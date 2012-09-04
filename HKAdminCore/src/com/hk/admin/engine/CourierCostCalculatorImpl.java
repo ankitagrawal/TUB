@@ -1,16 +1,5 @@
 package com.hk.admin.engine;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
@@ -25,6 +14,12 @@ import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -88,7 +83,10 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
             Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
             for (Courier courier : couriers) {
                 CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
-                totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
+	            if (courierPricingInfo == null) {
+		            return null;
+	            }
+	            totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
                 logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
                 courierCostingMap.put(courier, totalCost.longValue());
             }

@@ -69,12 +69,6 @@ function showPormotionCode(){
 </script>
 </head>
 
-<%
-  DateTime dateTime = new DateTime();
-  Date endOfOfferDate = new Date(new DateTime(2011, 8, 15, 23, 59, 59, 59).getMillis());
-%>
-
-
 <body id="">
 <div id="fb-root"></div>
 <div id='step1-2' style="display: block">
@@ -82,39 +76,15 @@ function showPormotionCode(){
 	if (fbRequest.getPage() != null) {
 		if (fbRequest.getPage().isLiked()) {
 %>
-  <%
-    if (dateTime.isBefore(endOfOfferDate.getTime())) {
-  %>
   <a href='http://www.healthkart.com/' target="_blank"><img
 	style="cursor: pointer;" width="510px"
 	title="Click to go to HealthKart.com"
-	src="<%=request.getContextPath() %>/images/facebook/fb_fanpage_postlike_iday.jpg" /></a>
-  <%
-    } else {
-  %>
-  <a href='http://www.healthkart.com/' target="_blank"><img
-	style="cursor: pointer;" width="510px"
-	title="Click to go to HealthKart.com"
-	src="<%=request.getContextPath() %>/images/facebook/fb_fanpage_postlike.jpg" /></a>
-  <%
-    }
-  %>
+	src="<%=request.getContextPath() %>/images/facebook/hKart_fanpage02.jpg" /></a>
 <%
 	} else {
 %>
-  <%
-    if (dateTime.isBefore(endOfOfferDate.getTime())) {
-  %>
   <img width="510px"
-	src="<%=request.getContextPath() %>/images/facebook/fb_fanpage_prelike_iday.jpg" />
-  <%
-    } else {
-  %>
-  <img width="510px"
-	src="<%=request.getContextPath() %>/images/facebook/fb_fanpage_prelike.jpg" />
-  <%
-    }
-  %>
+	src="<%=request.getContextPath() %>/images/facebook/hKart_fanpage01.jpg" />
 <%
 	}
 	}

@@ -20,7 +20,7 @@ public class HealthkartConstants {
     public static final String referred_by = "referred_by";
     public static final String affiliate_id = "affiliate_id";
     public static final String preferredZone = "preferredZone";
-    public static final String wantedCOD = "wantedCOD";
+    public static final String codConverterID = "codConverterID";
   }
 
   public static class BreadcrumbContext {
