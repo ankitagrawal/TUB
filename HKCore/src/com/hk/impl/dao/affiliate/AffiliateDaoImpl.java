@@ -128,7 +128,7 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 	@Override
 	public Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
 
-		StringBuilder hql = new StringBuilder("select a from Affiliate a left join fetch a.affiliateTxns  atx where atx.affiliateTxnType.id in (10,20)");
+		StringBuilder hql = new StringBuilder("select a from Affiliate a left outer join fetch a.affiliateTxns  atx where atx.affiliateTxnType.id in (10,20)");
 
 		Map<String, Object> params = new HashMap<String, Object>();
 
