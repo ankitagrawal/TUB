@@ -150,6 +150,8 @@
 		<td ></td>
 		<td></td>
 		<td></td>
+		<td></td>
+		<td></td>
 		<td><strong>Total</strong></td>
 		<td></td>
 		<td><strong>${totalAmount}</strong></td>

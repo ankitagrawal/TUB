@@ -2,6 +2,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.core.EnumPermission" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
@@ -213,6 +214,12 @@
 		<s:param name="courierDownloadFunctionality" value="false"/>
 	</s:link></h3>
 
+    <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
+                event="generateCourierReport">Add/Edit Hub
+        <s:param name="courierDownloadFunctionality" value="false"/>
+    </s:link></h3>
+
+
 </div>
 
 <div class="cl"></div>
@@ -388,9 +395,44 @@
 <div class="left roundBox">
 	<h2>Healthkart Delivery</h2>
 
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
+                title="Download Healthkart Delivery Worksheet">Mark Shipments Inward at Hub</s:link></h3>
 	<h3>
-		<s:link beanclass="com.hk.web.action.admin.courier.HKDeliveryAction"
-		        title="Download Healthkart Delivery Worksheet">Download Healthkart Delivery Worksheet</s:link></h3>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
+                    title="Download Healthkart Delivery Runsheet" event="previewRunsheet">Download Delivery Runsheet
+                <s:param name="runsheetPreview" value="false"/>
+            </s:link></h3>
+    <h3>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
+                    title="View Runsheets" >View/Edit Runsheets
+            </s:link>
+    </h3>
+    <h3>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
+                    title="View Consignments" event="searchConsignments" >View/Edit Consignments
+            </s:link>
+    </h3>
+	<%--<shiro:hasPermission name="<%=EnumPermission.VIEW_CONSIGNMENT_TRACKING%>" >--%>
+		<h3>
+			<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
+					title="Track Consignment" event="trackConsignment">Track Consignment
+				<s:param name="doTracking" value="false"/>
+			</s:link>
+		</h3>
+	<%--</shiro:hasPermission>--%>
+
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction"
+                title="Add/Edit Hub">Add/Edit Hub
+        </s:link>
+    </h3>
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction" event="addUserToHub"
+                title="Add agent">Add agent to hub
+        </s:link>
+    </h3>
+
 
 </div>
 
