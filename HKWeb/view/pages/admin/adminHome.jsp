@@ -413,14 +413,14 @@
                     title="View Consignments" event="searchConsignments" >View/Edit Consignments
             </s:link>
     </h3>
-	<shiro:hasPermission name="<%=EnumPermission.VIEW_CONSIGNMENT_TRACKING%>" >
+	<%--<shiro:hasPermission name="<%=EnumPermission.VIEW_CONSIGNMENT_TRACKING%>" >--%>
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
 					title="Track Consignment" event="trackConsignment">Track Consignment
 				<s:param name="doTracking" value="false"/>
 			</s:link>
 		</h3>
-	</shiro:hasPermission>
+	<%--</shiro:hasPermission>--%>
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction"
