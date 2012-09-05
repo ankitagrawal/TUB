@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS `supplier` (
   `contact_number` varchar(45) DEFAULT NULL,
   `tin_number` varchar(45) DEFAULT NULL,
   `create_date` datetime NOT NULL,
+  `imported` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tin_number_UNIQUE` (`tin_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
