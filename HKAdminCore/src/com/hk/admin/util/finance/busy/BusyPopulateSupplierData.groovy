@@ -53,7 +53,7 @@ public class BusyPopulateSupplierData {
         INSERT IGNORE INTO `healthkart_busy`.`supplier` (`id`, `name`, `line1`, `line2`, `city`, `state`, `pincode`, `contact_person`, `contact_number`, `tin_number`, `create_date`)
             SELECT su.`id` , su.`name`, su.`line1`, su.`line2`, su.`city`, su.`state`, su.`pincode`, su.`contact_person`, su.`contact_number`, su.`tin_number`, su.`create_date`
             FROM supplier su
-            WHERE supplier.update_date >${lastUpdateDate}
+            WHERE su.update_date >${lastUpdateDate}
             ON DUPLICATE KEY UPDATE id=su.id, name=su.name, line1=su.line1, line2=su.line2, city=su.city, state=su.state, pincode=su.pincode, contact_person=su.contact_person,
             contact_number=su.contact_number, tin_number=su.tin_number, create_date=su.create_date ;
      """);
