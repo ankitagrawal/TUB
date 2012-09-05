@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.admin.pact.service.order.AdminOrderService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -563,6 +564,12 @@ public class Functions {
        
        return linkManager.getProductURL(product, productReferrerId);
     }
+
+	public static String getCodConverterLink(Order order){
+		LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
+
+		return linkManager.getCodConverterLink(order);
+	}
 
 	public static boolean isCODAllowed(Order order) {
 		OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);

@@ -693,14 +693,6 @@ public class EmailManager {
         return (ownerEmail && reporterEmail);
     }
 
-    /*
-    * public boolean sendServiceVoucherMailToCustomer(LineItem lineItem) { HashMap valuesMap = new HashMap();
-    * valuesMap.put("lineItem", lineItem); valuesMap.put("pricingDto", new
-    * PricingDto(lineItem.getOrder().getLineItems(), lineItem.getOrder().getAddress())); return
-    * emailService.sendHtmlEmail(EmailTemplateConstants.serviceVoucherMailCustomer, valuesMap,
-    * lineItem.getOrder().getUser().getEmail(), lineItem.getOrder().getUser().getName()); }
-    */
-
     public boolean sendServiceVoucherMailToServiceProvider(Order order, CartLineItem lineItem) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("lineItem", lineItem);
@@ -723,12 +715,19 @@ public class EmailManager {
 
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.paymentFailEmail);
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
-        //emailService.sendHtmlEmail(EmailTemplateConstants.paymentFailEmail, valuesMap, "info@healthkart.com", "Customer Support");
-        //emailService.sendHtmlEmail(EmailTemplateConstants.paymentFailEmail, valuesMap, "pratham@healthkart.com", "Pratham");
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), "info@healthkart.com");
     }
 
-    public void sendCourierCollectionPostUpdationMessage(String email, String messagePostUpdation, String uploadDate) {
+	public void sendCodConverterMail(Order order) {
+		HashMap valuesMap = new HashMap();
+		valuesMap.put("order", order);
+		valuesMap.put("codConverterLink", linkManager.getCodConverterLink(order));
+
+		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.codConverterEmail);
+		emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName(), "info@healthkart.com");
+	}
+
+	public void sendCourierCollectionPostUpdationMessage(String email, String messagePostUpdation, String uploadDate) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("uploadDate", uploadDate);
         valuesMap.put("messagePostUpdation", messagePostUpdation);
