@@ -8464,5 +8464,14 @@
 			', 'Gurgaon Pharma Warehouse', '122101', '06101832327');
 		</sql>
 	</changeSet>
-	
+
+	<changeSet author="Tarun" id="09-05-2012">
+		<sql>
+			UPDATE shipment ship, shipping_order so
+			SET ship.return_date = date_add(ship.ship_date, INTERVAL 20 DAY)
+			WHERE ship.id = so.shipment_id
+			AND ship.`return_date` is null
+			AND so.shipping_order_status_id = 200
+		</sql>
+	</changeSet>
 </databaseChangeLog>
