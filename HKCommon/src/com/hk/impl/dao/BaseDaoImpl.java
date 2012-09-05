@@ -2,9 +2,7 @@ package com.hk.impl.dao;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
@@ -410,19 +408,46 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
   //@Override
   public Page list(DetachedCriteria criteria, boolean hasDistinctRootEntity, int pageNo, int perPage) {
 
-    int totalResults = count(criteria, hasDistinctRootEntity);
-    criteria.setProjection(null);
-    if (hasDistinctRootEntity) {
-      criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-    } else {
-      criteria.setResultTransformer(Criteria.ROOT_ENTITY);
-    }
-    int firstResult = (pageNo - 1) * perPage;
-    List resultList = findByCriteria(criteria, firstResult, perPage);
-    return new Page(resultList, perPage, pageNo, totalResults);
+	  int totalResults = count(criteria, hasDistinctRootEntity);
+	  //criteria.setProjection(null);
+	  if (hasDistinctRootEntity) {
+		  criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+	  } else {
+		  criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+	  }
+	  int firstResult = (pageNo - 1) * perPage;
+	  List resultList = findByCriteria(criteria, firstResult, perPage);
+	  return new Page(resultList, perPage, pageNo, totalResults);
   }
 
-  //@Override
+
+	private Query createQuery(String queryString){
+		return getSession().createQuery(queryString);
+	}
+
+	public Page list(String hql, Map<String, Object>params, int pageNo, int perPage) {
+		Query query = createQuery(hql);
+		applyQueryParams(query, params);
+		int totalResults = query.list().size();
+
+		int firstResult = (pageNo - 1) * perPage;
+		query.setFirstResult(firstResult);
+		query.setMaxResults(perPage);
+		List resultList = query.list();
+		return new Page(resultList, perPage, pageNo, totalResults);
+	}
+
+	private void applyQueryParams(Query query, Map<String,Object> params){
+		Iterator<Map.Entry<String,Object>> paramIterator = params.entrySet().iterator();
+
+		while(paramIterator.hasNext()){
+			Map.Entry<String,Object> entry = paramIterator.next();
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+	}
+
+
+	//@Override
   public Page list(DetachedCriteria criteria, int pageNo, int perPage) {
     return list(criteria, false, pageNo, perPage);
   }
