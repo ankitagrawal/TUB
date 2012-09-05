@@ -156,11 +156,17 @@ public class LinkManager {
 
         //return productURL;
 */    
+        String productURL = null;
+        String productSlug = product.getSlug();
+        String productId = product.getId();
+        productURL = "/product/" + productSlug + "/" + productId;
         
-        /**
-         * will remove this later, this method got added while adding/removing internal tagging.
-         */
-        return getProductURL(product, productReferrerId);   
+        if (productReferrerId != null && productReferrerId != 0) {
+            productURL.concat("?productReferrerId=" + productReferrerId);
+        }
+        
+        return productURL;
+         
     }
 
     public String getProductURL(Product product, Long productReferrerId) {
