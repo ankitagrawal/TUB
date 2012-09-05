@@ -77,7 +77,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		affiliatePage = affiliateDao.searchAffiliates(EnumAffiliateStatus.Verified.asAffiliateStatus(), name, email, websiteName, code, affiliateMode, affiliateType, EnumRole.HK_AFFILIATE.toRole(), getPerPage(), pageNo);
+		affiliatePage = affiliateDao.searchAffiliates(EnumAffiliateStatus.Verified.asAffiliateStatus(), name, email, websiteName, code, affiliateMode, affiliateType, EnumRole.HK_AFFILIATE.toRole(), getPerPage(), getPageNo());
 		if (affiliatePage != null) {
 			affiliates = affiliatePage.getList();
 		}
