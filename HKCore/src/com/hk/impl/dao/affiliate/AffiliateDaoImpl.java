@@ -2,10 +2,10 @@ package com.hk.impl.dao.affiliate;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.DateUtils;
+import com.hk.constants.affiliate.EnumAffiliateTxnType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.coupon.EnumCouponType;
-import com.hk.core.search.OrderBySqlFormula;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.affiliate.AffiliateStatus;
@@ -17,8 +17,6 @@ import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.service.RoleService;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -127,49 +125,47 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 
 	@Override
 	public Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
-
-		StringBuilder hql = new StringBuilder("select a from Affiliate a left outer join fetch a.affiliateTxns  atx where atx.affiliateTxnType.id in (10,20)");
+		List<Long> affiliateTxnTypeIds = Arrays.asList(EnumAffiliateTxnType.ADD.getId(), EnumAffiliateTxnType.PENDING.getId());
 
 		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("affiliateTxnTypeIds", affiliateTxnTypeIds);
+
+		StringBuilder hql = new StringBuilder("select a from Affiliate a left outer join fetch a.affiliateTxns  atx left join fetch a.user u where atx.affiliateTxnType.id in (:affiliateTxnTypeIds)");
 
 		if (affiliateStatus != null) {
 			hql.append(" and a.affiliateStatus.id = :affiliateStatusId ");
-			params.put("affiliateStatusId",affiliateStatus.getId());
+			params.put("affiliateStatusId", affiliateStatus.getId());
 		}
-		/*if (websiteName != null && StringUtils.isNotBlank(websiteName)) {
+		if (websiteName != null && StringUtils.isNotBlank(websiteName)) {
 			hql.append(" and a.websiteName = :websiteName ");
-
-		}*/
-		/*if (code != null && StringUtils.isNotBlank(code)) {
-			affiliateCriteria.add(Restrictions.eq("code", code));
+			params.put("websiteName", websiteName);
+		}
+		if (code != null && StringUtils.isNotBlank(code)) {
+			hql.append(" and a.code = :code ");
+			params.put("code", code);
 		}
 		if (affiliateMode != null) {
-			affiliateCriteria.add(Restrictions.eq("affiliateMode", affiliateMode));
+			hql.append(" and a.affiliateMode = :affiliateMode ");
+			params.put("affiliateMode", affiliateMode);
 		}
+
 		if (affiliateType != null) {
-			affiliateCriteria.add(Restrictions.eq("affiliateType", affiliateType));
-		}*/
-		/*DetachedCriteria userCriteria = affiliateCriteria.createCriteria("user");
-		if (name != null && StringUtils.isNotBlank(name)) {
-			userCriteria.add(Restrictions.eq("name", name));
+			hql.append(" and a.affiliateType = :affiliateType ");
+			params.put("affiliateType", affiliateType);
 		}
+
+		if (name != null && StringUtils.isNotBlank(name)) {
+			hql.append(" and u.name = :name ");
+			params.put("name", name);
+		}
+
 		if (email != null && StringUtils.isNotBlank(email)) {
-			userCriteria.add(Restrictions.eq("email", email));
-		}*/
+			hql.append(" and u.email = :email ");
+			params.put("email", email);
+		}
 
-		/*DetachedCriteria affiliateTxnCriteria = affiliateCriteria.createCriteria("affiliateTxns");
-		affiliateTxnCriteria.add(Restrictions.in("affiliateTxnType.id", Arrays.asList(new Long[]{10L, 20L})));
-*/
-		/*ProjectionList projectionList = Projections.projectionList();
-		projectionList.add(Projections.groupProperty("panNo"));
-		affiliateCriteria.setProjection(projectionList);
-
-		affiliateCriteria.addOrder(OrderBySqlFormula.sqlFormula(" sum(amount) desc"));
-*/
 		hql.append(" group by a.id").append(" order by sum(amount) desc");
-		//List results =   findByNamedParams(hql.toString(), new String[]{"affiliateStatusId"}, new Object[]{affiliateStatus.getId()});
-
-		return list(hql.toString(), params, pageNo,perPage);
+		return list(hql.toString(), params, pageNo, perPage);
 	}
 
 	public RoleService getRoleService() {
