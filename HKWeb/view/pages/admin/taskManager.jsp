@@ -27,8 +27,8 @@
         </tr>
         </s:form>
       </table>
-        <div>* Please run the following before running DB Master : <br>
-            ant db-dump <br>
+        <div>* Please run the following before running Catalog : <br>
+            dump.sql <br>
 
         </div>
     </fieldset>

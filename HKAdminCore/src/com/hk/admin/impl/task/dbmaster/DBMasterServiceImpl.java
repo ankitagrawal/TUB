@@ -119,7 +119,7 @@ public class DBMasterServiceImpl implements TaskService{
 
         /* Inserting Sku for different categories  */
         a =  baseDao.findByQuery("select count(*) from Sku");
-        if (a.get(0).intValue() == 0){
+        if (a.get(0).intValue() == 1){
 	    for (int i = 0; i < listOfSkuExcels.length; i++) {
 		    if (listOfSkuExcels[i].isFile()) {
 			    skuFiles = listOfSkuExcels[i].getName();
