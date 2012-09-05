@@ -130,7 +130,7 @@ public class BusyPopulateSalesData {
       account_name = accountingInvoice.account_name;
 
 	  if(account_name.length() >=40){
-		  account_name = account_name.subSequence(0,39);
+		  account_name = account_name.substring(0,39);
 	  }
       if(accountingInvoice.payment_mode_id == 40){
         debtors  = "COD_"+accountingInvoice.courier_name;
