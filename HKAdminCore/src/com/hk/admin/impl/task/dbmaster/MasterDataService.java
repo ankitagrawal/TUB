@@ -263,8 +263,8 @@ public class MasterDataService {
         logger.debug("inserting product referrer seed data");
         productReferrerSeedData.invokeInsert();
 
-//        logger.debug("inserting courier group has courier seed data");
-//        courierGroupHasCourierSeedData.invokeInsert();
+        logger.debug("inserting courier group has courier seed data");
+        courierGroupHasCourierSeedData.invokeInsert();
 
         logger.debug("inserting purchase form-type  seed data");
         purchaseFormTypeSeedData.invokeInsert();

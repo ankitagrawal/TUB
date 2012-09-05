@@ -236,9 +236,10 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
     private boolean validCase(List<DummyOrder> splitDummyOrders) {
         boolean validCase = true;
+	    Double codMinAmountForSplitting = 50D;  //so that orders get split
         for (DummyOrder splitDummyOrder : splitDummyOrders) {
             double amount = splitDummyOrder.getAmount();
-            if (splitDummyOrder.getCartLineItemList().size() > 0 && amount > 0D && amount < codMinAmount) {
+            if (splitDummyOrder.getCartLineItemList().size() > 0 && amount > 0D && amount < codMinAmountForSplitting) {
                 validCase = false;
             }
         }

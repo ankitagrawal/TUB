@@ -23,6 +23,12 @@ public class SubscriptionStatus  implements java.io.Serializable {
     @Column(name="name", nullable = false, length=100 )
     private String name;
 
+	@Override
+	 public String toString() {
+	   return id == null ? "" : id.toString();
+	 }
+	
+
     public Long getId() {
         return this.id;
     }

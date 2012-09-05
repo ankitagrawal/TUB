@@ -72,6 +72,7 @@ public enum EnumOrderStatus {
     return Arrays.asList(
         EnumOrderStatus.InProcess,
         EnumOrderStatus.Placed,
+        EnumOrderStatus.OnHold,
         EnumOrderStatus.Shipped,
         EnumOrderStatus.Delivered
     );
