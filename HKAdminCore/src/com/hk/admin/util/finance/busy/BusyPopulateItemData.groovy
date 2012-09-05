@@ -79,7 +79,7 @@ public class BusyPopulateItemData {
 			trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))),40) as item_description_4
 			,
 			0,
-			sk.create_date as create_date
+			NOW()
 
 
 			FROM sku sk INNER JOIN product_variant pv ON sk.product_variant_id=pv.id
@@ -109,7 +109,7 @@ public class BusyPopulateItemData {
 			mrp=pv.marked_price ,
 			tax_rate_local=t.value,
 			tax_rate_central=t.value ,
-			create_date=sk.create_date ,
+			create_date=NOW() ,
 			item_description_1=left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))= in_view_pv_po_option.pv_options_concat,NULL,
 			trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))),40) ,
 

@@ -117,4 +117,12 @@ GRANT UPDATE (
 `imported`
 ) ON  `healthkart_busy`.`transaction_header` TO  'busy'@'%';
 
+GRANT UPDATE (
+`imported`
+) ON  `healthkart_busy`.`item_detail` TO  'busy'@'%';
+
+GRANT UPDATE (
+`imported`
+) ON  `healthkart_busy`.`supplier` TO  'busy'@'%';
+
 
