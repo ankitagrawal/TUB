@@ -96,7 +96,7 @@ public class BusyPopulateItemData {
 
 				   on in_view_pv_po_option.product_variant_id = pv.id
 				   
-				   WHERE sk.create_date >${lastUpdateDate}
+				   WHERE sk.update_date >${lastUpdateDate}
 
 			ON DUPLICATE KEY UPDATE
 			item_code=item_code ,
