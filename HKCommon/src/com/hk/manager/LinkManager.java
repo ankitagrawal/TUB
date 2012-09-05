@@ -162,7 +162,7 @@ public class LinkManager {
         productURL = "/product/" + productSlug + "/" + productId;
         
         if (productReferrerId != null && productReferrerId != 0) {
-            productURL.concat("?productReferrerId=" + productReferrerId);
+            productURL = productURL.concat("?productReferrerId=" + productReferrerId);
         }
         
         return productURL;
