@@ -8644,6 +8644,10 @@
             values
             (157,'GURGAON') ON DUPLICATE KEY UPDATE name = 'GURGAON';
 
+	        INSERT into `courier` (`id`, `name`)
+	        values
+	        (500, 'HealthKart Delivery') ON DUPLICATE KEY UPDATE name = 'HealthKart Delivery';
+
             INSERT into `pincode`
             (`id`,`pincode`,`locality`,`default_courier_id`,`region`,`city_id`,`state_id`,`tier`)
             values
