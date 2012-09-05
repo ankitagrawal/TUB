@@ -51,18 +51,18 @@
 </head>
 <body>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="stockTransferBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="easySolBean"/>
 <c:set var="totalAmount" value="${0}" />
 <table class="header">
 	<tr>
 		<td>
 			Bright Lifecare Pvt. Ltd.<br/>
-			${stockTransferBean.stockTransfer.fromWarehouse.line1}<br/>
-			${stockTransferBean.stockTransfer.fromWarehouse.line2}<br/>
-			${stockTransferBean.stockTransfer.fromWarehouse.city} &nbsp;
-			-${stockTransferBean.stockTransfer.fromWarehouse.pincode} <br/>
-			${stockTransferBean.stockTransfer.fromWarehouse.state}<br/>
-			TIN: ${stockTransferBean.stockTransfer.fromWarehouse.tin}
+			${easySolBean.stockTransfer.fromWarehouse.line1}<br/>
+			${easySolBean.stockTransfer.fromWarehouse.line2}<br/>
+			${easySolBean.stockTransfer.fromWarehouse.city} &nbsp;
+			-${easySolBean.stockTransfer.fromWarehouse.pincode} <br/>
+			${easySolBean.stockTransfer.fromWarehouse.state}<br/>
+			TIN: ${easySolBean.stockTransfer.fromWarehouse.tin}
 		</td>
 		<td align="right">
 			<img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>
@@ -75,28 +75,28 @@
 <table style="font-size:.9em">
 	<tr>
 		<td><b>Stock Transfer id:</b></td>
-		<td>${stockTransferBean.stockTransfer.id}</td>
+		<td>${easySolBean.stockTransfer.id}</td>
 		<td><b>Stock Transfer Date</b></td>
-		<td><fmt:formatDate value="${stockTransferBean.stockTransfer.createDate}" pattern="yyyy-MM-dd"/></td>
+		<td><fmt:formatDate value="${easySolBean.stockTransfer.createDate}" pattern="yyyy-MM-dd"/></td>
 	</tr>
 	<tr>
 		<td><b>From Warehouse:</b></td>
-		<td>${stockTransferBean.stockTransfer.fromWarehouse.name}</td>
+		<td>${easySolBean.stockTransfer.fromWarehouse.name}</td>
 		<td><b>To Warehouse</b></td>
-		<td>${stockTransferBean.stockTransfer.toWarehouse.name}</td>
+		<td>${easySolBean.stockTransfer.toWarehouse.name}</td>
 	</tr>
 	<tr valign="top">
 		<td><b>Checked out date: </b></td>
-		<td><fmt:formatDate value="${stockTransferBean.stockTransfer.checkoutDate}" pattern="yyyy-MM-dd"/>
+		<td><fmt:formatDate value="${easySolBean.stockTransfer.checkoutDate}" pattern="yyyy-MM-dd"/>
 		</td>
 		<td><b>Check in date:</b></td>
-		<td><fmt:formatDate value="${stockTransferBean.stockTransfer.checkinDate}" pattern="yyyy-MM-dd"/></td>
+		<td><fmt:formatDate value="${easySolBean.stockTransfer.checkinDate}" pattern="yyyy-MM-dd"/></td>
 	</tr>
 	<tr>
 		<td><b>Created By</b></td>
-		<td>${stockTransferBean.stockTransfer.createdBy.name}</td>
+		<td>${easySolBean.stockTransfer.createdBy.name}</td>
 		<td><b>Received By</b></td>
-		<td>${stockTransferBean.stockTransfer.receivedBy.name}</td>
+		<td>${easySolBean.stockTransfer.receivedBy.name}</td>
 	</tr>
 </table>
 
@@ -108,21 +108,24 @@
 		<th>S.No.</th>
 		<th>Product Name</th>
 		<th>Product Variant Id</th>
+		<th>Manufacturer</th>
 		<th>Batch Number</th>
+		<th>Expiry (dd/mm/yyyy)</th>
 		<th>Cost Price</th>
 		<th>MRP</th>
+		<th>HK Selling Price</th>
+		<th>VAT %</th>
 		<th>Checked Out Quantity</th>
 		<th>Value</th>
 
 	</tr>
 	</thead>
 	<tbody id="poTable">
-	<c:forEach items="${stockTransferBean.stockTransfer.stockTransferLineItems}" var="stockTransferLineItem" varStatus="ctr">
+	<c:forEach items="${easySolBean.stockTransfer.stockTransferLineItems}" var="stockTransferLineItem" varStatus="ctr">
 		<tr>
 			<td>${ctr.index+1}.</td>
 			<td>
 					${stockTransferLineItem.sku.productVariant.product.name}
-
 				<em>
 					    <br>
 						${stockTransferLineItem.sku.productVariant.optionsPipeSeparated}
@@ -132,12 +135,16 @@
 				</em>
 			</td>
 			<td>${stockTransferLineItem.sku.productVariant}</td>
+			<td>${stockTransferLineItem.sku.productVariant.product.manufacturer.name}</td>
 			<td>
 					${stockTransferLineItem.batchNumber}
 			</td>
+			<td><fmt:formatDate value="${stockTransferLineItem.expiryDate}" pattern="dd/MM/yyyy" /> </td>
 			<td>${stockTransferLineItem.costPrice}
 			</td>
 			<td>${stockTransferLineItem.mrp}</td>
+			<td>${stockTransferLineItem.sku.productVariant.hkPrice}</td>
+			<td>${stockTransferLineItem.sku.tax.value * 100}</td>
 			<td>${stockTransferLineItem.checkedoutQty}
 			</td>
 			<td>${stockTransferLineItem.checkedoutQty * stockTransferLineItem.costPrice}
@@ -148,6 +155,10 @@
 	</tbody>
 	<tr>
 		<td ></td>
+		<td ></td>
+		<td></td>
+		<td></td>
+		<td></td>
 		<td></td>
 		<td></td>
 		<td></td>
