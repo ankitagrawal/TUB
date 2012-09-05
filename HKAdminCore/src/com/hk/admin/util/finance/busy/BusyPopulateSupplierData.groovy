@@ -50,7 +50,7 @@ public class BusyPopulateSupplierData {
 
      try{
       sql.executeInsert("""
-        INSERT INTO `healthkart_busy`.`supplier` (`id`, `name`, `line1`, `line2`, `city`, `state`, `pincode`, `contact_person`, `contact_number`, `tin_number`, `create_date`)
+        INSERT INTO `healthkart_busy`.`supplier` (`id`, `name`, `line1`, `line2`, `city`, `state`, `pincode`, `contact_person`, `contact_number`, `tin_number`, `create_date`, imported)
             SELECT su.`id` , su.`name`, su.`line1`, su.`line2`, su.`city`, su.`state`, su.`pincode`, su.`contact_person`, su.`contact_number`, su.`tin_number`, NOW(), 0
             FROM supplier su
             WHERE su.update_date >${lastUpdateDate}
