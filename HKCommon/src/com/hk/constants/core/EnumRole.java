@@ -104,7 +104,8 @@ public enum EnumRole {
                 EnumRole.TICKETADMIN.getRoleName(),
                 EnumRole.OPS_MANAGER.getRoleName(),
                 EnumRole.WH_EMPLOYEE.getRoleName(),
-                EnumRole.WH_MANAGER.getRoleName());
+                EnumRole.WH_MANAGER.getRoleName(),
+	            EnumRole.HK_DELIVERY_HUB_MANAGER.getRoleName());
     }
 
 	public static List<String> listHRRoles() {
