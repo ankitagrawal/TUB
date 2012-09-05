@@ -60,6 +60,9 @@
 	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction"> Ant Builds </s:link></h3>
 	</shiro:hasRole>
+    <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+		<h3><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction"> Populate Busy Data </s:link></h3>
+	</shiro:hasRole>
 		<%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
