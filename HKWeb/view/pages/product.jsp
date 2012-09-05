@@ -87,7 +87,7 @@
 		<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
 	</c:if>
 	
-	<c:if test="${pa.productReferrerId !=null}">
+	<c:if test="${!empty pa.productReferrerId}">
 			<link rel="canonical" href="${hk:getProductURL(product,null)}">
 	</c:if>
 
