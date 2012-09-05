@@ -2,6 +2,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.core.EnumPermission" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
@@ -409,12 +410,14 @@
                     title="View Consignments" event="searchConsignments" >View/Edit Consignments
             </s:link>
     </h3>
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
-                title="Track Consignment" event="trackConsignment">Track Consignment
-            <s:param name="doTracking" value="false"/>
-        </s:link>
-    </h3>
+	<shiro:hasPermission name="<%=EnumPermission.VIEW_CONSIGNMENT_TRACKING%>" >
+		<h3>
+			<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
+					title="Track Consignment" event="trackConsignment">Track Consignment
+				<s:param name="doTracking" value="false"/>
+			</s:link>
+		</h3>
+	</shiro:hasPermission>
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction"
