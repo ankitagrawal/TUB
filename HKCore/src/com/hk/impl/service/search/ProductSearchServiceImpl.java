@@ -35,9 +35,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 class ProductSearchServiceImpl implements ProductSearchService {
@@ -218,7 +216,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
         if (!SolrSchemaConstants.sortByRanking.equals(sortFilter.getName()) && !SolrSchemaConstants.sortByHkPrice.equals(sortFilter.getName())) {
             sortBy = SolrSchemaConstants.sortByRanking;
         }
+        solrQuery.addSortField(SolrSchemaConstants.sortByOutOfStock, SolrQuery.ORDER.asc);
         solrQuery.addSortField(sortBy, sortFilter.getSortOrder().equals("asc") ? SolrQuery.ORDER.asc : SolrQuery.ORDER.desc);
+
 
         QueryResponse response = solr.query(solrQuery);
 
@@ -232,28 +232,41 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     private SearchResult getSearchResult(List<SolrProduct> solrProducts, int totalResultCount){
         List<String> productIds = new ArrayList<String>();
-
+        //This sorting can also be done in database query but decided to do it in Java
+        //
+        Map<String, Integer> solrProductIndexMap = new HashMap<String, Integer>();
+        int counter = 0;
         for (SolrProduct solrProduct : solrProducts){
             productIds.add(solrProduct.getId());
+            solrProductIndexMap.put(solrProduct.getId(), counter);
+            counter++;
         }
+
         List<Product> products = new ArrayList<Product>();
-        List<Product> inStockProducts = new ArrayList<Product>();
-        List<Product> outOfStockProducts = new ArrayList<Product>();
+        //List of products sorted as per Solr
+        List<Product> sortedProducts = null;
         if (productIds.size() > 0){
             products = productService.getAllProductsById(productIds);
+            sortedProducts = new ArrayList<Product>(products);
             for (Product product : products){
                 product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
-                if ((product.isOutOfStock() != null) && product.isOutOfStock()){
-                    outOfStockProducts.add(product);
-                }else{
-                    inStockProducts.add(product);
-                }
+                int index = solrProductIndexMap.get(product.getId());
+                sortedProducts.set(index, product);
             }
         }
-        //Push out of stock products to the last
-        inStockProducts.addAll(outOfStockProducts);
-        return new SearchResult(inStockProducts, totalResultCount);
+        return new SearchResult(sortedProducts, totalResultCount);
     }
+
+  /*  public void sort(final Map<String, Double> solrProductScoreMap, List<SolrProduct> products){
+        Collections.sort(new Comparator<Product>(){
+            @Override
+            public int compare(Product p1, Product p2){
+                if (p1.getOutOfStock().equals(p2.getOutOfStock())){
+                    solrProductScoreMap.get(p1)
+                }
+            }
+        });
+    }*/
 
     private SearchResult getProductSuggestions(QueryResponse response, String userQuery, int page, int perPage) throws SolrServerException
     {
@@ -348,16 +361,19 @@ class ProductSearchServiceImpl implements ProductSearchService {
         //solrQuery.setParam("fq", fq);
         solrQuery.setStart((page - 1) * perPage);
         solrQuery.set("fl", "*");
+        solrQuery.set("fl", "score");
         solrQuery.setHighlight(true);
         solrQuery.setStart((page - 1) * perPage);
         solrQuery.setRows(perPage);
+        //We want to push out of stock products to the last page
+        solrQuery.addSortField(SolrSchemaConstants.sortByOutOfStock, SolrQuery.ORDER.asc);
         return solrQuery;
     }
 
     private SolrQuery getResultsQuery(String query, int page, int perPage){
 
         String qf = "";
-        qf += SolrSchemaConstants.name + "^1000.0 ";
+       /* qf += SolrSchemaConstants.name + "^1000.0 ";
         qf += SolrSchemaConstants.variantName + "^1002.0 ";  //If variant matches then it should be bit higher in score
         qf += SolrSchemaConstants.brand + "^100 ";
         qf += SolrSchemaConstants.keywords + "^90 ";
@@ -368,9 +384,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
         qf += SolrSchemaConstants.h1 + "^10 ";
         qf += SolrSchemaConstants.metaKeywords + "^79 ";
         qf += SolrSchemaConstants.metaDescription + "^0.9 ";
-        qf += SolrSchemaConstants.seoDescription + "^0.5 ";
+        qf += SolrSchemaConstants.seoDescription + "^0.5 ";*/
 
-       /* qf += SolrSchemaConstants.name + "^2.0 ";
+        qf += SolrSchemaConstants.name + "^2.0 ";
         qf += SolrSchemaConstants.variantName + "^1.9 ";
         qf += SolrSchemaConstants.brand + "^1.8 ";
         qf += SolrSchemaConstants.category + "^1.6 ";
@@ -382,7 +398,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         qf += SolrSchemaConstants.title + "^0.5 ";
         qf += SolrSchemaConstants.metaDescription + "^0.5 ";
         qf += SolrSchemaConstants.seoDescription + "^0.5 ";
-        qf += SolrSchemaConstants.description_title + "^0.5 ";*/
+        qf += SolrSchemaConstants.description_title + "^0.5 ";
 
         //qf += SolrSchemaConstants.description_title + "^0.5 ";
         return buildSolrQuery(query, qf, page, perPage);
