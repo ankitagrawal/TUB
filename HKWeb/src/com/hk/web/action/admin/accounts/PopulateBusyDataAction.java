@@ -41,15 +41,15 @@ public class PopulateBusyDataAction extends BaseAction {
 			BusyPopulateSalesData busyPopulateSalesData = new BusyPopulateSalesData(dbHostName, dbName, dbUser, dbPassword);
 			BusyPopulateRtoData busyPopulateRtoData = new BusyPopulateRtoData(dbHostName, dbName, dbUser, dbPassword);
 
-			logger.debug("Populating Items ");
+			logger.info("Populating Items ");
 			busyPopulateItemData.populateItemData();
-			logger.debug("Populating Suppliers ");
+			logger.info("Populating Suppliers ");
 			busyPopulateSupplierData.busySupplierUpdate();
-			logger.debug("Populating Sales ");
+			logger.info("Populating Sales ");
 			busyPopulateSalesData.transactionHeaderForSalesGenerator();
-			logger.debug("Populating Purchases ");
+			logger.info("Populating Purchases ");
 			busyTableTransactionGenerator.populatePurchaseData();
-			logger.debug("Populating RTO data ");
+			logger.info("Populating RTO data ");
 			busyPopulateRtoData.transactionHeaderForRtoGenerator();
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);

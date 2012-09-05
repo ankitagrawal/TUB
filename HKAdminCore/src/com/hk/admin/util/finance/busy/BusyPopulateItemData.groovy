@@ -128,7 +128,7 @@ public class BusyPopulateItemData {
     }
       catch (Exception e) {
 
-        Logger.debug("Unable to insert in  item: ",e);
+        Logger.info("Unable to insert in  item: ",e);
           }
   }
 }

@@ -195,7 +195,7 @@ public class BusyPopulateSalesData {
        transactionFooterForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
     }
       catch (Exception e) {
-            logger.debug("Unable to insert in  transaction header: ",e);
+            logger.info("Unable to insert in  transaction header: ",e);
           }
     }
   }
@@ -237,7 +237,7 @@ public class BusyPopulateSalesData {
          """)        
       }
       catch (Exception e) {
-            logger.debug("Unable to insert in  transaction body: ",e);
+            logger.info("Unable to insert in  transaction body: ",e);
           }
     }
   }
@@ -278,7 +278,7 @@ public class BusyPopulateSalesData {
        """)
     }
     catch (Exception e) {
-            logger.debug("Unable to insert in  transaction footer: ", e); 
+            logger.info("Unable to insert in  transaction footer: ", e); 
           }
     }
 }

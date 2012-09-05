@@ -59,7 +59,7 @@ public class BusyPopulateSupplierData {
      """);
     }
       catch (Exception e) {
-            logger.debug("Unable to insert in  supplier: ", e);
+            logger.info("Unable to insert in  supplier: ", e);
           }
   }  
 }

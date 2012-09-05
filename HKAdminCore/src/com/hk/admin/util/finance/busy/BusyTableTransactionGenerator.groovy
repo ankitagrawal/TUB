@@ -181,7 +181,7 @@ public class BusyTableTransactionGenerator {
 
 
           } catch (Exception e1) {
-//            Logger.debug("insertion into transaction_body is failed",e1);
+            Logger.info("insertion into transaction_body is failed",e1);
           }
 
 
@@ -210,7 +210,7 @@ public class BusyTableTransactionGenerator {
 
 
         } catch (Exception e2) {
-          logger.debug("Unable to insert in  supplier: ", e);
+          logger.info("Unable to insert in  supplier: ", e);
         }
       }
     }
