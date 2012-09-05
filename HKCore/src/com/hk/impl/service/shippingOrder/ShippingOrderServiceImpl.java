@@ -114,18 +114,14 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 	 */
 	public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder) {
 		logger.debug("Trying to autoescalate order#" + shippingOrder.getId());
-
 		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-
 			Order order = shippingOrder.getBaseOrder();
-
 			if (order.isReferredOrder() && order.getPayment().getAmount() < 1000) {
 				String comments = "BO is a referred Order, Please do a manual approval";
 				logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
 						getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
 				return false;
 			}
-
 			for (LineItem lineItem : shippingOrder.getLineItems()) {
 				Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This
 				// is after including placed order qty
@@ -152,8 +148,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					return false;
 				}
 			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Transactional
