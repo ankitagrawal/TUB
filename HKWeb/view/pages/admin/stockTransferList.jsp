@@ -80,6 +80,8 @@
                         &nbsp;
                         <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="print" target="_blank">Print
                           <s:param name="stockTransfer" value="${stockTransfer.id}"/></s:link>
+						<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="easySolView" target="_blank">Easy Sol View
+						                          <s:param name="stockTransfer" value="${stockTransfer.id}"/></s:link>
 					</td>
 				</tr>
 			</c:forEach>
