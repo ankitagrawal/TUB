@@ -1,28 +1,5 @@
 package com.hk.taglibs;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.hk.admin.pact.service.order.AdminOrderService;
-import net.sourceforge.stripes.util.CryptoUtil;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.akube.framework.util.DateUtils;
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
@@ -30,6 +7,7 @@ import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.EnumRewardPointMode;
@@ -39,14 +17,10 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.VariantConfig;
-import com.hk.domain.catalog.product.VariantConfigOption;
-import com.hk.domain.catalog.product.VariantConfigOptionParam;
-import com.hk.domain.catalog.product.VariantConfigValues;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
@@ -79,6 +53,19 @@ import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
+import net.sourceforge.stripes.util.CryptoUtil;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
 
 public class Functions {
 
@@ -576,4 +563,9 @@ public class Functions {
         return orderService.isCODAllowed(order);
     }
 
-  }
+    public static Hub getHubForHkdeliveryUser(User user){
+        HubService hubService = ServiceLocatorFactory.getService(HubService.class);
+        return hubService.getHubForUser(user);
+    }
+
+}
