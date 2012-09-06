@@ -268,7 +268,7 @@
       <c:if test="${hk:isNotBlank(ca.tertiaryChildCategorySlug)}"><s:param name="tertiaryChildCategorySlug"
                                                                            value="${ca.tertiaryChildCategorySlug}"/></c:if>
       <c:if test="${hk:isNotBlank(ca.preferredZone)}"><s:param name="preferredZone" value="${ca.preferredZone}"/></c:if>
-      <s:param name="sortBy" value="hk_price"/>
+      <s:param name="sortBy" value="hkPrice"/>
       <s:param name="sortOrder" value="${ca.sortOrder =='desc' ? 'asc' : 'desc'}"/>
     </s:link>
   </div>
