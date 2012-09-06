@@ -14,6 +14,7 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_WarehouseChanged(612L, "Warehouse Changed"),
   SO_Split(613L, "Shipping Order Split"),
   SO_AutoEscalatedToProcessingQueue(615L, "SO Auto-escalated To Processing Queue"),
+  SO_Shipment_Auto_Created(616L, "SO Shipment Auto Created"),
   SO_CouldNotBeAutoEscalatedToProcessingQueue(617L, "SO Could not be Auto-escalated To Processing Queue"),
   SO_EscalatedToProcessingQueue(620L, "SO Escalated To Processing Queue"),
   SO_ChosenForPrinting(625L, "SO  Chosen for Printing and sent to Printing Queue"),

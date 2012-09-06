@@ -76,13 +76,8 @@
                               </c:when>
                               <c:otherwise>
                                   <c:forEach items="${variant.productOptions}" var="variantOption">
-                                      <c:if
-                                              test="${fn:toUpperCase(variantOption.name) == 'TYPE' || fn:toUpperCase(variantOption.name) == 'BABY WEIGHT'
-                                              || fn:toUpperCase(variantOption.name) == 'SIZE' || fn:toUpperCase(variantOption.name) == 'FLAVOR'
-                                              || fn:toUpperCase(variantOption.name) == 'QUANTITY'}">
-                                          ${variantOption.value}
-                                          <br/>
-                                      </c:if>
+                                      <span style="font-size: 12px; line-height:18px;">${variantOption.value}</span>
+                                      <br/>
                                   </c:forEach>
                               </c:otherwise>
                           </c:choose>
@@ -91,15 +86,9 @@
                     <br/><br/>
                 </div>
                 <div class='desc'>
-                  <c:forEach items="${variant.productOptions}" var="variantOption">
-	                  <c:if
-                                              test="${fn:toUpperCase(variantOption.name) == 'TYPE' || fn:toUpperCase(variantOption.name) == 'BABY WEIGHT'
-                                              || fn:toUpperCase(variantOption.name) == 'SIZE' || fn:toUpperCase(variantOption.name) == 'FLAVOR'
-                                              || fn:toUpperCase(variantOption.name) == 'QUANTITY'}">
-                                          <span style="font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>
-                                      </c:if>
-
-                  </c:forEach>
+                    <c:forEach items="${variant.productOptions}" var="variantOption">
+                        <span style="font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>
+                    </c:forEach>
                 </div>
                 <c:if test="${variant.discountPercent > 0}">
                     <div class='prices'>
@@ -123,14 +112,15 @@
                           </c:if>
                         </div>
                         <br/><br/>
-                        <c:if test="${variant.mainImageId != null}">
+	                    <%-- Commented below as it was showing discount twice--%>
+                        <%--<c:if test="${variant.mainImageId != null}">
                             <div class="special green" style="text-align: center;font-size: 12px">
                                                 <span style="font-weight: bold;"><fmt:formatNumber
                                                         value="${variant.discountPercent*100}"
                                                         maxFractionDigits="0"/>%</span>
                                 off
                             </div>
-                        </c:if>
+                        </c:if>--%>
                     </div>
                 </c:if>
                 <c:if test="${variant.discountPercent == 0}">

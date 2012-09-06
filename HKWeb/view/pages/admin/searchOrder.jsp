@@ -483,6 +483,9 @@
     <c:if test="${empty order.comments}">Comments</c:if>
     <s:param name="order" value="${order}"/>
   </s:link>
+    <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT_L3_ADMINS%>">
+      Cod Converter Link  ${hk:getCodConverterLink(order)}
+    </shiro:hasAnyRoles>
 </td>
 <td class="has_table">
   <c:if test="${not empty order.shippingOrders}">

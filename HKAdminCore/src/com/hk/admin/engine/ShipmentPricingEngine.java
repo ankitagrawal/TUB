@@ -72,6 +72,9 @@ public class ShipmentPricingEngine {
     }
 
     public Double calculateShipmentCost(CourierPricingEngine courierPricingEngine, Double weight) {
+	    if(courierPricingEngine == null){
+		    return 0D;
+	    }
         Double additionalWeight = weight - (courierPricingEngine.getFirstBaseWt() + courierPricingEngine.getSecondBaseWt());
         Double remainder = 0D;
 
