@@ -89,7 +89,14 @@ public enum EnumRoleHasPermission {
                     EnumPermission.RUN_ANT_BUILDS,
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
                     EnumPermission.UPDATE_COURIER_DELIVERY_STATUS,
-                    EnumPermission.CREATE_REPLACEMENT_ORDER
+                    EnumPermission.CREATE_REPLACEMENT_ORDER,
+                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
+                    EnumPermission.VIEW_DELIVERY_QUEUE,
+                    EnumPermission.DOWNLOAD_COURIER_EXCEL,
+                    EnumPermission.UPDATE_DELIVERY_QUEUE,
+                    EnumPermission.SELECT_HUB,
+                    EnumPermission.ADD_HK_DELIVERY_AGENT,
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
             )
     ),
 
@@ -177,7 +184,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.CREATE_TICKETS,
                     EnumPermission.AWARD_REWARD_POINTS,
                     EnumPermission.HK_EMPLOYEE,
-                    EnumPermission.CREATE_REPLACEMENT_ORDER
+                    EnumPermission.CREATE_REPLACEMENT_ORDER,
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
             )
     ),
 
@@ -189,7 +197,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.UPDATE_DELIVERY_QUEUE,
                     EnumPermission.VIEW_OFFER,
                     EnumPermission.VIEW_COUPON,
-                    EnumPermission.EDIT_LINEITEM
+                    EnumPermission.EDIT_LINEITEM,
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
             )
     ),
 
@@ -201,7 +210,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.COD_PERFORMANCE_REPORTS,
                     EnumPermission.SALES_REPORT,
                     EnumPermission.MODERATE_REWARD_POINTS,
-                    EnumPermission.EDIT_LINEITEM
+                    EnumPermission.EDIT_LINEITEM,
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
             )
     ),
 
@@ -385,7 +395,37 @@ public enum EnumRoleHasPermission {
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
                     EnumPermission.VIEW_DELIVERY_QUEUE,
                     EnumPermission.DOWNLOAD_COURIER_EXCEL,
-                    EnumPermission.UPDATE_DELIVERY_QUEUE
+                    EnumPermission.UPDATE_DELIVERY_QUEUE,
+
+                    EnumPermission.VIEW_HUB,
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+            )
+    ),
+
+    HK_DELIVERY_ADMIN(
+            EnumRole.HK_DELIVERY_ADMIN,
+            Arrays.asList(
+                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
+                    EnumPermission.VIEW_DELIVERY_QUEUE,
+                    EnumPermission.DOWNLOAD_COURIER_EXCEL,
+                    EnumPermission.UPDATE_DELIVERY_QUEUE,
+
+                    EnumPermission.SELECT_HUB,
+                    EnumPermission.ADD_HK_DELIVERY_AGENT,
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+            )
+    ),
+    HK_DELIVERY_HUB_MANAGER(
+            EnumRole.HK_DELIVERY_HUB_MANAGER,
+            Arrays.asList(
+                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
+                    EnumPermission.VIEW_DELIVERY_QUEUE,
+                    EnumPermission.DOWNLOAD_COURIER_EXCEL,
+                    EnumPermission.UPDATE_DELIVERY_QUEUE,
+
+                    EnumPermission.VIEW_HUB,
+                    EnumPermission.ADD_HK_DELIVERY_AGENT,
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
             )
     ),
 

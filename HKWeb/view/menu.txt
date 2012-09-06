@@ -5,7 +5,7 @@
 --/nutrition/sports-nutrition/pre-workout : Pre Workout
 --/nutrition/sports-nutrition/intra-workout  :Intra Workout
 --/nutrition/sports-nutrition/post-workout : Post Workout
---/nutrition/sports-nutrition/weight-gainer : Weight Gainer
+--/nutrition/sports-nutrition/weight-gainer : Mass Gainer
 --/nutrition/sports-nutrition/protein-bars  : Protein Bars
 --/nutrition/sports-nutrition/athletes      :  Athletes
 --/nutrition/sports-nutrition/fat-burner
