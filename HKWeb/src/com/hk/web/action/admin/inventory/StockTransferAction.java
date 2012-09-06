@@ -164,6 +164,11 @@ public class StockTransferAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/stPrintView.jsp");
     }
 
+	public Resolution easySolView(){
+		logger.debug("purchaseOrder: " + stockTransfer);
+		return new ForwardResolution("/pages/admin/stockTransferEasySolView.jsp");
+	}
+
     public int getPerPageDefault() {
         return defaultPerPage;
     }

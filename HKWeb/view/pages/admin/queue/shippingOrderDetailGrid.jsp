@@ -392,9 +392,9 @@
                 <%--</c:if>--%>
                 <%--</span>--%>
                 <c:if test="${isActionQueue == true}">
-                    <c:if test="${productVariant.product.jit}">
+                    <%--<c:if test="${productVariant.product.jit}">--%>
                         ,<strong>Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days </strong>
-                    </c:if>
+                    <%--</c:if>--%>
                 </c:if>
             </td>
             <td style="border:1px solid gray;border-left:none;">
