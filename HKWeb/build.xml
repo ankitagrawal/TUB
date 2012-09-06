@@ -53,6 +53,7 @@
 		<fileset file="${project.report.dir}/dist/hk-report.jar" />
         <fileset file="${project.mooga.dir}/dist/hk-mooga.jar" />
         <fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
+        <fileset file="${lib.root.dir}/commons/commons-collections-3.1.jar" />
   </path>
 
 
