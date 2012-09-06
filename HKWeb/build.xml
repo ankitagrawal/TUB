@@ -53,8 +53,6 @@
 		<fileset file="${project.report.dir}/dist/hk-report.jar" />
         <fileset file="${project.mooga.dir}/dist/hk-mooga.jar" />
         <fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
-        <fileset file="${lib.root.dir}/redis/jedis-2.0.0.jar" />
-        <fileset file="${lib.root.dir}/redis/spring-data-redis-1.0.0.RELEASE.jar" />
   </path>
 
 

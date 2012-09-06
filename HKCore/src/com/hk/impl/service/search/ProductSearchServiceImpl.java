@@ -327,18 +327,12 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
             long resultsCount = response.getResults().getNumFound();
             if(resultsCount == 0 && !isRetry){
-                SearchResult searchResults = getProductSuggestions(response, query, page, perPage);
-                if ((searchResults != null) && searchResults.getResultSize() == 0){
+                searchResult = getProductSuggestions(response, query, page, perPage);
+                if ((searchResult != null) && searchResult.getResultSize() == 0){
                     query = query.replaceAll(" ","");
-                    searchResults = getSearchResults(query, page, perPage, true);
-                }
-                if (searchResults != null){
-                    searchResult.setSearchSuggestions(searchResults.getSearchSuggestions());
-                    resultsCount += searchResults.getResultSize();
-                    searchResult.getSolrProducts().addAll(searchResults.getSolrProducts());
+                    searchResult = getSearchResults(query, page, perPage, true);
                 }
             }
-            searchResult.setResultSize((int)resultsCount);
         }catch (SolrServerException ex ){
             SearchException e = wrapException("Unable to get search results from Solr", ex);
             throw e;
