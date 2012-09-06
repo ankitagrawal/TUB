@@ -37,7 +37,7 @@ public class TaskManagerAction extends BaseAction {
           addRedirectAlertMessage(new SimpleMessage("DB Master ran successfully"));
         }
         else{
-          addRedirectAlertMessage(new SimpleMessage("DB Master failed"));
+          addRedirectAlertMessage(new SimpleMessage("DB Master failed : please check logs for details"));
         }
         return new ForwardResolution("/pages/admin/taskManager.jsp");
   }

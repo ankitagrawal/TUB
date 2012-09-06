@@ -25,6 +25,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import net.sourceforge.stripes.action.SimpleMessage;
+
 /**
  * Created by IntelliJ IDEA.
  * User: user
@@ -77,12 +79,12 @@ public class DBMasterServiceImpl implements TaskService{
     }
 
     try{
-      if ("static".equals(masterData) || "both".equals(masterData)) {
+      if ("static".equals(masterData)){ // || "both".equals(masterData)) {
         masterDataService.insert();
         isSuccessful = true;
       }
 
-      if ("catalog".equals(masterData) || "both".equals(masterData)) {
+      if ("catalog".equals(masterData)) {   // || "both".equals(masterData)) {
           
         String catalogFiles;
 	    String skuFiles;
@@ -98,6 +100,7 @@ public class DBMasterServiceImpl implements TaskService{
 	    File[] listOfSkuExcels = skuFolder.listFiles();
         File[] listOfPincodeExcels =  pincodeFolder.listFiles();
         File[] listOfRVExcels = rvFolder.listFiles();
+        isSuccessful = true;
 
         /* Inserting product catalog for different categories*/
         List<Long> a =  baseDao.findByQuery("select count(*) from Product");
@@ -111,6 +114,7 @@ public class DBMasterServiceImpl implements TaskService{
                    }
                    catch(Exception e){
                       logger.error("Exception while reading catalog excel sheet.", e);
+                      isSuccessful = false;
                         }
                    }
 			}
@@ -130,6 +134,7 @@ public class DBMasterServiceImpl implements TaskService{
                   }
                   catch(Exception e){
                         logger.error("Exception while reading "+skuFiles+" Sku excel sheet.", e);
+                        isSuccessful = false;
                   }
                 }
 		    }
@@ -151,6 +156,7 @@ public class DBMasterServiceImpl implements TaskService{
                 }
                } catch (Exception e) {
                 logger.error("Exception while reading pincode excel sheet.", e);
+                  isSuccessful = false;
                  }
 	        }
           }
@@ -174,11 +180,12 @@ public class DBMasterServiceImpl implements TaskService{
 
                 } catch (Exception e) {
                     logger.error("Exception while reading reconciliationVoucher excel sheet.", e);
+                  isSuccessful = false;
                     }
 	        }
            }
          }
-         isSuccessful = true;
+         //isSuccessful = true;
          
       }
 
