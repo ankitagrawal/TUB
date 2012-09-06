@@ -729,7 +729,6 @@
 --/parenting/moms-maternity/nutrition-for-moms
 --/parenting/moms-maternity/maternity-belts
 --/parenting/moms-maternity/maternity-pads
-
 -/parenting/diapering
 --/parenting/diapering/diapers
 ---/parenting/diapering/diapers/small
@@ -742,7 +741,6 @@
 --/parenting/diapering/changing-mats
 --/parenting/diapering/diaper-bags
 --/parenting/diapering/potty-training
-
 -/parenting/feeding-nursing : Feeding & Nursing
 --/parenting/feeding-nursing/breastfeeding-aids
 ---/parenting/feeding-nursing/breastfeeding-aids/breast-pumps
@@ -769,7 +767,6 @@
 ---/parenting/feeding-nursing/baby-kids-utensils/food-storage
 ---/parenting/feeding-nursing/baby-kids-utensils/lunch-boxes
 ---/parenting/feeding-nursing/baby-kids-utensils/water-bottles
-
 -/parenting/bath-skin-care : Bath & Skin Care
 --/parenting/bath-skin-care/soaps-gels : Soaps & Gels
 --/parenting/bath-skin-care/shampoo
@@ -786,17 +783,20 @@
 ---/parenting/bath-skin-care/bath-tubs-accessories/accessories
 ---/parenting/bath-skin-care/bath-tubs-accessories/bath-toys
 --/parenting/bath-skin-care/grooming
+---/parenting/bath-skin-care/grooming/combs-hair-brushes : Combs & Brushes
+---/parenting/bath-skin-care/grooming/nail-clippers-scissors: Nail Clippers & Scissors
+---/parenting/bath-skin-care/grooming/ear-buds-cotton-balls:Ear Buds & Cotton Balls
+---/parenting/bath-skin-care/grooming/sunglasses
 --/parenting/bath-skin-care/sunscreen
 --/parenting/bath-skin-care/combo-packs
-
 -/parenting/health-safety : Health & Safety
 --/parenting/health-safety/thermometers
 --/parenting/health-safety/medical-care
+--/parenting/health-safety/eye-care
 --/parenting/health-safety/child-proofing
 --/parenting/health-safety/disinfectants
 --/parenting/health-safety/repellents
 --/parenting/health-safety/misc
-
 -/parenting/toys-more : Toys & More
 --/parenting/toys-more/toys
 ---/parenting/toys-more/toys/rattles
