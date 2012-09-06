@@ -1,16 +1,16 @@
 package com.hk.web.action.admin;
 
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.task.TaskService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.task.TaskService;
 
 /*@Secure(hasAnyPermissions = { PermissionConstants.RUN_ANT_BUILDS })*/
 @Component
@@ -24,7 +24,7 @@ public class TaskManagerAction extends BaseAction {
 */
 
   private String db_master_service;
-  private static Logger logger = Logger.getLogger(TaskManagerAction.class);
+  private static Logger logger                 = LoggerFactory.getLogger(TaskManagerAction.class);
 
 
   @DefaultHandler

@@ -100,15 +100,20 @@ public class Keys {
 		public static final String subscriptionCustomerBufferDays = "subscriptionCustomerBufferDays";
 		public static final String subscriptionInventoryBufferDays = "subscriptionInventoryBufferDays";
 
-		public static final String testDataDump                 = "testDataDump1";
+		public static final String testDataDump = "testDataDump";
 
+		public static final String dbHostName = "dbHostName";
+		public static final String dbName = "dbName";
+		public static final String dbUser = "dbUser";
+		public static final String dbPassword = "dbPassword";
+		public static final String dbPort = "dbPort";
 
 	}
 
 	/*
-		 * public static class App { public static final String contextPath = "contextPath"; public static final String
-		 * serviceTax_10_3 = "serviceTax_10_3"; public static final String appBasePath = "appBasePath"; public static final
-		 * String environmentDir = "environmentDir"; }
-		 */
+			  * public static class App { public static final String contextPath = "contextPath"; public static final String
+			  * serviceTax_10_3 = "serviceTax_10_3"; public static final String appBasePath = "appBasePath"; public static final
+			  * String environmentDir = "environmentDir"; }
+			  */
 
 }
