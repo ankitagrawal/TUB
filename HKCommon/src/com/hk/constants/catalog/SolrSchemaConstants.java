@@ -29,6 +29,7 @@ public class SolrSchemaConstants {
     public static final String sortBy = "ranking";
     public static final String sortByRanking = "ranking";
     public static final String sortByHkPrice = "hkPrice";
+    public static final String sortByOutOfStock = "outOfStock";
     public static final String hkPrice = "hkPrice";
 
 
