@@ -37,7 +37,7 @@ public class SolrProduct {
 
     @Field
     private
-    double orderRanking;
+    double ranking;
 
     @Field
     private
@@ -223,11 +223,11 @@ public class SolrProduct {
     }
 
     public double getOrderRanking() {
-        return orderRanking;
+        return ranking;
     }
 
     public void setOrderRanking(double orderRanking) {
-        this.orderRanking = orderRanking;
+        this.ranking = orderRanking;
     }
 
     public long getMainImageId() {
