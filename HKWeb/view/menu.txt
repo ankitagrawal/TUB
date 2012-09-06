@@ -456,6 +456,7 @@
 ---/personal-care/elderly-care/diagnostics/bp-monitor: BP Monitors
 ---/personal-care/elderly-care/diagnostics/strips
 ---/personal-care/elderly-care/diagnostics/meters: Blood Glucose Meters
+--/personal-care/elderly-care/massagers
 --/personal-care/elderly-care/mobility-aids: Mobility Aids
 ---/personal-care/elderly-care/mobility-aids/power-wheel-chairs: Power Wheel Chairs
 ---/personal-care/elderly-care/mobility-aids/manual-wheel-chairs: Manual Wheel Chairs
