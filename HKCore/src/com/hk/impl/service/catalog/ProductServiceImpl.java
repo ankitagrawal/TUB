@@ -476,10 +476,7 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setDeleted(product.getDeleted().booleanValue());
         }
         if (product.getOutOfStock() != null){
-            solrProduct.setOutOfStock(product.getOutOfStock());
-        }
-        if (product.getOutOfStock() != null){
-            solrProduct.setOutOfStock(product.getOutOfStock());
+            solrProduct.setOutOfStock(product.getOutOfStock().booleanValue());
         }
 
         double price = 0d;
