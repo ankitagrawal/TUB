@@ -123,6 +123,7 @@
 --/sports/fitness-equipment/home-gym
 --/sports/fitness-equipment/steppers
 --/sports/fitness-equipment/bench-equipments
+--/sports/fitness-equipment/heart-rate-monitors
 --/sports/fitness-equipment/miscellaneous-equipments
 -/sports/sports-equipment
 --/sports/sports-equipment/football
@@ -166,11 +167,12 @@
 ---/sports/sports-equipment/squash/balls
 --/sports/sports-equipment/boxing
 ---/sports/sports-equipment/boxing/punching-bags
+---/sports/sports-equipment/boxing/gloves
 ---/sports/sports-equipment/boxing/wraps
 ---/sports/sports-equipment/boxing/protection-gear
 ---/sports/sports-equipment/boxing/boxing-clothing
 ---/sports/sports-equipment/boxing/jabs
----/sports/sports-equipment/boxing/gloves
+---/sports/sports-equipment/boxing/accessories
 --/sports/sports-equipment/golf
 --/sports/sports-equipment/skating
 --/sports/sports-equipment/other-balls
