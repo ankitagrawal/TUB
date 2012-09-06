@@ -68,8 +68,7 @@ public class OrderSummaryAction extends BaseAction {
     private boolean  groundShippedItemPresent;
     private boolean  codAllowedOnGroundShipping;
     private Double  cashbackOnGroundshipped;
-    private Double  groundshipItemweight;
-    private Double  groundshipItemAmount;
+   
 
     // COD related changes
     @Autowired
