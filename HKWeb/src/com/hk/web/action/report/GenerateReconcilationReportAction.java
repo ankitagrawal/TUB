@@ -13,10 +13,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,6 +62,12 @@ public class GenerateReconcilationReportAction extends BaseAction {
     private Long                  warehouseId;
     private Courier               courier;
     private Long                  shippingOrderStatusId;
+	private String                gatewayOrderType;
+	private FileBean              fileBean;
+
+	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+	String                        adminUploadsPath;
+
     
 
     @DefaultHandler
@@ -152,6 +155,24 @@ public class GenerateReconcilationReportAction extends BaseAction {
         // return new ForwardResolution("/pages/admin/generateReconcilationReport.jsp");
     }
 
+	public Resolution parse() throws Exception {
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	        String excelFilePath = adminUploadsPath + "/reconcile/" + sdf.format(new Date()) + ".xls";
+	        File excelFile = new File(excelFilePath);
+	        excelFile.getParentFile().mkdirs();
+	        fileBean.save(excelFile);
+
+	        try {
+
+	           // addRedirectAlertMessage(new SimpleMessage(poLineItems.size() + " PO Line Items Created Successfully."));
+	        } catch (Exception e) {
+	            //logger.error("Exception while reading excel sheet.", e);
+	            addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+	        }
+	        return new RedirectResolution(GenerateReconcilationReportAction.class);
+	    }
+
+
     public Date getStartDate() {
         return startDate;
     }
@@ -199,4 +220,20 @@ public class GenerateReconcilationReportAction extends BaseAction {
     public void setShippingOrderStatusId(Long shippingOrderStatusId) {
         this.shippingOrderStatusId = shippingOrderStatusId;
     }
+
+	public String getGatewayOrderType() {
+		return gatewayOrderType;
+	}
+
+	public void setGatewayOrderType(String gatewayOrderType) {
+		this.gatewayOrderType = gatewayOrderType;
+	}
+
+	public FileBean getFileBean() {
+		return fileBean;
+	}
+
+	public void setFileBean(FileBean fileBean) {
+		this.fileBean = fileBean;
+	}
 }
