@@ -479,17 +479,20 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setOutOfStock(product.getOutOfStock().booleanValue());
         }
 
-        double price = 0d;
+        Double price = null;
 
         if (product.getMinimumHKPriceProductVariant().getHkPrice() != null){
             price = product.getMinimumHKPriceProductVariant().getHkPrice();
+            solrProduct.setHkPrice(price);
         }
-        solrProduct.setHkPrice(price);
+
         Combo combo = comboDao.getComboById(product.getId());
         if (combo!= null){
             solrProduct.setCombo(true);
             solrProduct.setMarkedPrice(combo.getMarkedPrice());
-            solrProduct.setHkPrice(combo.getHkPrice());
+            if (price == null){
+                solrProduct.setHkPrice(combo.getHkPrice());
+            }
             solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
         }
 
