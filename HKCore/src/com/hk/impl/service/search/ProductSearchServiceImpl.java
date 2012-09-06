@@ -361,6 +361,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         solrQuery.setRows(perPage);
         //We want to push out of stock products to the last page
         solrQuery.addSortField(SolrSchemaConstants.sortByOutOfStock, SolrQuery.ORDER.asc);
+        solrQuery.addSortField("score", SolrQuery.ORDER.desc);
         return solrQuery;
     }
 
@@ -381,7 +382,6 @@ class ProductSearchServiceImpl implements ProductSearchService {
         qf += SolrSchemaConstants.seoDescription + "^0.5 ";*/
 
         qf += SolrSchemaConstants.name + "^2.0 ";
-        qf += SolrSchemaConstants.variantName + "^1.9 ";
         qf += SolrSchemaConstants.brand + "^1.8 ";
         qf += SolrSchemaConstants.category + "^1.6 ";
         qf += SolrSchemaConstants.metaKeywords + "^1.4 ";
