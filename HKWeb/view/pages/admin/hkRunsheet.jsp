@@ -142,7 +142,7 @@
             <table class="zebra_vert">
                 <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>S. NO.</th>
                     <th>AWB Number</th>
                     <th>CNN Number</th>
                     <th>Amount</th>
@@ -156,7 +156,7 @@
                 <c:forEach items="${runsheetAction.runsheetConsignments}" var="consignment" varStatus="ctr">
                     <tr class="consignment-row">
                         <s:hidden class = "changed-consignment-list" name="changedConsignmentList[${ctr.index}]" value="" />
-                        <td><s:hidden name="runsheetConsignments[${ctr.index}]" value="${consignment.id}"/>${consignment.id}</td>
+                        <td><s:hidden name="runsheetConsignments[${ctr.index}]" value="${consignment.id}"/>${ctr.index+1}</td>
                         <td>${consignment.awbNumber}</td>
                         <td>${consignment.cnnNumber}</td>
                         <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
