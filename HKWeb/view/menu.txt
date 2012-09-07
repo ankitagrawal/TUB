@@ -537,10 +537,11 @@
 --/beauty/what-s-new/gift-ideas
 ---/beauty/what-s-new/gift-ideas/for-her
 ---/beauty/what-s-new/gift-ideas/for-him
---/beauty/what-s-new/discounts
 --/beauty/what-s-new/limited-period-offers
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
+--/beauty/what-s-new/organic-skin-care
+--/beauty/what-s-new/organic-make-up
 --/beauty/what-s-new/personal-hygiene
 ---/beauty/what-s-new/personal-hygiene/sanitary-napkins
 ---/beauty/what-s-new/personal-hygiene/tampons
@@ -611,6 +612,7 @@
 --/beauty/bath-body/accessories
 --/beauty/bath-body/fragrances
 -/beauty/make-up
+--/beauty/make-up/organic-make-up
 --/beauty/make-up/face
 ---/beauty/make-up/face/primer
 ---/beauty/make-up/face/concealer
