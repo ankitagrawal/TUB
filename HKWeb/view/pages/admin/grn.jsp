@@ -104,15 +104,18 @@
 					alert("Enter values in correct format.");
 					return false;
 				}
-				var taxCategory;
-				if (taxIdentifier == 'finance') {
+				var taxCategory = valueChangeRow.find('.taxCategory').val();
+				if(taxCategory == null) {
+					taxCategory = 0;
+				}
+				/*if (taxIdentifier == 'finance') {
 					var taxCat = valueChangeRow.find('.taxCategory');
 					var selectedTax = $(taxCat).find('option:selected');
 					taxCategory = selectedTax.text();
 				} else {
 					taxCategory = parseFloat(valueChangeRow.find('.taxCategory').html().trim());
 				}
-
+*/
 				if (isNaN(qty)) {
 					alert("Enter Valid Quantity.");
 					return;
@@ -343,8 +346,11 @@
 			<td>${productVariant.otherRemark}</td>
 			<td>${product.name}<br/>${productVariant.variantName}<br/>${productVariant.optionsCommaSeparated}
 			</td>
-			<td class="taxCategory">
-					<%--<shiro:hasPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
+			<td>
+				<input type="text" class="taxCategory" value="${grnLineItemDto.grnLineItem.sku.tax.value}" disabled="disabled"/>
+			</td>
+			<%--<td class="taxCategory">
+					&lt;%&ndash;<shiro:hasPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
 													  <input type="hidden" value="finance"
 															 class="taxIdentifier"/>
 													  <s:select name="grnLineItems[${ctr.index}].sku.tax"
@@ -355,9 +361,9 @@
 												  </shiro:hasPermission>
 												  <shiro:lacksPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
 													  ${grnLineItemDto.grnLineItem.sku.tax.value}
-												  </shiro:lacksPermission>--%>
+												  </shiro:lacksPermission>&ndash;%&gt;
 					${grnLineItemDto.grnLineItem.sku.tax.value}
-			</td>
+			</td>--%>
 			<td>${hk:askedPOQty(pa.grn.purchaseOrder, productVariant)}</td>
 			<td>
 				<s:text name="grnLineItems[${ctr.index}].qty" value="${grnLineItemDto.grnLineItem.qty}"
