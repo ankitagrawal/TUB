@@ -156,6 +156,11 @@
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Flip Warehouse
             </s:link>)
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
+                                     class="manualEscalateShippingOrder">
+                <s:param name="shippingOrder" value="${shippingOrder}"/>
+                Manual Escalate SO
+            </s:link>)
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.SplitShippingOrderAction"
                                      class="splitShippingOrder">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>

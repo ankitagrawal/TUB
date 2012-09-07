@@ -279,7 +279,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
 	@Override
-	public void splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order) {
+	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order) {
 		Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
 		boolean shippingOrderExists = false;
@@ -324,6 +324,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 			inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
 		}
 
+		return shippingOrderExists;
 	}
 
 
