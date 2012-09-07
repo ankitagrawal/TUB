@@ -119,7 +119,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     public Resolution saveRunsheet(){        
         if(runsheet != null){
-            consignments = new HashSet<Consignment>(runsheetConsignments);
+            consignments = new TreeSet<Consignment>(runsheetConsignments);
             runsheet.setConsignments(consignments);
             if(runsheet.getRunsheetStatus().getId().equals(EnumRunsheetStatus.Close.getId()) && runsheetService.isRunsheetClosable(runsheet) == false){
                 addRedirectAlertMessage(new SimpleMessage("Cannot close runsheet with a consignment status out for delivery"));
@@ -162,6 +162,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 		            return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
 	            }
 	            runsheet.setRunsheetStatus(getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
+	            //mark shipments delivered on healthkart side
+	            runsheetService.markShippingOrderDeliveredAgainstConsignments(runsheet.getConsignments());
             }
             else{
                 addRedirectAlertMessage(new SimpleMessage("cannot close runsheet with consignment status out for delivery or receieved at hub."));
@@ -189,7 +191,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             double totalCODAmount = 0.0;
             List<String> trackingIdsWithoutConsignment = new ArrayList<String>();
             List<String> invalidConsignmentsForRunsheet = new ArrayList<String>();
-            consignments = new HashSet<Consignment>();
+            consignments = new TreeSet<Consignment>();
             String awbWithoutConsignmentString = "";
             String invalidConsignmentsForRunsheetString = "";
             //Getting HK-Delivery Courier Object.
@@ -281,9 +283,9 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
             transferredConsignments = consignmentService.updateTransferredConsignments(consignmentDtoList, agent);
             if(transferredConsignments != null && transferredConsignments.size()>0) {
-            consignments = new HashSet(CollectionUtils.subtract(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList),transferredConsignments));
+            consignments = new TreeSet(CollectionUtils.subtract(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList),transferredConsignments));
             } else {
-                consignments = new HashSet(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList));
+                consignments = new TreeSet(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList));
             }
             runsheetCODParams = consignmentService.getRunsheetCODParams(consignments);
             totalPackets = consignments.size();
