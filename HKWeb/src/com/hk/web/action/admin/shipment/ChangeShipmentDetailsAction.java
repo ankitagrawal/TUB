@@ -50,76 +50,78 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+        return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
     }
 
     public Resolution search() {
         if (gatewayOrderId != null) {
             shippingOrder = shippingOrderService.findByGatewayOrderId(gatewayOrderId);
             if (shippingOrder != null) {
-                if (shippingOrder.getOrderStatus().getId() >= EnumShippingOrderStatus.SO_Shipped.getId()) {
+                if ((shippingOrder.getOrderStatus().getId()).equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
                     originalShippingOrderStatus = shippingOrder.getOrderStatus().getName();
                     shipment = shippingOrder.getShipment();
                     visible = true;
-                    return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+                    return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
                 } else {
-                    addRedirectAlertMessage(new SimpleMessage("Order with given id is not yet shipped"));
-                    return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+                    addRedirectAlertMessage(new SimpleMessage("SO is Already " + shippingOrder.getOrderStatus().getName()));
+                    return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
                 }
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Order with given id does not exist"));
-                return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+                return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please enter gateway order Id"));
-            return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+            return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
         }
     }
 
     public Resolution save() {
-        if (trackingId == null) {
-            addRedirectAlertMessage(new SimpleMessage("Enter Tracking ID"));
-            return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
-        }
+//        if (trackingId == null) {
+//            addRedirectAlertMessage(new SimpleMessage("Enter Tracking ID"));
+//            return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+//        }
 
+	    // Shipment Edit diabled
 
-        Awb attachedAwb = shipment.getAwb();
-        Awb finalAwb = attachedAwb;
-        if ((!(attachedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
-                ((!(shipment.getCourier().equals(attachedCourier))))) {
+//        Awb attachedAwb = shipment.getAwb();
+//        Awb finalAwb = attachedAwb;
+//        if ((!(attachedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
+//                ((!(shipment.getCourier().equals(attachedCourier))))) {
+//
+//            Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
+//            if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
+//                if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
+//                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
+//                    return new RedirectResolution(ChangeShipmentDetailsAction.class);
+//                }
+//                if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
+//                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
+//                            "  : " + shipment.getCourier().getName() + "  you are Trying to use COD tracking id with NON COD --->   TRY AGAIN "));
+//                    return new RedirectResolution(ChangeShipmentDetailsAction.class);
+//                }
+//
+//                finalAwb = awbFromDb;
+//                finalAwb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
+//            } else {
+//                Awb awb = new Awb();
+//                awb.setAwbNumber(trackingId.trim());
+//                awb.setAwbBarCode(trackingId.trim());
+//                awb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
+//                awb.setCourier(shipment.getCourier());
+//                awb.setCod(shippingOrder.isCOD());
+//                awb.setWarehouse(shippingOrder.getWarehouse());
+//                awb = awbService.save(awb);
+//                finalAwb = awb;
+//            }
+//            //Todo Seema -- Awb  detached from Shipment, their status should not change : Need to decide whether awb will be deleted or made available
+//            //attachedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+//            //awbService.save(attachedAwb);
+//            shipment.setAwb(finalAwb);
+//        }
+//
+//        shippingOrder.setShipment(shipment);
 
-            Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
-            if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
-                if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
-                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
-                    return new RedirectResolution(ChangeShipmentDetailsAction.class);
-                }
-                if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
-                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
-                            "  : " + shipment.getCourier().getName() + "  you are Trying to use COD tracking id with NON COD --->   TRY AGAIN "));
-                    return new RedirectResolution(ChangeShipmentDetailsAction.class);
-                }
-
-                finalAwb = awbFromDb;
-                finalAwb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
-            } else {
-                Awb awb = new Awb();
-                awb.setAwbNumber(trackingId.trim());
-                awb.setAwbBarCode(trackingId.trim());
-                awb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
-                awb.setCourier(shipment.getCourier());
-                awb.setCod(shippingOrder.isCOD());
-                awb.setWarehouse(shippingOrder.getWarehouse());
-                awb = awbService.save(awb);
-                finalAwb = awb;
-            }
-            //Todo Seema -- Awb  detached from Shipment, their status should not change : Need to decide whether awb will be deleted or made available
-            //attachedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-            //awbService.save(attachedAwb);
-            shipment.setAwb(finalAwb);
-        }
-
-        shippingOrder.setShipment(shipment);
 
         ShippingOrderStatus shippingOrderStatus = shippingOrder.getOrderStatus();
         Long shippingOrderStatusId = shippingOrderStatus.getId();
@@ -128,9 +130,13 @@ public class ChangeShipmentDetailsAction extends BaseAction {
         if (!shippingOrderStatusName.equals(originalShippingOrderStatus)) {
             if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Delivered.getId())) {
                 adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
-            } else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
-                adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
-            } else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Lost.getId())) {
+            }
+//
+//            else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
+//                adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
+//            }
+
+            else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Lost.getId())) {
                 adminShippingOrderService.markShippingOrderAsLost(shippingOrder);
             }
             if (!originalShippingOrderStatus.equals(shippingOrderStatusName)) {
@@ -140,7 +146,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
         }
         shippingOrderService.save(shippingOrder);
         addRedirectAlertMessage(new SimpleMessage("Changes Saved."));
-        return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+        return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
     }
 
     public ShippingOrder getShippingOrder() {
