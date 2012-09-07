@@ -101,4 +101,5 @@ public class PermissionConstants {
     public static final String VIEW_HUB                              ="VIEW_HUB";
     public static final String ADD_HK_DELIVERY_AGENT                 ="ADD_HK_DELIVERY_AGENT";
 	public static final String VIEW_CONSIGNMENT_TRACKING             ="VIEW_CONSIGNMENT_TRACKING";
+	public static final String ADD_HUB                               ="ADD_HUB";
 }
