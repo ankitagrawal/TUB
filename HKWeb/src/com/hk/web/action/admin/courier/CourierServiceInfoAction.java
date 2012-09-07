@@ -138,6 +138,9 @@ public class CourierServiceInfoAction extends BaseAction {
                         tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());
                         tmpObj2.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
                         tmpObj2.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());
+                        if (courierServiceInfo.isCodAvailableOnGroundShipping()){
+                           tmpObj2.setCodAvailable(true);
+                        }
                         courierServiceInfoDao.save(tmpObj2);
                     }
                 } else if (courierServiceInfo != null) {
@@ -169,7 +172,10 @@ public class CourierServiceInfoAction extends BaseAction {
             if (courierServiceInfoLocal != null) {
                 courierServiceInfoLocal.setCodAvailable(courierServiceInfo.isCodAvailable());
                 courierServiceInfoLocal.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
-                courierServiceInfoLocal.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());                
+                courierServiceInfoLocal.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());
+                if(courierServiceInfo.isCodAvailableOnGroundShipping()){
+                   courierServiceInfoLocal.setCodAvailable(true); 
+                }
                 courierServiceInfoDao.save(courierServiceInfoLocal);
             } else {
                 courierServiceInfo.setPincode(pincodeObj);

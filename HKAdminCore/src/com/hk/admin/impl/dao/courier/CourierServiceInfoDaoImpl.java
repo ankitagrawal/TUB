@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
@@ -160,4 +161,5 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
            return courierList;
        }
 
+    
 }

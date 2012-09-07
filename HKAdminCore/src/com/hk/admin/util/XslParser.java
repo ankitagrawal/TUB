@@ -475,11 +475,13 @@ public class XslParser {
               courierServiceInfo.setRoutingCode(getCellValue(XslConstants.ROUTING_CODE, rowMap, headerMap));
               String groundShippingAvailable = getCellValue(XslConstants.GROUND_SHIPPING_AVAILABLE, rowMap, headerMap);
               boolean isGroundShippingAvailable =  StringUtils.isNotBlank(groundShippingAvailable) && groundShippingAvailable.trim().toLowerCase().equals("y") ? true : false;
-              courierServiceInfo.setGroundShippingAvailable(isGroundShippingAvailable);               
+              courierServiceInfo.setGroundShippingAvailable(isGroundShippingAvailable);
               String codAvailableOnGroundShipping = getCellValue(XslConstants.COD_ON_GROUND_SHIPPING, rowMap, headerMap);
               boolean iscodAvailableOnGroundShipping =  StringUtils.isNotBlank(codAvailableOnGroundShipping) && codAvailableOnGroundShipping.trim().toLowerCase().equals("y") ? true : false;
               courierServiceInfo.setCodAvailableOnGroundShipping(iscodAvailableOnGroundShipping);
-
+               if (iscodAvailableOnGroundShipping)  {
+                 courierServiceInfo.setCodAvailable(true);
+              }  
               courierServiceInfoList.add(courierServiceInfo);
             }
           }
