@@ -37,4 +37,6 @@ public interface RunSheetService {
     public Runsheet getOpenRunsheetForAgent(User agent);
 
     public Runsheet updateRunsheetParams(Runsheet runsheet, ConsignmentDto consignmentDto);
+
+	public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList);
 }

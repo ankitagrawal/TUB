@@ -162,6 +162,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 		            return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
 	            }
 	            runsheet.setRunsheetStatus(getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
+	            //mark shipments delivered on healthkart side
+	            runsheetService.markShippingOrderDeliveredAgainstConsignments(runsheet.getConsignments());
             }
             else{
                 addRedirectAlertMessage(new SimpleMessage("cannot close runsheet with consignment status out for delivery or receieved at hub."));
