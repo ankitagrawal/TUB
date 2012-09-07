@@ -153,15 +153,40 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 		return false;
 	}
 
+	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
+		logger.debug("Trying to manually escalate order#" + shippingOrder.getId());
+		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+			for (LineItem lineItem : shippingOrder.getLineItems()) {
+				Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This
+				// is after including placed order qty
+				logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
+				ProductVariant productVariant = lineItem.getSku().getProductVariant();
+				logger.debug("jit: " + productVariant.getProduct().isJit());
+				if (productVariant.getProduct().isDropShipping()) {
+					String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
+					logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+							getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
+					return false;
+				}else if (availableUnbookedInv < 0) {
+					String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
+							+ availableUnbookedInv;
+					logger.info("Could not manually escalate order as availableUnbookedInv of sku[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv + " for shipping order id "
+							+ shippingOrder.getId());
+					logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+							getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
 	@Transactional
 	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder) {
 		if (isShippingOrderAutoEscalable(shippingOrder)) {
 			shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder, true);
 		}
-		/*
-				 * else { shippingOrder.setOrderStatus(orderStatusService.find(EnumOrderStatus.ActionAwaiting));
-				 * getShippingOrderDao().save(shippingOrder); }
-				 */
 		return shippingOrder;
 	}
 
@@ -174,7 +199,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 		} else {
 			logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue);
 		}
-
 		getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
 		return shippingOrder;
 	}
