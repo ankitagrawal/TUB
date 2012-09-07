@@ -388,7 +388,7 @@
                         <div class="floatright">
                             <c:if test="${order.orderStatus.id == orderStatusPlaced}">
                                 (<s:link beanclass="com.hk.web.action.admin.order.split.BulkOrderSplitterAction"
-                                         event="splitSingleOrder" target="_blank" style="color:red">
+                                         event="splitSingleOrder">
                                 Split Order
                                 <s:param name="order" value="${order}"/>
                             </s:link>)

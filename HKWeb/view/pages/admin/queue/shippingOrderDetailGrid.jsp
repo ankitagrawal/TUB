@@ -157,7 +157,7 @@
                 Flip Warehouse
             </s:link>)
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
-                                     class="manualEscalateShippingOrder">
+                                     event="manualEscalateShippingOrder">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Manual Escalate SO
             </s:link>)
