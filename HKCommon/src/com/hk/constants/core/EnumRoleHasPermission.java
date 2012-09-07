@@ -182,14 +182,27 @@ public enum EnumRoleHasPermission {
                     EnumPermission.SEARCH_USERS,
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
-                    EnumPermission.AWARD_REWARD_POINTS,
                     EnumPermission.HK_EMPLOYEE,
                     EnumPermission.CREATE_REPLACEMENT_ORDER,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
             )
     ),
 
-    CUSTOMER_SUPPORT_L2(
+	REWARD_POINT_MANAGER_L1(
+			EnumRole.REWARD_POINT_MANAGER_L1,
+			Arrays.asList(
+					EnumPermission.AWARD_REWARD_POINTS
+			)
+	),
+
+	REWARD_POINT_MANAGER_L2(
+			EnumRole.REWARD_POINT_MANAGER_L2,
+			Arrays.asList(
+					EnumPermission.MODERATE_REWARD_POINTS
+			)
+	),
+
+	CUSTOMER_SUPPORT_L2(
             EnumRole.CUSTOMER_SUPPORT_L2,
             Arrays.asList(
                     EnumPermission.CRM_REPORTS,
@@ -210,6 +223,7 @@ public enum EnumRoleHasPermission {
                     EnumPermission.COD_PERFORMANCE_REPORTS,
                     EnumPermission.SALES_REPORT,
                     EnumPermission.MODERATE_REWARD_POINTS,
+                    EnumPermission.AWARD_REWARD_POINTS,
                     EnumPermission.EDIT_LINEITEM,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
             )
@@ -235,7 +249,6 @@ public enum EnumRoleHasPermission {
                     EnumPermission.SEARCH_ORDERS,
                     EnumPermission.SEARCH_SUBSCRIPTIONS,
                     EnumPermission.SEARCH_USERS,
-                    EnumPermission.AWARD_REWARD_POINTS,
                     EnumPermission.VIEW_OFFER,
                     EnumPermission.VIEW_COUPON,
                     EnumPermission.DOWNLOAD_PRDOUCT_CATALOG,

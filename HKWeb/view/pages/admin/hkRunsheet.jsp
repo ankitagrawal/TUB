@@ -172,12 +172,12 @@
                         </td>
                         <td>
                              <c:forEach items="${runsheetAction.consignmentStatuses}" var="consignmentStatus" varStatus="statusCtr">
-                                 <s:link href="#" class="linkbutton consignment-status-button" id= "status-${consignment.id}" name="${consignmentStatus.id}">
+                                 <a href="#" class="linkbutton consignment-status-button" id= "status-${consignment.id}" name="${consignmentStatus.id}">
                                     ${consignmentStatus .status}
                                      <c:if test="${statusCtr.index == 3}" >
                                          <br />
                                      </c:if>
-                                 </s:link>&nbsp;&nbsp;
+                                 </a>&nbsp;&nbsp;
                              </c:forEach>
                         </td>
                     </tr>
