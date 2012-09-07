@@ -16,7 +16,7 @@ public interface RunSheetService {
 
     public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount);
 
-    public void saveRunSheet(Runsheet runsheet);
+    public Runsheet saveRunSheet(Runsheet runsheet);
 
     public void saveRunSheet(Runsheet runsheet, List<Consignment> changedConsignmentList);
 

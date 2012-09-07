@@ -10,6 +10,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -49,7 +51,7 @@ public class HKDRunsheetManager {
     private ConsignmentService consignmentService;
 
 
-    public File generateWorkSheetXls(String xslFilePath,List<Consignment> consignmentList, String assignedTo, Double totalCODAmount, int totalPackets, int totalCODPackets) throws NullPointerException, IOException, ParseException {
+    public File generateWorkSheetXls(String xslFilePath, Set<Consignment> consignments, String assignedTo, Double totalCODAmount, int totalPackets, int totalCODPackets) throws NullPointerException, IOException, ParseException {
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
@@ -58,6 +60,7 @@ public class HKDRunsheetManager {
         Row row = null;
         Cell cell = null;
         int rowCounter = 0;
+        int serialCounter = 0;
         int totalColumnNoInSheet1 = 6;
         InputStream is = null;
         byte[] bytes = null;
@@ -206,7 +209,9 @@ public class HKDRunsheetManager {
         setCellValue(row, 5, CourierConstants.HKD_WORKSHEET_REMARKS);
         addEmptyLine(row, sheet1, ++rowCounter, cell);
 
-        for (int index = 0; index < consignmentList.size(); index++) {
+        /*for (int index = 0; index < consignmentList.size(); index++) {*/
+            for(Consignment consignment : consignments) {
+            ++serialCounter;
             rowCounter++;
             row = sheet1.createRow(rowCounter);
             for (int columnNo = 0; columnNo < totalColumnNoInSheet1; columnNo++) {
@@ -214,13 +219,13 @@ public class HKDRunsheetManager {
                 cell = row.createCell(columnNo);
                 cell.setCellStyle(style_data);
             }
-             shippingOrder = consignmentService.getShippingOrderFromConsignment(consignmentList.get(index));
+             shippingOrder = consignmentService.getShippingOrderFromConsignment(consignment);
             addressObj = shippingOrder.getBaseOrder().getAddress();
             payment = shippingOrder.getBaseOrder().getPayment();
             store = shippingOrder.getBaseOrder().getStore();
 
             //fetching contact name,contact-number for COD/Non COD
-            paymentMode = consignmentList.get(index).getPaymentMode();
+            paymentMode = consignment.getPaymentMode();
             if (paymentMode.equalsIgnoreCase("COD")) {
                 if (store.getId().equals(StoreService.MIH_STORE_ID)) {
                     name = addressObj.getName();
@@ -241,12 +246,12 @@ public class HKDRunsheetManager {
             line2 = (line2 == null) ? "" : line2;
             city = addressObj.getCity();
             pincode = addressObj.getPin();
-            paymentAmt = consignmentList.get(index).getAmount();
+            paymentAmt = consignment.getAmount();
             address = "Name:" + name + "\n" + "Address:" + line1 + "," + "\n" + line2 + "," + "\n" + city + "-" + pincode + "\n" + "Phone:" + phone;
             receivedDetails = "Name:" + "\n" + "Relation:" + "\n" + "Mobile No.:" + "\n" + "Received Date,Time:" + "\n" + "Sign";
 
             //adding barcode image to cell
-            barcodePath = barcodeGenerator.getBarcodePath(consignmentList.get(index).getCnnNumber(), 1.0f, 150, false);
+            barcodePath = barcodeGenerator.getBarcodePath(consignment.getCnnNumber(), 1.0f, 150, false);
 
             //add picture data to this workbook.
             is = new FileInputStream(barcodePath);
@@ -265,7 +270,7 @@ public class HKDRunsheetManager {
             pict.resize(8.0);
 
 
-            sNo = index + 1 + "";
+            sNo = serialCounter+ "";
             setCellValue(row, 0, sNo);
             // setCellValue(row, 1, awbNumber);
             anchor.setDx1(10);
