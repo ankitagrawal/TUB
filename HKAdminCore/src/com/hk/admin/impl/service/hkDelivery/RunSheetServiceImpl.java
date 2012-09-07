@@ -53,9 +53,9 @@ public class RunSheetServiceImpl implements RunSheetService {
     }
 
     @Override
-    public void saveRunSheet(Runsheet runsheet) {
+    public Runsheet saveRunSheet(Runsheet runsheet) {
         runsheet.setUpdateDate(new Date());
-        runsheetDao.saveRunSheet(runsheet);
+        return runsheetDao.saveRunSheet(runsheet);
     }
 
     @Override

@@ -119,7 +119,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     public Resolution saveRunsheet(){        
         if(runsheet != null){
-            consignments = new HashSet<Consignment>(runsheetConsignments);
+            consignments = new TreeSet<Consignment>(runsheetConsignments);
             runsheet.setConsignments(consignments);
             if(runsheet.getRunsheetStatus().getId().equals(EnumRunsheetStatus.Close.getId()) && runsheetService.isRunsheetClosable(runsheet) == false){
                 addRedirectAlertMessage(new SimpleMessage("Cannot close runsheet with a consignment status out for delivery"));
@@ -189,7 +189,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             double totalCODAmount = 0.0;
             List<String> trackingIdsWithoutConsignment = new ArrayList<String>();
             List<String> invalidConsignmentsForRunsheet = new ArrayList<String>();
-            consignments = new HashSet<Consignment>();
+            consignments = new TreeSet<Consignment>();
             String awbWithoutConsignmentString = "";
             String invalidConsignmentsForRunsheetString = "";
             //Getting HK-Delivery Courier Object.
@@ -281,9 +281,9 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
             transferredConsignments = consignmentService.updateTransferredConsignments(consignmentDtoList, agent);
             if(transferredConsignments != null && transferredConsignments.size()>0) {
-            consignments = new HashSet(CollectionUtils.subtract(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList),transferredConsignments));
+            consignments = new TreeSet(CollectionUtils.subtract(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList),transferredConsignments));
             } else {
-                consignments = new HashSet(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList));
+                consignments = new TreeSet(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList));
             }
             runsheetCODParams = consignmentService.getRunsheetCODParams(consignments);
             totalPackets = consignments.size();
@@ -300,11 +300,11 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 // Creating Runsheet object.
                 runsheetObj = runsheetService.createRunsheet(hub, consignments, getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Open.getId()), agent, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
                 // Saving Runsheet in db.
-                runsheetService.saveRunSheet(runsheetObj);
+                runsheetObj = runsheetService.saveRunSheet(runsheetObj);
                 //making corresponding entry in consignment tracking.
-                consignmentService.saveConsignmentTracking(consignmentService.createConsignmentTracking(hub, deliveryHub, loggedOnUser, new ArrayList<Consignment>(consignments), consignmentLifecycleStatus));
+                consignmentService.saveConsignmentTracking(consignmentService.createConsignmentTracking(hub, deliveryHub, loggedOnUser, new ArrayList<Consignment>(runsheetObj.getConsignments()), consignmentLifecycleStatus));
                 // generating Xls file.
-                xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), new ArrayList(consignments), agent.getName(), totalCODAmount, totalPackets, totalCODPackets);
+                xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), runsheetObj.getConsignments(), agent.getName(), totalCODAmount, totalPackets, totalCODPackets);
             } catch (IOException ioe) {
                 logger.info("IOException Occurred" + ioe.getMessage());
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
@@ -337,7 +337,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         try {
             xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
             // generating Xls file.
-            xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), new ArrayList<Consignment>(consignments), runsheet.getAgent().getName(), (Double) runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_AMT), consignments.size(), (Integer) runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_PKTS));
+            xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), consignments, runsheet.getAgent().getName(), (Double) runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_AMT), consignments.size(), (Integer) runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_PKTS));
         } catch (IOException ioe) {
             logger.debug("IOException Occurred:" + ioe.getMessage());
             addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
