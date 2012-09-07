@@ -21,7 +21,7 @@
                     </tr>
                     <tr>
                         <td>Pincode:<span class='aster' title="this field is required">*</span></td>
-                        <td><s:text name="pincode" value="${hubAction.pincode}" class="pincode"/></td>
+                        <td><s:text name="pincode" value="${hubAction.pinlcode}" class="pincode"/></td>
 
                     </tr>
                     <tr>
