@@ -26,8 +26,13 @@ import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.hk.admin.util.BarcodeGenerator;
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.user.Address;
+import com.hk.domain.payment.Payment;
+import com.hk.domain.store.Store;
 import com.hk.pact.service.store.StoreService;
 
 
@@ -40,9 +45,11 @@ public class HKDRunsheetManager {
     private String barcodePath;
     @Autowired
     private BarcodeGenerator barcodeGenerator;
+    @Autowired
+    private ConsignmentService consignmentService;
 
 
-    public File generateWorkSheetXls(String xslFilePath, List<ShippingOrder> shippingOrderList, String assignedTo, Double totalCODAmount, int totalPackets, int totalCODPackets) throws NullPointerException, IOException, ParseException {
+    public File generateWorkSheetXls(String xslFilePath,List<Consignment> consignmentList, String assignedTo, Double totalCODAmount, int totalPackets, int totalCODPackets) throws NullPointerException, IOException, ParseException {
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
@@ -75,6 +82,10 @@ public class HKDRunsheetManager {
         String receivedDetails = null;
         String sNo = null;
         int totalPrepaidPackets = totalPackets - totalCODPackets;
+        ShippingOrder shippingOrder = null;
+        Address addressObj = null;
+        Payment payment = null;
+        Store store = null;
 
 
         //creating different styles for different elements of excel.
@@ -195,7 +206,7 @@ public class HKDRunsheetManager {
         setCellValue(row, 5, CourierConstants.HKD_WORKSHEET_REMARKS);
         addEmptyLine(row, sheet1, ++rowCounter, cell);
 
-        for (int index = 0; index < shippingOrderList.size(); index++) {
+        for (int index = 0; index < consignmentList.size(); index++) {
             rowCounter++;
             row = sheet1.createRow(rowCounter);
             for (int columnNo = 0; columnNo < totalColumnNoInSheet1; columnNo++) {
@@ -203,34 +214,39 @@ public class HKDRunsheetManager {
                 cell = row.createCell(columnNo);
                 cell.setCellStyle(style_data);
             }
+             shippingOrder = consignmentService.getShippingOrderFromConsignment(consignmentList.get(index));
+            addressObj = shippingOrder.getBaseOrder().getAddress();
+            payment = shippingOrder.getBaseOrder().getPayment();
+            store = shippingOrder.getBaseOrder().getStore();
 
             //fetching contact name,contact-number for COD/Non COD
-            paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
+            paymentMode = consignmentList.get(index).getPaymentMode();
             if (paymentMode.equalsIgnoreCase("COD")) {
-                if (shippingOrderList.get(index).getBaseOrder().getStore().getId().equals(StoreService.MIH_STORE_ID)) {
-                    name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
-                    phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
+                if (store.getId().equals(StoreService.MIH_STORE_ID)) {
+                    name = addressObj.getName();
+                    phone = addressObj.getPhone();
                 } else {
-                    name = shippingOrderList.get(index).getBaseOrder().getPayment().getContactName();
-                    phone = shippingOrderList.get(index).getBaseOrder().getPayment().getContactNumber();
+                    name = payment.getContactName();
+                    phone = payment.getContactNumber();
                 }
+
             } else {
-                name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
-                phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
+                name = addressObj.getName();
+                phone = addressObj.getPhone();
             }
 
             name = name.toUpperCase();
-            line1 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine1();
-            line2 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine2();
+            line1 = addressObj.getLine1();
+            line2 = addressObj.getLine2();
             line2 = (line2 == null) ? "" : line2;
-            city = shippingOrderList.get(index).getBaseOrder().getAddress().getCity();
-            pincode = shippingOrderList.get(index).getBaseOrder().getAddress().getPin();
-            paymentAmt = shippingOrderList.get(index).getAmount();
+            city = addressObj.getCity();
+            pincode = addressObj.getPin();
+            paymentAmt = consignmentList.get(index).getAmount();
             address = "Name:" + name + "\n" + "Address:" + line1 + "," + "\n" + line2 + "," + "\n" + city + "-" + pincode + "\n" + "Phone:" + phone;
             receivedDetails = "Name:" + "\n" + "Relation:" + "\n" + "Mobile No.:" + "\n" + "Received Date,Time:" + "\n" + "Sign";
 
             //adding barcode image to cell
-            barcodePath = barcodeGenerator.getBarcodePath(shippingOrderList.get(index).getGatewayOrderId(), 1.0f, 150, false);
+            barcodePath = barcodeGenerator.getBarcodePath(consignmentList.get(index).getCnnNumber(), 1.0f, 150, false);
 
             //add picture data to this workbook.
             is = new FileInputStream(barcodePath);
