@@ -89,12 +89,18 @@ public class CourierServiceImpl implements CourierService {
         } else if (order.getPayment().getPaymentMode().equals(getPaymentService().findPaymentMode(EnumPaymentMode.COD))) {
             isCOD = true;
         }
-        return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD);
+//        return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD);
+        return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD, false);
     }
 
     public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD) {
-        return getCourierServiceInfoDao().getCouriersForPincode(pinCode, isCOD);
+//        return getCourierServiceInfoDao().getCouriersForPincode(pinCode, isCOD);
+        return getCourierServiceInfoDao().getCouriersForPincode(pinCode, isCOD, false);
     }
+
+    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping) {
+           return getCourierServiceInfoDao().getCouriersForPincode(pinCode, isCOD, isGroundShipping);
+       }
 
     public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD) {
         Warehouse warehouse = getUserService().getWarehouseForLoggedInUser();

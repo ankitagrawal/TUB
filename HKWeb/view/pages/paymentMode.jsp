@@ -181,15 +181,16 @@
     <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
         <div id="tabs_content4" class="tab_content" style="display: none;">
             <c:choose>
-                <c:when test="${orderSummary.groundShippingAllowed && ! orderSummary.codAllowedOnGroundShipping  }">
-                    <h4 style="text-align: center;">We are sorry Cash on Delivery is not allowed on one of the products in your cart</h4>
+                <c:when test="${orderSummary.codAllowed && hk:isCodAllowedOnOrder(orderSummary.order)}">
+                    <c:if test="${orderSummary.groundShippingAllowed && ! orderSummary.codAllowedOnGroundShipping  }">
+                        <h4 style="text-align: center;">We are sorry Cash on Delivery is not allowed on one of the
+                            products in your cart</h4>
 
-                    <p>COD is not available for your delivery
-                        location (Pincode : <strong>${orderSummary.order.address.pin}</strong>).
-                        <br/>
-                        We provide cash on delivery option for select PIN codes only.</p>
-                </c:when>
-                 <c:when test="${orderSummary.codAllowed && hk:isCodAllowedOnOrder(orderSummary.order)}">
+                        <p>COD is not available for your delivery
+                            location (Pincode : <strong>${orderSummary.order.address.pin}</strong>).
+                            <br/>
+                            We provide cash on delivery option for select PIN codes only.</p>
+                    </c:if>
                     <div class="grid_5">
                         <h4>Order Total</h4>
                         <br />

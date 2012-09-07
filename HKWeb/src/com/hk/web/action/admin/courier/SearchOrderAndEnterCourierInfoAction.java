@@ -94,7 +94,22 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             getContext().getValidationErrors().add("3", new SimpleError("Pincode is invalid, It cannot be packed"));
         } else {
             boolean isCod = shippingOrder.isCOD();
-            availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+//            availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+//  groundShipping logic Starts---
+            boolean    isGroundShipped = false;
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
+                   isGroundShipped = true;
+                    break;
+                }
+            }
+             if (isGroundShipped) {
+                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped);
+             }else{
+             availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false);
+              }
+//  ground shipping logic ends
+
             if (availableCouriers == null || availableCouriers.isEmpty()) {
                 getContext().getValidationErrors().add("4", new SimpleError("No Couriers are applicable on this pincode, Please contact logistics, Order cannot be packed"));
             }
@@ -134,7 +149,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
-                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+//                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod , false);
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();

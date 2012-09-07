@@ -351,8 +351,8 @@
       height: 400px;
       top: 50%;
       left: 50%;
-      margin-left: -190px;
-      margin-top: -100px;
+      margin-left: -265px;
+      margin-top: -180px;
       background-color: #ffffff;
       border: 2px solid #336699;
       padding: 0px;

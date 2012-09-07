@@ -26,7 +26,7 @@ public interface CourierService {
 
     public List<Courier> getAvailableCouriers(Order order);
 
-    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD);
+//    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD);
 
     public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD);
 
@@ -37,4 +37,6 @@ public interface CourierService {
     public boolean isGroundShippingAllowed (String pin);
 
     public boolean isCodAllowedOnGroundShipping(String pin);
+
+     public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping);
 }

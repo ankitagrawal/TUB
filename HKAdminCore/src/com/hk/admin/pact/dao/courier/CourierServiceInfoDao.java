@@ -20,7 +20,7 @@ public interface CourierServiceInfoDao extends BaseDao {
 
   public boolean isCodAvailable(String pincode);
 
-  public List<Courier> getCouriersForPincode(String pincode, boolean forCOD);
+//  public List<Courier> getCouriersForPincode(String pincode, boolean forCOD);
 
   public Courier getDefaultCourierForPincode(Pincode pincode, boolean forCOD, Warehouse warehouse);
 
@@ -30,5 +30,7 @@ public interface CourierServiceInfoDao extends BaseDao {
 
   public boolean isGroundShippingAvailable(String pincode);
 
-  public boolean isCodAvailableOnGroundShipping(String pincode);
+  public boolean isCodAvailableOnGroundShipping(String pincode);  
+
+   public List<Courier> getCouriersForPincode(String pincode, boolean forCOD , boolean forGroundShipping);
 }
