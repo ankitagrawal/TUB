@@ -297,6 +297,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 		}
 
 		if (shippingOrders != null && shippingOrders.size() > 0) {
+			shippingOrderExists = true;
 			// save order with InProcess status since shipping orders have been created
 			order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
 			order.setShippingOrders(shippingOrders);
