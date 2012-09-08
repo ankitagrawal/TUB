@@ -1,4 +1,4 @@
-<%--<% ----%>
+
 
 <%--<%@ page import="com.akube.framework.util.FormatUtils" %>--%>
 <%--<%@ page import="com.hk.pact.dao.MasterDataDao" %>--%>
@@ -119,7 +119,7 @@
               <%--<div class="clear"></div>--%>
                 <%--//todo ps need to rethink--%>
               <%--<!--TO DO we will change it later on change --  -->--%>
-              <%--<s:label name="trackingId" class="label">Tracking Id</s:label>               --%>
+              <%--<s:label name="trackingId" class="label">Tracking Id</s:label>--%>
               <%--<s:text name="trackingId" id="trackingId" value="${csda.shipment.awb.awbNumber}" style="width:170px"--%>
                       <%--class="text fields"/>--%>
 
