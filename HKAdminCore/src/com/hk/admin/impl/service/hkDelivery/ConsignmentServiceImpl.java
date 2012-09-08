@@ -256,4 +256,9 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         saveConsignments(consignmentList);
         return consignmentList;
     }
+
+    @Override
+    public ShippingOrder getShippingOrderFromConsignment(Consignment consignment) {
+        return consignmentDao.getShippingOrderFromConsignment(consignment);
+    }
 }

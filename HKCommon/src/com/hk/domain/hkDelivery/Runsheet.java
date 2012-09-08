@@ -3,10 +3,13 @@ package com.hk.domain.hkDelivery;
 
 
 import com.hk.domain.user.User;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,12 +80,13 @@ public class Runsheet implements java.io.Serializable {
     @Column(name = "remarks", length = 16777215)
     private String remarks;
 
-   @Column(name="distance_traveled")
-   private Double distanceTraveled;
+    @Column(name="distance_traveled")
+    private Double distanceTraveled;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "runsheet_id")
-    private Set<Consignment> consignments = new HashSet<Consignment>(0);
+    @Sort(type = SortType.NATURAL)
+    private Set<Consignment> consignments = new TreeSet<Consignment>();
 
     public Long getId() {
         return this.id;

@@ -96,7 +96,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.UPDATE_DELIVERY_QUEUE,
                     EnumPermission.SELECT_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+		            EnumPermission.ADD_HUB
             )
     ),
 
@@ -425,7 +426,8 @@ public enum EnumRoleHasPermission {
 
                     EnumPermission.SELECT_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+		            EnumPermission.ADD_HUB
             )
     ),
     HK_DELIVERY_HUB_MANAGER(
