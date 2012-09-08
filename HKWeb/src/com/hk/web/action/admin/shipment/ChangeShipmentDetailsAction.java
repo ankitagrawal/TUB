@@ -167,12 +167,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 
 
 	public Resolution markLost() {
-		shippingOrder.setShipment(shipment); 	
-            if ((shipment.getShipDate().after(shipment.getDeliveryDate()) ) || (shipment.getDeliveryDate()).after(new Date())) {
-                Calendar lostDateAsToday = Calendar.getInstance();
-                lostDateAsToday.setTime(new Date());
-                shipment.setDeliveryDate(lostDateAsToday.getTime());
-            }
+		shippingOrder.setShipment(shipment);
 		adminShippingOrderService.markShippingOrderAsLost(shippingOrder);
 		comments = "Status changed from " + originalShippingOrderStatus + " to " + shippingOrder.getOrderStatus().getName();
 		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
