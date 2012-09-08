@@ -86,7 +86,8 @@ public class ShippingOrderAction extends BaseAction {
 	public Resolution manualEscalateShippingOrder() {
 		boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
 		String message = "";
-		if (isManualEscalable) {
+		if (true) {
+		//if (isManualEscalable) {
 			message = "shipping order manually escalated";
 			shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
 
