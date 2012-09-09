@@ -19,17 +19,17 @@ import com.hk.admin.dto.accounting.InvoiceLineItemDto;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.CourierServiceInfo;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ReplacementOrder;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
@@ -106,7 +106,7 @@ public class InvoicePDFGenerator {
         else{
           invoiceDto = new InvoiceDto(shippingOrder, null);
         }
-        barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(),1.0f, 150);
+        barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(),1.0f, 150, false);
         Image barcodeImage = Image.getInstance(barcodePath);
         String routingCode = null;
         Address address = addressDao.get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());

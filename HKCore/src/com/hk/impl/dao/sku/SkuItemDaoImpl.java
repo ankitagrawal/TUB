@@ -1,17 +1,14 @@
 package com.hk.impl.dao.sku;
 
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.sku.SkuItemDao;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuGroup;
+import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.sku.SkuItemDao;
 
 @SuppressWarnings("unchecked")
 @Repository

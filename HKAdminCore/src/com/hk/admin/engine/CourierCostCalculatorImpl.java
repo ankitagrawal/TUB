@@ -7,7 +7,10 @@ import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.comparator.MapValueComparator;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.*;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.CourierGroup;
+import com.hk.domain.courier.CourierPricingEngine;
+import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
@@ -80,7 +83,10 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
             Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
             for (Courier courier : couriers) {
                 CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
-                totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
+	            if (courierPricingInfo == null) {
+		            return null;
+	            }
+	            totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
                 logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
                 courierCostingMap.put(courier, totalCost.longValue());
             }

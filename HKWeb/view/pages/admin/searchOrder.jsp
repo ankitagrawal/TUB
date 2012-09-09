@@ -46,6 +46,11 @@
     <%--
     Cancel order
     --%>
+
+        $('.cancelOrderButton').click(function(){
+            var proceed = confirm('Are you sure?');
+            if (!proceed) return false;
+        });
       $('.cancelOrderLink').click(function() {
         var proceed = confirm('Are you sure?');
         if (!proceed) return false;
@@ -291,14 +296,11 @@
       Remark:
       <s:textarea name="cancellationRemark" style="height:100px"/>
       <div class="buttons">
-        <s:submit name="pre" value="Cancel" class="cancelOrderButton"/>
+        <s:submit name="pre" value="Cancel" class="cancelOrderButton" />
       </div>
     </s:form>
     <script type="text/javascript">
-      $('.cancelOrderButton').click(function() {
-        var proceed = confirm('Are you sure?');
-        if (!proceed) return false;
-      });
+
       $('.cancelOrderForm').ajaxForm({dataType: 'json', success: _cancelOrder});
 
       function _cancelOrder(res) {
@@ -481,6 +483,9 @@
     <c:if test="${empty order.comments}">Comments</c:if>
     <s:param name="order" value="${order}"/>
   </s:link>
+    <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT_L3_ADMINS%>">
+      Cod Converter Link  ${hk:getCodConverterLink(order)}
+    </shiro:hasAnyRoles>
 </td>
 <td class="has_table">
   <c:if test="${not empty order.shippingOrders}">

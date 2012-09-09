@@ -40,6 +40,12 @@ public class DebitNoteStatus implements java.io.Serializable {
     this.name = name;
   }
 
+	@Override
+	 public String toString() {
+	   return id == null ? "" : id.toString();
+	 }
+	
+
 }
 
 

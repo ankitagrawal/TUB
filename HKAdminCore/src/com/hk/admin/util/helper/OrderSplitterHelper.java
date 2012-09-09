@@ -73,7 +73,8 @@ public class OrderSplitterHelper {
                     sku = null;
                 }
                 if (sku != null) {
-                    taxIncurred += productVariant.getCostPrice() * sku.getTax().getValue() * cartLineItem.getQty();
+	                Double netHkPriceForVariant = cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
+                    taxIncurred += netHkPriceForVariant * sku.getTax().getValue();
                 }
             }
             dummyOrder.setTaxIncurred(taxIncurred);

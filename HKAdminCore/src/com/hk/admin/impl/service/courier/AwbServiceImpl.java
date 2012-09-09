@@ -1,19 +1,17 @@
 package com.hk.admin.impl.service.courier;
 
-import com.hk.admin.pact.service.courier.AwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.admin.pact.dao.courier.AwbDao;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.AwbStatus;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.constants.courier.EnumAwbStatus;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.ArrayList;
+import com.hk.admin.pact.dao.courier.AwbDao;
+import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.AwbStatus;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.warehouse.Warehouse;
 
 /**
  * Created by IntelliJ IDEA.
@@ -51,7 +49,11 @@ public class AwbServiceImpl implements AwbService {
         return awbDao.findByCourierAwbNumber(courier ,awbNumber);
     }
 
-  public List<Awb> getAllAwb(){
-      return awbDao.getAll(Awb.class);
-  }
+    public List<Awb> getAllAwb() {
+        return awbDao.getAll(Awb.class);
+    }
+
+    public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList) {
+        return awbDao.getAlreadyPresentAwb(courier,awbNumberList);
+    }
 }

@@ -1,5 +1,19 @@
 package com.hk.impl.service.order;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.akube.framework.dao.Page;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.core.Keys;
@@ -11,6 +25,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
@@ -41,14 +56,6 @@ import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pojo.DummyOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -86,6 +93,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderSplitterService orderSplitterService;
 
+
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;
 
@@ -109,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
-        return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
+            return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
     }
 
     @Override
@@ -261,7 +269,7 @@ public class OrderServiceImpl implements OrderService {
         // order = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Ready_For_Process,
         // EnumOrderStatus.ESCALTED, EnumOrderStatus.PARTIAL_ESCALTION);
 
-       User loggedOnUser = getUserService().getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
         if(loggedOnUser == null){
             loggedOnUser = order.getUser();
         }
@@ -515,5 +523,21 @@ public class OrderServiceImpl implements OrderService {
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
         this.orderLoggingService = orderLoggingService;
     }
+
+	public boolean isCODAllowed(Order order) {
+		CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+		Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+		for (CartLineItem productCartLineItem : productCartLineItems) {
+
+			ProductVariant productVariant = productCartLineItem.getProductVariant();
+			if (productVariant != null && productVariant.getProduct() != null) {
+				Product product = productVariant.getProduct();
+				if (product.isCodAllowed() != null && !product.isCodAllowed()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 }

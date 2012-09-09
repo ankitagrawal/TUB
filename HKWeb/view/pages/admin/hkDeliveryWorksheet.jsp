@@ -1,9 +1,11 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.courier.HKDeliveryAction" var="hkdBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction" var="hkdBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Healthkart Delivery">
 
     <s:layout-component name="htmlHead">
@@ -101,13 +103,35 @@
 
     <s:layout-component name="content">
         <div class="hkDeliveryWorksheetBox">
-            <s:form beanclass="com.hk.web.action.admin.courier.HKDeliveryAction">
+            <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction">
                 <fieldset class="right_label">
                     <legend>Download Healthkart Delivery Worksheet</legend>
                     <ul>
-
                         <li>
-                            <label style="font-size:medium;">Assigned to:</label><s:text name="assignedTo"/>
+                            <label style="font-size:medium;">Hub :</label>
+                            <shiro:hasPermission name="<%=PermissionConstants.SELECT_HUB%>">
+                                <s:select name="hub" class="hubName">
+                                    <s:option value="-Select Hub-">-Select Hub-</s:option>
+                                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                               serviceProperty="hubList" value="id"
+                                                               label="name"/>
+                                </s:select>
+                            </shiro:hasPermission>
+                            <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
+	                            <shiro:lacksPermission name="<%=PermissionConstants.SELECT_HUB%>" >
+									<c:set var="hub" value="${hk:getHubForHkdeliveryUser(hkdBean.loggedOnUser)}" />
+									 <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong>
+	                            </shiro:lacksPermission>
+                            </shiro:hasPermission>
+                        </li>
+                        <li>
+                            <label style="font-size:medium;">Assigned to:</label>
+                            <s:select name="agent" class="agentName">
+                                <s:option value="-Select Agent-">-Select Agent-</s:option>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                           serviceProperty="HKDeliveryAgentList" value="id"
+                                                           label="name"/>
+                            </s:select>
                         </li>
                         <br>
                         <li>
@@ -147,15 +171,33 @@
 
                         </li>
                         <li>
-                            <s:submit id="submitButton" name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"
-                                      class="verifyData"/>
-                        </li>
+                            <s:submit id="previewButton" name="previewRunsheet" class="verifyData">
+                                <s:param name="runsheetPreview" value="true"/>
+                                Preview Runsheet
+                            </s:submit>
+                         </li>
                     </ul>
                 </fieldset>
-            </s:form>
+             </s:form>
         </div>
 
     </s:layout-component>
 </s:layout-render>
+<script type="text/javascript">
+   $('.verifyData').click(function() {
+    //alert("in validator");
+    var hub = $('.hubName').val();
+    var assignedTo =$('.agentName').val();
+       //alert(hub);
+    if (hub == "-Select Hub-") {
+      alert("Please select a Hub.");
+      return false;
+    }
+       if (assignedTo == "-Select Agent-") {
+           alert("Please select an Agent.");
+           return false;
+       }
+  });
+</script>
 
 

@@ -45,140 +45,140 @@ import java.util.Properties;
 @Component
 public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<EbsPaymentGatewayWrapper> {
 
-    private static Logger logger = LoggerFactory.getLogger(EbsSendReceiveAction.class);
+	private static Logger logger = LoggerFactory.getLogger(EbsSendReceiveAction.class);
 
 
-    @Autowired
-    PaymentManager paymentManager;
+	@Autowired
+	PaymentManager paymentManager;
 
-    @Autowired
-    PaymentService paymentService;
+	@Autowired
+	PaymentService paymentService;
 
-    @Autowired
-    LinkManager linkManager;
+	@Autowired
+	LinkManager linkManager;
 
-    public static String country = "IND";
-    public static String description = "test transaction";
+	public static String country = "IND";
+	public static String description = "test transaction";
 
-    protected EbsPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
-        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/ebs.live.properties";
-        Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
-        String secret_key = properties.getProperty(EbsPaymentGatewayWrapper.secret_key);
-        String account_id = properties.getProperty(EbsPaymentGatewayWrapper.account_id);
-        String mode = properties.getProperty(EbsPaymentGatewayWrapper.mode);
+	protected EbsPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
+		String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/ebs.live.properties";
+		Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
+		String secret_key = properties.getProperty(EbsPaymentGatewayWrapper.secret_key);
+		String account_id = properties.getProperty(EbsPaymentGatewayWrapper.account_id);
+		String mode = properties.getProperty(EbsPaymentGatewayWrapper.mode);
 
-        EbsPaymentGatewayWrapper ebsPaymentGatewayWrapper = new EbsPaymentGatewayWrapper();
-        String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
-
-
-        MessageDigest m = null;
-        try {
-            m = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            logger.debug("NoSuchAlgorithmException occurred while generating MD5 hash" + e);
-        }
-        String return_url = linkManager.getEbsPaymentGatewayReturnUrl() + "?" + EbsPaymentGatewayWrapper.reqResParameter + "={DR}";
-        String pass = secret_key + "|" + account_id + "|" + amountStr + "|" + data.getGatewayOrderId() + "|" + return_url + "|" + mode;
-        byte[] dataBytes = pass.getBytes();
-        assert m != null;
-        m.update(dataBytes, 0, dataBytes.length);
-        BigInteger i = new BigInteger(1, m.digest());
-
-        String secure_hash = String.format("%1$032X", i);
-
-        Payment payment = paymentService.findByGatewayOrderId(data.getGatewayOrderId());
-        Address address = payment.getOrder().getAddress();
-
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.address, address.getLine1());
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.city, address.getCity());
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.state, address.getState());
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.phone, address.getPhone());
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.postal_code, address.getPin());
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.name, address.getName());
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.email, address.getUser().getEmail());
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.return_url, return_url);
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.account_id, account_id);
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.mode, mode);
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.reference_no, data.getGatewayOrderId());
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.description, description);
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.secure_hash_decrypted, pass);
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.secure_hash, secure_hash);
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.amount, amountStr);
-        ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.country, country);
-        return ebsPaymentGatewayWrapper;
-    }
-
-    @DefaultHandler
-    public Resolution callback() {
-        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/ebs.live.properties";
-        Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
-        String key = properties.getProperty(EbsPaymentGatewayWrapper.secret_key);
-
-        StringBuilder data1 = new StringBuilder().append(getContext().getRequest().getParameter(EbsPaymentGatewayWrapper.reqResParameter));
-
-        for (int i = 0; i < data1.length(); i++) {
-            if (data1.charAt(i) == ' ')
-                data1.setCharAt(i, '+');
-        }
-        Base64 base64 = new Base64();
-        byte[] data = base64.decode(data1.toString());
-        RC4 rc4 = new RC4(key);
-        byte[] result = rc4.rc4(data);
+		EbsPaymentGatewayWrapper ebsPaymentGatewayWrapper = new EbsPaymentGatewayWrapper();
+		String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
 
 
-        ByteArrayInputStream byteIn = new ByteArrayInputStream(result, 0, result.length);
-        DataInputStream dataIn = new DataInputStream(byteIn);
-        String recvString1 = "";
-        String recvString = "";
-        try {
-            recvString1 = dataIn.readLine();
-        } catch (IOException e) {
-            logger.debug("IO Exception occurred during callback of ebs " + e);
-        }
-        int i = 0;
-        while (recvString1 != null) {
-            i++;
-            if (i > 705) break;
-            recvString += recvString1 + "\n";
-            try {
-                recvString1 = dataIn.readLine();
-            } catch (IOException e) {
-                System.out.println("Exception occurred " + e);
-            }
-        }
+		MessageDigest m = null;
+		try {
+			m = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			logger.debug("NoSuchAlgorithmException occurred while generating MD5 hash" + e);
+		}
+		String return_url = linkManager.getEbsPaymentGatewayReturnUrl() + "?" + EbsPaymentGatewayWrapper.reqResParameter + "={DR}";
+		String pass = secret_key + "|" + account_id + "|" + amountStr + "|" + data.getGatewayOrderId() + "|" + return_url + "|" + mode;
+		byte[] dataBytes = pass.getBytes();
+		assert m != null;
+		m.update(dataBytes, 0, dataBytes.length);
+		BigInteger i = new BigInteger(1, m.digest());
 
-        recvString = recvString.replace("=&", "=--&");
+		String secure_hash = String.format("%1$032X", i);
 
-        Map<String, String> paramMap = EbsPaymentGatewayWrapper.parseResponse(recvString);
+		Payment payment = paymentService.findByGatewayOrderId(data.getGatewayOrderId());
+		Address address = payment.getOrder().getAddress();
 
-        String gatewayOrderId = paramMap.get(EbsPaymentGatewayWrapper.MerchantRefNo);
-        String amountStr = paramMap.get(EbsPaymentGatewayWrapper.Amount);
-        Double amount = NumberUtils.toDouble(amountStr);
-        String authStatus = paramMap.get(EbsPaymentGatewayWrapper.ResponseCode);
-        String flag_status = paramMap.get(EbsPaymentGatewayWrapper.IsFlagged);
-        String merchantParam = null;
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.address, address.getLine1());
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.city, address.getCity());
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.state, address.getState());
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.phone, address.getPhone());
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.postal_code, address.getPin());
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.name, address.getName());
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.email, address.getUser().getEmail());
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.return_url, return_url);
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.account_id, account_id);
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.mode, mode);
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.reference_no, data.getGatewayOrderId());
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.description, description);
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.secure_hash_decrypted, pass);
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.secure_hash, secure_hash);
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.amount, amountStr);
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.country, country);
+		return ebsPaymentGatewayWrapper;
+	}
 
-        Resolution resolution = null;
-        try {
-            // our own validations
-            paymentManager.verifyPayment(gatewayOrderId, amount, merchantParam);
+	@DefaultHandler
+	public Resolution callback() {
+		String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/ebs.live.properties";
+		Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
+		String key = properties.getProperty(EbsPaymentGatewayWrapper.secret_key);
 
-            // payment callback has been verified. now see if it is successful or failed from the gateway response
-            if (EbsPaymentGatewayWrapper.authStatus_Success.equals(authStatus) && EbsPaymentGatewayWrapper.is_Flagged_False.equalsIgnoreCase(flag_status)) {
-                paymentManager.success(gatewayOrderId);
-                resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-            } else if (EbsPaymentGatewayWrapper.is_Flagged_True.equalsIgnoreCase(flag_status)) {
-                paymentManager.pendingApproval(gatewayOrderId);
-                resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-            } else {
-                paymentManager.fail(gatewayOrderId);
-                resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-            }
-        } catch (HealthkartPaymentGatewayException e) {
-            paymentManager.error(gatewayOrderId, e);
-            resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
-        }
-        return resolution;
-    }
+		StringBuilder data1 = new StringBuilder().append(getContext().getRequest().getParameter(EbsPaymentGatewayWrapper.reqResParameter));
+
+		for (int i = 0; i < data1.length(); i++) {
+			if (data1.charAt(i) == ' ')
+				data1.setCharAt(i, '+');
+		}
+		Base64 base64 = new Base64();
+		byte[] data = base64.decode(data1.toString());
+		RC4 rc4 = new RC4(key);
+		byte[] result = rc4.rc4(data);
+
+
+		ByteArrayInputStream byteIn = new ByteArrayInputStream(result, 0, result.length);
+		DataInputStream dataIn = new DataInputStream(byteIn);
+		String recvString1 = "";
+		String recvString = "";
+		try {
+			recvString1 = dataIn.readLine();
+		} catch (IOException e) {
+			logger.debug("IO Exception occurred during callback of ebs " + e);
+		}
+		int i = 0;
+		while (recvString1 != null) {
+			i++;
+			if (i > 705) break;
+			recvString += recvString1 + "\n";
+			try {
+				recvString1 = dataIn.readLine();
+			} catch (IOException e) {
+				System.out.println("Exception occurred " + e);
+			}
+		}
+
+		recvString = recvString.replace("=&", "=--&");
+
+		Map<String, String> paramMap = EbsPaymentGatewayWrapper.parseResponse(recvString);
+
+		String gatewayOrderId = paramMap.get(EbsPaymentGatewayWrapper.MerchantRefNo);
+		String amountStr = paramMap.get(EbsPaymentGatewayWrapper.Amount);
+		Double amount = NumberUtils.toDouble(amountStr);
+		String authStatus = paramMap.get(EbsPaymentGatewayWrapper.ResponseCode);
+		String flag_status = paramMap.get(EbsPaymentGatewayWrapper.IsFlagged);
+		String merchantParam = null;
+
+		Resolution resolution = null;
+		try {
+			// our own validations
+			paymentManager.verifyPayment(gatewayOrderId, amount, merchantParam);
+
+			// payment callback has been verified. now see if it is successful or failed from the gateway response
+			if (EbsPaymentGatewayWrapper.authStatus_Success.equals(authStatus) && EbsPaymentGatewayWrapper.is_Flagged_False.equalsIgnoreCase(flag_status)) {
+				paymentManager.success(gatewayOrderId);
+				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+			} else if (EbsPaymentGatewayWrapper.is_Flagged_True.equalsIgnoreCase(flag_status)) {
+				paymentManager.pendingApproval(gatewayOrderId);
+				resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+			} else {
+				paymentManager.fail(gatewayOrderId);
+				resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+			}
+		} catch (HealthkartPaymentGatewayException e) {
+			paymentManager.error(gatewayOrderId, e);
+			resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
+		}
+		return resolution;
+	}
 
 }

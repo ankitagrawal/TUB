@@ -7,9 +7,6 @@ import javax.servlet.jsp.JspWriter;
 
 import net.sourceforge.stripes.tag.HtmlTagSupport;
 
-import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.util.HKImageUtils;
-
 /**
  * @author vaibhav.adlakha
  */

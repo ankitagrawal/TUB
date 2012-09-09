@@ -18,6 +18,8 @@ public enum EnumPermission {
   CONFIRM_COD                                    (PermissionConstants.CONFIRM_COD),
   SEND_SHIPPING_MAILS                            (PermissionConstants.SEND_SHIPPING_MAILS),
   SEARCH_ORDERS                                  (PermissionConstants.SEARCH_ORDERS),
+  SEARCH_SUBSCRIPTIONS                            (PermissionConstants.SEARCH_SUBSCRIPTIONS),
+  UPDATE_SUBSCRIPTION                             (PermissionConstants.UPDATE_SUBSCRIPTION),
   SEARCH_USERS                                   (PermissionConstants.SEARCH_USERS),
   VIEW_NOTIFY_LIST                               (PermissionConstants.VIEW_NOTIFY_LIST),
   AWARD_REWARD_POINTS                            (PermissionConstants.AWARD_REWARD_POINTS),
@@ -90,7 +92,12 @@ public enum EnumPermission {
   RUN_ANT_BUILDS                                 (PermissionConstants.RUN_ANT_BUILDS),
   UPDATE_COURIER_DELIVERY_STATUS                 (PermissionConstants.UPDATE_COURIER_DELIVERY_STATUS),
   HK_DELIVERY_WORKSHEET_DOWNLOAD                 (PermissionConstants.HK_DELIVERY_WORKSHEET_DOWNLOAD),
-  CREATE_REPLACEMENT_ORDER                       (PermissionConstants.CREATE_REPLACEMENT_ORDER);
+  CREATE_REPLACEMENT_ORDER                       (PermissionConstants.CREATE_REPLACEMENT_ORDER),
+  SELECT_HUB                                     (PermissionConstants.SELECT_HUB),
+  VIEW_HUB                                       (PermissionConstants.VIEW_HUB),
+  ADD_HK_DELIVERY_AGENT                          (PermissionConstants.ADD_HK_DELIVERY_AGENT),
+  VIEW_CONSIGNMENT_TRACKING                      (PermissionConstants.VIEW_CONSIGNMENT_TRACKING),
+  ADD_HUB                                        (PermissionConstants.ADD_HUB);
 
   String permissionName;
 

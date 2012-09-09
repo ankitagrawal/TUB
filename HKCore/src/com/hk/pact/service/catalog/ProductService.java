@@ -6,11 +6,7 @@ import java.util.Set;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 
 public interface ProductService {
@@ -37,7 +33,7 @@ public interface ProductService {
      */
     public boolean doesBrandExist(String brandName);
     
-    public String getProductUrl(Product product);
+    public String getProductUrl(Product product,boolean isSecure);
     
     public List<Product> getAllProducts();
 
@@ -81,6 +77,8 @@ public interface ProductService {
 
     public ProductOption findProductOptionByNameAndValue(String name, String value);
 
+    public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer);
+
     public boolean isComboInStock(Combo combo);
 
     public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage);
@@ -94,4 +92,12 @@ public interface ProductService {
     public Map<String,List<String>> getRecommendedProducts(Product product);
 
     Map<String, List<String>> getRelatedMoogaProducts(Product findProduct);
+
+    public Map<String, List<Long>> getGroupedFilters(List<Long> filters);
+
+	public boolean isProductOutOfStock(Product product);
+
+	public List<Product> getSortedByStock(List<Product> productList);
+
+	public List<Product> getSimilarProducts(Product product);
 }

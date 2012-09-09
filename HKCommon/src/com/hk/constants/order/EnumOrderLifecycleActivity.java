@@ -5,6 +5,7 @@ public enum EnumOrderLifecycleActivity {
   OrderPlaced(10L, "Order Placed"),
   OrderSplit(11L, "Order Split"),
   OrderCouldNotBeAutoSplit(12L, "Order Could not be Split"),
+  Cod_Conversion(14L, "Payment Mode changed from COD to Online Payment"),
   PaymentMarkedSuccessful(20L, "Payment Marked Successful"),
   PaymentUpdatedAsSuccessful(25L, "Payment Updated As Successful"),
   PaymentMarkedAuthPending(30L, "Payment Marked Auth Pending"),

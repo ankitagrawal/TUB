@@ -1,7 +1,7 @@
 package com.hk.constants;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.

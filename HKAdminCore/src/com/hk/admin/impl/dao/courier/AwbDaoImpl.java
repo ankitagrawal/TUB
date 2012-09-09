@@ -1,18 +1,18 @@
 package com.hk.admin.impl.dao.courier;
 
-import com.hk.admin.pact.dao.courier.AwbDao;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.AwbStatus;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.constants.courier.EnumAwbStatus;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.hk.admin.pact.dao.courier.AwbDao;
+import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.AwbStatus;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -49,7 +49,17 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
      }
 
-    
+    public List<Awb> getAlreadyPresentAwb(Courier courier, List<String> awbNumberList) {
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
+
+        if (awbNumberList != null && awbNumberList.size() > 0 && courier != null && courier.getId() != null) {
+            detachedCriteria.add(Restrictions.in("awbNumber", awbNumberList));
+            detachedCriteria.add(Restrictions.eq("courier", courier));
+            return (List<Awb>) findByCriteria(detachedCriteria);
+        }
+        return null;
+
+    }
 
 }
 

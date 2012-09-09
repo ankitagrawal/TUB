@@ -1,7 +1,7 @@
 package com.hk.pact.dao.core;
 
-import com.hk.pact.dao.BaseDao;
 import com.hk.domain.core.City;
+import com.hk.pact.dao.BaseDao;
 
 /**
  * Created by IntelliJ IDEA.

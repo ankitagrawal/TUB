@@ -1,16 +1,16 @@
 package com.hk.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.akube.framework.gson.JsonUtils;
 import com.google.gson.Gson;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.email.EmailCampaign;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class SendGridUtil {
 

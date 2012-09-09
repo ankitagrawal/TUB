@@ -1,14 +1,16 @@
 package com.hk.web.tag;
 
-import com.hk.service.ServiceLocatorFactory;
+import java.util.Collection;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.Tag;
+
 import net.sourceforge.stripes.tag.InputOptionsCollectionTag;
 import net.sourceforge.stripes.util.bean.BeanUtil;
 import net.sourceforge.stripes.util.bean.EvaluationException;
 import net.sourceforge.stripes.util.bean.ParseException;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.Tag;
-import java.util.Collection;
+import com.hk.service.ServiceLocatorFactory;
 
 
 @SuppressWarnings("unchecked")

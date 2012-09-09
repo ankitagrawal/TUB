@@ -94,4 +94,12 @@ public class PermissionConstants {
     public static final String UPDATE_COURIER_DELIVERY_STATUS        = "UPDATE_COURIER_DELIVERY_STATUS";
     public static final String HK_DELIVERY_WORKSHEET_DOWNLOAD        = "HK_DELIVERY_WORKSHEET_DOWNLOAD";
     public static final String CREATE_REPLACEMENT_ORDER              = "CREATE_REPLACEMENT_ORDER";
+
+    public static final String SEARCH_SUBSCRIPTIONS                  ="SEARCH_SUBSCRIPTIONS";
+    public static final String UPDATE_SUBSCRIPTION                   ="UPDATE_SUBSCRIPTION";
+    public static final String SELECT_HUB                            ="SELECT_HUB";
+    public static final String VIEW_HUB                              ="VIEW_HUB";
+    public static final String ADD_HK_DELIVERY_AGENT                 ="ADD_HK_DELIVERY_AGENT";
+	public static final String VIEW_CONSIGNMENT_TRACKING             ="VIEW_CONSIGNMENT_TRACKING";
+	public static final String ADD_HUB                               ="ADD_HUB";
 }

@@ -14,6 +14,7 @@ import com.akube.framework.dao.Page;
  * @author vaibhav.adlakha
  *
  */
+@SuppressWarnings("unchecked")
 public interface BaseDao {
 
     /**
@@ -138,11 +139,14 @@ public interface BaseDao {
     public Object findUniqueByNamedQueryAndNamedParam(String queryString, String[] paramNames, Object [] paramValues);
     
     
+    public List findByNamedQueryAndNamedParam(String queryString, String[] paramNames, Object[] paramValues);
+    
     /**
      * 
      * @param namedQuery
      * @return
      */
+    
     public List findByNamedQuery(String namedQuery);
 
     /**
@@ -253,4 +257,5 @@ public interface BaseDao {
     public Page list(DetachedCriteria criteria,  int pageNo, int perPage);
 
     public void refresh(Object entity);
+
 }

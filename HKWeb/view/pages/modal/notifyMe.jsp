@@ -40,16 +40,36 @@
 
         <div class="notifyForm">
             <s:form beanclass="com.hk.web.action.core.user.NotifyMeAction" id="notifyMeForm">
-                <div style="text-align: right; padding: 5px 0 5px 0; font-size: 1em;">
-                    Enter your name:<span class='aster' title="this field is required">*</span>
-                    <s:text class="userName" id="notifyMeName" name="notifyMe.name"/><br/><br/>
-                    Enter your email address:<span class='aster' title="this field is required">*</span>
-                    <s:text class="emailId" id="notifyMeEmail" name="notifyMe.email"/><br/><br/>
-                    Enter your phone / mobile number:<span class='aster' title="this field is required">*</span>
-                    <s:text class="phoneNo" id="notifyMePhone" name="notifyMe.phone"/>
+                <div style="text-align: left; padding: 5px 0 5px 0; font-size: 1em;">
+                    <table>
+                        <tr>
+                            <td style="text-align: right;">
+                                Enter your name:<span class='aster' title="this field is required">*</span>
+                            </td>
+                            <td>
+                                <s:text class="userName" id="notifyMeName" name="notifyMe.name"/> <br/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">
+                                Enter your email address:<span class='aster' title="this field is required">*</span>
+                            </td>
+                            <td>
+                                <s:text class="emailId" id="notifyMeEmail" name="notifyMe.email"/>  <br/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">
+                                Enter your phone / mobile number:<span class='aster' title="this field is required">*</span>
+                            </td>
+                            <td>
+                                <s:text class="phoneNo" id="notifyMePhone" name="notifyMe.phone"/> <br/><br/>
+                            </td>
+                        </tr>
+                    </table>
+
                     <s:hidden id="notifyMeProductVariant" name="notifyMe.productVariant"/>
                 </div>
-                <br>
                 <s:submit class="button_orange notifyMeValidate" name="notifyMe" value="Notify"/>
             </s:form>
 

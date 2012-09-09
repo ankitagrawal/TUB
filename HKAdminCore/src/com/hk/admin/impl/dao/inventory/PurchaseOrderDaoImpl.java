@@ -19,7 +19,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository
-public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDao{
+public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDao {
 
     public List<PurchaseOrder> listPurchaseOrdersExcludingStatus(List<Long> purchaseOrderStatusList) {
         return (List<PurchaseOrder>) getSession().createQuery("from PurchaseOrder o where o.purchaseOrderStatus.id not in (:purchaseOrderStatusList)").setParameterList(
@@ -31,11 +31,22 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
                 "productVariant", productVariant).list();
     }
 
-    public Page searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-            String tinNumber, String supplierName, Warehouse warehouse, int pageNo, int perPage) {
+    public List<PurchaseOrder> searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
+                                        String tinNumber, String supplierName, Warehouse warehouse) {
+        return findByCriteria(getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber,
+                tinNumber, supplierName, warehouse));
+    }
 
+    public Page searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
+                         String tinNumber, String supplierName, Warehouse warehouse, int pageNo, int perPage) {
+        return list(getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber,
+                tinNumber, supplierName, warehouse), pageNo, perPage);
+    }
+
+    private DetachedCriteria getPurchaseOrderCriteria(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
+                                                      String tinNumber, String supplierName, Warehouse warehouse) {
         DetachedCriteria purchaseOrderCriteria = DetachedCriteria.forClass(PurchaseOrder.class);
-        DetachedCriteria supplierCriteria =null;
+        DetachedCriteria supplierCriteria = null;
         if (purchaseOrder != null) {
             purchaseOrderCriteria.add(Restrictions.eq("id", purchaseOrder.getId()));
         }
@@ -55,22 +66,23 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
             purchaseOrderCriteria.add(Restrictions.eq("warehouse", warehouse));
         }
         if (StringUtils.isNotBlank(tinNumber)) {
-	                if(supplierCriteria == null){
-		        supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
-	        }
+            if (supplierCriteria == null) {
+                supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
+            }
             supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
         }
         if (StringUtils.isNotBlank(supplierName)) {
-	        if(supplierCriteria == null){
-		        supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
-	        }
+            if (supplierCriteria == null) {
+                supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
+            }
             supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
         }
 
         purchaseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
-        return list(purchaseOrderCriteria, pageNo, perPage);
 
+        return purchaseOrderCriteria;
     }
+
 
     public List<PurchaseOrder> listPurchaseOrdersIncludingStatus(List<Long> purchaseOrderStatusList) {
         return (List<PurchaseOrder>) getSession().createQuery("from PurchaseOrder o where o.purchaseOrderStatus.id in (:purchaseOrderStatusList)").setParameterList(

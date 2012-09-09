@@ -3,6 +3,9 @@ package com.hk.web.action.admin;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -15,9 +18,6 @@ import com.hk.constants.core.HealthkartConstants;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.filter.WebContext;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
-
 @Secure
 public class SetInCookieAction extends BaseAction {
 
@@ -27,7 +27,7 @@ public class SetInCookieAction extends BaseAction {
   @JsonHandler
   public Resolution pre() {
     HttpServletResponse httpResponse = WebContext.getResponse();
-    Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.wantedCOD, wantedCOD);
+    Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, wantedCOD);
     wantedCODCookie.setPath("/");
     wantedCODCookie.setMaxAge(3600);
     httpResponse.addCookie(wantedCODCookie);

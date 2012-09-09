@@ -18,6 +18,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,6 +54,8 @@ public class StockTransferAction extends BasePaginatedAction {
     private Date                        createDate;
     private Date                        checkOutDate;
     private Warehouse                   fromWarehouse;
+
+	@Validate(required = true, on = "save")
     private Warehouse                   toWarehouse;
 
     @SuppressWarnings("unchecked")
@@ -60,11 +63,13 @@ public class StockTransferAction extends BasePaginatedAction {
     public Resolution pre() {
         stockTransferPage = stockTransferDao.searchStockTransfer(createDate, userLogin, fromWarehouse, toWarehouse, getPageNo(), getPerPage());
         stockTransferList = stockTransferPage.getList();
+        Comparator comparator = Collections.reverseOrder();
+        Collections.sort(stockTransferList, comparator);
         return new ForwardResolution("/pages/admin/stockTransferList.jsp");
     }
 
     public Resolution view() {
-        if (stockTransfer != null) {
+        if (stockTransfer != null) {          
             logger.debug("stockTransfer@Pre: " + stockTransfer.getId());
         }
         return new ForwardResolution("/pages/admin/stockTransfer.jsp");
@@ -158,6 +163,11 @@ public class StockTransferAction extends BasePaginatedAction {
         logger.debug("purchaseOrder: " + stockTransfer);
         return new ForwardResolution("/pages/admin/stPrintView.jsp");
     }
+
+	public Resolution easySolView(){
+		logger.debug("purchaseOrder: " + stockTransfer);
+		return new ForwardResolution("/pages/admin/stockTransferEasySolView.jsp");
+	}
 
     public int getPerPageDefault() {
         return defaultPerPage;

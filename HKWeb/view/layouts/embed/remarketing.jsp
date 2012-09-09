@@ -176,6 +176,33 @@
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
 
+<%-- PARENTING --%>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'parenting') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="hTFCCMSIxgMQpIrJ3QM" id="1001538852"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'am-i-pregnant') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="BgNSCLyJxgMQpIrJ3QM" id="1001538852"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'skin-care') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="HXYoCLSKxgMQpIrJ3QM" id="1001538852"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'breast-feeding') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="Xp3LCKyLxgMQpIrJ3QM" id="1001538852"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'maternity-belts') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="J6KPCKSMxgMQpIrJ3QM" id="1001538852"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'sippers-mugs') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="w-8TCJSOxgMQpIrJ3QM" id="1001538852"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+
+
 <%-- SERVICES --%>
 <c:if test="${hk:collectionContains(remarketingLabelList, 'health-checkups') && !codeSet}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="zKMICKPeuQIQ9aL74AM" id="1008652661"/>

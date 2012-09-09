@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.dao.Page;
 import com.hk.constants.catalog.SolrSchemaConstants;
 import com.hk.constants.core.Keys;
+import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
@@ -35,6 +36,7 @@ import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.util.ProductReferrerMapper;
 
 @Component
 public class SolrManager {
@@ -48,6 +50,9 @@ public class SolrManager {
 
     @Autowired
     ProductService        productService;
+
+    @Autowired
+    LinkManager           linkManager;
 
     LocalityMapDao        localityMapDao;
 
@@ -158,7 +163,9 @@ public class SolrManager {
         SolrDocumentList documents = response.getResults();
         for (Object document : documents) {
             SolrDocument doc = (SolrDocument) document;
-            productList.add(getProductService().getProductById((String) doc.getFieldValue(SolrSchemaConstants.productID)));
+      			Product product = getProductService().getProductById((String) doc.getFieldValue(SolrSchemaConstants.productID));
+            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+			      productList.add(product);
         }
         if (rootCategorySlug.equals("services")) {
             productList = trimListByDistance(productList, preferredZone);
@@ -199,7 +206,9 @@ public class SolrManager {
         long resultCount = response.getResults().getNumFound();
         for (Object document : documents) {
             SolrDocument doc = (SolrDocument) document;
-            productList.add(getProductService().getProductById((String) doc.getFieldValue(SolrSchemaConstants.productID)));
+            Product product = getProductService().getProductById((String) doc.getFieldValue(SolrSchemaConstants.productID));
+            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+            productList.add(product);
         }
         return new Page(productList, perPage, page, (int) resultCount);
     }
@@ -222,7 +231,9 @@ public class SolrManager {
         List<Product> productList = new ArrayList<Product>();
         for (Object document : documents) {
             SolrDocument doc = (SolrDocument) document;
-            productList.add(getProductService().getProductById((String) doc.getFieldValue(SolrSchemaConstants.productID)));
+			      Product product = getProductService().getProductById((String) doc.getFieldValue(SolrSchemaConstants.productID));
+            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
+			      productList.add(product);
         }
         // productList = trimListByDistance(productList, preferredZone);
         // resultCount = productList != null ? productList.size() : 0;

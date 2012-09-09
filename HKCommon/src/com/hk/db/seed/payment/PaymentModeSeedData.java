@@ -3,10 +3,11 @@ package com.hk.db.seed.payment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.PaymentMode;
-import org.springframework.stereotype.Component;
 
 @Component
 public class PaymentModeSeedData extends BaseSeedData {

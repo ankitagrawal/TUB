@@ -1,28 +1,32 @@
 package com.hk.admin.util.helper;
 
 
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.courier.AwbService;
-import com.hk.admin.util.XslUtil;
-import com.hk.constants.XslConstants;
-import com.hk.constants.courier.EnumAwbStatus;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.exception.ExcelBlankFieldException;
-import com.hk.exception.DuplicateAwbexception;
-import com.hk.pact.service.core.WarehouseService;
-import com.hk.util.io.ExcelSheetParser;
-import com.hk.util.io.HKRow;
-import com.hk.util.io.LongStringUniqueObject;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.util.*;
+import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.util.XslUtil;
+import com.hk.constants.XslConstants;
+import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.exception.DuplicateAwbexception;
+import com.hk.exception.ExcelBlankFieldException;
+import com.hk.pact.service.core.WarehouseService;
+import com.hk.util.io.ExcelSheetParser;
+import com.hk.util.io.HKRow;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,17 +45,19 @@ public class XslAwbParser {
     private WarehouseService warehouseService;
     @Autowired
     AwbService awbService;
+    private Map<Courier,List<String>> courierWithAllAwbsInExcel = null;
 
+    public List<Awb> readAwbExcel(File file) throws Exception {
 
-    public Set<Awb> readAwbExcel(File file) throws Exception {
-        List<LongStringUniqueObject> constraintList=new ArrayList<LongStringUniqueObject>();
         logger.debug("parsing Awb info : " + file.getAbsolutePath());
-        Set<Awb> awbSet = new HashSet<Awb>();
+        List<Awb> awbList = new ArrayList<Awb>();
         int rowCount = 1;
         ExcelSheetParser excel = new ExcelSheetParser(file.getAbsolutePath(), "Sheet1", true);
         Iterator<HKRow> rowiterator = excel.parse();
+        // Map has < each courier in excel , List of Awb of particular courier>
+        courierWithAllAwbsInExcel=new HashMap<Courier,List<String>>();
         try {
-            while (rowiterator.hasNext()) {
+            while (rowiterator.hasNext()) {              
                 rowCount++;
                 HKRow row = rowiterator.next();
                 String courierId = row.getColumnValue(XslConstants.COURIER_ID);
@@ -61,9 +67,9 @@ public class XslAwbParser {
                 Awb awb = new Awb();
                 if (StringUtils.isEmpty(courierId)) {
 
-                    if (StringUtils.isEmpty(awbNumber) && cod.isEmpty() && warehouse.isEmpty()) {
-                        if (awbSet.size() > 0) {
-                            return awbSet;
+                    if ((awbNumber == null || StringUtils.isEmpty(awbNumber)) && (cod == null || cod.isEmpty()) && (warehouse == null || warehouse.isEmpty())) {
+                        if (awbList.size() > 0) {
+                            return awbList;
                         }
                         return null;
 
@@ -73,7 +79,7 @@ public class XslAwbParser {
                     }
 
                 }
-                Long courierLongId= XslUtil.getLong(courierId.trim());
+                Long courierLongId = XslUtil.getLong(courierId.trim());
                 Courier courier = courierService.getCourierById(courierLongId);
                 if (courier == null) {
                     logger.error("courierId is not valid  " + courierId, rowCount);
@@ -84,11 +90,20 @@ public class XslAwbParser {
                     logger.error("awbNumber cannot be null/empty");
                     throw new ExcelBlankFieldException("awbNumber cannot be empty " + "    ", rowCount);
                 }
-                LongStringUniqueObject courierAwbConstraint = new LongStringUniqueObject(courierLongId, awbNumber);
-                if (constraintList.contains(courierAwbConstraint)) {
-                    throw new DuplicateAwbexception("DUPLICATE VALUES ", courierAwbConstraint);
+                if (courierWithAllAwbsInExcel.containsKey(courier)) {
+                    awbNumber = awbNumber.trim();
+                    List<String> awbsOfCourier = courierWithAllAwbsInExcel.get(courier);
+                    if (awbsOfCourier.contains(awbNumber)) {
+                        throw new DuplicateAwbexception("DUPLICATE VALUES IN EXCEL :  ", courier, awbNumber);
+                    } else {
+                        awbsOfCourier.add(awbNumber);
+                    }
+                } else {
+                    List<String> newAwbList = new ArrayList<String>();
+                    newAwbList.add(awbNumber);
+                    courierWithAllAwbsInExcel.put(courier, newAwbList);
+
                 }
-                constraintList.add(courierAwbConstraint);
                 awb.setAwbNumber(awbNumber);
                 awb.setAwbBarCode(awbNumber);
                 awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
@@ -111,7 +126,7 @@ public class XslAwbParser {
                 } else if (XslUtil.getLong(cod).equals(0l)) {
                     awb.setCod(false);
                 }
-                awbSet.add(awb);
+                awbList.add(awb);
 
 
             }
@@ -122,25 +137,15 @@ public class XslAwbParser {
 
         }
 
-        if (awbSet.size() > 0) {
-            return awbSet;
+        if (awbList.size() > 0) {
+            return awbList;
         }
 
         return null;
 
     }
 
-    public static List<String> getIntersection(List<Awb> awbDatabase, List<Awb> awbSetFromExcel) {
-        List<String> commonCourierIds = new ArrayList<String>();
-        for (int i = 0; i < awbSetFromExcel.size(); i++) {
-            if (awbDatabase.contains(awbSetFromExcel.get(i))) {
-                commonCourierIds.add(awbSetFromExcel.get(i).getAwbNumber());
-            }
-
-        }
-        return commonCourierIds;
+    public Map<Courier, List<String>> getCourierWithAllAwbsInExcel() {
+        return courierWithAllAwbsInExcel;
     }
-
-
-
 }

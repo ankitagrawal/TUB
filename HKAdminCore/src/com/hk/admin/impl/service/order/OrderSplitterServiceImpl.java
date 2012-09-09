@@ -119,6 +119,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         return sortedCourierCostingTreeMap.lastKey();
     }
 
+    @SuppressWarnings("unchecked")
     public TreeMap<List<DummyOrder>, Long> splitBOPractically(Order order) {
 
         // get static things
@@ -235,9 +236,10 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
     private boolean validCase(List<DummyOrder> splitDummyOrders) {
         boolean validCase = true;
+	    Double codMinAmountForSplitting = 50D;  //so that orders get split
         for (DummyOrder splitDummyOrder : splitDummyOrders) {
             double amount = splitDummyOrder.getAmount();
-            if (splitDummyOrder.getCartLineItemList().size() > 0 && amount > 0D && amount < codMinAmount) {
+            if (splitDummyOrder.getCartLineItemList().size() > 0 && amount > 0D && amount < codMinAmountForSplitting) {
                 validCase = false;
             }
         }
@@ -245,6 +247,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     }
 
 
+    @SuppressWarnings("unchecked")
     public TreeMap<List<DummyOrder>, Long> splitBOIdeally(Order order, Warehouse ggnWarehouse, Warehouse mumWarehouse) {
         // get static things
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());

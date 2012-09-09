@@ -9,6 +9,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
@@ -20,7 +21,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import org.apache.poi.ddf.EscherBSERecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +60,19 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (suggestedAwb == null) {
             return null;
         }
+        Double estimatedWeight = 100D;
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
+            if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
+                return null;
+            }
+            Double variantWeight = productVariant.getWeight();
+            if (variantWeight == null || variantWeight == 0D) {
+                estimatedWeight += 0D;
+            } else {
+                estimatedWeight += variantWeight;
+            }
+        }
         Shipment shipment = new Shipment();
         shipment.setCourier(suggestedCourier);
         shipment.setEmailSent(false);
@@ -68,17 +81,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         suggestedAwb = awbService.save(suggestedAwb);
         shipment.setAwb(suggestedAwb);
         shipment.setShippingOrder(shippingOrder);
-        Double estimatedWeight = 0D;
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            Double variantWeight = productVariant.getWeight();
-            if (variantWeight == null || variantWeight == 0D) {
-                estimatedWeight += 0D;
-            } else {
-                estimatedWeight += variantWeight;
-            }
-        }
-        shipment.setBoxWeight(estimatedWeight);
+        shipment.setBoxWeight(estimatedWeight/1000);
         shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
         shippingOrder.setShipment(shipment);
         if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
@@ -86,8 +89,10 @@ public class ShipmentServiceImpl implements ShipmentService {
             shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
             shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
         }
-//        shipment.setShippingOrder(shippingOrder);
         shippingOrder = shippingOrderService.save(shippingOrder);
+	    String trackingId = shipment.getAwb().getAwbNumber();
+	    String comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + trackingId;
+	    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created, comment);
         return shippingOrder.getShipment();
     }
 
@@ -114,5 +119,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     public Shipment findByAwb(Awb awb) {
         return shipmentDao.findByAwb(awb);
+    }
+
+    public void delete(Shipment shipment){
+         shipmentDao.delete(shipment);
     }
 }

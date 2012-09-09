@@ -1,6 +1,10 @@
 package com.hk.web.action.core.catalog.product;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -14,25 +18,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
 
+import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.constants.review.EnumReviewStatus;
 import com.hk.domain.MapIndia;
-import com.hk.domain.review.UserReview;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.Manufacturer;
-import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.SimilarProduct;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.domain.content.SeoData;
+import com.hk.domain.review.UserReview;
+import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.dto.AddressDistanceDto;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
+import com.hk.manager.LinkManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.catalog.product.ProductCountDao;
 import com.hk.pact.dao.core.AddressDao;
@@ -41,6 +49,8 @@ import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
+import com.hk.pact.service.subscription.SubscriptionProductService;
+import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
@@ -48,7 +58,6 @@ import com.hk.web.filter.WebContext;
 @UrlBinding("/product/{productSlug}/{productId}")
 @Component
 public class ProductAction extends BaseAction {
-
     @SuppressWarnings("unused")
     private static Logger logger = Logger.getLogger(ProductAction.class);
 
@@ -70,6 +79,8 @@ public class ProductAction extends BaseAction {
     Long totalReviews = 0L;
     List<Combo> relatedCombos = new ArrayList<Combo>();
     String renderComboUI = "false";
+    SubscriptionProduct              subscriptionProduct;
+    Long productReferrerId;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String preferredZone;
@@ -97,6 +108,10 @@ public class ProductAction extends BaseAction {
     private ProductService productService;
     @Autowired
     private SuperSaverImageService superSaverImageService;
+    @Autowired
+    private SubscriptionProductService subscriptionProductService;
+    @Autowired
+    private LinkManager linkManager;
 
     @DefaultHandler
     @DontValidate
@@ -125,11 +140,21 @@ public class ProductAction extends BaseAction {
                 affiliate = affiliateDao.getAffilateByUser(user);
             }
         }
+        
+        boolean isUserHkEmployee = user !=null ? user.isHKEmployee() : false;
+        
+        if(!isUserHkEmployee && product.isDeleted()!=null && product.isDeleted() == true ){
+            WebContext.getResponse().setStatus(404); // redirection
+            return new ForwardResolution("/pages/error/noPage.html");    
+        }
 
         List<Product> relatedProducts = product.getRelatedProducts();
         if (relatedProducts == null || relatedProducts.size() == 0) {
             relatedProducts = getProductService().getRelatedProducts(product);
             product.setRelatedProducts(relatedProducts);
+        }
+        for (Product product : relatedProducts) {
+            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
         }
         if (product.isProductHaveColorOptions()) {
             Integer outOfStockOrDeletedCtr = 0;
@@ -167,6 +192,10 @@ public class ProductAction extends BaseAction {
             }
         }
 
+        if(product.isSubscribable()){
+            subscriptionProduct= subscriptionProductService.findByProduct(product);
+        }
+
         //User Reviews
         totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
         if (totalReviews != null && totalReviews > 0) {
@@ -182,23 +211,25 @@ public class ProductAction extends BaseAction {
         for (Combo relatedCombo : relatedCombosForProduct) {
             if (getProductService().isComboInStock(relatedCombo)) {
                 relatedCombos.add(relatedCombo);
+                relatedCombo.setProductURL(linkManager.getRelativeProductURL(relatedCombo, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
                 if (relatedCombos.size() == 6) {
                     break;
                 }
             }
+            
         }
 
         if (combo == null) {
             return new ForwardResolution("/pages/product.jsp");
         } else {
-            List<SuperSaverImage> superSaverImages = superSaverImageService.getSuperSaverImages(product, Boolean.FALSE, Boolean.TRUE);
+            List<SuperSaverImage> superSaverImages = getSuperSaverImageService().getSuperSaverImages(product, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE);
             String directTo;
-            if (renderComboUI != null && renderComboUI.equals("true")) {
+            if (superSaverImages == null || superSaverImages.isEmpty()) {
+                directTo = "product.jsp";
+            } else {
                 SuperSaverImage latestSuperSaverImage = superSaverImages.get(superSaverImages.size() - 1);
                 superSaverImageId = latestSuperSaverImage.getId();
                 directTo = "combo.jsp";
-            } else {
-                directTo = "product.jsp";
             }
 
             return new ForwardResolution("/pages/" + directTo);
@@ -356,9 +387,25 @@ public class ProductAction extends BaseAction {
         this.urlFragment = urlFragment;
     }
 
-    public Long getTotalReviews() {
-        return totalReviews;
-    }
+  public SubscriptionProductService getSubscriptionProductService() {
+    return subscriptionProductService;
+  }
+
+  public void setSubscriptionProductService(SubscriptionProductService subscriptionProductService) {
+    this.subscriptionProductService = subscriptionProductService;
+  }
+
+  public SubscriptionProduct getSubscriptionProduct() {
+    return subscriptionProduct;
+  }
+
+  public void setSubscriptionProduct(SubscriptionProduct subscriptionProduct) {
+    this.subscriptionProduct = subscriptionProduct;
+  }
+
+	public Long getTotalReviews() {
+		return totalReviews;
+	}
 
     public List<Combo> getRelatedCombos() {
         return relatedCombos;
@@ -376,7 +423,15 @@ public class ProductAction extends BaseAction {
         this.superSaverImageId = superSaverImageId;
     }
 
-    public void setRenderComboUI(String renderComboUI) {
-        this.renderComboUI = renderComboUI;
+    public Long getProductReferrerId() {
+        return productReferrerId;
+    }
+
+    public void setProductReferrerId(Long productReferrerId) {
+        this.productReferrerId = productReferrerId;
+    }
+
+    public SuperSaverImageService getSuperSaverImageService() {
+        return superSaverImageService;
     }
 }

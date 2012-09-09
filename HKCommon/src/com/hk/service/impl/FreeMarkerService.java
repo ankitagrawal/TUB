@@ -2,8 +2,8 @@ package com.hk.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +42,12 @@ public class FreeMarkerService {
     Template template = null;
     try {
       File freemarkerDir = new File(AppConstants.appBasePath + "/freemarker");
+      File templateFile=new File(AppConstants.appBasePath+"/freemarker"+templatePath);
       Configuration cfg = new Configuration();
-      cfg.setDirectoryForTemplateLoading(freemarkerDir);
+      cfg.setDirectoryForTemplateLoading(templateFile.getParentFile());
       cfg.setObjectWrapper(new DefaultObjectWrapper());
       // load a freemarker template from a pre-configured directory
-      template = cfg.getTemplate(templatePath);
+      template = cfg.getTemplate(templateFile.getName());
     } catch (IOException e) {
       logger.error("IOException in getCampaignTemplate for template " + templatePath, e);
     }

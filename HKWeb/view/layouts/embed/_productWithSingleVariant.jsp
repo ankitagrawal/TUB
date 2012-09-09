@@ -2,6 +2,8 @@
 <%@ page import="com.hk.domain.catalog.product.Product" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.domain.subscription.SubscriptionProduct" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -9,13 +11,16 @@
   <%
       Product product = (Product) pageContext.getAttribute("product");
       pageContext.setAttribute("product", product);
+      SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("subscriptionProduct");
+      pageContext.setAttribute("subscriptionProduct", subscriptionProduct);
 
     CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
     Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
     pageContext.setAttribute("eyeGlass", eyeGlass);
 
   %>
-  <div class="buy_prod">
+  <div class="buy_prod" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
+    <meta itemprop="currency" content="INR" />
     <div class="left_col">
       <div class='prices' style="font-size: 14px;">
         <c:if test="${product.productVariants[0].discountPercent > 0}">
@@ -25,11 +30,10 @@
                 </span>
           </div>
           <div class='hk' style="font-size: 16px;">
-            Our Price
                 <span class='num' style="font-size: 20px;">
-                  Rs <fmt:formatNumber
+                  Rs <span itemprop="price"><fmt:formatNumber
                     value="${hk:getApplicableOfferPrice(product.productVariants[0])+ hk:getPostpaidAmount(product.productVariants[0])}"
-                    maxFractionDigits="0"/>
+                    maxFractionDigits="0"/></span>
                 </span>
           </div>
           <div class="special green" style="font-size: 14px;">
@@ -41,23 +45,27 @@
         </c:if>
         <c:if test="${product.productVariants[0].discountPercent == 0}">
           <div class='hk' style="font-size: 16px;">
-            Our Price
                 <span class='num' style="font-size: 20px;">
-                  Rs <fmt:formatNumber
+                  Rs <span itemprop="price"><fmt:formatNumber
                     value="${hk:getApplicableOfferPrice(product.productVariants[0]) + hk:getPostpaidAmount(product.productVariants[0])}"
-                    maxFractionDigits="0"/>
+                    maxFractionDigits="0"/></span>
                 </span>
           </div>
         </c:if>
       </div>
-      <div style="font-size: 12px; text-align: right; margin-right: 5px;">
-        <c:if test="${hk:isNotBlank(product.productVariants[0].optionsCommaSeparated)}">
-          ${product.productVariants[0].optionsCommaSeparated}
-        </c:if>
-      </div>
+	    <div style="font-size: 12px; text-align: right; margin-right: 5px;">
+		    <c:forEach items="${product.productVariants[0].productOptions}" var="variantOption">
+			    <%--<c:if
+					    test="${fn:toUpperCase(variantOption.name) == 'TYPE' || fn:toUpperCase(variantOption.name) == 'BABY WEIGHT' || fn:toUpperCase(variantOption.name) == 'SIZE'
+					    || fn:toUpperCase(variantOption.name) == 'FLAVOR' || fn:toUpperCase(variantOption.name) == 'QUANTITY' || fn:toUpperCase(variantOption.name) == 'WEIGHT'} ">
+				    ${variantOption.name}:${variantOption.value}<br/>
+			    </c:if>--%>
+			    <span style="font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>
+		    </c:forEach>
+	    </div>
 
     </div>
-    <div class="right_col">
+    <div class="right_col" itemprop="availability" content="${product.productVariants[0].outOfStock ? '' : 'in_stock'}">
       <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
         <c:choose>
           <c:when test="${product.productVariants[0].outOfStock}">
@@ -84,7 +92,12 @@
                           class="eyeGlass cta button_green"/>
               </c:when>
               <c:otherwise>
-                <s:submit name="addToCart" value="Place Order" class="addToCartButton cta button_green"/>
+                  <c:if test="${!empty subscriptionProduct}">
+                     &nbsp;&nbsp;
+                      <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionButton"><b>Subscribe</b>
+                          <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link>
+                  </c:if>
+                  <s:submit name="addToCart" value="Place Order" class="addToCartButton cta button_green"/>
               </c:otherwise>
             </c:choose>
 
@@ -104,7 +117,8 @@
           $('#eyeGlassWindow').jqmShow();
         });
       </script>
-     <s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>
+
+	  <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>--%>
     </div>
     <script type="text/javascript">
       $(document).ready(function() {
@@ -119,5 +133,4 @@
       });
     </script>
   </div>
-
 </s:layout-definition>
