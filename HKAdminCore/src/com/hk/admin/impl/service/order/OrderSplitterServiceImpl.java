@@ -148,7 +148,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
             if (!skuList.isEmpty()) {
                 applicableWarehousesForLineItem = new HashSet<Warehouse>();
                 for (Sku sku : skuList) {
-                    if (inventoryService.getAvailableUnbookedInventory(sku) > 0) {
+                    if (inventoryService.getAvailableUnbookedInventory(sku) >= 0) {
                         applicableWarehousesForLineItem.add(sku.getWarehouse());
                     }
                 }
@@ -222,7 +222,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         }
 
         if (dummyOrderCostingMap.size() == 0) {
-            String comments = "System could not split the order, Please report to tech ";
+            String comments = "System could not split the order, Most probably due to one item being less than min cod limit Rs 50";
             orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
             throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
         }
