@@ -10,7 +10,7 @@
         <div class="addHub">
             <table>
                 <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction">
-                    <s:hidden name="hub.id" value="${hubAction.hub.id}"/>
+                    <s:hidden name="hub" value="${hubAction.hub.id}"/>
                     <tr>
                         <td>Name:<span class='aster' title="this field is required">*</span></td>
                         <td><s:text name="hub.name" value="${hubAction.hub.name}" class="name"/></td>
