@@ -1,5 +1,6 @@
 package com.hk.admin.impl.task.dbmaster;
 
+import com.hk.db.seed.courier.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,6 @@ import com.hk.db.seed.core.RoleSeedData;
 import com.hk.db.seed.core.StateSeedData;
 import com.hk.db.seed.core.SurchargeSeedData;
 import com.hk.db.seed.core.TaxSeedData;
-import com.hk.db.seed.courier.AwbStatusSeedData;
-import com.hk.db.seed.courier.BoxSizeSeedData;
-import com.hk.db.seed.courier.CourierGroupHasCourierSeedData;
-import com.hk.db.seed.courier.CourierGroupSeedData;
-import com.hk.db.seed.courier.CourierSeedData;
 import com.hk.db.seed.email.EmailTypeSeedData;
 import com.hk.db.seed.inventory.DebitNoteStatusSeedData;
 import com.hk.db.seed.inventory.GrnStatusSeedData;
@@ -148,6 +144,12 @@ public class MasterDataService {
     StateSeedData stateSeedData;
     @Autowired
     AwbStatusSeedData awbStatusSeedData;
+    @Autowired
+    ConsignmentStatusSeedData consignmentStatusSeedData;    
+    @Autowired
+    RunsheetStatusSeedData runsheetStatusSeedData;
+    @Autowired
+    ConsignmentLifecycleStatusSeedData consignmentLifecycleStatusSeedData;
 
     public void insert() {
 
@@ -289,5 +291,14 @@ public class MasterDataService {
 
         logger.debug("inserting awb status");
         awbStatusSeedData.invokeInsert();
+
+        logger.debug("inserting consignment status");
+        consignmentStatusSeedData.invokeInsert();
+
+        logger.debug("inserting runsheet status");
+        runsheetStatusSeedData.invokeInsert();
+
+        logger.debug("inserting consignment lifecycle status");
+        consignmentLifecycleStatusSeedData.invokeInsert();
     }
 }
