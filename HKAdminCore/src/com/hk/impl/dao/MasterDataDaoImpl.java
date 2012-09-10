@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -343,4 +344,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     public List<ConsignmentStatus> getConsignmentStatusList(){
         return getBaseDao().getAll(ConsignmentStatus.class);
     }
+
+	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
+	       return EnumPurchaseOrderStatus.getStatusForNonApprover();
+	}
 }

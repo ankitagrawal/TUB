@@ -13,207 +13,208 @@
 	WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 	pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
 %>
+<c:set var="poDeleted" value="<%=EnumPurchaseOrderStatus.Deleted.getId()%>"/>
 <c:set var="poApproved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
 <s:layout-component name="htmlHead">
-	<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
-	<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
-	<script type="text/javascript">
-		$(document).ready(function () {
-			$('.addRowButton').click(function () {
+<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$('.addRowButton').click(function () {
 
-				var lastIndex = $('.lastRow').attr('count');
-				if (!lastIndex) {
-					lastIndex = -1;
-				}
-				$('.lastRow').removeClass('lastRow');
+			var lastIndex = $('.lastRow').attr('count');
+			if (!lastIndex) {
+				lastIndex = -1;
+			}
+			$('.lastRow').removeClass('lastRow');
 
-				var nextIndex = eval(lastIndex + "+1");
-				var newRowHtml =
-						'<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
-								'<td>' + Math.round(nextIndex + 1) + '.</td>' +
-								'<td></td>' +
-								'  <td>' +
-								'    <input type="hidden" name="poLineItems[' + nextIndex + '].id" />' +
-								'    <input type="text" class="variant" name="poLineItems[' + nextIndex + '].productVariant"/>' +
-								'  </td>' +
-								'<td></td>' +
-								'<td class="supplierCode"></td>' +
-								'<td class="otherRemark"></td>' +
-								' <td class="pvDetails"></td>' +
-								'<td><input type="text" class="taxCategory" readonly="readonly" name="poLineItems[' + nextIndex + '].taxCategory"/></td>' +
-								'<td></td>' +
-								'<td></td>' +
-								'<td></td>' +
-								'  <td>' +
-								'    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity valueChange" />' +
-								'  </td>' +
-								'  <td>' +
-								'    <input class="costPrice valueChange" type="text" name="poLineItems[' + nextIndex + '].costPrice" />' +
-								'  </td>' +
-								'  <td>' +
-								'    <input class="mrp" type="text" name="poLineItems[' + nextIndex + '].mrp" />' +
-								'  </td>' +
-								'  <td>' +
-								'    <input class="discountPercentage valueChange" type="text" name="poLineItems[' + nextIndex + '].discountPercent" />' +
-								'  </td>'+
-								'  <td></td>'+
-								'  <td ><input class="taxableAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].taxableAmount"/></td>' +
-								'  <td ><input class="taxAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].taxAmount"></td>' +
-								'  <td ><input class="surchargeAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].surchargeAmount"/></td>' +
-								'  <td ><input class="payableAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].payableAmount"/></td>' +
-								'</tr>';
+			var nextIndex = eval(lastIndex + "+1");
+			var newRowHtml =
+					'<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
+							'<td>' + Math.round(nextIndex + 1) + '.</td>' +
+							'<td></td>' +
+							'  <td>' +
+							'    <input type="hidden" name="poLineItems[' + nextIndex + '].id" />' +
+							'    <input type="text" class="variant" name="poLineItems[' + nextIndex + '].productVariant"/>' +
+							'  </td>' +
+							'<td></td>' +
+							'<td class="supplierCode"></td>' +
+							'<td class="otherRemark"></td>' +
+							' <td class="pvDetails"></td>' +
+							'<td><input type="text" class="taxCategory" readonly="readonly" name="poLineItems[' + nextIndex + '].taxCategory"/></td>' +
+							'<td></td>' +
+							'<td></td>' +
+							'<td></td>' +
+							'  <td>' +
+							'    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity valueChange" />' +
+							'  </td>' +
+							'  <td>' +
+							'    <input class="costPrice valueChange" type="text" name="poLineItems[' + nextIndex + '].costPrice" />' +
+							'  </td>' +
+							'  <td>' +
+							'    <input class="mrp" type="text" name="poLineItems[' + nextIndex + '].mrp" />' +
+							'  </td>' +
+							'  <td>' +
+							'    <input class="discountPercentage valueChange" type="text" name="poLineItems[' + nextIndex + '].discountPercent" />' +
+							'  </td>'+
+							'  <td></td>'+
+							'  <td ><input class="taxableAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].taxableAmount"/></td>' +
+							'  <td ><input class="taxAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].taxAmount"></td>' +
+							'  <td ><input class="surchargeAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].surchargeAmount"/></td>' +
+							'  <td ><input class="payableAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].payableAmount"/></td>' +
+							'</tr>';
 
-				$('#poTable').append(newRowHtml);
+			$('#poTable').append(newRowHtml);
 
-				return false;
-			});
-
-			$('.valueChange').live("change", function () {
-				var valueChangeRow = $(this).parents('.lineItemRow');
-				var costPrice = valueChangeRow.find('.costPrice').val();
-				var mrp = valueChangeRow.find('.mrp').val();
-				var qty = valueChangeRow.find('.quantity').val();
-				var discountPercentage = valueChangeRow.find('.discountPercentage').val();
-				if (qty == "" || costPrice == "") {
-					alert("All fields are compulsory.");
-					return false;
-				}
-				if (isNaN(qty) || isNaN(costPrice) || qty < 0 || costPrice < 0 || discountPercentage < 0) {
-					alert("Enter values in correct format.");
-					return false;
-				}
-				var taxCategory = valueChangeRow.find('.taxCategory').val();
-				if(taxCategory == null) {
-					taxCategory = 0;
-				}
-				var surchargeCategory = 0.0;
-				var stateIdentifier = $('.state').html();
-				if (stateIdentifier == 'CST') {
-					surchargeCategory = 0.0;
-					taxCategory = 0.02;
-				} else {
-					surchargeCategory = 0.05;
-				}
-				var tax = valueChangeRow.find('.taxAmount').val();
-				var taxable = costPrice * qty;
-
-				var discountedAmount = 0.0;
-				if (discountPercentage!=null && (isNaN(discountPercentage) || discountPercentage < 0)) {
-					alert("Enter valid discount");
-					return;
-				}
-				if(discountPercentage > 0) {
-					discountedAmount = (discountPercentage / 100) * taxable;
-				}
-
-				taxable -= discountedAmount;
-				tax = taxable*taxCategory;
-				var surcharge = tax * surchargeCategory;
-				var payable = surcharge + taxable + tax;
-				valueChangeRow.find('.taxableAmount').val(taxable.toFixed(2));
-				valueChangeRow.find('.taxAmount').val(tax.toFixed(2));
-				valueChangeRow.find('.surchargeAmount').val(surcharge.toFixed(2));
-				valueChangeRow.find('.payableAmount').val(payable.toFixed(2));
-
-				updateTotal('.taxableAmount', '.totalTaxable', 0);
-				updateTotal('.taxAmount', '.totalTax', 0);
-				updateTotal('.surchargeAmount', '.totalSurcharge', 0);
-				updateTotal('.payableAmount', '.totalPayable', 0);
-				updateTotal('.payableAmount', '.finalPayable', 0);
-
-				var finalPayable = parseFloat($('.finalPayable').val().replace(/,/g, ''));
-				var overallDiscount = parseFloat($('.overallDiscount').val().replace(/,/g, ''));
-				if (isNaN(overallDiscount)) {
-					overallDiscount = 0;
-				}
-
-				finalPayable -= overallDiscount;
-				$('.finalPayable').val(finalPayable.toFixed(2));
-			});
-
-			function updateTotal(fromTotalClass,toTotalClass,toHtml){
-				var total=0;
-				$.each($(fromTotalClass),function(index,value){
-					var eachRow=$(value);
-					var eachRowValue=eachRow.val().trim();
-					total+=parseFloat(eachRowValue);
-				});
-				if(toHtml == 1){
-					$(toTotalClass).html(total);
-				} else {
-					$(toTotalClass).val(total.toFixed(2));
-				}
-			};
-
-			$('.variant').live("change", function () {
-				var variantRow = $(this).parents('.lineItemRow');
-				var productVariantId = variantRow.find('.variant').val();
-				var productVariantDetails = variantRow.find('.pvDetails');
-				$.getJSON(
-						$('#pvInfoLink').attr('href'), {productVariantId:productVariantId, warehouse : ${pa.purchaseOrder.warehouse}},
-						function (res) {
-							if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-								variantRow.find('.supplierCode').html(res.data.variant.supplierCode);
-								variantRow.find('.otherRemark').html(res.data.variant.otherRemark);
-								variantRow.find('.mrp').val(res.data.variant.markedPrice);
-								variantRow.find('.costPrice').val(res.data.variant.costPrice);
-								variantRow.find('.taxCategory').val(res.data.tax);
-								productVariantDetails.html(
-										res.data.product + '<br/>' +
-												res.data.options
-								);
-							} else {
-								$('.variantDetails').html('<h2>' + res.message + '</h2>');
-							}
-						}
-				);
-			});
-
-			$('.footerChanges').live("change", function overallDiscount() {
-				var overallDiscount=parseFloat($('.overallDiscount').val());
-				if(isNaN(overallDiscount)){
-					overallDiscount=0;
-				}
-				updateTotal('.payableAmount','.finalPayable',0);
-				var finalPayable=parseFloat($('.finalPayable').val().replace(/,/g,''));
-				finalPayable-=overallDiscount;
-				$('.finalPayable').val(finalPayable.toFixed(2));
-			} );
-
-			$('.requiredFieldValidator').click(function () {
-				var quantity = $('.quantity').val();
-				if (quantity == "" || isNaN(quantity)) {
-					alert("Please enter a valid quantity.");
-					return false;
-				}
-				var returnFalse = (1==2);
-				$.each($('.discountPercentage'), function(index, value){
-					var eachRow=$(value);
-					var discountPercentage=eachRow.val().trim();
-					if(discountPercentage < 0){
-						alert("Discount percentage should be greater than zero");
-						returnFalse = (1==1);
-						return false;
-					}
-				});
-				if(returnFalse) {
-					return false;
-				}
-				var statusSelected = $('.status').find('option:selected');
-				var approver = $('.approver').find('option:selected');
-				var test = approver.text();
-				if (statusSelected.text() == "Sent For Approval" && approver.text() == "-Select Approver-") {
-					alert("Approver Not Selected.");
-					return false;
-				}
-			});
-
-
+			return false;
 		});
-	</script>
-	<%--<style type="text/css">
+
+		$('.valueChange').live("change", function () {
+			var valueChangeRow = $(this).parents('.lineItemRow');
+			var costPrice = valueChangeRow.find('.costPrice').val();
+			var mrp = valueChangeRow.find('.mrp').val();
+			var qty = valueChangeRow.find('.quantity').val();
+			var discountPercentage = valueChangeRow.find('.discountPercentage').val();
+			if (qty == "" || costPrice == "") {
+				alert("All fields are compulsory.");
+				return false;
+			}
+			if (isNaN(qty) || isNaN(costPrice) || qty < 0 || costPrice < 0 || discountPercentage < 0) {
+				alert("Enter values in correct format.");
+				return false;
+			}
+			var taxCategory = valueChangeRow.find('.taxCategory').val();
+			if(taxCategory == null) {
+				taxCategory = 0;
+			}
+			var surchargeCategory = 0.0;
+			var stateIdentifier = $('.state').html();
+			if (stateIdentifier == 'CST') {
+				surchargeCategory = 0.0;
+				taxCategory = 0.02;
+			} else {
+				surchargeCategory = 0.05;
+			}
+			var tax = valueChangeRow.find('.taxAmount').val();
+			var taxable = costPrice * qty;
+
+			var discountedAmount = 0.0;
+			if (discountPercentage!=null && (isNaN(discountPercentage) || discountPercentage < 0)) {
+				alert("Enter valid discount");
+				return;
+			}
+			if(discountPercentage > 0) {
+				discountedAmount = (discountPercentage / 100) * taxable;
+			}
+
+			taxable -= discountedAmount;
+			tax = taxable*taxCategory;
+			var surcharge = tax * surchargeCategory;
+			var payable = surcharge + taxable + tax;
+			valueChangeRow.find('.taxableAmount').val(taxable.toFixed(2));
+			valueChangeRow.find('.taxAmount').val(tax.toFixed(2));
+			valueChangeRow.find('.surchargeAmount').val(surcharge.toFixed(2));
+			valueChangeRow.find('.payableAmount').val(payable.toFixed(2));
+
+			updateTotal('.taxableAmount', '.totalTaxable', 0);
+			updateTotal('.taxAmount', '.totalTax', 0);
+			updateTotal('.surchargeAmount', '.totalSurcharge', 0);
+			updateTotal('.payableAmount', '.totalPayable', 0);
+			updateTotal('.payableAmount', '.finalPayable', 0);
+
+			var finalPayable = parseFloat($('.finalPayable').val().replace(/,/g, ''));
+			var overallDiscount = parseFloat($('.overallDiscount').val().replace(/,/g, ''));
+			if (isNaN(overallDiscount)) {
+				overallDiscount = 0;
+			}
+
+			finalPayable -= overallDiscount;
+			$('.finalPayable').val(finalPayable.toFixed(2));
+		});
+
+		function updateTotal(fromTotalClass,toTotalClass,toHtml){
+			var total=0;
+			$.each($(fromTotalClass),function(index,value){
+				var eachRow=$(value);
+				var eachRowValue=eachRow.val().trim();
+				total+=parseFloat(eachRowValue);
+			});
+			if(toHtml == 1){
+				$(toTotalClass).html(total);
+			} else {
+				$(toTotalClass).val(total.toFixed(2));
+			}
+		};
+
+		$('.variant').live("change", function () {
+			var variantRow = $(this).parents('.lineItemRow');
+			var productVariantId = variantRow.find('.variant').val();
+			var productVariantDetails = variantRow.find('.pvDetails');
+			$.getJSON(
+					$('#pvInfoLink').attr('href'), {productVariantId:productVariantId, warehouse : ${pa.purchaseOrder.warehouse}},
+					function (res) {
+						if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+							variantRow.find('.supplierCode').html(res.data.variant.supplierCode);
+							variantRow.find('.otherRemark').html(res.data.variant.otherRemark);
+							variantRow.find('.mrp').val(res.data.variant.markedPrice);
+							variantRow.find('.costPrice').val(res.data.variant.costPrice);
+							variantRow.find('.taxCategory').val(res.data.tax);
+							productVariantDetails.html(
+									res.data.product + '<br/>' +
+											res.data.options
+							);
+						} else {
+							$('.variantDetails').html('<h2>' + res.message + '</h2>');
+						}
+					}
+			);
+		});
+
+		$('.footerChanges').live("change", function overallDiscount() {
+			var overallDiscount=parseFloat($('.overallDiscount').val());
+			if(isNaN(overallDiscount)){
+				overallDiscount=0;
+			}
+			updateTotal('.payableAmount','.finalPayable',0);
+			var finalPayable=parseFloat($('.finalPayable').val().replace(/,/g,''));
+			finalPayable-=overallDiscount;
+			$('.finalPayable').val(finalPayable.toFixed(2));
+		} );
+
+		$('.requiredFieldValidator').click(function () {
+			var quantity = $('.quantity').val();
+			if (quantity == "" || isNaN(quantity)) {
+				alert("Please enter a valid quantity.");
+				return false;
+			}
+			var returnFalse = (1==2);
+			$.each($('.discountPercentage'), function(index, value){
+				var eachRow=$(value);
+				var discountPercentage=eachRow.val().trim();
+				if(discountPercentage < 0){
+					alert("Discount percentage should be greater than zero");
+					returnFalse = (1==1);
+					return false;
+				}
+			});
+			if(returnFalse) {
+				return false;
+			}
+			var statusSelected = $('.status').find('option:selected');
+			var approver = $('.approver').find('option:selected');
+			var test = approver.text();
+			if (statusSelected.text() == "Sent For Approval" && approver.text() == "-Select Approver-") {
+				alert("Approver Not Selected.");
+				return false;
+			}
+		});
+
+
+	});
+</script>
+<%--<style type="text/css">
 			input {
 			  text-transform: uppercase;
 			}
@@ -228,6 +229,7 @@
 <h2>Edit PO# ${pa.purchaseOrder.id}</h2>
 <s:form beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">
 <s:hidden name="purchaseOrder" value="${pa.purchaseOrder}"/>
+<s:hidden name="previousPurchaseOrderStatus" value="${pa.purchaseOrder.purchaseOrderStatus}"/>
 <table>
 	<tr>
 		<td>Supplier Name</td>
@@ -274,26 +276,29 @@
 	<tr>
 		<td>Status</td>
 		<td class="status">
-			<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id >= poApproved}">
-				<shiro:hasRole name="<%=RoleConstants.PO_APPROVER%>">
-					<s:select name="purchaseOrder.purchaseOrderStatus"
-					          value="${pa.purchaseOrder.purchaseOrderStatus.id}">
-						<hk:master-data-collection service="<%=MasterDataDao.class%>"
-						                           serviceProperty="purchaseOrderStatusList"
-						                           value="id" label="name"/>
-					</s:select>
-				</shiro:hasRole>
-				<shiro:lacksRole name="<%=RoleConstants.PO_APPROVER%>">
+			<c:choose>
+				<c:when test="${pa.purchaseOrder.purchaseOrderStatus.id == poDeleted}">
 					${pa.purchaseOrder.purchaseOrderStatus.name}
-				</shiro:lacksRole>
-			</c:if>
-			<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poApproved}">
-				<s:select name="purchaseOrder.purchaseOrderStatus" value="${pa.purchaseOrder.purchaseOrderStatus.id}">
-					<hk:master-data-collection service="<%=MasterDataDao.class%>"
-					                           serviceProperty="purchaseOrderStatusList"
-					                           value="id" label="name"/>
-				</s:select>
-			</c:if>
+				</c:when>
+				<c:otherwise>
+					<shiro:hasRole name="<%=RoleConstants.PO_APPROVER%>">
+						<s:select name="purchaseOrder.purchaseOrderStatus"
+						          value="${pa.purchaseOrder.purchaseOrderStatus.id}">
+							<hk:master-data-collection service="<%=MasterDataDao.class%>"
+							                           serviceProperty="purchaseOrderStatusList"
+							                           value="id" label="name"/>
+						</s:select>
+					</shiro:hasRole>
+					<shiro:lacksRole name="<%=RoleConstants.PO_APPROVER%>">
+						<s:select name="purchaseOrder.purchaseOrderStatus"
+						          value="${pa.purchaseOrder.purchaseOrderStatus.id}">
+							<hk:master-data-collection service="<%=MasterDataDao.class%>"
+							                           serviceProperty="purchaseOrderStatusListForNonApprover"
+							                           value="id" label="name"/>
+						</s:select>
+					</shiro:lacksRole>
+				</c:otherwise>
+			</c:choose>
 		</td>
 
 		<td>Approver</td>
@@ -387,7 +392,7 @@
 			<td class="otherRemark">${productVariant.otherRemark} </label></td>
 			<td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
 			</td>
-			<%--<td class="taxCategory"> ${sku.tax.value}--%>
+				<%--<td class="taxCategory"> ${sku.tax.value}--%>
 			<td>
 				<input type="text" class="taxCategory" value="${sku.tax.value}" disabled="disabled"/>
 			</td>
@@ -454,17 +459,17 @@
 <div class="variantDetails info"></div>
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
 
-	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poApproved}">
+	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poDeleted}">
 		<a href="editPurchaseOrder.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 	</c:if>
 
-	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id >= poApproved}">
+	<%--<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id >= poApproved}">
 		<shiro:hasRole name="<%=RoleConstants.PO_APPROVER%>">
 			<a href="editPurchaseOrder.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 			<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 		</shiro:hasRole>
-	</c:if>
+	</c:if>--%>
 </shiro:hasAnyRoles>
 
 

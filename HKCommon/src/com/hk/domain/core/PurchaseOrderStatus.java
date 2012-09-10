@@ -43,6 +43,19 @@ public class PurchaseOrderStatus implements java.io.Serializable {
     return id == null ? "" : id.toString();
   }
 
+	public boolean equals(Object obj) {
+	       if (!(obj instanceof PurchaseOrderStatus)) {
+	           throw new ClassCastException("object compared are not of same Type");
+
+	       }
+	       PurchaseOrderStatus purchaseOrderStatus = (PurchaseOrderStatus) obj;
+	       if (this.id.equals((purchaseOrderStatus.getId()))) {
+	           return true;
+	       } else
+	           return false;
+
+	   }
+
 }
 
 

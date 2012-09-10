@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.domain.core.PurchaseOrderStatus;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.FileBean;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -79,6 +80,7 @@ public class EditPurchaseOrderAction extends BaseAction {
     public PurchaseOrderDto  purchaseOrderDto;
     public String            productVariantId;
     public Warehouse         warehouse;
+	private PurchaseOrderStatus       previousPurchaseOrderStatus ;
 
     @DefaultHandler
     public Resolution pre() {
@@ -124,12 +126,40 @@ public class EditPurchaseOrderAction extends BaseAction {
     }
 
     public Resolution save() {
-        if (purchaseOrder != null && purchaseOrder.getId() != null) {
-            logger.debug("poLineItems@Save: " + poLineItems.size());
-	        double discountRatio = 0;
-	        if(purchaseOrder.getPayable() != null && purchaseOrder.getPayable() > 0 && purchaseOrder.getDiscount() != null) {
-		        discountRatio = purchaseOrder.getDiscount()/purchaseOrder.getPayable();
-	        }
+	    if (purchaseOrder != null && purchaseOrder.getId() != null) {
+		    logger.debug("poLineItems@Save: " + poLineItems.size());
+		    boolean errorReturn = false;
+		    if (purchaseOrder.getPurchaseOrderStatus() == null) {
+			    addRedirectAlertMessage(new SimpleMessage("Please Select status"));
+		    }
+		    long newStatus = purchaseOrder.getPurchaseOrderStatus().getId().longValue();
+		    long oldStatus = getPreviousPurchaseOrderStatus().getId().longValue();
+		    if (newStatus < oldStatus) {
+			    if ((newStatus == EnumPurchaseOrderStatus.Generated.getId().longValue()) && (oldStatus == EnumPurchaseOrderStatus.Cancelled.getId().longValue())) {
+				    errorReturn = false;
+			    } else {
+				    addRedirectAlertMessage(new SimpleMessage("The Selected Status Should Be After  : " + getPreviousPurchaseOrderStatus().getName()));
+				    errorReturn = true;
+			    }
+		    } else if (newStatus > oldStatus) {
+			    PurchaseOrderStatus expectPurchaseStatus = EnumPurchaseOrderStatus.getNextPurchaseOrderStatus(previousPurchaseOrderStatus);
+			    if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Cancelled.getId())) {
+				    errorReturn = false;
+			    } else if (!(expectPurchaseStatus.equals(purchaseOrder.getPurchaseOrderStatus()))) {
+				    addRedirectAlertMessage(new SimpleMessage("Please Choose Correct Next  Status : " + expectPurchaseStatus.getName()));
+				    errorReturn = true;
+			    }
+		    } else if (newStatus == oldStatus && (oldStatus != EnumPurchaseOrderStatus.Generated.getId().longValue())) {
+			    addRedirectAlertMessage(new SimpleMessage("PO is Already : " + purchaseOrder.getPurchaseOrderStatus().getName()));
+			    errorReturn = true;
+		    }
+		    if (errorReturn) {
+			    return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+		    }
+		    double discountRatio = 0;
+		    if (purchaseOrder.getPayable() != null && purchaseOrder.getPayable() > 0 && purchaseOrder.getDiscount() != null) {
+			    discountRatio = purchaseOrder.getDiscount() / purchaseOrder.getPayable();
+		    }
             for (PoLineItem poLineItem : poLineItems) {
                 if (poLineItem.getQty() != null) {
                     if (poLineItem.getQty() == 0 && poLineItem.getId() != null) {
@@ -254,5 +284,13 @@ public class EditPurchaseOrderAction extends BaseAction {
 
 	public void setPurchaseOrderManager(PurchaseOrderManager purchaseOrderManager) {
 		this.purchaseOrderManager = purchaseOrderManager;
+	}
+
+	public PurchaseOrderStatus getPreviousPurchaseOrderStatus() {
+		return previousPurchaseOrderStatus;
+	}
+
+	public void setPreviousPurchaseOrderStatus(PurchaseOrderStatus previousPurchaseOrderStatus) {
+		this.previousPurchaseOrderStatus = previousPurchaseOrderStatus;
 	}
 }

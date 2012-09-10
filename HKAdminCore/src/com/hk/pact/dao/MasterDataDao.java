@@ -129,4 +129,7 @@ public interface MasterDataDao
     public List<User> getAgentsWithOpenRunsheet();
 
     public List<ConsignmentStatus> getConsignmentStatusList();
+
+	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover();
+
 }
