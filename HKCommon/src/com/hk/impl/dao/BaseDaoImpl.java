@@ -1,19 +1,9 @@
 package com.hk.impl.dao;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
+import com.akube.framework.dao.Page;
+import com.hk.pact.dao.BaseDao;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.FlushMode;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -28,8 +18,9 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import com.akube.framework.dao.Page;
-import com.hk.pact.dao.BaseDao;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * @author vaibhav.adlakha
@@ -416,7 +407,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
   public Page list(DetachedCriteria criteria, boolean hasDistinctRootEntity, int pageNo, int perPage) {
 
     int totalResults = count(criteria, hasDistinctRootEntity);
-    criteria.setProjection(null);
+		//criteria.setProjection(null);
     if (hasDistinctRootEntity) {
       criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     } else {
@@ -426,6 +417,39 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     List resultList = findByCriteria(criteria, firstResult, perPage);
     return new Page(resultList, perPage, pageNo, totalResults);
   }
+
+
+	private Query createQuery(String queryString) {
+		return getSession().createQuery(queryString);
+	}
+
+	public Page list(String hql, Map<String, Object> params, int pageNo, int perPage) {
+		Query query = createQuery(hql);
+		applyQueryParams(query, params);
+		int totalResults = query.list().size();
+
+		int firstResult = (pageNo - 1) * perPage;
+		query.setFirstResult(firstResult);
+		query.setMaxResults(perPage);
+		List resultList = query.list();
+		return new Page(resultList, perPage, pageNo, totalResults);
+	}
+
+	private void applyQueryParams(Query query, Map<String, Object> params) {
+		Iterator<Map.Entry<String, Object>> paramIterator = params.entrySet().iterator();
+
+		while (paramIterator.hasNext()) {
+			Map.Entry<String, Object> entry = paramIterator.next();
+			Object value = entry.getValue();
+			if (value instanceof Collection) {
+				query.setParameterList(entry.getKey(), (Collection) entry.getValue());
+			} else {
+				query.setParameter(entry.getKey(), entry.getValue());
+			}
+
+		}
+	}
+
 
   //@Override
   public Page list(DetachedCriteria criteria, int pageNo, int perPage) {
