@@ -41,10 +41,10 @@ public class ReconciliationVoucherParser {
     @Autowired
     SkuService skuService;
 
-    private List<RvLineItem>            rvLineItems            = new ArrayList<RvLineItem>(); //confirm
     private ReconciliationVoucher reconciliationVoucher;
 
     public List<RvLineItem> readAndCreateRVLineItems(String excelFilePath, String sheetName) throws Exception {
+        List<RvLineItem>            rvLineItems            = new ArrayList<RvLineItem>();
         ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
         Iterator<HKRow> rowIterator = parser.parse();
         int rowCount = 1;

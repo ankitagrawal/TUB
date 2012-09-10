@@ -45,186 +45,186 @@ import java.util.*;
 @Component
 public class ReconciliationVoucherAction extends BasePaginatedAction {
 
-	private static Logger logger = Logger.getLogger(ReconciliationVoucherAction.class);
-	@Autowired
-	ReconciliationVoucherDao reconciliationVoucherDao;
+    private static Logger logger = Logger.getLogger(ReconciliationVoucherAction.class);
+    @Autowired
+    ReconciliationVoucherDao reconciliationVoucherDao;
 
-	@Autowired
-	ProductVariantDao productVariantDao;
-	@Autowired
-	ReconciliationVoucherParser rvParser;
-	@Autowired
-	ReconciliationVoucherService reconciliationVoucherService;
+    @Autowired
+    ProductVariantDao productVariantDao;
+    @Autowired
+    private ReconciliationVoucherParser rvParser;
+    @Autowired
+    ReconciliationVoucherService reconciliationVoucherService;
 
-	@Autowired
-	UserDao userDao;
-	@Autowired
-	SkuGroupDao skuGroupDao;
-	@Autowired
-	AdminSkuItemDao adminSkuItemDao;
-	@Autowired
-	AdminInventoryService adminInventoryService;
-	@Autowired
-	private InventoryService inventoryService;
-	@Autowired
-	AdminProductVariantInventoryDao productVariantInventoryDao;
-	@Autowired
-	SkuService skuService;
-	@Autowired
-	private ProductVariantService productVariantService;
+    @Autowired
+    UserDao userDao;
+    @Autowired
+    SkuGroupDao skuGroupDao;
+    @Autowired
+    AdminSkuItemDao adminSkuItemDao;
+    @Autowired
+    AdminInventoryService adminInventoryService;
+    @Autowired
+    private InventoryService inventoryService;
+    @Autowired
+    AdminProductVariantInventoryDao productVariantInventoryDao;
+    @Autowired
+    SkuService skuService;
+    @Autowired
+    private ProductVariantService productVariantService;
 
-	private ReconciliationVoucher reconciliationVoucher;
-	private List<ReconciliationVoucher> reconciliationVouchers = new ArrayList<ReconciliationVoucher>();
-	private List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
-	public String productVariantId;
-	Page reconciliationVoucherPage;
-	private Integer defaultPerPage = 30;
-	private Date createDate;
-	private String userLogin;
-	private Warehouse warehouse;
+    private ReconciliationVoucher reconciliationVoucher;
+    private List<ReconciliationVoucher> reconciliationVouchers = new ArrayList<ReconciliationVoucher>();
+    private List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
+    public String productVariantId;
+    Page reconciliationVoucherPage;
+    private Integer defaultPerPage = 30;
+    private Date createDate;
+    private String userLogin;
+    private Warehouse warehouse;
 
-	@Validate(required = true, on = "parse")
-	private FileBean fileBean;
+    @Validate(required = true, on = "parse")
+    private FileBean fileBean;
 
-	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-	String adminUploadsPath;
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+    String adminUploadsPath;
 
-	@DefaultHandler
-	public Resolution pre() {
-		if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
-			warehouse = getPrincipalUser().getSelectedWarehouse();
-		}
-		reconciliationVoucherPage = reconciliationVoucherDao.searchReconciliationVoucher(createDate, userLogin, warehouse, getPageNo(), getPerPage());
-		reconciliationVouchers = reconciliationVoucherPage.getList();
-		return new ForwardResolution("/pages/admin/reconciliationVoucherList.jsp");
-	}
+    @DefaultHandler
+    public Resolution pre() {
+        if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
+            warehouse = getPrincipalUser().getSelectedWarehouse();
+        }
+        reconciliationVoucherPage = reconciliationVoucherDao.searchReconciliationVoucher(createDate, userLogin, warehouse, getPageNo(), getPerPage());
+        reconciliationVouchers = reconciliationVoucherPage.getList();
+        return new ForwardResolution("/pages/admin/reconciliationVoucherList.jsp");
+    }
 
-	public Resolution view() {
-		if (reconciliationVoucher != null) {
-			logger.debug("reconciliationVoucher@Pre: " + reconciliationVoucher.getId());
-		}
-		return new ForwardResolution("/pages/admin/reconciliationVoucher.jsp");
-	}
+    public Resolution view() {
+        if (reconciliationVoucher != null) {
+            logger.debug("reconciliationVoucher@Pre: " + reconciliationVoucher.getId());
+        }
+        return new ForwardResolution("/pages/admin/reconciliationVoucher.jsp");
+    }
 
-	public Resolution save() {
-		User loggedOnUser = null;
-		if (getPrincipal() != null) {
-			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-		}
-		reconciliationVoucherService.save(loggedOnUser, rvLineItems, reconciliationVoucher);
+    public Resolution save() {
+        User loggedOnUser = null;
+        if (getPrincipal() != null) {
+            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        }
+        reconciliationVoucherService.save(loggedOnUser, rvLineItems, reconciliationVoucher);
 
-		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-		return new RedirectResolution(ReconciliationVoucherAction.class);
-	}
+        addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+        return new RedirectResolution(ReconciliationVoucherAction.class);
+    }
 
-	public Resolution parse() throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
-		File excelFile = new File(excelFilePath);
-		excelFile.getParentFile().mkdirs();
-		fileBean.save(excelFile);
+    public Resolution parse() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
+        File excelFile = new File(excelFilePath);
+        excelFile.getParentFile().mkdirs();
+        fileBean.save(excelFile);
 
-		try {
-			rvParser.setReconciliationVoucher(reconciliationVoucher); //has warehouse and today's date
-			rvLineItems = rvParser.readAndCreateRVLineItems(excelFilePath, "Sheet1");
-			save();
-		} catch (Exception e) {
-			logger.error("Exception while reading excel sheet.", e);
-			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-		}
-		return new RedirectResolution(ReconciliationVoucherAction.class);
-	}
+        try {
+            rvParser.setReconciliationVoucher(reconciliationVoucher); //has warehouse and reconciliation date            
+            rvLineItems = rvParser.readAndCreateRVLineItems(excelFilePath, "Sheet1");
+            save();
+        } catch (Exception e) {
+            logger.error("Exception while reading excel sheet.", e);
+            addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+        }
+        return new RedirectResolution(ReconciliationVoucherAction.class);
+    }
 
-	public ReconciliationVoucher getReconciliationVoucher() {
-		return reconciliationVoucher;
-	}
+    public ReconciliationVoucher getReconciliationVoucher() {
+        return reconciliationVoucher;
+    }
 
-	public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
-		this.reconciliationVoucher = reconciliationVoucher;
-	}
+    public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
+        this.reconciliationVoucher = reconciliationVoucher;
+    }
 
-	public List<ReconciliationVoucher> getReconciliationVouchers() {
-		return reconciliationVouchers;
-	}
+    public List<ReconciliationVoucher> getReconciliationVouchers() {
+        return reconciliationVouchers;
+    }
 
-	public void setReconciliationVouchers(List<ReconciliationVoucher> reconciliationVouchers) {
-		this.reconciliationVouchers = reconciliationVouchers;
-	}
+    public void setReconciliationVouchers(List<ReconciliationVoucher> reconciliationVouchers) {
+        this.reconciliationVouchers = reconciliationVouchers;
+    }
 
-	public List<RvLineItem> getRvLineItems() {
-		return rvLineItems;
-	}
+    public List<RvLineItem> getRvLineItems() {
+        return rvLineItems;
+    }
 
-	public void setRvLineItems(List<RvLineItem> rvLineItems) {
-		this.rvLineItems = rvLineItems;
-	}
+    public void setRvLineItems(List<RvLineItem> rvLineItems) {
+        this.rvLineItems = rvLineItems;
+    }
 
-	public String getProductVariantId() {
-		return productVariantId;
-	}
+    public String getProductVariantId() {
+        return productVariantId;
+    }
 
-	public void setProductVariantId(String productVariantId) {
-		this.productVariantId = productVariantId;
-	}
+    public void setProductVariantId(String productVariantId) {
+        this.productVariantId = productVariantId;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-	public String getUserLogin() {
-		return userLogin;
-	}
+    public String getUserLogin() {
+        return userLogin;
+    }
 
-	public void setUserLogin(String userLogin) {
-		this.userLogin = userLogin;
-	}
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+    }
 
-	public int getPerPageDefault() {
-		return defaultPerPage;
-	}
+    public int getPerPageDefault() {
+        return defaultPerPage;
+    }
 
-	public int getPageCount() {
-		return reconciliationVoucherPage == null ? 0 : reconciliationVoucherPage.getTotalPages();
-	}
+    public int getPageCount() {
+        return reconciliationVoucherPage == null ? 0 : reconciliationVoucherPage.getTotalPages();
+    }
 
-	public int getResultCount() {
-		return reconciliationVoucherPage == null ? 0 : reconciliationVoucherPage.getTotalResults();
-	}
+    public int getResultCount() {
+        return reconciliationVoucherPage == null ? 0 : reconciliationVoucherPage.getTotalResults();
+    }
 
-	public Warehouse getWarehouse() {
-		return warehouse;
-	}
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
 
-	public void setWarehouse(Warehouse warehouse) {
-		this.warehouse = warehouse;
-	}
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
+    }
 
-	public FileBean getFileBean() {
-		return fileBean;
-	}
+    public FileBean getFileBean() {
+        return fileBean;
+    }
 
-	public void setFileBean(FileBean fileBean) {
-		this.fileBean = fileBean;
-	}
+    public void setFileBean(FileBean fileBean) {
+        this.fileBean = fileBean;
+    }
 
-	public ProductVariantService getProductVariantService() {
-		return productVariantService;
-	}
+    public ProductVariantService getProductVariantService() {
+        return productVariantService;
+    }
 
-	public void setProductVariantService(ProductVariantService productVariantService) {
-		this.productVariantService = productVariantService;
-	}
+    public void setProductVariantService(ProductVariantService productVariantService) {
+        this.productVariantService = productVariantService;
+    }
 
-	public Set<String> getParamSet() {
-		HashSet<String> params = new HashSet<String>();
-		params.add("createDate");
-		params.add("userLogin");
-		params.add("warehouse");
-		return params;
-	}
+    public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("createDate");
+        params.add("userLogin");
+        params.add("warehouse");
+        return params;
+    }
 
 }

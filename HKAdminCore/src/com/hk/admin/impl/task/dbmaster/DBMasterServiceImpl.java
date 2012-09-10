@@ -69,7 +69,7 @@ public class DBMasterServiceImpl implements TaskService{
   @Autowired
   private SkuXslParser                  skuXslParser;
   @Autowired
-  ReconciliationVoucherParser rvParser;
+  private ReconciliationVoucherParser rvParser;
 
   @Override
   public boolean execute(String masterData) {
