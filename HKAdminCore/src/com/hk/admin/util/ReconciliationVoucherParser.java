@@ -41,9 +41,9 @@ public class ReconciliationVoucherParser {
     @Autowired
     SkuService skuService;
 
-    private ReconciliationVoucher reconciliationVoucher;
+    //private ReconciliationVoucher reconciliationVoucher;
 
-    public List<RvLineItem> readAndCreateRVLineItems(String excelFilePath, String sheetName) throws Exception {
+    public List<RvLineItem> readAndCreateRVLineItems(String excelFilePath, String sheetName, ReconciliationVoucher reconciliationVoucher ) throws Exception {
         List<RvLineItem>            rvLineItems            = new ArrayList<RvLineItem>();
         ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
         Iterator<HKRow> rowIterator = parser.parse();
@@ -99,7 +99,7 @@ public class ReconciliationVoucherParser {
                     throw new Exception("Invalid batch number");
                 }
 
-                Sku sku = skuService.getSKU(productVariant, getReconciliationVoucher().getWarehouse());
+                Sku sku = skuService.getSKU(productVariant, reconciliationVoucher.getWarehouse());
 
                 if(productVariant != null) {
                     RvLineItem rvLineItem = new RvLineItem();
@@ -126,13 +126,5 @@ public class ReconciliationVoucherParser {
 
     public ProductVariantService getProductVariantService() {
         return productVariantService;
-    }
-
-    public ReconciliationVoucher getReconciliationVoucher() {
-        return reconciliationVoucher;
-    }
-
-    public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
-        this.reconciliationVoucher = reconciliationVoucher;
-    }
+    }   
 }

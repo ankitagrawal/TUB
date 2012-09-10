@@ -174,8 +174,8 @@ public class DBMasterServiceImpl implements TaskService{
                  testWarehouse.setId(Long.parseLong("1"));
                  reconciliationVoucher.setWarehouse(testWarehouse);
                   //setWarehouse = userService.getWarehouseForLoggedInUser();   //can be null
-                 rvParser.setReconciliationVoucher(reconciliationVoucher); // required for sku table
-                 List<RvLineItem> rvLineItems = rvParser.readAndCreateRVLineItems(listOfRVExcels[i].getAbsolutePath(), "Sheet1");
+                 //rvParser.setReconciliationVoucher(reconciliationVoucher); // required for sku table
+                 List<RvLineItem> rvLineItems = rvParser.readAndCreateRVLineItems(listOfRVExcels[i].getAbsolutePath(), "Sheet1",reconciliationVoucher);
                  reconciliationVoucherService.save(userService.getLoggedInUser() , rvLineItems, reconciliationVoucher);
 
                 } catch (Exception e) {
