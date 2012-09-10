@@ -18,7 +18,7 @@
             <accessories>
                 <Glasses id="${productVariant.id}" type="${sizeType}" price="${productVariant.hkPrice}"
                          mrp="${productVariant.markedPrice}" name="${hk:escapeHtml(product.name)}">
-                         desc="${product.description}">
+                         desc="${hk:escapeHtml(product.overview)}">
                     <imgPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, imageId, false)%>
                     </imgPath>
                     <thumbPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId, false)%>
