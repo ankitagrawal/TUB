@@ -182,7 +182,8 @@
         <div id="tabs_content4" class="tab_content" style="display: none;">
             <c:choose>
                 <c:when test="${orderSummary.codAllowed && hk:isCodAllowedOnOrder(orderSummary.order)}">
-                    <c:if test="${orderSummary.groundShippingAllowed && ! orderSummary.codAllowedOnGroundShipping  }">
+                    <c:choose>
+                    <c:when test="${orderSummary.groundShippingAllowed && ! orderSummary.codAllowedOnGroundShipping  }">
                         <h4 style="text-align: center;">We are sorry Cash on Delivery is not allowed on one of the
                             products in your cart</h4>
 
@@ -190,7 +191,8 @@
                             location (Pincode : <strong>${orderSummary.order.address.pin}</strong>).
                             <br/>
                             We provide cash on delivery option for select PIN codes only.</p>
-                    </c:if>
+                </c:when>
+                 <c:otherwise>
                     <div class="grid_5">
                         <h4>Order Total</h4>
                         <br />
@@ -240,7 +242,11 @@
                             given location for pick-up at all times.<br />
                         </p>
                     </s:form>
+                 </c:otherwise>
+
+                  </c:choose>
                 </c:when>
+
 	            <c:otherwise>
 		            <h4 style="text-align: center;">We are sorry Cash on Delivery is not available for your order</h4>
 		            <c:if test="${!orderSummary.codAllowed}">

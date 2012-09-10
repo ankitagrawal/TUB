@@ -33,5 +33,7 @@ public interface CourierServiceInfoDao extends BaseDao {
   public boolean isCodAvailableOnGroundShipping(String pincode);  
 
    public List<Courier> getCouriersForPincode(String pincode, boolean forCOD , boolean forGroundShipping);
+
+   public List<CourierServiceInfo> getDifferentCourierDetailsWithPincode(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) ;
     
 }
