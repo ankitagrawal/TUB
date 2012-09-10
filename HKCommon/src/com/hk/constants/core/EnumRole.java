@@ -31,6 +31,8 @@ public enum EnumRole {
   WH_MANAGER_L1       (RoleConstants.WH_MANAGER_L1),
   CUSTOMER_SUPPORT    (RoleConstants.CUSTOMER_SUPPORT),
   CUSTOMER_SUPPORT_L2 (RoleConstants.CUSTOMER_SUPPORT_L2),
+	REWARD_POINT_MANAGER_L1 (RoleConstants.REWARD_POINT_MANAGER_L1),
+	REWARD_POINT_MANAGER_L2 (RoleConstants.REWARD_POINT_MANAGER_L2),
   CUSTOMER_SUPPORT_L3 (RoleConstants.CUSTOMER_SUPPORT_L3),
   CATEGORY_MANAGER_L1 (RoleConstants.CATEGORY_MANAGER_L1),
   CATEGORY_MANAGER_L2 (RoleConstants.CATEGORY_MANAGER_L2),
@@ -51,7 +53,9 @@ public enum EnumRole {
   DEVELOPER(RoleConstants.DEVELOPER),
   PAYMENT_MANAGER(RoleConstants.PAYMENT_MANAGER),
   HR(RoleConstants.HR),
-  HK_DELIVERY_GUY(RoleConstants.HK_DELIVERY_GUY);
+  HK_DELIVERY_GUY(RoleConstants.HK_DELIVERY_GUY),
+  HK_DELIVERY_ADMIN(RoleConstants.HK_DELIVERY_ADMIN),
+  HK_DELIVERY_HUB_MANAGER(RoleConstants.HK_DELIVERY_HUB_MANAGER);
 
   String roleName;
 
@@ -83,6 +87,8 @@ public enum EnumRole {
                 EnumRole.CUSTOMER_SUPPORT.getRoleName(),
                 EnumRole.CUSTOMER_SUPPORT_L2.getRoleName(),
                 EnumRole.PAYMENT_MANAGER.getRoleName(),
+                EnumRole.REWARD_POINT_MANAGER_L1.getRoleName(),
+                EnumRole.REWARD_POINT_MANAGER_L2.getRoleName(),
                 EnumRole.COUPON_BLOCKED.getRoleName(),
                 EnumRole.HK_BLOCKED.getRoleName(),
                 EnumRole.HK_DEACTIVATED.getRoleName(),
@@ -102,7 +108,8 @@ public enum EnumRole {
                 EnumRole.TICKETADMIN.getRoleName(),
                 EnumRole.OPS_MANAGER.getRoleName(),
                 EnumRole.WH_EMPLOYEE.getRoleName(),
-                EnumRole.WH_MANAGER.getRoleName());
+                EnumRole.WH_MANAGER.getRoleName(),
+	            EnumRole.HK_DELIVERY_HUB_MANAGER.getRoleName());
     }
 
 	public static List<String> listHRRoles() {

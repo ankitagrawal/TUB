@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import com.hk.constants.coupon.EnumCouponType;
+import com.hk.domain.hkDelivery.Hub;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
@@ -157,6 +157,10 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     private KarmaProfile          karmaProfile;
+
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "hub_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "hub_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "hub_id", updatable = false) })
+    private Hub hub;
 
     public KarmaProfile getKarmaProfile() {
         return karmaProfile;
@@ -403,15 +407,7 @@ public class User {
     }
 
     public Coupon getReferrerCoupon() {
-	    if (referrerCoupons != null) {
-		    for (Coupon referrerCoupon : referrerCoupons) {
-			    if (EnumCouponType.REFERRAL.getId().equals(referrerCoupon.getCouponType().getId())) {
-				    return referrerCoupon;
-			    }
-		    }
-	    }
-	    return null;
-//	    return referrerCoupons != null && referrerCoupons.size() > 0 ? referrerCoupons.get(0) : null;
+        return referrerCoupons != null && referrerCoupons.size() > 0 ? referrerCoupons.get(0) : null;
     }
 
     public User getAffiliateTo() {
@@ -454,7 +450,15 @@ public class User {
         this.updateDate = updateDate;
     }
 
-    public boolean hasPermission(EnumPermission enumPermission) {
+	public Hub getHub() {
+		return hub;
+	}
+
+	public void setHub(Hub hub) {
+		this.hub = hub;
+	}
+
+	public boolean hasPermission(EnumPermission enumPermission) {
         if (roles == null || roles.isEmpty()) {
             return false;
         }

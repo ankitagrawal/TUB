@@ -5,7 +5,7 @@
 --/nutrition/sports-nutrition/pre-workout : Pre Workout
 --/nutrition/sports-nutrition/intra-workout  :Intra Workout
 --/nutrition/sports-nutrition/post-workout : Post Workout
---/nutrition/sports-nutrition/weight-gainer : Weight Gainer
+--/nutrition/sports-nutrition/weight-gainer : Mass Gainer
 --/nutrition/sports-nutrition/protein-bars  : Protein Bars
 --/nutrition/sports-nutrition/athletes      :  Athletes
 --/nutrition/sports-nutrition/fat-burner
@@ -123,6 +123,7 @@
 --/sports/fitness-equipment/home-gym
 --/sports/fitness-equipment/steppers
 --/sports/fitness-equipment/bench-equipments
+--/sports/fitness-equipment/heart-rate-monitors
 --/sports/fitness-equipment/miscellaneous-equipments
 -/sports/sports-equipment
 --/sports/sports-equipment/football
@@ -166,11 +167,12 @@
 ---/sports/sports-equipment/squash/balls
 --/sports/sports-equipment/boxing
 ---/sports/sports-equipment/boxing/punching-bags
+---/sports/sports-equipment/boxing/gloves
 ---/sports/sports-equipment/boxing/wraps
 ---/sports/sports-equipment/boxing/protection-gear
 ---/sports/sports-equipment/boxing/boxing-clothing
 ---/sports/sports-equipment/boxing/jabs
----/sports/sports-equipment/boxing/gloves
+---/sports/sports-equipment/boxing/accessories
 --/sports/sports-equipment/golf
 --/sports/sports-equipment/skating
 --/sports/sports-equipment/other-balls
@@ -456,6 +458,7 @@
 ---/personal-care/elderly-care/diagnostics/bp-monitor: BP Monitors
 ---/personal-care/elderly-care/diagnostics/strips
 ---/personal-care/elderly-care/diagnostics/meters: Blood Glucose Meters
+--/personal-care/elderly-care/massagers
 --/personal-care/elderly-care/mobility-aids: Mobility Aids
 ---/personal-care/elderly-care/mobility-aids/power-wheel-chairs: Power Wheel Chairs
 ---/personal-care/elderly-care/mobility-aids/manual-wheel-chairs: Manual Wheel Chairs
@@ -534,10 +537,11 @@
 --/beauty/what-s-new/gift-ideas
 ---/beauty/what-s-new/gift-ideas/for-her
 ---/beauty/what-s-new/gift-ideas/for-him
---/beauty/what-s-new/discounts
 --/beauty/what-s-new/limited-period-offers
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
+--/beauty/what-s-new/organic-skin-care
+--/beauty/what-s-new/organic-make-up
 --/beauty/what-s-new/personal-hygiene
 ---/beauty/what-s-new/personal-hygiene/sanitary-napkins
 ---/beauty/what-s-new/personal-hygiene/tampons
@@ -608,6 +612,7 @@
 --/beauty/bath-body/accessories
 --/beauty/bath-body/fragrances
 -/beauty/make-up
+--/beauty/make-up/organic-make-up
 --/beauty/make-up/face
 ---/beauty/make-up/face/primer
 ---/beauty/make-up/face/concealer
@@ -728,7 +733,6 @@
 --/parenting/moms-maternity/nutrition-for-moms
 --/parenting/moms-maternity/maternity-belts
 --/parenting/moms-maternity/maternity-pads
-
 -/parenting/diapering
 --/parenting/diapering/diapers
 ---/parenting/diapering/diapers/small
@@ -741,7 +745,6 @@
 --/parenting/diapering/changing-mats
 --/parenting/diapering/diaper-bags
 --/parenting/diapering/potty-training
-
 -/parenting/feeding-nursing : Feeding & Nursing
 --/parenting/feeding-nursing/breastfeeding-aids
 ---/parenting/feeding-nursing/breastfeeding-aids/breast-pumps
@@ -768,7 +771,6 @@
 ---/parenting/feeding-nursing/baby-kids-utensils/food-storage
 ---/parenting/feeding-nursing/baby-kids-utensils/lunch-boxes
 ---/parenting/feeding-nursing/baby-kids-utensils/water-bottles
-
 -/parenting/bath-skin-care : Bath & Skin Care
 --/parenting/bath-skin-care/soaps-gels : Soaps & Gels
 --/parenting/bath-skin-care/shampoo
@@ -785,17 +787,20 @@
 ---/parenting/bath-skin-care/bath-tubs-accessories/accessories
 ---/parenting/bath-skin-care/bath-tubs-accessories/bath-toys
 --/parenting/bath-skin-care/grooming
+---/parenting/bath-skin-care/grooming/combs-hair-brushes : Combs & Brushes
+---/parenting/bath-skin-care/grooming/nail-clippers-scissors: Nail Clippers & Scissors
+---/parenting/bath-skin-care/grooming/ear-buds-cotton-balls:Ear Buds & Cotton Balls
+---/parenting/bath-skin-care/grooming/sunglasses
 --/parenting/bath-skin-care/sunscreen
 --/parenting/bath-skin-care/combo-packs
-
 -/parenting/health-safety : Health & Safety
 --/parenting/health-safety/thermometers
 --/parenting/health-safety/medical-care
+--/parenting/health-safety/eye-care
 --/parenting/health-safety/child-proofing
 --/parenting/health-safety/disinfectants
 --/parenting/health-safety/repellents
 --/parenting/health-safety/misc
-
 -/parenting/toys-more : Toys & More
 --/parenting/toys-more/toys
 ---/parenting/toys-more/toys/rattles

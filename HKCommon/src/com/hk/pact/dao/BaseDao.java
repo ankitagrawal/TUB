@@ -139,6 +139,8 @@ public interface BaseDao {
     public Object findUniqueByNamedQueryAndNamedParam(String queryString, String[] paramNames, Object [] paramValues);
     
     
+    public List findByNamedQueryAndNamedParam(String queryString, String[] paramNames, Object[] paramValues);
+    
     /**
      * 
      * @param namedQuery

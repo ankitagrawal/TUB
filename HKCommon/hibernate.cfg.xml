@@ -158,6 +158,20 @@
         <mapping class="com.hk.domain.order.SecondaryReferrerForOrder"/>
         <!-- Please Add All Domains Post HKR Here-->
 
+          <!-- Ajeet Added His on 10-July-->
+        <mapping class="com.hk.domain.inventory.BrandsToAudit"/>
+        <mapping class="com.hk.domain.catalog.product.combo.SuperSaverImage"/>
+          <!--Added for HK Delivery -->
+        <mapping class="com.hk.domain.hkDelivery.Consignment"/>
+        <mapping class="com.hk.domain.hkDelivery.ConsignmentStatus"/>
+        <mapping class="com.hk.domain.hkDelivery.Runsheet"/>
+        <mapping class="com.hk.domain.hkDelivery.Hub"/>
+        <mapping class="com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation"/>
+        <mapping class="com.hk.domain.hkDelivery.ConsignmentTracking"/>
+        <mapping class="com.hk.domain.hkDelivery.RunsheetStatus"/>
+        <mapping class="com.hk.domain.hkDelivery.HubHasUser"/>
+        <mapping class="com.hk.domain.hkDelivery.ConsignmentLifecycleStatus"/>
+
         <!-- Ajeet Added His on 10-July-->
         <mapping class="com.hk.domain.inventory.BrandsToAudit"/>
         <mapping class="com.hk.domain.catalog.product.combo.SuperSaverImage"/>
