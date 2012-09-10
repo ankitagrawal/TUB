@@ -107,7 +107,7 @@ public class AffiliateAction extends BaseAction {
 			return getContext().getSourcePageResolution();
 		}
 		if (affiliate.getUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED))) {
-			return new ForwardResolution(UserManageAddressAction.class, "manageAddresses");
+			return new ForwardResolution(AffiliateAccountAction.class);
 		} else {
 			return new ForwardResolution(AffiliateAccountAction.class, "affiliateAccount");
 		}
@@ -132,7 +132,7 @@ public class AffiliateAction extends BaseAction {
 		}
 		addRedirectAlertMessage(new SimpleMessage(
 				"Welcome!!..Your account has not been verfied yet.You will be informed as soon as it is verified. Mean while, why dont you fill up the requisted information, so that we can contact you"));
-		return new ForwardResolution(UserManageAddressAction.class, "editUserAddresses");
+		return new ForwardResolution(AffiliateAccountAction.class);
 	}
 
 	public String getName() {

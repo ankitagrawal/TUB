@@ -1,8 +1,15 @@
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" var="paymentAction"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
-  <s:layout-component name="content">
+    <s:layout-component name="htmlHead">
+        <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+        <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+    </s:layout-component>
+    <s:layout-component name="content">
     <h2>
         ${paymentAction.affiliate.user.name}
     </h2>
@@ -49,7 +56,8 @@
             Issue Date
           </th>
           <td>
-            <s:text name="checkDetails.issueDate"/>
+              <s:text class="date_input startDate" style="width:150px"
+                      formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="checkDetails.issueDate"/>
           </td>
         </tr>
         <tr>

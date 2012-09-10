@@ -10,6 +10,67 @@
 
     <s:form beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction">
       <s:errors/>
+        <div class="row">
+            <label class="rowLabel">Affiliate Code</label>
+            <label class="rowText">${paymentAction.affiliate.code}</label>
+        </div>
+
+        <div class="clear"></div>
+        <div style="margin-top:5px"></div>
+
+        <div class="row">
+            <label class="rowLabel">Affiliate Mode</label>
+            <label class="rowText">${paymentAction.affiliate.affiliateMode}</label>
+        </div>
+
+        <div class="clear"></div>
+        <div style="margin-top:5px"></div>
+
+        <div class="row">
+            <label class="rowLabel">Affiliate Type</label>
+            <label class="rowText">${paymentAction.affiliate.affiliateType}</label>
+        </div>
+
+        <div class="clear"></div>
+        <div style="margin-top:5px"></div>
+
+        <div class="row">
+            <label class="rowLabel">Affiliate Status</label>
+            <label class="rowText">${paymentAction.affiliate.affiliateStatus}</label>
+        </div>
+
+        <div class="clear"></div>
+        <div style="margin-top:5px"></div>
+
+        <div class="row">
+            <label class="rowLabel">Affiliate Api Key</label>
+            <label class="rowText">${paymentAction.affiliate.apiKey}</label>
+        </div>
+
+        <div class="clear"></div>
+        <div style="margin-top:5px"></div>
+
+        <div class="row">
+            <label class="rowLabel">Valid Days</label>
+            <s:text name="affiliate.validDays" value="${paymentAction.affiliate.validDays}"/>
+        </div>
+
+        <div class="row">
+            <label class="rowLabel">Affiliate Offer</label>
+            <label class="rowText">${paymentAction.affiliate.offer.description}</label>
+            <s:text name="affiliate.offer" value="${paymentAction.affiliate.offer.id}"/>
+        </div>
+
+        <div class="clear"></div>
+        <div style="margin-top:5px"></div>
+
+        <div class="row">
+            <label class="rowLabel">Weekly Coupon Limit</label>
+            <s:text name="affiliate.weeklyCouponLimit" value="${paymentAction.affiliate.weeklyCouponLimit}"/>
+        </div>
+
+        <div class="clear"></div>
+        <div style="margin-top:5px"></div>
       <table>
       <thead>
       <tr>
@@ -33,7 +94,7 @@
         </tr>
       </c:forEach>
       </table>
-      <div class="buttons"><s:submit name="savePlan" value="Save"/></div>
+      <div class="buttons"><s:submit name="savePlan" value="Save Changes"/></div>
     </s:form>
   </s:layout-component>
 </s:layout-render>

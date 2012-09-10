@@ -131,6 +131,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	}
 
 	public Resolution savePlan() {
+		affiliate = (Affiliate) affiliateDao.save(affiliate);
 		for (AffiliateCategoryCommission categoryCommission : affiliateCategoryCommissionList) {
 			getAffiliateCategoryCommissionDao().save(categoryCommission);
 		}

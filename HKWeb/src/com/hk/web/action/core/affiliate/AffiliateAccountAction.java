@@ -10,12 +10,14 @@ import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
+import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.exception.HealthKartCouponException;
 import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.manager.AffiliateManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.discount.CouponService;
 import com.hk.web.action.core.auth.LogoutAction;
@@ -44,6 +46,8 @@ public class AffiliateAccountAction extends BaseAction {
 	List<CheckDetails> checkDetailsList;
 	private List<String> categories = new ArrayList<String>();
 	List<Coupon> coupons;
+	Address affiliateDefaultAddress;
+
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	private String adminDownloads;
 
@@ -60,6 +64,8 @@ public class AffiliateAccountAction extends BaseAction {
 	AffilateService affilateService;
 	@Autowired
 	CategoryDao categoryDao;
+	@Autowired
+	private AddressDao addressDao;
 
 	@DefaultHandler
 	@DontValidate
@@ -92,6 +98,10 @@ public class AffiliateAccountAction extends BaseAction {
 				Date endDate = endCalender.getTime();
 				affiliateAccountAmount = affiliateManager.getAmountInAccount(affiliate, null, null);
 				affiliatePayableAmount = affiliateManager.getAmountInAccount(affiliate, startDate, endDate);
+
+				if (affiliate.getMainAddressId() != null) {
+					affiliateDefaultAddress = getAddressDao().get(Address.class,affiliate.getMainAddressId());
+				}
 			} else {
 				logger.debug("affiliate is null");
 				addValidationError("e1", new LocalizableError("/Login.action.user.notFound"));
@@ -280,5 +290,17 @@ public class AffiliateAccountAction extends BaseAction {
 
 	public void setCategories(List<String> categories) {
 		this.categories = categories;
+	}
+
+	public Address getAffiliateDefaultAddress() {
+		return affiliateDefaultAddress;
+	}
+
+	public void setAffiliateDefaultAddress(Address affiliateDefaultAddress) {
+		this.affiliateDefaultAddress = affiliateDefaultAddress;
+	}
+
+	public AddressDao getAddressDao() {
+		return addressDao;
 	}
 }
