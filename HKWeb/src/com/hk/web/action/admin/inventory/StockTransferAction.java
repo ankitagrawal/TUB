@@ -111,7 +111,7 @@ public class StockTransferAction extends BasePaginatedAction {
                         stockTransferDao.delete(stockTransferLineItem);
                     }
                     List<SkuItem> instockSkuItems = adminSkuItemDao.getInStockSkuItemsBySku(sku);
-                    if (!instockSkuItems.isEmpty()) {
+                    if (!instockSkuItems.isEmpty() && stockTransferLineItem.getCheckedoutQty() <= instockSkuItems.size()) {
                         stockTransferLineItem.setSku(sku);
                         stockTransferLineItem.setStockTransfer(stockTransfer);
                         try {
@@ -135,8 +135,9 @@ public class StockTransferAction extends BasePaginatedAction {
                                 }
                             }
                         }
+	                    getInventoryService().checkInventoryHealth(sku.getProductVariant());
                     } else {
-                        addRedirectAlertMessage(new SimpleMessage("There is no in stock line item(PVI) for " + stockTransferLineItem.getProductVariant().getId()));
+                        addRedirectAlertMessage(new SimpleMessage("There are only " + instockSkuItems.size() + "  stock line item(PVI) for " + stockTransferLineItem.getProductVariant().getId()));
                         return new RedirectResolution(StockTransferAction.class).addParameter("view", stockTransfer.getId());
                     }
                 }
@@ -253,4 +254,12 @@ public class StockTransferAction extends BasePaginatedAction {
         params.add("toWarehouse");
         return params;
     }
+
+	public InventoryService getInventoryService() {
+		return inventoryService;
+	}
+
+	public void setInventoryService(InventoryService inventoryService) {
+		this.inventoryService = inventoryService;
+	}
 }
