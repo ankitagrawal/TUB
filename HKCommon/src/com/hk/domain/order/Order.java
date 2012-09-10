@@ -164,8 +164,8 @@ public class Order implements java.io.Serializable {
     @JoinColumn(name = "secondary_referrer_for_order_id")
     private SecondaryReferrerForOrder secondaryReferrerForOrder;
 
-    @Column(name = "target_del_date", nullable = true)
-    private Date                      targetDelDate;
+    @Column(name = "target_dispatch_date", nullable = true)
+    private Date                      targetDispatchDate;
 
     public boolean isPriorityOrder() {
         if (this.score != null) {
@@ -596,12 +596,12 @@ public class Order implements java.io.Serializable {
         this.subscriptions = subscriptions;
     }
 
-    public Date getTargetDelDate() {
-        return targetDelDate;
+    public Date getTargetDispatchDate() {
+        return targetDispatchDate;
     }
 
-    public void setTargetDelDate(Date targetDelDate) {
-        this.targetDelDate = targetDelDate;
+    public void setTargetDispatchDate(Date targetDelDate) {
+        this.targetDispatchDate = targetDelDate;
     }
 
     /*

@@ -37,7 +37,7 @@ public class ShippingOrderHelper {
     
     Long[] dispatchDays = OrderUtil.getDispatchDaysForSO(shippingOrder);
     Date targetDelDate = HKDateUtil.addToDate(shippingOrder.getBaseOrder().getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH, Integer.parseInt(dispatchDays[0].toString()));
-    shippingOrder.setTargetDelDate(targetDelDate);
+    shippingOrder.setTargetDispatchDate(targetDelDate);
     
     return shippingOrder;
   }

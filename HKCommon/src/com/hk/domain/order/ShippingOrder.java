@@ -115,8 +115,8 @@ public class ShippingOrder implements java.io.Serializable {
     @Column(name = "last_esc_date", nullable = true)
     private Date                        lastEscDate;
 
-    @Column(name = "target_del_date", nullable = true)
-    private Date                        targetDelDate;
+    @Column(name = "target_dispatch_date", nullable = true)
+    private Date                        targetDispatchDate;
 
     public Long getId() {
         return this.id;
@@ -295,12 +295,12 @@ public class ShippingOrder implements java.io.Serializable {
         this.lastEscDate = lastEscDate;
     }
 
-    public Date getTargetDelDate() {
-        return targetDelDate;
+    public Date getTargetDispatchDate() {
+        return targetDispatchDate;
     }
 
-    public void setTargetDelDate(Date targetDelDate) {
-        this.targetDelDate = targetDelDate;
+    public void setTargetDispatchDate(Date targetDelDate) {
+        this.targetDispatchDate = targetDelDate;
     }
 
 }

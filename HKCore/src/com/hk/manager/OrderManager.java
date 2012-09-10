@@ -384,7 +384,7 @@ public class OrderManager {
 		
 		Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
 		Date targetDelDate = HKDateUtil.addToDate(order.getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH, Integer.parseInt(dispatchDays[0].toString()));
-		order.setTargetDelDate(targetDelDate);
+		order.setTargetDispatchDate(targetDelDate);
 
 		order = getOrderService().save(order);
 
