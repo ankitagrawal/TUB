@@ -49,8 +49,10 @@ public class VerifyRejectAffiliateAction extends BasePaginatedAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		affiliatePage = affiliateDao.searchAffiliates(EnumAffiliateStatus.Unverified.asAffiliateStatus(), name, email, websiteName, code, affiliateMode, affiliateType, EnumRole.HK_AFFILIATE_UNVERIFIED.toRole(), getPerPage(), pageNo);
-		unverifiedAffiliates = affiliatePage.getList();
+		affiliatePage = affiliateDao.searchAffiliates(EnumAffiliateStatus.Unverified.asAffiliateStatus(), name, email, websiteName, code, affiliateMode, affiliateType,null, getPerPage(), getPageNo());
+		if (affiliatePage != null) {
+			unverifiedAffiliates = affiliatePage.getList();
+		}
 		return new ForwardResolution("/pages/affiliate/verifyAffiliate.jsp");
 	}
 
@@ -207,4 +209,6 @@ public class VerifyRejectAffiliateAction extends BasePaginatedAction {
 	public void setAffiliateStatus(AffiliateStatus affiliateStatus) {
 		this.affiliateStatus = affiliateStatus;
 	}
+
+
 }

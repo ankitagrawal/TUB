@@ -27,12 +27,12 @@
       <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="manageAddresses"
               title="My Addresses"><span id="myAddressesLink">My Addresses</span></s:link>
     </li>
-    <shiro:hasRole name="<%=RoleConstants.HK_AFFILIATE_UNVERIFIED%>">
+      <shiro:hasAnyRoles name="<%=RoleConstants.AFFILIATE%>">
       <li>
         <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" title="Affiliate Account"><span
             id="affiliateAccountLink">Affiliate Account</span> </s:link>
       </li>
-        </shiro:hasRole>
+        </shiro:hasAnyRoles>
         <shiro:hasRole name="<%=RoleConstants.HK_AFFILIATE%>">
         <li>
             <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="showCouponScreen" title="Download Coupon Codes"><span
