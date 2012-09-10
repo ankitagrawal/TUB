@@ -52,7 +52,21 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (pincode == null) {
             return null;
         }
-        Courier suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), shippingOrder.getWarehouse());
+        // Ground Shipping logic starts -- suggested courier
+        boolean isGroundShipped = false;
+        Courier suggestedCourier = null;
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
+                isGroundShipped = true;
+                break;
+            }
+        }
+        if (isGroundShipped) {
+            suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
+        } else {
+            suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), false, shippingOrder.getWarehouse());
+        }
+//      Ground Shipping logic ends -- suggested courier  
         if (suggestedCourier == null) {
             return null;
         }
@@ -81,7 +95,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         suggestedAwb = awbService.save(suggestedAwb);
         shipment.setAwb(suggestedAwb);
         shipment.setShippingOrder(shippingOrder);
-        shipment.setBoxWeight(estimatedWeight/1000);
+        shipment.setBoxWeight(estimatedWeight / 1000);
         shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
         shippingOrder.setShipment(shipment);
         if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
@@ -90,9 +104,9 @@ public class ShipmentServiceImpl implements ShipmentService {
             shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
         }
         shippingOrder = shippingOrderService.save(shippingOrder);
-	    String trackingId = shipment.getAwb().getAwbNumber();
-	    String comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + trackingId;
-	    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created, comment);
+        String trackingId = shipment.getAwb().getAwbNumber();
+        String comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + trackingId;
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created, comment);
         return shippingOrder.getShipment();
     }
 
@@ -121,7 +135,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         return shipmentDao.findByAwb(awb);
     }
 
-    public void delete(Shipment shipment){
-         shipmentDao.delete(shipment);
+    public void delete(Shipment shipment) {
+        shipmentDao.delete(shipment);
     }
 }

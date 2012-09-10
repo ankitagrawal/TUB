@@ -113,8 +113,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
         PincodeDefaultCourier pincodeDefaultCourierNew;
         pincode = pincodeDao.getByPincode(pincodeString);
         warehouse = pincodeDefaultCourier.getWarehouse();
-        Courier codCourier = pincodeDefaultCourier.getCodCourier();
-        Courier nonCodCourier = pincodeDefaultCourier.getNonCodCourier();
+        Courier courier = pincodeDefaultCourier.getCourier();
+//        Courier nonCodCourier = pincodeDefaultCourier.getNonCodCourier();
         pincodeDefaultCourierNew = getPincodeService().getByPincodeWarehouse(pincode, warehouse);
         if (pincodeDefaultCourierNew != null) {
             addRedirectAlertMessage(new SimpleMessage("Default courier for destination pincode already exists for given warehouse"));
@@ -124,10 +124,14 @@ public class ChangeDefaultCourierAction extends BaseAction {
                 pincodeDefaultCourierNew = new PincodeDefaultCourier();
                 pincodeDefaultCourierNew.setWarehouse(warehouse);
                 pincodeDefaultCourierNew.setPincode(pincode);
-                pincodeDefaultCourierNew.setCodCourier(codCourier);
-                pincodeDefaultCourierNew.setNonCodCourier(nonCodCourier);
-                pincodeDefaultCourierNew.setEstimatedShippingCostCod(pincodeDefaultCourier.getEstimatedShippingCostCod());
-                pincodeDefaultCourierNew.setEstimatedShippingCostNonCod(pincodeDefaultCourier.getEstimatedShippingCostNonCod());
+                pincodeDefaultCourierNew.setCourier(courier);
+                pincodeDefaultCourierNew.setGroundShipping(pincodeDefaultCourier.isGroundShipping());
+                pincodeDefaultCourierNew.setCod(pincodeDefaultCourier.isCod());
+                pincodeDefaultCourierNew.setEstimatedShippingCost(pincodeDefaultCourier.getEstimatedShippingCost());
+//                pincodeDefaultCourierNew.setNonCodCourier(nonCodCourier);
+//                pincodeDefaultCourierNew.setEstimatedShippingCostCod(pincodeDefaultCourier.getEstimatedShippingCostCod());
+//                pincodeDefaultCourierNew.setEstimatedShippingCostNonCod(pincodeDefaultCourier.getEstimatedShippingCostNonCod());
+
                 pincodeDao.save(pincodeDefaultCourierNew);
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Pincode does not exists in the system."));
@@ -186,10 +190,10 @@ public class ChangeDefaultCourierAction extends BaseAction {
                         pincodeDao.save(defaultPincode);
                         logger.info("inserting:" + defaultPincode.getPincode().getPincode());
                     } else {
-                        existingDefaultCourierObject.setNonCodCourier(defaultPincode.getNonCodCourier());
-                        existingDefaultCourierObject.setCodCourier(defaultPincode.getCodCourier());
-                        existingDefaultCourierObject.setEstimatedShippingCostCod(defaultPincode.getEstimatedShippingCostCod());
-                        existingDefaultCourierObject.setEstimatedShippingCostNonCod(defaultPincode.getEstimatedShippingCostNonCod());
+                        existingDefaultCourierObject.setCourier(defaultPincode.getCourier());
+                        existingDefaultCourierObject.setCod(defaultPincode.isCod());
+                        existingDefaultCourierObject.setGroundShipping(defaultPincode.isGroundShipping());
+                        existingDefaultCourierObject.setEstimatedShippingCost(defaultPincode.getEstimatedShippingCost());
                         pincodeDao.save(existingDefaultCourierObject);
                         logger.info("updating:" + defaultPincode.getPincode().getPincode());
                     }

@@ -625,26 +625,33 @@ public Set<Pincode> readPincodeList(File objInFile) throws Exception {
           throw new NullPointerException("Warehouse does not exists @row" + rowCount);
         }
 
-        String codCourierId = getCellValue(XslConstants.COD_COURIER_ID, rowMap, headerMap);
-        String techCourierId = getCellValue(XslConstants.TECH_PROCESS_COURIER_ID, rowMap, headerMap);
-        if (StringUtils.isNotEmpty(codCourierId) || StringUtils.isNotEmpty(techCourierId)) {
-          Courier courier_cod = getCourierService().getCourierById(getLong(codCourierId));
-          Courier courier_tech = getCourierService().getCourierById(getLong(techCourierId));
-          if (courier_cod == null || courier_tech == null) {
+        String courierId = getCellValue(XslConstants.COURIER_ID, rowMap, headerMap);
+//        String techCourierId = getCellValue(XslConstants.COD_AVAILABLE, rowMap, headerMap);
+        if (StringUtils.isNotEmpty(courierId) ) {
+          Courier courier = getCourierService().getCourierById(getLong(courierId));
+          if (courier == null) {
             logger.error("Exception @ Row:" + rowCount);
             throw new Exception("Courier Id is incorrect @ Row:" + rowCount);
           }
 
-          Double estimatedShippingCostCod = getDouble(getCellValue(XslConstants.ESTIMATED_SHIPPING_COST_COD, rowMap, headerMap));
-          Double estimatedShippingCostNonCod = getDouble(getCellValue(XslConstants.ESTIMATED_SHIPPING_COST_NON_COD, rowMap, headerMap));
+           String codAvailable = getCellValue(XslConstants.COD_AVAILABLE, rowMap, headerMap);
+           boolean isCODAvailable = StringUtils.isNotBlank(codAvailable) && codAvailable.trim().toLowerCase().equals("y") ? true : false;
+
+          String groundShippingAvailable = getCellValue(XslConstants.GROUND_SHIPPING_AVAILABLE, rowMap, headerMap);
+          boolean isGroundShippingAvailable = StringUtils.isNotBlank(groundShippingAvailable) && groundShippingAvailable.trim().toLowerCase().equals("y") ? true : false;
+
+
+          Double estimatedShippingCost = getDouble(getCellValue(XslConstants.ESTIMATED_SHIPPING_COST, rowMap, headerMap));
+
 
           PincodeDefaultCourier pincodeDefaultCourier = new PincodeDefaultCourier();
           pincodeDefaultCourier.setPincode(pincode);
-          pincodeDefaultCourier.setCodCourier(courier_cod);
-          pincodeDefaultCourier.setNonCodCourier(courier_tech);
+          pincodeDefaultCourier.setCourier(courier);        
           pincodeDefaultCourier.setWarehouse(warehouse);
-          pincodeDefaultCourier.setEstimatedShippingCostCod(estimatedShippingCostCod);
-          pincodeDefaultCourier.setEstimatedShippingCostNonCod(estimatedShippingCostNonCod);
+          pincodeDefaultCourier.setGroundShipping(isGroundShippingAvailable);
+          pincodeDefaultCourier.setCod(isCODAvailable);
+          pincodeDefaultCourier.setEstimatedShippingCost(estimatedShippingCost);
+            
           defaultPincodeList.add(pincodeDefaultCourier);
 
           logger.debug("read row " + rowCount);

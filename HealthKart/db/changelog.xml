@@ -8692,5 +8692,5 @@
 			AND ship.`return_date` is null
 			AND so.shipping_order_status_id = 200
 		</sql>
-	</changeSet>
+	</changeSet>    
 </databaseChangeLog>

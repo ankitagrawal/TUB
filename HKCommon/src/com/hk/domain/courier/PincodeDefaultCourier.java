@@ -29,12 +29,8 @@ public class PincodeDefaultCourier implements java.io.Serializable {
     private Long      id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "courier_id_cod")
-    private Courier   codCourier;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "courier_id_non_cod")
-    private Courier   nonCodCourier;
+    @JoinColumn(name = "courier_id")
+    private Courier   Courier;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id", nullable = false)
@@ -44,11 +40,14 @@ public class PincodeDefaultCourier implements java.io.Serializable {
     @JoinColumn(name = "pincode_id", nullable = false)
     private Pincode   pincode;
 
-    @Column(name = "estimated_shipping_cost_cod")
-    private Double    estimatedShippingCostCod;
+    @Column(name = "cod")
+    private boolean              cod;
 
-    @Column(name = "estimated_shipping_cost_non_cod")
-    private Double    estimatedShippingCostNonCod;
+     @Column(name = "ground_shipping")
+    private boolean              groundShipping;
+
+    @Column(name = "estimated_shipping_cost")
+    private Double    estimatedShippingCost;
 
     public Long getId() {
         return this.id;
@@ -58,20 +57,12 @@ public class PincodeDefaultCourier implements java.io.Serializable {
         this.id = id;
     }
 
-    public Courier getCodCourier() {
-        return this.codCourier;
+    public Courier getCourier() {
+        return Courier;
     }
 
-    public void setCodCourier(Courier codCourier) {
-        this.codCourier = codCourier;
-    }
-
-    public Courier getNonCodCourier() {
-        return this.nonCodCourier;
-    }
-
-    public void setNonCodCourier(Courier nonCodCourier) {
-        this.nonCodCourier = nonCodCourier;
+    public void setCourier(Courier courier) {
+        Courier = courier;
     }
 
     public Warehouse getWarehouse() {
@@ -90,19 +81,27 @@ public class PincodeDefaultCourier implements java.io.Serializable {
         this.pincode = pincode;
     }
 
-    public Double getEstimatedShippingCostCod() {
-        return estimatedShippingCostCod;
+    public boolean isCod() {
+        return cod;
     }
 
-    public void setEstimatedShippingCostCod(Double estimatedShippingCostCod) {
-        this.estimatedShippingCostCod = estimatedShippingCostCod;
+    public void setCod(boolean cod) {
+        this.cod = cod;
     }
 
-    public Double getEstimatedShippingCostNonCod() {
-        return estimatedShippingCostNonCod;
+    public boolean isGroundShipping() {
+        return groundShipping;
     }
 
-    public void setEstimatedShippingCostNonCod(Double estimatedShippingCostNonCod) {
-        this.estimatedShippingCostNonCod = estimatedShippingCostNonCod;
+    public void setGroundShipping(boolean groundShipping) {
+        this.groundShipping = groundShipping;
+    }
+
+    public Double getEstimatedShippingCost() {
+        return estimatedShippingCost;
+    }
+
+    public void setEstimatedShippingCost(Double estimatedShippingCost) {
+        this.estimatedShippingCost = estimatedShippingCost;
     }
 }

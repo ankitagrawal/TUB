@@ -96,18 +96,18 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             boolean isCod = shippingOrder.isCOD();
 //            availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
 //  groundShipping logic Starts---
-            boolean    isGroundShipped = false;
+            boolean isGroundShipped = false;
             for (LineItem lineItem : shippingOrder.getLineItems()) {
                 if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
-                   isGroundShipped = true;
+                    isGroundShipped = true;
                     break;
                 }
             }
-             if (isGroundShipped) {
-                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped);
-             }else{
-             availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false);
-              }
+            if (isGroundShipped) {
+                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped);
+            } else {
+                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false);
+            }
 //  ground shipping logic ends
 
             if (availableCouriers == null || availableCouriers.isEmpty()) {
@@ -150,12 +150,27 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
 //                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
-                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod , false);
+                boolean isGroundShipped = false;
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
+                        isGroundShipped = true;
+                        break;
+                    }
+                }
+                if (isGroundShipped) {
+                    availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped);
+                } else {
+                    availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false);
+                }
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
                 } else {
-                    suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod);
+                    if (isGroundShipped) {
+                        suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
+                    } else {
+                        suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
+                    }
                     //Todo: Seema ."reason=create  shipment with default Awb  " Action: default Tracking id= gateway_order_id: Might remove when we have all the awb in system
                     trackingId = shippingOrder.getGatewayOrderId();
                 }

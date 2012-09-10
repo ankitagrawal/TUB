@@ -102,13 +102,14 @@ public class CourierServiceImpl implements CourierService {
            return getCourierServiceInfoDao().getCouriersForPincode(pinCode, isCOD, isGroundShipping);
        }
 
-    public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD) {
+    public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping) {
         Warehouse warehouse = getUserService().getWarehouseForLoggedInUser();
-        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
+        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD,isGroundShipping, warehouse);
     }
 
-    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, Warehouse warehouse) {
-        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
+    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
+//        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
+        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, isGroundShipping,  warehouse);
     }
 
     public Double getCashbackOnGroundShippedItem(Double groundshipItemAmount, Order order, Double groundshipItemweight) {
@@ -123,7 +124,7 @@ public class CourierServiceImpl implements CourierService {
         int index = 0;
         for (Warehouse warehouse : warehouses) {
             if (warehouse.getId() != warehouseService.getCorporateOffice().getId()) {
-                Courier courier = getDefaultCourier(pincodeObj, true, warehouse);
+                Courier courier = getDefaultCourier(pincodeObj, true,true, warehouse);
                 CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, warehouse);
                 if (courierPricingInfo == null) {
                     return null;

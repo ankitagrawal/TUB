@@ -109,18 +109,37 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         return courierList;
     }
 
-    public Courier getDefaultCourierForPincode(Pincode pincode, boolean forCOD, Warehouse warehouse) {
+//    public Courier getDefaultCourierForPincode(Pincode pincode, boolean forCOD, Warehouse warehouse) {
+//        Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
+//        pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
+//        pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
+//        PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
+//        if (pincodeDefaultCourierObj != null) {
+//            if (forCOD)
+//                return pincodeDefaultCourierObj.getCodCourier();
+//            else
+//                return pincodeDefaultCourierObj.getNonCodCourier();
+//        }
+//        return null;
+//    }
+//
+
+    public Courier getDefaultCourierForPincode(Pincode pincode, boolean forCOD, boolean forGroundShipping, Warehouse warehouse) {
         Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
         pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
         pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
+        if (forCOD) {
+            pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", forCOD));
+        }
+        if (forGroundShipping) {
+            pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", forGroundShipping));
+        }
         PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
         if (pincodeDefaultCourierObj != null) {
-            if (forCOD)
-                return pincodeDefaultCourierObj.getCodCourier();
-            else
-                return pincodeDefaultCourierObj.getNonCodCourier();
+            return pincodeDefaultCourierObj.getCourier();
         }
         return null;
+
     }
 
      public boolean isGroundShippingAvailable(String pincode) {

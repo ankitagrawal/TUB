@@ -28,9 +28,11 @@ public interface CourierService {
 
 //    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD);
 
-    public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD);
+    public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping);
 
-    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, Warehouse warehouse);
+//    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, Warehouse warehouse);
+
+    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
 
     public Double getCashbackOnGroundShippedItem(Double groundshipItemAmount, Order order, Double groundshipItemweight);
 
