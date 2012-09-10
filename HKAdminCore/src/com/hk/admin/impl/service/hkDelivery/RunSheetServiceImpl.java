@@ -9,6 +9,7 @@ import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
@@ -181,12 +182,13 @@ public class RunSheetServiceImpl implements RunSheetService {
     }
 
 	@Override
-	public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList){
+	public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList, User user){
 		if(consignmentList != null){
 			for(Consignment consignment : consignmentList){
 				if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
 					ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(consignment.getCnnNumber());
 					shippingOrder.setOrderStatus(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus());
+					shippingOrderService.logShippingOrderActivity(shippingOrder, user, EnumShippingOrderLifecycleActivity.SO_Delivered.asShippingOrderLifecycleActivity(), "");
 					runsheetDao.save(shippingOrder);
 				}
 			}
