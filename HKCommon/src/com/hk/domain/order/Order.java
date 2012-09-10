@@ -132,9 +132,8 @@ public class Order implements java.io.Serializable {
     @Column(name = "is_b2b_order")
     private Boolean                   b2bOrder;
 
-  @Column(name = "is_subscription_order", nullable = false)
-  private Boolean                   subscriptionOrder;
-
+    @Column(name = "is_subscription_order", nullable = false)
+    private Boolean                   subscriptionOrder;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderLifecycle>      orderLifecycles = new ArrayList<OrderLifecycle>();
@@ -150,8 +149,8 @@ public class Order implements java.io.Serializable {
     @Column(name = "version", nullable = false)
     private Long                      version         = new Long(1);
 
-    @Column(name = "score", nullable=true)
-    private Long                    score;
+    @Column(name = "score", nullable = true)
+    private Long                      score;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
@@ -165,16 +164,16 @@ public class Order implements java.io.Serializable {
     @JoinColumn(name = "secondary_referrer_for_order_id")
     private SecondaryReferrerForOrder secondaryReferrerForOrder;
 
+    @Column(name = "target_del_date", nullable = true)
+    private Date                      targetDelDate;
 
     public boolean isPriorityOrder() {
-        if(this.score!=null){
-            return (this.score>= CLMConstants.thresholdScore);
-        }else{
+        if (this.score != null) {
+            return (this.score >= CLMConstants.thresholdScore);
+        } else {
             return false;
         }
     }
-
-
 
     public Order() {
     }
@@ -453,13 +452,13 @@ public class Order implements java.io.Serializable {
         this.b2bOrder = b2bOrder;
     }
 
-  public Boolean isSubscriptionOrder() {
-      if(subscriptionOrder!=null) {
-          return subscriptionOrder;
-      }else {
-          return false;
-      }
-  }
+    public Boolean isSubscriptionOrder() {
+        if (subscriptionOrder != null) {
+            return subscriptionOrder;
+        } else {
+            return false;
+        }
+    }
 
     public Boolean getSubscriptionOrder() {
         return subscriptionOrder;
@@ -589,15 +588,23 @@ public class Order implements java.io.Serializable {
         return "NA";
     }
 
-  public Set<Subscription> getSubscriptions() {
-    return subscriptions;
-  }
+    public Set<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
 
-  public void setSubscriptions(Set<Subscription> subscriptions) {
-    this.subscriptions = subscriptions;
-  }
+    public void setSubscriptions(Set<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
 
-  /*
-  * public void setBasketCategory(String basketCategory) { this.basketCategory = basketCategory; }
-  */
+    public Date getTargetDelDate() {
+        return targetDelDate;
+    }
+
+    public void setTargetDelDate(Date targetDelDate) {
+        this.targetDelDate = targetDelDate;
+    }
+
+    /*
+     * public void setBasketCategory(String basketCategory) { this.basketCategory = basketCategory; }
+     */
 }

@@ -22,6 +22,8 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
+import com.hk.util.HKDateUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,6 +195,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 	@Transactional
 	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc) {
 		shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
+		shippingOrder.setLastEscDate(HKDateUtil.getNow());
 		shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
 		if (isAutoEsc) {
 			logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue);
