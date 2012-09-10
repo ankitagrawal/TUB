@@ -30,5 +30,5 @@ public interface AdminOrderService {
 
     public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser);
 
-	public void splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order);
+	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order);
 }
