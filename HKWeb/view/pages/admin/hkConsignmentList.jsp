@@ -50,8 +50,10 @@
                     </s:select>
                 </shiro:hasPermission>
                 <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
-                    <c:set var="hub" value="${hk:getHubForHkdeliveryUser(consignmentAction.loggedOnUser)}" />
-                     <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong>&nbsp;&nbsp;
+	                <shiro:lacksPermission name="<%=PermissionConstants.SELECT_HUB%>" >
+						<c:set var="hub" value="${hk:getHubForHkdeliveryUser(consignmentAction.loggedOnUser)}" />
+						 <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong>&nbsp;&nbsp;
+	                </shiro:lacksPermission>
                 </shiro:hasPermission>
                 <label>Runsheet Id:</label><s:text name="runsheet"/>
                 <label>Reconciled: </label>

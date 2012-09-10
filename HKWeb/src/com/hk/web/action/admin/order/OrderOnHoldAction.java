@@ -41,9 +41,6 @@ public class OrderOnHoldAction extends BaseAction {
     @Autowired
     private AdminOrderService         adminOrderService;
 
-   /* @Autowired
-    private ShippingOrderService      shippingOrderService;*/
-
     @Autowired
     private AdminShippingOrderService adminShippingOrderService;
 
@@ -53,15 +50,6 @@ public class OrderOnHoldAction extends BaseAction {
     @DefaultHandler
     @JsonHandler
     public Resolution pre() {
-        /*
-         * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser = userDao.getUserById(getPrincipal().getId()); }
-         * order = orderManager.putOrderOnHold(order, loggedOnUser); Map<String, Object> data = new HashMap<String,
-         * Object>(); data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
-         * HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", data);
-         * return new JsonResolution(healthkartResponse);
-         */
-
-        // TODO: # warehouse fix this
         return null;
     }
 
@@ -81,29 +69,12 @@ public class OrderOnHoldAction extends BaseAction {
     public Resolution holdOrder() {
         adminOrderService.putOrderOnHold(order);
         return sendResponse(order.getOrderStatus());
-
     }
 
     @JsonHandler
     public Resolution unHoldOrder() {
-
         adminOrderService.unHoldOrder(order);
         return sendResponse(order.getOrderStatus());
-
-        /*
-         * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.Pending.getId())); order = orderDao.save(order);
-         * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser = userDao.getUserById(getPrincipal().getId()); }
-         *//**
-             * Order lifecycle activity logging - Order Removed OnHold
-             */
-        /*
-         * orderManager.logOrderActivity(order, loggedOnUser,
-         * orderLifecycleActivityDao.find(EnumOrderLifecycleActivity.OrderRemovedOnHold.getId()), null); Map<String,
-         * Object> data = new HashMap<String, Object>(); data.put("orderStatus",
-         * JsonUtils.hydrateHibernateObject(order.getOrderStatus())); HealthkartResponse healthkartResponse = new
-         * HealthkartResponse(HealthkartResponse.STATUS_OK, "", data); return new JsonResolution(healthkartResponse);
-         */
-
     }
 
     private Resolution sendResponse(OrderStatus orderStatus) {
