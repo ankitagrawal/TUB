@@ -107,7 +107,12 @@
         </div>
         <div class="clear"></div>
         <div class="floatleft">
-            Escalted On: <fmt:formatDate value="${(hk:getEscalationDate(shippingOrder))}" type="both" timeStyle="short"/>
+            <!-- Escalted On: <fmt:formatDate value="${(hk:getEscalationDate(shippingOrder))}" type="both" timeStyle="short"/> -->
+            Escalted On: <fmt:formatDate value="${shippingOrder.lastEscDate}" type="both" timeStyle="short"/>
+        </div>
+        <div class="clear"></div>
+        <div class="floatleft">
+            Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
         </div>
         <div class="clear"></div>
          <div class="floatleft">
