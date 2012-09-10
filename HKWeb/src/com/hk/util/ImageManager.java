@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import com.hk.constants.catalog.image.EnumImageType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -523,6 +524,10 @@ public class ImageManager {
             }
         }
     }
+
+	private ProductImage findByImageType(EnumImageType enumImageType){
+
+	}
 
     /*
     * private void resizeAndUpload(String filePath, ComboImage comboImage) throws Exception { String repositoryFilePath =

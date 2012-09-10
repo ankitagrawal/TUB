@@ -17,7 +17,7 @@
         <c:if test="${sizeType != null}">
             <accessories>
                 <Glasses id="${productVariant.id}" type="${sizeType}" price="${productVariant.hkPrice}"
-                         mrp="${productVariant.markedPrice}" name=<![CDATA[${hk:escapeHtml(product.name)}]]>
+                         mrp="${productVariant.markedPrice}" name="${hk:escapeHtml(product.name)}">
                          desc="${product.description}">
                     <imgPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, imageId, false)%>
                     </imgPath>
