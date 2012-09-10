@@ -75,6 +75,7 @@ public class Functions {
     private static final String          DEFAULT_DELIEVERY_DAYS = "1-3";
     private static final String          BUSINESS_DAYS          = " business days";
     private static final long            DEFAULT_MIN_DEL_DAYS   = 1;
+    
 
 
     // TODO: rewrite
@@ -494,7 +495,10 @@ public class Functions {
                 }
 
             }
-
+            
+            if(minDays == DEFAULT_MIN_DEL_DAYS && maxDays == DEFAULT_MIN_DEL_DAYS){
+              return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
+            }
             return String.valueOf(minDays).concat("-").concat(String.valueOf(maxDays)).concat(BUSINESS_DAYS);
         } else {
             return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);

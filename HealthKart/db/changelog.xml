@@ -8693,4 +8693,19 @@
 			AND so.shipping_order_status_id = 200
 		</sql>
 	</changeSet>
+    <changeSet author="vaibhav (generated)" id="1347274941034-1">
+        <addColumn tableName="base_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1347274941034-2">
+        <addColumn tableName="shipping_order">
+            <column name="last_esc_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1347274941034-3">
+        <addColumn tableName="shipping_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
