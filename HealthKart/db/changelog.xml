@@ -8693,112 +8693,112 @@
 			AND so.shipping_order_status_id = 200
 		</sql>
 	</changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-1">
+    <changeSet author="Rohit (generated)" id="1347279976393-1">
         <addColumn tableName="goods_received_note">
             <column name="discount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-2">
+    <changeSet author="Rohit (generated)" id="1347279976393-2">
         <addColumn tableName="goods_received_note">
             <column name="final_payable_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-3">
+    <changeSet author="Rohit (generated)" id="1347279976393-3">
         <addColumn tableName="goods_received_note">
             <column name="surcharge_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-4">
+    <changeSet author="Rohit (generated)" id="1347279976393-4">
         <addColumn tableName="goods_received_note">
             <column name="tax_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-5">
+    <changeSet author="Rohit (generated)" id="1347279976393-5">
         <addColumn tableName="goods_received_note">
             <column name="taxable_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-6">
+    <changeSet author="Rohit (generated)" id="1347279976393-6">
         <addColumn tableName="grn_line_item">
             <column name="discount_percent" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-7">
+    <changeSet author="Rohit (generated)" id="1347279976393-7">
         <addColumn tableName="grn_line_item">
             <column name="payable_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-8">
+    <changeSet author="Rohit (generated)" id="1347279976393-8">
         <addColumn tableName="grn_line_item">
             <column name="procurement_price" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-9">
+    <changeSet author="Rohit (generated)" id="1347279976393-9">
         <addColumn tableName="grn_line_item">
             <column name="surcharge_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-10">
+    <changeSet author="Rohit (generated)" id="1347279976393-10">
         <addColumn tableName="grn_line_item">
             <column name="tax_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-11">
+    <changeSet author="Rohit (generated)" id="1347279976393-11">
         <addColumn tableName="grn_line_item">
             <column name="taxable_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-12">
+    <changeSet author="Rohit (generated)" id="1347279976393-12">
         <addColumn tableName="po_line_item">
             <column name="discount_percent" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-13">
+    <changeSet author="Rohit (generated)" id="1347279976393-13">
         <addColumn tableName="po_line_item">
             <column name="payable_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-14">
+    <changeSet author="Rohit (generated)" id="1347279976393-14">
         <addColumn tableName="po_line_item">
             <column name="procurement_price" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-15">
+    <changeSet author="Rohit (generated)" id="1347279976393-15">
         <addColumn tableName="po_line_item">
             <column name="surcharge_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-16">
+    <changeSet author="Rohit (generated)" id="1347279976393-16">
         <addColumn tableName="po_line_item">
             <column name="tax_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-17">
+    <changeSet author="Rohit (generated)" id="1347279976393-17">
         <addColumn tableName="po_line_item">
             <column name="taxable_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-18">
+    <changeSet author="Rohit (generated)" id="1347279976393-18">
         <addColumn tableName="purchase_order">
             <column name="discount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-19">
+    <changeSet author="Rohit (generated)" id="1347279976393-19">
         <addColumn tableName="purchase_order">
             <column name="final_payable_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-20">
+    <changeSet author="Rohit (generated)" id="1347279976393-20">
         <addColumn tableName="purchase_order">
             <column name="surcharge_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-21">
+    <changeSet author="Rohit (generated)" id="1347279976393-21">
         <addColumn tableName="purchase_order">
             <column name="tax_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347007359586-22">
+    <changeSet author="Rohit (generated)" id="1347279976393-22">
         <addColumn tableName="purchase_order">
             <column name="taxable_amount" type="DECIMAL(12,2)"/>
         </addColumn>
