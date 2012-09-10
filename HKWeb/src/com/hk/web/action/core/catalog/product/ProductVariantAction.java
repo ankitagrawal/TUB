@@ -2,9 +2,12 @@ package com.hk.web.action.core.catalog.product;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.pact.service.image.ProductImageService;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKImageUtils;
 import com.hk.util.ImageManager;
 import com.hk.web.HealthkartResponse;
@@ -29,6 +32,8 @@ public class ProductVariantAction extends BaseAction {
 	ProductVariantDao productVariantDao;
 	@Autowired
 	ImageManager imageManager;
+	@Autowired
+	ProductImageService productImageService;
 
 	public Resolution renderManageImages() {
 		logger.debug("varaintId: " + productVariant.getId());
@@ -75,6 +80,12 @@ public class ProductVariantAction extends BaseAction {
 			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "no image set -fail", "");
 			return new JsonResolution(healthkartResponse);
 		}
+	}
+
+	public Resolution searchImages(){
+		productImages = productImageService.searchProductImages(imageType, productVariant.getProduct(), productVariant, true, false);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", productImages);
+		return new JsonResolution(healthkartResponse);
 	}
 
 	public ProductVariant getProductVariant() {

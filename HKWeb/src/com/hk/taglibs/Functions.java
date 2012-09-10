@@ -47,6 +47,7 @@ import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
@@ -568,4 +569,9 @@ public class Functions {
         return hubService.getHubForUser(user);
     }
 
+	public static ProductImage searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, boolean showHiddenImages){
+		ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
+		List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
+		return productImages != null && !productImages.isEmpty() ? productImages.get(0) : null;
+	}
 }

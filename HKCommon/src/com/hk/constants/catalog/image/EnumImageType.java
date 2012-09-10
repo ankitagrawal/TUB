@@ -13,6 +13,7 @@ import java.util.List;
 public enum EnumImageType {
 
 	FrontFacingEye(5L, "FrontFacingEye"),
+	SideFacingEye(7L, "SideFacingEye"),
 	SupplementsInfo(10L, "SupplementsInfo");
 
 	private String name;
@@ -33,6 +34,7 @@ public enum EnumImageType {
 	public static List<EnumImageType> getAllImageTypes() {
 		return Arrays.asList(
 				EnumImageType.FrontFacingEye,
+				EnumImageType.SideFacingEye,
 				EnumImageType.SupplementsInfo
 				);
 
