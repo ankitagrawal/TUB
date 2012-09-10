@@ -113,6 +113,7 @@
         <div class="clear"></div>
         <div class="floatleft">
             Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
+            Score : ${shippingOrder.baseOrder.score} 
         </div>
         <div class="clear"></div>
          <div class="floatleft">
