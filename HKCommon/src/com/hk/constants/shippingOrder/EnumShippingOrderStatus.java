@@ -105,7 +105,7 @@ public enum EnumShippingOrderStatus {
     }
 
     public static List<EnumShippingOrderStatus> getStatusSearchingInDeliveryQueue() {
-        return Arrays.asList(EnumShippingOrderStatus.SO_Shipped, EnumShippingOrderStatus.SO_Delivered, EnumShippingOrderStatus.SO_Returned, EnumShippingOrderStatus.SO_Lost);
+        return Arrays.asList(EnumShippingOrderStatus.SO_Delivered, EnumShippingOrderStatus.SO_Returned, EnumShippingOrderStatus.SO_Lost);
     }
 
     public static List<EnumShippingOrderStatus> getStatusForCRMReport() {
