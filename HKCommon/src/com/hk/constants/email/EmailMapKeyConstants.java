@@ -13,6 +13,7 @@ public class EmailMapKeyConstants {
     public static final String tags                  = "tags";
     public static final String emailId               = "email_id";
     public static final String productId             = "product_id";
+    public static final String similarProductId      = "similar_product_id";
     public static final String productVariantId      = "product_variant_id";
     public static final String couponCode            = "coupon_code";
     public static final String name                  = "name";

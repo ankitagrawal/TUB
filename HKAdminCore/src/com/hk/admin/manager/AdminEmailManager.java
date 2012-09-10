@@ -13,6 +13,10 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import com.hk.domain.catalog.product.SimilarProduct;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateModelException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.hibernate.Session;
@@ -172,11 +176,10 @@ public class AdminEmailManager {
     int breakFromLoop = emailersList.size() < COMMIT_COUNT ? emailersList.size() : COMMIT_COUNT;
 
     Session session = baseDao.getHibernateTemplate().getSessionFactory().openSession();
-    for (EmailRecepient emailRecepient : emailersList) {
 
+      for (EmailRecepient emailRecepient : emailersList) {
       try {
-
-        // values that may be used in FTL
+                 // values that may be used in FTL
         HashMap valuesMap = new HashMap();
         valuesMap.put(EmailMapKeyConstants.unsubscribeLink, getLinkManager().getEmailUnsubscribeLink(emailRecepient));
 
@@ -293,7 +296,9 @@ public class AdminEmailManager {
       return false;
     }
 
-    for (NotifyMe notifyMeObject : notifyMeList) {
+
+
+      for (NotifyMe notifyMeObject : notifyMeList) {
       // find existing recipients or create recipients through the emails ids passed
       EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(notifyMeObject.getEmail());
       // values that may be used in FTL
@@ -305,8 +310,10 @@ public class AdminEmailManager {
       } else {
         valuesMap.put("product", productVariant.getProduct());
       }
-      valuesMap.put("emailCampaign", emailCampaign);
-      // subscribed user + same campaign mail not yet sent
+        valuesMap.put("emailCampaign", emailCampaign);
+
+
+        // subscribed user + same campaign mail not yet sent
       List<EmailerHistory> emailerHistoryList = getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign);
       if (emailerHistoryList != null && emailerHistoryList.isEmpty() && notifyMeObject.getNotifiedByUser() == null) {
         // last mail date null or last mail date > campaign min date
@@ -373,6 +380,16 @@ public class AdminEmailManager {
       return false;
     }
 
+      TemplateHashModel hkImageUtils = null;
+      try{
+          BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+          TemplateHashModel staticModels = wrapper.getStaticModels();
+          hkImageUtils =
+                  (TemplateHashModel) staticModels.get("com.hk.util.HKImageUtils");
+      }catch (TemplateModelException ex){
+          logger.error("Unable to get static methods definition in HKImageUtils", ex);
+      }
+
 
     while (rowIterator != null && rowIterator.hasNext()) {
       HashMap excelMap = new HashMap();
@@ -384,7 +401,7 @@ public class AdminEmailManager {
         excelMap.put(key.toLowerCase(), value);
         i++;
       }
-
+      excelMap.put("HKImageUtils", hkImageUtils);
 
       EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(excelMap.get(EmailMapKeyConstants.emailId).toString());
       if (emailRecepient.isEmailAllowed()) {
@@ -398,6 +415,7 @@ public class AdminEmailManager {
         }
         if (!emailSentToRecepientRecently) {
           HashMap extraMapEntries = getExtraMapEntriesForMailMerge(excelMap);
+
           if (extraMapEntries != null) {
             excelMap.putAll(extraMapEntries);
           } else {
@@ -441,6 +459,17 @@ public class AdminEmailManager {
       excelMap.put(EmailMapKeyConstants.coupon, coupon);
     }
 
+      if (excelMap.containsKey(EmailMapKeyConstants.similarProductId)) {
+          String[] similarProductIds = excelMap.get(EmailMapKeyConstants.similarProductId).toString().split(",");
+          List<Product> similarProducts = new ArrayList<Product>();
+          for (String productId : similarProductIds){
+            Product product = getProductService().getProductById(productId);
+            product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
+            similarProducts.add(product);
+          }
+          excelMap.put(EmailMapKeyConstants.similarProductId, similarProducts);
+      }
+
     if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
       Product product = getProductService().getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
       if (product != null) {
@@ -479,7 +508,7 @@ public class AdminEmailManager {
           Long productMainImageId = product.getMainImageId();
           excelMap.put(EmailMapKeyConstants.product, product);
           //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-          excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
+          excelMap.put(EmailMapKeyConstants.productUrl,  convertToWww(getProductService().getProductUrl(product,false)));
 
           if (productMainImageId != null) {
             excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
@@ -688,12 +717,10 @@ public class AdminEmailManager {
     return success;
   }
 
-
-  //todo : isko thik kar do - for now hardcoding logic to convert admin.healthkart.com to www.healthkart.com
-  private static String convertToWww(String productUrl) {
-    return productUrl.replaceAll("admin\\.healthkart\\.com", "www.healthkart.com");
-  }
-
+    //todo : isko thik kar do - for now hardcoding logic to convert admin.healthkart.com to www.healthkart.com
+    public static String convertToWww(String productUrl) {
+        return productUrl.replaceAll("admin\\.healthkart\\.com", "www.healthkart.com");
+    }
 
   public EmailService getEmailService() {
     return emailService;

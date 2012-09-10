@@ -74,6 +74,14 @@ public class HKImageUtils {
         return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
     }
 
+    public static String getS3ImageUrl(String imageSize, Long imageId, boolean isSecure) {
+        String prefix = "http://";
+        if (isSecure) {
+            prefix = "https://";
+        }
+        return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize + ".jpg";
+    }
+
     public static String getS3SuperSaverImageUrl(EnumImageSize imageSize, Long imageId, boolean isSecure) {
         String prefix = "http://";
         if (isSecure) {
