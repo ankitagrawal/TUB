@@ -7,6 +7,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.image.ProductImageDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
  * Time: 3:04 PM
  * To change this template use File | Settings | File Templates.
  */
+@Repository
 public class ProductImageDaoImpl extends BaseDaoImpl implements ProductImageDao {
 
 

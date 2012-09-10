@@ -5,6 +5,7 @@ import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.image.ProductImageDao;
 import com.hk.pact.service.image.ProductImageService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * Time: 3:05 PM
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class ProductImageServiceImpl implements ProductImageService {
 
 	ProductImageDao productImageDao;
