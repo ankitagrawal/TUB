@@ -525,10 +525,6 @@ public class ImageManager {
         }
     }
 
-	private ProductImage findByImageType(EnumImageType enumImageType){
-
-	}
-
     /*
     * private void resizeAndUpload(String filePath, ComboImage comboImage) throws Exception { String repositoryFilePath =
     * null; Long id = comboImage.getId(); // saving original image String imageUrl =
