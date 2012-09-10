@@ -1,11 +1,16 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductVariantAction" var="pva"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
+    <%
+        pageContext.setAttribute("imageTypeList", EnumImageType.getAllImageTypes());
+    %>
 
-  <s:layout-component name="content">
+
+    <s:layout-component name="content">
 
     <s:form beanclass="com.hk.web.action.core.catalog.product.ProductVariantAction">
       Choose Variant
@@ -32,6 +37,9 @@
       <th>
         Set as PV image
       </th>
+        <th>
+            Set Image Type
+        </th>
     </tr>
     <s:form beanclass="com.hk.web.action.core.catalog.product.ProductVariantAction">
       ${pva.productVariant.colorOptionsValue}
@@ -50,6 +58,12 @@
             <td>
               <s:radio value="${productImage.id}" name="mainProductImageId"/>
             </td>
+            <s:select name="imageType" style="height:30px;font-size:1.2em;padding:1px;">
+                <s:option value="">-None-</s:option>
+                <c:forEach items="${imageTypeList}" var="imageType">
+                    <s:option value="${imageType.id}">${imageType.name}</s:option>
+                </c:forEach>
+            </s:select>
         </tr>
       </c:forEach>
       <tr>
