@@ -23,6 +23,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
+import com.hk.util.OrderUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -222,6 +224,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 		shippingOrder.setWarehouse(warehouse);
 		shippingOrder.setAmount(0D);
 		shippingOrder.setReconciliationStatus(getReconciliationStatusDao().getReconciliationStatusById(EnumReconciliationStatus.PENDING));
+		
 
 		return shippingOrder;
 	}

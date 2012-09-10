@@ -363,16 +363,12 @@ public class OrderServiceImpl implements OrderService {
                     ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
                     shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
                     
-                    Long[] dispatchDays = OrderUtil.getDispatchDaysForSO(shippingOrder);
-                    Date targetDelDate = HKDateUtil.addToDate(order.getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH, Integer.parseInt(dispatchDays[0].toString()));
-                    shippingOrder.setTargetDelDate(targetDelDate);
-                    
                     shippingOrder = shippingOrderService.save(shippingOrder);
                     /**
                      * this additional call to save is done so that we have shipping order id to generate shipping order
                      * gateway id
                      */
-                    shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
+                    shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
                     shippingOrder = shippingOrderService.save(shippingOrder);
                     shippingOrders.add(shippingOrder);
                 }
