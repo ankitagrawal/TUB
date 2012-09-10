@@ -201,7 +201,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
                 baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
             }
         }else{
-            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDelDate"));
+            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDispatchDate"));
             baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
             criteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
         }
