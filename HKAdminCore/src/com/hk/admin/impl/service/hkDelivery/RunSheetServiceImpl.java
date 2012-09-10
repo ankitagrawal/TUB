@@ -4,12 +4,12 @@ import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
@@ -42,6 +42,8 @@ public class RunSheetServiceImpl implements RunSheetService {
     UserService userService;
 	@Autowired
 	ShippingOrderService shippingOrderService;
+	@Autowired
+	private AdminShippingOrderService adminShippingOrderService;
 
     @Override
     public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
@@ -182,14 +184,12 @@ public class RunSheetServiceImpl implements RunSheetService {
     }
 
 	@Override
-	public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList, User user){
+	public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList){
 		if(consignmentList != null){
 			for(Consignment consignment : consignmentList){
 				if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
 					ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(consignment.getCnnNumber());
-					shippingOrder.setOrderStatus(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus());
-					shippingOrderService.logShippingOrderActivity(shippingOrder, user, EnumShippingOrderLifecycleActivity.SO_Delivered.asShippingOrderLifecycleActivity(), "");
-					runsheetDao.save(shippingOrder);
+					adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
 				}
 			}
 		}

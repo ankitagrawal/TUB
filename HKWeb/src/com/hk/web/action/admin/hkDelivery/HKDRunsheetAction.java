@@ -149,7 +149,6 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     }
 
     public Resolution closeRunsheet(){
-	    loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         if(runsheet != null){
             if(runsheet.getActualCollection() == null){
                 getContext().getValidationErrors().add("1", new SimpleError("Please enter actual collection"));
@@ -164,7 +163,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 	            }
 	            runsheet.setRunsheetStatus(getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
 	            //mark shipments delivered on healthkart side
-	            runsheetService.markShippingOrderDeliveredAgainstConsignments(runsheet.getConsignments(), loggedOnUser);
+	            runsheetService.markShippingOrderDeliveredAgainstConsignments(runsheet.getConsignments());
             }
             else{
                 addRedirectAlertMessage(new SimpleMessage("cannot close runsheet with consignment status out for delivery or receieved at hub."));
