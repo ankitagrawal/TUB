@@ -1,4 +1,4 @@
-Your order ${order.gatewayOrderId} has been delivered.
+Your order ${order.gatewayOrderId} has been delivered. Please share some feedback!
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -47,9 +47,8 @@ Your order ${order.gatewayOrderId} has been delivered.
 				<td align="left" height="15"></td>
 			</tr>
 			<tr>
-				<td width="579" valign="top">Hi ${order.user.name}!<br/> <br/>
-					Greetings from HealthKart!<br/> <br/>
-					Thank you for shopping with us!<br/> <br/>
+				<td width="579" valign="top">Dear ${order.user.name}<br/> <br/>
+					Thank you for shopping with HealthKart. We trust that you had a good shopping experience and are on your way to the zenith of health.<br/><br/>
 					Your Order No.: ${order.gatewayOrderId} has been successfully delivered.<br/>
 					Summary of your order: <br/>
 
@@ -80,10 +79,10 @@ Your order ${order.gatewayOrderId} has been delivered.
 							</tr>
 						</#list>
 					</#list>
-					</table>
-					We hope that you are happy with your purchase. We would appreciate your feedback on our services. <br/>
-
-					Your comments and feedback help us improve our products and services for other customers. <br/>
+					</table> <br>
+					We would like to know more about your experience shopping with us, so that we can improve our services. <br>
+					While we like positive feedback, we actually love negative feedback, since that empowers us to correct our course & serve you better.<br>
+					Please feel free to be as frank and critical as you want - after all, we are your health partner for life!<br/>
 					<br>
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
 						<tr>
