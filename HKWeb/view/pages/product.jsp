@@ -130,6 +130,8 @@
 
 			$('.jqzoom').jqzoom({
 				zoomType:'standard',
+                zoomWidth:400,
+                zoomHeight:400,
 				lens:true,
 				preloadImages:false,
 				alwaysOn:false
