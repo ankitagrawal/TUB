@@ -2980,7 +2980,7 @@ i{
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
-    background: #F0F6F9;
+    background: #FAFAFA;
     /*border: 1px solid #346F97;*/
 }
 
@@ -2989,8 +2989,8 @@ i{
 }
 
 .jcarousel-skin-tango .jcarousel-container-horizontal {
-    width: 245px;
-    padding: 5px 8px;
+    /*width: 245px;*/
+    padding: 5px 45px;
 }
 
 .jcarousel-skin-tango .jcarousel-container-vertical {
@@ -3004,7 +3004,7 @@ i{
 }
 
 .jcarousel-skin-tango .jcarousel-clip-horizontal {
-    width:  245px;
+    /*width:  245px;*/
     height: 75px;
 }
 
