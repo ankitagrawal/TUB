@@ -81,8 +81,8 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 					</#list>
 					</table> <br>
 					We would like to know more about your experience shopping with us, so that we can improve our services. <br>
-					While we like positive feedback, we actually love negative feedback, since that empowers us to correct our course & serve you better.<br>
-					Please feel free to be as frank and critical as you want - after all, we are your health partner for life!<br/>
+					While we like positive feedback, we think your criticism can help us correct our course & serve you better.<br>
+					Feel free to be frank, we're listening.<br/>
 					<br>
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
 						<tr>
