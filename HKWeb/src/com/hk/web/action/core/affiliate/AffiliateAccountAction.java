@@ -84,6 +84,11 @@ public class AffiliateAccountAction extends BaseAction {
 				if (affiliate.getMainAddressId() != null) {
 					affiliateDefaultAddress = getAddressDao().get(Address.class,affiliate.getMainAddressId());
 				}
+				if (affiliate.getCategories() != null) {
+					for (Category category : affiliate.getCategories()) {
+						categories.add(category.getName());
+					}
+				}
 			} else {
 				logger.debug("affiliate is null");
 				addValidationError("e1", new LocalizableError("/Login.action.user.notFound"));
