@@ -8,8 +8,8 @@
 <accessories>
     <c:forEach items="${eyeglassBean.productVariants}" var="productVariant">
         <c:set var="product" value="${productVariant.product}"/>
-        <c:set var="frontFacingEyeImageTypeId" value="<%=EnumImageType.FrontFacingEye.getId()%>"/>/>
-        <c:set var="sideFacingEyeImageTypeId" value="<%=EnumImageType.SideFacingEye.getId()%>"/>/>
+        <c:set var="frontFacingEyeImageTypeId" value="<%=EnumImageType.FrontFacingEye.getId()%>"/>
+        <c:set var="sideFacingEyeImageTypeId" value="<%=EnumImageType.SideFacingEye.getId()%>"/>
         <c:if test="${!productVariant.deleted && !productVariant.outOfStock && product.mainImageId != null}">
             <c:forEach items="${productVariant.productOptions}" var="productOption">
                 <c:if test="${hk:equalsIgnoreCase(productOption.name,'size')}">
