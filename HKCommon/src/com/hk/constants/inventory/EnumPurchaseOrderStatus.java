@@ -5,6 +5,7 @@ import com.hk.domain.core.PurchaseOrderStatus;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Generated
@@ -16,7 +17,7 @@ public enum EnumPurchaseOrderStatus {
 	SentToSupplier(40L, "Sent To Supplier"),
 	Cancelled(100L, "Cancelled"),
 	Deleted(1000L, "Deleted"),;
-
+  //  for every new status , it has to added in geAllPurchaseOrderStatus() list
 	private String name;
 	private Long id;
 
@@ -44,10 +45,16 @@ public enum EnumPurchaseOrderStatus {
 		return Arrays.asList(Generated.getPurchaseOrderStatus(), SentForApproval.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus());
 	}
 
+	// List contans all the status of PO ans sequence is decided by id
 	public static List<PurchaseOrderStatus> geAllPurchaseOrderStatus() {
-		return Arrays.asList(Generated.getPurchaseOrderStatus(), SentForApproval.getPurchaseOrderStatus(),
+
+		List<PurchaseOrderStatus> PurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentForApproval.getPurchaseOrderStatus(),
 				Approved.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(),
 				Cancelled.getPurchaseOrderStatus(), Deleted.getPurchaseOrderStatus());
+		Collections.sort(PurchaseOrderStatusList);
+		return PurchaseOrderStatusList;
+
+
 	}
 
 	public static PurchaseOrderStatus getNextPurchaseOrderStatus(PurchaseOrderStatus purchaseOrderStatus) {

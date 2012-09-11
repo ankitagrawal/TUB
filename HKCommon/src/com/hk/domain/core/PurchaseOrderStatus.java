@@ -12,7 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "purchase_order_status")
-public class PurchaseOrderStatus implements java.io.Serializable {
+public class PurchaseOrderStatus implements java.io.Serializable, Comparable<PurchaseOrderStatus>{
 
 
   @Id
@@ -44,17 +44,17 @@ public class PurchaseOrderStatus implements java.io.Serializable {
   }
 
 	public boolean equals(Object obj) {
-	       if (!(obj instanceof PurchaseOrderStatus)) {
-	           throw new ClassCastException("object compared are not of same Type");
+		if (!(obj instanceof PurchaseOrderStatus)) {
+			return false;
+		}
+		PurchaseOrderStatus purchaseOrderStatus = (PurchaseOrderStatus) obj;
+		return (this.id.equals((purchaseOrderStatus.getId())));
+	}
 
-	       }
-	       PurchaseOrderStatus purchaseOrderStatus = (PurchaseOrderStatus) obj;
-	       if (this.id.equals((purchaseOrderStatus.getId()))) {
-	           return true;
-	       } else
-	           return false;
+	public int compareTo(PurchaseOrderStatus purchaseOrderStatus) {
+		return this.getId().compareTo(purchaseOrderStatus.getId());
 
-	   }
+	}
 
 }
 
