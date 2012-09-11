@@ -8810,4 +8810,9 @@
 			AND so.shipping_order_status_id = 200
 		</sql>
 	</changeSet>
+    <changeSet author="Pratham (generated)" id="1347259898238-10">
+        <addColumn tableName="product_image">
+            <column name="image_type" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
