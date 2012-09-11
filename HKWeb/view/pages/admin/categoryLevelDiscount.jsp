@@ -43,7 +43,7 @@
       <label>&nbsp;</label>
 
       <div class="buttons"><s:submit name="saveExisting" value="Save"/></div>
-      <div class="buttons"><s:submit name="deleteExisting" value="Delete"/></div>
+      <%--<div class="buttons"><s:submit name="deleteExisting" value="Delete"/></div>--%>
     </s:form>
 
     <s:form beanclass="com.hk.web.action.core.discount.CategoryLevelDiscountAction">

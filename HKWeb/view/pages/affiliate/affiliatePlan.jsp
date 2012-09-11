@@ -36,7 +36,7 @@
 
         <div class="row">
             <label class="rowLabel">Affiliate Status</label>
-            <label class="rowText">${paymentAction.affiliate.affiliateStatus}</label>
+            <label class="rowText">${paymentAction.affiliate.affiliateStatus.name}</label>
         </div>
 
         <div class="clear"></div>
@@ -94,7 +94,8 @@
         </tr>
       </c:forEach>
       </table>
-      <div class="buttons"><s:submit name="savePlan" value="Save Changes"/></div>
+        <s:hidden name="affiliate" value="${paymentAction.affiliate.id}"/>
+        <div class="buttons"><s:submit name="savePlan" value="Save Changes"/></div>
     </s:form>
   </s:layout-component>
 </s:layout-render>

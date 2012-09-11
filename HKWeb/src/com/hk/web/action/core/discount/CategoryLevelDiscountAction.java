@@ -80,6 +80,7 @@ public class CategoryLevelDiscountAction extends BaseAction {
 		return new RedirectResolution(CategoryLevelDiscountAction.class);
 	}
 
+	@DontValidate
 	public Resolution addBrandsToExistingAffiliateCategory() {
 		AffiliateCategory affiliateCategory = getBaseDao().get(AffiliateCategory.class, category);
 		if(affiliateCategory == null){

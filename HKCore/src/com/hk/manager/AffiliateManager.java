@@ -1,5 +1,6 @@
 package com.hk.manager;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
@@ -136,9 +137,32 @@ public class AffiliateManager {
         return affiliateAccountAmount;
     }
 
+	public Double getPayableAmount(Affiliate affiliate) {
+		Double affiliateAccountAmount = 0D;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+		Calendar startCalender = Calendar.getInstance();
+		startCalender.setTime(new Date());
+
+		if (day <= 5) {
+			startCalender.add(Calendar.MONTH, -1);
+		}
+		startCalender.set(Calendar.DAY_OF_MONTH, 5);
+		Date startDate = startCalender.getTime();
+
+		Calendar endCalender = Calendar.getInstance();
+		endCalender.set(Calendar.DAY_OF_MONTH, 5);
+		Date endDate = endCalender.getTime();
+
+		affiliateAccountAmount = getAffiliateTxnDao().getAmountInAccount(affiliate, startDate, endDate);
+		return affiliateAccountAmount;
+	}
 
 
-    public void paidToAffiiliate(Affiliate affiliate, Double amountPaid, CheckDetails checkDetails) {
+	public void paidToAffiiliate(Affiliate affiliate, Double amountPaid, CheckDetails checkDetails) {
         AffiliateTxnType affiliateTxnType = getAffilateService().getAffiliateTxnType(EnumAffiliateTxnType.SENT.getId());
 	    AffiliateTxn affiliateTxn = getAffiliateTxnDao().saveTxn(affiliate, amountPaid, affiliateTxnType, null);
         checkDetails.setAffiliateTxn(affiliateTxn);

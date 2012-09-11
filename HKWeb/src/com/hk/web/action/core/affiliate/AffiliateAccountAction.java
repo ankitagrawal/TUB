@@ -78,26 +78,8 @@ public class AffiliateAccountAction extends BaseAction {
 				logger.debug("user name : " + user.getName());
 			if (affiliate != null) {
 				logger.debug("affiliate id : " + affiliate.getId());
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(new Date());
-
-//		int month = calendar.get(Calendar.MONTH);
-				int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-				Calendar startCalender = Calendar.getInstance();
-				startCalender.setTime(new Date());
-
-				if (day <= 5) {
-					startCalender.add(Calendar.MONTH, -1);
-				}
-				startCalender.set(Calendar.DAY_OF_MONTH, 5);
-				Date startDate = startCalender.getTime();
-
-				Calendar endCalender = Calendar.getInstance();
-				endCalender.set(Calendar.DAY_OF_MONTH, 5);
-				Date endDate = endCalender.getTime();
 				affiliateAccountAmount = affiliateManager.getAmountInAccount(affiliate, null, null);
-				affiliatePayableAmount = affiliateManager.getAmountInAccount(affiliate, startDate, endDate);
+				affiliatePayableAmount = affiliateManager.getPayableAmount(affiliate);
 
 				if (affiliate.getMainAddressId() != null) {
 					affiliateDefaultAddress = getAddressDao().get(Address.class,affiliate.getMainAddressId());
@@ -132,7 +114,6 @@ public class AffiliateAccountAction extends BaseAction {
 			}
 			affiliate.setCategories(categoryList);
 			affiliateDao.save(affiliate);
-			affiliateDao.save(affiliate);
 			addRedirectAlertMessage(new SimpleMessage("your preferences have been saved."));
 		}
 		return new RedirectResolution(AffiliateAccountAction.class);
@@ -145,20 +126,6 @@ public class AffiliateAccountAction extends BaseAction {
 			offer = affiliate.getOffer();
 		}
 		return new ForwardResolution("/pages/affiliate/affiliateCouponDownload.jsp");
-	}
-
-	public Resolution saveAffiliateCategoryPreferences() {
-		if (affiliate != null) {
-			Set<Category> categoryList = new HashSet<Category>();
-			for (String category : categories) {
-				if (category != null) {
-					categoryList.add((Category) categoryDao.getCategoryByName(category));
-				}
-			}
-			affiliate.setCategories(categoryList);
-			affiliateDao.save(affiliate);
-		}
-		return new ForwardResolution("/pages/affiliate/affiliateProfile.jsp");
 	}
 
 	public Resolution generateAffiliateCoupons() {
