@@ -17,9 +17,9 @@
                 </c:if>
             </c:forEach>
             <c:set var="frontFacingEyeImageId"
-                   value="${hk:searchProductImages(frontFacingEyeImageTypeId,product,productVariant,true,false)}"/>
+                   value="${hk:searchProductImages(frontFacingEyeImageTypeId,product,productVariant,false,false)}"/>
             <c:set var="sideFacingEyeImageId"
-                   value="${hk:searchProductImages(sideFacingEyeImageTypeId,product,productVariant,true,false)}"/>
+                   value="${hk:searchProductImages(sideFacingEyeImageTypeId,product,productVariant,false,false)}"/>
             <%Long frontFacingEyeImageId = (Long) pageContext.getAttribute("frontFacingEyeImageId");%>
             <%Long sideFacingEyeImageId = (Long) pageContext.getAttribute("sideFacingEyeImageId");%>
             <c:if test="${frontFacingEyeImageId != null && sideFacingEyeImageId != null && sizeType != null}">
