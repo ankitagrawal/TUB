@@ -22,7 +22,7 @@
         start: 1,
         offset: 1,
         size: null,
-        scroll: 3,
+        scroll: 5,
         visible: null,
         animation: 'normal',
         easing: 'swing',

@@ -2981,7 +2981,7 @@ i{
     -webkit-border-radius: 10px;
     border-radius: 10px;
     background: #F0F6F9;
-    border: 1px solid #346F97;
+    /*border: 1px solid #346F97;*/
 }
 
 .jcarousel-skin-tango .jcarousel-direction-rtl {
@@ -2990,7 +2990,7 @@ i{
 
 .jcarousel-skin-tango .jcarousel-container-horizontal {
     width: 245px;
-    padding: 20px 40px;
+    padding: 5px 8px;
 }
 
 .jcarousel-skin-tango .jcarousel-container-vertical {
