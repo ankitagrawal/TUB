@@ -405,19 +405,19 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     @SuppressWarnings("unchecked")
     private int count(DetachedCriteria criteria, boolean hasDistinctRootEntity) {
         int totalResults = 0;
-        DetachedCriteria countCriteria = copy(criteria);
+        //DetachedCriteria countCriteria = copy(criteria);
         if (hasDistinctRootEntity) {
-            countCriteria.setProjection(Projections.countDistinct("id"));
+            criteria.setProjection(Projections.countDistinct("id"));
         } else {
-            countCriteria.setProjection(Projections.rowCount());
+            criteria.setProjection(Projections.rowCount());
         }
-        List totalResultsList = getHibernateTemplate().findByCriteria(countCriteria);
+        List totalResultsList = getHibernateTemplate().findByCriteria(criteria);
         totalResults = (Integer) totalResultsList.get(0);
 
         return totalResults;
     }
 
-    private DetachedCriteria copy(DetachedCriteria criteria) {
+    /*private DetachedCriteria copy(DetachedCriteria criteria) {
         try {
             ByteArrayOutputStream baostream = new ByteArrayOutputStream();
             ObjectOutputStream oostream = new ObjectOutputStream(baostream);
@@ -432,13 +432,13 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         } catch (Throwable t) {
             throw new HibernateException(t);
         }
-    }
+    }*/
 
     // @Override
     public Page list(DetachedCriteria criteria, boolean hasDistinctRootEntity, int pageNo, int perPage) {
 
         int totalResults = count(criteria, hasDistinctRootEntity);
-        //criteria.setProjection(null);
+        criteria.setProjection(null);
         if (hasDistinctRootEntity) {
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         } else {
