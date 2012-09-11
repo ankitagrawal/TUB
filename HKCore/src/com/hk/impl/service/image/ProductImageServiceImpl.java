@@ -5,6 +5,7 @@ import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.image.ProductImageDao;
 import com.hk.pact.service.image.ProductImageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @Service
 public class ProductImageServiceImpl implements ProductImageService {
 
+	@Autowired
 	ProductImageDao productImageDao;
 
 	@Override
