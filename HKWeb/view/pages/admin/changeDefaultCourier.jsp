@@ -62,28 +62,16 @@
                     </tr>
                     <tr>
                         <td>Default Courier (COD):</td>
-                        <td><s:select name="pincodeDefaultCourier.codCourier" value="${defaultCourier.codCourier.id}">
+                        <td><s:select name="pincodeDefaultCourier.courier" value="${defaultCourier.courier.id}">
                                 <s:option value="">-Select-</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
                             </s:select>
                         </td>
                     </tr>
                     <tr>
-                        <td>Default Courier (Non COD):</td>
-                        <td><s:select name="pincodeDefaultCourier.nonCodCourier" value="${defaultCourier.nonCodCourier.id}">
-                                <s:option value="">-Select-</s:option>
-                                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
-                            </s:select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Estimated Shippping Cost COD:</td>
-                        <td><s:text name="pincodeDefaultCourier.estimatedShippingCostCod" value="${defaultCourier.estimatedShippingCostCod}" /></td>
-                    </tr>
-                    <tr>
-                        <td>Estimated Shippping Cost Tech:</td>
-                        <td><s:text name="pincodeDefaultCourier.estimatedShippingCostNonCod" value="${defaultCourier.estimatedShippingCostNonCod}" /></td>
-                    </tr>
+                        <td>Estimated Shippping Cost </td>
+                        <td><s:text name="pincodeDefaultCourier.estimatedShippingCost" value="${defaultCourier.estimatedShippingCost}" /></td>
+                    </tr>                      
                     <tr>
                         <td><s:submit name="save" value="Save"/></td>
                     </tr>
@@ -109,30 +97,36 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Default Courier for Cod True:</td>
-                                <td><s:select name="pincodeDefaultCourier.codCourier">
+                                <td>Default Courier </td>
+                                <td><s:select name="pincodeDefaultCourier.courier">
                                     <s:option value="">-Select-</s:option>
                                     <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
                                     </s:select>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Default Courier for Cod False:</td>
-                                <td><s:select name="pincodeDefaultCourier.nonCodCourier">
-                                    <s:option value="">-Select-</s:option>
-                                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
+                                <td>Cod Available</td>
+                                <td>
+                                    <s:select name="pincodeDefaultCourier.cod" value="">
+                                        <s:option value="0">N</s:option>
+                                        <s:option value="1">Y</s:option>
                                     </s:select>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Estimated Shippping Cost COD:</td>
-                                <td><s:text name="pincodeDefaultCourier.estimatedShippingCostCod"/></td>
+                                <td>Ground Shipping Available</td>
+                                <td>
+                                    <s:select name="pincodeDefaultCourier.groundShipping" value="">
+                                        <s:option value="0">N</s:option>
+                                        <s:option value="1">Y</s:option>
+                                    </s:select>
+                                </td>
                             </tr>
-                          <tr>
-                              <td>Estimated Shippping Cost Tech:</td>
-                              <td><s:text name="pincodeDefaultCourier.estimatedShippingCostNonCod"/></td>
-                          </tr>
-
+                            <tr>
+                                <td>Estimated Shippping Cost </td>
+                                <td><s:text name="pincodeDefaultCourier.estimatedShippingCost"/></td>
+                            </tr>
+                          <tr>                               
                             <tr>
                                 <td><s:submit name="add_pincode" value="Add"/></td>
                             </tr>
@@ -147,6 +141,8 @@
                     <tr>
                         <th>Courier Service</th>
                         <th>Cod Available</th>
+                        <th> Ground Shipping Available</th>
+                        <th> Cod Available on Ground Shipping</th>
                     </tr>
                     </thead>
                     <c:forEach items="${mpaBean.courierServiceList}" var="courierServiceList" varStatus="ctr">
@@ -155,6 +151,14 @@
                             <td>
                                 <c:if test="${courierServiceList.codAvailable}">Y</c:if>
                                 <c:if test="${!courierServiceList.codAvailable}">N</c:if>
+                            </td>
+                            <td>
+                                 <c:if test="${courierServiceList.groundShippingAvailable}">Y</c:if>
+                                <c:if test="${!courierServiceList.groundShippingAvailable}">N</c:if>
+                            </td>
+                             <td>
+                                 <c:if test="${courierServiceList.codAvailableOnGroundShipping}">Y</c:if>
+                                <c:if test="${!courierServiceList.codAvailableOnGroundShipping}">N</c:if>
                             </td>
                         </tr>
                     </c:forEach>

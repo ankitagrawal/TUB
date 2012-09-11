@@ -62,7 +62,7 @@ public class XslGenerator {
     public static final String COD_COURIER_ID        = "COD_COURIER_ID";
     public static final String TECH_PROCESS_COURIER_ID = "TECH_PROCESS_COURIER_ID";
     public static final String ESTIMATED_SHIPPING_COST_COD = "ESTIMATED_SHIPPING_COST_COD";
-    public static final String ESTIMATED_SHIPPING_COST_TECH = "ESTIMATED_SHIPPING_COST_TECH";
+    public static final String ESTIMATED_SHIPPING_COST = "ESTIMATED_SHIPPING_COST";
     public static final String    GROUND_SHIPPING_AVAILABLE      = "GROUND_SHIPPING_AVAILABLE";
     public static final String    COD_ON_GROUND_SHIPPING         = "COD_ON_GROUND_SHIPPING";
 
@@ -526,7 +526,7 @@ private SkuService                    skuService;*/
         setCellValue(row, 2, COURIER_ID);
         setCellValue(row, 3, COD_AVAILABLE);
         setCellValue(row, 4, GROUND_SHIPPING_AVAILABLE);
-        setCellValue(row, 5, ESTIMATED_SHIPPING_COST_TECH);
+        setCellValue(row, 5, ESTIMATED_SHIPPING_COST);
 
         int initialRowNo = 1;
         for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierList) {

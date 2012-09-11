@@ -58,10 +58,10 @@ public class CourierServiceInfo implements java.io.Serializable {
   private Boolean deleted;
 
   @Column(name = "ground_shipping_Availabe", nullable = false)  
-  private Boolean groundShippingAvailable;
+  private boolean groundShippingAvailable;
 
   @Column(name = "cod_on_ground_shipping", nullable = false)    
-  private Boolean codAvailableOnGroundShipping ;
+  private boolean codAvailableOnGroundShipping ;
 
   public Long getId() {
     return this.id;
@@ -128,19 +128,19 @@ public class CourierServiceInfo implements java.io.Serializable {
   }
 
 
-    public Boolean isGroundShippingAvailable() {
+    public boolean isGroundShippingAvailable() {
         return groundShippingAvailable;
     }
 
-    public void setGroundShippingAvailable(Boolean groundShippingAvailable) {
+    public void setGroundShippingAvailable(boolean groundShippingAvailable) {
         this.groundShippingAvailable = groundShippingAvailable;
     }
 
-    public Boolean isCodAvailableOnGroundShipping() {
+    public boolean isCodAvailableOnGroundShipping() {
         return codAvailableOnGroundShipping;
     }
 
-    public void setCodAvailableOnGroundShipping(Boolean codAvailableOnGroundShipping) {
+    public void setCodAvailableOnGroundShipping(boolean codAvailableOnGroundShipping) {
         this.codAvailableOnGroundShipping = codAvailableOnGroundShipping;
     }
 }

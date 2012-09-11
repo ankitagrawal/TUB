@@ -30,7 +30,7 @@ public class PincodeDefaultCourier implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "courier_id")
-    private Courier   Courier;
+    private Courier   courier;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id", nullable = false)
@@ -58,11 +58,11 @@ public class PincodeDefaultCourier implements java.io.Serializable {
     }
 
     public Courier getCourier() {
-        return Courier;
+        return courier;
     }
 
     public void setCourier(Courier courier) {
-        Courier = courier;
+       this.courier = courier;
     }
 
     public Warehouse getWarehouse() {
