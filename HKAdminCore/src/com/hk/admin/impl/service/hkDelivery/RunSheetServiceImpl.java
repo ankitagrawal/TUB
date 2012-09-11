@@ -4,13 +4,17 @@ import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
@@ -36,6 +40,10 @@ public class RunSheetServiceImpl implements RunSheetService {
     HubService hubService;
     @Autowired
     UserService userService;
+	@Autowired
+	ShippingOrderService shippingOrderService;
+	@Autowired
+	private AdminShippingOrderService adminShippingOrderService;
 
     @Override
     public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
@@ -53,9 +61,9 @@ public class RunSheetServiceImpl implements RunSheetService {
     }
 
     @Override
-    public void saveRunSheet(Runsheet runsheet) {
+    public Runsheet saveRunSheet(Runsheet runsheet) {
         runsheet.setUpdateDate(new Date());
-        runsheetDao.saveRunSheet(runsheet);
+        return runsheetDao.saveRunSheet(runsheet);
     }
 
     @Override
@@ -174,4 +182,16 @@ public class RunSheetServiceImpl implements RunSheetService {
         runsheet.setPrepaidBoxCount(prepaidBoxCount);
         return runsheet;
     }
+
+	@Override
+	public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList){
+		if(consignmentList != null){
+			for(Consignment consignment : consignmentList){
+				if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
+					ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(consignment.getCnnNumber());
+					adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
+				}
+			}
+		}
+	}
 }

@@ -2,6 +2,7 @@ package com.hk.web.action.admin.queue;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -206,50 +207,29 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
 	@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
 	public Resolution escalate() {
-
+		String message = "";
 		if (!shippingOrderList.isEmpty()) {
 			for (ShippingOrder shippingOrder : shippingOrderList) {
-				shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
+				boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
+				if (isManualEscalable) {
+					message = "Shipping order manually escalated";
+					shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
+				} else {
+					if (getPrincipalUser().getRoles().contains(EnumRole.GOD.toRole())) {
+						message = "Hacked! SO Escalated";
+						shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
+					} else {
+						message = "Shipping order can't be escalated";
+					}
+				}
 			}
-			addRedirectAlertMessage(new SimpleMessage("Orders have been escalated"));
+			addRedirectAlertMessage(new SimpleMessage(message));
 		} else {
 			addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
 		}
 
 		setUnplitOrderCount();
 		return new RedirectResolution(ActionAwaitingQueueAction.class);
-
-		/*
-				 * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser =
-				 * userDao.getUserById(getPrincipal().getId()); } Courier orderCourier = null; for (Order order : orderList) {
-				 * int escalatedLineItemsOfOrderCount = 0; String prefixComments = "Partially escalated items:<br/>"; String
-				 * addedItems = ""; List<LineItem> serviceLineItems = new ArrayList<LineItem>(); for (LineItem lineItem :
-				 * order.getProductLineItems()) { if (lineItem.isSelected()) {
-				 *//*
-             * if (escalatedLineItemsOfOrderCount == 0) { try { Courier courier =
-             * orderManager.getSuggestedCourierService(order); orderCourier = courier; } catch (Exception e) {
-             * logger.error("Error while getting suggested courier for order#" + order.getId()); } }
-             * orderManager.escalateFromActionQueue(lineItem, orderCourier);
-             *//*
-             * orderManager.escalateFromActionQueue(lineItem); escalatedLineItemsOfOrderCount++; addedItems +=
-             * lineItem.getProductVariant().getProduct().getName() + "<br/>"; if
-             * (lineItem.getProductVariant().getProduct().isService()) { serviceLineItems.add(lineItem); } } } if
-             * (serviceLineItems != null && !serviceLineItems.isEmpty()) {
-             * invoiceService.generateServiceInvoiceForLineItems(order, serviceLineItems); }
-             *//**
-		 * Order lifecycle activity logging - Order Escalated to Packing Queue
-		 */
-		/*
-				 * if (escalatedLineItemsOfOrderCount == order.getProductLineItems().size()) {
-				 * orderManager.logOrderActivity(order, loggedOnUser,
-				 * orderLifecycleActivityDao.find(EnumOrderLifecycleActivity.EscalatedToProcessingQueue.getId()), null); } else
-				 * if (escalatedLineItemsOfOrderCount > 0 && StringUtils.isNotEmpty(addedItems)) {
-				 * orderManager.logOrderActivity(order, loggedOnUser,
-				 * orderLifecycleActivityDao.find(EnumOrderLifecycleActivity.EscalatedPartiallyToProcessingQueue.getId()),
-				 * prefixComments + addedItems); } } addRedirectAlertMessage(new SimpleMessage("Orders have been escalated"));
-				 * return new RedirectResolution(ActionAwaitingQueueAction.class);
-				 */
-
 	}
 
 	public int getPerPageDefault() {

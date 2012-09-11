@@ -137,20 +137,20 @@
                                 </thead>
 
                                 <tbody id="awbTable">
-                                <c:forEach var="hubList" items="${hkdBean.hubList}" varStatus="ctr">
-                                    <tr count="${ctr.index}">
-                                        <td>${hubList.id}</td>
-                                        <td>${hubList.name}</td>
-                                        <td>${hubList.address}</td>
-                                        <td>${hubList.pincode.city.name}</td>
-                                        <td>${hubList.pincode.state.name}</td>
-                                        <td>${hubList.country}</td>
-                                        <td>${hubList.pincode.pincode}</td>
+                                <c:forEach var="hub" items="${hkdBean.hubList}" varStatus="ctr">
+                                    <tr >
+                                        <td>${hub.id}</td>
+                                        <td>${hub.name}</td>
+                                        <td>${hub.address}</td>
+                                        <td>${hub.pincode.city.name}</td>
+                                        <td>${hub.pincode.state.name}</td>
+                                        <td>${hub.country}</td>
+                                        <td>${hub.pincode.pincode}</td>
                                         <td><s:link
                                                 beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction"
                                                 event="editHub">
                                             <s:param name="editExistingHub" value="false"/>
-                                            <s:param name="hubId" value="${hubList.id}"/>
+                                            <s:param name="hub" value="${hub.id}"/>
                                             <b>Edit & Save</b> </s:link>
                                         </td>
 

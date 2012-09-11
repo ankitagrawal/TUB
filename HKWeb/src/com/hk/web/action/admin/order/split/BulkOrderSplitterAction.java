@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.order.split;
 
+import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.constants.order.EnumOrderStatus;
@@ -8,13 +9,17 @@ import com.hk.domain.order.Order;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.OrderSplitterService;
+import com.hk.web.HealthkartResponse;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,8 +60,17 @@ public class BulkOrderSplitterAction extends BaseAction {
 	}
 
 	public Resolution splitSingleOrder() {
-		adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
-		return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+		boolean shippingOrderExists = adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+		String message = "";
+		if (shippingOrderExists) {
+			message = "BO has been Split into SO";
+		} else {
+			message = "BO Can not be split";
+		}
+		Map<String, Object> data = new HashMap<String, Object>(1);
+		data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, data);
+		return new JsonResolution(healthkartResponse);
 	}
 
 	public Order getOrder() {

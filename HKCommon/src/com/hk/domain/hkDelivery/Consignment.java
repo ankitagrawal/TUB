@@ -22,7 +22,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "consignment")
-public class Consignment implements java.io.Serializable {
+public class Consignment implements java.io.Serializable, Comparable<Consignment> {
 
 
     @Id
@@ -161,6 +161,10 @@ public class Consignment implements java.io.Serializable {
     public String toString() {
         return id == null ? "" : id.toString();
     }
+
+	public int compareTo(Consignment o) {
+		return this.id.compareTo(o.getId());
+	}
 }
 
 
