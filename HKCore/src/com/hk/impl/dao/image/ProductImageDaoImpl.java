@@ -23,12 +23,12 @@ public class ProductImageDaoImpl extends BaseDaoImpl implements ProductImageDao 
 
 
 	@Override
-	public List<ProductImage> searchProductImages(Long imageTypeId, Product product, ProductVariant productVariant, boolean fetchVariantImages, boolean fetchHiddenImages) {
+	public List<ProductImage> searchProductImages(Long imageTypeId, Product product, ProductVariant productVariant, boolean fetchAllImages, boolean fetchHiddenImages) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(ProductImage.class);
 		if (product != null) {
 			criteria.add(Restrictions.eq("product", product));
 		}
-		if (fetchVariantImages && productVariant != null) {
+		if (!fetchAllImages && productVariant != null) {
 			criteria.add(Restrictions.eq("productVariant", productVariant));
 		}
 		if (imageTypeId != null) {
