@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface RunSheetDao extends BaseDao {
 
-    public void saveRunSheet(Runsheet runsheet);
+    public Runsheet saveRunSheet(Runsheet runsheet);
 
     public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage);
 

@@ -44,6 +44,8 @@ public interface ShippingOrderService {
 	 */
 	public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder);
 
+	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
+
 	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
 
 	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
@@ -65,6 +67,5 @@ public interface ShippingOrderService {
 	public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, String comments);
 
 	public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments);
-
 
 }

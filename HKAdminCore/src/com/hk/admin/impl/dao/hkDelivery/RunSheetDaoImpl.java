@@ -19,8 +19,8 @@ import java.util.List;
 public class RunSheetDaoImpl extends BaseDaoImpl implements RunSheetDao {
 
     @Override
-    public void saveRunSheet(Runsheet runsheet) {
-        save(runsheet);
+    public Runsheet saveRunSheet(Runsheet runsheet) {
+        return (Runsheet)save(runsheet);
     }
 
     @Override

@@ -281,7 +281,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
 	@Override
-	public void splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order) {
+	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order) {
 		Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
 		boolean shippingOrderExists = false;
@@ -299,6 +299,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 		}
 
 		if (shippingOrders != null && shippingOrders.size() > 0) {
+			shippingOrderExists = true;
 			// save order with InProcess status since shipping orders have been created
 			order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
 			order.setShippingOrders(shippingOrders);
@@ -326,6 +327,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 			inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
 		}
 
+		return shippingOrderExists;
 	}
 
 
