@@ -8693,12 +8693,47 @@
 			AND so.shipping_order_status_id = 200
 		</sql>
 	</changeSet>
-	
-	<changeSet author="Marut (generated)" id="1346223650206-1">
-	        <addColumn tableName="product">
-	            <column defaultValue="0" name="out_of_stock" type="TINYINT">
-	                <constraints nullable="false"/>
-	            </column>
-	        </addColumn>
-    	</changeSet>
+    <changeSet author="vaibhav (generated)" id="1347281819426-1">
+        <addColumn tableName="base_order">
+            <column name="target_dispatch_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1347281819426-2">
+        <addColumn tableName="shipping_order">
+            <column name="last_esc_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1347281819426-3">
+        <addColumn tableName="shipping_order">
+            <column name="target_dispatch_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1347345974710-1">
+        <createTable tableName="feedback">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="base_order_id" type="INT"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recommend_to_friends" type="INT"/>
+            <column name="website_experience" type="INT"/>
+            <column name="customer_care_experience" type="INT"/>
+            <column name="comments" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1347345974710-2">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="feedback" constraintName="fk_feedback_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1347345974710-3">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="feedback" constraintName="fk_feedback_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1346223650206-1">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="out_of_stock" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

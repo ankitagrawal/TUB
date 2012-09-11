@@ -4,6 +4,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
+import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -497,6 +498,8 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, shippingOrder.getBaseOrder().getUser().getEmail(),
                 shippingOrder.getBaseOrder().getUser().getName());
     }
+
+	
 
     public boolean sendSubscriptionCancellationEmail(Subscription subscription){
         HashMap valuesMap = new HashMap();

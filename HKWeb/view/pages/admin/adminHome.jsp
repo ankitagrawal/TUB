@@ -3,6 +3,7 @@
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.core.EnumPermission" %>
+<%@ page import="com.hk.constants.core.EnumRole" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
@@ -214,10 +215,14 @@
 		<s:param name="courierDownloadFunctionality" value="false"/>
 	</s:link></h3>
 
-    <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
-                event="generateCourierReport">Add/Edit Hub
-        <s:param name="courierDownloadFunctionality" value="false"/>
-    </s:link></h3>
+	<shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
+		<h3>
+			<s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
+					event="generateCourierReport">Add/Edit Hub
+				<s:param name="courierDownloadFunctionality" value="false"/>
+			</s:link>
+		</h3>
+	</shiro:hasRole>
 
 
 </div>
