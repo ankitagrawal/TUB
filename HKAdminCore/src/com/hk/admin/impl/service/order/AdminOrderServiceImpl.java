@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentStatus;
@@ -75,6 +76,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private OrderLoggingService       orderLoggingService;
     @Autowired
     private SubscriptionOrderService   subscriptionOrderService;
+    @Autowired
+    private AdminEmailManager adminEmailManager;
 
 
     @Transactional
@@ -242,7 +245,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
 			    //if the order is a subscription order update subscription status
 			    subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
-			    getEmailManager().sendOrderDeliveredEmail(order);
+			    getAdminEmailManager().sendOrderDeliveredEmail(order);
 		    }
 	    }
 	    return order;
@@ -413,4 +416,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     public void setSubscriptionOrderService(SubscriptionOrderService subscriptionOrderService) {
         this.subscriptionOrderService = subscriptionOrderService;
     }
+
+    public AdminEmailManager getAdminEmailManager() {
+        return adminEmailManager;
+    }
+    
+    
 }
