@@ -6,7 +6,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Payment Reconciliation List">
 
-    <s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" var="consignmentAction"/>
+    <s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction" var="consignmentAction"/>
     <s:layout-component name="htmlHead">
         <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -22,7 +22,7 @@
 
         <fieldset class="right_label">
             <legend>Search Payment Reconciliation</legend>
-            <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction">
+            <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction">
                 <label>Start Date:</label><s:text style="width:150px" class="date_input startDate"
                                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
                                                   name="startDate"/>

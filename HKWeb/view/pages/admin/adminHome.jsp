@@ -420,7 +420,7 @@
     </h3>
 
     <h3>
-            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction"
                     title="Search Payment Reconciliation" event="searchPaymentReconciliation" >Search Payment Reconciliation
             </s:link>
     </h3>

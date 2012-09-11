@@ -1,10 +1,8 @@
 package com.hk.web.action.admin.hkDelivery;
 
 import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.EnumPermission;
-import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.domain.hkDelivery.*;
@@ -17,7 +15,6 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.XslGenerator;
@@ -33,10 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.collections.CollectionUtils;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.io.*;
 import java.text.SimpleDateFormat;
 
 @Component
@@ -53,8 +47,6 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     private             Consignment           consignment;
     private             Page                  consignmentPage;
-    private             Page                  hkPaymentReconciliationPage;
-
     private             Date                  startDate;
     private             Date                  endDate;
     private             ConsignmentStatus     consignmentStatus;
@@ -64,11 +56,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private             HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
     private             Boolean               reconciled;
     private             Runsheet              runsheet;
-    private             File                  xlsFile;
-    private             SimpleDateFormat      sdf                      = new SimpleDateFormat("dd-MM-yyyy");
-    private             List<HkdeliveryPaymentReconciliation>   paymentReconciliationList = new ArrayList<HkdeliveryPaymentReconciliation>();
-
-    User                loggedOnUser;                     
+    private             User                loggedOnUser;
 
 
     @Autowired
@@ -79,8 +67,6 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private              AwbService                  awbService;
     @Autowired
     private              ShipmentService             shipmentService;
-    @Autowired
-    private              XslGenerator                xslGenerator;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -230,55 +216,6 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         }
         return new ForwardResolution("/pages/admin/trackConsignment.jsp");
     }
-
-    public Resolution downloadPaymentReconciliation() {
-           logger.info("Inside downloadPaymentReconciliation");
-           try {
-               xlsFile = new File(adminDownloadsPath + "/" + "PaymentReconciliation" + "_" + sdf.format(new Date()) + ".xls");
-               // generating Xls file.
-               xlsFile = xslGenerator.generateHKDPaymentReconciliationXls(xlsFile.getPath(), hkdeliveryPaymentReconciliation);
-           } catch (IOException ioe) {
-               logger.debug("IOException Occurred:" + ioe.getMessage());
-               addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
-               return new ForwardResolution(HKDRunsheetAction.class, HKDeliveryConstants.PREVIEW_RUNSHEET).addParameter(HKDeliveryConstants.RUNSHEET_PREVIEW_PARAM, false);
-           } catch (NullPointerException npe) {
-               logger.debug("NullPointerException Occurred:" + npe.getMessage());
-               addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_NULLEXCEPTION));
-               return new ForwardResolution(HKDRunsheetAction.class, HKDeliveryConstants.PREVIEW_RUNSHEET).addParameter(HKDeliveryConstants.RUNSHEET_PREVIEW_PARAM, false);
-           } catch (Exception ex) {
-               logger.debug("Exception Occurred:" + ex.getMessage());
-               addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_EXCEPTION));
-               return new ForwardResolution(HKDRunsheetAction.class, HKDeliveryConstants.PREVIEW_RUNSHEET).addParameter(HKDeliveryConstants.RUNSHEET_PREVIEW_PARAM, false);
-           }
-           return new HTTPResponseResolution();
-       }
-
-       public class HTTPResponseResolution implements Resolution {
-           public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-               OutputStream out = null;
-               InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
-               res.setContentLength((int) xlsFile.length());
-               res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
-               out = res.getOutputStream();
-
-               // Copy the contents of the file to the output stream
-               byte[] buf = new byte[4096];
-               int count = 0;
-               while ((count = in.read(buf)) >= 0) {
-                   out.write(buf, 0, count);
-               }
-           }
-
-       }
-
-    public Resolution searchPaymentReconciliation() {
-        hkPaymentReconciliationPage = consignmentService.getPaymentReconciliationListByDates(startDate ,endDate ,getPageNo(), getPerPage());
-        if(hkPaymentReconciliationPage != null){
-            paymentReconciliationList = hkPaymentReconciliationPage.getList();
-        }
-        return new ForwardResolution("/pages/admin/hkPaymentReconciliationList.jsp");
-    }
-
     
     public Hub getHub() {
         return hub;
@@ -422,13 +359,5 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setLoggedOnUser(User loggedOnUser) {
         this.loggedOnUser = loggedOnUser;
-    }
-
-    public List<HkdeliveryPaymentReconciliation> getPaymentReconciliationList() {
-        return paymentReconciliationList;
-    }
-
-    public void setPaymentReconciliationList(List<HkdeliveryPaymentReconciliation> paymentReconciliationList) {
-        this.paymentReconciliationList = paymentReconciliationList;
     }
 }
