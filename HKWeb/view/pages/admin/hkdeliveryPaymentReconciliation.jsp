@@ -66,6 +66,7 @@
                 </c:forEach>
             </table>
             <s:submit name="savePaymentReconciliation" value="Save payment Reconciliation" />
+            <s:submit name="downloadPaymentReconciliation" value="Download Payment Reconciliation" />
         </s:form>
     </s:layout-component>
 </s:layout-render>

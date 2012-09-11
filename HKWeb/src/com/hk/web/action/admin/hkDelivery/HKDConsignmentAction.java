@@ -53,6 +53,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     private             Consignment           consignment;
     private             Page                  consignmentPage;
+    private             Page                  hkPaymentReconciliationPage;
 
     private             Date                  startDate;
     private             Date                  endDate;
@@ -65,6 +66,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private             Runsheet              runsheet;
     private             File                  xlsFile;
     private             SimpleDateFormat      sdf                      = new SimpleDateFormat("dd-MM-yyyy");
+    private             List<HkdeliveryPaymentReconciliation>   paymentReconciliationList = new ArrayList<HkdeliveryPaymentReconciliation>();
 
     User                loggedOnUser;                     
 
@@ -269,6 +271,14 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
        }
 
+    public Resolution searchPaymentReconciliation() {
+        hkPaymentReconciliationPage = consignmentService.getPaymentReconciliationListByDates(startDate ,endDate ,getPageNo(), getPerPage());
+        if(hkPaymentReconciliationPage != null){
+            paymentReconciliationList = hkPaymentReconciliationPage.getList();
+        }
+        return new ForwardResolution("/pages/admin/hkPaymentReconciliationList.jsp");
+    }
+
     
     public Hub getHub() {
         return hub;
@@ -412,5 +422,13 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setLoggedOnUser(User loggedOnUser) {
         this.loggedOnUser = loggedOnUser;
+    }
+
+    public List<HkdeliveryPaymentReconciliation> getPaymentReconciliationList() {
+        return paymentReconciliationList;
+    }
+
+    public void setPaymentReconciliationList(List<HkdeliveryPaymentReconciliation> paymentReconciliationList) {
+        this.paymentReconciliationList = paymentReconciliationList;
     }
 }

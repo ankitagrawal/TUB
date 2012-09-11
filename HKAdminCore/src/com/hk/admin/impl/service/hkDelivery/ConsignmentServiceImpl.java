@@ -261,4 +261,9 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public ShippingOrder getShippingOrderFromConsignment(Consignment consignment) {
         return consignmentDao.getShippingOrderFromConsignment(consignment);
     }
+
+    @Override
+    public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage) {
+        return consignmentDao.getPaymentReconciliationListByDates(startDate ,endDate ,pageNo ,perPage);
+    }
 }

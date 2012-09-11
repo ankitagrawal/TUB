@@ -109,5 +109,20 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         String query = "from ShippingOrder sh where sh.gatewayOrderId = :cnnNumber)";
                 return (ShippingOrder) findUniqueByNamedParams(query,new String[]{"cnnNumber"},new Object[]{consignment.getCnnNumber()});
     }
+
+    @Override
+    public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage) {
+        DetachedCriteria paymentReconciliationCriteria = DetachedCriteria.forClass(HkdeliveryPaymentReconciliation.class);
+
+
+        if (startDate != null) {
+            paymentReconciliationCriteria.add(Restrictions.ge("createDate", startDate));
+        }
+        if (endDate != null) {
+            paymentReconciliationCriteria.add(Restrictions.le("createDate", endDate));
+        }
+        paymentReconciliationCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+        return list(paymentReconciliationCriteria, pageNo, perPage);
+    }
 }
 
