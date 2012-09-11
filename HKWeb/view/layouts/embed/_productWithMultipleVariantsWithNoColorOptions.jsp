@@ -6,7 +6,7 @@
 
 <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
-<c:set var="imageSmallSize" value="<%=EnumImageSize.SmallSize%>"/>
+<c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
 <s:layout-definition>
   <%
       Product product = (Product) pageContext.getAttribute("product");
@@ -54,11 +54,11 @@
                               <c:when test="${variant.mainProductImageId != null}">
                                   <a href='javascript:void(0);'
                                      rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}"><img
-                                          src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}' style="height:75px;"></a>
+                                          src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}'></a>
                               </c:when>
                               <c:otherwise>
                                   <img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
-                                       title="${product.name}" style="height:75px;">
+                                       title="${product.name}">
                               </c:otherwise>
                           </c:choose>
                           <br/>
