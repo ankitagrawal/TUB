@@ -18,8 +18,20 @@
 	<s:layout-component name="left_col">
 		<style type="text/css">
 			.alert{
-			    color: green;
+				color: green;
 				font-weight: bold;
+			}
+			.recommend{
+				width: 50px;
+				font-weight: bold;
+			}
+			.website{
+				width: 150px;
+				font-weight: bold;
+			}
+			.tableClass{
+				border: solid;
+				border-width: 4px;
 			}
 		</style>
 		<div style="background: #fcfcfc; padding: 15px; ">
@@ -27,40 +39,111 @@
 				<div class="left">
 					<h2>Please provide your valuable feedback</h2>
 					<s:hidden name="order" value="${baseOrderId}" />
-					<div class='label'><h3>1. How likely is it that you would recommend HealthKart to a friend or colleague?</h3></div>
-					<table cellpadding="5" cellspacing="5">
+					<div class='label'><h3>1. How likely is it that you would recommend HealthKart to a friend or colleague? </h3></div>
+					<table class="tableClass">
 						<tr>
-							<td><s:radio value="1" name="recommendToFriends" /> 1</td>
-							<td><s:radio value="2" name="recommendToFriends" /> 2</td>
-							<td><s:radio value="3" name="recommendToFriends" /> 3</td>
-							<td><s:radio value="4" name="recommendToFriends" /> 4</td>
-							<td><s:radio value="5" name="recommendToFriends" /> 5</td>
-							<td><s:radio value="6" name="recommendToFriends" /> 6</td>
-							<td><s:radio value="7" name="recommendToFriends" /> 7</td>
-							<td><s:radio value="8" name="recommendToFriends" /> 8</td>
-							<td><s:radio value="9" name="recommendToFriends" /> 9</td>
-							<td><s:radio value="10" name="recommendToFriends" /> 10</td>
+							<td colspan="12">&nbsp;</td>
 						</tr>
+						<tr>
+							<td width="10"></td>
+							<td class="recommend" colspan="8">&nbsp;Not likely</td>
+							<td class="recommend" colspan="2">Very likely</td>
+							<td width="10"></td>
+						</tr>
+						<tr>
+							<td width="10"></td>
+							<td class="recommend"> &nbsp;&nbsp;1</td>
+							<td class="recommend"> &nbsp;&nbsp;2</td>
+							<td class="recommend"> &nbsp;&nbsp;3</td>
+							<td class="recommend"> &nbsp;&nbsp;4</td>
+							<td class="recommend"> &nbsp;&nbsp;5</td>
+							<td class="recommend"> &nbsp;&nbsp;6</td>
+							<td class="recommend"> &nbsp;&nbsp;7</td>
+							<td class="recommend"> &nbsp;&nbsp;8</td>
+							<td class="recommend"> &nbsp;&nbsp;9</td>
+							<td class="recommend"> &nbsp;10</td>
+							<td width="10"></td>
+						</tr>
+						<tr>
+							<td width="10"></td>
+							<td class="recommend"><s:radio value="1" name="recommendToFriends" /></td>
+							<td class="recommend"><s:radio value="2" name="recommendToFriends" /></td>
+							<td class="recommend"><s:radio value="3" name="recommendToFriends" /></td>
+							<td class="recommend"><s:radio value="4" name="recommendToFriends" /></td>
+							<td class="recommend"><s:radio value="5" name="recommendToFriends" /></td>
+							<td class="recommend"><s:radio value="6" name="recommendToFriends" /></td>
+							<td class="recommend"><s:radio value="7" name="recommendToFriends" /></td>
+							<td class="recommend"><s:radio value="8" name="recommendToFriends" /></td>
+							<td class="recommend"><s:radio value="9" name="recommendToFriends" /></td>
+							<td class="recommend"><s:radio value="10" name="recommendToFriends" /></td>
+							<td width="10"></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+
 					</table>
 
 					<div class='label'><h3>2. How was your website experience?</h3></div>
-					<s:radio value="1" name="websiteExperienceFeedback"/>Poor
-					<s:radio value="2" name="websiteExperienceFeedback"/>Below Average
-					<s:radio value="3" name="websiteExperienceFeedback"/>Satisfactory
-					<s:radio value="4" name="websiteExperienceFeedback"/>Excellent
-					<s:radio value="5" name="websiteExperienceFeedback"/>Above Expectations
+					<table class="tableClass">
+						<tr>
+							<td colspan="7">&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="10"></td>
+							<td class="website" nowrap="nowrap"> 1. Poor</td>
+							<td class="website" nowrap="nowrap"> 2. Below Average</td>
+							<td class="website" nowrap="nowrap"> 3. Satisfactory</td>
+							<td class="website" nowrap="nowrap"> 4. Excellent</td>
+							<td class="website" nowrap="nowrap"> 5. Above Expectations</td>
+							<td width="10"></td>
+						</tr>
+						<tr>
+							<td width="10"></td>
+							<td class="website" align="center"> <s:radio value="1" name="websiteExperienceFeedback"/></td>
+							<td class="website" align="center"> <s:radio value="2" name="websiteExperienceFeedback"/></td>
+							<td class="website" align="center"> <s:radio value="3" name="websiteExperienceFeedback"/></td>
+							<td class="website" align="center"> <s:radio value="4" name="websiteExperienceFeedback"/></td>
+							<td class="website" align="center"> <s:radio value="5" name="websiteExperienceFeedback"/></td>
+							<td width="10"></td>
+						</tr>
+						<tr>
+							<td colspan="7">&nbsp;</td>
+						</tr>
+					</table>
 
 					<div class='label'><h3>3. How was your customer care experience?</h3></div>
-					<s:radio value="1" name="customerServiceFeedback"/>Poor
-					<s:radio value="2" name="customerServiceFeedback"/>Below Average
-					<s:radio value="3" name="customerServiceFeedback"/>Satisfactory
-					<s:radio value="4" name="customerServiceFeedback"/>Excellent
-					<s:radio value="5" name="customerServiceFeedback"/>Above Expectations
+					<table class="tableClass">
+						<tr>
+							<td colspan="7">&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="10"></td>
+							<td class="website" nowrap="nowrap"> 1. Poor</td>
+							<td class="website" nowrap="nowrap"> 2. Below Average</td>
+							<td class="website" nowrap="nowrap"> 3. Satisfactory</td>
+							<td class="website" nowrap="nowrap"> 4. Excellent</td>
+							<td class="website" nowrap="nowrap"> 5. Above Expectations</td>
+							<td width="10"></td>
+						</tr>
+						<tr>
+							<td width="10"></td>
+							<td class="website" align="center"> <s:radio value="1" name="customerServiceFeedback"/></td>
+							<td class="website" align="center"> <s:radio value="2" name="customerServiceFeedback"/></td>
+							<td class="website" align="center"> <s:radio value="3" name="customerServiceFeedback"/></td>
+							<td class="website" align="center"> <s:radio value="4" name="customerServiceFeedback"/></td>
+							<td class="website" align="center"> <s:radio value="5" name="customerServiceFeedback"/></td>
+							<td width="10"></td>
+						</tr>
+						<tr>
+							<td colspan="7">&nbsp;</td>
+						</tr>
+					</table>
 
 					<div class='label'><h3>4. Any feedback that you want to share with us?</h3></div>
 					<s:textarea name="comments" rows="8" cols="50"/>
 				</div>
-				<s:submit name="save" value="save" />
+				<s:submit name="save" value="Submit" />
 			</s:form>
 		</div>
 
