@@ -17,4 +17,5 @@ public class EmailMapKeyConstants {
     public static final String productVariantId      = "product_variant_id";
     public static final String couponCode            = "coupon_code";
     public static final String name                  = "name";
+	public static final String feedbackPage          = "feedbackPage";
 }

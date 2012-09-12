@@ -159,7 +159,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
              * this additional call to save is done so that we have shipping order id to generate shipping order gateway
              * id
              */
-            shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
+            shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
             shipmentService.createShipment(shippingOrder);
@@ -192,7 +192,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         /**
          * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
          */
-        shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
+        shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
         shippingOrder = getShippingOrderService().save(shippingOrder);
 
         return shippingOrder;

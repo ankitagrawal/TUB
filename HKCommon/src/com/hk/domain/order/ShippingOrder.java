@@ -1,6 +1,5 @@
 package com.hk.domain.order;
 
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,262 +32,275 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 
-
 @SuppressWarnings("serial")
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "shipping_order")
 public class ShippingOrder implements java.io.Serializable {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long                        id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipping_order_status_id", nullable = false)
+    private ShippingOrderStatus         shippingOrderStatus;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "shipping_order_status_id", nullable = false)
-  private ShippingOrderStatus shippingOrderStatus;
+    @Column(name = "amount", precision = 11)
+    private Double                      amount;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_date", nullable = false, length = 19)
+    private Date                        createDate;
 
-  @Column(name = "amount", precision = 11)
-  private Double amount;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_date", nullable = false, length = 19)
+    private Date                        updateDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "create_date", nullable = false, length = 19)
-  private Date createDate;
+    @Column(name = "gateway_order_id", length = 30)
+    private String                      gatewayOrderId;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "update_date", nullable = false, length = 19)
-  private Date updateDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reconciliation_status_id", nullable = false)
+    private ReconciliationStatus        reconciliationStatus;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cancellation_type_id")
+    private CancellationType            cancellationType;
 
-  @Column(name = "gateway_order_id", length = 30)
-  private String gatewayOrderId;
+    @Column(name = "cancellation_remark", length = 65535)
+    private String                      cancellationRemark;
 
+    @Column(name = "accounting_invoice_number_id")
+    private Long                        accountingInvoiceNumber;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "reconciliation_status_id", nullable = false)
-  private ReconciliationStatus reconciliationStatus;
+    @Column(name = "basket_category", length = 45)
+    private String                      basketCategory;
 
+    @Column(name = "is_service_order", nullable = false)
+    private boolean                     isServiceOrder;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "cancellation_type_id")
-  private CancellationType cancellationType;
+    @Column(name = "version", nullable = false)
+    private Long                        version                 = new Long(1);
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "base_order_id")
+    private Order                       baseOrder;
 
-  @Column(name = "cancellation_remark", length = 65535)
-  private String cancellationRemark;
-
-
-  @Column(name = "accounting_invoice_number_id")
-  private Long accountingInvoiceNumber;
-
-
-  @Column(name = "basket_category", length = 45)
-  private String basketCategory;
-
-  @Column(name = "is_service_order", nullable = false)
-  private boolean isServiceOrder;
-
-  
-  @Column(name = "version", nullable = false)
-  private Long version = new Long(1);
-
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "base_order_id")
-  private Order baseOrder;
-
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "warehouse_id")
-  private Warehouse warehouse;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse                   warehouse;
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "shipment_id")
-    private Shipment shipment;
+    private Shipment                    shipment;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     @Where(clause = "deleted = 0")
-  private Set<LineItem> lineItems = new HashSet<LineItem>();
+    private Set<LineItem>               lineItems               = new HashSet<LineItem>();
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
-  private Set<AccountingInvoice> accountingInvoices = new HashSet<AccountingInvoice>(0);
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
+    private Set<AccountingInvoice>      accountingInvoices      = new HashSet<AccountingInvoice>(0);
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
-  private Set<ShippingOrderLifecycle> shippingOrderLifecycles = new HashSet<ShippingOrderLifecycle>(0);
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
+    private Set<ShippingOrderLifecycle> shippingOrderLifecycles = new HashSet<ShippingOrderLifecycle>(0);
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "refShippingOrder")
-  private Set<ReplacementOrder> replacementOrders = new HashSet<ReplacementOrder>();
+    /*
+     * @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "refShippingOrder") private Set<ReplacementOrder>
+     * replacementOrders = new HashSet<ReplacementOrder>();
+     */
 
-  public Long getId() {
-    return this.id;
-  }
+    @Column(name = "last_esc_date", nullable = true)
+    private Date                        lastEscDate;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    @Column(name = "target_dispatch_date", nullable = true)
+    private Date                        targetDispatchDate;
 
-  public ShippingOrderStatus getOrderStatus() {
-    return shippingOrderStatus;
-  }
+    public Long getId() {
+        return this.id;
+    }
 
-  public void setOrderStatus(ShippingOrderStatus shippingOrderStatus) {
-    this.shippingOrderStatus = shippingOrderStatus;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public Double getAmount() {
-    return amount;
-  }
+    public ShippingOrderStatus getOrderStatus() {
+        return shippingOrderStatus;
+    }
 
-  public void setAmount(Double amount) {
-    this.amount = amount;
-  }
+    public void setOrderStatus(ShippingOrderStatus shippingOrderStatus) {
+        this.shippingOrderStatus = shippingOrderStatus;
+    }
 
-  public Date getCreateDate() {
-    return createDate;
-  }
+    public Double getAmount() {
+        return amount;
+    }
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
-  }
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
 
-  public Date getUpdateDate() {
-    return updateDate;
-  }
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-  public void setUpdateDate(Date updateDate) {
-    this.updateDate = updateDate;
-  }
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-  public String getGatewayOrderId() {
-    return gatewayOrderId;
-  }
+    public Date getUpdateDate() {
+        return updateDate;
+    }
 
-  public void setGatewayOrderId(String gatewayOrderId) {
-    this.gatewayOrderId = gatewayOrderId;
-  }
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
 
-  public ReconciliationStatus getReconciliationStatus() {
-    return reconciliationStatus;
-  }
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
 
-  public void setReconciliationStatus(ReconciliationStatus reconciliationStatus) {
-    this.reconciliationStatus = reconciliationStatus;
-  }
+    public void setGatewayOrderId(String gatewayOrderId) {
+        this.gatewayOrderId = gatewayOrderId;
+    }
 
-  public CancellationType getCancellationType() {
-    return cancellationType;
-  }
+    public ReconciliationStatus getReconciliationStatus() {
+        return reconciliationStatus;
+    }
 
-  public void setCancellationType(CancellationType cancellationType) {
-    this.cancellationType = cancellationType;
-  }
+    public void setReconciliationStatus(ReconciliationStatus reconciliationStatus) {
+        this.reconciliationStatus = reconciliationStatus;
+    }
 
-  public String getCancellationRemark() {
-    return cancellationRemark;
-  }
+    public CancellationType getCancellationType() {
+        return cancellationType;
+    }
 
-  public void setCancellationRemark(String cancellationRemark) {
-    this.cancellationRemark = cancellationRemark;
-  }
+    public void setCancellationType(CancellationType cancellationType) {
+        this.cancellationType = cancellationType;
+    }
 
-  public Long getAccountingInvoiceNumber() {
-    return accountingInvoiceNumber;
-  }
+    public String getCancellationRemark() {
+        return cancellationRemark;
+    }
 
-  public void setAccountingInvoiceNumber(Long accountingInvoiceNumber) {
-    this.accountingInvoiceNumber = accountingInvoiceNumber;
-  }
+    public void setCancellationRemark(String cancellationRemark) {
+        this.cancellationRemark = cancellationRemark;
+    }
 
-  public String getBasketCategory() {
-    return basketCategory;
-  }
+    public Long getAccountingInvoiceNumber() {
+        return accountingInvoiceNumber;
+    }
 
-  public void setBasketCategory(String basketCategory) {
-    this.basketCategory = basketCategory;
-  }
+    public void setAccountingInvoiceNumber(Long accountingInvoiceNumber) {
+        this.accountingInvoiceNumber = accountingInvoiceNumber;
+    }
 
-  public Order getBaseOrder() {
-    return baseOrder;
-  }
+    public String getBasketCategory() {
+        return basketCategory;
+    }
 
-  public void setBaseOrder(Order baseOrder) {
-    this.baseOrder = baseOrder;
-  }
+    public void setBasketCategory(String basketCategory) {
+        this.basketCategory = basketCategory;
+    }
 
-  public Warehouse getWarehouse() {
-    return warehouse;
-  }
+    public Order getBaseOrder() {
+        return baseOrder;
+    }
 
-  public void setWarehouse(Warehouse warehouse) {
-    this.warehouse = warehouse;
-  }
+    public void setBaseOrder(Order baseOrder) {
+        this.baseOrder = baseOrder;
+    }
 
-  public Set<LineItem> getLineItems() {
-    return lineItems;
-  }
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
 
-  public void setLineItems(Set<LineItem> lineItems) {
-    this.lineItems = lineItems;
-  }
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
+    }
 
-  public Set<AccountingInvoice> getAccountingInvoices() {
-    return accountingInvoices;
-  }
+    public Set<LineItem> getLineItems() {
+        return lineItems;
+    }
 
-  public void setAccountingInvoices(Set<AccountingInvoice> accountingInvoices) {
-    this.accountingInvoices = accountingInvoices;
-  }
+    public void setLineItems(Set<LineItem> lineItems) {
+        this.lineItems = lineItems;
+    }
 
-  public Set<ShippingOrderLifecycle> getShippingOrderLifecycles() {
-    return shippingOrderLifecycles;
-  }
+    public Set<AccountingInvoice> getAccountingInvoices() {
+        return accountingInvoices;
+    }
 
-  public void setShippingOrderLifecycles(Set<ShippingOrderLifecycle> shippingOrderLifecycles) {
-    this.shippingOrderLifecycles = shippingOrderLifecycles;
-  }
+    public void setAccountingInvoices(Set<AccountingInvoice> accountingInvoices) {
+        this.accountingInvoices = accountingInvoices;
+    }
 
+    public Set<ShippingOrderLifecycle> getShippingOrderLifecycles() {
+        return shippingOrderLifecycles;
+    }
 
-  @Transient
-  public boolean isCOD() {
-    return EnumPaymentMode.COD.getId().equals(getBaseOrder().getPayment().getPaymentMode().getId());
-  }
+    public void setShippingOrderLifecycles(Set<ShippingOrderLifecycle> shippingOrderLifecycles) {
+        this.shippingOrderLifecycles = shippingOrderLifecycles;
+    }
 
-  @Transient
-  public boolean getCOD(){
-    return isCOD();
-  }
+    @Transient
+    public boolean isCOD() {
+        return EnumPaymentMode.COD.getId().equals(getBaseOrder().getPayment().getPaymentMode().getId());
+    }
 
-  public Shipment getShipment() {
-    return shipment;
-  }
+    @Transient
+    public boolean getCOD() {
+        return isCOD();
+    }
 
-  public void setShipment(Shipment shipment) {
-    this.shipment = shipment;
-  }
+    public Shipment getShipment() {
+        return shipment;
+    }
 
-  public boolean isServiceOrder() {
-    return isServiceOrder;
-  }
+    public void setShipment(Shipment shipment) {
+        this.shipment = shipment;
+    }
 
-  public void setServiceOrder(boolean serviceOrder) {
-    isServiceOrder = serviceOrder;
-  }
+    public boolean isServiceOrder() {
+        return isServiceOrder;
+    }
 
-  public Long getVersion() {
-    return version;
-  }
+    public void setServiceOrder(boolean serviceOrder) {
+        isServiceOrder = serviceOrder;
+    }
 
-  public void setVersion(Long version) {
-    this.version = version;
-  }
+    public Long getVersion() {
+        return version;
+    }
 
-  @Override
-  public String toString() {
-    return id != null ? id.toString() : "";
-  }
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    @Override
+    public String toString() {
+        return id != null ? id.toString() : "";
+    }
+
+    
+
+    public Date getLastEscDate() {
+        return lastEscDate;
+    }
+
+    public void setLastEscDate(Date lastEscDate) {
+        this.lastEscDate = lastEscDate;
+    }
+
+    public Date getTargetDispatchDate() {
+        return targetDispatchDate;
+    }
+
+    public void setTargetDispatchDate(Date targetDelDate) {
+        this.targetDispatchDate = targetDelDate;
+    }
+
 }
-
-
