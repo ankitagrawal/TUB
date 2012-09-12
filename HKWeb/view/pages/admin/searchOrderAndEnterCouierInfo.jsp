@@ -13,6 +13,7 @@
   MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
   pageContext.setAttribute("boxSizeList", baseDao.getAll(BoxSize.class));
   pageContext.setAttribute("courierList", masterDataDao.getCourierList());
+   pageContext.setAttribute("groundShippedCourierList", masterDataDao.getGroundShippedCourierList());  
 %>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
@@ -117,9 +118,9 @@
               </c:forEach>
             </s:select>
             </c:if>
-               <c:if test="${shipmentQueueBean.groundShipped}">
+            <c:if test="${shipmentQueueBean.groundShipped}">
             <s:select name="shipment.courier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
-              <c:forEach var="courier" items="${courierList}">
+              <c:forEach var="courier" items="${groundShippedCourierList}">
                 <s:option value="${courier.id}">${courier.name}</s:option>
               </c:forEach>
             </s:select>
