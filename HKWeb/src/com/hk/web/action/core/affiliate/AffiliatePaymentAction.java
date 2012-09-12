@@ -9,6 +9,7 @@ import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.affiliate.AffiliateStatus;
+import com.hk.domain.offer.Offer;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.Role;
 import com.hk.impl.dao.CheckDetailsDaoImpl;
@@ -50,6 +51,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	List<AffiliateCategoryCommission> affiliateCategoryCommissionList;
 	Date startDate;
 	Date endDate;
+	Offer offer;
 
 	Double amount;
 	@ValidateNestedProperties({
@@ -81,30 +83,12 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 		if (affiliatePage != null) {
 			affiliates = affiliatePage.getList();
 		}
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-
-//		int month = calendar.get(Calendar.MONTH);
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-		Calendar startCalender = Calendar.getInstance();
-		startCalender.setTime(new Date());
-
-		if (day <= 5) {
-			startCalender.add(Calendar.MONTH, -1);
-		}
-		startCalender.set(Calendar.DAY_OF_MONTH, 5);
-		Date startDate = startCalender.getTime();
-
-		Calendar endCalender = Calendar.getInstance();
-		endCalender.set(Calendar.DAY_OF_MONTH, 5);
-		Date endDate = endCalender.getTime();
 
 		for (Affiliate affiliate : affiliates) {
 			AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
 			affiliatePaymentDto.setAffiliate(affiliate);
 			affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate, null, null));
-			affiliatePaymentDto.setPayableAmount(getAffiliateManager().getAmountInAccount(affiliate, startDate, endDate));
+			affiliatePaymentDto.setPayableAmount(getAffiliateManager().getPayableAmount(affiliate));
 			affiliatePaymentDtoList.add(affiliatePaymentDto);
 		}
 		return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
@@ -131,6 +115,10 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	}
 
 	public Resolution savePlan() {
+		if(offer == null){
+			return new RedirectResolution(AffiliatePaymentAction.class,"savePlan");
+		}
+		affiliate.setOffer(offer);
 		affiliate = (Affiliate) affiliateDao.save(affiliate);
 		for (AffiliateCategoryCommission categoryCommission : affiliateCategoryCommissionList) {
 			getAffiliateCategoryCommissionDao().save(categoryCommission);
@@ -392,5 +380,13 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 
 	public void setAffiliateStatus(AffiliateStatus affiliateStatus) {
 		this.affiliateStatus = affiliateStatus;
+	}
+
+	public Offer getOffer() {
+		return offer;
+	}
+
+	public void setOffer(Offer offer) {
+		this.offer = offer;
 	}
 }

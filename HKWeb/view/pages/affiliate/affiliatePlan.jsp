@@ -58,7 +58,7 @@
         <div class="row">
             <label class="rowLabel">Affiliate Offer</label>
             <label class="rowText">${paymentAction.affiliate.offer.description}</label>
-            <s:text name="affiliate.offer" value="${paymentAction.affiliate.offer.id}"/>
+            <s:text name="offer" value="${paymentAction.affiliate.offer.id}"/>
         </div>
 
         <div class="clear"></div>

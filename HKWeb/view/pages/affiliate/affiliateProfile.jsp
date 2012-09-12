@@ -84,7 +84,7 @@
 
             <div class="row">
                 <s:label class="rowLabel" name="Affiliate Type"/>
-                <s:select name="affiliateType" class="rowText">
+                <s:select name="affiliate.affiliateType" class="rowText">
                     <option value="">Select -</option>
                     <c:forEach items="<%=EnumAffiliateType.getAllAffiliateTypes()%>" var="aType">
                         <s:option value="${aType.id}">${aType.name}</s:option>
@@ -97,7 +97,7 @@
 
             <div class="row">
                 <s:label class="rowLabel" name="Channel"/>
-                <s:select name="affiliateMode" class="rowText">
+                <s:select name="affiliate.affiliateMode" class="rowText">
                     <option value="">Select -</option>
                     <c:forEach items="<%=EnumAffiliateMode.getAllAffiliateModes()%>" var="aMode">
                         <s:option value="${aMode.id}">${aMode.name}</s:option>

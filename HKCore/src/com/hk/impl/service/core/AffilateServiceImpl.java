@@ -5,6 +5,7 @@ import java.util.Set;
 import javax.servlet.http.Cookie;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.coupon.EnumCouponType;
 import com.hk.domain.affiliate.*;
 import com.hk.domain.user.Role;
 import com.hk.pact.dao.affiliate.AffiliateCategoryHasBrandDao;
@@ -74,7 +75,7 @@ public class AffilateServiceImpl implements AffilateService {
                 }
                 // check if the coupon is an affiliate coupon && user is affiliatedTo is set, Hence give first
                 // transacting commission
-                else if (offerInstance.getOffer().getOfferIdentifier().equals(OfferConstants.affiliateCommissionOffer) && user.getAffiliateTo() != null
+                else if (offerInstance.getCoupon().getCouponType() != null && offerInstance.getCoupon().getCouponType().getId().equals(EnumCouponType.AFFILIATE.getId()) && user.getAffiliateTo() != null
                         && affiliateDao.getAffilateByUser(user.getAffiliateTo()) != null) {
                     addAmountInAccountforFirstTransaction(user.getAffiliateTo(), order);
                     order.setReferredOrder(true);

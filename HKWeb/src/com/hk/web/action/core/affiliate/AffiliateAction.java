@@ -86,7 +86,7 @@ public class AffiliateAction extends BaseAction {
 		}
 		addRedirectAlertMessage(new SimpleMessage(
 				"Welcome!!..Your account has not been verified yet. You will be informed as soon as it is verified. Mean while, why don't you fill up the requisted information"));
-		return new ForwardResolution(UserManageAddressAction.class, "editUserAddresses");
+		return new ForwardResolution(AffiliateAccountAction.class);
 	}
 
 	public Resolution login() throws Exception {
