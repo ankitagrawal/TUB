@@ -465,8 +465,10 @@ public class AdminEmailManager {
           List<Product> similarProducts = new ArrayList<Product>();
           for (String productId : similarProductIds){
             Product product = getProductService().getProductById(productId);
-            product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
-            similarProducts.add(product);
+              if (product != null){
+                product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
+                similarProducts.add(product);
+              }
           }
           excelMap.put(EmailMapKeyConstants.similarProductId, similarProducts);
       }
