@@ -24,7 +24,7 @@ public interface CourierServiceInfoDao extends BaseDao {
 
 //  public Courier getDefaultCourierForPincode(Pincode pincode, boolean forCOD, Warehouse warehouse);
     
-  public Courier getDefaultCourierForPincode(Pincode pincode, boolean forCOD, boolean forGroundShipping, Warehouse warehouse) ;
+  public Courier getDefaultCourierForPincode(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) ;
 
   public List<CourierServiceInfo> getCourierServiceInfoByCourierAndPincode(Long courierId, String pincode);
 

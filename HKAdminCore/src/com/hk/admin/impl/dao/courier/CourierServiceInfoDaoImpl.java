@@ -124,16 +124,12 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
 //    }
 //
 
-    public Courier getDefaultCourierForPincode(Pincode pincode, boolean forCOD, boolean forGroundShipping, Warehouse warehouse) {
+    public Courier getDefaultCourierForPincode(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
         Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
         pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
         pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
-        if (forCOD) {
-            pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", forCOD));
-        }
-        if (forGroundShipping) {
-            pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", forGroundShipping));
-        }
+        pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCOD));
+        pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundShipping));      
         PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
         if (pincodeDefaultCourierObj != null) {
             return pincodeDefaultCourierObj.getCourier();
@@ -206,21 +202,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
             Criteria pinCodeCriteria = courierServiceInfoCriteria.createCriteria("pincode");
             pinCodeCriteria.add(Restrictions.eq("pincode", pincode));
         }
-
         return  courierServiceInfoCriteria.list();
-//        List<CourierServiceInfo> servicesList = courierServiceInfoCriteria.list();
-//
-//
-//        if (servicesList != null && servicesList.size() > 0) {
-//            List<Courier> courierList = new ArrayList<Courier>();
-//            for (CourierServiceInfo serviceInfo : servicesList) {
-//                courierList.add(serviceInfo.getCourier());
-//            }
-//            return courierList;
-//        } else {
-//            return null;
-//        }
-
     }
 
 
