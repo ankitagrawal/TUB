@@ -65,4 +65,6 @@ public interface ConsignmentService {
 
     public ShippingOrder getShippingOrderFromConsignment(Consignment consignment);
 
+    public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage);
+
 }

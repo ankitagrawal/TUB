@@ -66,6 +66,10 @@
                 </c:forEach>
             </table>
             <s:submit name="savePaymentReconciliation" value="Save payment Reconciliation" />
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction" event="downloadPaymentReconciliation"
+                    title="Download Payment Reconciliation">Download Payment Reconciliation
+            <s:param name="hkdeliveryPaymentReconciliation" value="${consignmentAction.hkdeliveryPaymentReconciliation.id}" />
+            </s:link>
         </s:form>
     </s:layout-component>
 </s:layout-render>
