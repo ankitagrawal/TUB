@@ -17,7 +17,7 @@ Unsuccessful Order!
 </p>
 
 <p style="margin-bottom:1em">
-  Feel free to mail us info@healthkart.com or call us at +91-124-4551616 between 10am - 9pm all 7 days.
+  Feel free to mail us info@healthkart.com or call us at +91-124-4551616 between 9am - 9pm all 7 days.
 </p>
 
 <p style="margin-bottom:1em">
