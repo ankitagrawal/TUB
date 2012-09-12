@@ -63,7 +63,7 @@
                                              value="${paymentReconciliation.id}"/>
                                     (View)
                                 </s:link>
-                                <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
+                                <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction"
                                         event="downloadPaymentReconciliation">
                                     <s:param name="hkdeliveryPaymentReconciliation"
                                              value="${paymentReconciliation.id}"/>

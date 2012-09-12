@@ -209,8 +209,12 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         Consignment consignment = null;
         if(doTracking){
             consignment = consignmentService.getConsignmentByAwbNumber(consignmentNumber);
+            if(consignment != null) {
             consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
             logger.info(consignment + "" + consignmentTrackingList.size());
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Consignment doesn't exist."));
+            }
 
             return new ForwardResolution("/pages/admin/trackConsignment.jsp"); 
         }
