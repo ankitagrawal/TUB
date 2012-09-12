@@ -76,6 +76,11 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private Warehouse                   warehouse;
     private Double                      estimatedShippingCostCod;
     private Double                      estimatedShippingCostNonCod;
+    private Long                        defaultCourierAirCod;
+    private Long                        defaultCourierAirNonCod;
+    private Long                        defaultCourierGroundShippedCod;
+    private Long                        defaultCourierGroundShippedNonCod;
+                    
 
     @DefaultHandler
     public Resolution pre() {
@@ -85,12 +90,13 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public Resolution search() {
         try {
             pincode = pincodeDao.getByPincode(pincodeString);
-            pincodeDefaultCouriers = getPincodeService().getByPincode(pincode);
+            pincodeDefaultCouriers = getPincodeService().getByPincode(pincode,pincodeDefaultCourier.isCod(),pincodeDefaultCourier.isGroundShipping());
             if (!pincodeDefaultCouriers.isEmpty()) {
 
                 courierServiceList = courierServiceInfoDao.getCourierServicesForPinCode(pincodeString);
                 return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
             } else {
+                 addRedirectAlertMessage(new SimpleMessage("Pincode does not exist for selected combination"));  
                 return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
             }
 
@@ -103,11 +109,23 @@ public class ChangeDefaultCourierAction extends BaseAction {
     }
 
     public Resolution save() {
-        pincodeDao.save(pincodeDefaultCourier);
-	    //Todo: 
-        addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
+//         PincodeDefaultCourier pincodeDefaultCourierNew;
+//        pincode =  pincodeDefaultCourier.getPincode();
+//        warehouse = pincodeDefaultCourier.getWarehouse();
+//        Courier courier = pincodeDefaultCourier.getCourier();
+       PincodeDefaultCourier   pincodeDefaultCourierNew = getPincodeService().getByPincodeWarehouse(pincodeDefaultCourier.getPincode(), pincodeDefaultCourier.getWarehouse(), pincodeDefaultCourier.isCod(),pincodeDefaultCourier.isGroundShipping());
+        if (pincodeDefaultCourierNew != null) {
+            pincodeDefaultCourierNew.setCourier(pincodeDefaultCourier.getCourier());
+            pincodeDefaultCourierNew.setEstimatedShippingCost(pincodeDefaultCourier.getEstimatedShippingCost());
+             pincodeDao.save(pincodeDefaultCourierNew);
+             addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));       
+        }
+
+	    //Todo:
         return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
-    }
+
+        }
+
 
     public Resolution add_pincode() {
         PincodeDefaultCourier pincodeDefaultCourierNew;
@@ -115,7 +133,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         warehouse = pincodeDefaultCourier.getWarehouse();
         Courier courier = pincodeDefaultCourier.getCourier();
 //        Courier nonCodCourier = pincodeDefaultCourier.getNonCodCourier();
-        pincodeDefaultCourierNew = getPincodeService().getByPincodeWarehouse(pincode, warehouse);
+        pincodeDefaultCourierNew = getPincodeService().getByPincodeWarehouse(pincode, warehouse, pincodeDefaultCourier.isCod(),pincodeDefaultCourier.isGroundShipping());
         if (pincodeDefaultCourierNew != null) {
             addRedirectAlertMessage(new SimpleMessage("Default courier for destination pincode already exists for given warehouse"));
             return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
@@ -184,7 +202,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
         try {
             Set<PincodeDefaultCourier> defaultPincodes = xslParser.readDefaultPincodeList(excelFile);
             for (PincodeDefaultCourier defaultPincode : defaultPincodes) {
-                PincodeDefaultCourier existingDefaultCourierObject = getPincodeService().getByPincodeWarehouse(defaultPincode.getPincode(), defaultPincode.getWarehouse());
+//                PincodeDefaultCourier existingDefaultCourierObject = getPincodeService().getByPincodeWarehouse(defaultPincode.getPincode(), defaultPincode.getWarehouse());
+                 PincodeDefaultCourier existingDefaultCourierObject = getPincodeService().getByPincodeWarehouse(defaultPincode.getPincode(), defaultPincode.getWarehouse(),defaultPincode.isCod(),defaultPincode.isGroundShipping());
                 if (defaultPincode != null) {
                     if (existingDefaultCourierObject == null) {
                         pincodeDao.save(defaultPincode);
@@ -284,4 +303,35 @@ public class ChangeDefaultCourierAction extends BaseAction {
         this.pincodeService = pincodeService;
     }
 
+    public Long getDefaultCourierAirCod() {
+        return defaultCourierAirCod;
+    }
+
+    public void setDefaultCourierAirCod(Long defaultCourierAirCod) {
+        this.defaultCourierAirCod = defaultCourierAirCod;
+    }
+
+    public Long getDefaultCourierAirNonCod() {
+        return defaultCourierAirNonCod;
+    }
+
+    public void setDefaultCourierAirNonCod(Long defaultCourierAirNonCod) {
+        this.defaultCourierAirNonCod = defaultCourierAirNonCod;
+    }
+
+    public Long getDefaultCourierGroundShippedCod() {
+        return defaultCourierGroundShippedCod;
+    }
+
+    public void setDefaultCourierGroundShippedCod(Long defaultCourierGroundShippedCod) {
+        this.defaultCourierGroundShippedCod = defaultCourierGroundShippedCod;
+    }
+
+    public Long getDefaultCourierGroundShippedNonCod() {
+        return defaultCourierGroundShippedNonCod;
+    }
+
+    public void setDefaultCourierGroundShippedNonCod(Long defaultCourierGroundShippedNonCod) {
+        this.defaultCourierGroundShippedNonCod = defaultCourierGroundShippedNonCod;
+    }
 }

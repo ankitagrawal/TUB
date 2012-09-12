@@ -73,6 +73,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     Courier suggestedCourier;
     List<Courier> availableCouriers;
     Double approxWeight = 0D;
+    boolean isGroundShipped = false;
 
     Shipment shipment;
 
@@ -95,8 +96,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         } else {
             boolean isCod = shippingOrder.isCOD();
 //            availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
-//  groundShipping logic Starts---
-            boolean isGroundShipped = false;
+//  groundShipping logic Starts---              
             for (LineItem lineItem : shippingOrder.getLineItems()) {
                 if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
                     isGroundShipped = true;
@@ -150,7 +150,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
 //                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
-                boolean isGroundShipped = false;
+
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
                     if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
                         isGroundShipped = true;
@@ -169,7 +169,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     if (isGroundShipped) {
                         suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
                     } else {
-                        suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
+                        suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, false);
                     }
                     //Todo: Seema ."reason=create  shipment with default Awb  " Action: default Tracking id= gateway_order_id: Might remove when we have all the awb in system
                     trackingId = shippingOrder.getGatewayOrderId();
@@ -324,5 +324,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
     public void setTrackingId(String trackingId) {
         this.trackingId = trackingId;
+    }
+
+    public boolean isGroundShipped() {
+        return isGroundShipped;
+    }
+
+    public void setGroundShipped(boolean groundShipped) {
+        isGroundShipped = groundShipped;
     }
 }
