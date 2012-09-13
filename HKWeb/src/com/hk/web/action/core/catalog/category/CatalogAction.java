@@ -196,7 +196,10 @@ public class CatalogAction extends BasePaginatedAction {
             searchFilters.add(brandFilter);
             SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter,paginationFilter,sortFilter);
 
-            List<Product> filteredProducts = trimListByDistance(searchResult.getSolrProducts(), preferredZone);
+			List<Product> filteredProducts = searchResult.getSolrProducts();
+			if (rootCategorySlug.equals("services")) {
+				productList = trimListByDistance(filteredProducts, preferredZone);
+			}
             //Find out how many products have been filtered
             int diff = 0;
             long totalResultSize = searchResult.getResultSize();
