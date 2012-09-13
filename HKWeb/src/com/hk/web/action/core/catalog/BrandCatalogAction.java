@@ -87,31 +87,31 @@ public class BrandCatalogAction extends BasePaginatedAction {
 
   @DefaultHandler
   public Resolution pre() throws MalformedURLException, SolrServerException {
-    List<String> categoryNames = new ArrayList<String>();
-    categoryNames.add(topLevelCategory);
-    urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
-    if (StringUtils.isBlank(brand)) {
-      return new RedirectResolution("/" + topLevelCategory);
-    } else {
-      try {
-        SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
-          productPage = new Page(searchResult.getSolrProducts(),getPerPage(), getPageNo(), searchResult.getResultSize());
-      } catch (Exception e) {
-        logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
-        categories = categoryDao.getCategoriesByBrand(brand, topLevelCategory);
-        productPage = productDao.getProductByCategoryAndBrand(categoryNames, URLDecoder.decode(brand), getPageNo(), getPerPage());
-      }
-      productList = productPage.getList();
-      seoData = seoManager.generateSeo(brand);
-    }
-
-    for (Product product : productList) {
-  	  product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
-      menuNode = menuHelper.getMenoNodeFromProduct(product);
-      menuNodes.add(menuNode);
-    }
-
-    return new ForwardResolution("/pages/brand-catalog.jsp");
+	  List<String> categoryNames = new ArrayList<String>();
+	  categoryNames.add(topLevelCategory);
+	  urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
+	  if (StringUtils.isBlank(brand)) {
+		  return new RedirectResolution("/" + topLevelCategory);
+	  } else {
+		  try {
+			  SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
+			  productPage = new Page(searchResult.getSolrProducts(), getPerPage(), getPageNo(), searchResult.getResultSize());
+		  } catch (Exception e) {
+			  logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
+			  categories = categoryDao.getCategoriesByBrand(brand, topLevelCategory);
+			  productPage = productDao.getProductByCategoryAndBrand(categoryNames, URLDecoder.decode(brand), getPageNo(), getPerPage());
+		  }
+		  if (productPage != null) {
+			  productList = productPage.getList();
+			  for (Product product : productList) {
+				  product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
+				  menuNode = menuHelper.getMenoNodeFromProduct(product);
+				  menuNodes.add(menuNode);
+			  }
+		  }
+		  seoData = seoManager.generateSeo(brand); 		  		  
+	  }
+	  return new ForwardResolution("/pages/brand-catalog.jsp");
   }
 
   public String getBrand() {
