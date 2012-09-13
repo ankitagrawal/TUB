@@ -96,15 +96,6 @@
                     src="${pageContext.request.contextPath}/product?productBanner=&product=${product.id}&affid=${affiliate.code}"
                     width="180" height="325" scrolling="no"></iframe>
               </textarea>
-
-
-                <%--<textarea id="productBannerTextArea" readonly="readonly" class="productBannerTextArea"--%>
-                <%--name="productBannerTextArea" rows="3" cols="50"--%>
-                <%--style="margin-top:20px;height:80px;word-wrap:normal;white-space:pre-wrap;">--%>
-                <%--<iframe--%>
-                <%--src="${pageContext.request.contextPath}/product?productBanner=&product=${product.id}&affid=${affiliate.code}"--%>
-                <%--width="180" height="325" scrolling="no"></iframe>--%>
-                <%--</textarea>--%>
             </div>
           </div>
           <s:hidden name="product" value="${product.id}"/>
