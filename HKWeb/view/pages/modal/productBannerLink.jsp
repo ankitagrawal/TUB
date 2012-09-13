@@ -17,6 +17,8 @@
           affiliate = affiliateDao.getAffiliateById(affiliateId);
       }
       pageContext.setAttribute("affiliate", affiliate);
+      boolean isSecure = pageContext.getRequest().isSecure();
+      pageContext.setAttribute("isSecure", isSecure);
   %>
   <div class="jqmWindow" style="width:700px;" id="getBannerLinkWindow">
     <s:layout-render name="/layouts/modal.jsp">
@@ -82,21 +84,23 @@
               </div>
             </div>
 
-            <div class="label">
-              <s:label name="Copy the following code and paste it in your website"/>
-              <a href="javascript:void(0);"
-                 onclick="document.getElementById('productBannerTextArea').focus();document.getElementById('productBannerTextArea').select();">(Select
-                This
-                Code)</a>
+              <c:if test="${not isSecure }">
+                  <div class="label">
+                      <s:label name="Copy the following code and paste it in your website"/>
+                      <a href="javascript:void(0);"
+                         onclick="document.getElementById('productBannerTextArea').focus();document.getElementById('productBannerTextArea').select();">(Select
+                          This
+                          Code)</a>
 
-              <textarea id="productBannerTextArea" readonly="readonly" class="productBannerTextArea"
-                        name="productBannerTextArea" rows="3" cols="65"
-                        style="text-align:left; margin-top:20px;height:auto;">
-                <iframe
-                    src="${pageContext.request.contextPath}/product?productBanner=&product=${product.id}&affid=${affiliate.code}"
-                    width="180" height="325" scrolling="no"></iframe>
-              </textarea>
-            </div>
+                      <textarea id="productBannerTextArea" readonly="readonly" class="productBannerTextArea"
+                                name="productBannerTextArea" rows="3" cols="65"
+                                style="text-align:left; margin-top:20px;height:auto;">
+                          <iframe
+                                  src="http://www.healthkart.com/product?productBanner=&product=${product.id}&affid=${affiliate.code}"
+                                  width="180" height="325" scrolling="no"></iframe>
+                      </textarea>
+                  </div>
+              </c:if>
           </div>
           <s:hidden name="product" value="${product.id}"/>
         </s:form>
