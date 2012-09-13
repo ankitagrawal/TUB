@@ -11,6 +11,9 @@ import javax.persistence.*;
  * Time: 3:03 PM
  * To change this template use File | Settings | File Templates.
  */
+@SuppressWarnings("serial")
+@Entity
+@Table(name = "order_payment_reconciliation")
 public class OrderPaymentReconciliation {
 
 	@Id
