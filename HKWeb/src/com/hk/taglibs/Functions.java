@@ -1,5 +1,27 @@
 package com.hk.taglibs;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import net.sourceforge.stripes.util.CryptoUtil;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.akube.framework.util.DateUtils;
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
@@ -17,7 +39,12 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.*;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.VariantConfig;
+import com.hk.domain.catalog.product.VariantConfigOption;
+import com.hk.domain.catalog.product.VariantConfigOptionParam;
+import com.hk.domain.catalog.product.VariantConfigValues;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.hkDelivery.Hub;
@@ -53,19 +80,7 @@ import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
-import net.sourceforge.stripes.util.CryptoUtil;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.*;
+import com.hk.util.OrderUtil;
 
 public class Functions {
 
@@ -74,7 +89,8 @@ public class Functions {
 
     private static final String          DEFAULT_DELIEVERY_DAYS = "1-3";
     private static final String          BUSINESS_DAYS          = " business days";
-    private static final long            DEFAULT_MIN_DEL_DAYS   = 1;
+    
+    
 
 
     // TODO: rewrite
@@ -478,23 +494,12 @@ public class Functions {
 
     public static String getDispatchDaysForOrder(Order order) {
         if (order != null) {
-            Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-            long minDays = DEFAULT_MIN_DEL_DAYS, maxDays = DEFAULT_MIN_DEL_DAYS;
-
-            for (CartLineItem cartLineItem : productCartLineItems) {
-                ProductVariant productVariant = cartLineItem.getProductVariant();
-                if (productVariant != null) {
-                    Product product = productVariant.getProduct();
-                    if (product.getMinDays() != null && product.getMinDays() > minDays) {
-                        minDays = product.getMinDays();
-                    }
-                    if (product.getMaxDays() != null && product.getMaxDays() > maxDays) {
-                        maxDays = product.getMaxDays();
-                    }
-                }
-
+            Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
+            long minDays = dispatchDays[0], maxDays = dispatchDays[1];
+            
+            if(minDays == OrderUtil.DEFAULT_MIN_DEL_DAYS && maxDays == OrderUtil.DEFAULT_MIN_DEL_DAYS){
+              return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
             }
-
             return String.valueOf(minDays).concat("-").concat(String.valueOf(maxDays)).concat(BUSINESS_DAYS);
         } else {
             return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
@@ -567,5 +572,11 @@ public class Functions {
         HubService hubService = ServiceLocatorFactory.getService(HubService.class);
         return hubService.getHubForUser(user);
     }
+
+	public static boolean renderNewCatalogUI(String child, String secondChild) {
+		List<String> categoriesForNewCatalogUI = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
+		boolean renderNewCatalogUI = (Functions.collectionContains(categoriesForNewCatalogUI, child) || Functions.collectionContains(categoriesForNewCatalogUI, secondChild));
+		return renderNewCatalogUI;
+	}
 
 }
