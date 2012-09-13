@@ -41,16 +41,16 @@ public class CourierServiceImpl implements CourierService {
     @Autowired
     private CourierServiceInfoDao courierServiceInfoDao;
 
-     @Autowired
-    WarehouseService  warehouseService;
+    @Autowired
+    WarehouseService warehouseService;
 
     @Autowired
     PincodeDao pincodeDao;
-      @Autowired
-      CourierCostCalculator courierCostCalculator;
+    @Autowired
+    CourierCostCalculator courierCostCalculator;
 
     @Autowired
-    ShipmentPricingEngine       shipmentPricingEngine;
+    ShipmentPricingEngine shipmentPricingEngine;
 
 
     @Override
@@ -70,7 +70,7 @@ public class CourierServiceImpl implements CourierService {
 
     public CourierServiceInfo getCourierServiceByPincodeAndCourier(Long courierId, String pincode, Boolean isCod) {
 //        return getCourierServiceInfoDao().getCourierServiceByPincodeAndCourier(courierId, pincode, isCod);
-        return getCourierServiceInfoDao().getCourierService(courierId, pincode, isCod, false, false);
+        return getCourierServiceInfoDao().getCourierServiceInfoForPincode(courierId, pincode, isCod, false, false);
     }
 
     // cod not available if either courier service not available there or order is exclusively service order -->
@@ -78,7 +78,7 @@ public class CourierServiceImpl implements CourierService {
     public boolean isCodAllowed(String pin) {
         if (StringUtils.isNotEmpty(pin)) {
 //            return getCourierServiceInfoDao().isCodAvailable(pin);
-             return getCourierServiceInfoDao().isCourierServiceInfoAvailable(null,pin, true, false, false);
+            return getCourierServiceInfoDao().isCourierServiceInfoAvailable(null, pin, true, false, false);
         }
         return false;
     }
@@ -92,67 +92,50 @@ public class CourierServiceImpl implements CourierService {
             isCOD = true;
         }
 //        return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD);
-        return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD, false , false);
+        return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD, false, false);
     }
 
 
-    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping , boolean isCodAvailableOnGroundShipping ) {
-           return getCourierServiceInfoDao().getCouriersForPincode(pinCode, isCOD, isGroundShipping , isCodAvailableOnGroundShipping);
-       }
+    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping) {
+        return getCourierServiceInfoDao().getCouriersForPincode(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping);
+    }
 
     public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping) {
         Warehouse warehouse = getUserService().getWarehouseForLoggedInUser();
-        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD,isGroundShipping, warehouse);
+        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, isGroundShipping, warehouse);
     }
 
     public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
 //        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
-        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, isGroundShipping,  warehouse);
+        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, isGroundShipping, warehouse);
     }
 
-    public Double getCashbackOnGroundShippedItem(Double groundshipItemAmount, Order order, Double groundshipItemweight) {
-        String pincode = order.getAddress().getPin();
-        Pincode pincodeObj = pincodeDao.getByPincode(pincode);
-        if (pincodeObj == null) {
-            return null;
-        }
-        List<Warehouse> warehouses = warehouseService.getAllWarehouses();
 
-        Double[] arrShipmentCost = new Double[warehouses.size()];
-        int index = 0;
-        for (Warehouse warehouse : warehouses) {
-            if (warehouse.getId() != warehouseService.getCorporateOffice().getId()) {
-                Courier courier = getDefaultCourier(pincodeObj, true,true, warehouse);
-                CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, warehouse);
-                if (courierPricingInfo == null) {
-                    return null;
-                }
-                arrShipmentCost[index] = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, groundshipItemweight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo,groundshipItemAmount,true) ; 
-
-                index++;
-            }
-        }
-        return minimumShippingCost(arrShipmentCost);
-    }
-
-    
     public boolean isGroundShippingAllowed(String pin) {
         if (StringUtils.isNotEmpty(pin)) {
 //           return getCourierServiceInfoDao().isGroundShippingAvailable(pin);
-            return getCourierServiceInfoDao().isCourierServiceInfoAvailable(null, pin , false, true, false);
+            return getCourierServiceInfoDao().isCourierServiceInfoAvailable(null, pin, false, true, false);
         }
         return false;
     }
 
     public boolean isCodAllowedOnGroundShipping(String pin) {
-            if (StringUtils.isNotEmpty(pin)) {
+        if (StringUtils.isNotEmpty(pin)) {
 //                return getCourierServiceInfoDao().isCodAvailableOnGroundShipping(pin);
-                  return getCourierServiceInfoDao().isCourierServiceInfoAvailable(null, pin, false, false, true);
-            }
-            return false;
+            return getCourierServiceInfoDao().isCourierServiceInfoAvailable(null, pin, false, false, true);
         }
+        return false;
+    }
 
-    
+
+     public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping){
+                 return getCourierServiceInfoDao().getCourierServiceInfoList(courierId,  pincode,  forCOD,  forGroundShipping,  forCodAvailableOnGroundShipping); 
+         }
+
+     public CourierServiceInfo getCourierServiceInfoForPincode(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping){
+         return getCourierServiceInfoDao().getCourierServiceInfoForPincode(courierId,  pincode,  forCOD,  forGroundShipping,  forCodAvailableOnGroundShipping);
+     }
+
     public CourierDao getCourierDao() {
         return courierDao;
     }
@@ -193,12 +176,4 @@ public class CourierServiceImpl implements CourierService {
         this.pincodeService = pincodeService;
     }
 
-    public Double minimumShippingCost(Double arrShipmentCost[]) {
-        if (arrShipmentCost == null || arrShipmentCost.length == 0) return null;
-        Double min = arrShipmentCost[0];
-        for (int i = 1; i < arrShipmentCost.length - 1; i++) {
-            if (min > arrShipmentCost[i]) min = arrShipmentCost[i];
-        }
-        return min;
-    }
 }

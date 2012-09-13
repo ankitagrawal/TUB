@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.dto.accounting.InvoiceLineItemDto;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
@@ -58,6 +59,8 @@ public class InvoicePDFGenerator {
     BarcodeGenerator        barcodeGenerator;
     @Autowired
     CourierServiceInfoDao   courierServiceInfoDao;
+    @Autowired
+    CourierService          courierService;
     @Autowired
     AddressDao              addressDao;
     @Autowired
@@ -115,9 +118,9 @@ public class InvoicePDFGenerator {
         if (EnumCourier.BlueDart_COD.getId().equals(shippingOrder.getShipment().getCourier().getId())) {
             if (isCod) {
 //                courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart_COD.getId(), address.getPin(), true);
-                 courierServiceInfo = courierServiceInfoDao.getCourierService(EnumCourier.BlueDart_COD.getId(), address.getPin(), true , false, false);
+                 courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart_COD.getId(), address.getPin(), true , false, false);
             } else {
-                 courierServiceInfo = courierServiceInfoDao.getCourierService(EnumCourier.BlueDart.getId(), address.getPin(), false , false, false);
+                 courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart.getId(), address.getPin(), false , false, false);
             }
             if (courierServiceInfo != null) {
                 routingCode = courierServiceInfo.getRoutingCode();
@@ -452,5 +455,13 @@ public class InvoicePDFGenerator {
 
     public void setBaseDao(BaseDao baseDao) {
       this.baseDao = baseDao;
+    }
+
+    public CourierService getCourierService() {
+        return courierService;
+    }
+
+    public void setCourierService(CourierService courierService) {
+        this.courierService = courierService;
     }
 }

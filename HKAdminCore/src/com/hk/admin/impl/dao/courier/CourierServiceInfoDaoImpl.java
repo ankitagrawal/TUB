@@ -37,7 +37,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
 
     public List<Courier> getCouriersForPincode(String pincode, boolean forCOD, boolean forGroundShipping , boolean forCodAvailableOnGroundShipping) {
 
-       List<CourierServiceInfo> servicesList = getCourierServiceInfo(null, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+       List<CourierServiceInfo> servicesList = getCourierServiceInfoList(null, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
         if (servicesList != null && servicesList.size() > 0) {
             List<Courier> courierList = new ArrayList<Courier>();
             for (CourierServiceInfo serviceInfo : servicesList) {
@@ -50,7 +50,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
     }
 
 
-    public List<CourierServiceInfo> getCourierServiceInfo(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+    public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
 
         Criteria courierServiceInfoCriteria = getSession().createCriteria(CourierServiceInfo.class);
         if (forCOD) {
@@ -76,18 +76,15 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
     }
 
 
-    public CourierServiceInfo getCourierService(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
-        List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfo(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
-        if (courierServiceInfoList != null && courierServiceInfoList.size() > 0) {
-            return courierServiceInfoList.get(0);
-        } else {
-            return null;
-        }
+    public CourierServiceInfo getCourierServiceInfoForPincode(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+        List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+       return courierServiceInfoList != null && courierServiceInfoList.size() > 0 ? courierServiceInfoList.get(0) : null;
+
     }
 
 
      public boolean isCourierServiceInfoAvailable (Long courierId, String pincode,boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
-         List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfo(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+         List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
           return courierServiceInfoList != null && courierServiceInfoList.size() > 0;
      }
 

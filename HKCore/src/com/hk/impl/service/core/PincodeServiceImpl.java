@@ -32,12 +32,12 @@ public class PincodeServiceImpl implements PincodeService {
         return getPincodeDao().getByPincodeWarehouse(pincode, warehouse);
     }
 
-    public List<PincodeDefaultCourier>  getByPincode(Pincode pincode,  boolean forCod, boolean forGroundshipping) {
-        return   getPincodeDao().getByPincode(pincode , forCod, forGroundshipping);
+    public List<PincodeDefaultCourier>  getByPincode(Pincode pincode,  boolean isCod, boolean isGroundshipping) {
+        return   getPincodeDao().getByPincode(pincode , isCod, isGroundshipping);
     }
 
-     public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse,  boolean forCod, boolean forGroundshipping) {
-          return getPincodeDao().getByPincodeWarehouse(pincode, warehouse, forCod,forGroundshipping );
+     public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse,  boolean isCod, boolean isGroundshipping) {
+          return getPincodeDao().getByPincodeWarehouse(pincode, warehouse, isCod, isGroundshipping );
      }
 
 

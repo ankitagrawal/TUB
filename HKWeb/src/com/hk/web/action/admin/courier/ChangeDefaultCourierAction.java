@@ -28,6 +28,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -50,6 +51,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private PincodeService pincodeService;
     @Autowired
     CourierServiceInfoDao courierServiceInfoDao;
+    @Autowired
+    CourierService courierService;
     @Autowired
     WarehouseDaoImpl warehouseDao;
     @Autowired
@@ -88,7 +91,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
             if (!pincodeDefaultCouriers.isEmpty()) {
 
 //                courierServiceList = courierServiceInfoDao.getCourierServicesForPinCode(pincodeString);
-                courierServiceList = courierServiceInfoDao.getCourierServiceInfo(null,pincodeString, false, false, false);
+                courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false);
                 return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Pincode does not exist for selected combination"));
@@ -273,5 +276,12 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public void setPincodeService(PincodeService pincodeService) {
         this.pincodeService = pincodeService;
     }
-    
+
+    public CourierService getCourierService() {
+        return courierService;
+    }
+
+    public void setCourierService(CourierService courierService) {
+        this.courierService = courierService;
+    }
 }

@@ -99,10 +99,10 @@ public class SOInvoiceAction extends BaseAction {
             CourierServiceInfo courierServiceInfo = null;
             if (isCod) {
 //                courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart_COD.getId(), address.getPin(), true);
-                   courierServiceInfo = courierServiceInfoDao.getCourierService(EnumCourier.BlueDart_COD.getId(), address.getPin(), true , false, false);
+                   courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart_COD.getId(), address.getPin(), true , false, false);
             } else {
 //                courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart.getId(), address.getPin(), false);
-                 courierServiceInfo = courierServiceInfoDao.getCourierService(EnumCourier.BlueDart_COD.getId(), address.getPin(), false , false, false);
+                 courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart_COD.getId(), address.getPin(), false , false, false);
             }
 
             if (courierServiceInfo != null) {

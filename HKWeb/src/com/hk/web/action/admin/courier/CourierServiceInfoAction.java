@@ -29,6 +29,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -52,6 +53,8 @@ public class CourierServiceInfoAction extends BaseAction {
     BatchProcessWorkManager          workManager;
     @Autowired
     CourierServiceInfoDao            courierServiceInfoDao;
+    @Autowired
+    CourierService                   courierService;
     @Autowired
     PincodeDao                       pincodeDao;
 
@@ -88,7 +91,7 @@ public class CourierServiceInfoAction extends BaseAction {
         List<CourierServiceInfo> courierServiceInfoList = new ArrayList<CourierServiceInfo>();
         if (courier != null) {
 //            courierServiceInfoList = courierServiceInfoDao.getCourierServiceInfo(courier.getId());
-              courierServiceInfoList = courierServiceInfoDao.getCourierServiceInfo(courier.getId(), null, false, false, false);
+              courierServiceInfoList = courierService.getCourierServiceInfoList(courier.getId(), null, false, false, false);
             courierName = courier.getName();
         } else {
             courierServiceInfoList = courierServiceInfoDao.getAll(CourierServiceInfo.class);
@@ -132,7 +135,7 @@ public class CourierServiceInfoAction extends BaseAction {
                 tmpObj = courierServiceInfo;
 //                CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(),
 //                        courierServiceInfo.getPincode().getPincode().toString());
-                     CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierService(courierServiceInfo.getCourier().getId(),
+                     CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceInfoForPincode(courierServiceInfo.getCourier().getId(),
                         courierServiceInfo.getPincode().getPincode().toString(), false, false, false);
                 if (tmpObj2 != null) {
                     if (courierServiceInfo.isDeleted()) {
@@ -172,7 +175,7 @@ public class CourierServiceInfoAction extends BaseAction {
         } else {
 
 //            CourierServiceInfo courierServiceInfoLocal = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(), pincode);
-            CourierServiceInfo courierServiceInfoLocal = courierServiceInfoDao.getCourierService(courierServiceInfo.getCourier().getId(), pincode , false, false,false);
+            CourierServiceInfo courierServiceInfoLocal = courierService.getCourierServiceInfoForPincode(courierServiceInfo.getCourier().getId(), pincode , false, false,false);
             if (courierServiceInfoLocal != null) {
                 courierServiceInfoLocal.setCodAvailable(courierServiceInfo.isCodAvailable());
                 courierServiceInfoLocal.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
@@ -219,5 +222,13 @@ public class CourierServiceInfoAction extends BaseAction {
 
     public void setCourierServiceInfoDao(CourierServiceInfoDao courierServiceInfoDao) {
         this.courierServiceInfoDao = courierServiceInfoDao;
+    }
+
+    public CourierService getCourierService() {
+        return courierService;
+    }
+
+    public void setCourierService(CourierService courierService) {
+        this.courierService = courierService;
     }
 }

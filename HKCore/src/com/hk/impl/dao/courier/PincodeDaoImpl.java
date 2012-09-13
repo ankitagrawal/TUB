@@ -37,33 +37,23 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
     }
 
 
-    public List<PincodeDefaultCourier>  getByPincode(Pincode pincode,  boolean forCod, boolean forGroundshipping) {
-//         Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
-//            pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", forCod));
-//            pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", forGroundshipping));
-//        if (pincode != null ) {
-//            Criteria pinCodeCriteria = pincodeDefaultCourierCriteria.createCriteria("pincode");
-//            pinCodeCriteria.add(Restrictions.eq("pincode", pincode));
-//        }
-//
-//         return   pincodeDefaultCourierCriteria.list();
-
-              String hqlQuery = " from PincodeDefaultCourier pincodeDefaultCourier where pincodeDefaultCourier.pincode = :pincode and pincodeDefaultCourier.cod = :cod and pincodeDefaultCourier.groundShipping = :groundShipping";
-             List<PincodeDefaultCourier> pincodeDefaultCouriers = getSession().createQuery(hqlQuery).setParameter("pincode", pincode).setParameter("cod",forCod).setParameter("groundShipping",forGroundshipping).list();
+    public List<PincodeDefaultCourier> getByPincode(Pincode pincode, boolean isCod, boolean isGroundshipping) {
+        String hqlQuery = " from PincodeDefaultCourier pincodeDefaultCourier where pincodeDefaultCourier.pincode = :pincode and pincodeDefaultCourier.cod = :cod and pincodeDefaultCourier.groundShipping = :groundShipping";
+        List<PincodeDefaultCourier> pincodeDefaultCouriers = getSession().createQuery(hqlQuery).setParameter("pincode", pincode).setParameter("cod", isCod).setParameter("groundShipping", isGroundshipping).list();
         return pincodeDefaultCouriers;
 
     }
 
 
-   public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse,  boolean forCod, boolean forGroundshipping) {
-           Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
-           pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
-           pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
-             pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", forCod));
-              pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", forGroundshipping));
-           PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
-           return pincodeDefaultCourierObj;
-       }
+    public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse, boolean isCod, boolean isGroundshipping) {
+        Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
+        pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
+        pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
+        pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCod));
+        pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundshipping));
+        PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
+        return pincodeDefaultCourierObj;
+    }
 
 
 }
