@@ -103,10 +103,12 @@ public class BrandCatalogAction extends BasePaginatedAction {
 		  }
 		  if (productPage != null) {
 			  productList = productPage.getList();
-			  for (Product product : productList) {
-				  product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
-				  menuNode = menuHelper.getMenoNodeFromProduct(product);
-				  menuNodes.add(menuNode);
+			  if (productList != null) {
+				  for (Product product : productList) {
+					  product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
+					  menuNode = menuHelper.getMenoNodeFromProduct(product);
+					  menuNodes.add(menuNode);
+				  }
 			  }
 		  }
 		  seoData = seoManager.generateSeo(brand); 		  		  
