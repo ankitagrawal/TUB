@@ -1,4 +1,4 @@
-package com.hk.util;
+package com.hk.admin.util;
 
 import java.io.File;
 import java.io.FileInputStream;
