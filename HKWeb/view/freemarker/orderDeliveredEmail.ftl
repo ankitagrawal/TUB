@@ -135,6 +135,11 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 												<input type="radio" name="recommendToFriends" value="10"/></a> 10
 										</td>
 									</tr>
+									<tr>
+										<td>Not likely</td>
+										<td colspan="8"></td>
+										<td>Very likely</td>
+									</tr>
 								</table>
 							</td>
 						</tr>

@@ -22,7 +22,7 @@
 				font-weight: bold;
 			}
 			.recommend{
-				width: 50px;
+				width: 75px;
 				font-weight: bold;
 			}
 			.website{
@@ -46,8 +46,8 @@
 						</tr>
 						<tr>
 							<td width="10"></td>
-							<td class="recommend" colspan="8">&nbsp;Not likely</td>
-							<td class="recommend" colspan="2">Very likely</td>
+							<td class="recommend" colspan="9">&nbsp;Not likely</td>
+							<td class="recommend" >Very likely</td>
 							<td width="10"></td>
 						</tr>
 						<tr>
