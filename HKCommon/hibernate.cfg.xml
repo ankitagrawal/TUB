@@ -191,5 +191,6 @@
         <mapping class="com.hk.domain.core.City" />
         <mapping class="com.hk.domain.courier.AwbStatus" />
         <mapping class="com.hk.domain.catalog.product.SimilarProduct" />
+	    <mapping class="com.hk.domain.feedback.Feedback" />
     </session-factory>
 </hibernate-configuration>

@@ -163,8 +163,7 @@ public class CatalogAction extends BasePaginatedAction {
 		}
 
 		try {
-			boolean renderNewCatalogUI = Functions.collectionContains(Arrays.asList("eyeglasses", "proteins", "creatine"), childCategorySlug)
-			|| Functions.collectionContains(Arrays.asList("eyeglasses", "proteins", "creatine"), secondaryChildCategorySlug);
+			boolean renderNewCatalogUI = Functions.renderNewCatalogUI(childCategorySlug, secondaryChildCategorySlug); 
 			if(renderNewCatalogUI){
 				defaultPerPage = 21;
 			}

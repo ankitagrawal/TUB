@@ -573,4 +573,10 @@ public class Functions {
         return hubService.getHubForUser(user);
     }
 
+	public static boolean renderNewCatalogUI(String child, String secondChild) {
+		List<String> categoriesForNewCatalogUI = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
+		boolean renderNewCatalogUI = (Functions.collectionContains(categoriesForNewCatalogUI, child) || Functions.collectionContains(categoriesForNewCatalogUI, secondChild));
+		return renderNewCatalogUI;
+	}
+
 }
