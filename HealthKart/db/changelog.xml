@@ -8736,4 +8736,34 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1347564843152-1">
+        <createTable tableName="update_pv_price">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="new_mrp" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="new_hkprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="txn_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="updated" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="DATETIME"/>
+            <column name="updated_by" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1347564843152-2">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="update_pv_price" constraintName="fk_update_pv_price_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1347564843152-3">
+        <addForeignKeyConstraint baseColumnNames="updated_by" baseTableName="update_pv_price" constraintName="fk_update_pv_price_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
