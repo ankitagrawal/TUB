@@ -21,154 +21,23 @@ import com.hk.impl.dao.BaseDaoImpl;
 @Repository
 public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierServiceInfoDao{
 
-    public List<CourierServiceInfo> getCourierServiceInfo(Long courierId) {
-        return getCourierServiceInfo(courierId, null, null);
-    }
-
-    public List<CourierServiceInfo> getCourierServicesForPinCode(String pincode) {
-        return getCourierServiceInfo(null, pincode, null);
-    }
-
-    public CourierServiceInfo getCourierServiceByPincodeAndCourier(Long courierId, String pincode, Boolean isCod) {
-        List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfo(courierId, pincode, isCod);
-        if (courierServiceInfoList != null && courierServiceInfoList.size() > 0) {
-            return courierServiceInfoList.get(0);
-        } else {
-            return null;
-        }                                                                                                 
-    }
-
-     public CourierServiceInfo getCourierServiceByPincodeAndCourierWithoutCOD(Long courierId, String pincode) {
-        List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoByCourierAndPincode(courierId, pincode);
-        if (courierServiceInfoList != null && courierServiceInfoList.size() > 0) {
-            return courierServiceInfoList.get(0);
-        } else {
-            return null;
-        }
-    }
-
-
-    public List<CourierServiceInfo> getCourierServiceInfo(Long courierId, String pincode, Boolean isCOD) {
-        Criteria criteria = getSession().createCriteria(CourierServiceInfo.class);
-        if (courierId != null) {
-            Criteria courierCriteria = criteria.createCriteria("courier");
-            courierCriteria.add(Restrictions.eq("id", courierId));
-        }
-        Criteria pinCodeCriteria = null;
-        if (pincode != null && StringUtils.isNotBlank(pincode)) {
-            pinCodeCriteria = criteria.createCriteria("pincode");
-            pinCodeCriteria.add(Restrictions.eq("pincode", pincode));
-        }
-        if (isCOD != null) {
-            criteria.add(Restrictions.eq("codAvailable", isCOD));
-        }
-
-        return criteria.list();
-    }
-
-
-
-    public List<CourierServiceInfo> getCourierServiceInfoByCourierAndPincode(Long courierId, String pincode) {
-        Criteria criteria = getSession().createCriteria(CourierServiceInfo.class);
-        if (courierId != null) {
-            Criteria courierCriteria = criteria.createCriteria("courier");
-            courierCriteria.add(Restrictions.eq("id", courierId));
-        }
-        Criteria pinCodeCriteria = null;
-        if (pincode != null && StringUtils.isNotBlank(pincode)) {
-            pinCodeCriteria = criteria.createCriteria("pincode");
-            pinCodeCriteria.add(Restrictions.eq("pincode", pincode));
-        }
-     
-        return criteria.list();
-    }
-
-    public boolean isCodAvailable(String pincode) {
-        Criteria criteria = getSession().createCriteria(CourierServiceInfo.class);
-        Criteria pincodeCriteria = criteria.createCriteria("pincode");
-        pincodeCriteria.add(Restrictions.eq("pincode", pincode));
-        criteria.add(Restrictions.eq("codAvailable", true));
-        List<CourierServiceInfo> courierServiceInfoList = criteria.list();
-        return courierServiceInfoList != null && courierServiceInfoList.size() > 0;
-    }
-
-    public List<Courier> getCouriersForPincode(String pincode, boolean forCOD) {
-        Criteria courierServiceInfoCriteria = getSession().createCriteria(CourierServiceInfo.class);
-        if (forCOD) {
-            courierServiceInfoCriteria.add(Restrictions.eq("codAvailable", forCOD));
-        }
-        Criteria pinCodeCriteria = courierServiceInfoCriteria.createCriteria("pincode");
-        pinCodeCriteria.add(Restrictions.eq("pincode", pincode));
-
-        List<CourierServiceInfo> servicesList = courierServiceInfoCriteria.list();
-
-        List<Courier> courierList = new ArrayList<Courier>();
-        for (CourierServiceInfo serviceInfo : servicesList) {
-            courierList.add(serviceInfo.getCourier());
-        }
-        return courierList;
-    }
-
-//    public Courier getDefaultCourierForPincode(Pincode pincode, boolean forCOD, Warehouse warehouse) {
-//        Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
-//        pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
-//        pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
-//        PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
-//        if (pincodeDefaultCourierObj != null) {
-//            if (forCOD)
-//                return pincodeDefaultCourierObj.getCodCourier();
-//            else
-//                return pincodeDefaultCourierObj.getNonCodCourier();
-//        }
-//        return null;
-//    }
-//
-
     public Courier getDefaultCourierForPincode(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
-        Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
-        pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
-        pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
-        pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCOD));
-        pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundShipping));      
-        PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
-        if (pincodeDefaultCourierObj != null) {
-            return pincodeDefaultCourierObj.getCourier();
-        }
-        return null;
+           Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
+           pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
+           pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
+           pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCOD));
+           pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundShipping));
+           PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
+           if (pincodeDefaultCourierObj != null) {
+               return pincodeDefaultCourierObj.getCourier();
+           }
+           return null;
+       }
 
-    }
 
-     public boolean isGroundShippingAvailable(String pincode) {
-        Criteria criteria = getSession().createCriteria(CourierServiceInfo.class);
-        Criteria pincodeCriteria = criteria.createCriteria("pincode");
-        pincodeCriteria.add(Restrictions.eq("pincode", pincode));
-        criteria.add(Restrictions.eq("groundShippingAvailable", true));
-        List<CourierServiceInfo> courierServiceInfoList = criteria.list();
-        return courierServiceInfoList != null && courierServiceInfoList.size() > 0;
-    }
+    public List<Courier> getCouriersForPincode(String pincode, boolean forCOD, boolean forGroundShipping , boolean forCodAvailableOnGroundShipping) {
 
-    public boolean isCodAvailableOnGroundShipping(String pincode) {
-        Criteria criteria = getSession().createCriteria(CourierServiceInfo.class);
-        Criteria pincodeCriteria = criteria.createCriteria("pincode");
-        pincodeCriteria.add(Restrictions.eq("pincode", pincode));
-        criteria.add(Restrictions.eq("codAvailableOnGroundShipping", true));
-        List<CourierServiceInfo> courierServiceInfoList = criteria.list();
-        return courierServiceInfoList != null && courierServiceInfoList.size() > 0;
-    }
-
-    public List<Courier> getCouriersForPincode(String pincode, boolean forCOD, boolean forGroundShipping) {
-        Criteria courierServiceInfoCriteria = getSession().createCriteria(CourierServiceInfo.class);
-        if (forCOD) {
-            courierServiceInfoCriteria.add(Restrictions.eq("codAvailable", forCOD));
-        }
-        if (forGroundShipping) {
-            courierServiceInfoCriteria.add(Restrictions.eq("groundShippingAvailable", forGroundShipping));
-        }
-        Criteria pinCodeCriteria = courierServiceInfoCriteria.createCriteria("pincode");
-        pinCodeCriteria.add(Restrictions.eq("pincode", pincode));
-
-        List<CourierServiceInfo> servicesList = courierServiceInfoCriteria.list();
-
+       List<CourierServiceInfo> servicesList = getCourierServiceInfo(null, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
         if (servicesList != null && servicesList.size() > 0) {
             List<Courier> courierList = new ArrayList<Courier>();
             for (CourierServiceInfo serviceInfo : servicesList) {
@@ -180,7 +49,8 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         }
     }
 
-    public List<CourierServiceInfo> getDifferentCourierDetailsWithPincode(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+
+    public List<CourierServiceInfo> getCourierServiceInfo(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
 
         Criteria courierServiceInfoCriteria = getSession().createCriteria(CourierServiceInfo.class);
         if (forCOD) {
@@ -204,6 +74,24 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         }
         return  courierServiceInfoCriteria.list();
     }
+
+
+    public CourierServiceInfo getCourierService(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+        List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfo(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+        if (courierServiceInfoList != null && courierServiceInfoList.size() > 0) {
+            return courierServiceInfoList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+
+     public boolean isCourierServiceInfoAvailable (Long courierId, String pincode,boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+         List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfo(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+          return courierServiceInfoList != null && courierServiceInfoList.size() > 0;
+     }
+
+
 
 
 }

@@ -10,32 +10,38 @@ import com.hk.pact.dao.BaseDao;
 
 public interface CourierServiceInfoDao extends BaseDao {
 
-  public List<CourierServiceInfo> getCourierServiceInfo(Long courierId);
+//  public List<CourierServiceInfo> getCourierServiceInfo(Long courierId);
 
-  public List<CourierServiceInfo> getCourierServicesForPinCode(String pincode);
+//  public List<CourierServiceInfo> getCourierServicesForPinCode(String pincode);
 
-  public CourierServiceInfo getCourierServiceByPincodeAndCourier(Long courierId, String pincode, Boolean isCod);
+//  public CourierServiceInfo getCourierServiceByPincodeAndCourier(Long courierId, String pincode, Boolean isCod);
 
-  public List<CourierServiceInfo> getCourierServiceInfo(Long courierId, String pincode, Boolean isCOD);
+//  public List<CourierServiceInfo> getCourierServiceInfo(Long courierId, String pincode, Boolean isCOD);
 
-  public boolean isCodAvailable(String pincode);
+//  public boolean isCodAvailable(String pincode);
 
 //  public List<Courier> getCouriersForPincode(String pincode, boolean forCOD);
 
 //  public Courier getDefaultCourierForPincode(Pincode pincode, boolean forCOD, Warehouse warehouse);
-    
-  public Courier getDefaultCourierForPincode(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) ;
 
-  public List<CourierServiceInfo> getCourierServiceInfoByCourierAndPincode(Long courierId, String pincode);
+// public List<CourierServiceInfo> getCourierServiceInfoByCourierAndPincode(Long courierId, String pincode);
 
-  public CourierServiceInfo getCourierServiceByPincodeAndCourierWithoutCOD(Long courierId, String pincode);
+//  public CourierServiceInfo getCourierServiceByPincodeAndCourierWithoutCOD(Long courierId, String pincode);
 
-  public boolean isGroundShippingAvailable(String pincode);
+//  public boolean isGroundShippingAvailable(String pincode);
 
-  public boolean isCodAvailableOnGroundShipping(String pincode);  
+//  public boolean isCodAvailableOnGroundShipping(String pincode);
 
-   public List<Courier> getCouriersForPincode(String pincode, boolean forCOD , boolean forGroundShipping);
+//   public List<Courier> getCouriersForPincode(String pincode, boolean forCOD , boolean forGroundShipping);
 
-   public List<CourierServiceInfo> getDifferentCourierDetailsWithPincode(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) ;
-    
+    public Courier getDefaultCourierForPincode(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
+
+    public List<Courier> getCouriersForPincode(String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
+
+    public List<CourierServiceInfo> getCourierServiceInfo(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
+
+    public CourierServiceInfo getCourierService(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
+
+    public boolean isCourierServiceInfoAvailable(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
+
 }

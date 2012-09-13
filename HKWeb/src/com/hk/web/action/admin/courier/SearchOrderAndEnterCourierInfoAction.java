@@ -104,9 +104,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 }
             }
             if (isGroundShipped) {
-                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped);
+                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped , false);
             } else {
-                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false);
+                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false , false);
             }
 //  ground shipping logic ends
 
@@ -158,9 +158,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     }
                 }
                 if (isGroundShipped) {
-                    availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped);
+                    availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
                 } else {
-                    availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false);
+                    availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false , false);
                 }
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();

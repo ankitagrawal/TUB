@@ -87,7 +87,8 @@ public class CourierServiceInfoAction extends BaseAction {
         String courierName = "All";
         List<CourierServiceInfo> courierServiceInfoList = new ArrayList<CourierServiceInfo>();
         if (courier != null) {
-            courierServiceInfoList = courierServiceInfoDao.getCourierServiceInfo(courier.getId());
+//            courierServiceInfoList = courierServiceInfoDao.getCourierServiceInfo(courier.getId());
+              courierServiceInfoList = courierServiceInfoDao.getCourierServiceInfo(courier.getId(), null, false, false, false);
             courierName = courier.getName();
         } else {
             courierServiceInfoList = courierServiceInfoDao.getAll(CourierServiceInfo.class);
@@ -129,8 +130,10 @@ public class CourierServiceInfoAction extends BaseAction {
             Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
             for (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) {
                 tmpObj = courierServiceInfo;
-                CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(),
-                        courierServiceInfo.getPincode().getPincode().toString());
+//                CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(),
+//                        courierServiceInfo.getPincode().getPincode().toString());
+                     CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierService(courierServiceInfo.getCourier().getId(),
+                        courierServiceInfo.getPincode().getPincode().toString(), false, false, false);
                 if (tmpObj2 != null) {
                     if (courierServiceInfo.isDeleted()) {
                         courierServiceInfoDao.delete(tmpObj2);
@@ -168,7 +171,8 @@ public class CourierServiceInfoAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("This pincode is not in the master list, add it there first."));
         } else {
 
-            CourierServiceInfo courierServiceInfoLocal = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(), pincode);
+//            CourierServiceInfo courierServiceInfoLocal = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(), pincode);
+            CourierServiceInfo courierServiceInfoLocal = courierServiceInfoDao.getCourierService(courierServiceInfo.getCourier().getId(), pincode , false, false,false);
             if (courierServiceInfoLocal != null) {
                 courierServiceInfoLocal.setCodAvailable(courierServiceInfo.isCodAvailable());
                 courierServiceInfoLocal.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());

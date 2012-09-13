@@ -40,5 +40,7 @@ public interface CourierService {
 
     public boolean isCodAllowedOnGroundShipping(String pin);
 
-     public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping);
+//    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping);
+
+      public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping);
 }
