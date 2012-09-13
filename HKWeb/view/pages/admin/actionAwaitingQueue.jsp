@@ -283,7 +283,7 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <label>SO Status</label>
                     <c:forEach items="${shippingOrderStatusList}" var="shippingOrderStatus" varStatus="ctr">
-                        <label><s:checkbox name="orderStatuses[${ctr.index}]"
+                        <label><s:checkbox name="shippingOrderStatuses[${ctr.index}]"
                                            value="${shippingOrderStatus.id}"/> ${shippingOrderStatus.name}</label>
                     </c:forEach>
                     &nbsp;&nbsp;&nbsp;

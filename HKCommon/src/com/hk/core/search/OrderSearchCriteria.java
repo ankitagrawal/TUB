@@ -6,6 +6,7 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
@@ -174,7 +175,20 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
                 shippingOrderCriteria = criteria.createCriteria("shippingOrders", CriteriaSpecification.LEFT_JOIN);
             }
 
+//             for (ShippingOrderStatus stats : shippingOrderStatusList){
+//                if (stats.equals(EnumShippingOrderStatus.SO_EscalatedBack.asShippingOrderStatus())){
+
+                if(shippingOrderStatusList.contains(EnumShippingOrderStatus.SO_EscalatedBack.asShippingOrderStatus())
+                        && !(shippingOrderStatusList.contains(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus()))){
+                   DetachedCriteria shippingLifeCycleCriteria = null;
+                   shippingLifeCycleCriteria =  shippingOrderCriteria.createCriteria("shippingOrderLifecycles", CriteriaSpecification.INNER_JOIN);
+                   shippingLifeCycleCriteria.add(Restrictions.eq("shippingOrderLifeCycleActivity.id", new Long(640)));
+                   shippingOrderStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());                   
+                }
+
+
             shippingOrderCriteria.add(Restrictions.or(Restrictions.in("shippingOrderStatus", shippingOrderStatusList), Restrictions.isNull("shippingOrderStatus")));
+
 
         }
 
