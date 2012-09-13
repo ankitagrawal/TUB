@@ -47,6 +47,9 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 	    if (product.getCodAllowed() == null)   {
             product.setCodAllowed(Boolean.FALSE);
         }
+	    if (product.getOutOfStock() == null)   {
+            product.setOutOfStock(Boolean.FALSE);
+        }
         return (Product) super.save(product);
     }
 
