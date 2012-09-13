@@ -35,4 +35,5 @@ public interface AffilateService {
 
 	public Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo);
 
+	public void markAffiliateTxnAsDue(Affiliate affiliate);
 }

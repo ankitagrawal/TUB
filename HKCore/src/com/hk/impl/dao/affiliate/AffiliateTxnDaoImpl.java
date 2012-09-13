@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -102,6 +103,28 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		return amountInAccount != null ? amountInAccount : 0D;
 	}
 
+	@SuppressWarnings("unchecked")
+	public Double getPayableAmount(Affiliate affiliate) {
+		List<Long> applicableTxnTypes = new ArrayList<Long>();
+		applicableTxnTypes.add(EnumAffiliateTxnType.PAYMENT_DUE.getId());
+		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
+
+		Calendar endCalender = Calendar.getInstance();
+		int day = endCalender.get(Calendar.DAY_OF_MONTH);
+		if (day <= 5) {
+			endCalender.add(Calendar.MONTH, -1);
+		}
+		endCalender.set(Calendar.DAY_OF_MONTH, 5);
+		Date endDate = endCalender.getTime();
+
+		Double amountPayable = 0D;
+			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes) and at.date >= :startDate and at.date <= :endDate";
+			amountPayable = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes", "endDate"}, new Object[]{
+					affiliate,
+					applicableTxnTypes, endDate});
+		return amountPayable != null ? amountPayable : 0D;
+	}
+
 	@Transactional
 	public void approvePendingAffiliateTxn(Affiliate affiliate, Order order) {
 		String queryString = "from AffiliateTxn aT where aT.order =:order and aT.affiliate = :affiliate and aT.affiliateTxnTypeId =:affiliateTxnTypeId ";
@@ -109,6 +132,21 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		if (affiliateTxn != null) {
 			affiliateTxn.setAffiliateTxnType(EnumAffiliateTxnType.ADD.asAffiliateTxnType());
 			save(affiliateTxn);
+		}
+	}
+
+	@Override
+	public void markAffiliateTxnAsDue(Affiliate affiliate) {
+		Calendar endCalender = Calendar.getInstance();
+		endCalender.set(Calendar.DAY_OF_MONTH, 5);
+		Date endDate = endCalender.getTime();
+		String queryString = "from AffiliateTxn aT where aT.affiliate = :affiliate and aT.affiliateTxnTypeId =:affiliateTxnTypeId and at.date <= :endDate";
+		List<AffiliateTxn> affiliateTxnList = findByNamedParams(queryString, new String[]{"affiliate", "affiliateTxnTypeId", "endDate"}, new Object[]{affiliate, EnumAffiliateTxnType.ADD.getId(), endDate});
+		for (AffiliateTxn affiliateTxn : affiliateTxnList) {
+			if (affiliateTxn != null) {
+				affiliateTxn.setAffiliateTxnType(EnumAffiliateTxnType.PAYMENT_DUE.asAffiliateTxnType());
+				save(affiliateTxn);
+			}
 		}
 	}
 }

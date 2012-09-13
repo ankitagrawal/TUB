@@ -198,6 +198,11 @@ public class AffilateServiceImpl implements AffilateService {
 	}
 
 	@Override
+	public void markAffiliateTxnAsDue(Affiliate affiliate) {
+		affiliateTxnDao.markAffiliateTxnAsDue(affiliate);
+	}
+
+	@Override
     public Affiliate getAffilateByUser(User affiliateUser) {
         return getAffiliateDao().getAffilateByUser(affiliateUser);
     }
