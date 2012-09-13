@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.dto.search.SearchResult;
+import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -32,7 +34,6 @@ import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.LinkManager;
-import com.hk.manager.SolrManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.user.UserDao;
@@ -64,8 +65,12 @@ public class BrandCatalogAction extends BasePaginatedAction {
   private String preferredZone;
 
   private int defaultPerPage = 20;
+  /*@Autowired
+   SolrManager productSearchService;*/
+
   @Autowired
-   SolrManager solrManager;
+  ProductSearchService productSearchService;
+
   @Autowired
    CategoryDaoImpl categoryDao;
   @Autowired
@@ -82,30 +87,33 @@ public class BrandCatalogAction extends BasePaginatedAction {
 
   @DefaultHandler
   public Resolution pre() throws MalformedURLException, SolrServerException {
-    List<String> categoryNames = new ArrayList<String>();
-    categoryNames.add(topLevelCategory);
-    urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
-    if (StringUtils.isBlank(brand)) {
-      return new RedirectResolution("/" + topLevelCategory);
-    } else {
-      try {
-        productPage = solrManager.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
-      } catch (Exception e) {
-        logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
-        categories = categoryDao.getCategoriesByBrand(brand, topLevelCategory);
-        productPage = productDao.getProductByCategoryAndBrand(categoryNames, URLDecoder.decode(brand), getPageNo(), getPerPage());
-      }
-      productList = productPage.getList();
-      seoData = seoManager.generateSeo(brand);
-    }
-
-    for (Product product : productList) {
-  	  product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
-      menuNode = menuHelper.getMenoNodeFromProduct(product);
-      menuNodes.add(menuNode);
-    }
-
-    return new ForwardResolution("/pages/brand-catalog.jsp");
+	  List<String> categoryNames = new ArrayList<String>();
+	  categoryNames.add(topLevelCategory);
+	  urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
+	  if (StringUtils.isBlank(brand)) {
+		  return new RedirectResolution("/" + topLevelCategory);
+	  } else {
+		  try {
+			  SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
+			  productPage = new Page(searchResult.getSolrProducts(), getPerPage(), getPageNo(), searchResult.getResultSize());
+		  } catch (Exception e) {
+			  logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
+			  categories = categoryDao.getCategoriesByBrand(brand, topLevelCategory);
+			  productPage = productDao.getProductByCategoryAndBrand(categoryNames, URLDecoder.decode(brand), getPageNo(), getPerPage());
+		  }
+		  if (productPage != null) {
+			  productList = productPage.getList();
+			  if (productList != null) {
+				  for (Product product : productList) {
+					  product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
+					  menuNode = menuHelper.getMenoNodeFromProduct(product);
+					  menuNodes.add(menuNode);
+				  }
+			  }
+		  }
+		  seoData = seoManager.generateSeo(brand); 		  		  
+	  }
+	  return new ForwardResolution("/pages/brand-catalog.jsp");
   }
 
   public String getBrand() {

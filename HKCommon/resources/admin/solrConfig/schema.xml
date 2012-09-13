@@ -551,7 +551,7 @@ any data added to them will be ignored outright.  -->
         <field name="isCombo" type="boolean" indexed="true" stored="true" />
         <field name="outOfStock" type="boolean" indexed="true" stored="true" />
         <field name="isService" type="boolean" indexed="true" stored="true" />
-        <field name="title_autocomplete" type="lowercase" indexed="true" stored="true" multiValued="true"/>
+        <field name="title_autocomplete" type="lowercase" indexed="true" stored="true"  multiValued="true"/>
         <!-- SpellFind field used to store all the fields from where we want to return spelling suggestions -->
         <field name="spellfind" type="text_en_splitting" indexed="true" stored="true" multiValued="true"/>
 
