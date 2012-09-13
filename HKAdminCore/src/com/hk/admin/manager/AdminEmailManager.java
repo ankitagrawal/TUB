@@ -362,180 +362,179 @@ public class AdminEmailManager {
    * @return
    */
   public Boolean sendMailMergeCampaign(EmailCampaign emailCampaign, String excelFilePath, String sheetName) {
-    List<String> tags = new ArrayList<String>();
-    ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
-    Iterator<HKRow> rowIterator = parser.parse();
-    int i;
+      List<String> tags = new ArrayList<String>();
+      ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
+      Iterator<HKRow> rowIterator = parser.parse();
+      int i;
 
-    String emailCampaignTemplate = emailCampaign.getTemplate();
-    String emailCampaignTemplateContents = emailCampaign.getTemplateFtl();
+      String emailCampaignTemplate = emailCampaign.getTemplate();
+      String emailCampaignTemplateContents = emailCampaign.getTemplateFtl();
 
-    Template freemarkerTemplate = null;
-    if (emailCampaignTemplate != null && StringUtils.isNotBlank(emailCampaignTemplate)) {
-      freemarkerTemplate = freeMarkerService.getCampaignTemplate(emailCampaignTemplate);
-    } else if (emailCampaignTemplateContents != null && StringUtils.isNotBlank(emailCampaignTemplateContents)) {
-      StringBuilder finalContents = new StringBuilder(emailCampaign.getSubject());
-      finalContents.append(BaseUtils.newline + emailCampaignTemplateContents);
-      freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
-    } else {
-      return false;
-    }
+      Template freemarkerTemplate = null;
+      if (emailCampaignTemplate != null && StringUtils.isNotBlank(emailCampaignTemplate)) {
+          freemarkerTemplate = freeMarkerService.getCampaignTemplate(emailCampaignTemplate);
+      } else if (emailCampaignTemplateContents != null && StringUtils.isNotBlank(emailCampaignTemplateContents)) {
+          StringBuilder finalContents = new StringBuilder(emailCampaign.getSubject());
+          finalContents.append(BaseUtils.newline + emailCampaignTemplateContents);
+          freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
+      } else {
+          return false;
+      }
 
       TemplateHashModel hkImageUtils = null;
       try{
           BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
           TemplateHashModel staticModels = wrapper.getStaticModels();
-          hkImageUtils =
-                  (TemplateHashModel) staticModels.get("com.hk.util.HKImageUtils");
+          hkImageUtils = (TemplateHashModel) staticModels.get("com.hk.util.HKImageUtils");
       }catch (TemplateModelException ex){
           logger.error("Unable to get static methods definition in HKImageUtils", ex);
       }
 
 
-    while (rowIterator != null && rowIterator.hasNext()) {
-      HashMap excelMap = new HashMap();
-      i = 0;
-      HKRow curHkRow = rowIterator.next();
-      while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
-        String key = parser.getHeadingNames(i);
-        String value = curHkRow.getColumnValue(i);
-        excelMap.put(key.toLowerCase(), value);
-        i++;
+      while (rowIterator != null && rowIterator.hasNext()) {
+          HashMap excelMap = new HashMap();
+          i = 0;
+          HKRow curHkRow = rowIterator.next();
+          while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
+              String key = parser.getHeadingNames(i);
+              String value = curHkRow.getColumnValue(i);
+              excelMap.put(key.toLowerCase(), value);
+              i++;
+          }
+          excelMap.put("HKImageUtils", hkImageUtils);
+
+          EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(excelMap.get(EmailMapKeyConstants.emailId).toString());
+          if (emailRecepient.isEmailAllowed()) {
+              Boolean emailSentToRecepientRecently = Boolean.FALSE;
+              if (emailRecepient.getLastEmailDate() != null) {
+                  Date lastDateCampaignMailSentToEmailRecepient = getEmailCampaignDao().getLastDateOfEmailCampaignMailSentToEmailRecepient(emailCampaign, emailRecepient);
+                  if (lastDateCampaignMailSentToEmailRecepient != null) {
+                      emailSentToRecepientRecently = new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isBefore(
+                              lastDateCampaignMailSentToEmailRecepient.getTime());
+                  }
+              }
+              if (!emailSentToRecepientRecently) {
+                  HashMap extraMapEntries = getExtraMapEntriesForMailMerge(excelMap);
+
+                  if (extraMapEntries != null) {
+                      excelMap.putAll(extraMapEntries);
+                  } else {
+                      excelMap.clear();
+                      continue;
+                  }
+
+                  excelMap.put(EmailMapKeyConstants.unsubscribeLink, linkManager.getEmailUnsubscribeLink(emailRecepient));
+
+                  if (excelMap.containsKey(EmailMapKeyConstants.tags)) {
+                      tags = Arrays.asList(StringUtils.split(excelMap.get(EmailMapKeyConstants.tags).toString(), ","));
+                  }
+
+                  // construct the headers to send
+                  String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(tags, emailCampaign);
+                  Map<String, String> headerMap = new HashMap<String, String>();
+                  headerMap.put("X-SMTPAPI", xsmtpapi);
+
+                  emailService.sendHtmlEmail(freemarkerTemplate, excelMap, (String) excelMap.get(EmailMapKeyConstants.emailId), "", "info@healthkart.com", headerMap);
+
+                  emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
+                  emailRecepient.setLastEmailDate(new Date());
+                  getEmailRecepientDao().save(emailRecepient);
+                  getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart", emailCampaign.getEmailType(), emailRecepient, emailCampaign, "");
+              }
+          }
       }
-      excelMap.put("HKImageUtils", hkImageUtils);
-
-      EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(excelMap.get(EmailMapKeyConstants.emailId).toString());
-      if (emailRecepient.isEmailAllowed()) {
-        Boolean emailSentToRecepientRecently = Boolean.FALSE;
-        if (emailRecepient.getLastEmailDate() != null) {
-          Date lastDateCampaignMailSentToEmailRecepient = getEmailCampaignDao().getLastDateOfEmailCampaignMailSentToEmailRecepient(emailCampaign, emailRecepient);
-          if (lastDateCampaignMailSentToEmailRecepient != null) {
-            emailSentToRecepientRecently = new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isBefore(
-                lastDateCampaignMailSentToEmailRecepient.getTime());
-          }
-        }
-        if (!emailSentToRecepientRecently) {
-          HashMap extraMapEntries = getExtraMapEntriesForMailMerge(excelMap);
-
-          if (extraMapEntries != null) {
-            excelMap.putAll(extraMapEntries);
-          } else {
-            excelMap.clear();
-            continue;
-          }
-
-          excelMap.put(EmailMapKeyConstants.unsubscribeLink, linkManager.getEmailUnsubscribeLink(emailRecepient));
-
-          if (excelMap.containsKey(EmailMapKeyConstants.tags)) {
-            tags = Arrays.asList(StringUtils.split(excelMap.get(EmailMapKeyConstants.tags).toString(), ","));
-          }
-
-          // construct the headers to send
-          String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(tags, emailCampaign);
-          Map<String, String> headerMap = new HashMap<String, String>();
-          headerMap.put("X-SMTPAPI", xsmtpapi);
-
-          emailService.sendHtmlEmail(freemarkerTemplate, excelMap, (String) excelMap.get(EmailMapKeyConstants.emailId), "", "info@healthkart.com", headerMap);
-
-          emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
-          emailRecepient.setLastEmailDate(new Date());
-          getEmailRecepientDao().save(emailRecepient);
-          getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart", emailCampaign.getEmailType(), emailRecepient, emailCampaign, "");
-        }
-      }
-    }
-    return true;
+      return true;
   }
 
   private HashMap getExtraMapEntriesForMailMerge(HashMap excelMap) {
-    List<User> users = userService.findByEmail(excelMap.get(EmailMapKeyConstants.emailId).toString());
-    if (users != null && users.size() > 0) {
-      excelMap.put(EmailMapKeyConstants.user, users.get(0));
-    } else {
-      return null;
-    }
+      List<User> users = userService.findByEmail(excelMap.get(EmailMapKeyConstants.emailId).toString());
+      if (users != null && users.size() > 0) {
+          excelMap.put(EmailMapKeyConstants.user, users.get(0));
+      } else {
+          return null;
+      }
 
-    if (excelMap.containsKey(EmailMapKeyConstants.couponCode)) {
-      Coupon coupon = couponService.findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
-      excelMap.put(EmailMapKeyConstants.coupon, coupon);
-    }
+      if (excelMap.containsKey(EmailMapKeyConstants.couponCode)) {
+          Coupon coupon = couponService.findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
+          excelMap.put(EmailMapKeyConstants.coupon, coupon);
+      }
 
       if (excelMap.containsKey(EmailMapKeyConstants.similarProductId)) {
           String[] similarProductIds = excelMap.get(EmailMapKeyConstants.similarProductId).toString().split(",");
           List<Product> similarProducts = new ArrayList<Product>();
           for (String productId : similarProductIds){
-            Product product = getProductService().getProductById(productId);
+              Product product = getProductService().getProductById(productId);
               if (product != null){
-                product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
-                similarProducts.add(product);
+                  product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
+                  similarProducts.add(product);
               }
           }
           excelMap.put(EmailMapKeyConstants.similarProductId, similarProducts);
       }
 
-    if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
-      Product product = getProductService().getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
-      if (product != null) {
-        Long productMainImageId = product.getMainImageId();
-        excelMap.put(EmailMapKeyConstants.product, product);
-        //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-        excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
+      if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
+          Product product = getProductService().getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
+          if (product != null) {
+              Long productMainImageId = product.getMainImageId();
+              excelMap.put(EmailMapKeyConstants.product, product);
+              //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+              excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
 
-        if (productMainImageId != null) {
-          excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
-          excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
-          excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
-        } else {
+              if (productMainImageId != null) {
+                  excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
+                  excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
+                  excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
+              } else {
 
-          excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-          excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-          excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
-        }
-      } else {
-        excelMap.put(EmailMapKeyConstants.product, null);
-        excelMap.put(EmailMapKeyConstants.productUrl, "");
-        excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-        excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-        excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
-      }
-    }
-
-    if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)) {
-      ProductVariant productVariant = productVariantService.getVariantById(excelMap.get(EmailMapKeyConstants.productVariantId).toString());
-      if (productVariant != null) {
-        excelMap.put(EmailMapKeyConstants.productVariant, productVariant);
-
-
-        if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
-          Product product = productVariant.getProduct();
-          Long productMainImageId = product.getMainImageId();
-          excelMap.put(EmailMapKeyConstants.product, product);
-          //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-          excelMap.put(EmailMapKeyConstants.productUrl,  convertToWww(getProductService().getProductUrl(product,false)));
-
-          if (productMainImageId != null) {
-            excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
-            excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
-            excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
+                  excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                  excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+                  excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+              }
           } else {
-            excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-            excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-            excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+              excelMap.put(EmailMapKeyConstants.product, null);
+              excelMap.put(EmailMapKeyConstants.productUrl, "");
+              excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+              excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+              excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
           }
-        }
-      } else {
-        excelMap.put(EmailMapKeyConstants.productVariant, null);
-        if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
-          excelMap.put(EmailMapKeyConstants.product, null);
-          excelMap.put(EmailMapKeyConstants.productUrl, "");
-          excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-          excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-          excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
-
-        }
       }
-    }
-    return excelMap;
+
+      if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)) {
+          ProductVariant productVariant = productVariantService.getVariantById(excelMap.get(EmailMapKeyConstants.productVariantId).toString());
+          if (productVariant != null) {
+              excelMap.put(EmailMapKeyConstants.productVariant, productVariant);
+
+
+              if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
+                  Product product = productVariant.getProduct();
+                  Long productMainImageId = product.getMainImageId();
+                  excelMap.put(EmailMapKeyConstants.product, product);
+                  //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+                  excelMap.put(EmailMapKeyConstants.productUrl,  convertToWww(getProductService().getProductUrl(product,false)));
+
+                  if (productMainImageId != null) {
+                      excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
+                      excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
+                      excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
+                  } else {
+                      excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                      excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+                      excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+                  }
+              }
+          } else {
+              excelMap.put(EmailMapKeyConstants.productVariant, null);
+              if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
+                  excelMap.put(EmailMapKeyConstants.product, null);
+                  excelMap.put(EmailMapKeyConstants.productUrl, "");
+                  excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                  excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+                  excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+
+              }
+          }
+      }
+      return excelMap;
   }
 
 
