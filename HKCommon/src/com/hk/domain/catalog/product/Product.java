@@ -278,10 +278,12 @@ public class Product implements java.io.Serializable {
         this.relatedProducts = relatedProducts;
     }
 
-    public List<ProductVariant> getProductVariants() {
-        Collections.sort(productVariants, new ProductVariantComparator());
-        return productVariants;
-    }
+	public List<ProductVariant> getProductVariants() {
+		if (productVariants != null && !productVariants.isEmpty()) {
+			Collections.sort(productVariants, new ProductVariantComparator());
+		}
+		return productVariants;
+	}
 
     public List<ProductVariant> getInStockVariants() {
         List<ProductVariant> inStockVariants = new ArrayList<ProductVariant>();
