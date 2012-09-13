@@ -210,10 +210,10 @@ public class CatalogAction extends BasePaginatedAction {
                 productList = productPage.getList();
             }
             category = categoryDao.getCategoryByName(smallestCategory);
-		} catch (Exception e) {
+		} catch (Exception e) {            			
+			urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
 			//logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for "+urlFragment, e);
 			logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for "+urlFragment);
-			urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
 			List<String> categoryNames = new ArrayList<String>();
 			Category primaryCategory = categoryDao.getCategoryByName(smallestCategory);
 			category = primaryCategory;
