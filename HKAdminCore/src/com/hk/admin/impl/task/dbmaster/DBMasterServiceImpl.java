@@ -143,7 +143,7 @@ public class DBMasterServiceImpl implements TaskService{
 
         /* adding pincodes */
         a =  baseDao.findByQuery("select count(*) from Pincode");
-        if (a.get(0).intValue() == 0){
+        if (a.get(0).intValue() == 1){
           for (int i = 0; i < listOfPincodeExcels.length; i++) {
 		    String pincodeFile = listOfPincodeExcels[i].getName();
 	        if (pincodeFile.endsWith(".xls") || pincodeFile.endsWith(".XLS")) {               
