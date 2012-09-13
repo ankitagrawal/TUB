@@ -124,4 +124,19 @@ public class ShipmentServiceImpl implements ShipmentService {
     public void delete(Shipment shipment){
          shipmentDao.delete(shipment);
     }
+
+	@Override
+	public Shipment recreateShipment(ShippingOrder shippingOrder) {
+		Shipment newShipment = null;
+		if (shippingOrder.getShipment() != null) {
+			Shipment oldShipment=shippingOrder.getShipment();
+			Awb awb = oldShipment.getAwb();
+			awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+			awbService.save(awb);
+			newShipment = createShipment(shippingOrder);
+			shippingOrder.setShipment(newShipment);
+			delete(oldShipment);
+		}
+		return newShipment;
+	}
 }
