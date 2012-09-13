@@ -14,6 +14,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.action.UrlBinding;
 
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,25 +51,27 @@ public class SearchAction extends BasePaginatedAction {
 
   private int defaultPerPage = 20;
 
-  public Resolution search() throws SolrServerException, MalformedURLException {
-    try {
-      SearchResult sr =  productSearchService.getSearchResults(query, getPageNo(), getPerPage(), false);
-      productPage = new Page(sr.getSolrProducts(),getPerPage(), getPageNo(), (int)sr.getResultSize());
-      productList = productPage.getList();
-      searchSuggestion = sr.getSearchSuggestions();
-    } catch (Exception e) {
-      logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
-      productPage = productDao.getProductByName(query, getPageNo(), getPerPage());
-      productList = productPage.getList();
-      for(Product product : productList){
-        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
-      }
-    }
-    if (productList != null && productList.size() == 0) {
-      addRedirectAlertMessage(new SimpleMessage("No results found."));
-    }
-    return new ForwardResolution("/pages/search.jsp");
-  }
+	public Resolution search() throws SolrServerException, MalformedURLException {
+		if (StringUtils.isNotBlank(query)) {
+			try {
+				SearchResult sr = productSearchService.getSearchResults(query, getPageNo(), getPerPage(), false);
+				productPage = new Page(sr.getSolrProducts(), getPerPage(), getPageNo(), (int) sr.getResultSize());
+				productList = productPage.getList();
+				searchSuggestion = sr.getSearchSuggestions();
+			} catch (Exception e) {
+				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
+				productPage = productDao.getProductByName(query, getPageNo(), getPerPage());
+				productList = productPage.getList();
+				for (Product product : productList) {
+					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+				}
+			}
+		}
+		if (productList != null && productList.size() == 0) {
+			addRedirectAlertMessage(new SimpleMessage("No results found."));
+		}
+		return new ForwardResolution("/pages/search.jsp");
+	}
 
   public List<Product> getProductList() {
     return productList;

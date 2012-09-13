@@ -6,7 +6,7 @@
 
   <property environment="env"/>
   <property name="solr.home" value="${env.SOLR_HOME}"/>
-  <echo message="SOLR_HOME = ${solr.home}"/>
+  <!--<echo message="SOLR_HOME = ${solr.home}"/>-->
 
 
     <path id="compile.classpath">
