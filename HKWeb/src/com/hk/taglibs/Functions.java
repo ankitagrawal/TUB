@@ -489,7 +489,7 @@ public class Functions {
     public static Map<String, List<String>> getRecommendedProducts(Object o) {
         Product product = (Product) o;
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-        return productService.getRelatedMoogaProducts(product);
+        return productService.getRecommendedProducts(product);
     }
 
     public static String getDispatchDaysForOrder(Order order) {

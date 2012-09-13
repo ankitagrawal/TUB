@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.dto.search.SearchResult;
+import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -32,7 +34,6 @@ import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.LinkManager;
-import com.hk.manager.SolrManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.user.UserDao;
@@ -64,8 +65,12 @@ public class BrandCatalogAction extends BasePaginatedAction {
   private String preferredZone;
 
   private int defaultPerPage = 20;
+  /*@Autowired
+   SolrManager productSearchService;*/
+
   @Autowired
-   SolrManager solrManager;
+  ProductSearchService productSearchService;
+
   @Autowired
    CategoryDaoImpl categoryDao;
   @Autowired
@@ -89,7 +94,8 @@ public class BrandCatalogAction extends BasePaginatedAction {
       return new RedirectResolution("/" + topLevelCategory);
     } else {
       try {
-        productPage = solrManager.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
+        SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
+          productPage = new Page(searchResult.getSolrProducts(),getPerPage(), getPageNo(), searchResult.getResultSize());
       } catch (Exception e) {
         logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
         categories = categoryDao.getCategoriesByBrand(brand, topLevelCategory);
