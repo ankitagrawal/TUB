@@ -29,8 +29,7 @@
     List<Category> applicableCategories = new ArrayList<Category>();
     applicableCategories.add(categoryDao.getCategoryByName("bp-monitor"));
     pageContext.setAttribute("applicableCategories", applicableCategories);
-	boolean renderNewCatalogUI = (Functions.collectionContains(Arrays.asList("eyeglasses", "proteins", "creatine"), ca.getChildCategorySlug())
-			|| Functions.collectionContains(Arrays.asList("eyeglasses", "proteins", "creatine"), ca.getSecondaryChildCategorySlug())); 
+	boolean renderNewCatalogUI = Functions.renderNewCatalogUI(ca.getChildCategorySlug(), ca.getSecondaryChildCategorySlug()); 
 	pageContext.setAttribute("renderNewCatalogUI", renderNewCatalogUI);
 	  if (renderNewCatalogUI) {
 		  pageContext.setAttribute("resultsPerPage1", 21);
