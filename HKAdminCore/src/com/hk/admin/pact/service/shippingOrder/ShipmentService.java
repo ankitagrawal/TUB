@@ -18,4 +18,6 @@ public interface ShipmentService {
     public Shipment findByAwb(Awb awb);
 
     public void delete(Shipment shipment);
+
+	public Shipment recreateShipment(ShippingOrder shippingOrder);
 }
