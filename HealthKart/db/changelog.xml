@@ -8736,4 +8736,11 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1347602311804-1">
+        <addColumn tableName="base_order">
+            <column defaultValue="0" name="is_delivery_email_sent" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
