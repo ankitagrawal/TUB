@@ -118,7 +118,7 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		Date endDate = endCalender.getTime();
 
 		Double amountPayable = 0D;
-			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes) and at.date >= :startDate and at.date <= :endDate";
+			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes) and at.date <= :endDate";
 			amountPayable = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes", "endDate"}, new Object[]{
 					affiliate,
 					applicableTxnTypes, endDate});
