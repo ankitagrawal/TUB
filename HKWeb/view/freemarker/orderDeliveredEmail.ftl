@@ -86,7 +86,7 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 					While we like positive feedback, we think your criticism can help us correct our course & serve you better.<br>
 					Feel free to be frank, we're listening.<br/>
 					<br>
-					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
+					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1" RULES=COLS >
 						<tr>
 							<td>
 								<table cellpadding="5" cellspacing="5" >
@@ -153,6 +153,9 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 									</tr>
 								</table>
 							</td>
+						</tr>
+						<tr>
+							<td></td>
 						</tr>
 					</table>
 					<br/> <br/>

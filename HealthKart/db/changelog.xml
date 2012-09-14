@@ -8743,4 +8743,22 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1347619563282-1">
+        <createTable tableName="order_email_exclusion">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="is_delivery_mail_excluded" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1347619563282-2">
+        <createIndex indexName="unique_exclusion_email" tableName="order_email_exclusion" unique="true">
+            <column name="email"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
