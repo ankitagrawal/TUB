@@ -139,15 +139,32 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 
 	@Override
 	public void markAffiliateTxnAsDue(Affiliate affiliate) {
+		List<Long> applicableTxnTypes = new ArrayList<Long>();
+		applicableTxnTypes.add(EnumAffiliateTxnType.ADD.getId());
+		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
+
 		Calendar endCalender = Calendar.getInstance();
+		int day = endCalender.get(Calendar.DAY_OF_MONTH);
+		if (day <= 5) {
+			endCalender.add(Calendar.MONTH, -1);
+		}
 		endCalender.set(Calendar.DAY_OF_MONTH, 5);
 		Date endDate = endCalender.getTime();
-		String queryString = "from AffiliateTxn aT where aT.affiliate = :affiliate and aT.affiliateTxnTypeId =:affiliateTxnTypeId and at.date <= :endDate";
-		List<AffiliateTxn> affiliateTxnList = findByNamedParams(queryString, new String[]{"affiliate", "affiliateTxnTypeId", "endDate"}, new Object[]{affiliate, EnumAffiliateTxnType.ADD.getId(), endDate});
-		for (AffiliateTxn affiliateTxn : affiliateTxnList) {
-			if (affiliateTxn != null) {
-				affiliateTxn.setAffiliateTxnType(EnumAffiliateTxnType.PAYMENT_DUE.asAffiliateTxnType());
-				save(affiliateTxn);
+
+		Double amountPayable = 0D;
+		String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes) and at.date <= :endDate";
+		amountPayable = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes", "endDate"}, new Object[]{
+				affiliate,
+				applicableTxnTypes, endDate});
+
+		if (amountPayable != null && amountPayable > 2500) {
+			String queryString2 = "from AffiliateTxn aT where aT.affiliate = :affiliate and aT.affiliateTxnTypeId =:affiliateTxnTypeId and at.date <= :endDate";
+			List<AffiliateTxn> affiliateTxnList = findByNamedParams(queryString2, new String[]{"affiliate", "affiliateTxnTypeId", "endDate"}, new Object[]{affiliate, EnumAffiliateTxnType.ADD.getId(), endDate});
+			for (AffiliateTxn affiliateTxn : affiliateTxnList) {
+				if (affiliateTxn != null) {
+					affiliateTxn.setAffiliateTxnType(EnumAffiliateTxnType.PAYMENT_DUE.asAffiliateTxnType());
+					save(affiliateTxn);
+				}
 			}
 		}
 	}

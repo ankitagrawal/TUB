@@ -96,7 +96,11 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	}
 
 	public Resolution search() {
-		affiliatePage = affiliateDao.searchAffiliates(Arrays.asList(affiliateStatus.getId()), name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
+		List<Long> affiliateStatusIds = new ArrayList<Long>();
+		if(affiliateStatus != null){
+			affiliateStatusIds.add(affiliateStatus.getId());
+		}
+		affiliatePage = affiliateDao.searchAffiliates(affiliateStatusIds, name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
 		if (affiliatePage != null) {
 			affiliates = affiliatePage.getList();
 		}
