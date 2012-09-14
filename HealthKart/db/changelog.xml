@@ -8791,9 +8791,7 @@
              estimated_shipping_cost,'1' as cod ,
              '0' as ground_shipping
              from `pincode_default_courier_bak`
-             )v1 ;
-
-             Drop table `pincode_default_courier_bak`;
+             )v1 ;                
          </sql>
      </changeSet>
 </databaseChangeLog>
