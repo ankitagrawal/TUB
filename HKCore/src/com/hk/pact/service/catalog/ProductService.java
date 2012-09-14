@@ -6,8 +6,13 @@ import java.util.Set;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.*;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductExtraOption;
+import com.hk.domain.catalog.product.ProductGroup;
+import com.hk.domain.catalog.product.ProductImage;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.combo.Combo;
+import com.hk.domain.search.SolrProduct;
 
 public interface ProductService {
 
@@ -37,6 +42,12 @@ public interface ProductService {
     
     public List<Product> getAllProducts();
 
+    /**
+     * returns the product which are not deleted
+     * @return
+     */
+    List<Product> getAllNonDeletedProducts();
+
     public List<Product> getAllProductBySubCategory(String category);
 
     public List<Product> getAllProductNotByCategory(List<String> categoryNames);
@@ -65,6 +76,8 @@ public interface ProductService {
 
     public Page getPaginatedResults(List<String> productIdList, int page, int perPage);
 
+    public List<Product> getAllProductsById(List<String> productIdList);
+
     public List<Product> getRecentlyAddedProducts();
 
     public ProductImage getProductImageByChecksum(String checksum);
@@ -91,13 +104,14 @@ public interface ProductService {
 
     public Map<String,List<String>> getRecommendedProducts(Product product);
 
-    Map<String, List<String>> getRelatedMoogaProducts(Product findProduct);
-
     public Map<String, List<Long>> getGroupedFilters(List<Long> filters);
 
 	public boolean isProductOutOfStock(Product product);
 
-	public List<Product> getSortedByStock(List<Product> productList);
+    SolrProduct createSolrProduct(Product pr);
+
 
 	public List<Product> getSimilarProducts(Product product);
+
+
 }

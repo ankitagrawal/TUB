@@ -18,7 +18,18 @@
 
     pageContext.setAttribute("product", product_productThumb);
   %>
+    <style type="text/css">
+        .opaque {
+            opacity: 0.4;
+            filter: alpha(opacity = 40);
 
+        }
+
+        .opaque:hover {
+            opacity: 1.0;
+            filter: alpha(opacity = 100);
+        }
+    </style>
   <div class='grid_4 product'>
     <h3>
       <s:link href="${product.productURL}" title="${product.name}" class="prod_link">
@@ -26,7 +37,7 @@
       </s:link>
     </h3>
     <s:link href="${product.productURL}" class="prod_link" title="${product.name}">
-      <div class='img128'>
+        <div class='img128 ${product.outOfStock ? 'opaque' : ''}'>
           <%--<img src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${product.id}.jpg" alt="${product.name}"/>--%>
         <c:choose>
           <c:when test="${product.mainImageId != null}">

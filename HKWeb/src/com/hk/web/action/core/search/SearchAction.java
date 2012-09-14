@@ -6,12 +6,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.dto.search.SearchResult;
+import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.action.UrlBinding;
 
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +27,6 @@ import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.manager.LinkManager;
-import com.hk.manager.SolrManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.util.ProductReferrerMapper;
 
@@ -35,7 +37,7 @@ public class SearchAction extends BasePaginatedAction {
   private static Logger logger = LoggerFactory.getLogger(SearchAction.class);
 
   String query;
-
+  String searchSuggestion;
   Page productPage;
   List<Product> productList = new ArrayList<Product>();
   @Autowired
@@ -43,29 +45,33 @@ public class SearchAction extends BasePaginatedAction {
   @Session(key = HealthkartConstants.Session.perPageCatalog) 
   private int perPage;
   @Autowired
-  SolrManager solrManager;
+  ProductSearchService productSearchService;
   @Autowired
   LinkManager linkManager;
 
   private int defaultPerPage = 20;
 
-  public Resolution search() throws SolrServerException, MalformedURLException {
-    try {
-      productPage = solrManager.getSearchResults(query, getPageNo(), getPerPage());
-      productList = productPage.getList();
-    } catch (Exception e) {
-      logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
-      productPage = productDao.getProductByName(query, getPageNo(), getPerPage());
-      productList = productPage.getList();
-      for(Product product : productList){
-        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
-      }
-    }
-    if (productList != null && productList.size() == 0) {
-      addRedirectAlertMessage(new SimpleMessage("No results found."));
-    }
-    return new ForwardResolution("/pages/search.jsp");
-  }
+	public Resolution search() throws SolrServerException, MalformedURLException {
+		if (StringUtils.isNotBlank(query)) {
+			try {
+				SearchResult sr = productSearchService.getSearchResults(query, getPageNo(), getPerPage(), false);
+				productPage = new Page(sr.getSolrProducts(), getPerPage(), getPageNo(), (int) sr.getResultSize());
+				productList = productPage.getList();
+				searchSuggestion = sr.getSearchSuggestions();
+			} catch (Exception e) {
+				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
+				productPage = productDao.getProductByName(query, getPageNo(), getPerPage());
+				productList = productPage.getList();
+				for (Product product : productList) {
+					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+				}
+			}
+		}
+		if (productList != null && productList.size() == 0) {
+			addRedirectAlertMessage(new SimpleMessage("No results found."));
+		}
+		return new ForwardResolution("/pages/search.jsp");
+	}
 
   public List<Product> getProductList() {
     return productList;
@@ -104,4 +110,12 @@ public class SearchAction extends BasePaginatedAction {
   public void setQuery(String query) {
     this.query = query;
   }
+
+    public String getSearchSuggestion() {
+        return searchSuggestion;
+    }
+
+    public void setSearchSuggestion(String searchSuggestion) {
+        this.searchSuggestion = searchSuggestion;
+    }
 }

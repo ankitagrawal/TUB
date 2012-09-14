@@ -41,7 +41,6 @@ import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
 import com.hk.pact.dao.user.UserCartDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
-import com.hk.pact.service.mooga.RecommendationEngine;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.user.SignupAction;
 
@@ -71,9 +70,6 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 	private Long productReferrerId;
 	@Autowired
 	SignupAction signupAction;
-
-	@Autowired
-	RecommendationEngine recomendationEngine;
 
 	private boolean variantConfigProvided;
 
