@@ -25,7 +25,7 @@
     <shiro:hasRole name="<%=RoleConstants.HK_AFFILIATE_UNVERIFIED%>">
         <div class="prom yellow help" style="margin-bottom:20px; padding:5px;">
             <p class="lrg"><strong>Pending Affiliate Approval Account</strong><br/>
-                To get it verified, please provide us all the information in the form below</p>
+                To get it verified, please provide us with all the information in the form below</p>
         </div>
     </shiro:hasRole>
     <div class="basicInformation" style="font-size:0.8em;">

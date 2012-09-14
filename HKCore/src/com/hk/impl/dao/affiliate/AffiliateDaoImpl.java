@@ -90,7 +90,7 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 
 		StringBuilder hql = new StringBuilder("select a from Affiliate a left outer join fetch a.affiliateTxns  atx left join fetch a.user u where (atx.affiliateTxnType.id in (:affiliateTxnTypeIds) or atx.affiliateTxnType.id is null)");
 
-		if (affiliateStatusIds != null) {
+		if (affiliateStatusIds != null && !affiliateStatusIds.isEmpty()) {
 			hql.append(" and a.affiliateStatus.id in (:affiliateStatusIds) ");
 			params.put("affiliateStatusIds", affiliateStatusIds);
 		}
