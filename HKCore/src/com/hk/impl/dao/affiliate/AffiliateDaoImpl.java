@@ -83,7 +83,7 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 
 	@Override
 	public Page searchAffiliates(List<Long> affiliateStatusIds, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
-		List<Long> affiliateTxnTypeIds = Arrays.asList(EnumAffiliateTxnType.ADD.getId(), EnumAffiliateTxnType.PENDING.getId());
+		List<Long> affiliateTxnTypeIds = Arrays.asList(EnumAffiliateTxnType.ADD.getId(), EnumAffiliateTxnType.PENDING.getId(), EnumAffiliateTxnType.PAYMENT_DUE.getId(), EnumAffiliateTxnType.PAID.getId());
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("affiliateTxnTypeIds", affiliateTxnTypeIds);
