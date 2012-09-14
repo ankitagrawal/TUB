@@ -46,6 +46,7 @@ public enum EnumAffiliateStatus {
 		return Arrays.asList(
 				EnumAffiliateStatus.Unverified,
 				EnumAffiliateStatus.Verified,
+				EnumAffiliateStatus.Cancelled,
 				EnumAffiliateStatus.Rejected);
 	}
 

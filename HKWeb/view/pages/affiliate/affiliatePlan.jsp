@@ -1,8 +1,11 @@
+<%@ page import="com.hk.domain.affiliate.AffiliateStatus" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.hk.constants.affiliate.EnumAffiliateStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" var="paymentAction"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
-  <s:layout-component name="content">
+    <s:layout-component name="content">
     <h2>
         ${paymentAction.affiliate.user.name}
     </h2>
@@ -36,7 +39,11 @@
 
         <div class="row">
             <label class="rowLabel">Affiliate Status</label>
-            <label class="rowText">${paymentAction.affiliate.affiliateStatus.name}</label>
+            <s:select name="affiliate.affiliateStatus" style="height:30px;font-size:1.2em;padding:1px;">
+                <c:forEach items="<%=EnumAffiliateStatus.getAllAffiliateStatus()%>" var="affiliateStatus">
+                    <s:option value="${affiliateStatus.id}">${affiliateStatus.name}</s:option>
+                </c:forEach>
+            </s:select>
         </div>
 
         <div class="clear"></div>

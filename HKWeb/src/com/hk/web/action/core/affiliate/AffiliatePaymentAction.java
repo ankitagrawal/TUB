@@ -121,7 +121,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 
 	public Resolution savePlan() {
 		if(offer == null){
-			return new RedirectResolution(AffiliatePaymentAction.class,"savePlan");
+			return new RedirectResolution(AffiliatePaymentAction.class,"showAffiliatePlan");
 		}
 		affiliate.setOffer(offer);
 		affiliate = (Affiliate) affiliateDao.save(affiliate);
