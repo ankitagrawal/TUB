@@ -1,18 +1,26 @@
 package com.hk.impl.dao.catalog.product;
 
-import com.akube.framework.dao.Page;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.*;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.catalog.product.ProductDao;
+import java.util.*;
+
+import com.hk.exception.SearchException;
+import com.hk.pact.service.search.ProductSearchService;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import com.akube.framework.dao.Page;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductExtraOption;
+import com.hk.domain.catalog.product.ProductGroup;
+import com.hk.domain.catalog.product.ProductImage;
+import com.hk.domain.catalog.product.ProductOption;
+import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.catalog.product.ProductDao;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -38,6 +46,9 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         }
 	    if (product.getCodAllowed() == null)   {
             product.setCodAllowed(Boolean.FALSE);
+        }
+	    if (product.getOutOfStock() == null)   {
+            product.setOutOfStock(Boolean.FALSE);
         }
         return (Product) super.save(product);
     }
@@ -91,6 +102,10 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 
     public List<Product> getAllProductBySubCategory(String category) {
         return getSession().createQuery("select p from Product p left join p.categories c where c.name = :category order by p.orderRanking asc").setString("category", category).list();
+    }
+
+    public List<Product> getAllNonDeletedProducts() {
+        return super.findByQuery("select p from Product p where p.deleted = false");
     }
 
     public List<Product> getAllProductByBrand(String brand) {
@@ -256,6 +271,12 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 
         return products;
 
+    }
+
+    public List<Product> getAllProductsById(List<String> productIdList) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+        criteria.add(Restrictions.in("id", productIdList));
+        return findByCriteria(criteria);
     }
 
     public Page getPaginatedResults(List<String> productIdList, int page, int perPage) {

@@ -4,7 +4,12 @@
   <property file="${project.healthkart.dir}/environmentLocator.properties" />
   <property file="${project.common.dir}/resources/${project.env}/setup/setup.properties" />
 
-  <path id="compile.classpath">
+  <property environment="env"/>
+  <property name="solr.home" value="${env.SOLR_HOME}"/>
+  <!--<echo message="SOLR_HOME = ${solr.home}"/>-->
+
+
+    <path id="compile.classpath">
     <fileset dir="${project.common.dir}/${lib.dir}">
       <include name="**/*.jar" />
     </fileset>
@@ -30,7 +35,7 @@
 	<target name="dev-clean" depends="clean, build"/>
 	<target name="db">
 		<updateDatabase changelogfile="${project.healthkart.dir}/db/changelog.xml" driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" classpathref="compile.classpath" />
-	</target>
+	    </target>
 
 	<target name="db-diff" description="Does a diff of the current db with the workbench db. adds to changelog.xml any changes to db">
 		<diffDatabaseToChangeLog driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" changelogfile="${project.healthkart.dir}/db/changelog.xml" referencedriver="${database.driver}" referenceurl="${database.url.workbench}" referenceusername="${database.username}" referencepassword="${database.password}" classpathref="compile.classpath">
