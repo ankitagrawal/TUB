@@ -462,7 +462,6 @@ public class Functions {
 
         ShippingOrder shippingOrder = (ShippingOrder) o;
         CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
-//        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD());
         return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false , false);
     }
 

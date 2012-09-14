@@ -117,7 +117,6 @@ public class InvoicePDFGenerator {
         CourierServiceInfo courierServiceInfo = null;
         if (EnumCourier.BlueDart_COD.getId().equals(shippingOrder.getShipment().getCourier().getId())) {
             if (isCod) {
-//                courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart_COD.getId(), address.getPin(), true);
                  courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart_COD.getId(), address.getPin(), true , false, false);
             } else {
                  courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart.getId(), address.getPin(), false , false, false);

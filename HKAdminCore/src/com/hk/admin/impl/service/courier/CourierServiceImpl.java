@@ -91,7 +91,6 @@ public class CourierServiceImpl implements CourierService {
         } else if (order.getPayment().getPaymentMode().equals(getPaymentService().findPaymentMode(EnumPaymentMode.COD))) {
             isCOD = true;
         }
-//        return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD);
         return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD, false, false);
     }
 
@@ -106,7 +105,6 @@ public class CourierServiceImpl implements CourierService {
     }
 
     public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
-//        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
         return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, isGroundShipping, warehouse);
     }
 

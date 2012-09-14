@@ -90,8 +90,7 @@ public class CourierServiceInfoAction extends BaseAction {
         String courierName = "All";
         List<CourierServiceInfo> courierServiceInfoList = new ArrayList<CourierServiceInfo>();
         if (courier != null) {
-//            courierServiceInfoList = courierServiceInfoDao.getCourierServiceInfo(courier.getId());
-              courierServiceInfoList = courierService.getCourierServiceInfoList(courier.getId(), null, false, false, false);
+            courierServiceInfoList = courierService.getCourierServiceInfoList(courier.getId(), null, false, false, false);
             courierName = courier.getName();
         } else {
             courierServiceInfoList = courierServiceInfoDao.getAll(CourierServiceInfo.class);
@@ -173,8 +172,6 @@ public class CourierServiceInfoAction extends BaseAction {
         if (pincodeObj == null) {
             addRedirectAlertMessage(new SimpleMessage("This pincode is not in the master list, add it there first."));
         } else {
-
-//            CourierServiceInfo courierServiceInfoLocal = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(), pincode);
             CourierServiceInfo courierServiceInfoLocal = courierService.getCourierServiceInfoForPincode(courierServiceInfo.getCourier().getId(), pincode , false, false,false);
             if (courierServiceInfoLocal != null) {
                 courierServiceInfoLocal.setCodAvailable(courierServiceInfo.isCodAvailable());

@@ -82,8 +82,6 @@ public class MasterPincodeAction extends BaseAction {
         try {
             pincode = pincodeDao.getByPincode(pincodeString);
             if (pincode != null) {
-
-//                courierServiceList = courierServiceInfoDao.getCourierServicesForPinCode(pincodeString);
                 courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false);
                 return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
             }

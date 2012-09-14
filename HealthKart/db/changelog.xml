@@ -8792,6 +8792,8 @@
              '0' as ground_shipping
              from `pincode_default_courier_bak`
              )v1 ;
+
+             Drop table `pincode_default_courier_bak`;
          </sql>
      </changeSet>
 </databaseChangeLog>
