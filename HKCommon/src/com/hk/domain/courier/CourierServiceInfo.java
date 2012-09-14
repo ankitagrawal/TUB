@@ -57,7 +57,7 @@ public class CourierServiceInfo implements java.io.Serializable {
   @Column(name = "is_deleted", nullable = true)
   private Boolean deleted;
 
-  @Column(name = "ground_shipping_Availabe", nullable = false)  
+  @Column(name = "ground_shipping_available", nullable = false)  
   private boolean groundShippingAvailable;
 
   @Column(name = "cod_on_ground_shipping", nullable = false)    

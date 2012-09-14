@@ -48,7 +48,6 @@ public class PincodeServiceImpl implements PincodeService {
     public void setPincodeDao(PincodeDao pincodeDao) {
         this.pincodeDao = pincodeDao;
     }
-
-    
+  
     
 }

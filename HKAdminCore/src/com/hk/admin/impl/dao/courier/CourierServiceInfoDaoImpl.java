@@ -72,6 +72,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
             Criteria pinCodeCriteria = courierServiceInfoCriteria.createCriteria("pincode");
             pinCodeCriteria.add(Restrictions.eq("pincode", pincode));
         }
+       
         return  courierServiceInfoCriteria.list();
     }
 
@@ -87,8 +88,6 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
          List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
           return courierServiceInfoList != null && courierServiceInfoList.size() > 0;
      }
-
-
 
 
 }
