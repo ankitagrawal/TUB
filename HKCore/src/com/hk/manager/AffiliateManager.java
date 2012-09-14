@@ -138,27 +138,7 @@ public class AffiliateManager {
     }
 
 	public Double getPayableAmount(Affiliate affiliate) {
-		Double affiliateAccountAmount = 0D;
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-		Calendar startCalender = Calendar.getInstance();
-		startCalender.setTime(new Date());
-
-		if (day <= 5) {
-			startCalender.add(Calendar.MONTH, -1);
-		}
-		startCalender.set(Calendar.DAY_OF_MONTH, 5);
-		Date startDate = startCalender.getTime();
-
-		Calendar endCalender = Calendar.getInstance();
-		endCalender.set(Calendar.DAY_OF_MONTH, 5);
-		Date endDate = endCalender.getTime();
-
-		affiliateAccountAmount = getAffiliateTxnDao().getAmountInAccount(affiliate, startDate, endDate);
-		return affiliateAccountAmount;
+		return getAffiliateTxnDao().getPayableAmount(affiliate);
 	}
 
 

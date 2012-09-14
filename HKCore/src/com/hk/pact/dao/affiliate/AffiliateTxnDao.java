@@ -30,4 +30,6 @@ public interface AffiliateTxnDao extends BaseDao {
 	void markAffiliateTxnAsDue(Affiliate affiliate);
 
 	void markDueAffiliateTxnAsPaid(Affiliate affiliate);
+
+	Double getPayableAmount(Affiliate affiliate);
 }
