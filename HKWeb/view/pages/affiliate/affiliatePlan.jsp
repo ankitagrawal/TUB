@@ -39,7 +39,7 @@
 
         <div class="row">
             <label class="rowLabel">Affiliate Status</label>
-            <s:select name="affiliate.affiliateStatus" style="height:30px;font-size:1.2em;padding:1px;">
+            <s:select name="affiliate.affiliateStatus" value="${paymentAction.affiliate.affiliateStatus}">
                 <c:forEach items="<%=EnumAffiliateStatus.getAllAffiliateStatus()%>" var="affiliateStatus">
                     <s:option value="${affiliateStatus.id}">${affiliateStatus.name}</s:option>
                 </c:forEach>
