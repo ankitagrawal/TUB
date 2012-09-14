@@ -8772,8 +8772,7 @@
              DROP COLUMN estimated_shipping_cost_non_cod,
              DROP FOREIGN KEY `fk_pincode_default_courier_cod`,
              DROP FOREIGN KEY `fk_pincode_default_courier_non_cod`,
-             ADD CONSTRAINT `fk_pincode_default_courier_courier1` FOREIGN KEY (`courier_id` ) REFERENCES
-             `healthkart_stag`.`courier` (`id` );
+             ADD CONSTRAINT `fk_pincode_default_courier_courier1` FOREIGN KEY (`courier_id` ) REFERENCES `courier` (`id` );            
 
 
              insert into `pincode_default_courier` (pincode_id, warehouse_id,courier_id,estimated_shipping_cost,cod,
