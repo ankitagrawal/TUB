@@ -22,11 +22,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrException;
+import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -411,8 +413,13 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     private void indexProduct(SolrProduct product){
         try{
-            solr.addBean(product);
-            solr.commit(true, true);
+            //solr.addBean(product);
+            SolrInputDocument solrDocument = solr.getBinder().toSolrInputDocument(product);
+            UpdateRequest req = new UpdateRequest();
+            req.add(solrDocument);
+            req.setCommitWithin(10000);
+            req.process(solr);
+            //solr.commit(false, false);
         }catch(SolrServerException ex){
             logger.error("Solr error during indexing the product", ex);
         }catch(IOException ex){
