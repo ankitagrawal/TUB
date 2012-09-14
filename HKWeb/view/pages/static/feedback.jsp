@@ -39,7 +39,7 @@
 				<div class="left">
 					<h2>Please provide your valuable feedback</h2>
 					<s:hidden name="order" value="${baseOrderId}" />
-					<div class='label'><h3>1. How likely is it that you would recommend HealthKart to a friend or colleague? </h3></div>
+					<div class='label'><h3>How likely is it that you would recommend HealthKart to a friend or colleague? </h3></div>
 					<table class="tableClass">
 						<tr>
 							<td colspan="12">&nbsp;</td>
@@ -84,7 +84,7 @@
 
 					</table>
 
-					<div class='label'><h3>2. How was your website experience?</h3></div>
+					<div class='label'><h3>How was your website experience?</h3></div>
 					<table class="tableClass">
 						<tr>
 							<td colspan="7">&nbsp;</td>
@@ -112,7 +112,7 @@
 						</tr>
 					</table>
 
-					<div class='label'><h3>3. How was your customer care experience?</h3></div>
+					<div class='label'><h3>How was your customer care experience?</h3></div>
 					<table class="tableClass">
 						<tr>
 							<td colspan="7">&nbsp;</td>

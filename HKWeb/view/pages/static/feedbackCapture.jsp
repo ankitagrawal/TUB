@@ -16,7 +16,7 @@
 			}
 		</style>
 		<br><br><br><br>
-		<h1 align="center">Thanks for your valuable feedback.</h1>
+		<h1 align="center">Thank you for your feedback.</h1>
 		<br><br><br><br>
 
 		<table cellpadding="10" cellspacing="10">

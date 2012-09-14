@@ -96,6 +96,18 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 									</table>
 								<table cellpadding="5" cellspacing="5" border="1" style="font-size:12px;" RULES=COLS FRAME=BOX>
 									<tr>
+										<td><strong>Not likely</strong></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td><strong>Very likely</strong></td>
+									</tr>
+									<tr>
 										<td>
 											<a href="${feedbackPage}?recommendToFriends=1&baseOrderId=${order}">
 												<input type="radio" name="recommendToFriends" value="1"/></a> 1
@@ -136,18 +148,6 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 											<a href="${feedbackPage}?recommendToFriends=10&baseOrderId=${order}">
 												<input type="radio" name="recommendToFriends" value="10"/></a> 10
 										</td>
-									</tr>
-									<tr>
-										<td><strong>Not likely</strong></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td><strong>Very likely</strong></td>
 									</tr>
 								</table>
 							</td>
