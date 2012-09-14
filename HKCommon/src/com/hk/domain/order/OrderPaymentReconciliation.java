@@ -21,11 +21,11 @@ public class OrderPaymentReconciliation {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "base_order_id", nullable = false)
 	private Order baseOrder;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "shipping_order_id")
 	private ShippingOrder shippingOrder;
 
@@ -39,8 +39,8 @@ public class OrderPaymentReconciliation {
 	@Column(name = "reconciled_amount", nullable = false)
 	private Double reconciledAmount;
 
-	@Column(name = "reward_points_against_cancellation")
-	private Double rewardPointsAgainstCancellation;
+	@Column(name = "reward_points_against_cancellation", nullable = false)
+	private Double rewardPointsAgainstCancellation = 0D;
 
 	public Long getId() {
 		return id;
