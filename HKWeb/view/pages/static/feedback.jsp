@@ -23,15 +23,20 @@
 			}
 			.recommend{
 				width: 75px;
-				font-weight: bold;
+				font-weight: normal;
+			}
+			.recommendRow1{
+				width: 75px;
+				font-weight: normal;
+				word-break: keep-all;
 			}
 			.website{
 				width: 150px;
-				font-weight: bold;
+				font-weight: normal;
 			}
 			.tableClass{
 				border: solid;
-				border-width: 4px;
+				border-width: 2px;
 			}
 		</style>
 		<div style="background: #fcfcfc; padding: 15px; ">
@@ -46,8 +51,8 @@
 						</tr>
 						<tr>
 							<td width="10"></td>
-							<td class="recommend" colspan="9">&nbsp;Not likely</td>
-							<td class="recommend" >Very likely</td>
+							<td class="recommendRow1" colspan="9">&nbsp;Not likely</td>
+							<td class="recommendRow1" >Very likely</td>
 							<td width="10"></td>
 						</tr>
 						<tr>

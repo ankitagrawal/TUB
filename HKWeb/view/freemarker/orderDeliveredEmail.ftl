@@ -80,6 +80,8 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 						</#list>
 					</#list>
 					</table> <br>
+					<div class="line-separator" style="height:1px; background:#717171; border-bottom:1px solid #313030;"></div>
+					<br>
 					We would like to know more about your experience shopping with us, so that we can improve our services. <br>
 					While we like positive feedback, we think your criticism can help us correct our course & serve you better.<br>
 					Feel free to be frank, we're listening.<br/>
