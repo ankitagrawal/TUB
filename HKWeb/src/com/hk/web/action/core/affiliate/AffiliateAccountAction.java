@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
 
-@Secure(hasAnyRoles = {RoleConstants.HK_AFFILIATE, RoleConstants.ADMIN, RoleConstants.HK_AFFILIATE_MANAGER})
+@Secure(hasAnyRoles = {RoleConstants.HK_AFFILIATE,RoleConstants.HK_AFFILIATE_UNVERIFIED, RoleConstants.ADMIN, RoleConstants.HK_AFFILIATE_MANAGER})
 @Component
 public class AffiliateAccountAction extends BaseAction {
 
