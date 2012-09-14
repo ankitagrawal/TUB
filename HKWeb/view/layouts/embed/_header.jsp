@@ -34,7 +34,7 @@
       </div>
       <div style='float: left; margin-left: 180px;'
            title='Call us on our customer care number for help regarding anything'>
-        <span style="font-size: .8em;">Customer Care: 0124-4551616 <span style="color: gray;">(10am - 9pm, 7 days a week)</span></span>
+        <span style="font-size: .8em;">Customer Care: 0124-4551616 <span style="color: gray;">(9am - 9pm, 7 days a week)</span></span>
 
         <div style="cursor:default; margin-top: 2px; width: 313px;">
           <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false"

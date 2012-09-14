@@ -1,8 +1,19 @@
 package com.hk.impl.service.inventory;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import com.hk.domain.catalog.product.Product;
+
+import com.hk.pact.service.catalog.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.Supplier;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.LowInventory;
@@ -19,14 +30,6 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -50,6 +53,9 @@ public class InventoryServiceImpl implements InventoryService {
     private ShippingOrderDao           shippingOrderDao;
     @Autowired
     private OrderDao                   orderDao;
+    @Autowired
+    private ProductService             productService;
+
     @Autowired
     private BaseDao                    baseDao;
 
@@ -80,7 +86,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public InvTxnType getInventoryTxnType(EnumInvTxnType enumInvTxnType) {
-        return getBaseDao().get(InvTxnType.class, enumInvTxnType.getId());
+        return baseDao.get(InvTxnType.class, enumInvTxnType.getId());
     }
 
     private void checkInventoryHealth(List<Sku> skuList, ProductVariant productVariant) {
@@ -119,13 +125,25 @@ public class InventoryServiceImpl implements InventoryService {
                 getLowInventoryDao().deleteFromLowInventoryList(productVariant);
             }
         }
-
+        boolean isProductOutOfStock = Boolean.FALSE;
+        boolean shouldUpdateProduct = Boolean.FALSE;
         // Mark product variant out of stock if inventory is negative or zero
         if (availableUnbookedInventory <= 0 && !productVariant.isOutOfStock() && !isJit) {
             logger.debug("Inventory status is negative now. Setting OUT of stock.");
-            productVariant.setOutOfStock(true);
-            productVariant = getProductVariantService().save(productVariant);
+            List<ProductVariant> productVariants = productVariant.getProduct().getInStockVariants();
 
+            //If there are other Variants in stock then there is no way a Product can be marked OutOfStock
+            if (productVariants.size() == 1 && !productVariant.isDeleted()){
+                if (productVariants.get(0).getId().equals(productVariant.getId())){
+                    if (!isJit && !product.isService() && !product.getDropShipping() && !product.getDeleted()) {
+                        isProductOutOfStock = Boolean.TRUE;
+                        shouldUpdateProduct = true;
+                    }
+                }
+            }
+            productVariant.setOutOfStock(true);
+            //First product variant goes out of stock
+            productVariant = getProductVariantService().save(productVariant);
             LowInventory lowInventoryInDB = getLowInventoryDao().findLowInventory(productVariant);
             if (lowInventoryInDB == null) {
                 LowInventory lowInventory = new LowInventory();
@@ -139,25 +157,25 @@ public class InventoryServiceImpl implements InventoryService {
                 lowInventoryInDB.setOutOfStock(true);
                 getLowInventoryDao().save(lowInventoryInDB);
             }
-
-            logger.debug("Fire Out of Stock Email to Category Admins");
             getEmailManager().sendOutOfStockMail(productVariant);
         } else if (availableUnbookedInventory > 0 && productVariant.isOutOfStock()) {
             logger.debug("Inventory status is positive now. Setting IN stock.");
             productVariant.setOutOfStock(false);
             productVariant = getProductVariantService().save(productVariant);
-
+            product = productVariant.getProduct();
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
+            if (!isJit && !product.isService() && !product.getDropShipping() && !product.getDeleted()) {
+                isProductOutOfStock = Boolean.FALSE;
+                shouldUpdateProduct = true;
+            }
         }
 
-/*  Commented as it is of no use.
-	    if(shouldFireOOSEmail){
-		   getEmailManager().sendProductStatusMail(product, "Out of Stock"); 
-	    }
-	    if(shouldFireInStockEmail){
-		    getEmailManager().sendProductStatusMail(product, "In Stock");
-	    }
-*/
+        if(shouldUpdateProduct){
+            product.setOutOfStock(isProductOutOfStock);
+            productService.save(product);
+            logger.debug(String.format("Settting product  %s out_of_stock ", product.getId()));
+        }
+
     }
 
     @Override
@@ -276,14 +294,6 @@ public class InventoryServiceImpl implements InventoryService {
 
     public void setEmailManager(EmailManager emailManager) {
         this.emailManager = emailManager;
-    }
-
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
     }
 
 }

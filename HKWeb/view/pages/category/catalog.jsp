@@ -1,4 +1,4 @@
-\<%@ page import="com.akube.framework.util.BaseUtils" %>
+<%@ page import="com.akube.framework.util.BaseUtils" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.domain.MapIndia" %>
@@ -29,8 +29,7 @@
     List<Category> applicableCategories = new ArrayList<Category>();
     applicableCategories.add(categoryDao.getCategoryByName("bp-monitor"));
     pageContext.setAttribute("applicableCategories", applicableCategories);
-	boolean renderNewCatalogUI = (Functions.collectionContains(Arrays.asList("eyeglasses","sunglasses","lenses", "proteins", "creatine"), ca.getChildCategorySlug())
-			|| Functions.collectionContains(Arrays.asList("eyeglasses","sunglasses","lenses", "proteins", "creatine"), ca.getSecondaryChildCategorySlug())); 
+	boolean renderNewCatalogUI = Functions.renderNewCatalogUI(ca.getChildCategorySlug(), ca.getSecondaryChildCategorySlug()); 
 	pageContext.setAttribute("renderNewCatalogUI", renderNewCatalogUI);
 	  if (renderNewCatalogUI) {
 		  pageContext.setAttribute("resultsPerPage1", 21);
@@ -268,7 +267,7 @@
       <c:if test="${hk:isNotBlank(ca.tertiaryChildCategorySlug)}"><s:param name="tertiaryChildCategorySlug"
                                                                            value="${ca.tertiaryChildCategorySlug}"/></c:if>
       <c:if test="${hk:isNotBlank(ca.preferredZone)}"><s:param name="preferredZone" value="${ca.preferredZone}"/></c:if>
-      <s:param name="sortBy" value="hk_price"/>
+      <s:param name="sortBy" value="hkPrice"/>
       <s:param name="sortOrder" value="${ca.sortOrder =='desc' ? 'asc' : 'desc'}"/>
     </s:link>
   </div>

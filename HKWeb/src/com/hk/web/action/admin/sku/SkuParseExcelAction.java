@@ -29,11 +29,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.util.SkuXslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.product.Product;
@@ -43,7 +43,6 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.util.SkuXslParser;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -78,7 +77,7 @@ public class SkuParseExcelAction extends BaseAction {
     }
 
     @Autowired
-    SkuXslParser                  skuXslParser;
+    SkuXslParser skuXslParser;
     @Autowired
     SkuService                    skuService;
 
@@ -215,7 +214,7 @@ public class SkuParseExcelAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
             return new ForwardResolution("/pages/admin/bulkUploadSKU.jsp");
         }
-        insertSKUs(skuSet);
+        skuService.insertSKUs(skuSet);
         addRedirectAlertMessage(new SimpleMessage("Database Successfully Updated."));
         return new ForwardResolution("/pages/admin/bulkUploadSKU.jsp");
     }
@@ -248,7 +247,7 @@ public class SkuParseExcelAction extends BaseAction {
         }
         return skuList;
     }
-
+    /*
     @Transactional
     private void insertSKUs(Set<Sku> skuSet) throws Exception {
         for (Sku skuObj : skuSet) {
@@ -263,7 +262,7 @@ public class SkuParseExcelAction extends BaseAction {
             }
         }
     }
-
+      */
     public SkuService getSkuService() {
         return skuService;
     }

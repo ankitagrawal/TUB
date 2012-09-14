@@ -1,11 +1,15 @@
 package com.hk.helper;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.util.HKDateUtil;
+import com.hk.util.OrderUtil;
 import com.hk.util.TokenUtils;
 
 /**
@@ -27,9 +31,14 @@ public class ShippingOrderHelper {
     return soBaseAmt;
   }
 
-  public static ShippingOrder setGatewayIdOnShippingOrder(ShippingOrder shippingOrder) {
+  public static ShippingOrder setGatewayIdAndTargetDateOnShippingOrder(ShippingOrder shippingOrder) {
     String shippingOrderGatewayId = TokenUtils.generateShippingOrderGatewayOrderId(shippingOrder);
     shippingOrder.setGatewayOrderId(shippingOrderGatewayId);
+    
+    Long[] dispatchDays = OrderUtil.getDispatchDaysForSO(shippingOrder);
+    Date targetDelDate = HKDateUtil.addToDate(shippingOrder.getBaseOrder().getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH, Integer.parseInt(dispatchDays[0].toString()));
+    shippingOrder.setTargetDispatchDate(targetDelDate);
+    
     return shippingOrder;
   }
 

@@ -22,7 +22,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.Awb;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -66,13 +65,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired
     AwbService awbService;
 
-    // public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
-    // List<Long> shippingOrderList = getAdminShippingOrderDao().getShippingOrderListByCourier(startDate, endDate,
-    // courierId);
-    // return shippingOrderList;
-    // }
-
-
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
@@ -98,12 +90,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         try {
         for (LineItem lineItem : lineItems) {
             Sku skuInOtherWarehouse = getSkuService().getSKU(lineItem.getSku().getProductVariant(), warehouse);
-//            if (skuInOtherWarehouse == null) {
-//                shouldUpdate = false;
-//                break;
-//            } else {
                 lineItemToSkuUpdate.put(lineItem.getId(), skuInOtherWarehouse);
-//            }
         }
         }catch(NoSkuException noSku){
         shouldUpdate = false;
@@ -113,16 +100,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 lineItem.setSku(lineItemToSkuUpdate.get(lineItem.getId()));
             }
             shippingOrder.setWarehouse(warehouse);
-            if (shippingOrder.getShipment() != null) {
-                Shipment oldShipment=shippingOrder.getShipment();
-                Awb awb = oldShipment.getAwb();
-                awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                awbService.save(awb);
-                Shipment shipment = shipmentService.createShipment(shippingOrder);
-                shippingOrder.setShipment(shipment);
-                shipmentService.delete(oldShipment);                
-
-            }
+	        shipmentService.recreateShipment(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
             getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
 
@@ -159,7 +137,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
              * this additional call to save is done so that we have shipping order id to generate shipping order gateway
              * id
              */
-            shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
+            shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
             shipmentService.createShipment(shippingOrder);
@@ -192,7 +170,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         /**
          * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
          */
-        shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
+        shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
         shippingOrder = getShippingOrderService().save(shippingOrder);
 
         return shippingOrder;
