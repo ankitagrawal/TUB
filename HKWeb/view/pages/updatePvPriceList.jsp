@@ -40,7 +40,9 @@
 				<tr>
 					<th>S.No.</th>
 					<th>Category</th>
-					<th>Variant/Product</th>
+					<th width="300px">Variant/Product</th>
+					<th>Old CostPrice</th>
+					<th>New CostPrice</th>
 					<th>Old MRP</th>
 					<th>New MRP</th>
 					<th>Txn Date</th>
@@ -61,6 +63,8 @@
 							<br/>
 								${variant.id} - ${variant.optionsCommaSeparated}
 						</td>
+						<td>${variant.costPrice}</td>
+						<td>${pvToBeUpdated.newCostPrice}</td>
 						<td>${variant.markedPrice}</td>
 						<td>${pvToBeUpdated.newMrp}</td>
 						<td><fmt:formatDate value="${pvToBeUpdated.txnDate}" pattern="dd/MM/yyyy HH:mm"/></td>

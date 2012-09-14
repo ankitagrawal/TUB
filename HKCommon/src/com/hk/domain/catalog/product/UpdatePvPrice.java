@@ -29,9 +29,11 @@ public class UpdatePvPrice implements java.io.Serializable {
 	private ProductVariant productVariant;
 
 
+	@Column (name = "new_costprice", nullable = false, precision = 10)
+	private Double newCostPrice;
+
 	@Column (name = "new_mrp", nullable = false, precision = 10)
 	private Double newMrp;
-
 
 	@Column (name = "new_hkprice", nullable = false, precision = 10)
 	private Double newHkprice;
@@ -70,6 +72,14 @@ public class UpdatePvPrice implements java.io.Serializable {
 
 	public void setProductVariant(ProductVariant productVariant) {
 		this.productVariant = productVariant;
+	}
+
+	public Double getNewCostPrice() {
+		return newCostPrice;
+	}
+
+	public void setNewCostPrice(Double newCostPrice) {
+		this.newCostPrice = newCostPrice;
 	}
 
 	public Double getNewMrp() {

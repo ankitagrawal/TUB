@@ -8744,6 +8744,9 @@
             <column name="product_variant_id" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
+	        <column name="new_costprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
             <column name="new_mrp" type="DECIMAL(10,2)">
                 <constraints nullable="false"/>
             </column>
@@ -8766,4 +8769,5 @@
     <changeSet author="Ajeet (generated)" id="1347564843152-3">
         <addForeignKeyConstraint baseColumnNames="updated_by" baseTableName="update_pv_price" constraintName="fk_update_pv_price_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
+    
 </databaseChangeLog>

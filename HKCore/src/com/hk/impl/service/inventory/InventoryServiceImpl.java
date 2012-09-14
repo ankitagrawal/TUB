@@ -1,20 +1,10 @@
 package com.hk.impl.service.inventory;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import com.hk.domain.catalog.product.Product;
-
-import com.hk.pact.service.catalog.ProductService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.LowInventory;
 import com.hk.domain.sku.Sku;
@@ -22,14 +12,22 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.manager.EmailManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.inventory.LowInventoryDao;
 import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -58,6 +56,9 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
     private BaseDao                    baseDao;
+	@Autowired
+    private UpdatePvPriceDao           updatePvPriceDao;
+	
 
     @Override
     public void checkInventoryHealth(ProductVariant productVariant) {
@@ -175,6 +176,27 @@ public class InventoryServiceImpl implements InventoryService {
             productService.save(product);
             logger.debug(String.format("Settting product  %s out_of_stock ", product.getId()));
         }
+
+	    //Now lets check for MRP dynamism
+	    boolean isBrandAudited = updatePvPriceDao.isBrandAudited(productVariant.getProduct().getBrand());
+	    if (isBrandAudited) {
+		    Long bookedInventory = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
+		    SkuGroup leastMRPSkuGroup = skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedInventory);
+		    if (leastMRPSkuGroup != null) {
+			    if (leastMRPSkuGroup != null && productVariant.getMarkedPrice() != leastMRPSkuGroup.getMrp()) {
+				    UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, false);
+				    if (updatePvPrice == null) {
+					    updatePvPrice = new UpdatePvPrice();
+				    }
+				    updatePvPrice.setProductVariant(productVariant);
+				    updatePvPrice.setNewCostPrice(leastMRPSkuGroup.getCostPrice());
+				    updatePvPrice.setNewMrp(leastMRPSkuGroup.getMrp());
+				    updatePvPrice.setNewHkprice(leastMRPSkuGroup.getMrp() * (1 - productVariant.getDiscountPercent()));
+				    updatePvPrice.setTxnDate(new Date());
+				    baseDao.save(updatePvPrice);
+			    }
+		    }
+	    }
 
     }
 

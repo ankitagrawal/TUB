@@ -43,6 +43,7 @@ public class UpdatePvPriceAction extends BasePaginatedAction {
 
 	public Resolution update() {
 		ProductVariant pv = updatePvPrice.getProductVariant();
+		pv.setCostPrice(updatePvPrice.getNewCostPrice());
 		pv.setMarkedPrice(updatePvPrice.getNewMrp());
 		pv.setHkPrice(updatePvPrice.getNewHkprice());
 		productVariantService.save(pv);
