@@ -83,7 +83,7 @@ public class HKDHubAction extends BaseAction {
 
             return new ForwardResolution("/pages/admin/editHub.jsp");
         } else {
-            hub = hubDao.get(Hub.class, hubId);
+     //       hub = hubDao.get(Hub.class, hubId);
             pincode = hub.getPincode().getPincode();
             return new ForwardResolution("/pages/admin/editHub.jsp");
         }

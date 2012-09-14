@@ -29,6 +29,7 @@
           <li><label>Min Days</label><s:text name="product.minDays"/></li>
           <li><label>Max Days</label><s:text name="product.maxDays"/></li>
           <li><label>Is Deleted</label><s:checkbox name="product.deleted"/></li>
+          <li><label>Is Out Of Stock</label><s:checkbox name="product.outOfStock"/></li>
           <li><label>Is Service</label><s:checkbox name="product.service"/></li>
           <li><label>Color Product</label><s:checkbox name="product.productHaveColorOptions"/></li>
           <li><label>Is Google Ad Disallowed</label><s:checkbox name="product.googleAdDisallowed"/></li>

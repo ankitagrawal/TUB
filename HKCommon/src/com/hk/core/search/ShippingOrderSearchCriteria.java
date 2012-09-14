@@ -22,7 +22,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private List<Awb>                                awbList;
     private List<Courier>                            courierList;
     private Long                                     warehouseId;
-    private boolean                                  isServiceOrder = false;
+    private boolean                                  isServiceOrder    = false;
     private Date                                     activityStartDate;
     private Date                                     activityEndDate;
     private String                                   basketCategory;
@@ -33,6 +33,13 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     private List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities;
     private List<ShippingOrderStatus>                shippingOrderStatusList;
+
+    private boolean                                  searchForPrinting = false;
+
+    public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
+        this.searchForPrinting = searchForPrinting;
+        return this;
+    }
 
     public ShippingOrderSearchCriteria setShippingOrderLifeCycleActivities(List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities) {
         this.shippingOrderLifeCycleActivities = shippingOrderLifeCycleActivities;
@@ -64,7 +71,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-      public ShippingOrderSearchCriteria setAwbList(List<Awb> awbList) {
+    public ShippingOrderSearchCriteria setAwbList(List<Awb> awbList) {
         this.awbList = awbList;
         return this;
     }
@@ -112,7 +119,6 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
 
@@ -121,7 +127,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         }
 
         DetachedCriteria shipmentCriteria = null;
-        if (awbList != null && awbList.size() >0) {
+        if (awbList != null && awbList.size() > 0) {
 
             if (shipmentCriteria == null) {
                 shipmentCriteria = criteria.createCriteria("shipment");
@@ -148,7 +154,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         }
 
         DetachedCriteria baseOrderCriteria = criteria.createCriteria("baseOrder");
-        
+
         if (baseOrderId != null) {
             baseOrderCriteria.add(Restrictions.eq("id", baseOrderId));
         }
@@ -183,19 +189,29 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
         // TODO: fix later after rewrite
         // criteria.setMaxResults(100);
-        
-        DetachedCriteria paymentCriteria = baseOrderCriteria.createCriteria("payment", CriteriaSpecification.LEFT_JOIN);
-        
-        if (sortByPaymentDate) {
-            paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
 
-        } if (sortByScore) {
+        DetachedCriteria paymentCriteria = baseOrderCriteria.createCriteria("payment", CriteriaSpecification.LEFT_JOIN);
+
+        if (!searchForPrinting) {
+            if (sortByPaymentDate) {
+                paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
+
+            }
+            if (sortByScore) {
+                baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
+            }
+        }else{
+            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDispatchDate"));
             baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
+            criteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
         }
         
-        /*paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
-        baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));*/
-        
+
+        /*
+         * paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
+         * baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
+         */
+
         return criteria;
     }
 

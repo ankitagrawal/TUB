@@ -96,7 +96,8 @@ public enum EnumPermission {
   SELECT_HUB                                     (PermissionConstants.SELECT_HUB),
   VIEW_HUB                                       (PermissionConstants.VIEW_HUB),
   ADD_HK_DELIVERY_AGENT                          (PermissionConstants.ADD_HK_DELIVERY_AGENT),
-  VIEW_CONSIGNMENT_TRACKING                      (PermissionConstants.VIEW_CONSIGNMENT_TRACKING);
+  VIEW_CONSIGNMENT_TRACKING                      (PermissionConstants.VIEW_CONSIGNMENT_TRACKING),
+  ADD_HUB                                        (PermissionConstants.ADD_HUB);
 
   String permissionName;
 

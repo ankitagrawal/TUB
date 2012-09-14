@@ -100,6 +100,8 @@ public class Keys {
 		public static final String subscriptionCustomerBufferDays = "subscriptionCustomerBufferDays";
 		public static final String subscriptionInventoryBufferDays = "subscriptionInventoryBufferDays";
 
+		public static final String testDataDump = "testDataDump";
+
 		public static final String dbHostName = "dbHostName";
 		public static final String dbName = "dbName";
 		public static final String dbUser = "dbUser";

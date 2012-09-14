@@ -5,6 +5,7 @@ import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
+import com.hk.domain.search.SolrProduct;
 
 import javax.persistence.*;
 import java.util.*;
@@ -81,7 +82,7 @@ public class Product implements java.io.Serializable {
     @Column(name = "is_amazon_product")
     private Boolean              isAmazonProduct;
 
-    @Transient
+    @Column(name = "out_of_stock")
     private Boolean              outOfStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -261,10 +262,12 @@ public class Product implements java.io.Serializable {
         this.relatedProducts = relatedProducts;
     }
 
-    public List<ProductVariant> getProductVariants() {
-        Collections.sort(productVariants, new ProductVariantComparator());
-        return productVariants;
-    }
+	public List<ProductVariant> getProductVariants() {
+		if (productVariants != null && !productVariants.isEmpty()) {
+			Collections.sort(productVariants, new ProductVariantComparator());
+		}
+		return productVariants;
+	}
 
     public List<ProductVariant> getInStockVariants() {
         List<ProductVariant> inStockVariants = new ArrayList<ProductVariant>();
@@ -351,6 +354,18 @@ public class Product implements java.io.Serializable {
         for (ProductVariant productVariant : this.getProductVariants()) {
             if (!productVariant.isDeleted()) {
                 if (productVariant.getMarkedPrice() < minMRPPV.getMarkedPrice())
+                    minMRPPV = productVariant;
+            }
+        }
+        return minMRPPV;
+    }
+
+    public ProductVariant getMinimumHKPriceProductVariant() {
+        ProductVariant minMRPPV = new ProductVariant();
+        minMRPPV.setHkPrice(1000000.0);
+        for (ProductVariant productVariant : this.getProductVariants()) {
+            if (!productVariant.isDeleted()) {
+                if (productVariant.getHkPrice() < minMRPPV.getHkPrice())
                     minMRPPV = productVariant;
             }
         }

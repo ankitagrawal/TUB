@@ -26,6 +26,8 @@ public class PaymentStatusDaoImpl extends BaseDaoImpl implements PaymentStatusDa
         paymentStatusIds.add(EnumPaymentStatus.AUTHORIZATION_PENDING.getId());
         paymentStatusIds.add(EnumPaymentStatus.ON_DELIVERY.getId());
         paymentStatusIds.add(EnumPaymentStatus.SUCCESS.getId());
+        paymentStatusIds.add(EnumPaymentStatus.REQUEST.getId());
+        paymentStatusIds.add(EnumPaymentStatus.ERROR.getId());
 
         DetachedCriteria criteria = DetachedCriteria.forClass(PaymentStatus.class);
         criteria.add(Restrictions.in("id", paymentStatusIds));

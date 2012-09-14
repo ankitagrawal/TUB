@@ -105,6 +105,11 @@ public class Hub implements java.io.Serializable {
 	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
+
+	@Override
+	public String toString() {
+		return id == null ? "" : id.toString();
+	}
 }
 
 

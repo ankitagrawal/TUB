@@ -42,6 +42,7 @@ import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.email.EmailerHistory;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.marketing.NotifyMe;
+import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
@@ -686,6 +687,17 @@ public class AdminEmailManager {
         success = false;
     }
     return success;
+  }
+  
+  public boolean sendOrderDeliveredEmail(Order order) {
+      HashMap valuesMap = new HashMap();
+      valuesMap.put("order", order);
+      String feedbackPageUrl = getLinkManager().getFeedbackPage();
+      feedbackPageUrl = convertToWww(feedbackPageUrl);
+      
+      valuesMap.put(EmailMapKeyConstants.feedbackPage, feedbackPageUrl);
+      Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderDeliveredEmail);
+      return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
   }
 
 

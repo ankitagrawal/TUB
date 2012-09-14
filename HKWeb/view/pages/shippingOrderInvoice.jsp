@@ -3,6 +3,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="com.hk.constants.core.EnumRole" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="java.util.Arrays" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -56,6 +59,11 @@
         }
     </style>
     <link href="<hk:vhostCss/>/css/960.css" rel="stylesheet" type="text/css"/>
+	<%
+		CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+		pageContext.setAttribute("sexualCare", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("sexual-care")));
+		pageContext.setAttribute("personalCareWomen", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("women")));
+	%>
 </head>
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" var="orderSummary"/>
@@ -213,36 +221,29 @@
         </tr>
         <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
             <tr>
-                <td>
-                    <c:choose>
-                        <c:when test="${orderSummary.printable}">
-                            <c:if
-                                    test="${hk:collectionContains(invoiceLineItem.productCategories, orderSummary.sexualCareCategory)}">
-                                <p>Personal Care Product</p>
-                            </c:if>
-                            <c:if
-                                    test="${!hk:collectionContains(invoiceLineItem.productCategories, orderSummary.sexualCareCategory)}">
-                                <p>${invoiceLineItem.productName}</p>
-                            </c:if>
-                        </c:when>
-                        <c:otherwise>
-                            <p>${invoiceLineItem.productName}</p>
-                        </c:otherwise>
-                    </c:choose>
-
-                    <c:if test="${invoiceLineItem.variantName != null}">
-                        <p>${invoiceLineItem.variantName}</p>
-                    </c:if>
-                    <em>
-                        <p>
-                                ${invoiceLineItem.productOptionsPipeSeparated}
-                        </p>
-                        <p>
-                                ${invoiceLineItem.extraOptionsPipeSeparated}
-                                ${invoiceLineItem.configOptionsPipeSeparated}
-                        </p>
-                    </em>
-                </td>
+	            <td>
+		            <c:choose>
+			            <c:when test="${orderSummary.printable && (hk:collectionContainsCollection(invoiceLineItem.productCategories, sexualCare)
+						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen))}">
+				            <p>Personal Care Product</p>
+			            </c:when>
+			            <c:otherwise>
+				            <p>${invoiceLineItem.productName}</p>
+				            <c:if test="${invoiceLineItem.variantName != null}">
+					            <p>${invoiceLineItem.variantName}</p>
+				            </c:if>
+				            <em>
+					            <p>
+							            ${invoiceLineItem.productOptionsPipeSeparated}
+					            </p>
+					            <p>
+							            ${invoiceLineItem.extraOptionsPipeSeparated}
+							            ${invoiceLineItem.configOptionsPipeSeparated}
+					            </p>
+				            </em>
+			            </c:otherwise>
+		            </c:choose>
+	            </td>
 
                 <td><fmt:formatNumber value="${invoiceLineItem.qty}" maxFractionDigits="0"/></td>
                 <td> ${invoiceLineItem.hkPrice} </td>

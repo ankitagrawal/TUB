@@ -381,7 +381,7 @@ public class OrderServiceImpl implements OrderService {
                              * this additional call to save is done so that we have shipping order id to generate shipping order
                              * gateway id
                              */
-                            shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
+                            shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
                             shippingOrder = shippingOrderService.save(shippingOrder);
                             shippingOrders.add(shippingOrder);
                         }

@@ -18,7 +18,8 @@
           affiliate = affiliateDao.getAffiliateById(affiliateId);
       }
       pageContext.setAttribute("affiliate", affiliate);
-      
+      boolean isSecure = pageContext.getRequest().isSecure();
+      pageContext.setAttribute("isSecure", isSecure);
   %>
 
   <div class="jqmWindow" style="width:700px" id="getProductLinkWindow">
@@ -54,38 +55,40 @@
               Choose one of the Text/Button Links to get the html code
             </div>
 
-            <div class="label">
-              <input type="radio" value="buy_button_0" name="anchor" class="buttonType"/>
-              <label>Enter Anchor Tag</label>
-              <input type="text" value="Buy ${product.name} from HealthKart.com" id="anchorTextBox"/>
+              <c:if test="${not isSecure }">
+                  <div class="label">
+                      <input type="radio" value="buy_button_0" name="anchor" class="buttonType"/>
+                      <label>Enter Anchor Tag</label>
+                      <input type="text" value="Buy ${product.name} from HealthKart.com" id="anchorTextBox"/>
 				<span style="display: none;" class="buy_button_0"> <a
-					class="buy_button_0_a"
-					href='${pageContext.request.contextPath}/product/${product.slug}/${product.id}?affid=${affiliate.code}'>Buy
-									${product.name} from HealthKart.com</a> </span>
-            </div>
+                        class="buy_button_0_a"
+                        href='http://www.healthkart.com/product/${product.slug}/${product.id}?affid=${affiliate.code}'>Buy
+                        ${product.name} from HealthKart.com</a> </span>
+                  </div>
 
-            <div class="label">
-              Button Link
-              <input type="radio" value="buy_button_1" name="anchor" class="buttonType"/>
-              <img src='${pageContext.request.contextPath}/images/icons/buy_button_1.png'/>
+                  <div class="label">
+                      Button Link
+                      <input type="radio" value="buy_button_1" name="anchor" class="buttonType"/>
+                      <img src='http://www.healthkart.com/images/icons/buy_button_1.png'/>
             <span style="display:none;" class="buy_button_1">
-            <a href='${pageContext.request.contextPath}/product/${product.slug}/${product.id}?affid=${affiliate.code}'><img
-                src='${pageContext.request.contextPath}/images/icons/buy_button_1.png'/></a>
+            <a href='http://www.healthkart.com/product/${product.slug}/${product.id}?affid=${affiliate.code}'><img
+                    src='http://www.healthkart.com/images/icons/buy_button_1.png'/></a>
             </span>
-              <input type="radio" value="buy_button_2" name="anchor" class="buttonType"/>
-              <img src='${pageContext.request.contextPath}/images/icons/buy_button_2.png'/>
+                      <input type="radio" value="buy_button_2" name="anchor" class="buttonType"/>
+                      <img src='http://www.healthkart.com/images/icons/buy_button_2.png'/>
             <span style="display:none;" class="buy_button_2">
-              <a href='${pageContext.request.contextPath}/product/${product.slug}/${product.id}?affid=${affiliate.code}'><img
-                  src='${pageContext.request.contextPath}/images/icons/buy_button_2.png'/></a>
+              <a href='http://www.healthkart.com/product/${product.slug}/${product.id}?affid=${affiliate.code}'><img
+                      src='http://www.healthkart.com/images/icons/buy_button_2.png'/></a>
             </span>
-              <input type="radio" value="buy_button_3" name="anchor" class="buttonType"/>
-              <img src='${pageContext.request.contextPath}/images/icons/buy_button_3.png'/>
+                      <input type="radio" value="buy_button_3" name="anchor" class="buttonType"/>
+                      <img src='http://www.healthkart.com/images/icons/buy_button_3.png'/>
             <span style="display:none;" class="buy_button_3">
-            <a href='${pageContext.request.contextPath}/product/${product.slug}/${product.id}?affid=${affiliate.code}'><img
-                src='${pageContext.request.contextPath}/images/icons/buy_button_3.png'/></a>
+            <a href='http://www.healthkart.com/product/${product.slug}/${product.id}?affid=${affiliate.code}'><img
+                    src='http://www.healthkart.com/images/icons/buy_button_3.png'/></a>
             </span>
-            </div>
-            <div class="label">
+                  </div>
+              </c:if>
+              <div class="label">
               <label>Copy the following code and paste it in your website</label>
               <a href="javascript:void(0);"
                  onclick="document.getElementById('productLinkTextArea').focus();document.getElementById('productLinkTextArea').select();">(Select
