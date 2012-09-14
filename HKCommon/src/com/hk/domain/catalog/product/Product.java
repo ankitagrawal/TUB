@@ -281,6 +281,8 @@ public class Product implements java.io.Serializable {
 	public List<ProductVariant> getProductVariants() {
 		if (productVariants != null && !productVariants.isEmpty()) {
 			Collections.sort(productVariants, new ProductVariantComparator());
+		} else {
+			productVariants = new ArrayList<ProductVariant>();
 		}
 		return productVariants;
 	}
