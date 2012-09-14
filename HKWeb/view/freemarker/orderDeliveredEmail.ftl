@@ -87,12 +87,14 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
 						<tr>
 							<td>
-								<table cellpadding="5" cellspacing="5">
+								<table cellpadding="5" cellspacing="5" >
 									<tr>
 										<td colspan="10"><strong>How likely is it that you would
 											recommend HealthKart to a friend or colleague? </strong>
 										</td>
 									</tr>
+									</table>
+								<table cellpadding="5" cellspacing="5" border="1" style="font-size:12px;" RULES=COLS FRAME=BOX>
 									<tr>
 										<td>
 											<a href="${feedbackPage}?recommendToFriends=1&baseOrderId=${order}">
@@ -136,9 +138,16 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 										</td>
 									</tr>
 									<tr>
-										<td>Not likely</td>
-										<td colspan="8"></td>
-										<td>Very likely</td>
+										<td><strong>Not likely</strong></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td><strong>Very likely</strong></td>
 									</tr>
 								</table>
 							</td>
