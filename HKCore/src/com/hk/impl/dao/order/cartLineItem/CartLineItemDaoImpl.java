@@ -1,5 +1,7 @@
 package com.hk.impl.dao.order.cartLineItem;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -69,6 +71,10 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
     public CartLineItem getLineItem(ProductVariant productVariant, Order order) {
         logger.error("getting line items for " + productVariant.getId() + " order" + order.getId());
         String query = "select cli from CartLineItem cli where cli.productVariant = :productVariant  and cli.order = :order";
+        List<CartLineItem> allItems =  getSession().createQuery(query).setEntity("productVariant", productVariant).setEntity("order", order).list();
+        for(CartLineItem item : allItems){
+            logger.error("***ID: " + item.getId());
+        }
         return (CartLineItem) getSession().createQuery(query).setEntity("productVariant", productVariant).setEntity("order", order).uniqueResult();
     }
 
