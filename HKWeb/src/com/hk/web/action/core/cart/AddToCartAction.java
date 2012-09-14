@@ -159,7 +159,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 					if (selectedProductVariants != null && selectedProductVariants.size() > 0) {
 						for (ProductVariant variant : selectedProductVariants) {
 							ComboInstanceHasProductVariant comboInstanceProductVariant = new ComboInstanceHasProductVariant();
-							if (variant.getQty() != 0) {
+							if (variant != null && variant.getQty() != null && variant.getQty() != 0) {
 								comboInstanceProductVariant.setComboInstance(comboInstance);
 								comboInstanceProductVariant.setProductVariant(variant);
 								comboInstanceProductVariant.setQty(variant.getQty());
