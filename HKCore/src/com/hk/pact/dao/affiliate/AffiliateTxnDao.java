@@ -28,4 +28,6 @@ public interface AffiliateTxnDao extends BaseDao {
 	public void approvePendingAffiliateTxn(Affiliate affiliate, Order order);
 
 	void markAffiliateTxnAsDue(Affiliate affiliate);
+
+	void markDueAffiliateTxnAsPaid(Affiliate affiliate);
 }

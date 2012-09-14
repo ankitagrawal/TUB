@@ -5,7 +5,8 @@ import com.hk.domain.affiliate.AffiliateTxnType;
 public enum EnumAffiliateTxnType {
 	PENDING(5L, "Pending"),
 	ADD(10L, "Added"),
-	PAYMENT_DUE(15L, "Payment Due"),
+	PAYMENT_DUE(13L, "Payment Due"),
+	PAID(18L, "Paid"),
 	SENT(20L, "Sent"),
 	ORDER_CANCELLED(30L, "Order Cancelled"),;
 

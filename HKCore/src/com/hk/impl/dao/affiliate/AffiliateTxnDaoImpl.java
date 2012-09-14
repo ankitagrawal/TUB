@@ -149,4 +149,16 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 			}
 		}
 	}
+
+	@Override
+	public void markDueAffiliateTxnAsPaid(Affiliate affiliate) {
+		String queryString = "from AffiliateTxn aT where aT.affiliate = :affiliate and aT.affiliateTxnTypeId =:affiliateTxnTypeId";
+		List<AffiliateTxn> affiliateTxnList = findByNamedParams(queryString, new String[]{"affiliate", "affiliateTxnTypeId", "endDate"}, new Object[]{affiliate, EnumAffiliateTxnType.PAYMENT_DUE.getId()});
+		for (AffiliateTxn affiliateTxn : affiliateTxnList) {
+			if (affiliateTxn != null) {
+				affiliateTxn.setAffiliateTxnType(EnumAffiliateTxnType.PAID.asAffiliateTxnType());
+				save(affiliateTxn);
+			}
+		}
+	}
 }

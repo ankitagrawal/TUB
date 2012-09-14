@@ -168,8 +168,18 @@
 
             <div class="checkBoxList row">
                 <c:forEach items="${categoryList}" var="category" varStatus="ctr">
-                    <label><s:checkbox name="categories[${ctr.index}]"
-                                       value="${category.name}"/> ${category.displayName}</label>
+                    <label>
+                        <c:choose>
+                            <c:when test="${hk:collectionContains(affiliateBean.categories, category)}">
+                                <s:checkbox name="categories[${ctr.index}]" checked="checked"
+                                            value="${category.name}"/>
+                            </c:when>
+                            <c:otherwise>
+                                <s:checkbox name="categories[${ctr.index}]"
+                                            value="${category.name}"/>
+                            </c:otherwise>
+                        </c:choose>
+                         ${category.displayName}</label>
                     <br/>
                 </c:forEach>
             </div>
