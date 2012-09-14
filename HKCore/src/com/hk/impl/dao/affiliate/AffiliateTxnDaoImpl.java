@@ -109,7 +109,7 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 	public Double getPayableAmount(Affiliate affiliate) {
 		List<Long> applicableTxnTypes = new ArrayList<Long>();
 		applicableTxnTypes.add(EnumAffiliateTxnType.PAYMENT_DUE.getId());
-		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
+//		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
 
 		Calendar endCalender = Calendar.getInstance();
 		int day = endCalender.get(Calendar.DAY_OF_MONTH);

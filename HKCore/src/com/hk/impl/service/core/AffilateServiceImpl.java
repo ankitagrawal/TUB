@@ -1,5 +1,6 @@
 package com.hk.impl.service.core;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.Cookie;
@@ -193,8 +194,8 @@ public class AffilateServiceImpl implements AffilateService {
 	}
 
 	@Override
-	public Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
-		return affiliateDao.searchAffiliates(affiliateStatus,name,email,websiteName,code,affiliateMode,affiliateType, role, perPage, pageNo);
+	public Page searchAffiliates(List<Long> affiliateStatusIds, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
+		return affiliateDao.searchAffiliates(affiliateStatusIds,name,email,websiteName,code,affiliateMode,affiliateType, role, perPage, pageNo);
 	}
 
 	@Override

@@ -81,50 +81,8 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 		return couponsList != null && !couponsList.isEmpty() ? couponsList.size() : 0L;
 	}
 
-	/*@Override
-	public Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
-//		DetachedCriteria affiliateTxnCriteria = DetachedCriteria.forClass(AffiliateTxn.class);
-//
-//		DetachedCriteria affiliateCriteria = affiliateTxnCriteria.createCriteria("affiliate", JoinFragment.LEFT_OUTER_JOIN);
-
-		DetachedCriteria affiliateCriteria = DetachedCriteria.forClass(Affiliate.class);   //todo ps duplicate results
-		if (affiliateStatus != null) {
-			affiliateCriteria.add(Restrictions.eq("affiliateStatus", affiliateStatus));
-		}
-		if (websiteName != null && StringUtils.isNotBlank(websiteName)) {
-			affiliateCriteria.add(Restrictions.eq("websiteName", websiteName));
-		}
-		if (code != null && StringUtils.isNotBlank(code)) {
-			affiliateCriteria.add(Restrictions.eq("code", code));
-		}
-		if (affiliateMode != null) {
-			affiliateCriteria.add(Restrictions.eq("affiliateMode", affiliateMode));
-		}
-		if (affiliateType != null) {
-			affiliateCriteria.add(Restrictions.eq("affiliateType", affiliateType));
-		}
-		DetachedCriteria userCriteria = affiliateCriteria.createCriteria("user");
-		if (name != null && StringUtils.isNotBlank(name)) {
-			userCriteria.add(Restrictions.eq("name", name));
-		}
-		if (email != null && StringUtils.isNotBlank(email)) {
-			userCriteria.add(Restrictions.eq("email", email));
-		}
-
-		DetachedCriteria affiliateTxnCriteria = affiliateCriteria.createCriteria("affiliateTxns");
-		affiliateTxnCriteria.add(Restrictions.in("affiliateTxnType.id", Arrays.asList(new Long[]{10L, 20L})));
-
-		ProjectionList projectionList = Projections.projectionList();
-		projectionList.add(Projections.groupProperty("panNo"));
-		affiliateCriteria.setProjection(projectionList);
-
-		affiliateCriteria.addOrder(OrderBySqlFormula.sqlFormula(" sum(amount) desc"));
-
-		return list(affiliateCriteria, pageNo, perPage);
-	}*/
-
 	@Override
-	public Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
+	public Page searchAffiliates(List<Long> affiliateStatusIds, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
 		List<Long> affiliateTxnTypeIds = Arrays.asList(EnumAffiliateTxnType.ADD.getId(), EnumAffiliateTxnType.PENDING.getId());
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -132,9 +90,9 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 
 		StringBuilder hql = new StringBuilder("select a from Affiliate a left outer join fetch a.affiliateTxns  atx left join fetch a.user u where (atx.affiliateTxnType.id in (:affiliateTxnTypeIds) or atx.affiliateTxnType.id is null)");
 
-		if (affiliateStatus != null) {
-			hql.append(" and a.affiliateStatus.id = :affiliateStatusId ");
-			params.put("affiliateStatusId", affiliateStatus.getId());
+		if (affiliateStatusIds != null) {
+			hql.append(" and a.affiliateStatus.id in (:affiliateStatusIds) ");
+			params.put("affiliateStatusIds", affiliateStatusIds);
 		}
 		if (websiteName != null && StringUtils.isNotBlank(websiteName)) {
 			hql.append(" and a.websiteName = :websiteName ");

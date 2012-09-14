@@ -28,5 +28,5 @@ public interface AffiliateDao extends BaseDao {
 
 	public Long getMaxCouponsLeft(Affiliate affiliate);
 
-	Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo);
+	Page searchAffiliates(List<Long> affiliateStatusIds, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo);
 }

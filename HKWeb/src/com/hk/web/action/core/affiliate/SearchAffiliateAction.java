@@ -11,6 +11,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public class SearchAffiliateAction extends BaseAction {
 	}
 
 	public Resolution searchAffiliates() {
-		affiliatePage = affilateService.searchAffiliates(affiliateStatus, name, email, websiteName, code, affiliateMode, affiliateType, role, perPage, pageNo);
+		affiliatePage = affilateService.searchAffiliates(Arrays.asList(affiliateStatus.getId()), name, email, websiteName, code, affiliateMode, affiliateType, role, perPage, pageNo);
 		affiliates = affiliatePage != null ? affiliatePage.getList() : null;
 		return new RedirectResolution("/pages/affiliate/searchAffiliates.jsp");
 	}

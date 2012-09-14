@@ -16,7 +16,8 @@ public enum EnumAffiliateStatus {
 
 	Unverified(10L, "Unverified"),
 	Verified(20L, "Verified"),
-	Rejected(30L, "Rejected");
+	Rejected(30L, "Rejected"),
+	Cancelled(40L, "Cancelled");
 
 	private String name;
 	private Long id;

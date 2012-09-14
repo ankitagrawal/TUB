@@ -33,7 +33,7 @@ public interface AffilateService {
 
 	public void approvePendingAffiliateTxn(Order order);
 
-	public Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo);
+	public Page searchAffiliates(List<Long> affiliateStatusIds, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo);
 
 	public void markAffiliateTxnAsDue(Affiliate affiliate);
 }

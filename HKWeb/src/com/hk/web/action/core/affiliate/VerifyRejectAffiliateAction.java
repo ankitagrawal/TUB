@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Secure(hasAnyPermissions = {PermissionConstants.VERIFY_AFFILIATES}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -49,7 +46,8 @@ public class VerifyRejectAffiliateAction extends BasePaginatedAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		affiliatePage = affiliateDao.searchAffiliates(EnumAffiliateStatus.Unverified.asAffiliateStatus(), name, email, websiteName, code, affiliateMode, affiliateType,null, getPerPage(), getPageNo());
+		List<Long> affiliateStatusIds = Arrays.asList(EnumAffiliateStatus.Unverified.getId());
+		affiliatePage = affiliateDao.searchAffiliates(affiliateStatusIds, name, email, websiteName, code, affiliateMode, affiliateType,null, getPerPage(), getPageNo());
 		if (affiliatePage != null) {
 			unverifiedAffiliates = affiliatePage.getList();
 		}
@@ -57,7 +55,7 @@ public class VerifyRejectAffiliateAction extends BasePaginatedAction {
 	}
 
 	public Resolution search() {
-		affiliatePage = affiliateDao.searchAffiliates(affiliateStatus, name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
+		affiliatePage = affiliateDao.searchAffiliates(Arrays.asList(affiliateStatus.getId()), name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
 		unverifiedAffiliates = affiliatePage.getList();
 		return new ForwardResolution("/pages/affiliate/verifyAffiliate.jsp");
 	}

@@ -79,7 +79,8 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		affiliatePage = affiliateDao.searchAffiliates(EnumAffiliateStatus.Verified.asAffiliateStatus(), name, email, websiteName, code, affiliateMode, affiliateType, EnumRole.HK_AFFILIATE.toRole(), getPerPage(), getPageNo());
+		List<Long> affiliateStatusIds = Arrays.asList(EnumAffiliateStatus.Verified.getId());
+		affiliatePage = affiliateDao.searchAffiliates(affiliateStatusIds, name, email, websiteName, code, affiliateMode, affiliateType, EnumRole.HK_AFFILIATE.toRole(), getPerPage(), getPageNo());
 		if (affiliatePage != null) {
 			affiliates = affiliatePage.getList();
 		}
@@ -95,7 +96,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	}
 
 	public Resolution search() {
-		affiliatePage = affiliateDao.searchAffiliates(affiliateStatus, name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
+		affiliatePage = affiliateDao.searchAffiliates(Arrays.asList(affiliateStatus.getId()), name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
 		if (affiliatePage != null) {
 			affiliates = affiliatePage.getList();
 		}
