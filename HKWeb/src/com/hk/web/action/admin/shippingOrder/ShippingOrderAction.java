@@ -87,8 +87,8 @@ public class ShippingOrderAction extends BaseAction {
 	public Resolution manualEscalateShippingOrder() {
 		boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
 		String message = "";
-		if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
-		//if (isManualEscalable) {
+		//if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
+		if (isManualEscalable) {
 			message = "shipping order manually escalated";
 			shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
 
