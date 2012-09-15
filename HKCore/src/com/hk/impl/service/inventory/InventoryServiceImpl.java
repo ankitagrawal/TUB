@@ -180,7 +180,7 @@ public class InventoryServiceImpl implements InventoryService {
 	    //Now lets check for MRP dynamism
 	    boolean isBrandAudited = updatePvPriceDao.isBrandAudited(productVariant.getProduct().getBrand());
 	    if (isBrandAudited) {
-		    Long bookedInventory = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
+		    Long bookedInventory = this.getBookedQty(productVariant);
 		    SkuGroup leastMRPSkuGroup = skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedInventory);
 		    if (leastMRPSkuGroup != null) {
 			    if (leastMRPSkuGroup != null && productVariant.getMarkedPrice() != leastMRPSkuGroup.getMrp()) {
@@ -207,20 +207,31 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public Long getAvailableUnbookedInventory(List<Sku> skuList) {
-        Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
-        logger.debug("net inventory " + netInventory);
-        Long bookedInventory = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuList);
-        logger.debug("booked inventory " + bookedInventory);
-        ProductVariant productVariant = !skuList.isEmpty() ? skuList.get(0).getProductVariant() : null;
-        Long bookedInventoryForProductVariant = 0L;
-        if (productVariant != null) {
-            bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
-            logger.debug("bookedInventoryForProductVariant " + bookedInventoryForProductVariant);
-        }
-        long availableUnbookedInventory = netInventory - (bookedInventory + bookedInventoryForProductVariant);
-        logger.debug("net total AvailableUnbookedInventory " + availableUnbookedInventory);
-        return availableUnbookedInventory;
+	    Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
+	    logger.debug("net inventory " + netInventory);
+
+	    ProductVariant productVariant = !skuList.isEmpty() ? skuList.get(0).getProductVariant() : null;
+	    Long bookedInventory = 0L;
+	    if (productVariant != null) {
+		    bookedInventory = this.getBookedQty(productVariant);
+		    logger.debug("booked inventory " + bookedInventory);
+	    }
+	    long availableUnbookedInventory = netInventory - bookedInventory;
+	    logger.debug("net total AvailableUnbookedInventory " + availableUnbookedInventory);
+	    return availableUnbookedInventory;
     }
+
+	public Long getBookedQty(ProductVariant productVariant) {
+		Long bookedInventory = 0L;
+		if (productVariant != null) {
+			Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
+			logger.debug("bookedInventoryForProductVariant " + bookedInventoryForProductVariant);
+			Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariant(productVariant));
+			logger.debug("bookedInventoryForSKUs " + bookedInventoryForSKUs);
+			bookedInventory = bookedInventoryForProductVariant + bookedInventoryForSKUs;
+		}
+		return bookedInventory;
+	}
     
     @Override
     public Long getBookedQtyOfSkuInQueue(List<Sku> skuList){
