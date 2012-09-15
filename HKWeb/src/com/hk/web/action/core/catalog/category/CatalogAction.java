@@ -259,7 +259,7 @@ public class CatalogAction extends BasePaginatedAction {
 						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
 					}
 				}
-				trimListByCategory(productList, secondaryCategory);
+                productList = trimListByCategory(productList, secondaryCategory);
 			} else {
 				if (StringUtils.isBlank(brand)) {
 					productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
@@ -272,7 +272,7 @@ public class CatalogAction extends BasePaginatedAction {
 						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
 					}
 				}
-				trimListByCategory(productList, secondaryCategory);
+                productList = trimListByCategory(productList, secondaryCategory);
 				if (rootCategorySlug.equals("services")) {
 					productList = trimListByDistance(productList, preferredZone);
 				}
@@ -361,15 +361,16 @@ public class CatalogAction extends BasePaginatedAction {
 	}
 
 
-	private void trimListByCategory(List<Product> productList, Category category) {
+	private List<Product> trimListByCategory(List<Product> productList, Category category) {
+        List<Product> categoryProductList = new ArrayList<Product>();
 		if (category != null) {
-			for (Iterator<Product> productIterator = productList.iterator(); productIterator.hasNext();) {
-				Product product = productIterator.next();
-				if (!product.getCategories().contains(category)) {
-					productIterator.remove();
+			for (Product product : productList) {
+				if (product.getCategories().contains(category)) {
+                    categoryProductList.add(product);
 				}
 			}
 		}
+        return categoryProductList;
 	}
 
 	public void setRootCategorySlug(String rootCategorySlug) {
