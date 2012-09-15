@@ -5,10 +5,18 @@
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
+<c:set var="TH" value="<%=VariantConfigOptionParam.THICKNESS.param()%>"/>
+<c:set var="THBF" value="<%=VariantConfigOptionParam.BFTHICKNESS.param()%>"/>
+<c:set var="CO" value="<%=VariantConfigOptionParam.COATING.param()%>"/>
+<c:set var="COBF" value="<%=VariantConfigOptionParam.BFCOATING.param()%>"/>
+<c:set var="BRANDCO" value="<%=VariantConfigOptionParam.BRANDCO.param()%>"/>
+<c:set var="BRANDTH" value="<%=VariantConfigOptionParam.BRANDTH.param()%>"/>
+<c:set var="BRANDTHBF" value="<%=VariantConfigOptionParam.BRANDTHBF.param()%>"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
@@ -236,17 +244,60 @@
 					            <p>
 						            <c:forEach items="${invoiceLineItem.productOptions}"
 						                       var="productOption">
-							            <c:if test="${hk:showOptionOnUI(productOption.name)}">
+							            <c:if test="${hk:showOptionOnUI(productOption.name)}" >
 								            ${productOption.name}:${productOption.value};
 							            </c:if>
 						            </c:forEach>
 					            </p>
 					            <p>
 							            ${invoiceLineItem.extraOptionsPipeSeparated}
-							            ${invoiceLineItem.configOptionsPipeSeparated}
-					            </p>
+							            <!--${invoiceLineItem.configOptionsPipeSeparated}-->
+							</p>
 				            </em>
-			            </c:otherwise>
+					Thickness and coating
+					<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
+						var="configValue" varStatus="configValueCtr">
+						<c:set var="additinalParam"
+							value="${configValue.variantConfigOption.additionalParam}" />
+						<c:if
+							test="${( additinalParam == TH || additinalParam == THBF 
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
+								|| additinalParam == BRANDTHBF) }">
+							<b>${configValue.variantConfigOption.displayName}:${configValue.value}</b>
+						</c:if>
+					</c:forEach>
+					<table>
+
+						<tr>
+							<td><b>Right</b></td>
+							<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
+								var="configValue" varStatus="configValueCtr">
+								<c:set var="additinalParam"
+									value="${configValue.variantConfigOption.additionalParam}" />
+								<c:if
+									test="${configValueCtr.index %2 ==0 && !( additinalParam == TH || additinalParam == THBF 
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
+								|| additinalParam == BRANDTHBF) }">
+									<td><b>${configValue.variantConfigOption.displayName}:${configValue.value}</b></td>
+								</c:if>
+							</c:forEach>
+						</tr>
+						<tr>
+							<td><b>Left</b></td>
+							<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
+								var="configValue" varStatus="configValueCtr">
+								<c:set var="additinalParam"
+									value="${configValue.variantConfigOption.additionalParam}" />
+								<c:if
+									test="${configValueCtr.index %2 !=0 && !( additinalParam == TH || additinalParam == THBF 
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
+								|| additinalParam == BRANDTHBF)}">
+									<td><b>${configValue.variantConfigOption.displayName}:${configValue.value}</b></td>
+								</c:if>
+							</c:forEach>
+						</tr>
+					</table>
+				</c:otherwise>
 		            </c:choose>
 	            </td>
 

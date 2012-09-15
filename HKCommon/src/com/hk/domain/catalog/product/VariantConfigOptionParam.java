@@ -30,4 +30,12 @@ public enum VariantConfigOptionParam {
     VariantConfigOptionParam(String param) {
         this.param = param;
     }
+    
+    /**
+     * helper only for jsp views
+     * @return
+     */
+    public String getParameter(){
+        return param();
+    }
 }
