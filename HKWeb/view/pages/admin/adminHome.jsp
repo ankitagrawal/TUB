@@ -279,7 +279,9 @@
 		        event="listOutOfStock">Out of Stock List</s:link></h3>
 
 	<h3>
-		<s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction">Update PV Price List</s:link></h3>
+		<s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction">Update Variant Price
+		<br/><span class="sml gry" style="color:red">(List of Variants - MRP Mismatch)</span>
+		</s:link></h3>
 
 	<shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
 		<h3>

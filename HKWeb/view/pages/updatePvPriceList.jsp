@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction" var="uppBean"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Update Price of Variants List">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Update Price of Variants">
 	<s:layout-component name="htmlHead">
 
 		<style type="text/css">
@@ -71,9 +71,9 @@
 								${product.primaryCategory}
 						</td>
 						<td valign="top">
-								<a href="${pageContext.request.contextPath}/product/${product.slug}/${product.id}" target="_blank">${product.id}</a> - ${product.name}
+								<a href="${pageContext.request.contextPath}/product/${product.slug}/${product.id}" target="_blank" title="Go to Product Page">${product.id}</a> - ${product.name}
 							<br/>
-								<s:link beanclass="com.hk.web.action.admin.sku.SearchSkuBatchesAction" event="showBatches" target="_blank">
+								<s:link beanclass="com.hk.web.action.admin.sku.SearchSkuBatchesAction" event="showBatches" target="_blank" title="Go to Variant Batches">
 									<s:param name="upc" value="${variant.id}"/>
 								${variant.id}
 								</s:link> -
