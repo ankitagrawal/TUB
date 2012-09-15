@@ -75,7 +75,7 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
         for(CartLineItem item : allItems){
             logger.error("***ID: " + item.getId());
         }
-        return (CartLineItem) getSession().createQuery(query).setEntity("productVariant", productVariant).setEntity("order", order).uniqueResult();
+        return (CartLineItem)  getSession().createQuery(query).setString("productVariantId", productVariant.getId()).setLong("orderId", order.getId()).uniqueResult();
     }
 
 }
