@@ -28,12 +28,20 @@ public class UpdatePvPrice implements java.io.Serializable {
 	@JoinColumn (name = "product_variant_id", nullable = false)
 	private ProductVariant productVariant;
 
+	@Column (name = "old_costprice", nullable = false, precision = 10)
+	private Double oldCostPrice;
 
 	@Column (name = "new_costprice", nullable = false, precision = 10)
 	private Double newCostPrice;
 
+	@Column (name = "old_mrp", nullable = false, precision = 10)
+	private Double oldMrp;
+
 	@Column (name = "new_mrp", nullable = false, precision = 10)
 	private Double newMrp;
+
+	@Column (name = "old_hkprice", nullable = false, precision = 10)
+	private Double oldHkprice;
 
 	@Column (name = "new_hkprice", nullable = false, precision = 10)
 	private Double newHkprice;
@@ -74,6 +82,15 @@ public class UpdatePvPrice implements java.io.Serializable {
 		this.productVariant = productVariant;
 	}
 
+	public Double getOldCostPrice() {
+		return oldCostPrice;
+	}
+
+	public void setOldCostPrice(Double oldCostPrice) {
+		this.oldCostPrice = oldCostPrice;
+	}
+
+
 	public Double getNewCostPrice() {
 		return newCostPrice;
 	}
@@ -82,12 +99,28 @@ public class UpdatePvPrice implements java.io.Serializable {
 		this.newCostPrice = newCostPrice;
 	}
 
+	public Double getOldMrp() {
+		return oldMrp;
+	}
+
+	public void setOldMrp(Double oldMrp) {
+		this.oldMrp = oldMrp;
+	}
+
 	public Double getNewMrp() {
 		return this.newMrp;
 	}
 
 	public void setNewMrp(Double newMrp) {
 		this.newMrp = newMrp;
+	}
+
+	public Double getOldHkprice() {
+		return oldHkprice;
+	}
+
+	public void setOldHkprice(Double oldHkprice) {
+		this.oldHkprice = oldHkprice;
 	}
 
 	public Double getNewHkprice() {
