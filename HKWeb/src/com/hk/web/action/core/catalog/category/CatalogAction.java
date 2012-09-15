@@ -147,6 +147,7 @@ public class CatalogAction extends BasePaginatedAction {
 			}
 		} else {
 			logger.error("No category found for root category slug : " + rootCategorySlug);
+            return new RedirectResolution(HomeAction.class, "pre");
 		}
 
 		String smallestCategory = null;
