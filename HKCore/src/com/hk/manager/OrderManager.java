@@ -330,6 +330,7 @@ public class OrderManager {
 		Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed());
 		Set<CartLineItem> cartLineItems = getCartLineItemsFromPricingCartLi(order, cartLIFromPricingEngine);
 
+		logger.info("catrLineItems size: " + cartLineItems.size() + " for order : " + order.getId());
 		PricingDto pricingDto = new PricingDto(cartLineItems, order.getAddress());
 
 		// give commissions to affiliates and and award them reward points if order came from them.
