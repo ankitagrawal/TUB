@@ -254,7 +254,9 @@
 							            <!--${invoiceLineItem.configOptionsPipeSeparated}-->
 							</p>
 				            </em>
-					Thickness and coating
+					
+					<c:if test="${invoiceLineItem.cartLineItemConfigValues !=null}" >
+					
 					<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
 						var="configValue" varStatus="configValueCtr">
 						<c:set var="additinalParam"
@@ -263,11 +265,11 @@
 							test="${( additinalParam == TH || additinalParam == THBF 
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF) }">
-							<b>${configValue.variantConfigOption.displayName}:${configValue.value}</b>
+							${configValue.variantConfigOption.displayName}:${configValue.value}|
+							
 						</c:if>
 					</c:forEach>
 					<table>
-
 						<tr>
 							<td><b>Right</b></td>
 							<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
@@ -297,6 +299,7 @@
 							</c:forEach>
 						</tr>
 					</table>
+					</c:if>
 				</c:otherwise>
 		            </c:choose>
 	            </td>
