@@ -210,6 +210,9 @@ public class CatalogAction extends BasePaginatedAction {
             productPage = new Page(filteredProducts, getPerPage(), getPageNo(), (int)totalResultSize);
             if (productPage != null) {
                 productList = productPage.getList();
+	            for (Product product : productList) {
+		            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+	            }
             }
             category = categoryDao.getCategoryByName(smallestCategory);
 		} catch (Exception e) {            			

@@ -2,12 +2,7 @@ package com.hk.domain.catalog.product;
 
 // Generated 10 Mar, 2011 5:37:39 PM by Hibernate Tools 3.2.4.CR1
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -271,9 +266,11 @@ public class ProductVariant implements java.io.Serializable {
     this.markedPrice = markedPrice;
   }
 
-  public List<ProductOption> getProductOptions() {
-    return productOptions;
-  }
+	public List<ProductOption> getProductOptions() {
+		if (productOptions != null && !productOptions.isEmpty())
+			Collections.sort(productOptions, new ProductOptionComparator());
+		return productOptions;
+	}
 
   public void setProductOptions(List<ProductOption> productOptions) {
     this.productOptions = productOptions;
