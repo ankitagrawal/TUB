@@ -234,7 +234,12 @@
 				            </c:if>
 				            <em>
 					            <p>
-							            ${invoiceLineItem.productOptionsPipeSeparated}
+						            <c:forEach items="${invoiceLineItem.productVariant.productOptions}"
+						                       var="productOption">
+							            <c:if test="${hk:showOptionOnUI(productOption.name)}">
+								            ${productOption.name}:${productOption.value};
+							            </c:if>
+						            </c:forEach>
 					            </p>
 					            <p>
 							            ${invoiceLineItem.extraOptionsPipeSeparated}

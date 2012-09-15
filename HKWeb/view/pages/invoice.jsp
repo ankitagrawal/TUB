@@ -201,11 +201,13 @@
 
             <p>${productLineItem.productVariant.variantName}</p>
             <em>
-              <p>
-                <c:forEach items="${productLineItem.productVariant.productOptions}" var="productOption">
-                  ${productOption.name} ${productOption.value}&nbsp
-                </c:forEach>
-              </p>
+	            <p>
+		            <c:forEach items="${productLineItem.productVariant.productOptions}" var="productOption">
+			            <c:if test="${hk:showOptionOnUI(productOption.name)}">
+				            ${productOption.name}:${productOption.value};
+			            </c:if>
+		            </c:forEach>
+	            </p>
 
               <p>
                 <c:forEach items="${productLineItem.cartLineItemExtraOptions}" var="extraOption">

@@ -595,4 +595,10 @@ public class Functions {
 		return renderNewCatalogUI;
 	}
 
+	public static boolean showOptionOnUI(String optionType) {
+		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE");
+		boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
+		return showOptionOnUI;
+	}
+
 }
