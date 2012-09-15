@@ -183,7 +183,10 @@ public class InventoryServiceImpl implements InventoryService {
 		    Long bookedInventory = this.getBookedQty(productVariant);
 		    SkuGroup leastMRPSkuGroup = skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedInventory);
 		    if (leastMRPSkuGroup != null) {
-			    if (leastMRPSkuGroup != null && productVariant.getMarkedPrice() != leastMRPSkuGroup.getMrp()) {
+			    //logger.info("leastMRPSkuGroup: "+leastMRPSkuGroup.getId());
+			    if (leastMRPSkuGroup != null && leastMRPSkuGroup.getMrp() != null
+					    && !productVariant.getMarkedPrice().equals(leastMRPSkuGroup.getMrp())) {
+				    //logger.info("MRP: "+productVariant.getMarkedPrice()+"-->"+leastMRPSkuGroup.getMrp());
 				    UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, false);
 				    if (updatePvPrice == null) {
 					    updatePvPrice = new UpdatePvPrice();

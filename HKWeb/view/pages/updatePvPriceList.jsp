@@ -41,8 +41,8 @@
 					<th>S.No.</th>
 					<th>Category</th>
 					<th width="300px">Variant/Product</th>
-					<th>Old CostPrice</th>
-					<th>New CostPrice</th>
+					<th>Old CP</th>
+					<th>New CP</th>
 					<th>Old MRP</th>
 					<th>New MRP</th>
 					<th>Txn Date</th>
@@ -61,7 +61,13 @@
 						<td valign="top">
 								${product.id} - ${product.name}
 							<br/>
-								${variant.id} - ${variant.optionsCommaSeparated}
+								${variant.id} -
+									<c:forEach items="${variant.productOptions}"
+									           var="productOption">
+										<c:if test="${hk:showOptionOnUI(productOption.name)}">
+											${productOption.name}:${productOption.value};
+										</c:if>
+									</c:forEach>
 						</td>
 						<td>${variant.costPrice}</td>
 						<td>${pvToBeUpdated.newCostPrice}</td>

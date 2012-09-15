@@ -37,7 +37,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 
 	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
 		SkuGroup minMRPUnbookedSkuGroup = null;
-		String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null " + "and pvi.sku.productVariant = :productVariant group by pvi.skuItem.id having sum(pvi.qty) > 0 order by pvi.skuItem.skuGroup.mrp asc";
+		String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null and pvi.skuItem.skuGroup.mrp is not null and pvi.sku.productVariant = :productVariant group by pvi.skuItem.id having sum(pvi.qty) > 0 order by pvi.skuItem.skuGroup.mrp asc";
 		List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery).setParameter("productVariant", productVariant).list();
 		if (skuItemIdList != null && skuItemIdList.size() > bookedQty) {
 			List<Long> firstUnBookedSkuItem = skuItemIdList.subList(bookedQty.intValue(), bookedQty.intValue()+1);
