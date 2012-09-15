@@ -361,7 +361,7 @@ public class CatalogAction extends BasePaginatedAction {
 
 
 	private void trimListByCategory(List<Product> productList, Category category) {
-		if (category != null) {
+		if (category != null && productList != null) {
 			for (Iterator<Product> productIterator = productList.iterator(); productIterator.hasNext();) {
 				Product product = productIterator.next();
 				if (!product.getCategories().contains(category)) {
