@@ -436,11 +436,13 @@ public class OrderManager {
 		return cartLineItems;
 	}
 
+	@Transactional
 	private Set<CartLineItem> addFreeVariantsToCart(Set<CartLineItem> cartLineItems) {
 		Set<CartLineItem> updatedCartLineItems = new HashSet<CartLineItem>();
 		updatedCartLineItems.addAll(cartLineItems);
 		for (CartLineItem cartLineItem : cartLineItems) {
 			if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
+			    logger.info("processing : " + cartLineItem.getProductVariant().getId() + " total " + cartLineItems.size());
 				ProductVariant freeVariant = cartLineItem.getProductVariant().getFreeProductVariant();
 				if (freeVariant != null) {
 					CartLineItem existingCartLineItem = getCartLineItemDao().getLineItem(freeVariant, cartLineItem.getOrder());
