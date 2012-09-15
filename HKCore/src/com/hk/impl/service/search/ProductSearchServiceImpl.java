@@ -250,7 +250,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
         List<Product> products = new ArrayList<Product>();
         //List of products sorted as per Solr
-        List<Product> sortedProducts = null;
+        List<Product> sortedProducts = new ArrayList<Product>();
         if (productIds.size() > 0){
             products = productService.getAllProductsById(productIds);
             sortedProducts = new ArrayList<Product>(products);
