@@ -234,7 +234,7 @@
 				            </c:if>
 				            <em>
 					            <p>
-						            <c:forEach items="${invoiceLineItem.productVariant.productOptions}"
+						            <c:forEach items="${invoiceLineItem.productOptions}"
 						                       var="productOption">
 							            <c:if test="${hk:showOptionOnUI(productOption.name)}">
 								            ${productOption.name}:${productOption.value};
