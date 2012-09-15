@@ -183,6 +183,7 @@
         <mapping class="com.hk.domain.courier.AwbStatus" />
         <mapping class="com.hk.domain.catalog.product.SimilarProduct" />
 	    <mapping class="com.hk.domain.feedback.Feedback" />
+		<mapping class="com.hk.domain.offer.OfferEmailDomain" />
 	    <mapping class="com.hk.domain.catalog.product.UpdatePvPrice" />
     </session-factory>
 </hibernate-configuration>
