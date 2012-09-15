@@ -327,11 +327,11 @@ public class OrderManager {
 		if(EnumOrderStatus.InCart.getId().equals(order.getOrderStatus().getId())){
 
 		// apply pricing and save cart line items
-		    logger.info("catrLineItems prev size: " + order.getCartLineItems().size() + " for order : " + order.getId());
+		   // logger.info("catrLineItems prev size: " + order.getCartLineItems().size() + " for order : " + order.getId());
 		Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed());
 		Set<CartLineItem> cartLineItems = getCartLineItemsFromPricingCartLi(order, cartLIFromPricingEngine);
 
-		logger.info("catrLineItems size after pricign engine: " + cartLineItems.size() + " for order : " + order.getId());
+		//logger.info("catrLineItems size after pricign engine: " + cartLineItems.size() + " for order : " + order.getId());
 		PricingDto pricingDto = new PricingDto(cartLineItems, order.getAddress());
 
 		// give commissions to affiliates and and award them reward points if order came from them.

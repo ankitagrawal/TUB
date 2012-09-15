@@ -70,12 +70,12 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
     }
 
     public CartLineItem getLineItem(ProductVariant productVariant, Order order) {
-        logger.error("getting line items for " + productVariant.getId() + " order" + order.getId());
+        //logger.error("getting line items for " + productVariant.getId() + " order" + order.getId());
         String query = "select cli from CartLineItem cli where cli.productVariant.id = :productVariantId  and cli.order.id = :orderId and cli.lineItemType.id = " + EnumCartLineItemType.Product.getId();
-        List<CartLineItem> allItems =  getSession().createQuery(query).setString("productVariantId", productVariant.getId()).setLong("orderId", order.getId()).list();
+        /*List<CartLineItem> allItems =  getSession().createQuery(query).setString("productVariantId", productVariant.getId()).setLong("orderId", order.getId()).list();
         for(CartLineItem item : allItems){
             logger.error("***ID: " + item.getId());
-        }
+        }*/
         return (CartLineItem)  getSession().createQuery(query).setString("productVariantId", productVariant.getId()).setLong("orderId", order.getId()).uniqueResult();
     }
 
