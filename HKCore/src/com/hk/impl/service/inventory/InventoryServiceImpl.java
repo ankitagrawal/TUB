@@ -192,8 +192,11 @@ public class InventoryServiceImpl implements InventoryService {
 					    updatePvPrice = new UpdatePvPrice();
 				    }
 				    updatePvPrice.setProductVariant(productVariant);
+				    updatePvPrice.setOldCostPrice(productVariant.getCostPrice());
 				    updatePvPrice.setNewCostPrice(leastMRPSkuGroup.getCostPrice());
+				    updatePvPrice.setOldMrp(productVariant.getMarkedPrice());
 				    updatePvPrice.setNewMrp(leastMRPSkuGroup.getMrp());
+				    updatePvPrice.setOldHkprice(productVariant.getHkPrice());
 				    updatePvPrice.setNewHkprice(leastMRPSkuGroup.getMrp() * (1 - productVariant.getDiscountPercent()));
 				    updatePvPrice.setTxnDate(new Date());
 				    baseDao.save(updatePvPrice);

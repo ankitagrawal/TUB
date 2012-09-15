@@ -10,6 +10,18 @@
 				text-align: left;
 			}
 		</style>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$(".updatePrice").click(function() {
+					var c = confirm("Do you want to update prices?");
+					if (c == true) {
+						return true;
+					}
+					return false;
+				});
+			});
+		</script>
 	</s:layout-component>
 	<s:layout-component name="heading">Update Price of Variants List</s:layout-component>
 	<s:layout-component name="content">
@@ -59,9 +71,12 @@
 								${product.primaryCategory}
 						</td>
 						<td valign="top">
-								${product.id} - ${product.name}
+								<a href="${pageContext.request.contextPath}/product/${product.slug}/${product.id}" target="_blank">${product.id}</a> - ${product.name}
 							<br/>
-								${variant.id} -
+								<s:link beanclass="com.hk.web.action.admin.sku.SearchSkuBatchesAction" event="showBatches" target="_blank">
+									<s:param name="upc" value="${variant.id}"/>
+								${variant.id}
+								</s:link> -
 									<c:forEach items="${variant.productOptions}"
 									           var="productOption">
 										<c:if test="${hk:showOptionOnUI(productOption.name)}">
@@ -69,15 +84,15 @@
 										</c:if>
 									</c:forEach>
 						</td>
-						<td>${variant.costPrice}</td>
+						<td>${pvToBeUpdated.oldCostPrice}</td>
 						<td>${pvToBeUpdated.newCostPrice}</td>
-						<td>${variant.markedPrice}</td>
+						<td>${pvToBeUpdated.oldMrp}</td>
 						<td>${pvToBeUpdated.newMrp}</td>
 						<td><fmt:formatDate value="${pvToBeUpdated.txnDate}" pattern="dd/MM/yyyy HH:mm"/></td>
 						<td>
 								${pvToBeUpdated.updated}
 							<c:if test="${! pvToBeUpdated.updated}">
-								<s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction"
+								<s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction" class="updatePrice"
 								        event="update" style="background-color:green;color:white;padding:2px;">
 									Update
 									<s:param name="updatePvPrice" value="${pvToBeUpdated.id}"/>
