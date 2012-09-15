@@ -104,8 +104,12 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     private void updateExtraProperties(Product pr, SolrProduct solrProduct){
         for (ProductVariant pv : pr.getProductVariants()){
-            for (ProductOption po : pv.getProductOptions()){
-                solrProduct.getVariantNames().add(pr.getName() + " " + po.getValue());
+            if (pv.getProductOptions() != null){
+                for (ProductOption po : pv.getProductOptions()){
+                    if (po.getValue() != null){
+                        solrProduct.getVariantNames().add(pr.getName() + " " + po.getValue());
+                    }
+                }
             }
         }
     }
