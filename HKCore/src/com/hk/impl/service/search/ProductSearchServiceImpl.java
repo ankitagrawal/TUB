@@ -384,6 +384,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         qf += SolrSchemaConstants.seoDescription + "^0.5 ";*/
 
         qf += SolrSchemaConstants.name + "^2.0 ";
+        qf += SolrSchemaConstants.variantName + "^1.9 ";
         qf += SolrSchemaConstants.brand + "^1.8 ";
         qf += SolrSchemaConstants.category + "^1.6 ";
         qf += SolrSchemaConstants.metaKeywords + "^1.4 ";
@@ -413,12 +414,12 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     private void indexProduct(SolrProduct product){
         try{
-            //solr.addBean(product);
-            SolrInputDocument solrDocument = solr.getBinder().toSolrInputDocument(product);
+            solr.addBean(product);
+            /*SolrInputDocument solrDocument = solr.getBinder().toSolrInputDocument(product);
             UpdateRequest req = new UpdateRequest();
             req.add(solrDocument);
             req.setCommitWithin(10000);
-            req.process(solr);
+            req.process(solr);*/
             //solr.commit(false, false);
         }catch(SolrServerException ex){
             logger.error("Solr error during indexing the product", ex);
