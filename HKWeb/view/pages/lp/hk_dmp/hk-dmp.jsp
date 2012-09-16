@@ -163,9 +163,6 @@
 <div class="main_container" style="background-color:#FFFFFF;">
 
 <div id="managementContainer">
-<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/banner.gif" width="960" height="220"
-     alt="diabetes management program banner"/>
-
 <div class="cl"></div>
 <h2 class="dbm">HealthKart Added Value Packages<span><a
 		href="${pageContext.request.contextPath}/home-devices/blood-pressure/bp-monitor?brand=Omron"></a></span></h2>

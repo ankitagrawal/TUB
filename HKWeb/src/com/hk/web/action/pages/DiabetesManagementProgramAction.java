@@ -6,7 +6,7 @@ import net.sourceforge.stripes.action.UrlBinding;
 
 import com.akube.framework.stripes.action.BaseAction;
 
-@UrlBinding ("/diabetes-management-program")
+@UrlBinding ("/dmp")
 public class DiabetesManagementProgramAction extends BaseAction {
 
 	public Resolution pre() {
