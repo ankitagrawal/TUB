@@ -8934,5 +8934,26 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham" id="09-17-2012">
+        <sql>
+            insert into `affiliate_status` (`id`, `name`) values('10','Unverified');
+            insert into `affiliate_status` (`id`, `name`) values('20','Verified');
+            insert into `affiliate_status` (`id`, `name`) values('30','Rejected');
+            insert into `affiliate_status` (`id`, `name`) values('40','Cancelled');
+            update affiliate a inner join user u on a.user_id = u.id inner join user_has_role ur on u.id = ur.user_id set affiliate_status_id = 10 where ur.role_name = 'HK_AFFILIATE_UNVERIFIED';
+            update affiliate a inner join user u on a.user_id = u.id inner join user_has_role ur on u.id = ur.user_id set affiliate_status_id = 20 where ur.role_name = 'HK_AFFILIATE';
+            update affiliate set offer_id = 1142;
+            update affiliate set valid_days = 365;
+            update affiliate set weekly_coupon_limit= 100;
+            insert into `coupon_type` (`id`, `name`) values('10','REFERRAL');
+            insert into `coupon_type` (`id`, `name`) values('20','AFFILIATE');
+            insert into `coupon_type` (`id`, `name`) values('30','OFFER');
+            insert into `affiliate_txn_type` (`id`, `name`) values('5','Pending');
+            insert into `affiliate_txn_type` (`id`, `name`) values('13','Payment Due');
+            insert into `affiliate_txn_type` (`id`, `name`) values('18','Paid');
+            update coupon set coupon_type_id = 20 where offer_id = 1142;
+            update coupon set coupon_type_id = 10 where offer_id != 1142 and referrer_user_id is not null;
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>
