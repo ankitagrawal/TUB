@@ -17,9 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,6 +42,7 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 		ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
 		Iterator<HKRow> rowIterator = parser.parse();
 		int rowCount = 1;
+		List<String> gatewayOrderIdListInExcel = new ArrayList<String>();
 		try {
 			while (rowIterator.hasNext()) {
 				HKRow row = rowIterator.next();
@@ -53,30 +52,55 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 				if (!reconciled.equalsIgnoreCase("N") && !reconciled.equalsIgnoreCase("Y")) {
 					throw new Exception("Reconciliation status should be 'Y' or 'N' only. ");
 				}
-				ShippingOrder shippingOrder = getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
-				if (shippingOrder == null) {
-					throw new Exception("Gateway order Id does not exist");
+				if(amount == null) {
+					throw new Exception("Invalid amount");
 				}
-
-				if (amount == null || amount.doubleValue() != shippingOrder.getAmount().doubleValue()) {
-					throw new Exception("Reconciliation Amount does not match with the actual shipping order amount");
-				}
-
-				OrderPaymentReconciliation orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationBySO(shippingOrder);
-				if (orderPaymentReconciliation == null) {
-					orderPaymentReconciliation = createOrderPaymentReconciliation(null, shippingOrder, paymentMode, amount, reconciled);
-				} else {
-					orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
-					orderPaymentReconciliation.setReconciledAmount(amount);
-				}
-
-				orderPaymentReconciliationList.add(orderPaymentReconciliation);
-
-
+				gatewayOrderIdListInExcel.add(gatewayOrderId);
 				rowCount++;
-				logger.debug("Doing sanity check for gateway order: " + gatewayOrderId);
+			}
+			rowCount = 0;
+			List<ShippingOrder> shippingOrderListInDB = getShippingOrderDao().getShippingOrderByGatewayOrderList(gatewayOrderIdListInExcel);
+			List<String> gatewayOrderIdListInDB = new ArrayList<String>();
+			Map<String, ShippingOrder> shippingOrderGatewayOrderMap = new HashMap<String, ShippingOrder>();
+			for (ShippingOrder shippingOrder : shippingOrderListInDB) {
+				gatewayOrderIdListInDB.add(shippingOrder.getGatewayOrderId());
+				shippingOrderGatewayOrderMap.put(shippingOrder.getGatewayOrderId(), shippingOrder);
 
 			}
+			gatewayOrderIdListInExcel.removeAll(gatewayOrderIdListInDB);
+
+			if(gatewayOrderIdListInExcel.size() > 0) {
+				String invalidGatewayOrderId = "";
+				for(String gatewayOrderId : gatewayOrderIdListInExcel) {
+					invalidGatewayOrderId += "     " + gatewayOrderId;
+
+				}
+				throw new Exception("Following gateway order ids are invalid : " + invalidGatewayOrderId);
+
+			} else {
+				rowIterator = parser.parse();
+				while (rowIterator.hasNext()) {
+					HKRow row = rowIterator.next();
+					String gatewayOrderId = row.getColumnValue(XslConstants.GATEWAY_ORDER_ID);
+					String reconciled = row.getColumnValue(XslConstants.RECONCILED);
+					Double amount = XslUtil.getDouble(row.getColumnValue(XslConstants.AMOUNT));
+					if(shippingOrderGatewayOrderMap.containsKey(gatewayOrderId)) {
+						ShippingOrder shippingOrder = shippingOrderGatewayOrderMap.get(gatewayOrderId);
+						OrderPaymentReconciliation orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationBySO(shippingOrder);
+						if (orderPaymentReconciliation == null) {
+							orderPaymentReconciliation = createOrderPaymentReconciliation(null, shippingOrder, paymentMode, amount, reconciled);
+						} else {
+							orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
+							orderPaymentReconciliation.setReconciledAmount(amount);
+						}
+
+						orderPaymentReconciliationList.add(orderPaymentReconciliation);
+						logger.debug("preparing orderPaymentReconciliation object for row : " + rowCount);
+					}
+					rowCount++;
+				}
+			}
+
 		} catch (Exception e) {
 			logger.error("Exception @ Row:" + (rowCount + 1) + e.getMessage());
 			throw new Exception("Exception @ Row:" + (rowCount + 1) + ": " + e.getMessage(), e);

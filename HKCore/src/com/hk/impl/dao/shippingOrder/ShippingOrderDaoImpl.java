@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
@@ -85,6 +86,12 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
                 + " and shipment.shipDate between :startDate and :endDate " + " and shipment.deliveryDate is null ";
         return getSession().createQuery(query).setParameter("courierId", courierId).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
     }
+
+	public List<ShippingOrder> getShippingOrderByGatewayOrderList(List<String> gatewayOrderIdList) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(ShippingOrder.class);
+		criteria.add(Restrictions.in("gatewayOrderId", gatewayOrderIdList));
+		return findByCriteria(criteria);
+	}
 
 
 }
