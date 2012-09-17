@@ -20,10 +20,6 @@
 <s:layout-component name="htmlHead">
 	<meta name="keywords" content="${ca.seoData.metaKeyword}"/>
 	<meta name="description" content="${ca.seoData.metaDescription}"/>
-	<%
-		boolean isSecure = pageContext.getRequest().isSecure();
-		pageContext.setAttribute("isSecure", isSecure);
-	%>
 
 	<script type="text/javascript" src="${pageContext.request.contextPath}/otherScripts/jquery.session.js"></script>
 	<script type="text/javascript">
@@ -39,46 +35,6 @@
 			} else {
 				$('.per_page').first().addClass('active');
 			}
-
-			$('.compare_checkbox').click(function() {
-				var selected = $('.compare_checkbox').filter(':checked').length;
-				if (selected > 4) {
-					alert("You can't select more than 4 products at a time.");
-					return false;
-				}
-			});
-			$('.checkSubmit').click(function() {
-				var selected = $('.compare_checkbox').filter(':checked').length;
-				if (selected < 2) {
-					alert("Select at least 2 products for comparison.");
-					return false;
-				}
-			});
-
-			$('.sortBy').change(function() {
-				$('#sorter').submit();
-			});
-
-			var sortOrderDeterminer = 0;
-			$('.sortBy').click(function() {
-				sortOrderDeterminer++;
-				function DescIfEven(sortOrderDeterminer) {
-					return (sortOrderDeterminer % 2) ? "desc" : "asc";
-				}
-			});
-
-		});
-		$(document).ready(function() {
-			$('#selectCityWindow').jqm();
-			$('#selectCityWindow').jqmShow();
-
-			$('.jqmOverlay').click(function() {
-				//        alert("Cliking w/o selecting" + $('#topLevelCategory').val());
-				if ($('#topLevelCategory').val() == 'services') {
-					//          alert("Inside");
-					$.getJSON($('#setDefaultZoneLink').attr('href'));
-				}
-			});
 		});
 
 	</script>

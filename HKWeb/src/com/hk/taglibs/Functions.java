@@ -589,10 +589,10 @@ public class Functions {
         return hubService.getHubForUser(user);
     }
 
-	public static boolean renderNewCatalogUI(String child, String secondChild) {
-		List<String> categoriesForNewCatalogUI = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
-		boolean renderNewCatalogUI = (Functions.collectionContains(categoriesForNewCatalogUI, child) || Functions.collectionContains(categoriesForNewCatalogUI, secondChild));
-		return renderNewCatalogUI;
+	public static boolean renderNewCatalogFilter(String child, String secondChild) {
+		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
+		boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter, secondChild));
+		return renderNewCatalogFilter;
 	}
 
 	public static boolean showOptionOnUI(String optionType) {
