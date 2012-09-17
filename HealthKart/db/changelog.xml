@@ -8791,4 +8791,26 @@
         <addForeignKeyConstraint baseColumnNames="updated_by" baseTableName="update_pv_price" constraintName="fk_update_pv_price_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
 	
+    <changeSet author="Ajeet (generated)" id="1347716040167-1">
+        <addColumn tableName="update_pv_price">
+            <column name="old_costprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Ajeet (generated)" id="1347716040167-2">
+        <addColumn tableName="update_pv_price">
+            <column name="old_mrp" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1347716040167-3">
+        <addColumn tableName="update_pv_price">
+            <column name="old_hkprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
