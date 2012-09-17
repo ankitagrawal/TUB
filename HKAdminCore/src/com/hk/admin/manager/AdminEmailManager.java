@@ -384,6 +384,7 @@ public class AdminEmailManager {
       TemplateHashModel hkImageUtils = null;
       try{
           BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+          //wrapper.getOuterIdentity().wrap("com.hk.domain.catalog.product.Product");
           TemplateHashModel staticModels = wrapper.getStaticModels();
           hkImageUtils = (TemplateHashModel) staticModels.get("com.hk.util.HKImageUtils");
       }catch (TemplateModelException ex){
@@ -446,96 +447,111 @@ public class AdminEmailManager {
       return true;
   }
 
-  private HashMap getExtraMapEntriesForMailMerge(HashMap excelMap) {
-      List<User> users = userService.findByEmail(excelMap.get(EmailMapKeyConstants.emailId).toString());
-      if (users != null && users.size() > 0) {
-          excelMap.put(EmailMapKeyConstants.user, users.get(0));
-      } else {
-          return null;
-      }
+    private HashMap getExtraMapEntriesForMailMerge(HashMap excelMap) {
+        List<User> users = userService.findByEmail(excelMap.get(EmailMapKeyConstants.emailId).toString());
+        if (users != null && users.size() > 0) {
+            excelMap.put(EmailMapKeyConstants.user, users.get(0));
+        } else {
+            return null;
+        }
 
-      if (excelMap.containsKey(EmailMapKeyConstants.couponCode)) {
-          Coupon coupon = couponService.findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
-          excelMap.put(EmailMapKeyConstants.coupon, coupon);
-      }
+        if (excelMap.containsKey(EmailMapKeyConstants.couponCode)) {
+            Coupon coupon = couponService.findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
+            excelMap.put(EmailMapKeyConstants.coupon, coupon);
+        }
+        Product product = null;
+        if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
+            product = getProductService().getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
+            if (product != null) {
+                Long productMainImageId = product.getMainImageId();
+                excelMap.put(EmailMapKeyConstants.product, product);
+                //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+                excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
 
-      if (excelMap.containsKey(EmailMapKeyConstants.similarProductId)) {
-          String[] similarProductIds = excelMap.get(EmailMapKeyConstants.similarProductId).toString().split(",");
-          List<Product> similarProducts = new ArrayList<Product>();
-          for (String productId : similarProductIds){
-              Product product = getProductService().getProductById(productId);
-              if (product != null){
-                  product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
-                  similarProducts.add(product);
-              }
-          }
-          excelMap.put(EmailMapKeyConstants.similarProductId, similarProducts);
-      }
+                if (productMainImageId != null) {
+                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
+                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
+                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
+                } else {
 
-      if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
-          Product product = getProductService().getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
-          if (product != null) {
-              Long productMainImageId = product.getMainImageId();
-              excelMap.put(EmailMapKeyConstants.product, product);
-              //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-              excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
+                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+                }
+            } else {
+                excelMap.put(EmailMapKeyConstants.product, null);
+                excelMap.put(EmailMapKeyConstants.productUrl, "");
+                excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+                excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+            }
+        }
 
-              if (productMainImageId != null) {
-                  excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
-                  excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
-                  excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
-              } else {
-
-                  excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-                  excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-                  excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
-              }
-          } else {
-              excelMap.put(EmailMapKeyConstants.product, null);
-              excelMap.put(EmailMapKeyConstants.productUrl, "");
-              excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-              excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-              excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
-          }
-      }
-
-      if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)) {
-          ProductVariant productVariant = productVariantService.getVariantById(excelMap.get(EmailMapKeyConstants.productVariantId).toString());
-          if (productVariant != null) {
-              excelMap.put(EmailMapKeyConstants.productVariant, productVariant);
+        if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)) {
+            ProductVariant productVariant = productVariantService.getVariantById(excelMap.get(EmailMapKeyConstants.productVariantId).toString());
+            if (productVariant != null) {
+                excelMap.put(EmailMapKeyConstants.productVariant, productVariant);
 
 
-              if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
-                  Product product = productVariant.getProduct();
-                  Long productMainImageId = product.getMainImageId();
-                  excelMap.put(EmailMapKeyConstants.product, product);
-                  //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-                  excelMap.put(EmailMapKeyConstants.productUrl,  convertToWww(getProductService().getProductUrl(product,false)));
+                if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
+                    product = productVariant.getProduct();
+                    Long productMainImageId = product.getMainImageId();
+                    excelMap.put(EmailMapKeyConstants.product, product);
+                    //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+                    excelMap.put(EmailMapKeyConstants.productUrl,  convertToWww(getProductService().getProductUrl(product,false)));
 
-                  if (productMainImageId != null) {
-                      excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
-                      excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
-                      excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
-                  } else {
-                      excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-                      excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-                      excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
-                  }
-              }
-          } else {
-              excelMap.put(EmailMapKeyConstants.productVariant, null);
-              if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
-                  excelMap.put(EmailMapKeyConstants.product, null);
-                  excelMap.put(EmailMapKeyConstants.productUrl, "");
-                  excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-                  excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-                  excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+                    if (productMainImageId != null) {
+                        excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
+                        excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
+                        excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
+                    } else {
+                        excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                        excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+                        excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+                    }
+                }
+            } else {
+                excelMap.put(EmailMapKeyConstants.productVariant, null);
+                if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
+                    excelMap.put(EmailMapKeyConstants.product, null);
+                    excelMap.put(EmailMapKeyConstants.productUrl, "");
+                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+                }
+            }
 
-              }
-          }
-      }
-      return excelMap;
-  }
+            if (excelMap.containsKey(EmailMapKeyConstants.similarProductId)) {
+                Object value = excelMap.get(EmailMapKeyConstants.similarProductId);
+                List<Product> similarProducts = new ArrayList<Product>();
+                if ( value != null &&
+                        StringUtils.isNotBlank(value.toString())){
+                    if (value.toString().equals("auto")){
+                        List<SimilarProduct> similarProductList = product.getSimilarProducts();
+                        for (SimilarProduct similarProduct : similarProductList){
+                            product = similarProduct.getProduct();
+                            product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
+                            similarProducts.add(product);
+                        };
+                    } else{
+                        String[] similarProductIds =value.toString().split(",");
+
+                        for (String productId : similarProductIds){
+                            product = getProductService().getProductById(productId);
+                            if (product != null){
+                                product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
+                                similarProducts.add(product);
+                            }
+                        }
+                    }
+
+                }
+
+                excelMap.put(EmailMapKeyConstants.similarProductId, similarProducts);
+            }
+        }
+        return excelMap;
+    }
 
 
   public boolean sendNotifyUserMailsForPVInStock(List<NotifyMe> notifyMeList, User notifiedByUser) {
