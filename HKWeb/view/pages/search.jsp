@@ -108,14 +108,14 @@
         <div id="prod_grid">
           <c:forEach items="${searchAction.productList}" var="product">
             <div class="product_box">
-              <s:layout-render name="/layouts/embed/_productThumbSearchResults.jsp" product="${product}"></s:layout-render>
+              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${product}"></s:layout-render>
             </div>
           </c:forEach>
         </div>
         <div id="prod_list" style="display:none;">
           <c:forEach items="${searchAction.productList}" var="product">
             <div class="product_list_box" id="prod_list">
-              <s:layout-render name="/layouts/embed/_productListSearchResults.jsp" productId="${product.id}"></s:layout-render>
+              <s:layout-render name="/layouts/embed/_productListG.jsp" productId="${product.id}"></s:layout-render>
             </div>
           </c:forEach>
         </div>

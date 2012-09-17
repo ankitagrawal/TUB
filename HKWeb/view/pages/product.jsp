@@ -555,7 +555,7 @@
 				Special Offers on ${product.name}
 			</h4>
 			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
-				<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
+				<s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="${relatedCombo.id}"/>
 			</c:forEach>
 
 			<div class="floatfix"></div>
