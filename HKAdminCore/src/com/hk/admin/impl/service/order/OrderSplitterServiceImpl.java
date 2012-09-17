@@ -5,6 +5,7 @@ import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.helper.OrderSplitterHelper;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.Keys;
@@ -21,6 +22,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.OrderSplitException;
+import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.pact.dao.courier.PincodeDao;
@@ -31,6 +33,7 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pojo.DummyOrder;
+import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.RedirectResolution;
 
 /**
  * Created with IntelliJ IDEA.
@@ -86,6 +92,9 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
     @Autowired
     private OrderLoggingService orderLoggingService;
+
+     @Autowired
+    private AdminShippingOrderService adminShippingOrderService;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;
@@ -489,6 +498,18 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
             }
         }
         return warehouseLineItemSetMap;
+    }
+
+
+    public void createSOForService(Set<CartLineItem> serviceCartLineItems) {
+        for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
+            try {
+                adminShippingOrderService.createSOForService(serviceCartLineItem);
+            } catch (NoSkuException e) {
+                logger.error("No sku found", e);
+
+            }
+        }
     }
 
 }

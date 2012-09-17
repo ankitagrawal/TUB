@@ -38,4 +38,6 @@ public interface OrderSplitterService {
 
     public Map<Warehouse,Set<CartLineItem>> splitBOExcludingShippingTaxConsideration(Order order);
 
+    public void createSOForService (Set<CartLineItem> serviceCartLineItems);
+
 }

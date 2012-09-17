@@ -343,6 +343,8 @@ public class OrderServiceImpl implements OrderService {
 //        List<Set<CartLineItem>> listOfCartLineItemSet = getMatchCartLineItemOrder(order);
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());         
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+        Set<CartLineItem> serviceCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();
+        productCartLineItems.removeAll(serviceCartLineItems);
         Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
         productCartLineItems.removeAll(groundShippedCartLineItemSet);
 
@@ -353,13 +355,13 @@ public class OrderServiceImpl implements OrderService {
         if (productCartLineItems != null && productCartLineItems.size() > 0) {
             listOfCartLineItemSet.add(productCartLineItems);
         }
-        
+
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
         for (Set<CartLineItem> cartlineitems : listOfCartLineItemSet) {
             if (cartlineitems != null && cartlineitems.size() > 0) {
 
-                List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, cartlineitems);
+               List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, cartlineitems);
                 if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                     long startTime = (new Date()).getTime();
 
@@ -367,7 +369,7 @@ public class OrderServiceImpl implements OrderService {
                     for (DummyOrder dummyOrder : dummyOrders) {
                         if (dummyOrder.getCartLineItemList().size() > 0) {
                             Warehouse warehouse = dummyOrder.getWarehouse();
-                            ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
+                            ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);                           
                             for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
                                 Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
                                 LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
@@ -394,6 +396,11 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }
+
+        if (serviceCartLineItems !=  null  && serviceCartLineItems.size() > 0) {
+             orderSplitterService.createSOForService(serviceCartLineItems) ;                         
+          }
+
         return shippingOrders;
 
     }
