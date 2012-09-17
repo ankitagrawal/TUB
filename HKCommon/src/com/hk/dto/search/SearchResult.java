@@ -3,6 +3,7 @@ package com.hk.dto.search;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.search.SolrProduct;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class SearchResult {
-    private List<Product> solrProducts;
+    private List<Product> solrProducts = new ArrayList<Product>();
     private int resultSize;
     private String searchSuggestions = "";
     private String primarySuggestion;
