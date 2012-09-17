@@ -74,7 +74,7 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 
 
 				rowCount++;
-				logger.debug("OrderPaymentReconciliation saved for Shipping Order: " + shippingOrder);
+				logger.debug("Doing sanity check for gateway order: " + gatewayOrderId);
 
 			}
 		} catch (Exception e) {
@@ -104,8 +104,8 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 					throw new Exception("Gateway order Id does not exist");
 				}
 
-				if (amount == null || amount.doubleValue() != order.getAmount().doubleValue()) {
-					throw new Exception("Reconciliation Amount does not match with the actual shipping order amount");
+				if (amount == null || (order.getAmount() != null && amount.doubleValue() != order.getAmount().doubleValue())) {
+					throw new Exception("Reconciliation Amount does not match with the actual base order amount");
 				}
 
 				OrderPaymentReconciliation orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationByBaseOrder(order);
@@ -132,7 +132,7 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 				}
 
 				rowCount++;
-				logger.debug("OrderPaymentReconciliation saved for Base Order: " + order);
+				logger.debug("Doing sanity check for gateway order: " + gatewayOrderId);
 
 			}
 		} catch (Exception e) {
