@@ -93,6 +93,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderLoggingService orderLoggingService;
     @Autowired
     private OrderSplitterService orderSplitterService;
+    @Autowired
+    private AdminShippingOrderService adminShippingOrderService;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
@@ -208,11 +210,12 @@ public class OrderServiceImpl implements OrderService {
     public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-            if (order.getContainsServices()) {
-                String comments = "Order has services,abort system split and do a manual split";
-                getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
-                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " has services. abort system split and do a manual split");
-            } else if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+//            if (order.getContainsServices()) {
+//                String comments = "Order has services,abort system split and do a manual split";
+//                getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+//                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " has services. abort system split and do a manual split");
+//            } else
+            if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                 shippingOrders = splitOrder(order);
             } else {
                 logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
@@ -397,9 +400,9 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        if (serviceCartLineItems !=  null  && serviceCartLineItems.size() > 0) {
-             orderSplitterService.createSOForService(serviceCartLineItems) ;                         
-          }
+        if (serviceCartLineItems != null && serviceCartLineItems.size() > 0) {
+           orderSplitterService.createSOForService(serviceCartLineItems) ;
+        }
 
         return shippingOrders;
 
