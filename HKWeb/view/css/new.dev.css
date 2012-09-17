@@ -242,8 +242,7 @@ img.prod320 {
 .img150 img {
     display: block;
     margin: 0 auto;
-	max-height:150px;
-	max-width:150px;
+	max
 }
 
 /* line 172, ../sass/_base.scss */
@@ -1790,7 +1789,7 @@ h3 a.prod_link {
     margin-top: -250px;
     position: absolute;
     left: 0px; right: 0px;
-    bottom: 0px;s
+    bottom: 0px;
 }
 
 .footer-bottom {

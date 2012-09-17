@@ -32,17 +32,16 @@
           <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
         </s:link>
       </div>
-      <div style='float: left; margin-left: 180px;'
-           title='Call us on our customer care number for help regarding anything'>
-        <span style="font-size: .8em;">Customer Care: 0124-4551616 <span style="color: gray;">(9am - 9pm, 7 days a week)</span></span>
+      <div style='float: left; margin-left: 175px;'>
+        <%--<span style="font-size: .8em;" title='Call us on our customer care number for help regarding anything'>Customer Care: 0124-4551616 <span style="color: gray;">(9am - 9pm, 7 days a week)</span></span>--%>
 
-        <div style="cursor:default; margin-top: 2px; width: 313px;">
+        <div style="cursor:default; margin-top: 5px; width: 420px;">
           <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false"
                   renderSourcePage="false" autocomplete="off" style="position: relative;">
             <s:text name="query" id="searchbox" class="input_tip" title='search our catalog'
-                    style="height: 14px; font-size: .8em;" value="${param['query']}" placeholder='search our catalog'/>
+                    style="height: 25px; width:420px; font-size: 18px; font-weight:normal; color: #999999;" value="${param['query']}" placeholder='search our catalog'/>
 
-            <s:image name="search" src="/images/icons/search2.png" style="position: absolute; right: 3px; top: 1px;"/>
+            <s:image name="search" src="/images/icons/search2.png" style="position: absolute; right: 1px; top: 5px; height:20px;width:20px;"/>
           </s:form>
         </div>
           <%--<div class='small'>--%>
@@ -77,13 +76,13 @@
                   </shiro:hasAnyRoles>
                 </strong>
             </span>
-          <c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">
+          <%--<c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">
             <s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction"
                     title="RewardPointTxnStatement"><span class="orange">(<fmt:formatNumber
                 value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}"
                 pattern="<%=FormatUtils.currencyFormatPattern%>"/>)</span>
             </s:link>
-          </c:if>
+          </c:if>--%>
 
           <div class='links'>
             <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
@@ -131,8 +130,7 @@
         <div class='right'>
           <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
             <div class='cartButton' title='view your shopping cart'>
-
-              <c:choose>
+	          <c:choose>
                 <c:when test="${cartAction.itemsInCart > 1}">
                   <img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
                                     <span class='num' id="productsInCart">
