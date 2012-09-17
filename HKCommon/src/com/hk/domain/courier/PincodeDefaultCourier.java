@@ -40,10 +40,10 @@ public class PincodeDefaultCourier implements java.io.Serializable {
     @JoinColumn(name = "pincode_id", nullable = false)
     private Pincode   pincode;
 
-    @Column(name = "cod")
+    @Column(name = "cod", nullable = false)
     private boolean              cod;
 
-     @Column(name = "ground_shipping")
+     @Column(name = "ground_shipping", nullable = false)
     private boolean              groundShipping;
 
     @Column(name = "estimated_shipping_cost")
