@@ -35,7 +35,7 @@
 		}                                                                                    
 	</style>
 		<c:if test="${!product.googleAdDisallowed && !product.deleted}">
-			<div class='grid_4 product' style="width:200px;height:260px;">
+			<div class='grid_4 product' style="width:190px;height:265px;">
 				<div class='img150 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;margin-top:10px;">
 					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
 						<c:choose>
@@ -53,7 +53,7 @@
 					</s:link>
 				</div>
 				<div>
-					<span style="height:20px;max-width:200px;">
+					<span style="height:20px;max-width:190px;">
 						<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
 							${product.name}
 						</s:link>
