@@ -402,14 +402,6 @@ public class XslParser {
             productVariant.setMainImageId(getLong(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap)));
           }
         }
-        // productVariant.setQty(getLong(getCellValue(INVENTORY, rowMap, headerMap)));
-        // TODO: #warehouse fix this
-        // productVariant.setCutOffInventory(getLong(getCellValue(CUTOFF_INVENTORY, rowMap, headerMap)));
-
-          ProductVariant productVariantInDB = getProductVariantService().getVariantById(variantId);
-          if ( productVariantInDB !=null ) {
-             productVariant.setFreeProductVariant(productVariantInDB.getFreeProductVariant()); 
-          }
 
           productVariants.add(productVariant);
 

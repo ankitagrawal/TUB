@@ -153,11 +153,12 @@ public class ProductCatalogServiceImpl {
 				productVariant.setProductOptions(productOptionsDb);
 
 				productVariant.setProduct(product);
-				if ( productVariantInDB !=null ) {
+				if (productVariantInDB != null) {
 					productVariant.setCreatedDate(productVariantInDB.getCreatedDate());
-				}else{
-          productVariant.setCreatedDate(new Date());
-        }
+					productVariant.setFreeProductVariant(productVariantInDB.getFreeProductVariant());
+				} else {
+					productVariant.setCreatedDate(new Date());
+				}
 				logger.debug("saving product variant : " + productVariant.getId() + "," + productVariant.getHkPrice(null));
 				logger.debug("inserting product variant " + productVariant.getId() + " - " + productVariant.getProduct().getName());
 
