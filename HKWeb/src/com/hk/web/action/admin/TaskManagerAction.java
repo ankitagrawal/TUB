@@ -1,25 +1,15 @@
 package com.hk.web.action.admin;
 
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.task.TaskService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.task.TaskService;
-import com.hk.admin.util.finance.busy.BusyPopulateItemData;
-import com.hk.admin.util.finance.busy.BusyPopulateSupplierData;
-import com.hk.admin.util.finance.busy.BusyTableTransactionGenerator;
-import com.hk.admin.util.finance.busy.BusyPopulateSalesData;
-
-import java.util.Date;
 
 
 /*@Secure(hasAnyPermissions = { PermissionConstants.RUN_ANT_BUILDS })*/
@@ -47,7 +37,7 @@ public class TaskManagerAction extends BaseAction {
           addRedirectAlertMessage(new SimpleMessage("DB Master ran successfully"));
         }
         else{
-          addRedirectAlertMessage(new SimpleMessage("DB Master failed"));
+          addRedirectAlertMessage(new SimpleMessage("DB Master failed : please check logs for details"));
         }
         return new ForwardResolution("/pages/admin/taskManager.jsp");
   }

@@ -245,7 +245,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
 			    //if the order is a subscription order update subscription status
 			    subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
-			    getAdminEmailManager().sendOrderDeliveredEmail(order);
+			    //getAdminEmailManager().sendOrderDeliveredEmail(order);
 		    }
 	    }
 	    return order;

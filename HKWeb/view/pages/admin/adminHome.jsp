@@ -59,7 +59,7 @@
 				beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
 	</c:if>
 	<h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
-	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+	<shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction"> Ant Builds </s:link></h3>
 	</shiro:hasRole>
     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
@@ -277,6 +277,11 @@
 	<h3>
 		<s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction"
 		        event="listOutOfStock">Out of Stock List</s:link></h3>
+
+	<h3>
+		<s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction">Update Variant Price
+		<br/><span class="sml gry" style="color:red">(List of Variants - MRP Mismatch)</span>
+		</s:link></h3>
 
 	<shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
 		<h3>

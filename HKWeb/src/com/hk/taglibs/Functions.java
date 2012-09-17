@@ -208,16 +208,32 @@ public class Functions {
         return s1.contains(s2);
     }
 
+    /**
+     * checks if c1 contains all elements of c2
+     * @param c1
+     * @param c2
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsCollection(Collection c1, Collection c2) {
         if (c1 == null || c2 == null)
             return false;
-        for (Object o : c2) {
-            if (collectionContains(c1, o)) {
-                return collectionContains(c1, o);
+        boolean collectionContainsCollection = true;
+        
+        for(Object o : c2 ){
+            if(!c1.contains(o)){
+               collectionContainsCollection = false;
+               break;
             }
         }
-        return false;
+        
+        /*for (Object o : c2) {
+            if (collectionContains(c1, o) && collectionContains(c2, o)) {
+                return collectionContains(c, o);
+            }
+        }*/
+        
+        return collectionContainsCollection;
     }
 
     public static Long netAvailableUnbookedInventory(Object o) {
@@ -489,7 +505,7 @@ public class Functions {
     public static Map<String, List<String>> getRecommendedProducts(Object o) {
         Product product = (Product) o;
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-        return productService.getRelatedMoogaProducts(product);
+        return productService.getRecommendedProducts(product);
     }
 
     public static String getDispatchDaysForOrder(Order order) {
@@ -572,5 +588,17 @@ public class Functions {
         HubService hubService = ServiceLocatorFactory.getService(HubService.class);
         return hubService.getHubForUser(user);
     }
+
+	public static boolean renderNewCatalogUI(String child, String secondChild) {
+		List<String> categoriesForNewCatalogUI = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
+		boolean renderNewCatalogUI = (Functions.collectionContains(categoriesForNewCatalogUI, child) || Functions.collectionContains(categoriesForNewCatalogUI, secondChild));
+		return renderNewCatalogUI;
+	}
+
+	public static boolean showOptionOnUI(String optionType) {
+		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY");
+		boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
+		return showOptionOnUI;
+	}
 
 }
