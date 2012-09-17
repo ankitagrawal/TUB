@@ -99,37 +99,14 @@ public class ProductCatalogServiceImpl {
 					logger.debug("Manufacturer: " + manufacturerDb);
 				}
 			}
-      //commented supplier code on 3rd Dec 2011
-			/*Supplier supplier = product.getSupplier();
-
-			product.setSupplier(null);
-
-						// insert manufacturer if not present already.. else pick up the existing one. find by name.
-						logger.debug(product.toString());
-						if (supplier != null) {
-							Supplier supplierDb = supplierDaoProvider.get().findByName(supplier.getName());
-							if (supplierDb == null) {
-								supplier = supplierDaoProvider.get().save(supplier);
-							} else {
-								if (StringUtils.isNotBlank(supplier.getState()) && !StringUtils.equals(supplier.getState(), supplierDb.getState())) {
-									supplierDb.setState(supplier.getState());
-								}
-								supplier = supplierDb;
-							}
-							logger.debug("Supplier: " + supplier);
-						}
-
-			product.setSupplier(supplier);*/
-			/*
-						Fix to not let main image id reset to NULL - Ajeet
-						 */
+     
 			try {
 				Product productInDB = getProductService().getProductById(product.getId());
 				if (productInDB != null) {
 					Long mainImageId = productInDB.getMainImageId();
 					logger.debug("mainImageId[" + product.getName() + "]:" + mainImageId);
 					product.setMainImageId(mainImageId);
-          product.setCreateDate(productInDB.getCreateDate());
+                    product.setCreateDate(productInDB.getCreateDate());
 				} else {      //Newly created product
 					product.setCreateDate(new Date());
 				}

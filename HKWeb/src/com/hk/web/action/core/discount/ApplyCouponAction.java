@@ -24,6 +24,8 @@ import com.hk.admin.manager.IHOManager;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.offer.Offer;
+import com.hk.domain.offer.OfferEmailDomain;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.manager.OfferManager;
@@ -116,7 +118,15 @@ public class ApplyCouponAction extends BaseAction {
                 message = new LocalizableMessage("/ApplyCoupon.action.expired.coupon").getMessage(getContext().getLocale());
             } else if (!offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
                 error = error_role;
-                message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
+	            Offer offer = coupon.getOffer();
+	            if (offer.getOfferEmailDomains().size() > 0) {
+		            message = "The offer is valid for the following domains only:";
+		            for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
+			            message += "<br/>" + offerEmailDomain.getEmailDomain();
+		            }
+	            } else {
+		            message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
+	            }
             } else if (user.equals(coupon.getReferrerUser())) {
                 message = new LocalizableMessage("/ApplyCoupon.action.same.user.referrel.coupon").getMessage(getContext().getLocale());
             } else if (coupon.getReferrerUser() != null && user.getReferredBy() != null) {

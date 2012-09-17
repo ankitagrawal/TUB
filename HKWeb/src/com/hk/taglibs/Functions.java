@@ -597,4 +597,10 @@ public class Functions {
 		return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
 	}
 
+	public static boolean showOptionOnUI(String optionType) {
+		List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT");
+		boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
+		return showOptionOnUI;
+	}
+
 }

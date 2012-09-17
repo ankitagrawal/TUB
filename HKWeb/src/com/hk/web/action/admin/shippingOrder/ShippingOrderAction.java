@@ -5,6 +5,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -86,8 +87,8 @@ public class ShippingOrderAction extends BaseAction {
 	public Resolution manualEscalateShippingOrder() {
 		boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
 		String message = "";
-		if (true) {
-		//if (isManualEscalable) {
+		//if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
+		if (isManualEscalable) {
 			message = "shipping order manually escalated";
 			shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
 

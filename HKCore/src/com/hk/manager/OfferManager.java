@@ -19,6 +19,7 @@ import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
 import com.hk.domain.offer.OfferAction;
 import com.hk.domain.offer.OfferTrigger;
+import com.hk.domain.offer.OfferEmailDomain;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.offer.OfferDao;
@@ -46,15 +47,23 @@ public class OfferManager {
     private RoleService   roleService;
 
     public boolean isOfferValidForUser(Offer offer, User user) {
-        if (offer.getRoles().size() == 0) {
-            return true;
-        }
-        for (Role role : user.getRoles()) {
-            if (offer.getRoles().contains(role)) {
-                return true;
-            }
-        }
-        return false;
+	    if (offer.getOfferEmailDomains().size() > 0) {
+		    for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
+			    if(user.getLogin().toLowerCase().endsWith(offerEmailDomain.getEmailDomain().toLowerCase())){
+				    return true;
+			    }
+		    }
+	    } else {
+		    if (offer.getRoles().size() == 0) {
+			    return true;
+		    }
+		    for (Role role : user.getRoles()) {
+			    if (offer.getRoles().contains(role)) {
+				    return true;
+			    }
+		    }
+	    }
+	    return false;
     }
 
     @Transactional

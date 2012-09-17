@@ -27,7 +27,7 @@
     <div class='prod_table'>
       <div class='row header'>
         <div class='prod' style="text-align: center;">
-          Variant
+          
         </div>
         <div class='desc'>
           Description
@@ -49,7 +49,7 @@
               <div class='row prods'>
                 <div class='prod' style="text-align: center;">
                   <c:choose>
-                      <c:when test="${variant.mainImageId != null}">
+                      <c:when test="${variant.mainImageId != null || product.mainImageId != null}">
                           <c:choose>
                               <c:when test="${variant.mainProductImageId != null}">
                                   <a href='javascript:void(0);'
@@ -61,11 +61,12 @@
                                        title="${product.name}"  style="height:75px;width:75px;">
                               </c:otherwise>
                           </c:choose>
-                          <br/>
-                          <br/>
-                          <c:if test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
-                              ${variant.variantName}
-                          </c:if>
+
+	                      <c:if test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
+		                      <br/>
+		                      <br/>
+		                      ${variant.variantName}
+	                      </c:if>
                       </c:when>
                       <c:otherwise>
                           <c:choose>
@@ -76,19 +77,23 @@
                               </c:when>
                               <c:otherwise>
                                   <c:forEach items="${variant.productOptions}" var="variantOption">
-                                      <span style="font-size: 12px; line-height:18px;">${variantOption.value}</span>
+                                      <c:if test="${hk:showOptionOnUI(variantOption.name)}">
+                                          ${variantOption.value}
                                       <br/>
+	                                  </c:if>
                                   </c:forEach>
                               </c:otherwise>
                           </c:choose>
                       </c:otherwise>
                   </c:choose>
-                    <br/><br/>
                 </div>
                 <div class='desc'>
-                    <c:forEach items="${variant.productOptions}" var="variantOption">
-                        <span style="font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>
+                  <c:forEach items="${variant.productOptions}" var="variantOption">
+	                  <c:if test="${hk:showOptionOnUI(variantOption.name)}">
+						  <span style="font-size: 12px; line-height:18px;"> ${variantOption.name}:</span><span>${variantOption.value}</span><br/>
+					  </c:if>
                     </c:forEach>
+	                <span>&nbsp;</span>
                 </div>
                 <c:if test="${variant.discountPercent > 0}">
                     <div class='prices'>
@@ -143,7 +148,7 @@
                           <%--<br/>--%>
                         <%--</c:when>--%>
                         <%--<c:otherwise>--%>
-                          <span class="outOfStock">Sold Out</span><br/>
+                          <div><span class="outOfStock">Sold Out</span></div>
 
                           <div align="center">
                             <s:link beanclass="com.hk.web.action.core.user.NotifyMeAction" class="notifyMe button_orange"><b>Notify
