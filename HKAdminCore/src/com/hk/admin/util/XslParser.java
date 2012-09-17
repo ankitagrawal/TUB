@@ -405,7 +405,13 @@ public class XslParser {
         // productVariant.setQty(getLong(getCellValue(INVENTORY, rowMap, headerMap)));
         // TODO: #warehouse fix this
         // productVariant.setCutOffInventory(getLong(getCellValue(CUTOFF_INVENTORY, rowMap, headerMap)));
-        productVariants.add(productVariant);
+
+          ProductVariant productVariantInDB = getProductVariantService().getVariantById(variantId);
+          if ( productVariantInDB !=null ) {
+             productVariant.setFreeProductVariant(productVariantInDB.getFreeProductVariant()); 
+          }
+
+          productVariants.add(productVariant);
 
         logger.debug("read row " + rowCount);
         rowCount++;
