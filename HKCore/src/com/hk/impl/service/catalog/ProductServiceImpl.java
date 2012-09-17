@@ -454,22 +454,24 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
-        if (product.getMinimumMRPProducVariant().getMarkedPrice() != null){
-            solrProduct.setMinimumMRPProductVariantMarkedPrice(product.getMinimumMRPProducVariant().getMarkedPrice());
+        ProductVariant productVariant = product.getMinimumMRPProducVariant();
+        if (productVariant.getMarkedPrice() != null){
+            solrProduct.setMinimumMRPProductVariantMarkedPrice(productVariant.getMarkedPrice());
         }
-        if (product.getMinimumMRPProducVariant().getDiscountPercent() != null){
-            solrProduct.setMinimumMRPProducVariantDiscount(product.getMinimumMRPProducVariant().getDiscountPercent());
+        if (productVariant.getDiscountPercent() != null){
+            solrProduct.setMinimumMRPProducVariantDiscount(productVariant.getDiscountPercent());
         }
-        if (product.getMaximumMRPProducVariant().getDiscountPercent() != null){
-            solrProduct.setMaximumMRPProducVariantDiscount(product.getMaximumMRPProducVariant().getDiscountPercent());
+        productVariant = product.getMaximumMRPProducVariant();
+        if (productVariant.getDiscountPercent() != null){
+            solrProduct.setMaximumMRPProducVariantDiscount(productVariant.getDiscountPercent());
         }
-
-        if (product.getMaximumDiscountProducVariant().getDiscountPercent() != null){
-            solrProduct.setMaximumDiscountProductVariantDiscountPercentage (product.getMaximumDiscountProducVariant().getDiscountPercent());
+        productVariant = product.getMaximumDiscountProducVariant();
+        if (productVariant.getDiscountPercent() != null){
+            solrProduct.setMaximumDiscountProductVariantDiscountPercentage (productVariant.getDiscountPercent());
         }
-
-        if(product.getMaximumMRPProducVariant().getPostpaidAmount() != null){
-            solrProduct.setPostpaidPrice(product.getMaximumMRPProducVariant().getPostpaidAmount());
+        productVariant = product.getMaximumMRPProducVariant();
+        if(productVariant.getPostpaidAmount() != null){
+            solrProduct.setPostpaidPrice(productVariant.getPostpaidAmount());
         }
 
         if (product.getDeleted() != null){
@@ -480,9 +482,9 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Double price = null;
-
-        if (product.getMinimumHKPriceProductVariant().getHkPrice() != null){
-            price = product.getMinimumHKPriceProductVariant().getHkPrice();
+        productVariant = product.getMinimumHKPriceProductVariant();
+        if (productVariant.getHkPrice() != null){
+            price = productVariant.getHkPrice();
             solrProduct.setHkPrice(price);
         }
 

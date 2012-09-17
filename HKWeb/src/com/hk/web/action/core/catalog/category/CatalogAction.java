@@ -258,7 +258,7 @@ public class CatalogAction extends BasePaginatedAction {
                         product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
                     }
                 }
-                trimListByCategory(productList, secondaryCategory);
+                productList = trimListByCategory(productList, secondaryCategory);
             } else {
                 if (StringUtils.isBlank(brand)) {
                     productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
@@ -361,18 +361,16 @@ public class CatalogAction extends BasePaginatedAction {
         return new RedirectResolution(redirectUrl);
     }
 
-    private void trimListByCategory(List<Product> productList, Category category) {
-        if (category != null && productList != null) {
-            Iterator<Product> productIterator = productList.iterator();
-            if (productIterator != null) {
-                while (productIterator.hasNext()) {
-                    Product product = productIterator.next();
-                    if (product != null && !product.getCategories().contains(category)) {
-                        productIterator.remove();
-                    }
+    private List<Product> trimListByCategory(List<Product> productList, Category category) {
+        List<Product> categoryProductList = new ArrayList<Product>();
+        if (category != null) {
+            for (Product product : productList) {
+                if (product.getCategories().contains(category)) {
+                    categoryProductList.add(product);
                 }
             }
         }
+        return categoryProductList;
     }
 
     public void setRootCategorySlug(String rootCategorySlug) {
