@@ -599,7 +599,7 @@
 --/beauty/bath-body/body-treatment
 ---/beauty/bath-body/body-treatment/anti-marks
 ---/beauty/bath-body/body-treatment/body-oil
----/beauty/bath-body/body-shaping
+--/beauty/bath-body/body-shaping
 ---/beauty/bath-body/body-shaping/creams
 ---/beauty/bath-body/body-shaping/shapewear
 ---/beauty/bath-body/body-shaping/accessories
