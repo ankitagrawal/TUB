@@ -242,7 +242,8 @@ img.prod320 {
 .img150 img {
     display: block;
     margin: 0 auto;
-	max
+	max-height:180px;
+	max-width:180px;
 }
 
 /* line 172, ../sass/_base.scss */
