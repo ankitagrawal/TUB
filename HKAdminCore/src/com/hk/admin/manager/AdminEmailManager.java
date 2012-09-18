@@ -399,8 +399,13 @@ public class AdminEmailManager {
           while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
               String key = parser.getHeadingNames(i);
               String value = curHkRow.getColumnValue(i);
-              excelMap.put(key.toLowerCase(), value);
+              if (StringUtils.isNotBlank(value)){
+                excelMap.put(key.toLowerCase(), value);
+              }
               i++;
+          }
+          if (excelMap.isEmpty()){
+              break;
           }
           excelMap.put("HKImageUtils", hkImageUtils);
 

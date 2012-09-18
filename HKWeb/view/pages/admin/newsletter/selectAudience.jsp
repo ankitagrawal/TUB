@@ -42,7 +42,8 @@
       <br/>
       <s:submit name="sendEmailViaExcel" value="Send emails (using excel file)"
                 id="sendEmailViaExcelSubmit"/>(Note:
-      <strong>email_id</strong> header is mandatory. Also for products and variants,headers need to be <strong>product_id</strong>,<strong>product_variant_id</strong>)
+      <strong>email_id</strong> header is mandatory. Also for products and variants,headers need to be <strong>product_id</strong>,
+        <strong>product_variant_id</strong>, <strong>similar_product(optional)</strong>)
 
       <s:hidden name="emailCampaign"/>
     </s:form>
