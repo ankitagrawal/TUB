@@ -404,7 +404,7 @@ public class XslParser {
             productVariant.setMainImageId(getLong(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap)));
           }
         }
-        productVariants.add(productVariant);
+          productVariants.add(productVariant);
 
         logger.debug("read row " + rowCount);
         rowCount++;
