@@ -148,6 +148,7 @@
                 <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary"
                         rel="noFollow">Logout</s:link>
               </shiro:lacksRole>
+	            |
             </shiro:user>
           </span>
         </div>
