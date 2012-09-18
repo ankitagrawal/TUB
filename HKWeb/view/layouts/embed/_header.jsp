@@ -46,41 +46,24 @@
 
         <div style='float:right;'>
 
-            <div title='view your shopping cart'>
-
-              <c:choose>
-                <c:when test="${cartAction.itemsInCart > 1}">
-                  <div class="cartText">
-                  <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
-                      Cart (<span class='num' id="productsInCart">${cartAction.itemsInCart}</span>)
-                  </s:link>
-                  </div>
-                  <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
-                    <img class='icon cartIcon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
-                  </s:link>
-                </c:when>
-                <c:when test="${cartAction.itemsInCart == 1}">
-                  <div class="cartText">
-                    <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
-                    Cart (<span class='num' id="productsInCart">1</span>)
-                    </s:link>
-                  </div>
-                  <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
-                  <img class='icon cartIcon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
-                  </s:link>
-                </c:when>
-                <c:otherwise>
-                  <div class="cartText">
-                    <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
-                    Cart (0)
-                    </s:link>
-                  </div>
-                  <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
-                  <img class='icon cartIcon' src='${pageContext.request.contextPath}/images/icons/cart_empty.png'/>
-                  </s:link>
-                </c:otherwise>
-              </c:choose>
-            </div>
+	        <div title='view your shopping cart'>
+		        <div class="cartText">
+			        <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+				        Cart (<span class='num' id="productsInCart">${cartAction.itemsInCart}</span>)
+			        </s:link>
+		        </div>
+		        <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+			        <c:choose>
+				        <c:when test="${cartAction.itemsInCart > 0}">
+					        <img class='icon cartIcon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
+				        </c:when>
+				        <c:otherwise>
+					        <img class='icon cartIcon'
+					             src='${pageContext.request.contextPath}/images/icons/cart_empty.png'/>
+				        </c:otherwise>
+			        </c:choose>
+		        </s:link>
+	        </div>
           
         </div>
 
