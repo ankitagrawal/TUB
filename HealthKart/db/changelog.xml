@@ -8958,7 +8958,7 @@
     <changeSet author="Pratham" id="09-18-2012">
         <sql>
             update affiliate set offer_id = 1357;
-            update coupon set offer_id = 1357 where referred_by is not null;
+            update coupon set offer_id = 1357 where referrer_user_id is not null;
         </sql>
     </changeSet>
 
