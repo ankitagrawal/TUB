@@ -116,7 +116,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
      */
     public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder) {
         logger.debug("Trying to autoescalate order#" + shippingOrder.getId());
-        if (shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId() != EnumPaymentStatus.AUTHORIZATION_PENDING.getId()) {
+        if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 Order order = shippingOrder.getBaseOrder();
                 if (order.isReferredOrder() && order.getPayment().getAmount() < 1000) {
@@ -170,7 +170,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
     public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
         logger.debug("Trying to manually escalate order#" + shippingOrder.getId());
-        if (shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId() != EnumPaymentStatus.AUTHORIZATION_PENDING.getId()) {
+        if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
                     Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This
