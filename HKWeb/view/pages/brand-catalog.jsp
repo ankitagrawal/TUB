@@ -72,7 +72,7 @@
 	</div>
 
 	<div class='catalog_filters'>
-		<div class='catalog_filters grid_5 bk_blue alpha'>
+		<div class='catalog_filters grid_5 alpha'>
 			<s:layout-render name="/layouts/brandCatalogFilter.jsp" menuNodeList="${ca.menuNodes}"/>
 		</div>
 	</div>

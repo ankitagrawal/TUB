@@ -133,7 +133,7 @@ public class CatalogAction extends BasePaginatedAction {
     @Session(key = HealthkartConstants.Session.perPageCatalog)
     private int                     perPage;
 
-    private int                     defaultPerPage             = 21;
+    private int                     defaultPerPage             = 24;
 
     @DefaultHandler
     public Resolution pre() throws IOException, SolrServerException {

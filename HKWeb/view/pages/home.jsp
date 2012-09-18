@@ -187,9 +187,9 @@
 
 
         <div class="grid_24" style="width: 950px;">
-          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, "home-page")}' begin="0" end="4">
-            <div class="grid_5 alpha omega">
-              <s:layout-render name="/layouts/embed/_productThumb175.jsp" product='${product}'/>
+          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, "home-page")}' begin="0" end="5">
+            <div class="grid_4 alpha omega">
+              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${product}'/>
             </div>
           </c:forEach>
         </div>

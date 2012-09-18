@@ -49,7 +49,7 @@ public class SearchAction extends BasePaginatedAction {
   @Autowired
   LinkManager linkManager;
 
-  private int defaultPerPage = 20;
+  private int defaultPerPage = 24;
 
 	public Resolution search() throws SolrServerException, MalformedURLException {
 		if (StringUtils.isNotBlank(query)) {

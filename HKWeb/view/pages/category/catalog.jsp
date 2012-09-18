@@ -262,7 +262,7 @@
   <div class='per grid_11'>
     show
     <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
-      21
+      ${ca.perPageDefault}
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
       <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
@@ -277,7 +277,7 @@
     </s:link>
     |
     <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
-      42
+      ${ca.perPageDefault*2}
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
       <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
@@ -292,7 +292,7 @@
     </s:link>
     |
     <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
-      63
+      ${ca.perPageDefault*3}
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
       <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>

@@ -50,7 +50,7 @@
 		</div>
 
 		<div class='catalog_filters'>
-			<div class='catalog_filters grid_5 bk_blue alpha'>
+			<div class='catalog_filters grid_5 alpha'>
 				<div class=''>
 					<h5 class='heading1' style="background-color:#DDD;padding:5px;">
 						Product Categories
