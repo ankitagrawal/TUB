@@ -490,7 +490,7 @@
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
             <div class="num"> Rs
-      <span class="lineItemSubTotalMrp"><fmt:formatNumber value="${cartLineItem.markedPrice}"
+      <span class="lineItemSubTotalMrp"><fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice}"
                                                           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
           </div>
