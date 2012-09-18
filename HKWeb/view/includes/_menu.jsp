@@ -12,7 +12,7 @@
     <c:set var="topCategoryUrl" value="/${topCategory}"/>
     <c:set var="allCategories" value="${allCategories}"/>
 
-  <div style="cursor:default; width: 960px; margin: 30px auto 5px;">
+  <div style="cursor:default; width: 960px; margin: 35px auto 7px;">
 
     <div class='logoBox' style="float:left;">
       <s:link href="/" title='go to healthkart home'>
@@ -22,10 +22,10 @@
     
     <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false"
             renderSourcePage="false" autocomplete="off" >
-      <s:text name="query" id="searchbox" class="input_tip" title='search our catalog'
-              style="height: 20px; font-size: 12px; width: 500px;" value="${param['query']}" placeholder='search our catalog'/>
+      <s:text name="query" id="searchbox" class="input_tip" title='Search for products, categories or brands...'
+              style="height: 25px; font-size: 15px; width: 500px;" value="${param['query']}" placeholder='Search for products, categories or brands...'/>
 
-      <s:image name="search" src="/images/icons/search2.png" style="left:50px; width: 15px;"/>
+      <s:image name="search" src="/images/icons/search2.png" style="left:50px; width: 20px;"/>
     </s:form>
   </div>
 
