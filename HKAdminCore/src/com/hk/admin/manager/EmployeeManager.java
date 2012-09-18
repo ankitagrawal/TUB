@@ -35,7 +35,7 @@ public class EmployeeManager {
         Coupon empCoupon = null;
         if (user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_EMPLOYEE)) && code != null && code.equals(OfferConstants.HK_EMPLOYEE_CODE)) {
             Offer offer = getOfferManager().getOfferForEmployee();
-            empCoupon = getCouponService().createCoupon(code, null, null, null, offer, null, true);
+            empCoupon = getCouponService().createCoupon(code, null, null, null, offer, null, true, null);
         }
         return empCoupon;
     }

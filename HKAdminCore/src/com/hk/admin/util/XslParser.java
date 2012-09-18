@@ -194,7 +194,8 @@ public class XslParser {
       String refProdId = "";
       Boolean refIsService = false;
       Product refProduct = null;
-      while (objRowIt.hasNext()) {
+	    Category primaryCategory = null;
+	    while (objRowIt.hasNext()) {
         rowMap = getRowMap(objRowIt);
 
         // checking if variantId is present. if no variant id is present then tis is a blank row, continue
@@ -233,8 +234,9 @@ public class XslParser {
           product = new Product();
           product.setCategories(getCategroyListFromCategoryString(getCellValue(XslConstants.CATEGORY, rowMap, headerMap)));
           List<Category> listFromPrimaryCategoryString = getCategroyListFromCategoryString(getCellValue(XslConstants.PRIMARY_CATEGORY, rowMap, headerMap));
+	      primaryCategory = listFromPrimaryCategoryString.get(0);
           if (listFromPrimaryCategoryString != null && !listFromPrimaryCategoryString.isEmpty()) {
-            product.setPrimaryCategory(listFromPrimaryCategoryString.get(0));
+            product.setPrimaryCategory(primaryCategory);
           }
           String secondaryCategory = getCellValue(XslConstants.SECONDARY_CATEGORY, rowMap, headerMap);
           if (StringUtils.isNotBlank(secondaryCategory)) {
@@ -245,7 +247,7 @@ public class XslParser {
             // Set secondary category same as primary category if secondary category is null
             else {
               if (listFromPrimaryCategoryString != null && !listFromPrimaryCategoryString.isEmpty()) {
-                product.setSecondaryCategory(listFromPrimaryCategoryString.get(0));
+                product.setSecondaryCategory(primaryCategory);
               }
             }
           }
@@ -396,13 +398,12 @@ public class XslParser {
         }
         productVariant.setOrderRanking(variantSortingOrder);
         productVariant.setAffiliateCategory(getAffiliateCategoryDao().getAffiliateCategoryByName(
-            (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) != null ? (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) : ""));
+            (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) != null ? (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) : primaryCategory.getName()));
         if (StringUtils.isNotBlank(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap))) {
           if (getBaseDao().get(ProductImage.class, getLong(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap))) != null) {
             productVariant.setMainImageId(getLong(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap)));
           }
         }
-
           productVariants.add(productVariant);
 
         logger.debug("read row " + rowCount);

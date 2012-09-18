@@ -12,6 +12,7 @@
 <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
+<c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
 <%
     CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
     Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
@@ -82,12 +83,14 @@
 	</style>
 
 	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
+	<link href="${pageContext.request.contextPath}/css/new.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
 	<c:if test="${!empty subscriptionProduct}">
 		<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
 	</c:if>
-	
-	<c:if test="${!empty pa.productReferrerId}">
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jcarousel.min.js"></script>
+
+    <c:if test="${!empty pa.productReferrerId}">
 			<link rel="canonical" href="${hk:getProductURL(product,null)}">
 	</c:if>
 
@@ -127,12 +130,18 @@
 
 			$('.jqzoom').jqzoom({
 				zoomType:'standard',
+                zoomWidth:400,
+                zoomHeight:400,
 				lens:true,
 				preloadImages:false,
 				alwaysOn:false
 			});
 
-			$('#notifyMeWindow').jqm({trigger:'.notifyMe', ajax:'@href'});
+            jQuery(document).ready(function() {
+                jQuery('#mycarousel').jcarousel();
+            });
+
+            $('#notifyMeWindow').jqm({trigger:'.notifyMe', ajax:'@href'});
 
 		});
 
@@ -227,10 +236,11 @@
 		</div>
 		<div>
 			<c:if test="${fn:length(pa.productImages) > 1}">
-				<ul class="thumblist">
+				<%--<ul class="thumblist">--%>
+				<ul id="mycarousel" class="jcarousel-skin-tango">
 					<c:forEach items="${pa.productImages}" var="productImage">
 						<li><a href='javascript:void(0);' rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}">
-              <img itemprop="image" src='${hk:getS3ImageUrl(imageSmallSize, productImage.id,isSecure)}'></a>
+              <img itemprop="image" style="height:75px;" src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id,isSecure)}'></a>
             </li>
 					</c:forEach>
 				</ul>

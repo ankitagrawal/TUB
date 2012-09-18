@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.domain.catalog.product.*;
+import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -39,12 +41,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.VariantConfig;
-import com.hk.domain.catalog.product.VariantConfigOption;
-import com.hk.domain.catalog.product.VariantConfigOptionParam;
-import com.hk.domain.catalog.product.VariantConfigValues;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.hkDelivery.Hub;
@@ -593,6 +589,12 @@ public class Functions {
 		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
 		boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter, secondChild));
 		return renderNewCatalogFilter;
+	}
+
+	public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, boolean showHiddenImages) {
+		ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
+		List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
+		return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
 	}
 
 	public static boolean showOptionOnUI(String optionType) {

@@ -2,11 +2,11 @@ package com.hk.impl.dao;
 
 import java.util.List;
 
+import com.hk.pact.dao.CheckDetailsDao;
 import org.springframework.stereotype.Repository;
 
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
-import com.hk.pact.dao.CheckDetailsDao;
 
 @SuppressWarnings("unchecked")
 @Repository

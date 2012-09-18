@@ -6,10 +6,10 @@
 
 <s:useActionBean beanclass="com.hk.web.action.core.referral.ReferralSignupAction" var="referralBean"/>
 
-<s:layout-render name="/layouts/default.jsp" pageTitle="Check out HealthKart.com (and get a Rs. 100 discount)">
+<s:layout-render name="/layouts/default.jsp" pageTitle="Check out HealthKart.com (and get an additional 5% discount)">
   <s:layout-component name="htmlHead">
     <meta name="description"
-          content="HealthKart.com is India's first health and wellness online store. They are running a referral program where you get a Rs. 100 discount if you signup through this link. Check it out!"/>
+          content="HealthKart.com is India's first health and wellness online store. They are running a referral program where you get an additional 5% discount if you signup through this link. Check it out!"/>
     <link rel="image_src"
           href="${pageContext.request.contextPath}/images/logo/healthkart-logo.png"/>
 
@@ -32,7 +32,7 @@
   </s:layout-component>
   <s:layout-component name="heading">
     <br/>
-    ${referralBean.user.firstName} has gifted you Rs. 100/- to buy anything you
+    ${referralBean.user.firstName} has gifted you an additional 5% off to buy anything you
     like at HealthKart.com</s:layout-component>
 
   <s:layout-component name="left_col">

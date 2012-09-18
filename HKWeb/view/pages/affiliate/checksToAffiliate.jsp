@@ -17,10 +17,11 @@
           <c:if test="${!empty affiliateBean.checkDetailsList}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-size: 14px;">
               <tr style="font-size: 12px;">
-                <th style="background: #f0f0f0; padding: 5px; font-weight: bold;">Check No</th>
+                <th style="background: #f0f0f0; padding: 5px; font-weight: bold;">Transaction Reference No</th>
                 <th style="background: #f0f0f0; padding: 5px; font-weight: bold;">Issue Date</th>
-                <th style="background: #f0f0f0; padding: 5px; font-weight: bold;">Bank</th>
-                <th style="background: #f0f0f0; padding: 5px; font-weight: bold;">Amount Paid</th>
+                <th style="background: #f0f0f0; padding: 5px; font-weight: bold;">Payment Mode</th>
+                <th style="background: #f0f0f0; padding: 5px; font-weight: bold;">Amount Due</th>
+                <th style="background: #f0f0f0; padding: 5px; font-weight: bold;">Amount Paid (After TDS)</th>
               </tr>
               <c:forEach items="${affiliateBean.checkDetailsList}" var="checkDetails">
                 <tr style="border-bottom: 1px solid #f0f0f0;">
@@ -28,13 +29,16 @@
                       ${checkDetails.checkNo}
                   </td>
                   <td>
-                    <fmt:formatDate value="${checkDetails.issueDate}" type="both"/>
+                    <fmt:formatDate value="${checkDetails.issueDate}" pattern="dd/MM/yyyy"/>
                   </td>
                   <td>
                       ${checkDetails.bankName}
                   </td>
                   <td>
                     <fmt:formatNumber value="${checkDetails.affiliateTxn.amount}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>
+                  </td>
+                  <td>
+                    <fmt:formatNumber value="${checkDetails.affiliateTxn.amount - checkDetails.tds}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>
                   </td>
                 </tr>
               </c:forEach>

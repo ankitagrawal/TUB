@@ -191,7 +191,6 @@
           <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="paymentModes" value="id"
                                      label="name"/>
         </s:select></li>
-          <%--<li><label>Tracking ID</label> <s:text name="trackingId" style="width: 120px;"/></li>--%>
         <li>
           <label>Start
             date</label><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
