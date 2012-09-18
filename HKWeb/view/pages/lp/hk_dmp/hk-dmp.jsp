@@ -207,7 +207,7 @@
 
 <div class="productThumb">
 
-	<h3><a href="#">HealthKart DMP - HealthEssential</a></h3>
+	<h3><a href="${pageContext.request.contextPath}/product/health-essential/HK-DMP-001">HealthKart DMP - HealthEssential</a></h3>
 
 	<p>4 Therapy Products: One Thyrocare BioT Test, 25 Monitoring Strips, 2 Counseling Call, Blood Glucose Meter
 	   free</p>
@@ -218,12 +218,12 @@
 
 	<p class="tSave">&nbsp;</p>
 
-	<p class="tBuy"><a href="#"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
+	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/health-essential/HK-DMP-001"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
 	                                 width="89" height="26" alt=""/></a></p>
 </div>
 <div class="productThumb">
 
-	<h3><a href="#">HealthKart DMP - HeathVital</a></h3>
+	<h3><a href="${pageContext.request.contextPath}/product/health-vital/HK-DMP-002">HealthKart DMP - HeathVital</a></h3>
 
 	<p>5 Therapy Products+ 1 Nutritional Supplement: One Thyrocare BioT Test, 25 Monitoring Strips, 2 Counseling Call,
 	   Blood Glucose Meter free</p>
@@ -235,13 +235,13 @@
 
 	<p class="tSave">&nbsp;</p>
 
-	<p class="tBuy"><a href="#"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
+	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/health-vital/HK-DMP-002"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
 	                                 width="89" height="26" alt=""/></a></p>
 </div>
 
 <div class="productThumb">
 
-	<h3><a href="#">HealthKart DMP - HealthUltima</a></h3>
+	<h3><a href="${pageContext.request.contextPath}/product/health-ultima/HK-DMP-003">HealthKart DMP - HealthUltima</a></h3>
 
 	<p>7 Therapy Products+ 2 Nutritional Supplement: One Thyrocare BioT Test, 25 Monitoring strips, 2 Counseling Call,
 	   Blood Glucose Meter free</p>
@@ -252,7 +252,7 @@
 
 	<p class="tSave">&nbsp;</p>
 
-	<p class="tBuy"><a href="#"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
+	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/health-ultima/HK-DMP-003"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
 	                                 width="89" height="26" alt=""/></a></p>
 </div>
 
