@@ -567,7 +567,7 @@ input[type="button"] .small, .button .small {
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
     margin: 10px 5px;
     text-align: center;
-    display: block;
+    /*display: block;*/
 }
 
 /* line 78, ../sass/_base.scss */
@@ -4760,6 +4760,7 @@ span.outOfStock {
     display: block;
     text-align: center;
     color: #aaa;
+	margin-bottom:10px;
 }
 
 .modal_header {

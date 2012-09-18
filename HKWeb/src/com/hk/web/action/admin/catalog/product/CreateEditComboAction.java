@@ -162,6 +162,7 @@ public class CreateEditComboAction extends BaseAction {
         combo.setShippingBasePrice(0D);
         combo.setShippingAddQty(1L);
         combo.setShippingAddPrice(0D);
+        combo.setOutOfStock(false);
 
         combo.setThumbUrl("");
         if (combo.getDeleted() == null) {

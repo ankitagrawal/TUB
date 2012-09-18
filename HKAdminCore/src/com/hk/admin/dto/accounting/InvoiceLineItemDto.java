@@ -167,7 +167,7 @@ public class InvoiceLineItemDto {
     public List<ProductOption> getProductOptions() {
         return productOptions;
     }
-
+    
     public List<CartLineItemExtraOption> getCartLineItemExtraOptions() {
         return cartLineItemExtraOptions;
     }
