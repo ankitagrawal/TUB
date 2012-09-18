@@ -1775,25 +1775,41 @@ h3 a.prod_link {
 }
 
 .footer-bottom {
-    width: 100%;
+    width: 960px;
+    margin: 0 auto;
     background: #FAFCFE;
     background: rgba(255, 255, 255, 0.2);
-    margin: 0;
     padding: 0;
     vertical-align: middle;
+    text-align: right;
+    /*width: 100%;
+  background: #e67817;
+  margin: 0px;
+  height: 66px;
+
+
+  clear: both;
+  bottom: 0px;
+  position: relative;*/
 }
 
 .footer-bottom .fb-contents {
-    margin: 0 auto;
-    text-align: right;
-    vertical-align: middle;
+    width: 960px;
+    margin: 0px auto;
+}
 
+.footer-bottom .fb-contents .copyright {
+    display: inline;
+    float: left;
+    width: 480px;
+    font-weight: bold;
+    color: white;
 }
 
 /* line 623, ../sass/main.scss */
 .footer .contents {
+    width: 960px;
     margin: 15px auto;
-    margin-bottom: 0;
 }
 
 /* line 626, ../sass/main.scss */
@@ -1802,7 +1818,7 @@ h3 a.prod_link {
     float: left;
     margin-left: 10px;
     margin-right: 10px;
-    width: 150px;
+    width: 130px;
 }
 
 /* line 628, ../sass/main.scss */
