@@ -21,8 +21,8 @@
     </div>
     
     <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false" renderSourcePage="false" autocomplete="off" style="float:left">
-      <s:text name="query" id="searchbox" class="input_tip" title='Search for products, categories or brands...' style="height: 25px; font-size: 15px; width: 500px;" value="${param['query']}" placeholder='Search for products, categories or brands...'/>
-      <s:image name="search" src="/images/icons/search2.png" style="left:50px; width: 20px;"/>
+      <s:text name="query" id="searchbox" class="input_tip" title='Search for products, categories or brands...' style="height:22px; font-size: 15px; width: 500px;" value="${param['query']}" placeholder='Search for products, categories or brands...'/>
+      <s:image title="Search" name="search" src="/images/icons/search2.png" style="left:50px; width:20px; vertical-align:middle;"/>
     </s:form>
 
     <div class="offerAndBrands">
