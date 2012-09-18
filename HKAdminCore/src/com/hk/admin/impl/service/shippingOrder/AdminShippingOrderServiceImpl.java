@@ -146,37 +146,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return null;
     }
 
-    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem) {
-        Order baseOrder = serviceCartLineItem.getOrder();
-        Warehouse corporateOffice = getWarehouseService().getCorporateOffice();
-        ShippingOrder shippingOrder = getShippingOrderService().createSOWithBasicDetails(baseOrder, corporateOffice);
-        shippingOrder.setBaseOrder(baseOrder);
-
-        ProductVariant productVariant = serviceCartLineItem.getProductVariant();
-        Sku sku = getSkuService().getSKU(productVariant, corporateOffice);
-        if (sku != null) {
-            LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, serviceCartLineItem);
-            shippingOrder.getLineItems().add(shippingOrderLineItem);
-        } else {
-            throw new NoSkuException(productVariant, corporateOffice);
-        }
-
-        shippingOrder.setBasketCategory("services");
-        shippingOrder.setServiceOrder(true);
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
-        ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
-        shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-        /**
-         * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
-         */
-        shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-
-        return shippingOrder;
-
-    }
-
     @Transactional
     public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));

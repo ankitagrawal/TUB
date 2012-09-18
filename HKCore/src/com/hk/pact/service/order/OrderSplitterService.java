@@ -10,7 +10,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pojo.DummyOrder;
-import com.hk.admin.pact.service.order.
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,7 +38,5 @@ public interface OrderSplitterService {
     public TreeMap<List<DummyOrder>, Long> splitBOIdeally(Order order, Warehouse ggnWarehouse, Warehouse mumWarehouse);
 
     public Map<Warehouse,Set<CartLineItem>> splitBOExcludingShippingTaxConsideration(Order order);
-
-    public void createSOForService (Set<CartLineItem> serviceCartLineItems);
-
+    
 }

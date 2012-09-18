@@ -33,7 +33,6 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pojo.DummyOrder;
-import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,8 +92,6 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     @Autowired
     private OrderLoggingService orderLoggingService;
 
-     @Autowired
-    private AdminShippingOrderService adminShippingOrderService;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;
@@ -498,18 +495,6 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
             }
         }
         return warehouseLineItemSetMap;
-    }
-
-
-    public void createSOForService(Set<CartLineItem> serviceCartLineItems) {
-        for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
-            try {
-                adminShippingOrderService.createSOForService(serviceCartLineItem);
-            } catch (NoSkuException e) {
-                logger.error("No sku found", e);
-
-            }
-        }
     }
 
 }

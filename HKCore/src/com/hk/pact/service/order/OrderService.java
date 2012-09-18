@@ -68,5 +68,7 @@ public interface OrderService {
 
     public boolean isCODAllowed(Order order);
 
+     public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
+
 }
 

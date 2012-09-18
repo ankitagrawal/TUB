@@ -37,6 +37,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.OrderSplitException;
+import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.manager.EmailManager;
@@ -55,6 +56,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 
 import com.hk.pojo.DummyOrder;
 
@@ -93,8 +95,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderLoggingService orderLoggingService;
     @Autowired
     private OrderSplitterService orderSplitterService;
-    @Autowired
-    private AdminShippingOrderService adminShippingOrderService;
+     @Autowired
+    private ShippingOrderStatusService shippingOrderStatusService;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
@@ -401,7 +403,11 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (serviceCartLineItems != null && serviceCartLineItems.size() > 0) {
-           orderSplitterService.createSOForService(serviceCartLineItems) ;
+//         orderSplitterService.createSOForService(serviceCartLineItems) ;
+           for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
+             createSOForService(serviceCartLineItem);
+           }
+
         }
 
         return shippingOrders;
@@ -569,5 +575,44 @@ public class OrderServiceImpl implements OrderService {
         }
         return true;
     }
-    
+
+
+     public ShippingOrder createSOForService(CartLineItem serviceCartLineItem) {
+        Order baseOrder = serviceCartLineItem.getOrder();
+        Warehouse corporateOffice = getWarehouseService().getCorporateOffice();
+        ShippingOrder shippingOrder = getShippingOrderService().createSOWithBasicDetails(baseOrder, corporateOffice);
+        shippingOrder.setBaseOrder(baseOrder);
+
+        ProductVariant productVariant = serviceCartLineItem.getProductVariant();
+        Sku sku = getSkuService().getSKU(productVariant, corporateOffice);
+        if (sku != null) {
+            LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, serviceCartLineItem);
+            shippingOrder.getLineItems().add(shippingOrderLineItem);
+        } else {
+            throw new NoSkuException(productVariant, corporateOffice);
+        }
+
+        shippingOrder.setBasketCategory("services");
+        shippingOrder.setServiceOrder(true);
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
+        ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
+        shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+        shippingOrder = getShippingOrderService().save(shippingOrder);
+        /**
+         * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
+         */
+        shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+        shippingOrder = getShippingOrderService().save(shippingOrder);
+
+        return shippingOrder;
+
+    }
+
+    public ShippingOrderStatusService getShippingOrderStatusService() {
+        return shippingOrderStatusService;
+    }
+
+    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
+        this.shippingOrderStatusService = shippingOrderStatusService;
+    }
 }
