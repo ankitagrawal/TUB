@@ -12,7 +12,7 @@
 
     <welcome-file-list>
         <welcome-file>/pages/home.jsp</welcome-file>
-    </welcome-file-list>
+    </welcome-file-list>/
 
 
     <!--  Listeners Start -->
@@ -240,7 +240,8 @@
         <url-pattern>/revital</url-pattern>
         <url-pattern>/super-savers</url-pattern>
         <url-pattern>/faq/*</url-pattern>
-	    <url-pattern>/diabetes-management-program</url-pattern>
+	    <url-pattern>/dmp</url-pattern>
+	    <url-pattern>/feedback</url-pattern>
     </servlet-mapping>
 
 

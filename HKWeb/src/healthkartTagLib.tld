@@ -891,4 +891,15 @@
             ${hk:getHubForHkdeliveryUser(${user})}
         </example>
     </function>
+	<function>
+        <description>
+            returns true if option needs to be shown on ui
+        </description>
+        <name>showOptionOnUI</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean showOptionOnUI(java.lang.String)</function-signature>
+        <example>
+            ${hk:showOptionOnUI(${optionType})}
+        </example>
+    </function>
 </taglib>

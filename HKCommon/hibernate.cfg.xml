@@ -156,12 +156,8 @@
         <mapping class="com.hk.domain.courier.CourierGroup"/>
         <mapping class="com.hk.domain.order.PrimaryReferrerForOrder"/>
         <mapping class="com.hk.domain.order.SecondaryReferrerForOrder"/>
-        <!-- Please Add All Domains Post HKR Here-->
-
-          <!-- Ajeet Added His on 10-July-->
         <mapping class="com.hk.domain.inventory.BrandsToAudit"/>
         <mapping class="com.hk.domain.catalog.product.combo.SuperSaverImage"/>
-          <!--Added for HK Delivery -->
         <mapping class="com.hk.domain.hkDelivery.Consignment"/>
         <mapping class="com.hk.domain.hkDelivery.ConsignmentStatus"/>
         <mapping class="com.hk.domain.hkDelivery.Runsheet"/>
@@ -169,12 +165,7 @@
         <mapping class="com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation"/>
         <mapping class="com.hk.domain.hkDelivery.ConsignmentTracking"/>
         <mapping class="com.hk.domain.hkDelivery.RunsheetStatus"/>
-        <mapping class="com.hk.domain.hkDelivery.HubHasUser"/>
         <mapping class="com.hk.domain.hkDelivery.ConsignmentLifecycleStatus"/>
-
-        <!-- Ajeet Added His on 10-July-->
-        <mapping class="com.hk.domain.inventory.BrandsToAudit"/>
-        <mapping class="com.hk.domain.catalog.product.combo.SuperSaverImage"/>
 	    <mapping class="com.hk.domain.marketing.ProductReferrer"/>
         <mapping class="com.hk.domain.clm.CategoryKarmaProfile"/>
         <mapping class="com.hk.domain.clm.KarmaProfile"/>
@@ -191,5 +182,8 @@
         <mapping class="com.hk.domain.core.City" />
         <mapping class="com.hk.domain.courier.AwbStatus" />
         <mapping class="com.hk.domain.catalog.product.SimilarProduct" />
+	    <mapping class="com.hk.domain.feedback.Feedback" />
+		<mapping class="com.hk.domain.offer.OfferEmailDomain" />
+	    <mapping class="com.hk.domain.catalog.product.UpdatePvPrice" />
     </session-factory>
 </hibernate-configuration>

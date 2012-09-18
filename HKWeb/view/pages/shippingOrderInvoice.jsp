@@ -3,9 +3,20 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="com.hk.constants.core.EnumRole" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
+<%@ page import="java.util.Arrays" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
+<c:set var="TH" value="<%=VariantConfigOptionParam.THICKNESS.param()%>"/>
+<c:set var="THBF" value="<%=VariantConfigOptionParam.BFTHICKNESS.param()%>"/>
+<c:set var="CO" value="<%=VariantConfigOptionParam.COATING.param()%>"/>
+<c:set var="COBF" value="<%=VariantConfigOptionParam.BFCOATING.param()%>"/>
+<c:set var="BRANDCO" value="<%=VariantConfigOptionParam.BRANDCO.param()%>"/>
+<c:set var="BRANDTH" value="<%=VariantConfigOptionParam.BRANDTH.param()%>"/>
+<c:set var="BRANDTHBF" value="<%=VariantConfigOptionParam.BRANDTHBF.param()%>"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
@@ -56,6 +67,11 @@
         }
     </style>
     <link href="<hk:vhostCss/>/css/960.css" rel="stylesheet" type="text/css"/>
+	<%
+		CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+		pageContext.setAttribute("sexualCare", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("sexual-care")));
+		pageContext.setAttribute("personalCareWomen", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("women")));
+	%>
 </head>
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" var="orderSummary"/>
@@ -213,36 +229,80 @@
         </tr>
         <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
             <tr>
-                <td>
-                    <c:choose>
-                        <c:when test="${orderSummary.printable}">
-                            <c:if
-                                    test="${hk:collectionContains(invoiceLineItem.productCategories, orderSummary.sexualCareCategory)}">
-                                <p>Personal Care Product</p>
-                            </c:if>
-                            <c:if
-                                    test="${!hk:collectionContains(invoiceLineItem.productCategories, orderSummary.sexualCareCategory)}">
-                                <p>${invoiceLineItem.productName}</p>
-                            </c:if>
-                        </c:when>
-                        <c:otherwise>
-                            <p>${invoiceLineItem.productName}</p>
-                        </c:otherwise>
-                    </c:choose>
-
-                    <c:if test="${invoiceLineItem.variantName != null}">
-                        <p>${invoiceLineItem.variantName}</p>
-                    </c:if>
-                    <em>
-                        <p>
-                                ${invoiceLineItem.productOptionsPipeSeparated}
-                        </p>
-                        <p>
-                                ${invoiceLineItem.extraOptionsPipeSeparated}
-                                ${invoiceLineItem.configOptionsPipeSeparated}
-                        </p>
-                    </em>
-                </td>
+	            <td>
+		            <c:choose>
+			            <c:when test="${orderSummary.printable && (hk:collectionContainsCollection(invoiceLineItem.productCategories, sexualCare)
+						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen))}">
+				            <p>Personal Care Product</p>
+			            </c:when>
+			            <c:otherwise>
+				            <p>${invoiceLineItem.productName}</p>
+				            <c:if test="${invoiceLineItem.variantName != null}">
+					            <p>${invoiceLineItem.variantName}</p>
+				            </c:if>
+				            <em>
+					            <p>
+						            <c:forEach items="${invoiceLineItem.productOptions}"
+						                       var="productOption">
+							            <c:if test="${hk:showOptionOnUI(productOption.name)}" >
+								            ${productOption.name}:${productOption.value};
+							            </c:if>
+						            </c:forEach>
+					            </p>
+					            <p>
+							            ${invoiceLineItem.extraOptionsPipeSeparated}
+							            <!--${invoiceLineItem.configOptionsPipeSeparated}-->
+							</p>
+				            </em>
+					
+					<c:if test="${invoiceLineItem.cartLineItemConfigValues !=null}" >
+					
+					<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
+						var="configValue" varStatus="configValueCtr">
+						<c:set var="additinalParam"
+							value="${configValue.variantConfigOption.additionalParam}" />
+						<c:if
+							test="${( additinalParam == TH || additinalParam == THBF 
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
+								|| additinalParam == BRANDTHBF) }">
+							${configValue.variantConfigOption.displayName}:${configValue.value}|
+							
+						</c:if>
+					</c:forEach>
+					<table>
+						<tr>
+							<td><b>Right</b></td>
+							<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
+								var="configValue" varStatus="configValueCtr">
+								<c:set var="additinalParam"
+									value="${configValue.variantConfigOption.additionalParam}" />
+								<c:if
+									test="${configValueCtr.index %2 ==0 && !( additinalParam == TH || additinalParam == THBF 
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
+								|| additinalParam == BRANDTHBF) }">
+									<td><b>${configValue.variantConfigOption.displayName}:${configValue.value}</b></td>
+								</c:if>
+							</c:forEach>
+						</tr>
+						<tr>
+							<td><b>Left</b></td>
+							<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
+								var="configValue" varStatus="configValueCtr">
+								<c:set var="additinalParam"
+									value="${configValue.variantConfigOption.additionalParam}" />
+								<c:if
+									test="${configValueCtr.index %2 !=0 && !( additinalParam == TH || additinalParam == THBF 
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
+								|| additinalParam == BRANDTHBF)}">
+									<td><b>${configValue.variantConfigOption.displayName}:${configValue.value}</b></td>
+								</c:if>
+							</c:forEach>
+						</tr>
+					</table>
+					</c:if>
+				</c:otherwise>
+		            </c:choose>
+	            </td>
 
                 <td><fmt:formatNumber value="${invoiceLineItem.qty}" maxFractionDigits="0"/></td>
                 <td> ${invoiceLineItem.hkPrice} </td>
