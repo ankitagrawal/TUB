@@ -41,7 +41,7 @@
 						<c:choose>
 							<c:when test="${product.mainImageId != null}">
 								<hk:productImage
-								                 imageId="${product.mainImageId}" size="<%=EnumImageSize.MediumSize%>"
+								                 imageId="${product.mainImageId}" size="<%=EnumImageSize.SmallSize%>"
 								                 alt="${product.name}"/>
 							</c:when>
 							<c:otherwise>

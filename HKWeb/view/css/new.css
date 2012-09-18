@@ -228,10 +228,11 @@ img.prod320 {
     width: 128px;
     margin: auto auto;
 }
-.img128 img {
-    height: 128px;
-    width: 128px;
-    margin: auto auto;
+
+/* line 173, ../sass/_base.scss */
+img.prod128 {
+    max-height: 128px;
+    max-width: 128px;
 }
 
 /* line 178, ../sass/_base.scss */
