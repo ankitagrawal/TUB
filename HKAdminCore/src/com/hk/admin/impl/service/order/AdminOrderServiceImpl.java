@@ -239,6 +239,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 		    if (isUpdated) {
 			    logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
 			    rewardPointService.approvePendingRewardPointsForOrder(order);
+			    affilateService.approvePendingAffiliateTxn(order);
 			    // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
 			    // check if payment mode was COD and email hasn't been sent yet
 			    // sendEmailToServiceProvidersForOrder(order);

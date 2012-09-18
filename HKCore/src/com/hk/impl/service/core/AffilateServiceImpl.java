@@ -7,6 +7,7 @@ import javax.servlet.http.Cookie;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.coupon.EnumCouponType;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.affiliate.*;
 import com.hk.domain.user.Role;
 import com.hk.pact.dao.affiliate.AffiliateCategoryHasBrandDao;
@@ -103,7 +104,12 @@ public class AffilateServiceImpl implements AffilateService {
                 }
             }
         }
-        AffiliateTxnType affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.PENDING.getId());
+	    AffiliateTxnType affiliateTxnType = null;
+	    if(EnumPaymentMode.getPrePaidPaymentModes().contains(order.getPayment().getPaymentMode().getId())){
+		    affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.ADD.getId());
+	    }else{
+		    affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.PENDING.getId());
+	    }
         getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
     }
 
@@ -120,8 +126,13 @@ public class AffilateServiceImpl implements AffilateService {
                 }
             }
         }
-        AffiliateTxnType affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.PENDING.getId());
-        getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
+	    AffiliateTxnType affiliateTxnType = null;
+	    if(EnumPaymentMode.getPrePaidPaymentModes().contains(order.getPayment().getPaymentMode().getId())){
+		    affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.ADD.getId());
+	    }else{
+		    affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.PENDING.getId());
+	    }
+	    getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
     }
 
 	public void associateBrandToAffiliateCategory(AffiliateCategory affiliateCategory, String brand) {
