@@ -764,6 +764,18 @@ span.error {
 .cartText {
   float:left; margin-right: 7px;
 }
+.offerAndBrands {
+  float:right; margin-top: 5px; font-size: 14px; color: gray; font-family: Lucida Grande, Lucida Sans Unicode, Lucida Sans, Geneva, Verdana, sans-serif;
+}
+.offerAndBrands a {
+  text-decoration: none;
+  font-size: 14px;
+  color: #23527F;
+  border-bottom: none;
+}
+.offerAndBrands a:visited {text-decoration:none;}
+.offerAndBrands a:hover {color:black;}
+.offerAndBrands a:active {text-decoration:none;}
 
 /*
 .topBar .logo_hover {

@@ -20,13 +20,17 @@
       </s:link>
     </div>
     
-    <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false"
-            renderSourcePage="false" autocomplete="off" >
-      <s:text name="query" id="searchbox" class="input_tip" title='Search for products, categories or brands...'
-              style="height: 25px; font-size: 15px; width: 500px;" value="${param['query']}" placeholder='Search for products, categories or brands...'/>
-
+    <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false" renderSourcePage="false" autocomplete="off" style="float:left">
+      <s:text name="query" id="searchbox" class="input_tip" title='Search for products, categories or brands...' style="height: 25px; font-size: 15px; width: 500px;" value="${param['query']}" placeholder='Search for products, categories or brands...'/>
       <s:image name="search" src="/images/icons/search2.png" style="left:50px; width: 20px;"/>
     </s:form>
+
+    <div class="offerAndBrands">
+      <div style="float:left"><s:link href='/brands'>Brands&nbsp;</s:link></div><div style="float:left; margin-right: 15px;"><s:link href='/brands'><img src="<hk:vhostImage/>/images/brand_16.png"></s:link></div>
+      <div style="float:left"><s:link href='/super-savers' style="color: #990000;">Offers&nbsp;</s:link></div><div style="float:left"><s:link href='/super-savers'><img src="<hk:vhostImage/>/images/offer_16.png"></s:link></div>
+    </div>
+
+    <div style="clear:both;"></div>
   </div>
 
   <script type="text/javascript">
@@ -111,10 +115,7 @@
                     </li>
                 </c:if>
             </c:forEach>
-                <li class='lvl1' id='brands_button' style='float:left;'><s:link href='/brands'>Brands</s:link></li>
             <%--<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">--%>
-                <li class='lvl1' id='super_savers_button' style='float:left;background-color:red;'><s:link
-                        href='/super-savers'>Offers</s:link></li>
             <%--</shiro:hasPermission>--%>
                 <%--<li class='lvl1' id='offers_button' style='float:left;'><s:link href='/pages/valentineGifts.jsp'>Gifts</s:link></li>--%>
                 <%--<li class='' id='brands_button' style='float:right; margin: 4px 6px 0 0; padding: 2px 4px; background-color: #2b659d; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #4c97df;'>--%>
