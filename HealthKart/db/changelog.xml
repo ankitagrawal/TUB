@@ -8812,5 +8812,9 @@
             </column>
         </addColumn>
     </changeSet>
-
+	<changeSet author="Tarun" id="1347716040168-1">
+		<sql>
+			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(999,1,'R','Corporate Retail Invoice 2012');
+		</sql>
+	</changeSet>
 </databaseChangeLog>
