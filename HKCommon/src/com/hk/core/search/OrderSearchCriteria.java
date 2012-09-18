@@ -175,8 +175,6 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
                 shippingOrderCriteria = criteria.createCriteria("shippingOrders", CriteriaSpecification.LEFT_JOIN);
             }
 
-//             for (ShippingOrderStatus stats : shippingOrderStatusList){
-//                if (stats.equals(EnumShippingOrderStatus.SO_EscalatedBack.asShippingOrderStatus())){
 
                 if(shippingOrderStatusList.contains(EnumShippingOrderStatus.SO_EscalatedBack.asShippingOrderStatus())
                         && !(shippingOrderStatusList.contains(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus()))){
