@@ -990,7 +990,7 @@
 			}
 
 			function show_message() {
-				$('.message').css("top", "70px");
+				$('.message').css("top", "50px");
 				$('.message').animate({
 					opacity:1
 				}, 500);

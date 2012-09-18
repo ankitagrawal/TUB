@@ -4267,7 +4267,7 @@ select:hover, select:focus {
     display: block;
     width: 43px;
     top: -33px;
-    right: 70px;
+    right: 5px;
     z-index: 1000;
 }
 
