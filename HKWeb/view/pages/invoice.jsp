@@ -124,7 +124,7 @@
         <p><strong>How it works: </strong></p>
 
         <p>
-          Pass this coupon code to your friends and family. They get a <strong>Rs. 100 discount on their first
+          Pass this coupon code to your friends and family. They get a <strong>5% discount on their first
           purchase*</strong> at healthkart.com and you
           <strong>get reward points worth Rs. 100</strong> in your account for your referral*.
         </p>

@@ -97,7 +97,7 @@ public class ReferrerProgramManager {
     public Coupon getOrCreateRefferrerCoupon(User user) {
         Coupon referrerCoupon = user.getReferrerCoupon();
         if (referrerCoupon == null) {
-            Offer offer = offerManager.getOfferForReferrelProgram();
+            Offer offer = offerManager.getOfferForReferralAndAffiliateProgram();
             String code = getCouponCode(user);
             while (getCouponService().findByCode(code) != null) {
                 code = getCouponCode(user);

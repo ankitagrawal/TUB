@@ -83,10 +83,10 @@ public class AffiliateManager {
         affiliate.setWeeklyCouponLimit(AffiliateConstants.weeklyCouponLimit);
 	    affiliate.setAffiliateStatus(EnumAffiliateStatus.Unverified.asAffiliateStatus());
         affiliate.setWebsiteName(websiteName);
-	    Offer offer = getOfferManager().getAffiliateOffer();
+	    Offer offer = getOfferManager().getOfferForReferralAndAffiliateProgram();
 	    affiliate.setOffer(offer);
 	    getAffilateService().save(affiliate);
-        getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false, EnumCouponType.AFFILIATE.asCouponType());
+//        getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false, EnumCouponType.AFFILIATE.asCouponType());
 
         getEmailManager().affiliateSignupEmail(affiliate.getUser().getEmail(), affiliate.getUser().getName());
         return affiliate;
@@ -123,10 +123,10 @@ public class AffiliateManager {
             code = createCode(affiliate.getUser());
         }
         affiliate.setCode(code);
-	    Offer offer = getOfferManager().getAffiliateOffer();
+	    Offer offer = getOfferManager().getOfferForReferralAndAffiliateProgram();
 	    affiliate.setOffer(offer);
 	    getAffilateService().save(affiliate);
-	    getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false, EnumCouponType.AFFILIATE.asCouponType());
+//	    getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false, EnumCouponType.AFFILIATE.asCouponType());
         getEmailManager().affiliateSignupEmail(user.getEmail(), user.getName());
         return affiliate;
     }

@@ -148,7 +148,36 @@ public class OfferManager {
         return offer;
     }
 
-    @Transactional
+	@Transactional
+	public Offer getOfferForReferralAndAffiliateProgram() {
+		Offer offer = getOfferDao().findByIdentifier(OfferConstants.referralAffiliateOffer5percent);
+
+		if (offer == null) {
+
+			OfferTrigger offerTrigger = OfferTriggerBuilder.getInstance().description("Min purchase amount Rs 500").minAmount(500D).build();
+
+			offerTrigger = (OfferTrigger) getOfferDao().save(offerTrigger);
+
+			OfferAction offerAction = OfferActionBuilder.getInstance().description("5% Additional Off on all Products").discountAmount(250D).discountPercent(0.05).discountOnBasePriceOnly(false).validOnIntlShipping(false).qty(
+					1L).productGroup(getProductService().findProductGroupByName(OfferConstants.referralAffiliateProductGroup)).build();
+			offerAction = (OfferAction) getOfferDao().save(offerAction);
+
+			offer = OfferBuilder.getInstance().description("5% Additional Off on all Products, Min Purchase Rs 500/- Max Discount Rs 250/-").startDate(new DateTime().toDate()).numberOfTimesAllowed(
+					1L).carryOverAllowed(false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.referralAffiliateOffer5percent).offerTrigger(offerTrigger).offerAction(
+					offerAction).build();
+
+			Set<Role> roles = new HashSet<Role>(1);
+			roles.add(getRoleService().getRoleByName(RoleConstants.HK_USER));
+			offer.setRoles(roles);
+
+			offer = (Offer) getOfferDao().save(offer);
+		}
+
+		return offer;
+	}
+
+
+	@Transactional
     public Offer getOfferForEmployee() {
         Offer offer = getOfferDao().findByIdentifier(OfferConstants.HK_EMPLOYEE_OFFER);
         if (offer == null) {
