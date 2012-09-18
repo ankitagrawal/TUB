@@ -27,26 +27,8 @@
   %>
   <div class='topBar'>
     <div class='topBarContent'>
-      <div class='logoBox'>
-        <s:link href="/" title='go to healthkart home'>
-          <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
-        </s:link>
-      </div>
-      <div style='float: left; margin-left: 175px;'>
-        <%--<span style="font-size: .8em;" title='Call us on our customer care number for help regarding anything'>Customer Care: 0124-4551616 <span style="color: gray;">(9am - 9pm, 7 days a week)</span></span>--%>
-
-        <div style="cursor:default; margin-top: 5px; width: 420px;">
-          <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false"
-                  renderSourcePage="false" autocomplete="off" style="position: relative;">
-            <s:text name="query" id="searchbox" class="input_tip" title='search our catalog'
-                    style="height: 25px; width:420px; font-size: 18px; font-weight:normal; color: #999999;" value="${param['query']}" placeholder='search our catalog'/>
-
-            <s:image name="search" src="/images/icons/search2.png" style="position: absolute; right: 1px; top: 5px; height:20px;width:20px;"/>
-          </s:form>
-        </div>
-          <%--<div class='small'>--%>
-          <%--(Monday to Saturday 10am - 8pm)--%>
-          <%--</div>--%>
+      <div style='float: left; margin-left: 5px; margin-top: 2px; line-height: 18px;' title='Call us on our customer care number for help regarding anything'>
+          <div style="font-size: 12px; float: left;">0124-4551616</div><div style="color: gray; float: left; font-size: 10px;">&nbsp;(9am - 9pm, 7 days a week)</div>
       </div>
       <div class="message">
         <div class="arrow"></div>
@@ -61,7 +43,48 @@
       </div>
 
       <div class='userCP'>
-        <div class='left'>
+
+        <div style='float:right;'>
+
+            <div title='view your shopping cart'>
+
+              <c:choose>
+                <c:when test="${cartAction.itemsInCart > 1}">
+                  <div class="cartText">
+                  <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+                      Cart (<span class='num' id="productsInCart">${cartAction.itemsInCart}</span>)
+                  </s:link>
+                  </div>
+                  <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+                    <img class='icon cartIcon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
+                  </s:link>
+                </c:when>
+                <c:when test="${cartAction.itemsInCart == 1}">
+                  <div class="cartText">
+                    <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+                    Cart (<span class='num' id="productsInCart">1</span>)
+                    </s:link>
+                  </div>
+                  <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+                  <img class='icon cartIcon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
+                  </s:link>
+                </c:when>
+                <c:otherwise>
+                  <div class="cartText">
+                    <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+                    Cart (0)
+                    </s:link>
+                  </div>
+                  <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+                  <img class='icon cartIcon' src='${pageContext.request.contextPath}/images/icons/cart_empty.png'/>
+                  </s:link>
+                </c:otherwise>
+              </c:choose>
+            </div>
+          
+        </div>
+
+        <div style="margin-top: 2px; float: right; margin-right: 10px; font-size: 12px;">
           Welcome,
             <span class='name'>
               <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
@@ -76,15 +99,16 @@
                   </shiro:hasAnyRoles>
                 </strong>
             </span>
-          <%--<c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">
+          <c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">
             <s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction"
                     title="RewardPointTxnStatement"><span class="orange">(<fmt:formatNumber
                 value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}"
                 pattern="<%=FormatUtils.currencyFormatPattern%>"/>)</span>
             </s:link>
-          </c:if>--%>
+          </c:if>
 
-          <div class='links'>
+          <span class='links'>
+            |
             <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
               <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary"
                       rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl"
@@ -125,49 +149,10 @@
                         rel="noFollow">Logout</s:link>
               </shiro:lacksRole>
             </shiro:user>
-          </div>
+          </span>
         </div>
-        <div class='right'>
-          <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
-            <div class='cartButton' title='view your shopping cart'>
-	          <c:choose>
-                <c:when test="${cartAction.itemsInCart > 1}">
-                  <img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
-                                    <span class='num' id="productsInCart">
-                                        ${cartAction.itemsInCart}
-                                    </span>
-                  items in
-                  <br/>
-                  your shopping cart
-                </c:when>
-                <c:when test="${cartAction.itemsInCart == 1}">
-                  <img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
-                                    <span class='num' id="productsInCart">
-                                       1
-                                    </span>
-                  item in
-                  <br/>
-                  your shopping cart
-                </c:when>
-                <c:otherwise>
-                  <img class='icon'
-                       src='${pageContext.request.contextPath}/images/icons/cart_empty.png'/>
-                  your shopping
-                  <br/>
-                  cart is empty&nbsp;
-                </c:otherwise>
-              </c:choose>
-            </div>
-          </s:link>
-        </div>
-        <div class="floatfix"></div>
+
       </div>
     </div>
   </div>
-  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.itvCommonPlugins.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $("#searchbox").autocomplete({url:'${pageContext.request.contextPath}/autocomplete-search/'});
-    });
-  </script>
 </s:layout-definition>

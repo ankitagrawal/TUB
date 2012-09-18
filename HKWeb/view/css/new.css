@@ -709,7 +709,7 @@ span.error {
     z-index: 1000;
     background: #fafafa;
     border-bottom: 2px solid #f0f0f0;
-    height: 42px;
+    height: 20px;
     left: 0;
 }
 
@@ -718,47 +718,51 @@ span.error {
     background: #fafafa;
     width: 960px;
     margin: 0 auto;
-    height: 42px;
+    height: 20px;
     position: relative;
 }
 
 /* line 22, ../sass/main.scss */
-.topBar .logoBox {
-    left: 5px;
-    position: absolute;
-    top: 8px;
+.logoBox {
+  margin-right: 10px;
 }
-
-.topBar .logoBox a {
+.logoBox a {
     border: none;
 }
 
-.topBar .logoBox a.logo:hover {
+.logoBox a.logo:hover {
     text-decoration: none;
     border: none;
 }
 
 /* line 36, ../sass/main.scss */
-.topBar .logoBox img {
+.logoBox img {
     max-height: 26px;
 }
 
 /* line 39, ../sass/main.scss */
-.topBar .logoBox .links {
+.logoBox .links {
     display: none;
     color: #aaa;
 }
 
 /* line 42, ../sass/main.scss */
-.topBar .logoBox .links a {
+.logoBox .links a {
     font-size: 10px;
     padding: 0px 0px;
     margin: 0 0;
 }
 
 /* line 46, ../sass/main.scss */
-.topBar .logoBox .links a:first-child {
+.logoBox .links a:first-child {
     padding-left: 0px;
+}
+
+.cartIcon {
+  width:15px; float:left;
+}
+.cartText {
+  float:left; margin-right: 7px;
 }
 
 /*
@@ -840,7 +844,7 @@ span.error {
 .topBar .userCP .right {
     margin-left: 10px;
     display: inline-block;
-    margin-top: 5px;
+    margin-top: 2px;
 }
 
 /* line 92, ../sass/main.scss */
@@ -893,7 +897,7 @@ span.error {
 
 .menuBar {
     margin: 0 auto;
-    margin-top: 45px;
+    /*margin-top: 65px;*/
     width: 960px;
     background: #23527f;
     position: relative;
