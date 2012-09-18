@@ -41,7 +41,7 @@
   </div>
 </s:layout-component>--%>
 
-<s:layout-component name="menu"> </s:layout-component>
+<%--<s:layout-component name="menu"> </s:layout-component>--%>
 <s:layout-component name="heading">
     <div style="margin-top: 50px;">
         <h1 class="green" style="font-size: 1.2em;">
