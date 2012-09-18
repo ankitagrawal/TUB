@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
@@ -44,4 +46,11 @@ public class AdminShippingOrderDaoImpl extends BaseDaoImpl implements AdminShipp
                 + " and shipment.shipDate between :startDate and :endDate " + " and shipment.deliveryDate is null";
         return getSession().createQuery(query).setParameterList("courierIdList", courierIdList).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
      }
+
+	public List<ShippingOrder> getShippingOrderByGatewayOrderList(List<String> gatewayOrderIdList) {
+			DetachedCriteria criteria = DetachedCriteria.forClass(ShippingOrder.class);
+			criteria.add(Restrictions.in("gatewayOrderId", gatewayOrderIdList));
+			return findByCriteria(criteria);
+	}
+
 }

@@ -1,6 +1,8 @@
 package com.hk.admin.impl.service.reconciliation;
 
+import com.hk.admin.pact.dao.order.AdminOrderDao;
 import com.hk.admin.pact.dao.reconciliation.AdminReconciliationDao;
+import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.reconciliation.AdminReconciliationService;
 import com.hk.admin.util.XslUtil;
 import com.hk.constants.XslConstants;
@@ -8,8 +10,6 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderPaymentReconciliation;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.pact.dao.order.OrderDao;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import org.slf4j.Logger;
@@ -31,11 +31,11 @@ import java.util.*;
 public class AdminReconciliationServiceImpl implements AdminReconciliationService {
 	private static Logger logger = LoggerFactory.getLogger(AdminReconciliationServiceImpl.class);
 	@Autowired
-	private ShippingOrderDao shippingOrderDao;
+	private AdminShippingOrderDao adminShippingOrderDao;
 	@Autowired
 	AdminReconciliationDao adminReconciliationDao;
 	@Autowired
-	OrderDao orderDao;
+	AdminOrderDao adminOrderDao;
 
 	public void parseExcelForShippingOrder(String excelFilePath, String sheetName, PaymentMode paymentMode) throws Exception {
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = new ArrayList<OrderPaymentReconciliation>();
@@ -49,17 +49,12 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 				String gatewayOrderId = row.getColumnValue(XslConstants.GATEWAY_ORDER_ID);
 				String reconciled = row.getColumnValue(XslConstants.RECONCILED);
 				Double amount = XslUtil.getDouble(row.getColumnValue(XslConstants.AMOUNT));
-				if (!reconciled.equalsIgnoreCase("N") && !reconciled.equalsIgnoreCase("Y")) {
-					throw new Exception("Reconciliation status should be 'Y' or 'N' only. ");
-				}
-				if(amount == null) {
-					throw new Exception("Invalid amount");
-				}
+				checkExcelSanity(gatewayOrderId, reconciled, amount);
 				gatewayOrderIdListInExcel.add(gatewayOrderId);
 				rowCount++;
 			}
 			rowCount = 0;
-			List<ShippingOrder> shippingOrderListInDB = getShippingOrderDao().getShippingOrderByGatewayOrderList(gatewayOrderIdListInExcel);
+			List<ShippingOrder> shippingOrderListInDB = getAdminShippingOrderDao().getShippingOrderByGatewayOrderList(gatewayOrderIdListInExcel);
 			List<String> gatewayOrderIdListInDB = new ArrayList<String>();
 			Map<String, ShippingOrder> shippingOrderGatewayOrderMap = new HashMap<String, ShippingOrder>();
 			for (ShippingOrder shippingOrder : shippingOrderListInDB) {
@@ -69,9 +64,9 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 			}
 			gatewayOrderIdListInExcel.removeAll(gatewayOrderIdListInDB);
 
-			if(gatewayOrderIdListInExcel.size() > 0) {
+			if (gatewayOrderIdListInExcel.size() > 0) {
 				String invalidGatewayOrderId = "";
-				for(String gatewayOrderId : gatewayOrderIdListInExcel) {
+				for (String gatewayOrderId : gatewayOrderIdListInExcel) {
 					invalidGatewayOrderId += "     " + gatewayOrderId;
 
 				}
@@ -84,16 +79,9 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 					String gatewayOrderId = row.getColumnValue(XslConstants.GATEWAY_ORDER_ID);
 					String reconciled = row.getColumnValue(XslConstants.RECONCILED);
 					Double amount = XslUtil.getDouble(row.getColumnValue(XslConstants.AMOUNT));
-					if(shippingOrderGatewayOrderMap.containsKey(gatewayOrderId)) {
+					if (shippingOrderGatewayOrderMap.containsKey(gatewayOrderId)) {
 						ShippingOrder shippingOrder = shippingOrderGatewayOrderMap.get(gatewayOrderId);
-						OrderPaymentReconciliation orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationBySO(shippingOrder);
-						if (orderPaymentReconciliation == null) {
-							orderPaymentReconciliation = createOrderPaymentReconciliation(null, shippingOrder, paymentMode, amount, reconciled);
-						} else {
-							orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
-							orderPaymentReconciliation.setReconciledAmount(amount);
-						}
-
+						OrderPaymentReconciliation orderPaymentReconciliation = updateOrCreateOrderPaymentReconciliationBySO(shippingOrder, paymentMode, amount, reconciled);
 						orderPaymentReconciliationList.add(orderPaymentReconciliation);
 						logger.debug("preparing orderPaymentReconciliation object for row : " + rowCount);
 					}
@@ -110,113 +98,85 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 	}
 
 	public void parseExcelForBaseOrder(String excelFilePath, String sheetName, PaymentMode paymentMode) throws Exception {
+
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = new ArrayList<OrderPaymentReconciliation>();
 		ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
 		Iterator<HKRow> rowIterator = parser.parse();
 		int rowCount = 1;
+		List<String> gatewayOrderIdListInExcel = new ArrayList<String>();
 		try {
 			while (rowIterator.hasNext()) {
 				HKRow row = rowIterator.next();
 				String gatewayOrderId = row.getColumnValue(XslConstants.GATEWAY_ORDER_ID);
 				String reconciled = row.getColumnValue(XslConstants.RECONCILED);
 				Double amount = XslUtil.getDouble(row.getColumnValue(XslConstants.AMOUNT));
-				if (!reconciled.equalsIgnoreCase("N") && !reconciled.equalsIgnoreCase("Y")) {
-					throw new Exception("Reconciliation status should be 'Y' or 'N' only. ");
-				}
-				Order order = getOrderDao().findByGatewayOrderId(gatewayOrderId);
-				if (order == null) {
-					throw new Exception("Gateway order Id does not exist");
-				}
-
-				if (amount == null || (order.getAmount() != null && amount.doubleValue() != order.getAmount().doubleValue())) {
-					throw new Exception("Reconciliation Amount does not match with the actual base order amount");
-				}
-
-				OrderPaymentReconciliation orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationByBaseOrder(order);
-				if (orderPaymentReconciliation == null) {
-					orderPaymentReconciliation = createOrderPaymentReconciliation(order, null, paymentMode, amount, reconciled);
-
-					orderPaymentReconciliationList.add(orderPaymentReconciliation);
-
-					for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-						orderPaymentReconciliation = createOrderPaymentReconciliation(null, shippingOrder, paymentMode, shippingOrder.getAmount(), reconciled);
-						orderPaymentReconciliationList.add(orderPaymentReconciliation);
-					}
-
-				} else {
-					orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
-					orderPaymentReconciliation.setReconciledAmount(amount);
-					orderPaymentReconciliationList.add(orderPaymentReconciliation);
-					for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-						orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationBySO(shippingOrder);
-						orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
-						orderPaymentReconciliation.setReconciledAmount(amount);
-						orderPaymentReconciliationList.add(orderPaymentReconciliation);
-					}
-				}
-
+				checkExcelSanity(gatewayOrderId, reconciled, amount);
+				gatewayOrderIdListInExcel.add(gatewayOrderId);
 				rowCount++;
-				logger.debug("Doing sanity check for gateway order: " + gatewayOrderId);
-
 			}
+			rowCount = 0;
+			List<Order> baseOrderListInDB = getAdminOrderDao().getOrdersByGatewayOrderList(gatewayOrderIdListInExcel);
+			List<String> gatewayOrderIdListInDB = new ArrayList<String>();
+			Map<String, Order> gatewayOrderbaseOrderMap = new HashMap<String, Order>();
+			for (Order order : baseOrderListInDB) {
+				gatewayOrderIdListInDB.add(order.getGatewayOrderId());
+				gatewayOrderbaseOrderMap.put(order.getGatewayOrderId(), order);
+			}
+			gatewayOrderIdListInExcel.removeAll(gatewayOrderIdListInDB);
+
+			if (gatewayOrderIdListInExcel.size() > 0) {
+				String invalidGatewayOrderId = "";
+				for (String gatewayOrderId : gatewayOrderIdListInExcel) {
+					invalidGatewayOrderId += "     " + gatewayOrderId;
+				}
+				throw new Exception("Following gateway order ids are invalid : " + invalidGatewayOrderId);
+
+			} else {
+				rowIterator = parser.parse();
+				while (rowIterator.hasNext()) {
+					HKRow row = rowIterator.next();
+					String gatewayOrderId = row.getColumnValue(XslConstants.GATEWAY_ORDER_ID);
+					String reconciled = row.getColumnValue(XslConstants.RECONCILED);
+					Double amount = XslUtil.getDouble(row.getColumnValue(XslConstants.AMOUNT));
+					if (gatewayOrderbaseOrderMap.containsKey(gatewayOrderId)) {
+						Order order = gatewayOrderbaseOrderMap.get(gatewayOrderId);
+						OrderPaymentReconciliation orderPaymentReconciliation = updateOrCreateOrderPaymentReconciliationByBO(order, paymentMode, amount, reconciled);
+						orderPaymentReconciliationList.add(orderPaymentReconciliation);
+						for (ShippingOrder shippingOrder : order.getShippingOrders()) {
+							orderPaymentReconciliation = updateOrCreateOrderPaymentReconciliationBySO(shippingOrder, paymentMode, shippingOrder.getAmount(), reconciled);
+							orderPaymentReconciliationList.add(orderPaymentReconciliation);
+						}
+
+						logger.debug("preparing orderPaymentReconciliation object for row : " + rowCount);
+					}
+					rowCount++;
+				}
+			}
+
 		} catch (Exception e) {
 			logger.error("Exception @ Row:" + (rowCount + 1) + e.getMessage());
 			throw new Exception("Exception @ Row:" + (rowCount + 1) + ": " + e.getMessage(), e);
 		}
+
 		getAdminReconciliationDao().saveOrUpdate(orderPaymentReconciliationList);
+
 	}
 
-	/*public void insertOrderPaymentReconciliationForSO(String excelFilePath, String sheetName, PaymentMode paymentMode) {
-
-		ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
-				Iterator<HKRow> rowIterator = parser.parse();
-				int rowCount = 1;
-				try {
-					while (rowIterator.hasNext()) {
-						HKRow row = rowIterator.next();
-						String gatewayOrderId = row.getColumnValue(XslConstants.GATEWAY_ORDER_ID);
-						String reconciled = row.getColumnValue(XslConstants.RECONCILED);
-						Double amount = XslUtil.getDouble(row.getColumnValue(XslConstants.AMOUNT));
-						ShippingOrder shippingOrder = getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
-						if (shippingOrder == null) {
-							throw new Exception("Gateway order Id does not exist");
-						}
-
-						if (amount == null || amount.doubleValue() != shippingOrder.getAmount().doubleValue()) {
-							throw new Exception("Reconciliation Amount does not match with the actual shipping order amount");
-						}
-						mapSOReconciled.put(shippingOrder, reconciled);
-
-						rowCount++;
-						logger.debug("OrderPaymentReconciliation saved for Shipping Order: " + shippingOrder);
-
-					}
-				} catch (Exception e) {
-					logger.error("Exception @ Row:" + (rowCount + 1) + e.getMessage());
-					throw new Exception("Exception @ Row:" + (rowCount + 1) + ": " + e.getMessage(), e);
-				}
-
-		List<OrderPaymentReconciliation> orderPaymentReconciliationList = new ArrayList<OrderPaymentReconciliation>();
-		OrderPaymentReconciliation orderPaymentReconciliation = null;
-		for (ShippingOrder shippingOrder : mapSOReconciled.keySet()) {
-			String reconciled = mapSOReconciled.get(shippingOrder);
-			orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationBySO(shippingOrder);
-										if (orderPaymentReconciliation == null) {
-											orderPaymentReconciliation = new OrderPaymentReconciliation();
-											orderPaymentReconciliation.setBaseOrder(shippingOrder.getBaseOrder());
-											orderPaymentReconciliation.setShippingOrder(shippingOrder);
-											orderPaymentReconciliation.setPaymentMode(paymentMode);
-										}
-										orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
-										orderPaymentReconciliation.setReconciledAmount(amount);
-						orderPaymentReconciliationList.add(orderPaymentReconciliation);
-
+	private void checkExcelSanity(String gatewayOrderId, String reconciled, Double amount) throws Exception {
+		if (gatewayOrderId == null) {
+			throw new Exception("Invalid gateway order id ");
 		}
-
-		getAdminReconciliationDao().saveOrUpdate(orderPaymentReconciliationList);
-
+		if (reconciled == null) {
+			throw new Exception("Invalid reconciliation status");
+		}
+		if (!reconciled.equalsIgnoreCase("N") && !reconciled.equalsIgnoreCase("Y")) {
+			throw new Exception("Reconciliation status should be 'Y' or 'N' only. ");
+		}
+		if (amount == null) {
+			throw new Exception("Invalid amount");
+		}
 	}
-*/
+
 	private OrderPaymentReconciliation createOrderPaymentReconciliation(Order order, ShippingOrder shippingOrder, PaymentMode paymentMode, Double amount, String reconciled) {
 		OrderPaymentReconciliation orderPaymentReconciliation = new OrderPaymentReconciliation();
 		if (order != null) {
@@ -232,6 +192,32 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 		return orderPaymentReconciliation;
 	}
 
+	private OrderPaymentReconciliation updateOrCreateOrderPaymentReconciliationBySO(ShippingOrder shippingOrder, PaymentMode paymentMode, Double amount, String reconciled) {
+		OrderPaymentReconciliation orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationBySO(shippingOrder);
+		if (orderPaymentReconciliation == null) {
+			orderPaymentReconciliation = new OrderPaymentReconciliation();
+		}
+		orderPaymentReconciliation.setShippingOrder(shippingOrder);
+		orderPaymentReconciliation.setBaseOrder(shippingOrder.getBaseOrder());
+		orderPaymentReconciliation.setPaymentMode(paymentMode);
+		orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
+		orderPaymentReconciliation.setReconciledAmount(amount);
+		return orderPaymentReconciliation;
+	}
+
+	private OrderPaymentReconciliation updateOrCreateOrderPaymentReconciliationByBO(Order order, PaymentMode paymentMode, Double amount, String reconciled) {
+		OrderPaymentReconciliation orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationByBaseOrder(order);
+		if (orderPaymentReconciliation == null) {
+			orderPaymentReconciliation = new OrderPaymentReconciliation();
+		}
+		orderPaymentReconciliation.setBaseOrder(order);
+		orderPaymentReconciliation.setPaymentMode(paymentMode);
+		orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
+		orderPaymentReconciliation.setReconciledAmount(amount);
+		return orderPaymentReconciliation;
+	}
+
+
 	public AdminReconciliationDao getAdminReconciliationDao() {
 		return adminReconciliationDao;
 	}
@@ -240,19 +226,19 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 		this.adminReconciliationDao = adminReconciliationDao;
 	}
 
-	public OrderDao getOrderDao() {
-		return orderDao;
+	public AdminShippingOrderDao getAdminShippingOrderDao() {
+		return adminShippingOrderDao;
 	}
 
-	public void setOrderDao(OrderDao orderDao) {
-		this.orderDao = orderDao;
+	public void setAdminShippingOrderDao(AdminShippingOrderDao adminShippingOrderDao) {
+		this.adminShippingOrderDao = adminShippingOrderDao;
 	}
 
-	public ShippingOrderDao getShippingOrderDao() {
-		return shippingOrderDao;
+	public AdminOrderDao getAdminOrderDao() {
+		return adminOrderDao;
 	}
 
-	public void setShippingOrderDao(ShippingOrderDao shippingOrderDao) {
-		this.shippingOrderDao = shippingOrderDao;
+	public void setAdminOrderDao(AdminOrderDao adminOrderDao) {
+		this.adminOrderDao = adminOrderDao;
 	}
 }
