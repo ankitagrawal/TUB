@@ -11,6 +11,31 @@
 <s:layout-definition>
     <c:set var="topCategoryUrl" value="/${topCategory}"/>
     <c:set var="allCategories" value="${allCategories}"/>
+
+  <div style="cursor:default; width: 960px; margin: 30px auto 5px;">
+
+    <div class='logoBox' style="float:left;">
+      <s:link href="/" title='go to healthkart home'>
+        <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+      </s:link>
+    </div>
+    
+    <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false"
+            renderSourcePage="false" autocomplete="off" >
+      <s:text name="query" id="searchbox" class="input_tip" title='search our catalog'
+              style="height: 20px; font-size: 12px; width: 500px;" value="${param['query']}" placeholder='search our catalog'/>
+
+      <s:image name="search" src="/images/icons/search2.png" style="left:50px; width: 15px;"/>
+    </s:form>
+  </div>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#searchbox").autocomplete({url:'${pageContext.request.contextPath}/autocomplete-search/'});
+    });
+  </script>
+  
+
     <%--
     use menuBarShifted class along with menu class to shift menu down when showing the notice
     the menu bar gets shifted by 30px; siteNotice div is 30px in height.
@@ -175,5 +200,5 @@
             });
         });
     </script>
-    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
+
 </s:layout-definition>
