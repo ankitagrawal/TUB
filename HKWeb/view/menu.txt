@@ -597,19 +597,22 @@
 --/beauty/bath-body/body-scrub
 --/beauty/bath-body/bath-salts-bubbles : Bath Salts & Bubbles
 --/beauty/bath-body/body-lotion
---/beauty/bath-body/body-oil
 --/beauty/bath-body/body-treatment
----/beauty/bath-body/body-treatment/body-shaping-creams
----/beauty/bath-body/body-treatment/body-shaping-accessories
----/beauty/bath-body/body-treatment/anti-stretch-mark
----/beauty/bath-body/body-treatment/scar-treatment
---/beauty/bath-body/talc
---/beauty/bath-body/deodorant
---/beauty/bath-body/oral
---/beauty/bath-body/hand-care
---/beauty/bath-body/foot-care
+---/beauty/bath-body/body-treatment/anti-marks
+---/beauty/bath-body/body-treatment/body-oil
+---/beauty/bath-body/body-shaping
+---/beauty/bath-body/body-shaping/creams
+---/beauty/bath-body/body-shaping/shapewear
+---/beauty/bath-body/body-shaping/accessories
+--/beauty/bath-body/talc-deodorant : Talc & Deodorant
+---/beauty/bath-body/talc-deodorant/talc
+---/beauty/bath-body/talc-deodorant/deodorant
+--/beauty/bath-body/hand-foot-care : Hand & Foot Care
+---/beauty/bath-body/hand-foot-care/hand-care
+---/beauty/bath-body/hand-foot-care/foot-care
 --/beauty/bath-body/hair-removal
 --/beauty/bath-body/accessories
+--/beauty/bath-body/camisoles
 --/beauty/bath-body/fragrances
 -/beauty/make-up
 --/beauty/make-up/organic-make-up
