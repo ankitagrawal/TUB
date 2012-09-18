@@ -51,11 +51,10 @@
 			        <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
 				        Cart (<span class='num' id="productsInCart">${cartAction.itemsInCart}</span>)
 			        </s:link>
-		        </div>
-		        <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+			        <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
 			        <c:choose>
 				        <c:when test="${cartAction.itemsInCart > 0}">
-					        <img class='icon cartIcon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
+					        <img class='icon cartIcon' src='${pageContext.request.contextPath}/images/icons/cart.png' style="max-height:15px;vertical-align:middle;"/>
 				        </c:when>
 				        <c:otherwise>
 					        <img class='icon cartIcon'
@@ -63,6 +62,7 @@
 				        </c:otherwise>
 			        </c:choose>
 		        </s:link>
+		        </div>   		        
 	        </div>
           
         </div>
