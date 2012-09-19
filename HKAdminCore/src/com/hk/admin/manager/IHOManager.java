@@ -66,7 +66,7 @@ public class IHOManager {
         Coupon ihoCoupon = null;
         if (isValidIHOCard(code) && !user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_IHO_USER))) {
             Offer offer = getOfferManager().getOfferForIHO();
-            ihoCoupon = getCouponService().createCoupon(code, null, null, null, offer, null, true);
+            ihoCoupon = getCouponService().createCoupon(code, null, null, null, offer, null, true, null);
             user.getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_IHO_USER));
             user = getUserService().save(user);
         }

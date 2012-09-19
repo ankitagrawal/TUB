@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -112,6 +113,8 @@ public class ProductAction extends BaseAction {
     private SubscriptionProductService subscriptionProductService;
     @Autowired
     private LinkManager linkManager;
+	@Autowired
+	ProductImageService productImageService;
 
     @DefaultHandler
     @DontValidate
@@ -179,7 +182,7 @@ public class ProductAction extends BaseAction {
             }
         }
         urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
-        productImages = getProductService().getImagesByProductForProductMainPage(product);
+        productImages = productImageService.searchProductImages(null,product,null,true,false);
         seoData = seoManager.generateSeo(productId);
         String breadcrumbUrlFragment = menuHelper.getUrlFragementFromProduct(product);
         MenuNode breadcrumbMenuNode = menuHelper.getMenuNode(breadcrumbUrlFragment);

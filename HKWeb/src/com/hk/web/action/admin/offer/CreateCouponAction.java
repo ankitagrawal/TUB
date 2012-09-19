@@ -101,7 +101,7 @@ public class CreateCouponAction extends BaseAction {
         }
         if (repetitiveUsage == null)
             repetitiveUsage = false;
-        Coupon coupon = getCouponService().createCoupon(couponCode, endDate, allowedTimes, alreadyUsed, offer, null, repetitiveUsage);
+        Coupon coupon = getCouponService().createCoupon(couponCode, endDate, allowedTimes, alreadyUsed, offer, null, repetitiveUsage, null);
 
         addRedirectAlertMessage(new LocalizableMessage("/CreateCoupon.action.coupon.created"));
         return new RedirectResolution(CreateCouponAction.class);
@@ -111,7 +111,7 @@ public class CreateCouponAction extends BaseAction {
 
         List<Coupon> coupons = null;
         try {
-            coupons = getCouponService().generateCoupons(endPart, couponCode, numberOfCoupons, repetitiveUsage, endDate, allowedTimes, alreadyUsed, offer);
+            coupons = getCouponService().generateCoupons(endPart, couponCode, numberOfCoupons, repetitiveUsage, endDate, allowedTimes, alreadyUsed, offer, null, null);
         } catch (HealthKartCouponException e) {
             addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
             return getContext().getSourcePageResolution();
@@ -173,7 +173,7 @@ public class CreateCouponAction extends BaseAction {
 
         List<Coupon> coupons = null;
         try {
-            coupons = getCouponService().generateCoupons(endPart, couponCode, numberOfCoupons, repetitiveUsage, endDate, allowedTimes, alreadyUsed, offer);
+            coupons = getCouponService().generateCoupons(endPart, couponCode, numberOfCoupons, repetitiveUsage, endDate, allowedTimes, alreadyUsed, offer, null, null);
         } catch (HealthKartCouponException e) {
             addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
             return getContext().getSourcePageResolution();
@@ -231,7 +231,7 @@ public class CreateCouponAction extends BaseAction {
                 return getContext().getSourcePageResolution();
             }
 
-            Coupon coupon = getCouponService().createCoupon(couponCode, endDate, allowedTimes, alreadyUsed, offer, null, false);
+            Coupon coupon = getCouponService().createCoupon(couponCode, endDate, allowedTimes, alreadyUsed, offer, null, false, null);
 
         }
 

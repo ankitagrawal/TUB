@@ -133,7 +133,7 @@ public class CatalogAction extends BasePaginatedAction {
     @Session(key = HealthkartConstants.Session.perPageCatalog)
     private int                     perPage;
 
-    private int                     defaultPerPage             = 20;
+    private int                     defaultPerPage             = 24;
 
     @DefaultHandler
     public Resolution pre() throws IOException, SolrServerException {
@@ -166,11 +166,7 @@ public class CatalogAction extends BasePaginatedAction {
             smallestCategory = rootCategorySlug;
         }
 
-        try {
-            boolean renderNewCatalogUI = Functions.renderNewCatalogUI(childCategorySlug, secondaryChildCategorySlug);
-            if (renderNewCatalogUI) {
-                defaultPerPage = 21;
-            }
+        try {            
             if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
                 if (!filterOptions.isEmpty()) {
                     filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");

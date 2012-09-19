@@ -3,6 +3,8 @@ package com.hk.web.action.core.discount;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.constants.coupon.EnumCouponType;
+import com.hk.domain.coupon.CouponType;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
 import net.sourceforge.stripes.action.Resolution;
@@ -130,7 +132,7 @@ public class ApplyCouponAction extends BaseAction {
             } else if (coupon.getReferrerUser() != null && user.getReferredBy() != null) {
                 error = error_alreadyReferrer;
                 message = new LocalizableMessage("/ApplyCoupon.action.already.has.referrer").getMessage(getContext().getLocale());
-            } else if (coupon.getReferrerUser() != null && !coupon.getOffer().getOfferIdentifier().equals(OfferConstants.affiliateCommissionOffer)
+            } else if (coupon.getReferrerUser() != null && coupon.getCouponType() != null && !coupon.getCouponType().getId().equals(EnumCouponType.AFFILIATE.getId())
                     && user.getCreateDate().before(coupon.getCreateDate())) {
                 error = error_referralNotAllowed;
                 message = new LocalizableMessage("/ApplyCoupon.action.referrer.coupon.not.allowed").getMessage(getContext().getLocale());
@@ -143,7 +145,8 @@ public class ApplyCouponAction extends BaseAction {
                 // add referredBy to the user if coupon contains the referrerUser
                 if (coupon.getReferrerUser() != null) {
                     // add affiliate_to to the user if its an affiliate coupon
-                    if (coupon.getOffer().getOfferIdentifier().equals(OfferConstants.affiliateCommissionOffer)) {
+	                CouponType couponType = coupon.getCouponType();
+                    if (couponType != null && couponType.getId().equals(EnumCouponType.AFFILIATE.getId())) {
                         Assert.assertNull(user.getAffiliateTo());
                         user.setAffiliateTo(coupon.getReferrerUser());
                         user = (User) getBaseDao().save(user);

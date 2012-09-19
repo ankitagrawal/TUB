@@ -1,287 +1,398 @@
 package com.hk.web.action.core.affiliate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidateNestedProperties;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.affiliate.EnumAffiliateStatus;
+import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.core.RoleConstants;
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
+import com.hk.domain.affiliate.AffiliateStatus;
+import com.hk.domain.offer.Offer;
 import com.hk.domain.user.Address;
-import com.hk.domain.user.User;
+import com.hk.domain.user.Role;
 import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
 import com.hk.manager.AffiliateManager;
+import com.hk.pact.dao.CheckDetailsDao;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.RoleService;
 import com.hk.report.dto.payment.AffiliatePaymentDto;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidateNestedProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 @Secure(hasAnyPermissions = {PermissionConstants.MANAGE_AFFILIATES}, authActionBean = AdminPermissionAction.class)
 @Component
 public class AffiliatePaymentAction extends BasePaginatedAction {
-    @Autowired
-    AffiliateDao affiliateDao;
-    @Autowired
-    AffiliateManager affiliateManager;
-    @Autowired
-    CheckDetailsDaoImpl checkDetailsDao;
-    @Autowired
-    AddressDao addressDao;
-    @Autowired
-    AffiliateCategoryDaoImpl affiliateCategoryCommissionDao;
+	@Autowired
+	AffiliateDao affiliateDao;
+	@Autowired
+	AffiliateManager affiliateManager;
+	@Autowired
+	CheckDetailsDao checkDetailsDao;
+	@Autowired
+	AddressDao addressDao;
+	@Autowired
+	AffiliateCategoryDaoImpl affiliateCategoryCommissionDao;
 
-    List<AffiliatePaymentDto> affiliatePaymentDtoList = new ArrayList<AffiliatePaymentDto>();
-    Affiliate affiliate;
-    List<CheckDetails> checkDetailsList;
-    List<AffiliateCategoryCommission> affiliateCategoryCommissionList;
-    Page affiliatePage;
+	List<AffiliatePaymentDto> affiliatePaymentDtoList = new ArrayList<AffiliatePaymentDto>();
+	Affiliate affiliate;
+	List<CheckDetails> checkDetailsList;
+	List<AffiliateCategoryCommission> affiliateCategoryCommissionList;
+	Date startDate;
+	Date endDate;
+	Offer offer;
 
-    Double amount;
-    @ValidateNestedProperties({
-            @Validate(field = "checkNo", required = true, on = "payToAffiliate"),
-            @Validate(field = "issueDate", required = true, on = "payToAffiliate"),
-            @Validate(field = "bankName", required = true, on = "payToAffiliate")})
-    CheckDetails checkDetails;
-    @Validate(required = true, on = "payToAffiliate")
-    Double amountToPay;
-    Address checkDeliveryAddress;
-    String name;
-    String email;
+	Double amount;
+	@ValidateNestedProperties({
+			@Validate(field = "checkNo", required = true, on = "payToAffiliate"),
+			@Validate(field = "issueDate", required = true, on = "payToAffiliate"),
+			@Validate(field = "bankName", required = true, on = "payToAffiliate")})
+	CheckDetails checkDetails;
+	@Validate(required = true, on = "payToAffiliate")
+	Double amountToPay;
+	Address checkDeliveryAddress;
+	String name;
+	String email;
+	String websiteName;
+	String code;
+	Long affiliateMode;
+	Long affiliateType;
+	Role role;
+	AffiliateStatus affiliateStatus;
 
-    @Autowired
-    private RoleService roleService;
+	Page affiliatePage;
+	List<Affiliate> affiliates = new ArrayList<Affiliate>();
 
-    @DefaultHandler
-    public Resolution pre() {
-        affiliatePage = getUserService().findByRole(name, email, getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE), getPageNo(), getPerPage());
-        List<User> affiliatesUsers = affiliatePage.getList();
-        List<Affiliate> affiliates = new ArrayList<Affiliate>();
-        for (User user : affiliatesUsers) {
-            affiliates.add(affiliateDao.getAffilateByUser(user));
-        }
-        for (Affiliate affiliate : affiliates) {
-                AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
-                affiliatePaymentDto.setAffiliate(affiliate);
-                affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate));
-                affiliatePaymentDtoList.add(affiliatePaymentDto);
-        }
-        return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
-    }
+	@Autowired
+	private RoleService roleService;
 
-    public Resolution showAffiliatePlan() {
-        affiliateCategoryCommissionList = getAffiliateDao().getAffiliatePlan(affiliate);
-        return new ForwardResolution("/pages/affiliate/affiliatePlan.jsp");
-    }
+	@DefaultHandler
+	public Resolution pre() {
+		List<Long> affiliateStatusIds = Arrays.asList(EnumAffiliateStatus.Verified.getId());
+		affiliatePage = affiliateDao.searchAffiliates(affiliateStatusIds, name, email, websiteName, code, affiliateMode, affiliateType, EnumRole.HK_AFFILIATE.toRole(), getPerPage(), getPageNo());
+		if (affiliatePage != null) {
+			affiliates = affiliatePage.getList();
+		}
 
-    public Resolution savePlan() {
-        for (AffiliateCategoryCommission categoryCommission : affiliateCategoryCommissionList) {
-            getAffiliateCategoryCommissionDao().save(categoryCommission);
-        }
-        return new ForwardResolution("/pages/affiliate/affiliatePlan.jsp");
-    }
+		for (Affiliate affiliate : affiliates) {
+			AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
+			affiliatePaymentDto.setAffiliate(affiliate);
+			affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate, null, null));
+			affiliatePaymentDto.setPayableAmount(getAffiliateManager().getPayableAmount(affiliate));
+			affiliatePaymentDtoList.add(affiliatePaymentDto);
+		}
+		return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
+	}
 
-    public Resolution save() {
-        for (AffiliatePaymentDto affiliatePaymentDto : affiliatePaymentDtoList) {
-            getAffiliateDao().save(affiliatePaymentDto.getAffiliate());
-        }
-        return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
-    }
+	public Resolution search() {
+		List<Long> affiliateStatusIds = new ArrayList<Long>();
+		if(affiliateStatus != null){
+			affiliateStatusIds.add(affiliateStatus.getId());
+		}
+		affiliatePage = affiliateDao.searchAffiliates(affiliateStatusIds, name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
+		if (affiliatePage != null) {
+			affiliates = affiliatePage.getList();
+		}
+		for (Affiliate affiliate : affiliates) {
+			AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
+			affiliatePaymentDto.setAffiliate(affiliate);
+			affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate, null, null));
+			affiliatePaymentDto.setPayableAmount(getAffiliateManager().getAmountInAccount(affiliate, startDate, endDate));
+			affiliatePaymentDtoList.add(affiliatePaymentDto);
+		}
+		return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
+	}
 
-    public Resolution showAffiliateDetails() {
-        amount = getAffiliateManager().getAmountInAccount(affiliate);
-        checkDetailsList = getCheckDetailsDao().getCheckListByAffiliate(affiliate);
-        return new ForwardResolution("/pages/affiliate/affiliateAccount.jsp");
-    }
+	public Resolution showAffiliatePlan() {
+		affiliateCategoryCommissionList = getAffiliateDao().getAffiliatePlan(affiliate);
+		return new ForwardResolution("/pages/affiliate/affiliatePlan.jsp");
+	}
 
-    public Resolution paymentDetails() {
-        if (affiliate.getMainAddressId() != null) {
-            checkDeliveryAddress = getAddressDao().get(Address.class, affiliate.getMainAddressId());
-        } else {
-            checkDeliveryAddress = null;
-        }
-        return new ForwardResolution("/pages/affiliate/paymentToAffiliateDetails.jsp");
-    }
+	public Resolution savePlan() {
+		if(offer == null){
+			return new RedirectResolution(AffiliatePaymentAction.class,"showAffiliatePlan").addParameter("affiliate", affiliate);
+		}
+		affiliate.setOffer(offer);
+		affiliate = (Affiliate) affiliateDao.save(affiliate);
+		for (AffiliateCategoryCommission categoryCommission : affiliateCategoryCommissionList) {
+			getAffiliateCategoryCommissionDao().save(categoryCommission);
+		}
+		return new ForwardResolution("/pages/affiliate/affiliatePlan.jsp");
+	}
 
-    public Resolution payToAffiliate() {
-        if (getCheckDetailsDao().geCheckDetailsByCheckNo(checkDetails.getCheckNo()) != null) {
-            addValidationError("e1", new SimpleError("The check with this check no. has already been sent to someone."));
-            return new ForwardResolution("/pages/affiliate/paymentToAffiliateDetails.jsp");
-        }
-        affiliateManager.paidToAffiiliate(affiliate, amountToPay, checkDetails);
-        addRedirectAlertMessage(new SimpleMessage("Entry made."));
-        return new RedirectResolution("/pages/admin/adminHome.jsp");
-    }
+	public Resolution save() {
+		for (AffiliatePaymentDto affiliatePaymentDto : affiliatePaymentDtoList) {
+			getAffiliateDao().save(affiliatePaymentDto.getAffiliate());
+		}
+		return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
+	}
 
-    @SuppressWarnings("unchecked")
-    public List<AffiliatePaymentDto> getAffiliatePaymentDtoList() {
-        Collections.sort(affiliatePaymentDtoList, new Comparator() {
-            public int compare(Object o1, Object o2) {
-                AffiliatePaymentDto affiliatePaymentObject1 = (AffiliatePaymentDto) o1;
-                AffiliatePaymentDto affiliatePaymentObject2 = (AffiliatePaymentDto) o2;
-                return affiliatePaymentObject2.getAmount().compareTo(affiliatePaymentObject1.getAmount());
-            }
-        });
-        return affiliatePaymentDtoList;
-    }
+	public Resolution showAffiliateDetails() {
+		amount = getAffiliateManager().getAmountInAccount(affiliate, startDate, endDate);
+		checkDetailsList = getCheckDetailsDao().getCheckListByAffiliate(affiliate);
+		return new ForwardResolution("/pages/affiliate/affiliateAccount.jsp");
+	}
 
-    public void setAffiliatePaymentDtoList(List<AffiliatePaymentDto> affiliatePaymentDtoList) {
-        this.affiliatePaymentDtoList = affiliatePaymentDtoList;
-    }
+	public Resolution paymentDetails() {
+		if (affiliate.getMainAddressId() != null) {
+			checkDeliveryAddress = getAddressDao().get(Address.class, affiliate.getMainAddressId());
+		} else {
+			checkDeliveryAddress = null;
+		}
+		amountToPay = affiliateManager.getPayableAmount(affiliate);
+		return new ForwardResolution("/pages/affiliate/paymentToAffiliateDetails.jsp");
+	}
 
-    public Affiliate getAffiliate() {
-        return affiliate;
-    }
+	public Resolution payToAffiliate() {
+		if (getCheckDetailsDao().geCheckDetailsByCheckNo(checkDetails.getCheckNo()) != null) {
+			addValidationError("e1", new SimpleError("The check with this check no. has already been sent to someone."));
+			return new ForwardResolution("/pages/affiliate/paymentToAffiliateDetails.jsp");
+		}
+		affiliateManager.paidToAffiiliate(affiliate, amountToPay, checkDetails);
+		addRedirectAlertMessage(new SimpleMessage("Entry made."));
+		return new RedirectResolution("/pages/admin/adminHome.jsp");
+	}
 
-    public void setAffiliate(Affiliate affiliate) {
-        this.affiliate = affiliate;
-    }
+	@SuppressWarnings("unchecked")
+	public List<AffiliatePaymentDto> getAffiliatePaymentDtoList() {
+		Collections.sort(affiliatePaymentDtoList, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				AffiliatePaymentDto affiliatePaymentObject1 = (AffiliatePaymentDto) o1;
+				AffiliatePaymentDto affiliatePaymentObject2 = (AffiliatePaymentDto) o2;
+				return affiliatePaymentObject2.getAmount().compareTo(affiliatePaymentObject1.getAmount());
+			}
+		});
+		return affiliatePaymentDtoList;
+	}
 
-    public List<CheckDetails> getCheckDetailsList() {
-        return checkDetailsList;
-    }
+	public void setAffiliatePaymentDtoList(List<AffiliatePaymentDto> affiliatePaymentDtoList) {
+		this.affiliatePaymentDtoList = affiliatePaymentDtoList;
+	}
 
-    public void setCheckDetailsList(List<CheckDetails> checkDetailsList) {
-        this.checkDetailsList = checkDetailsList;
-    }
+	public Affiliate getAffiliate() {
+		return affiliate;
+	}
 
-    public Double getAmount() {
-        return amount;
-    }
+	public void setAffiliate(Affiliate affiliate) {
+		this.affiliate = affiliate;
+	}
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
+	public List<CheckDetails> getCheckDetailsList() {
+		return checkDetailsList;
+	}
 
-    public CheckDetails getCheckDetails() {
-        return checkDetails;
-    }
+	public void setCheckDetailsList(List<CheckDetails> checkDetailsList) {
+		this.checkDetailsList = checkDetailsList;
+	}
 
-    public void setCheckDetails(CheckDetails checkDetails) {
-        this.checkDetails = checkDetails;
-    }
+	public Double getAmount() {
+		return amount;
+	}
 
-    public Double getAmountToPay() {
-        return amountToPay;
-    }
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
 
-    public void setAmountToPay(Double amountToPay) {
-        this.amountToPay = amountToPay;
-    }
+	public CheckDetails getCheckDetails() {
+		return checkDetails;
+	}
 
-    public Address getCheckDeliveryAddress() {
-        return checkDeliveryAddress;
-    }
+	public void setCheckDetails(CheckDetails checkDetails) {
+		this.checkDetails = checkDetails;
+	}
 
-    public void setCheckDeliveryAddress(Address checkDeliveryAddress) {
-        this.checkDeliveryAddress = checkDeliveryAddress;
-    }
+	public Double getAmountToPay() {
+		return amountToPay;
+	}
 
-    public List<AffiliateCategoryCommission> getAffiliateCategoryCommissionList() {
-        return affiliateCategoryCommissionList;
-    }
+	public void setAmountToPay(Double amountToPay) {
+		this.amountToPay = amountToPay;
+	}
 
-    public void setAffiliateCategoryCommissionList(List<AffiliateCategoryCommission> affiliateCategoryCommissionList) {
-        this.affiliateCategoryCommissionList = affiliateCategoryCommissionList;
-    }
+	public Address getCheckDeliveryAddress() {
+		return checkDeliveryAddress;
+	}
 
-    public Set<String> getParamSet() {
-        return null;
-    }
+	public void setCheckDeliveryAddress(Address checkDeliveryAddress) {
+		this.checkDeliveryAddress = checkDeliveryAddress;
+	}
 
-    public int getPerPageDefault() {
-        return 20;
-    }
+	public List<AffiliateCategoryCommission> getAffiliateCategoryCommissionList() {
+		return affiliateCategoryCommissionList;
+	}
 
-    public int getPageCount() {
-        return affiliatePage == null ? 0 : affiliatePage.getTotalPages();
-    }
+	public void setAffiliateCategoryCommissionList(List<AffiliateCategoryCommission> affiliateCategoryCommissionList) {
+		this.affiliateCategoryCommissionList = affiliateCategoryCommissionList;
+	}
 
-    public int getResultCount() {
-        return affiliatePage == null ? 0 : affiliatePage.getTotalResults();
-    }
+	public Set<String> getParamSet() {
+		return null;
+	}
 
-    public RoleService getRoleService() {
-        return roleService;
-    }
+	public int getPerPageDefault() {
+		return 20;
+	}
 
-    public void setRoleService(RoleService roleService) {
-        this.roleService = roleService;
-    }
+	public int getPageCount() {
+		return affiliatePage == null ? 0 : affiliatePage.getTotalPages();
+	}
 
-    public AffiliateDao getAffiliateDao() {
-        return affiliateDao;
-    }
+	public int getResultCount() {
+		return affiliatePage == null ? 0 : affiliatePage.getTotalResults();
+	}
 
-    public void setAffiliateDao(AffiliateDao affiliateDao) {
-        this.affiliateDao = affiliateDao;
-    }
+	public RoleService getRoleService() {
+		return roleService;
+	}
 
-    public AffiliateManager getAffiliateManager() {
-        return affiliateManager;
-    }
+	public void setRoleService(RoleService roleService) {
+		this.roleService = roleService;
+	}
 
-    public void setAffiliateManager(AffiliateManager affiliateManager) {
-        this.affiliateManager = affiliateManager;
-    }
+	public AffiliateDao getAffiliateDao() {
+		return affiliateDao;
+	}
 
-    public CheckDetailsDaoImpl getCheckDetailsDao() {
-        return checkDetailsDao;
-    }
+	public void setAffiliateDao(AffiliateDao affiliateDao) {
+		this.affiliateDao = affiliateDao;
+	}
 
-    public void setCheckDetailsDao(CheckDetailsDaoImpl checkDetailsDao) {
-        this.checkDetailsDao = checkDetailsDao;
-    }
+	public AffiliateManager getAffiliateManager() {
+		return affiliateManager;
+	}
 
-    public AddressDao getAddressDao() {
-        return addressDao;
-    }
+	public void setAffiliateManager(AffiliateManager affiliateManager) {
+		this.affiliateManager = affiliateManager;
+	}
 
-    public void setAddressDao(AddressDao addressDao) {
-        this.addressDao = addressDao;
-    }
+	public CheckDetailsDao getCheckDetailsDao() {
+		return checkDetailsDao;
+	}
 
-    public AffiliateCategoryDaoImpl getAffiliateCategoryCommissionDao() {
-        return affiliateCategoryCommissionDao;
-    }
+	public void setCheckDetailsDao(CheckDetailsDaoImpl checkDetailsDao) {
+		this.checkDetailsDao = checkDetailsDao;
+	}
 
-    public void setAffiliateCategoryCommissionDao(AffiliateCategoryDaoImpl affiliateCategoryCommissionDao) {
-        this.affiliateCategoryCommissionDao = affiliateCategoryCommissionDao;
-    }
+	public AddressDao getAddressDao() {
+		return addressDao;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setAddressDao(AddressDao addressDao) {
+		this.addressDao = addressDao;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public AffiliateCategoryDaoImpl getAffiliateCategoryCommissionDao() {
+		return affiliateCategoryCommissionDao;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setAffiliateCategoryCommissionDao(AffiliateCategoryDaoImpl affiliateCategoryCommissionDao) {
+		this.affiliateCategoryCommissionDao = affiliateCategoryCommissionDao;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public Page getAffiliatePage() {
+		return affiliatePage;
+	}
+
+	public void setAffiliatePage(Page affiliatePage) {
+		this.affiliatePage = affiliatePage;
+	}
+
+	public String getWebsiteName() {
+		return websiteName;
+	}
+
+	public void setWebsiteName(String websiteName) {
+		this.websiteName = websiteName;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Long getAffiliateMode() {
+		return affiliateMode;
+	}
+
+	public void setAffiliateMode(Long affiliateMode) {
+		this.affiliateMode = affiliateMode;
+	}
+
+	public Long getAffiliateType() {
+		return affiliateType;
+	}
+
+	public void setAffiliateType(Long affiliateType) {
+		this.affiliateType = affiliateType;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public AffiliateStatus getAffiliateStatus() {
+		return affiliateStatus;
+	}
+
+	public void setAffiliateStatus(AffiliateStatus affiliateStatus) {
+		this.affiliateStatus = affiliateStatus;
+	}
+
+	public Offer getOffer() {
+		return offer;
+	}
+
+	public void setOffer(Offer offer) {
+		this.offer = offer;
+	}
 }
