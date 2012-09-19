@@ -55,12 +55,10 @@
       </div>
 	    <div style="font-size: 12px; text-align: right; margin-right: 5px;">
 		    <c:forEach items="${product.productVariants[0].productOptions}" var="variantOption">
-			    <%--<c:if
-					    test="${fn:toUpperCase(variantOption.name) == 'TYPE' || fn:toUpperCase(variantOption.name) == 'BABY WEIGHT' || fn:toUpperCase(variantOption.name) == 'SIZE'
-					    || fn:toUpperCase(variantOption.name) == 'FLAVOR' || fn:toUpperCase(variantOption.name) == 'QUANTITY' || fn:toUpperCase(variantOption.name) == 'WEIGHT'} ">
+			    <c:if test="${hk:showOptionOnUI(variantOption.name)} ">
 				    ${variantOption.name}:${variantOption.value}<br/>
-			    </c:if>--%>
-			    <span style="font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>
+			    </c:if>
+			    <%--<span style="font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>--%>
 		    </c:forEach>
 	    </div>
 
@@ -74,7 +72,7 @@
                 <%--<div class="outOfStock">Coming soon...</div>--%>
               <%--</c:when>--%>
               <%--<c:otherwise> `--%>
-                <span class="outOfStock">Sold Out</span>
+                <div><span class="outOfStock">Sold Out</span></div>
 
                 <div align="center"><s:link beanclass="com.hk.web.action.core.user.NotifyMeAction"
                                             class="notifyMe button_orange"><b>Notify

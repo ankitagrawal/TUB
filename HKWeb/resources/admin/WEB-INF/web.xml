@@ -240,7 +240,7 @@
         <url-pattern>/revital</url-pattern>
         <url-pattern>/super-savers</url-pattern>
         <url-pattern>/faq/*</url-pattern>
-	    <url-pattern>/diabetes-management-program</url-pattern>
+	    <url-pattern>/dmp</url-pattern>
 	    <url-pattern>/feedback</url-pattern>
     </servlet-mapping>
 

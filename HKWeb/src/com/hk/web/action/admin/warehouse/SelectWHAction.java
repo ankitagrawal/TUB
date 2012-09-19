@@ -34,7 +34,7 @@ public class SelectWHAction extends BaseAction {
   @DefaultHandler
   public Resolution pre() {
     //TODO #introducing gc as a hit n try solution for server performance
-    System.gc();
+//    System.gc();
     return new ForwardResolution("/pages/admin/selectWH.jsp");
   }
 

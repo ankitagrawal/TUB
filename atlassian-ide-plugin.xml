@@ -1,0 +1,13 @@
+<atlassian-ide-plugin>
+  <project-configuration>
+    <servers>
+      <jira>
+        <server-id>f6b4cabd-be57-4494-a7a9-5d97043a2e16</server-id>
+        <name>HK-JIRA</name>
+        <url>https://healthkart.atlassian.net</url>
+        <shared>false</shared>
+      </jira>
+    </servers>
+    <default-jira-server>f6b4cabd-be57-4494-a7a9-5d97043a2e16</default-jira-server>
+  </project-configuration>
+</atlassian-ide-plugin>

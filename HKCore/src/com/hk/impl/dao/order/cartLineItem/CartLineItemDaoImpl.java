@@ -1,10 +1,13 @@
 package com.hk.impl.dao.order.cartLineItem;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.CartLineItemExtraOption;
@@ -67,8 +70,13 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
     }
 
     public CartLineItem getLineItem(ProductVariant productVariant, Order order) {
-        String query = "select cli from CartLineItem cli where cli.productVariant = :productVariant  and cli.order = :order";
-        return (CartLineItem) getSession().createQuery(query).setEntity("productVariant", productVariant).setEntity("order", order).uniqueResult();
+        //logger.error("getting line items for " + productVariant.getId() + " order" + order.getId());
+        String query = "select cli from CartLineItem cli where cli.productVariant.id = :productVariantId  and cli.order.id = :orderId and cli.lineItemType.id = " + EnumCartLineItemType.Product.getId();
+        /*List<CartLineItem> allItems =  getSession().createQuery(query).setString("productVariantId", productVariant.getId()).setLong("orderId", order.getId()).list();
+        for(CartLineItem item : allItems){
+            logger.error("***ID: " + item.getId());
+        }*/
+        return (CartLineItem)  getSession().createQuery(query).setString("productVariantId", productVariant.getId()).setLong("orderId", order.getId()).uniqueResult();
     }
 
 }
