@@ -14,7 +14,7 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "order_email_exclusion")
-@NamedQueries( {@NamedQuery(name = "findByEmail", query = "from OrderEmailExclusion o where o.email = :email") } )
+@NamedQueries( {@NamedQuery(name = "orderExclusionfindByEmail", query = "from OrderEmailExclusion o where o.email = :email") } )
 public class OrderEmailExclusion implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
