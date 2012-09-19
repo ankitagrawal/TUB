@@ -305,6 +305,8 @@ public class CatalogAction extends BasePaginatedAction {
         if (StringUtils.isNotBlank(feed)) {
             if (feed.equals("xml")) {
                 return new ForwardResolution("/pages/category/catalogFeedXml.jsp");
+            }else if (feed.equals("xml-temp")) {                                   //TODO: Hacky code to be removed..done by Marut as suggested by Kani
+                return new ForwardResolution("/pages/category/catalogFeedXmlTemp.jsp");
             }
         }
 
