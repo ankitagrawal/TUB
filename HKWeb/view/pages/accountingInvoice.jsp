@@ -11,8 +11,11 @@
 </head>
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" var="orderSummary"/>
-<c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
-<c:set var="isB2BOrder" value="${orderSummary.shippingOrder.baseOrder.b2bOrder}"/>
+<c:set var="shippingOrder" value="${orderSummary.shippingOrder}"/>
+<c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
+<c:set var="address" value="${baseOrder.address}"/>
+<c:set var="warehouse" value="${shippingOrder.warehouse}"/>
+<c:set var="isB2BOrder" value="${baseOrder.b2bOrder}"/>
 <c:set var="b2bUserDetails" value="${orderSummary.b2bUserDetails}"/>
 <div class="container_12">
 <div class="grid_12" style="text-align: center;">
@@ -66,20 +69,20 @@
   <div class="grid_4 alpha omega">
     <div class="column" style="border-right: 1px black solid; border-left: 1px black solid;">
       <p>
-        <strong>Invoice#: </strong>${orderSummary.invoiceDto.invoiceType}-${orderSummary.shippingOrder.accountingInvoiceNumber}
+        <strong>Invoice#: </strong>${orderSummary.invoiceDto.invoiceType}-${shippingOrder.accountingInvoiceNumber}
       </p>
 
       <p><strong>Invoice
-        Date: </strong><fmt:formatDate value="${orderSummary.shippingOrder.shipment.shipDate}" type="both"
+        Date: </strong><fmt:formatDate value="${shippingOrder.shipment.shipDate}" type="both"
 
                                        timeStyle="short"/></p>
 
-      <p><strong>Payment Mode:</strong>${orderSummary.shippingOrder.baseOrder.payment.paymentMode.name}</p>
+      <p><strong>Payment Mode:</strong>${baseOrder.payment.paymentMode.name}</p>
 
-      <p><strong>Courier:</strong>${orderSummary.shippingOrder.shipment.courier.name}</p>
+      <p><strong>Courier:</strong>${shippingOrder.shipment.courier.name}</p>
 
-      <p><strong>Order#: </strong>${orderSummary.shippingOrder.gatewayOrderId} on <fmt:formatDate
-          value="${orderSummary.shippingOrder.baseOrder.payment.createDate}" type="both" timeStyle="short"/></p>
+      <p><strong>Order#: </strong>${shippingOrder.gatewayOrderId} on <fmt:formatDate
+          value="${baseOrder.payment.createDate}" type="both" timeStyle="short"/></p>
     </div>
   </div>
 
@@ -87,23 +90,23 @@
     <div class="column">
       <p><strong>Shipped To:</strong><p>
 
-	  <p>${orderSummary.shippingOrder.baseOrder.address.name}</p>
+	  <p>${address.name}</p>
 
-      <p>${hk:escapeHtml(orderSummary.shippingOrder.baseOrder.address.line1)}
-        <c:if test="${not empty orderSummary.shippingOrder.baseOrder.address.line2}">
-          ,${hk:escapeHtml(orderSummary.shippingOrder.baseOrder.address.line2)}
+      <p>${hk:escapeHtml(address.line1)}
+        <c:if test="${not empty address.line2}">
+          ,${hk:escapeHtml(address.line2)}
         </c:if>
       </p>
 
       <p>
-        ${orderSummary.shippingOrder.baseOrder.address.city}, ${hk:escapeHtml(orderSummary.shippingOrder.baseOrder.address.state)}
-        - ${orderSummary.shippingOrder.baseOrder.address.pin},
+        ${address.city}, ${hk:escapeHtml(address.state)}
+        - ${address.pin},
       </p>
 
-      <p>Ph: ${orderSummary.shippingOrder.baseOrder.address.phone}</p>
+      <p>Ph: ${address.phone}</p>
 	    <c:if test="${isB2BOrder}">
 		    <p><strong>Consignee:</strong><p>
-		    <p>${b2bUserDetails.user.name}</p>
+		    <p>${baseOrder.user.name}</p>
 		    <c:if test="${b2bUserDetails != null}">			    
 			    <c:if test="${b2bUserDetails.tin != null}">
 				    <p>TIN- ${b2bUserDetails.tin}</p>
