@@ -82,7 +82,7 @@
 	    <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" style="float:right;">Brands to Exclude/Audit</s:link>
     </div>
     <div align="center">
-      <s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" method="get" autocomplete="false">
+      <s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" method="get" >
         <%--<label width="5" style="font-weight:bold;color:red;font-size:1.2em">Brand To Restrict:</label><s:text name="brand" class="brand" />--%>
         Category
         <s:select name="category" value="${printPickBean.category.name}">
@@ -97,6 +97,7 @@
 
         SO Gateway Order Id:<s:text name="gatewayOrderId"/>
         BO Gateway Order Id:<s:text name="baseGatewayOrderId"/>
+	      <s:text class="date_input" formatPattern="yyyy-MM-dd" name="endDate" />
         <s:submit name="searchOrdersForPrinting" value="Search By Gateway OrderId"
                   style="font-size:0.9em"/>
       </s:form>

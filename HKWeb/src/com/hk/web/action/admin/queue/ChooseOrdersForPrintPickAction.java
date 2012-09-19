@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.queue;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -64,6 +65,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
 	private static final int PRINTING = 1;
 	private static final int PICKING = 2;
+	private Date startDate;
+	private Date endDate;
 
 	private String brand;
 
@@ -121,6 +124,9 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 			shippingOrderSearchCriteria.setBaseGatewayOrderId(baseGatewayOrderId);
 		} else if (gatewayOrderId != null) {
 			shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
+		} else if (startDate != null && endDate != null) {
+			shippingOrderSearchCriteria.setLastEscStartDate(startDate);
+			shippingOrderSearchCriteria.setLastEscEndDate(endDate);
 		} else {
 			shippingOrderSearchCriteria.setBasketCategory(category.getName()).setBaseGatewayOrderId(baseGatewayOrderId).setGatewayOrderId(gatewayOrderId);
 		}
@@ -337,5 +343,21 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
 	public void setBrandsToAuditDao(BrandsToAuditDao brandsToAuditDao) {
 		this.brandsToAuditDao = brandsToAuditDao;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 }
