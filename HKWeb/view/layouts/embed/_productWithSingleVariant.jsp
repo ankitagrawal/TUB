@@ -19,7 +19,8 @@
     pageContext.setAttribute("eyeGlass", eyeGlass);
 
   %>
-  <div class="buy_prod">
+  <div class="buy_prod" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
+    <meta itemprop="currency" content="INR" />
     <div class="left_col">
       <div class='prices' style="font-size: 14px;">
         <c:if test="${product.productVariants[0].discountPercent > 0}">
@@ -29,11 +30,10 @@
                 </span>
           </div>
           <div class='hk' style="font-size: 16px;">
-            Our Price
                 <span class='num' style="font-size: 20px;">
-                  Rs <fmt:formatNumber
+                  Rs <span itemprop="price"><fmt:formatNumber
                     value="${hk:getApplicableOfferPrice(product.productVariants[0])+ hk:getPostpaidAmount(product.productVariants[0])}"
-                    maxFractionDigits="0"/>
+                    maxFractionDigits="0"/></span>
                 </span>
           </div>
           <div class="special green" style="font-size: 14px;">
@@ -45,23 +45,25 @@
         </c:if>
         <c:if test="${product.productVariants[0].discountPercent == 0}">
           <div class='hk' style="font-size: 16px;">
-            Our Price
                 <span class='num' style="font-size: 20px;">
-                  Rs <fmt:formatNumber
+                  Rs <span itemprop="price"><fmt:formatNumber
                     value="${hk:getApplicableOfferPrice(product.productVariants[0]) + hk:getPostpaidAmount(product.productVariants[0])}"
-                    maxFractionDigits="0"/>
+                    maxFractionDigits="0"/></span>
                 </span>
           </div>
         </c:if>
       </div>
-      <div style="font-size: 12px; text-align: right; margin-right: 5px;">
-        <c:if test="${hk:isNotBlank(product.productVariants[0].optionsCommaSeparated)}">
-          ${product.productVariants[0].optionsCommaSeparated}
-        </c:if>
-      </div>
+	    <div style="font-size: 12px; text-align: right; margin-right: 5px;">
+		    <c:forEach items="${product.productVariants[0].productOptions}" var="variantOption">
+			    <c:if test="${hk:showOptionOnUI(variantOption.name)} ">
+				    ${variantOption.name}:${variantOption.value}<br/>
+			    </c:if>
+			    <%--<span style="font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>--%>
+		    </c:forEach>
+	    </div>
 
     </div>
-    <div class="right_col">
+    <div class="right_col" itemprop="availability" content="${product.productVariants[0].outOfStock ? '' : 'in_stock'}">
       <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
         <c:choose>
           <c:when test="${product.productVariants[0].outOfStock}">
@@ -70,7 +72,7 @@
                 <%--<div class="outOfStock">Coming soon...</div>--%>
               <%--</c:when>--%>
               <%--<c:otherwise> `--%>
-                <span class="outOfStock">Sold Out</span>
+                <div><span class="outOfStock">Sold Out</span></div>
 
                 <div align="center"><s:link beanclass="com.hk.web.action.core.user.NotifyMeAction"
                                             class="notifyMe button_orange"><b>Notify
@@ -114,32 +116,7 @@
         });
       </script>
 
-	    <c:choose>
-		    <c:when test="${product.productVariants[0].outOfStock && !empty product.similarProducts}">
-			    <div style="font-size: 1.1em;margin-bottom:5px;">We also have the following similar products from other brands :</div>
-			    <c:forEach items="${product.similarProducts}" var="similarProduct">
-				    <c:set var="sProduct" value="${similarProduct.similarProduct}"/>
-				    <s:link href="${sProduct.productURL}" class="prod_link" title="${sProduct.name}">
-					    <div class='img128' style="float:left; width:100px;height:100px;padding-right:5px;">
-						    <c:choose>
-							    <c:when test="${sProduct.mainImageId != null}">
-								    <hk:productImage width="100px" height="100px" imageId="${sProduct.mainImageId}"
-								                     size="<%=EnumImageSize.SmallSize%>"/>
-							    </c:when>
-							    <c:otherwise>
-								    <img height="100px" width="100px" src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${sProduct.id}.jpg'
-								         alt="${sProduct.name}"/>
-							    </c:otherwise>
-						    </c:choose>
-					    </div>
-				    </s:link>
-			    </c:forEach>
-		    </c:when>
-		    <c:otherwise>
-			    <s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>
-		    </c:otherwise>
-	    </c:choose>
-
+	  <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>--%>
     </div>
     <script type="text/javascript">
       $(document).ready(function() {

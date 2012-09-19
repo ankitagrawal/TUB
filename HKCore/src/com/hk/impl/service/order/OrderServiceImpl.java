@@ -1,6 +1,7 @@
 package com.hk.impl.service.order;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -24,8 +25,8 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
@@ -56,6 +57,8 @@ import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pojo.DummyOrder;
+import com.hk.util.HKDateUtil;
+import com.hk.util.OrderUtil;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -92,7 +95,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderLoggingService orderLoggingService;
     @Autowired
     private OrderSplitterService orderSplitterService;
-	
+
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;
@@ -304,6 +307,7 @@ public class OrderServiceImpl implements OrderService {
         if (isUpdated) {
             getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
             approvePendingRewardPointsForOrder(order);
+	        affilateService.approvePendingAffiliateTxn(order);
             // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
             // check if payment mode was COD and email hasn't been sent yet
             // sendEmailToServiceProvidersForOrder(order);
@@ -319,6 +323,7 @@ public class OrderServiceImpl implements OrderService {
         } else {
             getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
         }
+	    affilateService.cancelTxn(order);
         return order;
     }
 
@@ -359,12 +364,13 @@ public class OrderServiceImpl implements OrderService {
                     shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
                     ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
                     shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+                    
                     shippingOrder = shippingOrderService.save(shippingOrder);
                     /**
                      * this additional call to save is done so that we have shipping order id to generate shipping order
                      * gateway id
                      */
-                    shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
+                    shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
                     shippingOrder = shippingOrderService.save(shippingOrder);
                     shippingOrders.add(shippingOrder);
                 }

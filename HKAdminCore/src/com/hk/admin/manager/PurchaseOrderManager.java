@@ -1,23 +1,5 @@
 package com.hk.admin.manager;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.admin.dto.inventory.PoLineItemDto;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
@@ -31,6 +13,17 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA. User: USER Date: Nov 20, 2011 Time: 10:54:30 PM To change this template use File | Settings |
@@ -58,6 +51,7 @@ public class PurchaseOrderManager {
     private static final String QTY = "QTY";
     private static final String COST_PRICE = "COST_PRICE";
     private static final String MRP = "MRP";
+	public static final String SUPPLIER_CODE = "SUPPLIER CODE";
     public static final String CHECKED_IN_QTY = "CHECKED-IN QTY";
     private static final String ID = "ID:";
     private static final String CREATED_DATE = "Created Date:";
@@ -107,6 +101,7 @@ public class PurchaseOrderManager {
         setCellValue(row1, 4, QTY);
         setCellValue(row1, 5, COST_PRICE);
         setCellValue(row1, 6, MRP);
+        setCellValue(row1, 7, SUPPLIER_CODE);
 
         int rowCounter = 1;
 
@@ -141,6 +136,7 @@ public class PurchaseOrderManager {
 
             //check for variant name null
             String variantName = productVariant.getProduct().getName().concat(" ").concat(productVariant.getVariantName() == null ? "" : productVariant.getVariantName());
+	        String supplierCode = productVariant.getSupplierCode();
             setCellValue(row1, 1, variantName);
 
             setCellValue(row1, 2, productVariant.getUpc());
@@ -148,6 +144,7 @@ public class PurchaseOrderManager {
             setCellValue(row1, 4, poLineItem.getQty());
             setCellValue(row1, 5, String.valueOf(poLineItem.getCostPrice()));
             setCellValue(row1, 6, String.valueOf(poLineItem.getMrp()));
+            setCellValue(row1, 7, supplierCode == null ? "" : supplierCode);
         }
         addEmptyLine(row1, sheet1, ++rowCounter, cell);
         row1 = sheet1.createRow(++rowCounter);
@@ -204,8 +201,8 @@ public class PurchaseOrderManager {
             poLineItemDto.setPoLineItem(poLineItem);
             if (poLineItem != null && poLineItem.getCostPrice() != null && poLineItem.getQty() != null) {
                 taxable = poLineItem.getCostPrice() * poLineItem.getQty();
-                if(poLineItem.getMrp() != null) {
-                    marginMrpVsCP = (poLineItem.getMrp() - poLineItem.getCostPrice())/poLineItem.getCostPrice()*100;
+                if(poLineItem.getMrp() != null && poLineItem.getMrp() > 0) {
+                    marginMrpVsCP = (poLineItem.getMrp() - poLineItem.getCostPrice())/poLineItem.getMrp()*100;
                 }
             }
             if (purchaseOrder.getSupplier() != null && purchaseOrder.getSupplier().getState() != null && productVariant != null && sku.getTax() != null) {

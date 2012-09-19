@@ -14,6 +14,10 @@
       </div>
     </s:form>
 
+	  <br/>
+            <span class="large gry">(PRODUCT_ID, RELATED_PRODUCT_ID) as excel headers</span>
+            <br/><br/>
+
   </s:layout-component>
 
 </s:layout-render>

@@ -222,13 +222,13 @@ img.prod320 {
     margin: 0 auto;
 }
 
-.img170 {
-    height: 170px;
-    width: 170px;
+.img180 {
+    height:180px;
+    width:180px;
     margin: auto auto;
 }
 
-.img170 img {
+.img180 img {
     display: block;
     margin: 0 auto;
 }
@@ -720,7 +720,7 @@ span.error {
     z-index: 1000;
     background: #fafafa;
     border-bottom: 2px solid #f0f0f0;
-    height: 42px;
+    height: 20px;
     left: 0;
 }
 
@@ -729,48 +729,65 @@ span.error {
     background: #fafafa;
     width: 960px;
     margin: 0 auto;
-    height: 42px;
+    height: 20px;
     position: relative;
 }
 
 /* line 22, ../sass/main.scss */
-.topBar .logoBox {
-    left: 5px;
-    position: absolute;
-    top: 8px;
-}
 
-.topBar .logoBox a {
+.logoBox {
+  margin-right: 10px;
+}
+.logoBox a {
     border: none;
 }
 
-.topBar .logoBox a.logo:hover {
+.logoBox a.logo:hover {
     text-decoration: none;
     border: none;
 }
 
 /* line 36, ../sass/main.scss */
-.topBar .logoBox img {
+.logoBox img {
     max-height: 26px;
 }
 
 /* line 39, ../sass/main.scss */
-.topBar .logoBox .links {
+.logoBox .links {
     display: none;
     color: #aaa;
 }
 
 /* line 42, ../sass/main.scss */
-.topBar .logoBox .links a {
+.logoBox .links a {
     font-size: 10px;
     padding: 0px 0px;
     margin: 0 0;
 }
 
 /* line 46, ../sass/main.scss */
-.topBar .logoBox .links a:first-child {
+.logoBox .links a:first-child {
     padding-left: 0px;
 }
+
+.cartIcon {
+  width:15px; float:left;
+}
+.cartText {
+  float:left; margin-right: 7px;
+}
+.offerAndBrands {
+  float:right; margin-top: 5px; font-size: 14px; color: gray; font-family: Lucida Grande, Lucida Sans Unicode, Lucida Sans, Geneva, Verdana, sans-serif;
+}
+.offerAndBrands a {
+  text-decoration: none;
+  font-size: 14px;
+  color: #23527F;
+  border-bottom: none;
+}
+.offerAndBrands a:visited {text-decoration:none;}
+.offerAndBrands a:hover {text-decoration:none;}
+.offerAndBrands a:active {text-decoration:none;}
 
 /*
 .topBar .logo_hover {
@@ -851,7 +868,7 @@ span.error {
 .topBar .userCP .right {
     margin-left: 10px;
     display: inline-block;
-    margin-top: 5px;
+    margin-top: 2px;
 }
 
 /* line 92, ../sass/main.scss kuki */
@@ -904,7 +921,7 @@ span.error {
 
 .menuBar {
     margin: 0 auto;
-    margin-top: 45px;
+    /*margin-top: 65px;*/
     width: 960px;
     background: #23527f;
     position: relative;
@@ -1777,7 +1794,7 @@ h3 a.prod_link {
     margin-top: -250px;
     position: absolute;
     left: 0px; right: 0px;
-    bottom: 0px;s
+    bottom: 0px;
 }
 
 .footer-bottom {
@@ -2099,13 +2116,13 @@ h3 a.prod_link {
 .catalog .controls .per {
     text-align: right;
     float: right;
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 
 .catalog .controls .per .per_page {
     border: 0;
-    font-size: 0.8em;
-}
+    font-size: 0.9em;
+}                                                                    img170
 
 .catalog .controls .per .active {
     font-weight: bold;

@@ -35,10 +35,7 @@ import com.hk.pact.service.order.CartFreebieService;
 @Component
 public class SOInvoiceAction extends BaseAction {
 
-    // private static Logger logger = LoggerFactory.getLogger(SOInvoiceAction.class);
-
     private boolean printable;
-    private Category sexualCareCategory;
 
     @Validate(required = true, encrypted = true)
     private ShippingOrder shippingOrder;
@@ -91,7 +88,6 @@ public class SOInvoiceAction extends BaseAction {
             } else {
                 invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
             }
-            sexualCareCategory = categoryService.getCategoryByName("sexual-care");
             coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
             barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f, 150, false);
             Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
@@ -112,10 +108,6 @@ public class SOInvoiceAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
             return new ForwardResolution("pages/admin/adminHome.jsp");
         }
-    }
-
-    public Category getSexualCareCategory() {
-        return sexualCareCategory;
     }
 
     public boolean isPrintable() {

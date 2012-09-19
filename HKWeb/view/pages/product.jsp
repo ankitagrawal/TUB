@@ -12,6 +12,7 @@
 <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
+<c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
 <%
     CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
     Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
@@ -82,7 +83,16 @@
 	</style>
 
 	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
+	<link href="${pageContext.request.contextPath}/css/new.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
+	<c:if test="${!empty subscriptionProduct}">
+		<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
+	</c:if>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jcarousel.min.js"></script>
+
+    <c:if test="${!empty pa.productReferrerId}">
+			<link rel="canonical" href="${hk:getProductURL(product,null)}">
+	</c:if>
 
 	<script type="text/javascript">
 		$(document).ready(function () {
@@ -120,12 +130,18 @@
 
 			$('.jqzoom').jqzoom({
 				zoomType:'standard',
+                zoomWidth:400,
+                zoomHeight:400,
 				lens:true,
 				preloadImages:false,
 				alwaysOn:false
 			});
 
-			$('#notifyMeWindow').jqm({trigger:'.notifyMe', ajax:'@href'});
+            jQuery(document).ready(function() {
+                jQuery('#mycarousel').jcarousel();
+            });
+
+            $('#notifyMeWindow').jqm({trigger:'.notifyMe', ajax:'@href'});
 
 		});
 
@@ -214,17 +230,18 @@
 		<div class="img320">
 			<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
 			   title="${product.name}">
-				<img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
+				<img itemprop="image" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
 				     title="${product.name}">
 			</a>
 		</div>
 		<div>
 			<c:if test="${fn:length(pa.productImages) > 1}">
-				<ul class="thumblist">
+				<%--<ul class="thumblist">--%>
+				<ul id="mycarousel" class="jcarousel-skin-tango">
 					<c:forEach items="${pa.productImages}" var="productImage">
-						<li><a href='javascript:void(0);'
-						       rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}"><img
-								src='${hk:getS3ImageUrl(imageSmallSize, productImage.id,isSecure)}'></a></li>
+						<li><a href='javascript:void(0);' rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}">
+              <img itemprop="image" style="height:75px;" src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id,isSecure)}'></a>
+            </li>
 					</c:forEach>
 				</ul>
 			</c:if>
@@ -264,7 +281,7 @@
 </s:layout-component>
 
 <s:layout-component name="product_detail_links">
-	<h2 class='prod_title'>
+	<h2 class='prod_title' itemprop="name">
 			${product.name}
 	</h2>
 
@@ -273,7 +290,7 @@
           <span class='title'>
             Brand:
           </span>
-          <span class='info'>
+          <span class='info' itemprop="brand">
             <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
 	            ${product.brand}
 	            <s:param name="brand" value="${fn:toLowerCase(product.brand)}"/>
@@ -293,10 +310,10 @@
 		|
 		<c:choose>
 			<c:when test="${product.codAllowed != null && !product.codAllowed}">
-				<span style="color:red;font-weight:bold;">COD Not Allowed</span>
+				<span style="color:red;font-weight:bold;">COD Not Available</span>
 			</c:when>
 			<c:otherwise>
-				<span style="color:green;font-weight:bold;">COD Allowed</span>
+				<span style="color:green;font-weight:bold;">COD Available</span>
 			</c:otherwise>
 		</c:choose>  		
 		|
@@ -473,15 +490,20 @@
 					<c:choose>
 						<c:when test="${!product.productHaveColorOptions}">
 							<s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
-
 							                 product="${product}" subscriptionProduct="${subscriptionProduct}"/>
-
-							<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+							<c:choose>
+								<c:when test="${empty product.inStockVariants && !empty product.similarProducts}">
+									<s:layout-render name="/layouts/embed/_hkSimilarProducts.jsp" product="${product}"/>
+								</c:when>
+								<c:otherwise>
+									<%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
+								</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
 							<s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
 							                 product="${product}"/>
-							<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+							<%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
 						</c:otherwise>
 					</c:choose>
 				</c:when>
@@ -495,7 +517,15 @@
 						</c:when>
 						<c:otherwise>
 							<s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"
-							                 subscriptionProduct="${subscriptionProduct}"/>
+							                 subscriptionProduct="${subscriptionProduct}"/>							
+							<c:choose>
+								<c:when test="${empty product.inStockVariants && !empty product.similarProducts}">
+									<s:layout-render name="/layouts/embed/_hkSimilarProducts.jsp" product="${product}"/>
+								</c:when>
+								<c:otherwise>
+									<%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
+								</c:otherwise>
+							</c:choose>
 
 						</c:otherwise>
 					</c:choose>
@@ -535,7 +565,7 @@
 				Special Offers on ${product.name}
 			</h4>
 			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
-				<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
+				<s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="${relatedCombo.id}"/>
 			</c:forEach>
 
 			<div class="floatfix"></div>
@@ -754,17 +784,17 @@
 </s:layout-component>--%>
 
 <s:layout-component name="user_reviews">
-	<div class='products content' id="user_reviews">
+	<div class='products content' id="user_reviews" itemscope itemtype="http://data-vocabulary.org/Review-aggregate">
+
 	<hr style="color:#F0F0F0;border-style:hidden"/>
 
 	<c:choose>
 		<c:when test="${!empty pa.userReviews}">
 			<table width="950" class="reviewLinksTable">
 				<tr height="40">
-					<td style="font-size:14px;font-weight:bold;border-style:none">Reviews of ${product.name}</td>
+					<td style="font-size:14px;font-weight:bold;border-style:none">Reviews of <span itemprop="itemreviewed">${product.name}</span></td>
 					<td style="border-style:none">
-						<s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction"
-						        event="writeNewReview">
+						<s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
 							<s:param name="product" value="${product.id}"/>
 							<strong>Write a Review</strong>
 						</s:link>
@@ -772,10 +802,9 @@
 				</tr>
 
 				<tr height="50">
-					<td colspan="2" style="border-style:none">Average Rating : <strong><fmt:formatNumber
-							value="${pa.averageRating}"
-							maxFractionDigits="1"/>/5</strong> <br/>
-						(based on ${pa.totalReviews} reviews) <br/>
+					<td colspan="2" style="border-style:none"><span itemprop="rating" itemscope itemtype="http://data-vocabulary.org/Rating">Average Rating : <strong>
+            <span itemprop="rating"><fmt:formatNumber value="${pa.averageRating}" maxFractionDigits="1"/></span>/<span itemprop="best">5</span></strong> </span><br/>
+						(based on <span itemprop="count">${pa.totalReviews}</span> reviews) <br/>
 
 						<div class="rating_bar">
 							<div id="blueStar" class="blueStar">
@@ -864,7 +893,13 @@
 			function _addToCart(res) {
 				if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 					$('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
-					$('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
+					//alert(res.data.itemsInCart);
+					$('#productsInCart').html(res.data.itemsInCart);
+					if(res.data.itemsInCart > 0){
+						$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart.png");
+					}else{
+						$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart_empty.png");
+					}
 					$('.progressLoader').hide();
 
 					show_message();
@@ -961,7 +996,7 @@
 			}
 
 			function show_message() {
-				$('.message').css("top", "70px");
+				$('.message').css("top", "50px");
 				$('.message').animate({
 					opacity:1
 				}, 500);

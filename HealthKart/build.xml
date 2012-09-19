@@ -51,6 +51,13 @@
 		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_NAME" value="${DB_NAME}" />
 		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_USERID" value="${DB_USERID}" />
 		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_PASSWD" value="${DB_PASSWD}" />
+
+        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_SERVER" value="${DB_SERVER}" />
+        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_PORT" value="${DB_PORT}" />
+        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_NAME" value="${DB_NAME}" />
+        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_USERID" value="${DB_USERID}" />
+        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_PASSWD" value="${DB_PASSWD}" />
+
 		<copy todir="${project.dist.dir}/WEB-INF/classes">
 			<fileset file="${project.web.dir}/resources/${project.env}/WEB-INF/StripesResources.properties" />
 			<fileset file="${project.web.dir}/resources/${project.env}/WEB-INF/healthkartTagLib.tld" />
@@ -58,7 +65,7 @@
 		<!-- <copy todir="${project.dist.dir}/WEB-INF/classes/spring">
 			<fileset dir="${project.web.dir}/resources/spring" />
 		</copy> -->
-		<copy todir="${project.dist.dir}/WEB-INF">
+		<copy todir="${project.dist.dir}/WEB-INF/classes">
 			<fileset dir="${project.common.dir}/resources/${project.env}/logging" />
 		</copy>
 		<copy todir="${project.dist.dir}/WEB-INF">

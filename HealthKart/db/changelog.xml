@@ -8449,4 +8449,522 @@
     <changeSet author="Ajeet (generated)" id="1345455498259-2">
         <addNotNullConstraint columnDataType="TINYINT" columnName="cod_allowed" defaultNullValue="1" tableName="product"/>
     </changeSet>
+    <changeSet author="Neha (generated)" id="1346058956497-1">
+        <createIndex indexName="unique_prod_simProd" tableName="similar_product" unique="true">
+            <column name="product_id"/>
+            <column name="similar_product_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-1">
+        <createTable tableName="consignment">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="awb_number" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cnn_number" type="VARCHAR(25)"/>
+            <column name="amount" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_mode" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="runsheet_id" type="INT"/>
+            <column name="consignment_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hub_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hkdelivery_payment_reconciliation_id" type="INT"/>
+            <column name="address" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-2">
+        <createTable tableName="consignment_lifecycle_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-3">
+        <createTable tableName="consignment_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-4">
+        <createTable tableName="consignment_tracking">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="create_date" type="DATETIME"/>
+            <column name="remarks" type="VARCHAR(45)"/>
+            <column name="source_hub_id" type="INT"/>
+            <column name="destination_hub_id" type="INT"/>
+            <column name="consignment_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT"/>
+            <column name="consignment_lifecycle_status_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-5">
+        <createTable tableName="hkdelivery_payment_reconciliation">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="expected_amount" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME"/>
+            <column name="update_date" type="DATETIME"/>
+            <column name="user_id" type="INT"/>
+            <column name="actual_amount" type="DOUBLE"/>
+            <column name="remarks" type="MEDIUMTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-6">
+        <createTable tableName="hub">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(150)"/>
+            <column name="country" type="VARCHAR(50)"/>
+            <column name="pincode_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-7">
+        <createTable tableName="runsheet">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="DATETIME"/>
+            <column name="expected_collection" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actual_collection" type="DOUBLE"/>
+            <column name="cod_box_count" type="INT"/>
+            <column name="prepaid_box_count" type="INT"/>
+            <column name="remarks" type="MEDIUMTEXT"/>
+            <column name="hub_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="agent" type="INT"/>
+            <column name="runsheet_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="distance_traveled" type="DOUBLE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-8">
+        <createTable tableName="runsheet_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-9">
+        <createIndex indexName="awb_number_UNIQUE" tableName="consignment" unique="true">
+            <column name="awb_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-10">
+        <addForeignKeyConstraint baseColumnNames="consignment_status_id" baseTableName="consignment" constraintName="fk_consignment_consignment_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consignment_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-11">
+        <addForeignKeyConstraint baseColumnNames="hkdelivery_payment_reconciliation_id" baseTableName="consignment" constraintName="fk_consignment_hkdelivery_payment_reconciliation1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hkdelivery_payment_reconciliation" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-12">
+        <addForeignKeyConstraint baseColumnNames="hub_id" baseTableName="consignment" constraintName="fk_consignment_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-13">
+        <addForeignKeyConstraint baseColumnNames="runsheet_id" baseTableName="consignment" constraintName="fk_consignment_runsheet1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-14">
+        <addForeignKeyConstraint baseColumnNames="consignment_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_consignment1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consignment" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-15">
+        <addForeignKeyConstraint baseColumnNames="consignment_lifecycle_status_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_consignment_lifecycle_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consignment_lifecycle_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-16">
+        <addForeignKeyConstraint baseColumnNames="destination_hub_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_hub2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-17">
+        <addForeignKeyConstraint baseColumnNames="source_hub_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-18">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-19">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="hkdelivery_payment_reconciliation" constraintName="fk_payment_reconciliation_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-20">
+        <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="hub" constraintName="fk_hub_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pincode" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-21">
+        <addForeignKeyConstraint baseColumnNames="agent" baseTableName="runsheet" constraintName="fk_runsheet_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-22">
+        <addForeignKeyConstraint baseColumnNames="hub_id" baseTableName="runsheet" constraintName="fk_runsheet_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346140043194-23">
+        <addForeignKeyConstraint baseColumnNames="runsheet_status_id" baseTableName="runsheet" constraintName="fk_runsheet_runsheet_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rajni" id="1346140043194-24">
+        <sql>
+
+            INSERT into `state` (`id`,`name`)
+            values
+            (6,'Haryana') ON DUPLICATE KEY UPDATE name = 'Haryana';
+
+            INSERT into `city` (`id`,`name`)
+            values
+            (157,'GURGAON') ON DUPLICATE KEY UPDATE name = 'GURGAON';
+
+	        INSERT into `courier` (`id`, `name`)
+	        values
+	        (500, 'HealthKart Delivery') ON DUPLICATE KEY UPDATE name = 'HealthKart Delivery';
+
+            INSERT into `pincode`
+            (`id`,`pincode`,`locality`,`default_courier_id`,`region`,`city_id`,`state_id`,`tier`)
+            values
+            (4925,'122001','.',500,'Delhi',157,6,'Metros')
+            ON DUPLICATE KEY UPDATE pincode = '122001',locality = '.',default_courier_id = 500,region = 'Delhi',city_id = 157,state_id = 6 ,tier = 'Metros';
+
+            INSERT into `hub` (`name`,`address`,`country`,`pincode_id`)
+            values
+            ('Source Hub','Dummy hub for source','India',4925),
+            ('Delivered Hub','Dummy hub for delivered','India',4925);
+        </sql>
+    </changeSet>
+      <changeSet author="Tarun (generated)" id="1346225918880-1">
+        <createTable tableName="hub_has_user">
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hub_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346225918880-2">
+        <addForeignKeyConstraint baseColumnNames="hub_id" baseTableName="hub_has_user" constraintName="fk_hub_has_user_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346225918880-3">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="hub_has_user" constraintName="fk_hub_has_user_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+	<changeSet author="rahul" id="09-01-2012">
+		<sql>
+			INSERT INTO `warehouse` (`id`, `city`, `state`, `wh_phone`, `line1`, `line2`, `name`, `pincode`, `tin`)
+			VALUES
+			(101, 'Gurgaon Pharma', 'HARYANA', '123456789', 'Khasra No. 146/25/2/1', 'Jail Road, Dhumaspur, Badshahpur
+			', 'Gurgaon Pharma Warehouse', '122101', '06101832327');
+		</sql>
+	</changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-1">
+        <createTable tableName="affiliate_category_has_brand">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="affiliate_category_name_id" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="brand" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-2">
+        <createTable tableName="affiliate_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-3">
+        <createTable tableName="coupon_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-4">
+        <addColumn tableName="affiliate">
+            <column name="affiliate_mode" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-5">
+        <addColumn tableName="affiliate">
+            <column name="affiliate_status_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-6">
+        <addColumn tableName="affiliate">
+            <column name="affiliate_type" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-7">
+        <addColumn tableName="affiliate">
+            <column name="api_key" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-8">
+        <addColumn tableName="affiliate">
+            <column name="bank_account_number" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-9">
+        <addColumn tableName="affiliate">
+            <column name="ifsc_code" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-10">
+        <addColumn tableName="affiliate">
+            <column name="offer_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-11">
+        <addColumn tableName="affiliate">
+            <column name="valid_days" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-12">
+        <addColumn tableName="affiliate">
+            <column name="weekly_coupon_limit" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-13">
+        <addColumn tableName="check_details">
+            <column name="tds" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-14">
+        <addColumn tableName="coupon">
+            <column name="coupon_type_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-15">
+        <addForeignKeyConstraint baseColumnNames="affiliate_status_id" baseTableName="affiliate" constraintName="fk_affiliate_affiliate_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="affiliate_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-16">
+        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="affiliate" constraintName="fk_affiliate_offer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="offer" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-17">
+        <addForeignKeyConstraint baseColumnNames="affiliate_category_name_id" baseTableName="affiliate_category_has_brand" constraintName="fk_affiliate_category_has_brand_affiliate_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="affiliate_category_name" referencedTableName="affiliate_category" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-18">
+        <addForeignKeyConstraint baseColumnNames="coupon_type_id" baseTableName="coupon" constraintName="fk_coupon_coupon_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="coupon_type" referencesUniqueColumn="false"/>
+    </changeSet>	
+    <changeSet author="Pratham (generated)" id="1346752484668-1">
+        <createTable tableName="affiliate_has_category">
+            <column name="affiliate_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1346752484668-2">
+        <addPrimaryKey columnNames="affiliate_id, category_name" tableName="affiliate_has_category"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1346752484668-3">
+        <addForeignKeyConstraint baseColumnNames="affiliate_id" baseTableName="affiliate_has_category" constraintName="fk_affiliate_has_category_affiliate1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="affiliate" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1346752484668-4">
+        <addForeignKeyConstraint baseColumnNames="category_name" baseTableName="affiliate_has_category" constraintName="fk_affiliate_has_category_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
+    </changeSet>
+	<changeSet author="Tarun" id="09-05-2012">
+		<sql>
+			UPDATE shipment ship, shipping_order so
+			SET ship.return_date = date_add(ship.ship_date, INTERVAL 20 DAY)
+			WHERE ship.id = so.shipment_id
+			AND ship.`return_date` is null
+			AND so.shipping_order_status_id = 200
+		</sql>
+	</changeSet>
+    <changeSet author="Pratham (generated)" id="1347259898238-10">
+        <addColumn tableName="product_image">
+            <column name="image_type" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1347281819426-1">
+        <addColumn tableName="base_order">
+            <column name="target_dispatch_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1347281819426-2">
+        <addColumn tableName="shipping_order">
+            <column name="last_esc_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1347281819426-3">
+        <addColumn tableName="shipping_order">
+            <column name="target_dispatch_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1347345974710-1">
+        <createTable tableName="feedback">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="base_order_id" type="INT"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recommend_to_friends" type="INT"/>
+            <column name="website_experience" type="INT"/>
+            <column name="customer_care_experience" type="INT"/>
+            <column name="comments" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1347345974710-2">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="feedback" constraintName="fk_feedback_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1347345974710-3">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="feedback" constraintName="fk_feedback_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1346223650206-1">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="out_of_stock" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+	
+    <changeSet author="Ajeet (generated)" id="1347689819294-1">
+        <createTable tableName="offer_email_domain">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="offer_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email_domain" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1347689819294-2">
+        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="offer_email_domain" constraintName="fk_offer_email_domain_offer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="offer" referencesUniqueColumn="false"/>
+    </changeSet>
+
+	<changeSet author="Ajeet (generated)" id="1347564843152-1">
+        <createTable tableName="update_pv_price">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+	        <column name="new_costprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="new_mrp" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="new_hkprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="txn_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="updated" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="DATETIME"/>
+            <column name="updated_by" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1347564843152-2">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="update_pv_price" constraintName="fk_update_pv_price_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1347564843152-3">
+        <addForeignKeyConstraint baseColumnNames="updated_by" baseTableName="update_pv_price" constraintName="fk_update_pv_price_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+	
+    <changeSet author="Ajeet (generated)" id="1347716040167-1">
+        <addColumn tableName="update_pv_price">
+            <column name="old_costprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Ajeet (generated)" id="1347716040167-2">
+        <addColumn tableName="update_pv_price">
+            <column name="old_mrp" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1347716040167-3">
+        <addColumn tableName="update_pv_price">
+            <column name="old_hkprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham" id="09-17-2012">
+        <sql>
+            insert into `affiliate_status` (`id`, `name`) values('10','Unverified');
+            insert into `affiliate_status` (`id`, `name`) values('20','Verified');
+            insert into `affiliate_status` (`id`, `name`) values('30','Rejected');
+            insert into `affiliate_status` (`id`, `name`) values('40','Cancelled');
+            update affiliate a inner join user u on a.user_id = u.id inner join user_has_role ur on u.id = ur.user_id set affiliate_status_id = 10 where ur.role_name = 'HK_AFFILIATE_UNVERIFIED';
+            update affiliate a inner join user u on a.user_id = u.id inner join user_has_role ur on u.id = ur.user_id set affiliate_status_id = 20 where ur.role_name = 'HK_AFFILIATE';
+            update affiliate set offer_id = 1142;
+            update affiliate set valid_days = 365;
+            update affiliate set weekly_coupon_limit= 100;
+            insert into `coupon_type` (`id`, `name`) values('10','REFERRAL');
+            insert into `coupon_type` (`id`, `name`) values('20','AFFILIATE');
+            insert into `coupon_type` (`id`, `name`) values('30','OFFER');
+            insert into `affiliate_txn_type` (`id`, `name`) values('5','Pending');
+            insert into `affiliate_txn_type` (`id`, `name`) values('13','Payment Due');
+            insert into `affiliate_txn_type` (`id`, `name`) values('18','Paid');
+            update coupon set coupon_type_id = 20 where offer_id = 1142;
+            update coupon set coupon_type_id = 10 where offer_id != 1142 and referrer_user_id is not null;
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham" id="09-18-2012">
+        <sql>
+            update affiliate set offer_id = 1357;
+            update coupon set offer_id = 1357 where referrer_user_id is not null;
+        </sql>
+    </changeSet>
+    <changeSet author="vaibhav" id="1347716040168-1">
+		<sql>
+			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(999,1,'R','Corporate Retail Invoice 2012');
+		</sql>
+	</changeSet>
+
 </databaseChangeLog>

@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.domain.catalog.product.*;
+import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -29,6 +31,7 @@ import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.EnumRewardPointMode;
@@ -38,14 +41,9 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.VariantConfig;
-import com.hk.domain.catalog.product.VariantConfigOption;
-import com.hk.domain.catalog.product.VariantConfigOptionParam;
-import com.hk.domain.catalog.product.VariantConfigValues;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
@@ -78,6 +76,7 @@ import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
+import com.hk.util.OrderUtil;
 
 public class Functions {
 
@@ -86,7 +85,8 @@ public class Functions {
 
     private static final String          DEFAULT_DELIEVERY_DAYS = "1-3";
     private static final String          BUSINESS_DAYS          = " business days";
-    private static final long            DEFAULT_MIN_DEL_DAYS   = 1;
+    
+    
 
 
     // TODO: rewrite
@@ -204,16 +204,32 @@ public class Functions {
         return s1.contains(s2);
     }
 
+    /**
+     * checks if c1 contains all elements of c2
+     * @param c1
+     * @param c2
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsCollection(Collection c1, Collection c2) {
         if (c1 == null || c2 == null)
             return false;
-        for (Object o : c2) {
-            if (collectionContains(c1, o)) {
-                return collectionContains(c1, o);
+        boolean collectionContainsCollection = true;
+        
+        for(Object o : c2 ){
+            if(!c1.contains(o)){
+               collectionContainsCollection = false;
+               break;
             }
         }
-        return false;
+        
+        /*for (Object o : c2) {
+            if (collectionContains(c1, o) && collectionContains(c2, o)) {
+                return collectionContains(c, o);
+            }
+        }*/
+        
+        return collectionContainsCollection;
     }
 
     public static Long netAvailableUnbookedInventory(Object o) {
@@ -485,28 +501,17 @@ public class Functions {
     public static Map<String, List<String>> getRecommendedProducts(Object o) {
         Product product = (Product) o;
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-        return productService.getRelatedMoogaProducts(product);
+        return productService.getRecommendedProducts(product);
     }
 
     public static String getDispatchDaysForOrder(Order order) {
         if (order != null) {
-            Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-            long minDays = DEFAULT_MIN_DEL_DAYS, maxDays = DEFAULT_MIN_DEL_DAYS;
-
-            for (CartLineItem cartLineItem : productCartLineItems) {
-                ProductVariant productVariant = cartLineItem.getProductVariant();
-                if (productVariant != null) {
-                    Product product = productVariant.getProduct();
-                    if (product.getMinDays() != null && product.getMinDays() > minDays) {
-                        minDays = product.getMinDays();
-                    }
-                    if (product.getMaxDays() != null && product.getMaxDays() > maxDays) {
-                        maxDays = product.getMaxDays();
-                    }
-                }
-
+            Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
+            long minDays = dispatchDays[0], maxDays = dispatchDays[1];
+            
+            if(minDays == OrderUtil.DEFAULT_MIN_DEL_DAYS && maxDays == OrderUtil.DEFAULT_MIN_DEL_DAYS){
+              return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
             }
-
             return String.valueOf(minDays).concat("-").concat(String.valueOf(maxDays)).concat(BUSINESS_DAYS);
         } else {
             return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
@@ -564,9 +569,38 @@ public class Functions {
        return linkManager.getProductURL(product, productReferrerId);
     }
 
+	public static String getCodConverterLink(Order order){
+		LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
+
+		return linkManager.getCodConverterLink(order);
+	}
+
 	public static boolean isCODAllowed(Order order) {
 		OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
         return orderService.isCODAllowed(order);
     }
+
+    public static Hub getHubForHkdeliveryUser(User user){
+        HubService hubService = ServiceLocatorFactory.getService(HubService.class);
+        return hubService.getHubForUser(user);
+    }
+
+	public static boolean renderNewCatalogFilter(String child, String secondChild) {
+		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
+		boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter, secondChild));
+		return renderNewCatalogFilter;
+	}
+
+	public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, boolean showHiddenImages) {
+		ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
+		List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
+		return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
+	}
+
+	public static boolean showOptionOnUI(String optionType) {
+		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY");
+		boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
+		return showOptionOnUI;
+	}
 
 }

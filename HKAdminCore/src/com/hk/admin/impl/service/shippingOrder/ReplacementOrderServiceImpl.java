@@ -63,7 +63,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 
         replacementOrder.setRefShippingOrder(shippingOrder);
         replacementOrder = (ReplacementOrder) getBaseDao().save(replacementOrder);
-        ShippingOrderHelper.setGatewayIdOnShippingOrder(replacementOrder);
+        ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
         getBaseDao().saveOrUpdate(replacementOrder);
     }
 

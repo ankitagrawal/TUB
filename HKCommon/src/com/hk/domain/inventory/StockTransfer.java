@@ -31,7 +31,7 @@ import com.hk.domain.warehouse.Warehouse;
 @Entity
 @Table(name = "stock_transfer")
 
-public class StockTransfer implements java.io.Serializable {
+public class StockTransfer implements java.io.Serializable , Comparable<StockTransfer>{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -152,4 +152,15 @@ public class StockTransfer implements java.io.Serializable {
 	public void setToWarehouse(Warehouse toWarehouse) {
 		this.toWarehouse = toWarehouse;
 	}
+
+    @Override
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
+
+
+    public int compareTo(StockTransfer stockTransfer) {
+        return this.getId().compareTo(stockTransfer.getId());
+
+    }
 }

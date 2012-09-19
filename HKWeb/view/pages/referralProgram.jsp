@@ -35,7 +35,7 @@
       }
     </style>
   </s:layout-component>
-  <s:layout-component name="heading">100/100 Referral Program!</s:layout-component>
+  <s:layout-component name="heading">Referral Program!</s:layout-component>
   <s:layout-component name="lhsContent">
     <jsp:include page="myaccount-nav.jsp"/>
   </s:layout-component>
@@ -58,7 +58,7 @@
       <p class="lrg">
         <strong>Simple!!
           <br></strong> When you refer, <strong>you get store credit of Rs. 100</strong>* <i>plus</i> <strong>your
-        friend gets Rs. 100 off</strong>** on the first purchase
+        friend gets an additional 5% off </strong>** on the first purchase
       </p>
     </div>
 
@@ -78,7 +78,7 @@
               <div class="addthis_toolbox addthis_default_style addthis_32x32_style"
                    addThis:url="${pageContext.request.contextPath}/action/invite/${couponBean.principal.userHash}"
                    addTHis:title="HealthKart referral program"
-                   addTHis:description="Get Rs. 100 and Gift Rs. 100">
+                   addTHis:description="Get Rs. 100 and Gift Additional 5% off">
                 <a class="addthis_button_preferred_1">
                   &nbsp;&nbsp;${pageContext.request.contextPath}/action/invite/${couponBean.principal.userHash}</a>
               </div>
