@@ -472,4 +472,14 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     public void setUnbookedInventoryRequired(boolean unbookedInventoryRequired) {
         this.unbookedInventoryRequired = unbookedInventoryRequired;
     }
+
+    public Boolean getUnbookedInventoryRequired() {
+        return unbookedInventoryRequired;
+    }
+
+    public void setUnbookedInventoryRequired(Boolean unbookedInventoryRequired) {
+        this.unbookedInventoryRequired = unbookedInventoryRequired;
+    }
+    
+    
 }

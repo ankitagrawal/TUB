@@ -339,4 +339,10 @@ public class CreateCouponAction extends BaseAction {
         this.fanCouponManager = fanCouponManager;
     }
 
+    public Boolean getRepetitiveUsage() {
+        return repetitiveUsage;
+    }
+    
+    
+
 }
