@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateTxn;
+import com.hk.domain.core.PaymentMode;
 
 @Entity
 @Table(name = "check_details")
@@ -33,8 +34,10 @@ public class CheckDetails {
   @Column(name = "issue_date", length = 19)
   private Date issueDate;
 
+	@Column(name = "tds", nullable = false, precision = 6)
+	private Double tds;
 
-  @Column(name = "bank_name", nullable = false, length = 20)
+	@Column(name = "bank_name", nullable = false, length = 20)
   private String bankName;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -92,4 +95,12 @@ public class CheckDetails {
   public void setAffiliateTxn(AffiliateTxn affiliateTxn) {
     this.affiliateTxn = affiliateTxn;
   }
+
+	public Double getTds() {
+		return tds;
+	}
+
+	public void setTds(Double tds) {
+		this.tds = tds;
+	}
 }

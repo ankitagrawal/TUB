@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.pact.dao.affiliate.AffiliateTxnDao;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
@@ -19,7 +20,6 @@ import com.hk.constants.core.RoleConstants;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateTxn;
 import com.hk.domain.user.User;
-import com.hk.impl.dao.affiliate.AffiliateTxnDaoImpl;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.user.UserDao;
 
@@ -42,7 +42,7 @@ public class AffiliateInsightsAction extends BasePaginatedAction {
     @Autowired
     UserDao                    userDao;
     @Autowired
-    AffiliateTxnDaoImpl            affiliateTxnDao;
+    AffiliateTxnDao affiliateTxnDao;
 
     public Resolution getReferredOrderDetails() {
         if (getPrincipal() != null) {
