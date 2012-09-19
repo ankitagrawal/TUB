@@ -101,16 +101,14 @@
       </p>
 
       <p>Ph: ${orderSummary.shippingOrder.baseOrder.address.phone}</p>
-	    <c:if test="${isB2BOrder}">
+	    <c:if test="${isB2BOrder && b2bUserDetails != null}">
 		    <p><strong>Consignee:</strong><p>
-		    <c:if test="${b2bUserDetails != null}">
-			    <p>${b2bUserDetails.user.name}</p>
-			    <c:if test="${b2bUserDetails.tin != null}">
-				    <p>TIN- ${b2bUserDetails.tin}</p>
-			    </c:if>
-			    <c:if test="${b2bUserDetails.dlNumber != null}">
-				    <p>DL Number- ${b2bUserDetails.dlNumber}</p>
-			    </c:if>
+		    <p>${b2bUserDetails.user.name}</p>
+		    <c:if test="${b2bUserDetails.tin != null}">
+			    <p>TIN- ${b2bUserDetails.tin}</p>
+		    </c:if>
+		    <c:if test="${b2bUserDetails.dlNumber != null}">
+			    <p>DL Number- ${b2bUserDetails.dlNumber}</p>
 		    </c:if>
 	    </c:if>
     </div>
