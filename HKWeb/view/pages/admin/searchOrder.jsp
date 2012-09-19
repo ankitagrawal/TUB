@@ -243,12 +243,13 @@
       <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Order" title="Unhold Order"/>
     </s:link>
     -->
-    <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
+    <!--<s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
             class="orderStatusLink normalStatusLink"
             style="${order.orderStatus.id == orderStatusHold ? 'display:none;': ''}">
       <s:param name="order" value="${order.id}"/>
       <img src="<hk:vhostImage/>/images/admin/icon_hold.png" alt="Put Order on Hold" title="Put Order on Hold"/>
     </s:link>
+     -->
   </c:if>
   <c:if test="${order.orderStatus.id == orderStatusCancelled}">
     <br>
