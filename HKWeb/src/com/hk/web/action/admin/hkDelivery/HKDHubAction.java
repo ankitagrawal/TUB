@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.hkDelivery;
 
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import org.springframework.stereotype.Component;
@@ -12,10 +13,12 @@ import com.hk.admin.pact.dao.hkDelivery.HubDao;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import net.sourceforge.stripes.action.*;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Secure(hasAnyPermissions = { PermissionConstants.ADD_HK_DELIVERY_AGENT, PermissionConstants.ADD_HUB })
 @Component
 public class HKDHubAction extends BaseAction {
 
