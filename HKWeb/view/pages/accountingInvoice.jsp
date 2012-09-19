@@ -11,25 +11,15 @@
 </head>
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" var="orderSummary"/>
-
+<c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
+<c:set var="isB2BOrder" value="${orderSummary.shippingOrder.baseOrder.b2bOrder}"/>
+<c:set var="b2bUserDetails" value="${orderSummary.b2bUserDetails}"/>
 <div class="container_12">
 <div class="grid_12" style="text-align: center;">
   <h4>
     <c:choose>
-      <c:when test="${orderSummary.invoiceDto.b2bUserDetails != null}">
-        <c:choose>
-          <c:when
-              test="${fn:toUpperCase(orderSummary.shippingOrder.baseOrder.address.state) eq('HARYANA') && orderSummary.invoiceDto.b2bUserDetails.tin != null }">
-            TAX INVOICE
-          </c:when>
-          <c:when
-              test="${fn:toUpperCase(orderSummary.shippingOrder.baseOrder.address.state) eq('MAHARASHTRA') && orderSummary.invoiceDto.b2bUserDetails.tin != null}">
-            TAX INVOICE
-          </c:when>
-          <c:otherwise>
-            RETAIL INVOICE
-          </c:otherwise>
-        </c:choose>
+      <c:when test="${isB2BOrder}">
+           TAX INVOICE            
       </c:when>
       <c:otherwise>
         RETAIL INVOICE
@@ -42,9 +32,7 @@
 
 <div class="grid_12" style="border: 1px black solid;">
 	<div class="grid_4 alpha omega">
-		<div class="column">
-			<c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
-			<c:set var="isB2BOrder" value="${orderSummary.shippingOrder.baseOrder.b2bOrder}"/>
+		<div class="column">			
 			<c:choose>
 				<c:when test="${isB2BOrder}">
 					<p>Bright Lifecare Pvt. Ltd.</p>
@@ -97,8 +85,9 @@
 
   <div class="grid_4 alpha omega" style="width: 330px;">
     <div class="column">
-      <p><strong>Customer:</strong>
-        ${orderSummary.shippingOrder.baseOrder.address.name}</p>
+      <p><strong>Shipped To:</strong><p>
+
+	  <p>${orderSummary.shippingOrder.baseOrder.address.name}</p>
 
       <p>${hk:escapeHtml(orderSummary.shippingOrder.baseOrder.address.line1)}
         <c:if test="${not empty orderSummary.shippingOrder.baseOrder.address.line2}">
@@ -111,14 +100,19 @@
         - ${orderSummary.shippingOrder.baseOrder.address.pin},
       </p>
 
-      <p>Ph: ${orderSummary.shippingOrder.baseOrder.address.phone}     </p>
-      <c:if test="${orderSummary.invoiceDto.b2bUserDetails != null}">
-        <c:if test="${orderSummary.invoiceDto.b2bUserDetails.tin != null}">
-          <p>TIN- ${orderSummary.invoiceDto.b2bUserDetails.tin}</p>
-        </c:if>
-
-        <p>DL Number- ${orderSummary.invoiceDto.b2bUserDetails.dlNumber}</p>
-      </c:if>
+      <p>Ph: ${orderSummary.shippingOrder.baseOrder.address.phone}</p>
+	    <c:if test="${isB2BOrder}">
+		    <p><strong>Consignee:</strong><p>
+		    <c:if test="${b2bUserDetails != null}">
+			    <p>${b2bUserDetails.user.name}</p>
+			    <c:if test="${b2bUserDetails.tin != null}">
+				    <p>TIN- ${b2bUserDetails.tin}</p>
+			    </c:if>
+			    <c:if test="${b2bUserDetails.dlNumber != null}">
+				    <p>DL Number- ${b2bUserDetails.dlNumber}</p>
+			    </c:if>
+		    </c:if>
+	    </c:if>
     </div>
   </div>
 </div>
