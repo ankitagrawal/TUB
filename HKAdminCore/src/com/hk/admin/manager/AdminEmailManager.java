@@ -692,7 +692,7 @@ public class AdminEmailManager {
   
   public boolean sendOrderDeliveredEmail(Order order) {
 	  List<OrderEmailExclusion> orderEmailExclusionList =
-			  getBaseDao().findByNamedQueryAndNamedParam("order_email_exclusion.findByEmail", new String[]{"email"}, new Object[]{order.getUser().getEmail()});
+			  getBaseDao().findByNamedQueryAndNamedParam("orderExclusionfindByEmail", new String[]{"email"}, new Object[]{order.getUser().getEmail()});
 
 	  if(orderEmailExclusionList != null && orderEmailExclusionList.size() > 0) {
 		  OrderEmailExclusion orderEmailExclusion = orderEmailExclusionList.get(0);
