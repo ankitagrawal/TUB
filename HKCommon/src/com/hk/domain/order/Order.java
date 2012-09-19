@@ -167,6 +167,9 @@ public class Order implements java.io.Serializable {
     @Column(name = "target_dispatch_date", nullable = true)
     private Date                      targetDispatchDate;
 
+	@Column(name = "is_delivery_email_sent", nullable = false)
+	private Boolean deliveryEmailSent = false;
+
     public boolean isPriorityOrder() {
         if (this.score != null) {
             return (this.score >= CLMConstants.thresholdScore);
@@ -604,7 +607,18 @@ public class Order implements java.io.Serializable {
         this.targetDispatchDate = targetDelDate;
     }
 
-    /*
-     * public void setBasketCategory(String basketCategory) { this.basketCategory = basketCategory; }
-     */
+	public Boolean getDeliveryEmailSent() {
+		return deliveryEmailSent;
+	}
+
+	public void setDeliveryEmailSent(Boolean deliveryEmailSent) {
+		this.deliveryEmailSent = deliveryEmailSent;
+	}
+
+	public Boolean isDeliveryEmailSent() {
+		return deliveryEmailSent;
+	}
+	/*
+			 * public void setBasketCategory(String basketCategory) { this.basketCategory = basketCategory; }
+			 */
 }
