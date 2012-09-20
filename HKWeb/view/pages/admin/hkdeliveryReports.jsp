@@ -3,20 +3,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Runsheet List">
-	<s:layout-component name="htmlHead">
 
+
+    <s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction" var="paymentReconciliationAction"/>
+    <s:layout-component name="htmlHead">
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 		<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
-	</s:layout-component>
-
-    <s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction" var="paymentReconciliationAction"/>
-    <s:layout-component name="htmlHead">
     </s:layout-component>
 
     <s:layout-component name="heading">
-        Reconcile HKDelivery payments
+        HKDelivery Reports
     </s:layout-component>
     <s:layout-component name="content">
 	    <div class="reportBox">
