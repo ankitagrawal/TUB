@@ -194,4 +194,13 @@ public class RunSheetServiceImpl implements RunSheetService {
 			}
 		}
 	}
+
+	@Override
+	public Runsheet closeRunsheet(Runsheet runsheet) {
+		runsheet = updateExpectedAmountForClosingRunsheet(runsheet);
+		runsheet.setRunsheetStatus(runsheetDao.get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
+		//mark shipments delivered on healthkart side
+		markShippingOrderDeliveredAgainstConsignments(runsheet.getConsignments()); 
+		return runsheet;
+	}
 }
