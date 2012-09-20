@@ -19,12 +19,11 @@ HealthKart.com Affiliate Program - your application has been received
 </p>
 
 <p>
-  But before that, We request you to please fill in your contact details, link of which can be seen in My Account-->My
-  Addresses
+  But before that, We request you to please fill in your basic information details.
 </p>
 
 <p>
-  We will reach you in 24-48 hrs as soon as we get this information, to get you up and running.
+  We will reach you as soon as we get this information, to get you up and running.
 </p>
 
 <p>

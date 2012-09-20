@@ -6,15 +6,13 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.manager.DeliveryStatusUpdateManager;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.manager.DeliveryStatusUpdateManager;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -26,10 +24,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
-import com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction;
-
-import java.util.Date;
-import java.util.Calendar;
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
 public class ChangeShipmentDetailsAction extends BaseAction {
@@ -42,7 +36,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
     private String gatewayOrderId;
     String comments;
     private boolean visible = false;
-    private static Logger logger = LoggerFactory.getLogger(ChangeShipmentDetailsAction.class);
+//    private static Logger logger = LoggerFactory.getLogger(ChangeShipmentDetailsAction.class);
 
 
     @Autowired
@@ -226,5 +220,10 @@ public class ChangeShipmentDetailsAction extends BaseAction {
     public void setAttachedCourier(Courier attachedCourier) {
         this.attachedCourier = attachedCourier;
     }
+
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
+    
 
 }

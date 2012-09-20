@@ -49,7 +49,7 @@ public class SearchAction extends BasePaginatedAction {
   @Autowired
   LinkManager linkManager;
 
-  private int defaultPerPage = 20;
+  private int defaultPerPage = 24;
 
 	public Resolution search() throws SolrServerException, MalformedURLException {
 		if (StringUtils.isNotBlank(query)) {
@@ -57,6 +57,9 @@ public class SearchAction extends BasePaginatedAction {
 				SearchResult sr = productSearchService.getSearchResults(query, getPageNo(), getPerPage(), false);
 				productPage = new Page(sr.getSolrProducts(), getPerPage(), getPageNo(), (int) sr.getResultSize());
 				productList = productPage.getList();
+				for (Product product : productList) {
+					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+				}
 				searchSuggestion = sr.getSearchSuggestions();
 			} catch (Exception e) {
 				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);

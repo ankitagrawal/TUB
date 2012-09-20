@@ -43,7 +43,7 @@
       <label>&nbsp;</label>
 
       <div class="buttons"><s:submit name="saveExisting" value="Save"/></div>
-      <div class="buttons"><s:submit name="deleteExisting" value="Delete"/></div>
+      <%--<div class="buttons"><s:submit name="deleteExisting" value="Delete"/></div>--%>
     </s:form>
 
     <s:form beanclass="com.hk.web.action.core.discount.CategoryLevelDiscountAction">
@@ -79,6 +79,31 @@
         </table>
       </fieldset>
     </s:form>
+      <s:form beanclass="com.hk.web.action.core.discount.CategoryLevelDiscountAction">
+          <br><br><br><br>
+          <fieldset style="float:left;">
+              <legend>Assign Brand To Existing Categoryy</legend>
+              <table>
+                  <tr>
+                      <td><label>Affiliate Category :-</label></td>
+                      <td><s:text name="category"/></td>
+                  </tr>
+                  <tr>
+                      <td><label>Brand</label></td>
+                      <td><s:text name="brand"/></td>
+                  </tr>
+                  <td>
+                      <tr><label>&nbsp;</label>
+                      </tr>
+                      <tr>
+                          <td>&nbsp;</td>
+                          <td>
+                              <div class="buttons"><s:submit name="addBrandsToExistingAffiliateCategory" value="Add Brand"/></div>
+                          </td>
+                      </tr>
+              </table>
+          </fieldset>
+      </s:form>
 
   </s:layout-component>
 </s:layout-render>

@@ -8684,6 +8684,123 @@
 			', 'Gurgaon Pharma Warehouse', '122101', '06101832327');
 		</sql>
 	</changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-1">
+        <createTable tableName="affiliate_category_has_brand">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="affiliate_category_name_id" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="brand" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-2">
+        <createTable tableName="affiliate_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-3">
+        <createTable tableName="coupon_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-4">
+        <addColumn tableName="affiliate">
+            <column name="affiliate_mode" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-5">
+        <addColumn tableName="affiliate">
+            <column name="affiliate_status_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-6">
+        <addColumn tableName="affiliate">
+            <column name="affiliate_type" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-7">
+        <addColumn tableName="affiliate">
+            <column name="api_key" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-8">
+        <addColumn tableName="affiliate">
+            <column name="bank_account_number" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-9">
+        <addColumn tableName="affiliate">
+            <column name="ifsc_code" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-10">
+        <addColumn tableName="affiliate">
+            <column name="offer_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-11">
+        <addColumn tableName="affiliate">
+            <column name="valid_days" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-12">
+        <addColumn tableName="affiliate">
+            <column name="weekly_coupon_limit" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-13">
+        <addColumn tableName="check_details">
+            <column name="tds" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-14">
+        <addColumn tableName="coupon">
+            <column name="coupon_type_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-15">
+        <addForeignKeyConstraint baseColumnNames="affiliate_status_id" baseTableName="affiliate" constraintName="fk_affiliate_affiliate_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="affiliate_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-16">
+        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="affiliate" constraintName="fk_affiliate_offer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="offer" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-17">
+        <addForeignKeyConstraint baseColumnNames="affiliate_category_name_id" baseTableName="affiliate_category_has_brand" constraintName="fk_affiliate_category_has_brand_affiliate_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="affiliate_category_name" referencedTableName="affiliate_category" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-18">
+        <addForeignKeyConstraint baseColumnNames="coupon_type_id" baseTableName="coupon" constraintName="fk_coupon_coupon_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="coupon_type" referencesUniqueColumn="false"/>
+    </changeSet>	
+    <changeSet author="Pratham (generated)" id="1346752484668-1">
+        <createTable tableName="affiliate_has_category">
+            <column name="affiliate_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1346752484668-2">
+        <addPrimaryKey columnNames="affiliate_id, category_name" tableName="affiliate_has_category"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1346752484668-3">
+        <addForeignKeyConstraint baseColumnNames="affiliate_id" baseTableName="affiliate_has_category" constraintName="fk_affiliate_has_category_affiliate1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="affiliate" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1346752484668-4">
+        <addForeignKeyConstraint baseColumnNames="category_name" baseTableName="affiliate_has_category" constraintName="fk_affiliate_has_category_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
+    </changeSet>
 	<changeSet author="Tarun" id="09-05-2012">
 		<sql>
 			UPDATE shipment ship, shipping_order so
@@ -8693,6 +8810,11 @@
 			AND so.shipping_order_status_id = 200
 		</sql>
 	</changeSet>
+    <changeSet author="Pratham (generated)" id="1347259898238-10">
+        <addColumn tableName="product_image">
+            <column name="image_type" type="INT"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="vaibhav (generated)" id="1347281819426-1">
         <addColumn tableName="base_order">
             <column name="target_dispatch_date" type="DATE"/>
@@ -8736,36 +8858,138 @@
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347607171338-1">
-        <createTable tableName="order_payment_reconciliation">
+	
+    <changeSet author="Ajeet (generated)" id="1347689819294-1">
+        <createTable tableName="offer_email_domain">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="base_order_id" type="INT">
+            <column name="offer_id" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="shipping_order_id" type="INT"/>
-            <column name="payment_mode_id" type="INT">
+            <column name="email_domain" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="reconciled" type="TINYINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="reconciled_amount" type="DECIMAL(12,2)">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueNumeric="0.00" name="reward_points_against_cancellation" type="DECIMAL(12,2)">
+            <column defaultValueNumeric="1" name="active" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347607171338-2">
-        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    <changeSet author="Ajeet (generated)" id="1347689819294-2">
+        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="offer_email_domain" constraintName="fk_offer_email_domain_offer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="offer" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347607171338-3">
-        <addForeignKeyConstraint baseColumnNames="payment_mode_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_payment_mode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment_mode" referencesUniqueColumn="false"/>
+
+	<changeSet author="Ajeet (generated)" id="1347564843152-1">
+        <createTable tableName="update_pv_price">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+	        <column name="new_costprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="new_mrp" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="new_hkprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="txn_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="updated" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="DATETIME"/>
+            <column name="updated_by" type="INT"/>
+        </createTable>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1347607171338-4">
-        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    <changeSet author="Ajeet (generated)" id="1347564843152-2">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="update_pv_price" constraintName="fk_update_pv_price_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1347564843152-3">
+        <addForeignKeyConstraint baseColumnNames="updated_by" baseTableName="update_pv_price" constraintName="fk_update_pv_price_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+	
+    <changeSet author="Ajeet (generated)" id="1347716040167-1">
+        <addColumn tableName="update_pv_price">
+            <column name="old_costprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Ajeet (generated)" id="1347716040167-2">
+        <addColumn tableName="update_pv_price">
+            <column name="old_mrp" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1347716040167-3">
+        <addColumn tableName="update_pv_price">
+            <column name="old_hkprice" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham" id="09-17-2012">
+        <sql>
+            insert into `affiliate_status` (`id`, `name`) values('10','Unverified');
+            insert into `affiliate_status` (`id`, `name`) values('20','Verified');
+            insert into `affiliate_status` (`id`, `name`) values('30','Rejected');
+            insert into `affiliate_status` (`id`, `name`) values('40','Cancelled');
+            update affiliate a inner join user u on a.user_id = u.id inner join user_has_role ur on u.id = ur.user_id set affiliate_status_id = 10 where ur.role_name = 'HK_AFFILIATE_UNVERIFIED';
+            update affiliate a inner join user u on a.user_id = u.id inner join user_has_role ur on u.id = ur.user_id set affiliate_status_id = 20 where ur.role_name = 'HK_AFFILIATE';
+            update affiliate set offer_id = 1142;
+            update affiliate set valid_days = 365;
+            update affiliate set weekly_coupon_limit= 100;
+            insert into `coupon_type` (`id`, `name`) values('10','REFERRAL');
+            insert into `coupon_type` (`id`, `name`) values('20','AFFILIATE');
+            insert into `coupon_type` (`id`, `name`) values('30','OFFER');
+            insert into `affiliate_txn_type` (`id`, `name`) values('5','Pending');
+            insert into `affiliate_txn_type` (`id`, `name`) values('13','Payment Due');
+            insert into `affiliate_txn_type` (`id`, `name`) values('18','Paid');
+            update coupon set coupon_type_id = 20 where offer_id = 1142;
+            update coupon set coupon_type_id = 10 where offer_id != 1142 and referrer_user_id is not null;
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham" id="09-18-2012">
+        <sql>
+            update affiliate set offer_id = 1357;
+            update coupon set offer_id = 1357 where referrer_user_id is not null;
+        </sql>
+    </changeSet>
+    <changeSet author="vaibhav" id="1347716040168-1">
+		<sql>
+			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(999,1,'R','Corporate Retail Invoice 2012');
+		</sql>
+	</changeSet>
+	<changeSet author="Rohit (generated)" id="1347602311804-1">
+        <addColumn tableName="base_order">
+            <column defaultValue="0" name="is_delivery_email_sent" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1347619563282-1">
+        <createTable tableName="order_email_exclusion">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="is_delivery_mail_excluded" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1347619563282-2">
+        <createIndex indexName="unique_exclusion_email" tableName="order_email_exclusion" unique="true">
+            <column name="email"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

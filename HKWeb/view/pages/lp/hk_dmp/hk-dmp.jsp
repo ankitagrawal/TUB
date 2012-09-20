@@ -163,72 +163,123 @@
 <div class="main_container" style="background-color:#FFFFFF;">
 
 <div id="managementContainer">
-<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/banner.gif" width="960" height="220"
-     alt="diabetes management program banner"/>
+
+<div style="padding:10px;">
+<h2>Who is this Program for?</h2>
+
+<p>The HealthKart Diabetes Management Program is targeted at people who are on medication for diabetes, heart problems, high cholesterol or thyroid disorders. These people are prone to complications related to kidney disease, nerve disorders, foot problems, paralytic strokes if their diabetes or cholesterol are not controlled or monitored adequately. The Program helps them manage their condition in a cost effective manner.</p>
+
+<h2>What is this Program?</h2>
+
+<p>Based on your prescription profile, you can choose one of the HealthKart Packages. HealthEssential, HealthVital or HealthUltima. Each package will provide you the required medication, diagnostics and nutritional support required for your condition for 3 months plus a host of other benefits.</p>
+
+<h2>What does the Package include?</h2>
+
+<p>HealthEssential, HeathVital or HealthUltima. Each Package will provide you the required medication and diagnostics required for your condition for 3 months plus a host of other benefits. These have been thoughtfully included to incorporate allied services you might require over the period of three months.</p>
+
+<h2>What does this not include?</h2>
+
+<p>This does not include cost of insulins, DPP IV or injectable cardiovascular medicines</p>
+
+<h2>What is the first time bonus offer?</h2>
+
+<h5><br/>A best in class Glucose monitoring Meter offered for those joining the first time! Is there a cost bebefit?</h5>
+<p><strong>Definitely!</strong> On an average people spend Rs. 1200-1500 per month (Rs. 40/day on an average) on their medication. The cost per day in this package will be Rs. 40/ Rs.50/ Rs. 60 per day. You get a lot more at approximately the same price!</p>
+<ul>
+  <li>- A Blood Glucose meter with strips alone would cost you > Rs. 2500</li>
+  <li>- 20% discounts on doctor consultations at Apollo Clinics</li>
+  <li>- Personalized Diet and Counseling calls</li>
+</ul>
+<p>If your therapy is changed by the doctor, you are saved against the fluctuations in cost.</p>
+
+<h2>Yes! i am interested, What is necessary to join in?</h2>
+
+<ul>
+  <li>1. Prescription of the Doctor</li>
+  <li>2. Registration and Signing of the Consent Form</li>
+  <li>3. Payment</li>
+</ul>
+</div>
 
 <div class="cl"></div>
 <h2 class="dbm">HealthKart Added Value Packages<span><a
 		href="${pageContext.request.contextPath}/home-devices/blood-pressure/bp-monitor?brand=Omron"></a></span></h2>
 
-<div class="productThumb">
-	<p class="tThumb">
-		<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/silver.jpg" width="170" height="170"/></p>
+<div style="height:100px; clear:boht;"></div>
+<div class="productThumb" style="position: relative; overflow: visible;">
+  <div style="position: absolute; top: -86px; left: 40px;"><a href="${pageContext.request.contextPath}/product/health-essential/HK-DMP-001">
+    <img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/essential.jpg" width="192" height="85" alt=""/></a>
+  </div>
 
-	<h3><a href="#">HealthKart DMP - Silver Plan</a></h3>
+	<p>
+    <ul type="circle" style="list-style-type:disc; margin:0px; padding:0px 0px 10px 15px; line-height:17px; font-family:Arial; font-size:12px; color:#000; ">
+      <li>Metabolic Diagnostic Package</li>
+      <li>2 Diet Counselling Calls</li>
+      <li>25 Glucose Monitoring Strips</li>
+      <li>20% off on Apollo Ophtho/ECG Test*</li>
+    </ul>
+  </p>
+  <p style="line-height:17px;">&nbsp;</p>
 
-	<p>4 Therapy Products: One Thyrocare BioT Test, 25 Monitoring Strips, 2 Counseling Call, Blood Glucose Meter
-	   free</p>
-
-	<p class="tPrice">
+	<p class="tPrice" style="font-size:15px; font-weight:bold;">
 		Rs 3,500
 	</p>
 
-	<p class="tSave">&nbsp;</p>
 
-	<p class="tBuy"><a href="#"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
+	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/health-essential/HK-DMP-001"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
 	                                 width="89" height="26" alt=""/></a></p>
 </div>
-<div class="productThumb">
-	<p class="tThumb">
-		<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/gold.jpg" width="170" height="170"/></p>
 
-	<h3><a href="#">HealthKart DMP - Gold Plan</a></h3>
 
-	<p>5 Therapy Products+ 1 Nutritional Supplement: One Thyrocare BioT Test, 25 Monitoring Strips, 2 Counseling Call,
-	   Blood Glucose Meter free</p>
+<div class="productThumb"  style="position: relative; overflow: visible;">
+  <div style="position: absolute; top: -86px; left: 40px;"><a href="${pageContext.request.contextPath}/product/health-vital/HK-DMP-002">
+    <img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/vital.jpg" width="192" height="85" alt=""/></a>
+  </div>
+	<p>
+      <ul type="circle" style="list-style-type:disc; margin:0px; padding:0px 0px 10px 15px; line-height:17px; font-family:Arial; font-size:12px; color:#000; ">
+      <li>1 Nutritional Supplement</li> 
+      <li>Metabolic Diagnostic Package</li>
+      <li>2 Diet Counselling Calls</li>
+      <li>25 Glucose Monitoring Strips</li>
+      <li>20% off on Apollo Ophtho/ECG Test*</li>
+    </ul>
 
-	<p class="tPrice">
+	</p>
+
+	<p class="tPrice" style="font-size:15px; font-weight:bold;">
 
 		Rs 4,500
 	</p>
 
-	<p class="tSave">&nbsp;</p>
-
-	<p class="tBuy"><a href="#"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
+	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/health-vital/HK-DMP-002"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
 	                                 width="89" height="26" alt=""/></a></p>
 </div>
 
-<div class="productThumb">
-	<p class="tThumb">
-		<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/platinum.jpg" width="170" height="170"/></p>
+<div class="productThumb"  style="position: relative; overflow: visible;">
+  <div style="position: absolute; top: -86px; left: 40px;"><a href="${pageContext.request.contextPath}/product/health-ultima/HK-DMP-003">
+    <img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/ultima.jpg" width="192" height="85" alt=""/></a>
+  </div>
 
-	<h3><a href="#">HealthKart DMP - Platinum Plan</a></h3>
+	<p><ul type="circle" style="list-style-type:disc; margin:0px; padding:0px 0px 10px 15px; line-height:17px; font-family:Arial; font-size:12px; color:#000; ">
+      <li/>2 Nutritional Supplement</li>
+      <li>Metabolic Diagnostic Package</li>
+      <li>2 Diet Counselling Calls</li>
+      <li>25 Glucose Monitoring Strips</li>
+      <li>20% off on Apollo Ophtho/ECG Test*</li>
+    </ul></p>
 
-	<p>7 Therapy Products+ 2 Nutritional Supplement: One Thyrocare BioT Test, 25 Monitoring strips, 2 Counseling Call,
-	   Blood Glucose Meter free</p>
-
-	<p class="tPrice">
+	<p class="tPrice" style="font-size:15px; font-weight:bold;">
 		Rs 5,500
 	</p>
 
-	<p class="tSave">&nbsp;</p>
 
-	<p class="tBuy"><a href="#"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
+	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/health-ultima/HK-DMP-003"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
 	                                 width="89" height="26" alt=""/></a></p>
 </div>
 
+  <p>*Diabeto/Opthalmologist Consultation, Cadiologist consultation package including ECG and Echo</p>
 <div class="cl"></div>
-<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/strip2.jpg" width="960" height="80" alt="offer1"/>
+<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/strip4.jpg" width="960" height="80" alt="offer1"/>
 
 <div class="cl"></div>
 <h2 class="dbm">Special Offers for Abbott Employees<span><a
@@ -274,7 +325,7 @@
 			alt=""/></a></p>
 </div>
 <div class="cl"></div>
-<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/strip1.jpg" width="960" height="80" alt="offer2"/>
+<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/strip3.jpg" width="960" height="80" alt="offer2"/>
 
 <div class="cl"></div>
 <h2 class="dbm">Omron BP Monitor<span><a

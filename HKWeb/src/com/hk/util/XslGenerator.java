@@ -2,14 +2,14 @@ package com.hk.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.*;
+import java.text.SimpleDateFormat;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -36,6 +36,8 @@ import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
+import com.hk.domain.hkDelivery.Consignment;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.io.HkXlsWriter;
@@ -694,6 +696,124 @@ private SkuService                    skuService;*/
         }
         xlsWriter.writeData(xlsFile, "SupplierList");
         return xlsFile;
+    }
+
+    public File generateHKDPaymentReconciliationXls(String xslFilePath, HkdeliveryPaymentReconciliation hkdPaymentReconciliation) throws IOException {
+        File file = new File(xslFilePath);
+        FileOutputStream out = new FileOutputStream(file);
+        Workbook wb = new HSSFWorkbook();
+        Sheet sheet1 = wb.createSheet("HKDelivery Payment Reconciliation"+ new Date());
+        Row row = null;
+        Cell cell = null;
+        int rowCounter = 0;
+        int totalColumnNoInSheet1 = 6;
+        //creating different styles for different elements of excel.
+        CellStyle style = wb.createCellStyle();
+        CellStyle style_header = wb.createCellStyle();
+        CellStyle style_data = wb.createCellStyle();
+
+        //setting borders for all cells in sheet.
+        style.setBorderTop(CellStyle.BORDER_THIN);
+        style.setBorderBottom(CellStyle.BORDER_THIN);
+        style.setBorderLeft(CellStyle.BORDER_THIN);
+        style.setBorderRight(CellStyle.BORDER_THIN);
+
+        style_data.setBorderTop(CellStyle.BORDER_THIN);
+        style_data.setBorderBottom(CellStyle.BORDER_THIN);
+        style_data.setBorderLeft(CellStyle.BORDER_THIN);
+        style_data.setBorderRight(CellStyle.BORDER_THIN);
+        //enabling addition of new lines in cells(using "\n" )
+        style_data.setWrapText(true);
+
+        //creating different fonts for the excel data.
+
+        Font font = wb.createFont();
+        font.setFontHeightInPoints((short) 11);
+        font.setColor(Font.COLOR_NORMAL);
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        style.setFont(font);
+
+        Font fontForHeader = wb.createFont();
+        fontForHeader.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        fontForHeader.setFontHeightInPoints((short) 16);
+        style_header.setFont(fontForHeader);
+        style_header.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+
+        //creating rows for header.
+
+        row = sheet1.createRow(++rowCounter);
+        cell = row.createCell(2);
+        cell.setCellStyle(style_header);
+        setCellValue(row, 2,"HKDelivery Payment Reconciliation");
+
+        row = sheet1.createRow(++rowCounter);
+        for (int i = 0; i < 6; i++) {
+            sheet1.autoSizeColumn(i);
+            cell = row.createCell(i);
+            cell.setCellStyle(style);
+        }
+        setCellValue(row, 0, "Reconciliation Date");
+        setCellValue(row, 1, hkdPaymentReconciliation.getCreateDate()+"");
+        setCellValue(row, 2, "Expected COD Amt");
+        setCellValue(row, 3, hkdPaymentReconciliation.getExpectedAmount()+"");
+        setCellValue(row, 4, "Actual Amount");
+        setCellValue(row, 5, hkdPaymentReconciliation.getActualAmount()+"");
+
+         ++rowCounter;
+        //addEmptyLine(row, sheet1, ++rowCounter, cell);
+
+
+        row = sheet1.createRow(++rowCounter);
+        // style.setFont(font);
+        for (int i = 0; i < 6; i++) {
+            sheet1.autoSizeColumn(i);
+            cell = row.createCell(i);
+            cell.setCellStyle(style);
+        }
+        //Date currentDate = new Date();
+        setCellValue(row, 0, "Reconciliation Done By");
+        setCellValue(row, 1, hkdPaymentReconciliation.getUser().getName());
+        setCellValue(row, 2, "Remarks");
+        setCellValue(row, 3, hkdPaymentReconciliation.getRemarks());
+        setCellValue(row, 4, "");
+        setCellValue(row, 5, "");
+        //addEmptyLine(row, sheet1, ++rowCounter, cell);
+        row = sheet1.createRow(++rowCounter);
+        for (int i = 0; i < 6; i++) {
+            sheet1.autoSizeColumn(i);
+            cell = row.createCell(i);
+            cell.setCellStyle(style);
+        }
+        setCellValue(row, 0, "Sl No.");
+        setCellValue(row, 1, "Awb Number");
+        setCellValue(row, 2, "Cnn Number(GatewayOrder Id)");
+        setCellValue(row, 3, "Amount");
+        setCellValue(row, 4,"Payment Mode");
+        setCellValue(row, 5, "Consignment Status");
+
+        int slNumber = 0;
+        for (Consignment consignment: hkdPaymentReconciliation.getConsignments()) {
+            rowCounter++;
+            row = sheet1.createRow(rowCounter);
+            for (int columnNo = 0; columnNo < totalColumnNoInSheet1; columnNo++) {
+                sheet1.autoSizeColumn(columnNo);
+                cell = row.createCell(columnNo);
+                cell.setCellStyle(style_data);
+            }
+             ++slNumber;
+            setCellValue(row, 0,slNumber+"");
+            setCellValue(row, 1,consignment.getAwbNumber());
+            setCellValue(row, 2, consignment.getCnnNumber());
+            setCellValue(row, 3, consignment.getAmount());
+            setCellValue(row, 4, consignment.getPaymentMode());
+            setCellValue(row, 5, consignment.getConsignmentStatus().getStatus());
+
+
+        }
+        wb.write(out);
+        out.close();
+        return file;
     }
 
     private void setCellValue(Row row, int column, Double cellValue) {
