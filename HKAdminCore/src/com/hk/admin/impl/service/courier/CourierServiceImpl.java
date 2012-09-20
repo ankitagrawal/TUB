@@ -126,4 +126,10 @@ public class CourierServiceImpl implements CourierService {
     public void setPincodeService(PincodeService pincodeService) {
         this.pincodeService = pincodeService;
     }
+
+
+	public Courier save(Courier courier){
+	 return(Courier)getCourierDao().save(courier);
+
+	}
 }

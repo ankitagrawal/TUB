@@ -44,6 +44,7 @@ import com.hk.domain.core.Tax;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
@@ -343,4 +344,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     public List<ConsignmentStatus> getConsignmentStatusList(){
         return getBaseDao().getAll(ConsignmentStatus.class);
     }
+
+	public List<CourierGroup>  getCourierGroupList(){
+	return getBaseDao().getAll(CourierGroup.class);	
+	}
 }

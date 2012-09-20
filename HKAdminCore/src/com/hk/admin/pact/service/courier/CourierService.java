@@ -32,6 +32,7 @@ public interface CourierService {
 
     public Courier getDefaultCourier(Pincode pincode, boolean isCOD, Warehouse warehouse);
 
+	public Courier save(Courier courier);
 
 
 }

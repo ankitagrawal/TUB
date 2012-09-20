@@ -27,6 +27,7 @@ import com.hk.domain.core.Tax;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
@@ -129,4 +130,6 @@ public interface MasterDataDao
     public List<User> getAgentsWithOpenRunsheet();
 
     public List<ConsignmentStatus> getConsignmentStatusList();
+
+	public List<CourierGroup>  getCourierGroupList();
 }

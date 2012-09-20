@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.BaseDao;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,6 +22,8 @@ import com.hk.impl.dao.BaseDaoImpl;
  */
 @Service
 public class CourierGroupServiceImpl extends BaseDaoImpl implements CourierGroupService {
+	@Autowired
+	BaseDao baseDao;
 
     public CourierGroup getByName(String name){
         return (CourierGroup) getSession().createQuery("select c from CourierGroup c where c.name = :name")
@@ -29,11 +33,8 @@ public class CourierGroupServiceImpl extends BaseDaoImpl implements CourierGroup
 
     public Set<Courier> getCommonCouriers(CourierGroup courierGroup, List<Courier> courierList){
         Set<Courier> commonCouriers = new HashSet<Courier>();
-        if(courierList.isEmpty()) return commonCouriers;
-        Set<Courier> applicableCourierHashSet = new HashSet<Courier>();
-        applicableCourierHashSet.addAll(courierList);
-        for (Courier courier : courierGroup.getCouriers()) {
-            if(applicableCourierHashSet.contains(courier)){
+        for (Courier courier : courierList) {
+            if(courier.getCourierGroup().equals(courierGroup)){
                 commonCouriers.add(courier);
             }
         }
@@ -41,14 +42,27 @@ public class CourierGroupServiceImpl extends BaseDaoImpl implements CourierGroup
     }
 
     public CourierGroup getCourierGroup(Courier courier) {
-        for (CourierGroup courierGroup : getAll(CourierGroup.class)) {
-            for (Courier subsetCourier : courierGroup.getCouriers()) {
-                if (subsetCourier.equals(courier)) {
-                    return courierGroup;
-                }
-            }
-        }
-        return null;
+      if(courier != null){
+	      return courier.getCourierGroup();
+      }
+	      return null;
     }
 
+	public List<CourierGroup> getAllCourierGroup(){
+	return getAll(CourierGroup.class);
+
+	}
+
+	public CourierGroup save(CourierGroup courierGroup){
+		return (CourierGroup)save(CourierGroup.class);
+	}
+
+
+	public BaseDao getBaseDao() {
+		return baseDao;
+	}
+
+	public void setBaseDao(BaseDao baseDao) {
+		this.baseDao = baseDao;
+	}
 }

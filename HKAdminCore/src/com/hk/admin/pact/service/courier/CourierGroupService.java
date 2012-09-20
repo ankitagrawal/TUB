@@ -15,9 +15,15 @@ import com.hk.domain.courier.CourierGroup;
  */
 public interface CourierGroupService {
 
-    public Set<Courier> getCommonCouriers(CourierGroup courierGroup, List<Courier> courierList);
+	public CourierGroup getByName(String name);
 
-    public CourierGroup getCourierGroup(Courier courier);
+	public Set<Courier> getCommonCouriers(CourierGroup courierGroup, List<Courier> courierList);
+
+	public CourierGroup getCourierGroup(Courier courier);
+
+	public List<CourierGroup> getAllCourierGroup();
+
+	public CourierGroup save(CourierGroup courierGroup);
 
 
-    }
+}
