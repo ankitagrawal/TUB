@@ -30,19 +30,8 @@
 						alert('Please select the payment mode');
 						return false;
 					}
-				                /*var quantity = $('.quantity').val();
-				                if (quantity == "" || isNaN(quantity)) {
-				                    alert("Please enter a valid quantity.");
-				                    return false;
-				                }
-				                var statusSelected = $('.status').find('option:selected');
-				                var approver = $('.approver').find('option:selected');
-				                var test = approver.text();
-				                if (statusSelected.text() == "Sent For Approval" && approver.text() == "-Select Approver-") {
-				                    alert("Approver Not Selected.");
-				                    return false;
-				                }*/
-				            });
+
+				});
 
 			});
 		</script>
@@ -116,18 +105,15 @@
 					<ul>
 						<li>
 							<label>Payment Mode:</label>
-							<s:select name="paymentProcess" class="uploadPaymentMode">
+							<s:select name="paymentProcess" class="uploadPaymentMode" style="width: 100">
 								<s:option value="all">-Select-</s:option>
 								<s:option value="cod">COD</s:option>
 								<s:option value="techprocess">Prepaid</s:option>
 							</s:select>
 						</li>
 						<li>
-							<h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
+							<h3>File to Upload: <s:file name="fileBean" size="30"/></h3>
 
-							                <%--<div class="buttons">
-
-							                </div>--%>
 						</li>
 						<li>
 							<s:submit name="parse" value="Upload reconciliation status" class="requiredFieldValidator"/>
