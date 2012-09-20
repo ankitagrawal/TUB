@@ -177,21 +177,6 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 		}
 	}
 
-	private OrderPaymentReconciliation createOrderPaymentReconciliation(Order order, ShippingOrder shippingOrder, PaymentMode paymentMode, Double amount, String reconciled) {
-		OrderPaymentReconciliation orderPaymentReconciliation = new OrderPaymentReconciliation();
-		if (order != null) {
-			orderPaymentReconciliation.setBaseOrder(order);
-		}
-		if (shippingOrder != null) {
-			orderPaymentReconciliation.setShippingOrder(shippingOrder);
-			orderPaymentReconciliation.setBaseOrder(shippingOrder.getBaseOrder());
-		}
-		orderPaymentReconciliation.setPaymentMode(paymentMode);
-		orderPaymentReconciliation.setReconciledAmount(amount);
-		orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
-		return orderPaymentReconciliation;
-	}
-
 	private OrderPaymentReconciliation updateOrCreateOrderPaymentReconciliationBySO(ShippingOrder shippingOrder, PaymentMode paymentMode, Double amount, String reconciled) {
 		OrderPaymentReconciliation orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationBySO(shippingOrder);
 		if (orderPaymentReconciliation == null) {
