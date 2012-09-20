@@ -57,7 +57,7 @@
                         <td>${paymentReconciliation.remarks}</td>
                         <td>
                             <c:if test="${paymentReconciliation.id != null}">
-                                <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
+                                <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction"
                                         event="editPaymentReconciliation" target="_blank">
                                     <s:param name="hkdeliveryPaymentReconciliation"
                                              value="${paymentReconciliation.id}"/>

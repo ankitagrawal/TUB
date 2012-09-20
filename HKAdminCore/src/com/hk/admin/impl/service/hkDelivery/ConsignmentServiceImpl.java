@@ -1,6 +1,7 @@
 package com.hk.admin.impl.service.hkDelivery;
 
 import com.akube.framework.dao.Page;
+import com.hk.pact.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
@@ -31,6 +32,9 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Autowired
     private RunSheetService runsheetService;
+
+	@Autowired
+	UserService userService;
 
     @Override
     public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode , String address, Hub hub){
@@ -175,8 +179,9 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation){
-        hkdeliveryPaymentReconciliation.setUpdateDate(new Date());
+    public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation, User loggedOnUser){
+	    hkdeliveryPaymentReconciliation.setUpdateDate(new Date());
+	    hkdeliveryPaymentReconciliation.setUser(loggedOnUser);
         consignmentDao.saveOrUpdate(hkdeliveryPaymentReconciliation);
         return hkdeliveryPaymentReconciliation;
     }
@@ -266,4 +271,9 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage) {
         return consignmentDao.getPaymentReconciliationListByDates(startDate ,endDate ,pageNo ,perPage);
     }
+
+	@Override
+	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate) {
+		return consignmentDao.getConsignmentsForPaymentReconciliation(startDate, endDate);
+	}
 }
