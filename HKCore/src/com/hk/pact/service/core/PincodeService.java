@@ -8,6 +8,8 @@ import com.hk.domain.warehouse.Warehouse;
 
 public interface PincodeService {
 
+	//todo ankit, if not a PDCService, atlease create a separate a different PDCdao for this
+
     
     public Pincode getByPincode(String pincode) ;
 

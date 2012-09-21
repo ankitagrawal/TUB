@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface CourierService {
 
+	//todo ankit, lets discuss how can we make it better
+
 	public List<Courier> getAllCouriers();
 
 	public Courier getCourierById(Long courierId);

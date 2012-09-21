@@ -93,6 +93,8 @@ public class SOInvoiceAction extends BaseAction {
             Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
             boolean isCod = shippingOrder.isCOD();
             CourierServiceInfo courierServiceInfo = null;
+
+	        //todo ankit
             if (isCod) {
                    courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart_COD.getId(), address.getPin(), true , false, false);
             } else {

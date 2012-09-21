@@ -9,8 +9,9 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 
 public interface CourierServiceInfoDao extends BaseDao {
-    
-    public Courier getDefaultCourierForPincode(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
+	//todo ankit dont be specific in method names, better rename to searchCourierServiceInfo, searchDefaultCourier etc
+
+	public Courier getDefaultCourierForPincode(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
 
     public List<Courier> getCouriersForPincode(String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
 

@@ -456,6 +456,8 @@ public class Functions {
         // so this will work like, The system gets input as pincode and code available or not, and Then system returns
         // the couriers in a sorted order on price
 
+	    //todo ankit do we sort them on price?
+
         ShippingOrder shippingOrder = (ShippingOrder) o;
         CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
         return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false , false);

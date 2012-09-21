@@ -714,7 +714,7 @@ public class OrderManager {
 		return margin;
 	}
 
-
+	 //todo ankit why is this method needed, please help me understand
      public void setGroundShippedItemQuantity(Order order) {
         if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
             for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {

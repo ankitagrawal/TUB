@@ -52,6 +52,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (pincode == null) {
             return null;
         }
+
+	    //todo ankit (is order ground shipped method, please write separately)
         // Ground Shipping logic starts -- suggested courier
         boolean isGroundShipped = false;
         Courier suggestedCourier = null;
@@ -61,6 +63,7 @@ public class ShipmentServiceImpl implements ShipmentService {
                 break;
             }
         }
+	    //todo ankit do we need 2 lines of code here, isgroundshiped will be either true or false
         if (isGroundShipped) {
             suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
         } else {

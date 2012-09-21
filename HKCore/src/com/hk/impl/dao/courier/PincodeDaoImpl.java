@@ -28,6 +28,8 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
         return pincodeDefaultCouriers;
     }
 
+	//todo ankit, do we need 4 different methods for the same functionality, please refactor
+
     public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse) {
         Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
         pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));

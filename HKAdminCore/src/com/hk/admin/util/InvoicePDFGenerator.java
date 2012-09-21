@@ -115,6 +115,7 @@ public class InvoicePDFGenerator {
         Address address = addressDao.get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
         boolean isCod = shippingOrder.isCOD();
         CourierServiceInfo courierServiceInfo = null;
+	    //todo ankit again 2 lines of code, can be written in one, less confusing and clean
         if (EnumCourier.BlueDart_COD.getId().equals(shippingOrder.getShipment().getCourier().getId())) {
             if (isCod) {
                  courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart_COD.getId(), address.getPin(), true , false, false);

@@ -92,11 +92,12 @@ public class SplitBaseOrderAction extends BaseAction {
             /**
              * if order has any services products create a shipping order and send it to service queue
              */
-            if (baseOrder.getContainsServices()) {
+            if (baseOrder.getContainsServices()) { //todo ankit do we need this check now? just see with service cartlineItems size
                 Set<CartLineItem> serviceCartLineItems = new CartLineItemFilter(baseOrder.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(
                         true).filter();
                 for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
                     try {
+	                    //todo ankit if i am not wrong, are you creating a So each service cart line item?
 //                        adminShippingOrderService.createSOForService(serviceCartLineItem);
                         orderService.createSOForService(serviceCartLineItem);
                     } catch (NoSkuException e) {

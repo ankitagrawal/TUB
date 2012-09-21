@@ -9,6 +9,8 @@ package com.hk.constants.warehouse;
  */
 public enum EnumWarehouse {
 
+	//todo ankit, please see if it is inline with the current warehouseService
+
     Gurgoan(1, "Gurgoan"),
     Mumbai(2, "Mumbai");
 

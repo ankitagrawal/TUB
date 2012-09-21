@@ -212,6 +212,7 @@ public class OrderServiceImpl implements OrderService {
     public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
+	        //todo ankit just order status places is not a valid criteria if order is not split, check if currrently it has SO's or not, if SOs are null or empty, then split
 //            if (order.getContainsServices()) {
 //                String comments = "Order has services,abort system split and do a manual split";
 //                getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
@@ -561,6 +562,10 @@ public class OrderServiceImpl implements OrderService {
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
         this.orderLoggingService = orderLoggingService;
     }
+
+	//todo ankit, there should be one and only method to which you will pass order
+	//todo there you wiill check for pin, cod,and products
+	//todo currently pin is checked separaretely or OSA and products are checked on paymentModepage, not scalable
 
     public boolean isCODAllowed(Order order) {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());

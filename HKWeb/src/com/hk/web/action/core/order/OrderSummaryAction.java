@@ -128,7 +128,7 @@ public class OrderSummaryAction extends BaseAction {
         }
         Address address = order.getAddress();
         String pin = address != null ? address.getPin() : null;
-        codAllowed = courierService.isCodAllowed(pin);
+        codAllowed = courierService.isCodAllowed(pin);                             //todo ankit somewhere based on this, we show that your area is serviced just by pincode, that function is wrong, please correct it
         if (codAllowed) {
             Double payable = pricingDto.getGrandTotalPayable();
             if (payable < codMinAmount || payable > codMaxAmount) {
