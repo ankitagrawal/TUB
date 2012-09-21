@@ -72,7 +72,7 @@ public class HKDPaymentReconciliationAction extends BasePaginatedAction {
 		loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		if(consignmentListForPaymentReconciliation.size() ==0 && (startDate != null || endDate != null)){
 			consignmentListForPaymentReconciliation = consignmentService.getConsignmentsForPaymentReconciliation(startDate, endDate);
-			if(consignmentListForPaymentReconciliation == null){
+			if(consignmentListForPaymentReconciliation.size() == 0){
 				addRedirectAlertMessage(new SimpleMessage("No delivered consignment found"));
                 return new ForwardResolution("/pages/admin/hkdeliveryReports.jsp");
 			}
@@ -82,7 +82,7 @@ public class HKDPaymentReconciliationAction extends BasePaginatedAction {
                 addRedirectAlertMessage(new SimpleMessage("Status of consignment "+ consignment.getAwbNumber() + " is not delivered."));
                 return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
             }
-	        if(consignmentListForPaymentReconciliation == null){
+	        if(consignmentListForPaymentReconciliation.size() == 0){
 				addRedirectAlertMessage(new SimpleMessage("No delivered consignment selected"));
                 return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
 			}
