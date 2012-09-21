@@ -133,7 +133,7 @@ public class CatalogAction extends BasePaginatedAction {
     @Session(key = HealthkartConstants.Session.perPageCatalog)
     private int                     perPage;
 
-    private int                     defaultPerPage             = 20;
+    private int                     defaultPerPage             = 24;
 
     @DefaultHandler
     public Resolution pre() throws IOException, SolrServerException {
@@ -166,11 +166,7 @@ public class CatalogAction extends BasePaginatedAction {
             smallestCategory = rootCategorySlug;
         }
 
-        try {
-            boolean renderNewCatalogUI = Functions.renderNewCatalogUI(childCategorySlug, secondaryChildCategorySlug);
-            if (renderNewCatalogUI) {
-                defaultPerPage = 21;
-            }
+        try {            
             if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
                 if (!filterOptions.isEmpty()) {
                     filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
@@ -199,7 +195,7 @@ public class CatalogAction extends BasePaginatedAction {
 
             List<Product> filteredProducts = searchResult.getSolrProducts();
             if (rootCategorySlug.equals("services")) {
-                productList = trimListByDistance(filteredProducts, preferredZone);
+                filteredProducts = trimListByDistance(filteredProducts, preferredZone);
             }
             // Find out how many products have been filtered
             int diff = 0;
@@ -309,6 +305,8 @@ public class CatalogAction extends BasePaginatedAction {
         if (StringUtils.isNotBlank(feed)) {
             if (feed.equals("xml")) {
                 return new ForwardResolution("/pages/category/catalogFeedXml.jsp");
+            }else if (feed.equals("xml-temp")) {                                   //TODO: Hacky code to be removed..done by Marut as suggested by Kani
+                return new ForwardResolution("/pages/category/catalogFeedXmlTemp.jsp");
             }
         }
 

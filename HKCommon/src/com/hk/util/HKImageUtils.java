@@ -71,10 +71,12 @@ public class HKImageUtils {
         if (isSecure) {
             prefix = "https://";
         }
+
         return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
     }
 
-    public static String getS3ImageUrl(String imageSize, Long imageId, boolean isSecure) {
+    public static String getS3ImageUrl(String imageSize, Object imgId, boolean isSecure) {
+        Long imageId = Long.parseLong(imgId.toString());
         String prefix = "http://";
         if (isSecure) {
             prefix = "https://";

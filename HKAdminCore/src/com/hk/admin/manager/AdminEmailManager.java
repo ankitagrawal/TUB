@@ -17,6 +17,7 @@ import com.hk.domain.catalog.product.SimilarProduct;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
+import com.hk.domain.email.OrderEmailExclusion;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.hibernate.Session;
@@ -741,6 +742,16 @@ public class AdminEmailManager {
   }
   
   public boolean sendOrderDeliveredEmail(Order order) {
+	  List<OrderEmailExclusion> orderEmailExclusionList =
+			  getBaseDao().findByNamedQueryAndNamedParam("orderExclusionfindByEmail", new String[]{"email"}, new Object[]{order.getUser().getEmail()});
+
+	  if(orderEmailExclusionList != null && orderEmailExclusionList.size() > 0) {
+		  OrderEmailExclusion orderEmailExclusion = orderEmailExclusionList.get(0);
+		  if (orderEmailExclusion.isDeliveryMailExcluded()) {
+			  return false;
+		  }
+	  }
+
       HashMap valuesMap = new HashMap();
       valuesMap.put("order", order);
       String feedbackPageUrl = getLinkManager().getFeedbackPage();

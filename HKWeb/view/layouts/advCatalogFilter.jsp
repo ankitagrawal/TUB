@@ -269,7 +269,7 @@
 				<c:if test="${!empty ca.filterOptions || (filteredPriceRange.minPrice != priceRange.minPrice) || (filteredPriceRange.maxPrice != priceRange.maxPrice)}">
 					<a class="removeFilters"
 					   style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Reset</a>
-				</c:if>				
+				</c:if>
 				<c:if test="${!empty ca.filterOptions}">
 					<div>
 						<c:forEach items="${ca.filterProductOptions}" var="filter">

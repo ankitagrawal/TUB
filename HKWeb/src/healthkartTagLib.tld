@@ -851,17 +851,6 @@
         <description>
             get cod converter url for an order
         </description>
-        <name>splitBOEscalateSOCreateShipmentAndRelatedTasks</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.String splitBOEscalateSOCreateShipmentAndRelatedTasks(com.hk.domain.order.Order)</function-signature>
-        <example>
-            ${hk:splitBOEscalateSOCreateShipmentAndRelatedTasks(${order})}
-        </example>
-    </function>
-    <function>
-        <description>
-            get cod converter url for an order
-        </description>
         <name>getCodConverterLink</name>
         <function-class>com.hk.taglibs.Functions</function-class>
         <function-signature>java.lang.String getCodConverterLink(com.hk.domain.order.Order)</function-signature>
@@ -891,7 +880,18 @@
             ${hk:getHubForHkdeliveryUser(${user})}
         </example>
     </function>
-	<function>
+    <function>
+        <description>
+            returns productImages based on type and product/variant
+        </description>
+        <name>searchProductImages</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long searchProductImages(com.hk.domain.catalog.product.Product,com.hk.domain.catalog.product.ProductVariant,java.lang.Long,boolean,boolean)</function-signature>
+        <example>
+        ${hk:searchProductImages(${product})}
+        </example>
+    </function>
+    <function>
         <description>
             returns true if option needs to be shown on ui
         </description>
