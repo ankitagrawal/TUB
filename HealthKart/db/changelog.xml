@@ -8992,4 +8992,36 @@
         </createIndex>
     </changeSet>
 
+    <changeSet author="Rohit (generated)" id="1348206809312-1">
+        <createTable tableName="order_payment_reconciliation">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipping_order_id" type="INT"/>
+            <column name="payment_mode_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reconciled" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reconciled_amount" type="DECIMAL(12,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="reward_points_against_cancellation" type="DECIMAL(12,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1348206809312-2">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1348206809312-3">
+        <addForeignKeyConstraint baseColumnNames="payment_mode_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_payment_mode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment_mode" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1348206809312-4">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
