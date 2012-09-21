@@ -73,6 +73,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     Courier suggestedCourier;
     List<Courier> availableCouriers;
     Double approxWeight = 0D;
+    boolean isGroundShipped = false;
 
     Shipment shipment;
 
@@ -94,7 +95,21 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             getContext().getValidationErrors().add("3", new SimpleError("Pincode is invalid, It cannot be packed"));
         } else {
             boolean isCod = shippingOrder.isCOD();
-            availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+//            availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+//  groundShipping logic Starts---              
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
+                    isGroundShipped = true;
+                    break;
+                }
+            }
+            if (isGroundShipped) {
+                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped , false);
+            } else {
+                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false , false);
+            }
+//  ground shipping logic ends
+
             if (availableCouriers == null || availableCouriers.isEmpty()) {
                 getContext().getValidationErrors().add("4", new SimpleError("No Couriers are applicable on this pincode, Please contact logistics, Order cannot be packed"));
             }
@@ -134,12 +149,28 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
-                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+//                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
+                        isGroundShipped = true;
+                        break;
+                    }
+                }
+                if (isGroundShipped) {
+                    availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
+                } else {
+                    availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false , false);
+                }
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
                 } else {
-                    suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod);
+                    if (isGroundShipped) {
+                        suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
+                    } else {
+                        suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, false);
+                    }
                     //Todo: Seema ."reason=create  shipment with default Awb  " Action: default Tracking id= gateway_order_id: Might remove when we have all the awb in system
                     trackingId = shippingOrder.getGatewayOrderId();
                 }
@@ -293,5 +324,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
     public void setTrackingId(String trackingId) {
         this.trackingId = trackingId;
+    }
+
+    public boolean isGroundShipped() {
+        return isGroundShipped;
+    }
+
+    public void setGroundShipped(boolean groundShipped) {
+        isGroundShipped = groundShipped;
     }
 }

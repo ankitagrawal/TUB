@@ -97,7 +97,8 @@ public class SplitBaseOrderAction extends BaseAction {
                         true).filter();
                 for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
                     try {
-                        adminShippingOrderService.createSOForService(serviceCartLineItem);
+//                        adminShippingOrderService.createSOForService(serviceCartLineItem);
+                        orderService.createSOForService(serviceCartLineItem);
                     } catch (NoSkuException e) {
                         logger.error("No sku found", e);
                         addRedirectAlertMessage(new SimpleMessage(e.getMessage()));

@@ -64,7 +64,9 @@ public class XslGenerator {
     public static final String COD_COURIER_ID        = "COD_COURIER_ID";
     public static final String TECH_PROCESS_COURIER_ID = "TECH_PROCESS_COURIER_ID";
     public static final String ESTIMATED_SHIPPING_COST_COD = "ESTIMATED_SHIPPING_COST_COD";
-    public static final String ESTIMATED_SHIPPING_COST_TECH = "ESTIMATED_SHIPPING_COST_TECH";
+    public static final String ESTIMATED_SHIPPING_COST = "ESTIMATED_SHIPPING_COST";
+    public static final String    GROUND_SHIPPING_AVAILABLE      = "GROUND_SHIPPING_AVAILABLE";
+    public static final String    COD_ON_GROUND_SHIPPING         = "COD_ON_GROUND_SHIPPING";
 
     @Autowired
     private CourierDao            courierDao;
@@ -311,7 +313,7 @@ private SkuService                    skuService;*/
         Row row = sheet1.createRow(0);
         row.setHeightInPoints((short) 25);
 
-        int totalColumnNo = 8;
+        int totalColumnNo = 10;
 
         Cell cell;
         for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
@@ -325,6 +327,8 @@ private SkuService                    skuService;*/
         setCellValue(row, 4, IS_PREFERRED_COD);
         setCellValue(row, 5, ROUTING_CODE);
         setCellValue(row, 6, IS_DELETED);
+        setCellValue(row, 7, GROUND_SHIPPING_AVAILABLE);
+        setCellValue(row, 8, COD_ON_GROUND_SHIPPING);
 
         int initialRowNo = 1;
         for (CourierServiceInfo courierServiceInfo : courierServiceInfoList) {
@@ -342,6 +346,8 @@ private SkuService                    skuService;*/
             setCellValue(row, 4, courierServiceInfo.isPreferredCod() ? "Y" : "N");
             setCellValue(row, 5, courierServiceInfo.getRoutingCode());
             setCellValue(row, 6, courierServiceInfo.isDeleted() ? "Y" : "N");
+            setCellValue(row, 7, courierServiceInfo.isGroundShippingAvailable() ? "Y" : "N");
+            setCellValue(row, 8, courierServiceInfo.isCodAvailableOnGroundShipping() ? "Y" : "N");
 
             initialRowNo++;
 
@@ -519,10 +525,10 @@ private SkuService                    skuService;*/
         }
         setCellValue(row, 0, PINCODE);
         setCellValue(row, 1, WAREHOUSE);
-        setCellValue(row, 2, COD_COURIER_ID);
-        setCellValue(row, 3, TECH_PROCESS_COURIER_ID);
-        setCellValue(row, 4, ESTIMATED_SHIPPING_COST_COD);
-        setCellValue(row, 5, ESTIMATED_SHIPPING_COST_TECH);
+        setCellValue(row, 2, COURIER_ID);
+        setCellValue(row, 3, COD_AVAILABLE);
+        setCellValue(row, 4, GROUND_SHIPPING_AVAILABLE);
+        setCellValue(row, 5, ESTIMATED_SHIPPING_COST);
 
         int initialRowNo = 1;
         for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierList) {
@@ -534,20 +540,15 @@ private SkuService                    skuService;*/
 
             setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
             setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
-            if(pincodeDefaultCourier.getCodCourier() != null){
-                setCellValue(row, 2, pincodeDefaultCourier.getCodCourier().getId());
+            if(pincodeDefaultCourier.getCourier() != null){
+                setCellValue(row, 2, pincodeDefaultCourier.getCourier().getId());
             }
             else{
                 setCellValue(row, 2, -1L);
             }
-            if(pincodeDefaultCourier.getNonCodCourier() != null){
-                setCellValue(row, 3, pincodeDefaultCourier.getNonCodCourier().getId());
-            }
-            else{
-                setCellValue(row, 3, -1L);
-            }
-            setCellValue(row, 4, pincodeDefaultCourier.getEstimatedShippingCostCod());
-            setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCostNonCod());
+            setCellValue(row, 3, pincodeDefaultCourier.isCod() ? "Y" : "N"  );
+            setCellValue(row, 4, pincodeDefaultCourier.isGroundShipping() ? "Y" : "N" );
+            setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCost());
 
             initialRowNo++;
         }

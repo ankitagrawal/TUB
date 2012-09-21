@@ -14,4 +14,8 @@ public interface PincodeService {
     public List<PincodeDefaultCourier> getByPincode(Pincode pincode) ;
 
     public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse) ;
+
+     public List<PincodeDefaultCourier>  getByPincode(Pincode pincode,  boolean isCod, boolean isGroundshipping) ;
+
+    public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse,  boolean isCod, boolean isGroundshipping) ;
 }

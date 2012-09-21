@@ -14,4 +14,8 @@ public interface PincodeDao extends BaseDao {
     public List<PincodeDefaultCourier> getByPincode(Pincode pincode);
 
     public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse);
+
+    public List<PincodeDefaultCourier>  getByPincode(Pincode pincode,  boolean forCod, boolean forGroundshipping) ;
+
+    public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse,  boolean isCod, boolean isGroundshipping) ;
 }

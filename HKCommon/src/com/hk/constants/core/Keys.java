@@ -108,6 +108,8 @@ public class Keys {
 		public static final String dbPassword = "dbPassword";
 		public static final String dbPort = "dbPort";
 
+        public static final String cashBackPercentageOnGroundShipped   = "cashBackPercentageOnGroundShipped";
+
 	}
 
 	/*

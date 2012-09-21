@@ -32,6 +32,15 @@ public class PincodeServiceImpl implements PincodeService {
         return getPincodeDao().getByPincodeWarehouse(pincode, warehouse);
     }
 
+    public List<PincodeDefaultCourier>  getByPincode(Pincode pincode,  boolean isCod, boolean isGroundshipping) {
+        return   getPincodeDao().getByPincode(pincode , isCod, isGroundshipping);
+    }
+
+     public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse,  boolean isCod, boolean isGroundshipping) {
+          return getPincodeDao().getByPincodeWarehouse(pincode, warehouse, isCod, isGroundshipping );
+     }
+
+
     public PincodeDao getPincodeDao() {
         return pincodeDao;
     }
@@ -39,7 +48,6 @@ public class PincodeServiceImpl implements PincodeService {
     public void setPincodeDao(PincodeDao pincodeDao) {
         this.pincodeDao = pincodeDao;
     }
-
-    
+  
     
 }

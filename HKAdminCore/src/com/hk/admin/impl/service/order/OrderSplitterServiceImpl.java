@@ -5,6 +5,7 @@ import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.helper.OrderSplitterHelper;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.Keys;
@@ -21,6 +22,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.OrderSplitException;
+import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.pact.dao.courier.PincodeDao;
@@ -38,6 +40,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.RedirectResolution;
 
 /**
  * Created with IntelliJ IDEA.
@@ -87,13 +92,20 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     @Autowired
     private OrderLoggingService orderLoggingService;
 
+
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;
 
-    public List<DummyOrder> listBestDummyOrdersPractically(Order order) {
-        TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order);
+    public List<DummyOrder> listBestDummyOrdersPractically(Order order, Set<CartLineItem> CartlineItems) {
+        TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order , CartlineItems);
         return sortedCourierCostingTreeMap.lastKey();
     }
+
+    public List<DummyOrder> listBestDummyOrdersPractically(Order order) {
+           TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order);
+           return sortedCourierCostingTreeMap.lastKey();
+       }
+
 
     public NavigableMap<List<DummyOrder>, Long> listSortedDummyOrderMapPractically(Order order) {
         TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order);
@@ -120,7 +132,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     }
 
     @SuppressWarnings("unchecked")
-    public TreeMap<List<DummyOrder>, Long> splitBOPractically(Order order) {
+    public TreeMap<List<DummyOrder>, Long> splitBOPractically(Order order, Set<CartLineItem> productCartLineItems) {
 
         // get static things
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
@@ -137,7 +149,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         boolean isCod = order.isCOD();
         Payment payment = order.getPayment();
 
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+//        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         Map<CartLineItem, Set<Warehouse>> cartLineItemWarehouseListMap = new HashMap<CartLineItem, Set<Warehouse>>();
 
         // iterate over product line items, make a map for the sku available (i.e having inventory as well) for each warehouse
@@ -233,6 +245,124 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
         return sortedCourierCostingTreeMap;
     }
+
+
+
+
+    public TreeMap<List<DummyOrder>, Long> splitBOPractically(Order order) {
+
+           // get static things
+           Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+           if (pincode == null) {
+               String comments = "Pincode does not exist in our system, Please get in touch with OPS or customer care";
+               orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+               throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
+           }
+           if (order.getPayment() == null) {
+               String comments = "No Payment Associated with order";
+               orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+               throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
+           }
+           boolean isCod = order.isCOD();
+           Payment payment = order.getPayment();
+
+          Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+           Map<CartLineItem, Set<Warehouse>> cartLineItemWarehouseListMap = new HashMap<CartLineItem, Set<Warehouse>>();
+
+           // iterate over product line items, make a map for the sku available (i.e having inventory as well) for each warehouse
+           for (CartLineItem cartLineItem : productCartLineItems) {
+               List<Sku> skuList = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
+
+               Set<Warehouse> applicableWarehousesForLineItem = null;
+               if (!skuList.isEmpty()) {
+                   applicableWarehousesForLineItem = new HashSet<Warehouse>();
+                   for (Sku sku : skuList) {
+                       if (inventoryService.getAvailableUnbookedInventory(sku) > 0) {
+                           applicableWarehousesForLineItem.add(sku.getWarehouse());
+                       }
+                   }
+                   cartLineItemWarehouseListMap.put(cartLineItem, applicableWarehousesForLineItem);
+               }
+           }
+
+           Warehouse ggnWarehouse = warehouseService.getDefaultWarehouse();
+           Warehouse mumWarehouse = warehouseService.getMumbaiWarehouse();
+
+           List<CartLineItem> awaraCartLineItems = new ArrayList<CartLineItem>();         // these are the dicey lineItems for which whole algo has been written
+           List<CartLineItem> ggnKiCartLineItems = new ArrayList<CartLineItem>();
+           List<CartLineItem> mumKiCartLineItems = new ArrayList<CartLineItem>();
+
+           for (CartLineItem cartLineItem : cartLineItemWarehouseListMap.keySet()) {
+               Set<Warehouse> applicableWarehouses = cartLineItemWarehouseListMap.get(cartLineItem);
+               Integer applicableWarehousesSize = applicableWarehouses != null ? applicableWarehouses.size() : 0;
+               if (applicableWarehousesSize == 0) {
+                   ggnKiCartLineItems.add(cartLineItem);
+               } else if (applicableWarehousesSize == 1) {
+                   Warehouse applicableWarehouse = applicableWarehouses.iterator().next();
+                   if (applicableWarehouse.equals(ggnWarehouse)) {
+                       ggnKiCartLineItems.add(cartLineItem);
+                   } else if (applicableWarehouse.equals(mumWarehouse)) {
+                       mumKiCartLineItems.add(cartLineItem);
+                   }
+               } else {
+                   awaraCartLineItems.add(cartLineItem);
+               }
+           }
+
+           Integer awaraLineItemsSize = awaraCartLineItems.size();
+           Map<List<DummyOrder>, Long> dummyOrderCostingMap = new HashMap<List<DummyOrder>, Long>();
+
+           //now what happens here is ki awara LineItems ko P&C karte hain, and allocate them in ggn/Mumbai, and then (shipping+cost) decide which is the best fit for them
+           for (int i = 0; i <= awaraLineItemsSize; i++) {
+               List<CartLineItem> ggnCartLineItems = new ArrayList<CartLineItem>();
+               ggnCartLineItems.addAll(ggnKiCartLineItems);
+               ggnCartLineItems.addAll(awaraCartLineItems.subList(0, i));
+
+               List<CartLineItem> mumCartLineItems = new ArrayList<CartLineItem>();
+               mumCartLineItems.addAll(mumKiCartLineItems);
+               mumCartLineItems.addAll(awaraCartLineItems.subList(i, awaraLineItemsSize));
+
+               DummyOrder dummyGgnOrder = new DummyOrder(ggnCartLineItems, ggnWarehouse, isCod, pincode, payment);
+               DummyOrder dummyMumOrder = new DummyOrder(mumCartLineItems, mumWarehouse, isCod, pincode, payment);
+
+               List<DummyOrder> splitDummyOrders = Arrays.asList(dummyGgnOrder, dummyMumOrder);
+
+               if (isCod) {
+                   if (!validCase(splitDummyOrders)) continue;
+               }
+
+               dummyOrderCostingMap.put(splitDummyOrders, orderSplitterHelper.calculateShippingPlusTax(splitDummyOrders));
+
+               List<CartLineItem> ggnCartLineItems2 = new ArrayList<CartLineItem>();
+               ggnCartLineItems2.addAll(ggnKiCartLineItems);
+               ggnCartLineItems2.addAll(awaraCartLineItems.subList(i, awaraLineItemsSize));
+
+               List<CartLineItem> mumCartLineItems2 = new ArrayList<CartLineItem>();
+               mumCartLineItems2.addAll(mumKiCartLineItems);
+               mumCartLineItems2.addAll(awaraCartLineItems.subList(0, i));
+               DummyOrder dummyGgnOrder2 = new DummyOrder(ggnCartLineItems2, ggnWarehouse, isCod, pincode, payment);
+               DummyOrder dummyMumOrder2 = new DummyOrder(mumCartLineItems2, mumWarehouse, isCod, pincode, payment);
+
+               List<DummyOrder> splitDummyOrders2 = Arrays.asList(dummyGgnOrder2, dummyMumOrder2);
+               if (isCod) {
+                   if (!validCase(splitDummyOrders2)) continue;
+               }
+               dummyOrderCostingMap.put(splitDummyOrders2, orderSplitterHelper.calculateShippingPlusTax(splitDummyOrders2));
+           }
+
+           if (dummyOrderCostingMap.size() == 0) {
+               String comments = "System could not split the order, Please report to tech ";
+               orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+               throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
+           }
+
+           MapValueComparator mapValueComparator = new MapValueComparator(dummyOrderCostingMap);
+           TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = new TreeMap(mapValueComparator);
+           sortedCourierCostingTreeMap.putAll(dummyOrderCostingMap);
+
+           return sortedCourierCostingTreeMap;
+       }
+
 
     private boolean validCase(List<DummyOrder> splitDummyOrders) {
         boolean validCase = true;
