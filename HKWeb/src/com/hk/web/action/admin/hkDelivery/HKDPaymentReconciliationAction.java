@@ -73,19 +73,19 @@ public class HKDPaymentReconciliationAction extends BasePaginatedAction {
 		if(consignmentListForPaymentReconciliation.size() ==0 && (startDate != null || endDate != null)){
 			consignmentListForPaymentReconciliation = consignmentService.getConsignmentsForPaymentReconciliation(startDate, endDate);
 			if(consignmentListForPaymentReconciliation.size() == 0){
-				addRedirectAlertMessage(new SimpleMessage("No delivered consignment found"));
+				addRedirectAlertMessage(new SimpleMessage("No delivered consignment found for given date"));
                 return new ForwardResolution("/pages/admin/hkdeliveryReports.jsp");
 			}
+		}
+		if (consignmentListForPaymentReconciliation.size() == 0) {
+			addRedirectAlertMessage(new SimpleMessage("No delivered consignment selected"));
+			return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
 		}
         for(Consignment consignment : consignmentListForPaymentReconciliation){
             if(!consignment.getConsignmentStatus().getStatus().equals(EnumConsignmentStatus.ShipmentDelivered.getStatus())){
                 addRedirectAlertMessage(new SimpleMessage("Status of consignment "+ consignment.getAwbNumber() + " is not delivered."));
                 return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
             }
-	        if(consignmentListForPaymentReconciliation.size() == 0){
-				addRedirectAlertMessage(new SimpleMessage("No delivered consignment selected"));
-                return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
-			}
         }
         hkdeliveryPaymentReconciliation = consignmentService.createPaymentReconciliationForConsignmentList(consignmentListForPaymentReconciliation, loggedOnUser);
         return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
