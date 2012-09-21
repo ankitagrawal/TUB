@@ -118,13 +118,20 @@
 --/sports/fitness-accessories/sklz : SKLZ
 -/sports/fitness-equipment
 --/sports/fitness-equipment/treadmills
+---/sports/fitness-equipment/treadmills/home
+---/sports/fitness-equipment/treadmills/commercial
 --/sports/fitness-equipment/crosstrainers
+---/sports/fitness-equipment/crosstrainers/home
+---/sports/fitness-equipment/crosstrainers/commercial
 --/sports/fitness-equipment/exercise-bike
+---/sports/fitness-equipment/exercise-bike/home
+---/sports/fitness-equipment/exercise-bike/commercial
 --/sports/fitness-equipment/rowers
 --/sports/fitness-equipment/home-gym
 --/sports/fitness-equipment/steppers
 --/sports/fitness-equipment/bench-equipments
 --/sports/fitness-equipment/heart-rate-monitors
+---/sports/fitness-equipment/heart-rate-monitors/accessories
 --/sports/fitness-equipment/miscellaneous-equipments
 -/sports/sports-equipment
 --/sports/sports-equipment/football
