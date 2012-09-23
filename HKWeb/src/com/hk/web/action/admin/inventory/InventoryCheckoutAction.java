@@ -101,9 +101,6 @@ public class InventoryCheckoutAction extends BaseAction {
 	private String invoiceNumber;
 	private String gatewayOrderId;
 	private boolean wronglyPickedBox = false;
-	private String earlierExpiryDate;
-	private String earlierMfgDate;
-	private String earlierCreationDate;
 	private SkuGroup earlierSkuGroup;
 	List<SkuGroup> skuGroups;
 
@@ -458,36 +455,12 @@ public class InventoryCheckoutAction extends BaseAction {
 		this.productVariantService = productVariantService;
 	}
 
-	public void setEarlierCreationDate(String earlierCreationDate) {
-		this.earlierCreationDate = earlierCreationDate;
-	}
-
-	public String getEarlierCreationDate() {
-		return earlierCreationDate;
-	}
-
 	public boolean isWronglyPickedBox() {
 		return wronglyPickedBox;
 	}
 
 	public void setWronglyPickedBox(boolean wronglyPickedBox) {
 		this.wronglyPickedBox = wronglyPickedBox;
-	}
-
-	public String getEarlierExpiryDate() {
-		return earlierExpiryDate;
-	}
-
-	public void setEarlierExpiryDate(String earlierExpiryDate) {
-		this.earlierExpiryDate = earlierExpiryDate;
-	}
-
-	public String getEarlierMfgDate() {
-		return earlierMfgDate;
-	}
-
-	public void setEarlierMfgDate(String earlierMfgDate) {
-		this.earlierMfgDate = earlierMfgDate;
 	}
 
 	public SkuGroup getEarlierSkuGroup() {
