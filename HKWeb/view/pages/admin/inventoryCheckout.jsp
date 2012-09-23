@@ -13,7 +13,7 @@
            alert("Cannot checkout the item, there is another item with inventory with Batch details: \n" +
                  "\n batch number - ${icBean.earlierSkuGroup.batchNumber}" +
                  //hiding the barcode because if this is displayed one would just type that in.
-                 "\n barcode - ${icBean.earlierSkuGroup.barcode}" +
+                 /*"\n barcode - ${icBean.earlierSkuGroup.barcode}" +*/
                  "\n mrp - ${icBean.earlierSkuGroup.mrp}" +
                  "\n expiry date - ${icBean.earlierSkuGroup.expiryDate}" +
                  "\n expiry date - ${icBean.earlierSkuGroup.sku.productVariant.id}" +
