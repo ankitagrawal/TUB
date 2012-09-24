@@ -8,6 +8,8 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.order.OrderPaymentReconciliation;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
@@ -15,6 +17,7 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.report.dto.order.reconcilation.ReconcilationReportDto;
 import com.hk.report.pact.service.shippingOrder.ReportShippingOrderService;
+import com.hk.util.XslGenerator;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
@@ -51,6 +54,8 @@ public class GenerateReconcilationReportAction extends BaseAction {
 	AdminReconciliationService adminReconciliationService;
 	@Autowired
 	PaymentModeDao paymentModeDao;
+	@Autowired
+	XslGenerator xslGenerator;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloadsPath;
@@ -70,6 +75,11 @@ public class GenerateReconcilationReportAction extends BaseAction {
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 
+	private Long    shippingOrderId;
+	private Long    baseOrderId;
+	private String  gatewayOrderId;
+	private String  baseGatewayOrderId;
+	private File    excelFile;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -181,6 +191,49 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		return new RedirectResolution(GenerateReconcilationReportAction.class);
 	}
 
+	public Resolution downloadPaymentDifference() throws Exception{
+		//SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		List<OrderPaymentReconciliation> orderPaymentReconciliationList = new ArrayList<OrderPaymentReconciliation>();
+		if(paymentProcess.equalsIgnoreCase("COD")) {
+			orderPaymentReconciliationList = getAdminReconciliationService().findPaymentDifferenceInCODOrders(shippingOrderId, gatewayOrderId, startDate, endDate, courier);
+		} else {
+			orderPaymentReconciliationList = getAdminReconciliationService().findPaymentDifferenceInPrepaidOrders(baseOrderId, gatewayOrderId, startDate, endDate);
+		}
+
+		if (orderPaymentReconciliationList.isEmpty() == true) {
+			addRedirectAlertMessage(new SimpleMessage("No order for given search criteria."));
+			return new ForwardResolution("/pages/admin/generateReconcilationReport.jsp");
+		}
+
+		String excelFilePath = adminDownloadsPath + "/reports/ReconDiffReport" + sdf.format(new Date()) + ".xls";
+		//final File excelFile = new File(excelFilePath);
+		excelFile = new File(excelFilePath);
+		if(paymentProcess.equalsIgnoreCase("COD")) {
+			getXslGenerator().generateExcelForCOD(excelFile, orderPaymentReconciliationList);
+		} else {
+			getXslGenerator().generateExcelForPrepaid(excelFile, orderPaymentReconciliationList);
+		}
+		return null;
+
+	}
+
+	private class HTTPResponseResolution implements Resolution {
+	        public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+	            OutputStream out = null;
+	            InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
+	            res.setContentLength((int) excelFile.length());
+	            res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
+	            out = res.getOutputStream();
+
+	            // Copy the contents of the file to the output stream
+	            byte[] buf = new byte[4096];
+	            int count = 0;
+	            while ((count = in.read(buf)) >= 0) {
+	                out.write(buf, 0, count);
+	            }
+	        }
+
+	    }
 
 	public Date getStartDate() {
 		return startDate;
@@ -260,5 +313,45 @@ public class GenerateReconcilationReportAction extends BaseAction {
 
 	public void setPaymentModeDao(PaymentModeDao paymentModeDao) {
 		this.paymentModeDao = paymentModeDao;
+	}
+
+	public Long getShippingOrderId() {
+		return shippingOrderId;
+	}
+
+	public void setShippingOrderId(Long shippingOrderId) {
+		this.shippingOrderId = shippingOrderId;
+	}
+
+	public Long getBaseOrderId() {
+		return baseOrderId;
+	}
+
+	public void setBaseOrderId(Long baseOrderId) {
+		this.baseOrderId = baseOrderId;
+	}
+
+	public String getGatewayOrderId() {
+		return gatewayOrderId;
+	}
+
+	public void setGatewayOrderId(String gatewayOrderId) {
+		this.gatewayOrderId = gatewayOrderId;
+	}
+
+	public String getBaseGatewayOrderId() {
+		return baseGatewayOrderId;
+	}
+
+	public void setBaseGatewayOrderId(String baseGatewayOrderId) {
+		this.baseGatewayOrderId = baseGatewayOrderId;
+	}
+
+	public XslGenerator getXslGenerator() {
+		return xslGenerator;
+	}
+
+	public void setXslGenerator(XslGenerator xslGenerator) {
+		this.xslGenerator = xslGenerator;
 	}
 }

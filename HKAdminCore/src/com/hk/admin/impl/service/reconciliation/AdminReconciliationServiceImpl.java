@@ -7,6 +7,7 @@ import com.hk.admin.pact.service.reconciliation.AdminReconciliationService;
 import com.hk.admin.util.XslUtil;
 import com.hk.constants.XslConstants;
 import com.hk.domain.core.PaymentMode;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderPaymentReconciliation;
 import com.hk.domain.order.ShippingOrder;
@@ -200,6 +201,14 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 		orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
 		orderPaymentReconciliation.setReconciledAmount(amount);
 		return orderPaymentReconciliation;
+	}
+
+	public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId, Date startDate, Date endDate, Courier courier) {
+		return getAdminReconciliationDao().findPaymentDifferenceInCODOrders(shippingOrderId, gatewayOrderId, startDate, endDate, courier);
+	}
+
+	public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId, Date startDate, Date endDate) {
+		return getAdminReconciliationDao().findPaymentDifferenceInPrepaidOrders(baseOrderId, gatewayOrderId, startDate, endDate);
 	}
 
 

@@ -30,6 +30,10 @@
 						alert('Please select the payment mode');
 						return false;
 					}
+					/*if($('#uploadFile').length <=0 ) {
+					 alert('Please select the file to upload');
+					 return false;
+					 }*/
 
 				});
 
@@ -112,11 +116,60 @@
 							</s:select>
 						</li>
 						<li>
-							<h3>File to Upload: <s:file name="fileBean" size="30"/></h3>
+							<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
 
 						</li>
 						<li>
 							<s:submit name="parse" value="Upload reconciliation status" class="requiredFieldValidator"/>
+						</li>
+					</ul>
+				</fieldset>
+			</s:form>
+		</div>
+
+		<div class="reportBox">
+			<s:form beanclass="com.hk.web.action.report.GenerateReconcilationReportAction" >
+				<fieldset class="right_label">
+					<legend>Difference in Reconcilation Amount Report</legend>
+					<ul>
+						<li>
+							<label>Payment Mode:</label>
+							<s:select name="paymentProcess" class="downloadPaymentMode" style="width: 100">
+								<s:option value="all">-Select-</s:option>
+								<s:option value="cod">COD</s:option>
+								<s:option value="techprocess">Prepaid</s:option>
+							</s:select>
+						</li>
+						<li>
+							<label>SO Gateway ID </label><s:text name="gatewayOrderId" id="gatewayOrderId"/>
+						</li>
+						<li>
+							<label>SO Order ID </label> <s:text name="shippingOrderId"/>
+						</li>
+						<li>
+							<label>BO Gateway ID </label><s:text name="baseGatewayOrderId" id="baseGatewayOrderId"/>
+						</li>
+						<label>BO Order ID </label> <s:text name="baseOrderId"/>
+						</li>
+						<li>
+							<label>Courier</label>
+							<s:select name="courier" class="codModeSelect">
+								<s:option value="">-All-</s:option>
+								<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
+							</s:select>
+						</li>
+
+						<li>
+							<label>Start Date </label><s:text class="date_input startDate" style="width:150px"
+							                                  formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+						</li>
+						<li>
+							<label>End Date </label><s:text class="date_input endDate" style="width:150px"
+							                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+						</li>
+
+						<li>
+							<s:submit name="downloadPaymentDifference" value="Download Diff Report" class="diffFieldValidator"/>
 						</li>
 					</ul>
 				</fieldset>
