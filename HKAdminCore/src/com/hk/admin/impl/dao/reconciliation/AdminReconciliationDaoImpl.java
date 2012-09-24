@@ -77,7 +77,7 @@ public class AdminReconciliationDaoImpl extends BaseDaoImpl implements AdminReco
 		String gatewayOrderClause   = "";
 
 		String query = "select recon from OrderPaymentReconciliation recon join recon.baseOrder bo where recon.reconciled = true " +
-				" and bo.payment.paymentDate between :startDate and :endDate " +
+				" and recon.shippingOrder is null and bo.payment.paymentDate between :startDate and :endDate " +
 				" and recon.reconciledAmount != recon.baseOrder.amount and recon.paymentMode = " + EnumPaymentMode.TECHPROCESS.asPaymenMode();
 
 		if(baseOrderId != null) {

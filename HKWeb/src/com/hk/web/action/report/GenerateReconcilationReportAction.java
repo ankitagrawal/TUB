@@ -9,7 +9,6 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.OrderPaymentReconciliation;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
@@ -75,11 +74,11 @@ public class GenerateReconcilationReportAction extends BaseAction {
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 
-	private Long    shippingOrderId;
-	private Long    baseOrderId;
-	private String  gatewayOrderId;
-	private String  baseGatewayOrderId;
-	private File    excelFile;
+	private Long shippingOrderId;
+	private Long baseOrderId;
+	private String gatewayOrderId;
+	private String baseGatewayOrderId;
+	private File excelFile;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -191,9 +190,9 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		return new RedirectResolution(GenerateReconcilationReportAction.class);
 	}
 
-	public Resolution downloadPaymentDifference() throws Exception{
+	public Resolution downloadPaymentDifference() throws Exception {
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = new ArrayList<OrderPaymentReconciliation>();
-		if(paymentProcess.equalsIgnoreCase("COD")) {
+		if (paymentProcess.equalsIgnoreCase("COD")) {
 			orderPaymentReconciliationList = getAdminReconciliationService().findPaymentDifferenceInCODOrders(shippingOrderId, gatewayOrderId, startDate, endDate, courier);
 		} else {
 			orderPaymentReconciliationList = getAdminReconciliationService().findPaymentDifferenceInPrepaidOrders(baseOrderId, gatewayOrderId, startDate, endDate);
@@ -206,7 +205,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
 
 		String excelFilePath = adminDownloadsPath + "/reports/ReconDiffReport" + sdf.format(new Date()) + ".xls";
 		excelFile = new File(excelFilePath);
-		if(paymentProcess.equalsIgnoreCase("COD")) {
+		if (paymentProcess.equalsIgnoreCase("COD")) {
 			getXslGenerator().generateExcelForCOD(excelFile, orderPaymentReconciliationList);
 		} else {
 			getXslGenerator().generateExcelForPrepaid(excelFile, orderPaymentReconciliationList);
@@ -217,22 +216,22 @@ public class GenerateReconcilationReportAction extends BaseAction {
 	}
 
 	private class HTTPResponseResolution implements Resolution {
-	        public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-	            OutputStream out = null;
-	            InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
-	            res.setContentLength((int) excelFile.length());
-	            res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
-	            out = res.getOutputStream();
+		public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+			OutputStream out = null;
+			InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
+			res.setContentLength((int) excelFile.length());
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
+			out = res.getOutputStream();
 
-	            // Copy the contents of the file to the output stream
-	            byte[] buf = new byte[4096];
-	            int count = 0;
-	            while ((count = in.read(buf)) >= 0) {
-	                out.write(buf, 0, count);
-	            }
-	        }
+			// Copy the contents of the file to the output stream
+			byte[] buf = new byte[4096];
+			int count = 0;
+			while ((count = in.read(buf)) >= 0) {
+				out.write(buf, 0, count);
+			}
+		}
 
-	    }
+	}
 
 	public Date getStartDate() {
 		return startDate;
