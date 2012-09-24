@@ -192,7 +192,6 @@ public class GenerateReconcilationReportAction extends BaseAction {
 	}
 
 	public Resolution downloadPaymentDifference() throws Exception{
-		//SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = new ArrayList<OrderPaymentReconciliation>();
 		if(paymentProcess.equalsIgnoreCase("COD")) {
 			orderPaymentReconciliationList = getAdminReconciliationService().findPaymentDifferenceInCODOrders(shippingOrderId, gatewayOrderId, startDate, endDate, courier);
@@ -206,7 +205,6 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		}
 
 		String excelFilePath = adminDownloadsPath + "/reports/ReconDiffReport" + sdf.format(new Date()) + ".xls";
-		//final File excelFile = new File(excelFilePath);
 		excelFile = new File(excelFilePath);
 		if(paymentProcess.equalsIgnoreCase("COD")) {
 			getXslGenerator().generateExcelForCOD(excelFile, orderPaymentReconciliationList);
