@@ -5,12 +5,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.util.CustomDateTypeConvertor;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import net.sourceforge.stripes.validation.Validate;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -349,6 +351,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 		return startDate;
 	}
 
+	@Validate(converter = CustomDateTypeConvertor.class)
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
@@ -357,6 +360,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 		return endDate;
 	}
 
+	@Validate (converter = CustomDateTypeConvertor.class)
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
