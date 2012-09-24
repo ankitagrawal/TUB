@@ -213,7 +213,8 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		} else {
 			getXslGenerator().generateExcelForPrepaid(excelFile, orderPaymentReconciliationList);
 		}
-		return null;
+		addRedirectAlertMessage(new SimpleMessage("Download complete"));
+		return new HTTPResponseResolution();
 
 	}
 

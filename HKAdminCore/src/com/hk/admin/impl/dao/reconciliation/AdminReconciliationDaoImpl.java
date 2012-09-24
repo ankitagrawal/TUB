@@ -45,7 +45,7 @@ public class AdminReconciliationDaoImpl extends BaseDaoImpl implements AdminReco
 		return null;
 	}
 
-	public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId, Date startDate, Date endDate, Courier courier) {
+	public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId, Date startDate, Date endDate, Courier courier) throws Exception{
 		String courierClause        = "";
 		String shippingOrderClause  = "" ;
 		String gatewayOrderClause   = "";
@@ -66,38 +66,13 @@ public class AdminReconciliationDaoImpl extends BaseDaoImpl implements AdminReco
 			courierClause = " and so.shipment.courier = " + courier;
 		}
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = getSession().createQuery(query + shippingOrderClause + gatewayOrderClause + courierClause)
-				.setParameter("startDate", startDate).setParameter("endDate", endDate).list();
+				.setParameter("startDate", startDate).setParameter("endDate", endDate)
+				.list();
 
 		return orderPaymentReconciliationList;
-		/*DetachedCriteria criteria = DetachedCriteria.forClass(OrderPaymentReconciliation.class);
-		criteria.add(Restrictions.eq("paymentMode", EnumPaymentMode.TECHPROCESS.asPaymenMode()));
-		criteria.add(Restrictions.isNotNull("shippingOrder"));
-		criteria.add(Restrictions.neProperty("reconciledAmount", shippingOrder.getAmount().toString()));
-		criteria.add(Restrictions.eq("reconciled", true));
-
-		if(shippingOrder != null) {
-			criteria.add(Restrictions.eq("shippingOrder", shippingOrder));
-		}
-
-		//DetachedCriteria shippingOrderCriteria  = criteria.createCriteria("shippingOrder");
-
-		if(gatewayOrderId != null) {
-
-			criteria.add(Restrictions.eq("shippingOrder.gatewayOrderId", gatewayOrderId));
-		}
-
-		if(startDate != null && endDate != null) {
-			criteria.add(Restrictions.between("shippingOrder.shipment.shipDate", startDate, endDate));
-		}
-
-		if(courier != null) {
-			criteria.add(Restrictions.eq("shippingOrder.shipment.courier", courier));
-		}
-
-		return findByCriteria(criteria);*/
 	}
 
-	public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId, Date startDate, Date endDate) {
+	public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId, Date startDate, Date endDate) throws Exception{
 		String orderClause          = "" ;
 		String gatewayOrderClause   = "";
 

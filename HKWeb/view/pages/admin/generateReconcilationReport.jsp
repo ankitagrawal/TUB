@@ -30,11 +30,34 @@
 						alert('Please select the payment mode');
 						return false;
 					}
-					/*if($('#uploadFile').length <=0 ) {
-					 alert('Please select the file to upload');
-					 return false;
-					 }*/
+				});
 
+				$('.downloadPaymentMode').change(function() {
+					var paymentMode = $('.downloadPaymentMode').find('option:selected');
+					if(paymentMode.text() == "COD") {
+						$('#shippingOrderId').attr("disabled", false);
+						$('#gatewayOrderId').attr("disabled", false);
+						$('.courierSelect').attr("disabled", false);
+						$('#baseOrderId').attr("disabled", true);
+						$('#baseGatewayOrderId').attr("disabled", true);
+
+					} else{
+						$('#baseOrderId').attr("disabled", false);
+						$('#baseGatewayOrderId').attr("disabled", false);
+						$('#shippingOrderId').attr("disabled", true);
+						$('#gatewayOrderId').attr("disabled", true);
+						$('.courierSelect').val("-All-");
+						$('.courierSelect').attr("disabled", true);
+					}
+
+				});
+
+				$('.diffFieldValidator').click(function() {
+					var paymentMode = $('.downloadPaymentMode').find('option:selected');
+					if(paymentMode.text() == "-Select-") {
+						alert('Please select the payment mode');
+						return false;
+					}
 				});
 
 			});
@@ -144,16 +167,16 @@
 							<label>SO Gateway ID </label><s:text name="gatewayOrderId" id="gatewayOrderId"/>
 						</li>
 						<li>
-							<label>SO Order ID </label> <s:text name="shippingOrderId"/>
+							<label>SO Order ID </label> <s:text name="shippingOrderId" id="shippingOrderId"/>
 						</li>
 						<li>
 							<label>BO Gateway ID </label><s:text name="baseGatewayOrderId" id="baseGatewayOrderId"/>
 						</li>
-						<label>BO Order ID </label> <s:text name="baseOrderId"/>
+						<label>BO Order ID </label> <s:text name="baseOrderId" id="baseOrderId"/>
 						</li>
 						<li>
 							<label>Courier</label>
-							<s:select name="courier" class="codModeSelect">
+							<s:select name="courier" class="courierSelect">
 								<s:option value="">-All-</s:option>
 								<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
 							</s:select>
@@ -161,11 +184,11 @@
 
 						<li>
 							<label>Start Date </label><s:text class="date_input startDate" style="width:150px"
-							                                  formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+							                                  formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate" id="startDateId"/>
 						</li>
 						<li>
 							<label>End Date </label><s:text class="date_input endDate" style="width:150px"
-							                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+							                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate" id="endDateId"/>
 						</li>
 
 						<li>

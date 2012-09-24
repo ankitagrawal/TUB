@@ -699,7 +699,8 @@ public class XslGenerator {
 		return xlsFile;
 	}
 
-	public File generateExcelForCOD(File excelFile, List<OrderPaymentReconciliation> orderPaymentReconciliationList) {
+	public File generateExcelForCOD(File excelFile, List<OrderPaymentReconciliation> orderPaymentReconciliationList) throws Exception{
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		HkXlsWriter xlsWriter = new HkXlsWriter();
 		xlsWriter.addHeader("SHIPPING ORDER ID", "SHIPPING ORDER ID");
 		xlsWriter.addHeader("SHIPMENT DATE", "SHIPMENT DATE");
@@ -712,7 +713,7 @@ public class XslGenerator {
 			xlsWriter.addCell(row, orderPaymentReconciliation.getShippingOrder());
 
 			if(orderPaymentReconciliation.getShippingOrder().getShipment() != null) {
-				xlsWriter.addCell(row, orderPaymentReconciliation.getShippingOrder().getShipment().getShipDate());
+				xlsWriter.addCell(row, sdf.format( orderPaymentReconciliation.getShippingOrder().getShipment().getShipDate() ));
 			} else {
 				xlsWriter.addCell(row, "");
 			}
@@ -737,7 +738,7 @@ public class XslGenerator {
 		return excelFile;
 	}
 
-	public File generateExcelForPrepaid(File excelFile, List<OrderPaymentReconciliation> orderPaymentReconciliationList) {
+	public File generateExcelForPrepaid(File excelFile, List<OrderPaymentReconciliation> orderPaymentReconciliationList) throws Exception{
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		HkXlsWriter xlsWriter = new HkXlsWriter();
 		xlsWriter.addHeader("BASE ORDER ID", "BASE ORDER ID");
