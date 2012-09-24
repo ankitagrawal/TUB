@@ -52,7 +52,7 @@
                 <td>${cartLineItem.qty}</td>
                 <td>
                   <select name="cartLineItemWarehouseMap[${cartLineItem.id}]">
-                    <c:forEach items="${warehouses}" var="warehouse">
+                    <c:forEach items="${hk:getApplicableWarehouses(productVariant)}" var="warehouse">
                       <option value="${warehouse.id}">${warehouse.city}</option>
                     </c:forEach>
                   </select>

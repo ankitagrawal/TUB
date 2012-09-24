@@ -3,12 +3,16 @@ package com.hk.web.action.admin.hkDelivery;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.dao.Page;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.core.Keys;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.XslGenerator;
 import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
+import net.sourceforge.stripes.validation.SimpleError;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +42,8 @@ public class HKDPaymentReconciliationAction extends BasePaginatedAction {
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     private List<HkdeliveryPaymentReconciliation> paymentReconciliationList = new ArrayList<HkdeliveryPaymentReconciliation>();
     private HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
+	private List<Consignment> consignmentListForPaymentReconciliation = new ArrayList<Consignment>();
+	private User loggedOnUser;
 
 
     @Autowired
@@ -56,6 +62,58 @@ public class HKDPaymentReconciliationAction extends BasePaginatedAction {
             paymentReconciliationList = hkPaymentReconciliationPage.getList();
         }
         return new ForwardResolution("/pages/admin/hkPaymentReconciliationList.jsp");
+    }
+
+	public Resolution hkDeliveryreports(){
+		return new ForwardResolution("/pages/admin/hkdeliveryReports.jsp");
+	}
+
+	public Resolution generatePaymentReconciliation(){
+		loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+		if(consignmentListForPaymentReconciliation.size() ==0 && (startDate != null || endDate != null)){
+			consignmentListForPaymentReconciliation = consignmentService.getConsignmentsForPaymentReconciliation(startDate, endDate);
+			if(consignmentListForPaymentReconciliation.size() == 0){
+				addRedirectAlertMessage(new SimpleMessage("No delivered consignment found for given date"));
+                return new ForwardResolution("/pages/admin/hkdeliveryReports.jsp");
+			}
+		}
+		if (consignmentListForPaymentReconciliation.size() == 0) {
+			addRedirectAlertMessage(new SimpleMessage("No delivered consignment selected"));
+			return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
+		}
+        for(Consignment consignment : consignmentListForPaymentReconciliation){
+            if(!consignment.getConsignmentStatus().getStatus().equals(EnumConsignmentStatus.ShipmentDelivered.getStatus())){
+                addRedirectAlertMessage(new SimpleMessage("Status of consignment "+ consignment.getAwbNumber() + " is not delivered."));
+                return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
+            }
+        }
+        hkdeliveryPaymentReconciliation = consignmentService.createPaymentReconciliationForConsignmentList(consignmentListForPaymentReconciliation, loggedOnUser);
+        return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
+    }
+
+	public Resolution savePaymentReconciliation(){
+		loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        hkdeliveryPaymentReconciliation.setConsignments(new TreeSet<Consignment>(consignmentListForPaymentReconciliation));
+        if(hkdeliveryPaymentReconciliation.getActualAmount() == null){
+            getContext().getValidationErrors().add("1", new SimpleError("Please Enter actual collected amount"));
+            return new ForwardResolution(HKDPaymentReconciliationAction.class, "savePaymentReconciliation");
+        }
+        if((hkdeliveryPaymentReconciliation.getActualAmount().doubleValue() - hkdeliveryPaymentReconciliation.getExpectedAmount().doubleValue()) > 10){
+            getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be blank or greater than expected amount"));
+            return new ForwardResolution(HKDPaymentReconciliationAction.class, "savePaymentReconciliation");
+        }
+        hkdeliveryPaymentReconciliation = consignmentService.saveHkdeliveryPaymentReconciliation(hkdeliveryPaymentReconciliation, loggedOnUser);
+        addRedirectAlertMessage(new SimpleMessage("Payment Reconciliation saved."));
+        return new ForwardResolution(HKDPaymentReconciliationAction.class, "editPaymentReconciliation").addParameter("hkdeliveryPaymentReconciliation", hkdeliveryPaymentReconciliation.getId());
+    }
+
+	public Resolution editPaymentReconciliation(){
+        if(hkdeliveryPaymentReconciliation != null){
+            consignmentListForPaymentReconciliation = new ArrayList<Consignment>(hkdeliveryPaymentReconciliation.getConsignments());
+            return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
+        }
+        addRedirectAlertMessage(new SimpleMessage("Payment Reconciliation saved."));
+        return new ForwardResolution(HKDPaymentReconciliationAction.class, "editPaymentReconciliation").addParameter("hkdeliveryPaymentReconciliation", hkdeliveryPaymentReconciliation.getId());
     }
 
     public Resolution downloadPaymentReconciliation() {
@@ -151,4 +209,12 @@ public class HKDPaymentReconciliationAction extends BasePaginatedAction {
     public void setHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation) {
         this.hkdeliveryPaymentReconciliation = hkdeliveryPaymentReconciliation;
     }
+
+	public List<Consignment> getConsignmentListForPaymentReconciliation() {
+		return consignmentListForPaymentReconciliation;
+	}
+
+	public void setConsignmentListForPaymentReconciliation(List<Consignment> consignmentListForPaymentReconciliation) {
+		this.consignmentListForPaymentReconciliation = consignmentListForPaymentReconciliation;
+	}
 }

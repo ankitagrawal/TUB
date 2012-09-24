@@ -195,7 +195,7 @@ public class CatalogAction extends BasePaginatedAction {
 
             List<Product> filteredProducts = searchResult.getSolrProducts();
             if (rootCategorySlug.equals("services")) {
-                productList = trimListByDistance(filteredProducts, preferredZone);
+                filteredProducts = trimListByDistance(filteredProducts, preferredZone);
             }
             // Find out how many products have been filtered
             int diff = 0;

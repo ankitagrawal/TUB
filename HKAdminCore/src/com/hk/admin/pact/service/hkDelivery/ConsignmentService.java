@@ -49,7 +49,7 @@ public interface ConsignmentService {
 
     public HkdeliveryPaymentReconciliation createPaymentReconciliationForConsignmentList(List<Consignment> consignmentListForPaymentReconciliation, User user);
 
-    public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation);
+    public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation, User loggedOnUser);
 
     public boolean isConsignmentValidForRunsheet(Consignment consignment);
 
@@ -66,5 +66,7 @@ public interface ConsignmentService {
     public ShippingOrder getShippingOrderFromConsignment(Consignment consignment);
 
     public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage);
+
+	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate);
 
 }
