@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.hk.domain.catalog.product.*;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.image.ProductImageService;
+import com.hk.pact.service.inventory.SkuService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -595,6 +597,16 @@ public class Functions {
 		ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
 		List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
 		return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
+	}
+
+	public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
+		SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
+		List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
+		List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
+		for (Sku applicableSku : applicableSkus) {
+			applicableWarehouses.add(applicableSku.getWarehouse());
+		}
+		return applicableWarehouses;
 	}
 
 	public static boolean showOptionOnUI(String optionType) {
