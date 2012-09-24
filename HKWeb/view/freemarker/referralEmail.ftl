@@ -1,17 +1,17 @@
-${fromName} likes shopping at HealthKart and has gifted you a Rs 100/- voucher to  try it out
+${fromName} likes shopping at HealthKart and has gifted you an additional 5% off voucher to  try it out
 <html>
 <head>
-  <title>${fromName} would like you to try HealthKart.com and has gifted you a FREE initial credit of Rs 100/- to buy anything you like!!!</title>
+  <title>${fromName} would like you to try HealthKart.com and has gifted you an additional 5% off to buy anything you like!!!</title>
 </head>
 <body>
 <#include "header.ftl">
-<h4>${fromName} would like you to try HealthKart.com and get a FREE initial credit of Rs 100/- to buy anything you
+<h4>${fromName} would like you to try HealthKart.com and get an additional 5% off to buy anything you
   like!!!</h4>
 
 <p>
   HealthKart is India's premier e-health store which provides authentic health & personal care products at the best
   prices in the market.
-  ${fromName} thinks that you would like it, and has sent you a special invitation offer of Rs 100/- off on your first
+  ${fromName} thinks that you would like it, and has sent you a special invitation offer of an additional 5% off on your first
   purchase (minimum purchase of Rs. 500). This is HealthKart's best offer for new customers.
 </p>
 <#if customMessage??>

@@ -64,7 +64,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
   @Session(key = HealthkartConstants.Cookie.preferredZone)
   private String preferredZone;
 
-  private int defaultPerPage = 20;
+  private int defaultPerPage = 24;
   /*@Autowired
    SolrManager productSearchService;*/
 

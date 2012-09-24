@@ -88,7 +88,7 @@
     <div class='floatfix'></div>
     <div class="footer-bottom" style=" padding: 1 0;">
       <div class="fb-contents">
-        <span style="color: white;" class="serif"> &copy; 2012 healthkart.com</span>
+        <span class="serif"> &copy; 2012 healthkart.com</span>
 
         <a href="http://www.facebook.com/healthkart" target="_blank" style="border-bottom:none">
           <img src="<hk:vhostImage/>/images/banners/home/facebook.png"></a>

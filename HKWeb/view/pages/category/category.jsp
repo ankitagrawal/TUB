@@ -154,7 +154,7 @@
       </c:when>
       <c:otherwise>
         <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
-          <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg" alt="refer a friend and earn"
+          <img src="<hk:vhostImage/>/images/banners/refer_earn_new.jpg" alt="refer a friend and earn"
                class="small_banner"/>
         </s:link>
         <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="cash on delivery"
@@ -235,7 +235,7 @@
         </shiro:hasPermission>
 
         <div class="grid_24" style="width: 950px;">
-          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, categoryBean.category.name)}'>
+          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, categoryBean.category.name)}' begin="0" end="5">
             <div class="grid_4 alpha omega">
               <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${product}'/>
             </div>

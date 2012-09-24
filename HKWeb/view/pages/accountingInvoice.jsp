@@ -11,25 +11,18 @@
 </head>
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" var="orderSummary"/>
-
+<c:set var="shippingOrder" value="${orderSummary.shippingOrder}"/>
+<c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
+<c:set var="address" value="${baseOrder.address}"/>
+<c:set var="warehouse" value="${shippingOrder.warehouse}"/>
+<c:set var="isB2BOrder" value="${baseOrder.b2bOrder}"/>
+<c:set var="b2bUserDetails" value="${orderSummary.b2bUserDetails}"/>
 <div class="container_12">
 <div class="grid_12" style="text-align: center;">
   <h4>
     <c:choose>
-      <c:when test="${orderSummary.invoiceDto.b2bUserDetails != null}">
-        <c:choose>
-          <c:when
-              test="${fn:toUpperCase(orderSummary.shippingOrder.baseOrder.address.state) eq('HARYANA') && orderSummary.invoiceDto.b2bUserDetails.tin != null }">
-            TAX INVOICE
-          </c:when>
-          <c:when
-              test="${fn:toUpperCase(orderSummary.shippingOrder.baseOrder.address.state) eq('MAHARASHTRA') && orderSummary.invoiceDto.b2bUserDetails.tin != null}">
-            TAX INVOICE
-          </c:when>
-          <c:otherwise>
-            RETAIL INVOICE
-          </c:otherwise>
-        </c:choose>
+      <c:when test="${isB2BOrder}">
+           TAX INVOICE            
       </c:when>
       <c:otherwise>
         RETAIL INVOICE
@@ -42,9 +35,7 @@
 
 <div class="grid_12" style="border: 1px black solid;">
 	<div class="grid_4 alpha omega">
-		<div class="column">
-			<c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
-			<c:set var="isB2BOrder" value="${orderSummary.shippingOrder.baseOrder.b2bOrder}"/>
+		<div class="column">			
 			<c:choose>
 				<c:when test="${isB2BOrder}">
 					<p>Bright Lifecare Pvt. Ltd.</p>
@@ -78,47 +69,53 @@
   <div class="grid_4 alpha omega">
     <div class="column" style="border-right: 1px black solid; border-left: 1px black solid;">
       <p>
-        <strong>Invoice#: </strong>${orderSummary.invoiceDto.invoiceType}-${orderSummary.shippingOrder.accountingInvoiceNumber}
+        <strong>Invoice#: </strong>${orderSummary.invoiceDto.invoiceType}-${shippingOrder.accountingInvoiceNumber}
       </p>
 
       <p><strong>Invoice
-        Date: </strong><fmt:formatDate value="${orderSummary.shippingOrder.shipment.shipDate}" type="both"
+        Date: </strong><fmt:formatDate value="${shippingOrder.shipment.shipDate}" type="both"
 
                                        timeStyle="short"/></p>
 
-      <p><strong>Payment Mode:</strong>${orderSummary.shippingOrder.baseOrder.payment.paymentMode.name}</p>
+      <p><strong>Payment Mode:</strong>${baseOrder.payment.paymentMode.name}</p>
 
-      <p><strong>Courier:</strong>${orderSummary.shippingOrder.shipment.courier.name}</p>
+      <p><strong>Courier:</strong>${shippingOrder.shipment.courier.name}</p>
 
-      <p><strong>Order#: </strong>${orderSummary.shippingOrder.gatewayOrderId} on <fmt:formatDate
-          value="${orderSummary.shippingOrder.baseOrder.payment.createDate}" type="both" timeStyle="short"/></p>
+      <p><strong>Order#: </strong>${shippingOrder.gatewayOrderId} on <fmt:formatDate
+          value="${baseOrder.payment.createDate}" type="both" timeStyle="short"/></p>
     </div>
   </div>
 
   <div class="grid_4 alpha omega" style="width: 330px;">
     <div class="column">
-      <p><strong>Customer:</strong>
-        ${orderSummary.shippingOrder.baseOrder.address.name}</p>
+      <p><strong>Shipped To:</strong><p>
 
-      <p>${hk:escapeHtml(orderSummary.shippingOrder.baseOrder.address.line1)}
-        <c:if test="${not empty orderSummary.shippingOrder.baseOrder.address.line2}">
-          ,${hk:escapeHtml(orderSummary.shippingOrder.baseOrder.address.line2)}
+	  <p>${address.name}</p>
+
+      <p>${hk:escapeHtml(address.line1)}
+        <c:if test="${not empty address.line2}">
+          ,${hk:escapeHtml(address.line2)}
         </c:if>
       </p>
 
       <p>
-        ${orderSummary.shippingOrder.baseOrder.address.city}, ${hk:escapeHtml(orderSummary.shippingOrder.baseOrder.address.state)}
-        - ${orderSummary.shippingOrder.baseOrder.address.pin},
+        ${address.city}, ${hk:escapeHtml(address.state)}
+        - ${address.pin},
       </p>
 
-      <p>Ph: ${orderSummary.shippingOrder.baseOrder.address.phone}     </p>
-      <c:if test="${orderSummary.invoiceDto.b2bUserDetails != null}">
-        <c:if test="${orderSummary.invoiceDto.b2bUserDetails.tin != null}">
-          <p>TIN- ${orderSummary.invoiceDto.b2bUserDetails.tin}</p>
-        </c:if>
-
-        <p>DL Number- ${orderSummary.invoiceDto.b2bUserDetails.dlNumber}</p>
-      </c:if>
+      <p>Ph: ${address.phone}</p>
+	    <c:if test="${isB2BOrder}">
+		    <p><strong>Consignee:</strong><p>
+		    <p>${baseOrder.user.name}</p>
+		    <c:if test="${b2bUserDetails != null}">			    
+			    <c:if test="${b2bUserDetails.tin != null}">
+				    <p>TIN- ${b2bUserDetails.tin}</p>
+			    </c:if>
+			    <c:if test="${b2bUserDetails.dlNumber != null}">
+				    <p>DL Number- ${b2bUserDetails.dlNumber}</p>
+			    </c:if>
+		    </c:if>
+	    </c:if>
     </div>
   </div>
 </div>

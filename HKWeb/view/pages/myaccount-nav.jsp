@@ -27,14 +27,20 @@
       <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="manageAddresses"
               title="My Addresses"><span id="myAddressesLink">My Addresses</span></s:link>
     </li>
-    <shiro:hasRole name="<%=RoleConstants.HK_AFFILIATE%>">
+      <shiro:hasAnyRoles name="<%=RoleConstants.AFFILIATE%>">
       <li>
         <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" title="Affiliate Account"><span
             id="affiliateAccountLink">Affiliate Account</span> </s:link>
       </li>
-      <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="checksToAffiliate"
-                  title="Checks sent to me">
-        <span id="myChecksLink">Cheques Sent</span> </s:link></li>
+        </shiro:hasAnyRoles>
+        <shiro:hasRole name="<%=RoleConstants.HK_AFFILIATE%>">
+        <li>
+            <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="showCouponScreen" title="Download Coupon Codes"><span
+                    id="affiliateShowCouponScreen">Affiliate Offer Program</span> </s:link>
+        </li>
+        <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="checksToAffiliate"
+                  title="Payment Details">
+        <span id="myChecksLink">Payment Details</span> </s:link></li>
       <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateStatisticsAction" title="Statistics">
         <span id="myTrafficStats">Statistics</span> </s:link></li>
       <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateInsightsAction" title="Insights">
