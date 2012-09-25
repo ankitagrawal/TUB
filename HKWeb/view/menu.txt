@@ -280,11 +280,6 @@
 --/home-devices/supports/calf-support
 --/home-devices/supports/ankle-support
 --/home-devices/supports/backrest
---/home-devices/supports/walking-aids
----/home-devices/supports/walking-aids/wheel-chair
----/home-devices/supports/walking-aids/Walking-sticks
----/home-devices/supports/walking-aids/crutches
----/home-devices/supports/walking-aids/walkers
 -/home-devices/rehabilitation-aids
 --/home-devices/rehabilitation-aids/walking-aids
 ---/home-devices/rehabilitation-aids/walking-aids/walking-sticks
@@ -295,8 +290,8 @@
 --/home-devices/rehabilitation-aids/commode : Commode WheelChair/Stools
 --/home-devices/rehabilitation-aids/physiotherapy-aids
 --/home-devices/rehabilitation-aids/orthotic-aids
----/home-devices/rehabilitation-aids/prosthetic-aids/knee
----/home-devices/rehabilitation-aids/prosthetic-aids/foot-drop-splints
+---/home-devices/rehabilitation-aids/orthotic-aids/knee
+---/home-devices/rehabilitation-aids/orthotic-aids/foot-drop-splints
 --/home-devices/rehabilitation-aids/cosmetic-restoration
 ---/home-devices/rehabilitation-aids/cosmetic-restoration/face
 ---/home-devices/rehabilitation-aids/cosmetic-restoration/breast
@@ -345,7 +340,7 @@
 --/home-devices/clinical-supplies/hearing-aids
 --/home-devices/clinical-supplies/eye-patch
 --/home-devices/clinical-supplies/suction-devices
---/home-devices/clinical-supplies/diagnostic-products
+--/home-devices/clinical-supplies/health-aids
 -/home-devices/miscellaneous
 --/home-devices/miscellaneous/weighing-scales
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
