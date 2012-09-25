@@ -36,7 +36,6 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
 
 
     public List<Courier> getCouriersForPincode(String pincode, boolean forCOD, boolean forGroundShipping , boolean forCodAvailableOnGroundShipping) {
-
        List<CourierServiceInfo> servicesList = getCourierServiceInfoList(null, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
         if (servicesList != null && servicesList.size() > 0) {
             List<Courier> courierList = new ArrayList<Courier>();

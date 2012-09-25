@@ -162,7 +162,7 @@ public class OrderSummaryAction extends BaseAction {
         if (netShopping > codFreeAfter) {
             codCharges = 0.0;
         }
-        availableCourierList = courierService.getAvailableCouriers(order);
+       availableCourierList = courierService.getAvailableCouriers(order);
         if (availableCourierList.size() == 0) {
             availableCourierList = null;
         }

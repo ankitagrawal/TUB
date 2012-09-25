@@ -21,7 +21,9 @@ public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
     }
 
     public List<Warehouse> findByIds(List<Long> warehouseIds) {
-        return getSession().createQuery("from Warehouse w where w.id in ( :warehouseIds)").setParameterList("warehouseIds", warehouseIds).list();
+      List<Warehouse> warehouses = getSession().createQuery("from Warehouse w where w.id in (:warehouseIds)").setParameterList("warehouseIds", warehouseIds).list();
+        return warehouses;
+
     }
 
     /**

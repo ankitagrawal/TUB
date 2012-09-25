@@ -99,9 +99,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderSplitterService orderSplitterService;
      @Autowired
-    private ShippingOrderStatusService shippingOrderStatusService;
-    @Autowired
-    private
+    private ShippingOrderStatusService shippingOrderStatusService;       
     @Autowired
     LineItemDao lineItemDao;
 
