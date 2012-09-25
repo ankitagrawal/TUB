@@ -5,6 +5,9 @@ import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.dto.pricing.PricingDto;
+
+import java.util.List;
 
 public interface AdminOrderService {
 
@@ -31,4 +34,7 @@ public interface AdminOrderService {
     public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser);
 
 	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order);
+
+     public List<String> isCODAllowed(Order order , PricingDto pricingDto);
+
 }

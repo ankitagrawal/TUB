@@ -35,6 +35,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
+import com.hk.domain.user.Address;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.OrderSplitException;
 import com.hk.exception.NoSkuException;
@@ -43,6 +44,7 @@ import com.hk.helper.ShippingOrderHelper;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
@@ -57,6 +59,7 @@ import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+
 
 import com.hk.pojo.DummyOrder;
 
@@ -97,10 +100,18 @@ public class OrderServiceImpl implements OrderService {
     private OrderSplitterService orderSplitterService;
      @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
+    private
+    @Autowired
+    LineItemDao lineItemDao;
+
 
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;
+
+     @Value("#{hkEnvProps['codMaxAmount']}")
+    private Double codMaxAmount;
 
     @Transactional
     public Order save(Order order) {
@@ -212,14 +223,20 @@ public class OrderServiceImpl implements OrderService {
     public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-	        //todo ankit just order status places is not a valid criteria if order is not split, check if currrently it has SO's or not, if SOs are null or empty, then split
-//            if (order.getContainsServices()) {
+	        //todo ankit just order status places is not a valid criteria if order is not split, check if currrently it has SO's or not, if SOs are null or empty, then split --- fixed 
+//         if (order.getContainsServices()) {
 //                String comments = "Order has services,abort system split and do a manual split";
 //                getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
 //                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " has services. abort system split and do a manual split");
 //            } else
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                shippingOrders = splitOrder(order);
+                if (isShippingOrderExists(order)) {
+                  order.setOrderStatus(getOrderStatus(EnumOrderStatus.InProcess));
+                }
+                else {
+                    shippingOrders = splitOrder(order);
+                }
+
             } else {
                 logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
             }
@@ -563,7 +580,7 @@ public class OrderServiceImpl implements OrderService {
         this.orderLoggingService = orderLoggingService;
     }
 
-	//todo ankit, there should be one and only method to which you will pass order
+	//todo ankit, there should be one and only method to which you will pass order      --- discuss
 	//todo there you wiill check for pin, cod,and products
 	//todo currently pin is checked separaretely or OSA and products are checked on paymentModepage, not scalable
 
@@ -581,7 +598,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         return true;
-    }
+    }   
 
 
      public ShippingOrder createSOForService(CartLineItem serviceCartLineItem) {
@@ -615,6 +632,16 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    public boolean isShippingOrderExists (Order order){
+        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+   		for (CartLineItem cartLineItem : productCartLineItems) {
+			if (lineItemDao.getLineItem(cartLineItem) != null) {
+				return true;
+			}
+		}
+         return false;
+    }
+
     public ShippingOrderStatusService getShippingOrderStatusService() {
         return shippingOrderStatusService;
     }
@@ -622,4 +649,6 @@ public class OrderServiceImpl implements OrderService {
     public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
         this.shippingOrderStatusService = shippingOrderStatusService;
     }
+
+
 }

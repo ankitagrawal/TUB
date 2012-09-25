@@ -216,7 +216,7 @@ public class CartAction extends BaseAction {
 
         return new RedirectResolution(SelectAddressAction.class);
     }
-	//todo ankit, is this being called as now?
+	//todo ankit, is this being called as now?    --- yes for modal window
     public Resolution removeGroundShippedItem() {
          orderManager.setGroundShippedItemQuantity(order);
          orderManager.trimEmptyLineItems(order);

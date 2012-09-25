@@ -451,12 +451,7 @@ public class Functions {
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
-    public static List<Courier> getAvailableCouriers(Object o) {
-
-        // so this will work like, The system gets input as pincode and code available or not, and Then system returns
-        // the couriers in a sorted order on price
-
-	    //todo ankit do we sort them on price?
+    public static List<Courier> getAvailableCouriers(Object o) {     
 
         ShippingOrder shippingOrder = (ShippingOrder) o;
         CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);

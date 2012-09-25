@@ -53,23 +53,15 @@ public class ShipmentServiceImpl implements ShipmentService {
             return null;
         }
 
-	    //todo ankit (is order ground shipped method, please write separately)
+	    //todo ankit (is order ground shipped method, please write separately)  --- fixed
         // Ground Shipping logic starts -- suggested courier
         boolean isGroundShipped = false;
         Courier suggestedCourier = null;
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
-                isGroundShipped = true;
-                break;
-            }
-        }
-	    //todo ankit do we need 2 lines of code here, isgroundshiped will be either true or false
-        if (isGroundShipped) {
+        isGroundShipped =  isShippingOrderHasGroundShippedItem(shippingOrder);
+
+	    //todo ankit do we need 2 lines of code here, isgroundshiped will be either true or false  --- fixed
             suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
-        } else {
-            suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), false, shippingOrder.getWarehouse());
-        }
-//      Ground Shipping logic ends -- suggested courier  
+//    Ground Shipping logic ends -- suggested courier
         if (suggestedCourier == null) {
             return null;
         }
@@ -156,4 +148,13 @@ public class ShipmentServiceImpl implements ShipmentService {
 		}
 		return newShipment;
 	}
+
+    public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder ){
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
+               return true;
+            }
+        }
+        return false;
+    }
 }

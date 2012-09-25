@@ -40,6 +40,10 @@ public class PincodeServiceImpl implements PincodeService {
           return getPincodeDao().getByPincodeWarehouse(pincode, warehouse, isCod, isGroundshipping );
      }
 
+     public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
+          return getPincodeDao().searchPincodeDefaultCourier(pincode, warehouse, isCod, isGroundshipping);
+     }
+
 
     public PincodeDao getPincodeDao() {
         return pincodeDao;

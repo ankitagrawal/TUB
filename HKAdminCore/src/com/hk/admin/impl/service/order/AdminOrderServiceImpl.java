@@ -1,9 +1,6 @@
 package com.hk.admin.impl.service.order;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
@@ -17,14 +14,17 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.core.Keys;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
@@ -32,6 +32,9 @@ import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
+import com.hk.domain.user.Address;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.Product;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.service.OrderStatusService;
@@ -43,6 +46,7 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.service.ServiceLocatorFactory;
+import com.hk.dto.pricing.PricingDto;
 
 @Service
 public class AdminOrderServiceImpl implements AdminOrderService {
@@ -78,6 +82,17 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private SubscriptionOrderService   subscriptionOrderService;
     @Autowired
     private AdminEmailManager adminEmailManager;
+     @Autowired
+    private CourierService courierService;
+
+     private PricingDto pricingDto;
+
+    @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
+      private Double codMinAmount;
+
+    @Value("#{hkEnvProps['codMaxAmount']}")
+    private Double codMaxAmount;
+
 
 
     @Transactional
@@ -294,13 +309,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order) {
 		Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
-		boolean shippingOrderExists = false;
+		boolean shippingOrderExists = orderService.isShippingOrderExists(order);
 
-		for (CartLineItem cartLineItem : productCartLineItems) {
-			if (lineItemDao.getLineItem(cartLineItem) != null) {
-				shippingOrderExists = true;
-			}
-		}
+//		for (CartLineItem cartLineItem : productCartLineItems) {
+//			if (lineItemDao.getLineItem(cartLineItem) != null) {
+//				shippingOrderExists = true;
+//			}
+//		}
 
 		Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
@@ -341,7 +356,47 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 	}
 
 
-	public UserService getUserService() {
+    public List<String> isCODAllowed(Order order, PricingDto pricingDto) {
+        List<String> codFailureReasons = new ArrayList<String>();
+        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+        Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+        for (CartLineItem productCartLineItem : productCartLineItems) {
+            ProductVariant productVariant = productCartLineItem.getProductVariant();
+            if (productVariant != null && productVariant.getProduct() != null) {
+                Product product = productVariant.getProduct();
+                if (product.isCodAllowed() != null && !product.isCodAllowed()) {
+                    codFailureReasons.add("We are sorry Cash on Delivery is not allowed on One of product ");
+                    break;
+                }
+            }
+        }
+        boolean codAllowed = false;
+        Address address = order.getAddress();
+        String pin = address != null ? address.getPin() : null;
+//        pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
+
+        codAllowed = courierService.isCodAllowed(pin);                 //todo ankit somewhere based on this, we show that your area is serviced just by pincode, that function is wrong, please correct it --
+
+        if (!courierService.isCodAllowed(pin)) {
+            codFailureReasons.add("COD is not available for your delivery location. We provide cash on delivery option for select PIN codes only. ");
+        }
+
+        Double payable = pricingDto.getGrandTotalPayable();
+        if (payable < codMinAmount || payable > codMaxAmount) {
+            codFailureReasons.add(" The net payable is not in the range of Rs." + codMinAmount + "- Rs." + codMaxAmount);
+        }
+
+        Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        if (codAllowed) {
+            if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
+                codFailureReasons.add("You have subscriptions in your car");
+            }
+        }
+        return codFailureReasons;
+    }
+
+
+    public UserService getUserService() {
         return userService;
     }
 

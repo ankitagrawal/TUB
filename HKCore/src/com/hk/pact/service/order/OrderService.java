@@ -70,5 +70,7 @@ public interface OrderService {
 
      public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
 
+    public boolean isShippingOrderExists (Order order);
+
 }
 

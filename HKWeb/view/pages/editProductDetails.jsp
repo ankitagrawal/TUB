@@ -37,7 +37,7 @@
           <li><label>Is Hidden</label><s:checkbox name="product.hidden"/></li>
           <li><label>Is JIT</label><s:checkbox name="product.jit"/></li>
           <li><label>Is Drop Shipping</label><s:checkbox name="product.dropShipping"/></li>  
-            //todo ankit, please add the same in bulk edit, take rimals help
+            <%--//todo ankit, please add the same in bulk edit, take rimals help      --  need to discuss--%>
            <li><label>Is Ground Shipping</label><s:checkbox name="product.groundShipping"/></li>
           <li><label>Is COD Allowed</label><s:checkbox name="product.codAllowed"/></li>
 

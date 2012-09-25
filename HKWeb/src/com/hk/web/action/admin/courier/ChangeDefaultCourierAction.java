@@ -87,8 +87,9 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public Resolution search() {
         try {
             pincode = pincodeDao.getByPincode(pincodeString);
-            pincodeDefaultCouriers = getPincodeService().getByPincode(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
-            if (!pincodeDefaultCouriers.isEmpty()) {
+//            pincodeDefaultCouriers = getPincodeService().getByPincode(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
+             pincodeDefaultCourier = getPincodeService().searchPincodeDefaultCourier(pincode,null, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
+            if (pincodeDefaultCourier != null) {
                 courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false);
                 return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
             } else {
@@ -105,7 +106,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
     }
 
     public Resolution save() {
-        PincodeDefaultCourier pincodeDefaultCourierNew = getPincodeService().getByPincodeWarehouse(pincodeDefaultCourier.getPincode(), pincodeDefaultCourier.getWarehouse(), pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
+//        PincodeDefaultCourier pincodeDefaultCourierNew = getPincodeService().getByPincodeWarehouse(pincodeDefaultCourier.getPincode(), pincodeDefaultCourier.getWarehouse(), pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
+       PincodeDefaultCourier pincodeDefaultCourierNew = getPincodeService().searchPincodeDefaultCourier(pincodeDefaultCourier.getPincode(), pincodeDefaultCourier.getWarehouse(), pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
         if (pincodeDefaultCourierNew != null) {
             pincodeDefaultCourierNew.setCourier(pincodeDefaultCourier.getCourier());
             pincodeDefaultCourierNew.setEstimatedShippingCost(pincodeDefaultCourier.getEstimatedShippingCost());
@@ -125,7 +127,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         warehouse = pincodeDefaultCourier.getWarehouse();
         Courier courier = pincodeDefaultCourier.getCourier();
 //        Courier nonCodCourier = pincodeDefaultCourier.getNonCodCourier();
-        pincodeDefaultCourierNew = getPincodeService().getByPincodeWarehouse(pincode, warehouse, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
+         pincodeDefaultCourierNew = getPincodeService().searchPincodeDefaultCourier(pincode, warehouse, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
         if (pincodeDefaultCourierNew != null) {
             addRedirectAlertMessage(new SimpleMessage("Default courier for destination pincode already exists for given warehouse"));
             return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
@@ -191,7 +193,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
             Set<PincodeDefaultCourier> defaultPincodes = xslParser.readDefaultPincodeList(excelFile);
             for (PincodeDefaultCourier defaultPincode : defaultPincodes) {
 //                PincodeDefaultCourier existingDefaultCourierObject = getPincodeService().getByPincodeWarehouse(defaultPincode.getPincode(), defaultPincode.getWarehouse());
-                PincodeDefaultCourier existingDefaultCourierObject = getPincodeService().getByPincodeWarehouse(defaultPincode.getPincode(), defaultPincode.getWarehouse(), defaultPincode.isCod(), defaultPincode.isGroundShipping());
+                PincodeDefaultCourier existingDefaultCourierObject = getPincodeService().searchPincodeDefaultCourier(defaultPincode.getPincode(), defaultPincode.getWarehouse(), defaultPincode.isCod(), defaultPincode.isGroundShipping());
                 if (defaultPincode != null) {
                     if (existingDefaultCourierObject == null) {
                         pincodeDao.save(defaultPincode);

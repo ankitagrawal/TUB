@@ -115,13 +115,9 @@ public class InvoicePDFGenerator {
         Address address = addressDao.get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
         boolean isCod = shippingOrder.isCOD();
         CourierServiceInfo courierServiceInfo = null;
-	    //todo ankit again 2 lines of code, can be written in one, less confusing and clean
+	    //todo ankit again 2 lines of code, can be written in one, less confusing and clean   -- one liner   -- fixed
         if (EnumCourier.BlueDart_COD.getId().equals(shippingOrder.getShipment().getCourier().getId())) {
-            if (isCod) {
-                 courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart_COD.getId(), address.getPin(), true , false, false);
-            } else {
-                 courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart.getId(), address.getPin(), false , false, false);
-            }
+            courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart_COD.getId(), address.getPin(), isCod , false, false);             
             if (courierServiceInfo != null) {
                 routingCode = courierServiceInfo.getRoutingCode();
             }

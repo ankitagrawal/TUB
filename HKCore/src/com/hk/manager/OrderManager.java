@@ -714,18 +714,22 @@ public class OrderManager {
 		return margin;
 	}
 
-	 //todo ankit why is this method needed, please help me understand
+	 //todo ankit why is this method needed, please help me understand    -- k at modal window for item which ground shipped not allowed
      public void setGroundShippedItemQuantity(Order order) {
-        if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
+         Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+         for (CartLineItem cartLineItem : cartLineItems) {
+             if (cartLineItem.getProductVariant().getProduct().getGroundShipping()) {
+                 cartLineItem.setQty(0L);
+             }
+         }
+         /*
+         if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
             for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
                 CartLineItem lineItem = iterator.next();
                 if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId()) || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
-                    if (lineItem.getProductVariant().getProduct().getGroundShipping()) {
-                        lineItem.setQty(0L);
-                    }
                 }
             }
-        }
+        }*/
     }
 
 	public CartLineItemService getCartLineItemService() {

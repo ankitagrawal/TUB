@@ -9,7 +9,7 @@ package com.hk.constants.warehouse;
  */
 public enum EnumWarehouse {
 
-	//todo ankit, please see if it is inline with the current warehouseService
+	//todo ankit, please see if it is inline with the current warehouseService -- i guess we can remove this file
 
     Gurgoan(1, "Gurgoan"),
     Mumbai(2, "Mumbai");

@@ -422,7 +422,7 @@ public class XslParser {
   }
 
 
-	//todo ankit, can you please remove this excel parser in a separate specific file and use ExcelParser like we do everywhere
+	//todo ankit, can you please remove this excel parser in a separate specific file and use ExcelParser like we do everywhere --- written need to check
 
   public Set<CourierServiceInfo> readCourierServiceInfoList(File objInFile) throws Exception {
 
@@ -647,7 +647,8 @@ public Set<Pincode> readPincodeList(File objInFile) throws Exception {
           Double estimatedShippingCost = getDouble(getCellValue(XslConstants.ESTIMATED_SHIPPING_COST, rowMap, headerMap));
 
 
-	        //todo ankit can you please move this object creating to PincodeDefaultCourierDao
+	        //todo ankit can you please move this object creating to PincodeDefaultCourierDao   -- k will do
+            
 
           PincodeDefaultCourier pincodeDefaultCourier = new PincodeDefaultCourier();
           pincodeDefaultCourier.setPincode(pincode);

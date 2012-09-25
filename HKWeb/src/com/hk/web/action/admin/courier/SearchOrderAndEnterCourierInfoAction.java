@@ -150,13 +150,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
 //                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
-	          //todo ankit uncomplicate this, i have already things earlier to do so
-                for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
-                        isGroundShipped = true;
-                        break;
-                    }
-                }
+	          //todo ankit uncomplicate this, i have already things earlier to do so     --- fixed
+               isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder) ;
+                
                 if (isGroundShipped) {
                     availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
                 } else {
