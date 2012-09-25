@@ -16,7 +16,6 @@
                  /*"\n barcode - ${icBean.earlierSkuGroup.barcode}" +*/
                  "\n mrp - ${icBean.earlierSkuGroup.mrp}" +
                  "\n expiry date - ${icBean.earlierSkuGroup.expiryDate}" +
-                 "\n expiry date - ${icBean.earlierSkuGroup.sku.productVariant.id}" +
                  "\n mfg date - ${icBean.earlierSkuGroup.mfgDate}");
         }
         $(document).find('#skuGroup').attr("checked", true);
