@@ -209,7 +209,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Delivered);
         Order order = shippingOrder.getBaseOrder();
         getAdminOrderService().markOrderAsDelivered(order);
-	    smsManager.sendOrderShippedSMS(shippingOrder);
+	    smsManager.sendOrderDeliveredSMS(shippingOrder);
 	    return shippingOrder;
     }
 

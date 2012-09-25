@@ -85,12 +85,12 @@ public boolean sendDiscountCoupon(String name, String mobile, String coupon) {
 	}
 
 	public static class SMSTemplateConstants {
-    public static final String orderPlacedSMS = "/orderPlacedSMS.ftl";
-    public static final String orderConfirmedSMS = "/orderConfirmedSMS.ftl";
-    public static final String orderPartialShippedSMS = "/orderPartialShippedSMS.ftl";
-    public static final String orderShippedSMS = "/orderShippedSMS.ftl";
-    public static final String shippingOrderDeliveredSMS = "/shippingOrderDeliveredSMS.ftl";
-    public static final String orderDeliveredSMS = "/orderDeliveredSMS.ftl";
+    public static final String orderPlacedSMS = "/sms/orderPlacedSMS.ftl";
+    public static final String orderConfirmedSMS = "/sms/orderConfirmedSMS.ftl";
+    public static final String orderPartialShippedSMS = "/sms/orderPartialShippedSMS.ftl";
+    public static final String orderShippedSMS = "/sms/orderShippedSMS.ftl";
+    public static final String shippingOrderDeliveredSMS = "/sms/shippingOrderDeliveredSMS.ftl";
+    public static final String orderDeliveredSMS = "/sms/orderDeliveredSMS.ftl";
     public static final String offerSMS = "/offerSMS.ftl";
     public static final String discountCouponSMS = "/discountCouponSMS.ftl";
   }
