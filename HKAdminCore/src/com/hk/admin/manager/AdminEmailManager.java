@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import com.hk.domain.catalog.product.SimilarProduct;
+import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.io.HKFileWriter;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateHashModel;
@@ -113,6 +114,9 @@ public class AdminEmailManager {
     private FreeMarkerService freeMarkerService;
     @Autowired
     private AdminEmailService adminEmailService;
+
+    @Autowired
+    private ProductSearchService productSearchService;
 
     private final int COMMIT_COUNT = 100;
     private final int INITIAL_LIST_SIZE = 100;
@@ -365,24 +369,15 @@ public class AdminEmailManager {
      * @return
      */
     public Boolean sendMailMergeCampaign(EmailCampaign emailCampaign, String excelFilePath, String sheetName) {
-        List<String> tags = new ArrayList<String>();
+
         ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
         Iterator<HKRow> rowIterator = parser.parse();
         int i;
 
-        //Writer failedEmailLog = HKFileWriter.getFileStream("csv", emailCampaign.getId().toString());
+        Writer failedEmailLog = HKFileWriter.getFileStream("csv", emailCampaign.getId().toString());
 
-        String emailCampaignTemplate = emailCampaign.getTemplate();
-        String emailCampaignTemplateContents = emailCampaign.getTemplateFtl();
-
-        Template freemarkerTemplate = null;
-        if (emailCampaignTemplate != null && StringUtils.isNotBlank(emailCampaignTemplate)) {
-            freemarkerTemplate = freeMarkerService.getCampaignTemplate(emailCampaignTemplate);
-        } else if (emailCampaignTemplateContents != null && StringUtils.isNotBlank(emailCampaignTemplateContents)) {
-            StringBuilder finalContents = new StringBuilder(emailCampaign.getSubject());
-            finalContents.append(BaseUtils.newline + emailCampaignTemplateContents);
-            freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
-        } else {
+        Template freemarkerTemplate = generateFreeMarkerTemplate(emailCampaign);
+        if (freemarkerTemplate == null){
             return false;
         }
 
@@ -393,7 +388,9 @@ public class AdminEmailManager {
             TemplateHashModel staticModels = wrapper.getStaticModels();
             hkImageUtils = (TemplateHashModel) staticModels.get("com.hk.util.HKImageUtils");
         }catch (TemplateModelException ex){
+            //Only expected reason for this exception is when com.hk.util.HKImageUtils is missing
             logger.error("Unable to get static methods definition in HKImageUtils", ex);
+            return false;
         }
 
         try{
@@ -401,7 +398,7 @@ public class AdminEmailManager {
                 HashMap excelMap = new HashMap();
                 i = 0;
                 HKRow curHkRow = rowIterator.next();
-                while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
+                while ((null != curHkRow) && (curHkRow.columnValues != null) && i < curHkRow.columnValues.length) {
                     String key = parser.getHeadingNames(i);
                     String value = curHkRow.getColumnValue(i);
                     if (StringUtils.isNotBlank(value)){
@@ -413,66 +410,115 @@ public class AdminEmailManager {
                     break;
                 }
                 excelMap.put("HKImageUtils", hkImageUtils);
-
-                EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(excelMap.get(EmailMapKeyConstants.emailId).toString());
-                if (emailRecepient.isEmailAllowed()) {
-                    Boolean emailSentToRecepientRecently = Boolean.FALSE;
-                    if (emailRecepient.getLastEmailDate() != null) {
-                        Date lastDateCampaignMailSentToEmailRecepient = getEmailCampaignDao().getLastDateOfEmailCampaignMailSentToEmailRecepient(emailCampaign, emailRecepient);
-                        if (lastDateCampaignMailSentToEmailRecepient != null) {
-                            emailSentToRecepientRecently = new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isBefore(
-                                    lastDateCampaignMailSentToEmailRecepient.getTime());
-                        }
-                    }
-                    if (!emailSentToRecepientRecently) {
-                        HashMap extraMapEntries = getExtraMapEntriesForMailMerge(excelMap);
-
-                        if (extraMapEntries != null) {
-                            excelMap.putAll(extraMapEntries);
-                        } else {
-                            excelMap.clear();
-                            continue;
-                        }
-
-                        excelMap.put(EmailMapKeyConstants.unsubscribeLink, linkManager.getEmailUnsubscribeLink(emailRecepient));
-
-                        if (excelMap.containsKey(EmailMapKeyConstants.tags)) {
-                            tags = Arrays.asList(StringUtils.split(excelMap.get(EmailMapKeyConstants.tags).toString(), ","));
-                        }
-
-                        // construct the headers to send
-                        String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(tags, emailCampaign);
-                        Map<String, String> headerMap = new HashMap<String, String>();
-                        headerMap.put("X-SMTPAPI", xsmtpapi);
-                        headerMap.put("X-Mailgun-Variables", xsmtpapi);
-
-                        boolean isSend = emailService.sendHtmlEmail(freemarkerTemplate, excelMap, (String) excelMap.get(EmailMapKeyConstants.emailId), "", "info@healthkart.com", headerMap);
-
-                        if (isSend){
-                            emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
-                            emailRecepient.setLastEmailDate(new Date());
-                            getEmailRecepientDao().save(emailRecepient);
-                            getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart", emailCampaign.getEmailType(), emailRecepient, emailCampaign, "");
-                        }else{
-                            String message = String.format("%s,%s", emailCampaign.getId().toString(), emailRecepient.getEmail());
-                            //HKFileWriter.writeToStream(failedEmailLog, message);
-                        }
-                    }
-                }
+                sendMailMergeCampaign(excelMap, emailCampaign, freemarkerTemplate, failedEmailLog);
             }
         }finally{
-            //HKFileWriter.close(failedEmailLog);
+            HKFileWriter.close(failedEmailLog);
         }
+
         return true;
     }
 
-    private HashMap getExtraMapEntriesForMailMerge(HashMap excelMap) {
-        List<User> users = userService.findByEmail(excelMap.get(EmailMapKeyConstants.emailId).toString());
+    private Template generateFreeMarkerTemplate(EmailCampaign emailCampaign){
+        String emailCampaignTemplate = emailCampaign.getTemplate();
+        String emailCampaignTemplateContents = emailCampaign.getTemplateFtl();
+
+        Template freemarkerTemplate = null;
+        if (emailCampaignTemplate != null && StringUtils.isNotBlank(emailCampaignTemplate)) {
+            freemarkerTemplate = freeMarkerService.getCampaignTemplate(emailCampaignTemplate);
+        } else if (emailCampaignTemplateContents != null && StringUtils.isNotBlank(emailCampaignTemplateContents)) {
+            StringBuilder finalContents = new StringBuilder(emailCampaign.getSubject());
+            finalContents.append(BaseUtils.newline + emailCampaignTemplateContents);
+            freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
+        }
+        return freemarkerTemplate;
+    }
+
+    private boolean sendMailMergeCampaign(HashMap excelMap, EmailCampaign emailCampaign, Template freemarkerTemplate,Writer failedEmailLog){
+
+        String userEmail = excelMap.get(EmailMapKeyConstants.emailId).toString();
+        List<User> users = userService.findByEmail(userEmail);
         if (users != null && users.size() > 0) {
             excelMap.put(EmailMapKeyConstants.user, users.get(0));
         } else {
-            return null;
+            String message = String.format("User %s does not exist", userEmail);
+            HKFileWriter.writeToStream(failedEmailLog, message);
+            return false;
         }
+
+        EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(excelMap.get(EmailMapKeyConstants.emailId).toString());
+        List<String> tags = new ArrayList<String>();
+        if (emailRecepient.isEmailAllowed()) {
+            Boolean emailSentToRecepientRecently = Boolean.FALSE;
+            if (emailRecepient.getLastEmailDate() != null) {
+                Date lastDateCampaignMailSentToEmailRecepient = getEmailCampaignDao().getLastDateOfEmailCampaignMailSentToEmailRecepient(emailCampaign, emailRecepient);
+                if (lastDateCampaignMailSentToEmailRecepient != null) {
+                    emailSentToRecepientRecently = new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isBefore(
+                            lastDateCampaignMailSentToEmailRecepient.getTime());
+                }
+            }
+            if (!emailSentToRecepientRecently) {
+                Boolean sendAlternateTemplate = Boolean.FALSE;
+                List result = getExtraMapEntriesForMailMerge(excelMap);
+                sendAlternateTemplate = Boolean.parseBoolean(result.get(0).toString());
+                String failureMessage = result.get(1).toString();
+                //If alternate template has to be sent...(In case when similar products are all out of stock)
+                if (sendAlternateTemplate)
+                {
+                    //We do not want to consider similar productId now as they are either out_of_stock or does not exist
+                    //Without this code it will become an infinite loop
+                    excelMap.remove(EmailMapKeyConstants.similarProductId);
+                    //Find the alternate email and send it..It has to be hard-coded
+                    EmailCampaign alternateCampaign =  getEmailCampaignDao().findCampaignByName("reporder_reminder_general");
+                    sendMailMergeCampaign(excelMap,alternateCampaign, generateFreeMarkerTemplate(alternateCampaign), failedEmailLog );
+                }
+                if (!failureMessage.trim().equals("")){
+                    String message = String.format("%s,%s,%s", emailCampaign.getId().toString(), emailRecepient.getEmail(), result);
+                    HKFileWriter.writeToStream(failedEmailLog, message);
+                    return false;
+                }
+
+                excelMap.put(EmailMapKeyConstants.unsubscribeLink, linkManager.getEmailUnsubscribeLink(emailRecepient));
+
+                if (excelMap.containsKey(EmailMapKeyConstants.tags)) {
+                    tags = Arrays.asList(StringUtils.split(excelMap.get(EmailMapKeyConstants.tags).toString(), ","));
+                }
+
+                // construct the headers to send
+                String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(tags, emailCampaign);
+                Map<String, String> headerMap = new HashMap<String, String>();
+                headerMap.put("X-SMTPAPI", xsmtpapi);
+                headerMap.put("X-Mailgun-Variables", xsmtpapi);
+
+                boolean isSent = emailService.sendHtmlEmail(freemarkerTemplate, excelMap, (String) excelMap.get(EmailMapKeyConstants.emailId), "", "info@healthkart.com", headerMap);
+
+                if (isSent){
+                    emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
+                    emailRecepient.setLastEmailDate(new Date());
+                    getEmailRecepientDao().save(emailRecepient);
+                    getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart", emailCampaign.getEmailType(), emailRecepient, emailCampaign, "");
+                }else{
+                    String message = String.format("%s,%s", emailCampaign.getId().toString(), emailRecepient.getEmail());
+                    HKFileWriter.writeToStream(failedEmailLog, message);
+                }
+                return isSent;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * updates the map with extra properties
+     * @param excelMap
+     * @return result with failure message if any
+     */
+    private List getExtraMapEntriesForMailMerge(HashMap excelMap) {
+
+        boolean sendAlternateTemplate = Boolean.FALSE;
+        List result = new ArrayList();
+        result.add(0, sendAlternateTemplate);
+        result.add(0, "");
 
         if (excelMap.containsKey(EmailMapKeyConstants.couponCode)) {
             Coupon coupon = couponService.findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
@@ -481,95 +527,80 @@ public class AdminEmailManager {
         Product product = null;
         if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
             product = getProductService().getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
-            if (product != null) {
-                Long productMainImageId = product.getMainImageId();
-                excelMap.put(EmailMapKeyConstants.product, product);
-                //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-                excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
-
-                if (productMainImageId != null) {
-                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
-                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
-                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
-                } else {
-
-                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
-                }
-            } else {
-                excelMap.put(EmailMapKeyConstants.product, null);
-                excelMap.put(EmailMapKeyConstants.productUrl, "");
-                excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-                excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-                excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
-            }
         }
 
         if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)) {
-            ProductVariant productVariant = productVariantService.getVariantById(excelMap.get(EmailMapKeyConstants.productVariantId).toString());
+            String pvId = excelMap.get(EmailMapKeyConstants.productVariantId).toString();
+            ProductVariant productVariant = productVariantService.getVariantById(pvId);
             if (productVariant != null) {
                 excelMap.put(EmailMapKeyConstants.productVariant, productVariant);
+                product = (product == null) ? productVariant.getProduct() : product;
+            }else{
+                result.set(1, String.format("Product Variant %s is wrong", pvId));
+                return result;
+            }
 
+            if (product == null){
+                result.set(1, String.format("Product %s is wrong", product.getId()));
+                return result;
+            }
 
-                if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
-                    product = productVariant.getProduct();
-                    Long productMainImageId = product.getMainImageId();
-                    excelMap.put(EmailMapKeyConstants.product, product);
-                    //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-                    excelMap.put(EmailMapKeyConstants.productUrl,  convertToWww(getProductService().getProductUrl(product,false)));
-
-                    if (productMainImageId != null) {
-                        excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
-                        excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
-                        excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
-                    } else {
-                        excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-                        excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-                        excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
-                    }
-                }
-            } else {
-                excelMap.put(EmailMapKeyConstants.productVariant, null);
-                if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
-                    excelMap.put(EmailMapKeyConstants.product, null);
-                    excelMap.put(EmailMapKeyConstants.productUrl, "");
-                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
-                }
+            if (product.isOutOfStock()){
+                result.set(1, String.format("Product %s is out of stock", product.getId()));
+                return result;
             }
 
             if (excelMap.containsKey(EmailMapKeyConstants.similarProductId)) {
-                Object value = excelMap.get(EmailMapKeyConstants.similarProductId);
+                sendAlternateTemplate = Boolean.TRUE;
+                Object similarIds = excelMap.get(EmailMapKeyConstants.similarProductId);
                 List<Product> similarProducts = new ArrayList<Product>();
-                if ( value != null &&
-                        StringUtils.isNotBlank(value.toString())){
-                    if (value.toString().equals("auto")){
+                if ( similarProducts != null &&
+                        StringUtils.isNotBlank(similarProducts.toString())){
+                    if (similarIds.toString().equals("auto")){
                         List<SimilarProduct> similarProductList = product.getSimilarProducts();
                         for (SimilarProduct similarProduct : similarProductList){
-                            product = similarProduct.getProduct();
-                            product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
-                            similarProducts.add(product);
-                        };
-                    } else{
-                        String[] similarProductIds =value.toString().split(",");
-
-                        for (String productId : similarProductIds){
-                            product = getProductService().getProductById(productId);
-                            if (product != null){
+                            if ((similarProduct.getProduct()!= null) && !similarProduct.getProduct().isOutOfStock()){
+                                product = similarProduct.getProduct();
                                 product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
                                 similarProducts.add(product);
+                                sendAlternateTemplate = Boolean.FALSE;
+                            }
+                        };
+                    } else{
+                        String[] similarProductIds = similarIds.toString().split(",");
+                        for (String productId : similarProductIds){
+                            product = getProductService().getProductById(productId);
+                            if ((product != null) && !product.isOutOfStock()){
+                                product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
+                                similarProducts.add(product);
+                                sendAlternateTemplate = Boolean.FALSE;
                             }
                         }
                     }
-
+                    result.set(0, sendAlternateTemplate);
                 }
 
                 excelMap.put(EmailMapKeyConstants.similarProductId, similarProducts);
             }
         }
-        return excelMap;
+
+        if ((product != null) && !product.isOutOfStock()) {
+            Long productMainImageId = product.getMainImageId();
+            excelMap.put(EmailMapKeyConstants.product, product);
+            //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+            excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
+
+            if (productMainImageId != null) {
+                excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
+                excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
+                excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
+            } else {
+                excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+                excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+            }
+        }
+        return result;
     }
 
 
@@ -778,6 +809,10 @@ public class AdminEmailManager {
     //todo : isko thik kar do - for now hardcoding logic to convert admin.healthkart.com to www.healthkart.com
     public static String convertToWww(String productUrl) {
         return productUrl.replaceAll("admin\\.healthkart\\.com", "www.healthkart.com");
+    }
+
+    static enum Product_Status{
+
     }
 
     public EmailService getEmailService() {
