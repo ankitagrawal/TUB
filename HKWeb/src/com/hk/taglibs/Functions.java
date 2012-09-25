@@ -500,6 +500,14 @@ public class Functions {
         return productService.isComboInStock(combo);
     }
 
+    public static boolean isCombo(String id) {
+        Combo combo = getCombo(id);
+        if (combo != null){
+            return true;
+        }
+        return false;
+    }
+
     public static Map<String, List<String>> getRecommendedProducts(Object o) {
         Product product = (Product) o;
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
