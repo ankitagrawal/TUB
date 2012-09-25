@@ -9,6 +9,8 @@ import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.payment.PaymentService;
+import com.hk.constants.payment.EnumPaymentMode;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ public class CourierServiceImpl implements CourierService {
 	private CourierDao courierDao;
 	@Autowired
 	private CourierServiceInfoDao courierServiceInfoDao;
+    @Autowired
+    private PaymentService paymentService;
 
 	@Autowired
 	UserService userService;
@@ -47,7 +51,13 @@ public class CourierServiceImpl implements CourierService {
 	}
 
 	public List<Courier> getAvailableCouriers(Order order) {
-		return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), order.isCOD(), false, false);
+          boolean isCOD = false;
+        if (order.getPayment() == null) {
+            isCOD = false;
+        } else if (order.getPayment().getPaymentMode().equals(getPaymentService().findPaymentMode(EnumPaymentMode.COD))) {
+            isCOD = true;
+        }
+		return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD, false, false);
 	}
 
 
@@ -98,4 +108,11 @@ public class CourierServiceImpl implements CourierService {
 		this.courierServiceInfoDao = courierServiceInfoDao;
 	}
 
+      public PaymentService getPaymentService() {
+        return paymentService;
+    }
+
+    public void setPaymentService(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
 }

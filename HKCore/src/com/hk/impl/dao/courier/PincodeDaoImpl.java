@@ -76,8 +76,13 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
         if (isGroundshipping != null) {
             pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundshipping));
         }
-        PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
-        return pincodeDefaultCourierObj;
+        List<PincodeDefaultCourier> pincodeDefaultCouriers =   pincodeDefaultCourierCriteria.list();
+
+        if(pincodeDefaultCouriers.size()>0 && pincodeDefaultCouriers != null){
+            return pincodeDefaultCouriers.get(0);
+        }
+//        PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
+        return null;
     }
 
 
