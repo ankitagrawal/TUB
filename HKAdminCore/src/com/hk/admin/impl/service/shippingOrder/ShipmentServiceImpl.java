@@ -7,7 +7,9 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.util.FedExCourier;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -56,23 +58,40 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (suggestedCourier == null) {
             return null;
         }
-        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
-        if (suggestedAwb == null) {
-            return null;
+        Awb suggestedAwb = null;
+        if (suggestedCourier.getId().equals(EnumCourier.FedEx.getId())){
+            String trackingNumber = new FedExCourier().newFedExShipment(shippingOrder);
+            if (trackingNumber != null){
+                Awb fedExNumber = new Awb();
+                fedExNumber.setCourier(suggestedCourier);
+                fedExNumber.setAwbNumber(trackingNumber);
+                fedExNumber.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+                fedExNumber.setWarehouse(shippingOrder.getWarehouse());
+                fedExNumber.setCod(shippingOrder.isCOD());                 
+                awbService.save(fedExNumber);
+                suggestedAwb = fedExNumber;
+            }
         }
-        Double estimatedWeight = 100D;
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
+        else{
+            suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+            if (suggestedAwb == null) {
                 return null;
             }
-            Double variantWeight = productVariant.getWeight();
-            if (variantWeight == null || variantWeight == 0D) {
-                estimatedWeight += 0D;
-            } else {
-                estimatedWeight += variantWeight;
-            }
         }
+            Double estimatedWeight = 100D;
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                ProductVariant productVariant = lineItem.getSku().getProductVariant();
+                if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
+                    return null;
+                }
+                Double variantWeight = productVariant.getWeight();
+                if (variantWeight == null || variantWeight == 0D) {
+                    estimatedWeight += 0D;
+                } else {
+                    estimatedWeight += variantWeight;
+                }
+            }
+        //}
         Shipment shipment = new Shipment();
         shipment.setCourier(suggestedCourier);
         shipment.setEmailSent(false);
