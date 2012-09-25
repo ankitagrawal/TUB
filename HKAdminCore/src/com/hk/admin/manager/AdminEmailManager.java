@@ -470,7 +470,11 @@ public class AdminEmailManager {
                     excelMap.remove(EmailMapKeyConstants.similarProductId);
                     //Find the alternate email and send it..It has to be hard-coded
                     EmailCampaign alternateCampaign =  getEmailCampaignDao().findCampaignByName("reporder_reminder_general");
-                    sendMailMergeCampaign(excelMap,alternateCampaign, generateFreeMarkerTemplate(alternateCampaign), failedEmailLog );
+                    if (alternateCampaign != null){
+                        sendMailMergeCampaign(excelMap,alternateCampaign, generateFreeMarkerTemplate(alternateCampaign), failedEmailLog );
+                    }else{
+                        return false;
+                    }
                 }
                 if (!failureMessage.trim().equals("")){
                     String message = String.format("%s,%s,%s", emailCampaign.getId().toString(), emailRecepient.getEmail(), result);
@@ -518,7 +522,7 @@ public class AdminEmailManager {
         boolean sendAlternateTemplate = Boolean.FALSE;
         List result = new ArrayList();
         result.add(0, sendAlternateTemplate);
-        result.add(0, "");
+        result.add(1, "");
 
         if (excelMap.containsKey(EmailMapKeyConstants.couponCode)) {
             Coupon coupon = couponService.findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
@@ -527,6 +531,15 @@ public class AdminEmailManager {
         Product product = null;
         if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
             product = getProductService().getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
+            if (product == null){
+                result.set(1, String.format("Product %s is wrong", product.getId()));
+                return result;
+            }
+
+            if (product.isOutOfStock()){
+                result.set(1, String.format("Product %s is out of stock", product.getId()));
+                return result;
+            }
         }
 
         if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)) {
@@ -560,19 +573,21 @@ public class AdminEmailManager {
                         List<SimilarProduct> similarProductList = product.getSimilarProducts();
                         for (SimilarProduct similarProduct : similarProductList){
                             if ((similarProduct.getProduct()!= null) && !similarProduct.getProduct().isOutOfStock()){
-                                product = similarProduct.getProduct();
-                                product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
-                                similarProducts.add(product);
-                                sendAlternateTemplate = Boolean.FALSE;
+                                Product simProduct = similarProduct.getProduct();
+                                if ((simProduct != null) && !simProduct.isOutOfStock()){
+                                    simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
+                                    similarProducts.add(simProduct);
+                                    sendAlternateTemplate = Boolean.FALSE;
+                                }
                             }
                         };
                     } else{
                         String[] similarProductIds = similarIds.toString().split(",");
                         for (String productId : similarProductIds){
-                            product = getProductService().getProductById(productId);
-                            if ((product != null) && !product.isOutOfStock()){
-                                product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
-                                similarProducts.add(product);
+                            Product simProduct = getProductService().getProductById(productId);
+                            if ((simProduct != null) && !simProduct.isOutOfStock()){
+                                simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
+                                similarProducts.add(simProduct);
                                 sendAlternateTemplate = Boolean.FALSE;
                             }
                         }
