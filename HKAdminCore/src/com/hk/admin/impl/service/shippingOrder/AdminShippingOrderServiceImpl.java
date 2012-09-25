@@ -143,7 +143,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
-            shipmentService.createShipment(shippingOrder);
+	        // auto escalate shipping orders if possible
+	        shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+
+	        shipmentService.createShipment(shippingOrder);
             return shippingOrder;
         }
         return null;

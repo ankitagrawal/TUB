@@ -27,7 +27,7 @@ public class TokenUtils {
       Order order = shippingOrder.getBaseOrder();
       String baseOrderGatewayOrderId[] = order.getGatewayOrderId().split("-");
 
-      return shippingOrder.getId() + "-" + baseOrderGatewayOrderId[1];
+      return shippingOrder.getId() + "-" + "S" + baseOrderGatewayOrderId[1];
 
     }
 
