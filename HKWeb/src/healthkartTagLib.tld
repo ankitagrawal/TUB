@@ -772,7 +772,18 @@
     </function>
     <function>
         <description>
-            returns stock check of combo
+            returns if the given product is a Combo or Not
+        </description>
+        <name>isCombo</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isCombo(java.lang.String)</function-signature>
+        <example>
+            ${hk:isCombo(${object})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns recommended products
         </description>
         <name>getRecommendedProducts</name>
         <function-class>com.hk.taglibs.Functions</function-class>
@@ -900,6 +911,17 @@
         <function-signature>boolean showOptionOnUI(java.lang.String)</function-signature>
         <example>
             ${hk:showOptionOnUI(${optionType})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns true if option needs to be shown on ui
+        </description>
+        <name>getApplicableWarehouses</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getApplicableWarehouses(com.hk.domain.catalog.product.ProductVariant)</function-signature>
+        <example>
+            ${hk:getApplicableWarehouses(${object})}
         </example>
     </function>
 </taglib>
