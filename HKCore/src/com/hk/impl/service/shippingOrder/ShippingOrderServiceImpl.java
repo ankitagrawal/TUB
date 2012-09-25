@@ -131,12 +131,15 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
-                    if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
-                        logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
-                        return false;
-                    } else if (productVariant.getProduct().isDropShipping()) {
+	                if (productVariant.getProduct().isService() != null && productVariant.getProduct().isService()) {
+		                continue;
+	                }
+	                if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
+		                String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
+		                logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+				                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
+		                return false;
+	                } else if (productVariant.getProduct().isDropShipping()) {
                         String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
                         logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);

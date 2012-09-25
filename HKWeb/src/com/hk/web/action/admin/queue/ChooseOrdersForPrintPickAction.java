@@ -1,15 +1,18 @@
 package com.hk.web.action.admin.queue;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.util.CustomDateTypeConvertor;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import net.sourceforge.stripes.validation.Validate;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +67,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
 	private static final int PRINTING = 1;
 	private static final int PICKING = 2;
+	private Date startDate;
+	private Date endDate;
 
 	private String brand;
 
@@ -121,6 +126,9 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 			shippingOrderSearchCriteria.setBaseGatewayOrderId(baseGatewayOrderId);
 		} else if (gatewayOrderId != null) {
 			shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
+		} else if (startDate != null && endDate != null) {
+			shippingOrderSearchCriteria.setLastEscStartDate(startDate);
+			shippingOrderSearchCriteria.setLastEscEndDate(endDate);
 		} else {
 			shippingOrderSearchCriteria.setBasketCategory(category.getName()).setBaseGatewayOrderId(baseGatewayOrderId).setGatewayOrderId(gatewayOrderId);
 		}
@@ -337,5 +345,23 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
 	public void setBrandsToAuditDao(BrandsToAuditDao brandsToAuditDao) {
 		this.brandsToAuditDao = brandsToAuditDao;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	@Validate(converter = CustomDateTypeConvertor.class)
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	@Validate (converter = CustomDateTypeConvertor.class)
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 }

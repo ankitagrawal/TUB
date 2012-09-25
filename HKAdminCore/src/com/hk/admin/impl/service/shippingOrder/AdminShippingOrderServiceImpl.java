@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.constants.order.EnumOrderLifecycleActivity;
+import com.hk.constants.payment.EnumPaymentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -140,7 +142,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
-            shipmentService.createShipment(shippingOrder);
+	        // auto escalate shipping orders if possible
+	        shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+
+	        shipmentService.createShipment(shippingOrder);
             return shippingOrder;
         }
         return null;
