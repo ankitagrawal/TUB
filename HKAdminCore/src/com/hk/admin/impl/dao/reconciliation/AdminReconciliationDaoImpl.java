@@ -50,20 +50,20 @@ public class AdminReconciliationDaoImpl extends BaseDaoImpl implements AdminReco
 		String shippingOrderClause  = "" ;
 		String gatewayOrderClause   = "";
 
-		String query = "select recon from OrderPaymentReconciliation recon join recon.shippingOrder so where recon.reconciled = true " +
-				" and so.shipment.shipDate between :startDate and :endDate " +
+		String query = "select recon from OrderPaymentReconciliation recon where recon.reconciled = true " +
+				" and recon.shippingOrder.shipment.shipDate between :startDate and :endDate " +
 				" and recon.reconciledAmount != recon.shippingOrder.amount and recon.paymentMode = " + EnumPaymentMode.COD.asPaymenMode();
 
 		if(shippingOrderId != null) {
-			shippingOrderClause = " and so = " + shippingOrderId;
+			shippingOrderClause = " and recon.shippingOrder = " + shippingOrderId;
 		}
 
 		if(gatewayOrderId != null) {
-			gatewayOrderClause = " and so.gatewayOrderId = " + gatewayOrderId;
+			gatewayOrderClause = " and recon.shippingOrder.gatewayOrderId = " + gatewayOrderId;
 		}
 
 		if(courier != null) {
-			courierClause = " and so.shipment.courier = " + courier;
+			courierClause = " and recon.shippingOrder.shipment.awb.courier = " + courier;
 		}
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = getSession().createQuery(query + shippingOrderClause + gatewayOrderClause + courierClause)
 				.setParameter("startDate", startDate).setParameter("endDate", endDate)
@@ -76,16 +76,16 @@ public class AdminReconciliationDaoImpl extends BaseDaoImpl implements AdminReco
 		String orderClause          = "" ;
 		String gatewayOrderClause   = "";
 
-		String query = "select recon from OrderPaymentReconciliation recon join recon.baseOrder bo where recon.reconciled = true " +
-				" and recon.shippingOrder is null and bo.payment.paymentDate between :startDate and :endDate " +
+		String query = "select recon from OrderPaymentReconciliation recon where recon.reconciled = true " +
+				" and recon.shippingOrder is null and recon.baseOrder.payment.paymentDate between :startDate and :endDate " +
 				" and recon.reconciledAmount != recon.baseOrder.amount and recon.paymentMode = " + EnumPaymentMode.TECHPROCESS.asPaymenMode();
 
 		if(baseOrderId != null) {
-			orderClause = " and bo.id = " + baseOrderId;
+			orderClause = " and recon.baseOrder.id = " + baseOrderId;
 		}
 
 		if(gatewayOrderId != null) {
-			gatewayOrderClause = " and bo.gatewayOrderId = " + gatewayOrderId;
+			gatewayOrderClause = " and recon.baseOrder.gatewayOrderId = " + gatewayOrderId;
 		}
 
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = getSession().createQuery(query + orderClause + gatewayOrderClause)

@@ -16,10 +16,12 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.report.dto.order.reconcilation.ReconcilationReportDto;
 import com.hk.report.pact.service.shippingOrder.ReportShippingOrderService;
+import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.XslGenerator;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -237,6 +239,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		return startDate;
 	}
 
+	@Validate(converter = CustomDateTypeConvertor.class)
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
@@ -245,6 +248,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		return endDate;
 	}
 
+	@Validate (converter = CustomDateTypeConvertor.class)
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
