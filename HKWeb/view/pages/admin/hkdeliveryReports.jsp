@@ -46,8 +46,10 @@
 				                </s:select>
 			                </shiro:hasPermission>
 			                <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
-				                <c:set var="hub" value="${hk:getHubForHkdeliveryUser(paymentReconciliationAction.loggedOnUser)}"/>
-				                <s:hidden name="hub" value="${hub.id}"/>${hub.name}
+				                <shiro:lacksPermission name="<%=PermissionConstants.SELECT_HUB%>" >
+									<c:set var="hub" value="${hk:getHubForHkdeliveryUser(paymentReconciliationAction.loggedOnUser)}"/>
+									<s:hidden name="hub" value="${hub.id}"/>${hub.name}
+				                </shiro:lacksPermission>
 			                </shiro:hasPermission>
 		                </li>
 
