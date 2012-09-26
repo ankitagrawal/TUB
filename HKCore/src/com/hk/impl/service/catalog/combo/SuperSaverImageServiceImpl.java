@@ -56,7 +56,7 @@ public class SuperSaverImageServiceImpl implements SuperSaverImageService {
 
     public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, Boolean getDeleted, int page, int perPage) {
         Page superSaverPage;
-        Set<SuperSaverImage> superSaverImages = new HashSet<SuperSaverImage>(superSaverImageDao.getSuperSaverImages(categories, brands, getVisible, getDeleted));
+        List<SuperSaverImage> superSaverImages = superSaverImageDao.getSuperSaverImages(categories, brands, getVisible, getDeleted);
 
         Iterator<SuperSaverImage> superSaverImageIterator = superSaverImages.iterator();
         while (superSaverImageIterator.hasNext()) {
@@ -65,7 +65,11 @@ public class SuperSaverImageServiceImpl implements SuperSaverImageService {
                 superSaverImageIterator.remove();
             }
         }
-        superSaverPage = new Page(new ArrayList<SuperSaverImage>(superSaverImages), perPage, page, superSaverImages.size());
+
+        int firstResult = (page - 1) * perPage;
+        List resultList = superSaverImages.subList(firstResult,firstResult + perPage);
+
+        superSaverPage = new Page(resultList, perPage, page, superSaverImages.size());
         return superSaverPage;
     }
 }
