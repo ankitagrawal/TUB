@@ -1,16 +1,15 @@
 package com.hk.manager;
 
-import java.util.HashMap;
-
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.impl.service.SMSService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.impl.service.SMSService;
+import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,27 +22,24 @@ import com.hk.impl.service.SMSService;
 @SuppressWarnings("unchecked")
 @Component
 public class SMSManager {
-  private static Logger logger = LoggerFactory.getLogger(SMSManager.class);
+	private static Logger logger = LoggerFactory.getLogger(SMSManager.class);
 
-  private  SMSService smsService;
+	@Autowired
+	SMSService smsService;
 
-  @Autowired
-  public SMSManager(SMSService smsService) {
-    this.smsService = smsService;
-  }
 
-  public boolean sendSMS(String message, String mobile) {
-    return smsService.sendSMS(message, mobile);
-  }
+	public boolean sendSMS(String message, String mobile) {
+		return smsService.sendSMS(message, mobile);
+	}
 
-  
-public boolean sendDiscountCoupon(String name, String mobile, String coupon) {
-    HashMap valuesMap = new HashMap();
-    valuesMap.put("name", name);
-    valuesMap.put("coupon", coupon);
 
-    return smsService.sendSMSUsingTemplate(mobile, SMSManager.SMSTemplateConstants.discountCouponSMS, valuesMap);
-  }
+	public boolean sendDiscountCoupon(String name, String mobile, String coupon) {
+		HashMap valuesMap = new HashMap();
+		valuesMap.put("name", name);
+		valuesMap.put("coupon", coupon);
+
+		return smsService.sendSMSUsingTemplate(mobile, SMSManager.SMSTemplateConstants.discountCouponSMS, valuesMap);
+	}
 
 	public boolean sendOrderPlacedSMS(Order order) {
 		HashMap valuesMap = new HashMap();
@@ -85,13 +81,13 @@ public boolean sendDiscountCoupon(String name, String mobile, String coupon) {
 	}
 
 	public static class SMSTemplateConstants {
-    public static final String orderPlacedSMS = "/sms/orderPlacedSMS.ftl";
-    public static final String orderConfirmedSMS = "/sms/orderConfirmedSMS.ftl";
-    public static final String orderPartialShippedSMS = "/sms/orderPartialShippedSMS.ftl";
-    public static final String orderShippedSMS = "/sms/orderShippedSMS.ftl";
-    public static final String shippingOrderDeliveredSMS = "/sms/shippingOrderDeliveredSMS.ftl";
-    public static final String orderDeliveredSMS = "/sms/orderDeliveredSMS.ftl";
-    public static final String offerSMS = "/offerSMS.ftl";
-    public static final String discountCouponSMS = "/discountCouponSMS.ftl";
-  }
+		public static final String orderPlacedSMS = "/sms/orderPlacedSMS.ftl";
+		public static final String orderConfirmedSMS = "/sms/orderConfirmedSMS.ftl";
+		public static final String orderPartialShippedSMS = "/sms/orderPartialShippedSMS.ftl";
+		public static final String orderShippedSMS = "/sms/orderShippedSMS.ftl";
+		public static final String shippingOrderDeliveredSMS = "/sms/shippingOrderDeliveredSMS.ftl";
+		public static final String orderDeliveredSMS = "/sms/orderDeliveredSMS.ftl";
+		public static final String offerSMS = "/offerSMS.ftl";
+		public static final String discountCouponSMS = "/discountCouponSMS.ftl";
+	}
 }
