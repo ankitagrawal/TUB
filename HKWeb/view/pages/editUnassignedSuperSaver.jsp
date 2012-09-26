@@ -57,7 +57,7 @@
             <table>
                 <tr>
                     <th>IMAGE</th>
-                    <th>COMBO ID</th>
+                    <th>PRODUCT ID</th>
                     <th>RANK</th>
                     <th>ALT TEXT</th>
                     <th>HIDE</th>
