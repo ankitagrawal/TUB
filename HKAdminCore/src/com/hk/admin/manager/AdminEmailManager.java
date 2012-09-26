@@ -422,9 +422,10 @@ public class AdminEmailManager {
                 sendMailMergeCampaign(excelMap, emailCampaign, freemarkerTemplate, failedEmailLog);
             }
         }finally{
-            HKFileWriter.close(failedEmailLog);
+
             boolean isReportSent = emailService.sendHtmlEmail("Email Campaign report",
-                    "Following recepients did not email \r\n", "prateek.verma@healthkart.com", "Prateek Verma", failedEmailLogFile );
+                    "Following recepients did not email \r\n", "prateek.verma@healthkart.com", "Prateek Verma", failedEmailLogFile.getAbsolutePath());
+            HKFileWriter.close(failedEmailLog);
             if (isReportSent){
                 failedEmailLogFile.delete();
             }

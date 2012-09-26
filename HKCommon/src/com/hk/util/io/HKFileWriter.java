@@ -17,7 +17,12 @@ public class HKFileWriter {
 
     public static File getFileStream(String path, String fileName, String extension){
         final File file = new File(String.format("%s%s.%s",path, fileName, extension));
-        file.getParentFile().mkdirs();
+        try{
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        }catch(IOException ie){
+            logger.error(String.format("Unable to create file stream for the given file %s ", file.getName()), ie);
+        }
         return file;
     }
     /**
@@ -46,6 +51,7 @@ public class HKFileWriter {
 
     public static void close(Writer writer){
         try{
+            writer.flush();
             writer.close();
         }catch (IOException ie){
             logger.error("Unable to close Stream", ie);

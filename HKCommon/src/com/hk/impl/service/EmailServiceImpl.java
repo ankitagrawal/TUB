@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
@@ -140,17 +141,21 @@ public class EmailServiceImpl implements EmailService {
     emailExecutorService.execute(new SendBulkEmailAsyncThread(htmlEmails, emailCampaign));
   }
 
-    public boolean sendHtmlEmail(String subject, String message, String toEmail, String toName, File attachement) {
+    public boolean sendHtmlEmail(String subject, String message, String toEmail, String toName, String attachementPath) {
         HtmlEmail htmlEmail = null;
         boolean isSent = true;
         try {
             htmlEmail = new HtmlEmail();
             htmlEmail.addTo(toEmail, toName).setFrom(noReplyEmail, noReplyName).setSubject(subject).setHostName("localhost");
-            if (attachement != null){
-                htmlEmail.embed(attachement);
+            if (StringUtils.isNotBlank(attachementPath)){
+                EmailAttachment attachment = new EmailAttachment();
+                attachment.setPath(attachementPath);
+                attachment.setDisposition(EmailAttachment.ATTACHMENT);
+                attachment.setDescription(subject);
+                htmlEmail.attach(attachment);
             }
             htmlEmail.setHtmlMsg(message);
-            sendEmail(htmlEmail);
+            htmlEmail.send();
 
         }catch (EmailException ex){
             logger.error("EmailException in sendHtmlEmail for template ", ex);
