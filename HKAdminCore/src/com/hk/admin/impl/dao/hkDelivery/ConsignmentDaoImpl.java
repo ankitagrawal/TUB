@@ -123,7 +123,7 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     }
 
 	@Override
-	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate) {
+	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub) {
 		DetachedCriteria consignmentCriteria = DetachedCriteria.forClass(Consignment.class);
 		if (startDate != null) {
             consignmentCriteria.add(Restrictions.ge("createDate", startDate));
@@ -131,6 +131,9 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         if (endDate != null) {
             consignmentCriteria.add(Restrictions.le("createDate", endDate));
         }
+		if(hub != null){
+			consignmentCriteria.add(Restrictions.eq("hub.id", hub.getId()));
+		}
 
 		consignmentCriteria.add(Restrictions.isNull("hkdeliveryPaymentReconciliation"));
 

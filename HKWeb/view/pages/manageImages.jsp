@@ -50,6 +50,14 @@
                       </c:forEach>
                   </s:select>
               </td>
+              <td>
+                  <s:select name="productImages[${ctr.index}].productVariant" >
+                      <s:option value="">-None-</s:option>
+                      <c:forEach items="${pa.product.productVariants}" var="variant" varStatus="ctr">
+                          <s:option value="${variant}">${variant.id}, ${variant.optionsCommaSeparated}</s:option>
+                      </c:forEach>
+                  </s:select>
+              </td>
           </tr>
         </c:forEach>
         <tr>

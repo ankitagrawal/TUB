@@ -102,7 +102,7 @@ public class SOInvoiceAction extends BaseAction {
             if (courierServiceInfo != null) {
                 routingCode = courierServiceInfo.getRoutingCode();
             }
-            freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
+            //freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
             return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));

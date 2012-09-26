@@ -64,6 +64,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private AdminShippingOrderDao adminShippingOrderDao;
     @Autowired
     AwbService awbService;
+//	@Autowired
+//	SMSManager smsManager;
 
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
@@ -140,7 +142,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
-            shipmentService.createShipment(shippingOrder);
+	        // auto escalate shipping orders if possible
+	        shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+
+	        shipmentService.createShipment(shippingOrder);
             return shippingOrder;
         }
         return null;
@@ -203,7 +208,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Delivered);
         Order order = shippingOrder.getBaseOrder();
         getAdminOrderService().markOrderAsDelivered(order);
-        return shippingOrder;
+//	    smsManager.sendOrderDeliveredSMS(shippingOrder);
+	    return shippingOrder;
     }
 
     @Transactional
@@ -254,6 +260,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
         getAdminOrderService().markOrderAsShipped(shippingOrder.getBaseOrder());
+//	    smsManager.sendOrderShippedSMS(shippingOrder);
 
         return shippingOrder;
     }

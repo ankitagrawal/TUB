@@ -421,12 +421,6 @@ public class Order implements java.io.Serializable {
         this.secondaryReferrerForOrder = secondaryReferrerForOrder;
     }
 
-    /*
-     * @Deprecated public AccountingInvoiceNumber getAccountingInvoiceNumber() { return accountingInvoiceNumber; }
-     * @Deprecated public void setAccountingInvoiceNumber(AccountingInvoiceNumber accountingInvoiceNumber) {
-     *             this.accountingInvoiceNumber = accountingInvoiceNumber; }
-     */
-
     public List<OrderLifecycle> getOrderLifecycles() {
         Collections.sort(orderLifecycles, new OrderLifecycleComparator());
         return orderLifecycles;
@@ -435,13 +429,6 @@ public class Order implements java.io.Serializable {
     public void setOrderLifecycles(List<OrderLifecycle> orderLifecycles) {
         this.orderLifecycles = orderLifecycles;
     }
-
-    /*
-     * @Deprecated public List<AccountingInvoice> getAccountingInvoices() { Collections.sort(accountingInvoices, new
-     *             AccountingInvoiceComparator()); return accountingInvoices; }
-     * @Deprecated public void setAccountingInvoices(List<AccountingInvoice> accountingInvoices) {
-     *             this.accountingInvoices = accountingInvoices; }
-     */
 
     public Boolean isB2bOrder() {
         return b2bOrder;
@@ -479,30 +466,10 @@ public class Order implements java.io.Serializable {
         this.shippingOrders = shippingOrders;
     }
 
-    /*
-     * @Deprecated public List<AccountingInvoice> getRetailInvoices() { List<AccountingInvoice> invoices = new
-     *             ArrayList<AccountingInvoice>(); for (AccountingInvoice accountingInvoice : accountingInvoices) { if
-     *             (accountingInvoice.getRetailInvoiceId() != null) { invoices.add(accountingInvoice); } }
-     *             Collections.sort(invoices, new AccountingInvoiceComparator()); return invoices; } public List<AccountingInvoice>
-     *             getB2BInvoices() { List<AccountingInvoice> invoices = new ArrayList<AccountingInvoice>(); for
-     *             (AccountingInvoice accountingInvoice : accountingInvoices) { if (accountingInvoice.getB2bInvoiceId() !=
-     *             null) { invoices.add(accountingInvoice); } } Collections.sort(invoices, new
-     *             AccountingInvoiceComparator()); return invoices; }
-     * @Deprecated public List<AccountingInvoice> getSeviceInvoices() { List<AccountingInvoice> invoices = new
-     *             ArrayList<AccountingInvoice>(); for (AccountingInvoice accountingInvoice : accountingInvoices) { if
-     *             (accountingInvoice.getServiceInvoiceId() != null) { invoices.add(accountingInvoice); } }
-     *             Collections.sort(invoices, new AccountingInvoiceComparator()); return invoices; }
-     */
-
     @Override
     public String toString() {
         return id != null ? id.toString() : "";
     }
-
-    /*
-     * public String getOrderDetails() { return "Order Detail { id= " + id.toString() + ", amount=" + amount + ",
-     * gatewayOrderId=" + gatewayOrderId + ", lineItems=" + cartLineItems.size() + '}'; }
-     */
 
     public List<CartLineItem> getLineItemsOfType(EnumCartLineItemType enumCartLineItemType) {
         List<CartLineItem> cartLineItems = new ArrayList<CartLineItem>();
@@ -533,39 +500,6 @@ public class Order implements java.io.Serializable {
     @Transient
     public boolean isCOD() {
         return EnumPaymentMode.COD.getId().equals(getPayment().getPaymentMode().getId());
-    }
-
-    /*
-     * public ProductVariant getTopDealVariant() { ProductVariant topOrderedVariant = null; for (CartLineItem
-     * cartLineItem : this.getProductCartLineItems()) { if (topOrderedVariant == null) { topOrderedVariant =
-     * cartLineItem.getProductVariant(); } else if (cartLineItem.getProductVariant().getDiscountPercent() >
-     * topOrderedVariant.getDiscountPercent()) { topOrderedVariant = cartLineItem.getProductVariant(); } } return
-     * topOrderedVariant; }
-     */
-
-    @Deprecated
-    public List<CartLineItem> getProductLineItemWithAwb(String awb) {
-
-        // TODO: #warehouse implement this in shipping order
-
-        return null;
-        /*
-         * List<LineItem> lineItemList = new ArrayList<LineItem>(); for (CartLineItem cartLineItem :
-         * this.getProductCartLineItems()) { if (awb.equals(lineItem.getTrackingId())) { lineItemList.add(lineItem); } }
-         * return lineItemList;
-         */
-    }
-
-    @Deprecated
-    public List<CartLineItem> getProductLineItemByCourier(Courier courier) {
-        // TODO: #warehouse implement this in shipping order
-
-        return null;
-        /*
-         * List<LineItem> lineItemList = new ArrayList<LineItem>(); for (LineItem lineItem :
-         * this.getProductCartLineItems()) { if (courier.equals(lineItem.getCourier())) { lineItemList.add(lineItem); } }
-         * return lineItemList;
-         */
     }
 
     public Long getVersion() {
@@ -618,7 +552,4 @@ public class Order implements java.io.Serializable {
 	public Boolean isDeliveryEmailSent() {
 		return deliveryEmailSent;
 	}
-	/*
-			 * public void setBasketCategory(String basketCategory) { this.basketCategory = basketCategory; }
-			 */
 }
