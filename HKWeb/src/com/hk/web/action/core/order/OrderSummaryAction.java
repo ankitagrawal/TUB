@@ -112,19 +112,12 @@ public class OrderSummaryAction extends BaseAction {
         if (useRewardPoints)
             rewardPointsUsed = redeemableRewardPoints;
         if (order.getAddress() == null) {
-            return new RedirectResolution(SelectAddressAction.class);
-        }
+            return new RedirectResolution(SelectAddressAction.class);           }
 
         pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
-        Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
 
         order.setRewardPointsUsed(rewardPointsUsed);
         order = (Order) getBaseDao().save(order);
-
-        // billingAddress = userPreferenceDao.getOrCreateUserPreference(user).getBillingAddress();
-
-        // doing this after populating the pricingDto as this actionBean is also used to display pricing elsewhere
-        // using the useActionBean tag
         if (order.getAddress() == null) {
             // addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.address.not.selected"));
             return new RedirectResolution(SelectAddressAction.class);
@@ -135,41 +128,16 @@ public class OrderSummaryAction extends BaseAction {
 
         Address address = order.getAddress();
         String pin = address != null ? address.getPin() : null;
-        /*
-        codAllowed = courierService.isCodAllowed(pin);                 //todo ankit somewhere based on this, we show that your area is serviced just by pincode, that function is wrong, please correct it -- written by Ajeet  i guess correct checking at cod avialbility
-        if (codAllowed) {
-            Double payable = pricingDto.getGrandTotalPayable();
-            if (payable < codMinAmount || payable > codMaxAmount) {
-                codAllowed = false;
-            }
-        }
-        if(codAllowed){
-            if(subscriptionCartLineItems!=null && subscriptionCartLineItems.size()>0){
-                codAllowed=false;
-            }
-        }
-      */
-
-
-  codFailureMap = adminOrderService.isCODAllowed(order,pricingDto);
-
-        
+       codFailureMap = adminOrderService.isCODAllowed(order,pricingDto);
 
  // Ground Shipping logic starts ---
-//        groundShippedItemPresent = orderService.isOrderHasGroundShippedItem(order);
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
-
         if (groundShippedCartLineItemSet !=null && groundShippedCartLineItemSet.size() > 0)  {
             groundShippedItemPresent = true;
+              groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
         }
-        if (groundShippedItemPresent) {
-            groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
 
-            if (groundShippingAllowed) {
-                codAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
-            }
-        }
   // Ground Shipping logic ends --
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();

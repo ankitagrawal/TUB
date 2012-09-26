@@ -57,8 +57,7 @@ public class CourierServiceInfo implements java.io.Serializable {
   @Column(name = "is_deleted", nullable = true)
   private Boolean deleted;
 
-	//todo ankit in phase 0.2 please refactor this     -- hope we are going to change after release 0.1
-
+	//todo ankit in phase 0.2 please refactor this     
   @Column(name = "ground_shipping_available", nullable = false)  
   private boolean groundShippingAvailable;
 

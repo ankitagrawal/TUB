@@ -53,14 +53,11 @@ public class ShipmentServiceImpl implements ShipmentService {
             return null;
         }
 
-	    //todo ankit (is order ground shipped method, please write separately)  --- fixed
-        // Ground Shipping logic starts -- suggested courier
+  // Ground Shipping logic starts -- suggested courier
         boolean isGroundShipped = false;
         Courier suggestedCourier = null;
-        isGroundShipped =  isShippingOrderHasGroundShippedItem(shippingOrder);
-
-	    //todo ankit do we need 2 lines of code here, isgroundshiped will be either true or false  --- fixed
-            suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
+        isGroundShipped = isShippingOrderHasGroundShippedItem(shippingOrder);
+        suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
 //    Ground Shipping logic ends -- suggested courier
         if (suggestedCourier == null) {
             return null;
@@ -134,25 +131,25 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipmentDao.delete(shipment);
     }
 
-	@Override
-	public Shipment recreateShipment(ShippingOrder shippingOrder) {
-		Shipment newShipment = null;
-		if (shippingOrder.getShipment() != null) {
-			Shipment oldShipment=shippingOrder.getShipment();
-			Awb awb = oldShipment.getAwb();
-			awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-			awbService.save(awb);
-			newShipment = createShipment(shippingOrder);
-			shippingOrder.setShipment(newShipment);
-			delete(oldShipment);
-		}
-		return newShipment;
-	}
+    @Override
+    public Shipment recreateShipment(ShippingOrder shippingOrder) {
+        Shipment newShipment = null;
+        if (shippingOrder.getShipment() != null) {
+            Shipment oldShipment = shippingOrder.getShipment();
+            Awb awb = oldShipment.getAwb();
+            awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+            awbService.save(awb);
+            newShipment = createShipment(shippingOrder);
+            shippingOrder.setShipment(newShipment);
+            delete(oldShipment);
+        }
+        return newShipment;
+    }
 
-    public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder ){
+    public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder) {
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
-               return true;
+                return true;
             }
         }
         return false;

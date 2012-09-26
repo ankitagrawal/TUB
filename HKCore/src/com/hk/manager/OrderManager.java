@@ -713,8 +713,7 @@ public class OrderManager {
 
 		return margin;
 	}
-
-	 //todo ankit why is this method needed, please help me understand    -- k at modal window for item which ground shipped not allowed
+     	
      public void setGroundShippedItemQuantity(Order order) {
          Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
          for (CartLineItem cartLineItem : cartLineItems) {

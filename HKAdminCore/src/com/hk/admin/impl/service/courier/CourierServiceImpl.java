@@ -57,21 +57,21 @@ public class CourierServiceImpl implements CourierService {
         } else if (order.getPayment().getPaymentMode().equals(getPaymentService().findPaymentMode(EnumPaymentMode.COD))) {
             isCOD = true;
         }
-		return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD, false, false);
+		return getCourierServiceInfoDao().searchCouriers(order.getAddress().getPin(), isCOD, false, false);
 	}
 
 
 	public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping) {
-		return getCourierServiceInfoDao().getCouriersForPincode(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping);
+		return getCourierServiceInfoDao().searchCouriers(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping);
 	}
 
 	public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping) {
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-		return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, isGroundShipping, warehouse);
+		return getCourierServiceInfoDao().searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
 	}
 
 	public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
-		return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, isGroundShipping, warehouse);
+		return getCourierServiceInfoDao().searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
 	}
 
 
@@ -88,8 +88,8 @@ public class CourierServiceImpl implements CourierService {
 		return getCourierServiceInfoDao().getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
 	}
 
-	public CourierServiceInfo getCourierServiceInfoForPincode(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
-		return getCourierServiceInfoDao().getCourierServiceInfoForPincode(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+	public CourierServiceInfo searchCourierServiceInfo(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+		return getCourierServiceInfoDao().searchCourierServiceInfo(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
 	}
 
 	public CourierDao getCourierDao() {

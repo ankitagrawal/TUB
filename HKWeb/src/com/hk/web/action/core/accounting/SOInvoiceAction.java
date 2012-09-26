@@ -92,10 +92,9 @@ public class SOInvoiceAction extends BaseAction {
             barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f, 150, false);
             Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
             boolean isCod = shippingOrder.isCOD();
-            CourierServiceInfo courierServiceInfo = null;
-            
-	        //todo ankit    -- one liner -- fixed            
-            courierServiceInfo = courierService.getCourierServiceInfoForPincode(EnumCourier.BlueDart_COD.getId(), address.getPin(), isCod , false, false);
+            CourierServiceInfo courierServiceInfo = null;                
+
+            courierServiceInfo = courierService.searchCourierServiceInfo(EnumCourier.BlueDart_COD.getId(), address.getPin(), isCod , false, false);
 
             if (courierServiceInfo != null) {
                 routingCode = courierServiceInfo.getRoutingCode();

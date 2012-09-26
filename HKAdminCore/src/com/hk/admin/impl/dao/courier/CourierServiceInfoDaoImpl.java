@@ -21,7 +21,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 @Repository
 public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierServiceInfoDao{
 
-    public Courier getDefaultCourierForPincode(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
+    public Courier searchDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
            Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
            pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
            pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
@@ -35,7 +35,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
        }
 
 
-    public List<Courier> getCouriersForPincode(String pincode, boolean forCOD, boolean forGroundShipping , boolean forCodAvailableOnGroundShipping) {
+    public List<Courier> searchCouriers(String pincode, boolean forCOD, boolean forGroundShipping , boolean forCodAvailableOnGroundShipping) {
        List<CourierServiceInfo> servicesList = getCourierServiceInfoList(null, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
         if (servicesList != null && servicesList.size() > 0) {
             List<Courier> courierList = new ArrayList<Courier>();
@@ -76,7 +76,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
     }
 
 
-    public CourierServiceInfo getCourierServiceInfoForPincode(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+    public CourierServiceInfo searchCourierServiceInfo(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
         List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
        return courierServiceInfoList != null && courierServiceInfoList.size() > 0 ? courierServiceInfoList.get(0) : null;
 

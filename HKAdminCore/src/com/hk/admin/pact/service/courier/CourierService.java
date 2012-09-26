@@ -10,29 +10,27 @@ import java.util.List;
 
 public interface CourierService {
 
-	//todo ankit, lets discuss how can we make it better      --- k lets discuss     --- based on order
+    public List<Courier> getAllCouriers();
 
-	public List<Courier> getAllCouriers();
+    public Courier getCourierById(Long courierId);
 
-	public Courier getCourierById(Long courierId);
+    public Courier getCourierByName(String name);
 
-	public Courier getCourierByName(String name);
+    public boolean isCodAllowed(String pin);
 
-	public boolean isCodAllowed(String pin);
+    public List<Courier> getAvailableCouriers(Order order);
 
-	public List<Courier> getAvailableCouriers(Order order);
+    public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping);
 
-	public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping);
+    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
 
-	public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
+    public boolean isGroundShippingAllowed(String pin);
 
-	public boolean isGroundShippingAllowed(String pin);
+    public boolean isCodAllowedOnGroundShipping(String pin);
 
-	public boolean isCodAllowedOnGroundShipping(String pin);
+    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping);
 
-	public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping);
+    public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
 
-	public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
-
-	public CourierServiceInfo getCourierServiceInfoForPincode(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
+    public CourierServiceInfo searchCourierServiceInfo(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
 }

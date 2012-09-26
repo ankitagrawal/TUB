@@ -221,13 +221,7 @@ public class OrderServiceImpl implements OrderService {
     public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-	        //todo ankit just order status places is not a valid criteria if order is not split, check if currrently it has SO's or not, if SOs are null or empty, then split --- fixed 
-//         if (order.getContainsServices()) {
-//                String comments = "Order has services,abort system split and do a manual split";
-//                getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
-//                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " has services. abort system split and do a manual split");
-//            } else
-            if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+	         if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                 if (isShippingOrderExists(order)) {
                   order.setOrderStatus(getOrderStatus(EnumOrderStatus.InProcess));
                 }

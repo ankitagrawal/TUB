@@ -134,7 +134,7 @@ public class CourierServiceInfoAction extends BaseAction {
                 tmpObj = courierServiceInfo;
 //                CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(),
 //                        courierServiceInfo.getPincode().getPincode().toString());
-                     CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceInfoForPincode(courierServiceInfo.getCourier().getId(),
+                     CourierServiceInfo tmpObj2 = courierServiceInfoDao.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(),
                         courierServiceInfo.getPincode().getPincode().toString(), false, false, false);
                 if (tmpObj2 != null) {
                     if (courierServiceInfo.isDeleted()) {
@@ -172,7 +172,7 @@ public class CourierServiceInfoAction extends BaseAction {
         if (pincodeObj == null) {
             addRedirectAlertMessage(new SimpleMessage("This pincode is not in the master list, add it there first."));
         } else {
-            CourierServiceInfo courierServiceInfoLocal = courierService.getCourierServiceInfoForPincode(courierServiceInfo.getCourier().getId(), pincode , false, false,false);
+            CourierServiceInfo courierServiceInfoLocal = courierService.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(), pincode , false, false,false);
             if (courierServiceInfoLocal != null) {
                 courierServiceInfoLocal.setCodAvailable(courierServiceInfo.isCodAvailable());
                 courierServiceInfoLocal.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());

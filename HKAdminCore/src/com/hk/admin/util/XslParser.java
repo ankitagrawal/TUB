@@ -646,9 +646,7 @@ public Set<Pincode> readPincodeList(File objInFile) throws Exception {
 
           Double estimatedShippingCost = getDouble(getCellValue(XslConstants.ESTIMATED_SHIPPING_COST, rowMap, headerMap));
 
-
-	        //todo ankit can you please move this object creating to PincodeDefaultCourierDao   -- k will do
-            
+	        //todo ankit can you please move this object creating to PincodeDefaultCourierDao   -- k will do            
 
           PincodeDefaultCourier pincodeDefaultCourier = new PincodeDefaultCourier();
           pincodeDefaultCourier.setPincode(pincode);

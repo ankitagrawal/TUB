@@ -152,12 +152,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 //                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
 	          //todo ankit uncomplicate this, i have already things earlier to do so     --- fixed
                isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder) ;
-                
-                if (isGroundShipped) {
-                    availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
-                } else {
-                    availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false , false);
-                }
+              availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);                
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
