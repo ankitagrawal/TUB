@@ -165,72 +165,76 @@
 
             &nbsp; <span> <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>&#37; for <%=SubscriptionConstants.minSubscriptionDays%>-360 days and <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/>&#37; for 360-<%=SubscriptionConstants.maxSubscriptionDays%> day plans. &nbsp; </span>
             <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" target="_blank">(click here) </s:link> to know more
-            <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
+            <%--<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>--%>
             <script type="text/javascript">
-                function _addSubscription(res) {
-                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                    <c:choose>
-                    <c:when test="${sa.fromCart}">
-                        location.reload();
-                    </c:when>
-                    <c:otherwise>
-                        closeSubscriptionWindow();
-                        $('.message .line1').html("<strong>" + res.data.name + "</strong> "+ res.message);
-                        $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
+	            $(document).ready(function () {
+		            function _addSubscription(res) {
+			            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+			            <c:choose>
+			            <c:when test="${sa.fromCart}">
+				            location.reload();
+			            </c:when>
+			            <c:otherwise>
+				            closeSubscriptionWindow();
+				            $('.message .line1').html("<strong>" + res.data.name + "</strong> " + res.message);
+				            $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
 
-                        show_sub_message();
-                    </c:otherwise>
-                    </c:choose>
+				            show_sub_message();
+			            </c:otherwise>
+			            </c:choose>
 
-                    }else if(res.code == '<%=HealthkartResponse.STATUS_ERROR%>'){
-                        $('#subcriptionErrors').html(getErrorHtmlFromJsonResponse(res));
-                    }
-                    $('#gulal').show();
-                }
-                function show_sub_message() {
-                    $('.message').css("top", "70px");
-                    $('.message').animate({
-                        opacity: 1
-                    }, 500);
-                }
-                $('.addSubscriptionForm').ajaxForm({dataType: 'json', success: _addSubscription});
+			            } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+				            $('#subcriptionErrors').html(getErrorHtmlFromJsonResponse(res));
+			            }
+			            $('#gulal').show();
+		            }
+
+		            function show_sub_message() {
+			            $('.message').css("top", "70px");
+			            $('.message').animate({
+				            opacity: 1
+			            }, 500);
+		            }
+
+		            $('.addSubscriptionForm').ajaxForm({dataType: 'json', success: _addSubscription});
 
 
-                function closeSubscriptionWindow(){
-                    $("#subscriptionWindow").jqmHide();
-                    $("#addSubscriptionWindow").jqmHide();
-                }
+		            function closeSubscriptionWindow() {
+			            $("#subscriptionWindow").jqmHide();
+			            $("#addSubscriptionWindow").jqmHide();
+		            }
 
-                $('#subscriptionPeriod,#subscriptionFrequency,#subscriptionQtyPerDelivery').change(function(){
-                    var frequency=$('#subscriptionFrequency').val();
-                    var qtyPerDelivery=$('#subscriptionQtyPerDelivery').val();
-                    var subscriptionPeriod=$('#subscriptionPeriod').val();
-                    var totalQty=Math.round(subscriptionPeriod/frequency)*qtyPerDelivery;
-                    if(totalQty !=null && totalQty!=undefined && !isNaN(totalQty) && totalQty !=Infinity){
-                        updateTotalQtyAndPrice(totalQty);
-                    }
-                }).change();
+		            $('#subscriptionPeriod,#subscriptionFrequency,#subscriptionQtyPerDelivery').change(function() {
+			            var frequency = $('#subscriptionFrequency').val();
+			            var qtyPerDelivery = $('#subscriptionQtyPerDelivery').val();
+			            var subscriptionPeriod = $('#subscriptionPeriod').val();
+			            var totalQty = Math.round(subscriptionPeriod / frequency) * qtyPerDelivery;
+			            if (totalQty != null && totalQty != undefined && !isNaN(totalQty) && totalQty != Infinity) {
+				            updateTotalQtyAndPrice(totalQty);
+			            }
+		            }).change();
 
-                function updateTotalQtyAndPrice(totalQty){
-                    var subscriptionPrice180=Math.round(${productVariant.hkPrice}-${sp.subscriptionDiscount180Days}*${productVariant.markedPrice}/100);
-                    var subscriptionPrice360=Math.round(${productVariant.hkPrice}-${sp.subscriptionDiscount360Days}*${productVariant.markedPrice}/100);
-                    var subscriptionPeriod=$('#subscriptionPeriod').val();
-                    $('#totalQuantity').html('<b>'+totalQty+'</b>');
-                    $('#subscriptionQty').attr('value',totalQty);
-                    if(subscriptionPeriod<360){
-                        $('#subscriptionPrice').html('<strong><b>Rs '+subscriptionPrice180+'</b></strong>');
-                        $('#extraDiscount').html('(extra  ${sp.subscriptionDiscount180Days} &#37; off)' );
-                        $('#totalSubscriptionPrice').html('<strong><b>Rs '+(subscriptionPrice180*totalQty)+'</b></strong>');
-                    }else{
-                        $('#subscriptionPrice').html('<strong><b>Rs '+subscriptionPrice360+'</b></strong>');
-                        $('#extraDiscount').html('(extra ${sp.subscriptionDiscount360Days} &#37; off)' );
-                        $('#totalSubscriptionPrice').html('<strong><b>Rs '+(subscriptionPrice360*totalQty)+'</b></strong>');
-                    }
-                }
+		            function updateTotalQtyAndPrice(totalQty) {
+			            var subscriptionPrice180 = Math.round(${productVariant.hkPrice}-${sp.subscriptionDiscount180Days} * ${productVariant.markedPrice}/100);
+			            var subscriptionPrice360 = Math.round(${productVariant.hkPrice}-${sp.subscriptionDiscount360Days} * ${productVariant.markedPrice}/100);
+			            var subscriptionPeriod = $('#subscriptionPeriod').val();
+			            $('#totalQuantity').html('<b>' + totalQty + '</b>');
+			            $('#subscriptionQty').attr('value', totalQty);
+			            if (subscriptionPeriod < 360) {
+				            $('#subscriptionPrice').html('<strong><b>Rs ' + subscriptionPrice180 + '</b></strong>');
+				            $('#extraDiscount').html('(extra  ${sp.subscriptionDiscount180Days} &#37; off)');
+				            $('#totalSubscriptionPrice').html('<strong><b>Rs ' + (subscriptionPrice180 * totalQty) + '</b></strong>');
+			            } else {
+				            $('#subscriptionPrice').html('<strong><b>Rs ' + subscriptionPrice360 + '</b></strong>');
+				            $('#extraDiscount').html('(extra ${sp.subscriptionDiscount360Days} &#37; off)');
+				            $('#totalSubscriptionPrice').html('<strong><b>Rs ' + (subscriptionPrice360 * totalQty) + '</b></strong>');
+			            }
+		            }
 
-                $('#subscriptionFrequency').jStepper({minValue:${sp.minFrequencyDays},maxValue:${sp.maxFrequencyDays} });
-                $('#subscriptionPeriod').jStepper({minValue:<%=SubscriptionConstants.minSubscriptionDays%>,maxValue:<%=SubscriptionConstants.maxSubscriptionDays%> });
-                $("#subscriptionStartDate" ).datepicker({ minDate: 0, maxDate: "+2M ",dateFormat : 'dd/mm/yy' });
+		            $('#subscriptionFrequency').jStepper({minValue:${sp.minFrequencyDays},maxValue:${sp.maxFrequencyDays} });
+		            $('#subscriptionPeriod').jStepper({minValue:<%=SubscriptionConstants.minSubscriptionDays%>,maxValue:<%=SubscriptionConstants.maxSubscriptionDays%> });
+		            $("#subscriptionStartDate").datepicker({ minDate: 0, maxDate: "+2M ",dateFormat : 'dd/mm/yy' });
+	            });
             </script>
         </div>
 

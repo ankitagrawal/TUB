@@ -29,4 +29,6 @@ public interface AdminOrderService {
     public Order putOrderOnHold(Order order);
 
     public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser);
+
+	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order);
 }

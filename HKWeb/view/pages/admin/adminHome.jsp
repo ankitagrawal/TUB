@@ -2,6 +2,8 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.core.EnumPermission" %>
+<%@ page import="com.hk.constants.core.EnumRole" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
@@ -57,8 +59,11 @@
 				beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
 	</c:if>
 	<h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
-	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+	<shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction"> Ant Builds </s:link></h3>
+	</shiro:hasRole>
+    <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+		<h3><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction"> Populate Busy Data </s:link></h3>
 	</shiro:hasRole>
 		<%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
@@ -108,6 +113,9 @@
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RelatedProductAction">Update Related Products</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.subscription.CreateEditSubscriptionProductAction">Create/edit Subscription(s) <br/><span class="sml gry">(includes excels)</span></s:link> </h3>
   <h3><s:link beanclass="com.hk.web.action.admin.store.StorePricingAction">Store pricing</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.AddEyeConfigAction">Add Eye Config</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction">Similar Products</s:link></h3>      
+
 
 </div>
 
@@ -207,6 +215,16 @@
 		<s:param name="courierDownloadFunctionality" value="false"/>
 	</s:link></h3>
 
+	<shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
+		<h3>
+			<s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
+					event="generateCourierReport">Add/Edit Hub
+				<s:param name="courierDownloadFunctionality" value="false"/>
+			</s:link>
+		</h3>
+	</shiro:hasRole>
+
+
 </div>
 
 <div class="cl"></div>
@@ -260,6 +278,11 @@
 		<s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction"
 		        event="listOutOfStock">Out of Stock List</s:link></h3>
 
+	<h3>
+		<s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction">Update Variant Price
+		<br/><span class="sml gry" style="color:red">(List of Variants - MRP Mismatch)</span>
+		</s:link></h3>
+
 	<shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction"
@@ -310,7 +333,7 @@
 <div class="left roundBox">
 	<h2>Affiliate</h2>
 
-	<h3><s:link beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction">Verify Affiliates</s:link></h3>
+	<h3><s:link beanclass="com.hk.web.action.core.affiliate.VerifyRejectAffiliateAction">Verify Affiliates</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction">Affiliate Account</s:link></h3>
 
@@ -382,9 +405,57 @@
 <div class="left roundBox">
 	<h2>Healthkart Delivery</h2>
 
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
+                title="Download Healthkart Delivery Worksheet">Mark Shipments Inward at Hub</s:link></h3>
 	<h3>
-		<s:link beanclass="com.hk.web.action.admin.courier.HKDeliveryAction"
-		        title="Download Healthkart Delivery Worksheet">Download Healthkart Delivery Worksheet</s:link></h3>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
+                    title="Download Healthkart Delivery Runsheet" event="previewRunsheet">Download Delivery Runsheet
+                <s:param name="runsheetPreview" value="false"/>
+            </s:link></h3>
+    <h3>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
+                    title="View Runsheets" >View/Edit Runsheets
+            </s:link>
+    </h3>
+    <h3>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
+                    title="View Consignments" event="searchConsignments" >View/Edit Consignments
+            </s:link>
+    </h3>
+
+    <h3>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction"
+                    title="View Payments History" event="searchPaymentReconciliation" >View Payments History
+            </s:link>
+    </h3>
+
+
+	<%--<shiro:hasPermission name="<%=EnumPermission.VIEW_CONSIGNMENT_TRACKING%>" >--%>
+		<h3>
+			<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
+					title="Track Consignment" event="trackConsignment">Track Consignment
+				<s:param name="doTracking" value="false"/>
+			</s:link>
+		</h3>
+
+	<h3>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction"
+                    title="View Payments History" event="hkDeliveryreports" >HKDelivery Reports
+            </s:link>
+    </h3>
+
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction"
+                title="Add/Edit Hub">Add/Edit Hub
+        </s:link>
+    </h3>
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction" event="addUserToHub"
+                title="Add agent">Add agent to hub
+        </s:link>
+    </h3>
+
 
 </div>
 

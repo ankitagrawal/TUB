@@ -17,6 +17,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" var="actionQueueBean" event="pre"/>
 
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
+<c:set var="orderStatusPlaced" value="<%=EnumOrderStatus.Placed.getId()%>"/>
 
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
@@ -91,6 +92,21 @@
                 return false;
             });
 
+            $('.manualEscalate').click(function() {
+                var proceed = confirm('This link will escalate SO only if order can be processed');
+                if (!proceed) return false;
+
+                var clickedLink = $(this);
+                $.getJSON(clickedLink.attr('href'), function(res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        alert(res.message);
+                        window.location.reload();
+                    }
+                });
+
+                return false;
+            });
+
             $('.delieverSO').click(function() {
                 var proceed = confirm('You should mark orders delieverd only if they have only drop ship products. Continue? ');
                 if (!proceed) return false;
@@ -143,22 +159,34 @@
                 return false;
             });
 
+            $('.splitBOLink').click(function() {
 
-        <%--
-     Set default courier
+                var clickedLink = $(this);
+                $.getJSON(clickedLink.attr('href'), function(res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        alert(res.message);
+                        window.location.reload();
+                    }
+                });
 
-       $('.setAsDefaultCourierLink').click(function() {
+                return false;
+            });
 
-         var clickedLink = $(this);
-         $.getJSON($(this).attr('href'), {'courier':$(this).parents('.addressRow').find('.courierId').val()}, function(res) {
-           if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-             clickedLink.parents('.addressRow').find('.addressDefaultCourier').html(res.data.courier.name);
-           }
-         });
+            <%--
+                 Set default courier
 
-         return false;
-       });
-        --%>
+                   $('.setAsDefaultCourierLink').click(function() {
+
+                     var clickedLink = $(this);
+                     $.getJSON($(this).attr('href'), {'courier':$(this).parents('.addressRow').find('.courierId').val()}, function(res) {
+                       if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                         clickedLink.parents('.addressRow').find('.addressDefaultCourier').html(res.data.courier.name);
+                       }
+                     });
+
+                     return false;
+                   });
+                    --%>
 
         <%--
         Order status hold/unhold toggle functionality
@@ -385,6 +413,13 @@
                             </c:choose>
                         </div>
                         <div class="floatright">
+                            <c:if test="${order.orderStatus.id == orderStatusPlaced}">
+                                (<s:link beanclass="com.hk.web.action.admin.order.split.BulkOrderSplitterAction"
+                                         event="splitSingleOrder" class="splitBOLink">
+                                Split Order
+                                <s:param name="order" value="${order}"/>
+                            </s:link>)
+                            </c:if>
                             (<s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
                             Order Lifecycle
                             <s:param name="order" value="${order}"/>

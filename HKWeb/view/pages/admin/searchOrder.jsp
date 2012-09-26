@@ -191,7 +191,6 @@
           <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="paymentModes" value="id"
                                      label="name"/>
         </s:select></li>
-          <%--<li><label>Tracking ID</label> <s:text name="trackingId" style="width: 120px;"/></li>--%>
         <li>
           <label>Start
             date</label><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
@@ -235,18 +234,22 @@
 
   <span class="orderStatusName or">${order.orderStatus.name}</span>
   <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold}">
-    <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldOrder" title="Unhold Order"
+  Now to hold orders please use action queue !!!
+  
+    <!--<s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldOrder" title="Unhold Order"
             class="orderStatusLink onHoldStatusLink"
             style="${order.orderStatus.id == orderStatusHold ? '': 'display:none;'}">
       <s:param name="order" value="${order.id}"/>
       <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Order" title="Unhold Order"/>
     </s:link>
-    <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
+    -->
+    <!--<s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
             class="orderStatusLink normalStatusLink"
             style="${order.orderStatus.id == orderStatusHold ? 'display:none;': ''}">
       <s:param name="order" value="${order.id}"/>
       <img src="<hk:vhostImage/>/images/admin/icon_hold.png" alt="Put Order on Hold" title="Put Order on Hold"/>
     </s:link>
+     -->
   </c:if>
   <c:if test="${order.orderStatus.id == orderStatusCancelled}">
     <br>
@@ -483,6 +486,9 @@
     <c:if test="${empty order.comments}">Comments</c:if>
     <s:param name="order" value="${order}"/>
   </s:link>
+    <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT_L3_ADMINS%>">
+      Cod Converter Link  ${hk:getCodConverterLink(order)}
+    </shiro:hasAnyRoles>
 </td>
 <td class="has_table">
   <c:if test="${not empty order.shippingOrders}">

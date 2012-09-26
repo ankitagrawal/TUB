@@ -6,12 +6,11 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.manager.DeliveryStatusUpdateManager;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
@@ -37,7 +36,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
     private String gatewayOrderId;
     String comments;
     private boolean visible = false;
-    private static Logger logger = LoggerFactory.getLogger(ChangeShipmentDetailsAction.class);
+//    private static Logger logger = LoggerFactory.getLogger(ChangeShipmentDetailsAction.class);
 
 
     @Autowired
@@ -46,33 +45,35 @@ public class ChangeShipmentDetailsAction extends BaseAction {
     AdminShippingOrderService adminShippingOrderService;
     @Autowired
     ShippingOrderService shippingOrderService;
+	@Autowired
+	DeliveryStatusUpdateManager deliveryAwaitingUpdateManager;
 
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+        return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
     }
 
     public Resolution search() {
         if (gatewayOrderId != null) {
             shippingOrder = shippingOrderService.findByGatewayOrderId(gatewayOrderId);
             if (shippingOrder != null) {
-                if (shippingOrder.getOrderStatus().getId() >= EnumShippingOrderStatus.SO_Shipped.getId()) {
+                if ( EnumShippingOrderStatus.getStatusForChangingShipmentDetails().contains(shippingOrder.getOrderStatus())) {
                     originalShippingOrderStatus = shippingOrder.getOrderStatus().getName();
                     shipment = shippingOrder.getShipment();
                     visible = true;
-                    return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+                    return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
                 } else {
-                    addRedirectAlertMessage(new SimpleMessage("Order with given id is not yet shipped"));
-                    return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+                    addRedirectAlertMessage(new SimpleMessage("Only  Shipped  SO Can be Searched"));
+                    return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
                 }
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Order with given id does not exist"));
-                return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+                return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please enter gateway order Id"));
-            return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+            return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
         }
     }
 
@@ -81,7 +82,6 @@ public class ChangeShipmentDetailsAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Enter Tracking ID"));
             return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
         }
-
 
         Awb attachedAwb = shipment.getAwb();
         Awb finalAwb = attachedAwb;
@@ -119,8 +119,8 @@ public class ChangeShipmentDetailsAction extends BaseAction {
             shipment.setAwb(finalAwb);
         }
 
-        shippingOrder.setShipment(shipment);
 
+        shippingOrder.setShipment(shipment);
         ShippingOrderStatus shippingOrderStatus = shippingOrder.getOrderStatus();
         Long shippingOrderStatusId = shippingOrderStatus.getId();
         String shippingOrderStatusName = shippingOrder.getOrderStatus().getName();
@@ -128,9 +128,13 @@ public class ChangeShipmentDetailsAction extends BaseAction {
         if (!shippingOrderStatusName.equals(originalShippingOrderStatus)) {
             if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Delivered.getId())) {
                 adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
-            } else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
+            }
+
+            else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
                 adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
-            } else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Lost.getId())) {
+            }
+
+            else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Lost.getId())) {
                 adminShippingOrderService.markShippingOrderAsLost(shippingOrder);
             }
             if (!originalShippingOrderStatus.equals(shippingOrderStatusName)) {
@@ -139,9 +143,34 @@ public class ChangeShipmentDetailsAction extends BaseAction {
             }
         }
         shippingOrderService.save(shippingOrder);
+	    visible = false;
         addRedirectAlertMessage(new SimpleMessage("Changes Saved."));
-        return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
+        return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
     }
+
+
+	public Resolution markDelivered() {
+		shippingOrder.setShipment(shipment);
+		deliveryAwaitingUpdateManager.updateCourierDeliveryStatus(shippingOrder, shipment, shipment.getAwb().getAwbNumber(), shipment.getDeliveryDate());
+		comments = "Status changed from " + originalShippingOrderStatus + " to " + shippingOrder.getOrderStatus().getName();
+		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
+		visible = false;
+		addRedirectAlertMessage(new SimpleMessage("Changes Saved."));
+		return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
+	}
+
+
+	public Resolution markLost() {
+		shippingOrder.setShipment(shipment);
+		adminShippingOrderService.markShippingOrderAsLost(shippingOrder);
+		comments = "Status changed from " + originalShippingOrderStatus + " to " + shippingOrder.getOrderStatus().getName();
+		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
+		visible = false;
+		addRedirectAlertMessage(new SimpleMessage("Changes Saved."));
+		return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
+
+	}
+
 
     public ShippingOrder getShippingOrder() {
         return shippingOrder;
@@ -191,5 +220,10 @@ public class ChangeShipmentDetailsAction extends BaseAction {
     public void setAttachedCourier(Courier attachedCourier) {
         this.attachedCourier = attachedCourier;
     }
+
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
+    
 
 }

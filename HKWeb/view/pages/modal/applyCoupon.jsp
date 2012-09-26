@@ -54,7 +54,7 @@
 
     <c:if test="${couponBean.error != null}">
       <p>
-        <c:if test="${couponBean.error eq error_role}">
+       <%-- <c:if test="${couponBean.error eq error_role}">
           Possible cause:
           <shiro:notAuthenticated>You are not logged in to your HealthKart account</shiro:notAuthenticated>
           <shiro:hasAnyRoles name='<%=RoleConstants.HK_DEACTIVATED+","+RoleConstants.HK_UNVERIFIED%>'>
@@ -87,7 +87,7 @@
           <shiro:hasAnyRoles name='<%=RoleConstants.HK_BLOCKED%>'>
             Your account has been blocked.
           </shiro:hasAnyRoles>
-        </c:if>
+        </c:if>--%>
         <c:if test="${couponBean.error eq error_alreadyApplied}">
           The offer associated with this coupon has now been selected. <br/>
 

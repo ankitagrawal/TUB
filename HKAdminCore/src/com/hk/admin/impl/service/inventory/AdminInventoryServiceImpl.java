@@ -14,6 +14,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
@@ -92,7 +93,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     public Long getBookedInventory(Sku sku) {
         Long bookedInventoryForSku = getShippingOrderDao().getBookedQtyOfSkuInQueue(sku);
         Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(sku.getProductVariant());
-        return bookedInventoryForSku + bookedInventoryForProductVariant;
+        return bookedInventoryForSku + bookedInventoryForProductVariant;           
     }
 
     public Long getBookedInventory(ProductVariant productVariant) {
@@ -262,6 +263,11 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         }
         return count;
     }
+
+
+     public List<VariantConfig> getAllVariantConfig(){
+         return getAdminPVIDao().getAllVariantConfig();
+     }
 
     public SkuGroup getSkuGroupByHkBarcode(String barcode) {
         return getSkuGroupDao().getSkuGroup(barcode);

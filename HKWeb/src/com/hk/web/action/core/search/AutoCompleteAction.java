@@ -16,6 +16,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.TermsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -27,6 +28,9 @@ public class AutoCompleteAction extends BaseAction {
 
     @Value("#{hkEnvProps['" + Keys.Env.solrUrl + "']}")
     String                solrUrl;
+
+    @Autowired
+    CommonsHttpSolrServer server;
 
     @SuppressWarnings("unused")
     private static Logger logger = LoggerFactory.getLogger(SearchAction.class);
@@ -43,12 +47,6 @@ public class AutoCompleteAction extends BaseAction {
 
         List<String> suggestedStrings = new ArrayList<String>();
         List<TermsResponse.Term> items = null;
-        CommonsHttpSolrServer server = null;
-        try {
-            server = new CommonsHttpSolrServer(solrUrl);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         // escape special characters
         SolrQuery query = new SolrQuery();

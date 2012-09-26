@@ -2,6 +2,7 @@ package com.hk.pact.dao.catalog.product;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +48,8 @@ public interface ProductDao extends BaseDao {
 
     public List<Product> getAllProductBySubCategory(String category);
 
+    public List<Product> getAllNonDeletedProducts();
+
     public List<Product> getAllProductByBrand(String brand);
 
     public Page getAllProductsByCategoryAndBrand(String category, String brand, int page, int perPage);
@@ -58,6 +61,8 @@ public interface ProductDao extends BaseDao {
     public Page getProductByCategoryAndBrand(String category, String brand, int page, int perPage);
 
     public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage);
+
+	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> filters, int groupsCount, Double minPrice, Double maxPrice, int page, int perPage);
 
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage);
 
@@ -83,4 +88,7 @@ public interface ProductDao extends BaseDao {
 
     public ProductOption findProductOptionByNameAndValue(String name, String value);
 
+	public List<ProductOption> getProductOptions(List<Long> options);
+
+    List<Product> getAllProductsById(List<String> productIdList);
 }

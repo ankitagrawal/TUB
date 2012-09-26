@@ -1,9 +1,19 @@
 package com.hk.admin.impl.service.order;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.admin.manager.AdminEmailManager;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.order.CartLineItem;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,17 +57,27 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private RewardPointService rewardPointService;
     @Autowired
     private OrderService orderService;
-    private AdminShippingOrderService adminShippingOrderService;
-    @Autowired
-    private AffilateService affilateService;
-    @Autowired
-    private ReferrerProgramManager referrerProgramManager;
-    @Autowired
-    private EmailManager emailManager;
-    @Autowired
+	private AdminShippingOrderService adminShippingOrderService;
+	@Autowired
+	ShippingOrderService shippingOrderService;
+	@Autowired
+	ShipmentService shipmentService;
+	@Autowired
+	private AffilateService affilateService;
+	@Autowired
+	InventoryService inventoryService;
+	@Autowired
+	LineItemDao lineItemDao;
+	@Autowired
+	private ReferrerProgramManager referrerProgramManager;
+	@Autowired
+	private EmailManager emailManager;
+	@Autowired
     private OrderLoggingService       orderLoggingService;
     @Autowired
     private SubscriptionOrderService   subscriptionOrderService;
+    @Autowired
+    private AdminEmailManager adminEmailManager;
 
 
     @Transactional
@@ -214,22 +234,31 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Transactional
     public Order markOrderAsDelivered(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Delivered, EnumOrderStatus.Delivered);
-        if (isUpdated) {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
-            rewardPointService.approvePendingRewardPointsForOrder(order);
-            // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
-            // check if payment mode was COD and email hasn't been sent yet
-            // sendEmailToServiceProvidersForOrder(order);
+	    if (!order.getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())) {
+		    boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Delivered, EnumOrderStatus.Delivered);
+		    if (isUpdated) {
+			    logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
+			    rewardPointService.approvePendingRewardPointsForOrder(order);
+			    affilateService.approvePendingAffiliateTxn(order);
+			    // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
+			    // check if payment mode was COD and email hasn't been sent yet
+			    // sendEmailToServiceProvidersForOrder(order);
 
-            //if the order is a subscription order update subscription status
-            subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
+			    //if the order is a subscription order update subscription status
+			    subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
 
-        }
-        return order;
+			    if(!order.isDeliveryEmailSent() && order.getUser().getStore() != null && order.getUser().getStore().getId() == 1L) {
+				    if(getAdminEmailManager().sendOrderDeliveredEmail(order)) {
+					    order.setDeliveryEmailSent(true);
+					    getOrderService().save(order);
+				    };
+			    }
+		    }
+	    }
+	    return order;
     }
 
-    @Transactional
+	@Transactional
     public Order markOrderAsRTO(Order order) {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Returned, EnumOrderStatus.RTO);
         if (isUpdated) {
@@ -254,10 +283,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     @Transactional
     public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
-        /*
-        * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.ActionAwaiting.getId())); order =
-        * orderDaoProvider.get().save(order);
-        */
 
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
         logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
@@ -265,7 +290,58 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return order;
     }
 
-    public UserService getUserService() {
+	@Override
+	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order) {
+		Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+
+		boolean shippingOrderExists = false;
+
+		for (CartLineItem cartLineItem : productCartLineItems) {
+			if (lineItemDao.getLineItem(cartLineItem) != null) {
+				shippingOrderExists = true;
+			}
+		}
+
+		Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+
+		if (!shippingOrderExists) {
+			shippingOrders = getOrderService().createShippingOrders(order);
+		}
+
+		if (shippingOrders != null && shippingOrders.size() > 0) {
+			shippingOrderExists = true;
+			// save order with InProcess status since shipping orders have been created
+			order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
+			order.setShippingOrders(shippingOrders);
+			order = getOrderService().save(order);
+
+			/**
+			 * Order lifecycle activity logging - Order split to shipping orders
+			 */
+			orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+
+			// auto escalate shipping orders if possible
+			if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
+				for (ShippingOrder shippingOrder : shippingOrders) {
+					shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+				}
+			}
+
+			for (ShippingOrder shippingOrder : shippingOrders) {
+				shipmentService.createShipment(shippingOrder);
+			}
+
+		}
+		//Check Inventory health of order lineitems
+		for (CartLineItem cartLineItem : productCartLineItems) {
+			inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+		}
+
+		return shippingOrderExists;
+	}
+
+
+	public UserService getUserService() {
         return userService;
     }
 
@@ -347,4 +423,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     public void setSubscriptionOrderService(SubscriptionOrderService subscriptionOrderService) {
         this.subscriptionOrderService = subscriptionOrderService;
     }
+
+    public AdminEmailManager getAdminEmailManager() {
+        return adminEmailManager;
+    }
+    
+    
 }

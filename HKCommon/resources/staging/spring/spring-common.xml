@@ -100,6 +100,13 @@
 		<property name="securityManager" ref="securityManager" />
 	</bean>
 
+    <bean id="solr" class="org.apache.solr.client.solrj.impl.CommonsHttpSolrServer">
+        <constructor-arg value="http://localhost:8983/solr"/>
+        <property name="connectionTimeout" value="2000"/>
+        <property name="defaultMaxConnectionsPerHost" value="10"/>
+        <property name="maxTotalConnections" value="50"/>
+    </bean>
+
 	<!--  <bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="/WEB-INF/environment.properties" />

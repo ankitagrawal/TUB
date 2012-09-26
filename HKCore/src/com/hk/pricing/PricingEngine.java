@@ -359,20 +359,6 @@ public class PricingEngine {
                 // }
             }
 
-            /***********************************************************************************************************
-             * * First Proposed Affiliate Discount Implementation *
-             * *************************************************************************** if
-             * (offerInstance.getOffer().getOfferIdentifier().startsWith(OfferConstants.affiliateCommissionOffer)) {
-             * Double affiliateCategoryCommission; for (LineItemWrapper lineItemWrapper : lineItemWrappers) { LineItem
-             * lineitem = lineItemWrapper.getLineItem(); if ((lineitem.isType(EnumLineItemType.Product))) { if
-             * (lineitem.getProductVariant().getAffiliateCategory() != null) { affiliateCategoryCommission =
-             * lineitem.getProductVariant().getAffiliateCategory().getCategoryCommissionRank().getCommission();
-             * affiliateDiscountLineItems.add(createAffiliateDiscountLineItem(lineitem.getProductVariant(),
-             * lineitem.getQty(), lineitem.getHkPrice(), lineitem.getHkPrice() * lineitem.getQty() *
-             * (affiliateCategoryCommission) * 0.01 * offerAction.getDiscountPercentOnHkPrice())); } } }
-             * offerActionSuccess = true; offerInstance.setActive(false); }
-             */
-
             if (offerInstance != null && offerInstance.getOffer().getOfferIdentifier() != null
                     && offerInstance.getOffer().getOfferIdentifier().equals(OfferConstants.HK_EMPLOYEE_OFFER)) {
                 for (CartLineItem lineItem : lineItems) {

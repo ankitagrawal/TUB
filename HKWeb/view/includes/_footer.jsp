@@ -16,7 +16,7 @@
             <a href="${pageContext.request.contextPath}/pages/aboutCompany.jsp"><span class="txt-white">About Us</span></a>
           </li>
           <li><a href="${pageContext.request.contextPath}/affiliate"><span class="txt-white">Affiliate</span></a></li>
-          <li><a href="${pageContext.request.contextPath}/b2b"><span class="txt-white">For Business</span></a></li>
+          <%--<li><a href="${pageContext.request.contextPath}/b2b"><span class="txt-white">For Business</span></a></li>--%>
           <li><s:link beanclass="com.hk.web.action.pages.ContactAction"><span class="txt-white">Contact Us</span></s:link>
           </li>
           <li><a href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp"><span class="txt-white">Terms & Conditions</span></a>
@@ -88,7 +88,7 @@
     <div class='floatfix'></div>
     <div class="footer-bottom" style=" padding: 1 0;">
       <div class="fb-contents">
-        <span style="color: white;" class="serif"> &copy; 2012 healthkart.com</span>
+        <span class="serif"> &copy; 2012 healthkart.com</span>
 
         <a href="http://www.facebook.com/healthkart" target="_blank" style="border-bottom:none">
           <img src="<hk:vhostImage/>/images/banners/home/facebook.png"></a>

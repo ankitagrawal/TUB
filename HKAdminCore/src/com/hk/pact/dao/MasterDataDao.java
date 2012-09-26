@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
+import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
@@ -115,6 +118,15 @@ public interface MasterDataDao
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation();
 
+    public List<Hub> getHubList();
+
+    public List<User>  getHKDeliveryAgentList();
+
+    public List<RunsheetStatus> getRunsheetStatusList();
+
     public List<SubscriptionStatus> getSubscriptionStatusList();
 
+    public List<User> getAgentsWithOpenRunsheet();
+
+    public List<ConsignmentStatus> getConsignmentStatusList();
 }

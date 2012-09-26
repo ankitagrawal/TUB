@@ -194,7 +194,8 @@ public class XslParser {
       String refProdId = "";
       Boolean refIsService = false;
       Product refProduct = null;
-      while (objRowIt.hasNext()) {
+	    Category primaryCategory = null;
+	    while (objRowIt.hasNext()) {
         rowMap = getRowMap(objRowIt);
 
         // checking if variantId is present. if no variant id is present then tis is a blank row, continue
@@ -233,8 +234,9 @@ public class XslParser {
           product = new Product();
           product.setCategories(getCategroyListFromCategoryString(getCellValue(XslConstants.CATEGORY, rowMap, headerMap)));
           List<Category> listFromPrimaryCategoryString = getCategroyListFromCategoryString(getCellValue(XslConstants.PRIMARY_CATEGORY, rowMap, headerMap));
+	      primaryCategory = listFromPrimaryCategoryString.get(0);
           if (listFromPrimaryCategoryString != null && !listFromPrimaryCategoryString.isEmpty()) {
-            product.setPrimaryCategory(listFromPrimaryCategoryString.get(0));
+            product.setPrimaryCategory(primaryCategory);
           }
           String secondaryCategory = getCellValue(XslConstants.SECONDARY_CATEGORY, rowMap, headerMap);
           if (StringUtils.isNotBlank(secondaryCategory)) {
@@ -245,7 +247,7 @@ public class XslParser {
             // Set secondary category same as primary category if secondary category is null
             else {
               if (listFromPrimaryCategoryString != null && !listFromPrimaryCategoryString.isEmpty()) {
-                product.setSecondaryCategory(listFromPrimaryCategoryString.get(0));
+                product.setSecondaryCategory(primaryCategory);
               }
             }
           }
@@ -284,7 +286,8 @@ public class XslParser {
           product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XslConstants.RELATED_PRODUCTS, rowMap, headerMap)));
           productDeleted = true;
           product.setDeleted(productDeleted);
-            product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap),
+          product.setCodAllowed(true);
+          product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap),
               getCellValue(XslConstants.SUPPLIER_STATE, rowMap, headerMap), rowCount));
 
           product.setMaxDays(getLong(getCellValue(XslConstants.MAX_DAYS_TO_PROCESS, rowMap, headerMap)));
@@ -395,16 +398,13 @@ public class XslParser {
         }
         productVariant.setOrderRanking(variantSortingOrder);
         productVariant.setAffiliateCategory(getAffiliateCategoryDao().getAffiliateCategoryByName(
-            (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) != null ? (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) : ""));
+            (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) != null ? (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) : primaryCategory.getName()));
         if (StringUtils.isNotBlank(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap))) {
           if (getBaseDao().get(ProductImage.class, getLong(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap))) != null) {
             productVariant.setMainImageId(getLong(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap)));
           }
         }
-        // productVariant.setQty(getLong(getCellValue(INVENTORY, rowMap, headerMap)));
-        // TODO: #warehouse fix this
-        // productVariant.setCutOffInventory(getLong(getCellValue(CUTOFF_INVENTORY, rowMap, headerMap)));
-        productVariants.add(productVariant);
+          productVariants.add(productVariant);
 
         logger.debug("read row " + rowCount);
         rowCount++;
@@ -1195,68 +1195,56 @@ public Set<Pincode> readPincodeList(File objInFile) throws Exception {
     return relatedProducts;
   }
 
-  public Set<Product> readAndSetRelatedProducts(File objInFile) throws Exception {
-    Set<Product> productSet = new HashSet<Product>();
+	public Set<Product> readAndSetRelatedProducts(File objInFile) throws Exception {
+		Set<Product> productSet = new HashSet<Product>();
 
-    InputStream poiInputStream = new FileInputStream(objInFile);
-    POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
+		InputStream poiInputStream = new FileInputStream(objInFile);
+		POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
 
-    HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
+		HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
 
-    // Assuming there is only one sheet, the first one only will be picked
-    for (int i = 0; i < 8; i++) {
-      HSSFSheet excelSheet = workbook.getSheetAt(i);
-      if (excelSheet != null) {
-        Iterator<Row> objRowIt = excelSheet.rowIterator();
+		// Assuming there is only one sheet, the first one only will be picked
+		HSSFSheet excelSheet = workbook.getSheetAt(0);
+		if (excelSheet != null) {
+			Iterator<Row> objRowIt = excelSheet.rowIterator();
 
-        // Declaring data elements
-        Map<Integer, String> headerMap;
-        Map<Integer, String> rowMap;
+			// Declaring data elements
+			Map<Integer, String> headerMap;
+			Map<Integer, String> rowMap;
 
-        int rowCount = 1;
-        try {
-          headerMap = getRowMap(objRowIt);
-          Product mainProduct = null;
-          List<Product> relatedProducts = new ArrayList<Product>();
-          while (objRowIt.hasNext()) {
-            rowMap = getRowMap(objRowIt);
-            if (StringUtils.isBlank(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap))) {
-              // this is not a new product. add a new product variant
-            } else {
-              Product product = getProductService().getProductById(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap));
-              if (mainProduct == null || !mainProduct.equals(product)) {
-                if (mainProduct != null) {
-                  getProductService().save(mainProduct);
-                  logger.debug("Saved old product. Will set new product as main product now.");
-                  productSet.add(mainProduct);
-                }
-                mainProduct = product;
-                relatedProducts = new ArrayList<Product>();
-              }
-            }
-            if (mainProduct != null && relatedProducts.size() < 6) {
-              Product crossProduct = getProductService().getProductById(getCellValue(XslConstants.CROSS_PRODUCT_ID, rowMap, headerMap));
-              if (crossProduct != null && !crossProduct.equals(mainProduct) && !crossProduct.isDeleted()) {
-                relatedProducts.add(crossProduct);
-                mainProduct.setRelatedProducts(relatedProducts);
-              }
-            }
-            logger.debug("Read row " + rowCount);
-            rowCount++;
-          }
-        } catch (Exception e) {
-          logger.error("Exception @ Row:" + rowCount + 1 + e.getMessage());
-          throw new Exception("Exception @ Row:" + rowCount + " at Sheet:" + i, e);
-        } finally {
-          if (poiInputStream != null) {
-            IOUtils.closeQuietly(poiInputStream);
-          }
-        }
-      }
-    }
-    return productSet;
+			int rowCount = 1;
+			try {
+				headerMap = getRowMap(objRowIt);
+				List<Product> relatedProducts;
+				while (objRowIt.hasNext()) {
+					rowMap = getRowMap(objRowIt);
+					Product product = getProductService().getProductById(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap));
+					relatedProducts = product.getRelatedProducts();
+					if (product != null && relatedProducts.size() < 6) {
+						Product relatedProduct = getProductService().getProductById(getCellValue(XslConstants.RELATED_PRODUCT_ID, rowMap, headerMap));
+						if (relatedProduct != null && !relatedProduct.equals(product) && !relatedProduct.isDeleted() && !relatedProducts.contains(relatedProduct)) {
+							relatedProducts.add(relatedProduct);
+							product.setRelatedProducts(relatedProducts);
+							getProductService().save(product);
+							productSet.add(product);
+						}
+					}
+					logger.debug("Read row " + rowCount);
+					rowCount++;
+				}
+			} catch (Exception e) {
+				logger.error("Exception @ Row:" + rowCount + 1, e.getMessage());
+				throw new Exception("Exception @ Row:" + rowCount, e);
+			} finally {
+				if (poiInputStream != null) {
+					IOUtils.closeQuietly(poiInputStream);
+				}
+			}
+		}
 
-  }
+		return productSet;
+
+	}
 
   /**
    * Returns a list of categories. Category format Eg: <p/> Baby, Baby Food, Cereal ; Baby, Baby Food, Formula <p/>

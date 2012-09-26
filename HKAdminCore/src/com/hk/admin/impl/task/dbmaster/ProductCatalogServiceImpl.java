@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.akube.framework.gson.JsonUtils;
-import com.google.gson.Gson;
 import com.hk.admin.util.XslParser;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
@@ -33,7 +31,7 @@ import com.hk.pact.service.core.TaxService;
 public class ProductCatalogServiceImpl {
 
 	private static Logger logger = LoggerFactory.getLogger(ProductCatalogServiceImpl.class);
-	private static Gson gson = JsonUtils.getGsonDefault();
+	/*private static Gson gson = JsonUtils.getGsonDefault();*/
 
 	@Autowired
 	private XslParser xslParser;
@@ -101,37 +99,14 @@ public class ProductCatalogServiceImpl {
 					logger.debug("Manufacturer: " + manufacturerDb);
 				}
 			}
-      //commented supplier code on 3rd Dec 2011
-			/*Supplier supplier = product.getSupplier();
-
-			product.setSupplier(null);
-
-						// insert manufacturer if not present already.. else pick up the existing one. find by name.
-						logger.debug(product.toString());
-						if (supplier != null) {
-							Supplier supplierDb = supplierDaoProvider.get().findByName(supplier.getName());
-							if (supplierDb == null) {
-								supplier = supplierDaoProvider.get().save(supplier);
-							} else {
-								if (StringUtils.isNotBlank(supplier.getState()) && !StringUtils.equals(supplier.getState(), supplierDb.getState())) {
-									supplierDb.setState(supplier.getState());
-								}
-								supplier = supplierDb;
-							}
-							logger.debug("Supplier: " + supplier);
-						}
-
-			product.setSupplier(supplier);*/
-			/*
-						Fix to not let main image id reset to NULL - Ajeet
-						 */
+     
 			try {
 				Product productInDB = getProductService().getProductById(product.getId());
 				if (productInDB != null) {
 					Long mainImageId = productInDB.getMainImageId();
 					logger.debug("mainImageId[" + product.getName() + "]:" + mainImageId);
 					product.setMainImageId(mainImageId);
-          product.setCreateDate(productInDB.getCreateDate());
+                    product.setCreateDate(productInDB.getCreateDate());
 				} else {      //Newly created product
 					product.setCreateDate(new Date());
 				}
@@ -178,11 +153,12 @@ public class ProductCatalogServiceImpl {
 				productVariant.setProductOptions(productOptionsDb);
 
 				productVariant.setProduct(product);
-				if ( productVariantInDB !=null ) {
+				if (productVariantInDB != null) {
 					productVariant.setCreatedDate(productVariantInDB.getCreatedDate());
-				}else{
-          productVariant.setCreatedDate(new Date());
-        }
+					productVariant.setFreeProductVariant(productVariantInDB.getFreeProductVariant());
+				} else {
+					productVariant.setCreatedDate(new Date());
+				}
 				logger.debug("saving product variant : " + productVariant.getId() + "," + productVariant.getHkPrice(null));
 				logger.debug("inserting product variant " + productVariant.getId() + " - " + productVariant.getProduct().getName());
 

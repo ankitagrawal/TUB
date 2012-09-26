@@ -6,6 +6,7 @@ import static ch.lambdaj.Lambda.sum;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.constants.coupon.EnumCouponType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,12 +97,12 @@ public class ReferrerProgramManager {
     public Coupon getOrCreateRefferrerCoupon(User user) {
         Coupon referrerCoupon = user.getReferrerCoupon();
         if (referrerCoupon == null) {
-            Offer offer = offerManager.getOfferForReferrelProgram();
+            Offer offer = offerManager.getOfferForReferralAndAffiliateProgram();
             String code = getCouponCode(user);
             while (getCouponService().findByCode(code) != null) {
                 code = getCouponCode(user);
             }
-            referrerCoupon = getCouponService().createCoupon(code, null, 10L, null, offer, user, false);
+            referrerCoupon = getCouponService().createCoupon(code, null, 10L, null, offer, user, false, EnumCouponType.REFERRAL.asCouponType());
         }
         return referrerCoupon;
     }

@@ -1,9 +1,6 @@
 package com.hk.web.action.admin.catalog.product;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -38,34 +35,34 @@ import com.hk.report.dto.catalog.ComboProductAndAllowedVariantsDto;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PRODUCT_CATALOG }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_CATALOG}, authActionBean = AdminPermissionAction.class)
 @Component
 public class CreateEditComboAction extends BaseAction {
 
-    private static Logger                           logger                                = Logger.getLogger(CreateEditComboAction.class);
+    private static Logger logger = Logger.getLogger(CreateEditComboAction.class);
 
     @Autowired
-    private ComboDao                                comboDao;
+    private ComboDao comboDao;
     @Autowired
-    private ProductVariantService                   productVariantService;
+    private ProductVariantService productVariantService;
     @Autowired
-    private ProductService                          productService;
+    private ProductService productService;
     @Autowired
-    private XslParser                               xslParser;
+    private XslParser xslParser;
     @Autowired
-    private CategoryService                         categoryService;
-   
-    
-    private Combo                                   combo;
-    private ComboProduct                            comboProduct;
+    private CategoryService categoryService;
 
-    @Validate(required = true)
-    private String                                  categories;
+
+    private Combo combo;
+    private ComboProduct comboProduct;
 
     @Validate(required = true)
-    private String                                  primaryCategory;
+    private String categories;
 
-    private String                                  productId;
+    @Validate(required = true)
+    private String primaryCategory;
+
+    private String productId;
 
     private List<ComboProductAndAllowedVariantsDto> comboProductAndAllowedVariantsDtoList = new ArrayList<ComboProductAndAllowedVariantsDto>();
 
@@ -139,7 +136,9 @@ public class CreateEditComboAction extends BaseAction {
             combo.setBrand("Combo");
         }
         Double comboMrp = 0.0;
+        Set<Product> comboProducts = new HashSet<Product>();
         for (ComboProductAndAllowedVariantsDto comboProductAndAllowedVariantsDto : comboProductAndAllowedVariantsDtoList) {
+            comboProducts.add(comboProductAndAllowedVariantsDto.getProduct());
             String allowedVariants = comboProductAndAllowedVariantsDto.getAllowedVariants();
             if (StringUtils.isNotBlank(allowedVariants)) {
                 String[] pvArr = allowedVariants.split(",");
@@ -163,11 +162,19 @@ public class CreateEditComboAction extends BaseAction {
         combo.setShippingBasePrice(0D);
         combo.setShippingAddQty(1L);
         combo.setShippingAddPrice(0D);
+        combo.setOutOfStock(false);
 
         combo.setThumbUrl("");
         if (combo.getDeleted() == null) {
             combo.setDeleted(Boolean.FALSE);
         }
+//        if (combo.getCodAllowed() == null) {
+//            combo.setCodAllowed(Boolean.FALSE);
+//        }
+
+        boolean isCodAllowed = isCodAllowedForCombo(new ArrayList<Product>(comboProducts));
+        combo.setCodAllowed(isCodAllowed);
+
         combo = (Combo) getComboDao().save(combo);
 
         List<Category> catList = getXslParser().getCategroyListFromCategoryString(categories);
@@ -211,6 +218,14 @@ public class CreateEditComboAction extends BaseAction {
         getComboDao().delete(comboProduct);
         addRedirectAlertMessage(new SimpleMessage("Deleted product from Combo - {0} successfully", comboProduct.getCombo().getName()));
         return new RedirectResolution(CreateEditComboAction.class).addParameter("combo", comboProduct.getCombo());
+    }
+
+    private boolean isCodAllowedForCombo(List<Product> comboProducts){
+        boolean isCodAllowed = true;
+        for (Product comboProduct : comboProducts) {
+           isCodAllowed = isCodAllowed && comboProduct.isCodAllowed();
+        }
+        return isCodAllowed;
     }
 
     public Combo getCombo() {

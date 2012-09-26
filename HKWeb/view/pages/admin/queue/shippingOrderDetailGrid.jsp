@@ -107,7 +107,13 @@
         </div>
         <div class="clear"></div>
         <div class="floatleft">
-            Escalted On: <fmt:formatDate value="${(hk:getEscalationDate(shippingOrder))}" type="both" timeStyle="short"/>
+            <!-- Escalted On: <fmt:formatDate value="${(hk:getEscalationDate(shippingOrder))}" type="both" timeStyle="short"/> -->
+            Escalted On: <fmt:formatDate value="${shippingOrder.lastEscDate}" type="both" timeStyle="short"/>
+        </div>
+        <div class="clear"></div>
+        <div class="floatleft">
+            Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
+            Score : ${shippingOrder.baseOrder.score} 
         </div>
         <div class="clear"></div>
          <div class="floatleft">
@@ -155,6 +161,11 @@
                                      class="flipWarehouse">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Flip Warehouse
+            </s:link>)
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
+                                     event="manualEscalateShippingOrder" class="manualEscalate">
+                <s:param name="shippingOrder" value="${shippingOrder}"/>
+                Manual Escalate SO
             </s:link>)
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.SplitShippingOrderAction"
                                      class="splitShippingOrder">
@@ -392,9 +403,9 @@
                 <%--</c:if>--%>
                 <%--</span>--%>
                 <c:if test="${isActionQueue == true}">
-                    <c:if test="${productVariant.product.jit}">
+                    <%--<c:if test="${productVariant.product.jit}">--%>
                         ,<strong>Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days </strong>
-                    </c:if>
+                    <%--</c:if>--%>
                 </c:if>
             </td>
             <td style="border:1px solid gray;border-left:none;">

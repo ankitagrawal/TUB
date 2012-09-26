@@ -2,7 +2,7 @@ package com.hk.db.seed.core;
 
 import org.springframework.stereotype.Component;
 
-import com.hk.constants.EnumAffiliateTxnType;
+import com.hk.constants.affiliate.EnumAffiliateTxnType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.affiliate.AffiliateTxnType;
 

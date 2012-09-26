@@ -17,7 +17,7 @@
 
     MenuNode menuNode = menuHelper.getMenuNode(urlFragment);
     pageContext.setAttribute("currentMenuNode", menuNode);
-    MenuNode topParentNode = menuHelper.getTopParentMenuNode(menuNode);
+	MenuNode topParentNode = menuHelper.getTopParentMenuNode(menuNode);
     List<MenuNode> firstChildMenuNodes = menuHelper.getSiblings(topParentNode.getChildNodes().get(0).getUrl());
     pageContext.setAttribute("firstChildMenuNodes", firstChildMenuNodes);
     List<MenuNode> hierarchicalMenuNodes = menuHelper.getHierarchicalMenuNodes(menuNode);
@@ -57,28 +57,28 @@
     pageContext.setAttribute("brandList", brandList);
 
   %>
-  <div class='box'>
-    <h5 class='heading1'>
-      Categories
+  <div class=''>
+    <h5 class='heading1' style="background-color:#DDD;padding:5px;">
+      Browse By Category
     </h5>
     <ul>
       <c:forEach items="${firstChildMenuNodes}" var="firstChildMenuNode">
         <li class="${(hk:collectionContains(hierarchicalMenuNodes,firstChildMenuNode)) ? 'active' : ''}">
-          <a href="${pageContext.request.contextPath}${firstChildMenuNode.url}">
+          <a href="${pageContext.request.contextPath}${firstChildMenuNode.url}" style="font-size:1.2em;color:#444444;">
               ${firstChildMenuNode.name}
           </a>
           <c:if test="${(hk:collectionContains(hierarchicalMenuNodes,firstChildMenuNode)) && fn:length(firstChildMenuNode.childNodes) > 0}">
             <ul>
               <c:forEach items="${firstChildMenuNode.childNodes}" var="secondChildMenuNode">
                 <li class="lvl2">
-                  <a href="${pageContext.request.contextPath}${secondChildMenuNode.url}" style="${currentMenuNode == secondChildMenuNode ? 'font-weight:bold;' : ''}">
+                  <a href="${pageContext.request.contextPath}${secondChildMenuNode.url}" style="${currentMenuNode == secondChildMenuNode ? 'font-weight:bold;' : ''} font-size:1.1em;color:#444444;">
                       ${secondChildMenuNode.name}
                   </a>
                   <c:if test="${(hk:collectionContains(hierarchicalMenuNodes,secondChildMenuNode)) && fn:length(secondChildMenuNode.childNodes) > 0}">
                     <ul>
                       <c:forEach items="${secondChildMenuNode.childNodes}" var="thirdChildMenuNode">
                         <li class="lvl3">
-                          <a href="${pageContext.request.contextPath}${thirdChildMenuNode.url}" style="${currentMenuNode == thirdChildMenuNode ? 'font-weight:bold;' : ''}">
+                          <a href="${pageContext.request.contextPath}${thirdChildMenuNode.url}" style="${currentMenuNode == thirdChildMenuNode ? 'font-weight:bold;' : ''} font-size:1.0em;color:#444444;" >
                               ${thirdChildMenuNode.name}
                           </a>
                         </li>
@@ -92,13 +92,13 @@
         </li>
       </c:forEach>
     </ul>
-    <h5 class='heading1'>
-      Brands
+    <h5 class='heading1' style="background-color:#DDD;padding:5px;">
+      Browse By Brand
     </h5>
     <ul>
       <c:forEach items="${brandList}" var="navBrand">
         <li>
-          <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" style="${currentBrand == navBrand ? 'font-weight:bold;' : ''}">
+          <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" style="${currentBrand == navBrand ? 'font-weight:bold;' : ''} font-size:1.2em;color:#444444;">
             ${navBrand}
             <s:param name="brand" value="${navBrand}"/>
             <c:if test="${hk:isNotBlank(ca.startRange)}"><s:param name="startRange" value="${ca.startRange}"/></c:if>
@@ -114,12 +114,12 @@
         </li>
       </c:forEach>
     </ul>
-    <h5 class='heading1'>
-      Filter by Price
+    <h5 class='heading1' style="background-color:#DDD;padding:5px;">
+      Browse by Price
     </h5>
     <ul>
       <li>
-        <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
+        <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" style="font-size:1.2em;color:#444444;">
           Below Rs 500
           <s:param name="startRange" value="0"/>
           <s:param name="endRange" value="500"/>
@@ -134,7 +134,7 @@
           <s:param name="perPage" value="${ca.perPage}"/>
         </s:link>
       </li>
-      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
+      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" style="font-size:1.2em;color:#444444;">
         Between Rs 500-1000
         <s:param name="startRange" value="500"/>
         <s:param name="endRange" value="1000"/>
@@ -149,7 +149,7 @@
         <s:param name="perPage" value="${ca.perPage}"/>
       </s:link>
       </li>
-      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
+      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" style="font-size:1.2em;color:#444444;">
         Between Rs 1000-2500
         <s:param name="startRange" value="1000"/>
         <s:param name="endRange" value="2500"/>
@@ -163,7 +163,7 @@
         <c:if test="${hk:isNotBlank(ca.preferredZone)}"><s:param name="preferredZone" value="${ca.preferredZone}"/></c:if>
       </s:link>
       </li>
-      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
+      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" style="font-size:1.2em;color:#444444;">
         Above Rs 2500
         <s:param name="startRange" value="2500"/>
         <s:param name="endRange" value="1000000"/>

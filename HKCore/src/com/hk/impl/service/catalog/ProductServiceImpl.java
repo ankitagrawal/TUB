@@ -1,14 +1,12 @@
 package com.hk.impl.service.catalog;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.domain.content.SeoData;
+import com.hk.domain.search.SolrProduct;
+import com.hk.exception.SearchException;
+import com.hk.pact.dao.seo.SeoDao;
+import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.core.Keys;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.content.PrimaryCategoryHeading;
@@ -32,35 +26,38 @@ import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.pact.service.catalog.ProductService;
-import com.hk.pact.service.mooga.RecommendationEngine;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.util.ProductReferrerMapper;
-import com.hk.util.ProductUtil;
 import com.hk.web.filter.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    private ProductDao productDAO;
+    private ProductDao                productDAO;
 
     @Autowired
-    private ComboDao comboDao;
+    private ComboDao                  comboDao;
 
     @Autowired
-    private ReviewService reviewService;
-
-    @Autowired
-    private RecommendationEngine recommendationService;
+    private ReviewService             reviewService;
 
     @Autowired
     private PrimaryCategoryHeadingDao primaryCategoryHeadingDao;
 
     @Autowired
-    private LinkManager linkManager;
+    private LinkManager               linkManager;
 
-    @Value("#{hkEnvProps['" + Keys.Env.moogaEnabled + "']}")
-    private Boolean moogaOn;
+    @Autowired
+    ProductSearchService productSearchService;
+
+    @Autowired
+    private SeoDao seoDao;
+
+    private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -68,6 +65,10 @@ public class ProductServiceImpl implements ProductService {
 
     public List<Product> getAllProducts() {
         return getProductDAO().getAll(Product.class);
+    }
+
+    public List<Product> getAllNonDeletedProducts() {
+        return getProductDAO().getAllNonDeletedProducts();
     }
 
     public boolean doesBrandExist(String brandName) {
@@ -125,6 +126,10 @@ public class ProductServiceImpl implements ProductService {
         return getProductDAO().getPaginatedResults(productIdList, page, perPage);
     }
 
+    public List<Product> getAllProductsById(List<String> productIdList) {
+        return getProductDAO().getAllProductsById(productIdList);
+    }
+
     public Page getProductByBrand(String brand, int page, int perPage) {
         return getProductDAO().getProductByBrand(brand, page, perPage);
     }
@@ -174,7 +179,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product save(Product product) {
-        return getProductDAO().save(product);
+        Product savedProduct = getProductDAO().save(product);
+        productSearchService.indexProduct(savedProduct);
+        return savedProduct;
     }
 
     public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage) {
@@ -214,7 +221,38 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public boolean isComboInStock(Combo combo) {
-        return ProductUtil.isComboInStock(combo);
+        if (combo.isDeleted() != null && combo.isDeleted()) {
+            return false;
+        } else {
+            for (ComboProduct comboProduct : combo.getComboProducts()) {
+                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
+                    return false;
+                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
+                    return false;
+                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+	public boolean isComboInStock(String comboId) {
+		Combo combo = getComboDao().getComboById(comboId);
+        if (combo.isDeleted() != null && combo.isDeleted()) {
+            return false;
+        } else {
+            for (ComboProduct comboProduct : combo.getComboProducts()) {
+                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
+                    return false;
+                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
+                    return false;
+                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public List<Combo> getRelatedCombos(Product product) {
@@ -225,49 +263,26 @@ public class ProductServiceImpl implements ProductService {
         List<ProductVariant> productVariants = product.getProductVariants();
         boolean isOutOfStock = true;
         for (ProductVariant pv : productVariants) {
-            if (!pv.getOutOfStock()) {
+            if (!pv.getOutOfStock() && !pv.getDeleted()) {
                 isOutOfStock = false;
                 break;
             }
         }
         return isOutOfStock;
     }
+/*
 
     public Map<String, List<String>> getRecommendedProducts(Product findProduct) {
-        List<String> pvIdList = recommendationService.getRecommendedProducts(findProduct.getId());
-        return getRecommendedProducts(findProduct, pvIdList);
+        return getRecommendedProducts(findProduct);
     }
+*/
 
-    public Map<String, List<String>> getRelatedMoogaProducts(Product findProduct) {
-        List<String> categories = new ArrayList<String>();
-        categories.add(findProduct.getPrimaryCategory().getName());
-        if (findProduct.getSecondaryCategory() != null) {
-            categories.add(findProduct.getSecondaryCategory().getName());
-        }
-        List<String> pvIdList = recommendationService.getRelatedProducts(findProduct.getId(), categories);
-        return getRecommendedProducts(findProduct, pvIdList);
-    }
-
-    public Map<String, List<String>> getRecommendedProducts(Product findProduct, List<String> pvIdList) {
+    public Map<String, List<String>> getRecommendedProducts(Product findProduct) {
         Map<String, List<String>> productsResult = new HashMap<String, List<String>>();
         List<String> productsList = new ArrayList<String>();
         Set<String> products = new HashSet<String>();
         String source = "";
-        if (moogaOn) {
-            Iterator it = pvIdList.iterator();
-            int productCount = 0;
-            while (it.hasNext()) {
-                Product product = productDAO.getProductById((String) it.next());
-                if ((product != null) && isProductValid(product)) {
-                    products.add(product.getId());
-                    ++productCount;
-                }
-            }
-            if (products.size() > 0) {
-                source += "MOOGA";
-            }
-        }
-
+        boolean moogaOn = false;
         if (!moogaOn || (products.size() < 6)) {
             if (products.size() > 0) {
                 source += " + ";
@@ -306,6 +321,217 @@ public class ProductServiceImpl implements ProductService {
             product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
         }
         return primaryCategoryHeading.getProducts();
+    }
+
+	public Map<String, List<Long>> getGroupedFilters(List<Long> filters){
+		Map<String, List<Long>> filterMap = new HashMap<String, List<Long>>();
+		List<Long> groupedFilters;
+		List<ProductOption> options = getProductDAO().getProductOptions(filters);
+		for (ProductOption option : options) {
+			String group = option.getName().toUpperCase();
+			if (filterMap.containsKey(group)) {
+				groupedFilters = filterMap.get(group);
+			} else {
+				groupedFilters = new ArrayList<Long>(0);
+			}
+			groupedFilters.add(option.getId());
+			filterMap.put(group, groupedFilters);
+		}
+		return filterMap;
+	}
+
+    /*public Product createProduct(SolrProduct solrProduct){
+        Product product = new Product();
+        if (solrProduct.getKeywords() != null){
+            product.setKeywords(solrProduct.getKeywords());
+        }
+        if (solrProduct.getId() != null){
+            product.setId(solrProduct.getId());
+        }
+        if (solrProduct.getSlug() != null){
+            //solrProduct.set(product.getSlug());
+        }
+        if (solrProduct.getName() != null){
+            product.setName(solrProduct.getName());
+        }
+        if (solrProduct.getBrand() != null){
+            product.setBrand(solrProduct.getBrand());
+        }
+        if (solrProduct.getOverview() != null){
+            product.setOverview(solrProduct.getOverview());
+        }
+        if (solrProduct.getDescription() != null){
+            product.setDescription(solrProduct.getDescription());
+        }
+        product.setGoogleAdDisallowed(solrProduct.getGoogleAdDisallowed());
+
+        product.setOrderRanking(solrProduct.getOrderRanking());
+        product.setMainImageId(solrProduct.getMainImageId());
+
+        product.setDeleted(solrProduct.getDeleted());
+
+        product.setOutOfStock(solrProduct.getOutOfStock());
+
+        double price = 0d;
+
+        if (product.getMinimumHKPriceProductVariant().getHkPrice() != null){
+            price = product.getMinimumHKPriceProductVariant().getHkPrice();
+        }
+
+        Combo combo = comboDao.getComboById(product.getId());
+        if (combo!= null){
+            solrProduct.setCombo(true);
+            solrProduct.setMarkedPrice(combo.getMarkedPrice());
+            solrProduct.setHkPrice(combo.getHkPrice());
+            solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
+        }
+
+        if (product.getService() != null){
+            product.setService(solrProduct.getService());
+        }
+
+        return product;
+    }*/
+
+    public SolrProduct createSolrProduct(Product product){
+        SolrProduct solrProduct = new SolrProduct();
+        SeoData seoData = seoDao.getSeoById(product.getId());
+        if (product.getKeywords() != null){
+            solrProduct.setKeywords(product.getKeywords());
+        }
+        if (product.getId() != null){
+            solrProduct.setId(product.getId());
+        }
+        if (product.getSlug() != null){
+            solrProduct.setSlug(product.getSlug());
+        }
+        if (product.getName() != null){
+            solrProduct.setName(product.getName());
+        }
+        if (product.getBrand() != null){
+            solrProduct.setBrand(product.getBrand());
+        }
+        if (product.getOverview() != null){
+            solrProduct.setOverview(product.getOverview());
+        }
+        if (product.getDescription() != null){
+            solrProduct.setDescription(product.getDescription());
+        }
+        if (seoData != null){
+            if (seoData.getH1() != null){
+                solrProduct.setH1(seoData.getH1());
+            }
+            if (seoData.getTitle() != null){
+                solrProduct.setTitle(seoData.getTitle());
+            }
+            if (seoData.getMetaKeyword() != null){
+                solrProduct.setMetaKeyword(seoData.getMetaKeyword());
+            }
+            if (seoData.getMetaDescription() != null){
+                solrProduct.setMetaDescription(seoData.getMetaDescription());
+            }
+            if (seoData.getDescriptionTitle() != null){
+                solrProduct.setDescriptionTitle(seoData.getDescriptionTitle());
+            }
+            if (seoData.getDescription() != null){
+                solrProduct.setSeoDescription(seoData.getDescription());
+            }
+        }
+        if (product.isGoogleAdDisallowed() != null){
+            solrProduct.setGoogleAdDisallowed(product.isGoogleAdDisallowed());
+        }
+        if (product.getOrderRanking() != null){
+            solrProduct.setOrderRanking(product.getOrderRanking());
+        }
+        if (product.getMainImageId() != null){
+            solrProduct.setMainImageId(product.getMainImageId());
+        }
+
+        List<String> categories = new ArrayList<String>();
+        if (product.getCategories() != null){
+            for (Category category : product.getCategories()){
+                categories.add(category.getName());
+            }
+        }
+
+        ProductVariant productVariant = product.getMinimumMRPProducVariant();
+        if (productVariant.getMarkedPrice() != null){
+            solrProduct.setMinimumMRPProductVariantMarkedPrice(productVariant.getMarkedPrice());
+        }
+        if (productVariant.getDiscountPercent() != null){
+            solrProduct.setMinimumMRPProducVariantDiscount(productVariant.getDiscountPercent());
+        }
+        productVariant = product.getMaximumMRPProducVariant();
+        if (productVariant.getDiscountPercent() != null){
+            solrProduct.setMaximumMRPProducVariantDiscount(productVariant.getDiscountPercent());
+        }
+        productVariant = product.getMaximumDiscountProducVariant();
+        if (productVariant.getDiscountPercent() != null){
+            solrProduct.setMaximumDiscountProductVariantDiscountPercentage (productVariant.getDiscountPercent());
+        }
+        productVariant = product.getMaximumMRPProducVariant();
+        if(productVariant.getPostpaidAmount() != null){
+            solrProduct.setPostpaidPrice(productVariant.getPostpaidAmount());
+        }
+
+        if (product.getDeleted() != null){
+            solrProduct.setDeleted(product.getDeleted().booleanValue());
+        }
+        if (product.getOutOfStock() != null){
+            solrProduct.setOutOfStock(product.getOutOfStock().booleanValue());
+        }
+
+        Double price = null;
+        productVariant = product.getMinimumHKPriceProductVariant();
+        if (productVariant.getHkPrice() != null){
+            price = productVariant.getHkPrice();
+            solrProduct.setHkPrice(price);
+        }
+
+	    try {
+		    Combo combo = comboDao.getComboById(product.getId());
+		    if (combo != null) {
+			    solrProduct.setCombo(true);
+			    solrProduct.setMarkedPrice(combo.getMarkedPrice());
+			    if (price == null) {
+				    solrProduct.setHkPrice(combo.getHkPrice());
+			    }
+			    solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
+		    }
+	    } catch (Exception e) {
+
+	    }
+
+        if (product.getService() != null){
+            solrProduct.setService(product.getService());
+        }
+
+        solrProduct.setCategory(categories);
+        return solrProduct;
+    }
+
+    public List<SolrProduct> getProductsSortedByOrderRanking(PrimaryCategoryHeading primaryCategoryHeading) {
+        List<Product> products = primaryCategoryHeading.getProductSortedByOrderRanking();
+        List<SolrProduct> solrProducts = new ArrayList<SolrProduct>();
+        for (Product product : products){
+            solrProducts.add(createSolrProduct(product));
+        }
+        return solrProducts;
+    }
+
+    public List<Product> getSimilarProducts(Product product) {
+        List<Product> inStockSimilarProducts = new ArrayList<Product>();
+        int ctr = 0;
+        for (SimilarProduct similarProduct : product.getSimilarProducts()) {
+            Product sProduct = similarProduct.getSimilarProduct();
+            if (!sProduct.isDeleted() && product.getInStockVariants().size() > 0) {  // Will add out of stock constraint instead of in stock variants size
+                sProduct.setProductURL(linkManager.getRelativeProductURL(sProduct, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+                inStockSimilarProducts.add(sProduct);
+                ctr++;
+                if (ctr >= 5) break;
+            }
+        }
+        return inStockSimilarProducts;
     }
 }
 

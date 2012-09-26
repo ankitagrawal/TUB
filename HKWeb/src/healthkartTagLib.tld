@@ -772,7 +772,18 @@
     </function>
     <function>
         <description>
-            returns stock check of combo
+            returns if the given product is a Combo or Not
+        </description>
+        <name>isCombo</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isCombo(java.lang.String)</function-signature>
+        <example>
+            ${hk:isCombo(${object})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns recommended products
         </description>
         <name>getRecommendedProducts</name>
         <function-class>com.hk.taglibs.Functions</function-class>
@@ -845,6 +856,72 @@
         <function-signature>java.lang.String getProductURL(com.hk.domain.catalog.product.Product , java.lang.Long )</function-signature>
         <example>
             ${hk:getProductURL(${product},1)}
+        </example>
+    </function>
+    <function>
+        <description>
+            get cod converter url for an order
+        </description>
+        <name>getCodConverterLink</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getCodConverterLink(com.hk.domain.order.Order)</function-signature>
+        <example>
+            ${hk:getCodConverterLink(${order})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns true if cod is allowed on order
+        </description>
+        <name>isCodAllowedOnOrder</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isCODAllowed(com.hk.domain.order.Order)</function-signature>
+        <example>
+            ${hk:isCodAllowedOnOrder(${order})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns true if cod is allowed on order
+        </description>
+        <name>getHubForHkdeliveryUser</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.hkDelivery.Hub getHubForHkdeliveryUser(com.hk.domain.user.User)</function-signature>
+        <example>
+            ${hk:getHubForHkdeliveryUser(${user})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns productImages based on type and product/variant
+        </description>
+        <name>searchProductImages</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long searchProductImages(com.hk.domain.catalog.product.Product,com.hk.domain.catalog.product.ProductVariant,java.lang.Long,boolean,boolean)</function-signature>
+        <example>
+        ${hk:searchProductImages(${product})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns true if option needs to be shown on ui
+        </description>
+        <name>showOptionOnUI</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean showOptionOnUI(java.lang.String)</function-signature>
+        <example>
+            ${hk:showOptionOnUI(${optionType})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns true if option needs to be shown on ui
+        </description>
+        <name>getApplicableWarehouses</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getApplicableWarehouses(com.hk.domain.catalog.product.ProductVariant)</function-signature>
+        <example>
+            ${hk:getApplicableWarehouses(${object})}
         </example>
     </function>
 </taglib>

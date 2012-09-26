@@ -74,7 +74,7 @@
       %>
       <s:layout-render name="/layouts/embed/_pageNoLink.jsp" paginatedBean="${paginatedBean}" pageNo="1" pageText="1"/>
       <s:layout-render name="/layouts/embed/_pageNoLink.jsp" paginatedBean="${paginatedBean}" pageNo="2" pageText="2"/>
-      <li>..</li>
+      <%--<li>..</li>--%>
       <%
         for (int pageNo = basePaginatedAction.getPageNo() - (maxDisplay / 2 - 2); pageNo <= basePaginatedAction.getPageNo() + (maxDisplay / 2 - 2); pageNo++) {
       %>
