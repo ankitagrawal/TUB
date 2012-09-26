@@ -6,6 +6,7 @@ import freemarker.template.Template;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,97 +21,103 @@ import java.net.URLEncoder;
 @Service
 public class SMSService {
 
-	private static Logger logger = LoggerFactory.getLogger(SMSService.class);
+    private static Logger logger = LoggerFactory.getLogger(SMSService.class);
 
-	final FreeMarkerService freeMarkerService = null;
+    @Autowired
+    FreeMarkerService     freeMarkerService;
 
-	public static String smsUrl;
-	public static String userName;
-	public static String password;
-	public static String senderId;
-	String mtype = "N";
-	String DR = "N";
+    public static String  smsUrl;
+    public static String  userName;
+    public static String  password;
+    public static String  senderId;
+    String                mtype  = "N";
+    String                DR     = "Y";
 
-	public static boolean useSmsService;
+    public static boolean useSmsService;
 
-	@Value("#{hkEnvProps['" + Keys.Env.useSmsService + "']}")
-	private String useSmsServiceString;
+    @Value("#{hkEnvProps['" + Keys.Env.useSmsService + "']}")
+    private String        useSmsServiceString;
 
-	@Value("#{hkEnvProps['" + Keys.Env.hkSMSURL + "']}")
-	private String hkSMSURL;
+    @Value("#{hkEnvProps['" + Keys.Env.hkSMSURL + "']}")
+    private String        hkSMSURL;
 
-	@Value("#{hkEnvProps['" + Keys.Env.hkSMSSender + "']}")
-	private String hkSMSSender;
+    @Value("#{hkEnvProps['" + Keys.Env.hkSMSSender + "']}")
+    private String        hkSMSSender;
 
-	@Value("#{hkEnvProps['" + Keys.Env.hkSMSUserName + "']}")
-	private String hkSMSUserName;
+    @Value("#{hkEnvProps['" + Keys.Env.hkSMSUserName + "']}")
+    private String        hkSMSUserName;
 
-	@Value("#{hkEnvProps['" + Keys.Env.hkSMSPassword + "']}")
-	private String hkSMSPassword;
+    @Value("#{hkEnvProps['" + Keys.Env.hkSMSPassword + "']}")
+    private String        hkSMSPassword;
 
-	@PostConstruct
-	public void postConstruction() {
-		useSmsService = StringUtils.isNotBlank(useSmsServiceString) && Boolean.parseBoolean(useSmsServiceString);
-		smsUrl = hkSMSURL;
-		userName = hkSMSUserName;
-		password = hkSMSPassword;
-		senderId = hkSMSSender;
-	}
+    @PostConstruct
+    public void postConstruction() {
+        useSmsService = StringUtils.isNotBlank(useSmsServiceString) && Boolean.parseBoolean(useSmsServiceString);
+        smsUrl = hkSMSURL;
+        userName = hkSMSUserName;
+        password = hkSMSPassword;
+        senderId = hkSMSSender;
+    }
 
-	public boolean sendSMS(String message, String mobile) {
-		String postData = "";
-		String retval = "";
+    public boolean sendSMS(String message, String mobile) {
+        String postData = "";
+        String retval = "";
 
-		if (useSmsService) {
-			try {
-				if (mobile != null && mobile.length() == 10) {
+        if (useSmsService) {
+            try {
+                if (mobile != null && mobile.length() == 10) {
 
-					mobile = URLEncoder.encode(mobile, "UTF-8");
-					message = URLEncoder.encode(message, "UTF-8");
+                    mobile = URLEncoder.encode(mobile, "UTF-8");
+                    message = URLEncoder.encode(message, "UTF-8");
 
-					postData += "User=" + URLEncoder.encode(userName, "UTF-8") + "&passwd=" + password + "&mobilenumber=" + mobile + "&message=" + message + "&sid=" + senderId + "&mtype=" + mtype + "&DR=" + DR;
-					URL newUrl = new URL("http://smscountry.com/SMSCwebservice_Bulk.aspx");
+                    postData += "User=" + URLEncoder.encode(userName, "UTF-8") + "&passwd=" + password + "&mobilenumber=" + mobile + "&message=" + message + "&sid=" + senderId
+                            + "&mtype=" + mtype + "&DR=" + DR;
+                    URL newUrl = new URL("http://smscountry.com/SMSCwebservice_Bulk.aspx");
 
-					HttpURLConnection urlconnection = (HttpURLConnection) newUrl.openConnection();
-					urlconnection.setDoOutput(false);
-					urlconnection.setDoInput(true);
-					urlconnection.setConnectTimeout(10000);
-					urlconnection.setRequestMethod("POST");
-					urlconnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-					urlconnection.setDoOutput(true);
-					OutputStreamWriter out = new OutputStreamWriter(urlconnection.getOutputStream());
-					out.write(postData);
-					out.close();
-				} else {
-					return false;
-				}
-			} catch (MalformedURLException e) {
-				logger.error("MalformedURLException in sendSMS", e);
-				return false;
-			} catch (IOException e) {
-				logger.error("IOException in sendSMS", e);
-				return false;
-			} catch (Exception e) {
-				logger.error("Catching Exception in sendSMS", e);
-				return false;
-			}
-		} else {
-			return false;
-		}
-		return true;
-	}
+                    HttpURLConnection urlconnection = (HttpURLConnection) newUrl.openConnection();
+                    urlconnection.setDoOutput(false);
+                    urlconnection.setDoInput(true);
+                    urlconnection.setConnectTimeout(10000);
+                    urlconnection.setRequestMethod("POST");
+                    urlconnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    urlconnection.setDoOutput(true);
+                    OutputStreamWriter out = new OutputStreamWriter(urlconnection.getOutputStream());
+                    out.write(postData);
+                    out.close();
+                } else {
+                    return false;
+                }
+            } catch (MalformedURLException e) {
+                logger.error("MalformedURLException in sendSMS", e);
+                return false;
+            } catch (IOException e) {
+                logger.error("IOException in sendSMS", e);
+                return false;
+            } catch (Exception e) {
+                logger.error("Catching Exception in sendSMS", e);
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
 
-	public boolean sendSMSUsingTemplate(String mobile, String templatePath, Object templateValues) {
-		String message = "";
-		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(templatePath);
-		FreeMarkerService.RenderOutput renderOutput = freeMarkerService.getRenderOutputForTemplate(freemarkerTemplate, templateValues);
+    public boolean sendSMSUsingTemplate(String mobile, String templatePath, Object templateValues) {
+        String message = "";
+        Template smsTemplate = freeMarkerService.getCampaignTemplate(templatePath);
+        if (smsTemplate != null) {
+            FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processSmsTemplate(smsTemplate, templateValues);
 
-		if (renderOutput == null) {
-			logger.error("Error while rendering freemarker template : " + templatePath);
-			return false;
-		}
-		message = renderOutput.getMessage();
-		return sendSMS(message, mobile);
-	}
+            if (renderOutput == null) {
+                logger.error("Error while rendering freemarker template : " + templatePath);
+                return false;
+            }
+            message = renderOutput.getMessage();
+            return sendSMS(message, mobile);
+        }
+        return false;
+
+    }
 
 }

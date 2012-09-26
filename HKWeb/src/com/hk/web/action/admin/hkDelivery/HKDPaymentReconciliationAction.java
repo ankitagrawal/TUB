@@ -8,6 +8,7 @@ import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.core.Keys;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.XslGenerator;
@@ -44,6 +45,7 @@ public class HKDPaymentReconciliationAction extends BasePaginatedAction {
     private HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
 	private List<Consignment> consignmentListForPaymentReconciliation = new ArrayList<Consignment>();
 	private User loggedOnUser;
+	private Hub hub;
 
 
     @Autowired
@@ -65,13 +67,14 @@ public class HKDPaymentReconciliationAction extends BasePaginatedAction {
     }
 
 	public Resolution hkDeliveryreports(){
+		loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		return new ForwardResolution("/pages/admin/hkdeliveryReports.jsp");
 	}
 
 	public Resolution generatePaymentReconciliation(){
 		loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		if(consignmentListForPaymentReconciliation.size() ==0 && (startDate != null || endDate != null)){
-			consignmentListForPaymentReconciliation = consignmentService.getConsignmentsForPaymentReconciliation(startDate, endDate);
+			consignmentListForPaymentReconciliation = consignmentService.getConsignmentsForPaymentReconciliation(startDate, endDate, hub);
 			if(consignmentListForPaymentReconciliation.size() == 0){
 				addRedirectAlertMessage(new SimpleMessage("No delivered consignment found for given date"));
                 return new ForwardResolution("/pages/admin/hkdeliveryReports.jsp");
@@ -216,5 +219,21 @@ public class HKDPaymentReconciliationAction extends BasePaginatedAction {
 
 	public void setConsignmentListForPaymentReconciliation(List<Consignment> consignmentListForPaymentReconciliation) {
 		this.consignmentListForPaymentReconciliation = consignmentListForPaymentReconciliation;
+	}
+
+	public Hub getHub() {
+		return hub;
+	}
+
+	public void setHub(Hub hub) {
+		this.hub = hub;
+	}
+
+	public User getLoggedOnUser() {
+		return loggedOnUser;
+	}
+
+	public void setLoggedOnUser(User loggedOnUser) {
+		this.loggedOnUser = loggedOnUser;
 	}
 }
