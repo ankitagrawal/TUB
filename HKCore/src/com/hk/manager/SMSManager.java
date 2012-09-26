@@ -50,7 +50,9 @@ public class SMSManager {
 
         if (order != null && order.getAddress() != null && order.getAddress().getPhone() != null) {
 
-            return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.orderConfirmedSMS, valuesMap);
+            return false;
+            //TODO: fix and uncomment
+            //return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.orderConfirmedSMS, valuesMap);
         }
         return false;
     }
