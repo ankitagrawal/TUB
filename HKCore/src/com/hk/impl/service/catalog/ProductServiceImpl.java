@@ -225,11 +225,12 @@ public class ProductServiceImpl implements ProductService {
             return false;
         } else {
             for (ComboProduct comboProduct : combo.getComboProducts()) {
+                Product product = comboProduct.getProduct();
                 if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
                     return false;
-                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
+                } else if (product.getInStockVariants().isEmpty()) {
                     return false;
-                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
+                } else if (product.isDeleted() != null && product.isDeleted()) {
                     return false;
                 }
             }
@@ -239,20 +240,7 @@ public class ProductServiceImpl implements ProductService {
 
 	public boolean isComboInStock(String comboId) {
 		Combo combo = getComboDao().getComboById(comboId);
-        if (combo.isDeleted() != null && combo.isDeleted()) {
-            return false;
-        } else {
-            for (ComboProduct comboProduct : combo.getComboProducts()) {
-                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return isComboInStock(combo);
     }
 
     public List<Combo> getRelatedCombos(Product product) {

@@ -382,11 +382,13 @@ public class AdminEmailManager {
         }
 
         TemplateHashModel hkImageUtils = null;
+        TemplateHashModel hkPriceUtils = null;
         try{
             BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
             //wrapper.getOuterIdentity().wrap("com.hk.domain.catalog.product.Product");
             TemplateHashModel staticModels = wrapper.getStaticModels();
             hkImageUtils = (TemplateHashModel) staticModels.get("com.hk.util.HKImageUtils");
+            hkPriceUtils = (TemplateHashModel) staticModels.get("com.hk.util.HKPriceUtils");
         }catch (TemplateModelException ex){
             //Only expected reason for this exception is when com.hk.util.HKImageUtils is missing
             logger.error("Unable to get static methods definition in HKImageUtils", ex);
@@ -410,6 +412,7 @@ public class AdminEmailManager {
                     break;
                 }
                 excelMap.put("HKImageUtils", hkImageUtils);
+                excelMap.put("HKPriceUtils", hkPriceUtils);
                 sendMailMergeCampaign(excelMap, emailCampaign, freemarkerTemplate, failedEmailLog);
             }
         }finally{
