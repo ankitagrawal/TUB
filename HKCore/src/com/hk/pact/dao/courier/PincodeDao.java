@@ -11,13 +11,13 @@ public interface PincodeDao extends BaseDao {
 
     public Pincode getByPincode(String pincode);
 
-    public List<PincodeDefaultCourier> getByPincode(Pincode pincode);
+//    public List<PincodeDefaultCourier> getByPincode(Pincode pincode);
 
-    public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse);
+//    public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse);
 
     public List<PincodeDefaultCourier>  getByPincode(Pincode pincode,  boolean forCod, boolean forGroundshipping) ;
 
-    public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse,  boolean isCod, boolean isGroundshipping) ;
+//    public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse,  boolean isCod, boolean isGroundshipping) ;
 
      public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping);
 }

@@ -367,8 +367,8 @@ public class OrderServiceImpl implements OrderService {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());         
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
         Set<CartLineItem> serviceCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();
-        productCartLineItems.removeAll(serviceCartLineItems);
         Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
+        productCartLineItems.removeAll(serviceCartLineItems);
         productCartLineItems.removeAll(groundShippedCartLineItemSet);
 
         List<Set<CartLineItem>> listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
