@@ -31,7 +31,7 @@ public class SMSService {
 	public static String password;
 	public static String senderId;
 	String mtype = "N";
-	String DR = "N";
+	String DR = "Y";
 
 	public static boolean useSmsService;
 
