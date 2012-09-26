@@ -1,5 +1,6 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Runsheet List">
@@ -34,6 +35,23 @@
 	                            date</label><s:text class="date_input endDate" style="width:150px"
 	                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
 	                    </li>
+		                <li>
+			                <label><strong>Hub:</strong></label>
+			                <shiro:hasPermission name="<%=PermissionConstants.SELECT_HUB%>">
+				                <s:select name="hub" class="hubName">
+					                <s:option value="-Select Hub-">-Select Hub-</s:option>
+					                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+					                                           serviceProperty="hubList" value="id"
+					                                           label="name"/>
+				                </s:select>
+			                </shiro:hasPermission>
+			                <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
+				                <shiro:lacksPermission name="<%=PermissionConstants.SELECT_HUB%>" >
+									<c:set var="hub" value="${hk:getHubForHkdeliveryUser(paymentReconciliationAction.loggedOnUser)}"/>
+									<s:hidden name="hub" value="${hub.id}"/>${hub.name}
+				                </shiro:lacksPermission>
+			                </shiro:hasPermission>
+		                </li>
 
 	                    <li>
 	                        <s:submit name="generatePaymentReconciliation" value="Generate Payment Reconciliation"/>
