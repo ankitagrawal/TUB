@@ -8992,4 +8992,12 @@
         </createIndex>
     </changeSet>
 
+    <changeSet author="Tarun (generated)" id="1348554794998-1">
+        <addColumn tableName="runsheet">
+            <column name="created_by" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1348554794998-2">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="runsheet" constraintName="fk_runsheet_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>   
 </databaseChangeLog>
