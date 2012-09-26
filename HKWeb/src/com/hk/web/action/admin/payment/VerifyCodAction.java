@@ -3,6 +3,7 @@ package com.hk.web.action.admin.payment;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hk.manager.SMSManager;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
@@ -41,6 +42,8 @@ public class VerifyCodAction extends BaseAction {
 
     @Validate(required = true)
     private Order               order;
+	@Autowired
+	SMSManager smsManager;
 
     @JsonHandler
     public Resolution pre() {
@@ -51,8 +54,10 @@ public class VerifyCodAction extends BaseAction {
 
             getOrderService().processOrderForAutoEsclationAfterPaymentConfirmed(order);
             getOrderLoggingService().logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), null);
-            
-            data.put("paymentStatus", JsonUtils.hydrateHibernateObject(payment.getPaymentStatus()));
+
+	        smsManager.sendOrderConfirmedSMS(order);
+
+	        data.put("paymentStatus", JsonUtils.hydrateHibernateObject(payment.getPaymentStatus()));
             data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
             return new JsonResolution(healthkartResponse);

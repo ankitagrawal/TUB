@@ -21,7 +21,7 @@ Thanks for your first order. This gives you access to a new feature at HealthKar
     substantial benefits (read cash) for spreading the word :) Here's the sweet deal -
 </p>
 <p style="border: 1px solid gray; padding: 5px;">
-    When your refer a friend to HealthKart, they get a <strong>Rs. 100 off</strong> on their first purchase
+    When your refer a friend to HealthKart, they get an additional <strong>5% off</strong> on their first purchase
     (on order value worth Rs. 500 or more), and when they complete that purchase, you get a
     <strong>Rs. 100 reward point</strong> credit in your account!<br/><br/>
 

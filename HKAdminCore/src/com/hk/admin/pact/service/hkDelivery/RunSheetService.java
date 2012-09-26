@@ -39,4 +39,6 @@ public interface RunSheetService {
     public Runsheet updateRunsheetParams(Runsheet runsheet, ConsignmentDto consignmentDto);
 
 	public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList);
+
+	public Runsheet closeRunsheet(Runsheet runsheet);
 }

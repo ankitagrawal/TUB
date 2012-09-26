@@ -38,12 +38,14 @@ public class FeedbackAction extends BaseAction {
 		if (order != null) {
 			Feedback feedback = getFeedbackService().getOrCreateFeedbackForOrder(order);
 			getFeedbackService().updateFeedback(feedback, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
-			addRedirectAlertMessage(new SimpleMessage("Thanks for your feedback, your feedback has been captured."));
+			return new ForwardResolution("/pages/static/feedbackCapture.jsp");
+			//addRedirectAlertMessage(new SimpleMessage("Thanks for your feedback, your feedback has been captured."));
 		} else {
 			if (getPrincipal() != null) {
 				user = getUserService().getUserById(getPrincipal().getId());
 				getFeedbackService().createFeedbackForUser(user, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
-				addRedirectAlertMessage(new SimpleMessage("Thanks for your feedback, your feedback has been captured."));
+				return new ForwardResolution("/pages/static/feedbackCapture.jsp");
+				//addRedirectAlertMessage(new SimpleMessage("Thanks for your feedback, your feedback has been captured."));
 			}
 			else {
 				addRedirectAlertMessage(new SimpleMessage("Login to the site to give your feedback."));

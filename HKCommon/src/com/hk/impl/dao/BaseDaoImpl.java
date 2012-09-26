@@ -6,9 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
@@ -458,5 +456,38 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     public void refresh(Object entity) {
         getHibernateTemplate().refresh(entity);
     }
+
+	private Query createQuery(String queryString) {
+		return getSession().createQuery(queryString);
+	}
+
+	public Page list(String hql, Map<String, Object> params, int pageNo, int perPage) {
+		Query query = createQuery(hql);
+		applyQueryParams(query, params);
+		int totalResults = query.list().size();
+
+		int firstResult = (pageNo - 1) * perPage;
+		query.setFirstResult(firstResult);
+		query.setMaxResults(perPage);
+		List resultList = query.list();
+		return new Page(resultList, perPage, pageNo, totalResults);
+	}
+
+	private void applyQueryParams(Query query, Map<String, Object> params) {
+		Iterator<Map.Entry<String, Object>> paramIterator = params.entrySet().iterator();
+
+		while (paramIterator.hasNext()) {
+			Map.Entry<String, Object> entry = paramIterator.next();
+			Object value = entry.getValue();
+			if (value instanceof Collection) {
+				query.setParameterList(entry.getKey(), (Collection) entry.getValue());
+			} else {
+				query.setParameter(entry.getKey(), entry.getValue());
+			}
+
+		}
+	}
+
+
 
 }

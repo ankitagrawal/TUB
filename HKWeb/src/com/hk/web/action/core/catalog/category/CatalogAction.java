@@ -56,128 +56,125 @@ import com.hk.web.action.HomeAction;
 import com.hk.web.filter.WebContext;
 import com.hk.taglibs.Functions;
 
-@UrlBinding ("/{rootCategorySlug}/{childCategorySlug}/{secondaryChildCategorySlug}/{tertiaryChildCategorySlug}")
+@UrlBinding("/{rootCategorySlug}/{childCategorySlug}/{secondaryChildCategorySlug}/{tertiaryChildCategorySlug}")
 public class CatalogAction extends BasePaginatedAction {
-	private static org.slf4j.Logger logger = LoggerFactory.getLogger(CatalogAction.class);
+    private static org.slf4j.Logger logger                     = LoggerFactory.getLogger(CatalogAction.class);
 
-	private String rootCategorySlug;
-	private String childCategorySlug;
-	private String secondaryChildCategorySlug;
-	private String tertiaryChildCategorySlug;
-	private SeoData seoData;
+    private String                  rootCategorySlug;
+    private String                  childCategorySlug;
+    private String                  secondaryChildCategorySlug;
+    private String                  tertiaryChildCategorySlug;
+    private SeoData                 seoData;
 
-	String urlFragment;
-	String topCategoryUrlSlug;
-	String allCategories;
-	Category category;
-	String brand;
-	List<String> brandList;
-	private String redirectUrl;
+    String                          urlFragment;
+    String                          topCategoryUrlSlug;
+    String                          allCategories;
+    Category                        category;
+    String                          brand;
+    List<String>                    brandList;
+    private String                  redirectUrl;
 
-	String displayMode;
+    String                          displayMode;
 
-	String feed;
+    String                          feed;
 
-	Page productPage;
-	List<Product> productList = new ArrayList<Product>();
-	List<Product> productListNonCityFiltered = new ArrayList<Product>();
-	List<String> productIDList = new ArrayList<String>();
-	List<MenuNode> menuNodes;
+    Page                            productPage;
+    List<Product>                   productList                = new ArrayList<Product>();
+    List<Product>                   productListNonCityFiltered = new ArrayList<Product>();
+    List<String>                    productIDList              = new ArrayList<String>();
+    List<MenuNode>                  menuNodes;
 
-	List<Long> filterOptions = new ArrayList<Long>();
-	List<ProductOption> filterProductOptions = new ArrayList<ProductOption>();
-	Double minPrice;
-	Double maxPrice;
+    List<Long>                      filterOptions              = new ArrayList<Long>();
+    List<ProductOption>             filterProductOptions       = new ArrayList<ProductOption>();
+    Double                          minPrice;
+    Double                          maxPrice;
 
-	MenuNode menuNode;
+    MenuNode                        menuNode;
 
-	String sortBy;
-	String sortOrder;
-	Double startRange;
-	@Validate (converter = ConvertEncryptedToNormalDouble.class)
-	Double endRange;
+    String                          sortBy;
+    String                          sortOrder;
+    Double                          startRange;
+    @Validate(converter = ConvertEncryptedToNormalDouble.class)
+    Double                          endRange;
 
-	@Autowired
-	MenuHelper menuHelper;
-	@Autowired
-	LocalityMapDao localityMapDao;
-	@Autowired
-	MapIndiaDao mapIndiaDao;
-	@Autowired
-	CategoryImageDaoImpl categoryImageDao;
-	@Autowired
-	ProductDao productDao;
-	@Autowired
-	ProductService productService;
-	@Autowired
-	ComboDao comboDao;
-	//@Autowired
-	//@Named(Keys.App.appBasePath)
-	String appBasePath;
-	@Autowired
-	CategoryDaoImpl categoryDao;
-	@Autowired
-	SeoManager seoManager;
-	@Autowired
-    ProductSearchService productSearchService;
-	@Autowired
-	UserDao userDao;
-	@Autowired
-	UserManager userManager;
-	@Autowired
-	LinkManager linkManager;
+    @Autowired
+    MenuHelper                      menuHelper;
+    @Autowired
+    LocalityMapDao                  localityMapDao;
+    @Autowired
+    MapIndiaDao                     mapIndiaDao;
+    @Autowired
+    CategoryImageDaoImpl            categoryImageDao;
+    @Autowired
+    ProductDao                      productDao;
+    @Autowired
+    ProductService                  productService;
+    @Autowired
+    ComboDao                        comboDao;
+    // @Autowired
+    // @Named(Keys.App.appBasePath)
+    String                          appBasePath;
+    @Autowired
+    CategoryDaoImpl                 categoryDao;
+    @Autowired
+    SeoManager                      seoManager;
+    @Autowired
+    ProductSearchService            productSearchService;
+    @Autowired
+    UserDao                         userDao;
+    @Autowired
+    UserManager                     userManager;
+    @Autowired
+    LinkManager                     linkManager;
 
-	@Session (key = HealthkartConstants.Cookie.preferredZone)
-	private String preferredZone;
+    @Session(key = HealthkartConstants.Cookie.preferredZone)
+    private String                  preferredZone;
 
-	@Session (key = HealthkartConstants.Session.perPageCatalog)
-	private int perPage;
+    @Session(key = HealthkartConstants.Session.perPageCatalog)
+    private int                     perPage;
 
-	private int defaultPerPage = 20;
+    private int                     defaultPerPage             = 24;
 
-	@DefaultHandler
-	public Resolution pre() throws IOException, SolrServerException {
-		category = categoryDao.getCategoryByName(rootCategorySlug);
-		String jspRelativePath = "/pages/category/category.jsp";
+    @DefaultHandler
+    public Resolution pre() throws IOException, SolrServerException {
+        category = categoryDao.getCategoryByName(rootCategorySlug);
+        String jspRelativePath = "/pages/category/category.jsp";
 
-		File jspFile = new File(AppConstants.appBasePath + jspRelativePath);
-		if (category != null) {
-			if (jspFile.exists() && StringUtils.isBlank(childCategorySlug) && StringUtils.isBlank(secondaryChildCategorySlug)) {
-				return new ForwardResolution(CategoryAction.class, "pre").addParameter("category", category.getName());
-			}
-		} else {
-			logger.error("No category found for root category slug : " + rootCategorySlug);
-		}
+        File jspFile = new File(AppConstants.appBasePath + jspRelativePath);
+        if (category != null) {
+            if (jspFile.exists() && StringUtils.isBlank(childCategorySlug) && StringUtils.isBlank(secondaryChildCategorySlug)) {
+                return new ForwardResolution(CategoryAction.class, "pre").addParameter("category", category.getName());
+            }
+        } else {
+            logger.error("No category found for root category slug : " + rootCategorySlug);
+	        return new RedirectResolution(HomeAction.class);
+        }
 
-		String smallestCategory = null;
-		String secondSmallestCategory = null;
-		String thirdSmallestCategory = null;
-		if (StringUtils.isNotBlank(tertiaryChildCategorySlug)) {
-			smallestCategory = tertiaryChildCategorySlug;
-			secondSmallestCategory = secondaryChildCategorySlug;
-			thirdSmallestCategory = childCategorySlug;
-		} else if (StringUtils.isNotBlank(secondaryChildCategorySlug)) {
-			smallestCategory = secondaryChildCategorySlug;
-			secondSmallestCategory = childCategorySlug;
-		} else if (StringUtils.isNotBlank(childCategorySlug)) {
-			smallestCategory = childCategorySlug;
-			secondSmallestCategory = rootCategorySlug;
-		} else {
-			smallestCategory = rootCategorySlug;
-		}
+        String smallestCategory = null;
+        String secondSmallestCategory = null;
+        String thirdSmallestCategory = null;
+        if (StringUtils.isNotBlank(tertiaryChildCategorySlug)) {
+            smallestCategory = tertiaryChildCategorySlug;
+            secondSmallestCategory = secondaryChildCategorySlug;
+            thirdSmallestCategory = childCategorySlug;
+        } else if (StringUtils.isNotBlank(secondaryChildCategorySlug)) {
+            smallestCategory = secondaryChildCategorySlug;
+            secondSmallestCategory = childCategorySlug;
+        } else if (StringUtils.isNotBlank(childCategorySlug)) {
+            smallestCategory = childCategorySlug;
+            secondSmallestCategory = rootCategorySlug;
+        } else {
+            smallestCategory = rootCategorySlug;
+        }
 
-		try {
-			boolean renderNewCatalogUI = Functions.renderNewCatalogUI(childCategorySlug, secondaryChildCategorySlug); 
-			if(renderNewCatalogUI){
-				defaultPerPage = 21;
-			}
-			if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
-				if(!filterOptions.isEmpty()){
-					filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
-				}
-				logger.error("Using filters. SOLR can't return results so hitting DB");
-				throw new Exception("Using filters. SOLR can't return results so hitting DB");
-			}
+        try {            
+            if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
+                if (!filterOptions.isEmpty()) {
+                    filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
+                }
+                logger.error("Using filters. SOLR can't return results so hitting DB");
+                throw new Exception("Using filters. SOLR can't return results so hitting DB");
+            }
             List<SearchFilter> categoryList = new ArrayList<SearchFilter>();
             SearchFilter searchFilter = new SearchFilter(SolrSchemaConstants.category, rootCategorySlug);
             categoryList.add(searchFilter);
@@ -190,432 +187,437 @@ public class CatalogAction extends BasePaginatedAction {
 
             SortFilter sortFilter = new SortFilter(getCustomSortBy(), getCustomSortOrder());
             PaginationFilter paginationFilter = new PaginationFilter(getPageNo(), getPerPage());
-            RangeFilter rangeFilter = new RangeFilter(SolrSchemaConstants.hkPrice,getCustomStartRange(), getCustomEndRange());
+            RangeFilter rangeFilter = new RangeFilter(SolrSchemaConstants.hkPrice, getCustomStartRange(), getCustomEndRange());
 
             SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
             List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
             searchFilters.add(brandFilter);
-            SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter,paginationFilter,sortFilter);
+            SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter, paginationFilter, sortFilter);
 
-			List<Product> filteredProducts = searchResult.getSolrProducts();
-			if (rootCategorySlug.equals("services")) {
-				productList = trimListByDistance(filteredProducts, preferredZone);
-			}
-            //Find out how many products have been filtered
+            List<Product> filteredProducts = searchResult.getSolrProducts();
+            if (rootCategorySlug.equals("services")) {
+                filteredProducts = trimListByDistance(filteredProducts, preferredZone);
+            }
+            // Find out how many products have been filtered
             int diff = 0;
             long totalResultSize = searchResult.getResultSize();
-            //totalResultSize = filteredProducts.size();
+            // totalResultSize = filteredProducts.size();
 
-            productPage = new Page(filteredProducts, getPerPage(), getPageNo(), (int)totalResultSize);
+            productPage = new Page(filteredProducts, getPerPage(), getPageNo(), (int) totalResultSize);
             if (productPage != null) {
                 productList = productPage.getList();
+                for (Product product : productList) {
+                    product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+                }
             }
             category = categoryDao.getCategoryByName(smallestCategory);
-		} catch (Exception e) {            			
-			urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
-			//logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for "+urlFragment, e);
-			logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for "+urlFragment);
-			List<String> categoryNames = new ArrayList<String>();
-			Category primaryCategory = categoryDao.getCategoryByName(smallestCategory);
-			category = primaryCategory;
-			if (primaryCategory != null) {
-				categoryNames.add(primaryCategory.getName());
-			}
+        } catch (Exception e) {
+            urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
+            // logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for "+urlFragment, e);
+            logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for " + urlFragment);
+            List<String> categoryNames = new ArrayList<String>();
+            Category primaryCategory = categoryDao.getCategoryByName(smallestCategory);
+            category = primaryCategory;
+            if (primaryCategory != null) {
+                categoryNames.add(primaryCategory.getName());
+            }
 
-			Category secondaryCategory = null;
-			if (secondSmallestCategory != null) {
-				secondaryCategory = categoryDao.getCategoryByName(secondSmallestCategory);
-				if (secondaryCategory != null) {
-					categoryNames.add(secondaryCategory.getName());
-				}
-			}
+            Category secondaryCategory = null;
+            if (secondSmallestCategory != null) {
+                secondaryCategory = categoryDao.getCategoryByName(secondSmallestCategory);
+                if (secondaryCategory != null) {
+                    categoryNames.add(secondaryCategory.getName());
+                }
+            }
 
-			Category tertiaryCategory = null;
-			if (thirdSmallestCategory != null) {
-				tertiaryCategory = categoryDao.getCategoryByName(thirdSmallestCategory);
-				if (tertiaryCategory != null) {
-					categoryNames.add(tertiaryCategory.getName());
-				}
-			}
+            Category tertiaryCategory = null;
+            if (thirdSmallestCategory != null) {
+                tertiaryCategory = categoryDao.getCategoryByName(thirdSmallestCategory);
+                if (tertiaryCategory != null) {
+                    categoryNames.add(tertiaryCategory.getName());
+                }
+            }
 
-			if (categoryNames.size() == 0) {
-				return new RedirectResolution(HomeAction.class);
-			}
+            if (categoryNames.size() == 0) {
+                return new RedirectResolution(HomeAction.class);
+            }
 
-			if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
-				int groupsCount = 0;
-				if(!filterOptions.isEmpty()){
-					Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
-					groupsCount = groupedFilters.size();
-				}
-				productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice, getPageNo(), getPerPage());
-				if (productPage != null) {
-					productList = productPage.getList();
-					for (Product product : productList) {
-						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
-					}
-				}
-				trimListByCategory(productList, secondaryCategory);
-			} else {
-				if (StringUtils.isBlank(brand)) {
-					productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
-				} else {
-					productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, getPageNo(), getPerPage());
-				}
-				if (productPage != null) {
-					productList = productPage.getList();
-					for (Product product : productList) {
-						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
-					}
-				}
-				trimListByCategory(productList, secondaryCategory);
-				if (rootCategorySlug.equals("services")) {
-					productList = trimListByDistance(productList, preferredZone);
-				}
-			}
+            if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
+                int groupsCount = 0;
+                if (!filterOptions.isEmpty()) {
+                    Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
+                    groupsCount = groupedFilters.size();
+                }
+                productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice, getPageNo(), getPerPage());
+                if (productPage != null) {
+                    productList = productPage.getList();
+                    for (Product product : productList) {
+                        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+                    }
+                }
+                productList = trimListByCategory(productList, secondaryCategory);
+            } else {
+                if (StringUtils.isBlank(brand)) {
+                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
+                } else {
+                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, getPageNo(), getPerPage());
+                }
+                if (productPage != null) {
+                    productList = productPage.getList();
+                    for (Product product : productList) {
+                        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+                    }
+                }
+                trimListByCategory(productList, secondaryCategory);
+                if (rootCategorySlug.equals("services")) {
+                    productList = trimListByDistance(productList, preferredZone);
+                }
+            }
 
-		}
-		urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
-		menuNodes = menuHelper.getSiblings(urlFragment);
-		if (menuNodes == null) {
-			logger.debug(urlFragment);
-			urlFragment = urlFragment.replace("/" + smallestCategory, "");
-			menuNodes = menuHelper.getSiblings(urlFragment);
-			WebContext.getResponse().setStatus(301); //redirection
-			//argumentative, need to discuss, it will work without setting header as well but the url shown in browser will be wrong, though output same, hence page is loaded twice
-			WebContext.getResponse().setHeader("Location", getContext().getRequest().getContextPath() + "/" + rootCategorySlug + "/" + secondSmallestCategory);
-		}
+        }
+        urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
+        menuNodes = menuHelper.getSiblings(urlFragment);
+        if (menuNodes == null) {
+            logger.debug(urlFragment);
+            urlFragment = urlFragment.replace("/" + smallestCategory, "");
+            menuNodes = menuHelper.getSiblings(urlFragment);
+            WebContext.getResponse().setStatus(301); // redirection
+            // argumentative, need to discuss, it will work without setting header as well but the url shown in browser
+            // will be wrong, though output same, hence page is loaded twice
+            WebContext.getResponse().setHeader("Location", getContext().getRequest().getContextPath() + "/" + rootCategorySlug + "/" + secondSmallestCategory);
+        }
 
-		if (jspFile.exists() && menuNodes == null) {
-			WebContext.getResponse().setHeader("Location", getContext().getRequest().getContextPath() + "/" + rootCategorySlug);
-			return new ForwardResolution(jspRelativePath);
-		}
-		menuNode = menuHelper.getMenuNode(urlFragment);
-		topCategoryUrlSlug = menuHelper.getTopCategorySlug(menuNode);
-		allCategories = menuHelper.getAllCategoriesString(menuNode);
-		brandList = categoryDao.getBrandsByCategory(menuHelper.getAllCategoriesList(menuNode));
+        if (jspFile.exists() && menuNodes == null) {
+            WebContext.getResponse().setHeader("Location", getContext().getRequest().getContextPath() + "/" + rootCategorySlug);
+            return new ForwardResolution(jspRelativePath);
+        }
+        menuNode = menuHelper.getMenuNode(urlFragment);
+        topCategoryUrlSlug = menuHelper.getTopCategorySlug(menuNode);
+        allCategories = menuHelper.getAllCategoriesString(menuNode);
+        brandList = categoryDao.getBrandsByCategory(menuHelper.getAllCategoriesList(menuNode));
 
-		if (StringUtils.isNotBlank(brand)) {
-			String keyForBrandInCat = urlFragment.concat(SeoManager.KEY_BRAND_IN_CAT).concat(brand);
-			seoData = seoManager.generateSeo(keyForBrandInCat);
-		} else {
-			seoData = seoManager.generateSeo(urlFragment);
-		}
+        if (StringUtils.isNotBlank(brand)) {
+            String keyForBrandInCat = urlFragment.concat(SeoManager.KEY_BRAND_IN_CAT).concat(brand);
+            seoData = seoManager.generateSeo(keyForBrandInCat);
+        } else {
+            seoData = seoManager.generateSeo(urlFragment);
+        }
 
-		if (StringUtils.isNotBlank(feed)) {
-			if (feed.equals("xml")) {
-				return new ForwardResolution("/pages/category/catalogFeedXml.jsp");
-			}
-		}
+        if (StringUtils.isNotBlank(feed)) {
+            if (feed.equals("xml")) {
+                return new ForwardResolution("/pages/category/catalogFeedXml.jsp");
+            }else if (feed.equals("xml-temp")) {                                   //TODO: Hacky code to be removed..done by Marut as suggested by Kani
+                return new ForwardResolution("/pages/category/catalogFeedXmlTemp.jsp");
+            }
+        }
 
-		return new ForwardResolution("/pages/category/catalog.jsp");
-	}
+        return new ForwardResolution("/pages/category/catalog.jsp");
+    }
 
-	private List<Product> trimListByDistance(List<Product> productListNonCityFiltered, String preferredZone) throws IOException {
-		if (preferredZone == null) {
-			preferredZone = "Delhi"; //hardcoded default results
-		} else if (preferredZone.equals("All")) {//returning the whole list if preferred zone is blank
-			return productListNonCityFiltered;
-		}
-		MapIndia mi = mapIndiaDao.findByCity(preferredZone);
-		List<Product> cityFiltered = new ArrayList<Product>();
-		for (Iterator<Product> productIterator = productListNonCityFiltered.iterator(); productIterator.hasNext();) {
-			Product product = productIterator.next();
-			if (product.isService()) {
-				Manufacturer manufacturer = product.getManufacturer();
-				if (manufacturer != null) {
-					List<Address> manufacturerAddresses = manufacturer.getAddresses();
-					if (manufacturerAddresses != null && manufacturerAddresses.size() > 0) {
-						for (Address serviceAddress : manufacturerAddresses) {
-							LocalityMap lm = localityMapDao.findByAddress(serviceAddress);
-							if (lm != null && mi != null) {
-								if (localityMapDao.getDistanceInMeters(lm.getLattitude(), lm.getLongitude(), mi.getLattitude(), mi.getLongitude()) < 100) {
-									cityFiltered.add(product);
-									break;
-								}
-							}
-						}
-					}
-				}
-				if (manufacturer != null && manufacturer.isAvailableAllOverIndia() != null && manufacturer.isAvailableAllOverIndia()) {
-					if (!cityFiltered.contains(product)) cityFiltered.add(product);
-				}
-			}else{
+    private List<Product> trimListByDistance(List<Product> productListNonCityFiltered, String preferredZone) throws IOException {
+        if (preferredZone == null) {
+            preferredZone = "Delhi"; // hardcoded default results
+        } else if (preferredZone.equals("All")) {// returning the whole list if preferred zone is blank
+            return productListNonCityFiltered;
+        }
+        MapIndia mi = mapIndiaDao.findByCity(preferredZone);
+        List<Product> cityFiltered = new ArrayList<Product>();
+        for (Iterator<Product> productIterator = productListNonCityFiltered.iterator(); productIterator.hasNext();) {
+            Product product = productIterator.next();
+            if (product.isService()) {
+                Manufacturer manufacturer = product.getManufacturer();
+                if (manufacturer != null) {
+                    List<Address> manufacturerAddresses = manufacturer.getAddresses();
+                    if (manufacturerAddresses != null && manufacturerAddresses.size() > 0) {
+                        for (Address serviceAddress : manufacturerAddresses) {
+                            LocalityMap lm = localityMapDao.findByAddress(serviceAddress);
+                            if (lm != null && mi != null) {
+                                if (localityMapDao.getDistanceInMeters(lm.getLattitude(), lm.getLongitude(), mi.getLattitude(), mi.getLongitude()) < 100) {
+                                    cityFiltered.add(product);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (manufacturer != null && manufacturer.isAvailableAllOverIndia() != null && manufacturer.isAvailableAllOverIndia()) {
+                    if (!cityFiltered.contains(product))
+                        cityFiltered.add(product);
+                }
+            } else {
                 cityFiltered.add(product);
             }
-		}
-		return cityFiltered;
-	}
+        }
+        return cityFiltered;
+    }
 
-	public Resolution setCookie() {
-		Cookie preferredZoneCookie = new Cookie(HealthkartConstants.Cookie.preferredZone, CryptoUtil.encrypt(preferredZone));
-		preferredZoneCookie.setPath("/");
-		preferredZoneCookie.setMaxAge(365 * 24 * 3600);
-		WebContext.getResponse().addCookie(preferredZoneCookie);
-		WebContext.getResponse().setContentType("text/html");
-		return new RedirectResolution(redirectUrl);
-	}
+    public Resolution setCookie() {
+        Cookie preferredZoneCookie = new Cookie(HealthkartConstants.Cookie.preferredZone, CryptoUtil.encrypt(preferredZone));
+        preferredZoneCookie.setPath("/");
+        preferredZoneCookie.setMaxAge(365 * 24 * 3600);
+        WebContext.getResponse().addCookie(preferredZoneCookie);
+        WebContext.getResponse().setContentType("text/html");
+        return new RedirectResolution(redirectUrl);
+    }
 
+    private List<Product> trimListByCategory(List<Product> productList, Category category) {
+        List<Product> categoryProductList = new ArrayList<Product>();
+        if (category != null) {
+            for (Product product : productList) {
+                if (product.getCategories().contains(category)) {
+                    categoryProductList.add(product);
+                }
+            }
+        }
+        return categoryProductList;
+    }
 
-	private void trimListByCategory(List<Product> productList, Category category) {
-		if (category != null) {
-			for (Iterator<Product> productIterator = productList.iterator(); productIterator.hasNext();) {
-				Product product = productIterator.next();
-				if (!product.getCategories().contains(category)) {
-					productIterator.remove();
-				}
-			}
-		}
-	}
+    public void setRootCategorySlug(String rootCategorySlug) {
+        this.rootCategorySlug = rootCategorySlug;
+    }
 
-	public void setRootCategorySlug(String rootCategorySlug) {
-		this.rootCategorySlug = rootCategorySlug;
-	}
+    public void setChildCategorySlug(String childCategorySlug) {
+        this.childCategorySlug = childCategorySlug;
+    }
 
-	public void setChildCategorySlug(String childCategorySlug) {
-		this.childCategorySlug = childCategorySlug;
-	}
+    public void setSecondaryChildCategorySlug(String secondaryChildCategorySlug) {
+        this.secondaryChildCategorySlug = secondaryChildCategorySlug;
+    }
 
-	public void setSecondaryChildCategorySlug(String secondaryChildCategorySlug) {
-		this.secondaryChildCategorySlug = secondaryChildCategorySlug;
-	}
+    public String getRootCategorySlug() {
+        return rootCategorySlug;
+    }
 
-	public String getRootCategorySlug() {
-		return rootCategorySlug;
-	}
+    public String getChildCategorySlug() {
+        return childCategorySlug;
+    }
 
-	public String getChildCategorySlug() {
-		return childCategorySlug;
-	}
+    public String getSecondaryChildCategorySlug() {
+        return secondaryChildCategorySlug;
+    }
 
-	public String getSecondaryChildCategorySlug() {
-		return secondaryChildCategorySlug;
-	}
+    public List<MenuNode> getMenuNodes() {
+        return menuNodes;
+    }
 
-	public List<MenuNode> getMenuNodes() {
-		return menuNodes;
-	}
+    public MenuNode getMenuNode() {
+        return menuNode;
+    }
 
-	public MenuNode getMenuNode() {
-		return menuNode;
-	}
+    public List<Product> getProductList() {
+        return productList;
+    }
 
-	public List<Product> getProductList() {
-		return productList;
-	}
+    public String getUrlFragment() {
+        return urlFragment;
+    }
 
-	public String getUrlFragment() {
-		return urlFragment;
-	}
+    public void setUrlFragment(String urlFragment) {
+        this.urlFragment = urlFragment;
+    }
 
-	public void setUrlFragment(String urlFragment) {
-		this.urlFragment = urlFragment;
-	}
+    public Category getCategory() {
+        return category;
+    }
 
-	public Category getCategory() {
-		return category;
-	}
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
-	public void setCategory(Category category) {
-		this.category = category;
-	}
+    public String getBrand() {
+        return brand;
+    }
 
-	public String getBrand() {
-		return brand;
-	}
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
 
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
+    public String getTopCategoryUrlSlug() {
+        return topCategoryUrlSlug;
+    }
 
-	public String getTopCategoryUrlSlug() {
-		return topCategoryUrlSlug;
-	}
+    public String getAllCategories() {
+        return allCategories;
+    }
 
-	public String getAllCategories() {
-		return allCategories;
-	}
+    public int getPerPageDefault() {
+        return defaultPerPage;
+    }
 
-	public int getPerPageDefault() {
-		return defaultPerPage;
-	}
+    public int getPageCount() {
+        return productPage == null ? 0 : productPage.getTotalPages();
+    }
 
-	public int getPageCount() {
-		return productPage == null ? 0 : productPage.getTotalPages();
-	}
+    public int getResultCount() {
+        return productPage == null ? 0 : productPage.getTotalResults();
+    }
 
-	public int getResultCount() {
-		return productPage == null ? 0 : productPage.getTotalResults();
-	}
+    public SeoData getSeoData() {
+        return seoData;
+    }
 
+    public void setSeoData(SeoData seoData) {
+        this.seoData = seoData;
+    }
 
-	public SeoData getSeoData() {
-		return seoData;
-	}
+    public String getDisplayMode() {
+        return displayMode;
+    }
 
-	public void setSeoData(SeoData seoData) {
-		this.seoData = seoData;
-	}
+    public void setDisplayMode(String displayMode) {
+        this.displayMode = displayMode;
+    }
 
-	public String getDisplayMode() {
-		return displayMode;
-	}
+    public int getPerPage() {
+        return perPage <= 0 ? getPerPageDefault() : perPage;
+    }
 
-	public void setDisplayMode(String displayMode) {
-		this.displayMode = displayMode;
-	}
+    public void setPerPage(int perPage) {
+        this.perPage = perPage;
+    }
 
-	public int getPerPage() {
-		return perPage <= 0 ? getPerPageDefault() : perPage;
-	}
+    public List<String> getProductIDList() {
+        return productIDList;
+    }
 
-	public void setPerPage(int perPage) {
-		this.perPage = perPage;
-	}
+    public void setProductIDList(List<String> productIDList) {
+        this.productIDList = productIDList;
+    }
 
-	public List<String> getProductIDList() {
-		return productIDList;
-	}
+    public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("rootCategorySlug");
+        params.add("childCategorySlug");
+        params.add("secondaryChildCategorySlug");
+        params.add("tertiaryChildCategorySlug");
+        params.add("brand");
+        params.add("sortBy");
+        params.add("sortOrder");
+        params.add("startRange");
+        params.add("endRange");
+        params.add("maxPrice");
+        params.add("minPrice");
+        if (filterOptions != null && !filterOptions.isEmpty()) {
+            for (int i = 0; i < filterOptions.size(); i++) {
+                params.add("filterOptions[" + i + "]");
+            }
 
-	public void setProductIDList(List<String> productIDList) {
-		this.productIDList = productIDList;
-	}
+        }
+        if (getTopCategoryUrlSlug().equals("services")) {
+            params.add("preferredZone");
+        }
+        return params;
+    }
 
-	public Set<String> getParamSet() {
-		HashSet<String> params = new HashSet<String>();
-		params.add("rootCategorySlug");
-		params.add("childCategorySlug");
-		params.add("secondaryChildCategorySlug");
-		params.add("tertiaryChildCategorySlug");
-		params.add("brand");
-		params.add("sortBy");
-		params.add("sortOrder");
-		params.add("startRange");
-		params.add("endRange");
-		params.add("maxPrice");
-		params.add("minPrice");
-		if (filterOptions != null && !filterOptions.isEmpty()) {
-			for (int i = 0; i < filterOptions.size(); i++) {
-				params.add("filterOptions[" + i + "]");
-			}
+    public String getSortBy() {
+        return sortBy;
+    }
 
-		}
-		if (getTopCategoryUrlSlug().equals("services")) {
-			params.add("preferredZone");
-		}
-		return params;
-	}
+    public String getCustomSortBy() {
+        return StringUtils.isBlank(sortBy) ? "ranking" : sortBy;
+    }
 
-	public String getSortBy() {
-		return sortBy;
-	}
+    public void setSortBy(String sortBy) {
+        this.sortBy = sortBy;
+    }
 
-	public String getCustomSortBy() {
-		return StringUtils.isBlank(sortBy) ? "ranking" : sortBy;
-	}
+    public String getSortOrder() {
+        return sortOrder;
+    }
 
-	public void setSortBy(String sortBy) {
-		this.sortBy = sortBy;
-	}
+    public String getCustomSortOrder() {
+        return StringUtils.isBlank(sortOrder) ? "asc" : sortOrder;
+    }
 
-	public String getSortOrder() {
-		return sortOrder;
-	}
+    public void setSortOrder(String sortOrder) {
+        this.sortOrder = sortOrder;
+    }
 
-	public String getCustomSortOrder() {
-		return StringUtils.isBlank(sortOrder) ? "asc" : sortOrder;
-	}
+    public Double getCustomStartRange() {
+        return startRange != null ? startRange : 0.0;
+    }
 
-	public void setSortOrder(String sortOrder) {
-		this.sortOrder = sortOrder;
-	}
+    public Double getStartRange() {
+        return startRange;
+    }
 
-	public Double getCustomStartRange() {
-		return startRange != null ? startRange : 0.0;
-	}
+    public void setStartRange(Double startRange) {
+        this.startRange = startRange;
+    }
 
-	public Double getStartRange() {
-		return startRange;
-	}
+    public Double getEndRange() {
+        return endRange;
+    }
 
-	public void setStartRange(Double startRange) {
-		this.startRange = startRange;
-	}
+    public Double getCustomEndRange() {
+        return endRange != null ? endRange : 1000000;
+    }
 
-	public Double getEndRange() {
-		return endRange;
-	}
+    public void setEndRange(Double endRange) {
+        this.endRange = endRange;
+    }
 
-	public Double getCustomEndRange() {
-		return endRange != null ? endRange : 1000000;
-	}
+    public String getPreferredZone() {
+        return getTopCategoryUrlSlug().equals("services") ? preferredZone : null;
+    }
 
-	public void setEndRange(Double endRange) {
-		this.endRange = endRange;
-	}
+    public void setPreferredZone(String preferredZone) {
+        this.preferredZone = preferredZone;
+    }
 
-	public String getPreferredZone() {
-		return getTopCategoryUrlSlug().equals("services") ? preferredZone : null;
-	}
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
 
-	public void setPreferredZone(String preferredZone) {
-		this.preferredZone = preferredZone;
-	}
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
 
-	public String getRedirectUrl() {
-		return redirectUrl;
-	}
+    public void setFeed(String feed) {
+        this.feed = feed;
+    }
 
-	public void setRedirectUrl(String redirectUrl) {
-		this.redirectUrl = redirectUrl;
-	}
+    public String getTertiaryChildCategorySlug() {
+        return tertiaryChildCategorySlug;
+    }
 
-	public void setFeed(String feed) {
-		this.feed = feed;
-	}
+    public void setTertiaryChildCategorySlug(String tertiaryChildCategorySlug) {
+        this.tertiaryChildCategorySlug = tertiaryChildCategorySlug;
+    }
 
-	public String getTertiaryChildCategorySlug() {
-		return tertiaryChildCategorySlug;
-	}
+    public List<String> getBrandList() {
+        return brandList;
+    }
 
-	public void setTertiaryChildCategorySlug(String tertiaryChildCategorySlug) {
-		this.tertiaryChildCategorySlug = tertiaryChildCategorySlug;
-	}
+    public void setBrandList(List<String> brandList) {
+        this.brandList = brandList;
+    }
 
-	public List<String> getBrandList() {
-		return brandList;
-	}
+    public List<Long> getFilterOptions() {
+        return filterOptions;
+    }
 
-	public void setBrandList(List<String> brandList) {
-		this.brandList = brandList;
-	}
+    public void setFilterOptions(List<Long> filterOptions) {
+        this.filterOptions = filterOptions;
+    }
 
-	public List<Long> getFilterOptions() {
-		return filterOptions;
-	}
+    public Double getMinPrice() {
+        return minPrice;
+    }
 
-	public void setFilterOptions(List<Long> filterOptions) {
-		this.filterOptions = filterOptions;
-	}
+    public void setMinPrice(Double minPrice) {
+        this.minPrice = minPrice;
+    }
 
-	public Double getMinPrice() {
-		return minPrice;
-	}
+    public Double getMaxPrice() {
+        return maxPrice;
+    }
 
-	public void setMinPrice(Double minPrice) {
-		this.minPrice = minPrice;
-	}
+    public void setMaxPrice(Double maxPrice) {
+        this.maxPrice = maxPrice;
+    }
 
-	public Double getMaxPrice() {
-		return maxPrice;
-	}
-
-	public void setMaxPrice(Double maxPrice) {
-		this.maxPrice = maxPrice;
-	}
-
-	public List<ProductOption> getFilterProductOptions() {
-		return filterProductOptions;
-	}
+    public List<ProductOption> getFilterProductOptions() {
+        return filterProductOptions;
+    }
 }
-

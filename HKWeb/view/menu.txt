@@ -6,10 +6,11 @@
 --/nutrition/sports-nutrition/intra-workout  :Intra Workout
 --/nutrition/sports-nutrition/post-workout : Post Workout
 --/nutrition/sports-nutrition/weight-gainer : Mass Gainer
+--/nutrition/sports-nutrition/glutamine
 --/nutrition/sports-nutrition/protein-bars  : Protein Bars
 --/nutrition/sports-nutrition/athletes      :  Athletes
 --/nutrition/sports-nutrition/fat-burner
---/nutrition/sports-nutrition/more... : Other Supplements
+--/nutrition/sports-nutrition/more...   : Other Supplements
 --/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
 --/nutrition/sports-nutrition/muscle-building-combos :Supersavers !!!
 -/nutrition/dietary-supplements : Dietary Supplements
@@ -117,13 +118,20 @@
 --/sports/fitness-accessories/sklz : SKLZ
 -/sports/fitness-equipment
 --/sports/fitness-equipment/treadmills
+---/sports/fitness-equipment/treadmills/home
+---/sports/fitness-equipment/treadmills/commercial
 --/sports/fitness-equipment/crosstrainers
+---/sports/fitness-equipment/crosstrainers/home
+---/sports/fitness-equipment/crosstrainers/commercial
 --/sports/fitness-equipment/exercise-bike
+---/sports/fitness-equipment/exercise-bike/home
+---/sports/fitness-equipment/exercise-bike/commercial
 --/sports/fitness-equipment/rowers
 --/sports/fitness-equipment/home-gym
 --/sports/fitness-equipment/steppers
 --/sports/fitness-equipment/bench-equipments
 --/sports/fitness-equipment/heart-rate-monitors
+---/sports/fitness-equipment/heart-rate-monitors/accessories
 --/sports/fitness-equipment/miscellaneous-equipments
 -/sports/sports-equipment
 --/sports/sports-equipment/football
@@ -272,11 +280,6 @@
 --/home-devices/supports/calf-support
 --/home-devices/supports/ankle-support
 --/home-devices/supports/backrest
---/home-devices/supports/walking-aids
----/home-devices/supports/walking-aids/wheel-chair
----/home-devices/supports/walking-aids/Walking-sticks
----/home-devices/supports/walking-aids/crutches
----/home-devices/supports/walking-aids/walkers
 -/home-devices/rehabilitation-aids
 --/home-devices/rehabilitation-aids/walking-aids
 ---/home-devices/rehabilitation-aids/walking-aids/walking-sticks
@@ -287,8 +290,8 @@
 --/home-devices/rehabilitation-aids/commode : Commode WheelChair/Stools
 --/home-devices/rehabilitation-aids/physiotherapy-aids
 --/home-devices/rehabilitation-aids/orthotic-aids
----/home-devices/rehabilitation-aids/prosthetic-aids/knee
----/home-devices/rehabilitation-aids/prosthetic-aids/foot-drop-splints
+---/home-devices/rehabilitation-aids/orthotic-aids/knee
+---/home-devices/rehabilitation-aids/orthotic-aids/foot-drop-splints
 --/home-devices/rehabilitation-aids/cosmetic-restoration
 ---/home-devices/rehabilitation-aids/cosmetic-restoration/face
 ---/home-devices/rehabilitation-aids/cosmetic-restoration/breast
@@ -337,7 +340,7 @@
 --/home-devices/clinical-supplies/hearing-aids
 --/home-devices/clinical-supplies/eye-patch
 --/home-devices/clinical-supplies/suction-devices
---/home-devices/clinical-supplies/diagnostic-products
+--/home-devices/clinical-supplies/health-aids
 -/home-devices/miscellaneous
 --/home-devices/miscellaneous/weighing-scales
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
@@ -453,6 +456,21 @@
 ---/personal-care/elderly-care/adult-diapers/diapers
 ---/personal-care/elderly-care/adult-diapers/underpads
 ---/personal-care/elderly-care/adult-diapers/diaper-rash-cream: Diaper Rash Cream
+--/personal-care/elderly-care/support-systems
+---/personal-care/elderly-care/support-systems/crepe-bandages:Crepe Bandages
+---/personal-care/elderly-care/support-systems/cervical-supports:Cervical Supports
+---/personal-care/elderly-care/support-systems/shoulder-clavicle-supports:Shoulder & Clavicle Supports
+---/personal-care/elderly-care/support-systems/chest-supports:Chest Supports
+---/personal-care/elderly-care/support-systems/wrist-forearm-supports:Wrist & Forearm Supports
+---/personal-care/elderly-care/support-systems/elbow-thumb-supports:Elbow & Thumb Supports
+---/personal-care/elderly-care/support-systems/arm-supports:Arm Supports
+---/personal-care/elderly-care/support systems/abdominal-supports:Abdominal Supports
+---/personal-care/elderly-care/support-systems/back-supports:Back Supports
+---/personal-care/elderly-care/support-systems/compression-supports:Compression Supports
+---/personal-care/elderly-care/support systems/knee-supports:Knee Supports
+---/personal-care/elderly-care/support-systems/ankle-supports:Ankle Supports
+---/personal-care/elderly-care/support-systems/traction-accessories:Traction Accessories
+---/personal-care/elderly-care/support-systems/premium-range:Premium Range
 --/personal-care/elderly-care/nutrition
 --/personal-care/elderly-care/diagnostics
 ---/personal-care/elderly-care/diagnostics/bp-monitor: BP Monitors
@@ -559,7 +577,6 @@
 ---/beauty/what-s-new/women-nutrition/wellness
 ---/beauty/what-s-new/women-nutrition/weight-watch
 --/beauty/what-s-new/spas-salons : Spas & Salons
---/beauty/what-s-new/cosmetic-restoration
 -/beauty/face-care
 --/beauty/face-care/cleanser
 ---/beauty/face-care/cleanser/normal
@@ -597,19 +614,22 @@
 --/beauty/bath-body/body-scrub
 --/beauty/bath-body/bath-salts-bubbles : Bath Salts & Bubbles
 --/beauty/bath-body/body-lotion
---/beauty/bath-body/body-oil
 --/beauty/bath-body/body-treatment
----/beauty/bath-body/body-treatment/body-shaping-creams
----/beauty/bath-body/body-treatment/body-shaping-accessories
----/beauty/bath-body/body-treatment/anti-stretch-mark
----/beauty/bath-body/body-treatment/scar-treatment
---/beauty/bath-body/talc
---/beauty/bath-body/deodorant
---/beauty/bath-body/oral
---/beauty/bath-body/hand-care
---/beauty/bath-body/foot-care
+---/beauty/bath-body/body-treatment/anti-marks
+---/beauty/bath-body/body-treatment/body-oil
+--/beauty/bath-body/body-shaping
+---/beauty/bath-body/body-shaping/creams
+---/beauty/bath-body/body-shaping/shapewear
+---/beauty/bath-body/body-shaping/accessories
+--/beauty/bath-body/talc-deodorant : Talc & Deodorant
+---/beauty/bath-body/talc-deodorant/talc
+---/beauty/bath-body/talc-deodorant/deodorant
+--/beauty/bath-body/hand-foot-care : Hand & Foot Care
+---/beauty/bath-body/hand-foot-care/hand-care
+---/beauty/bath-body/hand-foot-care/foot-care
 --/beauty/bath-body/hair-removal
 --/beauty/bath-body/accessories
+--/beauty/bath-body/camisoles
 --/beauty/bath-body/fragrances
 -/beauty/make-up
 --/beauty/make-up/organic-make-up
@@ -687,7 +707,6 @@
 --/beauty/men/face-mask
 --/beauty/men/talc
 --/beauty/men/fragrances
-
 
 /baby
 -/baby/diapering

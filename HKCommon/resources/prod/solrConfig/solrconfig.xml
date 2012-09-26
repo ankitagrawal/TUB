@@ -295,12 +295,10 @@
                      since a document was added before automaticly
                      triggering a new commit.
         -->
-        <!--
          <autoCommit>
-           <maxDocs>10000</maxDocs>
-           <maxTime>1000</maxTime>
+           <maxDocs>1000</maxDocs>
+           <maxTime>10000</maxTime>
          </autoCommit>
-        -->
 
         <!-- Update Related Event Listeners
 
