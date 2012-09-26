@@ -7,10 +7,12 @@
 <%@ page import="com.hk.pact.service.OrderStatusService" %>
 <%@ page import="com.hk.pact.service.payment.PaymentService" %>
 <%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
+<%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.pact.dao.store.StoreDao" %>
 <%@ page import="com.hk.pact.service.store.StoreService" %>
+<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -31,11 +33,13 @@
         PaymentService paymentService =  ServiceLocatorFactory.getService(PaymentService.class);
         OrderStatusService orderStatusService = ServiceLocatorFactory.getService(OrderStatusService.class);
         ShippingOrderStatusService shippingOrderStatusService = ServiceLocatorFactory.getService(ShippingOrderStatusService.class);
+        ShippingOrderLifecycleService shippingOrderLifecycleService = ServiceLocatorFactory.getService(ShippingOrderLifecycleService.class);
         StoreService storeService = ServiceLocatorFactory.getService(StoreService.class);
         pageContext.setAttribute("paymentModeList", paymentService.listWorkingPaymentModes());
         pageContext.setAttribute("paymentStatusList", paymentService.listWorkingPaymentStatuses());
         pageContext.setAttribute("orderStatusList", orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForActionQueue()));
         pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForActionQueue()));
+        pageContext.setAttribute("shippingOrderLifecycleList", shippingOrderLifecycleService.getOrderActivities(EnumShippingOrderLifecycleActivity.getActivitiesForActionQueue()));
         pageContext.setAttribute("storeList", storeService.getAllStores());
 
         CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
@@ -285,6 +289,13 @@
                     <c:forEach items="${shippingOrderStatusList}" var="shippingOrderStatus" varStatus="ctr">
                         <label><s:checkbox name="shippingOrderStatuses[${ctr.index}]"
                                            value="${shippingOrderStatus.id}"/> ${shippingOrderStatus.name}</label>
+                    </c:forEach>
+                    &nbsp;&nbsp;&nbsp;
+                    <br>
+                    <label>SO Lifecycle</label>
+                    <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity" varStatus="ctr">
+                        <label><s:checkbox name="shippingOrderLifecycleActivities[${ctr.index}]"
+                                           value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}</label>
                     </c:forEach>
                     &nbsp;&nbsp;&nbsp;
                     <label>StoreId</label>

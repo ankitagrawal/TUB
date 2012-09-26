@@ -6,6 +6,7 @@ import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
@@ -14,6 +15,7 @@ import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.OrderStatusDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
@@ -25,6 +27,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
@@ -69,6 +72,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 	ShippingOrderService shippingOrderService;
 	@Autowired
 	ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
+    ShippingOrderLifecycleService shippingOrderLifecycleService;
 
 	private Long orderId;
 	private Long storeId;
@@ -77,6 +82,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 	private Date endDate;
 	private List<OrderStatus> orderStatuses = new ArrayList<OrderStatus>();
 	private List<ShippingOrderStatus> shippingOrderStatuses = new ArrayList<ShippingOrderStatus>();
+    private List<ShippingOrderLifeCycleActivity> shippingOrderLifecycleActivities = new ArrayList<ShippingOrderLifeCycleActivity>();
 	private List<PaymentMode> paymentModes = new ArrayList<PaymentMode>();
 	private List<PaymentStatus> paymentStatuses = new ArrayList<PaymentStatus>();
 	private List<String> basketCategories = new ArrayList<String>();
@@ -145,6 +151,20 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 			shippingOrderStatusList = shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForActionQueue());
 		}
 		orderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList);
+
+        List<ShippingOrderLifeCycleActivity> shippingOrderActivityList = new ArrayList<ShippingOrderLifeCycleActivity>();
+		for (ShippingOrderLifeCycleActivity shippingOrderActivity : shippingOrderLifecycleActivities) {
+			if (shippingOrderActivity != null) {
+				shippingOrderActivityList.add(shippingOrderActivity);
+			}
+		}
+        /*
+		if (shippingOrderActivityList.size() == 0) {
+			shippingOrderActivityList = shippingOrderLifecycleService.getOrderActivities(EnumShippingOrderLifecycleActivity.getActivitiesForActionQueue());
+		}
+		*/
+		orderSearchCriteria.setSOLifecycleActivityList(shippingOrderActivityList);
+
 
 		List<PaymentMode> paymentModeList = new ArrayList<PaymentMode>();
 		for (PaymentMode paymentMode : paymentModes) {
@@ -350,7 +370,15 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 		this.shippingOrderStatuses = shippingOrderStatuses;
 	}
 
-	public Set<String> getParamSet() {
+    public List<ShippingOrderLifeCycleActivity> getShippingOrderLifecycleActivities() {
+        return shippingOrderLifecycleActivities;
+    }
+
+    public void setShippingOrderLifecycleActivities(List<ShippingOrderLifeCycleActivity> shippingOrderLifecycleActivities) {
+        this.shippingOrderLifecycleActivities = shippingOrderLifecycleActivities;
+    }
+
+    public Set<String> getParamSet() {
 		HashSet<String> params = new HashSet<String>();
 		params.add("startDate");
 		params.add("endDate");
@@ -406,6 +434,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 				params.add("shippingOrderStatuses[" + ctr6 + "]");
 			}
 			ctr6++;
+		}
+        int ctr7 = 0;
+		for (ShippingOrderLifeCycleActivity SOLifecycleActivity : shippingOrderLifecycleActivities) {
+			if (SOLifecycleActivity != null) {
+				params.add("shippingOrderLifecycleActivities[" + ctr7 + "]");
+			}
+			ctr7++;
 		}
 
 		return params;

@@ -85,7 +85,7 @@ public enum EnumShippingOrderStatus {
 
 
     public static List<EnumShippingOrderStatus> getStatusForActionQueue() {
-        return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting, EnumShippingOrderStatus.SO_OnHold, EnumShippingOrderStatus.SO_EscalatedBack);
+        return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting, EnumShippingOrderStatus.SO_OnHold);//, EnumShippingOrderStatus.SO_EscalatedBack);
     }
 
     public static List<EnumShippingOrderStatus> getStatusForPicking() {
