@@ -116,7 +116,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
      */
     public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder) {
         logger.debug("Trying to autoescalate order#" + shippingOrder.getId());
-        if (shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId() != EnumPaymentStatus.AUTHORIZATION_PENDING.getId()) {
+        if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 Order order = shippingOrder.getBaseOrder();
                 if (order.isReferredOrder() && order.getPayment().getAmount() < 1000) {
@@ -131,12 +131,15 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
-                    if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
-                        logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
-                        return false;
-                    } else if (productVariant.getProduct().isDropShipping()) {
+	                if (productVariant.getProduct().isService() != null && productVariant.getProduct().isService()) {
+		                continue;
+	                }
+	                if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
+		                String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
+		                logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+				                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
+		                return false;
+	                } else if (productVariant.getProduct().isDropShipping()) {
                         String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
                         logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
@@ -170,7 +173,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
     public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
         logger.debug("Trying to manually escalate order#" + shippingOrder.getId());
-        if (shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId() != EnumPaymentStatus.AUTHORIZATION_PENDING.getId()) {
+        if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
                     Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This

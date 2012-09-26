@@ -50,7 +50,7 @@ public class AffiliateCategory {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Category)) return false;
+    if (!(o instanceof AffiliateCategory)) return false;
 
     AffiliateCategory category = (AffiliateCategory) o;
 

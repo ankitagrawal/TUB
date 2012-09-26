@@ -35,6 +35,8 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private List<ShippingOrderStatus>                shippingOrderStatusList;
 
     private boolean                                  searchForPrinting = false;
+	private Date                                     lastEscStartDate;
+	private Date                                     lastEscEndDate;
 
     public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
         this.searchForPrinting = searchForPrinting;
@@ -121,6 +123,10 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
+
+		if(lastEscStartDate != null && lastEscEndDate != null) {
+			criteria.add(Restrictions.between("lastEscDate", lastEscStartDate, lastEscEndDate));
+		}
 
         if (shippingOrderStatusList != null && shippingOrderStatusList.size() > 0) {
             criteria.add(Restrictions.in("shippingOrderStatus", shippingOrderStatusList));
@@ -215,4 +221,21 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return criteria;
     }
 
+	public Date getLastEscStartDate() {
+		return lastEscStartDate;
+	}
+
+	public ShippingOrderSearchCriteria setLastEscStartDate(Date lastEscStartDate) {
+		this.lastEscStartDate = lastEscStartDate;
+		return this;
+	}
+
+	public Date getLastEscEndDate() {
+		return lastEscEndDate;
+	}
+
+	public ShippingOrderSearchCriteria setLastEscEndDate(Date lastEscEndDate) {
+		this.lastEscEndDate = lastEscEndDate;
+		return this;
+	}
 }

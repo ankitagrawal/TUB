@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.domain.catalog.product.*;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.image.ProductImageService;
+import com.hk.pact.service.inventory.SkuService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -39,12 +43,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.VariantConfig;
-import com.hk.domain.catalog.product.VariantConfigOption;
-import com.hk.domain.catalog.product.VariantConfigOptionParam;
-import com.hk.domain.catalog.product.VariantConfigValues;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.hkDelivery.Hub;
@@ -502,6 +500,14 @@ public class Functions {
         return productService.isComboInStock(combo);
     }
 
+    public static boolean isCombo(String id) {
+        Combo combo = getCombo(id);
+        if (combo != null){
+            return true;
+        }
+        return false;
+    }
+
     public static Map<String, List<String>> getRecommendedProducts(Object o) {
         Product product = (Product) o;
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
@@ -589,14 +595,30 @@ public class Functions {
         return hubService.getHubForUser(user);
     }
 
-	public static boolean renderNewCatalogUI(String child, String secondChild) {
-		List<String> categoriesForNewCatalogUI = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
-		boolean renderNewCatalogUI = (Functions.collectionContains(categoriesForNewCatalogUI, child) || Functions.collectionContains(categoriesForNewCatalogUI, secondChild));
-		return renderNewCatalogUI;
+	public static boolean renderNewCatalogFilter(String child, String secondChild) {
+		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
+		boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter, secondChild));
+		return renderNewCatalogFilter;
+	}
+
+	public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, boolean showHiddenImages) {
+		ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
+		List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
+		return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
+	}
+
+	public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
+		SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
+		List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
+		List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
+		for (Sku applicableSku : applicableSkus) {
+			applicableWarehouses.add(applicableSku.getWarehouse());
+		}
+		return applicableWarehouses;
 	}
 
 	public static boolean showOptionOnUI(String optionType) {
-		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE");
+		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY");
 		boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
 		return showOptionOnUI;
 	}

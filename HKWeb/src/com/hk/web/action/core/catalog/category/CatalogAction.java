@@ -133,7 +133,7 @@ public class CatalogAction extends BasePaginatedAction {
     @Session(key = HealthkartConstants.Session.perPageCatalog)
     private int                     perPage;
 
-    private int                     defaultPerPage             = 20;
+    private int                     defaultPerPage             = 24;
 
     @DefaultHandler
     public Resolution pre() throws IOException, SolrServerException {
@@ -147,6 +147,7 @@ public class CatalogAction extends BasePaginatedAction {
             }
         } else {
             logger.error("No category found for root category slug : " + rootCategorySlug);
+	        return new RedirectResolution(HomeAction.class);
         }
 
         String smallestCategory = null;
@@ -166,11 +167,7 @@ public class CatalogAction extends BasePaginatedAction {
             smallestCategory = rootCategorySlug;
         }
 
-        try {
-            boolean renderNewCatalogUI = Functions.renderNewCatalogUI(childCategorySlug, secondaryChildCategorySlug);
-            if (renderNewCatalogUI) {
-                defaultPerPage = 21;
-            }
+        try {            
             if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
                 if (!filterOptions.isEmpty()) {
                     filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
@@ -199,7 +196,7 @@ public class CatalogAction extends BasePaginatedAction {
 
             List<Product> filteredProducts = searchResult.getSolrProducts();
             if (rootCategorySlug.equals("services")) {
-                productList = trimListByDistance(filteredProducts, preferredZone);
+                filteredProducts = trimListByDistance(filteredProducts, preferredZone);
             }
             // Find out how many products have been filtered
             int diff = 0;
@@ -258,7 +255,7 @@ public class CatalogAction extends BasePaginatedAction {
                         product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
                     }
                 }
-                trimListByCategory(productList, secondaryCategory);
+                productList = trimListByCategory(productList, secondaryCategory);
             } else {
                 if (StringUtils.isBlank(brand)) {
                     productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
@@ -309,6 +306,8 @@ public class CatalogAction extends BasePaginatedAction {
         if (StringUtils.isNotBlank(feed)) {
             if (feed.equals("xml")) {
                 return new ForwardResolution("/pages/category/catalogFeedXml.jsp");
+            }else if (feed.equals("xml-temp")) {                                   //TODO: Hacky code to be removed..done by Marut as suggested by Kani
+                return new ForwardResolution("/pages/category/catalogFeedXmlTemp.jsp");
             }
         }
 
@@ -361,18 +360,16 @@ public class CatalogAction extends BasePaginatedAction {
         return new RedirectResolution(redirectUrl);
     }
 
-    private void trimListByCategory(List<Product> productList, Category category) {
-        if (category != null && productList != null) {
-            Iterator<Product> productIterator = productList.iterator();
-            if (productIterator != null) {
-                while (productIterator.hasNext()) {
-                    Product product = productIterator.next();
-                    if (product != null && !product.getCategories().contains(category)) {
-                        productIterator.remove();
-                    }
+    private List<Product> trimListByCategory(List<Product> productList, Category category) {
+        List<Product> categoryProductList = new ArrayList<Product>();
+        if (category != null) {
+            for (Product product : productList) {
+                if (product.getCategories().contains(category)) {
+                    categoryProductList.add(product);
                 }
             }
         }
+        return categoryProductList;
     }
 
     public void setRootCategorySlug(String rootCategorySlug) {

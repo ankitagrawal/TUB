@@ -121,6 +121,8 @@ public class OrderManager {
 	private KarmaProfileService karmaProfileService;
 	@Autowired
 	private SubscriptionService subscriptionService;
+//	@Autowired
+//	private SMSManager smsManager;
 
 	@Autowired
 	private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
@@ -373,7 +375,7 @@ public class OrderManager {
 		rewardPointService.awardRewardPoints(order);
 
 		// save order with placed status since amount has been applied
-		order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.Placed));
+		order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
 
 		Set<OrderCategory> categories = getOrderService().getCategoriesForBaseOrder(order);
 		order.setCategories(categories);
@@ -404,16 +406,14 @@ public class OrderManager {
 		if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
 			subscriptionService.placeSubscriptions(order);
 		}
-
+			getEmailManager().sendOrderConfirmEmailToAdmin(order);
+		}
 		// Check if HK order then only send emails and no order placed email is necessary for subscription orders
 		if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
 			// Send mail to Customer
 			getPaymentService().sendPaymentEmailForOrder(order);
-			// Send referral program intro email
 			sendReferralProgramEmail(order.getUser());
-		}
-			// Send mail to Admin
-			getEmailManager().sendOrderConfirmEmailToAdmin(order);
+//			getSmsManager().sendOrderPlacedSMS(order);
 		}
 		return order;
 	}
@@ -444,7 +444,7 @@ public class OrderManager {
 		updatedCartLineItems.addAll(cartLineItems);
 		for (CartLineItem cartLineItem : cartLineItems) {
 			if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
-			    logger.info("processing : " + cartLineItem.getProductVariant().getId() + " total " + cartLineItems.size());
+
 				ProductVariant freeVariant = cartLineItem.getProductVariant().getFreeProductVariant();
 				if (freeVariant != null) {
 					CartLineItem existingCartLineItem = getCartLineItemDao().getLineItem(freeVariant, cartLineItem.getOrder());
@@ -889,4 +889,12 @@ public class OrderManager {
 	public void setSubscriptionService(SubscriptionService subscriptionService) {
 		this.subscriptionService = subscriptionService;
 	}
+
+/*	public SMSManager getSmsManager() {
+		return smsManager;
+	}
+
+	public void setSmsManager(SMSManager smsManager) {
+		this.smsManager = smsManager;
+	}*/
 }

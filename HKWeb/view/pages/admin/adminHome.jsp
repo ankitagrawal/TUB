@@ -333,7 +333,7 @@
 <div class="left roundBox">
 	<h2>Affiliate</h2>
 
-	<h3><s:link beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction">Verify Affiliates</s:link></h3>
+	<h3><s:link beanclass="com.hk.web.action.core.affiliate.VerifyRejectAffiliateAction">Verify Affiliates</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction">Affiliate Account</s:link></h3>
 
@@ -423,6 +423,14 @@
                     title="View Consignments" event="searchConsignments" >View/Edit Consignments
             </s:link>
     </h3>
+
+    <h3>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction"
+                    title="View Payments History" event="searchPaymentReconciliation" >View Payments History
+            </s:link>
+    </h3>
+
+
 	<%--<shiro:hasPermission name="<%=EnumPermission.VIEW_CONSIGNMENT_TRACKING%>" >--%>
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
@@ -430,7 +438,12 @@
 				<s:param name="doTracking" value="false"/>
 			</s:link>
 		</h3>
-	<%--</shiro:hasPermission>--%>
+
+	<h3>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction"
+                    title="View Payments History" event="hkDeliveryreports" >HKDelivery Reports
+            </s:link>
+    </h3>
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction"
@@ -439,7 +452,7 @@
     </h3>
     <h3>
         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction" event="addUserToHub"
-                title="Add agent">Add agent to hub
+                title="Add agent">Add/Remove agent to hub
         </s:link>
     </h3>
 
