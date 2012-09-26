@@ -210,7 +210,7 @@
   <div style="position: absolute; top: -86px; left: 40px;"><a href="${pageContext.request.contextPath}/product/health-essential/HK-DMP-001">
     <img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/essential.jpg" width="192" height="85" alt=""/></a>
   </div>
-
+     <p><strong>4 Therapy Products</strong></p>
 	<p>
     <ul type="circle" style="list-style-type:disc; margin:0px; padding:0px 0px 10px 15px; line-height:17px; font-family:Arial; font-size:12px; color:#000; ">
       <li>Metabolic Diagnostic Package</li>
@@ -235,6 +235,7 @@
   <div style="position: absolute; top: -86px; left: 40px;"><a href="${pageContext.request.contextPath}/product/health-vital/HK-DMP-002">
     <img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/vital.jpg" width="192" height="85" alt=""/></a>
   </div>
+    <p><strong>5 Therapy Products</strong></p>
 	<p>
       <ul type="circle" style="list-style-type:disc; margin:0px; padding:0px 0px 10px 15px; line-height:17px; font-family:Arial; font-size:12px; color:#000; ">
       <li>1 Nutritional Supplement</li> 
@@ -259,7 +260,7 @@
   <div style="position: absolute; top: -86px; left: 40px;"><a href="${pageContext.request.contextPath}/product/health-ultima/HK-DMP-003">
     <img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/ultima.jpg" width="192" height="85" alt=""/></a>
   </div>
-
+    <p><strong>7 Therapy Products</strong></p>
 	<p><ul type="circle" style="list-style-type:disc; margin:0px; padding:0px 0px 10px 15px; line-height:17px; font-family:Arial; font-size:12px; color:#000; ">
       <li/>2 Nutritional Supplement</li>
       <li>Metabolic Diagnostic Package</li>
