@@ -2,6 +2,7 @@ package com.hk.web.action.core.order;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -35,6 +36,8 @@ import org.stripesstuff.plugin.session.Session;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 @Secure
 @Component
@@ -53,7 +56,9 @@ public class OrderSummaryAction extends BaseAction {
     @Autowired
     PricingEngine pricingEngine;
     @Autowired
-    ReferrerProgramManager referrerProgramManager;     
+    ReferrerProgramManager referrerProgramManager;
+     @Autowired
+    private AdminOrderService adminOrderService;
 
     @Session(key = HealthkartConstants.Session.useRewardPoints)
     private boolean useRewardPoints;
@@ -68,6 +73,7 @@ public class OrderSummaryAction extends BaseAction {
     private boolean  groundShippedItemPresent;
     private boolean  codAllowedOnGroundShipping;
     private Double  cashbackOnGroundshipped;
+    Map<String, String> codFailureMap = new HashMap<String, String>();
    
 
     // COD related changes
@@ -126,8 +132,10 @@ public class OrderSummaryAction extends BaseAction {
             addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
             return new RedirectResolution(CartAction.class);
         }
+
         Address address = order.getAddress();
         String pin = address != null ? address.getPin() : null;
+        /*
         codAllowed = courierService.isCodAllowed(pin);                 //todo ankit somewhere based on this, we show that your area is serviced just by pincode, that function is wrong, please correct it -- written by Ajeet  i guess correct checking at cod avialbility
         if (codAllowed) {
             Double payable = pricingDto.getGrandTotalPayable();
@@ -140,6 +148,12 @@ public class OrderSummaryAction extends BaseAction {
                 codAllowed=false;
             }
         }
+      */
+
+
+  codFailureMap = adminOrderService.isCODAllowed(order,pricingDto);
+
+        
 
  // Ground Shipping logic starts ---
 //        groundShippedItemPresent = orderService.isOrderHasGroundShippedItem(order);
@@ -268,5 +282,13 @@ public class OrderSummaryAction extends BaseAction {
 
     public void setCodAllowedOnGroundShipping(boolean codAllowedOnGroundShipping) {
         this.codAllowedOnGroundShipping = codAllowedOnGroundShipping;
+    }
+
+    public Map<String, String> getCodFailureMap() {
+        return codFailureMap;
+    }
+
+    public void setCodFailureMap(Map<String, String> codFailureMap) {
+        this.codFailureMap = codFailureMap;
     }
 }

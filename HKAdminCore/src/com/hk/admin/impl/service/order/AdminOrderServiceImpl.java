@@ -356,43 +356,53 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 	}
 
 
-    public List<String> isCODAllowed(Order order, PricingDto pricingDto) {
-        List<String> codFailureReasons = new ArrayList<String>();
+    public Map<String, String> isCODAllowed(Order order, PricingDto pricingDto) {
+        Map<String, String> codFailureMap = new HashMap<String, String>();
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+        Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
+        boolean codAllowedonProduct = true;
+        boolean codAllowed = false;
+
         for (CartLineItem productCartLineItem : productCartLineItems) {
             ProductVariant productVariant = productCartLineItem.getProductVariant();
             if (productVariant != null && productVariant.getProduct() != null) {
                 Product product = productVariant.getProduct();
                 if (product.isCodAllowed() != null && !product.isCodAllowed()) {
-                    codFailureReasons.add("We are sorry Cash on Delivery is not allowed on One of product ");
-                    break;
+                    codFailureMap.put("ProductName", product.getName());
+                    codAllowedonProduct = false;
+
+                }
+                if (product.isGroundShipping()) {
+                    codFailureMap.put("GroundShipProduct", product.getName());
                 }
             }
         }
-        boolean codAllowed = false;
+
         Address address = order.getAddress();
         String pin = address != null ? address.getPin() : null;
-//        pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
-
-        codAllowed = courierService.isCodAllowed(pin);                 //todo ankit somewhere based on this, we show that your area is serviced just by pincode, that function is wrong, please correct it --
-
-        if (!courierService.isCodAllowed(pin)) {
-            codFailureReasons.add("COD is not available for your delivery location. We provide cash on delivery option for select PIN codes only. ");
-        }
 
         Double payable = pricingDto.getGrandTotalPayable();
-        if (payable < codMinAmount || payable > codMaxAmount) {
-            codFailureReasons.add(" The net payable is not in the range of Rs." + codMinAmount + "- Rs." + codMaxAmount);
-        }
-
-        Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-        if (codAllowed) {
-            if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
-                codFailureReasons.add("You have subscriptions in your car");
+        if (!courierService.isCodAllowed(pin)) {
+            codFailureMap.put("CodAllowedOnPin", "N");
+            codFailureMap.put("Pincode", pin);
+        } else if (payable < codMinAmount || payable > codMaxAmount) {
+            codFailureMap.put("CodOnAmount", "N");
+        } else if (!codAllowedonProduct) {
+            codFailureMap.put("CodAllowedOnProduct", "N");
+        } else if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
+            codFailureMap.put("CodOnSubscription", "N");
+        } else if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
+            if (courierService.isGroundShippingAllowed(pin)) {
+                codFailureMap.put("GroundShippingAllowed", "Y");
             }
+            if (!courierService.isCodAllowedOnGroundShipping(pin)) {
+                codFailureMap.put("CodAllowedOnGroundShipping", "N");
+            }
+
         }
-        return codFailureReasons;
+        return codFailureMap;
     }
 
 

@@ -87,8 +87,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public Resolution search() {
         try {
             pincode = pincodeDao.getByPincode(pincodeString);
-//            pincodeDefaultCouriers = getPincodeService().getByPincode(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
-             pincodeDefaultCourier = getPincodeService().searchPincodeDefaultCourier(pincode,null, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
+            pincodeDefaultCouriers = getPincodeService().getByPincode(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
+//             pincodeDefaultCourier = getPincodeService().searchPincodeDefaultCourier(pincode,null, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
             if (pincodeDefaultCourier != null) {
                 courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false);
                 return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");

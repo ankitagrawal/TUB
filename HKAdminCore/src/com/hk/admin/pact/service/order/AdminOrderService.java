@@ -8,6 +8,7 @@ import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AdminOrderService {
 
@@ -35,6 +36,6 @@ public interface AdminOrderService {
 
 	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order);
 
-     public List<String> isCODAllowed(Order order , PricingDto pricingDto);
+     public Map<String, String> isCODAllowed(Order order , PricingDto pricingDto);
 
 }
