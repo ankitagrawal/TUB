@@ -81,6 +81,8 @@ public class GenerateReconcilationReportAction extends BaseAction {
 	private String gatewayOrderId;
 	private String baseGatewayOrderId;
 	private File excelFile;
+	private final String COD = "cod";
+	private final String PREPAID = "prepaid";
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -173,15 +175,13 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		File excelFile = new File(excelFilePath);
 		excelFile.getParentFile().mkdirs();
 		fileBean.save(excelFile);
-		PaymentMode paymentMode = null;
+		//PaymentMode paymentMode = null;
 
 		try {
 			if (paymentProcess.equalsIgnoreCase("cod")) {
-				paymentMode = getPaymentModeDao().getPaymentModeById(EnumPaymentMode.COD.getId());
-				getAdminReconciliationService().parseExcelForShippingOrder(excelFilePath, "Sheet1", paymentMode);
+				getAdminReconciliationService().parseExcelForShippingOrder(excelFilePath, "Sheet1", COD);
 			} else {
-				paymentMode = getPaymentModeDao().getPaymentModeById(EnumPaymentMode.TECHPROCESS.getId());
-				getAdminReconciliationService().parseExcelForBaseOrder(excelFilePath, "Sheet1", paymentMode);
+				getAdminReconciliationService().parseExcelForBaseOrder(excelFilePath, "Sheet1", PREPAID);
 			}
 
 			addRedirectAlertMessage(new SimpleMessage("Changes saved."));
@@ -195,9 +195,9 @@ public class GenerateReconcilationReportAction extends BaseAction {
 	public Resolution downloadPaymentDifference() throws Exception {
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = new ArrayList<OrderPaymentReconciliation>();
 		if (paymentProcess.equalsIgnoreCase("COD")) {
-			orderPaymentReconciliationList = getAdminReconciliationService().findPaymentDifferenceInCODOrders(shippingOrderId, gatewayOrderId, startDate, endDate, courier);
+			orderPaymentReconciliationList = getAdminReconciliationService().findPaymentDifferenceInCODOrders(shippingOrderId, gatewayOrderId, startDate, endDate, courier, COD);
 		} else {
-			orderPaymentReconciliationList = getAdminReconciliationService().findPaymentDifferenceInPrepaidOrders(baseOrderId, gatewayOrderId, startDate, endDate);
+			orderPaymentReconciliationList = getAdminReconciliationService().findPaymentDifferenceInPrepaidOrders(baseOrderId, baseGatewayOrderId, startDate, endDate, PREPAID);
 		}
 
 		if (orderPaymentReconciliationList.isEmpty() == true) {

@@ -183,11 +183,11 @@
 						</li>
 
 						<li>
-							<label>Start Date </label><s:text class="date_input startDate" style="width:150px"
+							<label>Start Date </label> <span class="aster">*</span> <s:text class="date_input startDate" style="width:150px"
 							                                  formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate" id="startDateId"/>
 						</li>
 						<li>
-							<label>End Date </label><s:text class="date_input endDate" style="width:150px"
+							<label>End Date </label> <span class="aster">*</span> <s:text class="date_input endDate" style="width:150px"
 							                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate" id="endDateId"/>
 						</li>
 
@@ -198,7 +198,6 @@
 				</fieldset>
 			</s:form>
 		</div>
-
 
 	</s:layout-component>
 </s:layout-render>

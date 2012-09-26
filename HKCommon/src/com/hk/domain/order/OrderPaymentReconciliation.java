@@ -29,9 +29,8 @@ public class OrderPaymentReconciliation {
 	@JoinColumn(name = "shipping_order_id")
 	private ShippingOrder shippingOrder;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "payment_mode_id", nullable = false)
-	private PaymentMode paymentMode;
+	@Column(name = "payment_process_type")
+	private String paymentProcessType;
 
 	@Column(name = "reconciled", nullable = false)
 	private boolean reconciled;
@@ -66,12 +65,12 @@ public class OrderPaymentReconciliation {
 		this.shippingOrder = shippingOrder;
 	}
 
-	public PaymentMode getPaymentMode() {
-		return paymentMode;
+	public String getPaymentProcessType() {
+		return paymentProcessType;
 	}
 
-	public void setPaymentMode(PaymentMode paymentMode) {
-		this.paymentMode = paymentMode;
+	public void setPaymentProcessType(String paymentProcessType) {
+		this.paymentProcessType = paymentProcessType;
 	}
 
 	public boolean isReconciled() {
