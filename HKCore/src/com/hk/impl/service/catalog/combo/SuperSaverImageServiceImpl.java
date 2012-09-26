@@ -67,7 +67,8 @@ public class SuperSaverImageServiceImpl implements SuperSaverImageService {
         }
 
         int firstResult = (page - 1) * perPage;
-        List resultList = superSaverImages.subList(firstResult,firstResult + perPage);
+        int lastResult = Math.min(firstResult + perPage, superSaverImages.size() - 1);
+        List resultList = superSaverImages.subList(firstResult,lastResult);
 
         superSaverPage = new Page(resultList, perPage, page, superSaverImages.size());
         return superSaverPage;
