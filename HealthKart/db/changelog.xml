@@ -9000,4 +9000,33 @@
     <changeSet author="Tarun (generated)" id="1348554794998-2">
         <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="runsheet" constraintName="fk_runsheet_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>   
+    <changeSet author="Rohit (generated)" id="1348648571172-1">
+        <createTable tableName="order_payment_reconciliation">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipping_order_id" type="INT"/>
+            <column name="payment_process_type" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reconciled" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reconciled_amount" type="DECIMAL(12,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="reward_points_against_cancellation" type="DECIMAL(12,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1348648571172-2">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="order_payment_reconciliation" baseTableSchemaName="healthkart_workbench" constraintName="fk_order_payment_reconciliation_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1348648571172-3">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="order_payment_reconciliation" baseTableSchemaName="healthkart_workbench" constraintName="fk_order_payment_reconciliation_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
