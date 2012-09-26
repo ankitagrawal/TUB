@@ -413,7 +413,7 @@ public class OrderManager {
 			// Send mail to Customer
 			getPaymentService().sendPaymentEmailForOrder(order);
 			sendReferralProgramEmail(order.getUser());
-			getSmsManager().sendOrderPlacedSMS(order);
+//			getSmsManager().sendOrderPlacedSMS(order);
 		}
 		return order;
 	}
