@@ -15,19 +15,22 @@ import java.io.*;
 public class HKFileWriter {
     private static Logger logger = LoggerFactory.getLogger(HKFileWriter.class);
 
+    public static File getFileStream(String path, String fileName, String extension){
+        final File file = new File(String.format("%s%s.%s",path, fileName, extension));
+        file.getParentFile().mkdirs();
+        return file;
+    }
     /**
      * WARNING: It is caller's responsiblity to clean up resources
-     * @param fileName
-     * @param extension
+     * @param file
      * @return
      */
-    public static Writer getFileStream(String fileName, String extension){
+    public static Writer getFileWriter(File file){
         Writer output = null;
-        File file = new File(String.format("%s.%s", fileName, extension));
         try{
             output = new BufferedWriter(new FileWriter(file));
         }catch (IOException ie){
-            logger.error(String.format("Unable to create file stream for the given file %s ", fileName), ie);
+            logger.error(String.format("Unable to create file stream for the given file %s ", file.getName()), ie);
         }
         return output;
     }

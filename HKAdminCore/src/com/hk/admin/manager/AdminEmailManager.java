@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 
 import com.hk.domain.catalog.product.SimilarProduct;
 import com.hk.pact.service.search.ProductSearchService;
+import com.hk.util.HKDateUtil;
 import com.hk.util.io.HKFileWriter;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateHashModel;
@@ -87,6 +88,9 @@ public class AdminEmailManager {
     private String hkReportAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
     private String marketingAdminEmailsString = null;
+
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+    String adminUploadsPath;
 
     @Autowired
     private EmailService emailService;
@@ -372,9 +376,11 @@ public class AdminEmailManager {
 
         ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
         Iterator<HKRow> rowIterator = parser.parse();
-        int i;
-
-        Writer failedEmailLog = HKFileWriter.getFileStream("csv", emailCampaign.getId().toString());
+        String campaignReportPath = adminUploadsPath + "/emailReports/";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String reportName = "EmailReport_" + sdf.format(new Date());
+        File failedEmailLogFile = HKFileWriter.getFileStream(campaignReportPath, reportName,  "csv");
+        Writer failedEmailLog = HKFileWriter.getFileWriter(failedEmailLogFile);
 
         Template freemarkerTemplate = generateFreeMarkerTemplate(emailCampaign);
         if (freemarkerTemplate == null){
@@ -398,7 +404,7 @@ public class AdminEmailManager {
         try{
             while (rowIterator != null && rowIterator.hasNext()) {
                 HashMap excelMap = new HashMap();
-                i = 0;
+                int i = 0;
                 HKRow curHkRow = rowIterator.next();
                 while ((null != curHkRow) && (curHkRow.columnValues != null) && i < curHkRow.columnValues.length) {
                     String key = parser.getHeadingNames(i);
@@ -417,6 +423,11 @@ public class AdminEmailManager {
             }
         }finally{
             HKFileWriter.close(failedEmailLog);
+            boolean isReportSent = emailService.sendHtmlEmail("Email Campaign report",
+                    "Following recepients did not email \r\n", "prateek.verma@healthkart.com", "Prateek Verma", failedEmailLogFile );
+            if (isReportSent){
+                failedEmailLogFile.delete();
+            }
         }
 
         return true;
@@ -444,7 +455,7 @@ public class AdminEmailManager {
         if (users != null && users.size() > 0) {
             excelMap.put(EmailMapKeyConstants.user, users.get(0));
         } else {
-            String message = String.format("User %s does not exist", userEmail);
+            String message = String.format("%s, %s", userEmail,"does not exist");
             HKFileWriter.writeToStream(failedEmailLog, message);
             return false;
         }
@@ -480,7 +491,7 @@ public class AdminEmailManager {
                     }
                 }
                 if (!failureMessage.trim().equals("")){
-                    String message = String.format("%s,%s,%s", emailCampaign.getId().toString(), emailRecepient.getEmail(), result);
+                    String message = String.format("%s,%s",emailRecepient.getEmail(), result);
                     HKFileWriter.writeToStream(failedEmailLog, message);
                     return false;
                 }

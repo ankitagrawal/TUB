@@ -1,5 +1,6 @@
 package com.hk.impl.service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +140,26 @@ public class EmailServiceImpl implements EmailService {
     emailExecutorService.execute(new SendBulkEmailAsyncThread(htmlEmails, emailCampaign));
   }
 
-  /**
+    public boolean sendHtmlEmail(String subject, String message, String toEmail, String toName, File attachement) {
+        HtmlEmail htmlEmail = null;
+        boolean isSent = true;
+        try {
+            htmlEmail = new HtmlEmail();
+            htmlEmail.addTo(toEmail, toName).setFrom(noReplyEmail, noReplyName).setSubject(subject).setHostName("localhost");
+            if (attachement != null){
+                htmlEmail.embed(attachement);
+            }
+            htmlEmail.setHtmlMsg(message);
+            sendEmail(htmlEmail);
+
+        }catch (EmailException ex){
+            logger.error("EmailException in sendHtmlEmail for template ", ex);
+            isSent = false;
+        }
+        return isSent;
+    }
+
+    /**
    * This method sends an email asynchrounously
    *
    * @param email
