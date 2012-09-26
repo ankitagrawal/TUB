@@ -235,7 +235,7 @@
 			</a>
 		</div>
 		<div>
-			<c:if test="${fn:length(pa.productImages) > 1}">
+			<c:if test="${fn:length(pa.productImages) > 1 && !pa.product.isProductHaveColorOptions}">
 				<%--<ul class="thumblist">--%>
 				<ul id="mycarousel" class="jcarousel-skin-tango">
 					<c:forEach items="${pa.productImages}" var="productImage">

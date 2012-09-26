@@ -6,6 +6,7 @@ import freemarker.template.Template;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,8 @@ public class SMSService {
 
 	private static Logger logger = LoggerFactory.getLogger(SMSService.class);
 
-	final FreeMarkerService freeMarkerService = null;
+	@Autowired
+	FreeMarkerService freeMarkerService;
 
 	public static String smsUrl;
 	public static String userName;
@@ -102,8 +104,8 @@ public class SMSService {
 
 	public boolean sendSMSUsingTemplate(String mobile, String templatePath, Object templateValues) {
 		String message = "";
-		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(templatePath);
-		FreeMarkerService.RenderOutput renderOutput = freeMarkerService.getRenderOutputForTemplate(freemarkerTemplate, templateValues);
+		Template smsTemplate = freeMarkerService.getCampaignTemplate(templatePath);
+		FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processSmsTemplate(smsTemplate, templateValues);
 
 		if (renderOutput == null) {
 			logger.error("Error while rendering freemarker template : " + templatePath);
