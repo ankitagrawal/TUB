@@ -129,6 +129,8 @@
 			<s:form beanclass="com.hk.web.action.report.GenerateReconcilationReportAction" >
 				<fieldset class="right_label">
 					<legend>Update Reconcile Status</legend>
+					<br>
+					<span class="large">(GATEWAY ORDER ID, RECONCILED, AMOUNT) as excel headers</span>
 					<ul>
 						<li>
 							<label>Payment Mode:</label>
