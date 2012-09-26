@@ -121,8 +121,8 @@ public class OrderManager {
 	private KarmaProfileService karmaProfileService;
 	@Autowired
 	private SubscriptionService subscriptionService;
-	@Autowired
-	private SMSManager smsManager;
+//	@Autowired
+//	private SMSManager smsManager;
 
 	@Autowired
 	private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
@@ -890,11 +890,11 @@ public class OrderManager {
 		this.subscriptionService = subscriptionService;
 	}
 
-	public SMSManager getSmsManager() {
+/*	public SMSManager getSmsManager() {
 		return smsManager;
 	}
 
 	public void setSmsManager(SMSManager smsManager) {
 		this.smsManager = smsManager;
-	}
+	}*/
 }
