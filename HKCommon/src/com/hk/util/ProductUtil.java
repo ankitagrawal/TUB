@@ -34,7 +34,7 @@ public class ProductUtil {
                 return true;
             }
         } else {
-            return false;
+            return true;
         }
     }
 }

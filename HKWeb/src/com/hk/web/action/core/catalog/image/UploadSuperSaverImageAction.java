@@ -114,10 +114,10 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
                     superSaverImages = superSaverPage.getList();
                     return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
                 }
-            }else {
-            addRedirectAlertMessage(new SimpleMessage("The product entered has the isDeleted property set to true!"));
-            return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
-        }
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("The product entered has the isDeleted property set to true!"));
+                return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
+            }
         } else {
             addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
             return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
@@ -162,18 +162,11 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
                 Product superSaverProduct = superSaverImage.getProduct();
                 if (superSaverProduct != null) {
                     //check whether combo exists or not
-                    Combo combo = getComboDao().getComboById(superSaverProduct.getId());
-                    if (combo != null) {
-                        superSaverImage.setMainImage(Boolean.TRUE);
-                        String altText = superSaverImage.getAltText();
-                        String productName = superSaverProduct.getName();
-                        superSaverImage.setUrl(productName);
-                        superSaverImage.setAltText(StringUtils.isNotBlank(altText) ? altText : productName);
-                        //superSaverImageService.saveSuperSaverImage(superSaverImage);
-                    } else {
-                        addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
-                        return new RedirectResolution(UploadSuperSaverImageAction.class, "getSuperSaversForCategoryAndBrand");
-                    }
+                    superSaverImage.setMainImage(Boolean.TRUE);
+                    String altText = superSaverImage.getAltText();
+                    String productName = superSaverProduct.getName();
+                    superSaverImage.setUrl(productName);
+                    superSaverImage.setAltText(StringUtils.isNotBlank(altText) ? altText : productName);
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
                     return new RedirectResolution(UploadSuperSaverImageAction.class, "getSuperSaversForCategoryAndBrand");
