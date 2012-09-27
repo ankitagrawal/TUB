@@ -48,13 +48,7 @@ public class SMSManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", order);
 
-        if (order != null && order.getAddress() != null && order.getAddress().getPhone() != null) {
-
-            return false;
-            //TODO: fix and uncomment
-            //return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.orderConfirmedSMS, valuesMap);
-        }
-        return false;
+	    return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.orderConfirmedSMS, valuesMap);
     }
 
     public boolean sendOrderShippedSMS(ShippingOrder shippingOrder) {
