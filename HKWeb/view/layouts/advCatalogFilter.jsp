@@ -280,17 +280,7 @@
 
 		</div>
 		<c:set var="ctr" value="0"/>
-		<s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="filterCatalogForm">
-			<s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
-			<s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
-			<c:if test="${ca.secondaryChildCategorySlug != null}">
-				<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
-			</c:if>
-			<c:if test="${ca.tertiaryChildCategorySlug != null}">
-				<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
-			</c:if>
-			<%--<s:param name="minPrice" value="${filteredPriceRange.minPrice}"/>--%>
-			<%--<s:param name="maxPrice" value="${filteredPriceRange.maxPrice}"/>--%>
+
 			<c:if test="${filteredPriceRange != null}">
 				<div class="separator" style="margin-top:10px;">
 					<h5 class='heading1' style="padding-left:5px;">
@@ -364,8 +354,19 @@
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
-			<%--<s:submit name="pre" value="Filter" class="filterCatalogFormButton" style="padding:3px;"/>--%>
-		</s:link>
+		<div style="display:none;">
+			<s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="filterCatalogForm">
+				<s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
+				<s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
+				<c:if test="${ca.secondaryChildCategorySlug != null}">
+					<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
+				</c:if>
+				<c:if test="${ca.tertiaryChildCategorySlug != null}">
+					<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
+				</c:if>
+			</s:link>
+		</div>
+		<a class="filterCatalogFormButton button_green" style="padding:2px;width:75px;">Filter</a>
 	</div>
 </c:if>
 
