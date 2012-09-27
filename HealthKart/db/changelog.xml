@@ -9029,4 +9029,61 @@
     <changeSet author="Rohit (generated)" id="1348648571172-3">
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Ankit (generated)" id="1347620653716-1">
+        <addColumn tableName="courier_service_info">
+            <column name="cod_on_ground_shipping" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1347620653716-2">
+        <addColumn tableName="courier_service_info">
+            <column name="ground_shipping_available" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1347620653716-3">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="ground_shipping" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit" id="1347620653716-4">
+        <sql>
+            create table `pincode_default_courier_bak` as (select * from `pincode_default_courier` );
+
+            Delete from `pincode_default_courier` ;
+
+            ALTER TABLE `pincode_default_courier`
+            ADD COLUMN `courier_id` INT NULL ,
+            ADD COLUMN `cod` TINYINT NOT NULL ,
+            ADD COLUMN `ground_shipping` TINYINT NOT NULL ,
+            ADD COLUMN `estimated_shipping_cost` DECIMAL(10,2) NULL ,
+            DROP COLUMN courier_id_cod,
+            DROP COLUMN courier_id_non_cod,
+            DROP COLUMN estimated_shipping_cost_cod,
+            DROP COLUMN estimated_shipping_cost_non_cod,
+            DROP FOREIGN KEY `fk_pincode_default_courier_cod`,
+            DROP FOREIGN KEY `fk_pincode_default_courier_non_cod`,
+            ADD CONSTRAINT `fk_pincode_default_courier_courier1` FOREIGN KEY (`courier_id` ) REFERENCES `courier` (`id` );
+
+
+            insert into `pincode_default_courier` (pincode_id, warehouse_id,courier_id,estimated_shipping_cost,cod,
+            ground_shipping)
+            select v1.pincode_id,v1.warehouse_id,v1.courier_id,v1.estimated_shipping_cost,v1.cod,v1.ground_shipping
+            from
+            (select pincode_id,warehouse_id,courier_id_cod as courier_id,estimated_shipping_cost_cod as
+            estimated_shipping_cost,'0' as cod,
+            '0' as ground_shipping
+            from `pincode_default_courier_bak`
+
+            union
+
+            select pincode_id,warehouse_id,courier_id_non_cod as courier_id,estimated_shipping_cost_non_cod as
+            estimated_shipping_cost,'1' as cod ,
+            '0' as ground_shipping
+            from `pincode_default_courier_bak`
+            )v1 ;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -64,8 +64,10 @@ public class XslGenerator {
 	public static final String WAREHOUSE             = "WAREHOUSE";
 	public static final String COD_COURIER_ID        = "COD_COURIER_ID";
 	public static final String TECH_PROCESS_COURIER_ID = "TECH_PROCESS_COURIER_ID";
-	public static final String ESTIMATED_SHIPPING_COST_COD = "ESTIMATED_SHIPPING_COST_COD";
-	public static final String ESTIMATED_SHIPPING_COST_TECH = "ESTIMATED_SHIPPING_COST_TECH";
+//	public static final String ESTIMATED_SHIPPING_COST_COD = "ESTIMATED_SHIPPING_COST_COD";
+    public static final String ESTIMATED_SHIPPING_COST     =        "ESTIMATED_SHIPPING_COST";
+    public static final String    GROUND_SHIPPING_AVAILABLE      = "GROUND_SHIPPING_AVAILABLE";
+    public static final String    COD_ON_GROUND_SHIPPING         = "COD_ON_GROUND_SHIPPING";
 
 	@Autowired
 	private CourierDao            courierDao;
@@ -495,67 +497,61 @@ public class XslGenerator {
 	}
 
 	public File generatePincodeDefaultCourierXsl(List<PincodeDefaultCourier> pincodeDefaultCourierList, String xslFilePath) throws Exception {
+File file = new File(xslFilePath);
+        file.getParentFile().mkdirs();
+        FileOutputStream out = new FileOutputStream(file);
+        Workbook wb = new HSSFWorkbook();
 
-		File file = new File(xslFilePath);
-		file.getParentFile().mkdirs();
-		FileOutputStream out = new FileOutputStream(file);
-		Workbook wb = new HSSFWorkbook();
+        CellStyle style = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setFontHeightInPoints((short) 12);
+        font.setColor(Font.COLOR_NORMAL);
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        style.setFont(font);
+        Sheet sheet1 = wb.createSheet(XslConstants.DEFAULT_COURIER_SHEET);
+        Row row = sheet1.createRow(0);
+        row.setHeightInPoints((short) 25);
 
-		CellStyle style = wb.createCellStyle();
-		Font font = wb.createFont();
-		font.setFontHeightInPoints((short) 12);
-		font.setColor(Font.COLOR_NORMAL);
-		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-		style.setFont(font);
-		Sheet sheet1 = wb.createSheet(XslConstants.DEFAULT_COURIER_SHEET);
-		Row row = sheet1.createRow(0);
-		row.setHeightInPoints((short) 25);
+        int totalColumnNo = 8;
 
-		int totalColumnNo = 8;
+        Cell cell;
+        for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+            cell = row.createCell(columnNo);
+            cell.setCellStyle(style);
+        }
+        setCellValue(row, 0, PINCODE);
+        setCellValue(row, 1, WAREHOUSE);
+        setCellValue(row, 2, COURIER_ID);
+        setCellValue(row, 3, COD_AVAILABLE);
+        setCellValue(row, 4, GROUND_SHIPPING_AVAILABLE);
+        setCellValue(row, 5, ESTIMATED_SHIPPING_COST);
 
-		Cell cell;
-		for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-			cell = row.createCell(columnNo);
-			cell.setCellStyle(style);
-		}
-		setCellValue(row, 0, PINCODE);
-		setCellValue(row, 1, WAREHOUSE);
-		setCellValue(row, 2, COD_COURIER_ID);
-		setCellValue(row, 3, TECH_PROCESS_COURIER_ID);
-		setCellValue(row, 4, ESTIMATED_SHIPPING_COST_COD);
-		setCellValue(row, 5, ESTIMATED_SHIPPING_COST_TECH);
+        int initialRowNo = 1;
+        for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierList) {
 
-		int initialRowNo = 1;
-		for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierList) {
+            row = sheet1.createRow(initialRowNo);
+            for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+                row.createCell(columnNo);
+            }
 
-			row = sheet1.createRow(initialRowNo);
-			for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-				row.createCell(columnNo);
-			}
+            setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
+            setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
+            if(pincodeDefaultCourier.getCourier() != null){
+                setCellValue(row, 2, pincodeDefaultCourier.getCourier().getId());
+            }
+            else{
+                setCellValue(row, 2, -1L);
+            }
+            setCellValue(row, 3, pincodeDefaultCourier.isCod() ? "Y" : "N"  );
+            setCellValue(row, 4, pincodeDefaultCourier.isGroundShipping() ? "Y" : "N" );
+            setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCost());
 
-			setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
-			setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
-			if(pincodeDefaultCourier.getCodCourier() != null){
-				setCellValue(row, 2, pincodeDefaultCourier.getCodCourier().getId());
-			}
-			else{
-				setCellValue(row, 2, -1L);
-			}
-			if(pincodeDefaultCourier.getNonCodCourier() != null){
-				setCellValue(row, 3, pincodeDefaultCourier.getNonCodCourier().getId());
-			}
-			else{
-				setCellValue(row, 3, -1L);
-			}
-			setCellValue(row, 4, pincodeDefaultCourier.getEstimatedShippingCostCod());
-			setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCostNonCod());
+            initialRowNo++;
+        }
 
-			initialRowNo++;
-		}
-
-		wb.write(out);
-		out.close();
-		return file;
+        wb.write(out);
+        out.close();
+        return file;
 	}
 
 	public File generateGRNListExcel(File xlsFile, List<GoodsReceivedNote> grnList) {
