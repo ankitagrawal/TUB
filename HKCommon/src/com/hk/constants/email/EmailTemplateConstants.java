@@ -12,10 +12,10 @@ public class EmailTemplateConstants {
 	public static final String discountCouponEmail = "/discountCouponEmail.ftl";
 	public static final String contactUsEmail = "/contactUsEmail.ftl";
 	public static final String orderShippedEmail = "/orderShippedEmailNew.ftl";
-	public static final String orderShippedEmailOld = "/orderShippedEmail.ftl";
 	public static final String orderShippedInPartsEmail = "/orderShippedInPartsEmail.ftl";
-	public static final String partialOrderShippedEmail = "/partialOrderShippedEmailNew.ftl";
-	public static final String partialOrderShippedEmailOld = "/partialOrderShippedEmail.ftl";
+	public static final String partialOrderShippedEmail = "/partialOrderShippedEmail.ftl";
+	public static final String finalOrderShippedEmail = "/finalOrderShippedEmail.ftl";
+	//public static final String partialOrderShippedEmailOld = "/partialOrderShippedEmail.ftl";
 	public static final String referralEmail = "/referralEmail.ftl";
 	public static final String referralRewardPointEmail = "/referralRewardPointEmail.ftl";
 	public static final String cashBackRewardPointEmail = "/cashBackRewardPointEmail.ftl";
