@@ -62,11 +62,20 @@ public class FedExCourier
 			printNotifications(reply.getNotifications());
 
             CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
+            /*
             String trackingNumber="";
 		    if(null != csd.getMasterTrackingId()){
 			    trackingNumber = csd.getMasterTrackingId().getTrackingNumber();
             }
-            // CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
+            */
+            CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
+            String trackingNumber = null;
+            if(cpd!=null){
+			System.out.println("Package Details");
+			for (int i=0; i < cpd.length; i++) { // Package details / Rating information for each package
+				trackingNumber = cpd[i].getTrackingIds()[0].getTrackingNumber();
+			}
+		}
             return trackingNumber;
 			//
 		} catch (Exception e) {
@@ -359,15 +368,19 @@ public class FedExCourier
 
         // healthkart address
         com.hk.domain.user.Address HKAddress = shippingOrder.getBaseOrder().getAddress();
+
         contactRecip.setPersonName(HKAddress.getName());//("Recipient Name");
-        contactRecip.setCompanyName("");//("Recipient Company Name");
+        contactRecip.setCompanyName("Recipient Company Name");//("Recipient Company Name");
         contactRecip.setPhoneNumber(HKAddress.getPhone());//("1234567890");
         recipient.setContact(contactRecip);
 
         Address addressRecip = new Address();
         addressRecip.setStreetLines(new String[]{HKAddress.getLine1(),HKAddress.getLine2()});//(new String[] { "1 RECIPIENT STREET" });
+
         addressRecip.setCity(HKAddress.getCity());//("NEWDELHI");
-        addressRecip.setStateOrProvinceCode(HKAddress.getState());//("DL");
+        addressRecip.setStateOrProvinceCode("DL");//("DL");
+//        addressRecip.setStateOrProvinceCode(HKAddress.getState());//("DL");
+
         addressRecip.setPostalCode(HKAddress.getPin());//("110010");
         addressRecip.setCountryCode("IN");
         addressRecip.setCountryName("INDIA");

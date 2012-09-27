@@ -59,17 +59,24 @@ public class ShipmentServiceImpl implements ShipmentService {
             return null;
         }
         Awb suggestedAwb = null;
+
         if (suggestedCourier.getId().equals(EnumCourier.FedEx.getId())){
             String trackingNumber = new FedExCourier().newFedExShipment(shippingOrder);
+
             if (trackingNumber != null){
                 Awb fedExNumber = new Awb();
                 fedExNumber.setCourier(suggestedCourier);
                 fedExNumber.setAwbNumber(trackingNumber);
                 fedExNumber.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
                 fedExNumber.setWarehouse(shippingOrder.getWarehouse());
-                fedExNumber.setCod(shippingOrder.isCOD());                 
-                awbService.save(fedExNumber);
+                fedExNumber.setCod(shippingOrder.isCOD());
+                fedExNumber.setAwbBarCode(trackingNumber);
+                fedExNumber.setUsed(false);
+                //awbService.save(fedExNumber);
                 suggestedAwb = fedExNumber;
+            }
+            else{
+                return null;
             }
         }
         else{

@@ -156,11 +156,13 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
+
         <copy todir="${project.dist.dir}/WEB-INF/lib">
 			<fileset dir="${lib.FedEx.root}">
 				<include name="*.jar" />
 			</fileset>
 		</copy>
+
         <copy todir="${project.dist.dir}/WEB-INF/lib">
             <fileset dir="${lib.axis.root}">
                 <include name="*.jar" />
