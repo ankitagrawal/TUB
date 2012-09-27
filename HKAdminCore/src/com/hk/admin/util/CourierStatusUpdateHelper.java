@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
+import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -366,6 +368,21 @@ public class CourierStatusUpdateHelper {
         }
         return responseMap;
     }
+
+	@SuppressWarnings("unchecked")
+	public Map getHkDeliveryStatusForUser(){
+		Map responseMap = new HashMap<Long, String>();
+		responseMap.put(EnumConsignmentLifecycleStatus.ReceivedAtHub.getId(), "Your shipment has been received at our courier office.");
+		responseMap.put(EnumConsignmentLifecycleStatus.Dispatched.getId(), "Your order has been shipped to you.");
+		responseMap.put(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId(), "You asked us to hold your shipment.");
+		responseMap.put(EnumConsignmentLifecycleStatus.Hold.getId(), "Due to unavoidable circumstances, your consignment is still with us. It will be delivered very soon");
+		responseMap.put(EnumConsignmentLifecycleStatus.Delivered.getId(), "Your shipment has been delivered to you");
+		responseMap.put(EnumConsignmentLifecycleStatus.Damaged.getId(), "Unfortunately, your shipment was damaged. We will ship you a new one soon.");
+		responseMap.put(EnumConsignmentLifecycleStatus.ConsignmentLost.getId(), "Unfortunately, your shipment was damaged. We will ship you a new one soon.");
+		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToHub.getId(), "You returned the shipment.");
+		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToSource.getId(), "Your shipment has been returned to healthkart.");
+		return responseMap;
+	}
 
 
 }
