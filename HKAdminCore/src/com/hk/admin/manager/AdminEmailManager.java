@@ -480,6 +480,8 @@ public class AdminEmailManager {
                 //If alternate template has to be sent...(In case when similar products are all out of stock)
                 if (sendAlternateTemplate)
                 {
+                    String message = String.format("%s,%s",emailRecepient.getEmail(), "Sending alternate email reporder_reminder_general");
+                    HKFileWriter.writeToStream(failedEmailLog, message);
                     //We do not want to consider similar productId now as they are either out_of_stock or does not exist
                     //Without this code it will become an infinite loop
                     excelMap.remove(EmailMapKeyConstants.similarProductId);
