@@ -302,7 +302,7 @@
                     <s:checkbox name="sortByScore"/>
                 </li>
                 <li>
-                    <label style="float:left;width:75px;">Payment Modes</label>
+                    <label style="float:left;width:50px;">Payment Modes</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${paymentModeList}" var="paymentMode" varStatus="ctr">
@@ -313,7 +313,7 @@
                     </div>
                 </li>
 
-                <li><label style="float:left;width: 75px;">Payment Status</label>
+                <li><label style="float:left;width: 60px;">Payment Status</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${paymentStatusList}" var="paymentStatus" varStatus="ctr">
