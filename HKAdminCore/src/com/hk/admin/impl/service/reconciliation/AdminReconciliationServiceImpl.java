@@ -38,7 +38,7 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 	@Autowired
 	AdminOrderDao adminOrderDao;
 
-	public void parseExcelForShippingOrder(String excelFilePath, String sheetName, PaymentMode paymentMode) throws Exception {
+	public void parseExcelForShippingOrder(String excelFilePath, String sheetName, String paymentProcess) throws Exception {
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = new ArrayList<OrderPaymentReconciliation>();
 		ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
 		Iterator<HKRow> rowIterator = parser.parse();
@@ -82,7 +82,7 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 					Double amount = XslUtil.getDouble(row.getColumnValue(XslConstants.AMOUNT));
 					if (shippingOrderGatewayOrderMap.containsKey(gatewayOrderId)) {
 						ShippingOrder shippingOrder = shippingOrderGatewayOrderMap.get(gatewayOrderId);
-						OrderPaymentReconciliation orderPaymentReconciliation = updateOrCreateOrderPaymentReconciliationBySO(shippingOrder, paymentMode, amount, reconciled);
+						OrderPaymentReconciliation orderPaymentReconciliation = updateOrCreateOrderPaymentReconciliationBySO(shippingOrder, paymentProcess, amount, reconciled);
 						orderPaymentReconciliationList.add(orderPaymentReconciliation);
 						logger.debug("preparing orderPaymentReconciliation object for row : " + rowCount);
 					}
@@ -98,7 +98,7 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 		getAdminReconciliationDao().saveOrUpdate(orderPaymentReconciliationList);
 	}
 
-	public void parseExcelForBaseOrder(String excelFilePath, String sheetName, PaymentMode paymentMode) throws Exception {
+	public void parseExcelForBaseOrder(String excelFilePath, String sheetName, String paymentProcess) throws Exception {
 
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = new ArrayList<OrderPaymentReconciliation>();
 		ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
@@ -141,10 +141,10 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 					Double amount = XslUtil.getDouble(row.getColumnValue(XslConstants.AMOUNT));
 					if (gatewayOrderbaseOrderMap.containsKey(gatewayOrderId)) {
 						Order order = gatewayOrderbaseOrderMap.get(gatewayOrderId);
-						OrderPaymentReconciliation orderPaymentReconciliation = updateOrCreateOrderPaymentReconciliationByBO(order, paymentMode, amount, reconciled);
+						OrderPaymentReconciliation orderPaymentReconciliation = updateOrCreateOrderPaymentReconciliationByBO(order, paymentProcess, amount, reconciled);
 						orderPaymentReconciliationList.add(orderPaymentReconciliation);
 						for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-							orderPaymentReconciliation = updateOrCreateOrderPaymentReconciliationBySO(shippingOrder, paymentMode, shippingOrder.getAmount(), reconciled);
+							orderPaymentReconciliation = updateOrCreateOrderPaymentReconciliationBySO(shippingOrder, paymentProcess, shippingOrder.getAmount(), reconciled);
 							orderPaymentReconciliationList.add(orderPaymentReconciliation);
 						}
 
@@ -178,37 +178,37 @@ public class AdminReconciliationServiceImpl implements AdminReconciliationServic
 		}
 	}
 
-	private OrderPaymentReconciliation updateOrCreateOrderPaymentReconciliationBySO(ShippingOrder shippingOrder, PaymentMode paymentMode, Double amount, String reconciled) {
+	private OrderPaymentReconciliation updateOrCreateOrderPaymentReconciliationBySO(ShippingOrder shippingOrder, String paymentProcess, Double amount, String reconciled) {
 		OrderPaymentReconciliation orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationBySO(shippingOrder);
 		if (orderPaymentReconciliation == null) {
 			orderPaymentReconciliation = new OrderPaymentReconciliation();
 		}
 		orderPaymentReconciliation.setShippingOrder(shippingOrder);
 		orderPaymentReconciliation.setBaseOrder(shippingOrder.getBaseOrder());
-		orderPaymentReconciliation.setPaymentMode(paymentMode);
+		orderPaymentReconciliation.setPaymentProcessType(paymentProcess);
 		orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
 		orderPaymentReconciliation.setReconciledAmount(amount);
 		return orderPaymentReconciliation;
 	}
 
-	private OrderPaymentReconciliation updateOrCreateOrderPaymentReconciliationByBO(Order order, PaymentMode paymentMode, Double amount, String reconciled) {
+	private OrderPaymentReconciliation updateOrCreateOrderPaymentReconciliationByBO(Order order, String paymentProcess, Double amount, String reconciled) {
 		OrderPaymentReconciliation orderPaymentReconciliation = getAdminReconciliationDao().getOrderPaymentReconciliationByBaseOrder(order);
 		if (orderPaymentReconciliation == null) {
 			orderPaymentReconciliation = new OrderPaymentReconciliation();
 		}
 		orderPaymentReconciliation.setBaseOrder(order);
-		orderPaymentReconciliation.setPaymentMode(paymentMode);
+		orderPaymentReconciliation.setPaymentProcessType(paymentProcess);
 		orderPaymentReconciliation.setReconciled(reconciled.equalsIgnoreCase("Y"));
 		orderPaymentReconciliation.setReconciledAmount(amount);
 		return orderPaymentReconciliation;
 	}
 
-	public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId, Date startDate, Date endDate, Courier courier) throws Exception {
-		return getAdminReconciliationDao().findPaymentDifferenceInCODOrders(shippingOrderId, gatewayOrderId, startDate, endDate, courier);
+	public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId, Date startDate, Date endDate, Courier courier, String paymentProcess) throws Exception {
+		return getAdminReconciliationDao().findPaymentDifferenceInCODOrders(shippingOrderId, gatewayOrderId, startDate, endDate, courier, paymentProcess);
 	}
 
-	public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId, Date startDate, Date endDate) throws Exception {
-		return getAdminReconciliationDao().findPaymentDifferenceInPrepaidOrders(baseOrderId, gatewayOrderId, startDate, endDate);
+	public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId, Date startDate, Date endDate, String paymentProcess) throws Exception {
+		return getAdminReconciliationDao().findPaymentDifferenceInPrepaidOrders(baseOrderId, gatewayOrderId, startDate, endDate, paymentProcess);
 	}
 
 

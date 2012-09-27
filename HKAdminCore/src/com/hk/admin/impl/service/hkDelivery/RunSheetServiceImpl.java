@@ -46,17 +46,22 @@ public class RunSheetServiceImpl implements RunSheetService {
 	private AdminShippingOrderService adminShippingOrderService;
 
     @Override
-    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
+    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User agent,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
         Runsheet runsheetObj = new Runsheet();
+	    User loggedOnUser = userService.getLoggedInUser();
         runsheetObj.setCodBoxCount(totalCODPackets);
         runsheetObj.setCreateDate(new Date());
         runsheetObj.setUpdateDate(new Date());
         runsheetObj.setExpectedCollection(totalCODAmount);
         runsheetObj.setPrepaidBoxCount(prePaidBoxCount);
-        runsheetObj.setAgent(user);
+        runsheetObj.setAgent(agent);
         runsheetObj.setHub(hub);
         runsheetObj.setConsignments(consignments);
         runsheetObj.setRunsheetStatus(runsheetStatus);
+	    if(loggedOnUser != null){
+		    runsheetObj.setCreatedBy(loggedOnUser);
+	    }
+	    
        return runsheetObj;
     }
 

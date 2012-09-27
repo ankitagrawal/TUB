@@ -39,7 +39,7 @@ public class HubServiceImpl implements HubService {
     }
 
     @Override
-    public boolean addAgentToHub(Hub hub, User user){
+    public Boolean addAgentToHub(Hub hub, User user){
         if(getHubForUser(user) != null){
             return false;
         }
@@ -54,4 +54,17 @@ public class HubServiceImpl implements HubService {
             return true;
         }
     }
+
+	@Override
+	public Boolean removeAgentFromHub(Hub hub, User user) {
+		if(getHubForUser(user) != null){
+			if(user.getRoles().contains(EnumRole.HK_DELIVERY_GUY.toRole())){
+				user.getRoles().remove(EnumRole.HK_DELIVERY_GUY.toRole());
+			}
+			hub.getUsers().remove(user);
+			hubDao.save(hub);
+			return true;
+		}
+		return false;
+	}
 }

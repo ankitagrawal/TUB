@@ -17,12 +17,12 @@ import java.util.List;
  */
 public interface AdminReconciliationService {
 
-	public void parseExcelForShippingOrder(String excelFilePath, String sheetName, PaymentMode paymentMode) throws Exception;
+	public void parseExcelForShippingOrder(String excelFilePath, String sheetName, String paymentProcess) throws Exception;
 
-	public void parseExcelForBaseOrder(String excelFilePath, String sheetName, PaymentMode paymentMode) throws Exception;
+	public void parseExcelForBaseOrder(String excelFilePath, String sheetName, String paymentProcess) throws Exception;
 
-	public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId, Date startDate, Date endDate, Courier courier) throws Exception;
+	public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId, Date startDate, Date endDate, Courier courier, String paymentProcess) throws Exception;
 
-	public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId, Date startDate, Date endDate) throws Exception;
+	public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId, Date startDate, Date endDate, String paymentProcess) throws Exception;
 
 }

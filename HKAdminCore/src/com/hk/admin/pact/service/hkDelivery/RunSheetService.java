@@ -14,7 +14,7 @@ import java.util.Set;
 
 public interface RunSheetService {
 
-    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount);
+    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User agent,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount);
 
     public Runsheet saveRunSheet(Runsheet runsheet);
 

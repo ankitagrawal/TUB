@@ -45,51 +45,53 @@ public class AdminReconciliationDaoImpl extends BaseDaoImpl implements AdminReco
 		return null;
 	}
 
-	public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId, Date startDate, Date endDate, Courier courier) throws Exception{
+	public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId,
+	                                                                         Date startDate, Date endDate, Courier courier, String paymentProcess) throws Exception{
 		String courierClause        = "";
 		String shippingOrderClause  = "" ;
 		String gatewayOrderClause   = "";
 
-		String query = "select recon from OrderPaymentReconciliation recon join recon.shippingOrder so where recon.reconciled = true " +
-				" and so.shipment.shipDate between :startDate and :endDate " +
-				" and recon.reconciledAmount != recon.shippingOrder.amount and recon.paymentMode = " + EnumPaymentMode.COD.asPaymenMode();
+		String query = "select recon from OrderPaymentReconciliation recon where recon.reconciled = true " +
+				" and recon.shippingOrder.shipment.shipDate between :startDate and :endDate " +
+				" and recon.reconciledAmount != recon.shippingOrder.amount and recon.paymentProcessType = :paymentProcess ";
 
 		if(shippingOrderId != null) {
-			shippingOrderClause = " and so = " + shippingOrderId;
+			shippingOrderClause = " and recon.shippingOrder.id = '" + shippingOrderId + "' ";
 		}
 
 		if(gatewayOrderId != null) {
-			gatewayOrderClause = " and so.gatewayOrderId = " + gatewayOrderId;
+			gatewayOrderClause = " and recon.shippingOrder.gatewayOrderId = '" + gatewayOrderId + "' ";
 		}
 
 		if(courier != null) {
-			courierClause = " and so.shipment.courier = " + courier;
+			courierClause = " and recon.shippingOrder.shipment.awb.courier = " + courier;
 		}
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = getSession().createQuery(query + shippingOrderClause + gatewayOrderClause + courierClause)
-				.setParameter("startDate", startDate).setParameter("endDate", endDate)
+				.setParameter("paymentProcess", paymentProcess).setParameter("startDate", startDate).setParameter("endDate", endDate)
 				.list();
 
 		return orderPaymentReconciliationList;
 	}
 
-	public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId, Date startDate, Date endDate) throws Exception{
+	public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId,
+	                                                                             Date startDate, Date endDate, String paymentProcess) throws Exception{
 		String orderClause          = "" ;
 		String gatewayOrderClause   = "";
 
-		String query = "select recon from OrderPaymentReconciliation recon join recon.baseOrder bo where recon.reconciled = true " +
-				" and recon.shippingOrder is null and bo.payment.paymentDate between :startDate and :endDate " +
-				" and recon.reconciledAmount != recon.baseOrder.amount and recon.paymentMode = " + EnumPaymentMode.TECHPROCESS.asPaymenMode();
+		String query = "select recon from OrderPaymentReconciliation recon where recon.reconciled = true " +
+				" and recon.shippingOrder is null and recon.baseOrder.payment.paymentDate between :startDate and :endDate " +
+				" and recon.reconciledAmount != recon.baseOrder.amount and recon.paymentProcessType = :paymentProcess ";
 
 		if(baseOrderId != null) {
-			orderClause = " and bo.id = " + baseOrderId;
+			orderClause = " and recon.baseOrder.id = '" + baseOrderId + "' ";
 		}
 
 		if(gatewayOrderId != null) {
-			gatewayOrderClause = " and bo.gatewayOrderId = " + gatewayOrderId;
+			gatewayOrderClause = " and recon.baseOrder.gatewayOrderId = '" + gatewayOrderId + "' ";
 		}
 
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = getSession().createQuery(query + orderClause + gatewayOrderClause)
-				.setParameter("startDate", startDate).setParameter("endDate", endDate).list();
+				.setParameter("paymentProcess", paymentProcess).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
 
 		return orderPaymentReconciliationList;
 	}

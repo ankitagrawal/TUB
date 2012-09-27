@@ -703,6 +703,8 @@ public class XslGenerator {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		HkXlsWriter xlsWriter = new HkXlsWriter();
 		xlsWriter.addHeader("SHIPPING ORDER ID", "SHIPPING ORDER ID");
+		xlsWriter.addHeader("GATEWAY ORDER ID", "GATEWAY ORDER ID");
+		xlsWriter.addHeader("COURIER", "COURIER");
 		xlsWriter.addHeader("SHIPMENT DATE", "SHIPMENT DATE");
 		xlsWriter.addHeader("ACTUAL AMOUNT", "ACTUAL AMOUNT");
 		xlsWriter.addHeader("AMOUNT RECONCILED", "AMOUNT RECONCILED");
@@ -711,6 +713,14 @@ public class XslGenerator {
 		int row = 1;
 		for (OrderPaymentReconciliation orderPaymentReconciliation : orderPaymentReconciliationList) {
 			xlsWriter.addCell(row, orderPaymentReconciliation.getShippingOrder());
+			xlsWriter.addCell(row, orderPaymentReconciliation.getShippingOrder().getGatewayOrderId());
+
+			if(orderPaymentReconciliation.getShippingOrder().getShipment() != null && orderPaymentReconciliation.getShippingOrder().getShipment().getAwb() != null
+					&& orderPaymentReconciliation.getShippingOrder().getShipment().getAwb().getCourier() != null) {
+				xlsWriter.addCell(row, orderPaymentReconciliation.getShippingOrder().getShipment().getAwb().getCourier().getName());
+			} else {
+				xlsWriter.addCell(row, "");
+			}
 
 			if(orderPaymentReconciliation.getShippingOrder().getShipment() != null) {
 				xlsWriter.addCell(row, sdf.format( orderPaymentReconciliation.getShippingOrder().getShipment().getShipDate() ));
@@ -742,6 +752,8 @@ public class XslGenerator {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		HkXlsWriter xlsWriter = new HkXlsWriter();
 		xlsWriter.addHeader("BASE ORDER ID", "BASE ORDER ID");
+		xlsWriter.addHeader("GATEWAY ORDER ID", "GATEWAY ORDER ID");
+		xlsWriter.addHeader("PAYMENT MODE", "PAYMENT MODE");
 		xlsWriter.addHeader("PAYMENT DATE", "PAYMENT DATE");
 		xlsWriter.addHeader("ACTUAL AMOUNT", "ACTUAL AMOUNT");
 		xlsWriter.addHeader("AMOUNT RECONCILED", "AMOUNT RECONCILED");
@@ -750,11 +762,20 @@ public class XslGenerator {
 		int row = 1;
 		for (OrderPaymentReconciliation orderPaymentReconciliation : orderPaymentReconciliationList) {
 			xlsWriter.addCell(row, orderPaymentReconciliation.getBaseOrder());
+			xlsWriter.addCell(row, orderPaymentReconciliation.getBaseOrder().getGatewayOrderId());
+
+			if(orderPaymentReconciliation.getBaseOrder().getPayment() != null) {
+				xlsWriter.addCell(row, orderPaymentReconciliation.getBaseOrder().getPayment().getPaymentMode().getName());
+			} else {
+				xlsWriter.addCell(row, "");
+			}
+
 			if(orderPaymentReconciliation.getBaseOrder().getPayment() != null && orderPaymentReconciliation.getBaseOrder().getPayment().getPaymentDate() != null) {
 				xlsWriter.addCell(row, sdf.format(orderPaymentReconciliation.getBaseOrder().getPayment().getPaymentDate()));
 			} else {
 				xlsWriter.addCell(row, "");
 			}
+
 			if(orderPaymentReconciliation.getBaseOrder() != null) {
 				xlsWriter.addCell(row, orderPaymentReconciliation.getBaseOrder().getAmount());
 			} else {
