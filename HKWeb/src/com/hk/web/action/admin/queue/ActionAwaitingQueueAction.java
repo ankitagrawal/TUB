@@ -229,7 +229,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 	public Resolution escalate() {
 		StringBuilder falseMessage = new StringBuilder();
 		StringBuilder trueMessage = new StringBuilder();
-		falseMessage.append("Shipping order which escalated are ");
+		trueMessage.append("Shipping order which escalated are ");
 		falseMessage.append("Shipping order which couldn't be escalated are ");
 		if (!shippingOrderList.isEmpty()) {
 			for (ShippingOrder shippingOrder : shippingOrderList) {
@@ -249,7 +249,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 					}
 				}
 			}
-			addRedirectAlertMessage(new SimpleMessage(trueMessage.toString() + "\n" + falseMessage.toString()));
+			trueMessage.append("\n");
+			addRedirectAlertMessage(new SimpleMessage(trueMessage.toString()  + " " + falseMessage.toString()));
 		} else {
 			addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
 		}

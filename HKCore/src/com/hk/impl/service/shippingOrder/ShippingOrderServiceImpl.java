@@ -187,7 +187,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
                         return false;
-                    } else if (availableUnbookedInv < 0) {
+                    } else if (availableUnbookedInv <= 0) {
                         String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
                                 + availableUnbookedInv;
                         logger.info("Could not manually escalate order as availableUnbookedInv of sku[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv
