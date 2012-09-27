@@ -3,9 +3,9 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Runsheet List">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="HKDelivery Payment">
 
-    <s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" var="consignmentAction"/>
+    <s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction" var="paymentReconciliationAction"/>
     <s:layout-component name="htmlHead">
     </s:layout-component>
 
@@ -13,19 +13,19 @@
         Reconcile HKDelivery payments
     </s:layout-component>
     <s:layout-component name="content">
-        <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction">
-            <s:hidden name="hkdeliveryPaymentReconciliation" value="${consignmentAction.hkdeliveryPaymentReconciliation.id}" />
+        <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction">
+            <s:hidden name="hkdeliveryPaymentReconciliation" value="${paymentReconciliationAction.hkdeliveryPaymentReconciliation.id}" />
             <table>
                 <tr>
                     <td><label><strong>Date: </strong></label></td>
                     <td>
                         <s:hidden name="hkdeliveryPaymentReconciliation.createDate" />
-                        <fmt:formatDate value="${consignmentAction.hkdeliveryPaymentReconciliation.createDate}" type="both" timeStyle="short"/>
+                        <fmt:formatDate value="${paymentReconciliationAction.hkdeliveryPaymentReconciliation.createDate}" type="both" timeStyle="short"/>
                     </td>
                     <td><label><strong>Expected COD Amount:</strong></label></td>
                     <td>
                         <s:hidden name="hkdeliveryPaymentReconciliation.expectedAmount" />
-                        <fmt:formatNumber value="${consignmentAction.hkdeliveryPaymentReconciliation.expectedAmount}" type="currency" currencySymbol=" "
+                        <fmt:formatNumber value="${paymentReconciliationAction.hkdeliveryPaymentReconciliation.expectedAmount}" type="currency" currencySymbol=" "
                                           maxFractionDigits="2"/>
                     </td>
                     <td><label><strong>Actual Amount:</strong></label></td>
@@ -34,8 +34,8 @@
                 <tr>
                     <td><label><strong>User: </strong></label></td>
                     <td>
-                        <s:hidden name="hkdeliveryPaymentReconciliation.user" value="${consignmentAction.hkdeliveryPaymentReconciliation.user.id}" />
-                        ${consignmentAction.hkdeliveryPaymentReconciliation.user.name}</td>
+                        <s:hidden name="hkdeliveryPaymentReconciliation.user" value="${paymentReconciliationAction.hkdeliveryPaymentReconciliation.user.id}" />
+                        ${paymentReconciliationAction.hkdeliveryPaymentReconciliation.user.name}</td>
                     <td><label><strong>Remarks: </strong></label></td>
                     <td><s:textarea name="hkdeliveryPaymentReconciliation.remarks" style="height:50px;"/></td>
                 </tr>
@@ -53,7 +53,7 @@
 
                 </tr>
                 </thead>
-                <c:forEach items="${consignmentAction.consignmentListForPaymentReconciliation}" var="consignment" varStatus="ctr">
+                <c:forEach items="${paymentReconciliationAction.consignmentListForPaymentReconciliation}" var="consignment" varStatus="ctr">
                     <tr class="consignment-row">
                         <td><s:hidden name="consignmentListForPaymentReconciliation[${ctr.index}]" value="${consignment.id}"/>${consignment.id}</td>
                         <td>${consignment.awbNumber}</td>
@@ -66,10 +66,10 @@
                 </c:forEach>
             </table>
             <s:submit name="savePaymentReconciliation" value="Save payment Reconciliation" />
-	          <c:if test="${consignmentAction.hkdeliveryPaymentReconciliation.id != null}" >
+	          <c:if test="${paymentReconciliationAction.hkdeliveryPaymentReconciliation.id != null}" >
 							<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction" event="downloadPaymentReconciliation"
 											title="Download Payment Reconciliation">Download Payment Reconciliation
-							<s:param name="hkdeliveryPaymentReconciliation" value="${consignmentAction.hkdeliveryPaymentReconciliation.id}" />
+							<s:param name="hkdeliveryPaymentReconciliation" value="${paymentReconciliationAction.hkdeliveryPaymentReconciliation.id}" />
 							</s:link>
 	        </c:if>
         </s:form>

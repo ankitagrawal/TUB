@@ -147,6 +147,7 @@ public class CatalogAction extends BasePaginatedAction {
             }
         } else {
             logger.error("No category found for root category slug : " + rootCategorySlug);
+	        return new RedirectResolution(HomeAction.class);
         }
 
         String smallestCategory = null;
@@ -195,7 +196,7 @@ public class CatalogAction extends BasePaginatedAction {
 
             List<Product> filteredProducts = searchResult.getSolrProducts();
             if (rootCategorySlug.equals("services")) {
-                productList = trimListByDistance(filteredProducts, preferredZone);
+                filteredProducts = trimListByDistance(filteredProducts, preferredZone);
             }
             // Find out how many products have been filtered
             int diff = 0;

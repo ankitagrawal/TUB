@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.domain.order.ShippingOrder;
+import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -50,6 +52,8 @@ public class SplitBaseOrderAction extends BaseAction {
     private OrderStatusService orderStatusService;
     @Autowired
     private OrderService orderService;
+	@Autowired
+	UserService userService;
 
     Map<CartLineItem, Warehouse> cartLineItemWarehouseMap = new HashMap<CartLineItem, Warehouse>();
 
@@ -77,7 +81,8 @@ public class SplitBaseOrderAction extends BaseAction {
             for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseCartLineItemsMap.entrySet()) {
 
                 try {
-                    adminShippingOrderService.createSOforManualSplit(warehouseSetEntry.getValue(), warehouseSetEntry.getKey());
+                    ShippingOrder shippingOrder = adminShippingOrderService.createSOforManualSplit(warehouseSetEntry.getValue(), warehouseSetEntry.getKey());
+	                orderLoggingService.logOrderActivity(baseOrder, userService.getLoggedInUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderManualSplit), null);
                 } catch (NoSkuException e) {
                     logger.error("No sku found", e);
                     addRedirectAlertMessage(new SimpleMessage(e.getMessage()));

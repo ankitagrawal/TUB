@@ -32,4 +32,6 @@ public interface ConsignmentDao extends BaseDao {
     public ShippingOrder getShippingOrderFromConsignment(Consignment consignment);
 
     public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage);
+
+	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub);
 }

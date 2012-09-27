@@ -52,8 +52,6 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private             ConsignmentStatus     consignmentStatus;
     private             Integer               defaultPerPage           = 20;
     private             List<Consignment>     consignmentList          = new ArrayList<Consignment>();
-    private             List<Consignment>     consignmentListForPaymentReconciliation = new ArrayList<Consignment>();
-    private             HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
     private             Boolean               reconciled;
     private             Runsheet              runsheet;
     private             User                loggedOnUser;
@@ -170,41 +168,6 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/hkConsignmentList.jsp");
     }
 
-    public Resolution generatePaymentReconciliation(){
-        for(Consignment consignment : consignmentListForPaymentReconciliation){
-            if(!consignment.getConsignmentStatus().getStatus().equals(EnumConsignmentStatus.ShipmentDelivered.getStatus())){
-                addRedirectAlertMessage(new SimpleMessage("Status of consignment "+ consignment.getAwbNumber() + " is not delivered."));
-                return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
-            }
-        }
-        hkdeliveryPaymentReconciliation = consignmentService.createPaymentReconciliationForConsignmentList(consignmentListForPaymentReconciliation, getUserService().getUserById(getPrincipal().getId()));
-        return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
-    }
-
-    public Resolution savePaymentReconciliation(){
-        hkdeliveryPaymentReconciliation.setConsignments(new HashSet<Consignment>(consignmentListForPaymentReconciliation));
-        if(hkdeliveryPaymentReconciliation.getActualAmount() == null){
-            getContext().getValidationErrors().add("1", new SimpleError("Please Enter actual collected amount"));
-            return new ForwardResolution(HKDConsignmentAction.class, "savePaymentReconciliation");
-        }
-        if((hkdeliveryPaymentReconciliation.getActualAmount().doubleValue() - hkdeliveryPaymentReconciliation.getExpectedAmount().doubleValue()) > 10){
-            getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be blank or greater than expected amount"));
-            return new ForwardResolution(HKDConsignmentAction.class, "savePaymentReconciliation");
-        }
-        hkdeliveryPaymentReconciliation = consignmentService.saveHkdeliveryPaymentReconciliation(hkdeliveryPaymentReconciliation);
-        addRedirectAlertMessage(new SimpleMessage("Payment Reconciliation saved."));        
-        return new ForwardResolution(HKDConsignmentAction.class, "editPaymentReconciliation").addParameter("hkdeliveryPaymentReconciliation", hkdeliveryPaymentReconciliation.getId());
-    }
-
-    public Resolution editPaymentReconciliation(){
-        if(hkdeliveryPaymentReconciliation != null){
-            consignmentListForPaymentReconciliation = new ArrayList<Consignment>(hkdeliveryPaymentReconciliation.getConsignments());
-            return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
-        }
-        addRedirectAlertMessage(new SimpleMessage("Payment Reconciliation saved."));
-        return new ForwardResolution(HKDConsignmentAction.class, "editPaymentReconciliation").addParameter("hkdeliveryPaymentReconciliation", hkdeliveryPaymentReconciliation.getId());
-    }
-
     public Resolution trackConsignment(){
         Consignment consignment = null;
         if(doTracking){
@@ -299,15 +262,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setConsignmentList(List<Consignment> consignmentList) {
         this.consignmentList = consignmentList;
-    }
-
-    public List<Consignment> getConsignmentListForPaymentReconciliation() {
-        return consignmentListForPaymentReconciliation;
-    }
-
-    public void setConsignmentListForPaymentReconciliation(List<Consignment> consignmentListForPaymentReconciliation) {
-        this.consignmentListForPaymentReconciliation = consignmentListForPaymentReconciliation;
-    }
+    }  
 
     public String getConsignmentNumber() {
         return consignmentNumber;
@@ -325,14 +280,6 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         this.doTracking = doTracking;
     }
 
-    public HkdeliveryPaymentReconciliation getHkdeliveryPaymentReconciliation() {
-        return hkdeliveryPaymentReconciliation;
-    }
-
-    public void setHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation) {
-        this.hkdeliveryPaymentReconciliation = hkdeliveryPaymentReconciliation;
-    }
-    
     public List<ConsignmentTracking> getConsignmentTrackingList() {
         return consignmentTrackingList;
     }

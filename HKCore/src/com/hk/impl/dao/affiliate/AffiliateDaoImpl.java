@@ -95,8 +95,8 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 			params.put("affiliateStatusIds", affiliateStatusIds);
 		}
 		if (websiteName != null && StringUtils.isNotBlank(websiteName)) {
-			hql.append(" and a.websiteName = :websiteName ");
-			params.put("websiteName", websiteName);
+			hql.append(" and a.websiteName like :websiteName ");
+			params.put("websiteName", "%" + websiteName + "%");
 		}
 		if (code != null && StringUtils.isNotBlank(code)) {
 			hql.append(" and a.code = :code ");
@@ -113,13 +113,13 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 		}
 
 		if (name != null && StringUtils.isNotBlank(name)) {
-			hql.append(" and u.name = :name ");
-			params.put("name", name);
+			hql.append(" and u.name like :name ");
+			params.put("name", "%" + name + "%");
 		}
 
 		if (email != null && StringUtils.isNotBlank(email)) {
-			hql.append(" and u.email = :email ");
-			params.put("email", email);
+			hql.append(" and u.email like :email ");
+			params.put("email", "%" + email + "%");
 		}
 
 		hql.append(" group by a.id").append(" order by sum(amount) desc");

@@ -13,4 +13,6 @@ public interface AdminShippingOrderDao {
 
     public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId);
 
+	public List<ShippingOrder> getShippingOrderByGatewayOrderList(List<String> gatewayOrderIdList);
+
 }

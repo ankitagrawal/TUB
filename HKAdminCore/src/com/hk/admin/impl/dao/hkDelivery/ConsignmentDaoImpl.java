@@ -1,6 +1,7 @@
 package com.hk.admin.impl.dao.hkDelivery;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.hkDelivery.*;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -64,10 +65,6 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
             consignmentCriteria.add(Restrictions.eq("awbNumber", awbNumber));
         }
 
-        if (consignment != null) {
-            consignmentCriteria.add(Restrictions.eq("id", consignment.getId()));
-        }
-
         if (startDate != null) {
             consignmentCriteria.add(Restrictions.ge("createDate", startDate));
         }
@@ -124,5 +121,28 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         paymentReconciliationCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
         return list(paymentReconciliationCriteria, pageNo, perPage);
     }
+
+	@Override
+	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub) {
+		DetachedCriteria consignmentCriteria = DetachedCriteria.forClass(Consignment.class);
+		if (startDate != null) {
+            consignmentCriteria.add(Restrictions.ge("createDate", startDate));
+        }
+        if (endDate != null) {
+            consignmentCriteria.add(Restrictions.le("createDate", endDate));
+        }
+		if(hub != null){
+			consignmentCriteria.add(Restrictions.eq("hub.id", hub.getId()));
+		}
+
+		consignmentCriteria.add(Restrictions.isNull("hkdeliveryPaymentReconciliation"));
+
+		consignmentCriteria.add(Restrictions.eq("consignmentStatus.id", EnumConsignmentStatus.ShipmentDelivered.getId()));
+
+		consignmentCriteria.add(Restrictions.like("paymentMode", HKDeliveryConstants.COD));
+		
+		consignmentCriteria.addOrder(org.hibernate.criterion.Order.asc("id"));
+		return findByCriteria(consignmentCriteria);
+	}
 }
 

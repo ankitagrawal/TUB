@@ -12,6 +12,8 @@
 <catalog>
     <page current="${catalogBean.pageNo}" total="${catalogBean.pageCount}" perPage="${catalogBean.perPage}"/>
     <c:forEach items="${catalogBean.productList}" var="product">
+        <c:if test="${!product.outOfStock && !hk:isCombo(product.id)}">
+
         <product id="${product.id}">
             <name>${hk:escapeHtml(product.name)}</name>
             <url>http://www.healthkart.com/product/${product.slug}/${product.id}</url>
@@ -51,5 +53,6 @@
                 </c:forEach>
             </variants>
         </product>
+        </c:if>
     </c:forEach>
 </catalog>
