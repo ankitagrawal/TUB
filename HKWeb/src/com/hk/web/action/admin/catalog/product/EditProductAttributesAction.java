@@ -180,6 +180,10 @@ public class EditProductAttributesAction extends BaseAction {
         if(product.getGroundShipping()) {
             product.setCodAllowed(Boolean.TRUE);
         }
+        if(product.isService()) {
+            product.setGroundShipping(Boolean.FALSE);
+            product.setCodAllowed(Boolean.FALSE);
+        }
         logger.debug( "actual save call start ");
         getProductService().save(product);
         logger.debug( "actual save call  ");

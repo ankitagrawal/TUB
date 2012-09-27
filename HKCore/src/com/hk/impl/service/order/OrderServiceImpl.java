@@ -573,7 +573,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
 	//todo ankit, there should be one and only method to which you will pass order      --- completed on AdminOrderService
-
+//  this function not in use  
     public boolean isCODAllowed(Order order) {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
