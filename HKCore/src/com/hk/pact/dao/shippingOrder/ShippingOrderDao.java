@@ -27,6 +27,8 @@ public interface ShippingOrderDao extends BaseDao {
 
     public Long getBookedQtyOfSkuInQueue(List<Sku> skuList);
 
+    public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList);
+
     /**
      * @param sku based on warehouse
      * @return Sum of Qty of lineitems for product variant which are not yet shipped

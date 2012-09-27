@@ -72,8 +72,15 @@ public enum EnumShippingOrderStatus {
                 EnumShippingOrderStatus.SO_EscalatedBack);
     }
 
+	public static List<EnumShippingOrderStatus> getStatusForBookedInventoryInProcessingQueue() {
+		return Arrays.asList(
+				EnumShippingOrderStatus.SO_ReadyForProcess,
+				EnumShippingOrderStatus.SO_MarkedForPrinting,
+				EnumShippingOrderStatus.SO_Picking
+		);
+	}
 
-    public static List<EnumShippingOrderStatus> getStatusForPuttingOrderOnHold() {
+	public static List<EnumShippingOrderStatus> getStatusForPuttingOrderOnHold() {
 
         return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting,
                 EnumShippingOrderStatus.SO_ReadyForProcess,

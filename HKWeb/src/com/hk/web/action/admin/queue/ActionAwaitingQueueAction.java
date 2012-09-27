@@ -227,23 +227,29 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
 	@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
 	public Resolution escalate() {
-		String message = "";
+		StringBuilder falseMessage = new StringBuilder();
+		StringBuilder trueMessage = new StringBuilder();
+		falseMessage.append("Shipping order which escalated are ");
+		falseMessage.append("Shipping order which couldn't be escalated are ");
 		if (!shippingOrderList.isEmpty()) {
 			for (ShippingOrder shippingOrder : shippingOrderList) {
 				boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
 				if (isManualEscalable) {
-					message = "Shipping order manually escalated";
+					trueMessage.append(shippingOrder.getId());
+					trueMessage.append(" ");
 					shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
 				} else {
 					if (getPrincipalUser().getRoles().contains(EnumRole.GOD.toRole())) {
-						message = "Hacked! SO Escalated";
+						trueMessage.append(shippingOrder.getId());
+						trueMessage.append(" ");
 						shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
 					} else {
-						message = "Shipping order can't be escalated";
+						falseMessage.append(shippingOrder.getId());
+						falseMessage.append(" ");
 					}
 				}
 			}
-			addRedirectAlertMessage(new SimpleMessage(message));
+			addRedirectAlertMessage(new SimpleMessage(trueMessage.toString() + "\n" + falseMessage.toString()));
 		} else {
 			addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
 		}

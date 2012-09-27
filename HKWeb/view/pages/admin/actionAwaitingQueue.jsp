@@ -291,13 +291,6 @@
                                            value="${shippingOrderStatus.id}"/> ${shippingOrderStatus.name}</label>
                     </c:forEach>
                     &nbsp;&nbsp;&nbsp;
-                    <br>
-                    <label>SO Lifecycle</label>
-                    <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity" varStatus="ctr">
-                        <label><s:checkbox name="shippingOrderLifecycleActivities[${ctr.index}]"
-                                           value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}</label>
-                    </c:forEach>
-                    &nbsp;&nbsp;&nbsp;
                     <label>StoreId</label>
                     <c:forEach items="${storeList}" var="store" varStatus="ctr">
                         <label><s:checkbox name="storeId"
@@ -309,7 +302,7 @@
                     <s:checkbox name="sortByScore"/>
                 </li>
                 <li>
-                    <label style="float:left;">Payment Modes </label>
+                    <label style="float:left;width:75px;">Payment Modes</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${paymentModeList}" var="paymentMode" varStatus="ctr">
@@ -320,7 +313,7 @@
                     </div>
                 </li>
 
-                <li><label style="float:left;">Payment Status </label>
+                <li><label style="float:left;width: 75px;">Payment Status</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${paymentStatusList}" var="paymentStatus" varStatus="ctr">
@@ -331,7 +324,7 @@
                     </div>
                 </li>
 
-                <li><label style="float:left;">BO Category </label>
+                <li><label style="float:left;width: 60px;">BO Category</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${categoryList}" var="category" varStatus="ctr">
@@ -342,12 +335,24 @@
                     </div>
                 </li>
 
-                <li><label style="float:left;">SO Category </label>
+                <li><label style="float:left;width: 60px;">SO Category</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${categoryList}" var="category" varStatus="ctr">
                             <label><s:checkbox name="basketCategories[${ctr.index}]"
                                                value="${category.name}"/> ${category.displayName}</label>
+                            <br/>
+                        </c:forEach>
+                    </div>
+                </li>
+
+                <li><label style="float:left;width: 60px;">SO Lifecycle</label>
+
+                    <div class="checkBoxList">
+                        <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity"
+                                   varStatus="ctr">
+                            <label><s:checkbox name="shippingOrderLifecycleActivities[${ctr.index}]"
+                                               value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}</label>
                             <br/>
                         </c:forEach>
                     </div>
