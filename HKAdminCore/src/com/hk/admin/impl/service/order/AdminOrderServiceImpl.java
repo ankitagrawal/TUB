@@ -310,13 +310,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 		Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
 		boolean shippingOrderExists = orderService.isShippingOrderExists(order);
-
-//		for (CartLineItem cartLineItem : productCartLineItems) {
-//			if (lineItemDao.getLineItem(cartLineItem) != null) {
-//				shippingOrderExists = true;
-//			}
-//		}
-
 		Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
 		if (!shippingOrderExists) {

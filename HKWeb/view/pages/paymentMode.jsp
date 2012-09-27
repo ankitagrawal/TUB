@@ -199,7 +199,7 @@
                     <c:when test='${codFailureMap["CodAllowedOnProduct"] == "N" }'>
                         ${message}
                         <p>COD is not allowed on the product :
-                            <strong> ${codFailureMap["ProductName"]} </strong> in your cart</p>
+                            <strong> ${codFailureMap["ProductName"]} </strong>. </p>
                     </c:when>
                      <c:when test='${codFailureMap["CodOnSubscription"] == "N" }'>
                         ${message}

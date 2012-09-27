@@ -95,19 +95,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             getContext().getValidationErrors().add("3", new SimpleError("Pincode is invalid, It cannot be packed"));
         } else {
             boolean isCod = shippingOrder.isCOD();
-//            availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
-//  groundShipping logic Starts---              
-            for (LineItem lineItem : shippingOrder.getLineItems()) {
-                if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {
-                    isGroundShipped = true;
-                    break;
-                }
-            }
-            if (isGroundShipped) {
-                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped , false);
-            } else {
-                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, false , false);
-            }
+            
+//  groundShipping logic Starts---
+        isGroundShipped =  shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
+        availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
 //  ground shipping logic ends
 
             if (availableCouriers == null || availableCouriers.isEmpty()) {
@@ -149,19 +140,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
-//                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
-	          //todo ankit uncomplicate this, i have already things earlier to do so     --- fixed
-               isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder) ;
-              availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);                
+                isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
+                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
                 } else {
-                    if (isGroundShipped) {
-                        suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
-                    } else {
-                        suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, false);
-                    }
+                     suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);                    
                     //Todo: Seema ."reason=create  shipment with default Awb  " Action: default Tracking id= gateway_order_id: Might remove when we have all the awb in system
                     trackingId = shippingOrder.getGatewayOrderId();
                 }

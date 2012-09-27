@@ -128,16 +128,16 @@ public class OrderSummaryAction extends BaseAction {
 
         Address address = order.getAddress();
         String pin = address != null ? address.getPin() : null;
-       codFailureMap = adminOrderService.isCODAllowed(order,pricingDto);
+
+        codFailureMap = adminOrderService.isCODAllowed(order,pricingDto);
 
  // Ground Shipping logic starts ---
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
         if (groundShippedCartLineItemSet !=null && groundShippedCartLineItemSet.size() > 0)  {
             groundShippedItemPresent = true;
-              groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
+            groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
         }
-
   // Ground Shipping logic ends --
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();

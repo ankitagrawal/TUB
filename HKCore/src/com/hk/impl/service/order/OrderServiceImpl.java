@@ -572,9 +572,7 @@ public class OrderServiceImpl implements OrderService {
         this.orderLoggingService = orderLoggingService;
     }
 
-	//todo ankit, there should be one and only method to which you will pass order      --- discuss
-	//todo there you wiill check for pin, cod,and products
-	//todo currently pin is checked separaretely or OSA and products are checked on paymentModepage, not scalable
+	//todo ankit, there should be one and only method to which you will pass order      --- completed on AdminOrderService
 
     public boolean isCODAllowed(Order order) {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());

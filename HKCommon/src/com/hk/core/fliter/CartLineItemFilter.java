@@ -38,11 +38,13 @@ public class CartLineItemFilter {
 
   public CartLineItemFilter hasOnlyServiceLineItems(boolean onlyServiceLineItems) {
     this.onlyServiceLineItems = onlyServiceLineItems;
+    this.onlyGroundShippedItems = false;  
     return this;
   }
 
     public CartLineItemFilter hasOnlyGroundShippedItems(boolean onlyGroundShippedItems) {
     this.onlyGroundShippedItems = onlyGroundShippedItems;
+    this.onlyServiceLineItems = false;    
     return this;
   }
 
