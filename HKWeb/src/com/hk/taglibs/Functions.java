@@ -432,7 +432,11 @@ public class Functions {
     }
 
     public static String escapeHtml(String str) {
-        return StringEscapeUtils.escapeHtml(str);
+        return StringEscapeUtils.escapeHtml(str.trim());
+    }
+
+    public static String escapeXML(String str) {
+        return StringEscapeUtils.escapeXml(str.trim());
     }
 
     public static Double getApplicableOfferPrice(Object o) {

@@ -15,9 +15,8 @@
         <c:if test="${!product.outOfStock && !hk:isCombo(product.id)}">
 
         <product id="${product.id}">
-            <name>${hk:escapeHtml(product.name)}</name>
+            <name>${hk:escapeXML(product.name)}</name>
             <url>http://www.healthkart.com/product/${product.slug}/${product.id}</url>
-            <name>${hk:escapeHtml(product.name)}</name>
             <priceMin marked="${product.minimumMRPProducVariant.markedPrice}" hk="${product.minimumMRPProducVariant.hkPrice}"/>
             <priceMax marked="${product.maximumMRPProducVariant.markedPrice}" hk="${product.maximumMRPProducVariant.hkPrice}"/>
             <images>
