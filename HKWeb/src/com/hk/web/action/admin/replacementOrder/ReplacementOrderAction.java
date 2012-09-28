@@ -111,7 +111,7 @@ public class ReplacementOrderAction extends BaseAction {
                 addRedirectAlertMessage(new SimpleMessage("The quantity of " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " cannot be less than zero."));
                 return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
             }
-            if (lineItem.getQty() > getLineItemDao().getLineItem(lineItem.getSku(), shippingOrder).getQty()) {
+            if (lineItem.getQty() > getLineItemDao().getMatchingLineItemForDuplicateShippingOrder(lineItem, shippingOrder).getQty()) {
                 addRedirectAlertMessage(new SimpleMessage("The quantity of " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " cannot be more than original quantity."));
                 return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
             }
