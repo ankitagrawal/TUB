@@ -1,14 +1,19 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
 
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -27,11 +32,11 @@ public class AddCourierAction extends BaseAction {
 
 	private List<Courier> courierList;
 
-
 	private List<CourierGroup> courierGroupList;
 
+	@Validate(field = "courier", required = true, on = "saveCourier assignCourierGroup getCourierGroupForCourier")
 	private Courier courier;
-
+	@Validate(field = "courierGroup", required = true, on = "addNewCourierGroup assignCourierGroup")
 	private CourierGroup courierGroup;
 
 	@DefaultHandler
@@ -41,18 +46,19 @@ public class AddCourierAction extends BaseAction {
 		return new ForwardResolution("/pages/addCourier.jsp");
 	}
 
-	public Resolution save() {
-
+	public Resolution saveCourier() {
 		if (courier != null) {
 			if (courierService.getCourierByName(courier.getName().trim()) != null) {
-				addRedirectAlertMessage(new SimpleMessage("Courier Saved"));
+				addRedirectAlertMessage(new SimpleMessage("Courier With same name already exist"));
 			} else {
 				courierService.save(courier);
 				addRedirectAlertMessage(new SimpleMessage("Courier Saved"));
 			}
 		}
-		return new RedirectResolution(AddCourierAction.class);
+
+		return new ForwardResolution(AddCourierAction.class);
 	}
+
 
 	public Resolution addNewCourierGroup() {
 		if (courierGroup != null) {
@@ -63,16 +69,24 @@ public class AddCourierAction extends BaseAction {
 				addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
 			}
 		}
-		return new RedirectResolution(AddCourierAction.class);
+		return new ForwardResolution(AddCourierAction.class);
 	}
 
 
-	@
+	public Resolution assignCourierGroup() {
+		List<CourierGroup> couriergroup = new ArrayList<CourierGroup>();
+		courier.setCourierGroup(couriergroup);
+		courierService.save(courier);
+		addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
+		return new ForwardResolution(AddCourierAction.class);
+	}
+
+	@JsonHandler
 	public Resolution getCourierGroupForCourier() {
 		if (courier != null) {
 			courierGroup = courier.getCourierGroup();
 		}
-		return new RedirectResolution(AddCourierAction.class);
+		return new ForwardResolution(AddCourierAction.class);
 	}
 
 
