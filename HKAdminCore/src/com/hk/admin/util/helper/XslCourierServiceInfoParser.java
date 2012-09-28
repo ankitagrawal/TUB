@@ -19,6 +19,7 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.apache.commons.lang.StringUtils;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -31,6 +32,8 @@ import net.sourceforge.stripes.validation.SimpleError;
  * Time: 5:52:32 PM
  * To change this template use File | Settings | File Templates.
  */
+
+@Component
 public class XslCourierServiceInfoParser {
     private static Logger logger = LoggerFactory.getLogger(XslCourierServiceInfoParser.class);
 
@@ -44,7 +47,7 @@ public class XslCourierServiceInfoParser {
 //          CourierServiceInfo courierServiceInfo = new CourierServiceInfo();
         Set<CourierServiceInfo> courierServiceInfoList = new HashSet<CourierServiceInfo>();
         int rowCount = 1;
-        ExcelSheetParser excel = new ExcelSheetParser(objInFile.getAbsolutePath(), "Sheet1", true);
+        ExcelSheetParser excel = new ExcelSheetParser(objInFile.getAbsolutePath(), "CourierServiceInfo", true);
         Iterator<HKRow> rowiterator = excel.parse();
 
         try {
@@ -54,8 +57,8 @@ public class XslCourierServiceInfoParser {
                 HKRow row = rowiterator.next();
 //                String id = row.getColumnValue(XslConstants.ID );
                 String lPincode = row.getColumnValue(XslConstants.PINCODE);
-                String codAvailable = row.getColumnValue(XslConstants.COD_AVAILABLE);
                 String courierId = row.getColumnValue(XslConstants.COURIER_ID);
+                String codAvailable = row.getColumnValue(XslConstants.COD_AVAILABLE);
                 String deleted = row.getColumnValue(XslConstants.IS_DELETED);
                 String preferred = row.getColumnValue(XslConstants.IS_PREFERRED);
                 String preferredCod = row.getColumnValue(XslConstants.IS_PREFERRED_COD);
@@ -63,6 +66,10 @@ public class XslCourierServiceInfoParser {
                 String groundShippingAvailable = row.getColumnValue(XslConstants.GROUND_SHIPPING_AVAILABLE);
                 String codAvailableOnGroundShipping = row.getColumnValue(XslConstants.COD_ON_GROUND_SHIPPING);
 
+                String id = row.getColumnValue(XslConstants.ID);
+                if (StringUtils.isNotBlank(id)) {
+                    courierServiceInfo.setId(getLong(id));
+                }
                 if (StringUtils.isBlank(lPincode)) {
                     throw new ExcelBlankFieldException("Pincode cannot be empty" + "    ", rowCount);
                 }
@@ -127,4 +134,15 @@ public class XslCourierServiceInfoParser {
     public void setPincodeService(PincodeService pincodeService) {
         this.pincodeService = pincodeService;
     }
+
+    private Long getLong(String value) {
+        Long valueInLong = null;
+        try {
+            valueInLong = Long.parseLong(value.replace(".0", ""));
+        } catch (Exception e) {
+
+        }
+        return valueInLong;
+    }
+
 }

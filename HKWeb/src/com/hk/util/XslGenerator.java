@@ -298,88 +298,92 @@ public class XslGenerator {
 	}
 
 	public File generateCouerierServiceInfoXsl(List<CourierServiceInfo> courierServiceInfoList, String xslFilePath) throws Exception {
+        
+		 File file = new File(xslFilePath);
+        file.getParentFile().mkdirs();
+        FileOutputStream out = new FileOutputStream(file);
+        Workbook wb = new HSSFWorkbook();
 
-		File file = new File(xslFilePath);
-		file.getParentFile().mkdirs();
-		FileOutputStream out = new FileOutputStream(file);
-		Workbook wb = new HSSFWorkbook();
+        CellStyle style = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setFontHeightInPoints((short) 12);
+        font.setColor(Font.COLOR_NORMAL);
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        style.setFont(font);
+        Sheet sheet1 = wb.createSheet("CourierServiceInfo");
+        Row row = sheet1.createRow(0);
+        row.setHeightInPoints((short) 25);
 
-		CellStyle style = wb.createCellStyle();
-		Font font = wb.createFont();
-		font.setFontHeightInPoints((short) 12);
-		font.setColor(Font.COLOR_NORMAL);
-		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-		style.setFont(font);
-		Sheet sheet1 = wb.createSheet("CourierServiceInfo");
-		Row row = sheet1.createRow(0);
-		row.setHeightInPoints((short) 25);
+        int totalColumnNo = 10;
 
-		int totalColumnNo = 8;
+        Cell cell;
+        for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+            cell = row.createCell(columnNo);
+            cell.setCellStyle(style);
+        }
+        setCellValue(row, 0, PINCODE);
+        setCellValue(row, 1, COURIER_ID);
+        setCellValue(row, 2, COD_AVAILABLE);
+        setCellValue(row, 3, IS_PREFERRED);
+        setCellValue(row, 4, IS_PREFERRED_COD);
+        setCellValue(row, 5, ROUTING_CODE);
+        setCellValue(row, 6, IS_DELETED);
+        setCellValue(row, 7, GROUND_SHIPPING_AVAILABLE);
+        setCellValue(row, 8, COD_ON_GROUND_SHIPPING);
 
-		Cell cell;
-		for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-			cell = row.createCell(columnNo);
-			cell.setCellStyle(style);
-		}
-		setCellValue(row, 0, PINCODE);
-		setCellValue(row, 1, COURIER_ID);
-		setCellValue(row, 2, COD_AVAILABLE);
-		setCellValue(row, 3, IS_PREFERRED);
-		setCellValue(row, 4, IS_PREFERRED_COD);
-		setCellValue(row, 5, ROUTING_CODE);
-		setCellValue(row, 6, IS_DELETED);
+        int initialRowNo = 1;
+        for (CourierServiceInfo courierServiceInfo : courierServiceInfoList) {
 
-		int initialRowNo = 1;
-		for (CourierServiceInfo courierServiceInfo : courierServiceInfoList) {
+            row = sheet1.createRow(initialRowNo);
+            for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+                row.createCell(columnNo);
+            }
 
-			row = sheet1.createRow(initialRowNo);
-			for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-				row.createCell(columnNo);
-			}
+            Pincode pincode = courierServiceInfo.getPincode();
+            setCellValue(row, 0, pincode.getPincode());
+            setCellValue(row, 1, courierServiceInfo.getCourier().getId());
+            setCellValue(row, 2, courierServiceInfo.isCodAvailable() ? "Y" : "N");
+            setCellValue(row, 3, courierServiceInfo.isPreferred() ? "Y" : "N");
+            setCellValue(row, 4, courierServiceInfo.isPreferredCod() ? "Y" : "N");
+            setCellValue(row, 5, courierServiceInfo.getRoutingCode());
+            setCellValue(row, 6, courierServiceInfo.isDeleted() ? "Y" : "N");
+            setCellValue(row, 7, courierServiceInfo.isGroundShippingAvailable() ? "Y" : "N");
+            setCellValue(row, 8, courierServiceInfo.isCodAvailableOnGroundShipping() ? "Y" : "N");
 
-			Pincode pincode = courierServiceInfo.getPincode();
-			setCellValue(row, 0, pincode.getPincode());
-			setCellValue(row, 1, courierServiceInfo.getCourier().getId());
-			setCellValue(row, 2, courierServiceInfo.isCodAvailable() ? "Y" : "N");
-			setCellValue(row, 3, courierServiceInfo.isPreferred() ? "Y" : "N");
-			setCellValue(row, 4, courierServiceInfo.isPreferredCod() ? "Y" : "N");
-			setCellValue(row, 5, courierServiceInfo.getRoutingCode());
-			setCellValue(row, 6, courierServiceInfo.isDeleted() ? "Y" : "N");
+            initialRowNo++;
 
-			initialRowNo++;
+        }
 
-		}
+        Sheet sheet2 = wb.createSheet("Courier IDs");
+        row = sheet2.createRow(0);
+        row.setHeightInPoints((short) 25);
 
-		Sheet sheet2 = wb.createSheet("Courier IDs");
-		row = sheet2.createRow(0);
-		row.setHeightInPoints((short) 25);
+        int totalColumnNo2 = 2;
 
-		int totalColumnNo2 = 2;
+        for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+            cell = row.createCell(columnNo);
+            cell.setCellStyle(style);
+        }
+        setCellValue(row, 0, "Courier");
+        setCellValue(row, 1, "ID");
 
-		for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-			cell = row.createCell(columnNo);
-			cell.setCellStyle(style);
-		}
-		setCellValue(row, 0, "Courier");
-		setCellValue(row, 1, "ID");
+        int initialRowNo2 = 1;
+        List<Courier> courierList = courierDao.getAllCouriers();
+        for (Courier courier : courierList) {
+            row = sheet2.createRow(initialRowNo2);
+            for (int columnNo = 0; columnNo < totalColumnNo2; columnNo++) {
+                row.createCell(columnNo);
+            }
 
-		int initialRowNo2 = 1;
-		List<Courier> courierList = courierDao.getAllCouriers();
-		for (Courier courier : courierList) {
-			row = sheet2.createRow(initialRowNo2);
-			for (int columnNo = 0; columnNo < totalColumnNo2; columnNo++) {
-				row.createCell(columnNo);
-			}
+            setCellValue(row, 0, courier.getName());
+            setCellValue(row, 1, courier.getId());
 
-			setCellValue(row, 0, courier.getName());
-			setCellValue(row, 1, courier.getId());
+            initialRowNo2++;
+        }
 
-			initialRowNo2++;
-		}
-
-		wb.write(out);
-		out.close();
-		return file;
+        wb.write(out);
+        out.close();
+        return file;
 	}
 
 	public File generateGRNXsl(GoodsReceivedNote goodsReceivedNote, String xslFilePath) throws Exception {

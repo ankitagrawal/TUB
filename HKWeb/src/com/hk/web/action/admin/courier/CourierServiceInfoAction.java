@@ -31,6 +31,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.XslParser;
+import com.hk.admin.util.helper.XslCourierServiceInfoParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
@@ -63,8 +64,7 @@ public class CourierServiceInfoAction extends BaseAction {
 
     Courier                          courier;
     CourierServiceInfo               courierServiceInfo;
-    String                           pincode;
-    /*private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();*/
+    String                           pincode;             
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                           adminUploadsPath;
@@ -73,6 +73,9 @@ public class CourierServiceInfoAction extends BaseAction {
     XslParser                        xslParser;
 
     FileBean                         fileBean;
+
+    @Autowired
+    XslCourierServiceInfoParser     xslCourierServiceInfoParser;
 
     public void setFileBean(FileBean fileBean) {
         this.fileBean = fileBean;
@@ -129,11 +132,10 @@ public class CourierServiceInfoAction extends BaseAction {
         fileBean.save(excelFile);
         CourierServiceInfo tmpObj = null;
         try {
-            Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
+//            Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
+             Set<CourierServiceInfo> courierServiceInfoSet = xslCourierServiceInfoParser.readCourierServiceInfoList(excelFile);
             for (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) {
                 tmpObj = courierServiceInfo;
-//                CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(),
-//                        courierServiceInfo.getPincode().getPincode().toString());
                      CourierServiceInfo tmpObj2 = courierServiceInfoDao.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(),
                         courierServiceInfo.getPincode().getPincode().toString(), false, false, false);
                 if (tmpObj2 != null) {
