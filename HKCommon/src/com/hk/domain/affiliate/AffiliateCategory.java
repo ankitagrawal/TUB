@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.hk.domain.catalog.category.Category;
-
 /**
  * Created by IntelliJ IDEA.
  * User: USER

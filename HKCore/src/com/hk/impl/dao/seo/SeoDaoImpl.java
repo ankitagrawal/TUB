@@ -1,10 +1,10 @@
 package com.hk.impl.dao.seo;
 
-import com.hk.domain.catalog.product.combo.Combo;
+import org.springframework.stereotype.Repository;
+
 import com.hk.domain.content.SeoData;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.seo.SeoDao;
-import org.springframework.stereotype.Repository;
 
 /**
  * Created with IntelliJ IDEA.

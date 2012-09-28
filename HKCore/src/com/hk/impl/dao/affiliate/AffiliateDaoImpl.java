@@ -1,5 +1,17 @@
 package com.hk.impl.dao.affiliate;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.DateUtils;
 import com.hk.constants.affiliate.EnumAffiliateTxnType;
@@ -8,20 +20,12 @@ import com.hk.constants.core.RoleConstants;
 import com.hk.constants.coupon.EnumCouponType;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
-import com.hk.domain.affiliate.AffiliateStatus;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.service.RoleService;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import java.util.*;
 
 @Repository
 public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
@@ -72,7 +76,8 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 		return list(criteria, page, perPage);
 	}
 
-	public Long getMaxCouponsLeft(Affiliate affiliate) {
+	@SuppressWarnings("unchecked")
+    public Long getMaxCouponsLeft(Affiliate affiliate) {
 		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Coupon.class);
 		detachedCriteria.add(Restrictions.eq("referrerUser", affiliate.getUser()));
 		detachedCriteria.add(Restrictions.eq("couponType", EnumCouponType.AFFILIATE.asCouponType()));

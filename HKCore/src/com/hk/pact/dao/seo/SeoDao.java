@@ -1,6 +1,5 @@
 package com.hk.pact.dao.seo;
 
-import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.content.SeoData;
 import com.hk.pact.dao.BaseDao;
 

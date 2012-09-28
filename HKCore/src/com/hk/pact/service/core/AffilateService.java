@@ -1,16 +1,15 @@
 package com.hk.pact.service.core;
 
+import java.util.List;
+
 import com.akube.framework.dao.Page;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategory;
-import com.hk.domain.affiliate.AffiliateStatus;
 import com.hk.domain.affiliate.AffiliateTxnType;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
-
-import java.util.List;
 
 public interface AffilateService {
 
