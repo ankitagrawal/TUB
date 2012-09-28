@@ -1,6 +1,7 @@
 package com.hk.impl.service;
 
 import com.hk.constants.core.Keys;
+import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.service.impl.FreeMarkerService;
 import freemarker.template.Template;
 import org.apache.commons.lang.StringUtils;
