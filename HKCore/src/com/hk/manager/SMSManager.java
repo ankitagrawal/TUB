@@ -57,7 +57,7 @@ public class SMSManager {
         valuesMap.put("shipment", shippingOrder.getShipment());
 
         if (shippingOrder.getBaseOrder().getOrderStatus().getId().equals(EnumOrderStatus.Shipped.getId())) {
-            return smsService.sendSMSUsingTemplate(shippingOrder.getBaseOrder().getAddress().getPhone(), SMSTemplateConstants.orderPartialShippedSMS, valuesMap);
+            return smsService.sendSMSUsingTemplate(shippingOrder.getBaseOrder().getAddress().getPhone(), SMSTemplateConstants.orderShippedSMS, valuesMap);
         } else {
             return smsService.sendSMSUsingTemplate(shippingOrder.getBaseOrder().getAddress().getPhone(), SMSTemplateConstants.orderPartialShippedSMS, valuesMap);
         }
@@ -69,7 +69,7 @@ public class SMSManager {
         valuesMap.put("shipment", shippingOrder.getShipment());
 
         if (shippingOrder.getBaseOrder().getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())) {
-            return smsService.sendSMSUsingTemplate(shippingOrder.getBaseOrder().getAddress().getPhone(), SMSTemplateConstants.shippingOrderDeliveredSMS, valuesMap);
+            return smsService.sendSMSUsingTemplate(shippingOrder.getBaseOrder().getAddress().getPhone(), SMSTemplateConstants.orderDeliveredSMS, valuesMap);
         } else {
             return smsService.sendSMSUsingTemplate(shippingOrder.getBaseOrder().getAddress().getPhone(), SMSTemplateConstants.shippingOrderDeliveredSMS, valuesMap);
         }
@@ -78,9 +78,9 @@ public class SMSManager {
     public static class SMSTemplateConstants {
         public static final String orderPlacedSMS            = "/sms/orderPlacedSms.ftl";
         public static final String orderConfirmedSMS         = "/sms/orderConfirmedSms.ftl";
-        public static final String orderPartialShippedSMS    = "/sms/orderPartialShippedSMS.ftl";
+        public static final String orderPartialShippedSMS    = "/sms/orderShippedSms.ftl";
         public static final String orderShippedSMS           = "/sms/orderShippedSms.ftl";
-        public static final String shippingOrderDeliveredSMS = "/sms/shippingOrderDeliveredSMS.ftl";
+        public static final String shippingOrderDeliveredSMS = "/sms/orderDeliveredSms.ftl";
         public static final String orderDeliveredSMS         = "/sms/orderDeliveredSms.ftl";
         public static final String offerSMS                  = "/offerSMS.ftl";
         public static final String discountCouponSMS         = "/discountCouponSMS.ftl";
