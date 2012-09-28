@@ -57,7 +57,8 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
                     <td width="579" valign="top">Hi ${order.baseOrder.address.name}!<br/>
 
                         Following items of your order ${order.baseOrder.gatewayOrderId}, placed
-                        on ${order.baseOrder.payment.paymentDate} has been dispatched. Here are
+                        on ${order.baseOrder.payment.paymentDate} has been dispatched.
+	                    This completes the shipping of your order in its totality. Here are
                         the details:<br/>
                         <br/>
                         <table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">

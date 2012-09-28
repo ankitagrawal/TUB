@@ -431,18 +431,19 @@ public class EmailManager {
 		shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getAwb().getAwbNumber(), shipment.getCourier().getId(), shippingOrder));
 		HashMap valuesMap = new HashMap();
 
-		String templatePath = EmailTemplateConstants.finalOrderShippedEmail;
+		String templatePath = EmailTemplateConstants.orderShippedEmail;
 
 		List<ShippingOrder> shippingOrderYetToBeSentList = new ArrayList<ShippingOrder>();
-		List<ShippingOrder> cancelledShippingOrderList = new ArrayList<ShippingOrder>();
 		Order order = shippingOrder.getBaseOrder();
 
 		for(ShippingOrder shippingOrderFromAllSO : order.getShippingOrders()) {
-			if(shippingOrderFromAllSO.isServiceOrder() || shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Delivered) ) {
+			if( shippingOrderFromAllSO.isServiceOrder()
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus())
+					|| shippingOrderFromAllSO.getId().equals(shippingOrder.getId())
+					|| ( shippingOrderFromAllSO.getShipment() != null && shippingOrderFromAllSO.getShipment().isEmailSent() )
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled.asShippingOrderStatus()) ) {
 				continue;
-			} else if(shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
-				cancelledShippingOrderList.add(shippingOrderFromAllSO);
-			} else {
+			}  else {
 				shippingOrderYetToBeSentList.add(shippingOrderFromAllSO);
 				templatePath = EmailTemplateConstants.partialOrderShippedEmail;
 			}
@@ -450,7 +451,6 @@ public class EmailManager {
 		valuesMap.put("order", shippingOrder);
 		valuesMap.put("invoiceLink", invoiceLink);
 		valuesMap.put("shippingOrderYetToBeSentList", shippingOrderYetToBeSentList);
-		valuesMap.put("cancelledShippingOrderList", cancelledShippingOrderList);
 
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(templatePath);
 		return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, shippingOrder.getBaseOrder().getUser().getEmail(),
