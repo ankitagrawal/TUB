@@ -25,6 +25,8 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.util.FedExCourier;
+import com.hk.admin.util.DeleteFedExShipment;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
@@ -169,6 +171,30 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         if ((suggestedAwb == null) || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
                 (suggestedCourier != null && (!(shipment.getCourier().equals(suggestedCourier))))) {
 
+            if((suggestedAwb != null) && (suggestedCourier != null) && (suggestedCourier.getId().equals(EnumCourier.FedEx.getId()))){
+               //delete FedEx tracking no. generated previously
+               Boolean result =  new DeleteFedExShipment().deleteShipment(suggestedAwb.getAwbNumber());
+            }
+            if((suggestedAwb == null) && (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId()))){
+               String trackingNumber = new FedExCourier().newFedExShipment(shippingOrder);
+               if (trackingNumber == null){
+                   addRedirectAlertMessage(new SimpleMessage(" FedEx tracking number could not be generated"));
+                   return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+               }
+               else{
+                   Awb fedExNumber = new Awb();
+                   fedExNumber.setCourier(shipment.getCourier());
+                   fedExNumber.setAwbNumber(trackingNumber);
+                   fedExNumber.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+                   fedExNumber.setWarehouse(shippingOrder.getWarehouse());
+                   fedExNumber.setCod(shippingOrder.isCOD());
+                   fedExNumber.setAwbBarCode(trackingNumber);
+                   fedExNumber.setUsed(false);
+                   finalAwb = fedExNumber;
+               }
+            }
+            else{
+
             Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
             if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
                 if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
@@ -193,16 +219,16 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 awb.setWarehouse(shippingOrder.getWarehouse());
                 awb = awbService.save(awb);
                 finalAwb = awb;
-                finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());
+                finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());     //new awb taken according to trackingId manually entered, as DB has none
             }
             //Todo: Seema --  Awb which are detached from Shipment,their status should not change:Need to check if awb should be deleted or made free for reuse
             /*if (suggestedAwb != null) {
                 suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
                 awbService.save(suggestedAwb);
             }*/
-
+          }
         } else {
-            finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+            finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());  //comes here when no change at all
         }
 
 

@@ -8,6 +8,7 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.FedExCourier;
+import com.hk.admin.util.DeleteFedExShipment;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -149,6 +150,10 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     public void delete(Shipment shipment){
          shipmentDao.delete(shipment);
+         if(shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
+               //delete FedEx tracking no. generated previously
+               Boolean result =  new DeleteFedExShipment().deleteShipment(shipment.getAwb().getAwbNumber());
+         }
     }
 
 	@Override
