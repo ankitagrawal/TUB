@@ -42,7 +42,7 @@ public class HKFileWriter {
 
     public static void writeToStream(Writer writer, String message){
         try{
-            writer.write(message);
+            writer.write(message + "\r\n");
             writer.flush();
         }catch (IOException ie){
             logger.error("Unable to write to log", ie);

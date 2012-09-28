@@ -378,7 +378,7 @@ public class AdminEmailManager {
         Iterator<HKRow> rowIterator = parser.parse();
         String campaignReportPath = adminUploadsPath + "/emailReports/";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String reportName = "EmailReport_" + sdf.format(new Date());
+        String reportName = "EmailReport_" + emailCampaign.getId().toString() + sdf.format(new Date());
         File failedEmailLogFile = HKFileWriter.getFileStream(campaignReportPath, reportName,  "csv");
         Writer failedEmailLog = HKFileWriter.getFileWriter(failedEmailLogFile);
 
