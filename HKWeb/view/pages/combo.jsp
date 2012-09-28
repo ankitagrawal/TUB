@@ -276,7 +276,7 @@
                             </div>
 
                             <fieldset style="float:right;">
-                                <legend>&nbsp;&nbsp;Seleted Option</legend>
+                                <legend>&nbsp;&nbsp;Selected Option</legend>
                                 <div class="grid_4 result">
                                 </div>
                             </fieldset>

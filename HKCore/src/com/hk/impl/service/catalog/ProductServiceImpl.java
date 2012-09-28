@@ -524,7 +524,7 @@ public class ProductServiceImpl implements ProductService {
         int ctr = 0;
         for (SimilarProduct similarProduct : product.getSimilarProducts()) {
             Product sProduct = similarProduct.getSimilarProduct();
-            if (!sProduct.isDeleted() && product.getInStockVariants().size() > 0) {  // Will add out of stock constraint instead of in stock variants size
+            if (!sProduct.isDeleted() && !sProduct.isOutOfStock()) {
                 sProduct.setProductURL(linkManager.getRelativeProductURL(sProduct, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
                 inStockSimilarProducts.add(sProduct);
                 ctr++;

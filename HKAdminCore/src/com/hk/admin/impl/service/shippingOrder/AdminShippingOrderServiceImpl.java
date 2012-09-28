@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.hk.constants.order.EnumOrderLifecycleActivity;
-import com.hk.constants.payment.EnumPaymentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +64,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private AdminShippingOrderDao adminShippingOrderDao;
     @Autowired
     AwbService awbService;
+//	@Autowired
+//	SMSManager smsManager;
 
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
@@ -208,7 +208,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Delivered);
         Order order = shippingOrder.getBaseOrder();
         getAdminOrderService().markOrderAsDelivered(order);
-        return shippingOrder;
+//	    smsManager.sendOrderDeliveredSMS(shippingOrder);
+	    return shippingOrder;
     }
 
     @Transactional
@@ -259,6 +260,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
         getAdminOrderService().markOrderAsShipped(shippingOrder.getBaseOrder());
+//	    smsManager.sendOrderShippedSMS(shippingOrder);
 
         return shippingOrder;
     }

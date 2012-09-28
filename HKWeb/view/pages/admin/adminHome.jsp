@@ -452,7 +452,7 @@
     </h3>
     <h3>
         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction" event="addUserToHub"
-                title="Add agent">Add agent to hub
+                title="Add agent">Add/Remove agent to hub
         </s:link>
     </h3>
 

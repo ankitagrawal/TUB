@@ -88,6 +88,10 @@ public class Runsheet implements java.io.Serializable {
     @Sort(type = SortType.NATURAL)
     private Set<Consignment> consignments = new TreeSet<Consignment>();
 
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
     public Long getId() {
         return this.id;
     }
@@ -192,7 +196,15 @@ public class Runsheet implements java.io.Serializable {
         this.distanceTraveled = distanceTraveled;
     }
 
-    @Override
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	@Override
     public String toString() {
         return id == null ? "" : id.toString();
     }

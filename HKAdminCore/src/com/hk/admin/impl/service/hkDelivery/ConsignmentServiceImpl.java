@@ -273,7 +273,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
 	@Override
-	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate) {
-		return consignmentDao.getConsignmentsForPaymentReconciliation(startDate, endDate);
+	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate,Hub hub) {
+		return consignmentDao.getConsignmentsForPaymentReconciliation(startDate, endDate, hub);
 	}
 }

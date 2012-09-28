@@ -114,9 +114,9 @@
                 <li id="tab5">Cheque / Bank Deposit</li>
             </c:if>
         </shiro:lacksRole>
-        <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
+        <shiro:hasRole name="<%=RoleConstants.GOD%>">
             <li id="tab6">Counter Cash</li>
-        </shiro:hasAnyRoles>
+        </shiro:hasRole>
     </ul>
 </div>
 <div class='right_content'>
