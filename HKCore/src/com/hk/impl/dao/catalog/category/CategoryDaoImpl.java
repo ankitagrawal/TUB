@@ -31,7 +31,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
     }
 
 	public List<String> getBrandsByPrimaryCategory(Category primaryCategory) {
-		String queryString = "select distinct p.brand from Product p where p.primaryCategory = :primaryCategory and p.deleted=:deleted order by p.brand asc";
+		String queryString = "select distinct p.brand from Product p where p.primaryCategory.name = :primaryCategory and p.deleted=:deleted order by p.brand asc";
 		return findByNamedParams(queryString, new String[] { "primaryCategory", "deleted"}, new Object[] { primaryCategory.getName(), false});
 	}
 
