@@ -1,6 +1,5 @@
 package com.hk.manager;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,17 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.akube.framework.util.DateUtils;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.domain.builder.OfferActionBuilder;
 import com.hk.domain.builder.OfferBuilder;
 import com.hk.domain.builder.OfferTriggerBuilder;
-import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
 import com.hk.domain.offer.OfferAction;
-import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.offer.OfferEmailDomain;
+import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.offer.OfferDao;

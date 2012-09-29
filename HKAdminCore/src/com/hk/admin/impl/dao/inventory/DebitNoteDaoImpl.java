@@ -1,10 +1,6 @@
 package com.hk.admin.impl.dao.inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -14,8 +10,6 @@ import com.hk.admin.pact.dao.inventory.DebitNoteDao;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.inventory.po.PurchaseOrder;
-import com.hk.domain.catalog.Supplier;
 import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")

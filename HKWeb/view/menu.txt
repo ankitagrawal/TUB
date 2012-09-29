@@ -260,7 +260,7 @@
 ---/home-devices/blood-pressure/bp/electrical-sphygmomanometer
 --/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
---/home-devices/blood-pressure/combo : Star's of the Month
+--/home-devices/blood-pressure/combo : Stars of the Month
 -/home-devices/respiratory-care
 --/home-devices/respiratory-care/nebulizer
 ---/home-devices/respiratory-care/nebulizer/compressor-nebulizer
@@ -365,7 +365,6 @@
 ---/home-devices/miscellaneous/weight-management/step-counter
 ---/home-devices/miscellaneous/weight-management/slimming-products : Slimming
 --/home-devices/miscellaneous/massager
----/home-devices/miscellaneous/massager/neck-massager
 ---/home-devices/miscellaneous/massager/back-massager
 ---/home-devices/miscellaneous/massager/infrared-massager
 ---/home-devices/miscellaneous/massager/handheld

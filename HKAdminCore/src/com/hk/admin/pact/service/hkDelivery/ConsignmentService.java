@@ -1,20 +1,21 @@
 package com.hk.admin.pact.service.hkDelivery;
 
-import com.akube.framework.dao.Page;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.hkDelivery.*;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.user.User;
-import com.hk.domain.core.PaymentMode;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.admin.dto.ConsignmentDto;
-
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
+
+import com.akube.framework.dao.Page;
+import com.hk.admin.dto.ConsignmentDto;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
+import com.hk.domain.hkDelivery.ConsignmentTracking;
+import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
+import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.Runsheet;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.user.User;
 
 
 public interface ConsignmentService {

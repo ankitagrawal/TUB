@@ -1,13 +1,37 @@
 package com.hk.web.action.report;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.FileBean;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.reconciliation.AdminReconciliationService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.domain.core.PaymentMode;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.OrderPaymentReconciliation;
 import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
 import com.hk.pact.dao.order.OrderDao;
@@ -20,21 +44,6 @@ import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.XslGenerator;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Secure(hasAnyPermissions = {PermissionConstants.VIEW_RECONCILIATION_REPORTS}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -65,7 +74,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
 	private Date endDate;
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private String paymentProcess;
-	private CourierServiceInfo courierServiceInfo;
+	/*private CourierServiceInfo courierServiceInfo;*/
 
 	private Long warehouseId;
 	private Courier courier;

@@ -1,25 +1,28 @@
 package com.hk.admin.impl.dao.hkDelivery;
 
-import com.akube.framework.dao.Page;
-import com.hk.constants.hkDelivery.HKDeliveryConstants;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.hkDelivery.*;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.user.User;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.constants.hkDelivery.EnumConsignmentStatus;
-import com.hk.constants.hkDelivery.EnumRunsheetStatus;
+import java.util.Date;
+import java.util.List;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import com.akube.framework.dao.Page;
+import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
+import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.EnumRunsheetStatus;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
+import com.hk.domain.hkDelivery.ConsignmentTracking;
+import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
+import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.Runsheet;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
 
     @Override
@@ -29,6 +32,7 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     }
 
 
+    
     @Override
     public List<String> getDuplicateAwbNumbersinRunsheet(List<String> trackingIdList) {
         String query = "select cn.awbNumber from Consignment cn where cn.runsheet != null and cn.runsheet.runsheetStatus.id = :runsheetStatusId and cn.awbNumber in (:trackingIdList)";
