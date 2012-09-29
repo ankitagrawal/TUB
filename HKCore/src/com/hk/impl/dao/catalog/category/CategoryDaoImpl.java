@@ -30,7 +30,12 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
         return findByNamedParams(queryString, new String[] { "categories", "deleted", "tagCount" }, new Object[] { categoryNames, false, new Long(categoryNames.size()) });
     }
 
-    public List<Category> getCategoriesByBrand(String brand, String topLevelCategory) {
+	public List<String> getBrandsByPrimaryCategory(Category primaryCategory) {
+		String queryString = "select distinct p.brand from Product p where p.primaryCategory = :primaryCategory and p.deleted=:deleted order by p.brand asc";
+		return findByNamedParams(queryString, new String[] { "primaryCategory", "deleted"}, new Object[] { primaryCategory.getName(), false});
+	}
+
+	public List<Category> getCategoriesByBrand(String brand, String topLevelCategory) {
         String queryString = "select distinct p.categories from Product p inner join p.categories c where c.name in (:topLevelCategory) and p.brand in (:brand) and p.deleted=:deleted";
         return findByNamedParams(queryString, new String[] { "brand", "topLevelCategory", "deleted" }, new Object[] { brand, topLevelCategory, false });
     }
