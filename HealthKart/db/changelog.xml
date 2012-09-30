@@ -9029,4 +9029,21 @@
     <changeSet author="Rohit (generated)" id="1348648571172-3">
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1348919811628-1">
+        <addColumn tableName="update_pv_price">
+            <column defaultValue="10" name="status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Ajeet (generated)" id="1348919811628-2">
+        <sql>
+	        update  update_pv_price set status = 10 where updated = 0;
+	        update  update_pv_price set status = 20 where updated = 1;
+	    </sql>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1348919811628-3">
+        <dropColumn columnName="updated" tableName="update_pv_price"/>
+    </changeSet>
+
 </databaseChangeLog>

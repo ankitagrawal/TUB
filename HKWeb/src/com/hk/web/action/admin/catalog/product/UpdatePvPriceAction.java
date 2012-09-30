@@ -3,6 +3,7 @@ package com.hk.web.action.admin.catalog.product;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.category.Category;
@@ -30,11 +31,13 @@ public class UpdatePvPriceAction extends BasePaginatedAction {
 	List<UpdatePvPrice> updatePvPriceList = new ArrayList<UpdatePvPrice>();
 	UpdatePvPrice updatePvPrice;
 	Category primaryCategory;
-	boolean updated;
+	ProductVariant productVariant;
+	Long status;
 
 	@DefaultHandler
 	public Resolution pre() {
-		updatePvPricePage = updatePvPriceDao.getPVForPriceUpdate(primaryCategory, updated, getPageNo(), getPerPage());
+		if(status == null) status = EnumUpdatePVPriceStatus.ToBeUpdated.getId();
+		updatePvPricePage = updatePvPriceDao.getPVForPriceUpdate(primaryCategory, productVariant, status, getPageNo(), getPerPage());
 		if (updatePvPricePage != null) {
 			updatePvPriceList = updatePvPricePage.getList();
 		}
@@ -49,12 +52,24 @@ public class UpdatePvPriceAction extends BasePaginatedAction {
 		productVariantService.save(pv);
 
 		User loggedOnUser = getUserService().getLoggedInUser();
-		updatePvPrice.setUpdated(true);
+		updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Updated.getId());
 		updatePvPrice.setUpdateDate(new Date());
 		updatePvPrice.setUpdatedBy(loggedOnUser);
 		getBaseDao().save(updatePvPrice);
 
 		addRedirectAlertMessage(new SimpleMessage("Price updated successfully."));
+		return new RedirectResolution(UpdatePvPriceAction.class);
+	}
+
+	public Resolution ignore() {
+
+		User loggedOnUser = getUserService().getLoggedInUser();
+		updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Ignored.getId());
+		updatePvPrice.setUpdateDate(new Date());
+		updatePvPrice.setUpdatedBy(loggedOnUser);
+		getBaseDao().save(updatePvPrice);
+
+		addRedirectAlertMessage(new SimpleMessage("Price update recommendation ignored successfully."));
 		return new RedirectResolution(UpdatePvPriceAction.class);
 	}
 
@@ -74,18 +89,27 @@ public class UpdatePvPriceAction extends BasePaginatedAction {
 		this.primaryCategory = primaryCategory;
 	}
 
-	public boolean isUpdated() {
-		return updated;
+	public Long getStatus() {
+		return status;
 	}
 
-	public void setUpdated(boolean updated) {
-		this.updated = updated;
+	public void setStatus(Long status) {
+		this.status = status;
+	}
+
+	public ProductVariant getProductVariant() {
+		return productVariant;
+	}
+
+	public void setProductVariant(ProductVariant productVariant) {
+		this.productVariant = productVariant;
 	}
 
 	public Set<String> getParamSet() {
 		HashSet<String> params = new HashSet<String>();
 		params.add("primaryCategory");
-		params.add("updated");
+		params.add("productVariant");
+		params.add("status");
 		return params;
 	}
 
