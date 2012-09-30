@@ -586,12 +586,13 @@ public class AdminEmailManager {
                 List<Product> similarProducts = new ArrayList<Product>();
                 if ( similarProducts != null &&
                         StringUtils.isNotBlank(similarProducts.toString())){
-                    if (similarIds.toString().equals("auto")){
+                    if (similarIds.toString().trim().equals("auto")){
                         List<SimilarProduct> similarProductList = product.getSimilarProducts();
                         for (SimilarProduct similarProduct : similarProductList){
-                            if ((similarProduct.getProduct()!= null) && !similarProduct.getProduct().isOutOfStock()){
-                                Product simProduct = similarProduct.getProduct();
-                                if ((simProduct != null) && !simProduct.isOutOfStock()){
+                            Product simProduct = similarProduct.getProduct();
+                            if ((simProduct!= null) && !simProduct.isOutOfStock()
+                                    && !productService.isComboInStock(simProduct.getId())){
+                                {
                                     simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
                                     similarProducts.add(simProduct);
                                     sendAlternateTemplate = Boolean.FALSE;
@@ -602,7 +603,7 @@ public class AdminEmailManager {
                         String[] similarProductIds = similarIds.toString().split(",");
                         for (String productId : similarProductIds){
                             Product simProduct = getProductService().getProductById(productId);
-                            if ((simProduct != null) && !simProduct.isOutOfStock()){
+                            if ((simProduct != null) && !simProduct.isOutOfStock() && !productService.isComboInStock(simProduct.getId())){
                                 simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
                                 similarProducts.add(simProduct);
                                 sendAlternateTemplate = Boolean.FALSE;
