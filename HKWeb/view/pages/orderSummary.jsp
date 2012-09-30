@@ -212,7 +212,7 @@
   <s:form beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
        <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
            <tr>
-               <td colspan="2" class="web_dialog_title">Undeliverable Items</td>
+               <td colspan="2" class="web_dialog_title" style="color:#444;">Undeliverable Items</td>
                <td class="web_dialog_title align_right">
                    <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
                </td>
@@ -223,7 +223,7 @@
            </tr>
            <tr>
                <td colspan="3" style="padding-left: 15px;">
-                   <b>We are sorry below items cannot be delivered. Please remove them from cart. </b>
+                   <b>We are sorry below items cannot be delivered to your pincode. </b>
                </td>
            </tr>
            <tr>
@@ -353,18 +353,24 @@
       left: 50%;
       margin-left: -265px;
       margin-top: -180px;
-      background-color: #ffffff;
-      border: 2px solid #336699;
+      /*background-color: #ffffff;*/
+      background-color: white;
+      /*border: 2px solid #336699;*/
       padding: 0px;
       z-index: 102;
       font-family: Verdana;
       font-size: 10pt;
+      color: #333;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
    }
    .web_dialog_title
    {
-      border-bottom: solid 2px #336699;
-      background-color: #336699;
-      padding: 4px;
+      /*border-bottom: solid 2px #336699;*/
+      /*background-color: #336699;*/
+     font-size: 16px;
+     font-weight: bold;
+     padding: 5px;
+      background-color: #f2f7fb;
       color: White;
       font-weight:bold;
    }
