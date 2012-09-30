@@ -214,11 +214,9 @@
 
         <fieldType name="text_brand" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
             </analyzer>
             <analyzer type="query">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
             </analyzer>
         </fieldType>
