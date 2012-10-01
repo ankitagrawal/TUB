@@ -419,7 +419,7 @@ public class AdminEmailManager {
                 }
                 excelMap.put("HKImageUtils", hkImageUtils);
                 excelMap.put("HKPriceUtils", hkPriceUtils);
-                sendMailMergeCampaign(excelMap, emailCampaign, freemarkerTemplate, failedEmailLog);
+                sendMailMergeCampaign(excelMap, emailCampaign, freemarkerTemplate, failedEmailLog, mailGunCampaignId);
             }
         }finally{
 

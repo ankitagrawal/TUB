@@ -40,6 +40,9 @@
       <br/>
       Sheet Name* <s:text name="sheetName" id="sheetName"/>
       <br/>
+        <br/>
+        MailGun Campaign Id <s:text name="mailGunCampaignId" id="mailGunCampaignId"/>
+        <br/>
       <s:submit name="sendEmailViaExcel" value="Send emails (using excel file)"
                 id="sendEmailViaExcelSubmit"/>(Note:
       <strong>email_id</strong> header is mandatory. Also for products and variants,headers need to be <strong>product_id</strong>,
