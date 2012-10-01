@@ -6,6 +6,7 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.web.HealthkartResponse;
 
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Time: 12:33:24 PM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class AddCourierAction extends BaseAction {
 
 	@Autowired
@@ -34,9 +37,9 @@ public class AddCourierAction extends BaseAction {
 
 	private List<CourierGroup> courierGroupList;
 
-	@Validate(field = "courier", required = true, on = "saveCourier assignCourierGroup getCourierGroupForCourier")
+//	@Validate(required = true, on = "saveCourier assignCourierGroup getCourierGroupForCourier")
 	private Courier courier;
-	@Validate(field = "courierGroup", required = true, on = "addNewCourierGroup assignCourierGroup")
+//	@Validate(required = true, on = "addNewCourierGroup assignCourierGroup")
 	private CourierGroup courierGroup;
 
 	@DefaultHandler
@@ -56,7 +59,7 @@ public class AddCourierAction extends BaseAction {
 			}
 		}
 
-		return new ForwardResolution(AddCourierAction.class);
+		return pre();
 	}
 
 
@@ -69,7 +72,7 @@ public class AddCourierAction extends BaseAction {
 				addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
 			}
 		}
-		return new ForwardResolution(AddCourierAction.class);
+		return  pre();
 	}
 
 
@@ -78,15 +81,19 @@ public class AddCourierAction extends BaseAction {
 		courier.setCourierGroup(couriergroup);
 		courierService.save(courier);
 		addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
-		return new ForwardResolution(AddCourierAction.class);
+		return pre();
 	}
 
 	@JsonHandler
 	public Resolution getCourierGroupForCourier() {
-		if (courier != null) {
-			courierGroup = courier.getCourierGroup();
+		courierGroup = courier.getCourierGroup();
+		HealthkartResponse healthkartResponse = null;
+		if (courierGroup != null) {
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", courierGroup);
+		} else {
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Not assiged to any group");
 		}
-		return new ForwardResolution(AddCourierAction.class);
+		return new JsonResolution(healthkartResponse);
 	}
 
 

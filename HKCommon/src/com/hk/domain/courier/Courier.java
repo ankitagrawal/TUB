@@ -18,6 +18,7 @@ import javax.persistence.*;
 public class Courier implements java.io.Serializable {
 
 	@Id
+	@GeneratedValue (strategy = GenerationType.AUTO)
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
