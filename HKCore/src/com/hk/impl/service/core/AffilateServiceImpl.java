@@ -5,30 +5,33 @@ import java.util.Set;
 
 import javax.servlet.http.Cookie;
 
-import com.akube.framework.dao.Page;
-import com.hk.constants.coupon.EnumCouponType;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.domain.affiliate.*;
-import com.hk.domain.user.Role;
-import com.hk.pact.dao.affiliate.AffiliateCategoryHasBrandDao;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.akube.framework.dao.Page;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.affiliate.EnumAffiliateTxnType;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.discount.OfferConstants;
+import com.hk.constants.coupon.EnumCouponType;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.affiliate.Affiliate;
+import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.affiliate.AffiliateCategoryCommission;
+import com.hk.domain.affiliate.AffiliateTxn;
+import com.hk.domain.affiliate.AffiliateTxnType;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.pact.dao.affiliate.AffiliateCategoryDao;
+import com.hk.pact.dao.affiliate.AffiliateCategoryHasBrandDao;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.affiliate.AffiliateTxnDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
