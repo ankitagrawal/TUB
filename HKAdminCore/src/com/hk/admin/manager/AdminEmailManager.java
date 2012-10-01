@@ -372,7 +372,7 @@ public class AdminEmailManager {
      * @param sheetName
      * @return
      */
-    public Boolean sendMailMergeCampaign(EmailCampaign emailCampaign, String excelFilePath, String sheetName) {
+    public Boolean sendMailMergeCampaign(EmailCampaign emailCampaign, String excelFilePath, String sheetName, String mailGunCampaignId ) {
 
         ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
         Iterator<HKRow> rowIterator = parser.parse();
@@ -449,7 +449,7 @@ public class AdminEmailManager {
         return freemarkerTemplate;
     }
 
-    private boolean sendMailMergeCampaign(HashMap excelMap, EmailCampaign emailCampaign, Template freemarkerTemplate,Writer failedEmailLog){
+    private boolean sendMailMergeCampaign(HashMap excelMap, EmailCampaign emailCampaign, Template freemarkerTemplate,Writer failedEmailLog, String mailGunCampaignId){
 
         String userEmail = excelMap.get(EmailMapKeyConstants.emailId).toString();
         List<User> users = userService.findByEmail(userEmail);
@@ -488,7 +488,7 @@ public class AdminEmailManager {
                     //Find the alternate email and send it..It has to be hard-coded
                     EmailCampaign alternateCampaign =  getEmailCampaignDao().findCampaignByName("reporder_reminder_general");
                     if (alternateCampaign != null){
-                        sendMailMergeCampaign(excelMap,alternateCampaign, generateFreeMarkerTemplate(alternateCampaign), failedEmailLog );
+                        sendMailMergeCampaign(excelMap,alternateCampaign, generateFreeMarkerTemplate(alternateCampaign), failedEmailLog,mailGunCampaignId );
                     }else{
                         return false;
                     }
@@ -510,6 +510,9 @@ public class AdminEmailManager {
                 Map<String, String> headerMap = new HashMap<String, String>();
                 headerMap.put("X-SMTPAPI", xsmtpapi);
                 headerMap.put("X-Mailgun-Variables", xsmtpapi);
+                if (StringUtils.isNotBlank(mailGunCampaignId)){
+                    headerMap.put("X-Mailgun-Variables", xsmtpapi);
+                }
 
                 boolean isSent = emailService.sendHtmlEmail(freemarkerTemplate, excelMap, (String) excelMap.get(EmailMapKeyConstants.emailId), "", "info@healthkart.com", headerMap);
 
