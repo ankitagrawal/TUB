@@ -32,7 +32,6 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.comparator.OrderLifecycleComparator;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderStatus;
-import com.hk.domain.courier.Courier;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;

@@ -10,13 +10,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.comparator.BasketCategory;
-import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -105,8 +103,8 @@ public class OrderServiceImpl implements OrderService {
 
 
 
-    @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
-    private Double codMinAmount;
+    /*@Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
+    private Double codMinAmount;*/
 
      @Value("#{hkEnvProps['codMaxAmount']}")
     private Double codMaxAmount;

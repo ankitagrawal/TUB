@@ -113,7 +113,7 @@
 		<table>
 			<tr>
 				<th>IMAGE</th>
-				<th class="assignedSuperSaverHeader">COMBO ID</th>
+				<th class="assignedSuperSaverHeader">PRODUCT ID</th>
 				<th class="assignedSuperSaverHeader">RANK</th>
 				<th class="assignedSuperSaverHeader">ALT TEXT</th>
 				<th class="assignedSuperSaverHeader">HIDE</th>
