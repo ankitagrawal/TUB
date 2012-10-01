@@ -8,11 +8,11 @@
 --/nutrition/sports-nutrition/weight-gainer : Mass Gainer
 --/nutrition/sports-nutrition/glutamine
 --/nutrition/sports-nutrition/protein-bars  : Protein Bars
---/nutrition/sports-nutrition/athletes      :  Athletes
 --/nutrition/sports-nutrition/fat-burner
 --/nutrition/sports-nutrition/more...   : Other Supplements
 --/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
 --/nutrition/sports-nutrition/muscle-building-combos :Supersavers !!!
+--/nutrition/sports-nutrition/nutrition-plan: Nutrition Plan
 -/nutrition/dietary-supplements : Dietary Supplements
 --/nutrition/dietary-supplements/multivitamins :  Multivitamins
 ---/nutrition/dietary-supplements/multivitamins/men-s-health  :Men's Health
@@ -46,6 +46,7 @@
 --/nutrition/weight-management/meal-replacement :Meal Replacement
 --/nutrition/weight-management/low-calorie-food
 --/nutrition/weight-management/sweetener
+--/nutrition/weight-management/diet-plan: Diet Plan
 -/nutrition/specialty-nutrition  :Specialty Nutrition
 --/nutrition/specialty-nutrition/ayurveda :Ayurveda
 ---/nutrition/specialty-nutrition/ayurveda/single-herb-formula
@@ -408,19 +409,19 @@
 --/eye/sunglasses/kids    :   Kids
 -/eye/eyeglasses :Eyeglasses
 --/eye/eyeglasses/half-rim :Half Rim
----/eye/eyeglasses/half-rim/small   : Small 
+---/eye/eyeglasses/half-rim/small   : Small
 ---/eye/eyeglasses/half-rim/medium  : Medium
 ---/eye/eyeglasses/half-rim/large   :   Large
 ---/eye/eyeglasses/half-rim/oval
 ---/eye/eyeglasses/half-rim/rectangular
 --/eye/eyeglasses/full-rim :Full Rim
----/eye/eyeglasses/full-rim/small   : Small 
+---/eye/eyeglasses/full-rim/small   : Small
 ---/eye/eyeglasses/full-rim/medium  : Medium
 ---/eye/eyeglasses/full-rim/large   :   Large
 ---/eye/eyeglasses/full-rim/oval
 ---/eye/eyeglasses/full-rim/rectangular
 --/eye/eyeglasses/frameless
----/eye/eyeglasses/frameless/small   : Small 
+---/eye/eyeglasses/frameless/small   : Small
 ---/eye/eyeglasses/frameless/medium  : Medium
 ---/eye/eyeglasses/frameless/large   :   Large
 ---/eye/eyeglasses/frameless/oval
@@ -428,23 +429,23 @@
 --/eye/eyeglasses/reading-glasses :Reading Glasses
 --/eye/eyeglasses/kids :  Kids
 --/eye/eyeglasses/men    : Men
----/eye/eyeglasses/men/small   : Small 
+---/eye/eyeglasses/men/small   : Small
 ---/eye/eyeglasses/men/medium  : Medium
 ---/eye/eyeglasses/men/large   :   Large
 ---/eye/eyeglasses/men/oval
 ---/eye/eyeglasses/men/rectangular
 --/eye/eyeglasses/women   :  Women
----/eye/eyeglasses/women/small   : Small 
+---/eye/eyeglasses/women/small   : Small
 ---/eye/eyeglasses/women/medium  : Medium
 ---/eye/eyeglasses/women/large   :   Large
 ---/eye/eyeglasses/women/oval
 ---/eye/eyeglasses/women/rectangular
 --/eye/eyeglasses/unisex   : Unisex
----/eye/eyeglasses/unisex/small   : Small 
+---/eye/eyeglasses/unisex/small   : Small
 ---/eye/eyeglasses/unisex/medium  : Medium
 ---/eye/eyeglasses/unisex/large   :   Large
 ---/eye/eyeglasses/unisex/oval
----/eye/eyeglasses/unisex/rectangular 
+---/eye/eyeglasses/unisex/rectangular
 -/eye/eye-care
 --/eye/eye-care/solutions
 --/eye/eye-care/lens-case
