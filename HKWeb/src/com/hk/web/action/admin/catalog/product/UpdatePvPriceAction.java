@@ -36,7 +36,7 @@ public class UpdatePvPriceAction extends BasePaginatedAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		if(status == null) status = EnumUpdatePVPriceStatus.ToBeUpdated.getId();
+		if(status == null) status = EnumUpdatePVPriceStatus.Pending.getId();
 		updatePvPricePage = updatePvPriceDao.getPVForPriceUpdate(primaryCategory, productVariant, status, getPageNo(), getPerPage());
 		if (updatePvPricePage != null) {
 			updatePvPriceList = updatePvPricePage.getList();

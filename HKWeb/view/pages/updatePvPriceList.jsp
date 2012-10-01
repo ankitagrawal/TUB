@@ -43,8 +43,9 @@
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="topLevelCategoryList"
 					                           value="name" label="displayName"/>
 				</s:select>
-				                             &nbsp; &nbsp;
-				<label>Updated:</label><s:select name="status">
+				&nbsp; &nbsp;
+				<label>Product Variant:</label><s:text name="productVariant"/>
+				<label>Status:</label><s:select name="status">
 		        <c:forEach items="<%=EnumUpdatePVPriceStatus.getAllStatuses()%>" var="pType">
 			        <s:option value="${pType.id}">${pType.name}</s:option>
 		        </c:forEach>
@@ -107,7 +108,7 @@
 						<td><fmt:formatDate value="${pvToBeUpdated.txnDate}" pattern="dd/MM/yyyy HH:mm"/></td>
 						<td>
 							<c:if test="${pvToBeUpdated.status == 10}">
-								To Be Updated
+								Pending <br/>
 								<s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction" class="updatePrice"
 								        event="update" style="background-color:green;color:white;padding:2px;">
 									Update

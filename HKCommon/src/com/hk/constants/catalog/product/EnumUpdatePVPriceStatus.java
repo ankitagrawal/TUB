@@ -5,7 +5,7 @@ import java.util.List;
 
 
 public enum EnumUpdatePVPriceStatus {
-	ToBeUpdated(10L, "ToBeUpdated"),
+	Pending(10L, "Pending"),
 	Updated(20L, "Updated"),
 	Ignored(30L, "Ignored");
 
@@ -26,7 +26,7 @@ public enum EnumUpdatePVPriceStatus {
 	}
 
 	public static List<EnumUpdatePVPriceStatus> getAllStatuses() {
-		return Arrays.asList(EnumUpdatePVPriceStatus.ToBeUpdated, EnumUpdatePVPriceStatus.Updated, EnumUpdatePVPriceStatus.Ignored);
+		return Arrays.asList(EnumUpdatePVPriceStatus.Pending, EnumUpdatePVPriceStatus.Updated, EnumUpdatePVPriceStatus.Ignored);
 
 	}
 

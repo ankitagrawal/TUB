@@ -51,7 +51,7 @@ public class UpdatePvPrice implements java.io.Serializable {
 	private Date txnDate;
 
 
-	@Column (name = "status", nullable = false, columnDefinition = "int(11) default 10")
+	@Column (name = "status", nullable = false)
 	private Long status;
 
 	@Temporal (TemporalType.TIMESTAMP)

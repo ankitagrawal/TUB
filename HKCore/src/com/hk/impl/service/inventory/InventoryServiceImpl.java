@@ -188,7 +188,7 @@ public class InventoryServiceImpl implements InventoryService {
 			    if (leastMRPSkuGroup != null && leastMRPSkuGroup.getMrp() != null
 					    && !productVariant.getMarkedPrice().equals(leastMRPSkuGroup.getMrp())) {
 				    //logger.info("MRP: "+productVariant.getMarkedPrice()+"-->"+leastMRPSkuGroup.getMrp());
-				    UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, EnumUpdatePVPriceStatus.ToBeUpdated.getId());
+				    UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, EnumUpdatePVPriceStatus.Pending.getId());
 				    if (updatePvPrice == null) {
 					    updatePvPrice = new UpdatePvPrice();
 				    }
@@ -201,6 +201,7 @@ public class InventoryServiceImpl implements InventoryService {
 				    Double newHkPrice = leastMRPSkuGroup.getMrp() * (1 - productVariant.getDiscountPercent());
 				    updatePvPrice.setNewHkprice(newHkPrice);
 				    updatePvPrice.setTxnDate(new Date());
+				    updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
 				    baseDao.save(updatePvPrice);
 			    }
 		    }
