@@ -106,8 +106,8 @@ public class OrderServiceImpl implements OrderService {
     /*@Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;*/
 
-     @Value("#{hkEnvProps['codMaxAmount']}")
-    private Double codMaxAmount;
+//     @Value("#{hkEnvProps['codMaxAmount']}")
+//    private Double codMaxAmount;
 
     @Transactional
     public Order save(Order order) {
