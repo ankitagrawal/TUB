@@ -589,7 +589,7 @@ public class AdminEmailManager {
                     if (similarIds.toString().trim().equals("auto")){
                         List<SimilarProduct> similarProductList = product.getSimilarProducts();
                         for (SimilarProduct similarProduct : similarProductList){
-                            Product simProduct = similarProduct.getProduct();
+                            Product simProduct = similarProduct.getSimilarProduct();
                             if ((simProduct!= null) && !simProduct.isOutOfStock()
                                     && !productService.isComboInStock(simProduct.getId())){
                                 {
