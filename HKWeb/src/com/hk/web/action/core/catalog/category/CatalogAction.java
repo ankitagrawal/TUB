@@ -2,15 +2,15 @@ package com.hk.web.action.core.catalog.category;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.Cookie;
 
-import com.hk.constants.catalog.SolrSchemaConstants;
-import com.hk.domain.search.SolrProduct;
-import com.hk.domain.search.*;
-import com.hk.dto.search.SearchResult;
-import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -27,6 +27,7 @@ import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.catalog.SolrSchemaConstants;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
@@ -35,8 +36,13 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.content.SeoData;
+import com.hk.domain.search.PaginationFilter;
+import com.hk.domain.search.RangeFilter;
+import com.hk.domain.search.SearchFilter;
+import com.hk.domain.search.SortFilter;
 import com.hk.domain.user.Address;
 import com.hk.dto.menu.MenuNode;
+import com.hk.dto.search.SearchResult;
 import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
@@ -48,14 +54,15 @@ import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 import com.hk.web.AppConstants;
 import com.hk.web.ConvertEncryptedToNormalDouble;
 import com.hk.web.action.HomeAction;
 import com.hk.web.filter.WebContext;
-import com.hk.taglibs.Functions;
 
+@SuppressWarnings("unchecked")
 @UrlBinding("/{rootCategorySlug}/{childCategorySlug}/{secondaryChildCategorySlug}/{tertiaryChildCategorySlug}")
 public class CatalogAction extends BasePaginatedAction {
     private static org.slf4j.Logger logger                     = LoggerFactory.getLogger(CatalogAction.class);
@@ -135,6 +142,7 @@ public class CatalogAction extends BasePaginatedAction {
 
     private int                     defaultPerPage             = 24;
 
+    
     @DefaultHandler
     public Resolution pre() throws IOException, SolrServerException {
         category = categoryDao.getCategoryByName(rootCategorySlug);
@@ -199,7 +207,7 @@ public class CatalogAction extends BasePaginatedAction {
                 filteredProducts = trimListByDistance(filteredProducts, preferredZone);
             }
             // Find out how many products have been filtered
-            int diff = 0;
+            /*int diff = 0;*/
             long totalResultSize = searchResult.getResultSize();
             // totalResultSize = filteredProducts.size();
 

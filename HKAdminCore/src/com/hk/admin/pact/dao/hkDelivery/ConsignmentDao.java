@@ -1,16 +1,16 @@
 package com.hk.admin.pact.dao.hkDelivery;
 
-import com.akube.framework.dao.Page;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.hkDelivery.*;
-import com.hk.pact.dao.BaseDao;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.user.User;
-import com.hk.domain.order.ShippingOrder;
-
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+
+import com.akube.framework.dao.Page;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
+import com.hk.domain.hkDelivery.ConsignmentTracking;
+import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.Runsheet;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.pact.dao.BaseDao;
 
 
 public interface ConsignmentDao extends BaseDao {
@@ -33,5 +33,5 @@ public interface ConsignmentDao extends BaseDao {
 
     public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage);
 
-	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate);
+	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub);
 }

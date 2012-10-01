@@ -16,7 +16,6 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.courier.EnumCourier;
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.CourierServiceInfo;
@@ -30,7 +29,6 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.PincodeService;
-import com.hk.pact.service.order.CartFreebieService;
 
 @Component
 public class SOInvoiceAction extends BaseAction {
@@ -47,8 +45,8 @@ public class SOInvoiceAction extends BaseAction {
     private CategoryService categoryService;
     @Autowired
     private CourierService courierService;
-    @Autowired
-    private CartFreebieService cartFreebieService;
+    /*@Autowired
+    private CartFreebieService cartFreebieService;*/
     @Autowired
     private B2bUserDetailsDao b2bUserDetailsDao;
     @Autowired
@@ -102,7 +100,7 @@ public class SOInvoiceAction extends BaseAction {
             if (courierServiceInfo != null) {
                 routingCode = courierServiceInfo.getRoutingCode();
             }
-            freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
+            //freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
             return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));

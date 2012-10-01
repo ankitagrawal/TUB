@@ -7,7 +7,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -33,6 +32,7 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
         return getSuperSaverImages(null, getVisible, getMainImage, Boolean.FALSE);
     }
 
+    @SuppressWarnings("unchecked")
     public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage, Boolean getDeleted) {
         DetachedCriteria criteria = DetachedCriteria.forClass(SuperSaverImage.class);
 
@@ -60,7 +60,8 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
         return (List<SuperSaverImage>) findByCriteria(criteria);
     }
 
-    public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, Boolean getDeleted, int page, int perPage) {
+    @SuppressWarnings("unchecked")
+    public List<SuperSaverImage> getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, Boolean getDeleted) {
         DetachedCriteria criteria = DetachedCriteria.forClass(SuperSaverImage.class);
 
         if (!getDeleted) {
@@ -85,6 +86,6 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
         }
 
         criteria.addOrder(Order.asc("ranking"));
-        return list(criteria, true, page, perPage);
+        return (List<SuperSaverImage>) findByCriteria(criteria);
     }
 }

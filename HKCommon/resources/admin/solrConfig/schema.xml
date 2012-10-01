@@ -526,7 +526,7 @@ any data added to them will be ignored outright.  -->
         <field name="variantNames" type="text_en_splitting" indexed="true" stored="true" multiValued="true" />
         <field name="nameSort" type="string" indexed="true" stored="false"/>
         <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
-        <field name="brand" type="text_en_splitting" indexed="true" stored="true" />
+        <field name="brand" type="text_brand" indexed="true" stored="true" />
         <field name="overview" type="text_en_splitting" indexed="true" stored="true" />
         <field name="description" type="text_en_splitting" indexed="true" stored="true" />
         <field name="isGoogleAdDisallowed" type="boolean" indexed="true" stored="true" />
