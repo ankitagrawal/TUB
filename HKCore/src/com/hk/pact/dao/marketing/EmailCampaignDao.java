@@ -6,7 +6,6 @@ import java.util.List;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.pact.dao.BaseDao;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface EmailCampaignDao extends BaseDao {
 
@@ -20,6 +19,5 @@ public interface EmailCampaignDao extends BaseDao {
      
     public Date getLastDateOfEmailCampaignMailSentToEmailRecepient(EmailCampaign emailCampaign, EmailRecepient emailRecepient) ;
 
-    @Transactional
     EmailCampaign findCampaignByName(String campaignName);
 }

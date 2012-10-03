@@ -9,6 +9,6 @@ import com.hk.domain.catalog.product.Product;
  * Time: 6:12 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProductIndexService {
+public interface ProductIndexService {
     void indexProduct(Product product);
 }

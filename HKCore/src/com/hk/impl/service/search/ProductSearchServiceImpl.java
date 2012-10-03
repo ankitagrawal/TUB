@@ -95,15 +95,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             }
     }
 
-    public void indexProduct(Product product){
-        try{
-            SolrProduct solrProduct = productService.createSolrProduct(product);
-            updateExtraProperties(product, solrProduct);
-            indexProduct(solrProduct);
-        } catch (Exception ex) {
-            logger.error(String.format("Unable to build Solr index for Product %s", product.getId()), ex);
-        }
-    }
+
 
     private void updateExtraProperties(Product pr, SolrProduct solrProduct){
         for (ProductVariant pv : pr.getProductVariants()){
@@ -420,21 +412,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         }
     }
 
-    private void indexProduct(SolrProduct product){
-        try{
-            solr.addBean(product);
-            /*SolrInputDocument solrDocument = solr.getBinder().toSolrInputDocument(product);
-            UpdateRequest req = new UpdateRequest();
-            req.add(solrDocument);
-            req.setCommitWithin(10000);
-            req.process(solr);*/
-            //solr.commit(false, false);
-        }catch(SolrServerException ex){
-            logger.error("Solr error during indexing the product", ex);
-        }catch(IOException ex){
-            logger.error("Solr error during indexing the product", ex);
-        }
-    }
+
 
     private SearchException wrapException(String msg, Exception ex){
         logger.error(msg, ex);

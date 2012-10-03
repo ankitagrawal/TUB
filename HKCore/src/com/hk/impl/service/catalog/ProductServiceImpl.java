@@ -5,8 +5,8 @@ import java.util.*;
 import com.hk.domain.content.SeoData;
 import com.hk.domain.search.SolrProduct;
 import com.hk.exception.SearchException;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.seo.SeoDao;
+import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
@@ -44,9 +44,6 @@ public class ProductServiceImpl implements ProductService {
     private ComboDao                  comboDao;
 
     @Autowired
-    private BaseDao                   baseDao;
-
-    @Autowired
     private ReviewService             reviewService;
 
     @Autowired
@@ -56,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     private LinkManager               linkManager;
 
     @Autowired
-    ProductSearchService productSearchService;
+    ProductIndexService productSearchService;
 
     @Autowired
     private SeoDao seoDao;
@@ -224,14 +221,6 @@ public class ProductServiceImpl implements ProductService {
         this.comboDao = comboDao;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
-
     public boolean isComboInStock(Combo combo) {
         if (combo.isDeleted() != null && combo.isDeleted()) {
             return false;
@@ -251,7 +240,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
 	public boolean isComboInStock(String comboId) {
-		Combo combo = getBaseDao().get(Combo.class,comboId);
+		Combo combo = getComboDao().getComboById(comboId);
         if (combo != null){
             return isComboInStock(combo);
         }
