@@ -84,4 +84,18 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
 				+ " and shipment.shipDate between :startDate and :endDate " + " and shipment.deliveryDate is null ";
 		return getSession().createQuery(query).setParameter("courierId", courierId).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
 	}
+
+	public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList) {
+		Long qtyInQueue = 0L;
+		if (skuList != null && !skuList.isEmpty()) {
+			String query = "select sum(li.qty) from LineItem li " + "where li.sku in (:skuList) " + "and li.shippingOrder.shippingOrderStatus.id in (:orderStatusIdList) ";
+			qtyInQueue = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("orderStatusIdList",
+					EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventoryInProcessingQueue())).uniqueResult();
+			if (qtyInQueue == null) {
+				qtyInQueue = 0L;
+			}
+		}
+		return qtyInQueue;
+	}
+
 }
