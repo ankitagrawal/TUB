@@ -1,7 +1,6 @@
 package com.hk.constants.core;
 
 public class Keys {
-
 	public static class Env {
 		public static final String adminDownloads = "adminDownloads";
 		public static final String adminUploads = "adminUploads";
@@ -109,12 +108,17 @@ public class Keys {
 		public static final String dbPassword = "dbPassword";
 		public static final String dbPort = "dbPort";
 
+        public static final String storeId                      = "storeId";
+        public static final String deploymentPath               = "deploymentPath";
+        public static final String healthkartRestUrl            ="healthkartRestUrl";
+        public static final String mihRestUrl                   ="mihRestUrl";
+
 	}
 
 	/*
-			  * public static class App { public static final String contextPath = "contextPath"; public static final String
-			  * serviceTax_10_3 = "serviceTax_10_3"; public static final String appBasePath = "appBasePath"; public static final
-			  * String environmentDir = "environmentDir"; }
-			  */
+		 * public static class App { public static final String contextPath = "contextPath"; public static final String
+		 * serviceTax_10_3 = "serviceTax_10_3"; public static final String appBasePath = "appBasePath"; public static final
+		 * String environmentDir = "environmentDir"; }
+		 */
 
 }
