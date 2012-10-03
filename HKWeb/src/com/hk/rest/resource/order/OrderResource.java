@@ -12,7 +12,6 @@ import com.akube.framework.gson.JsonUtils;
 import com.google.gson.Gson;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
-import com.hk.domain.store.StoreOrder;
 import com.hk.manager.StoreOrderService;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.order.OrderService;
@@ -82,48 +81,6 @@ public class OrderResource {
         }else{
             return "invalid json";
         }
-    }
-
-    @GET
-    @Path("/script/place/{orderId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String placeOrderInHK(@PathParam ("orderId") String orderId){
-        Order order=orderService.find(new Long(orderId));
-        if(order!=null){
-            if(!order.getStore().getId().equals(storeService.getDefaultStore().getId())){
-                if(order.getStoreOrder()==null){
-                    order=storeOrderService.placeOrderInHK(order);
-                    return "order placed in hk with id: "+order.getStoreOrder().getHkOrderId() ;
-                } else
-                {
-                    return "invalid";
-                }
-            }else {
-                return "invalid";
-            }
-        }else{
-            return "invalid";
-        }
-    }
-
-    @GET
-    @Path("/update/{hkOrderId}/status/{orderStatusId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String updateOrderInStore(@PathParam ("hkOrderId") String hkOrderId,@PathParam ("orderStatusId") String orderStatusId){
-          StoreOrder storeOrder=storeService.getStoreOrderByHkOrderId(new Long(hkOrderId.trim()));
-          if(storeOrder!=null){
-              Order storeBaseOrder=storeOrder.getBaseOrder();
-              OrderStatus orderStatusToUpdate=   orderStatusService.find(new Long(orderStatusId.trim()));
-              if(orderStatusToUpdate!=null){
-                 storeBaseOrder.setOrderStatus(orderStatusToUpdate);
-                 storeBaseOrder=orderService.save(storeBaseOrder);
-                 return "order status updated";
-              }else{
-                  return "invalid";
-              }
-          }else{
-              return "invalid";
-          }
     }
 
 

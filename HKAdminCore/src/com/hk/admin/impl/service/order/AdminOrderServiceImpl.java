@@ -238,7 +238,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
             //incase of other store orders
             if(!order.getStore().getId().equals(storeService.getDefaultStore().getId())){
-                order=orderService.refresh(order);
+                order=orderService.save(order);
                 storeOrderService.updateOrderStatusInStore(order);
             }
         }
@@ -262,7 +262,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
                 //incase of other store orders
                 if(!order.getStore().getId().equals(storeService.getDefaultStore().getId())){
-                    order=orderService.refresh(order);
+                    order=orderService.save(order);
                     storeOrderService.updateOrderStatusInStore(order);
                 }
                 if(!order.isDeliveryEmailSent() && order.getUser().getStore() != null && order.getUser().getStore().getId() == 1L) {

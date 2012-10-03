@@ -11,7 +11,6 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
-import com.hk.domain.store.StoreOrder;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.store.StoreService;
 import org.hibernate.Hibernate;
