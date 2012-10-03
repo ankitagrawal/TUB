@@ -36,7 +36,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     @Autowired
     private ReconciliationStatusDao    reconciliationStatusDao;
 
-    public void createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto) {
+    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto) {
         Set<LineItem> lineItemSet = new HashSet<LineItem>();
         ReplacementOrder replacementOrder = ReplacementOrderHelper.getReplacementOrderFromShippingOrder(shippingOrder, shippingOrderStatusService, reconciliationStatusDao);
         for (LineItem lineItem : lineItems) {
@@ -64,7 +64,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         replacementOrder.setRefShippingOrder(shippingOrder);
         replacementOrder = (ReplacementOrder) getBaseDao().save(replacementOrder);
         ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
-        getBaseDao().saveOrUpdate(replacementOrder);
+        return (ReplacementOrder)getBaseDao().save(replacementOrder);
     }
 
     public BaseDao getBaseDao() {

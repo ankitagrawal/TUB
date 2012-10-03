@@ -3,6 +3,7 @@ package com.hk.web.action.admin.replacementOrder;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.domain.order.ReplacementOrder;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -43,16 +44,18 @@ public class ReplacementOrderAction extends BaseAction {
     private List<LineItem> lineItems = new ArrayList<LineItem>();
 
     @Autowired
-    ShippingOrderService shippingOrderService;
+    private ShippingOrderService shippingOrderService;
 
     @Autowired
-    ReplacementOrderService replacementOrderService;
+    private ReplacementOrderService replacementOrderService;
 
     @Autowired
-    LineItemDao lineItemDao;
+    private LineItemDao lineItemDao;
 
     @Autowired
-    InventoryService inventoryService;
+    private InventoryService inventoryService;
+
+	private ReplacementOrder replacementOrder;
 
     @ValidationMethod(on = "searchShippingOrder")
     public void validateSearch() {
@@ -120,8 +123,13 @@ public class ReplacementOrderAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("The quantity of at least one item should be greater than 0"));
             return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
         }
-        addRedirectAlertMessage(new SimpleMessage("The Replacement order created"));
-        replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto);
+
+        replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto);
+	    if(replacementOrder == null){
+		    addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order."));
+            return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+	    }
+	    addRedirectAlertMessage(new SimpleMessage("The Replacement order created. New gateway order id: "+ replacementOrder.getId()));
         return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
     }
 
@@ -161,7 +169,11 @@ public class ReplacementOrderAction extends BaseAction {
         return lineItemDao;
     }
 
-    public void setLineItemDao(LineItemDao lineItemDao) {
-        this.lineItemDao = lineItemDao;
-    }
+	public ReplacementOrder getReplacementOrder() {
+		return replacementOrder;
+	}
+
+	public void setReplacementOrder(ReplacementOrder replacementOrder) {
+		this.replacementOrder = replacementOrder;
+	}
 }
