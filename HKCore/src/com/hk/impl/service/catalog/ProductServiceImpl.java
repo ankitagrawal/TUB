@@ -6,6 +6,7 @@ import com.hk.domain.content.SeoData;
 import com.hk.domain.search.SolrProduct;
 import com.hk.exception.SearchException;
 import com.hk.pact.dao.seo.SeoDao;
+import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
@@ -52,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     private LinkManager               linkManager;
 
     @Autowired
-    ProductSearchService productSearchService;
+    ProductIndexService productSearchService;
 
     @Autowired
     private SeoDao seoDao;
@@ -479,6 +480,10 @@ public class ProductServiceImpl implements ProductService {
         }
         if (product.getOutOfStock() != null){
             solrProduct.setOutOfStock(product.getOutOfStock().booleanValue());
+        }
+
+        if (product.getHidden() != null){
+            solrProduct.setHidden(product.getHidden().booleanValue());
         }
 
         Double price = null;
