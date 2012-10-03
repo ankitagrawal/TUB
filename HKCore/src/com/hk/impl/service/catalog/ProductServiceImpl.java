@@ -4,18 +4,14 @@ import java.util.*;
 
 import com.hk.domain.content.SeoData;
 import com.hk.domain.search.SolrProduct;
-import com.hk.exception.SearchException;
 import com.hk.pact.dao.seo.SeoDao;
 import com.hk.pact.service.search.ProductIndexService;
-import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
-import com.hk.constants.core.Keys;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.*;
@@ -53,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
     private LinkManager               linkManager;
 
     @Autowired
-    ProductIndexService productSearchService;
+    ProductIndexService productIndexService;
 
     @Autowired
     private SeoDao seoDao;
@@ -181,7 +177,7 @@ public class ProductServiceImpl implements ProductService {
 
     public Product save(Product product) {
         Product savedProduct = getProductDAO().save(product);
-        productSearchService.indexProduct(savedProduct);
+        productIndexService.indexProduct(savedProduct);
         return savedProduct;
     }
 
