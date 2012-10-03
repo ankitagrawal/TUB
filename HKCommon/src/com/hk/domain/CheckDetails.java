@@ -16,7 +16,6 @@ import javax.persistence.TemporalType;
 
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateTxn;
-import com.hk.domain.core.PaymentMode;
 
 @Entity
 @Table(name = "check_details")

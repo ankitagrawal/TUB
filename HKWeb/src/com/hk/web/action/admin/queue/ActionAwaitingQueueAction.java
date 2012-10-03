@@ -6,6 +6,7 @@ import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
@@ -14,6 +15,7 @@ import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.OrderStatusDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
@@ -25,6 +27,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
@@ -69,6 +72,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 	ShippingOrderService shippingOrderService;
 	@Autowired
 	ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
+    ShippingOrderLifecycleService shippingOrderLifecycleService;
 
 	private Long orderId;
 	private Long storeId;
@@ -77,6 +82,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 	private Date endDate;
 	private List<OrderStatus> orderStatuses = new ArrayList<OrderStatus>();
 	private List<ShippingOrderStatus> shippingOrderStatuses = new ArrayList<ShippingOrderStatus>();
+    private List<ShippingOrderLifeCycleActivity> shippingOrderLifecycleActivities = new ArrayList<ShippingOrderLifeCycleActivity>();
 	private List<PaymentMode> paymentModes = new ArrayList<PaymentMode>();
 	private List<PaymentStatus> paymentStatuses = new ArrayList<PaymentStatus>();
 	private List<String> basketCategories = new ArrayList<String>();
@@ -146,6 +152,20 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 		}
 		orderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList);
 
+        List<ShippingOrderLifeCycleActivity> shippingOrderActivityList = new ArrayList<ShippingOrderLifeCycleActivity>();
+		for (ShippingOrderLifeCycleActivity shippingOrderActivity : shippingOrderLifecycleActivities) {
+			if (shippingOrderActivity != null) {
+				shippingOrderActivityList.add(shippingOrderActivity);
+			}
+		}
+        /*
+		if (shippingOrderActivityList.size() == 0) {
+			shippingOrderActivityList = shippingOrderLifecycleService.getOrderActivities(EnumShippingOrderLifecycleActivity.getActivitiesForActionQueue());
+		}
+		*/
+		orderSearchCriteria.setSOLifecycleActivityList(shippingOrderActivityList);
+
+
 		List<PaymentMode> paymentModeList = new ArrayList<PaymentMode>();
 		for (PaymentMode paymentMode : paymentModes) {
 			if (paymentMode != null) {
@@ -207,23 +227,30 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
 	@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
 	public Resolution escalate() {
-		String message = "";
+		StringBuilder falseMessage = new StringBuilder();
+		StringBuilder trueMessage = new StringBuilder();
+		trueMessage.append("Shipping order which escalated are ");
+		falseMessage.append("Shipping order which couldn't be escalated are ");
 		if (!shippingOrderList.isEmpty()) {
 			for (ShippingOrder shippingOrder : shippingOrderList) {
 				boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
 				if (isManualEscalable) {
-					message = "Shipping order manually escalated";
+					trueMessage.append(shippingOrder.getId());
+					trueMessage.append(" ");
 					shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
 				} else {
 					if (getPrincipalUser().getRoles().contains(EnumRole.GOD.toRole())) {
-						message = "Hacked! SO Escalated";
+						trueMessage.append(shippingOrder.getId());
+						trueMessage.append(" ");
 						shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
 					} else {
-						message = "Shipping order can't be escalated";
+						falseMessage.append(shippingOrder.getId());
+						falseMessage.append(" ");
 					}
 				}
 			}
-			addRedirectAlertMessage(new SimpleMessage(message));
+			trueMessage.append("\n");
+			addRedirectAlertMessage(new SimpleMessage(trueMessage.toString()  + " " + falseMessage.toString()));
 		} else {
 			addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
 		}
@@ -350,7 +377,15 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 		this.shippingOrderStatuses = shippingOrderStatuses;
 	}
 
-	public Set<String> getParamSet() {
+    public List<ShippingOrderLifeCycleActivity> getShippingOrderLifecycleActivities() {
+        return shippingOrderLifecycleActivities;
+    }
+
+    public void setShippingOrderLifecycleActivities(List<ShippingOrderLifeCycleActivity> shippingOrderLifecycleActivities) {
+        this.shippingOrderLifecycleActivities = shippingOrderLifecycleActivities;
+    }
+
+    public Set<String> getParamSet() {
 		HashSet<String> params = new HashSet<String>();
 		params.add("startDate");
 		params.add("endDate");
@@ -406,6 +441,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 				params.add("shippingOrderStatuses[" + ctr6 + "]");
 			}
 			ctr6++;
+		}
+        int ctr7 = 0;
+		for (ShippingOrderLifeCycleActivity SOLifecycleActivity : shippingOrderLifecycleActivities) {
+			if (SOLifecycleActivity != null) {
+				params.add("shippingOrderLifecycleActivities[" + ctr7 + "]");
+			}
+			ctr7++;
 		}
 
 		return params;

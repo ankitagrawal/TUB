@@ -106,6 +106,14 @@ public class HKDHubAction extends BaseAction {
         return new ForwardResolution("/pages/admin/addAgentToHub.jsp");
     }
 
+	public Resolution removeAgentFromHub(){
+		if(hub != null & agent != null){
+			hubService.removeAgentFromHub(hub,agent);
+		}
+		addRedirectAlertMessage(new SimpleMessage("Agent removed from hub !"));
+		return new RedirectResolution(HKDHubAction.class, "addUserToHub");
+	}
+
     public Resolution saveUserToHub(){
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         boolean status = false;
@@ -118,7 +126,7 @@ public class HKDHubAction extends BaseAction {
         else{
             addRedirectAlertMessage(new SimpleMessage("Unable to add agent. Agent might already be present in the hub."));
         }
-        return new ForwardResolution("/pages/admin/addAgentToHub.jsp");
+        return new RedirectResolution(HKDHubAction.class, "addUserToHub");
     }
 
     public List<Hub> getHubList() {

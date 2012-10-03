@@ -2,6 +2,7 @@ package com.hk.impl.service.payment;
 
 import java.util.List;
 
+import com.hk.manager.SMSManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,8 @@ public class PaymentServiceImpl implements PaymentService {
     private OrderService     orderService;
     @Autowired
     private PaymentDao       paymentDao;
+	@Autowired
+	SMSManager smsManager;
 
     public List<Payment> listByOrderId(Long orderId) {
         return getPaymentDao().listByOrderId(orderId);
@@ -92,6 +95,7 @@ public class PaymentServiceImpl implements PaymentService {
             case FREE_CHECKOUT:
                 if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
                     paymentEmailSent = getEmailManager().sendOrderConfirmEmailToUser(order);
+	                smsManager.sendOrderConfirmedSMS(order);
                     getOrderService().sendEmailToServiceProvidersForOrder(order);
                 } else if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
                     paymentEmailSent = getEmailManager().sendOrderPlacedPaymentPendingEmailToUser(order);

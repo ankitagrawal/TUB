@@ -52,7 +52,9 @@
 
 	<h3><s:link beanclass="com.hk.web.action.core.menu.MenuRefreshAction">Refresh Menu</s:link></h3>
 
-	<h3><s:link beanclass="com.hk.web.action.core.menu.DataIndexRefreshAction">Refresh Data Indexes</s:link></h3>
+	<shiro:hasRole name="<%=RoleConstants.GOD%>">
+		<h3><s:link beanclass="com.hk.web.action.core.menu.DataIndexRefreshAction">Refresh Data Indexes</s:link></h3>
+	</shiro:hasRole>
 
 	<c:if test="${whAction.setWarehouse == null}">
 		<h3><s:link
@@ -452,7 +454,7 @@
     </h3>
     <h3>
         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction" event="addUserToHub"
-                title="Add agent">Add agent to hub
+                title="Add agent">Add/Remove agent to hub
         </s:link>
     </h3>
 

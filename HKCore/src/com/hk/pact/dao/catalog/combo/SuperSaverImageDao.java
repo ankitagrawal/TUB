@@ -18,5 +18,5 @@ public interface SuperSaverImageDao extends BaseDao {
 
     public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage, Boolean getDeleted);
 
-    public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, Boolean getDeleted, int page, int perPage);
+    public List<SuperSaverImage> getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, Boolean getDeleted);
 }

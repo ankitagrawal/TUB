@@ -267,8 +267,9 @@ public class Functions {
     }
 
     public static List<String> brandsInCategory(Object o) {
+	    Category primaryCategory = (Category) o;
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-        return categoryDao.getBrandsByCategory(Arrays.asList(((Category) o).getName()));
+        return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
     }
 
     @SuppressWarnings("deprecation")
@@ -600,7 +601,7 @@ public class Functions {
     }
 
 	public static boolean renderNewCatalogFilter(String child, String secondChild) {
-		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
+		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer");
 		boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter, secondChild));
 		return renderNewCatalogFilter;
 	}
@@ -622,7 +623,7 @@ public class Functions {
 	}
 
 	public static boolean showOptionOnUI(String optionType) {
-		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY");
+		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY", "FRAGRANCE");
 		boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
 		return showOptionOnUI;
 	}

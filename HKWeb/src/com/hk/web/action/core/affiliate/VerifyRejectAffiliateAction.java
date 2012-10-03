@@ -1,9 +1,24 @@
 package com.hk.web.action.core.affiliate;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.affiliate.EnumAffiliateStatus;
-import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateStatus;
@@ -13,12 +28,6 @@ import com.hk.manager.AffiliateManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.service.RoleService;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import java.util.*;
 
 @Secure(hasAnyPermissions = {PermissionConstants.VERIFY_AFFILIATES}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -44,7 +53,8 @@ public class VerifyRejectAffiliateAction extends BasePaginatedAction {
 	Role role;
 	AffiliateStatus affiliateStatus;
 
-	@DefaultHandler
+	@SuppressWarnings("unchecked")
+    @DefaultHandler
 	public Resolution pre() {
 		List<Long> affiliateStatusIds = Arrays.asList(EnumAffiliateStatus.Unverified.getId());
 		affiliatePage = affiliateDao.searchAffiliates(affiliateStatusIds, name, email, websiteName, code, affiliateMode, affiliateType,null, getPerPage(), getPageNo());
@@ -54,7 +64,8 @@ public class VerifyRejectAffiliateAction extends BasePaginatedAction {
 		return new ForwardResolution("/pages/affiliate/verifyAffiliate.jsp");
 	}
 
-	public Resolution search() {
+	@SuppressWarnings("unchecked")
+    public Resolution search() {
 		List<Long> affiliateStatusIds = new ArrayList<Long>();
 		if(affiliateStatus != null){
 			affiliateStatusIds.add(affiliateStatus.getId());
