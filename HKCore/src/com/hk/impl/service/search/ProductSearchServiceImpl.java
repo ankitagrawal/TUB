@@ -323,6 +323,8 @@ class ProductSearchServiceImpl implements ProductSearchService {
         QueryResponse response = null;
         SearchResult searchResult = new SearchResult();
         try{
+            query += SolrSchemaConstants.isHidden + SolrSchemaConstants.paramAppender + 0
+                            + SolrSchemaConstants.queryTerminator + SolrSchemaConstants.queryInnerJoin;
             response = solr.query(getResultsQuery(query, page, perPage));
             List<SolrProduct> productList = getQueryResults(response);
             searchResult = getSearchResult(productList, (int)response.getResults().getNumFound());

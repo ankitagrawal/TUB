@@ -484,6 +484,8 @@ public class ProductServiceImpl implements ProductService {
 
         if (product.getHidden() != null){
             solrProduct.setHidden(product.getHidden().booleanValue());
+        }else{
+            solrProduct.setHidden(false);
         }
 
         Double price = null;
