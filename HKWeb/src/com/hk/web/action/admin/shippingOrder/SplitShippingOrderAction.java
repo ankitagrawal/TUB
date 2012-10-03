@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -46,6 +47,8 @@ public class SplitShippingOrderAction extends BaseAction {
   private LineItemDao lineItemDao;
   @Autowired
   ShippingOrderDao shippingOrderDao;
+@Autowired
+	ShipmentService shipmentService;
 
   @DontValidate
   @DefaultHandler
@@ -88,6 +91,8 @@ public class SplitShippingOrderAction extends BaseAction {
       newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
       newShippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
       newShippingOrder = shippingOrderService.save(newShippingOrder);
+
+	    shipmentService.createShipment(newShippingOrder);
 
       /**
        * Fetch previous shipping order and recalculate amount

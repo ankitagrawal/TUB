@@ -57,7 +57,7 @@
 
   <c:if test="${hk:collectionContains(topCategoryNameList, 'nutrition')}">
     <%--<jsp:include page="/categoryBanners/nutriTenDiscount.jsp"/>--%>
-    <%--<jsp:include page="/categoryBanners/nutriCallback.jsp"/>--%>
+    <jsp:include page="/categoryBanners/nutriCallback.jsp"/>
     <%--<jsp:include page="/categoryBanners/fitnessAccessoriesCashback.jsp"/>--%>
   </c:if>
 

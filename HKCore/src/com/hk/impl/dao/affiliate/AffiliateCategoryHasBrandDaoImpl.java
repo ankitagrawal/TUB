@@ -1,16 +1,16 @@
 package com.hk.impl.dao.affiliate;
 
-import com.hk.domain.affiliate.Affiliate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.affiliate.AffiliateCategoryHasBrand;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.affiliate.AffiliateCategoryHasBrandDao;
 import com.hk.pact.service.catalog.ProductVariantService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

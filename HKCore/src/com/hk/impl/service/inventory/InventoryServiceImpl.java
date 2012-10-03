@@ -227,6 +227,13 @@ public class InventoryServiceImpl implements InventoryService {
 	    return availableUnbookedInventory;
     }
 
+	@Override
+	public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList) {
+		Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
+		Long  bookedInventory = this.getBookedQtyOfSkuInProcessingQueue(skuList);
+		return netInventory - bookedInventory;
+	}
+
 	public Long getBookedQty(ProductVariant productVariant) {
 		Long bookedInventory = 0L;
 		if (productVariant != null) {
@@ -244,19 +251,16 @@ public class InventoryServiceImpl implements InventoryService {
         return getShippingOrderDao().getBookedQtyOfSkuInQueue(skuList);
     }
 
-    @Override
+	@Override
+	public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList){
+		return getShippingOrderDao().getBookedQtyOfSkuInProcessingQueue(skuList);
+	}
+
+	@Override
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant){
         return getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
     }
-    /*
-     * public List<Warehouse> getWarehousesForSkuAndQty(List<Sku> skuList, Long qty) { Long
-     * bookedInventoryOfSplitOrders = shippingOrderDaoProvider.get().getBookedQtyOfSkuInQueue(skuList); Long
-     * bookedInventoryOfUnsplitOrders = 0L; if (skuList != null && !skuList.isEmpty()) { bookedInventoryOfUnsplitOrders =
-     * orderDaoProvider.get().getBookedQtyOfProductVariantInQueue(skuList.get(0).getProductVariant()); // Here order
-     * status of the order is placed thus the 'qty' is already included. } Long netQtyCheck =
-     * bookedInventoryOfSplitOrders + bookedInventoryOfUnsplitOrders; return
-     * skuItemDaoProvider.get().getWarehousesForSkuAndQty(skuList, netQtyCheck); }
-     */
+
     @Override
     public Supplier getSupplierForSKU(Sku sku) {
         List<SkuGroup> availableSkuGroups = getSkuItemDao().getInStockSkuGroups(sku);
