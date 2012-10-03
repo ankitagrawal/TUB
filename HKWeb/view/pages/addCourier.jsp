@@ -8,24 +8,26 @@
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.AddCourierAction" var="courierBean"/>
 	<s:layout-component name="htmlHead">
 		<script type="text/javascript">
+
+
+			
 			$(document).ready(function() {
-				$('#courierDropDown').selected(function() {
-					alert('1');
-					val courieren = $('#courierDropDown').val();
+				$('#courierDropDown').blur(function() { 				
+					var courieren = $('#courierDropDown').val();
 					if (courieren == "") {
-						return;
+						return false;
 					}
 					else {
 						$.getJSON(
 								$('#selectgroup').attr('href'), {courier:courieren}, function(response) {
-							if (response.code == '<%=HealthkartResponse.STATUS_OK%>') {
-								$('#groupDropDown').val(response.courierGroup.id);
+							if (response.code == '<%=HealthkartResponse.STATUS_OK%>') { 								
+								$('#groupDropDown').val(response.data.id);
 							}
 							else {
 								$('#groupDropDown').val("");
 							}
 
-						})
+						});
 
 					}
 
@@ -38,15 +40,16 @@
 	</s:layout-component>
 
 
-	<div style="display:none">
-		<s:link id="selectgroup" beanclass="com.hk.web.action.admin.courier.AddCourierAction"
-		        event="getCourierGroupForCourier"></s:link>
 
-	</div>
 	<s:layout-component name="heading">
 		Search and Add Courier
 	</s:layout-component>
 	<s:layout-component name="content">
+		<div style="display:none">
+		<s:link id="selectgroup" beanclass="com.hk.web.action.admin.courier.AddCourierAction"
+		        event="getCourierGroupForCourier"></s:link>
+
+	</div>
 		<s:errors></s:errors>
 		<div>
 			Total Courier in System = ${fn:length(courierBean.courierList)}

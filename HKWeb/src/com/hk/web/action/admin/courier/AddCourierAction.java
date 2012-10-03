@@ -2,6 +2,7 @@ package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.akube.framework.gson.JsonUtils;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.admin.pact.service.courier.CourierService;
@@ -37,9 +38,9 @@ public class AddCourierAction extends BaseAction {
 
 	private List<CourierGroup> courierGroupList;
 
-//	@Validate(required = true, on = "saveCourier assignCourierGroup getCourierGroupForCourier")
+	//	@Validate(required = true, on = "saveCourier assignCourierGroup getCourierGroupForCourier")
 	private Courier courier;
-//	@Validate(required = true, on = "addNewCourierGroup assignCourierGroup")
+	//	@Validate(required = true, on = "addNewCourierGroup assignCourierGroup")
 	private CourierGroup courierGroup;
 
 	@DefaultHandler
@@ -72,14 +73,15 @@ public class AddCourierAction extends BaseAction {
 				addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
 			}
 		}
-		return  pre();
+		return pre();
 	}
 
 
 	public Resolution assignCourierGroup() {
-		List<CourierGroup> couriergroup = new ArrayList<CourierGroup>();
-		courier.setCourierGroup(couriergroup);
-		courierService.save(courier);
+		Set<Courier> couriergroupset = new HashSet<Courier>();
+		couriergroupset.add(courier);
+		courierGroup.setCouriers(couriergroupset);
+		courierGroupService.save(courierGroup);
 		addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
 		return pre();
 	}
@@ -89,6 +91,7 @@ public class AddCourierAction extends BaseAction {
 		courierGroup = courier.getCourierGroup();
 		HealthkartResponse healthkartResponse = null;
 		if (courierGroup != null) {
+			courierGroup = (CourierGroup) JsonUtils.hydrateHibernateObject(courierGroup);
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", courierGroup);
 		} else {
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Not assiged to any group");
