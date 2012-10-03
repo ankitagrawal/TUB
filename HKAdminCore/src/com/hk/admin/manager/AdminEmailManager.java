@@ -15,7 +15,6 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import com.hk.domain.catalog.product.SimilarProduct;
-import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.HKDateUtil;
 import com.hk.util.io.HKFileWriter;
 import freemarker.ext.beans.BeansWrapper;
