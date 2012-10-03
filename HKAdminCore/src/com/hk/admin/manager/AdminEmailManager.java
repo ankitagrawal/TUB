@@ -119,9 +119,6 @@ public class AdminEmailManager {
     @Autowired
     private AdminEmailService adminEmailService;
 
-    @Autowired
-    private ProductSearchService productSearchService;
-
     private final int COMMIT_COUNT = 100;
     private final int INITIAL_LIST_SIZE = 100;
 
