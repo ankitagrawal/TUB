@@ -34,4 +34,7 @@ public interface ShippingOrderDao extends BaseDao {
 	public Long getBookedQtyOfSkuInQueue(Sku sku);
 
 	public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
+
+	public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList);
+
 }

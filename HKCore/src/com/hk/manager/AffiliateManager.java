@@ -1,17 +1,14 @@
 package com.hk.manager;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
-import com.hk.constants.affiliate.AffiliateConstants;
-import com.hk.constants.affiliate.EnumAffiliateStatus;
-import com.hk.constants.coupon.EnumCouponType;
-import com.hk.pact.dao.CheckDetailsDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.affiliate.AffiliateConstants;
+import com.hk.constants.affiliate.EnumAffiliateStatus;
 import com.hk.constants.affiliate.EnumAffiliateTxnType;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.CheckDetails;
@@ -25,6 +22,7 @@ import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateTxnDaoImpl;
+import com.hk.pact.dao.CheckDetailsDao;
 import com.hk.pact.dao.affiliate.AffiliateCategoryDao;
 import com.hk.pact.dao.affiliate.AffiliateTxnDao;
 import com.hk.pact.service.RoleService;

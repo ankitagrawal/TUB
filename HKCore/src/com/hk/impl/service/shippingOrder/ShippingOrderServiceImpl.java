@@ -1,5 +1,6 @@
 package com.hk.impl.service.shippingOrder;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -176,8 +177,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This
-                    // is after including placed order qty
+	                Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
+	                // is after including placed order qty
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
@@ -186,7 +187,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
                         return false;
-                    } else if (availableUnbookedInv < 0) {
+                    } else if (availableUnbookedInv <= 0) {
                         String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
                                 + availableUnbookedInv;
                         logger.info("Could not manually escalate order as availableUnbookedInv of sku[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv

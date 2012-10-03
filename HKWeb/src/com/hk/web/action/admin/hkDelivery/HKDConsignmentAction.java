@@ -1,37 +1,48 @@
 package com.hk.web.action.admin.hkDelivery;
 
-import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.constants.core.EnumPermission;
-import com.hk.constants.core.Keys;
-import com.hk.constants.hkDelivery.EnumConsignmentStatus;
-import com.hk.domain.hkDelivery.*;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.user.User;
-import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
-import com.hk.admin.pact.service.hkDelivery.HubService;
-import com.hk.admin.pact.service.courier.AwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.admin.util.HKDeliveryUtil;
-import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.hkDelivery.HKDeliveryConstants;
-import com.hk.util.CustomDateTypeConvertor;
-import com.hk.util.XslGenerator;
-import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.transaction.annotation.Transactional;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.text.SimpleDateFormat;
+import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.util.HKDeliveryUtil;
+import com.hk.constants.core.EnumPermission;
+import com.hk.constants.core.Keys;
+import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
+import com.hk.domain.hkDelivery.ConsignmentTracking;
+import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.Runsheet;
+import com.hk.domain.user.User;
+import com.hk.util.CustomDateTypeConvertor;
 
 @Component
 public class HKDConsignmentAction extends BasePaginatedAction {
@@ -79,6 +90,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/hkDeliveryConsignment.jsp");        
     }
 
+    @SuppressWarnings("unchecked")
     @Transactional
     public Resolution markShipmentsReceived() {
         Set<String>  awbNumberSet ;
@@ -90,7 +102,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         String       paymentMode                      = null;
         Double       amount                           = null;
         String       address                          = null;
-        Consignment  consignment                      = null;
+        /*Consignment  consignment                      = null;*/
         List<String> newAwbNumbers                    = null;
         List<Consignment> consignmentList             = new ArrayList<Consignment>();
         List<ConsignmentTracking> consignmentTrackingList = null;
@@ -156,6 +168,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         return new RedirectResolution(HKDConsignmentAction.class);
     }
 
+    @SuppressWarnings("unchecked")
     public Resolution searchConsignments(){
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         if(!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)){
