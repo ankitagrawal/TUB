@@ -434,13 +434,16 @@ public class EmailManager {
 		String templatePath = EmailTemplateConstants.orderShippedEmail;
 
 		List<ShippingOrder> shippingOrderYetToBeSentList = new ArrayList<ShippingOrder>();
+		List<ShippingOrder> shippingOrderAlreadySentList = new ArrayList<ShippingOrder>();
+
 		Order order = shippingOrder.getBaseOrder();
 
 		for(ShippingOrder shippingOrderFromAllSO : order.getShippingOrders()) {
-			if( shippingOrderFromAllSO.isServiceOrder()
+			if( shippingOrderFromAllSO.getShipment() != null && shippingOrderFromAllSO.getShipment().isEmailSent() ) {
+				shippingOrderAlreadySentList.add(shippingOrderFromAllSO);
+			} else if( shippingOrderFromAllSO.isServiceOrder()
 					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus())
 					|| shippingOrderFromAllSO.getId().equals(shippingOrder.getId())
-					|| ( shippingOrderFromAllSO.getShipment() != null && shippingOrderFromAllSO.getShipment().isEmailSent() )
 					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled.asShippingOrderStatus()) ) {
 				continue;
 			}  else {
