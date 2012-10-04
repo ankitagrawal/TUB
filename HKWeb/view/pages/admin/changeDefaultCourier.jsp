@@ -37,6 +37,11 @@
                 <br/>
 				<br/>
 				<s:submit name="search" value="Search"/>
+                <label>Warehouse</label>
+                <s:select name="pincodeDefaultCourier.warehouse">
+                                    <s:option value="1">Gurgaon</s:option>
+                                    <s:option value="2">Mumbai</s:option>
+                    </s:select>
         <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
 			</s:form>
         </fieldset>
@@ -123,6 +128,7 @@
                 </s:form>
             </table>
            </c:forEach>
+
           </fieldset>
 
             <fieldset style="float:left; display:none;" id="new-default-courier-form">

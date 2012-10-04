@@ -11,10 +11,10 @@ public interface PincodeService {
 
     public Pincode getByPincode(String pincode);
 
-    public List<PincodeDefaultCourier> getByPincode(Pincode pincode, boolean isCod, boolean isGroundshipping);
+    public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping);
 
     public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping);
 
-    public  PincodeDefaultCourier createPincodeDefaultCourier (Pincode pincode, Courier courier, Warehouse warehouse,boolean isGroundShippingAvailable, boolean isCODAvailable, Double estimatedShippingCost  );
+    public PincodeDefaultCourier createPincodeDefaultCourier(Pincode pincode, Courier courier, Warehouse warehouse, boolean isGroundShippingAvailable, boolean isCODAvailable, Double estimatedShippingCost);
 
 }

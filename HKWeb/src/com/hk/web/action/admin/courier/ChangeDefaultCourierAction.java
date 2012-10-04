@@ -87,7 +87,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public Resolution search() {
         try {
             pincode = pincodeDao.getByPincode(pincodeString);
-            pincodeDefaultCouriers = getPincodeService().getByPincode(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
+            pincodeDefaultCouriers = getPincodeService().searchPincodeDefaultCourierList(pincode,null, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
 //             pincodeDefaultCourier = getPincodeService().searchPincodeDefaultCourier(pincode,null, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
             if (pincodeDefaultCourier != null) {
                 courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false);
@@ -152,8 +152,11 @@ public class ChangeDefaultCourierAction extends BaseAction {
 
     public Resolution generatePincodeExcel() throws Exception {
         List<PincodeDefaultCourier> pincodeDefaultCourierList = new ArrayList<PincodeDefaultCourier>();
+        warehouse = pincodeDefaultCourier.getWarehouse();
+//        get(PincodeDefaultCourier.class, variantId);
 
-        pincodeDefaultCourierList = pincodeDao.getAll(PincodeDefaultCourier.class);
+//        pincodeDefaultCourierList = pincodeDao.getAll(PincodeDefaultCourier.class);
+          pincodeDefaultCourierList= pincodeDao.searchPincodeDefaultCourierList(null,warehouse,null,null) ;
 
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
         final File excelFile = new File(excelFilePath);

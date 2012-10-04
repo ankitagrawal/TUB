@@ -179,6 +179,9 @@
               HideDialog();
               e.preventDefault();
           });
+              $('.button_green').click(function(){
+                  $(this).hide();
+              });
           });
 
           function ShowDialog(modal)
@@ -281,19 +284,19 @@
                                        </td>
                                        </c:forEach>
                                        <br/>
-                                       <c:forEach items="${invoiceLineItem.cartLineItemExtraOptions}" var="extraOption">
-                                   <tr>
-                                       <td style="text-align: left;  padding: 5px; border: 1px solid #f0f0f0;background: #fafafa;">${extraOption.name}</td>
-                                       <td style="text-align: left; padding: 0px;border: 1px solid #f0f0f0;background: #fff;">
-                                           <c:if test="${fn:startsWith(extraOption.value, '-')}">
-                                               ${extraOption.value}
-                                           </c:if>
-                                           <c:if test="${!fn:startsWith(extraOption.value, '-')}">
-                                               &nbsp;${extraOption.value}
-                                           </c:if>
-                                       </td>
-                                   </tr>
-                                   </c:forEach>
+                                       <%--<c:forEach items="${invoiceLineItem.cartLineItemExtraOptions}" var="extraOption">--%>
+                                   <%--<tr>--%>
+                                       <%--<td style="text-align: left;  padding: 5px; border: 1px solid #f0f0f0;background: #fafafa;">${extraOption.name}</td>--%>
+                                       <%--<td style="text-align: left; padding: 0px;border: 1px solid #f0f0f0;background: #fff;">--%>
+                                           <%--<c:if test="${fn:startsWith(extraOption.value, '-')}">--%>
+                                               <%--${extraOption.value}--%>
+                                           <%--</c:if>--%>
+                                           <%--<c:if test="${!fn:startsWith(extraOption.value, '-')}">--%>
+                                               <%--&nbsp;${extraOption.value}--%>
+                                           <%--</c:if>--%>
+                                       <%--</td>--%>
+                                   <%--</tr>--%>
+                                   <%--</c:forEach>--%>
                             </table>
                               </td>
                        </div>

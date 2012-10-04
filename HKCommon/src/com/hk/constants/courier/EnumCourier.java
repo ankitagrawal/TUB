@@ -100,15 +100,8 @@ public enum EnumCourier {
 
      public static List<EnumCourier> getCurrentlyApplicableGroundShippedCouriers() {
         return Arrays.asList(
-                EnumCourier.DTDC_Plus,
-                EnumCourier.DTDC_Lite,
                 EnumCourier.DTDC_Surface,
-                EnumCourier.DTDC_COD,
-                EnumCourier.Speedpost,
-                EnumCourier.Delhivery,
-                EnumCourier.Delhivery_Surface,
-                EnumCourier.Quantium,
-                EnumCourier.HK_Delivery
+                EnumCourier.Delhivery_Surface
         );
     }
 

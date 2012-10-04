@@ -23,9 +23,10 @@ public class PincodeServiceImpl implements PincodeService {
        return getPincodeDao().getByPincode(pincode);
     }
 
-    public List<PincodeDefaultCourier>  getByPincode(Pincode pincode,  boolean isCod, boolean isGroundshipping) {
-        return   getPincodeDao().getByPincode(pincode , isCod, isGroundshipping);
-    }          
+
+    public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode,Warehouse warehouse, Boolean isCod, Boolean isGroundshipping){
+        return getPincodeDao().searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGroundshipping);
+    }
 
      public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
           return getPincodeDao().searchPincodeDefaultCourier(pincode, warehouse, isCod, isGroundshipping);
