@@ -437,10 +437,13 @@ public class EmailManager {
 		List<ShippingOrder> shippingOrderAlreadySentList = new ArrayList<ShippingOrder>();
 
 		Order order = shippingOrder.getBaseOrder();
+		valuesMap.put("order", shippingOrder);
+		valuesMap.put("invoiceLink", invoiceLink);
 
 		for(ShippingOrder shippingOrderFromAllSO : order.getShippingOrders()) {
 			if( shippingOrderFromAllSO.getShipment() != null && shippingOrderFromAllSO.getShipment().isEmailSent() ) {
 				shippingOrderAlreadySentList.add(shippingOrderFromAllSO);
+				valuesMap.put("shippingOrderAlreadySentList", shippingOrderAlreadySentList);
 			} else if( shippingOrderFromAllSO.isServiceOrder()
 					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus())
 					|| shippingOrderFromAllSO.getId().equals(shippingOrder.getId())
@@ -451,8 +454,7 @@ public class EmailManager {
 				templatePath = EmailTemplateConstants.partialOrderShippedEmail;
 			}
 		}
-		valuesMap.put("order", shippingOrder);
-		valuesMap.put("invoiceLink", invoiceLink);
+
 		valuesMap.put("shippingOrderYetToBeSentList", shippingOrderYetToBeSentList);
 
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(templatePath);

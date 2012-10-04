@@ -57,7 +57,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 				<td width="579" valign="top">Hi ${order.baseOrder.address.name}!<br/>
 
 					Following items of your order ${order.baseOrder.gatewayOrderId}, placed
-					on ${order.baseOrder.payment.paymentDate} has been dispatched. Here are
+					on ${order.baseOrder.payment.paymentDate} have been dispatched. Here are
 					the details:<br/>
 					<br/>
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
@@ -96,7 +96,44 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 						</tr>
 					</#list>
 					</table>
+			</tr>
+		<#if shippingOrderAlreadySentList??>
+			<tr>
+				<td width="579" valign="top">
+					<br>
+					Following items were dispatched earlier via a different shipment <br><br>
+					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
+						<tr>
+							<td><strong>Item</strong></td>
+							<td><strong>Quantity</strong></td>
+						</tr>
+						<#list shippingOrderAlreadySentList as shippingOrder>
+							<#list shippingOrder.lineItems as lineItem>
+								<tr>
+									<td>${lineItem.sku.productVariant.product.name}
+										<#if lineItem.sku.productVariant.variantName??>
+										${lineItem.sku.productVariant.variantName}
+										</#if>
+										<br/>
 
+										<#list lineItem.sku.productVariant.productOptions as
+										productOption>
+											<em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
+										</#list>
+									</td>
+									<td>
+									${lineItem.qty}
+									</td>
+								</tr>
+							</#list>
+
+						</#list>
+
+					</table>
+
+				</td>
+			</tr>
+		</#if>
 			<tr>
 				<td width="579" valign="top">
 					Due to the assortment of products in your current order, certain items will be shipped at a later date.<br>
@@ -129,7 +166,6 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 					</#list>
 
 					</table>
-
 
 				</td>
 			</tr>
