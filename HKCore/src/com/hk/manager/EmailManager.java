@@ -4,7 +4,6 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
-import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -440,33 +439,40 @@ public class EmailManager {
 		valuesMap.put("order", shippingOrder);
 		valuesMap.put("invoiceLink", invoiceLink);
 
-		for(ShippingOrder shippingOrderFromAllSO : order.getShippingOrders()) {
-			if( shippingOrderFromAllSO.getShipment() != null && shippingOrderFromAllSO.getShipment().isEmailSent() ) {
+		for (ShippingOrder shippingOrderFromAllSO : order.getShippingOrders()) {
+			if (shippingOrderFromAllSO.isServiceOrder()
+					|| shippingOrderFromAllSO.getId().equals(shippingOrder.getId())
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled.asShippingOrderStatus())) {
+				continue;
+			} else if ( shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Shipped.asShippingOrderStatus())
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus()) ) {
 				shippingOrderAlreadySentList.add(shippingOrderFromAllSO);
 				valuesMap.put("shippingOrderAlreadySentList", shippingOrderAlreadySentList);
-			} else if( shippingOrderFromAllSO.isServiceOrder()
-					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus())
-					|| shippingOrderFromAllSO.getId().equals(shippingOrder.getId())
-					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled.asShippingOrderStatus()) ) {
-				continue;
-			}  else {
+			} else if (shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus())
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_CheckedOut.asShippingOrderStatus())
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_ReadyForProcess.asShippingOrderStatus())
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_EscalatedBack.asShippingOrderStatus())
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_OnHold.asShippingOrderStatus())
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Packed.asShippingOrderStatus())
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_Picking.asShippingOrderStatus())
+					|| shippingOrderFromAllSO.getOrderStatus().equals(EnumShippingOrderStatus.SO_MarkedForPrinting.asShippingOrderStatus())
+					) {
 				shippingOrderYetToBeSentList.add(shippingOrderFromAllSO);
+				valuesMap.put("shippingOrderYetToBeSentList", shippingOrderYetToBeSentList);
 				templatePath = EmailTemplateConstants.partialOrderShippedEmail;
 			}
 		}
-
-		valuesMap.put("shippingOrderYetToBeSentList", shippingOrderYetToBeSentList);
 
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(templatePath);
 		return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, shippingOrder.getBaseOrder().getUser().getEmail(),
 				shippingOrder.getBaseOrder().getUser().getName());
 	}
 
-	public boolean sendSubscriptionOrderShippedEmail(ShippingOrder shippingOrder,Subscription subscription, String invoiceLink){
+	public boolean sendSubscriptionOrderShippedEmail(ShippingOrder shippingOrder, Subscription subscription, String invoiceLink) {
 		Shipment shipment = shippingOrder.getShipment();
 		shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getAwb().getAwbNumber(), shipment.getCourier().getId(), shippingOrder));
 		HashMap valuesMap = new HashMap();
-		valuesMap.put("subscription",subscription);
+		valuesMap.put("subscription", subscription);
 		valuesMap.put("order", shippingOrder);
 		valuesMap.put("invoiceLink", invoiceLink);
 
@@ -476,20 +482,19 @@ public class EmailManager {
 	}
 
 
-
-	public boolean sendSubscriptionCancellationEmail(Subscription subscription){
+	public boolean sendSubscriptionCancellationEmail(Subscription subscription) {
 		HashMap valuesMap = new HashMap();
-		valuesMap.put("subscription",subscription);
+		valuesMap.put("subscription", subscription);
 
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionCancelEmailUser);
 		return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, subscription.getBaseOrder().getUser().getEmail(),
 				subscription.getBaseOrder().getUser().getName());
 	}
 
-	public boolean sendSubscriptionCancellationEmailToAdmin(Subscription subscription){
+	public boolean sendSubscriptionCancellationEmailToAdmin(Subscription subscription) {
 		boolean success = false;
 		HashMap valuesMap = new HashMap();
-		valuesMap.put("subscription",subscription);
+		valuesMap.put("subscription", subscription);
 		Category basketCategory = getCategoryService().getTopLevelCategory(subscription.getProductVariant().getProduct());
 		if (basketCategory != null) {
 			Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionCancelEmailAdmin);
@@ -503,19 +508,19 @@ public class EmailManager {
 		return success;
 	}
 
-	public boolean sendSubscriptionPlacedEmailToUser(Subscription subscription){
+	public boolean sendSubscriptionPlacedEmailToUser(Subscription subscription) {
 		HashMap valuesMap = new HashMap();
-		valuesMap.put("subscription",subscription);
+		valuesMap.put("subscription", subscription);
 
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionPlacedEmailUser);
 		return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, subscription.getBaseOrder().getUser().getEmail(),
 				subscription.getBaseOrder().getUser().getName());
 	}
 
-	public boolean sendSubscriptionPlacedEmailToAdmin(Subscription subscription){
+	public boolean sendSubscriptionPlacedEmailToAdmin(Subscription subscription) {
 		boolean success = false;
 		HashMap valuesMap = new HashMap();
-		valuesMap.put("subscription",subscription);
+		valuesMap.put("subscription", subscription);
 		Category basketCategory = getCategoryService().getTopLevelCategory(subscription.getProductVariant().getProduct());
 		if (basketCategory != null) {
 			Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionPlacedEmailAdmin);
@@ -529,10 +534,10 @@ public class EmailManager {
 		return success;
 	}
 
-	public boolean sendSubscriptionVariantOutOfStockEmailAdmin(Subscription subscription){
+	public boolean sendSubscriptionVariantOutOfStockEmailAdmin(Subscription subscription) {
 		boolean success = false;
 		HashMap valuesMap = new HashMap();
-		valuesMap.put("subscription",subscription);
+		valuesMap.put("subscription", subscription);
 		Category basketCategory = getCategoryService().getTopLevelCategory(subscription.getProductVariant().getProduct());
 		if (basketCategory != null) {
 			Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionVariantOutOfStockEmailAdmin);

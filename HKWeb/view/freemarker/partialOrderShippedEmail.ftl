@@ -49,7 +49,6 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 				</td>
 			</tr>
 
-
 			<tr>
 				<td align="left" height="15"></td>
 			</tr>
@@ -98,16 +97,22 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 					</table>
 			</tr>
 		<#if shippingOrderAlreadySentList??>
-			<tr>
-				<td width="579" valign="top">
-					<br>
-					Following items were dispatched earlier via a different shipment <br><br>
-					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
-						<tr>
-							<td><strong>Item</strong></td>
-							<td><strong>Quantity</strong></td>
-						</tr>
-						<#list shippingOrderAlreadySentList as shippingOrder>
+			<#list shippingOrderAlreadySentList as shippingOrder>
+				<tr>
+					<td width="579" valign="top">
+						<br>
+						<#if shippingOrder.shipment.shipDate??>
+							Following items were dispatched earlier on ${shippingOrder.shipment.shipDate} via a different shipment <br><br>
+						<#else >
+							Following items were dispatched earlier via different shipment <br><br>
+						</#if>
+
+						<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
+							<tr>
+								<td><strong>Item</strong></td>
+								<td><strong>Quantity</strong></td>
+							</tr>
+
 							<#list shippingOrder.lineItems as lineItem>
 								<tr>
 									<td>${lineItem.sku.productVariant.product.name}
@@ -127,23 +132,29 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 								</tr>
 							</#list>
 
-						</#list>
+						</table>
 
-					</table>
-
-				</td>
-			</tr>
+					</td>
+				</tr>
+			</#list>
 		</#if>
+
+		<#list shippingOrderYetToBeSentList as shippingOrder>
 			<tr>
 				<td width="579" valign="top">
-					Due to the assortment of products in your current order, certain items will be shipped at a later date.<br>
-					Here are the details:<br><br>
+					<#if shippingOrder.targetDispatchDate??>
+						Due to the assortment of products in your current order, certain items will be shipped on ${shippingOrder.targetDispatchDate}.<br>
+						Here are the details:<br><br>
+					<#else>
+						Due to the assortment of products in your current order, certain items will be shipped at a later date.<br>
+						Here are the details:<br><br>
+					</#if>
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
 						<tr>
 							<td><strong>Item</strong></td>
 							<td><strong>Quantity</strong></td>
 						</tr>
-					<#list shippingOrderYetToBeSentList as shippingOrder>
+
 						<#list shippingOrder.lineItems as lineItem>
 							<tr>
 								<td>${lineItem.sku.productVariant.product.name}
@@ -163,12 +174,11 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 							</tr>
 						</#list>
 
-					</#list>
-
 					</table>
 
 				</td>
 			</tr>
+		</#list>
 
 			<br/>
 			<br/>

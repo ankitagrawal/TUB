@@ -102,16 +102,22 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 			</tr>
 
 		<#if shippingOrderAlreadySentList??>
+			<#list shippingOrderAlreadySentList as shippingOrder>
 			<tr>
 				<td width="579" valign="top">
 					<br>
-					Following items were dispatched earlier via a different shipment <br><br>
+					<#if shippingOrder.shipment.shipDate??>
+						Following items were dispatched earlier on ${shippingOrder.shipment.shipDate} via a different shipment <br><br>
+					<#else >
+						Following items were dispatched earlier via different shipment <br><br>
+					</#if>
+
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
 						<tr>
 							<td><strong>Item</strong></td>
 							<td><strong>Quantity</strong></td>
 						</tr>
-						<#list shippingOrderAlreadySentList as shippingOrder>
+
 							<#list shippingOrder.lineItems as lineItem>
 								<tr>
 									<td>${lineItem.sku.productVariant.product.name}
@@ -131,12 +137,11 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 								</tr>
 							</#list>
 
-						</#list>
-
 					</table>
 
 				</td>
 			</tr>
+			</#list>
 		</#if>
 			<tr>
 				<td width="579" valign="top">
