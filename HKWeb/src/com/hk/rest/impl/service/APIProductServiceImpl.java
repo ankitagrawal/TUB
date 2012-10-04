@@ -1,169 +1,160 @@
 package com.hk.rest.impl.service;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
+
+import javax.ws.rs.core.MediaType;
+
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.imaging.ImageUtils;
 import com.akube.framework.util.BaseUtils;
 import com.google.gson.Gson;
 import com.hk.admin.util.S3Utils;
-import com.hk.constants.EnumS3UploadStatus;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.rest.pact.service.APIProductService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.ImageManager;
-import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.resteasy.client.ClientResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.ws.rs.core.MediaType;
-import java.io.*;
-import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Pradeep
- * Date: 8/28/12
- * Time: 3:47 PM
+ * Created with IntelliJ IDEA. User: Pradeep Date: 8/28/12 Time: 3:47 PM
  */
 @Service
 public class APIProductServiceImpl implements APIProductService {
 
-
     @Value("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
-    private String        healthkartRestUrl;
+    private String              healthkartRestUrl;
 
-
-    @Autowired
-    ProductDao productDao;
+    private static Logger       logger       = LoggerFactory.getLogger(APIProductServiceImpl.class);
 
     @Autowired
-    ImageManager imageManager;
+    ProductDao                  productDao;
 
     @Autowired
-    ProductService productService;
+    ImageManager                imageManager;
+
+    @Autowired
+    ProductService              productService;
 
     @Value("#{hkEnvProps['" + Keys.Env.accessKey + "']}")
-    String awsAccessKey;
+    String                      awsAccessKey;
 
     @Value("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
-    String awsSecretKey;
+    String                      awsSecretKey;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String         adminUploadsPath;
+    String                      adminUploadsPath;
 
-    private static final float QUALITY = 0.95F;
-    private static final String mihAwsBucket="mih-prod";
+    private static final float  QUALITY      = 0.95F;
+    private static final String mihAwsBucket = "mih-prod";
 
-    public Product getProductById(String productId){
+    public Product getProductById(String productId) {
         try {
-            ClientRequest request = new ClientRequest(healthkartRestUrl+"product/"+productId);
+            ClientRequest request = new ClientRequest(healthkartRestUrl + "product/" + productId);
             request.accept(MediaType.APPLICATION_JSON);
             ClientResponse<String> response = request.get(String.class);
 
             if (response.getStatus() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + response.getStatus());
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
             }
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    new ByteArrayInputStream(response.getEntity().getBytes())));
-            Gson gson= JsonUtils.getGsonDefault();
+            BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes())));
+            Gson gson = JsonUtils.getGsonDefault();
 
             return gson.fromJson(br, Product.class);
 
         } catch (IOException e) {
-
-            e.printStackTrace();
-
+            logger.error("IO exception gettting product" + productId, e);
         } catch (Exception e) {
-
-            e.printStackTrace();
-
+            logger.error(" exception gettting product" + productId, e);
         }
         return null;
     }
 
-    public String syncContentAndDescription(){
-        List<Product> mihNutritionProducts=productDao.getAllProductByCategory("nutrition");
-        List<Product> mihSportsProducts=productDao.getAllProductByCategory("sports");
-        List<Product> mihProducts=mihNutritionProducts;
-        for(Product product:mihSportsProducts){
+    public String syncContentAndDescription() {
+        List<Product> mihNutritionProducts = productDao.getAllProductByCategory("nutrition");
+        List<Product> mihSportsProducts = productDao.getAllProductByCategory("sports");
+        List<Product> mihProducts = mihNutritionProducts;
+        for (Product product : mihSportsProducts) {
             mihProducts.add(product);
         }
-        for(Product product:mihProducts){
+        for (Product product : mihProducts) {
             try {
-                ClientRequest request = new ClientRequest(healthkartRestUrl+"product/"+product.getId().toString());
+                ClientRequest request = new ClientRequest(healthkartRestUrl + "product/" + product.getId().toString());
                 request.accept(MediaType.APPLICATION_JSON);
                 ClientResponse<String> response = request.get(String.class);
 
                 if (response.getStatus() != 200) {
-                    throw new RuntimeException("Failed : HTTP error code : "
-                            + response.getStatus());
+                    throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
                 }
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                        new ByteArrayInputStream(response.getEntity().getBytes())));
-                Gson gson= JsonUtils.getGsonDefault();
+                BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes())));
+                Gson gson = JsonUtils.getGsonDefault();
 
-                Product hkProduct= gson.fromJson(br, Product.class);
+                Product hkProduct = gson.fromJson(br, Product.class);
                 product.setDescription(hkProduct.getDescription());
                 product.setOverview(hkProduct.getOverview());
                 productDao.save(product);
 
             } catch (IOException e) {
-
-                e.printStackTrace();
-                return "sync failed for product id "+product.getId().toString();
-
+                logger.error(" exception syncing products" + product.getId(),  e);
+                return "sync failed for product id " + product.getId().toString();
             } catch (Exception e) {
-
-                e.printStackTrace();
-                return "sync failed for product id"+product.getId().toString();
+                logger.error(" exception syncing products" + product.getId(),  e);
+                return "sync failed for product id" + product.getId().toString();
 
             }
         }
         return "synced";
     }
 
-    public String syncProductImages(){
-        List<Product> mihNutritionProducts=productDao.getAllProductByCategory("nutrition");
-        List<Product> mihSportsProducts=productDao.getAllProductByCategory("sports");
-        List<Product> mihProducts=mihNutritionProducts;
-        for(Product product:mihSportsProducts){
+    public String syncProductImages() {
+        List<Product> mihNutritionProducts = productDao.getAllProductByCategory("nutrition");
+        List<Product> mihSportsProducts = productDao.getAllProductByCategory("sports");
+        List<Product> mihProducts = mihNutritionProducts;
+        for (Product product : mihSportsProducts) {
             mihProducts.add(product);
         }
-        for(Product product:mihProducts){
+        for (Product product : mihProducts) {
             try {
-                ClientRequest request = new ClientRequest(healthkartRestUrl+"product/"+product.getId().toString());
+                ClientRequest request = new ClientRequest(healthkartRestUrl + "product/" + product.getId().toString());
                 request.accept(MediaType.APPLICATION_JSON);
                 ClientResponse<String> response = request.get(String.class);
 
                 if (response.getStatus() != 200) {
-                    throw new RuntimeException("Failed : HTTP error code : "
-                            + response.getStatus());
+                    throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
                 }
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                        new ByteArrayInputStream(response.getEntity().getBytes())));
-                Gson gson= JsonUtils.getGsonDefault();
+                BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes())));
+                Gson gson = JsonUtils.getGsonDefault();
 
-                Product hkProduct= gson.fromJson(br, Product.class);
+                Product hkProduct = gson.fromJson(br, Product.class);
 
                 String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
                 File imageFile = new File(imageFilePath);
-                if(hkProduct.getMainImageId()!=null){
-                    if(product.getMainImageId()==null){
+                if (hkProduct.getMainImageId() != null) {
+                    if (product.getMainImageId() == null) {
                         try {
                             imageFile.getParentFile().mkdirs();
-                            S3Utils.downloadData(awsAccessKey,awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, hkProduct.getMainImageId()),"healthkart-prod",imageFile);
-                            ProductImage productImage=setImage(imageFile, product, true, false);
+                            S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, hkProduct.getMainImageId()), "healthkart-prod",
+                                    imageFile);
+                            ProductImage productImage = setImage(imageFile, product, true, false);
                             if (productImage != null) {
                                 resizeAndUpload(imageFile.getAbsolutePath(), productImage);
                                 productImage.setUploaded(true);
@@ -178,15 +169,9 @@ public class APIProductServiceImpl implements APIProductService {
                 }
 
             } catch (IOException e) {
-
-                e.printStackTrace();
-                //return "image sync failed for product id "+product.getId().toString();
-
+                logger.error(" exception syncing products" + product.getId(),  e);
             } catch (Exception e) {
-
-                e.printStackTrace();
-                //return "image sync failed for product id"+product.getId().toString();
-
+                logger.error(" exception syncing products" + product.getId(),  e);
             }
         }
         return "images synced";

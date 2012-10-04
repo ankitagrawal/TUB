@@ -142,7 +142,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 }
             }
             // Send Email Comm. for HK Users Only
-            if (order.getStore() != null && order.getStore().getId().equals(storeService.getDefaultStore().getId())) {
+            if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
                 emailManager.sendOrderCancelEmailToUser(order);
             }
             emailManager.sendOrderCancelEmailToAdmin(order);
@@ -236,7 +236,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             subscriptionOrderService.markSubscriptionOrderAsShipped(order);
 
             //incase of other store orders
-            if(!order.getStore().getId().equals(storeService.getDefaultStore().getId())){
+            if(!order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)){
                 order=orderService.save(order);
                 storeOrderService.updateOrderStatusInStore(order);
             }
@@ -260,11 +260,11 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
 
                 //incase of other store orders
-                if(!order.getStore().getId().equals(storeService.getDefaultStore().getId())){
+                if(!order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)){
                     order=orderService.save(order);
                     storeOrderService.updateOrderStatusInStore(order);
                 }
-                if(!order.isDeliveryEmailSent() && order.getUser().getStore() != null && order.getUser().getStore().getId() == 1L) {
+                if(!order.isDeliveryEmailSent() && order.getUser().getStore() != null && order.getUser().getStore().getId() == StoreService.DEFAULT_STORE_ID) {
                     if(getAdminEmailManager().sendOrderDeliveredEmail(order)) {
                         order.setDeliveryEmailSent(true);
                         getOrderService().save(order);

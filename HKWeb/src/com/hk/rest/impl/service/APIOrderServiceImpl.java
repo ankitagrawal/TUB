@@ -1,10 +1,5 @@
 package com.hk.rest.impl.service;
 
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,15 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.akube.framework.gson.JsonUtils;
-import com.akube.framework.util.BaseUtils;
-import com.google.gson.Gson;
-import com.hk.constants.core.Keys;
-import com.hk.domain.builder.CartLineItemBuilder;
-import com.hk.pact.service.order.AutomatedOrderService;
-import com.hk.pact.service.store.StoreService;
-import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.resteasy.client.ClientResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +40,7 @@ import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.order.AutomatedOrderService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -69,13 +56,8 @@ import com.hk.rest.pact.service.APIOrderService;
 import com.hk.rest.pact.service.APIUserService;
 import com.hk.util.json.JSONResponseBuilder;
 
-import javax.ws.rs.core.MediaType;
-
 /**
- * Created by IntelliJ IDEA.
- * User: Pradeep
- * Date: May 1, 2012
- * Time: 1:26:17 PM
+ * Created by IntelliJ IDEA. User: Pradeep Date: May 1, 2012 Time: 1:26:17 PM
  */
 @Service
 public class APIOrderServiceImpl implements APIOrderService {
@@ -83,72 +65,72 @@ public class APIOrderServiceImpl implements APIOrderService {
     @Autowired
     ProductVariantService productVariantService;
     @Autowired
-    PaymentManager paymentManager;
+    PaymentManager        paymentManager;
     @Autowired
-    CartLineItemService cartLineItemService;
+    CartLineItemService   cartLineItemService;
     @Autowired
-    APIUserService apiUserService;
+    APIUserService        apiUserService;
     @Autowired
-    OrderManager orderManager;
+    OrderManager          orderManager;
     @Autowired
-    OrderService orderService;
+    OrderService          orderService;
     @Autowired
-    AddressDao addressDao;
+    AddressDao            addressDao;
     @Autowired
-    PaymentModeDao paymentModeDao;
+    PaymentModeDao        paymentModeDao;
     @Autowired
-    PaymentStatusDao paymentStatusDao;
+    PaymentStatusDao      paymentStatusDao;
     @Autowired
-    PaymentService paymentService;
+    PaymentService        paymentService;
     @Autowired
-    LineItemDao lineItemDao;
+    LineItemDao           lineItemDao;
     @Autowired
-    OrderStatusService orderStatusService;
+    OrderStatusService    orderStatusService;
     @Autowired
-    OrderLoggingService orderLoggingService;
+    OrderLoggingService   orderLoggingService;
     @Autowired
-    ShippingOrderService shippingOrderService;
+    ShippingOrderService  shippingOrderService;
     @Autowired
-    InventoryService inventoryService;
+    InventoryService      inventoryService;
     @Autowired
-    UserService userService;
+    UserService           userService;
     @Autowired
-    ShipmentService shipmentService;
+    ShipmentService       shipmentService;
     @Autowired
     AutomatedOrderService automatedOrderService;
 
     public String createOrderInHK(APIOrder apiOrder) {
         Set<CartLineItem> cartLineItems = new HashSet<CartLineItem>();
-        //get hkuser object if he already exists or create a new hkuser
+        // get hkuser object if he already exists or create a new hkuser
         User hkUser = getApiUserService().getHKUser(apiOrder.getApiUser());
 
-        //first place a base order  or find one if it already exists
+        // first place a base order or find one if it already exists
         Order order = getOrderManager().getOrCreateOrder(hkUser);
         order.setCartLineItems(cartLineItems);
         order = getOrderService().save(order);
-        //add items in the cart
+        // add items in the cart
         cartLineItems = addCartLineItems(apiOrder.getApiOrderDetails(), order);
 
         order.setCartLineItems(cartLineItems);
         order = getOrderService().save(order);
 
-        //how to check if address always exists or create a new address everytime?
+        // how to check if address always exists or create a new address everytime?
         Address address = createAddress(apiOrder.getApiAddress(), hkUser);
-        //save address in the base_order
+        // save address in the base_order
         order.setAddress(address);
-        //set store in base order
+        // set store in base order
         order.setStore(hkUser.getStore());
         order = getOrderService().save(order);
-        //update amount to be paid for the order... sequence is important here address need to be created priorhand!!
+        // update amount to be paid for the order... sequence is important here address need to be created priorhand!!
         getOrderManager().recalAndUpdateAmount(order);
 
-        //create a payment
+        // create a payment
         Payment payment = createPayment(order, apiOrder.getApiPayment());
 
-        //update order payment status and order status in general
+        // update order payment status and order status in general
         getOrderManager().orderPaymentReceieved(payment);
 
-        //finalize order -- create shipping order and update inventory
+        // finalize order -- create shipping order and update inventory
         finalizeOrder(order);
         return new JSONResponseBuilder().addField("hkOrderId", order.getId()).build();
     }
@@ -159,7 +141,7 @@ public class APIOrderServiceImpl implements APIOrderService {
 
         boolean shippingOrderExists = false;
 
-        //Check Inventory health of order lineitems
+        // Check Inventory health of order lineitems
         for (CartLineItem cartLineItem : productCartLineItems) {
             if (lineItemDao.getLineItem(cartLineItem) != null) {
                 shippingOrderExists = true;
@@ -181,7 +163,8 @@ public class APIOrderServiceImpl implements APIOrderService {
             /**
              * Order lifecycle activity logging - Order split to shipping orders
              */
-            getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+            getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(),
+                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
@@ -196,7 +179,7 @@ public class APIOrderServiceImpl implements APIOrderService {
 
         }
 
-        //Check Inventory health of order lineitems
+        // Check Inventory health of order lineitems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
@@ -218,14 +201,19 @@ public class APIOrderServiceImpl implements APIOrderService {
 
     public Payment createPayment(Order order, APIPayment apiPayment) {
         Payment payment = new Payment();
-        //dont set payment amount it will be taken from the order
+        // dont set payment amount it will be taken from the order
         payment.setOrder(order);
         PaymentMode paymentMode;
         paymentMode = getPaymentModeDao().getPaymentModeById(new Long(apiPayment.getPaymentmodeId()));
         payment.setPaymentMode(paymentMode);
         // payment.setIp(remoteAddr);
         payment.setBankCode(apiPayment.getBankId());
-        payment = getPaymentManager().createNewPayment(order, paymentMode, "182.12.1.1", apiPayment.getBankId()); //remote ip adddress is hard coded
+        payment = getPaymentManager().createNewPayment(order, paymentMode, "182.12.1.1", apiPayment.getBankId()); // remote
+                                                                                                                    // ip
+                                                                                                                    // adddress
+                                                                                                                    // is
+                                                                                                                    // hard
+                                                                                                                    // coded
         PaymentStatus paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.AUTHORIZATION_PENDING.getId());
         if (EnumPaymentMode.getPrePaidPaymentModes().contains(paymentMode.getId())) {
             paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.SUCCESS.getId());
@@ -278,9 +266,10 @@ public class APIOrderServiceImpl implements APIOrderService {
                 ShippingOrder shippingOrder = lineItem.getShippingOrder();
                 Shipment shipment = shippingOrder.getShipment();
 
-
-                if (shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Shipped.getId() && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Delivered.getId()
-                        && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Returned.getId() && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Lost.getId()
+                if (shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Shipped.getId()
+                        && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Delivered.getId()
+                        && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Returned.getId()
+                        && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Lost.getId()
                         && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Cancelled.getId()) {
 
                     trackingItem.setStatus(shippingOrder.getBaseOrder().getOrderStatus().getName());
@@ -308,45 +297,44 @@ public class APIOrderServiceImpl implements APIOrderService {
             }
         }
 
-
         return new JSONResponseBuilder().addField("orderStatus", status).addField("shipped", "false").build();
 
     }
 
-    public String createOrderInHk(Order order){
+    public String createOrderInHk(Order order) {
 
         order.getUser().setStore(order.getStore());
         order.getUser().setId(null);
         User hkUser = getApiUserService().getHKUser(order.getUser());
 
-        Order hkOrder= automatedOrderService.createNewOrder(hkUser);
+        Order hkOrder = automatedOrderService.createNewOrder(hkUser);
         hkOrder.setUserComments(order.getUserComments());
 
-        Set<CartLineItem> cartLineItemSet=order.getCartLineItems();
-        Set<CartLineItem> hkCartLineItemSet=new HashSet<CartLineItem>();
-        for(CartLineItem cartLineItem:cartLineItemSet){
-                cartLineItem.setId(null);
-                cartLineItem.setOrder(hkOrder);
-                cartLineItem=cartLineItemService.save(cartLineItem);
-                hkCartLineItemSet.add(cartLineItem);
+        Set<CartLineItem> cartLineItemSet = order.getCartLineItems();
+        Set<CartLineItem> hkCartLineItemSet = new HashSet<CartLineItem>();
+        for (CartLineItem cartLineItem : cartLineItemSet) {
+            cartLineItem.setId(null);
+            cartLineItem.setOrder(hkOrder);
+            cartLineItem = cartLineItemService.save(cartLineItem);
+            hkCartLineItemSet.add(cartLineItem);
         }
 
-        Address address=order.getAddress();
+        Address address = order.getAddress();
         address.setId(null);
-        address=addressDao.save(address);
+        address = addressDao.save(address);
 
-        Payment payment=order.getPayment();
+        Payment payment = order.getPayment();
         payment.setId(null);
         payment.setOrder(hkOrder);
 
-        /*payment.setGatewayOrderId(hkOrder.getId().toString() +"-"+ order.getGatewayOrderId().split("-")[1]);*/
+        /* payment.setGatewayOrderId(hkOrder.getId().toString() +"-"+ order.getGatewayOrderId().split("-")[1]); */
         payment.setGatewayOrderId(order.getGatewayOrderId());
-        payment=paymentService.save(payment);
-        if(cartLineItemSet.size()>0){
-            hkOrder=  automatedOrderService.placeOrder(hkOrder,hkCartLineItemSet,address,payment, order.getStore(),false);
+        payment = paymentService.save(payment);
+        if (cartLineItemSet.size() > 0) {
+            hkOrder = automatedOrderService.placeOrder(hkOrder, hkCartLineItemSet, address, payment, order.getStore(), false);
 
             return new JSONResponseBuilder().addField("hkOrderId", hkOrder.getId()).build();
-        }else{
+        } else {
             return null;
         }
     }
@@ -366,7 +354,6 @@ public class APIOrderServiceImpl implements APIOrderService {
     public void setCartLineItemService(CartLineItemService cartLineItemService) {
         this.cartLineItemService = cartLineItemService;
     }
-
 
     public OrderManager getOrderManager() {
         return orderManager;
