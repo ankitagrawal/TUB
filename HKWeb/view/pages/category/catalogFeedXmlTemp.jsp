@@ -45,7 +45,7 @@
                         <price marked="${variant.markedPrice}" hk="${variant.hkPrice}"/>
                         <options>
                             <c:forEach items="${variant.productOptions}" var="productOption">
-                                <option name="${hk:escapeHtml(productOption.name)}">${hk:escapeHtml(productOption.value)}</option>
+                                <option name="${hk:escapeXML(productOption.name)}">${hk:escapeXML(productOption.value)}</option>
                             </c:forEach>
                         </options>
                     </variant>
