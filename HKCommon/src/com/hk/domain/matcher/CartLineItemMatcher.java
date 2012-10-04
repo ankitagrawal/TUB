@@ -9,6 +9,7 @@ import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.CartLineItemExtraOption;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author vaibhav.adlakha
@@ -21,6 +22,9 @@ public class CartLineItemMatcher {
 	private List<CartLineItemExtraOption> extraOptions;
 	private EnumCartLineItemType enumCartLineItemType;
 	private Long cartLineItemTypeId;
+
+  @Autowired
+  //ComboInstance comboInstance;
 
 	public CartLineItemMatcher addProductVariant(ProductVariant productVariant) {
 		this.productVariant = productVariant;
@@ -66,9 +70,16 @@ public class CartLineItemMatcher {
 			if (productVariant != null && !productVariant.equals(cartLineItem.getProductVariant())) {
 				matchFound = false;
 			}
-			if (matchFound && comboInstance != null && !comboInstance.equals(cartLineItem.getComboInstance())) {
-				matchFound = false;
-			}
+        if(matchFound && productVariant !=null && comboInstance !=null && productVariant.equals(cartLineItem.getProductVariant()) && !comboInstance.getCombo().equals(cartLineItem.getComboInstance().getCombo())){
+        matchFound = false;
+      }
+        if(matchFound && productVariant !=null && comboInstance!=null && !productVariant.equals(cartLineItem.getProductVariant())){
+              matchFound = false;
+          }
+//			if (matchFound && comboInstance != null && !comboInstance.equals(cartLineItem.getComboInstance())) {
+//				matchFound = false;
+//			}
+
 			if (matchFound && productVariant.equals(cartLineItem.getProductVariant()) && cartLineItemConfig == null && cartLineItem.getCartLineItemConfig() != null) {
 				matchFound = false;
 			}
@@ -87,7 +98,7 @@ public class CartLineItemMatcher {
 				}
 			}
 			if (matchFound && enumCartLineItemType != null) {
-				if (!cartLineItem.isType(enumCartLineItemType)) {
+				if (!cartLineItem.isType(enumCartLineItemType)) {        
 					matchFound = false;
 				}
 			}
