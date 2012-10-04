@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.constants.store.StoreConstants;
 import com.hk.manager.StoreOrderService;
 import com.hk.admin.manager.AdminEmailManager;
 
@@ -143,7 +142,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 }
             }
             // Send Email Comm. for HK Users Only
-            if (order.getStore() != null && order.getStore().getId().equals(StoreConstants.getStoreId())) {
+            if (order.getStore() != null && order.getStore().getId().equals(storeService.getDefaultStore().getId())) {
                 emailManager.sendOrderCancelEmailToUser(order);
             }
             emailManager.sendOrderCancelEmailToAdmin(order);

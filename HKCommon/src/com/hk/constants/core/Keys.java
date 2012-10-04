@@ -108,8 +108,6 @@ public class Keys {
 		public static final String dbPassword = "dbPassword";
 		public static final String dbPort = "dbPort";
 
-        public static final String storeId                      = "storeId";
-        public static final String deploymentPath               = "deploymentPath";
         public static final String healthkartRestUrl            ="healthkartRestUrl";
         public static final String mihRestUrl                   ="mihRestUrl";
 
