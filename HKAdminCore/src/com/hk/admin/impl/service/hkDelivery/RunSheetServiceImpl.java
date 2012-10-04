@@ -1,31 +1,36 @@
 package com.hk.admin.impl.service.hkDelivery;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.akube.framework.dao.Page;
+import com.hk.admin.dto.ConsignmentDto;
 import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.pact.service.hkDelivery.RunSheetService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
+import com.hk.domain.hkDelivery.ConsignmentTracking;
+import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.Runsheet;
+import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.hk.admin.pact.service.hkDelivery.RunSheetService;
-import com.hk.admin.dto.ConsignmentDto;
-import com.hk.domain.hkDelivery.Runsheet;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.RunsheetStatus;
-import com.hk.domain.hkDelivery.*;
-
-import java.util.*;
-
-import java.util.Date;
 
 @Service
 
@@ -41,19 +46,26 @@ public class RunSheetServiceImpl implements RunSheetService {
     UserService userService;
 	@Autowired
 	ShippingOrderService shippingOrderService;
+	@Autowired
+	private AdminShippingOrderService adminShippingOrderService;
 
     @Override
-    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
+    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User agent,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
         Runsheet runsheetObj = new Runsheet();
+	    User loggedOnUser = userService.getLoggedInUser();
         runsheetObj.setCodBoxCount(totalCODPackets);
         runsheetObj.setCreateDate(new Date());
         runsheetObj.setUpdateDate(new Date());
         runsheetObj.setExpectedCollection(totalCODAmount);
         runsheetObj.setPrepaidBoxCount(prePaidBoxCount);
-        runsheetObj.setAgent(user);
+        runsheetObj.setAgent(agent);
         runsheetObj.setHub(hub);
         runsheetObj.setConsignments(consignments);
         runsheetObj.setRunsheetStatus(runsheetStatus);
+	    if(loggedOnUser != null){
+		    runsheetObj.setCreatedBy(loggedOnUser);
+	    }
+	    
        return runsheetObj;
     }
 
@@ -186,10 +198,19 @@ public class RunSheetServiceImpl implements RunSheetService {
 			for(Consignment consignment : consignmentList){
 				if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
 					ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(consignment.getCnnNumber());
-					shippingOrder.setOrderStatus(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus());
-					runsheetDao.save(shippingOrder);
+					adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
 				}
 			}
 		}
+	}
+
+	@Override
+	public Runsheet closeRunsheet(Runsheet runsheet) {
+		Set<Consignment> consignments = runsheet.getConsignments();
+		runsheet = updateExpectedAmountForClosingRunsheet(runsheet);
+		runsheet.setRunsheetStatus(runsheetDao.get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
+		//mark shipments delivered on healthkart side
+		markShippingOrderDeliveredAgainstConsignments(consignments); 
+		return runsheet;
 	}
 }

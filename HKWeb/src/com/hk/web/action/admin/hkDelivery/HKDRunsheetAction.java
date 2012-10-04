@@ -54,7 +54,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     private         List<Runsheet>        runsheetList                       = new ArrayList<Runsheet>();
     private         Boolean               runsheetDownloadFunctionality;
     private         Boolean               runsheetPreview;
-    private         SimpleDateFormat      sdf                                = new SimpleDateFormat("yyyyMMdd");
+    private         SimpleDateFormat      sdf                                = new SimpleDateFormat("dd-MM-yyyy hh:mm");
     private         Runsheet              runsheet;
     private         Page                  runsheetPage;
     //search filters for runsheet list
@@ -155,15 +155,12 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
             if(runsheetService.isRunsheetClosable(runsheet)){
-                runsheet = runsheetService.updateExpectedAmountForClosingRunsheet(runsheet);
 	            if ((runsheet.getActualCollection() != null) &&
 			            ((runsheet.getActualCollection().doubleValue() - runsheet.getExpectedCollection().doubleValue()) > 10.0)) {
 		            getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be greater than expected amount "));
 		            return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
 	            }
-	            runsheet.setRunsheetStatus(getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
-	            //mark shipments delivered on healthkart side
-	            runsheetService.markShippingOrderDeliveredAgainstConsignments(runsheet.getConsignments());
+	            runsheet = runsheetService.closeRunsheet(runsheet);                
             }
             else{
                 addRedirectAlertMessage(new SimpleMessage("cannot close runsheet with consignment status out for delivery or receieved at hub."));
@@ -298,7 +295,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
               if(consignments.size()>0) {
             try {
                 //shippingOrderList = consignmentService.getShippingOrderFromConsignments(new ArrayList(consignments));
-                xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
+                xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + agent.getName()+ "_" + sdf.format(new Date()) + ".xls");
                 // Creating Runsheet object.
                 runsheetObj = runsheetService.createRunsheet(hub, consignments, getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Open.getId()), agent, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
                 // Saving Runsheet in db.
@@ -337,7 +334,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         //List<ShippingOrder> shippingOrderList = consignmentService.getShippingOrderFromConsignments(new ArrayList<Consignment>(consignments));
         Map<Object, Object> runsheetCODParams = consignmentService.getRunsheetCODParams(consignments);
         try {
-            xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
+            xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + runsheet.getAgent().getName()+ "_" + sdf.format(new Date()) + ".xls");
             // generating Xls file.
             xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), consignments, runsheet.getAgent().getName(), (Double) runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_AMT), consignments.size(), (Integer) runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_PKTS));
         } catch (IOException ioe) {

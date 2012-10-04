@@ -83,15 +83,13 @@
           count = Math.round($('#productsInCart').html());
           simpleProductCount = Math.round($('#simpleProductsInCart').html())
           if (count == 1 || simpleProductCount==1) {
+	        $('#productsInCart').html(0);
+			//$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart_empty.png");	        
             location.reload();
           }
-          else if (count > 2) {
+          else if (count > 1) {
             $('#productsInCart').html(count - 1);
             $('#simpleProductsInCart').html(simpleProductCount-1);
-          }
-          else {
-              $('#simpleProductsInCart').html(simpleProductCount-1);
-            $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>&nbsp;<span class='num' id='productsInCart'>1</span> item in<br/>your shopping cart");
           }
           $('#numProdTitle').html(count - 1);
           $('.cartButton').glow('#f99', 500, 10);
@@ -308,31 +306,33 @@
         ${cartLineItem.productVariant.variantName}<br/>
       <table style="display: inline-block; font-size: 12px;">
         <c:forEach items="${cartLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
-        <tr>
-          <td style="text-align: right;  padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fafafa;">${productOption.name}</td>
-          <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fff;">
-            <c:if test="${fn:startsWith(productOption.value, '-')}">
-              ${productOption.value}
-            </c:if>
-            <c:if test="${!fn:startsWith(productOption.value, '-')}">
-              &nbsp;${productOption.value}
-            </c:if>
-          </td>
-          </c:forEach>
-          <br/>
-          <c:forEach items="${cartLineItem.cartLineItemExtraOptions}" var="extraOption">
-        <tr>
-          <td style="text-align: left;  padding: 5px; border: 1px solid #f0f0f0;background: #fafafa;">${extraOption.name}</td>
-          <td style="text-align: left; padding: 0px;border: 1px solid #f0f0f0;background: #fff;">
-            <c:if test="${fn:startsWith(extraOption.value, '-')}">
-              ${extraOption.value}
-            </c:if>
-            <c:if test="${!fn:startsWith(extraOption.value, '-')}">
-              &nbsp;${extraOption.value}
-            </c:if>
-          </td>
-        </tr>
+	        <tr>
+		        <c:if test="${hk:showOptionOnUI(productOption.name)}">
+			        <td style="text-align: left;  padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fafafa;">${productOption.name}</td>
+			        <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fff;">
+				        <c:if test="${fn:startsWith(productOption.value, '-')}">
+					        ${productOption.value}
+				        </c:if>
+				        <c:if test="${!fn:startsWith(productOption.value, '-')}">
+					        &nbsp;${productOption.value}
+				        </c:if>
+			        </td>
+		        </c:if>
+	        </tr>
         </c:forEach>
+	      <c:forEach items="${cartLineItem.cartLineItemExtraOptions}" var="extraOption">
+		      <tr>
+			      <td style="text-align: left;  padding: 0.3em 2em; border: 1px solid #f0f0f0;background: #fafafa;">${extraOption.name}</td>
+			      <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0;background: #fff;">
+				      <c:if test="${fn:startsWith(extraOption.value, '-')}">
+					      ${extraOption.value}
+				      </c:if>
+				      <c:if test="${!fn:startsWith(extraOption.value, '-')}">
+					      &nbsp;${extraOption.value}
+				      </c:if>
+			      </td>
+		      </tr>
+	      </c:forEach>
         <c:set var="TH" value="TH"/>
         <c:set var="THBF" value="THBF"/>
         <c:set var="CO" value="CO"/>
@@ -488,7 +488,7 @@
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
             <div class="num"> Rs
-      <span class="lineItemSubTotalMrp"><fmt:formatNumber value="${cartLineItem.markedPrice}"
+      <span class="lineItemSubTotalMrp"><fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice}"
                                                           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
           </div>

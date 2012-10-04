@@ -298,6 +298,7 @@ public class ImageManager {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unused")
     private Product findProduct(String imageFilePath) throws Exception {
         Set<String> tags = imageTagReader.readImageMetadata(imageFilePath);
         for (String keyword : tags) {
@@ -343,6 +344,7 @@ public class ImageManager {
         return null;
     }
 
+    @SuppressWarnings("unused")
     private ProductVariant findProductVariant(String imageFilePath) throws Exception {
         Set<String> tags = imageTagReader.readImageMetadata(imageFilePath);
         for (String keyword : tags) {

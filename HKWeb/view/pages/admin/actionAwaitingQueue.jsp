@@ -7,10 +7,12 @@
 <%@ page import="com.hk.pact.service.OrderStatusService" %>
 <%@ page import="com.hk.pact.service.payment.PaymentService" %>
 <%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
+<%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.pact.dao.store.StoreDao" %>
 <%@ page import="com.hk.pact.service.store.StoreService" %>
+<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -31,11 +33,13 @@
         PaymentService paymentService =  ServiceLocatorFactory.getService(PaymentService.class);
         OrderStatusService orderStatusService = ServiceLocatorFactory.getService(OrderStatusService.class);
         ShippingOrderStatusService shippingOrderStatusService = ServiceLocatorFactory.getService(ShippingOrderStatusService.class);
+        ShippingOrderLifecycleService shippingOrderLifecycleService = ServiceLocatorFactory.getService(ShippingOrderLifecycleService.class);
         StoreService storeService = ServiceLocatorFactory.getService(StoreService.class);
         pageContext.setAttribute("paymentModeList", paymentService.listWorkingPaymentModes());
         pageContext.setAttribute("paymentStatusList", paymentService.listWorkingPaymentStatuses());
         pageContext.setAttribute("orderStatusList", orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForActionQueue()));
         pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForActionQueue()));
+        pageContext.setAttribute("shippingOrderLifecycleList", shippingOrderLifecycleService.getOrderActivities(EnumShippingOrderLifecycleActivity.getActivitiesForActionQueue()));
         pageContext.setAttribute("storeList", storeService.getAllStores());
 
         CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
@@ -283,7 +287,7 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <label>SO Status</label>
                     <c:forEach items="${shippingOrderStatusList}" var="shippingOrderStatus" varStatus="ctr">
-                        <label><s:checkbox name="orderStatuses[${ctr.index}]"
+                        <label><s:checkbox name="shippingOrderStatuses[${ctr.index}]"
                                            value="${shippingOrderStatus.id}"/> ${shippingOrderStatus.name}</label>
                     </c:forEach>
                     &nbsp;&nbsp;&nbsp;
@@ -298,7 +302,7 @@
                     <s:checkbox name="sortByScore"/>
                 </li>
                 <li>
-                    <label style="float:left;">Payment Modes </label>
+                    <label style="float:left;width:50px;">Payment Modes</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${paymentModeList}" var="paymentMode" varStatus="ctr">
@@ -309,7 +313,7 @@
                     </div>
                 </li>
 
-                <li><label style="float:left;">Payment Status </label>
+                <li><label style="float:left;width: 60px;">Payment Status</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${paymentStatusList}" var="paymentStatus" varStatus="ctr">
@@ -320,7 +324,7 @@
                     </div>
                 </li>
 
-                <li><label style="float:left;">BO Category </label>
+                <li><label style="float:left;width: 60px;">BO Category</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${categoryList}" var="category" varStatus="ctr">
@@ -331,12 +335,24 @@
                     </div>
                 </li>
 
-                <li><label style="float:left;">SO Category </label>
+                <li><label style="float:left;width: 60px;">SO Category</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${categoryList}" var="category" varStatus="ctr">
                             <label><s:checkbox name="basketCategories[${ctr.index}]"
                                                value="${category.name}"/> ${category.displayName}</label>
+                            <br/>
+                        </c:forEach>
+                    </div>
+                </li>
+
+                <li><label style="float:left;width: 60px;">SO Lifecycle</label>
+
+                    <div class="checkBoxList">
+                        <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity"
+                                   varStatus="ctr">
+                            <label><s:checkbox name="shippingOrderLifecycleActivities[${ctr.index}]"
+                                               value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}</label>
                             <br/>
                         </c:forEach>
                     </div>

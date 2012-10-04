@@ -112,50 +112,19 @@
 				$("#amount").html("Rs." + ui.values[ 0 ] + " - Rs." + ui.values[ 1 ]);
 			},
 			change: function(event, ui) {
-				//$("#amount").html("Rs." + ui.values[ 0 ] + " - Rs." + ui.values[ 1 ]);
-				$("#minPrice").val(ui.values[ 0 ]);
-				$("#maxPrice").val(ui.values[ 1 ]);
-				$(".filterCatalogForm").submit();
+
+				var filterURL = $('.filterCatalogForm').attr('href');
+				if (filterURL.indexOf("?") > 0) {
+					filterURL += "&minPrice=" + ui.values[ 0 ];
+					filterURL += "&maxPrice=" + ui.values[ 1 ];
+				} else {
+					filterURL += "?minPrice=" + ui.values[ 0 ];
+					filterURL += "&maxPrice=" + ui.values[ 1 ];
+				}
+
+				window.location = filterURL;
 			}
 		});
-
-		/*$(".filterOption").click(function() {
-			var ctr = 0;
-			$(".filterOption").each(function() {
-				if ($(this).attr("checked")) {
-					$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
-					ctr++;
-				}
-			});
-			$(".filterCatalogForm").submit();
-		});
-
-		$(".filterOptionLink").click(function() {
-			var li = $(this).parents(".filterOptionLi");
-			var cb = li.find(".filterOption");
-			cb.attr("checked", true);
-			var ctr = 0;
-			$(".filterOption").each(function() {
-				if ($(this).attr("checked")) {
-					$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
-					ctr++;
-				}
-			});
-			$(".filterCatalogForm").submit();
-		});
-
-		$(".resetAndFilterOption").click(function() {
-			$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[0]">').appendTo('.filterCatalogForm');
-			$(".filterCatalogForm").submit();
-		});
-
-		$(".resetAndFilterOptionLink").click(function() {
-			var li = $(this).parents(".filterOptionLi");
-			var cb = li.find(".resetAndFilterOption");
-			cb.attr("checked", true);
-			$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[0]">').appendTo('.filterCatalogForm');
-			$(".filterCatalogForm").submit();
-		});*/
 
 		$(".filterOptionLink").click(function() {
 			var li = $(this).parents(".filterOptionLi");
@@ -170,27 +139,42 @@
 
 		$(".filterCatalogFormButton").click(function() {
 			var ctr = 0;
+			var filterURL = $('.filterCatalogForm').attr('href');
 			$(".resetAndFilterOption").each(function() {
 				if ($(this).attr("checked")) {
-					$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
+					if (filterURL.indexOf("?") > 0) {
+						filterURL += "&filterOptions[" + ctr + "]=" + $(this).val();
+					} else {
+						filterURL += "?filterOptions[" + ctr + "]=" + $(this).val();
+					}
 					ctr++;
 				}
 			});
 			if (ctr == 0) {
 				$(".filterOption").each(function() {
 					if ($(this).attr("checked")) {
-						$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
+						if (filterURL.indexOf("?") > 0) {
+							filterURL += "&filterOptions[" + ctr + "]=" + $(this).val();
+						} else {
+							filterURL += "?filterOptions[" + ctr + "]=" + $(this).val();
+						}
 						ctr++;
 					}
 				});
 			}
-			$(".filterCatalogForm").submit();
+			if (filterURL.indexOf("?") > 0) {
+				filterURL += "&minPrice=" + ${filteredPriceRange.minPrice};
+				filterURL += "&maxPrice=" + ${filteredPriceRange.maxPrice};
+			} else {
+				filterURL += "?minPrice=" + ${filteredPriceRange.minPrice};
+				filterURL += "&maxPrice=" + ${filteredPriceRange.maxPrice};
+			}
+			window.location = filterURL;
 		});
 
 		$(".removeFilters").click(function() {
-			$("#minPrice").val(${priceRange.minPrice});
-			$("#maxPrice").val(${priceRange.maxPrice});
-			$(".filterCatalogForm").submit();
+			var filterURL = $('.filterCatalogForm').attr('href');
+			window.location = filterURL;
 		});
 
 	});
@@ -208,13 +192,25 @@
 
 	function removeFilter(id) {
 		var ctr = 0;
+		var filterURL = $('.filterCatalogForm').attr('href');
 		$(".filterOption").each(function() {
 			if ($(this).attr("checked") && $(this).val() != id) {
-				$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
+				if (filterURL.indexOf("?") > 0) {
+					filterURL += "&filterOptions[" + ctr + "]=" + $(this).val();
+				} else {
+					filterURL += "?filterOptions[" + ctr + "]=" + $(this).val();
+				}
 				ctr++;
 			}
 		});
-		$(".filterCatalogForm").submit();
+		if (filterURL.indexOf("?") > 0) {
+			filterURL += "&minPrice=" + ${filteredPriceRange.minPrice};
+			filterURL += "&maxPrice=" + ${filteredPriceRange.maxPrice};
+		} else {
+			filterURL += "?minPrice=" + ${filteredPriceRange.minPrice};
+			filterURL += "&maxPrice=" + ${filteredPriceRange.maxPrice};
+		}
+		window.location = filterURL;
 	}
 </script>
 <div class='' style="border-right:1px dotted #ddd">
@@ -269,7 +265,7 @@
 				<c:if test="${!empty ca.filterOptions || (filteredPriceRange.minPrice != priceRange.minPrice) || (filteredPriceRange.maxPrice != priceRange.maxPrice)}">
 					<a class="removeFilters"
 					   style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Reset</a>
-				</c:if>				
+				</c:if>
 				<c:if test="${!empty ca.filterOptions}">
 					<div>
 						<c:forEach items="${ca.filterProductOptions}" var="filter">
@@ -284,17 +280,7 @@
 
 		</div>
 		<c:set var="ctr" value="0"/>
-		<s:form beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="filterCatalogForm">
-			<s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
-			<s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
-			<c:if test="${ca.secondaryChildCategorySlug != null}">
-				<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
-			</c:if>
-			<c:if test="${ca.tertiaryChildCategorySlug != null}">
-				<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
-			</c:if>
-			<s:hidden name="minPrice" id="minPrice" value="${filteredPriceRange.minPrice}"/>
-			<s:hidden name="maxPrice" id="maxPrice" value="${filteredPriceRange.maxPrice}"/>
+
 			<c:if test="${filteredPriceRange != null}">
 				<div class="separator" style="margin-top:10px;">
 					<h5 class='heading1' style="padding-left:5px;">
@@ -311,7 +297,7 @@
 			</c:if>
 			<c:forEach items="${filterMap}" var="filter" varStatus="headCtr">
 				<c:choose>
-					<c:when test="${ca.secondaryChildCategorySlug == 'proteins' && filter.key == 'SIZE'}">
+					<c:when test="${(ca.secondaryChildCategorySlug == 'proteins' || ca.secondaryChildCategorySlug == 'weight-gainer') && filter.key == 'SIZE'}">
 						<%--Do Nothing--%>
 					</c:when>
 					<c:otherwise>
@@ -368,8 +354,19 @@
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
-			<s:submit name="pre" value="Filter" class="filterCatalogFormButton" style="padding:3px;"/>
-		</s:form>
+		<div style="display:none;">
+			<s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="filterCatalogForm">
+				<s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
+				<s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
+				<c:if test="${ca.secondaryChildCategorySlug != null}">
+					<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
+				</c:if>
+				<c:if test="${ca.tertiaryChildCategorySlug != null}">
+					<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
+				</c:if>
+			</s:link>
+		</div>
+		<a class="filterCatalogFormButton button_green" style="padding:2px;width:75px;">Filter</a>
 	</div>
 </c:if>
 

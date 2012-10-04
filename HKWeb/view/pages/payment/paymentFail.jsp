@@ -2,7 +2,7 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Failed">
 
-  <s:layout-component name="menu"> </s:layout-component>
+  <%--<s:layout-component name="menu"> </s:layout-component>--%>
   <s:layout-component name="heading">
     <div style="margin-top: 50px;">
       <h2 class="red" style="font-size:17px;">

@@ -6,12 +6,13 @@
 --/nutrition/sports-nutrition/intra-workout  :Intra Workout
 --/nutrition/sports-nutrition/post-workout : Post Workout
 --/nutrition/sports-nutrition/weight-gainer : Mass Gainer
+--/nutrition/sports-nutrition/glutamine
 --/nutrition/sports-nutrition/protein-bars  : Protein Bars
---/nutrition/sports-nutrition/athletes      :  Athletes
 --/nutrition/sports-nutrition/fat-burner
---/nutrition/sports-nutrition/more... : Other Supplements
+--/nutrition/sports-nutrition/more...   : Other Supplements
 --/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
 --/nutrition/sports-nutrition/muscle-building-combos :Supersavers !!!
+--/nutrition/sports-nutrition/nutrition-plan: Nutrition Plan
 -/nutrition/dietary-supplements : Dietary Supplements
 --/nutrition/dietary-supplements/multivitamins :  Multivitamins
 ---/nutrition/dietary-supplements/multivitamins/men-s-health  :Men's Health
@@ -45,7 +46,19 @@
 --/nutrition/weight-management/meal-replacement :Meal Replacement
 --/nutrition/weight-management/low-calorie-food
 --/nutrition/weight-management/sweetener
+--/nutrition/weight-management/diet-plan: Diet Plan
 -/nutrition/specialty-nutrition  :Specialty Nutrition
+--/nutrition/specialty-nutrition/ayurveda :Ayurveda
+---/nutrition/specialty-nutrition/ayurveda/single-herb-formula
+---/nutrition/specialty-nutrition/ayurveda/cardiovascular
+---/nutrition/specialty-nutrition/ayurveda/joint-muscle    :Joint & Muscle
+---/nutrition/specialty-nutrition/ayurveda/stress-anxiety  :Stress & Anxiety
+---/nutrition/specialty-nutrition/ayurveda/digestion
+---/nutrition/specialty-nutrition/ayurveda/immunity
+---/nutrition/specialty-nutrition/ayurveda/blood-sugar :Diabetic Care
+---/nutrition/specialty-nutrition/ayurveda/brain-memory     :Brain & Memory
+---/nutrition/specialty-nutrition/ayurveda/vitality :Sexual Health
+---/nutrition/specialty-nutrition/ayurveda/energy-endurance     :Energy & Endurance
 --/nutrition/specialty-nutrition/gluten-free-food  :Gluten Free Food
 --/nutrition/specialty-nutrition/organic-food    :Organic Food
 --/nutrition/specialty-nutrition/diabetic-food  :Diabetic Food
@@ -117,13 +130,20 @@
 --/sports/fitness-accessories/sklz : SKLZ
 -/sports/fitness-equipment
 --/sports/fitness-equipment/treadmills
+---/sports/fitness-equipment/treadmills/home
+---/sports/fitness-equipment/treadmills/commercial
 --/sports/fitness-equipment/crosstrainers
+---/sports/fitness-equipment/crosstrainers/home
+---/sports/fitness-equipment/crosstrainers/commercial
 --/sports/fitness-equipment/exercise-bike
+---/sports/fitness-equipment/exercise-bike/home
+---/sports/fitness-equipment/exercise-bike/commercial
 --/sports/fitness-equipment/rowers
 --/sports/fitness-equipment/home-gym
 --/sports/fitness-equipment/steppers
 --/sports/fitness-equipment/bench-equipments
 --/sports/fitness-equipment/heart-rate-monitors
+---/sports/fitness-equipment/heart-rate-monitors/accessories
 --/sports/fitness-equipment/miscellaneous-equipments
 -/sports/sports-equipment
 --/sports/sports-equipment/football
@@ -241,7 +261,7 @@
 ---/home-devices/blood-pressure/bp/electrical-sphygmomanometer
 --/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
---/home-devices/blood-pressure/combo : Star's of the Month
+--/home-devices/blood-pressure/combo : Stars of the Month
 -/home-devices/respiratory-care
 --/home-devices/respiratory-care/nebulizer
 ---/home-devices/respiratory-care/nebulizer/compressor-nebulizer
@@ -272,11 +292,6 @@
 --/home-devices/supports/calf-support
 --/home-devices/supports/ankle-support
 --/home-devices/supports/backrest
---/home-devices/supports/walking-aids
----/home-devices/supports/walking-aids/wheel-chair
----/home-devices/supports/walking-aids/Walking-sticks
----/home-devices/supports/walking-aids/crutches
----/home-devices/supports/walking-aids/walkers
 -/home-devices/rehabilitation-aids
 --/home-devices/rehabilitation-aids/walking-aids
 ---/home-devices/rehabilitation-aids/walking-aids/walking-sticks
@@ -287,8 +302,8 @@
 --/home-devices/rehabilitation-aids/commode : Commode WheelChair/Stools
 --/home-devices/rehabilitation-aids/physiotherapy-aids
 --/home-devices/rehabilitation-aids/orthotic-aids
----/home-devices/rehabilitation-aids/prosthetic-aids/knee
----/home-devices/rehabilitation-aids/prosthetic-aids/foot-drop-splints
+---/home-devices/rehabilitation-aids/orthotic-aids/knee
+---/home-devices/rehabilitation-aids/orthotic-aids/foot-drop-splints
 --/home-devices/rehabilitation-aids/cosmetic-restoration
 ---/home-devices/rehabilitation-aids/cosmetic-restoration/face
 ---/home-devices/rehabilitation-aids/cosmetic-restoration/breast
@@ -337,7 +352,7 @@
 --/home-devices/clinical-supplies/hearing-aids
 --/home-devices/clinical-supplies/eye-patch
 --/home-devices/clinical-supplies/suction-devices
---/home-devices/clinical-supplies/diagnostic-products
+--/home-devices/clinical-supplies/health-aids
 -/home-devices/miscellaneous
 --/home-devices/miscellaneous/weighing-scales
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
@@ -351,7 +366,6 @@
 ---/home-devices/miscellaneous/weight-management/step-counter
 ---/home-devices/miscellaneous/weight-management/slimming-products : Slimming
 --/home-devices/miscellaneous/massager
----/home-devices/miscellaneous/massager/neck-massager
 ---/home-devices/miscellaneous/massager/back-massager
 ---/home-devices/miscellaneous/massager/infrared-massager
 ---/home-devices/miscellaneous/massager/handheld
@@ -395,19 +409,19 @@
 --/eye/sunglasses/kids    :   Kids
 -/eye/eyeglasses :Eyeglasses
 --/eye/eyeglasses/half-rim :Half Rim
----/eye/eyeglasses/half-rim/small   : Small 
+---/eye/eyeglasses/half-rim/small   : Small
 ---/eye/eyeglasses/half-rim/medium  : Medium
 ---/eye/eyeglasses/half-rim/large   :   Large
 ---/eye/eyeglasses/half-rim/oval
 ---/eye/eyeglasses/half-rim/rectangular
 --/eye/eyeglasses/full-rim :Full Rim
----/eye/eyeglasses/full-rim/small   : Small 
+---/eye/eyeglasses/full-rim/small   : Small
 ---/eye/eyeglasses/full-rim/medium  : Medium
 ---/eye/eyeglasses/full-rim/large   :   Large
 ---/eye/eyeglasses/full-rim/oval
 ---/eye/eyeglasses/full-rim/rectangular
 --/eye/eyeglasses/frameless
----/eye/eyeglasses/frameless/small   : Small 
+---/eye/eyeglasses/frameless/small   : Small
 ---/eye/eyeglasses/frameless/medium  : Medium
 ---/eye/eyeglasses/frameless/large   :   Large
 ---/eye/eyeglasses/frameless/oval
@@ -415,23 +429,23 @@
 --/eye/eyeglasses/reading-glasses :Reading Glasses
 --/eye/eyeglasses/kids :  Kids
 --/eye/eyeglasses/men    : Men
----/eye/eyeglasses/men/small   : Small 
+---/eye/eyeglasses/men/small   : Small
 ---/eye/eyeglasses/men/medium  : Medium
 ---/eye/eyeglasses/men/large   :   Large
 ---/eye/eyeglasses/men/oval
 ---/eye/eyeglasses/men/rectangular
 --/eye/eyeglasses/women   :  Women
----/eye/eyeglasses/women/small   : Small 
+---/eye/eyeglasses/women/small   : Small
 ---/eye/eyeglasses/women/medium  : Medium
 ---/eye/eyeglasses/women/large   :   Large
 ---/eye/eyeglasses/women/oval
 ---/eye/eyeglasses/women/rectangular
 --/eye/eyeglasses/unisex   : Unisex
----/eye/eyeglasses/unisex/small   : Small 
+---/eye/eyeglasses/unisex/small   : Small
 ---/eye/eyeglasses/unisex/medium  : Medium
 ---/eye/eyeglasses/unisex/large   :   Large
 ---/eye/eyeglasses/unisex/oval
----/eye/eyeglasses/unisex/rectangular 
+---/eye/eyeglasses/unisex/rectangular
 -/eye/eye-care
 --/eye/eye-care/solutions
 --/eye/eye-care/lens-case
@@ -453,6 +467,21 @@
 ---/personal-care/elderly-care/adult-diapers/diapers
 ---/personal-care/elderly-care/adult-diapers/underpads
 ---/personal-care/elderly-care/adult-diapers/diaper-rash-cream: Diaper Rash Cream
+--/personal-care/elderly-care/support-systems
+---/personal-care/elderly-care/support-systems/crepe-bandages:Crepe Bandages
+---/personal-care/elderly-care/support-systems/cervical-supports:Cervical Supports
+---/personal-care/elderly-care/support-systems/shoulder-clavicle-supports:Shoulder & Clavicle Supports
+---/personal-care/elderly-care/support-systems/chest-supports:Chest Supports
+---/personal-care/elderly-care/support-systems/wrist-forearm-supports:Wrist & Forearm Supports
+---/personal-care/elderly-care/support-systems/elbow-thumb-supports:Elbow & Thumb Supports
+---/personal-care/elderly-care/support-systems/arm-supports:Arm Supports
+---/personal-care/elderly-care/support systems/abdominal-supports:Abdominal Supports
+---/personal-care/elderly-care/support-systems/back-supports:Back Supports
+---/personal-care/elderly-care/support-systems/compression-supports:Compression Supports
+---/personal-care/elderly-care/support systems/knee-supports:Knee Supports
+---/personal-care/elderly-care/support-systems/ankle-supports:Ankle Supports
+---/personal-care/elderly-care/support-systems/traction-accessories:Traction Accessories
+---/personal-care/elderly-care/support-systems/premium-range:Premium Range
 --/personal-care/elderly-care/nutrition
 --/personal-care/elderly-care/diagnostics
 ---/personal-care/elderly-care/diagnostics/bp-monitor: BP Monitors
@@ -559,7 +588,6 @@
 ---/beauty/what-s-new/women-nutrition/wellness
 ---/beauty/what-s-new/women-nutrition/weight-watch
 --/beauty/what-s-new/spas-salons : Spas & Salons
---/beauty/what-s-new/cosmetic-restoration
 -/beauty/face-care
 --/beauty/face-care/cleanser
 ---/beauty/face-care/cleanser/normal
@@ -597,19 +625,22 @@
 --/beauty/bath-body/body-scrub
 --/beauty/bath-body/bath-salts-bubbles : Bath Salts & Bubbles
 --/beauty/bath-body/body-lotion
---/beauty/bath-body/body-oil
 --/beauty/bath-body/body-treatment
----/beauty/bath-body/body-treatment/body-shaping-creams
----/beauty/bath-body/body-treatment/body-shaping-accessories
----/beauty/bath-body/body-treatment/anti-stretch-mark
----/beauty/bath-body/body-treatment/scar-treatment
---/beauty/bath-body/talc
---/beauty/bath-body/deodorant
---/beauty/bath-body/oral
---/beauty/bath-body/hand-care
---/beauty/bath-body/foot-care
+---/beauty/bath-body/body-treatment/anti-marks
+---/beauty/bath-body/body-treatment/body-oil
+--/beauty/bath-body/body-shaping
+---/beauty/bath-body/body-shaping/creams
+---/beauty/bath-body/body-shaping/shapewear
+---/beauty/bath-body/body-shaping/accessories
+--/beauty/bath-body/talc-deodorant : Talc & Deodorant
+---/beauty/bath-body/talc-deodorant/talc
+---/beauty/bath-body/talc-deodorant/deodorant
+--/beauty/bath-body/hand-foot-care : Hand & Foot Care
+---/beauty/bath-body/hand-foot-care/hand-care
+---/beauty/bath-body/hand-foot-care/foot-care
 --/beauty/bath-body/hair-removal
 --/beauty/bath-body/accessories
+--/beauty/bath-body/camisoles
 --/beauty/bath-body/fragrances
 -/beauty/make-up
 --/beauty/make-up/organic-make-up
@@ -687,7 +718,6 @@
 --/beauty/men/face-mask
 --/beauty/men/talc
 --/beauty/men/fragrances
-
 
 /baby
 -/baby/diapering

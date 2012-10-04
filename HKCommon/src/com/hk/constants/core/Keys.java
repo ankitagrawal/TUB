@@ -31,6 +31,7 @@ public class Keys {
 		public static final String categoryHealthkart = "categoryHealthkart";
 		//public static final String marketingAdsMonitorEmails = "marketingAdsMonitorEmails";
 
+		public static final String useSmsService = "useSmsService";
 		public static final String hkSMSURL = "hkSMSURL";
 		public static final String hkSMSUserName = "hkSMSUserName";
 		public static final String hkSMSPassword = "hkSMSPassword";
@@ -99,6 +100,8 @@ public class Keys {
 		public static final String maxSubscriptionDays = "maxSubscriptionDays";
 		public static final String subscriptionCustomerBufferDays = "subscriptionCustomerBufferDays";
 		public static final String subscriptionInventoryBufferDays = "subscriptionInventoryBufferDays";
+
+		public static final String testDataDump = "testDataDump";
 
 		public static final String dbHostName = "dbHostName";
 		public static final String dbName = "dbName";

@@ -3,6 +3,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
+<%
+    boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
+%>
 
 <head>
   <title>HealthKart.com Affiliate Program: Refer Customers and Earn Money</title>
@@ -55,11 +59,12 @@
         </div>
       </div>
     </a>
-
-    <a href="${pageContext.request.contextPath}/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}"
-       target="_parent">
-      <img src="${pageContext.request.contextPath}/images/icons/buy_button_1.png" alt="Buy from HealthKart"/>
-    </a>
+      <c:if test="${not isSecure }">
+          <a href="http://www.healthkart.com/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}"
+             target="_parent">
+              <img src="${pageContext.request.contextPath}/images/icons/buy_button_1.png" alt="Buy from HealthKart"/>
+          </a>
+      </c:if>
 
   </div>
 </div>

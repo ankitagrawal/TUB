@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import com.hk.domain.email.OrderEmailExclusion;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.hibernate.Session;
@@ -42,6 +43,7 @@ import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.email.EmailerHistory;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.marketing.NotifyMe;
+import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
@@ -686,6 +688,27 @@ public class AdminEmailManager {
         success = false;
     }
     return success;
+  }
+  
+  public boolean sendOrderDeliveredEmail(Order order) {
+	  List<OrderEmailExclusion> orderEmailExclusionList =
+			  getBaseDao().findByNamedQueryAndNamedParam("orderExclusionfindByEmail", new String[]{"email"}, new Object[]{order.getUser().getEmail()});
+
+	  if(orderEmailExclusionList != null && orderEmailExclusionList.size() > 0) {
+		  OrderEmailExclusion orderEmailExclusion = orderEmailExclusionList.get(0);
+		  if (orderEmailExclusion.isDeliveryMailExcluded()) {
+			  return false;
+		  }
+	  }
+
+      HashMap valuesMap = new HashMap();
+      valuesMap.put("order", order);
+      String feedbackPageUrl = getLinkManager().getFeedbackPage();
+      feedbackPageUrl = convertToWww(feedbackPageUrl);
+      
+      valuesMap.put(EmailMapKeyConstants.feedbackPage, feedbackPageUrl);
+      Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderDeliveredEmail);
+      return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
   }
 
 

@@ -65,7 +65,7 @@
 		<!-- <copy todir="${project.dist.dir}/WEB-INF/classes/spring">
 			<fileset dir="${project.web.dir}/resources/spring" />
 		</copy> -->
-		<copy todir="${project.dist.dir}/WEB-INF">
+		<copy todir="${project.dist.dir}/WEB-INF/classes">
 			<fileset dir="${project.common.dir}/resources/${project.env}/logging" />
 		</copy>
 		<copy todir="${project.dist.dir}/WEB-INF">

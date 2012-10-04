@@ -16,5 +16,7 @@ public interface HubService {
 
     public List<User> getAgentsForHub(Hub hub);
 
-    public boolean addAgentToHub(Hub hub, User user);
+    public Boolean addAgentToHub(Hub hub, User user);
+
+	public Boolean removeAgentFromHub(Hub hub, User user);
 }

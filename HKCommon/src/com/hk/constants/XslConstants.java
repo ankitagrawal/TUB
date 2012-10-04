@@ -141,4 +141,8 @@ public class XslConstants {
     public static final String CREDIT_PERIOD = "CREDIT PERIOD";
     public static final String MARGIN = "MARGIN";
     public static final String VALIDITY_TERMS_OF_TRADE = "VALIDITY OF TERMS OF TRADE";
+
+	public static final String GATEWAY_ORDER_ID = "GATEWAY ORDER ID";
+	public static final String AMOUNT = "AMOUNT";
+
 }

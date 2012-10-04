@@ -83,6 +83,7 @@ public enum EnumPaymentMode {
 				EnumPaymentMode.CITRUS_NetBanking_Old,
 				EnumPaymentMode.EBS,
 				EnumPaymentMode.CITRUS_CreditDebit,
+                EnumPaymentMode.SUBSCRIPTION_PAYMENT,
 				EnumPaymentMode.CITRUS_NetBanking_New);
 
 	}

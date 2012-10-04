@@ -30,7 +30,12 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
         return findByNamedParams(queryString, new String[] { "categories", "deleted", "tagCount" }, new Object[] { categoryNames, false, new Long(categoryNames.size()) });
     }
 
-    public List<Category> getCategoriesByBrand(String brand, String topLevelCategory) {
+	public List<String> getBrandsByPrimaryCategory(Category primaryCategory) {
+		String queryString = "select distinct p.brand from Product p where p.primaryCategory.name = :primaryCategory and p.deleted=:deleted order by p.brand asc";
+		return findByNamedParams(queryString, new String[] { "primaryCategory", "deleted"}, new Object[] { primaryCategory.getName(), false});
+	}
+
+	public List<Category> getCategoriesByBrand(String brand, String topLevelCategory) {
         String queryString = "select distinct p.categories from Product p inner join p.categories c where c.name in (:topLevelCategory) and p.brand in (:brand) and p.deleted=:deleted";
         return findByNamedParams(queryString, new String[] { "brand", "topLevelCategory", "deleted" }, new Object[] { brand, topLevelCategory, false });
     }
@@ -88,25 +93,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
                             + "and p.deleted != :deleted group by p.id having count(*) = :tagCount ").setParameter("primaryCategory", primaryCategory).setBoolean("deleted", true).setParameterList("categories",
                     categoryNames).setInteger("tagCount", categoryNames.size()).list();
 
-            if (productIds != null && !productIds.isEmpty()) {
-                /*
-                 * if (filterOptions != null && !filterOptions.isEmpty()) { String query2 = "select distinct pv.id from
-                 * product_variant_has_product_option pvhpo, product_variant pv " + "where
-                 * pvhpo.product_variant_id=pv.id and pvhpo.product_option_id in (:filterOptions) and pv.product_id in
-                 * (:productIds) " + "group by pvhpo.product_variant_id having count(pvhpo.product_variant_id) =
-                 * :groupsCount"; List<String> pvIds =
-                 * getSession().createSQLQuery(query2).setParameterList("filterOptions",
-                 * filterOptions).setParameterList("productIds", productIds).setInteger("groupsCount",
-                 * groupsCount).list(); if (pvIds != null && !pvIds.isEmpty()) { String queryString = "select
-                 * min(pv.hkPrice) from ProductVariant pv where pv.id in (:pvIds) and pv.product.deleted <> 1 and
-                 * pv.deleted <> 1 and pv.outOfStock <> 1"; Double minPrice = (Double)
-                 * getSession().createQuery(queryString).setParameterList("pvIds", pvIds).uniqueResult(); String
-                 * queryString2 = "select max(pv.hkPrice) from ProductVariant pv where pv.id in (:pvIds) and
-                 * pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1"; Double maxPrice = (Double)
-                 * getSession().createQuery(queryString2).setParameterList("pvIds", pvIds).uniqueResult(); PriceRangeDto
-                 * priceRangeDto = new PriceRangeDto(Math.floor(minPrice), Math.ceil(maxPrice)); return priceRangeDto; } }
-                 * else {
-                 */
+            if (productIds != null && !productIds.isEmpty()) {                
                 String queryString = "select min(pv.hkPrice) from ProductVariant pv where pv.product.id in (:productIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1";
                 Double minPrice = (Double) getSession().createQuery(queryString).setParameterList("productIds", productIds).uniqueResult();
                 String queryString2 = "select max(pv.hkPrice) from ProductVariant pv where pv.product.id in (:productIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1";
@@ -115,15 +102,11 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
                 Double maxPrice = (Double) query.setParameterList("productIds", productIds).uniqueResult();
                 if(minPrice == null || maxPrice == null){
                     logger.error("null min or max price for" + productIds);
-                }
-                /*
-                 * minPrice = minPrice == null ? 0D : minPrice; maxPrice = maxPrice == null ? 0D : maxPrice;
-                 */
-                PriceRangeDto priceRangeDto = new PriceRangeDto(Math.floor(minPrice), Math.ceil(maxPrice));
-                return priceRangeDto;
-                /* } */
+	                return new PriceRangeDto(0.0, 10000.0);
+                }                
+                return new PriceRangeDto(Math.floor(minPrice), Math.ceil(maxPrice));
             }
         }
-        return null;
+        return new PriceRangeDto(0.0, 10000.0);
     }
 }

@@ -1,5 +1,31 @@
 package com.hk.taglibs;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.hk.domain.catalog.product.*;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.image.ProductImageService;
+import com.hk.pact.service.inventory.SkuService;
+import net.sourceforge.stripes.util.CryptoUtil;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.akube.framework.util.DateUtils;
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
@@ -17,7 +43,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.hkDelivery.Hub;
@@ -53,19 +78,7 @@ import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
-import net.sourceforge.stripes.util.CryptoUtil;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.*;
+import com.hk.util.OrderUtil;
 
 public class Functions {
 
@@ -74,7 +87,8 @@ public class Functions {
 
     private static final String          DEFAULT_DELIEVERY_DAYS = "1-3";
     private static final String          BUSINESS_DAYS          = " business days";
-    private static final long            DEFAULT_MIN_DEL_DAYS   = 1;
+    
+    
 
 
     // TODO: rewrite
@@ -192,16 +206,32 @@ public class Functions {
         return s1.contains(s2);
     }
 
+    /**
+     * checks if c1 contains all elements of c2
+     * @param c1
+     * @param c2
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsCollection(Collection c1, Collection c2) {
         if (c1 == null || c2 == null)
             return false;
-        for (Object o : c2) {
-            if (collectionContains(c1, o)) {
-                return collectionContains(c1, o);
+        boolean collectionContainsCollection = true;
+        
+        for(Object o : c2 ){
+            if(!c1.contains(o)){
+               collectionContainsCollection = false;
+               break;
             }
         }
-        return false;
+        
+        /*for (Object o : c2) {
+            if (collectionContains(c1, o) && collectionContains(c2, o)) {
+                return collectionContains(c, o);
+            }
+        }*/
+        
+        return collectionContainsCollection;
     }
 
     public static Long netAvailableUnbookedInventory(Object o) {
@@ -237,8 +267,9 @@ public class Functions {
     }
 
     public static List<String> brandsInCategory(Object o) {
+	    Category primaryCategory = (Category) o;
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-        return categoryDao.getBrandsByCategory(Arrays.asList(((Category) o).getName()));
+        return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
     }
 
     @SuppressWarnings("deprecation")
@@ -402,7 +433,11 @@ public class Functions {
     }
 
     public static String escapeHtml(String str) {
-        return StringEscapeUtils.escapeHtml(str);
+        return StringEscapeUtils.escapeHtml(str.trim());
+    }
+
+    public static String escapeXML(String str) {
+        return StringEscapeUtils.escapeXml(str.trim());
     }
 
     public static Double getApplicableOfferPrice(Object o) {
@@ -470,31 +505,28 @@ public class Functions {
         return productService.isComboInStock(combo);
     }
 
+    public static boolean isCombo(String id) {
+        Combo combo = getCombo(id);
+        if (combo != null){
+            return true;
+        }
+        return false;
+    }
+
     public static Map<String, List<String>> getRecommendedProducts(Object o) {
         Product product = (Product) o;
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-        return productService.getRelatedMoogaProducts(product);
+        return productService.getRecommendedProducts(product);
     }
 
     public static String getDispatchDaysForOrder(Order order) {
         if (order != null) {
-            Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-            long minDays = DEFAULT_MIN_DEL_DAYS, maxDays = DEFAULT_MIN_DEL_DAYS;
-
-            for (CartLineItem cartLineItem : productCartLineItems) {
-                ProductVariant productVariant = cartLineItem.getProductVariant();
-                if (productVariant != null) {
-                    Product product = productVariant.getProduct();
-                    if (product.getMinDays() != null && product.getMinDays() > minDays) {
-                        minDays = product.getMinDays();
-                    }
-                    if (product.getMaxDays() != null && product.getMaxDays() > maxDays) {
-                        maxDays = product.getMaxDays();
-                    }
-                }
-
+            Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
+            long minDays = dispatchDays[0], maxDays = dispatchDays[1];
+            
+            if(minDays == OrderUtil.DEFAULT_MIN_DEL_DAYS && maxDays == OrderUtil.DEFAULT_MIN_DEL_DAYS){
+              return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
             }
-
             return String.valueOf(minDays).concat("-").concat(String.valueOf(maxDays)).concat(BUSINESS_DAYS);
         } else {
             return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
@@ -567,5 +599,33 @@ public class Functions {
         HubService hubService = ServiceLocatorFactory.getService(HubService.class);
         return hubService.getHubForUser(user);
     }
+
+	public static boolean renderNewCatalogFilter(String child, String secondChild) {
+		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer");
+		boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter, secondChild));
+		return renderNewCatalogFilter;
+	}
+
+	public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, boolean showHiddenImages) {
+		ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
+		List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
+		return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
+	}
+
+	public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
+		SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
+		List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
+		List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
+		for (Sku applicableSku : applicableSkus) {
+			applicableWarehouses.add(applicableSku.getWarehouse());
+		}
+		return applicableWarehouses;
+	}
+
+	public static boolean showOptionOnUI(String optionType) {
+		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY", "FRAGRANCE");
+		boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
+		return showOptionOnUI;
+	}
 
 }

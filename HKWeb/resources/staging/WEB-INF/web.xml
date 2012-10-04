@@ -106,11 +106,11 @@
 		</init-param>
 		<init-param>
 			<param-name>SSL.SecureHost</param-name>
-			<param-value>staging01.healthkart.com:8443</param-value>
+			<param-value>staging.healthkart.com:8443</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SSL.UnsecureHost</param-name>
-			<param-value>staging01.healthkart.com:80</param-value>
+			<param-value>staging.healthkart.com:9090</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SSL.SessionMode</param-name>
@@ -239,7 +239,8 @@
 		<url-pattern>/ror.xml</url-pattern>
         <url-pattern>/super-savers</url-pattern>
         <url-pattern>/faq/*</url-pattern>
-		<url-pattern>/diabetes-management-program</url-pattern>
+		<url-pattern>/dmp</url-pattern>
+		<url-pattern>/feedback</url-pattern>
 	</servlet-mapping>
 
 
