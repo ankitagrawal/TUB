@@ -35,6 +35,11 @@ import java.util.List;
 @Service
 public class APIProductServiceImpl implements APIProductService {
 
+
+    @Value("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
+    private String        healthkartRestUrl;
+
+
     @Autowired
     ProductDao productDao;
 
@@ -58,8 +63,7 @@ public class APIProductServiceImpl implements APIProductService {
 
     public Product getProductById(String productId){
         try {
-            ClientRequest request = new ClientRequest(
-                    BaseUtils.getPropertyValue(Keys.Env.healthkartRestUrl)+"product/"+productId);
+            ClientRequest request = new ClientRequest(healthkartRestUrl+"product/"+productId);
             request.accept(MediaType.APPLICATION_JSON);
             ClientResponse<String> response = request.get(String.class);
 
@@ -95,8 +99,7 @@ public class APIProductServiceImpl implements APIProductService {
         }
         for(Product product:mihProducts){
             try {
-                ClientRequest request = new ClientRequest(
-                        BaseUtils.getPropertyValue(Keys.Env.healthkartRestUrl)+"product/"+product.getId().toString());
+                ClientRequest request = new ClientRequest(healthkartRestUrl+"product/"+product.getId().toString());
                 request.accept(MediaType.APPLICATION_JSON);
                 ClientResponse<String> response = request.get(String.class);
 
@@ -138,8 +141,7 @@ public class APIProductServiceImpl implements APIProductService {
         }
         for(Product product:mihProducts){
             try {
-                ClientRequest request = new ClientRequest(
-                        BaseUtils.getPropertyValue(Keys.Env.healthkartRestUrl)+"product/"+product.getId().toString());
+                ClientRequest request = new ClientRequest(healthkartRestUrl+"product/"+product.getId().toString());
                 request.accept(MediaType.APPLICATION_JSON);
                 ClientResponse<String> response = request.get(String.class);
 
