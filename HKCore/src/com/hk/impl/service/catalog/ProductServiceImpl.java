@@ -244,7 +244,7 @@ public class ProductServiceImpl implements ProductService {
         if (combo != null){
             return isComboInStock(combo);
         }
-        return false;
+        return true;
     }
 
     public List<Combo> getRelatedCombos(Product product) {

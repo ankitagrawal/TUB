@@ -2,15 +2,7 @@ package com.hk.admin.manager;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 
@@ -368,7 +360,7 @@ public class AdminEmailManager {
      * @param sheetName
      * @return
      */
-    public Boolean sendMailMergeCampaign(EmailCampaign emailCampaign, String excelFilePath, String sheetName, String mailGunCampaignId ) {
+    public Boolean sendMailMergeCampaign(EmailCampaign emailCampaign,String excelFilePath, String sheetName, String mailGunCampaignId ) {
 
         ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
         Iterator<HKRow> rowIterator = parser.parse();
@@ -398,6 +390,7 @@ public class AdminEmailManager {
         }
 
         try{
+            Map<String, Product> productsMap = new HashMap<String,Product>();
             while (rowIterator != null && rowIterator.hasNext()) {
                 HashMap excelMap = new HashMap();
                 int i = 0;
@@ -415,7 +408,7 @@ public class AdminEmailManager {
                 }
                 excelMap.put("HKImageUtils", hkImageUtils);
                 excelMap.put("HKPriceUtils", hkPriceUtils);
-                sendMailMergeCampaign(excelMap, emailCampaign, freemarkerTemplate, failedEmailLog, mailGunCampaignId);
+                sendMailMergeCampaign(excelMap,productsMap, emailCampaign, freemarkerTemplate, failedEmailLog, mailGunCampaignId);
             }
         }finally{
 
@@ -445,7 +438,9 @@ public class AdminEmailManager {
         return freemarkerTemplate;
     }
 
-    private boolean sendMailMergeCampaign(HashMap excelMap, EmailCampaign emailCampaign, Template freemarkerTemplate,Writer failedEmailLog, String mailGunCampaignId){
+    private boolean sendMailMergeCampaign(HashMap excelMap,Map<String, Product> productsMap, EmailCampaign emailCampaign,
+                                          Template freemarkerTemplate,Writer failedEmailLog,
+                                          String mailGunCampaignId){
 
         String userEmail = excelMap.get(EmailMapKeyConstants.emailId).toString();
         List<User> users = userService.findByEmail(userEmail);
@@ -458,6 +453,8 @@ public class AdminEmailManager {
         }
 
         EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(excelMap.get(EmailMapKeyConstants.emailId).toString());
+
+
         List<String> tags = new ArrayList<String>();
         if (emailRecepient.isEmailAllowed()) {
             Boolean emailSentToRecepientRecently = Boolean.FALSE;
@@ -470,7 +467,7 @@ public class AdminEmailManager {
             }
             if (!emailSentToRecepientRecently) {
                 Boolean sendAlternateTemplate = Boolean.FALSE;
-                List result = getExtraMapEntriesForMailMerge(excelMap);
+                List result = getExtraMapEntriesForMailMerge(excelMap,productsMap);
                 sendAlternateTemplate = Boolean.parseBoolean(result.get(0).toString());
                 String failureMessage = result.get(1).toString();
                 //If alternate template has to be sent...(In case when similar products are all out of stock)
@@ -484,7 +481,7 @@ public class AdminEmailManager {
                     //Find the alternate email and send it..It has to be hard-coded
                     EmailCampaign alternateCampaign =  getEmailCampaignDao().findCampaignByName("reporder_reminder_general");
                     if (alternateCampaign != null){
-                        sendMailMergeCampaign(excelMap,alternateCampaign, generateFreeMarkerTemplate(alternateCampaign), failedEmailLog,mailGunCampaignId );
+                        sendMailMergeCampaign(excelMap,productsMap, alternateCampaign, generateFreeMarkerTemplate(alternateCampaign), failedEmailLog,mailGunCampaignId );
                     }else{
                         return false;
                     }
@@ -533,7 +530,7 @@ public class AdminEmailManager {
      * @param excelMap
      * @return result with failure message if any
      */
-    private List getExtraMapEntriesForMailMerge(HashMap excelMap) {
+    private List getExtraMapEntriesForMailMerge(HashMap excelMap, Map<String, Product> productsMap) {
 
         boolean sendAlternateTemplate = Boolean.FALSE;
         List result = new ArrayList();
@@ -545,32 +542,24 @@ public class AdminEmailManager {
             excelMap.put(EmailMapKeyConstants.coupon, coupon);
         }
         Product product = null;
-        if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
-            product = getProductService().getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
-            if (product == null){
-                result.set(1, String.format("Product %s is wrong", product.getId()));
-                return result;
-            }
-
-            if (product.isOutOfStock()){
-                result.set(1, String.format("Product %s is out of stock", product.getId()));
-                return result;
-            }
-        }
-
         if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)) {
             String pvId = excelMap.get(EmailMapKeyConstants.productVariantId).toString();
             ProductVariant productVariant = productVariantService.getVariantById(pvId);
             if (productVariant != null) {
                 excelMap.put(EmailMapKeyConstants.productVariant, productVariant);
-                product = (product == null) ? productVariant.getProduct() : product;
+                if (productsMap.containsKey(pvId)){
+                    product =  productsMap.get(pvId);
+                }else{
+                    product = productVariant.getProduct();
+                    productsMap.put(pvId, product);
+                }
             }else{
                 result.set(1, String.format("Product Variant %s is wrong", pvId));
                 return result;
             }
 
             if (product == null){
-                result.set(1, String.format("Product %s is wrong", product.getId()));
+                result.set(1, String.format("Product for variant %s is wrong", productVariant.getId()));
                 return result;
             }
 
@@ -587,7 +576,8 @@ public class AdminEmailManager {
                         StringUtils.isNotBlank(similarProducts.toString())){
                     if (similarIds.toString().trim().equals("auto")){
                         List<SimilarProduct> similarProductList = product.getSimilarProducts();
-                        for (SimilarProduct similarProduct : similarProductList){
+                        //Todo: Check this logic and re-implement
+                        /*for (SimilarProduct similarProduct : similarProductList){
                             Product simProduct = similarProduct.getSimilarProduct();
                             if ((simProduct!= null) && !simProduct.isOutOfStock()
                                     && !productService.isComboInStock(simProduct.getId())){
@@ -597,12 +587,21 @@ public class AdminEmailManager {
                                     sendAlternateTemplate = Boolean.FALSE;
                                 }
                             }
-                        };
+                        };*/
                     } else{
                         String[] similarProductIds = similarIds.toString().split(",");
                         for (String productId : similarProductIds){
-                            Product simProduct = getProductService().getProductById(productId);
-                            if ((simProduct != null) && !simProduct.isOutOfStock() && !productService.isComboInStock(simProduct.getId())){
+                            Product simProduct = null;
+                            if (productsMap.containsKey(productId)) {
+                                simProduct = productsMap.get(productId);
+                            }else{
+                                simProduct = getProductService().getProductById(productId);
+                                if (simProduct != null){
+                                    productsMap.put(productId, simProduct);
+                                }
+                            }
+
+                            if ((simProduct != null) && !simProduct.isOutOfStock() && productService.isComboInStock(simProduct.getId())){
                                 simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
                                 similarProducts.add(simProduct);
                                 sendAlternateTemplate = Boolean.FALSE;
