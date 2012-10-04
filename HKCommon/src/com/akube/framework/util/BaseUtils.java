@@ -93,18 +93,6 @@ public class BaseUtils {
         return properties;
     }
 
-	public static String getPropertyValue(String propertyName) {
-		String propertyValue = null;
-		try {
-			String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/environment.properties";
-			Properties properties = getPropertyFile(propertyFilePath);
-			propertyValue = properties.getProperty(propertyName);
-		} catch (Exception e) {
-
-		}
-		return propertyValue;
-	}
-
     public static String passwordEncrypt(String password) {
         return new Md5Hash(password, HibernateSecurityRealm.passwordSalt, HibernateSecurityRealm.hashIterations).toBase64();
     }
@@ -537,30 +525,4 @@ public class BaseUtils {
         }
         return set;
     }
-
-	/**
-	 * The method is an interim solution to find out custom file for a Store.
-	 * @param path
-	 * @return
-	 */
-	public static String getStoreFilePath(String path){
-		String storeId = StoreConstants.getStoreId().toString();
-		String deploymentPath = getPropertyValue(Keys.Env.deploymentPath);
-		logger.debug("storeId=" + storeId);
-		logger.debug("deploymentPath=" + deploymentPath);
-		try {
-		    if (!storeId.equals("1")) {
-			    String storePath = path.replace(".jsp", "-" + storeId + ".jsp");
-			    logger.debug("storePath=" + storePath);
-			    File file = new File(deploymentPath, storePath);
-			    if (file.exists()) {
-				    logger.debug("storePath exists");
-				    return storePath;
-			    }
-		    }
-	    } catch (Exception e) {
-		    //e.printStackTrace();
-	    }
-		return path;
-	}
 }

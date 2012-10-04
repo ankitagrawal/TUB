@@ -20,6 +20,7 @@ import org.jboss.resteasy.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.MediaType;
@@ -36,14 +37,16 @@ import java.io.InputStreamReader;
  */
 @Component
 public class StoreOrderService {
+    @Value("#{hkEnvProps['" + Keys.Env.mihRestUrl + "']}")
+    private String        mihRestUrl;
+
 
 
     private static Logger logger = LoggerFactory.getLogger(StoreOrderService.class);
 
     public Order updateOrderStatusInStore(Order order){
         try {
-            ClientRequest request = new ClientRequest(
-                    BaseUtils.getPropertyValue(Keys.Env.mihRestUrl)+"/order/update/"+order.getId()+"/status/"+order.getOrderStatus().getId());
+            ClientRequest request = new ClientRequest(mihRestUrl+"/order/update/"+order.getId()+"/status/"+order.getOrderStatus().getId());
             request.accept(MediaType.APPLICATION_JSON);
 
             logger.debug("trying to update orderstatus for store-"+order.getStore().getId()+"-order Id-"+order.getId());
