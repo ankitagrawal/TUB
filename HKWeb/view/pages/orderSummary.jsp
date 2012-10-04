@@ -232,7 +232,7 @@
            <tr>
                <td>&nbsp;</td>
                <td>&nbsp;</td>
-           </tr>
+           </tr>            
 
                <c:forEach items="${orderSummary.pricingDto.productLineItems}" var="invoiceLineItem"
                               varStatus="ctr1">
@@ -256,7 +256,7 @@
                          </td>
                          <td>
                            <div class='name'>
-                               <table width="50%">
+                               <table width="70%">
                                    <tr>
                                        <td>
                                                ${invoiceLineItem.productVariant.product.name} <br/>
@@ -267,38 +267,8 @@
                                    </tr>
                                </table>
                            </div>
-                         </td>
-                           <td>
-                               <table width="50%" style="display: inline-block; font-size: 12px;">
-                                   <c:forEach items="${invoiceLineItem.productVariant.productOptions}" var="productOption"
-                                              varStatus="ctr">
-                                   <tr>
-                                       <td style="text-align: right;  padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fafafa;">${productOption.name}</td>
-                                       <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fff;">
-                                           <c:if test="${fn:startsWith(productOption.value, '-')}">
-                                               ${productOption.value}
-                                           </c:if>
-                                           <c:if test="${!fn:startsWith(productOption.value, '-')}">
-                                               &nbsp;${productOption.value}
-                                           </c:if>
-                                       </td>
-                                       </c:forEach>
-                                       <br/>
-                                       <%--<c:forEach items="${invoiceLineItem.cartLineItemExtraOptions}" var="extraOption">--%>
-                                   <%--<tr>--%>
-                                       <%--<td style="text-align: left;  padding: 5px; border: 1px solid #f0f0f0;background: #fafafa;">${extraOption.name}</td>--%>
-                                       <%--<td style="text-align: left; padding: 0px;border: 1px solid #f0f0f0;background: #fff;">--%>
-                                           <%--<c:if test="${fn:startsWith(extraOption.value, '-')}">--%>
-                                               <%--${extraOption.value}--%>
-                                           <%--</c:if>--%>
-                                           <%--<c:if test="${!fn:startsWith(extraOption.value, '-')}">--%>
-                                               <%--&nbsp;${extraOption.value}--%>
-                                           <%--</c:if>--%>
-                                       <%--</td>--%>
-                                   <%--</tr>--%>
-                                   <%--</c:forEach>--%>
-                            </table>
-                              </td>
+                         </td>                      
+
                        </div>
                    </tr>
                  </c:if>
@@ -350,8 +320,8 @@
    {
       display: none;
       position: fixed;
-      width: 580px;
-      height: 400px;
+      width: 450px;
+      /*height: 400px;*/
       top: 50%;
       left: 50%;
       margin-left: -265px;

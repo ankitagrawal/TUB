@@ -34,9 +34,9 @@
                                         <s:option value="0">N</s:option>
                                         <s:option value="1">Y</s:option>
                  </s:select>
+                <s:submit name="search" value="Search"/>
                 <br/>
-				<br/>
-				<s:submit name="search" value="Search"/>
+				<br/>  				
                 <label>Warehouse</label>
                 <s:select name="pincodeDefaultCourier.warehouse">
                                     <s:option value="1">Gurgaon</s:option>
