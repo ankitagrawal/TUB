@@ -15,6 +15,7 @@ import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.BarcodeGenerator;
+import com.hk.admin.util.FedExCourier;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
@@ -57,6 +58,8 @@ public class SOInvoiceAction extends BaseAction {
     PincodeService pincodeService;
     @Autowired
     AwbService awbService;
+     @Autowired
+     FedExCourier fedExCourier;
 
     private String barcodePath;
     private Coupon coupon;
@@ -74,8 +77,19 @@ public class SOInvoiceAction extends BaseAction {
             if (shipment != null) {
                 Awb awb = shipment.getAwb();
                 if (awb != null && awb.getAwbNumber() != null ) {
-                    String trackingId = awb.getAwbNumber();
+                    String trackingId;
+                    if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
+                        trackingId = fedExCourier.getBarCodeString().get(0);
+                        String CODBarCode = fedExCourier.getBarCodeString().get(1);
+                        if (shippingOrder.isCOD()){
+                            String CODBarCodePath = barcodeGenerator.getBarcodePath(CODBarCode, 2.0f, 200, true);
+                        }
+                    }
+                    else{
+                        trackingId = awb.getAwbNumber();
+                    }
                     barcodePath = barcodeGenerator.getBarcodePath(trackingId, 2.0f, 200, true);
+
                 }
             }
             ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());

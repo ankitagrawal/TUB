@@ -69,6 +69,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     private ShipmentPricingEngine shipmentPricingEngine;
     @Autowired
     AwbService awbService;
+     @Autowired
+    FedExCourier fedExCourier;
 
     private String trackingId;
     private String gatewayOrderId;
@@ -175,14 +177,17 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                //delete FedEx tracking no. generated previously
                Boolean result =  new DeleteFedExShipment().deleteShipment(suggestedAwb.getAwbNumber());
             }
-            if((suggestedAwb == null) && (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId()))){
-               String trackingNumber = new FedExCourier().newFedExShipment(shippingOrder);
+            //if((suggestedAwb == null) && (
+            if(shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
+               Double weightInKg = shipment.getBoxWeight();
+               String trackingNumber = fedExCourier.newFedExShipment(shippingOrder, weightInKg);
                if (trackingNumber == null){
                    addRedirectAlertMessage(new SimpleMessage(" FedEx tracking number could not be generated"));
                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
                }
                else{
-                   Awb fedExNumber = new Awb();
+                   Awb fedExNumber = awbService.createAwb(shipment.getCourier(),trackingNumber, shippingOrder.getWarehouse(), shippingOrder.isCOD());
+                   /*
                    fedExNumber.setCourier(shipment.getCourier());
                    fedExNumber.setAwbNumber(trackingNumber);
                    fedExNumber.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
@@ -190,7 +195,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                    fedExNumber.setCod(shippingOrder.isCOD());
                    fedExNumber.setAwbBarCode(trackingNumber);
                    fedExNumber.setUsed(false);
+                   */
+                   fedExNumber = awbService.save(fedExNumber);
                    finalAwb = fedExNumber;
+
                }
             }
             else{

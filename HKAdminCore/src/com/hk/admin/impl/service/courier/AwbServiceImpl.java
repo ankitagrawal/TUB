@@ -12,6 +12,7 @@ import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.AwbStatus;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.constants.courier.EnumAwbStatus;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,5 +56,17 @@ public class AwbServiceImpl implements AwbService {
 
     public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList) {
         return awbDao.getAlreadyPresentAwb(courier,awbNumberList);
+    }
+    
+    public Awb createAwb(Courier suggestedCourier, String trackingNumber, Warehouse warehouse, Boolean isCod){
+        Awb awb = new Awb();
+        awb.setCourier(suggestedCourier);
+        awb.setAwbNumber(trackingNumber);
+        awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+        awb.setWarehouse(warehouse);
+        awb.setCod(isCod);
+        awb.setAwbBarCode(trackingNumber);
+        awb.setUsed(false);
+        return awb;
     }
 }

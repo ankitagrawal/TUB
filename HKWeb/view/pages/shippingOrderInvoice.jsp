@@ -7,6 +7,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
 <%@ page import="java.util.Arrays" %>
+<%@ page import="com.hk.constants.courier.EnumCourier" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -78,13 +79,21 @@
 <c:set var="b2bUser" value="<%=EnumRole.B2B_USER.getRoleName()%>"/>
 <c:set var="baseOrder" value="${orderSummary.shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
+<c:set var="fedExCourier" value="<%=EnumCourier.FedEx.getId()%>"/>
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">
     <c:choose>
         <c:when test="${orderSummary.shipment != null}">
-            <div style="float: left;">
+          <div style="float: left;">
                 <strong>AWB NO.</strong>
+          <c:when test="${orderSummary.shipment.courier.id == fedExCourier }">
+              <div class="clear"></div>
+              <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name}</div>
+              <div style="font-weight:bold; margin-top:5px;">Standard Overnight</div>
+              
+          </c:when>
+          <c:otherwise>
 
                 <div class="clear"></div>
                 <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name}</div>
@@ -92,6 +101,7 @@
                 <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
                      src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
             </div>
+          </c:otherwise>
         </c:when>
         <c:otherwise>
             &nbsp;&nbsp;

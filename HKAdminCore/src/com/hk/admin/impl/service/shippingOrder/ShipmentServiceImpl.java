@@ -48,6 +48,8 @@ public class ShipmentServiceImpl implements ShipmentService {
     ShippingOrderService shippingOrderService;
     @Autowired
     ShipmentDao shipmentDao;
+    @Autowired
+    FedExCourier fedExCourier;
 
     public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
@@ -61,32 +63,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
         Awb suggestedAwb = null;
 
-        if (suggestedCourier.getId().equals(EnumCourier.FedEx.getId())){
-            String trackingNumber = new FedExCourier().newFedExShipment(shippingOrder);
-
-            if (trackingNumber != null){
-                Awb fedExNumber = new Awb();
-                fedExNumber.setCourier(suggestedCourier);
-                fedExNumber.setAwbNumber(trackingNumber);
-                fedExNumber.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                fedExNumber.setWarehouse(shippingOrder.getWarehouse());
-                fedExNumber.setCod(shippingOrder.isCOD());
-                fedExNumber.setAwbBarCode(trackingNumber);
-                fedExNumber.setUsed(false);
-                //awbService.save(fedExNumber);
-                suggestedAwb = fedExNumber;
-            }
-            else{
-                return null;
-            }
-        }
-        else{
-            suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
-            if (suggestedAwb == null) {
-                return null;
-            }
-        }
-            Double estimatedWeight = 100D;
+        Double estimatedWeight = 100D;
             for (LineItem lineItem : shippingOrder.getLineItems()) {
                 ProductVariant productVariant = lineItem.getSku().getProductVariant();
                 if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
@@ -99,6 +76,37 @@ public class ShipmentServiceImpl implements ShipmentService {
                     estimatedWeight += variantWeight;
                 }
             }
+
+        Double weightInKg = estimatedWeight/1000;
+
+        if (suggestedCourier.getId().equals(EnumCourier.FedEx.getId())){
+            String trackingNumber = fedExCourier.newFedExShipment(shippingOrder,weightInKg);
+
+            if (trackingNumber != null){
+                Awb fedExNumber = awbService.createAwb(suggestedCourier,trackingNumber, shippingOrder.getWarehouse(), shippingOrder.isCOD());
+                /*
+                fedExNumber.setCourier(suggestedCourier);
+                fedExNumber.setAwbNumber(trackingNumber);
+                fedExNumber.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+                fedExNumber.setWarehouse(shippingOrder.getWarehouse());
+                fedExNumber.setCod(shippingOrder.isCOD());
+                fedExNumber.setAwbBarCode(trackingNumber);
+                fedExNumber.setUsed(false);
+                //awbService.save(fedExNumber);
+                */
+                suggestedAwb = fedExNumber;
+            }
+            else{
+                return null;
+            }
+        }
+        else{
+            suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+            if (suggestedAwb == null) {
+                return null;
+            }
+        }
+
         //}
         Shipment shipment = new Shipment();
         shipment.setCourier(suggestedCourier);
@@ -149,11 +157,11 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     public void delete(Shipment shipment){
-         shipmentDao.delete(shipment);
          if(shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
                //delete FedEx tracking no. generated previously
                Boolean result =  new DeleteFedExShipment().deleteShipment(shipment.getAwb().getAwbNumber());
          }
+         shipmentDao.delete(shipment);
     }
 
 	@Override

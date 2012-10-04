@@ -14,6 +14,7 @@ import java.math.*;
 
 import org.apache.axis.types.NonNegativeInteger;
 import org.apache.axis.types.PositiveInteger;
+import org.springframework.stereotype.Component;
 
 import com.fedex.ship.stub.*;
 import com.hk.domain.order.ShippingOrder;
@@ -31,16 +32,18 @@ import com.hk.domain.order.ShippingOrder;
 //
 //Sample code to call the FedEx Ship Service - GDE Express Domestic India Shipment
 //
+@Component
 public class FedExCourier
 {
 	//
 
-    public FedExCourier() {
-     }
+//    public FedExCourier() {
+//     }
+    List<String> retrieveBarcodes = new ArrayList<String>();
 
-	public String newFedExShipment(ShippingOrder shippingOrder)
+	public String newFedExShipment(ShippingOrder shippingOrder, Double weightInKg)
 	{
-		ProcessShipmentRequest request = buildRequest(shippingOrder); // Build a request object
+		ProcessShipmentRequest request = buildRequest(shippingOrder,weightInKg); // Build a request object
 		//
 		try {
 			// Initialize the service
@@ -51,31 +54,29 @@ public class FedExCourier
 			updateEndPoint(service);
 			port = service.getShipServicePort();
 		    //
-			ProcessShipmentReply reply = port.processShipment(request); // This is the call to the ship web service passing in a request object and returning a reply object
+			ProcessShipmentReply reply = port.processShipment(request);
+
+            // This is the call to the ship web service passing in a request object and returning a reply object
 			//
 
 			if (isResponseOk(reply.getHighestSeverity())) // check if the call was successful
 			{
-				writeServiceOutput(reply);
+				//writeServiceOutput(reply);
 			}
 
-			printNotifications(reply.getNotifications());
+			//printNotifications(reply.getNotifications());
 
             CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
-            /*
-            String trackingNumber="";
-		    if(null != csd.getMasterTrackingId()){
-			    trackingNumber = csd.getMasterTrackingId().getTrackingNumber();
-            }
-            */
+
             CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
             String trackingNumber = null;
             if(cpd!=null){
-			System.out.println("Package Details");
-			for (int i=0; i < cpd.length; i++) { // Package details / Rating information for each package
-				trackingNumber = cpd[i].getTrackingIds()[0].getTrackingNumber();
-			}
-		}
+			//System.out.println("Package Details");
+			    for (int i=0; i < cpd.length; i++) { // Package details / Rating information for each package
+                    trackingNumber = cpd[i].getTrackingIds()[0].getTrackingNumber();
+			    }
+		    }
+            setBarCodeString(reply, shippingOrder);
             return trackingNumber;
 			//
 		} catch (Exception e) {
@@ -84,7 +85,7 @@ public class FedExCourier
         return null;
 	}
 	//
-	private static ProcessShipmentRequest buildRequest(ShippingOrder shippingOrder)
+	private static ProcessShipmentRequest buildRequest(ShippingOrder shippingOrder, Double weightInKg)
 	{
 		ProcessShipmentRequest request = new ProcessShipmentRequest(); // Build a request object
 
@@ -92,7 +93,7 @@ public class FedExCourier
         request.setWebAuthenticationDetail(createWebAuthenticationDetail());
         //
         TransactionDetail transactionDetail = new TransactionDetail();
-        transactionDetail.setCustomerTransactionId("java sample - International Ground Shipment"); // The client will get the same value back in the response
+        transactionDetail.setCustomerTransactionId("java sample - India Ground Shipment"); // The client will get the same value back in the response
         request.setTransactionDetail(transactionDetail);
 
         //
@@ -103,7 +104,7 @@ public class FedExCourier
         RequestedShipment requestedShipment = new RequestedShipment();
         requestedShipment.setShipTimestamp(Calendar.getInstance()); // Ship date and time
         requestedShipment.setDropoffType(DropoffType.REGULAR_PICKUP);
-        requestedShipment.setServiceType(ServiceType.STANDARD_OVERNIGHT); // Service types are STANDARD_OVERNIGHT, PRIORITY_OVERNIGHT, FEDEX_GROUND ...
+        requestedShipment.setServiceType(ServiceType.STANDARD_OVERNIGHT);//FEDEX_EXPRESS_SAVER); // Service types are STANDARD_OVERNIGHT, PRIORITY_OVERNIGHT, FEDEX_GROUND ...
         requestedShipment.setPackagingType(PackagingType.YOUR_PACKAGING); // Packaging type FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...
 
         //
@@ -113,9 +114,12 @@ public class FedExCourier
         //
         requestedShipment.setShippingChargesPayment(addShippingChargesPayment());
         //
-        requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested());
+        if (shippingOrder.isCOD()){
+        requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested(shippingOrder));
+        requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder));
+        }
         //
-        requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail());
+        //requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail());
         //
 	    requestedShipment.setLabelSpecification(addLabelSpecification());
         //
@@ -123,11 +127,44 @@ public class FedExCourier
         requestedShipment.setRateRequestTypes(rrt);
         requestedShipment.setPackageCount(new NonNegativeInteger("1"));
         //
-        requestedShipment.setRequestedPackageLineItems(new RequestedPackageLineItem[] {addRequestedPackageLineItem()});
+        requestedShipment.setRequestedPackageLineItems(new RequestedPackageLineItem[] {addRequestedPackageLineItem(shippingOrder, weightInKg)});
 	    request.setRequestedShipment(requestedShipment);
 		//
 	    return request;
 	}
+
+    public void setBarCodeString(ProcessShipmentReply reply, ShippingOrder shippingOrder){
+                    List<String> retrieveBarcodes = new ArrayList<String>();
+                    // forward going label (outbound label)
+                    CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
+                    CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
+
+                    if(cpd!=null){
+                        System.out.println("Package Details");
+                        for (int i=0; i < cpd.length; i++) { // Package details / Rating information for each package
+                            StringBarcode sb = cpd[i].getOperationalDetail().getBarcodes().getStringBarcodes(0);
+                            retrieveBarcodes.add(sb.toString());
+                        }
+                    }
+                    
+
+                    //return COD label now
+                   if(shippingOrder.isCOD()){
+                    AssociatedShipmentDetail asd[] = csd.getAssociatedShipments();
+                    if(cpd!=null){
+                        System.out.println("Package Details");
+                        for (int i=0; i < cpd.length; i++) { // Package details / Rating information for each package
+                            StringBarcode sb = asd[i].getPackageOperationalDetail().getBarcodes().getStringBarcodes(0);
+                            retrieveBarcodes.add(sb.toString());
+                        }
+                    }
+                   }
+
+    }
+
+    public List<String> getBarCodeString(){
+        return retrieveBarcodes;
+    }
 	//
 	private static void writeServiceOutput(ProcessShipmentReply reply) throws Exception
 	{
@@ -370,41 +407,55 @@ public class FedExCourier
         com.hk.domain.user.Address HKAddress = shippingOrder.getBaseOrder().getAddress();
 
         contactRecip.setPersonName(HKAddress.getName());//("Recipient Name");
-        contactRecip.setCompanyName("Recipient Company Name");//("Recipient Company Name");
+        contactRecip.setCompanyName("");//Recipient Company Name");//("Recipient Company Name");
         contactRecip.setPhoneNumber(HKAddress.getPhone());//("1234567890");
         recipient.setContact(contactRecip);
 
         Address addressRecip = new Address();
-        addressRecip.setStreetLines(new String[]{HKAddress.getLine1(),HKAddress.getLine2()});//(new String[] { "1 RECIPIENT STREET" });
+        if(HKAddress.getLine2() == null || HKAddress.getLine2() == "" ){
+            addressRecip.setStreetLines(new String[]{HKAddress.getLine1()});
+        }
+        else{
+        addressRecip.setStreetLines(new String[]{HKAddress.getLine1(),HKAddress.getLine2()});
+        }
+        //(new String[] { "1 RECIPIENT STREET" });
 
         addressRecip.setCity(HKAddress.getCity());//("NEWDELHI");
-        addressRecip.setStateOrProvinceCode("DL");//("DL");
+        addressRecip.setStateOrProvinceCode(HKAddress.getState());//("DL");
 //        addressRecip.setStateOrProvinceCode(HKAddress.getState());//("DL");
 
         addressRecip.setPostalCode(HKAddress.getPin());//("110010");
         addressRecip.setCountryCode("IN");
         addressRecip.setCountryName("INDIA");
-        addressRecip.setResidential(new Boolean(false));
+        addressRecip.setResidential(new Boolean(true));
         recipient.setAddress(addressRecip);
         return recipient;
 	}
 
-	private static ContactAndAddress addFinancialInstitutionParty(){
+	private static ContactAndAddress addFinancialInstitutionParty(ShippingOrder shippingOrder){
 		ContactAndAddress contactAndAddress = new ContactAndAddress(); // Recipient information
         Contact contactRecip = new Contact();
-        contactRecip.setPersonName("Recipient Name");
-        contactRecip.setCompanyName("Recipient Company Name");
-        contactRecip.setPhoneNumber("1234567890");
+        // healthkart address
+        com.hk.domain.user.Address HKAddress = shippingOrder.getBaseOrder().getAddress();
+        contactRecip.setPersonName(HKAddress.getName());//"Recipient Name");
+        contactRecip.setCompanyName("");//Recipient Company Name");
+        contactRecip.setPhoneNumber(HKAddress.getPhone());//"1234567890");
         contactAndAddress.setContact(contactRecip);
         //
         Address addressRecip = new Address();
-        addressRecip.setStreetLines(new String[] { "1 RECIPIENT STREET" });
-        addressRecip.setCity("NEWDELHI");
-        addressRecip.setStateOrProvinceCode("DL");
-        addressRecip.setPostalCode("110010");
+        if(HKAddress.getLine2() == null || HKAddress.getLine2() == "" ){
+            addressRecip.setStreetLines(new String[]{HKAddress.getLine1()});
+        }
+        else{
+        addressRecip.setStreetLines(new String[]{HKAddress.getLine1(),HKAddress.getLine2()});
+        }
+        //addressRecip.setStreetLines(new String[] { "1 RECIPIENT STREET" });
+        addressRecip.setCity(HKAddress.getCity());//"NEWDELHI");
+        addressRecip.setStateOrProvinceCode(HKAddress.getState());//"DL");
+        addressRecip.setPostalCode(HKAddress.getPin());//"110010");
         addressRecip.setCountryCode("IN");
         addressRecip.setCountryName("INDIA");
-        addressRecip.setResidential(new Boolean(false));
+        addressRecip.setResidential(new Boolean(true));
         contactAndAddress.setAddress(addressRecip);
         return contactAndAddress;
 	}
@@ -424,18 +475,18 @@ public class FedExCourier
 	    return payment;
 	}
 
-	private static ShipmentSpecialServicesRequested addShipmentSpecialServicesRequested(){
+	private static ShipmentSpecialServicesRequested addShipmentSpecialServicesRequested(ShippingOrder shippingOrder){
 	    ShipmentSpecialServicesRequested shipmentSpecialServicesRequested = new ShipmentSpecialServicesRequested();
 	    ShipmentSpecialServiceType shipmentSpecialServiceType[]=new ShipmentSpecialServiceType[1];
 	    shipmentSpecialServiceType[0]=ShipmentSpecialServiceType.COD;
 	    shipmentSpecialServicesRequested.setSpecialServiceTypes(shipmentSpecialServiceType);
 	    CodDetail codDetail = new CodDetail();
-	    codDetail.setCollectionType(CodCollectionType.GUARANTEED_FUNDS);
+	    codDetail.setCollectionType(CodCollectionType.CASH);//GUARANTEED_FUNDS);
 	    Money codMoney = new Money();
 	    codMoney.setCurrency("INR");
-	    codMoney.setAmount(new BigDecimal(400));
+	    codMoney.setAmount(new BigDecimal(shippingOrder.getAmount())); //(400));
 	    codDetail.setCodCollectionAmount(codMoney);
-	    codDetail.setFinancialInstitutionContactAndAddress(addFinancialInstitutionParty());
+	    codDetail.setFinancialInstitutionContactAndAddress(addFinancialInstitutionParty(shippingOrder));
 	    codDetail.setRemitToName("Remitter");
 	    shipmentSpecialServicesRequested.setCodDetail(codDetail);
 	    return shipmentSpecialServicesRequested;
@@ -456,15 +507,15 @@ public class FedExCourier
 	    return payment;
 	}
 
-	private static RequestedPackageLineItem addRequestedPackageLineItem(){
+	private static RequestedPackageLineItem addRequestedPackageLineItem(ShippingOrder shippingOrder, Double weightInKg){
 		RequestedPackageLineItem requestedPackageLineItem = new RequestedPackageLineItem();
 		requestedPackageLineItem.setSequenceNumber(new PositiveInteger("1"));
 		requestedPackageLineItem.setGroupPackageCount(new PositiveInteger("1"));
-		requestedPackageLineItem.setWeight(addPackageWeight(50.5, WeightUnits.LB));
+		requestedPackageLineItem.setWeight(addPackageWeight(weightInKg, WeightUnits.KG));//50.5, WeightUnits.LB));
 		requestedPackageLineItem.setDimensions(addPackageDimensions(108, 5, 5, LinearUnits.IN));
 		requestedPackageLineItem.setCustomerReferences(new CustomerReference[]{
 				addCustomerReference(CustomerReferenceType.CUSTOMER_REFERENCE.getValue(), "CR1234"),
-				addCustomerReference(CustomerReferenceType.INVOICE_NUMBER.getValue(), "IV1234"),
+				addCustomerReference(CustomerReferenceType.INVOICE_NUMBER.getValue(), "IV1234"),// shippingOrder.getAccountingInvoiceNumber().toString()),
 				addCustomerReference(CustomerReferenceType.P_O_NUMBER.getValue(), "PO1234"),
 		});
 		return requestedPackageLineItem;
@@ -486,10 +537,10 @@ public class FedExCourier
 	    return labelSpecification;
 	}
 
-	private static CustomsClearanceDetail addCustomsClearanceDetail(){
+	private static CustomsClearanceDetail addCustomsClearanceDetail(ShippingOrder shippingOrder){
         CustomsClearanceDetail customs = new CustomsClearanceDetail (); // International details
         customs.setDutiesPayment(addDutiesPayment());
-        customs.setCustomsValue(addMoney("INR", 400.00));
+        customs.setCustomsValue(addMoney("INR", shippingOrder.getAmount()));//400.00));
         customs.setDocumentContent(InternationalDocumentContentType.NON_DOCUMENTS);
         customs.setCommercialInvoice(addCommercialInvoice());
         customs.setCommodities(new Commodity[] {addCommodity()});// Commodity details
