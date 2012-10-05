@@ -37,15 +37,13 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
 
     public List<Courier> searchCouriers(String pincode, boolean forCOD, boolean forGroundShipping , boolean forCodAvailableOnGroundShipping) {
        List<CourierServiceInfo> servicesList = getCourierServiceInfoList(null, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+        List<Courier> courierList = new ArrayList<Courier>();
         if (servicesList != null && servicesList.size() > 0) {
-            List<Courier> courierList = new ArrayList<Courier>();
             for (CourierServiceInfo serviceInfo : servicesList) {
                 courierList.add(serviceInfo.getCourier());
             }
-            return courierList;
-        } else {
-            return null;
         }
+            return  courierList;
     }
 
 
@@ -85,7 +83,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
 
      public boolean isCourierServiceInfoAvailable (Long courierId, String pincode,boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
          List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
-          return courierServiceInfoList != null && courierServiceInfoList.size() > 0;
+          return courierServiceInfoList != null && courierServiceInfoList.size() > 0 ? true : false;
      }
 
 

@@ -133,7 +133,7 @@ public class CourierServiceInfoAction extends BaseAction {
         CourierServiceInfo tmpObj = null;
         try {
 //            Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
-             Set<CourierServiceInfo> courierServiceInfoSet = xslCourierServiceInfoParser.readCourierServiceInfoList(excelFile);
+            Set<CourierServiceInfo> courierServiceInfoSet = xslCourierServiceInfoParser.readCourierServiceInfoList(excelFile);
             for (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) {
                 tmpObj = courierServiceInfo;
                      CourierServiceInfo tmpObj2 = courierServiceInfoDao.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(),

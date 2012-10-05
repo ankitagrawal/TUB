@@ -68,7 +68,7 @@ public class OrderSummaryAction extends BaseAction {
     private Address billingAddress;
     private boolean codAllowed;
     private Double redeemableRewardPoints;
-    private List<Courier> availableCourierList;
+    private List<Courier> availableCourierList ;
     private boolean  groundShippingAllowed ;
     private boolean  groundShippedItemPresent;
     private boolean  codAllowedOnGroundShipping;
@@ -145,7 +145,7 @@ public class OrderSummaryAction extends BaseAction {
             codCharges = 0.0;
         }
        availableCourierList = courierService.getAvailableCouriers(order);
-        if (availableCourierList.size() == 0) {
+     if (availableCourierList != null && availableCourierList.size() == 0) {
             availableCourierList = null;
         }
         return new ForwardResolution("/pages/orderSummary.jsp");

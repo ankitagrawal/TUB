@@ -36,6 +36,6 @@ public interface AdminOrderService {
 
 	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order);
 
-     public Map<String, String> isCODAllowed(Order order , PricingDto pricingDto);
+    public Map<String, String> isCODAllowed(Order order , PricingDto pricingDto);
 
 }
