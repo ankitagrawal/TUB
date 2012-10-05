@@ -96,7 +96,7 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         order.setPayment(payment);
         // save order with placed status since amount has been applied
         order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
-
+        order=orderService.save(order);
         //finalize order -- create shipping order and update inventory
         finalizeOrder(order);
         return  order;
