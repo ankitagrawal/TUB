@@ -109,6 +109,7 @@ public class Product implements java.io.Serializable {
     @JoinColumn(name = "supplier_id")
     private Supplier             supplier;
 
+	@JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", length = 19)
     private Date                 createDate;

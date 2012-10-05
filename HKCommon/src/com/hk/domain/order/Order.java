@@ -158,6 +158,7 @@ public class Order implements java.io.Serializable {
     @JoinColumn(name = "secondary_referrer_for_order_id")
     private SecondaryReferrerForOrder secondaryReferrerForOrder;
 
+	@JsonSkip
     @Column(name = "target_dispatch_date", nullable = true)
     private Date                      targetDispatchDate;
 

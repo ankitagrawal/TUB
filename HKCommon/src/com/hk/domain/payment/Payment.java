@@ -58,6 +58,8 @@ public class Payment implements java.io.Serializable {
   @Column(name = "gateway_order_id", length = 30)
   private String gatewayOrderId;
 
+
+  @JsonSkip
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "payment_date", length = 19)
   private Date paymentDate;
@@ -98,6 +100,7 @@ public class Payment implements java.io.Serializable {
   @Column(name = "cheque_number", length = 10)
   private String chequeNumber;
 
+  @JsonSkip
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_date", nullable = false, length = 19)
   private Date createDate;

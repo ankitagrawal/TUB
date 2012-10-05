@@ -88,10 +88,10 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         order = orderService.save(order);
 
         //update amount to be paid for the order... sequence is important here address need to be created priorhand!!
-        orderManager.recalAndUpdateAmount(order);
+        //orderManager.recalAndUpdateAmount(order);
 
         //update order payment status and order status in general
-        orderManager.orderPaymentReceieved(payment);
+        //orderManager.orderPaymentReceieved(payment);
 
         //finalize order -- create shipping order and update inventory
         finalizeOrder(order);
