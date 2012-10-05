@@ -146,6 +146,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         query.set("fl", "*");
         query.setStart((page - 1) * perPage);
         query.setRows(perPage);
+        query.addSortField(SolrSchemaConstants.sortByOutOfStock, SolrQuery.ORDER.asc);
         query.addSortField(SolrSchemaConstants.sortBy, SolrQuery.ORDER.asc);
         List<SolrProduct> solrProductList = new ArrayList<SolrProduct>();
         long resultCount = 0;
