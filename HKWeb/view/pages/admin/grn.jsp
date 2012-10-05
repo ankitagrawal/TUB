@@ -152,16 +152,7 @@
 				updateTotal('.taxableAmount','.totalTaxable',0);
 				updateTotal('.taxAmount','.totalTax',0);
 				updateTotal('.surchargeAmount','.totalSurcharge',0);
-				updateTotal('.payableAmount', '.finalPayable',0);
 
-				var finalPayable = parseFloat($('.finalPayable').val().replace(/,/g, ''));
-				var overallDiscount = $('.overallDiscount').val();
-				if (isNaN(overallDiscount)) {
-					overallDiscount = 0;
-				}
-
-				finalPayable -= overallDiscount;
-				$('.finalPayable').val(finalPayable.toFixed(2));
 			});
 
 			function updateTotal(fromTotalClass,toTotalClass,toHtml){
@@ -178,17 +169,6 @@
 					$(toTotalClass).val(total.toFixed(2));
 				}
 			};
-
-			$('.footerChanges').live("change", function overallDiscount() {
-				var overallDiscount=parseFloat($('.overallDiscount').val());
-				if(isNaN(overallDiscount)){
-					overallDiscount=0;
-				}
-				updateTotal('.payableAmount','.finalPayable');
-				var finalPayable=parseFloat($('.finalPayable').val().replace(/,/g,''));
-				finalPayable-=overallDiscount;
-				$('.finalPayable').val(finalPayable.toFixed(2));
-			} );
 
 			$('.requiredFieldValidator').click(function() {
 				var qty = $('.receivedQuantity').val();
@@ -256,7 +236,7 @@
 	<tr>
 		<td>Payable</td>
 		<td class="payable">
-			<fmt:formatNumber value="${actionBean.grnDto.finalPayable}" type="currency" currencySymbol=" "
+			<fmt:formatNumber value="${actionBean.grnDto.totalPayable}" type="currency" currencySymbol=" "
 			                  maxFractionDigits="0"/></td>
 		<td>Payment Details<br/><span class="sml gry">(eg. Cheque no.)</span></td>
 		<td><s:textarea name="grn.paymentDetails" style="height:50px;"/></td>
@@ -410,7 +390,7 @@
 		<td><s:text readonly="readonly" class="totalSurcharge" name="grn.surchargeAmount" value="${pa.grn.surchargeAmount}"/></td>
 		<td><s:text readonly="readonly" class="totalPayable" name="grn.payable" value="${pa.grn.payable}"/></td>
 	</tr>
-	<tr>
+	<%--<tr>
 		<td colspan="16"></td><td>Overall Discount<br/>(In Rupees)</td>
 		<td><s:text class="overallDiscount footerChanges" name="grn.discount" value="${pa.grn.discount}"/></td>
 	</tr>
@@ -418,7 +398,7 @@
 	<tr>
 		<td colspan="16"></td><td>Final Payable</td>
 		<td><s:text readonly="readonly" class="finalPayable" name="grn.finalPayableAmount" value="${pa.grn.finalPayableAmount}"/></td>
-	</tr>
+	</tr>--%>
 	</tfoot>
 </table>
 <div class="variantDetails info"></div>

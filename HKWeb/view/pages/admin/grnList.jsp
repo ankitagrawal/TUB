@@ -166,7 +166,7 @@
             </c:choose>
           </td>
           <td>
-            <fmt:formatNumber value="${grn.finalPayableAmount}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
+            <fmt:formatNumber value="${grn.payable}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td>${grn.paymentDetails}</td>
           <td>
             <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">Edit
