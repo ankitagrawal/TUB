@@ -54,11 +54,20 @@
 ---/nutrition/specialty-nutrition/ayurveda/joint-muscle    :Joint & Muscle
 ---/nutrition/specialty-nutrition/ayurveda/stress-anxiety  :Stress & Anxiety
 ---/nutrition/specialty-nutrition/ayurveda/digestion
+---/nutrition/specialty-nutrition/ayurveda/kidney-care     :Kidney Care
+---/nutrition/specialty-nutrition/ayurveda/Stones
+---/nutrition/specialty-nutrition/ayurveda/uterine-tonic   :Uterine Tonic
+---/nutrition/specialty-nutrition/ayurveda/respiratory-care  :Respiratory Care
+---/nutrition/specialty-nutrition/ayurveda/liver-care      :Liver Care
+---/nutrition/specialty-nutrition/ayurveda/sleep-care      :Sleep Care
+---/nutrition/specialty-nutrition/ayurveda/piles-fistula   :Piles & Fistula
+---/nutrition/specialty-nutrition/ayurveda/laxative
+---/nutrition/specialty-nutrition/ayurveda/natural-protein :Natural Protein
 ---/nutrition/specialty-nutrition/ayurveda/immunity
 ---/nutrition/specialty-nutrition/ayurveda/blood-sugar :Diabetic Care
 ---/nutrition/specialty-nutrition/ayurveda/brain-memory     :Brain & Memory
 ---/nutrition/specialty-nutrition/ayurveda/vitality :Sexual Health
----/nutrition/specialty-nutrition/ayurveda/energy-endurance     :Energy & Endurance
+---/nutrition/specialty-nutrition/ayurveda/revitalize     :Revitalize
 --/nutrition/specialty-nutrition/gluten-free-food  :Gluten Free Food
 --/nutrition/specialty-nutrition/organic-food    :Organic Food
 --/nutrition/specialty-nutrition/diabetic-food  :Diabetic Food
