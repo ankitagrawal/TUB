@@ -34,5 +34,10 @@ public interface CourierService {
 
 	public Courier save(Courier courier);
 
+	public List<Courier> getDisableCourier();
+
+	
+
+
 
 }

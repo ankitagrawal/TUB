@@ -5,9 +5,13 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.akube.framework.gson.JsonUtils;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.category.Category;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.web.HealthkartResponse;
+import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 
 import java.util.List;
 import java.util.Set;
@@ -30,6 +34,13 @@ import org.springframework.stereotype.Component;
 public class AddCourierAction extends BaseAction {
 
 	@Autowired
+	ProductDao productDao;
+
+	@Autowired
+	CategoryDao categoryDao;
+
+
+	@Autowired
 	CourierService courierService;
 	@Autowired
 	CourierGroupService courierGroupService;
@@ -38,10 +49,12 @@ public class AddCourierAction extends BaseAction {
 
 	private List<CourierGroup> courierGroupList;
 
-	//	@Validate(required = true, on = "saveCourier assignCourierGroup getCourierGroupForCourier")
+		@Validate(required = true, on = "assignCourierGroup getCourierGroupForCourier")
 	private Courier courier;
-	//	@Validate(required = true, on = "addNewCourierGroup assignCourierGroup")
+		@Validate(required = true, on = "addNewCourierGroup assignCourierGroup")
 	private CourierGroup courierGroup;
+
+	private String courierName;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -51,15 +64,19 @@ public class AddCourierAction extends BaseAction {
 	}
 
 	public Resolution saveCourier() {
-		if (courier != null) {
-			if (courierService.getCourierByName(courier.getName().trim()) != null) {
-				addRedirectAlertMessage(new SimpleMessage("Courier With same name already exist"));
+		if (courierName != null && courier != null) {
+			addRedirectAlertMessage(new SimpleMessage("Either Enter  New Courier or Enable Courier"));
+		} else {
+			if (courier != null) {
+				courier.setDeleted(false);
+				courierService.save(courier);
+				addRedirectAlertMessage(new SimpleMessage("Courier "+courier.getName() +"  is made Available"));
 			} else {
+				courier.setDeleted(false);
 				courierService.save(courier);
 				addRedirectAlertMessage(new SimpleMessage("Courier Saved"));
 			}
 		}
-
 		return pre();
 	}
 
@@ -78,13 +95,31 @@ public class AddCourierAction extends BaseAction {
 
 
 	public Resolution assignCourierGroup() {
-		Set<Courier> couriergroupset = new HashSet<Courier>();
-		couriergroupset.add(courier);
-		courierGroup.setCouriers(couriergroupset);
-		courierGroupService.save(courierGroup);
+		if(courier.getCourierGroup() != null){
+		CourierGroup oldCourierGroup = courier.getCourierGroup();
+		oldCourierGroup.getCouriers().remove(courier);
+		courierGroupService.save(oldCourierGroup);
+		}
+		courierGroup.getCouriers().add(courier);
+		courierGroup = courierGroupService.save(courierGroup);
 		addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
 		return pre();
 	}
+
+	public Resolution deleteCourier() {
+		courier.setDeleted(true);
+		courierService.save(courier);
+		addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
+		return pre();
+	}
+
+//	public Resolution deleteCourierGroup() {
+//		Set<Courier> courierSet = courierGroup.getCouriers();
+//		courierGroupService.getAllCourierGroup().removeAll(courierSet);
+//		addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
+//		return pre();
+//	}
+
 
 	@JsonHandler
 	public Resolution getCourierGroupForCourier() {
@@ -139,5 +174,13 @@ public class AddCourierAction extends BaseAction {
 
 	public void setCourierGroupList(List<CourierGroup> courierGroupList) {
 		this.courierGroupList = courierGroupList;
+	}
+
+	public String getCourierName() {
+		return courierName;
+	}
+
+	public void setCourierName(String courierName) {
+		this.courierName = courierName;
 	}
 }

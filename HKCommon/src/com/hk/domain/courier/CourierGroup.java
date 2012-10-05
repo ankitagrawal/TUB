@@ -3,33 +3,29 @@ package com.hk.domain.courier;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import com.akube.framework.gson.JsonSkip;
 
 @Entity
 @Table(name = "courier_group")
 public class CourierGroup implements java.io.Serializable {
 	@Id
+	@GeneratedValue (strategy = GenerationType.AUTO)
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
 	@Column(name = "name", length = 45)
 	private String name;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@Fetch(value = FetchMode.SELECT)
+	
+	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	//@Fetch(value = FetchMode.SELECT)
 	@JoinTable(name = "courier_group_has_courier",
-			joinColumns = @JoinColumn(name = "courier_group_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "courier_id", referencedColumnName = "id")
+			joinColumns = @JoinColumn(name = "courier_group_id", updatable = false),
+			inverseJoinColumns = @JoinColumn(name = "courier_id", updatable = false)
 	)
 	private Set<Courier> couriers = new HashSet<Courier>();
 

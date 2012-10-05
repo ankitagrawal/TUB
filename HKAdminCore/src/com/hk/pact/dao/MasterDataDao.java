@@ -132,4 +132,6 @@ public interface MasterDataDao
     public List<ConsignmentStatus> getConsignmentStatusList();
 
 	public List<CourierGroup>  getCourierGroupList();
+
+	public List<Courier> getDisableCourier();
 }

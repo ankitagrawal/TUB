@@ -59,8 +59,8 @@ public class MasterDataService {
     PermissionSeedData                     permissionSeedData;
     @Autowired
     RoleHasPermissionSeedData              roleHasPermissionSeedData;
-    @Autowired
-    CourierSeedData                        courierSeedData;
+//    @Autowired
+//    CourierSeedData                        courierSeedData;
     /* CartLineItemTypeSeedData lineItemStatusSeedData; */
     @Autowired
     CartLineItemTypeSeedData               cartLineItemTypeSeedData;
@@ -124,10 +124,10 @@ public class MasterDataService {
     ReviewStatusSeedData                   reviewStatusSeedData;
 	@Autowired
     ProductReferrerSeedData                productReferrerSeedData;
-    @Autowired
-    CourierGroupSeedData                   courierGroupSeedData;
-    @Autowired
-    CourierGroupHasCourierSeedData        courierGroupHasCourierSeedData;
+//    @Autowired
+//    CourierGroupSeedData                   courierGroupSeedData;
+//    @Autowired
+//    CourierGroupHasCourierSeedData        courierGroupHasCourierSeedData;
     @Autowired
     PurchaseFormTypeSeedData               purchaseFormTypeSeedData;
     @Autowired
@@ -162,8 +162,8 @@ public class MasterDataService {
         logger.debug("inserting role has permissions");
         roleHasPermissionSeedData.invokeInsert();
 
-        logger.debug("inserting couriers");
-        courierSeedData.invokeInsert();
+//        logger.debug("inserting couriers");
+//        courierSeedData.invokeInsert();
 
         /*
          * logger.debug("inserting lineItemStatus"); lineItemStatusSeedData.invokeInsert();
@@ -258,15 +258,15 @@ public class MasterDataService {
 
         logger.debug("inserting review status seed data");
         reviewStatusSeedData.invokeInsert();
-        
-        logger.debug("inserting courier group seed data");
-        courierGroupSeedData.invokeInsert();
+//
+//        logger.debug("inserting courier group seed data");
+//        courierGroupSeedData.invokeInsert();
 
         logger.debug("inserting product referrer seed data");
         productReferrerSeedData.invokeInsert();
 
-        logger.debug("inserting courier group has courier seed data");
-        courierGroupHasCourierSeedData.invokeInsert();
+//        logger.debug("inserting courier group has courier seed data");
+//        courierGroupHasCourierSeedData.invokeInsert();
 
         logger.debug("inserting purchase form-type  seed data");
         purchaseFormTypeSeedData.invokeInsert();

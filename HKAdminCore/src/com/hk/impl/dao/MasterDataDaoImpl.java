@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
+import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
@@ -92,7 +94,11 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private HubService       hubService;
     @Autowired
     private RunSheetService  runsheetService;
+@Autowired
+private CourierGroupService courierGroupService;
 
+	@Autowired
+	private CourierService courierService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -313,7 +319,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
   }
 
     public List<Courier> getCourierList() {
-        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
+        return courierDao.getAllCouriers();
     }
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation(){
@@ -346,6 +352,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
 	public List<CourierGroup>  getCourierGroupList(){
-	return getBaseDao().getAll(CourierGroup.class);	
+	return courierGroupService.getAllCourierGroup();	
+	}
+
+	public List<Courier> getDisableCourier(){
+		return courierService.getDisableCourier();
 	}
 }

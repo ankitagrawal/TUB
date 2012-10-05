@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.domain.courier.Courier;
@@ -53,8 +54,9 @@ public class CourierGroupServiceImpl extends BaseDaoImpl implements CourierGroup
 
 	}
 
+	
 	public CourierGroup save(CourierGroup courierGroup){
-		return (CourierGroup)save(CourierGroup.class);
+		return (CourierGroup)getBaseDao().save(courierGroup);
 	}
 
 

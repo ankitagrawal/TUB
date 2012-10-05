@@ -132,4 +132,9 @@ public class CourierServiceImpl implements CourierService {
 	 return(Courier)getCourierDao().save(courier);
 
 	}
+
+	public List<Courier> getDisableCourier(){
+		return courierDao.getDisableCourier();
+	}
+
 }

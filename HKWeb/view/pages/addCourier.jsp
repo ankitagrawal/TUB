@@ -10,9 +10,8 @@
 		<script type="text/javascript">
 
 
-			
 			$(document).ready(function() {
-				$('#courierDropDown').blur(function() { 				
+				$('#courierDropDown').blur(function() {
 					var courieren = $('#courierDropDown').val();
 					if (courieren == "") {
 						return false;
@@ -20,7 +19,7 @@
 					else {
 						$.getJSON(
 								$('#selectgroup').attr('href'), {courier:courieren}, function(response) {
-							if (response.code == '<%=HealthkartResponse.STATUS_OK%>') { 								
+							if (response.code == '<%=HealthkartResponse.STATUS_OK%>') {
 								$('#groupDropDown').val(response.data.id);
 							}
 							else {
@@ -37,8 +36,13 @@
 
 			});
 		</script>
-	</s:layout-component>
+		<style type="text/css">
+			.alert {
+				font: bolder;
+			}
+		</style>
 
+	</s:layout-component>
 
 
 	<s:layout-component name="heading">
@@ -46,11 +50,10 @@
 	</s:layout-component>
 	<s:layout-component name="content">
 		<div style="display:none">
-		<s:link id="selectgroup" beanclass="com.hk.web.action.admin.courier.AddCourierAction"
-		        event="getCourierGroupForCourier"></s:link>
+			<s:link id="selectgroup" beanclass="com.hk.web.action.admin.courier.AddCourierAction"
+			        event="getCourierGroupForCourier"></s:link>
 
-	</div>
-		<s:errors></s:errors>
+		</div>
 		<div>
 			Total Courier in System = ${fn:length(courierBean.courierList)}
 			<fieldset class="right_label">
@@ -59,9 +62,17 @@
 				<s:form beanclass="com.hk.web.action.admin.courier.AddCourierAction">
 					<ul>
 						<li>
-							<label> Courier Name</label>
-							<s:text name="courier.name"></s:text>
+							<label>Enter New Courier Name</label>
+							<s:text name="courierName"></s:text>
+
+							<label>Enable Courier</label>
+							<s:select id="courierDropDown" name="courier">
+								<s:option value="">--Select Courier --</s:option>
+								<hk:master-data-collection service="<%=MasterDataDao.class%>"
+								                           serviceProperty="disableCourier" value="id" label="name"/>
+							</s:select>
 						</li>
+
 						<s:submit name="saveCourier" value="save courier"/>
 						</li>
 					</ul>
@@ -76,18 +87,25 @@
 				<legend>assign Group Courier</legend>
 				<s:form beanclass="com.hk.web.action.admin.courier.AddCourierAction">
 					<ul>
-						<li><label>Courier </label>
-							<s:select id="courierDropDown" name="courier">
-								<s:option value="">--Select Courier --</s:option>
+						<div>
+							<li><label>Courier </label>
+								<s:select id="courierDropDown" name="courier">
+									<s:option value="">--Select Courier --</s:option>
+									<hk:master-data-collection service="<%=MasterDataDao.class%>"
+									                           serviceProperty="courierList" value="id" label="name"/>
+								</s:select><s:submit name="deleteCourier" value="disable courier"/></li>
+						</div>
+						<div class="clear" style="height:50px;">
+						</div>
+						<div>
+							<li><label>Courier Group </label><s:select id="groupDropDown" name="courierGroup">
+								<s:option value="">-- No Courier Assigned -- </s:option>
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
-								                           serviceProperty="courierList" value="id" label="name"/>
-							</s:select></li>
-
-						<li><label>Courier Group </label><s:select id="groupDropDown" name="courierGroup">
-							<s:option value="">-- No Courier Assigned -- </s:option>
-							<hk:master-data-collection service="<%=MasterDataDao.class%>"
-							                           serviceProperty="courierGroupList" value="id" label="name"/>
-						</s:select></li>
+								                           serviceProperty="courierGroupList" value="id" label="name"/>
+							</s:select>
+								<%--<s:submit name="deleteCourierGroup" value="delete group"/>--%>
+							</li>
+						</div>
 					</ul>
 					<s:submit name="assignCourierGroup" value="assign group"/>
 				</s:form>

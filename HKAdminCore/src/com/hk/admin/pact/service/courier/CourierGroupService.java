@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created with IntelliJ IDEA.
