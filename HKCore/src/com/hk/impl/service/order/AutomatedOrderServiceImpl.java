@@ -88,7 +88,7 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         order = orderService.save(order);
 
         //update amount to be paid for the order... sequence is important here address need to be created priorhand!!
-        orderManager.recalAndUpdateAmount(order);
+        order=recalAndUpdateAmount(order);
 
         //update order payment status and order status in general
         //orderManager.orderPaymentReceieved(payment);
@@ -98,6 +98,16 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         //finalize order -- create shipping order and update inventory
         finalizeOrder(order);
         return  order;
+    }
+
+    private Order recalAndUpdateAmount(Order order){
+         Set<CartLineItem> cartLineItems=order.getCartLineItems();
+         double orderAmount=0.0;
+         for(CartLineItem cartLineItem:cartLineItems){
+              orderAmount=orderAmount+cartLineItem.getHkPrice()-cartLineItem.getDiscountOnHkPrice();
+         }
+         order.setAmount(orderAmount);
+         return orderService.save(order);
     }
 
     public Order createNewOrder(User user){
