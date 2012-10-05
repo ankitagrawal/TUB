@@ -21,6 +21,8 @@
   <s:layout-component name="htmlHead">
 	  <script type="text/javascript">
 		  $(document).ready(function() {
+			 $('#userComments').val('');
+			 $('.commentType').removeAttr("checked");
 			 $('#userComments').change(function() {
 				 if($.trim($('#userComments').val()) == '') {
 					 $('.commentType').removeAttr("checked");
@@ -170,8 +172,8 @@
             </h5>
           </div>--%>
 	      <div class="comment_type" style="display: none;">
-		      <br><s:radio value="1" name="order.commentType" class="commentType"/> Packing instruction
-		      <br><s:radio value="2" name="order.commentType" class="commentType"/> Courier Instruction
+		      <br><s:radio value="1" name="order.commentType" class="commentType"/> Packing Type
+		      <br><s:radio value="2" name="order.commentType" class="commentType"/> Delivery Type
 		      <br><s:radio value="3" name="order.commentType" class="commentType"/> Others
 	      </div>
           <div style="margin:10px; padding-top:10px">

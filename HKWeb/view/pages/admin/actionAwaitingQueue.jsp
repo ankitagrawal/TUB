@@ -535,7 +535,7 @@
                     </div>
                     </div>
                     <div class="clear"></div>
-                    <c:if test="${order.userComments != null}">
+                    <c:if test="${order.commentType == 3}">
                         <div id="userComments-${order.id}" class="detailDiv" style="margin-top:3px;">
                             <div class="headingLabel">User Instructions:</div>
             <span style="word-wrap:break-word">

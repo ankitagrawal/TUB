@@ -52,6 +52,13 @@
           </div>
         </c:otherwise>
       </c:choose>
+    <c:if test="${icBean.shippingOrder.baseOrder.commentType == 1 }" >
+	    <br>
+	    <div align="left" class="prom yellow help" style="height:30px; font-size:20px; color:green; font-weight:bold;">
+		    User Instructions : ${icBean.shippingOrder.baseOrder.userComments}
+	    </div>
+    </c:if>
+
     <div style="display:inline;float:left;">
 
       <c:choose><c:when test="${empty icBean.skuGroups}">
