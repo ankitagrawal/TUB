@@ -104,6 +104,7 @@ public class Product implements java.io.Serializable {
     @Column(name = "out_of_stock")
     private Boolean              outOfStock;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
     private Supplier             supplier;
@@ -120,7 +121,6 @@ public class Product implements java.io.Serializable {
     @JoinTable(name = "product_has_related_product", joinColumns = { @JoinColumn(name = "product_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "related_product_id", nullable = false, updatable = false) })
     private List<Product>        relatedProducts  = new ArrayList<Product>(0);
 
-    @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private List<ProductVariant> productVariants  = new ArrayList<ProductVariant>(0);
 
@@ -133,17 +133,19 @@ public class Product implements java.io.Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private List<SimilarProduct> similarProducts  = new ArrayList<SimilarProduct>(0);
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     private List<ProductFeature> productFeatures  = new ArrayList<ProductFeature>();
 
-    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     private List<ProductImage>   productImages    = new ArrayList<ProductImage>();
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "primary_category", nullable = false)
     private Category             primaryCategory;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "secondary_category", nullable = true)
     private Category             secondaryCategory;

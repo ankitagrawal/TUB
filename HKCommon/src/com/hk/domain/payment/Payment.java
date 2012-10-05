@@ -17,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
@@ -39,9 +40,10 @@ public class Payment implements java.io.Serializable {
   @JoinColumn(name = "payment_mode_id", nullable = false)
   private PaymentMode paymentMode;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "order_id", nullable = false)
-  private Order order;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "payment_status_id", nullable = false)

@@ -144,6 +144,7 @@ public class ProductVariant implements java.io.Serializable {
   @Column(name = "postpaid_amount")
   private Double postpaidAmount;
 
+  @JsonSkip
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "created_date", nullable = false, length = 19)
   private Date createdDate;
