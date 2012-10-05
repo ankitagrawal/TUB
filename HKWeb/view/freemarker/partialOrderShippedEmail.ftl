@@ -102,9 +102,9 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 					<td width="579" valign="top">
 						<br>
 						<#if shippingOrder.shipment.shipDate??>
-							Following items were dispatched earlier on ${shippingOrder.shipment.shipDate} via a different shipment <br><br>
+							Following items were dispatched earlier on ${shippingOrder.shipment.shipDate?date} via a different shipment <br>
 						<#else >
-							Following items were dispatched earlier via different shipment <br><br>
+							Following items were dispatched earlier via a different shipment <br>
 						</#if>
 
 						<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
@@ -143,11 +143,13 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 			<tr>
 				<td width="579" valign="top">
 					<#if shippingOrder.targetDispatchDate??>
-						Due to the assortment of products in your current order, certain items will be shipped on ${shippingOrder.targetDispatchDate}.<br>
-						Here are the details:<br><br>
+						<br><br>Due to the assortment of products in your current order, following items are expected to be
+						shipped on ${shippingOrder.targetDispatchDate?date} :
+						<br>
 					<#else>
-						Due to the assortment of products in your current order, certain items will be shipped at a later date.<br>
-						Here are the details:<br><br>
+						<br><br>Due to the assortment of products in your current order, following items are expected to be
+						shipped at a later date :
+						<br>
 					</#if>
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
 						<tr>

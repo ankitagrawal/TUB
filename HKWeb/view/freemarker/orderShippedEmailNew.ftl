@@ -57,7 +57,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 				<td width="579" valign="top">Hi ${order.baseOrder.address.name}!<br/>
 
 					Following items of your order ${order.baseOrder.gatewayOrderId}, placed
-					on ${order.baseOrder.payment.paymentDate} has been dispatched.
+					on ${order.baseOrder.payment.paymentDate} have been dispatched.
 					This completes the shipping of your order in its totality. Here are
 					the details:<br/>
 					<br/>
@@ -107,9 +107,9 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 				<td width="579" valign="top">
 					<br>
 					<#if shippingOrder.shipment.shipDate??>
-						Following items were dispatched earlier on ${shippingOrder.shipment.shipDate} via a different shipment <br><br>
+						Following items were dispatched earlier on ${shippingOrder.shipment.shipDate?date} via a different shipment <br><br>
 					<#else >
-						Following items were dispatched earlier via different shipment <br><br>
+						Following items were dispatched earlier via a different shipment <br><br>
 					</#if>
 
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
