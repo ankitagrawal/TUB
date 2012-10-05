@@ -68,7 +68,7 @@
 
         <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${consignmentAction}"/>
         <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${consignmentAction}"/>
-        <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction">
+        <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction">
             <s:submit name="generatePaymentReconciliation" value="Generate Payment Reconciliation"/>
             <table class="zebra_vert">
                 <thead>
@@ -101,7 +101,7 @@
                         <td>${consignment.consignmentStatus.status}</td>
                         <td>${consignment.hkdeliveryPaymentReconciliation.id}
                             <c:if test="${consignment.hkdeliveryPaymentReconciliation.id != null}" >
-                                <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="editPaymentReconciliation" target="_blank">
+                                <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction" event="editPaymentReconciliation" target="_blank">
                                     <s:param name="hkdeliveryPaymentReconciliation" value="${consignment.hkdeliveryPaymentReconciliation.id}" />
                                     (View)
                                 </s:link>

@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.hk.domain.catalog.category.Category;
-
 /**
  * Created by IntelliJ IDEA.
  * User: USER
@@ -50,7 +48,7 @@ public class AffiliateCategory {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Category)) return false;
+    if (!(o instanceof AffiliateCategory)) return false;
 
     AffiliateCategory category = (AffiliateCategory) o;
 

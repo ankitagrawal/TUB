@@ -134,4 +134,6 @@ public interface MasterDataDao
 	public List<CourierGroup>  getCourierGroupList();
 
 	public List<Courier> getDisableCourier();
+
+	public List<Courier> getAvailableCouriers();
 }

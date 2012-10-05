@@ -1,15 +1,8 @@
 package com.hk.dto;
 
-import com.hk.domain.catalog.product.ProductOption;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 
+@SuppressWarnings("serial")
 public class PriceRangeDto implements java.io.Serializable {
 
 	private Double minPrice;

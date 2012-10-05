@@ -2,6 +2,7 @@ package com.hk.web.action.core.payment;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.order.AdminOrderService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.discount.EnumRewardPointMode;
@@ -72,6 +73,8 @@ public class PaymentSuccessAction extends BaseAction {
 	@Autowired
 	private ShippingOrderService shippingOrderService;
 	@Autowired
+	ShipmentService shipmentService;
+	@Autowired
 	RewardPointService rewardPointService;
 	@Autowired
 	ReferrerProgramManager referrerProgramManager;
@@ -138,6 +141,8 @@ public class PaymentSuccessAction extends BaseAction {
 								if (shippingOrders != null) {
 									for (ShippingOrder shippingOrder : shippingOrders) {
 										shippingOrderService.nullifyCodCharges(shippingOrder);
+										shipmentService.recreateShipment(shippingOrder);
+										shippingOrderService.autoEscalateShippingOrder(shippingOrder);
 									}
 								}
 								Set<CartLineItem> cartLineItems = order.getCartLineItems();

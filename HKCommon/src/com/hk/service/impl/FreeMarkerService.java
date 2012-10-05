@@ -99,7 +99,26 @@ public class FreeMarkerService {
     return renderOutput;
   }
 
-  /**
+	public RenderOutput processSmsTemplate(Template template, Object templateValues) {
+		RenderOutput renderOutput = null;
+		try {
+			StringWriter stringWriter = new StringWriter();
+			template.process(templateValues, stringWriter);
+			// the first line in the template is the email subject
+			// the rest is the html body
+			String body = stringWriter.toString();
+
+			renderOutput = new RenderOutput("", body);
+		} catch (IOException e) {
+			logger.error("IOException in getRenderOutputForTemplate for template ", e);
+		} catch (TemplateException e) {
+			logger.error("TemplateException in getRenderOutputForTemplate for template ", e);
+		}
+		return renderOutput;
+	}
+
+
+	/**
    * This method takes a template's path and template values and tries to return a rendered message.
    *
    * @param template

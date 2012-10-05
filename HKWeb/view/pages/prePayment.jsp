@@ -45,7 +45,7 @@
             <c:if test="${order != null}">
                 <c:if test="${order.payment.paymentMode.id == codPaymentModeId  && order.amount < 1500 && order.amount > 250}">
                     <div>
-                        <img src="${pageContext.request.contextPath}/images/banners/pay_online_banner2.5.jpg">
+                        <img src="${pageContext.request.contextPath}/images/banners/pay_online_banner5.jpg">
                     </div>
                 </c:if>
             </c:if>

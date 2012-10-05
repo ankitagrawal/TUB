@@ -1,10 +1,11 @@
 package com.hk.impl.dao.catalog.product;
 
-import com.akube.framework.dao.Page;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.*;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.catalog.product.ProductDao;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -12,7 +13,15 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import com.akube.framework.dao.Page;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductExtraOption;
+import com.hk.domain.catalog.product.ProductGroup;
+import com.hk.domain.catalog.product.ProductImage;
+import com.hk.domain.catalog.product.ProductOption;
+import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.catalog.product.ProductDao;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -38,6 +47,9 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         }
 	    if (product.getCodAllowed() == null)   {
             product.setCodAllowed(Boolean.FALSE);
+        }
+	    if (product.getOutOfStock() == null)   {
+            product.setOutOfStock(Boolean.FALSE);
         }
         return (Product) super.save(product);
     }
@@ -91,6 +103,10 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 
     public List<Product> getAllProductBySubCategory(String category) {
         return getSession().createQuery("select p from Product p left join p.categories c where c.name = :category order by p.orderRanking asc").setString("category", category).list();
+    }
+
+    public List<Product> getAllNonDeletedProducts() {
+        return super.findByQuery("select p from Product p where p.deleted = false");
     }
 
     public List<Product> getAllProductByBrand(String brand) {
@@ -164,7 +180,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) and p.deleted <> 1 group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
 			if (productIds != null && !productIds.isEmpty()) {
 				productIds = getSession().createQuery("select pv.product.id from ProductVariant pv where pv.product.id in (:productIds) and pv.hkPrice between :minPrice and :maxPrice and pv.deleted <> 1").setParameterList("productIds", productIds).setParameter("minPrice", minPrice).setParameter("maxPrice", maxPrice).list();
-				if (filterOptions != null && !filterOptions.isEmpty() && groupsCount > 0) {
+				if (productIds != null && !productIds.isEmpty() && filterOptions != null && !filterOptions.isEmpty() && groupsCount > 0) {
 					productIds = getSession().createSQLQuery("select distinct pv.product_id from product_variant_has_product_option pvhpo, product_variant pv where pvhpo.product_variant_id=pv.id and pv.product_id in (:productIds) and pvhpo.product_option_id in (:filterOptions) group by pvhpo.product_variant_id having count(pvhpo.product_variant_id) = :groupsCount").setParameterList("productIds", productIds).setParameterList("filterOptions", filterOptions).setParameter("groupsCount", groupsCount).list();
 				}
 				if (productIds != null && !productIds.isEmpty()) {
@@ -256,6 +272,12 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 
         return products;
 
+    }
+
+    public List<Product> getAllProductsById(List<String> productIdList) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+        criteria.add(Restrictions.in("id", productIdList));
+        return findByCriteria(criteria);
     }
 
     public Page getPaginatedResults(List<String> productIdList, int page, int perPage) {

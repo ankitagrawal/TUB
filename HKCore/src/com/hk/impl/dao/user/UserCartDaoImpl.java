@@ -26,7 +26,7 @@ public class UserCartDaoImpl extends BaseDaoImpl implements UserCartDao {
     @Transactional
     public void addToCartHistory(Product product, User user) {
 
-        if (!incrementProductCounterIfAlreadyExists(product, user)) {
+        if ( product !=null && user !=null && !incrementProductCounterIfAlreadyExists(product, user)) {
             UserCart userCart = new UserCart();
             userCart.setCreateDate(new Date());
             userCart.setLastDate(new Date());

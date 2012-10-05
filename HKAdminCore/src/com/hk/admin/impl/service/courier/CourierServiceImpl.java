@@ -47,7 +47,7 @@ public class CourierServiceImpl implements CourierService {
     }
 
     public List<Courier> getAllCouriers() {
-        return getCourierDao().getAllCouriers();
+        return getCourierDao().getAll(Courier.class);
     }
 
     public CourierServiceInfo getCourierServiceByPincodeAndCourier(Long courierId, String pincode, Boolean isCod) {
@@ -136,5 +136,9 @@ public class CourierServiceImpl implements CourierService {
 	public List<Courier> getDisableCourier(){
 		return courierDao.getDisableCourier();
 	}
+
+	 public List<Courier> getAvailableCouriers() {
+		 return courierDao.getAvailableCouriers();
+	 }
 
 }

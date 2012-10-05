@@ -64,7 +64,7 @@
 						<li>
 							<label>Enter New Courier Name</label>
 							<s:text name="courierName"></s:text>
-
+							&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp;
 							<label>Enable Courier</label>
 							<s:select id="courierDropDown" name="courier">
 								<s:option value="">--Select Courier --</s:option>
@@ -73,7 +73,7 @@
 							</s:select>
 						</li>
 
-						<s:submit name="saveCourier" value="save courier"/>
+						<s:submit name="saveCourier" value="Save/Enable courier"/>
 						</li>
 					</ul>
 				</s:form>
@@ -92,7 +92,7 @@
 								<s:select id="courierDropDown" name="courier">
 									<s:option value="">--Select Courier --</s:option>
 									<hk:master-data-collection service="<%=MasterDataDao.class%>"
-									                           serviceProperty="courierList" value="id" label="name"/>
+									                           serviceProperty="availableCouriers" value="id" label="name"/>
 								</s:select><s:submit name="deleteCourier" value="disable courier"/></li>
 						</div>
 						<div class="clear" style="height:50px;">
@@ -106,8 +106,9 @@
 								<%--<s:submit name="deleteCourierGroup" value="delete group"/>--%>
 							</li>
 						</div>
+						<s:submit name="assignCourierGroup" value="assign group"/>
 					</ul>
-					<s:submit name="assignCourierGroup" value="assign group"/>
+
 				</s:form>
 			</fieldset>
 		</div>
@@ -125,7 +126,7 @@
 							<s:text name="courierGroup.name"></s:text>
 						</li>
 						<s:submit name="addNewCourierGroup" value="save courier group"/>
-						</li>
+						
 					</ul>
 				</s:form>
 			</fieldset>

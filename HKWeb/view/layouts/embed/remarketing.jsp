@@ -261,7 +261,69 @@
 <c:if test="${hk:equalsIgnoreCase('revlon', brandLabel)}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="-InxCMmU7QMQ_4XqxAM" id="949650175"/>
 </c:if>
-
+<c:if test="${hk:equalsIgnoreCase('braun', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="-2fKCOmawgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('babyliss', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="fxpDCPGZwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('andis', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="9cMxCPmYwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('ponds', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="CRq0CIGYwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('remington', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="DSTOCImXwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('streetwear', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="hdajCJGWwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('axe', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="4iYeCJmVwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('khadi', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="e83JCKGUwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('colorbar', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="IXhPCKmTwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('h2o', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="yGIBCLGSwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('dove', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="I6R9CLmRwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('vichy', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="g-_OCMGQwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('nivea', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="1o8dCMmPwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('aroma-magic', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="dosSCNGOwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('shahnaz', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="BPJFCNmNwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('scholl', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="5HaGCOGMwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('elle18', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="oszMCOmLwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('lakme', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="UXQoCPGKwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('philips', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="kkrACPmJwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('kaya', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="CzgdCIGJwgQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('maybelline', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="UMOACLmo5wMQ_4XqxAM" id="949650175"/>
+</c:if>
 <%-- EYE --%>
 <c:if test="${hk:equalsIgnoreCase('bausch+&+lomb', brandLabel) || hk:equalsIgnoreCase('bausch & lomb', brandLabel)}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="pA4ECKnE7AIQn_iQ4gM" id="1011104799"/>

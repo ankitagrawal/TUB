@@ -16,15 +16,11 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
-import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
-import com.hk.domain.hkDelivery.ConsignmentStatus;
-import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
@@ -47,6 +43,8 @@ import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.RegionType;
 import com.hk.domain.courier.CourierGroup;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
@@ -319,7 +317,7 @@ private CourierGroupService courierGroupService;
   }
 
     public List<Courier> getCourierList() {
-        return courierDao.getAllCouriers();
+        return courierService.getAllCouriers();
     }
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation(){
@@ -357,5 +355,9 @@ private CourierGroupService courierGroupService;
 
 	public List<Courier> getDisableCourier(){
 		return courierService.getDisableCourier();
+	}
+
+	public List<Courier> getAvailableCouriers(){
+		return courierService.getAvailableCouriers();
 	}
 }

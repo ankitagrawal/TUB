@@ -6,10 +6,10 @@
   <s:layout-component name="body">
 
     <div class="round-cont" style="width:695px;">
-      <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="EYE034"/>
-      <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="EYE035"/>
-      <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="EYE036"/>
-      <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="EYE037"/>
+      <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="EYE034"/>
+      <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="EYE035"/>
+      <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="EYE036"/>
+      <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="EYE037"/>
       <div align="right">
         <a class="more" href="${pageContext.request.contextPath}/eye/lenses">more>></a>
       </div>

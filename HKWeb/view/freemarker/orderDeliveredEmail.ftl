@@ -80,18 +80,34 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 						</#list>
 					</#list>
 					</table> <br>
+					<div class="line-separator" style="height:1px; background:#717171; border-bottom:1px solid #313030;"></div>
+					<br>
 					We would like to know more about your experience shopping with us, so that we can improve our services. <br>
 					While we like positive feedback, we think your criticism can help us correct our course & serve you better.<br>
 					Feel free to be frank, we're listening.<br/>
 					<br>
-					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
+					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1" RULES=COLS >
 						<tr>
 							<td>
-								<table cellpadding="5" cellspacing="5">
+								<table cellpadding="5" cellspacing="5" >
 									<tr>
 										<td colspan="10"><strong>How likely is it that you would
 											recommend HealthKart to a friend or colleague? </strong>
 										</td>
+									</tr>
+									</table>
+								<table cellpadding="5" cellspacing="5" border="1" style="font-size:12px;" RULES=COLS FRAME=BOX>
+									<tr>
+										<td><strong>Not likely</strong></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td><strong>Very likely</strong></td>
 									</tr>
 									<tr>
 										<td>
@@ -137,6 +153,9 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 									</tr>
 								</table>
 							</td>
+						</tr>
+						<tr>
+							<td></td>
 						</tr>
 					</table>
 					<br/> <br/>

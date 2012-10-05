@@ -49,16 +49,16 @@ public class AddCourierAction extends BaseAction {
 
 	private List<CourierGroup> courierGroupList;
 
-		@Validate(required = true, on = "assignCourierGroup getCourierGroupForCourier")
+	@Validate(required = true, on = "assignCourierGroup getCourierGroupForCourier")
 	private Courier courier;
-		@Validate(required = true, on = "addNewCourierGroup assignCourierGroup")
+	@Validate(required = true, on = "addNewCourierGroup assignCourierGroup")
 	private CourierGroup courierGroup;
 
 	private String courierName;
 
 	@DefaultHandler
 	public Resolution pre() {
-		courierList = courierService.getAllCouriers();
+		courierList = courierService.getAvailableCouriers();
 		courierGroupList = courierGroupService.getAllCourierGroup();
 		return new ForwardResolution("/pages/addCourier.jsp");
 	}
@@ -67,15 +67,19 @@ public class AddCourierAction extends BaseAction {
 		if (courierName != null && courier != null) {
 			addRedirectAlertMessage(new SimpleMessage("Either Enter  New Courier or Enable Courier"));
 		} else {
-			if (courier != null) {
-				courier.setDeleted(false);
-				courierService.save(courier);
-				addRedirectAlertMessage(new SimpleMessage("Courier "+courier.getName() +"  is made Available"));
+			if (courier != null && courier.getId() != null) {
+				addRedirectAlertMessage(new SimpleMessage("Courier " + courier.getName() + "  is made Available"));
 			} else {
-				courier.setDeleted(false);
-				courierService.save(courier);
+				if(courierService.getCourierByName(courierName.trim()) != null){
+				addRedirectAlertMessage(new SimpleMessage("Courier " + courierName + "  is Already exist"));
+				return pre();
+				}
+				courier = new Courier();
+				courier.setName(courierName.trim());
 				addRedirectAlertMessage(new SimpleMessage("Courier Saved"));
 			}
+			courier.setDeleted(false);
+			courierService.save(courier);
 		}
 		return pre();
 	}
@@ -95,10 +99,10 @@ public class AddCourierAction extends BaseAction {
 
 
 	public Resolution assignCourierGroup() {
-		if(courier.getCourierGroup() != null){
-		CourierGroup oldCourierGroup = courier.getCourierGroup();
-		oldCourierGroup.getCouriers().remove(courier);
-		courierGroupService.save(oldCourierGroup);
+		if (courier.getCourierGroup() != null) {
+			CourierGroup oldCourierGroup = courier.getCourierGroup();
+			oldCourierGroup.getCouriers().remove(courier);
+			courierGroupService.save(oldCourierGroup);
 		}
 		courierGroup.getCouriers().add(courier);
 		courierGroup = courierGroupService.save(courierGroup);

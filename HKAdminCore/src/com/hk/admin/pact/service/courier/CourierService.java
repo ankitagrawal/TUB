@@ -36,6 +36,8 @@ public interface CourierService {
 
 	public List<Courier> getDisableCourier();
 
+	 public List<Courier> getAvailableCouriers();
+
 	
 
 

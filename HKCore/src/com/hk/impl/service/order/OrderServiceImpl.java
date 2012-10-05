@@ -1,7 +1,6 @@
 package com.hk.impl.service.order;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -11,13 +10,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.comparator.BasketCategory;
-import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -57,8 +54,6 @@ import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pojo.DummyOrder;
-import com.hk.util.HKDateUtil;
-import com.hk.util.OrderUtil;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -97,8 +92,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderSplitterService orderSplitterService;
 
 
-    @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
-    private Double codMinAmount;
+    /*@Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
+    private Double codMinAmount;*/
 
     @Transactional
     public Order save(Order order) {
@@ -307,6 +302,7 @@ public class OrderServiceImpl implements OrderService {
         if (isUpdated) {
             getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
             approvePendingRewardPointsForOrder(order);
+	        affilateService.approvePendingAffiliateTxn(order);
             // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
             // check if payment mode was COD and email hasn't been sent yet
             // sendEmailToServiceProvidersForOrder(order);
@@ -322,6 +318,7 @@ public class OrderServiceImpl implements OrderService {
         } else {
             getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
         }
+	    affilateService.cancelTxn(order);
         return order;
     }
 

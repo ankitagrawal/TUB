@@ -52,7 +52,7 @@ Subscription Cancellation for Subscription ID ${subscription.id}
                 <tr>
                     <td width="579" valign="top">Hi ${subscription.user.name}! <br/>
                         <br/>
-                        Your Subscription for ID ${subscription.id} has been cancelled, as per your instructions. <br/>
+                        Your Subscription for ID ${subscription.id} has been cancelled. <br/>
                         <br/>
 
                         You had subscribed for:<br/>
