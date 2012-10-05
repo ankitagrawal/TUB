@@ -92,6 +92,8 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
 
         //update order payment status and order status in general
         //orderManager.orderPaymentReceieved(payment);
+        order.setGatewayOrderId(payment.getGatewayOrderId());
+        order.setPayment(payment);
         // save order with placed status since amount has been applied
         order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
 
