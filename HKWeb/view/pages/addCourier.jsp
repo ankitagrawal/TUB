@@ -8,8 +8,6 @@
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.AddCourierAction" var="courierBean"/>
 	<s:layout-component name="htmlHead">
 		<script type="text/javascript">
-
-
 			$(document).ready(function() {
 				$('#courierDropDown').blur(function() {
 					var courieren = $('#courierDropDown').val();
@@ -36,11 +34,6 @@
 
 			});
 		</script>
-		<style type="text/css">
-			.alert {
-				font: bolder;
-			}
-		</style>
 
 	</s:layout-component>
 
@@ -51,7 +44,9 @@
 	<s:layout-component name="content">
 		<div style="display:none">
 			<s:link id="selectgroup" beanclass="com.hk.web.action.admin.courier.AddCourierAction"
-			        event="getCourierGroupForCourier"></s:link>
+			        event="getCourierGroupForCourier">
+
+			        </s:link>
 
 		</div>
 		<div>
@@ -66,15 +61,13 @@
 							<s:text name="courierName"></s:text>
 							&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp;
 							<label>Enable Courier</label>
-							<s:select id="courierDropDown" name="courier">
+							<s:select  name="courier">
 								<s:option value="">--Select Courier --</s:option>
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
 								                           serviceProperty="disableCourier" value="id" label="name"/>
 							</s:select>
 						</li>
-
 						<s:submit name="saveCourier" value="Save/Enable courier"/>
-						</li>
 					</ul>
 				</s:form>
 			</fieldset>

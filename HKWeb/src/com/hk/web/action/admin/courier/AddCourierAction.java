@@ -49,7 +49,7 @@ public class AddCourierAction extends BaseAction {
 
 	private List<CourierGroup> courierGroupList;
 
-	@Validate(required = true, on = "assignCourierGroup getCourierGroupForCourier")
+	@Validate(required = true, on = "assignCourierGroup")
 	private Courier courier;
 	@Validate(required = true, on = "addNewCourierGroup assignCourierGroup")
 	private CourierGroup courierGroup;
@@ -117,12 +117,7 @@ public class AddCourierAction extends BaseAction {
 		return pre();
 	}
 
-//	public Resolution deleteCourierGroup() {
-//		Set<Courier> courierSet = courierGroup.getCouriers();
-//		courierGroupService.getAllCourierGroup().removeAll(courierSet);
-//		addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
-//		return pre();
-//	}
+
 
 
 	@JsonHandler
