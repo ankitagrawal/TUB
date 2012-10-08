@@ -314,10 +314,14 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
         PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
         Collections.sort(primaryCategoryHeading.getProducts(), new ProductOrderRankingComparator());
+        List<Product> sortedProductsByOrder = new ArrayList<Product>();
         for (Product product : primaryCategoryHeading.getProducts()) {
             product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
+            if (isProductValid(product)){
+                sortedProductsByOrder.add(product);
+            }
         }
-        return primaryCategoryHeading.getProducts();
+        return sortedProductsByOrder;
     }
 
 	public Map<String, List<Long>> getGroupedFilters(List<Long> filters){
