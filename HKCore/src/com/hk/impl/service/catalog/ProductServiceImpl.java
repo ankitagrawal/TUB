@@ -4,18 +4,14 @@ import java.util.*;
 
 import com.hk.domain.content.SeoData;
 import com.hk.domain.search.SolrProduct;
-import com.hk.exception.SearchException;
 import com.hk.pact.dao.seo.SeoDao;
 import com.hk.pact.service.search.ProductIndexService;
-import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
-import com.hk.constants.core.Keys;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.*;
@@ -53,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
     private LinkManager               linkManager;
 
     @Autowired
-    ProductIndexService productSearchService;
+    ProductIndexService productIndexService;
 
     @Autowired
     private SeoDao seoDao;
@@ -181,7 +177,7 @@ public class ProductServiceImpl implements ProductService {
 
     public Product save(Product product) {
         Product savedProduct = getProductDAO().save(product);
-        productSearchService.indexProduct(savedProduct);
+        productIndexService.indexProduct(savedProduct);
         return savedProduct;
     }
 
@@ -226,12 +222,11 @@ public class ProductServiceImpl implements ProductService {
             return false;
         } else {
             for (ComboProduct comboProduct : combo.getComboProducts()) {
-                Product product = comboProduct.getProduct();
                 if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
                     return false;
-                } else if (product.getInStockVariants().isEmpty()) {
+                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
                     return false;
-                } else if (product.isDeleted() != null && product.isDeleted()) {
+                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
                     return false;
                 }
             }
@@ -241,8 +236,18 @@ public class ProductServiceImpl implements ProductService {
 
 	public boolean isComboInStock(String comboId) {
 		Combo combo = getComboDao().getComboById(comboId);
-        if (combo != null){
-            return isComboInStock(combo);
+        if (combo.isDeleted() != null && combo.isDeleted()) {
+            return false;
+        } else {
+            for (ComboProduct comboProduct : combo.getComboProducts()) {
+                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
+                    return false;
+                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
+                    return false;
+                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -309,10 +314,14 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
         PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
         Collections.sort(primaryCategoryHeading.getProducts(), new ProductOrderRankingComparator());
+        List<Product> sortedProductsByOrder = new ArrayList<Product>();
         for (Product product : primaryCategoryHeading.getProducts()) {
             product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
+            if (isProductValid(product)){
+                sortedProductsByOrder.add(product);
+            }
         }
-        return primaryCategoryHeading.getProducts();
+        return sortedProductsByOrder;
     }
 
 	public Map<String, List<Long>> getGroupedFilters(List<Long> filters){
@@ -471,6 +480,12 @@ public class ProductServiceImpl implements ProductService {
         }
         if (product.getOutOfStock() != null){
             solrProduct.setOutOfStock(product.getOutOfStock().booleanValue());
+        }
+
+        if (product.getHidden() != null){
+            solrProduct.setHidden(product.getHidden().booleanValue());
+        }else{
+            solrProduct.setHidden(false);
         }
 
         Double price = null;

@@ -1,6 +1,9 @@
 package com.hk.pact.service.search;
 
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.search.SolrProduct;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,4 +14,6 @@ import com.hk.domain.catalog.product.Product;
  */
 public interface ProductIndexService {
     void indexProduct(Product product);
+
+    void indexProduct(List<SolrProduct> products);
 }
