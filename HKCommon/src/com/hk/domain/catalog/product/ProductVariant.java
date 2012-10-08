@@ -144,6 +144,7 @@ public class ProductVariant implements java.io.Serializable {
   @Column(name = "postpaid_amount")
   private Double postpaidAmount;
 
+  @JsonSkip
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "created_date", nullable = false, length = 19)
   private Date createdDate;
@@ -163,10 +164,12 @@ public class ProductVariant implements java.io.Serializable {
   @Column(name = "consumption_time", nullable = true)
   private Long consumptionTime;
 
+  @JsonSkip
   @Temporal(TemporalType.DATE)
   @Column(name = "next_available_date", nullable = true, length = 19)
   private Date nextAvailableDate;
 
+  @JsonSkip
   @Temporal(TemporalType.DATE)
   @Column(name = "following_available_date", nullable = true, length = 19)
   private Date followingAvailableDate;

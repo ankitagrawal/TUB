@@ -51,6 +51,9 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 	    if (product.getOutOfStock() == null)   {
             product.setOutOfStock(Boolean.FALSE);
         }
+	    if (product.isHidden() == null)   {
+            product.setHidden(Boolean.FALSE);
+        }
         return (Product) super.save(product);
     }
 
@@ -167,6 +170,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                 criteria.add(Restrictions.in("id", productIds));
                 criteria.add(Restrictions.eq("deleted", false));
                 criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+                criteria.add(Restrictions.eq("hidden", false));
                 criteria.addOrder(Order.asc("orderRanking"));
 
                 return list(criteria, page, perPage);
@@ -191,6 +195,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 					criteria.add(Restrictions.in("id", productIds));
 					criteria.add(Restrictions.eq("deleted", false));
 					criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+					criteria.add(Restrictions.eq("hidden", false));
 					criteria.addOrder(Order.asc("orderRanking"));
 					return list(criteria, page, perPage);
 				}
