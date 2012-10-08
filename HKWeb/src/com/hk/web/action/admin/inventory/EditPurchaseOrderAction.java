@@ -1,32 +1,5 @@
 package com.hk.web.action.admin.inventory;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.hk.domain.core.PurchaseOrderStatus;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.FileBean;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.admin.manager.PurchaseOrderManager;
@@ -38,6 +11,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
@@ -46,6 +20,19 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
 @Component
@@ -195,9 +182,9 @@ public class EditPurchaseOrderAction extends BaseAction {
 	        purchaseOrder.setFinalPayableAmount(purchaseOrder.getPayable() - overallDiscount);
             purchaseOrderDao.save(purchaseOrder);
 
-            if (purchaseOrder.getPurchaseOrderStatus().getId() == EnumPurchaseOrderStatus.SentForApproval.getId()) {
+            if (purchaseOrder.getPurchaseOrderStatus().getId().equals( EnumPurchaseOrderStatus.SentForApproval.getId())) {
                 emailManager.sendPOSentForApprovalEmail(purchaseOrder);
-            } else if (purchaseOrder.getPurchaseOrderStatus().getId() == EnumPurchaseOrderStatus.SentToSupplier.getId()) {
+            } else if (purchaseOrder.getPurchaseOrderStatus().getId().equals( EnumPurchaseOrderStatus.SentToSupplier.getId())) {
                 emailManager.sendPOPlacedEmail(purchaseOrder);
             }
         }
