@@ -1,14 +1,14 @@
 package com.hk.web.action.admin.replacementOrder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.domain.order.ReplacementOrder;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import com.hk.web.HealthkartResponse;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
@@ -80,7 +80,7 @@ public class ReplacementOrderAction extends BaseAction {
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem));
         }
-        return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+        return new ForwardResolution("/pages/admin/createReplacementOrder.jsp").addParameter("shippingOrderId", shippingOrderId);
     }
 
     public Resolution createReplacementOrder() {
@@ -129,9 +129,25 @@ public class ReplacementOrderAction extends BaseAction {
 		    addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order."));
             return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 	    }
-	    addRedirectAlertMessage(new SimpleMessage("The Replacement order created. New gateway order id: "+ replacementOrder.getId()));
+	    addRedirectAlertMessage(new SimpleMessage("The Replacement order created. New gateway order id: "+ replacementOrder.getGatewayOrderId()));
         return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
     }
+
+	@JsonHandler
+	public Resolution checkExistingReplacementOrder(){
+		Map dataMap = new HashMap();
+		if(shippingOrderId != null){
+			List<ReplacementOrder> replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(shippingOrderId);
+			if(replacementOrderList.size() > 0){
+				HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product VariantID", dataMap);
+				noCache();
+				return new JsonResolution(healthkartResponse);
+			}
+		}
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Invalid Product VariantID", dataMap);
+		noCache();
+		return new JsonResolution(healthkartResponse);
+	}
 
     public Long getShippingOrderId() {
         return shippingOrderId;

@@ -15,4 +15,6 @@ public interface ReplacementOrderService {
 
     public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto);
 
+	public List<ReplacementOrder> getReplacementOrderForRefShippingOrder(Long refShippingOrderId);
+
 }

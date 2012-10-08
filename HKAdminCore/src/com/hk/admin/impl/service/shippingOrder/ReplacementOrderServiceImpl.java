@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     @Autowired
     LineItemDao                        lineItemDao;
     @Autowired
-    BaseDao                            baseDao;
+    ReplacementOrderDao                replacementOrderDao;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
@@ -62,20 +63,21 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         replacementOrder.setRto(isRto);
 
         replacementOrder.setRefShippingOrder(shippingOrder);
-        replacementOrder = (ReplacementOrder) getBaseDao().save(replacementOrder);
+        replacementOrder = (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
         ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
-        return (ReplacementOrder)getBaseDao().save(replacementOrder);
+        return (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
+	@Override
+	public List<ReplacementOrder> getReplacementOrderForRefShippingOrder(Long refShippingOrderId) {
+		return getReplacementOrderDao().getReplacementOrderFromShippingOrder(refShippingOrderId);
+	}
 
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
+	public ReplacementOrderDao getReplacementOrderDao() {
+		return replacementOrderDao;
+	}
 
-    public ShippingOrderStatusService getShippingOrderStatusService() {
+	public ShippingOrderStatusService getShippingOrderStatusService() {
         return shippingOrderStatusService;
     }
 

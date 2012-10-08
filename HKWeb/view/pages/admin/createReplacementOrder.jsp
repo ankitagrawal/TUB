@@ -1,5 +1,6 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
@@ -30,13 +31,33 @@
                     $('#is-replacement').hide();
                     $('#is-rto').slideDown();
                 });
+	            $('.createReplacementOrderButton').click(function(event){
+		            var shippingOrderId= $('#shippingOrderIdText').val();
+		            $.getJSON(
+				            $('#checkReplacementOrderLink').attr('href'), {shippingOrderId: shippingOrderId},
+				            function(res) {
+					            alert(1);
+					            if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+						            var confirm_action = confirm("A replacement order exists for given shipping order, are you sure you want to create another replacement order?");
+						            if (confirm_action == false) {
+							            event.preventDefault();
+						            }
+					            }
+				            }
+				            );
+	            });
             })
         </script>
+
+	     <div style="display: none;">
+		    <s:link beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="checkReplacementOrderLink"
+		            event="checkExistingReplacementOrder"></s:link>
+	    </div>
         <fieldset class="right_label">
             <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
                 <label>Search Shipping Order</label>
                 <br/><br/>
-                <s:text name="shippingOrderId" id="shippingOrderId" style="width:200px;"/>
+                <s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/>
                 <br/>
                 <br/>
                 <s:submit name="searchShippingOrder" value="Search"/>
@@ -127,7 +148,7 @@
                             </tr>
                         </c:forEach>
                     </table>
-                    <s:submit name="createReplacementOrder" value="Generate Replacement Order"/>
+                    <s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
 
@@ -164,7 +185,7 @@
                             </tr>
                         </c:forEach>
                     </table>
-                    <s:submit name="createReplacementOrder" value="Generate Replacement Order"/>
+                    <s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
 

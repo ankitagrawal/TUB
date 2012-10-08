@@ -84,6 +84,7 @@
                         }
                 );
             });
+	        
 
             $('.requiredFieldValidator').click(function() {
                 var quantity = $('.quantity').val();
