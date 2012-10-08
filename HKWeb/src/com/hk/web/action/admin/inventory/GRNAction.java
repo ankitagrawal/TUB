@@ -157,6 +157,13 @@ public class GRNAction extends BasePaginatedAction {
 				addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
 				return new RedirectResolution(GRNAction.class).addParameter("view").addParameter("grn", grn.getId());
 			}
+
+			double overallDiscount = 0;
+			if(grn.getPurchaseOrder().getDiscount() != null && grn.getPurchaseOrder().getPayable() != null && grn.getPurchaseOrder().getPayable() > 0 && grn.getPayable() != null) {
+				overallDiscount = (grn.getPurchaseOrder().getDiscount()/grn.getPurchaseOrder().getPayable()) * grn.getPayable();
+			}
+			grn.setDiscount(overallDiscount);
+
 			double discountRatio = 0;
 			if (grn.getPayable() != null && grn.getPayable() > 0 && grn.getDiscount() != null) {
 				discountRatio = grn.getDiscount() / grn.getPayable();
@@ -197,7 +204,6 @@ public class GRNAction extends BasePaginatedAction {
 			grnDto = grnManager.generateGRNDto(grn);
 			grn.setPayable(grnDto.getTotalPayable());
 
-			double overallDiscount = grn.getDiscount() != null ? grn.getDiscount() : 0;
 			grn.setFinalPayableAmount(grn.getPayable() - overallDiscount);
 			goodsReceivedNoteDao.save(grn);
 		}
