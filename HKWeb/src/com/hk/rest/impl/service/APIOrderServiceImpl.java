@@ -55,6 +55,7 @@ import com.hk.rest.models.order.APIProductDetail;
 import com.hk.rest.pact.service.APIOrderService;
 import com.hk.rest.pact.service.APIUserService;
 import com.hk.util.json.JSONResponseBuilder;
+import com.akube.framework.util.BaseUtils;
 
 /**
  * Created by IntelliJ IDEA. User: Pradeep Date: May 1, 2012 Time: 1:26:17 PM
@@ -309,6 +310,7 @@ public class APIOrderServiceImpl implements APIOrderService {
 
         Order hkOrder = automatedOrderService.createNewOrder(hkUser);
         hkOrder.setUserComments(order.getUserComments());
+	    hkOrder.setScore(0L);
 
         Set<CartLineItem> cartLineItemSet = order.getCartLineItems();
         Set<CartLineItem> hkCartLineItemSet = new HashSet<CartLineItem>();
@@ -327,8 +329,9 @@ public class APIOrderServiceImpl implements APIOrderService {
         payment.setId(null);
         payment.setOrder(hkOrder);
 
-        /* payment.setGatewayOrderId(hkOrder.getId().toString() +"-"+ order.getGatewayOrderId().split("-")[1]); */
-        payment.setGatewayOrderId(order.getGatewayOrderId());
+        payment.setGatewayOrderId(hkOrder.getId().toString() +"-"+ order.getGatewayOrderId().split("-")[1]);
+        //payment.setGatewayOrderId(order.getGatewayOrderId());
+	    payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
         payment = paymentService.save(payment);
         if (cartLineItemSet.size() > 0) {
             hkOrder = automatedOrderService.placeOrder(hkOrder, hkCartLineItemSet, address, payment, order.getStore(), false);
