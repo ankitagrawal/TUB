@@ -84,6 +84,7 @@
                                         res.data.product + '<br/>' +
                                                 res.data.options
                                 );
+
                             } else {
                                 $('.variantDetails').html('<h2>'+res.message+'</h2>');
                             }
@@ -168,6 +169,13 @@
             updateTotal('.receivedQuantity','.totalQuantity');
         });
     </script>
+
+	<style type="text/css">
+
+		.bcolor{
+			color:brown;
+		}
+	</style>
 </s:layout-component>
 <s:layout-component name="heading">
     Edit GRN of PO # ${pa.grn.purchaseOrder.id}
@@ -299,7 +307,17 @@
                     </div>
                 </td>
                 <td>
+	                <c:set var="skumap" value="${pa.skuIsNew}"/>
+	                <c:choose>
+	                <c:when test="${skumap[grnLineItemDto.grnLineItem.sku] != null }">
+		                <span style="color:red;">
                         ${productVariant.id}
+			                </span>
+	                  </c:when>
+		                <c:otherwise>
+			               ${productVariant.id}
+		                </c:otherwise>
+	                   </c:choose>
                     <s:hidden class="variant" name="grnLineItems[${ctr.index}].productVariant"
                               value="${grnLineItemDto.grnLineItem.productVariant.id}"/>
                         <%--<s:hidden class="sku" name="grnLineItems[${ctr.index}].sku"

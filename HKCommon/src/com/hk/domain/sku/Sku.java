@@ -125,4 +125,24 @@ public class Sku implements java.io.Serializable {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+
+	 @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (!(o instanceof Sku))
+            return false;
+        Sku sku = (Sku) o;
+        if (!id.equals(sku.getId()))
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
