@@ -152,11 +152,10 @@ public class GRNAction extends BasePaginatedAction {
     public Resolution view() {
         if (grn != null) {
             logger.debug("grn@view: " + grn.getId());
-            grnDto = grnManager.generateGRNDto(grn);
-             grnLineItems = grn.getGrnLineItems();
-	        for(GrnLineItem grnlineitem : grnLineItems){
-		     List<GrnLineItem> grnLineItems = grnLineItemDao.getAllGrnLineItemBySku(grnlineitem.getSku());
-		     if(grnLineItems != null && grnLineItems.size() == 1){
+            grnDto = grnManager.generateGRNDto(grn);	   
+	        for(GrnLineItem grnlineitem : grn.getGrnLineItems()){
+		     List<GrnLineItem> grnLineItemsList = grnLineItemDao.getAllGrnLineItemBySku(grnlineitem.getSku());
+		     if(grnLineItemsList != null && grnLineItemsList.size() == 1){
 			  skuIsNew.put(grnlineitem.getSku(),true);
 		     }
 	        }

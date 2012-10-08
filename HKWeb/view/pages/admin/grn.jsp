@@ -71,7 +71,7 @@
             });
 
             $('.variant').live("change", function() {
-                var variantRow = $(this).parents('.lineItemRow');
+                var variantRow = $(this).parents('.lineItemRow'); 	        
                 var productVariantId = variantRow.find('.variant').val();
                 var productVariantDetails = variantRow.find('.pvDetails');
                 $.getJSON(
@@ -83,7 +83,7 @@
                                 productVariantDetails.html(
                                         res.data.product + '<br/>' +
                                                 res.data.options
-                                );
+                                );	                         
 
                             } else {
                                 $('.variantDetails').html('<h2>'+res.message+'</h2>');
@@ -170,12 +170,6 @@
         });
     </script>
 
-	<style type="text/css">
-
-		.bcolor{
-			color:brown;
-		}
-	</style>
 </s:layout-component>
 <s:layout-component name="heading">
     Edit GRN of PO # ${pa.grn.purchaseOrder.id}
@@ -289,7 +283,19 @@
             <c:set value="${productVariant.product}" var="product"/>
 
             <s:hidden name="grnLineItems[${ctr.index}]" value="${grnLineItemDto.grnLineItem.id}"/>
-            <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+	        <c:set var="skumap" value="${pa.skuIsNew}"/>
+	       <c:set var="skumap" value="${pa.skuIsNew}"/>
+	                <c:choose>
+	                <c:when test="${skumap[grnLineItemDto.grnLineItem.sku] != null }">
+                            <tr style="background-color:#FFFAB2;"  count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow ':'lineItemRow '}">
+
+	                  </c:when>
+		                <c:otherwise>
+			               <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+		                </c:otherwise>
+	                   </c:choose>
+	        
+            <%--<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow ':'lineItemRow'}">--%>
                 <td>${ctr.index+1}.</td>
                 <td>
                     <div class='img48' style="vertical-align:top;">
@@ -307,17 +313,7 @@
                     </div>
                 </td>
                 <td>
-	                <c:set var="skumap" value="${pa.skuIsNew}"/>
-	                <c:choose>
-	                <c:when test="${skumap[grnLineItemDto.grnLineItem.sku] != null }">
-		                <span style="color:red;">
-                        ${productVariant.id}
-			                </span>
-	                  </c:when>
-		                <c:otherwise>
-			               ${productVariant.id}
-		                </c:otherwise>
-	                   </c:choose>
+	                ${productVariant.id}
                     <s:hidden class="variant" name="grnLineItems[${ctr.index}].productVariant"
                               value="${grnLineItemDto.grnLineItem.productVariant.id}"/>
                         <%--<s:hidden class="sku" name="grnLineItems[${ctr.index}].sku"
@@ -390,7 +386,7 @@
     </table>
     <div class="variantDetails info"></div>
     <br/>
-    <a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
+    <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
 
     <s:submit name="save" value="Save" class="requiredFieldValidator"/>
 </s:form>
