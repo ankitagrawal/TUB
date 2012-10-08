@@ -1,5 +1,7 @@
 package com.hk.domain.catalog.product;
 
+import com.akube.framework.gson.JsonSkip;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,10 +22,12 @@ public class SimilarProduct {
     @Column(name = "id", unique = true, nullable = false)
     private Long  id;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "similar_product_id")
     private Product similarProduct;

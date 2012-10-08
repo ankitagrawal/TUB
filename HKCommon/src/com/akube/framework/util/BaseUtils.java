@@ -1,38 +1,9 @@
 package com.akube.framework.util;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-import java.util.zip.Adler32;
-import java.util.zip.CRC32;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
+import com.akube.framework.shiro.realm.HibernateSecurityRealm;
+import com.hk.exception.FileDownloadException;
+import com.hk.util.md5.MD5;
 import net.sourceforge.stripes.action.ActionBeanContext;
-
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -49,18 +20,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 
-import com.akube.framework.shiro.realm.HibernateSecurityRealm;
-import com.hk.exception.FileDownloadException;
-import com.hk.util.md5.MD5;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import java.util.zip.Adler32;
+import java.util.zip.CRC32;
 
 /**
  * Author: Kani
  * Date: Aug 29, 2008
  */
 public class BaseUtils {
+	
     private static Logger logger = LoggerFactory.getLogger(BaseUtils.class);
     public static String newline = System.getProperty("line.separator");
-
 
     public static Properties getPropertyFile(String propertyFileName) {
         Properties properties = null;
@@ -518,5 +500,4 @@ public class BaseUtils {
         }
         return set;
     }
-
 }

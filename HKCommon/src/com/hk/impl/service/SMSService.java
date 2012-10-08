@@ -113,22 +113,22 @@ public class SMSService {
         return true;
     }
 
-    public boolean sendSMSUsingTemplate(String mobile, String templatePath, Object templateValues) {
-        String message = "";
-	    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionOrderShippedEmail);
-	    Template smsTemplate = freeMarkerService.getCampaignTemplate(templatePath);
-        if (smsTemplate != null) {
-            FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processSmsTemplate(smsTemplate, templateValues);
+	public boolean sendSMSUsingTemplate(String mobile, String templatePath, Object templateValues) {
+		String message = "";
+		if (useSmsService) {
+			Template smsTemplate = freeMarkerService.getCampaignTemplate(templatePath);
+			if (smsTemplate != null) {
+				FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processSmsTemplate(smsTemplate, templateValues);
 
-            if (renderOutput == null) {
-                logger.error("Error while rendering freemarker template : " + templatePath);
-                return false;
-            }
-            message = renderOutput.getMessage();
-            return sendSMS(message, mobile);
-        }
-        return false;
-
-    }
+				if (renderOutput == null) {
+					logger.error("Error while rendering freemarker template : " + templatePath);
+					return false;
+				}
+				message = renderOutput.getMessage();
+				return sendSMS(message, mobile);
+			}
+		}
+		return false;
+	}
 
 }

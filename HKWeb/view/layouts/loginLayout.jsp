@@ -36,6 +36,9 @@
     <s:layout-component name="header">
       <s:layout-render name="/layouts/embed/_header.jsp" attachRedirectParam="false"/>
     </s:layout-component>
+	<s:layout-component name="menu">
+      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}"/>
+    </s:layout-component>
     <div class="main_container">
       <s:layout-component name="checkoutStep"/>
       <div class="floatfix"></div>
