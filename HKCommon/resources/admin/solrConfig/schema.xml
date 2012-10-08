@@ -530,6 +530,7 @@ any data added to them will be ignored outright.  -->
         <field name="overview" type="text_en_splitting" indexed="true" stored="true" />
         <field name="description" type="text_en_splitting" indexed="true" stored="true" />
         <field name="isGoogleAdDisallowed" type="boolean" indexed="true" stored="true" />
+        <field name="hidden" type="boolean" indexed="true" stored="true" />
         <field name="ranking" type="float" indexed="true" stored="true" />
         <field name="mainImageId" type="long" indexed="true" stored="true" />
         <field name="hkPrice" type="float" indexed="true" stored="true" />
