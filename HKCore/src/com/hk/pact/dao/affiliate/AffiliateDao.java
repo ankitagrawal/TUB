@@ -5,7 +5,6 @@ import java.util.List;
 import com.akube.framework.dao.Page;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
-import com.hk.domain.affiliate.AffiliateStatus;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;

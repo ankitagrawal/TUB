@@ -634,6 +634,18 @@
 
     <function>
         <description>
+            escape special chars for valid HTML or XML
+        </description>
+        <name>escapeXML</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String escapeXML(java.lang.String)</function-signature>
+        <example>
+            ${hk:escapeXML(${str)}
+        </example>
+    </function>
+
+    <function>
+        <description>
             returns applicable offer price based on logged on user ie. General User, B2B User, Preferred User etc.
         </description>
         <name>getApplicableOfferPrice</name>

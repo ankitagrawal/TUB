@@ -1,18 +1,18 @@
 package com.hk.admin.impl.dao.reconciliation;
 
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
 import com.hk.admin.pact.dao.reconciliation.AdminReconciliationDao;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderPaymentReconciliation;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.impl.dao.BaseDaoImpl;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,7 +25,8 @@ import java.util.List;
 @Repository
 public class AdminReconciliationDaoImpl extends BaseDaoImpl implements AdminReconciliationDao {
 
-	public OrderPaymentReconciliation getOrderPaymentReconciliationBySO(ShippingOrder shippingOrder) {
+	@SuppressWarnings("unchecked")
+    public OrderPaymentReconciliation getOrderPaymentReconciliationBySO(ShippingOrder shippingOrder) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(OrderPaymentReconciliation.class);
 		criteria.add(Restrictions.eq("shippingOrder", shippingOrder));
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = findByCriteria(criteria);
@@ -35,7 +36,8 @@ public class AdminReconciliationDaoImpl extends BaseDaoImpl implements AdminReco
 		return null;
 	}
 
-	public OrderPaymentReconciliation getOrderPaymentReconciliationByBaseOrder(Order order) {
+	@SuppressWarnings("unchecked")
+    public OrderPaymentReconciliation getOrderPaymentReconciliationByBaseOrder(Order order) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(OrderPaymentReconciliation.class);
 		criteria.add(Restrictions.eq("baseOrder", order));
 		List<OrderPaymentReconciliation> orderPaymentReconciliationList = findByCriteria(criteria);
@@ -45,7 +47,8 @@ public class AdminReconciliationDaoImpl extends BaseDaoImpl implements AdminReco
 		return null;
 	}
 
-	public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId,
+	@SuppressWarnings("unchecked")
+    public List<OrderPaymentReconciliation> findPaymentDifferenceInCODOrders(Long shippingOrderId, String gatewayOrderId,
 	                                                                         Date startDate, Date endDate, Courier courier, String paymentProcess) throws Exception{
 		String courierClause        = "";
 		String shippingOrderClause  = "" ;
@@ -73,7 +76,8 @@ public class AdminReconciliationDaoImpl extends BaseDaoImpl implements AdminReco
 		return orderPaymentReconciliationList;
 	}
 
-	public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId,
+	@SuppressWarnings("unchecked")
+    public List<OrderPaymentReconciliation> findPaymentDifferenceInPrepaidOrders(Long baseOrderId, String gatewayOrderId,
 	                                                                             Date startDate, Date endDate, String paymentProcess) throws Exception{
 		String orderClause          = "" ;
 		String gatewayOrderClause   = "";
