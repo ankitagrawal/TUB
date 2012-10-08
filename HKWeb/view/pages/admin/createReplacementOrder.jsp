@@ -32,19 +32,23 @@
                     $('#is-rto').slideDown();
                 });
 	            $('.createReplacementOrderButton').click(function(event){
+		            event.preventDefault();
 		            var shippingOrderId= $('#shippingOrderIdText').val();
+		            var formUrl = $('#createReplacementOrderForm').attr('action');
 		            $.getJSON(
-				            $('#checkReplacementOrderLink').attr('href'), {shippingOrderId: shippingOrderId},
+				            $('#checkReplacementOrderLink').attr('href'), {shippingOrderId:shippingOrderId},
 				            function(res) {
-					            alert(1);
-					            if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+					            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 						            var confirm_action = confirm("A replacement order exists for given shipping order, are you sure you want to create another replacement order?");
 						            if (confirm_action == false) {
 							            event.preventDefault();
 						            }
+						            else{
+							            $('#createReplacementOrderForm').attr('action', formUrl+"?createReplacementOrder=");
+							            $('#createReplacementOrderForm').submit();
+						            }
 					            }
-				            }
-				            );
+				            });
 	            });
             })
         </script>
@@ -115,7 +119,7 @@
 
             <fieldset style="display:none;" id="is-rto">
                 <h4>Returned to origin</h4>
-                <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
+                <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForm">
                     <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
                     <table border="1">
                         <thead>

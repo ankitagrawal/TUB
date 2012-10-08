@@ -38,7 +38,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 @Secure(hasAnyPermissions = { PermissionConstants.CREATE_REPLACEMENT_ORDER })
 @Component
 public class ReplacementOrderAction extends BaseAction {
-    private Long shippingOrderId;
+    private String shippingOrderId;
     private ShippingOrder shippingOrder;
     private Boolean isRto;
     private List<LineItem> lineItems = new ArrayList<LineItem>();
@@ -71,8 +71,8 @@ public class ReplacementOrderAction extends BaseAction {
 
     public Resolution searchShippingOrder() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setOrderId(shippingOrderId);
-        shippingOrder = shippingOrderService.find(shippingOrderId);
+        shippingOrderSearchCriteria.setOrderId(Long.parseLong(shippingOrderId));
+        shippingOrder = shippingOrderService.find(Long.parseLong(shippingOrderId));
         if (shippingOrder == null) {
             addRedirectAlertMessage(new SimpleMessage("No shipping order found  "));
             return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
@@ -137,23 +137,23 @@ public class ReplacementOrderAction extends BaseAction {
 	public Resolution checkExistingReplacementOrder(){
 		Map dataMap = new HashMap();
 		if(shippingOrderId != null){
-			List<ReplacementOrder> replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(shippingOrderId);
+			List<ReplacementOrder> replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(Long.parseLong(shippingOrderId));
 			if(replacementOrderList.size() > 0){
-				HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product VariantID", dataMap);
+				HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Shipping order exist", dataMap);
 				noCache();
 				return new JsonResolution(healthkartResponse);
 			}
 		}
-		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Invalid Product VariantID", dataMap);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Shipping order does not exists", dataMap);
 		noCache();
 		return new JsonResolution(healthkartResponse);
 	}
 
-    public Long getShippingOrderId() {
+    public String getShippingOrderId() {
         return shippingOrderId;
     }
 
-    public void setShippingOrderId(Long shippingOrderId) {
+    public void setShippingOrderId(String shippingOrderId) {
         this.shippingOrderId = shippingOrderId;
     }
 
