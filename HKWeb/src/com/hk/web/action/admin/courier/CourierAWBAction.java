@@ -89,7 +89,7 @@ public class CourierAWBAction extends BaseAction {
         String courierName = "All";
         List<CourierServiceInfo> courierServiceInfoList = new ArrayList<CourierServiceInfo>();
         if (courier != null) {
-            courierServiceInfoList = courierServiceInfoDao.getCourierServiceInfo(courier.getId());
+            courierServiceInfoList = courierService.getCourierServiceInfoList(courier.getId(), null, false, false, false);
             courierName = courier.getName();
         } else {
             courierServiceInfoList = courierServiceInfoDao.getAll(CourierServiceInfo.class);

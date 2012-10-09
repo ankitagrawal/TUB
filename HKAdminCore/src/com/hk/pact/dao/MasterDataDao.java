@@ -50,6 +50,8 @@ public interface MasterDataDao
 
     public List<Courier> getCourierList();
 
+    public List<Courier> getGroundShippedCourierList();
+
     public List<ReconciliationStatus> getReconciliationStatus();
 
     public List<CartLineItemType> getLineItemTypeList();

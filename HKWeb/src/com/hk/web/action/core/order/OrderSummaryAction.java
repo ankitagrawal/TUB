@@ -1,30 +1,13 @@
 package com.hk.web.action.core.order;
 
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-import org.stripesstuff.plugin.session.Session;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
@@ -35,59 +18,74 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.user.UserDao;
-import com.hk.pact.service.order.OrderService;
 import com.hk.pricing.PricingEngine;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.payment.PaymentModeAction;
 import com.hk.web.action.core.user.SelectAddressAction;
+import net.sourceforge.stripes.action.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+import org.stripesstuff.plugin.session.Session;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Secure
 @Component
 public class OrderSummaryAction extends BaseAction {
 
-    private static Logger  logger = LoggerFactory.getLogger(OrderSummaryAction.class);
+    //private static Logger     logger        = LoggerFactory.getLogger(OrderSummaryAction.class);
 
     @Autowired
-    private CourierService courierService;
+    private CourierService    courierService;
     @Autowired
-    UserDao                userDao;
+    UserDao                   userDao;
     @Autowired
-    OrderManager           orderManager;
+    OrderManager              orderManager;
     @Autowired
-    private OrderService   orderService;
+    PricingEngine             pricingEngine;
     @Autowired
-    PricingEngine          pricingEngine;
+    ReferrerProgramManager    referrerProgramManager;
     @Autowired
-    ReferrerProgramManager referrerProgramManager;
+    private AdminOrderService adminOrderService;
 
     @Session(key = HealthkartConstants.Session.useRewardPoints)
-    private boolean        useRewardPoints;
+    private boolean           useRewardPoints;
 
-    private PricingDto     pricingDto;
-    private Order          order;
-    private Address        billingAddress;
-    private boolean        codAllowed;
-    private Double         redeemableRewardPoints;
-    private List<Courier>  availableCourierList;
+    private PricingDto        pricingDto;
+    private Order             order;
+    private Address           billingAddress;
+    private boolean           codAllowed;
+    private Double            redeemableRewardPoints;
+    private List<Courier>     availableCourierList;
+    private boolean           groundShippingAllowed;
+    private boolean           groundShippedItemPresent;
+    private boolean           codAllowedOnGroundShipping;
+    private Double            cashbackOnGroundshipped;
+    Map<String, String>       codFailureMap = new HashMap<String, String>();
 
     // COD related changes
     @Autowired
-    PaymentManager         paymentManager;
+    PaymentManager            paymentManager;
     @Autowired
-    PaymentModeDao         paymentModeDao;
+    PaymentModeDao            paymentModeDao;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
-    private Double         codCharges;
+    private Double            codCharges;
 
     @Value("#{hkEnvProps['" + Keys.Env.codFreeAfter + "']}")
-    private Double         codFreeAfter;
+    private Double            codFreeAfter;
 
-    @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
-    private Double         codMinAmount;
+   /* @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
+    private Double            codMinAmount;
 
     // @Named(Keys.Env.codMaxAmount)
     @Value("#{hkEnvProps['codMaxAmount']}")
-    private Double         codMaxAmount;
+    private Double            codMaxAmount;*/
 
     @DefaultHandler
     public Resolution pre() {
@@ -95,8 +93,7 @@ public class OrderSummaryAction extends BaseAction {
         order = orderManager.getOrCreateOrder(user);
         // Trimming empty line items once again.
         orderManager.trimEmptyLineItems(order);
-        OfferInstance offerInstance = order.getOfferInstance();
-
+        // OfferInstance offerInstance = order.getOfferInstance();
         Double rewardPointsUsed = 0D;
         redeemableRewardPoints = referrerProgramManager.getTotalRedeemablePoints(user);
         if (useRewardPoints)
@@ -106,15 +103,9 @@ public class OrderSummaryAction extends BaseAction {
         }
 
         pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
-        Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
 
         order.setRewardPointsUsed(rewardPointsUsed);
         order = (Order) getBaseDao().save(order);
-
-        // billingAddress = userPreferenceDao.getOrCreateUserPreference(user).getBillingAddress();
-
-        // doing this after populating the pricingDto as this actionBean is also used to display pricing elsewhere
-        // using the useActionBean tag
         if (order.getAddress() == null) {
             // addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.address.not.selected"));
             return new RedirectResolution(SelectAddressAction.class);
@@ -122,27 +113,27 @@ public class OrderSummaryAction extends BaseAction {
             addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
             return new RedirectResolution(CartAction.class);
         }
+
         Address address = order.getAddress();
         String pin = address != null ? address.getPin() : null;
-        codAllowed = courierService.isCodAllowed(pin);
-        if (codAllowed) {
-            Double payable = pricingDto.getGrandTotalPayable();
-            if (payable < codMinAmount || payable > codMaxAmount) {
-                codAllowed = false;
-            }
+
+        codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
+
+        // Ground Shipping logic starts ---
+        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+        Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
+        if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
+            groundShippedItemPresent = true;
+            groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
         }
-        if(codAllowed){
-            if(subscriptionCartLineItems!=null && subscriptionCartLineItems.size()>0){
-                codAllowed=false;
-            }
-        }
+        // Ground Shipping logic ends --
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
         if (netShopping > codFreeAfter) {
             codCharges = 0.0;
         }
         availableCourierList = courierService.getAvailableCouriers(order);
-        if (availableCourierList.size() == 0) {
+        if (availableCourierList != null && availableCourierList.size() == 0) {
             availableCourierList = null;
         }
         return new ForwardResolution("/pages/orderSummary.jsp");
@@ -217,4 +208,43 @@ public class OrderSummaryAction extends BaseAction {
         this.availableCourierList = availableCourierList;
     }
 
+    public boolean isGroundShippedItemPresent() {
+        return groundShippedItemPresent;
+    }
+
+    public void setGroundShippedItemPresent(boolean groundShippedItemPresent) {
+        this.groundShippedItemPresent = groundShippedItemPresent;
+    }
+
+    public Double getCashbackOnGroundshipped() {
+        return cashbackOnGroundshipped;
+    }
+
+    public void setCashbackOnGroundshipped(Double cashbackOnGroundshipped) {
+        this.cashbackOnGroundshipped = cashbackOnGroundshipped;
+    }
+
+    public boolean isGroundShippingAllowed() {
+        return groundShippingAllowed;
+    }
+
+    public void setGroundShippingAllowed(boolean groundShippingAllowed) {
+        this.groundShippingAllowed = groundShippingAllowed;
+    }
+
+    public boolean isCodAllowedOnGroundShipping() {
+        return codAllowedOnGroundShipping;
+    }
+
+    public void setCodAllowedOnGroundShipping(boolean codAllowedOnGroundShipping) {
+        this.codAllowedOnGroundShipping = codAllowedOnGroundShipping;
+    }
+
+    public Map<String, String> getCodFailureMap() {
+        return codFailureMap;
+    }
+
+    public void setCodFailureMap(Map<String, String> codFailureMap) {
+        this.codFailureMap = codFailureMap;
+    }
 }
