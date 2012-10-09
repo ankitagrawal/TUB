@@ -1,20 +1,21 @@
 package com.hk.admin.pact.service.hkDelivery;
 
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.*;
-import com.hk.domain.user.User;
-import com.hk.constants.hkDelivery.EnumRunsheetStatus;
-import com.hk.admin.dto.ConsignmentDto;
-import com.akube.framework.dao.Page;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.akube.framework.dao.Page;
+import com.hk.admin.dto.ConsignmentDto;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.Runsheet;
+import com.hk.domain.hkDelivery.RunsheetStatus;
+import com.hk.domain.user.User;
+
 
 public interface RunSheetService {
 
-    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount);
+    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User agent,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount);
 
     public Runsheet saveRunSheet(Runsheet runsheet);
 
@@ -39,4 +40,6 @@ public interface RunSheetService {
     public Runsheet updateRunsheetParams(Runsheet runsheet, ConsignmentDto consignmentDto);
 
 	public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList);
+
+	public Runsheet closeRunsheet(Runsheet runsheet);
 }

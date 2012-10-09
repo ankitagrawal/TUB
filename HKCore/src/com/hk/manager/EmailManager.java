@@ -4,7 +4,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
-import com.hk.constants.email.EmailMapKeyConstants;
+import com.hk.constants.email.EmailConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -66,7 +66,6 @@ public class EmailManager {
     private Set<String> personalCareAdminEmails = null;
     private Set<String> sportsAdminEmails = null;
     private Set<String> servicesAdminEmails = null;
-    //private Set<String> marketingAdsMonitorEmails = null;
 
     @Autowired
     private BaseDao baseDao;
@@ -93,9 +92,6 @@ public class EmailManager {
 
     @Value("#{hkEnvProps['" + Keys.Env.hkAdminEmails + "']}")
     private String hkAdminEmailsString;
-    /*
-    * @Value("#{hkEnvProps['" + Keys.Env.hkReportAdminEmails + "']}") private String hkReportAdminEmailsString = null;
-    */
     @Value("#{hkEnvProps['" + Keys.Env.babyAdminEmails + "']}")
     private String babyAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.beautyAdminEmails + "']}")
@@ -110,26 +106,14 @@ public class EmailManager {
     private String nutritionAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.personalCareAdminEmails + "']}")
     private String personalCareAdminEmailsString = null;
-	//@Value("#{hkEnvProps['" + Keys.Env.marketingAdsMonitorEmails + "']}")
-	//private String marketingAdsMonitorEmailsString = null;
-
-    /*
-    * @Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}") private String logisticsAdminEmailsString =
-    * null;
-    */
     @Value("#{hkEnvProps['" + Keys.Env.sportsAdminEmails + "']}")
     private String sportsAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.servicesAdminEmails + "']}")
     private String servicesAdminEmailsString = null;
 
     @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
-    /*
-    * private String marketingAdminEmailsString = null; @Value("#{hkEnvProps['" + Keys.Env.categoryHealthkart + "']}")
-    * private String categoryHealthkartListString = null;
-    */
     @PostConstruct
     public void postConstruction() {
-        // this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmailsString, ",");
         this.hkAdminEmails = BaseUtils.split(hkAdminEmailsString, ",");
         this.babyAdminEmails = BaseUtils.split(babyAdminEmailsString, ",");
         this.beautyAdminEmails = BaseUtils.split(beautyAdminEmailsString, ",");
@@ -138,36 +122,9 @@ public class EmailManager {
         this.homeDevicesAdminEmails = BaseUtils.split(homeDevicesAdminEmailsString, ",");
         this.nutritionAdminEmails = BaseUtils.split(nutritionAdminEmailsString, ",");
         this.personalCareAdminEmails = BaseUtils.split(personalCareAdminEmailsString, ",");
-        // this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmailsString, ",");
         this.sportsAdminEmails = BaseUtils.split(sportsAdminEmailsString, ",");
         this.servicesAdminEmails = BaseUtils.split(servicesAdminEmailsString, ",");
-        //this.marketingAdsMonitorEmails = BaseUtils.split(marketingAdsMonitorEmailsString, ",");
-        // this.marketingAdminEmails = BaseUtils.split(marketingAdminEmailsString, ",");
-        // this.categoryHealthkartList = BaseUtils.split(categoryHealthkartListString, ",");
     }
-
-    /*
-    * @Autowired public EmailManager(EmailService emailService, // @Named(Keys.Env.hkAdminEmails) String hkAdminEmails, //
-    * @Named(Keys.Env.hkReportAdminEmails) String hkReportAdminEmails, // @Named(Keys.Env.babyAdminEmails) String
-    * babyAdminEmails, // @Named(Keys.Env.beautyAdminEmails) String beautyAdminEmails, //
-    * @Named(Keys.Env.diabetesAdminEmails) String diabetesAdminEmails, // @Named(Keys.Env.eyeAdminEmails) String
-    * eyeAdminEmails, // @Named(Keys.Env.homeDevicesAdminEmails) String homeDevicesAdminEmails, //
-    * @Named(Keys.Env.nutritionAdminEmails) String nutritionAdminEmails, // @Named(Keys.Env.personalCareAdminEmails)
-    * String personalCareAdminEmails, // @Named(Keys.Env.sportsAdminEmails) String sportsAdminEmails, //
-    * @Named(Keys.Env.servicesAdminEmails) String servicesAdminEmails, // @Named(Keys.Env.logisticsAdminEmails) String
-    * logisticsAdminEmails, // @Named(Keys.Env.marketingAdminEmails) String marketingAdminEmails, //
-    * @Named(Keys.Env.categoryHealthkart) String categoryHealthkartList) { this.emailService = emailService;
-    * this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmails, ","); this.hkAdminEmails =
-    * BaseUtils.split(hkAdminEmails, ","); this.babyAdminEmails = BaseUtils.split(babyAdminEmails, ",");
-    * this.beautyAdminEmails = BaseUtils.split(beautyAdminEmails, ","); this.diabetesAdminEmails =
-    * BaseUtils.split(diabetesAdminEmails, ","); this.eyeAdminEmails = BaseUtils.split(eyeAdminEmails, ",");
-    * this.homeDevicesAdminEmails = BaseUtils.split(homeDevicesAdminEmails, ","); this.nutritionAdminEmails =
-    * BaseUtils.split(nutritionAdminEmails, ","); this.personalCareAdminEmails =
-    * BaseUtils.split(personalCareAdminEmails, ","); this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmails,
-    * ","); this.sportsAdminEmails = BaseUtils.split(sportsAdminEmails, ","); this.servicesAdminEmails =
-    * BaseUtils.split(servicesAdminEmails, ","); this.marketingAdminEmails = BaseUtils.split(marketingAdminEmails,
-    * ","); this.categoryHealthkartList = BaseUtils.split(categoryHealthkartList, ","); }
-    */
 
     // TODO:rewrite
 
@@ -185,12 +142,6 @@ public class EmailManager {
         }
 
         boolean success = true;
-
-        /*
-        * for (String hkAdminEmail : hkAdminEmails) { boolean sent =
-        * emailService.sendHtmlEmailNoReply(EmailTemplateConstants.inventoryRedZoneEmail, valuesMap, hkAdminEmail, "HK
-        * Admin"); if (!sent) success = false; }
-        */
 
         // Sending category specific emails to category admins.
         if (basketCategory != null) {
@@ -468,7 +419,7 @@ public class EmailManager {
             if (!sent)
                 success = false;
         }
-        boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "info@healthkart.com", "Admin", email);
+        boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, EmailConstants.getHkContactEmail(), "Admin", email);
         if (!sent)
             success = false;
         return success;
@@ -480,8 +431,8 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", shippingOrder);
         valuesMap.put("invoiceLink", invoiceLink);
-
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderShippedEmail);
+        Template freemarkerTemplate;
+        freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderShippedEmail);
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, shippingOrder.getBaseOrder().getUser().getEmail(),
                 shippingOrder.getBaseOrder().getUser().getName());
     }
@@ -718,7 +669,9 @@ public class EmailManager {
 
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.paymentFailEmail);
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
-        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), "info@healthkart.com");
+
+        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), EmailConstants.getHkContactEmail());
+
     }
 
 	public void sendCodConverterMail(Order order) {
@@ -754,12 +707,12 @@ public class EmailManager {
                 valuesMap.put("user", emailRecepient.getUser());
             }
             valuesMap.put("coupon", coupon);
-            emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getEmail(), "info@healthkart.com", headerMap);
+            emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getEmail(), EmailConstants.getHkContactEmail(), headerMap);
             // keep a record in history
             emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
             emailRecepient.setLastEmailDate(new Date());
             getEmailRecepientDao().save(emailRecepient);
-            getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart", getBaseDao().get(EmailType.class, EnumEmailType.MissYouEmail.getId()),
+            getEmailerHistoryDao().createEmailerHistory(EmailConstants.getHkNoReplyEmail(), EmailConstants.getHkNoReplyName(), getBaseDao().get(EmailType.class, EnumEmailType.MissYouEmail.getId()),
                     emailRecepient, emailCampaign, "");
         }
     }

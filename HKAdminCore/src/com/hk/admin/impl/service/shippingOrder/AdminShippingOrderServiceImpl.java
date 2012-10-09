@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
-import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -64,6 +64,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private AdminShippingOrderDao adminShippingOrderDao;
     @Autowired
     AwbService awbService;
+//	@Autowired
+//	SMSManager smsManager;
 
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
@@ -142,41 +144,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
-            shipmentService.createShipment(shippingOrder);
+	        // auto escalate shipping orders if possible
+	        shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+
+	        shipmentService.createShipment(shippingOrder);
             return shippingOrder;
         }
         return null;
-    }
-
-    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem) {
-        Order baseOrder = serviceCartLineItem.getOrder();
-        Warehouse corporateOffice = getWarehouseService().getCorporateOffice();
-        ShippingOrder shippingOrder = getShippingOrderService().createSOWithBasicDetails(baseOrder, corporateOffice);
-        shippingOrder.setBaseOrder(baseOrder);
-
-        ProductVariant productVariant = serviceCartLineItem.getProductVariant();
-        Sku sku = getSkuService().getSKU(productVariant, corporateOffice);
-        if (sku != null) {
-            LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, serviceCartLineItem);
-            shippingOrder.getLineItems().add(shippingOrderLineItem);
-        } else {
-            throw new NoSkuException(productVariant, corporateOffice);
-        }
-
-        shippingOrder.setBasketCategory("services");
-        shippingOrder.setServiceOrder(true);
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
-        ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
-        shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-        /**
-         * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
-         */
-        shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-
-        return shippingOrder;
-
     }
 
     @Transactional
@@ -205,7 +179,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Delivered);
         Order order = shippingOrder.getBaseOrder();
         getAdminOrderService().markOrderAsDelivered(order);
-        return shippingOrder;
+//	    smsManager.sendOrderDeliveredSMS(shippingOrder);
+	    return shippingOrder;
     }
 
     @Transactional
@@ -256,6 +231,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
         getAdminOrderService().markOrderAsShipped(shippingOrder.getBaseOrder());
+//	    smsManager.sendOrderShippedSMS(shippingOrder);
 
         return shippingOrder;
     }

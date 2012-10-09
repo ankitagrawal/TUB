@@ -1,14 +1,36 @@
 package com.hk.impl.service.search;
 
-import com.akube.framework.dao.Page;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.SpellCheckResponse;
+import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.SolrException;
+import org.apache.solr.common.params.ModifiableSolrParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hk.constants.catalog.SolrSchemaConstants;
-import com.hk.constants.core.Keys;
 import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.search.*;
+import com.hk.domain.search.PaginationFilter;
+import com.hk.domain.search.RangeFilter;
+import com.hk.domain.search.SearchFilter;
+import com.hk.domain.search.SolrProduct;
+import com.hk.domain.search.SortFilter;
 import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
 import com.hk.manager.LinkManager;
@@ -16,28 +38,9 @@ import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.ProductReferrerMapper;
-import org.apache.commons.lang.StringUtils;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
-import org.apache.solr.client.solrj.request.UpdateRequest;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.response.SpellCheckResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.SolrException;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.params.ModifiableSolrParams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.*;
 
 @Service
 class ProductSearchServiceImpl implements ProductSearchService {
@@ -57,6 +60,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     @Autowired
     CommonsHttpSolrServer solr;
+
+    @Autowired
+    ProductIndexService productIndexService;
 
     @Autowired
     LinkManager linkManager;
@@ -81,7 +87,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
                     products.add(solrProduct);
                 }
             }
-            indexProduct(products);
+            productIndexService.indexProduct(products);
             buildDictionary();
         }catch (SolrException ex) {
             SearchException e = wrapException("Unable to build indexes. Problem with Solr", ex);
@@ -90,16 +96,6 @@ class ProductSearchServiceImpl implements ProductSearchService {
                 SearchException e = wrapException("Unable to build indexes. Problem with Solr", ex);
                 throw e;
             }
-    }
-
-    public void indexProduct(Product product){
-        try{
-            SolrProduct solrProduct = productService.createSolrProduct(product);
-            updateExtraProperties(product, solrProduct);
-            indexProduct(solrProduct);
-        } catch (Exception ex) {
-            logger.error(String.format("Unable to build Solr index for Product %s", product.getId()), ex);
-        }
     }
 
     private void updateExtraProperties(Product pr, SolrProduct solrProduct){
@@ -137,12 +133,14 @@ class ProductSearchServiceImpl implements ProductSearchService {
         String myQuery = SolrSchemaConstants.brand + SolrSchemaConstants.paramAppender + "\"" + brand + "\"" + SolrSchemaConstants.queryInnerJoin + SolrSchemaConstants.category
                 + SolrSchemaConstants.paramAppender + topLevelCategory + SolrSchemaConstants.queryTerminator + SolrSchemaConstants.queryInnerJoin
                 + SolrSchemaConstants.isGoogleAdDisallowed + SolrSchemaConstants.paramAppender + 0 + SolrSchemaConstants.queryTerminator + SolrSchemaConstants.queryInnerJoin
+                + SolrSchemaConstants.isHidden + SolrSchemaConstants.paramAppender + 0 + SolrSchemaConstants.queryTerminator + SolrSchemaConstants.queryInnerJoin
                 + SolrSchemaConstants.isDeleted + SolrSchemaConstants.paramAppender + 0 + SolrSchemaConstants.queryTerminator;
 
         query.setQuery(myQuery);
         query.set("fl", "*");
         query.setStart((page - 1) * perPage);
         query.setRows(perPage);
+        query.addSortField(SolrSchemaConstants.sortByOutOfStock, SolrQuery.ORDER.asc);
         query.addSortField(SolrSchemaConstants.sortBy, SolrQuery.ORDER.asc);
         List<SolrProduct> solrProductList = new ArrayList<SolrProduct>();
         long resultCount = 0;
@@ -204,6 +202,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         // dont show deleted products and google disallowed products
         query += SolrSchemaConstants.queryInnerJoin + SolrSchemaConstants.isDeleted + SolrSchemaConstants.paramAppender + 0 + SolrSchemaConstants.queryTerminator;
         query += SolrSchemaConstants.queryInnerJoin + SolrSchemaConstants.isGoogleAdDisallowed + SolrSchemaConstants.paramAppender + 0 + SolrSchemaConstants.queryTerminator;
+        query += SolrSchemaConstants.queryInnerJoin + SolrSchemaConstants.isHidden + SolrSchemaConstants.paramAppender + 0 + SolrSchemaConstants.queryTerminator;
         query += SolrSchemaConstants.queryInnerJoin + rangeFilter.getName() + SolrSchemaConstants.paramAppender +
                 "[" + rangeFilter.getStartRange() + " TO " + rangeFilter.getEndRange() + "]" + SolrSchemaConstants.queryTerminator;
         solrQuery.setQuery(query);
@@ -263,17 +262,6 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return new SearchResult(sortedProducts, totalResultCount);
     }
 
-  /*  public void sort(final Map<String, Double> solrProductScoreMap, List<SolrProduct> products){
-        Collections.sort(new Comparator<Product>(){
-            @Override
-            public int compare(Product p1, Product p2){
-                if (p1.getOutOfStock().equals(p2.getOutOfStock())){
-                    solrProductScoreMap.get(p1)
-                }
-            }
-        });
-    }*/
-
     private SearchResult getProductSuggestions(QueryResponse response, String userQuery, int page, int perPage) throws SolrServerException
     {
         ModifiableSolrParams params = new ModifiableSolrParams();
@@ -327,6 +315,8 @@ class ProductSearchServiceImpl implements ProductSearchService {
         QueryResponse response = null;
         SearchResult searchResult = new SearchResult();
         try{
+            //query += " AND hidden:false";
+
             response = solr.query(getResultsQuery(query, page, perPage));
             List<SolrProduct> productList = getQueryResults(response);
             searchResult = getSearchResult(productList, (int)response.getResults().getNumFound());
@@ -354,8 +344,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     private SolrQuery buildSolrQuery(String query, String qf,  int page, int perPage){
         SolrQuery solrQuery = new SolrQuery(); // &defType=dismax&qf=
-       /* String fq= String.format("{!cache=false}deleted:false");  //Do not cache the results*/
+        String fq= String.format("{!cache=false}hidden:false");  //Do not cache the results*/
         solrQuery.setParam("q", query);
+        solrQuery.setParam("fq", fq);
         solrQuery.setParam("defType", "dismax");
         solrQuery.setParam("qf", qf);
         //solrQuery.setParam("fq", fq);
@@ -374,19 +365,6 @@ class ProductSearchServiceImpl implements ProductSearchService {
     private SolrQuery getResultsQuery(String query, int page, int perPage){
 
         String qf = "";
-       /* qf += SolrSchemaConstants.name + "^1000.0 ";
-        qf += SolrSchemaConstants.variantName + "^1002.0 ";  //If variant matches then it should be bit higher in score
-        qf += SolrSchemaConstants.brand + "^100 ";
-        qf += SolrSchemaConstants.keywords + "^90 ";
-        qf += SolrSchemaConstants.title + "^80 ";
-        qf += SolrSchemaConstants.overview + "^70 ";
-        qf += SolrSchemaConstants.description + "^69.9 ";
-        qf += SolrSchemaConstants.category + "^10 ";
-        qf += SolrSchemaConstants.h1 + "^10 ";
-        qf += SolrSchemaConstants.metaKeywords + "^79 ";
-        qf += SolrSchemaConstants.metaDescription + "^0.9 ";
-        qf += SolrSchemaConstants.seoDescription + "^0.5 ";*/
-
         qf += SolrSchemaConstants.name + "^2.0 ";
         qf += SolrSchemaConstants.variantName + "^1.9 ";
         qf += SolrSchemaConstants.brand + "^1.8 ";
@@ -400,36 +378,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
         qf += SolrSchemaConstants.metaDescription + "^0.5 ";
         qf += SolrSchemaConstants.seoDescription + "^0.5 ";
         qf += SolrSchemaConstants.description_title + "^0.5 ";
+        SolrQuery solrQuery = buildSolrQuery(query, qf, page, perPage);
 
-        //qf += SolrSchemaConstants.description_title + "^0.5 ";
-        return buildSolrQuery(query, qf, page, perPage);
-    }
-
-    private void indexProduct(List<SolrProduct> products){
-        try{
-            solr.addBeans(products);
-            solr.commit(false, false);
-        }catch(SolrServerException ex){
-            logger.error("Solr error during indexing the product", ex);
-        }catch(IOException ex){
-            logger.error("Solr error during indexing the product", ex);
-        }
-    }
-
-    private void indexProduct(SolrProduct product){
-        try{
-            solr.addBean(product);
-            /*SolrInputDocument solrDocument = solr.getBinder().toSolrInputDocument(product);
-            UpdateRequest req = new UpdateRequest();
-            req.add(solrDocument);
-            req.setCommitWithin(10000);
-            req.process(solr);*/
-            //solr.commit(false, false);
-        }catch(SolrServerException ex){
-            logger.error("Solr error during indexing the product", ex);
-        }catch(IOException ex){
-            logger.error("Solr error during indexing the product", ex);
-        }
+        return solrQuery;
     }
 
     private SearchException wrapException(String msg, Exception ex){

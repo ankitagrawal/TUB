@@ -147,20 +147,12 @@
     </ul>
   </div>
   <div class='grid_6'>
-    <c:choose>
-      <c:when test="${categoryBean.category.name == 'nutrition' || categoryBean.category.name == 'sports'}">
-        <a href="${pageContext.request.contextPath}/pages/sheruClassic.jsp"><img src="<hk:vhostImage/>/images/banners/sheru_classic_small.jpg" alt="Sheru Classic 2012"
-             class="small_banner"/></a>
-      </c:when>
-      <c:otherwise>
-        <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
-          <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg" alt="refer a friend and earn"
-               class="small_banner"/>
-        </s:link>
-        <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="cash on delivery"
-             class="small_banner"/>
-      </c:otherwise>
-    </c:choose>
+    <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
+      <img src="<hk:vhostImage/>/images/banners/refer_earn_new.jpg" alt="refer a friend and earn"
+           class="small_banner"/>
+    </s:link>
+    <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="cash on delivery"
+         class="small_banner"/>
   </div>
 
 </s:layout-component>
@@ -235,7 +227,7 @@
         </shiro:hasPermission>
 
         <div class="grid_24" style="width: 950px;">
-          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, categoryBean.category.name)}'>
+          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, categoryBean.category.name)}' begin="0" end="5">
             <div class="grid_4 alpha omega">
               <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${product}'/>
             </div>

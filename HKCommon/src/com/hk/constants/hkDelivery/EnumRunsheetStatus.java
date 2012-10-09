@@ -1,9 +1,5 @@
 package com.hk.constants.hkDelivery;
 
-import com.hk.domain.hkDelivery.RunsheetStatus;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 public enum EnumRunsheetStatus {

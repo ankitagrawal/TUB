@@ -1,23 +1,5 @@
 package com.hk.web.action.admin.inventory;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.manager.BinManager;
@@ -49,6 +31,17 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Set;
 
 @Secure (hasAnyPermissions = {PermissionConstants.INVENTORY_CHECKOUT}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -108,9 +101,7 @@ public class InventoryCheckoutAction extends BaseAction {
 	private String invoiceNumber;
 	private String gatewayOrderId;
 	private boolean wronglyPickedBox = false;
-	private String earlierExpiryDate;
-	private String earlierMfgDate;
-	private String earlierCreationDate;
+	private SkuGroup earlierSkuGroup;
 	List<SkuGroup> skuGroups;
 
 	@DefaultHandler
@@ -142,6 +133,7 @@ public class InventoryCheckoutAction extends BaseAction {
 
 	public Resolution findSkuGroups() {
 		SkuGroup skuGroupBarcode;
+		earlierSkuGroup = null;
 		List<SkuGroup> inStockSkuGroupList;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
@@ -153,7 +145,7 @@ public class InventoryCheckoutAction extends BaseAction {
 				productVariant = skuGroupBarcode.getSku().getProductVariant();
 
 				inStockSkuGroupList = skuItemDao.getInStockSkuGroups(skuGroupBarcode.getSku());
-				if (inStockSkuGroupList != null & inStockSkuGroupList.size() > 0) {
+				if (inStockSkuGroupList != null && inStockSkuGroupList.size() > 0) {
 					if (inStockSkuGroupList.size() == 1) {
 						if (upc.equalsIgnoreCase(skuGroupBarcode.getBarcode())) {
 							skuGroups = inStockSkuGroupList.subList(0, 1);
@@ -166,15 +158,7 @@ public class InventoryCheckoutAction extends BaseAction {
 						if (upc.equalsIgnoreCase(inStockSkuGroupList.get(0).getBarcode())) {
 							skuGroups = inStockSkuGroupList.subList(0, 1);
 						} else {
-							SkuGroup correctSkuGroup = inStockSkuGroupList.get(0);
-							if (correctSkuGroup.getExpiryDate() != null) {
-								earlierExpiryDate = sdf.format(correctSkuGroup.getExpiryDate());
-							} else if (correctSkuGroup.getMfgDate() != null) {
-								earlierMfgDate = sdf.format(correctSkuGroup.getMfgDate());
-							} else if (correctSkuGroup.getCreateDate() != null) {
-								earlierCreationDate = sdf.format(correctSkuGroup.getCreateDate());
-							}
-
+							earlierSkuGroup = inStockSkuGroupList.get(0);
 							wronglyPickedBox = true;
 							upc = null;
 						}
@@ -471,14 +455,6 @@ public class InventoryCheckoutAction extends BaseAction {
 		this.productVariantService = productVariantService;
 	}
 
-	public void setEarlierCreationDate(String earlierCreationDate) {
-		this.earlierCreationDate = earlierCreationDate;
-	}
-
-	public String getEarlierCreationDate() {
-		return earlierCreationDate;
-	}
-
 	public boolean isWronglyPickedBox() {
 		return wronglyPickedBox;
 	}
@@ -487,20 +463,11 @@ public class InventoryCheckoutAction extends BaseAction {
 		this.wronglyPickedBox = wronglyPickedBox;
 	}
 
-	public String getEarlierExpiryDate() {
-		return earlierExpiryDate;
+	public SkuGroup getEarlierSkuGroup() {
+		return earlierSkuGroup;
 	}
 
-	public void setEarlierExpiryDate(String earlierExpiryDate) {
-		this.earlierExpiryDate = earlierExpiryDate;
+	public void setEarlierSkuGroup(SkuGroup earlierSkuGroup) {
+		this.earlierSkuGroup = earlierSkuGroup;
 	}
-
-	public String getEarlierMfgDate() {
-		return earlierMfgDate;
-	}
-
-	public void setEarlierMfgDate(String earlierMfgDate) {
-		this.earlierMfgDate = earlierMfgDate;
-	}
-
 }

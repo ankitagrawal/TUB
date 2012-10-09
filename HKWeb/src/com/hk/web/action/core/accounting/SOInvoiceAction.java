@@ -18,6 +18,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.admin.util.FedExCourier;
 import com.hk.constants.courier.EnumCourier;
+
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
@@ -33,7 +34,6 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.PincodeService;
-import com.hk.pact.service.order.CartFreebieService;
 
 import java.io.File;
 
@@ -52,8 +52,8 @@ public class SOInvoiceAction extends BaseAction {
     private CategoryService categoryService;
     @Autowired
     private CourierService courierService;
-    @Autowired
-    private CartFreebieService cartFreebieService;
+    /*@Autowired
+    private CartFreebieService cartFreebieService;*/
     @Autowired
     private B2bUserDetailsDao b2bUserDetailsDao;
     @Autowired
@@ -115,22 +115,24 @@ public class SOInvoiceAction extends BaseAction {
             barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f, 150, false);
             Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
             boolean isCod = shippingOrder.isCOD();
-            CourierServiceInfo courierServiceInfo = null;
-            if (isCod) {
-                courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart_COD.getId(), address.getPin(), true);
-            } else {
-                courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart.getId(), address.getPin(), false);
-            }
+            CourierServiceInfo courierServiceInfo = null;                
+
+            courierServiceInfo = courierService.searchCourierServiceInfo(EnumCourier.BlueDart_COD.getId(), address.getPin(), isCod , false, false);
 
             if (courierServiceInfo != null) {
                 routingCode = courierServiceInfo.getRoutingCode();
             }
+
             if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
                 //routingCode = "DELKG";
-                courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(EnumCourier.FedEx.getId(),address.getPin());
+                courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(EnumCourier.FedEx.getId(),address.getPin(), true, false, false);
+                if (courierServiceInfo == null){
+                courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(EnumCourier.FedEx.getId(),address.getPin(), false, false, false);
+                }
                 routingCode = courierServiceInfo.getRoutingCode();
             }
-            freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
+            //freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
+
             return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));

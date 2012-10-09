@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.akube.framework.gson.JsonSkip;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -34,6 +35,7 @@ public class CartLineItemExtraOption implements java.io.Serializable {
   @Column(name = "value", length = 45)
   private String value;
 
+  @JsonSkip
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cart_line_item_id")
   private CartLineItem cartLineItem;

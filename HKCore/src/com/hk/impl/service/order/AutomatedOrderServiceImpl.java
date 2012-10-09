@@ -18,6 +18,7 @@ import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.OrderCategory;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
@@ -88,14 +89,34 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         order = orderService.save(order);
 
         //update amount to be paid for the order... sequence is important here address need to be created priorhand!!
-        orderManager.recalAndUpdateAmount(order);
+        order=recalAndUpdateAmount(order);
 
         //update order payment status and order status in general
-        orderManager.orderPaymentReceieved(payment);
+        //orderManager.orderPaymentReceieved(payment);
+        order.setGatewayOrderId(payment.getGatewayOrderId());
+        order.setPayment(payment);
+        // save order with placed status since amount has been applied
 
+	    Set<OrderCategory> categories = orderService.getCategoriesForBaseOrder(order);
+	    order.setCategories(categories);
+
+        order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
+	    getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
+
+	    order=orderService.save(order);
         //finalize order -- create shipping order and update inventory
         finalizeOrder(order);
         return  order;
+    }
+
+    private Order recalAndUpdateAmount(Order order){
+         Set<CartLineItem> cartLineItems=order.getCartLineItems();
+         double orderAmount=0.0;
+         for(CartLineItem cartLineItem:cartLineItems){
+              orderAmount=orderAmount+cartLineItem.getHkPrice()-cartLineItem.getDiscountOnHkPrice();
+         }
+         order.setAmount(orderAmount);
+         return orderService.save(order);
     }
 
     public Order createNewOrder(User user){

@@ -1,18 +1,17 @@
 package com.hk.admin.impl.service.hkDelivery;
 
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hk.admin.pact.dao.hkDelivery.HubDao;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.constants.core.EnumRole;
 import com.hk.domain.hkDelivery.Hub;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class HubServiceImpl implements HubService {
@@ -39,7 +38,7 @@ public class HubServiceImpl implements HubService {
     }
 
     @Override
-    public boolean addAgentToHub(Hub hub, User user){
+    public Boolean addAgentToHub(Hub hub, User user){
         if(getHubForUser(user) != null){
             return false;
         }
@@ -54,4 +53,17 @@ public class HubServiceImpl implements HubService {
             return true;
         }
     }
+
+	@Override
+	public Boolean removeAgentFromHub(Hub hub, User user) {
+		if(getHubForUser(user) != null){
+			if(user.getRoles().contains(EnumRole.HK_DELIVERY_GUY.toRole())){
+				user.getRoles().remove(EnumRole.HK_DELIVERY_GUY.toRole());
+			}
+			hub.getUsers().remove(user);
+			hubDao.save(hub);
+			return true;
+		}
+		return false;
+	}
 }

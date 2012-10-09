@@ -1,6 +1,5 @@
 package com.hk.manager;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,17 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.akube.framework.util.DateUtils;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.domain.builder.OfferActionBuilder;
 import com.hk.domain.builder.OfferBuilder;
 import com.hk.domain.builder.OfferTriggerBuilder;
-import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
 import com.hk.domain.offer.OfferAction;
-import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.offer.OfferEmailDomain;
+import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.offer.OfferDao;
@@ -95,49 +92,21 @@ public class OfferManager {
     }
 
     @Transactional
-    public Offer getOfferForReferrelProgram2() {
-        Offer offer = offerDao.findByIdentifier(OfferConstants.offer15percentOffOnPurchaseOf250OrMore);
-
-        if (offer == null) {
-
-            OfferTrigger offerTrigger = OfferTriggerBuilder.getInstance().description("Min purchase amount Rs 200").minAmount(200D).build();
-
-            offerTrigger = (OfferTrigger) offerDao.save(offerTrigger);
-
-            OfferAction offerAction = OfferActionBuilder.getInstance().description("15% off").discountPercent(.15D).discountOnBasePriceOnly(false).validOnIntlShipping(false).qty(
-                    1L).build();
-            offerAction = (OfferAction) getOfferDao().save(offerAction);
-
-            offer = OfferBuilder.getInstance().description("15% off on purchase of 200 or more, referrer program discount").startDate(new DateTime().toDate()).numberOfTimesAllowed(
-                    1L).carryOverAllowed(false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.offer15percentOffOnPurchaseOf250OrMore).offerTrigger(offerTrigger).offerAction(
-                    offerAction).build();
-
-            Set<Role> roles = new HashSet<Role>(1);
-            roles.add((Role) getRoleService().getRoleByName(RoleConstants.HK_USER));
-            offer.setRoles(roles);
-
-            offer = (Offer) getOfferDao().save(offer);
-        }
-
-        return offer;
-    }
-
-    @Transactional
     public Offer getAffiliateOffer() {
-        Offer offer = getOfferDao().findByIdentifier(OfferConstants.affiliateCommissionOffer);
+        Offer offer = getOfferDao().findByIdentifier(OfferConstants.affiliateCommissionOfferNew);
 
         if (offer == null) {
 
-            OfferTrigger offerTrigger = OfferTriggerBuilder.getInstance().description("Min purchase amount Rs 500").minAmount(500D).build();
+            OfferTrigger offerTrigger = OfferTriggerBuilder.getInstance().description("Min purchase amount Rs 100").minAmount(100D).build();
 
             offerTrigger = (OfferTrigger) offerDao.save(offerTrigger);
 
-            OfferAction offerAction = OfferActionBuilder.getInstance().description("Rs. 100 off").discountAmount(100D).discountOnBasePriceOnly(false).validOnIntlShipping(false).productGroup(
+            OfferAction offerAction = OfferActionBuilder.getInstance().description("Additional 2% off on all Products").discountPercent(0.02).discountOnBasePriceOnly(false).validOnIntlShipping(false).productGroup(
                     getProductService().findProductGroupByName(OfferConstants.productGroupExcludingServices)).qty(1L).build();
             offerAction = (OfferAction) getOfferDao().save(offerAction);
 
-            offer = OfferBuilder.getInstance().description("Rs. 100 off on purchase of 500 or more, affiliate program discount").startDate(new DateTime().toDate()).numberOfTimesAllowed(
-                    1L).carryOverAllowed(false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.affiliateCommissionOffer).offerTrigger(offerTrigger).offerAction(
+            offer = OfferBuilder.getInstance().description("Additional 2% off on all Products, Affiliate program discount").startDate(new DateTime().toDate()).numberOfTimesAllowed(
+                    1000L).carryOverAllowed(false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.affiliateCommissionOfferNew).offerTrigger(offerTrigger).offerAction(
                     offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
@@ -150,34 +119,6 @@ public class OfferManager {
         return offer;
     }
 
-    @Transactional
-    public Offer getDiwaliOfferAndCreateCoupon() {
-        Offer offer = getOfferDao().findByIdentifier(OfferConstants.diwaliOffer);
-
-        if (offer == null) {
-
-            OfferTrigger offerTrigger = OfferTriggerBuilder.getInstance().description("Min purchase amount Rs 10").minAmount(10D).build();
-
-            offerTrigger = (OfferTrigger) offerDao.save(offerTrigger);
-
-            OfferAction offerAction = OfferActionBuilder.getInstance().description("20% Cashback Special Diwali Dhamaka off").discountAmount(0D).discountOnBasePriceOnly(false).validOnIntlShipping(
-                    false).qty(1L).build();
-            offerAction = (OfferAction) getOfferDao().save(offerAction);
-
-            offer = OfferBuilder.getInstance().description("20% Cashback Special Diwali Dhamaka off").startDate(new DateTime().toDate()).numberOfTimesAllowed(1L).carryOverAllowed(
-                    false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.diwaliOffer).offerTrigger(offerTrigger).offerAction(offerAction).build();
-
-            Set<Role> roles = new HashSet<Role>(1);
-            roles.add((Role) getRoleService().getRoleByName(RoleConstants.HK_USER));
-            offer.setRoles(roles);
-
-            offer = (Offer) getOfferDao().save(offer);
-        }
-
-        Coupon diwaliCoupon = getCouponService().createCoupon("DIWALIDHAMAKA", DateUtils.getEndOfNextDay(new Date()), 500L, 0L, offer, null, false);
-
-        return offer;
-    }
 
     @Transactional
     public Offer getOfferForIHO() {
@@ -204,7 +145,36 @@ public class OfferManager {
         return offer;
     }
 
-    @Transactional
+	@Transactional
+	public Offer getOfferForReferralAndAffiliateProgram() {
+		Offer offer = getOfferDao().findByIdentifier(OfferConstants.referralAffiliateOffer5percent);
+
+		if (offer == null) {
+
+			OfferTrigger offerTrigger = OfferTriggerBuilder.getInstance().description("Min purchase amount Rs 500").minAmount(500D).build();
+
+			offerTrigger = (OfferTrigger) getOfferDao().save(offerTrigger);
+
+			OfferAction offerAction = OfferActionBuilder.getInstance().description("5% Additional Off on all Products").discountAmount(250D).discountPercent(0.05).discountOnBasePriceOnly(false).validOnIntlShipping(false).qty(
+					1L).productGroup(getProductService().findProductGroupByName(OfferConstants.referralAffiliateProductGroup)).build();
+			offerAction = (OfferAction) getOfferDao().save(offerAction);
+
+			offer = OfferBuilder.getInstance().description("5% Additional Off on all Products, Min Purchase Rs 500/- Max Discount Rs 250/-").startDate(new DateTime().toDate()).numberOfTimesAllowed(
+					1L).carryOverAllowed(false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.referralAffiliateOffer5percent).offerTrigger(offerTrigger).offerAction(
+					offerAction).build();
+
+			Set<Role> roles = new HashSet<Role>(1);
+			roles.add(getRoleService().getRoleByName(RoleConstants.HK_USER));
+			offer.setRoles(roles);
+
+			offer = (Offer) getOfferDao().save(offer);
+		}
+
+		return offer;
+	}
+
+
+	@Transactional
     public Offer getOfferForEmployee() {
         Offer offer = getOfferDao().findByIdentifier(OfferConstants.HK_EMPLOYEE_OFFER);
         if (offer == null) {

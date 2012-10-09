@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.hkDelivery;
 
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import org.springframework.stereotype.Component;
@@ -12,10 +13,12 @@ import com.hk.admin.pact.dao.hkDelivery.HubDao;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import net.sourceforge.stripes.action.*;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Secure(hasAnyPermissions = { PermissionConstants.ADD_HK_DELIVERY_AGENT, PermissionConstants.ADD_HUB })
 @Component
 public class HKDHubAction extends BaseAction {
 
@@ -103,6 +106,14 @@ public class HKDHubAction extends BaseAction {
         return new ForwardResolution("/pages/admin/addAgentToHub.jsp");
     }
 
+	public Resolution removeAgentFromHub(){
+		if(hub != null & agent != null){
+			hubService.removeAgentFromHub(hub,agent);
+		}
+		addRedirectAlertMessage(new SimpleMessage("Agent removed from hub !"));
+		return new RedirectResolution(HKDHubAction.class, "addUserToHub");
+	}
+
     public Resolution saveUserToHub(){
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         boolean status = false;
@@ -115,7 +126,7 @@ public class HKDHubAction extends BaseAction {
         else{
             addRedirectAlertMessage(new SimpleMessage("Unable to add agent. Agent might already be present in the hub."));
         }
-        return new ForwardResolution("/pages/admin/addAgentToHub.jsp");
+        return new RedirectResolution(HKDHubAction.class, "addUserToHub");
     }
 
     public List<Hub> getHubList() {

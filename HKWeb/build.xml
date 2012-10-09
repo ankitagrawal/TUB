@@ -17,7 +17,6 @@
 		<fileset file="${lib.root.dir}/spring/org.springframework.context-3.0.2.RELEASE.jar" />
 		<fileset file="${project.common.dir}/dependencies/javaee.jar" />
 		<fileset file="${lib.root.dir}/stripes/stripes-1.5.3-patched.jar" />
-		<fileset file="${lib.root.dir}/rest/resteasy-jaxrs-2.3.0.GA.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/poi-3.6-20091214.jar" />
 		<fileset file="${lib.root.dir}/commons/commons-httpclient-3.0.1.jar" />
 		<fileset file="${lib.root.dir}/commons/commons-io-1.4.jar" />
@@ -30,8 +29,12 @@
 		<fileset file="${lib.root.dir}/thirdParty/metadata-extractor-2.5.0-RC1.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/core-renderer-R8pre2.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/joda-time-1.6.jar" />
-		<fileset file="${lib.root.dir}/rest/jackson-core-lgpl-1.4.2.jar" />
+		<fileset file="${lib.root.dir}/rest/jackson-core-asl-1.8.5.jar" />
+        <fileset file="${lib.root.dir}/rest/jackson-mapper-asl-1.8.5.jar"/>
+        <fileset file="${lib.root.dir}/rest/jackson-jaxrs-1.8.5.jar" />
+        <fileset file="${lib.root.dir}/rest/resteasy-jaxrs-2.3.0.GA.jar" />
 		<fileset file="${lib.root.dir}/rest/jaxrs-api-2.3.0.GA.jar" />
+        <fileset file="${lib.root.dir}/rest/resteasy-jackson-provider-2.3.0.GA.jar"/>
 		<fileset file="${lib.root.dir}/thirdParty/shiro-all-1.0-incubating-SNAPSHOT.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-annotations-3.4.0.GA.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />

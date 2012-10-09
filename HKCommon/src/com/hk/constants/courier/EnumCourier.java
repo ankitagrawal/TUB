@@ -99,6 +99,14 @@ public enum EnumCourier {
         );
     }
 
+
+     public static List<EnumCourier> getCurrentlyApplicableGroundShippedCouriers() {
+        return Arrays.asList(
+                EnumCourier.DTDC_Surface,
+                EnumCourier.Delhivery_Surface
+        );
+    }
+
     public static List<Long> getDTDCCouriers() {
         List<Long> dtdcCourierIds = new ArrayList<Long>();
         dtdcCourierIds.add(EnumCourier.DTDC_COD.getId());

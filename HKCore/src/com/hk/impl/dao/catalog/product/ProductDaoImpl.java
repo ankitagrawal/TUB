@@ -1,14 +1,15 @@
 package com.hk.impl.dao.catalog.product;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import com.hk.exception.SearchException;
-import com.hk.pact.service.search.ProductSearchService;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +50,9 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         }
 	    if (product.getOutOfStock() == null)   {
             product.setOutOfStock(Boolean.FALSE);
+        }
+	    if (product.isHidden() == null)   {
+            product.setHidden(Boolean.FALSE);
         }
         return (Product) super.save(product);
     }
@@ -166,6 +170,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                 criteria.add(Restrictions.in("id", productIds));
                 criteria.add(Restrictions.eq("deleted", false));
                 criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+                criteria.add(Restrictions.eq("hidden", false));
                 criteria.addOrder(Order.asc("orderRanking"));
 
                 return list(criteria, page, perPage);
@@ -179,7 +184,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) and p.deleted <> 1 group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
 			if (productIds != null && !productIds.isEmpty()) {
 				productIds = getSession().createQuery("select pv.product.id from ProductVariant pv where pv.product.id in (:productIds) and pv.hkPrice between :minPrice and :maxPrice and pv.deleted <> 1").setParameterList("productIds", productIds).setParameter("minPrice", minPrice).setParameter("maxPrice", maxPrice).list();
-				if (filterOptions != null && !filterOptions.isEmpty() && groupsCount > 0) {
+				if (productIds != null && !productIds.isEmpty() && filterOptions != null && !filterOptions.isEmpty() && groupsCount > 0) {
 					productIds = getSession().createSQLQuery("select distinct pv.product_id from product_variant_has_product_option pvhpo, product_variant pv where pvhpo.product_variant_id=pv.id and pv.product_id in (:productIds) and pvhpo.product_option_id in (:filterOptions) group by pvhpo.product_variant_id having count(pvhpo.product_variant_id) = :groupsCount").setParameterList("productIds", productIds).setParameterList("filterOptions", filterOptions).setParameter("groupsCount", groupsCount).list();
 				}
 				if (productIds != null && !productIds.isEmpty()) {
@@ -190,6 +195,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 					criteria.add(Restrictions.in("id", productIds));
 					criteria.add(Restrictions.eq("deleted", false));
 					criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+					criteria.add(Restrictions.eq("hidden", false));
 					criteria.addOrder(Order.asc("orderRanking"));
 					return list(criteria, page, perPage);
 				}

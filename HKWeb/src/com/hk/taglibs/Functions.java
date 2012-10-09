@@ -40,6 +40,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.catalog.product.VariantConfigOption;
@@ -60,6 +61,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.LinkManager;
@@ -74,6 +76,8 @@ import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.image.ProductImageService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
@@ -269,8 +273,9 @@ public class Functions {
     }
 
     public static List<String> brandsInCategory(Object o) {
+	    Category primaryCategory = (Category) o;
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-        return categoryDao.getBrandsByCategory(Arrays.asList(((Category) o).getName()));
+        return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
     }
 
     @SuppressWarnings("deprecation")
@@ -434,7 +439,11 @@ public class Functions {
     }
 
     public static String escapeHtml(String str) {
-        return StringEscapeUtils.escapeHtml(str);
+        return StringEscapeUtils.escapeHtml(str.trim());
+    }
+
+    public static String escapeXML(String str) {
+        return StringEscapeUtils.escapeXml(str.trim());
     }
 
     public static Double getApplicableOfferPrice(Object o) {
@@ -455,14 +464,11 @@ public class Functions {
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
-    public static List<Courier> getAvailableCouriers(Object o) {
-
-        // so this will work like, The system gets input as pincode and code available or not, and Then system returns
-        // the couriers in a sorted order on price
+    public static List<Courier> getAvailableCouriers(Object o) {     
 
         ShippingOrder shippingOrder = (ShippingOrder) o;
         CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
-        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD());
+        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false , false);
     }
 
     public static boolean equalsIgnoreCase(String str1, String str2) {
@@ -500,6 +506,14 @@ public class Functions {
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         Combo combo = (Combo) o;
         return productService.isComboInStock(combo);
+    }
+
+    public static boolean isCombo(String id) {
+        Combo combo = getCombo(id);
+        if (combo != null){
+            return true;
+        }
+        return false;
     }
 
     public static Map<String, List<String>> getRecommendedProducts(Object o) {
@@ -579,24 +593,40 @@ public class Functions {
 		return linkManager.getCodConverterLink(order);
 	}
 
-	public static boolean isCODAllowed(Order order) {
-		OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
-        return orderService.isCODAllowed(order);
-    }
+	/*public static boolean isCODAllowed(Order order) {
+	    AdminOrderService adminOrderService = ServiceLocatorFactory.getService(AdminOrderService.class);
+        return adminOrderService.isCODAllowed(order);
+    }*/
 
     public static Hub getHubForHkdeliveryUser(User user){
         HubService hubService = ServiceLocatorFactory.getService(HubService.class);
         return hubService.getHubForUser(user);
     }
 
-	public static boolean renderNewCatalogUI(String child, String secondChild) {
-		List<String> categoriesForNewCatalogUI = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
-		boolean renderNewCatalogUI = (Functions.collectionContains(categoriesForNewCatalogUI, child) || Functions.collectionContains(categoriesForNewCatalogUI, secondChild));
-		return renderNewCatalogUI;
+	public static boolean renderNewCatalogFilter(String child, String secondChild) {
+		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer");
+		boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter, secondChild));
+		return renderNewCatalogFilter;
+	}
+
+	public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, boolean showHiddenImages) {
+		ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
+		List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
+		return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
+	}
+
+	public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
+		SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
+		List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
+		List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
+		for (Sku applicableSku : applicableSkus) {
+			applicableWarehouses.add(applicableSku.getWarehouse());
+		}
+		return applicableWarehouses;
 	}
 
 	public static boolean showOptionOnUI(String optionType) {
-		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY");
+		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY", "FRAGRANCE");
 		boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
 		return showOptionOnUI;
 	}

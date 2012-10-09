@@ -214,11 +214,11 @@
 
         <fieldType name="text_brand" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <tokenizer class="solr.KeywordTokenizerFactory"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
             </analyzer>
             <analyzer type="query">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <tokenizer class="solr.KeywordTokenizerFactory"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
             </analyzer>
         </fieldType>
@@ -526,10 +526,11 @@ any data added to them will be ignored outright.  -->
         <field name="variantNames" type="text_en_splitting" indexed="true" stored="true" multiValued="true" />
         <field name="nameSort" type="string" indexed="true" stored="false"/>
         <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
-        <field name="brand" type="text_en_splitting" indexed="true" stored="true" />
+        <field name="brand" type="text_brand" indexed="true" stored="true" />
         <field name="overview" type="text_en_splitting" indexed="true" stored="true" />
         <field name="description" type="text_en_splitting" indexed="true" stored="true" />
         <field name="isGoogleAdDisallowed" type="boolean" indexed="true" stored="true" />
+        <field name="hidden" type="boolean" indexed="true" stored="true" />
         <field name="ranking" type="float" indexed="true" stored="true" />
         <field name="mainImageId" type="long" indexed="true" stored="true" />
         <field name="hkPrice" type="float" indexed="true" stored="true" />

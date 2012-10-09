@@ -182,8 +182,11 @@
         <mapping class="com.hk.domain.core.City" />
         <mapping class="com.hk.domain.courier.AwbStatus" />
         <mapping class="com.hk.domain.catalog.product.SimilarProduct" />
+        <mapping class="com.hk.domain.affiliate.AffiliateCategoryHasBrand" />
+        <mapping class="com.hk.domain.affiliate.AffiliateStatus" />
 	    <mapping class="com.hk.domain.feedback.Feedback" />
 		<mapping class="com.hk.domain.offer.OfferEmailDomain" />
 	    <mapping class="com.hk.domain.catalog.product.UpdatePvPrice" />
+	    <mapping class="com.hk.domain.order.OrderPaymentReconciliation" />
     </session-factory>
 </hibernate-configuration>

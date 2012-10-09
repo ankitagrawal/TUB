@@ -195,7 +195,7 @@
       </c:otherwise>
     </c:choose>
 
-    <s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>
+    <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>--%>
   </div>
 </div>
 <script type="text/javascript">

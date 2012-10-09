@@ -11,6 +11,7 @@ import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.ReferrerProgramManager;
+import com.hk.manager.SMSManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
@@ -53,6 +54,8 @@ public class PaymentManager {
 	private InventoryService inventoryService;
 	@Autowired
 	private PaymentService paymentService;
+	@Autowired
+	SMSManager smsManager;
 
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
 	private Double cashBackLimit;
@@ -260,6 +263,7 @@ public class PaymentManager {
 			Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
 			if (orderCount != null && orderCount >= 3) {
 				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
+				smsManager.sendOrderConfirmedSMS(payment.getOrder());
 			} else {
 				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
 			}

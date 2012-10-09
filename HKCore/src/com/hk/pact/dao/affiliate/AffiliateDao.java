@@ -5,6 +5,7 @@ import java.util.List;
 import com.akube.framework.dao.Page;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
+import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 
@@ -24,4 +25,7 @@ public interface AffiliateDao extends BaseDao {
     @SuppressWarnings("unchecked")
     public Page getAffiliateVerifiedUsers(int page, int perPage);
 
+	public Long getMaxCouponsLeft(Affiliate affiliate);
+
+	Page searchAffiliates(List<Long> affiliateStatusIds, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo);
 }

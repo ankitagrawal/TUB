@@ -8,16 +8,15 @@
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
       $(document).ready(function() {
-        var boolWronglyPickedBox = $("#wronglyPickedBox").val() == 'true';
-
+        var boolWronglyPickedBox = "${icBean.wronglyPickedBox}" == 'true';
         if(boolWronglyPickedBox) {
-          if($("#earlierExpiryDate").val() != "") {
-            alert("Cannot checkout the item, there is another item with expiry date - " + $("#earlierExpiryDate").val());
-          } else if($("#earlierMfgDate").val() != "") {
-            alert("Cannot checkout the item, there is another item with Mfg date - " + $("#earlierMfgDate").val());
-          } else if($("#earlierCreationDate").val() != "") {
-            alert("Cannot checkout the item, there is another item with inventory checkin date - " + $("#earlierCreationDate").val());
-          }
+           alert("Cannot checkout the item, there is another item with inventory with Batch details: \n" +
+                 "\n batch number - ${icBean.earlierSkuGroup.batchNumber}" +
+                 //hiding the barcode because if this is displayed one would just type that in.
+                 /*"\n barcode - ${icBean.earlierSkuGroup.barcode}" +*/
+                 "\n mrp - ${icBean.earlierSkuGroup.mrp}" +
+                 "\n expiry date - ${icBean.earlierSkuGroup.expiryDate}" +
+                 "\n mfg date - ${icBean.earlierSkuGroup.mfgDate}");
         }
         $(document).find('#skuGroup').attr("checked", true);
 
@@ -41,12 +40,6 @@
   <s:layout-component
       name="heading">Inventory Checkout for Gateway Order ID#${icBean.shippingOrder.gatewayOrderId}</s:layout-component>
   <s:layout-component name="content">
-    <s:form partial="true" beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" method="get" autocomplete="false">
-    <s:hidden name="wronglyPickedBox" id="wronglyPickedBox" />
-    <s:hidden name="earlierExpiryDate" id="earlierExpiryDate" />
-    <s:hidden name="earlierMfgDate" id="earlierMfgDate" />
-    <s:hidden name="earlierCreationDate" id="earlierCreationDate" />
-    </s:form>
     <c:choose>
         <c:when test="${! hk:allItemsCheckedOut(icBean.shippingOrder)}">
           <div align="center" class="prom yellow help" style="height:30px; font-size:20px; color:red; font-weight:bold;">
