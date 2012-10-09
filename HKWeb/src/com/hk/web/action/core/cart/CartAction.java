@@ -124,6 +124,7 @@ public class CartAction extends BaseAction {
                     if(comboInstanceHasProductVariant.getProductVariant().isOutOfStock()){
                       comboInstanceValue = lineItem.getComboInstance().getId();
                       lineItem.setQty(0L);
+                      break;
                     }
                   }
                 }
