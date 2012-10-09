@@ -47,7 +47,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
      */
     private List<ShippingOrderStatus> shippingOrderStatusList;
     private Set<String>               shippingOrderCategories;
-    private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;
+    private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;           //addded by someone saying: MAIN HOO DON !!!! please use camel case
 
     public OrderSearchCriteria setLogin(String login) {
         this.login = login;
