@@ -90,9 +90,6 @@ public class OrderSummaryAction extends BaseAction {
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;
-
-    @Value("#{hkEnvProps['" + Keys.Env.cashBackPercentageOnGroundShipped + "']}")
-    private Double cashBackPercentageOnGroundShipped;
     
     // @Named(Keys.Env.codMaxAmount)
     @Value("#{hkEnvProps['codMaxAmount']}")
