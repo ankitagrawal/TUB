@@ -559,7 +559,7 @@ public class OrderManager {
               }
               else{
                 comboInstanceValue = null;
-                for(Iterator<ComboInstanceHasProductVariant> iterator1 = lineItem.getComboInstance().getComboInstanceProductVariants().iterator(); iterator.hasNext();){
+                for(Iterator<ComboInstanceHasProductVariant> iterator1 = lineItem.getComboInstance().getComboInstanceProductVariants().iterator(); iterator1.hasNext();){
                   if(iterator1.next().getProductVariant().isOutOfStock()){
                     comboInstanceValue = lineItem.getComboInstance();
                     iterator.remove();
@@ -594,8 +594,8 @@ public class OrderManager {
 								}
 							}
 						}
-            cartLineItemService.save(lineItem);
             }
+            cartLineItemService.save(lineItem);
 					}
 				}
 			}
