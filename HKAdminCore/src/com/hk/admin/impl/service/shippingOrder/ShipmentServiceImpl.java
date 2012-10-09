@@ -94,7 +94,7 @@ public class ShipmentServiceImpl implements ShipmentService {
                 return null;
             }
              String routingCode = fedExCourier.getRoutingCode();
-             CourierServiceInfo courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(EnumCourier.FedEx.getId(),order.getAddress().getPin());//, shippingOrder.isCOD());//remove COD
+             CourierServiceInfo courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(EnumCourier.FedEx.getId(),order.getAddress().getPin());
              if (courierServiceInfo != null){
                if(routingCode != null){
                  courierServiceInfo.setRoutingCode(routingCode);
@@ -104,14 +104,14 @@ public class ShipmentServiceImpl implements ShipmentService {
             
              String forwardBarCode = fedExCourier.getBarCodeList().get(0);
              fedExNumber.setAwbBarCode(forwardBarCode);
-             //String forwardBarcodePath = barcodeGenerator.getBarcodePath(forwardBarCode, 2.0f, 200, true);
+
 
              if (shippingOrder.isCOD()){
                  String CODReturnBarCode = fedExCourier.getBarCodeList().get(1);
                  fedExNumber.setReturnAwbBarCode(CODReturnBarCode);
                  String returnAwb =  fedExCourier.getBarCodeList().get(2);
                  fedExNumber.setReturnAwbNumber(returnAwb);
-                 //String CODBarCodePath = barcodeGenerator.getBarcodePath(CODReturnBarCode, 2.0f, 200, true);
+
              }
 
         }

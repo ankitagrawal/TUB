@@ -88,26 +88,10 @@
         <c:when test="${orderSummary.shipment != null}">
             <div style="float: left;">
                 <strong>AWB NO.</strong>
-                    <%--<script type="text/javascript">alert(${fedExCourier})</script>--%>
+                    
                 <c:choose>
                     <c:when test="${orderSummary.shipment.courier.id == fedExCourier}">
                         <div>${orderSummary.shipment.awb.awbNumber}</div>
-
-                        <%--<div class="clear"></div>--%>
-                        <%--<div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;Standard--%>
-                        <%--Overnight--%>
-                        <%--</div>--%>
-
-                        <%--<div class="clear"></div>--%>
-                        <%--<img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "--%>
-                        <%--src="${pageContext.request.contextPath}/barcodes/1021448651341023204300794803377210.png                        "/>--%>
-
-
-                        <%--<div class="clear"></div>--%>
-                        <%--<div style="font-weight:bold; margin-top:5px;">COD Return : Priority Overnight &nbsp;&nbsp;794803377220</div>--%>
-                        <%--<div class="clear"></div>--%>
-                        <%--<img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "--%>
-                        <%--src="${pageContext.request.contextPath}/barcodes/1021467001341024403700794803377220.png"/>--%>
                     </c:when>
                     <c:otherwise>
                         <div class="clear"></div>
@@ -143,7 +127,7 @@
 
     </div>
 </div>
-<%--</div>--%>
+
 
 <c:choose>
     <c:when test="${orderSummary.shipment.courier.id == fedExCourier}">
@@ -160,11 +144,6 @@
             <div class="clear"></div>
             <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
                  src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbBarCode}.png"/>
-
-            <%--<div class="grid_5 alpha omega">--%>
-                <%--Subject to the conditions of Carriage, which limits the liability to FedEx--%>
-                <%--for loss, delay or damage to the consignment. Visit www.fedex.com/in to view the conditions of carriage.--%>
-            <%--</div>--%>
 
         </div>
     </c:when>

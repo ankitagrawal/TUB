@@ -181,7 +181,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 //delete FedEx tracking no. generated previously
                 Boolean result = new DeleteFedExShipment().deleteShipment(suggestedAwb.getAwbNumber());
             }
-            //if((suggestedAwb == null) && (
+            //if((suggestedAwb == null)
             if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())) {
                 Double weightInKg = shipment.getBoxWeight();
                 FedExCourier fedExCourier = new FedExCourier();
@@ -206,14 +206,14 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
                     String forwardBarCode = fedExCourier.getBarCodeList().get(0);
                     fedExNumber.setAwbBarCode(forwardBarCode);
-                    //String forwardBarcodePath = barcodeGenerator.getBarcodePath(forwardBarCode, 2.0f, 200, true);
+
 
                     if (shippingOrder.isCOD()) {
                         String CODReturnBarCode = fedExCourier.getBarCodeList().get(1);
                         fedExNumber.setReturnAwbBarCode(CODReturnBarCode);
                         String returnAwb = fedExCourier.getBarCodeList().get(2);
                         fedExNumber.setReturnAwbNumber(returnAwb);
-                        //String CODBarCodePath = barcodeGenerator.getBarcodePath(CODReturnBarCode, 2.0f, 200, true);
+                        
                     }
 
 
