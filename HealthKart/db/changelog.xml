@@ -9095,7 +9095,8 @@
     </changeSet>
 	<changeSet author="Ankit" id="1347620653716-4">
 	    <sql>
-	        
+		    create table `pincode_default_courier_bak` as (select * from `pincode_default_courier` );
+
 	        delete from `pincode_default_courier` ;
 
 	        insert into `pincode_default_courier` (pincode_id, warehouse_id,courier_id,estimated_shipping_cost,cod,
