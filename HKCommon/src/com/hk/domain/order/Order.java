@@ -9,21 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
+import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.clm.CLMConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
@@ -32,7 +20,6 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.comparator.OrderLifecycleComparator;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderStatus;
-import com.hk.domain.courier.Courier;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
@@ -72,6 +59,7 @@ public class Order implements java.io.Serializable {
     @JoinColumn(name = "address_id")
     private Address                   address;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "offer_instance_id")
     private OfferInstance             offerInstance;
@@ -79,10 +67,12 @@ public class Order implements java.io.Serializable {
     @Column(name = "amount", precision = 11)
     private Double                    amount;
 
+    @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", nullable = false, length = 19)
     private Date                      createDate;
 
+    @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_date", nullable = false, length = 19)
     private Date                      updateDate;
@@ -96,7 +86,7 @@ public class Order implements java.io.Serializable {
     /*
      * @Column(name = "basket_category", length = 45) private String basketCategory;
      */
-
+    @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private Set<OrderCategory>        categories      = new HashSet<OrderCategory>();
 
@@ -112,6 +102,7 @@ public class Order implements java.io.Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<Comment>             comments        = new ArrayList<Comment>();
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cancellation_type_id")
     private CancellationType          cancellationType;
@@ -135,6 +126,7 @@ public class Order implements java.io.Serializable {
     @Column(name = "is_subscription_order", nullable = false)
     private Boolean                   subscriptionOrder;
 
+    @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderLifecycle>      orderLifecycles = new ArrayList<OrderLifecycle>();
 
@@ -142,7 +134,7 @@ public class Order implements java.io.Serializable {
      * @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order") private List<AccountingInvoice>
      * accountingInvoices = new ArrayList<AccountingInvoice>(0);
      */
-
+    @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseOrder")
     private Set<ShippingOrder>        shippingOrders  = new HashSet<ShippingOrder>(0);
 
@@ -156,14 +148,17 @@ public class Order implements java.io.Serializable {
     @JoinColumn(name = "store_id")
     private Store                     store;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "primary_referrer_for_order_id")
     private PrimaryReferrerForOrder   primaryReferrerForOrder;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "secondary_referrer_for_order_id")
     private SecondaryReferrerForOrder secondaryReferrerForOrder;
 
+	@JsonSkip
     @Column(name = "target_dispatch_date", nullable = true)
     private Date                      targetDispatchDate;
 

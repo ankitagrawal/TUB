@@ -31,6 +31,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.hkDelivery.Hub;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -86,14 +87,17 @@ public class User {
     @Column(name = "gender", nullable = true, length = 6)
     private String                gender;
 
+    @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", nullable = false, length = 19)
     private Date                  createDate;
 
+    @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_date", nullable = false, length = 19)
     private Date                  updateDate;
 
+    @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_login_date", nullable = false, length = 19)
     private Date                  lastLoginDate;
@@ -104,6 +108,7 @@ public class User {
     @Transient
     private String                confirmPassword;
 
+    @JsonSkip
     @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SELECT)
     @JoinTable(name = "user_has_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
@@ -113,51 +118,64 @@ public class User {
     @Column(name = "user_hash", nullable = false, length = 32, unique = true)
     private String                userHash;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "referred_by", nullable = true)
     private User                  referredBy;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "affiliate_to", nullable = true)
     private User                  affiliateTo;
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "referrerUser")
     private List<Coupon>          referrerCoupons    = new ArrayList<Coupon>(1);
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OrderBy("createDate desc")
     private List<RewardPoint>     rewardPointList    = new ArrayList<RewardPoint>();
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<RewardPointTxn>  rewardPointTxnList = new ArrayList<RewardPointTxn>();
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserAccountInfo> userAccountInfos   = new ArrayList<UserAccountInfo>(1);
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @Where(clause = "deleted = 0")
     private List<Address>         addresses          = new ArrayList<Address>();
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<OfferInstance>   offerInstances     = new ArrayList<OfferInstance>();
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Order>           orders             = new ArrayList<Order>();
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Subscription> subscriptions;
 
+    @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "warehouse_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "warehouse_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "warehouse_id", nullable = false, updatable = false) })
     private Set<Warehouse>        warehouses         = new HashSet<Warehouse>(0);
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", nullable = true)
+    @JoinColumn(name = "store_id", nullable = false)
     private Store                 store;
 
+    @JsonSkip
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     private KarmaProfile          karmaProfile;
 
+    @JsonSkip
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "hub_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "hub_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "hub_id", updatable = false) })
     private Hub hub;

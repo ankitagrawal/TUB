@@ -13,7 +13,7 @@
 %>--%>
 
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-  <img src="${pageContext.request.contextPath}/images/banners/top/personal_care_thermometer.jpg" alt="Personal care optima digital thermometer">
+  <img src="${pageContext.request.contextPath}/images/banners/top/personal-care-banner.jpg" alt="10% cashback on minimum purchase of Rs. 750">
 </div>
 
 <%--<%

@@ -1,10 +1,9 @@
 package com.hk.dto.search;
 
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.search.SolrProduct;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.hk.domain.catalog.product.Product;
 
 /**
  * Created with IntelliJ IDEA.

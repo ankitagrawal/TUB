@@ -4,7 +4,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
-import com.hk.constants.email.EmailMapKeyConstants;
+import com.hk.constants.email.EmailConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -419,7 +419,7 @@ public class EmailManager {
             if (!sent)
                 success = false;
         }
-        boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "info@healthkart.com", "Admin", email);
+        boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, EmailConstants.getHkContactEmail(), "Admin", email);
         if (!sent)
             success = false;
         return success;
@@ -431,8 +431,8 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", shippingOrder);
         valuesMap.put("invoiceLink", invoiceLink);
-
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderShippedEmail);
+        Template freemarkerTemplate;
+        freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderShippedEmail);
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, shippingOrder.getBaseOrder().getUser().getEmail(),
                 shippingOrder.getBaseOrder().getUser().getName());
     }
@@ -669,7 +669,9 @@ public class EmailManager {
 
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.paymentFailEmail);
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
-        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), "info@healthkart.com");
+
+        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), EmailConstants.getHkContactEmail());
+
     }
 
 	public void sendCodConverterMail(Order order) {
@@ -705,12 +707,12 @@ public class EmailManager {
                 valuesMap.put("user", emailRecepient.getUser());
             }
             valuesMap.put("coupon", coupon);
-            emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getEmail(), "info@healthkart.com", headerMap);
+            emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getEmail(), EmailConstants.getHkContactEmail(), headerMap);
             // keep a record in history
             emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
             emailRecepient.setLastEmailDate(new Date());
             getEmailRecepientDao().save(emailRecepient);
-            getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart", getBaseDao().get(EmailType.class, EnumEmailType.MissYouEmail.getId()),
+            getEmailerHistoryDao().createEmailerHistory(EmailConstants.getHkNoReplyEmail(), EmailConstants.getHkNoReplyName(), getBaseDao().get(EmailType.class, EnumEmailType.MissYouEmail.getId()),
                     emailRecepient, emailCampaign, "");
         }
     }

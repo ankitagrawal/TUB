@@ -1,14 +1,15 @@
 package com.hk.impl.dao.catalog.product;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import com.hk.exception.SearchException;
-import com.hk.pact.service.search.ProductSearchService;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +50,9 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         }
 	    if (product.getOutOfStock() == null)   {
             product.setOutOfStock(Boolean.FALSE);
+        }
+	    if (product.isHidden() == null)   {
+            product.setHidden(Boolean.FALSE);
         }
         return (Product) super.save(product);
     }
@@ -166,6 +170,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                 criteria.add(Restrictions.in("id", productIds));
                 criteria.add(Restrictions.eq("deleted", false));
                 criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+                criteria.add(Restrictions.eq("hidden", false));
                 criteria.addOrder(Order.asc("orderRanking"));
 
                 return list(criteria, page, perPage);
@@ -190,6 +195,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 					criteria.add(Restrictions.in("id", productIds));
 					criteria.add(Restrictions.eq("deleted", false));
 					criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+					criteria.add(Restrictions.eq("hidden", false));
 					criteria.addOrder(Order.asc("orderRanking"));
 					return list(criteria, page, perPage);
 				}

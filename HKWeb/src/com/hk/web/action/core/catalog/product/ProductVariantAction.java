@@ -1,22 +1,26 @@
 package com.hk.web.action.core.catalog.product;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.pact.dao.catalog.product.ProductVariantDao;
-import com.hk.pact.service.image.ProductImageService;
-import com.hk.service.ServiceLocatorFactory;
-import com.hk.util.HKImageUtils;
-import com.hk.util.ImageManager;
-import com.hk.web.HealthkartResponse;
-import net.sourceforge.stripes.action.*;
+import java.util.List;
+
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.domain.catalog.product.ProductImage;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.pact.service.image.ProductImageService;
+import com.hk.util.HKImageUtils;
+import com.hk.util.ImageManager;
+import com.hk.web.HealthkartResponse;
 
 @Component
 public class ProductVariantAction extends BaseAction {

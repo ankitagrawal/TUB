@@ -1,5 +1,6 @@
 package com.hk.rest.pact.service;
 
+import com.hk.domain.order.Order;
 import com.hk.rest.models.order.APIOrder;
 
 
@@ -12,8 +13,10 @@ import com.hk.rest.models.order.APIOrder;
  */
 public interface APIOrderService {
 
-  public String createOrderInHK(APIOrder apiOrder);
+    public String createOrderInHK(APIOrder apiOrder);
 
-  public String trackOrder(String orderId);
+    public String trackOrder(String orderId);
+
+    public String createOrderInHk(Order order);
 
 }
