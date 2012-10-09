@@ -9050,7 +9050,7 @@
     </changeSet>
     <changeSet author="Rahul (generated)" id="1349775702731-1">
         <addColumn tableName="pincode_default_courier">
-            <column defaultValue="1" name="cod" type="TINYINT">
+            <column defaultValue="0" name="cod" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
