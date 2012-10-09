@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.akube.framework.gson.JsonSkip;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -44,15 +45,17 @@ public class Subscription  implements java.io.Serializable {
     @Column(name="id", unique=true, nullable=false)
     private Long id;
 
-
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",  nullable = false)
     private User user;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_order_id",  nullable = false)
     private Order baseOrder;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id",  nullable = true)
     private Address address;
@@ -128,6 +131,7 @@ public class Subscription  implements java.io.Serializable {
     @Column(name="next_shipment_date", length=19)
     private Date nextShipmentDate;
 
+    @JsonSkip
     @OneToOne(fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SELECT)
     @JoinTable(name = "subscription_cart_line_item",

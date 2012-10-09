@@ -17,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import com.akube.framework.gson.JsonSkip;
 import org.hibernate.annotations.SQLDelete;
 
 import com.hk.domain.courier.Courier;
@@ -35,10 +36,12 @@ public class Address implements java.io.Serializable {
   @Column(name = "id", unique = true, nullable = false)
   private Long id;
 
+  @JsonSkip
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;
 
+  @JsonSkip
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "default_courier_id")
   private Courier courier;
@@ -67,6 +70,7 @@ public class Address implements java.io.Serializable {
   @Column(name = "deleted", nullable = false, length = 30)
   private Boolean deleted;
 
+  @JsonSkip
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_date", nullable = false, length = 19)
   private Date createDate;
