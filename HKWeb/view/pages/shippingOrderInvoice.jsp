@@ -6,6 +6,7 @@
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
+<%@ page import="com.hk.admin.util.FedExCourier" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -68,11 +69,11 @@
         }
     </style>
     <link href="<hk:vhostCss/>/css/960.css" rel="stylesheet" type="text/css"/>
-	<%
-		CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-		pageContext.setAttribute("sexualCare", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("sexual-care")));
-		pageContext.setAttribute("personalCareWomen", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("women")));
-	%>
+    <%
+        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+        pageContext.setAttribute("sexualCare", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("sexual-care")));
+        pageContext.setAttribute("personalCareWomen", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("women")));
+    %>
 </head>
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" var="orderSummary"/>
@@ -85,23 +86,38 @@
 <div class="grid_4">
     <c:choose>
         <c:when test="${orderSummary.shipment != null}">
-          <div style="float: left;">
+            <div style="float: left;">
                 <strong>AWB NO.</strong>
-          <c:when test="${orderSummary.shipment.courier.id == fedExCourier }">
-              <div class="clear"></div>
-              <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name}</div>
-              <div style="font-weight:bold; margin-top:5px;">Standard Overnight</div>
-              
-          </c:when>
-          <c:otherwise>
+                    <%--<script type="text/javascript">alert(${fedExCourier})</script>--%>
+                <c:choose>
+                    <c:when test="${orderSummary.shipment.courier.id == fedExCourier}">
+                        <div>${orderSummary.shipment.awb.awbNumber}</div>
 
-                <div class="clear"></div>
-                <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name}</div>
-                <div class="clear"></div>
-                <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
-                     src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
+                        <%--<div class="clear"></div>--%>
+                        <%--<div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;Standard--%>
+                        <%--Overnight--%>
+                        <%--</div>--%>
+
+                        <%--<div class="clear"></div>--%>
+                        <%--<img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "--%>
+                        <%--src="${pageContext.request.contextPath}/barcodes/1021448651341023204300794803377210.png                        "/>--%>
+
+
+                        <%--<div class="clear"></div>--%>
+                        <%--<div style="font-weight:bold; margin-top:5px;">COD Return : Priority Overnight &nbsp;&nbsp;794803377220</div>--%>
+                        <%--<div class="clear"></div>--%>
+                        <%--<img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "--%>
+                        <%--src="${pageContext.request.contextPath}/barcodes/1021467001341024403700794803377220.png"/>--%>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="clear"></div>
+                        <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name}</div>
+                        <div class="clear"></div>
+                        <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
+                             src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
+                    </c:otherwise>
+                </c:choose>
             </div>
-          </c:otherwise>
         </c:when>
         <c:otherwise>
             &nbsp;&nbsp;
@@ -127,6 +143,33 @@
 
     </div>
 </div>
+<%--</div>--%>
+
+<c:choose>
+    <c:when test="${orderSummary.shipment.courier.id == fedExCourier}">
+        <div class="grid_12">
+
+            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;Standard
+                Overnight
+                <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD && orderSummary.invoiceDto.grandTotal > 0}">
+                    COD
+                </c:if>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
+            </div>
+
+            <div class="clear"></div>
+            <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
+                 src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbBarCode}.png"/>
+
+            <%--<div class="grid_5 alpha omega">--%>
+                <%--Subject to the conditions of Carriage, which limits the liability to FedEx--%>
+                <%--for loss, delay or damage to the consignment. Visit www.fedex.com/in to view the conditions of carriage.--%>
+            <%--</div>--%>
+
+        </div>
+    </c:when>
+    <c:otherwise></c:otherwise>
+</c:choose>
 
 <div class="clear"></div>
 <div style="margin-top: 15px;"></div>
@@ -162,6 +205,15 @@
                 <h2>Cash on Delivery :
                     <fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" type="currency"
                                       currencySymbol="Rs. " maxFractionDigits="0"/></h2>
+                <c:if test="${orderSummary.shipment.courier.id == fedExCourier}">
+                    <div class="clear"></div>
+                    <div style="font-weight:bold; margin-top:5px;">COD Return : Priority Overnight
+                        &nbsp;&nbsp; ${orderSummary.shipment.awb.returnAwbNumber}
+                    </div>
+                    <div class="clear"></div>
+                    <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
+                         src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.returnAwbBarCode}.png"/>
+                </c:if>
             </c:if>
         </div>
     </div>
@@ -179,6 +231,13 @@
         </c:if>
         <c:if test="${orderSummary.shippingOrder.warehouse.id == 2}">
             <p>Return Location: <b>BOM/BPT/421302</b></p>
+        </c:if>
+        <p><p></p>
+        <c:if test="${orderSummary.shipment.courier.id == fedExCourier}">
+           <div style="font-size:.8em">
+           Subject to the conditions of Carriage, which limits the liability to FedEx
+                for loss, delay or damage to the consignment. Visit www.fedex.com/in to view the conditions of carriage.<br>
+           </div>    
         </c:if>
     </div>
 </div>
@@ -239,80 +298,85 @@
         </tr>
         <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
             <tr>
-	            <td>
-		            <c:choose>
-			            <c:when test="${orderSummary.printable && (hk:collectionContainsCollection(invoiceLineItem.productCategories, sexualCare)
+                <td>
+                    <c:choose>
+                        <c:when test="${orderSummary.printable && (hk:collectionContainsCollection(invoiceLineItem.productCategories, sexualCare)
 						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen))}">
-				            <p>Personal Care Product</p>
-			            </c:when>
-			            <c:otherwise>
-				            <p>${invoiceLineItem.productName}</p>
-				            <c:if test="${invoiceLineItem.variantName != null}">
-					            <p>${invoiceLineItem.variantName}</p>
-				            </c:if>
-				            <em>
-					            <p>
-						            <c:forEach items="${invoiceLineItem.productOptions}"
-						                       var="productOption">
-							            <c:if test="${hk:showOptionOnUI(productOption.name)}" >
-								            ${productOption.name}:${productOption.value};
-							            </c:if>
-						            </c:forEach>
-					            </p>
-					            <p>
-							            ${invoiceLineItem.extraOptionsPipeSeparated}
-							            <!--${invoiceLineItem.configOptionsPipeSeparated}-->
-							</p>
-				            </em>
-					
-					<c:if test="${invoiceLineItem.cartLineItemConfigValues !=null}" >
-					
-					<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
-						var="configValue" varStatus="configValueCtr">
-						<c:set var="additinalParam"
-							value="${configValue.variantConfigOption.additionalParam}" />
-						<c:if
-							test="${( additinalParam == TH || additinalParam == THBF 
+                            <p>Personal Care Product</p>
+                        </c:when>
+                        <c:otherwise>
+                            <p>${invoiceLineItem.productName}</p>
+                            <c:if test="${invoiceLineItem.variantName != null}">
+                                <p>${invoiceLineItem.variantName}</p>
+                            </c:if>
+                            <em>
+                                <p>
+                                    <c:forEach items="${invoiceLineItem.productOptions}"
+                                               var="productOption">
+                                        <c:if test="${hk:showOptionOnUI(productOption.name)}">
+                                            ${productOption.name}:${productOption.value};
+                                        </c:if>
+                                    </c:forEach>
+                                </p>
+
+                                <p>
+                                        ${invoiceLineItem.extraOptionsPipeSeparated}
+                                    <!--${invoiceLineItem.configOptionsPipeSeparated}-->
+                                </p>
+                            </em>
+
+                            <c:if test="${invoiceLineItem.cartLineItemConfigValues !=null}">
+
+                                <c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
+                                           var="configValue" varStatus="configValueCtr">
+                                    <c:set var="additinalParam"
+                                           value="${configValue.variantConfigOption.additionalParam}"/>
+                                    <c:if
+                                            test="${( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF) }">
-							${configValue.variantConfigOption.displayName}:${configValue.value}|
-							
-						</c:if>
-					</c:forEach>
-					<table>
-						<tr>
-							<td><b>Right</b></td>
-							<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
-								var="configValue" varStatus="configValueCtr">
-								<c:set var="additinalParam"
-									value="${configValue.variantConfigOption.additionalParam}" />
-								<c:if
-									test="${configValueCtr.index %2 ==0 && !( additinalParam == TH || additinalParam == THBF 
+                                        ${configValue.variantConfigOption.displayName}:${configValue.value}|
+
+                                    </c:if>
+                                </c:forEach>
+                                <table>
+                                    <tr>
+                                        <td><b>Right</b></td>
+                                        <c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
+                                                   var="configValue" varStatus="configValueCtr">
+                                            <c:set var="additinalParam"
+                                                   value="${configValue.variantConfigOption.additionalParam}"/>
+                                            <c:if
+                                                    test="${configValueCtr.index %2 ==0 && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF) }">
-									<td><b>${configValue.variantConfigOption.displayName}:${configValue.value}</b></td>
-								</c:if>
-							</c:forEach>
-						</tr>
-						<tr>
-							<td><b>Left</b></td>
-							<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
-								var="configValue" varStatus="configValueCtr">
-								<c:set var="additinalParam"
-									value="${configValue.variantConfigOption.additionalParam}" />
-								<c:if
-									test="${configValueCtr.index %2 !=0 && !( additinalParam == TH || additinalParam == THBF 
+                                                <td>
+                                                    <b>${configValue.variantConfigOption.displayName}:${configValue.value}</b>
+                                                </td>
+                                            </c:if>
+                                        </c:forEach>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Left</b></td>
+                                        <c:forEach items="${invoiceLineItem.cartLineItemConfigValues}"
+                                                   var="configValue" varStatus="configValueCtr">
+                                            <c:set var="additinalParam"
+                                                   value="${configValue.variantConfigOption.additionalParam}"/>
+                                            <c:if
+                                                    test="${configValueCtr.index %2 !=0 && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF)}">
-									<td><b>${configValue.variantConfigOption.displayName}:${configValue.value}</b></td>
-								</c:if>
-							</c:forEach>
-						</tr>
-					</table>
-					</c:if>
-				</c:otherwise>
-		            </c:choose>
-	            </td>
+                                                <td>
+                                                    <b>${configValue.variantConfigOption.displayName}:${configValue.value}</b>
+                                                </td>
+                                            </c:if>
+                                        </c:forEach>
+                                    </tr>
+                                </table>
+                            </c:if>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
 
                 <td><fmt:formatNumber value="${invoiceLineItem.qty}" maxFractionDigits="0"/></td>
                 <td> ${invoiceLineItem.hkPrice} </td>

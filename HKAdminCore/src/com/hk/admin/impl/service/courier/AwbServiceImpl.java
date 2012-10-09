@@ -58,9 +58,9 @@ public class AwbServiceImpl implements AwbService {
         return awbDao.getAlreadyPresentAwb(courier,awbNumberList);
     }
     
-    public Awb createAwb(Courier suggestedCourier, String trackingNumber, Warehouse warehouse, Boolean isCod){
+    public Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod){
         Awb awb = new Awb();
-        awb.setCourier(suggestedCourier);
+        awb.setCourier(courier);
         awb.setAwbNumber(trackingNumber);
         awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
         awb.setWarehouse(warehouse);

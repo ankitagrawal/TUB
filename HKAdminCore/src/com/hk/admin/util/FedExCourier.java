@@ -15,9 +15,12 @@ import java.math.*;
 import org.apache.axis.types.NonNegativeInteger;
 import org.apache.axis.types.PositiveInteger;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fedex.ship.stub.*;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.warehouse.Warehouse;
 
 /**
  * Sample code to call the FedEx Ship Service
@@ -36,10 +39,12 @@ import com.hk.domain.order.ShippingOrder;
 public class FedExCourier
 {
 	//
+    private static Logger logger = LoggerFactory.getLogger(FedExCourier.class);
+     List<String> retrieveBarcodes = new ArrayList<String>();
+    String routingFedEx;
 
-//    public FedExCourier() {
-//     }
-    List<String> retrieveBarcodes = new ArrayList<String>();
+    public FedExCourier() {
+     }
 
 	public String newFedExShipment(ShippingOrder shippingOrder, Double weightInKg)
 	{
@@ -76,11 +81,13 @@ public class FedExCourier
                     trackingNumber = cpd[i].getTrackingIds()[0].getTrackingNumber();
 			    }
 		    }
-            setBarCodeString(reply, shippingOrder);
+            setBarCodeList(reply, shippingOrder);
+            setRoutingCode(reply);
             return trackingNumber;
 			//
 		} catch (Exception e) {
-		    System.out.println(e.getMessage());
+		    //System.out.println(e.getMessage());
+            logger.error(e.getMessage());
 		}
         return null;
 	}
@@ -108,7 +115,7 @@ public class FedExCourier
         requestedShipment.setPackagingType(PackagingType.YOUR_PACKAGING); // Packaging type FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...
 
         //
-        requestedShipment.setShipper(addShipper()); // Sender information
+        requestedShipment.setShipper(addShipper(shippingOrder)); // Sender information
         //
         requestedShipment.setRecipient(addRecipient(shippingOrder));
         //
@@ -116,10 +123,10 @@ public class FedExCourier
         //
         if (shippingOrder.isCOD()){
         requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested(shippingOrder));
-        requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder));
+        //requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder));
         }
         //
-        //requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail());
+        requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder));
         //
 	    requestedShipment.setLabelSpecification(addLabelSpecification());
         //
@@ -133,17 +140,17 @@ public class FedExCourier
 	    return request;
 	}
 
-    public void setBarCodeString(ProcessShipmentReply reply, ShippingOrder shippingOrder){
-                    List<String> retrieveBarcodes = new ArrayList<String>();
+    public void setBarCodeList(ProcessShipmentReply reply, ShippingOrder shippingOrder){
+
                     // forward going label (outbound label)
                     CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
                     CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
 
                     if(cpd!=null){
-                        System.out.println("Package Details");
+                        //System.out.println("Package Details");
                         for (int i=0; i < cpd.length; i++) { // Package details / Rating information for each package
                             StringBarcode sb = cpd[i].getOperationalDetail().getBarcodes().getStringBarcodes(0);
-                            retrieveBarcodes.add(sb.toString());
+                            retrieveBarcodes.add(sb.getValue());
                         }
                     }
                     
@@ -152,18 +159,31 @@ public class FedExCourier
                    if(shippingOrder.isCOD()){
                     AssociatedShipmentDetail asd[] = csd.getAssociatedShipments();
                     if(cpd!=null){
-                        System.out.println("Package Details");
+                        //System.out.println("Package Details");
                         for (int i=0; i < cpd.length; i++) { // Package details / Rating information for each package
                             StringBarcode sb = asd[i].getPackageOperationalDetail().getBarcodes().getStringBarcodes(0);
-                            retrieveBarcodes.add(sb.toString());
+                            String returnAwb = asd[i].getTrackingId().getTrackingNumber();
+                            retrieveBarcodes.add(sb.getValue());
+                            retrieveBarcodes.add(returnAwb);
                         }
                     }
+
                    }
 
     }
 
-    public List<String> getBarCodeString(){
+    public List<String> getBarCodeList(){
         return retrieveBarcodes;
+    }
+
+    public void setRoutingCode(ProcessShipmentReply reply){
+         CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
+         ShipmentOperationalDetail sod = csd.getOperationalDetail();
+         routingFedEx = sod.getUrsaSuffixCode();
+    }
+
+    public String getRoutingCode(){
+        return routingFedEx;
     }
 	//
 	private static void writeServiceOutput(ProcessShipmentReply reply) throws Exception
@@ -378,20 +398,19 @@ public class FedExCourier
 		return payorAccountNumber;
 	}
 
-	private static Party addShipper(){
+	private static Party addShipper(ShippingOrder shippingOrder){
 	    Party shipperParty = new Party(); // Sender information
 	    Contact shipperContact = new Contact();
-	    shipperContact.setPersonName("Healthkart");
+        Warehouse HKWarehouse = shippingOrder.getWarehouse();
+
+	    shipperContact.setPersonName(HKWarehouse.getName());//"Healthkart");
 	    shipperContact.setCompanyName("Aquamarine HealthCare Pvt. Ltd.");
-	    shipperContact.setPhoneNumber("0124-4551616");
+	    shipperContact.setPhoneNumber(HKWarehouse.getWhPhone());//"0124-4551616");
 	    Address shipperAddress = new Address();
-	    shipperAddress.setStreetLines(new String[] {"4th Floor, Parshavnath Arcadia\n" +
-                "1, MG Road\n" +
-                "(Opposite to Motorola)\n" +
-                "Sector-14"});
-	    shipperAddress.setCity("Gurgaon");
-	    shipperAddress.setStateOrProvinceCode("HR");
-	    shipperAddress.setPostalCode("122001");
+	    shipperAddress.setStreetLines(new String[] {HKWarehouse.getLine1(), HKWarehouse.getLine2()});//{"4th Floor, Parshavnath Arcadia\n" +"1, MG Road\n" +"(Opposite to Motorola)\n" +"Sector-14"});
+	    shipperAddress.setCity(HKWarehouse.getCity());//"Gurgaon");
+	    shipperAddress.setStateOrProvinceCode(HKWarehouse.getState());//"HR");
+	    shipperAddress.setPostalCode(HKWarehouse.getPincode());//"122001");
 	    shipperAddress.setCountryCode("IN");
 	    shipperAddress.setCountryName("INDIA");
 	    shipperParty.setContact(shipperContact);
@@ -512,7 +531,7 @@ public class FedExCourier
 		requestedPackageLineItem.setSequenceNumber(new PositiveInteger("1"));
 		requestedPackageLineItem.setGroupPackageCount(new PositiveInteger("1"));
 		requestedPackageLineItem.setWeight(addPackageWeight(weightInKg, WeightUnits.KG));//50.5, WeightUnits.LB));
-		requestedPackageLineItem.setDimensions(addPackageDimensions(108, 5, 5, LinearUnits.IN));
+		//requestedPackageLineItem.setDimensions(addPackageDimensions(108, 5, 5, LinearUnits.IN));
 		requestedPackageLineItem.setCustomerReferences(new CustomerReference[]{
 				addCustomerReference(CustomerReferenceType.CUSTOMER_REFERENCE.getValue(), "CR1234"),
 				addCustomerReference(CustomerReferenceType.INVOICE_NUMBER.getValue(), "IV1234"),// shippingOrder.getAccountingInvoiceNumber().toString()),
@@ -543,7 +562,7 @@ public class FedExCourier
         customs.setCustomsValue(addMoney("INR", shippingOrder.getAmount()));//400.00));
         customs.setDocumentContent(InternationalDocumentContentType.NON_DOCUMENTS);
         customs.setCommercialInvoice(addCommercialInvoice());
-        customs.setCommodities(new Commodity[] {addCommodity()});// Commodity details
+        customs.setCommodities(new Commodity[] {addCommodity(shippingOrder)});// Commodity details
         return customs;
 	}
 
@@ -556,21 +575,21 @@ public class FedExCourier
 		return commercialInvoice;
 	}
 
-	private static Commodity addCommodity(){
+	private static Commodity addCommodity(ShippingOrder shippingOrder){
 		Commodity commodity = new Commodity();
 		commodity.setNumberOfPieces(new NonNegativeInteger("1"));
 		commodity.setDescription("Books");
 		commodity.setCountryOfManufacture("IN");
 		commodity.setWeight(new Weight());
 		commodity.getWeight().setValue(new BigDecimal(1.0));
-		commodity.getWeight().setUnits(WeightUnits.LB);
+		commodity.getWeight().setUnits(WeightUnits.KG);
 		commodity.setQuantity(new NonNegativeInteger("4"));
 		commodity.setQuantityUnits("EA");
 		commodity.setUnitPrice(new Money());
 		commodity.getUnitPrice().setAmount(new java.math.BigDecimal(100.000000));
 		commodity.getUnitPrice().setCurrency("INR");
 		commodity.setCustomsValue(new Money());
-		commodity.getCustomsValue().setAmount(new java.math.BigDecimal(400.000000));
+		commodity.getCustomsValue().setAmount(new java.math.BigDecimal(shippingOrder.getAmount()));//(400.000000));
 		commodity.getCustomsValue().setCurrency("INR");
 		commodity.setCountryOfManufacture("IN");
 		commodity.setHarmonizedCode("490199009100");

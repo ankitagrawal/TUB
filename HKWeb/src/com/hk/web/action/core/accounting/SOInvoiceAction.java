@@ -7,6 +7,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -17,6 +18,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.admin.util.FedExCourier;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.Awb;
@@ -32,6 +34,8 @@ import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.order.CartFreebieService;
+
+import java.io.File;
 
 @Component
 public class SOInvoiceAction extends BaseAction {
@@ -61,7 +65,11 @@ public class SOInvoiceAction extends BaseAction {
      @Autowired
      FedExCourier fedExCourier;
 
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeDir + "']}")
+    String               barcodeDir;
+
     private String barcodePath;
+    private String CODBarCodePath;
     private Coupon coupon;
     private String routingCode;
     private InvoiceDto invoiceDto;
@@ -77,19 +85,20 @@ public class SOInvoiceAction extends BaseAction {
             if (shipment != null) {
                 Awb awb = shipment.getAwb();
                 if (awb != null && awb.getAwbNumber() != null ) {
-                    String trackingId;
+
                     if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
-                        trackingId = fedExCourier.getBarCodeString().get(0);
-                        String CODBarCode = fedExCourier.getBarCodeString().get(1);
+                        String awbBarCode = awb.getAwbBarCode();
+                        String forwardBarcodePath = barcodeGenerator.getBarcodePath(awbBarCode, 2.0f, 200, true);
                         if (shippingOrder.isCOD()){
+
+                            String CODBarCode = awb.getReturnAwbBarCode();
                             String CODBarCodePath = barcodeGenerator.getBarcodePath(CODBarCode, 2.0f, 200, true);
                         }
                     }
-                    else{
-                        trackingId = awb.getAwbNumber();
+                   else{
+                        String trackingId = awb.getAwbNumber();
+                        barcodePath = barcodeGenerator.getBarcodePath(trackingId, 2.0f, 200, true);
                     }
-                    barcodePath = barcodeGenerator.getBarcodePath(trackingId, 2.0f, 200, true);
-
                 }
             }
             ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
@@ -114,6 +123,11 @@ public class SOInvoiceAction extends BaseAction {
             }
 
             if (courierServiceInfo != null) {
+                routingCode = courierServiceInfo.getRoutingCode();
+            }
+            if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
+                //routingCode = "DELKG";
+                courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(EnumCourier.FedEx.getId(),address.getPin());
                 routingCode = courierServiceInfo.getRoutingCode();
             }
             freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
@@ -142,6 +156,14 @@ public class SOInvoiceAction extends BaseAction {
 
     public void setBarcodePath(String barcodePath) {
         this.barcodePath = barcodePath;
+    }
+
+    public String getCODBarCodePath() {
+        return CODBarCodePath;
+    }
+
+    public void setCODBarCodePath(String CODBarCodePath) {
+        this.CODBarCodePath = CODBarCodePath;
     }
 
     public String getRoutingCode() {

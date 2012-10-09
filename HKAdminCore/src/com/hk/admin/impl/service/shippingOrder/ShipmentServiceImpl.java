@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.AwbDao;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.shipment.ShipmentDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
@@ -9,16 +10,14 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.FedExCourier;
 import com.hk.admin.util.DeleteFedExShipment;
+import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.AwbStatus;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.*;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -48,8 +47,12 @@ public class ShipmentServiceImpl implements ShipmentService {
     ShippingOrderService shippingOrderService;
     @Autowired
     ShipmentDao shipmentDao;
+
+     @Autowired
+    BarcodeGenerator barcodeGenerator;
     @Autowired
-    FedExCourier fedExCourier;
+    CourierServiceInfoDao courierServiceInfoDao;
+
 
     public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
@@ -80,25 +83,35 @@ public class ShipmentServiceImpl implements ShipmentService {
         Double weightInKg = estimatedWeight/1000;
 
         if (suggestedCourier.getId().equals(EnumCourier.FedEx.getId())){
+            FedExCourier fedExCourier = new FedExCourier();
             String trackingNumber = fedExCourier.newFedExShipment(shippingOrder,weightInKg);
-
+            Awb fedExNumber;
             if (trackingNumber != null){
-                Awb fedExNumber = awbService.createAwb(suggestedCourier,trackingNumber, shippingOrder.getWarehouse(), shippingOrder.isCOD());
-                /*
-                fedExNumber.setCourier(suggestedCourier);
-                fedExNumber.setAwbNumber(trackingNumber);
-                fedExNumber.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                fedExNumber.setWarehouse(shippingOrder.getWarehouse());
-                fedExNumber.setCod(shippingOrder.isCOD());
-                fedExNumber.setAwbBarCode(trackingNumber);
-                fedExNumber.setUsed(false);
-                //awbService.save(fedExNumber);
-                */
+                fedExNumber = awbService.createAwb(suggestedCourier,trackingNumber, shippingOrder.getWarehouse(), shippingOrder.isCOD());
                 suggestedAwb = fedExNumber;
             }
             else{
                 return null;
             }
+             String routingCode = fedExCourier.getRoutingCode();
+             CourierServiceInfo courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(EnumCourier.FedEx.getId(),order.getAddress().getPin());//, shippingOrder.isCOD());//remove COD
+             if (courierServiceInfo != null){
+                 courierServiceInfo.setRoutingCode(routingCode);
+                 courierServiceInfoDao.save(courierServiceInfo);
+             }
+            
+             String forwardBarCode = fedExCourier.getBarCodeList().get(0);
+             fedExNumber.setAwbBarCode(forwardBarCode);
+             //String forwardBarcodePath = barcodeGenerator.getBarcodePath(forwardBarCode, 2.0f, 200, true);
+
+             if (shippingOrder.isCOD()){
+                 String CODReturnBarCode = fedExCourier.getBarCodeList().get(1);
+                 fedExNumber.setReturnAwbBarCode(CODReturnBarCode);
+                 String returnAwb =  fedExCourier.getBarCodeList().get(2);
+                 fedExNumber.setReturnAwbNumber(returnAwb);
+                 //String CODBarCodePath = barcodeGenerator.getBarcodePath(CODReturnBarCode, 2.0f, 200, true);
+             }
+
         }
         else{
             suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());

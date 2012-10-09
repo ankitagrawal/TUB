@@ -31,7 +31,7 @@ public interface AwbService {
 
     public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList);
 
-    public Awb createAwb(Courier suggestedCourier, String trackingNumber, Warehouse warehouse, Boolean isCod);
+    public Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
 
 
 }

@@ -1,6 +1,8 @@
 package com.hk.admin.util;
 
 import com.fedex.ship.stub.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Sample code to call the FedEx Delete Shipment Web Service
@@ -14,6 +16,7 @@ import com.fedex.ship.stub.*;
  */
 public class DeleteFedExShipment {
 
+    private static Logger logger = LoggerFactory.getLogger(DeleteFedExShipment.class);
     public DeleteFedExShipment(){
 
     }
@@ -54,17 +57,17 @@ public class DeleteFedExShipment {
 			ShipmentReply reply = port.deleteShipment(request);
 			//
 			NotificationSeverityType nst = reply.getHighestSeverity();
-			System.out.println("CancelPackageReply HightestSeverity: " + nst.toString());
+			logger.debug("CancelPackageReply HightestSeverity: " + nst.toString());
 			if (isResponseOk(reply.getHighestSeverity()))
 			{
-				System.out.println("Successful.");
+				logger.debug("Successful.");
                 return true;
 			}
 
-			printNotifications(reply.getNotifications());
+			//printNotifications(reply.getNotifications());
 
 		} catch (Exception e) {
-		    System.out.println(e.getMessage());
+		    logger.error(e.getMessage());
             return false;
 		}
         return false;
