@@ -18,6 +18,7 @@ import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.OrderCategory;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
@@ -95,8 +96,14 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         order.setGatewayOrderId(payment.getGatewayOrderId());
         order.setPayment(payment);
         // save order with placed status since amount has been applied
+
+	    Set<OrderCategory> categories = orderService.getCategoriesForBaseOrder(order);
+	    order.setCategories(categories);
+
         order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
-        order=orderService.save(order);
+	    getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
+
+	    order=orderService.save(order);
         //finalize order -- create shipping order and update inventory
         finalizeOrder(order);
         return  order;
