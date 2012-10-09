@@ -1,19 +1,5 @@
 package com.hk.admin.impl.service.order;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
@@ -52,6 +38,14 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.service.ServiceLocatorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 public class AdminOrderServiceImpl implements AdminOrderService {
@@ -368,7 +362,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     /**
      * TODO:#ankit please make keys in the map as some constants.
      */
-    public Map<String, String> isCODAllowed(Order order) {
+    public Map<String, String> isCODAllowed(Order order,Double payable) {
         Map<String, String> codFailureMap = new HashMap<String, String>();
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
@@ -396,7 +390,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         String pin = address != null ? address.getPin() : null;
 
         // Double payable = pricingDto.getGrandTotalPayable();
-        Double payable = order.getAmount();
+        //Double payable = order.getAmount();
         if (!courierService.isCodAllowed(pin)) {
             codFailureMap.put("CodAllowedOnPin", "N");
             codFailureMap.put("Pincode", pin);

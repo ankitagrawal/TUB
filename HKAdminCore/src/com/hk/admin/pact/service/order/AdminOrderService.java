@@ -1,12 +1,12 @@
 package com.hk.admin.pact.service.order;
 
-import java.util.Map;
-
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+
+import java.util.Map;
 
 public interface AdminOrderService {
 
@@ -39,6 +39,6 @@ public interface AdminOrderService {
 	 * @param order
 	 * @return
 	 */
-    public Map<String, String> isCODAllowed(Order order);
+    public Map<String, String> isCODAllowed(Order order, Double totalPayable);
 
 }

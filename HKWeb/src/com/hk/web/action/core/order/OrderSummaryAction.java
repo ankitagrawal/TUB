@@ -1,22 +1,5 @@
 package com.hk.web.action.core.order;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-import org.stripesstuff.plugin.session.Session;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
@@ -39,6 +22,17 @@ import com.hk.pricing.PricingEngine;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.payment.PaymentModeAction;
 import com.hk.web.action.core.user.SelectAddressAction;
+import net.sourceforge.stripes.action.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+import org.stripesstuff.plugin.session.Session;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Secure
 @Component
@@ -123,7 +117,7 @@ public class OrderSummaryAction extends BaseAction {
         Address address = order.getAddress();
         String pin = address != null ? address.getPin() : null;
 
-        codFailureMap = adminOrderService.isCODAllowed(order);
+        codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
 
         // Ground Shipping logic starts ---
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
