@@ -114,4 +114,5 @@ public interface ProductService {
 	public List<Product> getSimilarProducts(Product product);
 
 
+    boolean isComboInStock(String comboId);
 }

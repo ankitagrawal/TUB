@@ -9,25 +9,25 @@ import com.hk.domain.store.StoreProduct;
 public interface StoreService {
 
     public static final Long DEFAULT_STORE_ID = 1L;
-    public static final Long MIH_STORE_ID = 2L;
+    public static final Long MIH_STORE_ID     = 2L;
 
+    public List<Store> getAllStores();
 
-    public List<Store> getAllStores() ;
     /**
      * Default store will be healthkart
      * 
      * @return Store
      */
-    public Store getDefaultStore() ;
+    public Store getDefaultStore();
 
-  public Store getStoreById(Long storeId);
+    public Store getStoreById(Long storeId);
 
-  public StoreProduct saveStoreProduct(StoreProduct storeProduct);
+    public StoreProduct saveStoreProduct(StoreProduct storeProduct);
 
-  public StoreProduct getStoreProductByHKVariantAndStore(ProductVariant productVariant, Store store);
+    public StoreProduct getStoreProductByHKVariantAndStore(ProductVariant productVariant, Store store);
 
-   public StoreProduct getStoreProductByHKVariantIDAndStoreId(String productVariantId, Long storeId);
+    public StoreProduct getStoreProductByHKVariantIDAndStoreId(String productVariantId, Long storeId);
 
-   public List<StoreProduct> getProductListForStore(Store store);
+    public List<StoreProduct> getProductListForStore(Store store);
 
 }

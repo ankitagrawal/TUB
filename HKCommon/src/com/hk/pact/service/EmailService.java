@@ -1,5 +1,6 @@
 package com.hk.pact.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -27,5 +28,7 @@ String replyToName, Map<String, String> headerMap, Template template);*/
 
 
   public void sendBulkHtmlEmail(List<Map<String, HtmlEmail>> htmlEmails, EmailCampaign emailCampaign);
+
+  public boolean sendHtmlEmail(String subject, String message, String toEmail, String toName, String attachementPath);
 
 }
