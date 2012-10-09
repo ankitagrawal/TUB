@@ -543,12 +543,33 @@ public class OrderManager {
 		//orderDao.refresh(order);
 		if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
 			for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext(); ) {
+        ComboInstance comboInstanceValue = null;
 				CartLineItem lineItem = iterator.next();
 				if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId()) || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
 					if (lineItem.getQty() <= 0) {
 						iterator.remove();
 						getCartLineItemDao().delete(lineItem);
 					} else {
+            Boolean bool = false;
+            if(lineItem.getComboInstance()!=null){
+              if(comboInstanceValue !=null && comboInstanceValue.equals(lineItem.getComboInstance())){
+                iterator.remove();
+                getCartLineItemDao().delete(lineItem);
+                bool = true;
+              }
+              else{
+                comboInstanceValue = null;
+                for(Iterator<ComboInstanceHasProductVariant> iterator1 = lineItem.getComboInstance().getComboInstanceProductVariants().iterator(); iterator.hasNext();){
+                  if(iterator1.next().getProductVariant().isOutOfStock()){
+                    comboInstanceValue = lineItem.getComboInstance();
+                    iterator.remove();
+                    getCartLineItemDao().delete(lineItem);
+                    bool = true;
+                  }
+                }
+              }
+            }
+            if(!bool){
 						ProductVariant productVariant = lineItem.getProductVariant();
 						Product product = productVariant.getProduct();
 						boolean isService = false;
@@ -572,7 +593,8 @@ public class OrderManager {
 								}
 							}
 						}
-						cartLineItemService.save(lineItem);
+            cartLineItemService.save(lineItem);
+            }
 					}
 				}
 			}
