@@ -9029,6 +9029,13 @@
     <changeSet author="Rohit (generated)" id="1348648571172-3">
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
     </changeSet>
+	<changeSet author="Ankit" id="10-11-2012">
+	    <sql>
+		    create table `pincode_default_courier_bak` as (select * from `pincode_default_courier` );
+	    </sql>
+	</changeSet>
+
+
     <changeSet author="Ankit (generated)" id="1347620653716-1">
         <addColumn tableName="courier_service_info">
             <column name="cod_on_ground_shipping" type="TINYINT">
@@ -9095,8 +9102,6 @@
     </changeSet>
 	<changeSet author="Ankit" id="1347620653716-4">
 	    <sql>
-		    create table `pincode_default_courier_bak` as (select * from `pincode_default_courier` );
-
 	        delete from `pincode_default_courier` ;
 
 	        insert into `pincode_default_courier` (pincode_id, warehouse_id,courier_id,estimated_shipping_cost,cod,
