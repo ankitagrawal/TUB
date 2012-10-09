@@ -18,6 +18,10 @@ public class HKPriceUtils {
      * @param product
      * @return
      */
+    
+    /**
+     * Not the best example of using ServiceLocator, please avoid using in such ways.
+     */
     public static double getMinimumProductPrice(Product product){
         BaseDao baseDao = ServiceLocatorFactory.getService(BaseDao.class);
         Combo combo = baseDao.get(Combo.class, product.getId());
