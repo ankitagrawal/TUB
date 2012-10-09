@@ -158,7 +158,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
             }
         }
         if (courierList.size() == 0) {
-            courierList = courierDao.getAllCouriers();
+            courierList = courierDao.getAvailableCouriers();
         }
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInDeliveryQueue()));

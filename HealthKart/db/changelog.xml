@@ -9029,4 +9029,17 @@
     <changeSet author="Rohit (generated)" id="1348648571172-3">
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
     </changeSet>
+	 <changeSet author="Seema (generated)" id="1349781909753-1">
+        <addColumn tableName="courier">
+            <column name="deleted" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+	 <changeSet author="Seema (generated)" id="1349781909753-2">
+		 <sql>
+			update courier set `deleted` = 0;
+		 </sql>
+		   </changeSet>   
+    <changeSet author="Seema (generated)" id="1349782838900-1">
+        <addNotNullConstraint columnDataType="TINYINT" columnName="deleted" tableName="courier"/>
+    </changeSet>  
 </databaseChangeLog>
