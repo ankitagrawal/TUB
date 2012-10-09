@@ -189,13 +189,13 @@
 				alert("Please enter a valid quantity.");
 				return false;
 			}
-			var returnFalse = (1==2);
+			var returnFalse = false;
 			$.each($('.discountPercentage'), function(index, value){
 				var eachRow=$(value);
 				var discountPercentage=eachRow.val().trim();
 				if(discountPercentage < 0){
 					alert("Discount percentage should be greater than zero");
-					returnFalse = (1==1);
+					returnFalse = true;
 					return false;
 				}
 			});

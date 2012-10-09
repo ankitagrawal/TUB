@@ -208,6 +208,12 @@ public class GRNManager {
         grnDto.setTotalPayable(totalPayable);
 	    double overallDiscount = grn.getDiscount() == null ? 0.0 : grn.getDiscount();
 	    grnDto.setFinalPayable(totalPayable - overallDiscount);
+
+	    grn.setTaxableAmount(totalTaxable);
+	    grn.setTaxAmount(totalTax);
+	    grn.setSurchargeAmount(totalSurcharge);
+	    goodsReceivedNoteDao.save(grn);
+
         return grnDto;
 
     }

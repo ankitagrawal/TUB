@@ -253,6 +253,10 @@ public class PurchaseOrderManager {
 	    double overallDiscount = purchaseOrder.getDiscount() == null ? 0.0 : purchaseOrder.getDiscount();
 	    purchaseOrderDto.setFinalPayable(totalPayable - overallDiscount);
 
+	    purchaseOrder.setTaxableAmount(totalTaxable);
+	    purchaseOrder.setTaxAmount(totalTax);
+	    purchaseOrder.setSurchargeAmount(totalSurcharge);
+	    purchaseOrderDao.save(purchaseOrder);
         return purchaseOrderDto;
     }
 
