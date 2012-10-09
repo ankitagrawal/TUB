@@ -1,6 +1,7 @@
 package com.hk.web.action.core.cart;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.SubscriptionFilter;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.ComboInstance;
+import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
@@ -107,15 +109,32 @@ public class CartAction extends BaseAction {
         if (user != null) {
             order = orderManager.getOrCreateOrder(user);
 
-            Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-            for (CartLineItem lineItem : cartLineItems) {
-                if (lineItem != null && lineItem.getProductVariant() != null) {
-                    ProductVariant productVariant = lineItem.getProductVariant();
-                    if ((productVariant.getProduct().isDeleted() != null && productVariant.getProduct().isDeleted()) || productVariant.isDeleted() || productVariant.isOutOfStock()) {
-                        lineItem.setQty(0L);
-                    }
+         Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+          for (CartLineItem lineItem : cartLineItems) {
+            Long comboInstanceValue = null;
+            if (lineItem != null && lineItem.getProductVariant() != null) {
+              if(lineItem.getComboInstance()!=null){
+                if(comboInstanceValue !=null && comboInstanceValue==lineItem.getComboInstance().getId()){
+                  lineItem.setQty(0L);
                 }
+                else{
+                  comboInstanceValue = null;
+                  for(ComboInstanceHasProductVariant comboInstanceHasProductVariant : lineItem.getComboInstance().getComboInstanceProductVariants()){
+                    if(comboInstanceHasProductVariant.getProductVariant().isOutOfStock()){
+                      comboInstanceValue = lineItem.getComboInstance().getId();
+                      lineItem.setQty(0L);
+                    }
+                  }
+                }
+              }
+              else{
+                ProductVariant productVariant = lineItem.getProductVariant();
+                if ((productVariant.getProduct().isDeleted() != null && productVariant.getProduct().isDeleted()) || productVariant.isDeleted() || productVariant.isOutOfStock()) {
+                  lineItem.setQty(0L);
+                }
+              }
             }
+          }
 
             // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
             order = orderManager.trimEmptyLineItems(order);
