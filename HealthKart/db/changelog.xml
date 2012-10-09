@@ -9029,4 +9029,95 @@
     <changeSet author="Rohit (generated)" id="1348648571172-3">
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Ankit (generated)" id="1347620653716-1">
+        <addColumn tableName="courier_service_info">
+            <column name="cod_on_ground_shipping" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1347620653716-2">
+        <addColumn tableName="courier_service_info">
+            <column name="ground_shipping_available" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1347620653716-3">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="ground_shipping" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-1">
+        <addColumn tableName="pincode_default_courier">
+            <column defaultValue="0" name="cod" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-2">
+        <addColumn tableName="pincode_default_courier">
+            <column name="courier_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-3">
+        <addColumn tableName="pincode_default_courier">
+            <column name="estimated_shipping_cost" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-4">
+        <addColumn tableName="pincode_default_courier">
+            <column defaultValue="0" name="ground_shipping" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-5">
+        <dropForeignKeyConstraint baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_cod"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-6">
+        <dropForeignKeyConstraint baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_non_cod"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-7">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-8">
+        <dropColumn columnName="courier_id_cod" tableName="pincode_default_courier"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-9">
+        <dropColumn columnName="courier_id_non_cod" tableName="pincode_default_courier"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-10">
+        <dropColumn columnName="estimated_shipping_cost_cod" tableName="pincode_default_courier"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-11">
+        <dropColumn columnName="estimated_shipping_cost_non_cod" tableName="pincode_default_courier"/>
+    </changeSet>
+	<changeSet author="Ankit" id="1347620653716-4">
+	    <sql>
+	        
+	        delete from `pincode_default_courier` ;
+
+	        insert into `pincode_default_courier` (pincode_id, warehouse_id,courier_id,estimated_shipping_cost,cod,
+	        ground_shipping)
+	        select v1.pincode_id,v1.warehouse_id,v1.courier_id,v1.estimated_shipping_cost,v1.cod,v1.ground_shipping
+	        from
+	        (select pincode_id,warehouse_id,courier_id_cod as courier_id,estimated_shipping_cost_cod as
+	        estimated_shipping_cost,'0' as cod,
+	        '0' as ground_shipping
+	        from `pincode_default_courier_bak`
+
+	        union
+
+	        select pincode_id,warehouse_id,courier_id_non_cod as courier_id,estimated_shipping_cost_non_cod as
+	        estimated_shipping_cost,'1' as cod ,
+	        '0' as ground_shipping
+	        from `pincode_default_courier_bak`
+	        )v1 ;
+	    </sql>
+	</changeSet>
+
+    <changeSet author="Rahul (generated)" id="1349775925334-1">
+        <dropTable tableName="pincode_default_courier_bak"/>
+    </changeSet>
 </databaseChangeLog>

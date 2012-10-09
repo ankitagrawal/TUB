@@ -6,6 +6,8 @@ import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 
+import java.util.Map;
+
 public interface AdminOrderService {
 
     public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity);
@@ -31,4 +33,12 @@ public interface AdminOrderService {
     public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser);
 
 	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order);
+
+	/**
+	 * TODO:#ankit please document all keys and there meaning in the map being returned
+	 * @param order
+	 * @return
+	 */
+    public Map<String, String> isCODAllowed(Order order, Double totalPayable);
+
 }
