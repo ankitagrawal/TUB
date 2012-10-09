@@ -52,6 +52,7 @@ import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.user.SelectAddressAction;
+import com.hk.web.action.core.order.OrderSummaryAction;
 
 @Component
 public class CartAction extends BaseAction {
@@ -233,6 +234,12 @@ public class CartAction extends BaseAction {
          */
 
         return new RedirectResolution(SelectAddressAction.class);
+    }
+	
+    public Resolution removeGroundShippedItem() {
+         orderManager.setGroundShippedItemQuantity(order);
+         orderManager.trimEmptyLineItems(order);
+         return new RedirectResolution(OrderSummaryAction.class);
     }
 
     public Order getOrder() {

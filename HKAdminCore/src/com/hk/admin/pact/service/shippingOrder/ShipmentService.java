@@ -20,4 +20,6 @@ public interface ShipmentService {
     public void delete(Shipment shipment);
 
 	public Shipment recreateShipment(ShippingOrder shippingOrder);
+
+    public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder );
 }
