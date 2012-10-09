@@ -79,6 +79,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
+            if(shippingOrder.getShipment()!= null)
+                shipmentService.delete(shippingOrder.getShipment());
         }
     }
 

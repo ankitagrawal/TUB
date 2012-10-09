@@ -96,8 +96,10 @@ public class ShipmentServiceImpl implements ShipmentService {
              String routingCode = fedExCourier.getRoutingCode();
              CourierServiceInfo courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(EnumCourier.FedEx.getId(),order.getAddress().getPin());//, shippingOrder.isCOD());//remove COD
              if (courierServiceInfo != null){
+               if(routingCode != null){
                  courierServiceInfo.setRoutingCode(routingCode);
                  courierServiceInfoDao.save(courierServiceInfo);
+               }
              }
             
              String forwardBarCode = fedExCourier.getBarCodeList().get(0);

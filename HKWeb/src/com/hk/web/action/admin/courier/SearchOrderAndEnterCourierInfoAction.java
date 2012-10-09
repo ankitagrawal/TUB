@@ -198,8 +198,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     String routingCode = fedExCourier.getRoutingCode();
                     CourierServiceInfo courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(EnumCourier.FedEx.getId(), shippingOrder.getBaseOrder().getAddress().getPin());
                     if (courierServiceInfo != null) {
+                      if (routingCode != null){
                         courierServiceInfo.setRoutingCode(routingCode);
                         courierServiceInfoDao.save(courierServiceInfo);
+                      }    
                     }
 
                     String forwardBarCode = fedExCourier.getBarCodeList().get(0);
