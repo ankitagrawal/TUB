@@ -24,6 +24,9 @@
 		<fileset file="${lib.root.dir}/solr/apache-solr-solrj-3.3.0.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-annotations-3.4.0.GA.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />
+        <fileset file="${lib.root.dir}/rest/resteasy-jaxrs-2.3.0.GA.jar" />
+        <fileset file="${lib.root.dir}/rest/jaxrs-api-2.3.0.GA.jar" />
+        <fileset file="${lib.root.dir}/thirdParty/gson-1.4.jar" />
 		<fileset file="${project.common.dir}/dependencies/javaee.jar" />
 		<fileset file="${project.common.dir}/dependencies/testng-5.8-jdk15.jar" />
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
