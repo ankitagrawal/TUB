@@ -1,7 +1,7 @@
 package com.hk.domain.catalog.product;
 // Generated 10 Mar, 2011 5:37:39 PM by Hibernate Tools 3.2.4.CR1
 
-
+import com.akube.framework.gson.JsonSkip;
 import javax.persistence.*;
 
 /**
@@ -17,6 +17,7 @@ public class ProductImage implements java.io.Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
+    @JsonSkip
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;

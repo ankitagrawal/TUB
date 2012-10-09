@@ -37,6 +37,11 @@ public class SolrProduct {
 
     @Field
     private
+    boolean hidden;
+
+
+    @Field
+    private
     double ranking;
 
     @Field
@@ -420,6 +425,14 @@ public class SolrProduct {
 
     public void setVariantNames(List<String> variantNames) {
         this.variantNames = variantNames;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public SolrProduct(){
