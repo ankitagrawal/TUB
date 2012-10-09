@@ -1,18 +1,12 @@
 package com.hk.admin.impl.service.order;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.hk.manager.StoreOrderService;
-import com.hk.admin.manager.AdminEmailManager;
-
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.domain.order.CartLineItem;
-import com.hk.pact.dao.shippingOrder.LineItemDao;
-import com.hk.pact.service.inventory.InventoryService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,85 +14,91 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.admin.manager.AdminEmailManager;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.constants.core.Keys;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.constants.core.Keys;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.ShippingOrderFilter;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.user.User;
 import com.hk.domain.user.Address;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.Product;
+import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
+import com.hk.manager.StoreOrderService;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AffilateService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.dto.pricing.PricingDto;
 
 @Service
 public class AdminOrderServiceImpl implements AdminOrderService {
 
-    private static Logger logger = LoggerFactory.getLogger(AdminOrderService.class);
+    private static Logger             logger = LoggerFactory.getLogger(AdminOrderService.class);
 
     @Autowired
-    private UserService userService;
+    private UserService               userService;
     @Autowired
-    private OrderStatusService orderStatusService;
+    private OrderStatusService        orderStatusService;
     @Autowired
-    private RewardPointService rewardPointService;
+    private RewardPointService        rewardPointService;
     @Autowired
-    private OrderService orderService;
+    private OrderService              orderService;
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
-    ShippingOrderService shippingOrderService;
+    ShippingOrderService              shippingOrderService;
     @Autowired
-    ShipmentService shipmentService;
+    ShipmentService                   shipmentService;
     @Autowired
-    private AffilateService affilateService;
+    private AffilateService           affilateService;
     @Autowired
-    InventoryService inventoryService;
+    InventoryService                  inventoryService;
     @Autowired
-    LineItemDao lineItemDao;
+    LineItemDao                       lineItemDao;
     @Autowired
-    private ReferrerProgramManager referrerProgramManager;
+    private ReferrerProgramManager    referrerProgramManager;
     @Autowired
-    private EmailManager emailManager;
+    private EmailManager              emailManager;
     @Autowired
-    private OrderLoggingService orderLoggingService;
+    private OrderLoggingService       orderLoggingService;
     @Autowired
-    private SubscriptionOrderService subscriptionOrderService;
+    private SubscriptionOrderService  subscriptionOrderService;
     @Autowired
-    private StoreService storeService;
+    private StoreService              storeService;
     @Autowired
-    private StoreOrderService storeOrderService;
+    private StoreOrderService         storeOrderService;
     @Autowired
-    private AdminEmailManager adminEmailManager;
+    private AdminEmailManager         adminEmailManager;
     @Autowired
-    private CourierService courierService;
-
-    private PricingDto pricingDto;
+    private CourierService            courierService;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
-    private Double codMinAmount;
+    private Double                    codMinAmount;
 
     @Value("#{hkEnvProps['codMaxAmount']}")
-    private Double codMaxAmount;
-
+    private Double                    codMaxAmount;
 
     @Transactional
     public Order putOrderOnHold(Order order) {
@@ -234,9 +234,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             order = getOrderService().save(order);
         }
         /*
-        * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =
-        * orderDaoProvider.get().save(order); }
-        */
+         * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =
+         * orderDaoProvider.get().save(order); }
+         */
 
         return shouldUpdate;
     }
@@ -246,10 +246,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
         if (isUpdated) {
             logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
-            //update in case of subscription orders
+            // update in case of subscription orders
             subscriptionOrderService.markSubscriptionOrderAsShipped(order);
 
-            //incase of other store orders
+            // incase of other store orders
             if (!order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
                 order = orderService.save(order);
                 storeOrderService.updateOrderStatusInStore(order);
@@ -266,14 +266,15 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
                 rewardPointService.approvePendingRewardPointsForOrder(order);
                 affilateService.approvePendingAffiliateTxn(order);
-                // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
+                // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put
+                // a
                 // check if payment mode was COD and email hasn't been sent yet
                 // sendEmailToServiceProvidersForOrder(order);
 
-                //if the order is a subscription order update subscription status
+                // if the order is a subscription order update subscription status
                 subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
 
-                //incase of other store orders
+                // incase of other store orders
                 if (!order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
                     order = orderService.save(order);
                     storeOrderService.updateOrderStatusInStore(order);
@@ -356,7 +357,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             }
 
         }
-        //Check Inventory health of order lineitems
+        // Check Inventory health of order lineitems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
@@ -364,15 +365,17 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return shippingOrderExists;
     }
 
-
-    public Map<String, String> isCODAllowed(Order order, PricingDto pricingDto) {
+    /**
+     * TODO:#ankit please make keys in the map as some constants.
+     */
+    public Map<String, String> isCODAllowed(Order order) {
         Map<String, String> codFailureMap = new HashMap<String, String>();
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
         Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
         Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
         boolean codAllowedonProduct = true;
-        boolean codAllowed = false;
+        // boolean codAllowed = false;
 
         for (CartLineItem productCartLineItem : productCartLineItems) {
             ProductVariant productVariant = productCartLineItem.getProductVariant();
@@ -392,7 +395,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         Address address = order.getAddress();
         String pin = address != null ? address.getPin() : null;
 
-        Double payable = pricingDto.getGrandTotalPayable();
+        // Double payable = pricingDto.getGrandTotalPayable();
+        Double payable = order.getAmount();
         if (!courierService.isCodAllowed(pin)) {
             codFailureMap.put("CodAllowedOnPin", "N");
             codFailureMap.put("Pincode", pin);
@@ -413,7 +417,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
         return codFailureMap;
     }
-
 
     public UserService getUserService() {
         return userService;
@@ -517,6 +520,5 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     public AdminEmailManager getAdminEmailManager() {
         return adminEmailManager;
     }
-
 
 }

@@ -8,17 +8,16 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.gson.JsonUtils;
 import com.google.gson.Gson;
-import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.manager.StoreOrderService;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.store.StoreService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.rest.models.order.APIOrder;
 import com.hk.rest.pact.service.APIOrderService;
 

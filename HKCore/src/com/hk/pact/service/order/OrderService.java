@@ -66,7 +66,7 @@ public interface OrderService {
 
     public Order findByGatewayOrderId(String gatewayOrderId);
 
-    public boolean isCODAllowed(Order order);
+    //public boolean isCODAllowed(Order order);
 
      public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
 

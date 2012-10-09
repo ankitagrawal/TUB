@@ -1,14 +1,12 @@
 package com.hk.admin.pact.service.order;
 
+import java.util.Map;
+
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
-import com.hk.dto.pricing.PricingDto;
-
-import java.util.List;
-import java.util.Map;
 
 public interface AdminOrderService {
 
@@ -36,6 +34,11 @@ public interface AdminOrderService {
 
 	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order);
 
-    public Map<String, String> isCODAllowed(Order order , PricingDto pricingDto);
+	/**
+	 * TODO:#ankit please document all keys and there meaning in the map being returned
+	 * @param order
+	 * @return
+	 */
+    public Map<String, String> isCODAllowed(Order order);
 
 }

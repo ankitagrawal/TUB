@@ -73,6 +73,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
         return courierCostingMap.lastEntry();
     }
 
+    @SuppressWarnings("unchecked")
     public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight) {
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
         applicableCourierList = courierServiceInfoDao.searchCouriers(pincode, cod , false , false);
@@ -104,7 +105,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
         PincodeRegionZone pincodeRegionZone = pincodeRegionZoneDao.getPincodeRegionZone(courierGroup, pincodeObj, srcWarehouse);
         if (pincodeRegionZone == null) {
             if (courierGroup == null) {
-                logger.info("courier group not found for courier " + courier.getName());
+                logger.error("courier group not found for courier " + courier.getName());
                 return null;
             }
             logger.info("prz null for " + pincodeObj.getPincode() + courierGroup.getName() + srcWarehouse.getCity());

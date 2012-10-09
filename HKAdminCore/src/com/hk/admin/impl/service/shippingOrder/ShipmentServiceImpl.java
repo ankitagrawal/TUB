@@ -30,21 +30,21 @@ import java.util.Date;
 public class ShipmentServiceImpl implements ShipmentService {
 
     @Autowired
-    CourierService courierService;
+    CourierService        courierService;
     @Autowired
-    PincodeDao pincodeDao;
+    PincodeDao            pincodeDao;
     @Autowired
-    AwbDao awbDao;
+    AwbDao                awbDao;
     @Autowired
-    CourierGroupService courierGroupService;
+    CourierGroupService   courierGroupService;
     @Autowired
     ShipmentPricingEngine shipmentPricingEngine;
     @Autowired
-    AwbService awbService;
+    AwbService            awbService;
     @Autowired
-    ShippingOrderService shippingOrderService;
+    ShippingOrderService  shippingOrderService;
     @Autowired
-    ShipmentDao shipmentDao;
+    ShipmentDao           shipmentDao;
 
     public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
@@ -53,16 +53,17 @@ public class ShipmentServiceImpl implements ShipmentService {
             return null;
         }
 
-  // Ground Shipping logic starts -- suggested courier
+        // Ground Shipping logic starts -- suggested courier
         boolean isGroundShipped = false;
         Courier suggestedCourier = null;
         isGroundShipped = isShippingOrderHasGroundShippedItem(shippingOrder);
         suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
-//    Ground Shipping logic ends -- suggested courier
+        // Ground Shipping logic ends -- suggested courier
         if (suggestedCourier == null) {
             return null;
         }
-        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
+                EnumAwbStatus.Unused.getAsAwbStatus());
         if (suggestedAwb == null) {
             return null;
         }
@@ -113,7 +114,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     public Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
         Shipment shipment = shippingOrder.getShipment();
-        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
+                EnumAwbStatus.Unused.getAsAwbStatus());
         if (suggestedAwb != null) {
             AwbStatus awbStatus = EnumAwbStatus.Attach.getAsAwbStatus();
             suggestedAwb.setAwbStatus(awbStatus);
@@ -146,6 +148,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         return newShipment;
     }
 
+    @Override
     public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder) {
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             if (lineItem.getSku().getProductVariant().getProduct().isGroundShipping()) {

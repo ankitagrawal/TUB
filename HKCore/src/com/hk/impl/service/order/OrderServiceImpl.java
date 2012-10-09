@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.comparator.BasketCategory;
+import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -23,7 +24,6 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
@@ -33,17 +33,16 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
-import com.hk.domain.user.Address;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.exception.OrderSplitException;
 import com.hk.exception.NoSkuException;
+import com.hk.exception.OrderSplitException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
@@ -57,8 +56,6 @@ import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-
-
 import com.hk.pojo.DummyOrder;
 
 @Service
@@ -358,8 +355,10 @@ public class OrderServiceImpl implements OrderService {
 //        List<Set<CartLineItem>> listOfCartLineItemSet = getMatchCartLineItemOrder(order);
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());         
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
-        Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
-        Set<CartLineItem> serviceCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();      
+        CartLineItemFilter groundShipLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+        Set<CartLineItem> groundShippedCartLineItemSet = groundShipLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
+        CartLineItemFilter serviceCartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+        Set<CartLineItem> serviceCartLineItems = serviceCartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();      
         productCartLineItems.removeAll(serviceCartLineItems);
         productCartLineItems.removeAll(groundShippedCartLineItemSet);
 
@@ -572,7 +571,7 @@ public class OrderServiceImpl implements OrderService {
 
 	//todo ankit, there should be one and only method to which you will pass order      --- completed on AdminOrderService
 //  this function not in use  
-    public boolean isCODAllowed(Order order) {
+    /*public boolean isCODAllowed(Order order) {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
         for (CartLineItem productCartLineItem : productCartLineItems) {
@@ -587,7 +586,7 @@ public class OrderServiceImpl implements OrderService {
         }
         return true;
     }   
-
+*/
 
      public ShippingOrder createSOForService(CartLineItem serviceCartLineItem) {
         Order baseOrder = serviceCartLineItem.getOrder();
@@ -604,7 +603,8 @@ public class OrderServiceImpl implements OrderService {
             throw new NoSkuException(productVariant, corporateOffice);
         }
 
-        shippingOrder.setBasketCategory("services");
+       
+        shippingOrder.setBasketCategory(CategoryConstants.SERVICES);
         shippingOrder.setServiceOrder(true);
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
         ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
