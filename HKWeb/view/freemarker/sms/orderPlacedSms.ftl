@@ -1,1 +1,1 @@
-Your COD Order No.${order.gatewayOrderId} has been placed and is under process. Check your mail for shipment & delivery details. Thank you for choosing HealthKart.
+Your Order No.${order.gatewayOrderId} is placed and is under process. Check your email or call 0124-4551616 for further details. Thank you!

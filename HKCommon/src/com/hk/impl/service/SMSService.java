@@ -70,15 +70,15 @@ public class SMSService {
 
         if (useSmsService) {
             try {
-                if (mobile != null && mobile.length() == 10) {
+                if (mobile != null && mobile.length() == 10 && StringUtils.isNumeric(mobile)) {
 
                     mobile = URLEncoder.encode(mobile, "UTF-8");
                     message = URLEncoder.encode(message, "UTF-8");
 
                     postData += "User=" + URLEncoder.encode(userName, "UTF-8") + "&passwd=" + password + "&mobilenumber=" + mobile + "&message=" + message + "&sid=" + senderId
                             + "&mtype=" + mtype + "&DR=" + DR;
-                    URL newUrl = new URL("http://smscountry.com/SMSCwebservice_Bulk.aspx");
-	                logger.debug("post data to sms gateway" + postData);
+                    URL newUrl = new URL(smsUrl);
+	                logger.debug("post data to sms gateway: " + postData);
 
                     HttpURLConnection urlconnection = (HttpURLConnection) newUrl.openConnection();
                     urlconnection.setDoInput(true);
@@ -95,8 +95,9 @@ public class SMSService {
 		                retval += decodedString;
 	                }
 	                in.close();
-	                logger.debug("return value from sms" + retval);
+	                logger.debug("return value from sms: " + retval);
                 } else {
+	                logger.debug("invalid mobile: " + mobile);
                     return false;
                 }
             } catch (MalformedURLException e) {
