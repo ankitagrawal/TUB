@@ -565,6 +565,7 @@ public class OrderManager {
                     iterator.remove();
                     getCartLineItemDao().delete(lineItem);
                     bool = true;
+                    break;
                   }
                 }
               }
