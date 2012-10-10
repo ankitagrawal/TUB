@@ -147,15 +147,19 @@ public class TrackCourierAction extends BaseAction {
                 }
                 break;
 
-            case HK_Delivery: if(trackingId != null){
-	            consignment = consignmentService.getConsignmentByAwbNumber(trackingId);
-	            if(consignment != null){
-					consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
-		            resolution = new ForwardResolution("/pages/hkDeliveryTracking.jsp");
-	            }else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
-                }
-            }
+	        case HK_Delivery:
+		        if (trackingId != null) {
+			        consignment = consignmentService.getConsignmentByAwbNumber(trackingId);
+			        if (consignment != null) {
+				        consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
+				        resolution = new ForwardResolution("/pages/hkDeliveryTracking.jsp");
+			        } else {
+				        resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+			        }
+		        }
+		        else{
+			        resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+		        }
 	            
 	            break;
             default:
