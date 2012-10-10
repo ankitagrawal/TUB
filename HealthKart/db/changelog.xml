@@ -9126,275 +9126,122 @@
     <changeSet author="Rahul (generated)" id="1349775925334-1">
         <dropTable tableName="pincode_default_courier_bak"/>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-1">
-        <addColumn tableName="address">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-2">
+    <changeSet author="vaibhav (generated)" id="1349816769325-2">
         <addColumn tableName="affiliate_traffic_details">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-3">
-        <addColumn tableName="affiliate_traffic_details">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-4">
+    <changeSet author="vaibhav (generated)" id="1349816769325-4">
         <addColumn tableName="awb">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-5">
-        <addColumn tableName="awb">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-6">
+    <changeSet author="vaibhav (generated)" id="1349816769325-6">
         <addColumn tableName="base_order_category">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-7">
-        <addColumn tableName="base_order_category">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-8">
+    <changeSet author="vaibhav (generated)" id="1349816769325-8">
         <addColumn tableName="campaign_tracking">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-9">
-        <addColumn tableName="campaign_tracking">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-10">
+    <changeSet author="vaibhav (generated)" id="1349816769325-10">
         <addColumn tableName="cart_line_item">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-11">
-        <addColumn tableName="cart_line_item">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-12">
-        <addColumn tableName="coupon">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-13">
+    <changeSet author="vaibhav (generated)" id="1349816769325-13">
         <addColumn tableName="demand_history">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-14">
-        <addColumn tableName="demand_history">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-15">
+    <changeSet author="vaibhav (generated)" id="1349816769325-15">
         <addColumn tableName="email_recepient">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-16">
-        <addColumn tableName="email_recepient">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-17">
+    <changeSet author="vaibhav (generated)" id="1349816769325-17">
         <addColumn tableName="emailer_history">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-18">
-        <addColumn tableName="emailer_history">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-19">
+    <changeSet author="vaibhav (generated)" id="1349816769325-19">
         <addColumn tableName="line_item">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-20">
-        <addColumn tableName="line_item">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-21">
-        <addColumn tableName="notify_me">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-22">
+    <changeSet author="vaibhav (generated)" id="1349816769325-22">
         <addColumn tableName="order_lifecycle">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-23">
-        <addColumn tableName="order_lifecycle">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-24">
-        <addColumn tableName="payment">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-25">
-        <addColumn tableName="product">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-26">
+    <changeSet author="vaibhav (generated)" id="1349816769325-26">
         <addColumn tableName="product_variant">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-27">
-        <addColumn tableName="product_variant">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-28">
+    <changeSet author="vaibhav (generated)" id="1349816769325-28">
         <addColumn tableName="shipment">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-29">
-        <addColumn tableName="shipment">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-30">
+    <changeSet author="vaibhav (generated)" id="1349816769325-30">
         <addColumn tableName="shipping_order">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-31">
-        <addColumn tableName="shipping_order">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-32">
+    <changeSet author="vaibhav (generated)" id="1349816769325-32">
         <addColumn tableName="shipping_order_lifecycle">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-33">
-        <addColumn tableName="shipping_order_lifecycle">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-34">
+    <changeSet author="vaibhav (generated)" id="1349816769325-34">
         <addColumn tableName="user">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-35">
-        <addColumn tableName="user">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-36">
+    <changeSet author="vaibhav (generated)" id="1349816769325-36">
         <addColumn tableName="user_cart">
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-37">
-        <addColumn tableName="user_cart">
-            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-38">
+    <changeSet author="vaibhav (generated)" id="1349816769325-38">
         <dropIndex indexName="awb_no_idx" tableName="awb"/>
     </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-39">
+    <changeSet author="vaibhav (generated)" id="1349816769325-39">
         <dropColumn columnName="create_date" tableName="user"/>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-40">
-        <dropColumn columnName="update_date" tableName="user"/>
-    </changeSet>
-    <changeSet author="AdminUser (generated)" id="1349816769325-41">
-        <dropColumn columnName="create_date" tableName="user_cart"/>
     </changeSet>
 </databaseChangeLog>
