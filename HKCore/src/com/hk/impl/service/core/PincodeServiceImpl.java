@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.PincodeDefaultCourier;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.PincodeService;
@@ -22,15 +23,26 @@ public class PincodeServiceImpl implements PincodeService {
        return getPincodeDao().getByPincode(pincode);
     }
 
-    @Override
-    public List<PincodeDefaultCourier> getByPincode(Pincode pincode) {
-        return getPincodeDao().getByPincode(pincode);
+
+    public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode,Warehouse warehouse, Boolean isCod, Boolean isGroundshipping){
+        return getPincodeDao().searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGroundshipping);
     }
 
-    @Override
-    public PincodeDefaultCourier getByPincodeWarehouse(Pincode pincode, Warehouse warehouse) {
-        return getPincodeDao().getByPincodeWarehouse(pincode, warehouse);
-    }
+     public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
+          return getPincodeDao().searchPincodeDefaultCourier(pincode, warehouse, isCod, isGroundshipping);
+     }
+
+
+      public PincodeDefaultCourier createPincodeDefaultCourier (Pincode pincode, Courier courier, Warehouse warehouse,boolean isGroundShippingAvailable, boolean isCODAvailable, Double estimatedShippingCost  ){
+          PincodeDefaultCourier pincodeDefaultCourier = new PincodeDefaultCourier();
+          pincodeDefaultCourier.setPincode(pincode);
+          pincodeDefaultCourier.setCourier(courier);
+          pincodeDefaultCourier.setWarehouse(warehouse);
+          pincodeDefaultCourier.setGroundShipping(isGroundShippingAvailable);
+          pincodeDefaultCourier.setCod(isCODAvailable);
+          pincodeDefaultCourier.setEstimatedShippingCost(estimatedShippingCost);
+          return pincodeDefaultCourier;
+      }
 
     public PincodeDao getPincodeDao() {
         return pincodeDao;
@@ -39,7 +51,6 @@ public class PincodeServiceImpl implements PincodeService {
     public void setPincodeDao(PincodeDao pincodeDao) {
         this.pincodeDao = pincodeDao;
     }
-
-    
+  
     
 }

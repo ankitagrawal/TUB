@@ -112,7 +112,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
 
         int cusomterBufferDays= SubscriptionConstants.subscriptionCustomerBufferDays;
         //going back a week just in case this process din't run on schedule
-        Date currentDate=new Date(BaseUtils.getCurrentTimestamp().getTime()-7*24*60*60*1000);
+        Date currentDate=new Date(BaseUtils.getCurrentTimestamp().getTime()-120*24*60*60*1000);
         Date referenceDate=new Date(BaseUtils.getCurrentTimestamp().getTime()+cusomterBufferDays*24*60*60*1000);
         subscriptionSearchCriteria.setStartNextShipmentDate(currentDate);
         subscriptionSearchCriteria.setEndNextShipmentDate(referenceDate);

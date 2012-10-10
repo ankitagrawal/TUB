@@ -4,17 +4,14 @@ import java.util.*;
 
 import com.hk.domain.content.SeoData;
 import com.hk.domain.search.SolrProduct;
-import com.hk.exception.SearchException;
 import com.hk.pact.dao.seo.SeoDao;
-import com.hk.pact.service.search.ProductSearchService;
+import com.hk.pact.service.search.ProductIndexService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
-import com.hk.constants.core.Keys;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.*;
@@ -52,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
     private LinkManager               linkManager;
 
     @Autowired
-    ProductSearchService productSearchService;
+    ProductIndexService productIndexService;
 
     @Autowired
     private SeoDao seoDao;
@@ -180,7 +177,7 @@ public class ProductServiceImpl implements ProductService {
 
     public Product save(Product product) {
         Product savedProduct = getProductDAO().save(product);
-        productSearchService.indexProduct(savedProduct);
+        productIndexService.indexProduct(savedProduct);
         return savedProduct;
     }
 
@@ -317,10 +314,14 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
         PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
         Collections.sort(primaryCategoryHeading.getProducts(), new ProductOrderRankingComparator());
+        List<Product> sortedProductsByOrder = new ArrayList<Product>();
         for (Product product : primaryCategoryHeading.getProducts()) {
             product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
+            if (isProductValid(product)){
+                sortedProductsByOrder.add(product);
+            }
         }
-        return primaryCategoryHeading.getProducts();
+        return sortedProductsByOrder;
     }
 
 	public Map<String, List<Long>> getGroupedFilters(List<Long> filters){
@@ -479,6 +480,12 @@ public class ProductServiceImpl implements ProductService {
         }
         if (product.getOutOfStock() != null){
             solrProduct.setOutOfStock(product.getOutOfStock().booleanValue());
+        }
+
+        if (product.getHidden() != null){
+            solrProduct.setHidden(product.getHidden().booleanValue());
+        }else{
+            solrProduct.setHidden(false);
         }
 
         Double price = null;

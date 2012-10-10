@@ -1,22 +1,21 @@
 package com.hk.core.search;
 
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.core.OrderStatus;
-import com.hk.domain.core.PaymentMode;
-import com.hk.domain.core.PaymentStatus;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrderStatus;
-import com.hk.domain.order.ShippingOrderLifecycle;
-import com.hk.domain.order.ShippingOrderLifeCycleActivity;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.core.OrderStatus;
+import com.hk.domain.core.PaymentMode;
+import com.hk.domain.core.PaymentStatus;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrderLifeCycleActivity;
+import com.hk.domain.order.ShippingOrderStatus;
 
 /**
  * @author vaibhav.adlakha
@@ -47,7 +46,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
      */
     private List<ShippingOrderStatus> shippingOrderStatusList;
     private Set<String>               shippingOrderCategories;
-    private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;
+    private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;           //addded by someone saying: MAIN HOO DON !!!! please use camel case
 
     public OrderSearchCriteria setLogin(String login) {
         this.login = login;
