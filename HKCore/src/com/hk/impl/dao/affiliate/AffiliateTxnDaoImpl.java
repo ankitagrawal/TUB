@@ -50,7 +50,11 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 	public Page getReferredOrderListByAffiliate(Affiliate affiliate, Date startDate, Date endDate, int pageNo, int perPage) {
 
 		List<Long> applicableTxnTypes = new ArrayList<Long>();
+		applicableTxnTypes.add(EnumAffiliateTxnType.PENDING.getId());
 		applicableTxnTypes.add(EnumAffiliateTxnType.ADD.getId());
+		applicableTxnTypes.add(EnumAffiliateTxnType.PAYMENT_DUE.getId());
+		applicableTxnTypes.add(EnumAffiliateTxnType.PAID.getId());
+		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
 		applicableTxnTypes.add(EnumAffiliateTxnType.ORDER_CANCELLED.getId());
 
 		DetachedCriteria applicableTxnCriteria = DetachedCriteria.forClass(AffiliateTxnType.class);
@@ -75,6 +79,9 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 	public long getReferredOrdersCountByAffiliate(Affiliate affiliate, Date startDate, Date endDate) {
 		List<AffiliateTxnType> applicableTxns = new ArrayList<AffiliateTxnType>();
 		applicableTxns.add(get(AffiliateTxnType.class, EnumAffiliateTxnType.ADD.getId()));
+		applicableTxns.add(get(AffiliateTxnType.class, EnumAffiliateTxnType.PAYMENT_DUE.getId()));
+		applicableTxns.add(get(AffiliateTxnType.class, EnumAffiliateTxnType.PAID.getId()));
+		applicableTxns.add(get(AffiliateTxnType.class, EnumAffiliateTxnType.SENT.getId()));
 
 		String queryString = "select count(at.id) from AffiliateTxn at where at.affiliate=:affiliate and at.affiliateTxnType in (:applicableTxns)and at.date >= :startDate and at.date <= :endDate";
 

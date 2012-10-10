@@ -143,10 +143,16 @@ public class AffiliateAccountAction extends BaseAction {
 		if (affiliate != null) {
 			Offer offer = affiliate.getOffer();
 			if (offer != null) {
+				Long numberOfCouponsToDownload = 0L;
 				Long numberOfCoupons = affiliate.getWeeklyCouponLimit() - affilateService.getMaxCouponsLeft(affiliate);
-				if (numberOfCoupons > 0) {
+				if(numberOfCoupons == 0){
+					numberOfCouponsToDownload = affiliate.getWeeklyCouponLimit();
+				} else{
+					numberOfCouponsToDownload = numberOfCoupons;
+				}
+				if (numberOfCouponsToDownload > 0) {
 					try {
-						coupons = couponService.generateCoupons("AFF", "HK", numberOfCoupons, false, new DateTime().plusMonths(1).toDate(), 1L, 0L, offer, EnumCouponType.AFFILIATE.asCouponType(), affiliate.getUser());
+						coupons = couponService.generateCoupons("AFF", "HK", numberOfCouponsToDownload, false, new DateTime().plusMonths(1).toDate(), 1L, 0L, offer, EnumCouponType.AFFILIATE.asCouponType(), affiliate.getUser());
 //				addRedirectAlertMessage(new SimpleMessage("your preferences have been saved."));
 					} catch (HealthKartCouponException e) {
 						addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
@@ -183,8 +189,11 @@ public class AffiliateAccountAction extends BaseAction {
 					}
 
 					final int contentLength = (int) couponFile.length();
-
-					addRedirectAlertMessage(new LocalizableMessage("/CreateCoupon.action.coupon.created"));
+					if(numberOfCoupons == 0L){
+						addRedirectAlertMessage(new SimpleMessage("You have already downloaded your this weeks coupons, Please find the downloaded list again"));
+					}else{
+						addRedirectAlertMessage(new LocalizableMessage("/CreateCoupon.action.coupon.created"));
+					}
 					// give option to download the coupons file
 					return new Resolution() {
 						public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
