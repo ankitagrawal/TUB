@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.comparator.BasketCategory;
+import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -22,7 +23,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
@@ -34,6 +34,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
@@ -41,6 +42,7 @@ import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
@@ -53,6 +55,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pojo.DummyOrder;
 
 @Service
@@ -90,10 +93,18 @@ public class OrderServiceImpl implements OrderService {
     private OrderLoggingService orderLoggingService;
     @Autowired
     private OrderSplitterService orderSplitterService;
+     @Autowired
+    private ShippingOrderStatusService shippingOrderStatusService;       
+    @Autowired
+    LineItemDao lineItemDao;
+
 
 
     /*@Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;*/
+
+//     @Value("#{hkEnvProps['codMaxAmount']}")
+//    private Double codMaxAmount;
 
     @Transactional
     public Order save(Order order) {
@@ -115,7 +126,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
-            return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
+        return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
     }
 
     @Override
@@ -205,12 +216,14 @@ public class OrderServiceImpl implements OrderService {
     public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-            if (order.getContainsServices()) {
-                String comments = "Order has services,abort system split and do a manual split";
-                getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
-                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " has services. abort system split and do a manual split");
-            } else if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                shippingOrders = splitOrder(order);
+	         if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+                if (isShippingOrderExists(order)) {
+                  order.setOrderStatus(getOrderStatus(EnumOrderStatus.InProcess));
+                }
+                else {
+                    shippingOrders = splitOrder(order);
+                }
+
             } else {
                 logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
             }
@@ -268,7 +281,7 @@ public class OrderServiceImpl implements OrderService {
         // EnumOrderStatus.ESCALTED, EnumOrderStatus.PARTIAL_ESCALTION);
 
         User loggedOnUser = getUserService().getLoggedInUser();
-        if(loggedOnUser == null){
+        if (loggedOnUser == null) {
             loggedOnUser = order.getUser();
         }
 
@@ -339,45 +352,75 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
+//        List<Set<CartLineItem>> listOfCartLineItemSet = getMatchCartLineItemOrder(order);
+        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());         
+        Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+        CartLineItemFilter groundShipLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+        Set<CartLineItem> groundShippedCartLineItemSet = groundShipLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
+        CartLineItemFilter serviceCartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+        Set<CartLineItem> serviceCartLineItems = serviceCartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();      
+        productCartLineItems.removeAll(serviceCartLineItems);
+        productCartLineItems.removeAll(groundShippedCartLineItemSet);
 
-        List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order);
+        List<Set<CartLineItem>> listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
+        if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
+            listOfCartLineItemSet.add(groundShippedCartLineItemSet);
+        }
+        if (productCartLineItems != null && productCartLineItems.size() > 0) {
+            listOfCartLineItemSet.add(productCartLineItems);
+        }
 
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
-        if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-            long startTime = (new Date()).getTime();
 
-            // Create Shipping orders and Save it in DB
-            for (DummyOrder dummyOrder : dummyOrders) {
-                if (dummyOrder.getCartLineItemList().size() > 0) {
-                    Warehouse warehouse = dummyOrder.getWarehouse();
-                    ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
-                    for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
-                        Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
-                        LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
-                        shippingOrder.getLineItems().add(shippingOrderLineItem);
+        for (Set<CartLineItem> cartlineitems : listOfCartLineItemSet) {
+            if (cartlineitems != null && cartlineitems.size() > 0) {
+
+               List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, cartlineitems);
+                if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+                    long startTime = (new Date()).getTime();
+
+                    // Create Shipping orders and Save it in DB
+                    for (DummyOrder dummyOrder : dummyOrders) {
+                        if (dummyOrder.getCartLineItemList().size() > 0) {
+                            Warehouse warehouse = dummyOrder.getWarehouse();
+                            ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);                           
+                            for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
+                                Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
+                                LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
+                                shippingOrder.getLineItems().add(shippingOrderLineItem);
+                            }
+                            shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
+                            ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
+                            shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+                            shippingOrder = shippingOrderService.save(shippingOrder);
+                            /**
+                             * this additional call to save is done so that we have shipping order id to generate shipping order
+                             * gateway id
+                             */
+                            shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+                            shippingOrder = shippingOrderService.save(shippingOrder);
+                            shippingOrders.add(shippingOrder);
+                        }
                     }
-                    shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
-                    ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
-                    shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-                    
-                    shippingOrder = shippingOrderService.save(shippingOrder);
-                    /**
-                     * this additional call to save is done so that we have shipping order id to generate shipping order
-                     * gateway id
-                     */
-                    shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
-                    shippingOrder = shippingOrderService.save(shippingOrder);
-                    shippingOrders.add(shippingOrder);
+
+                    long endTime = (new Date()).getTime();
+                    logger.debug("Total time to split order[" + order.getId() + "] = " + (endTime - startTime));
+                } else {
+                    logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
                 }
             }
+        }
 
-            long endTime = (new Date()).getTime();
-            logger.debug("Total time to split order[" + order.getId() + "] = " + (endTime - startTime));
-        } else {
-            logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
+        if (serviceCartLineItems != null && serviceCartLineItems.size() > 0) {
+//         orderSplitterService.createSOForService(serviceCartLineItems) ;
+           for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
+             createSOForService(serviceCartLineItem);
+           }
+
         }
 
         return shippingOrders;
+
     }
 
     public ProductVariant getTopDealVariant(Order order) {
@@ -412,6 +455,7 @@ public class OrderServiceImpl implements OrderService {
             emailManager.sendServiceVoucherMailToServiceProvider(order, lineItem);
         }
     }
+
 
     public OrderDao getOrderDao() {
         return orderDao;
@@ -525,20 +569,74 @@ public class OrderServiceImpl implements OrderService {
         this.orderLoggingService = orderLoggingService;
     }
 
-	public boolean isCODAllowed(Order order) {
-		CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
-		Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
-		for (CartLineItem productCartLineItem : productCartLineItems) {
+	//todo ankit, there should be one and only method to which you will pass order      --- completed on AdminOrderService
+//  this function not in use  
+    /*public boolean isCODAllowed(Order order) {
+        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+        Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+        for (CartLineItem productCartLineItem : productCartLineItems) {
 
-			ProductVariant productVariant = productCartLineItem.getProductVariant();
-			if (productVariant != null && productVariant.getProduct() != null) {
-				Product product = productVariant.getProduct();
-				if (product.isCodAllowed() != null && !product.isCodAllowed()) {
-					return false;
-				}
+            ProductVariant productVariant = productCartLineItem.getProductVariant();
+            if (productVariant != null && productVariant.getProduct() != null) {
+                Product product = productVariant.getProduct();
+                if (product.isCodAllowed() != null && !product.isCodAllowed()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }   
+*/
+
+     public ShippingOrder createSOForService(CartLineItem serviceCartLineItem) {
+        Order baseOrder = serviceCartLineItem.getOrder();
+        Warehouse corporateOffice = getWarehouseService().getCorporateOffice();
+        ShippingOrder shippingOrder = getShippingOrderService().createSOWithBasicDetails(baseOrder, corporateOffice);
+        shippingOrder.setBaseOrder(baseOrder);
+
+        ProductVariant productVariant = serviceCartLineItem.getProductVariant();
+        Sku sku = getSkuService().getSKU(productVariant, corporateOffice);
+        if (sku != null) {
+            LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, serviceCartLineItem);
+            shippingOrder.getLineItems().add(shippingOrderLineItem);
+        } else {
+            throw new NoSkuException(productVariant, corporateOffice);
+        }
+
+       
+        shippingOrder.setBasketCategory(CategoryConstants.SERVICES);
+        shippingOrder.setServiceOrder(true);
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
+        ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
+        shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+        shippingOrder = getShippingOrderService().save(shippingOrder);
+        /**
+         * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
+         */
+        shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+        shippingOrder = getShippingOrderService().save(shippingOrder);
+
+        return shippingOrder;
+
+    }
+
+    public boolean isShippingOrderExists (Order order){
+        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+   		for (CartLineItem cartLineItem : productCartLineItems) {
+			if (lineItemDao.getLineItem(cartLineItem) != null) {
+				return true;
 			}
 		}
-		return true;
-	}
+         return false;
+    }
+
+    public ShippingOrderStatusService getShippingOrderStatusService() {
+        return shippingOrderStatusService;
+    }
+
+    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
+        this.shippingOrderStatusService = shippingOrderStatusService;
+    }
+
 
 }

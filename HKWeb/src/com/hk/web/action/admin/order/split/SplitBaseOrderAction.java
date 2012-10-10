@@ -97,12 +97,12 @@ public class SplitBaseOrderAction extends BaseAction {
             /**
              * if order has any services products create a shipping order and send it to service queue
              */
-            if (baseOrder.getContainsServices()) {
                 Set<CartLineItem> serviceCartLineItems = new CartLineItemFilter(baseOrder.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(
                         true).filter();
+                if (serviceCartLineItems != null && serviceCartLineItems.size()>0) {
                 for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
                     try {
-                        adminShippingOrderService.createSOForService(serviceCartLineItem);
+                        orderService.createSOForService(serviceCartLineItem);
                     } catch (NoSkuException e) {
                         logger.error("No sku found", e);
                         addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
