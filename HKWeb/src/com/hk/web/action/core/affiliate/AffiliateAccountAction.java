@@ -33,9 +33,12 @@ import org.stripesstuff.plugin.security.Secure;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-@Secure(hasAnyRoles = {RoleConstants.HK_AFFILIATE,RoleConstants.HK_AFFILIATE_UNVERIFIED, RoleConstants.ADMIN, RoleConstants.HK_AFFILIATE_MANAGER})
+@Secure(hasAnyRoles = {RoleConstants.HK_AFFILIATE, RoleConstants.HK_AFFILIATE_UNVERIFIED, RoleConstants.ADMIN, RoleConstants.HK_AFFILIATE_MANAGER})
 @Component
 public class AffiliateAccountAction extends BaseAction {
 
@@ -82,7 +85,7 @@ public class AffiliateAccountAction extends BaseAction {
 				affiliatePayableAmount = affiliateManager.getPayableAmount(affiliate);
 
 				if (affiliate.getMainAddressId() != null) {
-					affiliateDefaultAddress = getAddressDao().get(Address.class,affiliate.getMainAddressId());
+					affiliateDefaultAddress = getAddressDao().get(Address.class, affiliate.getMainAddressId());
 				}
 				if (affiliate.getCategories() != null) {
 					for (Category category : affiliate.getCategories()) {
@@ -145,72 +148,79 @@ public class AffiliateAccountAction extends BaseAction {
 			if (offer != null) {
 				Long numberOfCouponsToDownload = 0L;
 				Long numberOfCoupons = affiliate.getWeeklyCouponLimit() - affilateService.getMaxCouponsLeft(affiliate);
-				if(numberOfCoupons == 0){
+				if (numberOfCoupons == 0) {
 					numberOfCouponsToDownload = affiliate.getWeeklyCouponLimit();
-				} else{
+				} else {
 					numberOfCouponsToDownload = numberOfCoupons;
 				}
 				if (numberOfCouponsToDownload > 0) {
-					try {
-						coupons = couponService.generateCoupons("AFF", "HK", numberOfCouponsToDownload, false, new DateTime().plusMonths(1).toDate(), 1L, 0L, offer, EnumCouponType.AFFILIATE.asCouponType(), affiliate.getUser());
+					if (numberOfCoupons == 0) {
+						coupons = couponService.getAffiliateUnusedCoupons(affiliate);
+					} else {
+						try {
+							coupons = couponService.generateCoupons("AFF", "HK", numberOfCouponsToDownload, false, new DateTime().plusMonths(1).toDate(), 1L, 0L, offer, EnumCouponType.AFFILIATE.asCouponType(), affiliate.getUser());
 //				addRedirectAlertMessage(new SimpleMessage("your preferences have been saved."));
-					} catch (HealthKartCouponException e) {
-						addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
-						return getContext().getSourcePageResolution();
-					}
-					// save coupons file to admin dir
-					File couponsDir = new File(getSavedCouponsDirPath());
-					if (!couponsDir.exists()) {
-						couponsDir.mkdirs();
-					}
-
-					String couponFileName = couponCode + "-" + endPart + "-" + coupons.size() + "-coupons-" + BaseUtils.getCurrentTimestamp().getTime() + ".txt";
-					final File couponFile = new File(couponsDir.getAbsolutePath() + "/" + couponFileName);
-					Writer output = null;
-					try {
-						couponFile.createNewFile();
-						output = new BufferedWriter(new FileWriter(couponFile));
-						output.write("Offer: " + offer.getDescription() + BaseUtils.newline);
-						output.write("Nuber of coupons: " + numberOfCoupons + BaseUtils.newline);
-						output.write("Coupons: " + BaseUtils.newline);
-						for (Coupon coupon : coupons) {
-							output.write(coupon.getCode() + BaseUtils.newline);
+						} catch (HealthKartCouponException e) {
+							addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
+							return getContext().getSourcePageResolution();
 						}
-					} catch (IOException e) {
-						logger.error("Error while making a coupons file:", e);
-					} finally {
-						if (output != null) {
-							try {
-								output.close();
-							} catch (IOException e) {
-								logger.error("error while closing the coupons file", e);
+					}
+						// save coupons file to admin dir
+						File couponsDir = new File(getSavedCouponsDirPath());
+						if (!couponsDir.exists()) {
+							couponsDir.mkdirs();
+						}
+
+						String couponFileName = couponCode + "-" + endPart + "-" + coupons.size() + "-coupons-" + BaseUtils.getCurrentTimestamp().getTime() + ".txt";
+						final File couponFile = new File(couponsDir.getAbsolutePath() + "/" + couponFileName);
+						Writer output = null;
+						try {
+							couponFile.createNewFile();
+							output = new BufferedWriter(new FileWriter(couponFile));
+							if(numberOfCoupons == 0){
+								output.write("You have currently exceeded your coupon limit, These are your current unused coupons.");
+							}
+							output.write("Offer: " + offer.getDescription() + BaseUtils.newline);
+							output.write("Nuber of coupons: " + numberOfCouponsToDownload + BaseUtils.newline);
+							output.write("Coupons: " + BaseUtils.newline);
+							for (Coupon coupon : coupons) {
+								output.write(coupon.getCode() + BaseUtils.newline);
+							}
+						} catch (IOException e) {
+							logger.error("Error while making a coupons file:", e);
+						} finally {
+							if (output != null) {
+								try {
+									output.close();
+								} catch (IOException e) {
+									logger.error("error while closing the coupons file", e);
+								}
 							}
 						}
-					}
 
-					final int contentLength = (int) couponFile.length();
-					if(numberOfCoupons == 0L){
-						addRedirectAlertMessage(new SimpleMessage("You have already downloaded your this weeks coupons, Please find the downloaded list again"));
-					}else{
-						addRedirectAlertMessage(new LocalizableMessage("/CreateCoupon.action.coupon.created"));
-					}
-					// give option to download the coupons file
-					return new Resolution() {
-						public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-							OutputStream out = null;
-							InputStream in = new BufferedInputStream(new FileInputStream(couponFile));
-							res.setContentLength(contentLength);
-							res.setHeader("Content-Disposition", "attachment; filename=\"" + couponFile.getName() + "\";");
-							out = res.getOutputStream();
-
-							// Copy the contents of the file to the output stream
-							byte[] buf = new byte[4096];
-							int count = 0;
-							while ((count = in.read(buf)) >= 0) {
-								out.write(buf, 0, count);
-							}
+						final int contentLength = (int) couponFile.length();
+						if (numberOfCoupons == 0) {
+							addRedirectAlertMessage(new SimpleMessage("You have already downloaded your this weeks coupons, Please find the downloaded list again"));
+						} else {
+							addRedirectAlertMessage(new LocalizableMessage("/CreateCoupon.action.coupon.created"));
 						}
-					};
+						// give option to download the coupons file
+						return new Resolution() {
+							public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+								OutputStream out = null;
+								InputStream in = new BufferedInputStream(new FileInputStream(couponFile));
+								res.setContentLength(contentLength);
+								res.setHeader("Content-Disposition", "attachment; filename=\"" + couponFile.getName() + "\";");
+								out = res.getOutputStream();
+
+								// Copy the contents of the file to the output stream
+								byte[] buf = new byte[4096];
+								int count = 0;
+								while ((count = in.read(buf)) >= 0) {
+									out.write(buf, 0, count);
+								}
+							}
+						};
 				} else {
 					addRedirectAlertMessage(new SimpleMessage("You have already exceeded your max weekly coupon limit, that being " + affiliate.getWeeklyCouponLimit()));
 					return new RedirectResolution(AffiliateAccountAction.class);
