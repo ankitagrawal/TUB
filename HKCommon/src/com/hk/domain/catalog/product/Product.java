@@ -154,6 +154,9 @@ public class Product implements java.io.Serializable {
     @Column(name = "drop_shipping")
     private boolean              dropShipping;
 
+    @Column(name = "ground_shipping")
+    private boolean              groundShipping;
+
 	@Column(name = "cod_allowed", nullable = false, scale = 1)
     private Boolean              codAllowed;
 
@@ -583,6 +586,17 @@ public class Product implements java.io.Serializable {
 
     public void setDropShipping(boolean dropShipping) {
         this.dropShipping = dropShipping;
+    }
+
+     public boolean isGroundShipping() {
+        return groundShipping;
+    }
+    public Boolean getGroundShipping(){
+         return groundShipping;
+    }
+
+    public void setGroundShipping(boolean groundShipping) {
+        this.groundShipping = groundShipping;
     }
 
 	public Boolean isCodAllowed() {

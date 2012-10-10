@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.hk.admin.util.CourierStatusUpdateHelper;
-import com.hk.domain.catalog.product.*;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
@@ -44,6 +43,13 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductImage;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.VariantConfig;
+import com.hk.domain.catalog.product.VariantConfigOption;
+import com.hk.domain.catalog.product.VariantConfigOptionParam;
+import com.hk.domain.catalog.product.VariantConfigValues;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.hkDelivery.Hub;
@@ -459,14 +465,11 @@ public class Functions {
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
-    public static List<Courier> getAvailableCouriers(Object o) {
-
-        // so this will work like, The system gets input as pincode and code available or not, and Then system returns
-        // the couriers in a sorted order on price
+    public static List<Courier> getAvailableCouriers(Object o) {     
 
         ShippingOrder shippingOrder = (ShippingOrder) o;
         CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
-        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD());
+        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false , false);
     }
 
     public static boolean equalsIgnoreCase(String str1, String str2) {
@@ -591,10 +594,10 @@ public class Functions {
 		return linkManager.getCodConverterLink(order);
 	}
 
-	public static boolean isCODAllowed(Order order) {
-		OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
-        return orderService.isCODAllowed(order);
-    }
+	/*public static boolean isCODAllowed(Order order) {
+	    AdminOrderService adminOrderService = ServiceLocatorFactory.getService(AdminOrderService.class);
+        return adminOrderService.isCODAllowed(order);
+    }*/
 
     public static Hub getHubForHkdeliveryUser(User user){
         HubService hubService = ServiceLocatorFactory.getService(HubService.class);

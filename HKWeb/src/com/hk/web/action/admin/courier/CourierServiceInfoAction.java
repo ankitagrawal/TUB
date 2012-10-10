@@ -29,7 +29,9 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.XslParser;
+import com.hk.admin.util.helper.XslCourierServiceInfoParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
@@ -53,6 +55,8 @@ public class CourierServiceInfoAction extends BaseAction {
     @Autowired
     CourierServiceInfoDao            courierServiceInfoDao;
     @Autowired
+    CourierService                   courierService;
+    @Autowired
     PincodeDao                       pincodeDao;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -60,8 +64,7 @@ public class CourierServiceInfoAction extends BaseAction {
 
     Courier                          courier;
     CourierServiceInfo               courierServiceInfo;
-    String                           pincode;
-    /*private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();*/
+    String                           pincode;             
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                           adminUploadsPath;
@@ -70,6 +73,9 @@ public class CourierServiceInfoAction extends BaseAction {
     XslParser                        xslParser;
 
     FileBean                         fileBean;
+
+    @Autowired
+    XslCourierServiceInfoParser     xslCourierServiceInfoParser;
 
     public void setFileBean(FileBean fileBean) {
         this.fileBean = fileBean;
@@ -87,7 +93,7 @@ public class CourierServiceInfoAction extends BaseAction {
         String courierName = "All";
         List<CourierServiceInfo> courierServiceInfoList = new ArrayList<CourierServiceInfo>();
         if (courier != null) {
-            courierServiceInfoList = courierServiceInfoDao.getCourierServiceInfo(courier.getId());
+            courierServiceInfoList = courierService.getCourierServiceInfoList(courier.getId(), null, false, false, false);
             courierName = courier.getName();
         } else {
             courierServiceInfoList = courierServiceInfoDao.getAll(CourierServiceInfo.class);
@@ -126,16 +132,22 @@ public class CourierServiceInfoAction extends BaseAction {
         fileBean.save(excelFile);
         CourierServiceInfo tmpObj = null;
         try {
-            Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
+//            Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
+            Set<CourierServiceInfo> courierServiceInfoSet = xslCourierServiceInfoParser.readCourierServiceInfoList(excelFile);
             for (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) {
                 tmpObj = courierServiceInfo;
-                CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(),
-                        courierServiceInfo.getPincode().getPincode().toString());
+                     CourierServiceInfo tmpObj2 = courierServiceInfoDao.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(),
+                        courierServiceInfo.getPincode().getPincode().toString(), false, false, false);
                 if (tmpObj2 != null) {
                     if (courierServiceInfo.isDeleted()) {
                         courierServiceInfoDao.delete(tmpObj2);
                     } else {
                         tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());
+                        tmpObj2.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
+                        tmpObj2.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());
+                        if (courierServiceInfo.isCodAvailableOnGroundShipping()){
+                           tmpObj2.setCodAvailable(true);
+                        }
                         courierServiceInfoDao.save(tmpObj2);
                     }
                 } else if (courierServiceInfo != null) {
@@ -162,10 +174,14 @@ public class CourierServiceInfoAction extends BaseAction {
         if (pincodeObj == null) {
             addRedirectAlertMessage(new SimpleMessage("This pincode is not in the master list, add it there first."));
         } else {
-
-            CourierServiceInfo courierServiceInfoLocal = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(), pincode);
+            CourierServiceInfo courierServiceInfoLocal = courierService.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(), pincode , false, false,false);
             if (courierServiceInfoLocal != null) {
                 courierServiceInfoLocal.setCodAvailable(courierServiceInfo.isCodAvailable());
+                courierServiceInfoLocal.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
+                courierServiceInfoLocal.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());
+                if(courierServiceInfo.isCodAvailableOnGroundShipping()){
+                   courierServiceInfoLocal.setCodAvailable(true); 
+                }
                 courierServiceInfoDao.save(courierServiceInfoLocal);
             } else {
                 courierServiceInfo.setPincode(pincodeObj);
@@ -205,5 +221,13 @@ public class CourierServiceInfoAction extends BaseAction {
 
     public void setCourierServiceInfoDao(CourierServiceInfoDao courierServiceInfoDao) {
         this.courierServiceInfoDao = courierServiceInfoDao;
+    }
+
+    public CourierService getCourierService() {
+        return courierService;
+    }
+
+    public void setCourierService(CourierService courierService) {
+        this.courierService = courierService;
     }
 }
