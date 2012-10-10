@@ -2,28 +2,14 @@ package com.hk.domain.catalog.product;
 
 // Generated 10 Mar, 2011 5:37:39 PM by Hibernate Tools 3.2.4.CR1
 
-import java.util.*;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.core.EnumRole;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
+
+import javax.persistence.*;
+import java.util.*;
 
 @SuppressWarnings("serial")
 @Entity
@@ -146,8 +132,8 @@ public class ProductVariant implements java.io.Serializable {
 
   @JsonSkip
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "created_date", nullable = false, length = 19)
-  private Date createdDate;
+  @Column(name = "created_dt", nullable = false, length = 19)
+  private Date createdDate = new Date();
 
   @Column(name = "clearance_sale")
   private Boolean clearanceSale;
