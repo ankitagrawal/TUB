@@ -201,6 +201,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
                     fedExNumber = awbService.save(fedExNumber);
                     finalAwb = fedExNumber;
+                    finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
 
                     String routingCode = fedExCourier.getRoutingCode();
                     String pincode = shippingOrder.getBaseOrder().getAddress().getPin();

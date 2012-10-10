@@ -71,11 +71,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             return null;
         }
 
-        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
-                EnumAwbStatus.Unused.getAsAwbStatus());
-        if (suggestedAwb == null) {
-            return null;
-        }
+        Awb suggestedAwb;
 
         Double estimatedWeight = 100D;
             for (LineItem lineItem : shippingOrder.getLineItems()) {
