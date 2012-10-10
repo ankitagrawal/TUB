@@ -132,7 +132,7 @@ public class ProductVariant implements java.io.Serializable {
 
   @JsonSkip
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "created_dt", nullable = false, length = 19)
+  @Column(name = "create_dt", nullable = false, length = 19)
   private Date createdDate = new Date();
 
   @Column(name = "clearance_sale")

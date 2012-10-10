@@ -29,8 +29,8 @@ public class PurchaseOrder implements java.io.Serializable {
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", nullable = false, length = 19)
-    private Date createDate;
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date createDate = new Date();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "purchase_order_status_id", nullable = false)
