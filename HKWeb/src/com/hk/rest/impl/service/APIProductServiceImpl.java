@@ -241,7 +241,7 @@ public class APIProductServiceImpl implements APIProductService {
 			String lineSeparator = System.getProperty("line.separator");
 			printWriter.write("ProductID || CATEGORY" + lineSeparator);
 			for (Product product : nonDeletedProducts) {
-				if (product.getMainImageId() != null) {
+				if (product.getMainImageId() != null && product.getId().compareTo("BTY210") > 0) {
 					File imageFile = new File(getImageFilePath());
 					S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, product.getMainImageId()), hkReadBucket, imageFile);
 					try {
