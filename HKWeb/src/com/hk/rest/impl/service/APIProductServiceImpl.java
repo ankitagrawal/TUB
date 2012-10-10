@@ -240,6 +240,7 @@ public class APIProductServiceImpl implements APIProductService {
 			logger.info("--- Low Resolution Finder START ---");
 			String lineSeparator = System.getProperty("line.separator");
 			printWriter.write("ProductID || CATEGORY" + lineSeparator);
+			int counter = 0;
 			for (Product product : nonDeletedProducts) {
 				if (product.getMainImageId() != null) {
 					File imageFile = new File(getImageFilePath());
@@ -255,7 +256,8 @@ public class APIProductServiceImpl implements APIProductService {
 									if (reader.getWidth(0) < pixelSize && reader.getHeight(0) < pixelSize) {
 										productsWithLowResolutionImages.add(product);
 										productIdsForLowResolutionImages.append(product.getId() + "," + product.getPrimaryCategory() + ";");
-										logger.info("Low Resolution ProductID = " + product.getId());
+										counter++;
+										logger.info("Low Resolution ProductID = " + product.getId()+"; Count="+counter);
 										printWriter.write(product.getId() + " || " + product.getPrimaryCategory().getDisplayName() + lineSeparator);
 									}
 									//return new Dimension(reader.getWidth(0), reader.getHeight(0));
