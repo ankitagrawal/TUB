@@ -233,13 +233,18 @@ public class ProductServiceImpl implements ProductService {
         }
         return true;
     }
-
+    @SuppressWarnings("unchecked")
 	public boolean isComboInStock(String comboId) {
-		Combo combo = getComboDao().getComboById(comboId);
-        if (combo == null){
-            return true;
+        boolean isComboInStock = true;
+        try{
+            Combo combo = getComboDao().getComboById(comboId);
+            if (combo != null){
+                isComboInStock = isComboInStock(combo);
+            }
+        }catch (Exception ex){
+
         }
-        return isComboInStock(combo);
+        return isComboInStock;
     }
 
     public List<Combo> getRelatedCombos(Product product) {
@@ -247,11 +252,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private boolean isCombo(String comboId){
-        Combo combo = getComboDao().getComboById(comboId);
-        if (combo == null){
-            return false;
+        try{
+            Combo combo = comboDao.getComboById(comboId);
+            if (combo != null){
+                return true;
+            }
+        }//Suppress the exception. Done on multiple places e.g. createSolrProduct
+        catch (Exception ex){
+
         }
-        return true;
+        return false;
     }
 
     public boolean isProductOutOfStock(Product product) {
