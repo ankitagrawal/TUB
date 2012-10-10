@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -370,18 +371,20 @@ public class CourierStatusUpdateHelper {
     }
 
 	@SuppressWarnings("unchecked")
-	public Map getHkDeliveryStatusForUser(){
-		Map responseMap = new HashMap<Long, String>();
-		responseMap.put(EnumConsignmentLifecycleStatus.ReceivedAtHub.getId(), "Your shipment has been received at our courier office.");
-		responseMap.put(EnumConsignmentLifecycleStatus.Dispatched.getId(), "Your order has been shipped to you.");
-		responseMap.put(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId(), "You asked us to hold your shipment.");
-		responseMap.put(EnumConsignmentLifecycleStatus.Hold.getId(), "Due to unavoidable circumstances, your consignment is still with us. It will be delivered very soon");
-		responseMap.put(EnumConsignmentLifecycleStatus.Delivered.getId(), "Your shipment has been delivered to you");
-		responseMap.put(EnumConsignmentLifecycleStatus.Damaged.getId(), "Unfortunately, your shipment was damaged. We will ship you a new one soon.");
-		responseMap.put(EnumConsignmentLifecycleStatus.ConsignmentLost.getId(), "Unfortunately, your shipment was damaged. We will ship you a new one soon.");
-		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToHub.getId(), "You returned the shipment.");
-		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToSource.getId(), "Your shipment has been returned to healthkart.");
-		return responseMap;
+	public String getHkDeliveryStatusForUser(String status){
+		Map responseMap = new HashMap<String, String>();
+		responseMap.put(EnumConsignmentLifecycleStatus.ReceivedAtHub.getStatus(), "Shipment received at courier hub.");
+		responseMap.put(EnumConsignmentLifecycleStatus.Dispatched.getStatus(), "Shipment has been dispatched from hub.");
+		responseMap.put(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getStatus(), "You asked us to hold your shipment.");
+		responseMap.put(EnumConsignmentLifecycleStatus.Hold.getStatus(), "Shipment On Hold at courier hub.");
+		responseMap.put(EnumConsignmentLifecycleStatus.Delivered.getStatus(), "Shipment has been delivered to you");
+		responseMap.put(EnumConsignmentLifecycleStatus.Damaged.getStatus(), "Shipment is damaged.");
+		responseMap.put(EnumConsignmentLifecycleStatus.ConsignmentLost.getStatus(), "Shipment is lost");
+		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToHub.getStatus(), "Shipment returned");
+		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToSource.getStatus(), "Shipment returned to healthkart.");
+		responseMap.put(HKDeliveryConstants.HEALTHKART_HUB, "Healthkart Warehouse");
+		responseMap.put(HKDeliveryConstants.DELIVERY_HUB, "Customer");
+		return (String)responseMap.get(status);
 	}
 
 

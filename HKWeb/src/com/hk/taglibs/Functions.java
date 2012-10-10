@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.domain.catalog.product.*;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.image.ProductImageService;
@@ -628,4 +629,8 @@ public class Functions {
 		return showOptionOnUI;
 	}
 
+	public static String getDisplayNameForHkdeliveryTracking(String status){
+		CourierStatusUpdateHelper courierStatusUpdateHelper = new CourierStatusUpdateHelper();
+		return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
+	}
 }

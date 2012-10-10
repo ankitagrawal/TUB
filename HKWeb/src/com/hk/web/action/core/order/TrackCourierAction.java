@@ -1,4 +1,4 @@
-package com.hk.web.action.core.order;
+	package com.hk.web.action.core.order;
 
 import java.util.List;
 import java.util.Map;
@@ -148,13 +148,12 @@ public class TrackCourierAction extends BaseAction {
                 break;
 
             case HK_Delivery: if(trackingId != null){
-	            consignmentService.getConsignmentByAwbNumber(trackingId);
-	            List<ConsignmentTracking> consignmentTrackingList;
+	            consignment = consignmentService.getConsignmentByAwbNumber(trackingId);
 	            if(consignment != null){
 					consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
-		            new ForwardResolution("/pages/hkDeliveryTracking.jsp");
+		            resolution = new ForwardResolution("/pages/hkDeliveryTracking.jsp");
 	            }else {
-                    new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
                 }
             }
 	            
