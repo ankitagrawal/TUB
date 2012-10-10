@@ -66,6 +66,9 @@ public class APIProductServiceImpl implements APIProductService {
 	@Value ("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 
+	@Value ("#{hkEnvProps['" + Keys.Env.readBucket + "']}")
+	String readBucket;
+
 	private static final float QUALITY = 0.95F;
 	private static final String mihAwsBucket = "mih-prod";
 
@@ -159,7 +162,7 @@ public class APIProductServiceImpl implements APIProductService {
 					if (product.getMainImageId() == null) {
 						try {
 							imageFile.getParentFile().mkdirs();
-							S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, hkProduct.getMainImageId()), "healthkart-prod", imageFile);
+							S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, hkProduct.getMainImageId()), readBucket, imageFile);
 							ProductImage productImage = setImage(imageFile, product, true, false);
 							if (productImage != null) {
 								resizeAndUpload(imageFile.getAbsolutePath(), productImage);
