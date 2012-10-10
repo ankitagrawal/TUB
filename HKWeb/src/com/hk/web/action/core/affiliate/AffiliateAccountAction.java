@@ -148,13 +148,13 @@ public class AffiliateAccountAction extends BaseAction {
 			if (offer != null) {
 				Long numberOfCouponsToDownload = 0L;
 				Long numberOfCoupons = affiliate.getWeeklyCouponLimit() - affilateService.getMaxCouponsLeft(affiliate);
-				if (numberOfCoupons == 0) {
+				if (numberOfCoupons == 0L) {
 					numberOfCouponsToDownload = affiliate.getWeeklyCouponLimit();
 				} else {
 					numberOfCouponsToDownload = numberOfCoupons;
 				}
 				if (numberOfCouponsToDownload > 0) {
-					if (numberOfCoupons == 0) {
+					if (numberOfCoupons == 0L) {
 						coupons = couponService.getAffiliateUnusedCoupons(affiliate);
 					} else {
 						try {

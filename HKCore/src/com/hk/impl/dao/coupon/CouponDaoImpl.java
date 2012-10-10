@@ -41,7 +41,7 @@ public class CouponDaoImpl extends BaseDaoImpl implements CouponDao {
 	public List<Coupon> affiliateCoupon(Affiliate affiliate) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(Coupon.class);
 		criteria.add(Restrictions.eq("referrerUser", affiliate.getUser()));
-		criteria.add(Restrictions.eq("alreadyUsed", 0));
+		criteria.add(Restrictions.eq("alreadyUsed", 0L));
 		return findByCriteria(criteria);
 	}
 
