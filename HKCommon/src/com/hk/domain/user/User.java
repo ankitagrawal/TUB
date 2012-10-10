@@ -89,14 +89,13 @@ public class User {
 
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", nullable = false, length = 19)
-    private Date                  createDate;
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date                  createDate = new Date();
 
-    @JsonSkip
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_date", nullable = false, length = 19)
-    private Date                  updateDate;
-
+    /*
+     * @JsonSkip @Temporal(TemporalType.TIMESTAMP) @Column(name = "update_date", nullable = false, length = 19) private
+     * Date updateDate;
+     */
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_login_date", nullable = false, length = 19)
@@ -160,7 +159,7 @@ public class User {
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Subscription> subscriptions;
+    private List<Subscription>    subscriptions;
 
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -176,9 +175,9 @@ public class User {
     private KarmaProfile          karmaProfile;
 
     @JsonSkip
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "hub_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "hub_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "hub_id", updatable = false) })
-    private Hub hub;
+    private Hub                   hub;
 
     public KarmaProfile getKarmaProfile() {
         return karmaProfile;
@@ -274,9 +273,9 @@ public class User {
         return password;
     }
 
-    public Date getUpdateDate() {
-        return this.updateDate;
-    }
+    /*
+     * public Date getUpdateDate() { return this.updateDate; }
+     */
 
     public void setPassword(String password) {
         this.password = password;
@@ -356,9 +355,9 @@ public class User {
         this.createDate = createDate;
     }
 
-    public void setUpdateDate(Timestamp updateDate) {
-        this.updateDate = updateDate;
-    }
+    /*
+     * public void setUpdateDate(Timestamp updateDate) { this.updateDate = updateDate; }
+     */
 
     public String toString() {
         return id == null ? "" : id.toString();
@@ -464,19 +463,19 @@ public class User {
         this.createDate = createDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
+    /*
+     * public void setUpdateDate(Date updateDate) { this.updateDate = updateDate; }
+     */
+
+    public Hub getHub() {
+        return hub;
     }
 
-	public Hub getHub() {
-		return hub;
-	}
+    public void setHub(Hub hub) {
+        this.hub = hub;
+    }
 
-	public void setHub(Hub hub) {
-		this.hub = hub;
-	}
-
-	public boolean hasPermission(EnumPermission enumPermission) {
+    public boolean hasPermission(EnumPermission enumPermission) {
         if (roles == null || roles.isEmpty()) {
             return false;
         }
