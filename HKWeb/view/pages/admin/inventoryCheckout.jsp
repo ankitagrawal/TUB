@@ -10,12 +10,6 @@
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
       $(document).ready(function() {
-
-	    var commentType = $('#commentType').val();
-	    if(commentType == ${commentTypePacking}) {
-		   alert("User Instruction : " + $('#userComments').val());
-	    }
-
 	    var boolWronglyPickedBox = "${icBean.wronglyPickedBox}" == 'true';
         if(boolWronglyPickedBox) {
            alert("Cannot checkout the item, there is another item with inventory with Batch details: \n" +
@@ -65,8 +59,8 @@
       </c:choose>
     <c:if test="${icBean.shippingOrder.baseOrder.commentType == commentTypePacking }" >
 	    <br>
-	    <div align="left" class="prom yellow help" style="height:30px; font-size:20px; color:green; font-weight:bold;">
-		    User Instructions : ${icBean.shippingOrder.baseOrder.userComments}
+	    <div style="margin:5px;color:red;font-size:25px;">
+		    User Instructions: ${icBean.shippingOrder.baseOrder.userComments}
 	    </div>
     </c:if>
 
@@ -215,7 +209,9 @@
           <th width="75px;">Checked Out Qty</th>
         </tr>
         </thead>
+	    <c:set var="alertCount" value="0" />
         <c:forEach items="${icBean.shippingOrder.lineItems}" var="lineItem">
+	       <c:set var="alertCount" value="${alertCount + hk:checkedoutItemsCount(lineItem)}"/>
           <c:set var="productVariant" value="${lineItem.sku.productVariant}"/>
           <tr class="productVariantRow">
             <input type="hidden" value="${productVariant.id}" class="productVariantId"/>
@@ -253,6 +249,13 @@
 
           </tr>
         </c:forEach>
+	      <script type="text/javascript">
+		      var commentType = $('#commentType').val();
+		      var upc = $('#upc').val();
+		      if(${alertCount == 0} && upc == '' && commentType == ${commentTypePacking}) {
+			      alert("User Instruction : " + $('#userComments').val());
+		      }
+	      </script>
       </table>
     </div>
   </s:layout-component>
