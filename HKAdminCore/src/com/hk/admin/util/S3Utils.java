@@ -90,15 +90,22 @@ public class S3Utils {
 
     public static Boolean downloadData(String awsAccess, String awsSecret, String objectKey, String bucketName, File fileToWriteTo){
         S3Service s3Service = initializeConnectionParams(awsAccess, awsSecret, bucketName);
+	    InputStream dataInputStream = null;
+	    FileOutputStream fileOutputStream = null;
         try {
             S3Object s3Object = s3Service.getObject(bucketName, objectKey);
-            IOUtils.copy(s3Object.getDataInputStream(),new FileOutputStream(fileToWriteTo));
+	        dataInputStream = s3Object.getDataInputStream();
+	        fileOutputStream = new FileOutputStream(fileToWriteTo);
+	        IOUtils.copy(dataInputStream, fileOutputStream);
         } catch (ServiceException se) {
             logger.error("error in downloading data from s3: " + se);
         } catch (FileNotFoundException fnfe){
             logger.error("error in downloading data from s3: " + fnfe) ;
         } catch (IOException ioe){
             logger.error("error in downloading data from s3: " + ioe) ;
+        } finally {
+	        if (dataInputStream != null) IOUtils.closeQuietly(dataInputStream);
+	        if (fileOutputStream != null) IOUtils.closeQuietly(fileOutputStream);
         }
         return Boolean.FALSE;
     }

@@ -241,7 +241,7 @@ public class APIProductServiceImpl implements APIProductService {
 			String lineSeparator = System.getProperty("line.separator");
 			printWriter.write("ProductID || CATEGORY" + lineSeparator);
 			for (Product product : nonDeletedProducts) {
-				if (product.getMainImageId() != null && product.getId().compareTo("BTY210") > 0) {
+				if (product.getMainImageId() != null) {
 					File imageFile = new File(getImageFilePath());
 					S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, product.getMainImageId()), hkReadBucket, imageFile);
 					try {
@@ -252,7 +252,7 @@ public class APIProductServiceImpl implements APIProductService {
 								ImageReader reader = (ImageReader) readers.next();
 								try {
 									reader.setInput(in);
-									if (reader.getWidth(0) < pixelSize || reader.getHeight(0) < pixelSize) {
+									if (reader.getWidth(0) < pixelSize && reader.getHeight(0) < pixelSize) {
 										productsWithLowResolutionImages.add(product);
 										productIdsForLowResolutionImages.append(product.getId() + "," + product.getPrimaryCategory() + ";");
 										logger.info("Low Resolution ProductID = " + product.getId());
