@@ -6,8 +6,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 import javax.ws.rs.core.MediaType;
+import javax.imageio.ImageReader;
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
@@ -38,210 +43,254 @@ import com.hk.util.ImageManager;
 @Service
 public class APIProductServiceImpl implements APIProductService {
 
-    @Value("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
-    private String              healthkartRestUrl;
+	@Value ("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
+	private String healthkartRestUrl;
 
-    private static Logger       logger       = LoggerFactory.getLogger(APIProductServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(APIProductServiceImpl.class);
 
-    @Autowired
-    ProductDao                  productDao;
+	@Autowired
+	ProductDao productDao;
 
-    @Autowired
-    ImageManager                imageManager;
+	@Autowired
+	ImageManager imageManager;
 
-    @Autowired
-    ProductService              productService;
+	@Autowired
+	ProductService productService;
 
-    @Value("#{hkEnvProps['" + Keys.Env.accessKey + "']}")
-    String                      awsAccessKey;
+	@Value ("#{hkEnvProps['" + Keys.Env.accessKey + "']}")
+	String awsAccessKey;
 
-    @Value("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
-    String                      awsSecretKey;
+	@Value ("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
+	String awsSecretKey;
 
-    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String                      adminUploadsPath;
+	@Value ("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+	String adminUploadsPath;
 
-    private static final float  QUALITY      = 0.95F;
-    private static final String mihAwsBucket = "mih-prod";
+	private static final float QUALITY = 0.95F;
+	private static final String mihAwsBucket = "mih-prod";
 
-    public Product getProductById(String productId) {
-        try {
-            ClientRequest request = new ClientRequest(healthkartRestUrl + "product/" + productId);
-            request.accept(MediaType.APPLICATION_JSON);
-            ClientResponse<String> response = request.get(String.class);
+	private static final Integer pixelSize = 1024;
 
-            if (response.getStatus() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-            }
+	public Product getProductById(String productId) {
+		try {
+			ClientRequest request = new ClientRequest(healthkartRestUrl + "product/" + productId);
+			request.accept(MediaType.APPLICATION_JSON);
+			ClientResponse<String> response = request.get(String.class);
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes())));
-            Gson gson = JsonUtils.getGsonDefault();
+			if (response.getStatus() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}
 
-            return gson.fromJson(br, Product.class);
+			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes())));
+			Gson gson = JsonUtils.getGsonDefault();
 
-        } catch (IOException e) {
-            logger.error("IO exception gettting product" + productId, e);
-        } catch (Exception e) {
-            logger.error(" exception gettting product" + productId, e);
-        }
-        return null;
-    }
+			return gson.fromJson(br, Product.class);
 
-    public String syncContentAndDescription() {
-        List<Product> mihNutritionProducts = productDao.getAllProductByCategory("nutrition");
-        List<Product> mihSportsProducts = productDao.getAllProductByCategory("sports");
-        List<Product> mihProducts = mihNutritionProducts;
-        for (Product product : mihSportsProducts) {
-            mihProducts.add(product);
-        }
-        for (Product product : mihProducts) {
-            try {
-                ClientRequest request = new ClientRequest(healthkartRestUrl + "product/" + product.getId().toString());
-                request.accept(MediaType.APPLICATION_JSON);
-                ClientResponse<String> response = request.get(String.class);
+		} catch (IOException e) {
+			logger.error("IO exception gettting product" + productId, e);
+		} catch (Exception e) {
+			logger.error(" exception gettting product" + productId, e);
+		}
+		return null;
+	}
 
-                if (response.getStatus() != 200) {
-                    throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-                }
+	public String syncContentAndDescription() {
+		List<Product> mihNutritionProducts = productDao.getAllProductByCategory("nutrition");
+		List<Product> mihSportsProducts = productDao.getAllProductByCategory("sports");
+		List<Product> mihProducts = mihNutritionProducts;
+		for (Product product : mihSportsProducts) {
+			mihProducts.add(product);
+		}
+		for (Product product : mihProducts) {
+			try {
+				ClientRequest request = new ClientRequest(healthkartRestUrl + "product/" + product.getId().toString());
+				request.accept(MediaType.APPLICATION_JSON);
+				ClientResponse<String> response = request.get(String.class);
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes())));
-                Gson gson = JsonUtils.getGsonDefault();
+				if (response.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+				}
 
-                Product hkProduct = gson.fromJson(br, Product.class);
-                product.setDescription(hkProduct.getDescription());
-                product.setOverview(hkProduct.getOverview());
-                productDao.save(product);
+				BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes())));
+				Gson gson = JsonUtils.getGsonDefault();
 
-            } catch (IOException e) {
-                logger.error(" exception syncing products" + product.getId(),  e);
-                return "sync failed for product id " + product.getId().toString();
-            } catch (Exception e) {
-                logger.error(" exception syncing products" + product.getId(),  e);
-                return "sync failed for product id" + product.getId().toString();
+				Product hkProduct = gson.fromJson(br, Product.class);
+				product.setDescription(hkProduct.getDescription());
+				product.setOverview(hkProduct.getOverview());
+				productDao.save(product);
 
-            }
-        }
-        return "synced";
-    }
+			} catch (IOException e) {
+				logger.error(" exception syncing products" + product.getId(), e);
+				return "sync failed for product id " + product.getId().toString();
+			} catch (Exception e) {
+				logger.error(" exception syncing products" + product.getId(), e);
+				return "sync failed for product id" + product.getId().toString();
 
-    public String syncProductImages() {
-        List<Product> mihNutritionProducts = productDao.getAllProductByCategory("nutrition");
-        List<Product> mihSportsProducts = productDao.getAllProductByCategory("sports");
-        List<Product> mihProducts = mihNutritionProducts;
-        for (Product product : mihSportsProducts) {
-            mihProducts.add(product);
-        }
-        for (Product product : mihProducts) {
-            try {
-                ClientRequest request = new ClientRequest(healthkartRestUrl + "product/" + product.getId().toString());
-                request.accept(MediaType.APPLICATION_JSON);
-                ClientResponse<String> response = request.get(String.class);
+			}
+		}
+		return "synced";
+	}
 
-                if (response.getStatus() != 200) {
-                    throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-                }
+	public String syncProductImages() {
+		List<Product> mihNutritionProducts = productDao.getAllProductByCategory("nutrition");
+		List<Product> mihSportsProducts = productDao.getAllProductByCategory("sports");
+		List<Product> mihProducts = mihNutritionProducts;
+		for (Product product : mihSportsProducts) {
+			mihProducts.add(product);
+		}
+		for (Product product : mihProducts) {
+			try {
+				ClientRequest request = new ClientRequest(healthkartRestUrl + "product/" + product.getId().toString());
+				request.accept(MediaType.APPLICATION_JSON);
+				ClientResponse<String> response = request.get(String.class);
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes())));
-                Gson gson = JsonUtils.getGsonDefault();
+				if (response.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+				}
 
-                Product hkProduct = gson.fromJson(br, Product.class);
+				BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes())));
+				Gson gson = JsonUtils.getGsonDefault();
 
-                String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
-                File imageFile = new File(imageFilePath);
-                if (hkProduct.getMainImageId() != null) {
-                    if (product.getMainImageId() == null) {
-                        try {
-                            imageFile.getParentFile().mkdirs();
-                            S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, hkProduct.getMainImageId()), "healthkart-prod",
-                                    imageFile);
-                            ProductImage productImage = setImage(imageFile, product, true, false);
-                            if (productImage != null) {
-                                resizeAndUpload(imageFile.getAbsolutePath(), productImage);
-                                productImage.setUploaded(true);
-                                getProductDao().save(productImage);
-                            }
+				Product hkProduct = gson.fromJson(br, Product.class);
 
-                        } finally {
-                            if (imageFile.exists())
-                                imageFile.delete();
-                        }
-                    }
-                }
+				String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
+				File imageFile = new File(imageFilePath);
+				if (hkProduct.getMainImageId() != null) {
+					if (product.getMainImageId() == null) {
+						try {
+							imageFile.getParentFile().mkdirs();
+							S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, hkProduct.getMainImageId()), "healthkart-prod", imageFile);
+							ProductImage productImage = setImage(imageFile, product, true, false);
+							if (productImage != null) {
+								resizeAndUpload(imageFile.getAbsolutePath(), productImage);
+								productImage.setUploaded(true);
+								getProductDao().save(productImage);
+							}
 
-            } catch (IOException e) {
-                logger.error(" exception syncing products" + product.getId(),  e);
-            } catch (Exception e) {
-                logger.error(" exception syncing products" + product.getId(),  e);
-            }
-        }
-        return "images synced";
-    }
+						} finally {
+							if (imageFile.exists()) imageFile.delete();
+						}
+					}
+				}
 
-    private ProductImage setImage(File imageFile, Product product, boolean defaultImage, boolean checkExists) {
-        String checksum = BaseUtils.getMD5Checksum(imageFile);
-        ProductImage productImage = getProductService().getProductImageByChecksum(checksum);
-        if (productImage != null && productImage.isUploaded() && checkExists) {
-            return null;
-        } else {
-            if (productImage == null) {
-                productImage = new ProductImage();
-                productImage.setProduct(product);
-                productImage.setUrl(product.getId());
-                productImage.setAltText(product.getName());
-                productImage.setChecksum(checksum);
-                productImage = (ProductImage) getProductDao().save(productImage);
-            }
+			} catch (IOException e) {
+				logger.error(" exception syncing products" + product.getId(), e);
+			} catch (Exception e) {
+				logger.error(" exception syncing products" + product.getId(), e);
+			}
+		}
+		return "images synced";
+	}
 
-            if (defaultImage) {
-                product.setMainImageId(productImage.getId());
-            }
+	private ProductImage setImage(File imageFile, Product product, boolean defaultImage, boolean checkExists) {
+		String checksum = BaseUtils.getMD5Checksum(imageFile);
+		ProductImage productImage = getProductService().getProductImageByChecksum(checksum);
+		if (productImage != null && productImage.isUploaded() && checkExists) {
+			return null;
+		} else {
+			if (productImage == null) {
+				productImage = new ProductImage();
+				productImage.setProduct(product);
+				productImage.setUrl(product.getId());
+				productImage.setAltText(product.getName());
+				productImage.setChecksum(checksum);
+				productImage = (ProductImage) getProductDao().save(productImage);
+			}
 
-            return productImage;
-        }
-    }
+			if (defaultImage) {
+				product.setMainImageId(productImage.getId());
+			}
 
-    private void resizeAndUpload(String filePath, ProductImage productImage) throws Exception {
+			return productImage;
+		}
+	}
 
-        String repositoryFilePath = null;
+	private void resizeAndUpload(String filePath, ProductImage productImage) throws Exception {
 
-        Long id = productImage.getId();
+		String repositoryFilePath = null;
 
-        // saving original image
-        String imageUrl = HKImageUtils.getS3ImageKey(EnumImageSize.Original, id);
-        S3Utils.uploadData(awsAccessKey, awsSecretKey, filePath, imageUrl, mihAwsBucket);
+		Long id = productImage.getId();
 
-        // saving thumbnails for all sizes
-        for (EnumImageSize enumImageSize : EnumImageSize.values()) {
-            if (enumImageSize != EnumImageSize.Original) {
-                repositoryFilePath = HKImageUtils.getRepositoryImagePath(enumImageSize, id);
-                ImageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
-                imageUrl = HKImageUtils.getS3ImageKey(enumImageSize, id);
-                S3Utils.uploadData(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, mihAwsBucket);
-            }
-        }
-    }
+		// saving original image
+		String imageUrl = HKImageUtils.getS3ImageKey(EnumImageSize.Original, id);
+		S3Utils.uploadData(awsAccessKey, awsSecretKey, filePath, imageUrl, mihAwsBucket);
 
-    public ProductDao getProductDao() {
-        return productDao;
-    }
+		// saving thumbnails for all sizes
+		for (EnumImageSize enumImageSize : EnumImageSize.values()) {
+			if (enumImageSize != EnumImageSize.Original) {
+				repositoryFilePath = HKImageUtils.getRepositoryImagePath(enumImageSize, id);
+				ImageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
+				imageUrl = HKImageUtils.getS3ImageKey(enumImageSize, id);
+				S3Utils.uploadData(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, mihAwsBucket);
+			}
+		}
+	}
 
-    public void setProductDao(ProductDao productDao) {
-        this.productDao = productDao;
-    }
+	public String getProductsWithLowResolutionImages() {
+		List<Product> nonDeletedProducts = getProductService().getAllNonDeletedProducts();
+		List<Product> productsWithLowResolutionImages = new ArrayList<Product>();
+		StringBuilder productIdsForLowResolutionImages = new StringBuilder("");
+		for (Product product : nonDeletedProducts) {
+			if (product.getMainImageId() != null) {
+				File imageFile = new File(getImageFilePath());
+				S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, product.getMainImageId()), "mih-prod", imageFile);
+				try {
+					ImageInputStream in = ImageIO.createImageInputStream(imageFile);
+					try {
+						final Iterator readers = ImageIO.getImageReaders(in);
+						if (readers.hasNext()) {
+							ImageReader reader = (ImageReader) readers.next();
+							try {
+								reader.setInput(in);
+								if (reader.getWidth(0) < pixelSize || reader.getHeight(0) < pixelSize) {
+									productsWithLowResolutionImages.add(product);
+									productIdsForLowResolutionImages.append(product.getId() + "," + product.getPrimaryCategory() + ";");
+								}
+								//return new Dimension(reader.getWidth(0), reader.getHeight(0));
+							} finally {
+								reader.dispose();
+							}
+						}
+					} finally {
+						if (in != null) in.close();
+					}
+				} catch (Exception e) {
 
-    public ImageManager getImageManager() {
-        return imageManager;
-    }
+				}
+				if(imageFile.exists()){
+					imageFile.delete();
+				}
+			}
+		}
+		return productIdsForLowResolutionImages.toString();
+	}
 
-    public void setImageManager(ImageManager imageManager) {
-        this.imageManager = imageManager;
-    }
+	private String getImageFilePath() {
+		return adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
+	}
 
-    public ProductService getProductService() {
-        return productService;
-    }
 
-    public void setProductService(ProductService productService) {
-        this.productService = productService;
-    }
+	public ProductDao getProductDao() {
+		return productDao;
+	}
+
+	public void setProductDao(ProductDao productDao) {
+		this.productDao = productDao;
+	}
+
+	public ImageManager getImageManager() {
+		return imageManager;
+	}
+
+	public void setImageManager(ImageManager imageManager) {
+		this.imageManager = imageManager;
+	}
+
+	public ProductService getProductService() {
+		return productService;
+	}
+
+	public void setProductService(ProductService productService) {
+		this.productService = productService;
+	}
 }
