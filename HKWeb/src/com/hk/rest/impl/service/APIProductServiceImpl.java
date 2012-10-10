@@ -245,6 +245,7 @@ public class APIProductServiceImpl implements APIProductService {
 								if (reader.getWidth(0) < pixelSize || reader.getHeight(0) < pixelSize) {
 									productsWithLowResolutionImages.add(product);
 									productIdsForLowResolutionImages.append(product.getId() + "," + product.getPrimaryCategory() + ";");
+									logger.info("Low Resolution ProductID = "+product.getId() );
 								}
 								//return new Dimension(reader.getWidth(0), reader.getHeight(0));
 							} finally {
