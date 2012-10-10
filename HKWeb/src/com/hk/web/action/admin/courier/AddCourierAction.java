@@ -104,16 +104,21 @@ public class AddCourierAction extends BaseAction {
 			oldCourierGroup.getCouriers().remove(courier);
 			courierGroupService.save(oldCourierGroup);
 		}
+		if(courierGroup != null){
 		courierGroup.getCouriers().add(courier);
 		courierGroup = courierGroupService.save(courierGroup);
 		addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
+			}
+		else{
+		addRedirectAlertMessage(new SimpleMessage("Courier Group of Courier Removed"));
+		}
 		return pre();
 	}
 
 	public Resolution deleteCourier() {
 		courier.setDeleted(true);
 		courierService.save(courier);
-		addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
+		addRedirectAlertMessage(new SimpleMessage("Courier Deleted"));
 		return pre();
 	}
 

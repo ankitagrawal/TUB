@@ -32,6 +32,15 @@
 				});
 
 
+			$('.assignCourierGroup').click(function(){
+					var courier =$('#courierDropDown').val();
+				var courierGroup =$('#groupDropDown').val();
+				if(	courier != ""  && courierGroup == ""){
+					alert('You are removing group of courier '+ courier);
+				}
+
+				});
+
 			});
 		</script>
 
@@ -99,7 +108,7 @@
 								<%--<s:submit name="deleteCourierGroup" value="delete group"/>--%>
 							</li>
 						</div>
-						<s:submit name="assignCourierGroup" value="assign group"/>
+						<s:submit class="assignCourierGroup" name="assignCourierGroup" value="assign group"/>
 					</ul>
 
 				</s:form>
