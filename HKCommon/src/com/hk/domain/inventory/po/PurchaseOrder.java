@@ -31,6 +31,10 @@ public class PurchaseOrder implements java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_dt", nullable = false, length = 19)
     private Date createDate = new Date();
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_dt", nullable = false, length = 19)
+    private Date updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "purchase_order_status_id", nullable = false)
@@ -254,6 +258,16 @@ public class PurchaseOrder implements java.io.Serializable {
     public int getNoOfSku() {
         return this.poLineItems != null ? this.poLineItems.size() : 0;
     }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+    
+    
 }
 
 
