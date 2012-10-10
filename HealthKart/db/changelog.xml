@@ -9126,4 +9126,19 @@
     <changeSet author="Rahul (generated)" id="1349775925334-1">
         <dropTable tableName="pincode_default_courier_bak"/>
     </changeSet>
+    <changeSet author="Tarun (generated)" id="1349849616633-1">
+        <addColumn tableName="consignment">
+            <column name="delivery_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Tarun" id="1349849616633-2">
+		<sql>
+			UPDATE consignment c
+			SET c.delivery_date =
+						(SELECT MAX(create_date)
+						FROM consignment_tracking ct
+						WHERE ct.consignment_lifecycle_status_id=80
+						AND ct.consignment_id = c.id);
+		</sql>
+	</changeSet>
 </databaseChangeLog>
