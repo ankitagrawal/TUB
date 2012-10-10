@@ -373,17 +373,17 @@ public class CourierStatusUpdateHelper {
 	@SuppressWarnings("unchecked")
 	public String getHkDeliveryStatusForUser(String status){
 		Map responseMap = new HashMap<String, String>();
-		responseMap.put(EnumConsignmentLifecycleStatus.ReceivedAtHub.getStatus(), "Shipment received at courier hub.");
-		responseMap.put(EnumConsignmentLifecycleStatus.Dispatched.getStatus(), "Shipment has been dispatched from hub.");
-		responseMap.put(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getStatus(), "You asked us to hold your shipment.");
-		responseMap.put(EnumConsignmentLifecycleStatus.Hold.getStatus(), "Shipment On Hold at courier hub.");
-		responseMap.put(EnumConsignmentLifecycleStatus.Delivered.getStatus(), "Shipment has been delivered to you");
-		responseMap.put(EnumConsignmentLifecycleStatus.Damaged.getStatus(), "Shipment is damaged.");
-		responseMap.put(EnumConsignmentLifecycleStatus.ConsignmentLost.getStatus(), "Shipment is lost");
-		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToHub.getStatus(), "Shipment returned");
-		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToSource.getStatus(), "Shipment returned to healthkart.");
-		responseMap.put(HKDeliveryConstants.HEALTHKART_HUB, "Healthkart Warehouse");
-		responseMap.put(HKDeliveryConstants.DELIVERY_HUB, "Customer");
+		responseMap.put(EnumConsignmentLifecycleStatus.ReceivedAtHub.getStatus(), HKDeliveryConstants.USER_STATUS_RECEIVED);
+		responseMap.put(EnumConsignmentLifecycleStatus.Dispatched.getStatus(),HKDeliveryConstants.USER_STATUS_DISPATCHED);
+		responseMap.put(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getStatus(), HKDeliveryConstants.USER_STATUS_CUSTOMERHOLD);
+		responseMap.put(EnumConsignmentLifecycleStatus.Hold.getStatus(), HKDeliveryConstants.USER_STATUS_HOLD);
+		responseMap.put(EnumConsignmentLifecycleStatus.Delivered.getStatus(), HKDeliveryConstants.USER_STATUS_DELIVERED);
+		responseMap.put(EnumConsignmentLifecycleStatus.Damaged.getStatus(), HKDeliveryConstants.USER_STATUS_DAMAGED);
+		responseMap.put(EnumConsignmentLifecycleStatus.ConsignmentLost.getStatus(), HKDeliveryConstants.USER_STATUS_LOST);
+		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToHub.getStatus(), HKDeliveryConstants.USER_STATUS_RTH);
+		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToSource.getStatus(), HKDeliveryConstants.USER_STATUS_RTO);
+		responseMap.put(HKDeliveryConstants.HEALTHKART_HUB, HKDeliveryConstants.USER_SOURCE);
+		responseMap.put(HKDeliveryConstants.DELIVERY_HUB, HKDeliveryConstants.USER_DESTINATION);
 		return (String)responseMap.get(status);
 	}
 
