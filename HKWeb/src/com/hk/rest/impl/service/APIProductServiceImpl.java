@@ -1,10 +1,6 @@
 package com.hk.rest.impl.service;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -21,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.io.IOUtils;
 
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.imaging.ImageUtils;
@@ -36,6 +34,7 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.rest.pact.service.APIProductService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.ImageManager;
+import com.hk.util.FtlUtils;
 
 /**
  * Created with IntelliJ IDEA. User: Pradeep Date: 8/28/12 Time: 3:47 PM
@@ -233,41 +232,55 @@ public class APIProductServiceImpl implements APIProductService {
 		List<Product> nonDeletedProducts = getProductService().getAllNonDeletedProducts();
 		List<Product> productsWithLowResolutionImages = new ArrayList<Product>();
 		StringBuilder productIdsForLowResolutionImages = new StringBuilder("");
-		logger.info("--- Low Resolution Finder START ---");
-		for (Product product : nonDeletedProducts) {
-			if (product.getMainImageId() != null) {
-				File imageFile = new File(getImageFilePath());
-				S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, product.getMainImageId()), hkReadBucket, imageFile);
-				try {
-					ImageInputStream in = ImageIO.createImageInputStream(imageFile);
+		File txtFile = new File(adminUploadsPath + "/imageFiles/temp/lowResProd.txt");
+		PrintWriter printWriter = null;
+		try {
+			printWriter = new PrintWriter(new FileWriter(txtFile));
+
+			logger.info("--- Low Resolution Finder START ---");
+			String lineSeparator = System.getProperty("line.separator");
+			printWriter.write("ProductID || CATEGORY" + lineSeparator);
+			for (Product product : nonDeletedProducts) {
+				if (product.getMainImageId() != null) {
+					File imageFile = new File(getImageFilePath());
+					S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, product.getMainImageId()), hkReadBucket, imageFile);
 					try {
-						final Iterator readers = ImageIO.getImageReaders(in);
-						if (readers.hasNext()) {
-							ImageReader reader = (ImageReader) readers.next();
-							try {
-								reader.setInput(in);
-								if (reader.getWidth(0) < pixelSize || reader.getHeight(0) < pixelSize) {
-									productsWithLowResolutionImages.add(product);
-									productIdsForLowResolutionImages.append(product.getId() + "," + product.getPrimaryCategory() + ";");
-									logger.info("Low Resolution ProductID = "+product.getId() );
+						ImageInputStream in = ImageIO.createImageInputStream(imageFile);
+						try {
+							final Iterator readers = ImageIO.getImageReaders(in);
+							if (readers.hasNext()) {
+								ImageReader reader = (ImageReader) readers.next();
+								try {
+									reader.setInput(in);
+									if (reader.getWidth(0) < pixelSize || reader.getHeight(0) < pixelSize) {
+										productsWithLowResolutionImages.add(product);
+										productIdsForLowResolutionImages.append(product.getId() + "," + product.getPrimaryCategory() + ";");
+										logger.info("Low Resolution ProductID = " + product.getId());
+										printWriter.write(product.getId() + " || " + product.getPrimaryCategory().getDisplayName() + lineSeparator);
+									}
+									//return new Dimension(reader.getWidth(0), reader.getHeight(0));
+								} finally {
+									reader.dispose();
 								}
-								//return new Dimension(reader.getWidth(0), reader.getHeight(0));
-							} finally {
-								reader.dispose();
+							}
+						} finally {
+							if (in != null) in.close();
+							if (imageFile.exists()) {
+								imageFile.delete();
 							}
 						}
-					} finally {
-						if (in != null) in.close();
+					} catch (Exception e) {
+					   e.printStackTrace();
 					}
-				} catch (Exception e) {
 
 				}
-				if(imageFile.exists()){
-					imageFile.delete();
-				}
 			}
+			logger.info("--- Low Resolution Finder END ---");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(printWriter);
 		}
-		logger.info("--- Low Resolution Finder END ---");
 		return productIdsForLowResolutionImages.toString();
 	}
 
