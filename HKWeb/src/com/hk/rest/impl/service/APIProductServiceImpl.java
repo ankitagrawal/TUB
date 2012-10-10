@@ -230,6 +230,7 @@ public class APIProductServiceImpl implements APIProductService {
 		List<Product> nonDeletedProducts = getProductService().getAllNonDeletedProducts();
 		List<Product> productsWithLowResolutionImages = new ArrayList<Product>();
 		StringBuilder productIdsForLowResolutionImages = new StringBuilder("");
+		logger.info("--- Low Resolution Finder START ---");
 		for (Product product : nonDeletedProducts) {
 			if (product.getMainImageId() != null) {
 				File imageFile = new File(getImageFilePath());
@@ -263,6 +264,7 @@ public class APIProductServiceImpl implements APIProductService {
 				}
 			}
 		}
+		logger.info("--- Low Resolution Finder END ---");
 		return productIdsForLowResolutionImages.toString();
 	}
 
