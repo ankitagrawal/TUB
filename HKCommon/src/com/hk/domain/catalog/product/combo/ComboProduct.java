@@ -40,7 +40,7 @@ public class ComboProduct implements java.io.Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "product_id", nullable = false)
-  @NotFound(action= NotFoundAction.IGNORE)
+  //@NotFound(action= NotFoundAction.IGNORE)
   private Product product;
 
   @Column(name = "qty")
