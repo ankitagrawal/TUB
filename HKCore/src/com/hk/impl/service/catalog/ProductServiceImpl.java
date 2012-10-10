@@ -236,29 +236,30 @@ public class ProductServiceImpl implements ProductService {
 
 	public boolean isComboInStock(String comboId) {
 		Combo combo = getComboDao().getComboById(comboId);
-        if (combo.isDeleted() != null && combo.isDeleted()) {
-            return false;
-        } else {
-            for (ComboProduct comboProduct : combo.getComboProducts()) {
-                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
-                    return false;
-                }
-            }
+        if (combo == null){
+            return true;
         }
-        return true;
+        return isComboInStock(combo);
     }
 
     public List<Combo> getRelatedCombos(Product product) {
         return getComboDao().getCombos(product);
     }
 
+    private boolean isCombo(String comboId){
+        Combo combo = getComboDao().getComboById(comboId);
+        if (combo == null){
+            return false;
+        }
+        return true;
+    }
+
     public boolean isProductOutOfStock(Product product) {
         List<ProductVariant> productVariants = product.getProductVariants();
         boolean isOutOfStock = true;
+        if (isCombo(product.getId())){
+             return !isComboInStock(product.getId());
+        }
         for (ProductVariant pv : productVariants) {
             if (!pv.getOutOfStock() && !pv.getDeleted()) {
                 isOutOfStock = false;
