@@ -67,7 +67,7 @@ public class APIProductServiceImpl implements APIProductService {
 	String adminUploadsPath;
 
 	@Value ("#{hkEnvProps['" + Keys.Env.readBucket + "']}")
-	String readBucket;
+	String hkReadBucket;
 
 	private static final float QUALITY = 0.95F;
 	private static final String mihAwsBucket = "mih-prod";
@@ -162,7 +162,7 @@ public class APIProductServiceImpl implements APIProductService {
 					if (product.getMainImageId() == null) {
 						try {
 							imageFile.getParentFile().mkdirs();
-							S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, hkProduct.getMainImageId()), readBucket, imageFile);
+							S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, hkProduct.getMainImageId()), "healthkart-prod", imageFile);
 							ProductImage productImage = setImage(imageFile, product, true, false);
 							if (productImage != null) {
 								resizeAndUpload(imageFile.getAbsolutePath(), productImage);
@@ -237,7 +237,7 @@ public class APIProductServiceImpl implements APIProductService {
 		for (Product product : nonDeletedProducts) {
 			if (product.getMainImageId() != null) {
 				File imageFile = new File(getImageFilePath());
-				S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, product.getMainImageId()), "mih-prod", imageFile);
+				S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, product.getMainImageId()), hkReadBucket, imageFile);
 				try {
 					ImageInputStream in = ImageIO.createImageInputStream(imageFile);
 					try {
