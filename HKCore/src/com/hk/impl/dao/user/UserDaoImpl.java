@@ -136,7 +136,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
       criteria.add(Restrictions.eq("login", userFilterDto.getLogin()));
     }
     if (StringUtils.isNotBlank(userFilterDto.getEmail())) {
-      criteria.add(Restrictions.eq("email", userFilterDto.getEmail()));
+	  criteria.add(Restrictions.like("email", "%" + userFilterDto.getEmail() + "%"));
     }
     if (StringUtils.isNotBlank(userFilterDto.getName())) {
       criteria.add(Restrictions.like("name", "%" + userFilterDto.getName() + "%"));

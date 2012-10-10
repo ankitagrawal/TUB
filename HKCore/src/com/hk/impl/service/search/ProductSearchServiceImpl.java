@@ -1,13 +1,11 @@
 package com.hk.impl.service.search;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.hk.pact.service.search.ProductIndexService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -40,6 +38,7 @@ import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.ProductReferrerMapper;
 

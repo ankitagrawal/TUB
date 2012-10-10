@@ -35,6 +35,7 @@ public class ProductImageDaoImpl extends BaseDaoImpl implements ProductImageDao 
 			criteria.add(Restrictions.eq("imageType", imageTypeId));
 		}
 		criteria.add(Restrictions.eq("hidden", fetchHiddenImages));
+        
 		return (List<ProductImage>) findByCriteria(criteria);
 	}
 }

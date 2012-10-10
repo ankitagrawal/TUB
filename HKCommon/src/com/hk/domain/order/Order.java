@@ -345,6 +345,7 @@ public class Order implements java.io.Serializable {
         return isExclusivelyServiceOrder;
     }
 
+    @Deprecated
     public boolean getContainsServices() {
         for (CartLineItem cartLineItem : this.getProductCartLineItems()) {
             Boolean isService = cartLineItem.getProductVariant().getProduct().isService();
