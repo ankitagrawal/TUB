@@ -9127,14 +9127,13 @@
         <dropTable tableName="pincode_default_courier_bak"/>
     </changeSet>
 
-		<changeSet author="Ankit" id="1349852020790-50">
+	<changeSet author="Rahul" id="1349852020790-50">
 	    <sql>
 
 			alter table  address add column `create_dt` DATETIME;
 			alter table  affiliate_traffic_details add column `create_dt` DATETIME;
 			alter table  awb add column `create_dt` DATETIME;
 			alter table  campaign_tracking add column `create_dt` DATETIME;
-			alter table  user add column `create_dt` DATETIME;
 			alter table  emailer_history add column `create_dt` DATETIME;
 			alter table  base_order add column `create_dt` DATETIME;
 			alter table  order_lifecycle add column `create_dt` DATETIME;
@@ -9156,12 +9155,10 @@
 			alter table  goods_received_note add column `create_dt` DATETIME;
 			alter table  purchase_invoice add column `create_dt` DATETIME;
 
-
 		    alter table  address add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		    alter table  affiliate_traffic_details add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		    alter table  awb add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		    alter table  campaign_tracking add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
-		    alter table  user add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		    alter table  emailer_history add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		    alter table  base_order add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		    alter table  order_lifecycle add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
@@ -9192,19 +9189,16 @@
 			update purchase_invoice  set create_dt = create_date;
 			update purchase_order  set create_dt = create_date;
 			update shipping_order  set create_dt = create_date;
-			update user  set create_dt = create_date;
 			update user_cart  set create_dt = create_date;
 
 		    update base_order  set update_dt = update_date;
 		    update purchase_order set update_dt = update_date;
 		    update shipping_order set update_dt = update_date;
-		    update user set update_dt = update_date;
 
 			update address  set create_dt = now() where create_dt is null;
 			update affiliate_traffic_details  set create_dt = now() where create_dt is null;
 			update awb  set create_dt = now() where create_dt is null;
 			update campaign_tracking set create_dt = now() where create_dt is null;
-			update user  set create_dt = now() where create_dt is null;
 			update emailer_history  set create_dt = now() where create_dt is null;
 			update base_order  set create_dt = now() where create_dt is null;
 			update order_lifecycle  set create_dt = now() where create_dt is null;
@@ -9230,7 +9224,6 @@
 			alter table  affiliate_traffic_details MODIFY create_dt datetime NOT NULL;
 			alter table  awb MODIFY create_dt datetime NOT NULL;
 			alter table  campaign_tracking MODIFY create_dt datetime NOT NULL;
-			alter table  user MODIFY create_dt datetime NOT NULL;
 			alter table  emailer_history MODIFY create_dt datetime NOT NULL;
 			alter table  base_order MODIFY create_dt datetime NOT NULL;
 			alter table  order_lifecycle MODIFY create_dt datetime NOT NULL;
@@ -9252,6 +9245,17 @@
 			alter table  goods_received_note MODIFY create_dt datetime NOT NULL;
 			alter table  purchase_invoice MODIFY create_dt datetime NOT NULL;
 
+	    </sql>
+	</changeSet>
+
+	<changeSet author="Rahul" id="1349852020790-501">
+	    <sql>
+		    alter table  user add column `create_dt` DATETIME;
+		    alter table  user add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+		    update user  set create_dt = create_date;
+		    update user set update_dt = update_date;
+		    update user  set create_dt = now() where create_dt is null;
+		    alter table  user MODIFY create_dt datetime NOT NULL;
 	    </sql>
 	</changeSet>
 
