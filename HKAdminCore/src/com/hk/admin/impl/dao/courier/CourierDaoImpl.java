@@ -43,6 +43,9 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
         return(List<Courier>) findByCriteria(criteria1);
 	 }
 
-
+   public List<Courier>  getAllCouriers(){
+	 DetachedCriteria criteria1 = DetachedCriteria.forClass(Courier.class);
+        return(List<Courier>) findByCriteria(criteria1);
+   }
 
 }

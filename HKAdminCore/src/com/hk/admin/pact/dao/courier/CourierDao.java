@@ -17,6 +17,8 @@ public interface CourierDao extends BaseDao {
 
    public List<Courier> getDisableCourier();
 
+	public List<Courier>  getAllCouriers();
+
 
 
 
