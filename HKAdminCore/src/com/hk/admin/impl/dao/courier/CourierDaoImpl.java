@@ -42,10 +42,4 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
         criteria1.add(Restrictions.eq("deleted", new Boolean(true)));
         return(List<Courier>) findByCriteria(criteria1);
 	 }
-
-   public List<Courier>  getAllCouriers(){
-	 DetachedCriteria criteria1 = DetachedCriteria.forClass(Courier.class);
-        return(List<Courier>) findByCriteria(criteria1);
-   }
-
 }

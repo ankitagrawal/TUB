@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.XslConstants;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
@@ -68,7 +69,7 @@ public class XslGenerator {
 	public static final String ESTIMATED_SHIPPING_COST_TECH = "ESTIMATED_SHIPPING_COST_TECH";
 
 	@Autowired
-	private CourierDao            courierDao;
+	private CourierService courierService;
 	@Autowired
 	private InventoryService      inventoryService;
 	@Autowired
@@ -362,7 +363,7 @@ public class XslGenerator {
 		setCellValue(row, 1, "ID");
 
 		int initialRowNo2 = 1;
-		List<Courier> courierList = courierDao.getAllCouriers();
+		List<Courier> courierList = courierService.getAllCouriers();
 		for (Courier courier : courierList) {
 			row = sheet2.createRow(initialRowNo2);
 			for (int columnNo = 0; columnNo < totalColumnNo2; columnNo++) {
