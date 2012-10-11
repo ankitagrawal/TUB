@@ -12,6 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hk.domain.affiliate.Affiliate;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import com.hk.constants.core.HealthkartConstants;
@@ -79,13 +80,16 @@ public class AffiliateTrackingFilter implements Filter {
             break;
           }
         }
-        // monitoring traffic for affiliate id
-        if (affiliateDao.getAffiliateByCode(affid) != null) {
-          affiliateTrafficDetailsDao.saveTrafficDetails(affiliateDao.getAffiliateByCode(affid), httpRequest.getRequestURL().toString(), httpRequest.getHeader("referer") != null ? httpRequest.getHeader("referer") : null);
-        }
       }
 
-      // for users coming first time through an affiliate
+	    Affiliate affiliate = affiliateDao.getAffiliateByCode(affid);
+
+	    // monitoring traffic for affiliate id
+	    if (affiliate != null) {
+		    affiliateTrafficDetailsDao.saveTrafficDetails(affiliate, httpRequest.getRequestURL() != null ? httpRequest.getRequestURL().toString() : "", httpRequest.getHeader("referer") != null ? httpRequest.getHeader("referer") : null);
+	    }
+
+	    // for users coming first time through an affiliate
       if (!alreadyContainsValidAffiliateCookie) {
         Cookie affiliateCookie = new Cookie(HealthkartConstants.Cookie.affiliate_id, CryptoUtil.encrypt(affid));
         affiliateCookie.setPath("/");
