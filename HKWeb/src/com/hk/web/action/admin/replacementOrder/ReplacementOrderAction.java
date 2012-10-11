@@ -42,6 +42,7 @@ public class ReplacementOrderAction extends BaseAction {
     private ShippingOrder shippingOrder;
     private Boolean isRto;
     private List<LineItem> lineItems = new ArrayList<LineItem>();
+	private List<ReplacementOrder> replacementOrderList;
 
     @Autowired
     private ShippingOrderService shippingOrderService;
@@ -137,7 +138,7 @@ public class ReplacementOrderAction extends BaseAction {
 	public Resolution checkExistingReplacementOrder(){
 		Map dataMap = new HashMap();
 		if(shippingOrderId != null){
-			List<ReplacementOrder> replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(Long.parseLong(shippingOrderId));
+			replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(Long.parseLong(shippingOrderId));
 			if(replacementOrderList.size() > 0){
 				HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Shipping order exist", dataMap);
 				noCache();
@@ -147,6 +148,14 @@ public class ReplacementOrderAction extends BaseAction {
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Shipping order does not exists", dataMap);
 		noCache();
 		return new JsonResolution(healthkartResponse);
+	}
+
+	public Resolution searchReplacementOrders(){
+		if(shippingOrderId == null){
+			return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
+		}
+		replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(Long.parseLong(shippingOrderId));
+		return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
 	}
 
     public String getShippingOrderId() {
@@ -191,5 +200,13 @@ public class ReplacementOrderAction extends BaseAction {
 
 	public void setReplacementOrder(ReplacementOrder replacementOrder) {
 		this.replacementOrder = replacementOrder;
+	}
+
+	public List<ReplacementOrder> getReplacementOrderList() {
+		return replacementOrderList;
+	}
+
+	public void setReplacementOrderList(List<ReplacementOrder> replacementOrderList) {
+		this.replacementOrderList = replacementOrderList;
 	}
 }
