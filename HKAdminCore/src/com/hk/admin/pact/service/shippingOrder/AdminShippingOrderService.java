@@ -18,7 +18,7 @@ public interface AdminShippingOrderService {
 
     public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse);
 
-    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
+//    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
 
     public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder);
 

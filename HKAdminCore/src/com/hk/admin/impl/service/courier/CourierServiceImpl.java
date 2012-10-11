@@ -1,144 +1,133 @@
 package com.hk.admin.impl.service.courier;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.constants.payment.EnumPaymentMode;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class CourierServiceImpl implements CourierService {
 
-    @Autowired
-    private PaymentService paymentService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PincodeService pincodeService;
-    @Autowired
-    private CourierDao courierDao;
-    @Autowired
-    private CourierServiceInfoDao courierServiceInfoDao;
+	@Autowired
+	private CourierDao courierDao;
+	@Autowired
+	private CourierServiceInfoDao courierServiceInfoDao;
+	@Autowired
+	private PaymentService paymentService;
 
+	@Autowired
+	private UserService userService;
 
-    @Override
-    public Courier getCourierById(Long courierId) {
-        List<Courier> courierList = getCourierDao().getCourierByIds(Arrays.asList(courierId));
-        return courierList != null && courierList.size() > 0 ? courierList.get(0) : null;
-    }
+	@Override
+	public Courier getCourierById(Long courierId) {
+		List<Courier> courierList = getCourierDao().getCourierByIds(Arrays.asList(courierId));
+		return courierList != null && courierList.size() > 0 ? courierList.get(0) : null;
+	}
 
-    @Override
-    public Courier getCourierByName(String name) {
-        return getCourierDao().getCourierByName(name);
-    }
+	@Override
+	public Courier getCourierByName(String name) {
+		return getCourierDao().getCourierByName(name);
+	}
 
-    public List<Courier> getAllCouriers() {
-        return getCourierDao().getAll(Courier.class);
-    }
+	public List<Courier> getAllCouriers() {
+		return getCourierDao().getAll(Courier.class);
+	}
 
-    public CourierServiceInfo getCourierServiceByPincodeAndCourier(Long courierId, String pincode, Boolean isCod) {
-        return getCourierServiceInfoDao().getCourierServiceByPincodeAndCourier(courierId, pincode, isCod);
-    }
+	public boolean isCodAllowed(String pin) {
+		return StringUtils.isNotBlank(pin) && getCourierServiceInfoDao().isCourierServiceInfoAvailable(null, pin, true, false, false);
+	}
 
-    // cod not available if either courier service not available there or order is exclusively service order -->
-    // changing to if any service is there
-    public boolean isCodAllowed(String pin) {
-        if (StringUtils.isNotEmpty(pin)) {
-            return getCourierServiceInfoDao().isCodAvailable(pin);
-        }
-        return false;
-    }
+	public List<Courier> getAvailableCouriers(Order order) {
+		boolean isCOD = false;
+		if (order.getPayment() == null) {
+			isCOD = false;
+		} else if (order.getPayment().getPaymentMode().equals(getPaymentService().findPaymentMode(EnumPaymentMode.COD))) {
+			isCOD = true;
+		}
+		return getCourierServiceInfoDao().searchCouriers(order.getAddress().getPin(), isCOD, false, false);
+	}
 
-    public List<Courier> getAvailableCouriers(Order order) {
+	public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping) {
+		return getCourierServiceInfoDao().searchCouriers(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping);
+	}
 
-        boolean isCOD = false;
-        if (order.getPayment() == null) {
-            isCOD = false;
-        } else if (order.getPayment().getPaymentMode().equals(getPaymentService().findPaymentMode(EnumPaymentMode.COD))) {
-            isCOD = true;
-        }
-        return getCourierServiceInfoDao().getCouriersForPincode(order.getAddress().getPin(), isCOD);
-    }
+	public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping) {
+		Warehouse warehouse = getUserService().getWarehouseForLoggedInUser();
+		return getCourierServiceInfoDao().searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
+	}
 
-    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD) {
-        return getCourierServiceInfoDao().getCouriersForPincode(pinCode, isCOD);
-    }
+	public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
+		return getCourierServiceInfoDao().searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
+	}
 
-    public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD) {
-        Warehouse warehouse = getUserService().getWarehouseForLoggedInUser();
-        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
-    }
+	public boolean isGroundShippingAllowed(String pin) {
+		return StringUtils.isNotBlank(pin) && getCourierServiceInfoDao().isCourierServiceInfoAvailable(null, pin, false, true, false);
+	}
 
-    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, Warehouse warehouse) {
-        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
-    }
+	public boolean isCodAllowedOnGroundShipping(String pin) {
+		return StringUtils.isNotBlank(pin) && getCourierServiceInfoDao().isCourierServiceInfoAvailable(null, pin, false, false, true);
+	}
 
-    public CourierDao getCourierDao() {
-        return courierDao;
-    }
+	public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+		return getCourierServiceInfoDao().getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+	}
 
-    public void setCourierDao(CourierDao courierDao) {
-        this.courierDao = courierDao;
-    }
+	public CourierServiceInfo searchCourierServiceInfo(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+		return getCourierServiceInfoDao().searchCourierServiceInfo(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+	}
 
-    public PaymentService getPaymentService() {
-        return paymentService;
-    }
+	public CourierDao getCourierDao() {
+		return courierDao;
+	}
 
-    public void setPaymentService(PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
+	public void setCourierDao(CourierDao courierDao) {
+		this.courierDao = courierDao;
+	}
 
-    public UserService getUserService() {
-        return userService;
-    }
+	public CourierServiceInfoDao getCourierServiceInfoDao() {
+		return courierServiceInfoDao;
+	}
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+	public void setCourierServiceInfoDao(CourierServiceInfoDao courierServiceInfoDao) {
+		this.courierServiceInfoDao = courierServiceInfoDao;
+	}
 
-    public CourierServiceInfoDao getCourierServiceInfoDao() {
-        return courierServiceInfoDao;
-    }
+	public PaymentService getPaymentService() {
+		return paymentService;
+	}
 
-    public void setCourierServiceInfoDao(CourierServiceInfoDao courierServiceInfoDao) {
-        this.courierServiceInfoDao = courierServiceInfoDao;
-    }
+	public void setPaymentService(PaymentService paymentService) {
+		this.paymentService = paymentService;
+	}
 
-    public PincodeService getPincodeService() {
-        return pincodeService;
-    }
+	public UserService getUserService() {
+		return userService;
+	}
 
-    public void setPincodeService(PincodeService pincodeService) {
-        this.pincodeService = pincodeService;
-    }
-
-
-	public Courier save(Courier courier){
-	 return(Courier)getCourierDao().save(courier);
+	public Courier save(Courier courier) {
+		return (Courier) getCourierDao().save(courier);
 
 	}
 
-	public List<Courier> getDisableCourier(){
+	public List<Courier> getDisableCourier() {
 		return courierDao.getDisableCourier();
 	}
 
-	 public List<Courier> getAvailableCouriers() {
-		 return courierDao.getAvailableCouriers();
-	 }
+	public List<Courier> getAvailableCouriers() {
+		return courierDao.getAvailableCouriers();
+	}
 
 }

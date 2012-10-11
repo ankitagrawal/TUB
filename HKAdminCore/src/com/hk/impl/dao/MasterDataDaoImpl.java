@@ -16,6 +16,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -318,6 +319,10 @@ private CourierGroupService courierGroupService;
 
     public List<Courier> getCourierList() {
         return courierService.getAllCouriers();
+    }
+
+     public List<Courier> getGroundShippedCourierList() {
+        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableGroundShippedCouriers()));
     }
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation(){

@@ -36,7 +36,8 @@
 					var courier =$('#courierDropDown').val();
 				var courierGroup =$('#groupDropDown').val();
 				if(	courier != ""  && courierGroup == ""){
-					alert('You are removing group of courier '+ courier);
+				var proceed = confirm('You are removing group of courier ');
+					if(!proceed)return  false;
 				}
 
 				});
@@ -101,7 +102,7 @@
 						</div>
 						<div>
 							<li><label>Courier Group </label><s:select id="groupDropDown" name="courierGroup">
-								<s:option value="">-- No Courier Assigned -- </s:option>
+								<s:option value="">-- No Group Assigned -- </s:option>
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
 								                           serviceProperty="courierGroupList" value="id" label="name"/>
 							</s:select>
