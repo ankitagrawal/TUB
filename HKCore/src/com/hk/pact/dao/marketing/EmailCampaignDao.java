@@ -18,4 +18,6 @@ public interface EmailCampaignDao extends BaseDao {
     public List<EmailCampaign> listAllMissYouCampaigns();
      
     public Date getLastDateOfEmailCampaignMailSentToEmailRecepient(EmailCampaign emailCampaign, EmailRecepient emailRecepient) ;
+
+    EmailCampaign findCampaignByName(String campaignName);
 }

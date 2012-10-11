@@ -94,6 +94,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   private EmailManager emailManager;
   EmailType emailType;
   String sheetName;
+  String mailGunCampaignId;
   Page emailCampaignPage;
   private Integer defaultPerPage = 20;
   private final int COMMIT_COUNT = 100;
@@ -293,7 +294,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     excelFile.getParentFile().mkdirs();
     fileBeanForCustomExcel.save(excelFile);
 
-    Boolean success = getAdminEmailManager().sendMailMergeCampaign(emailCampaign, excelFilePath, sheetName);
+    Boolean success = getAdminEmailManager().sendMailMergeCampaign(emailCampaign, excelFilePath, sheetName, mailGunCampaignId);
     if (success) {
       addRedirectAlertMessage(new SimpleMessage("Email sending for campaign:" + emailCampaign.getName() + "in progress...."));
     } else {
@@ -472,4 +473,12 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   public void setEmailCampaignService(AdminEmailCampaignService adminEmailCampaignService) {
     this.adminEmailCampaignService = adminEmailCampaignService;
   }
+
+    public String getMailGunCampaignId() {
+        return mailGunCampaignId;
+    }
+
+    public void setMailGunCampaignId(String mailGunCampaignId) {
+        this.mailGunCampaignId = mailGunCampaignId;
+    }
 }

@@ -11,5 +11,8 @@ import com.hk.rest.models.user.APIUser;
  * To change this template use File | Settings | File Templates.
  */
 public interface APIUserService {
-   public User getHKUser(APIUser apiUser);
+
+    public User getHKUser(APIUser apiUser);
+
+    public User getHKUser(User user);
 }

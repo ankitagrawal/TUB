@@ -7,64 +7,116 @@
   </s:layout-component>
 
   <s:layout-component name="rhsContent">
+    <style type="text/css">
+      em {
+        font-style: italic;
+      }
+      ul.niceList {
+        margin-left:2.5em;
+        padding-left:0.2em;
+        margin-bottom:1em;
+      }
+      ul.niceList li {
+        padding-left: 1.8em;
+        list-style: circle;
+      }
+      .niceList ul li {
+        list-style-type: decimal;
+      }
+    </style>
     <div class="grid_18">
-
-
-      <p style="text-align: justify">
-
-        Should you wish to return all or a part of your order, you need to let us know within 3 working days from the
-        date of receiving your parcel. You can either call our Customer Support No. 0124-4551616 between 9am and 9pm,
-        On all 7 DAYS or write to us info@healthkart.com.
-
-        After validating your return request over phone we will send you an email authorizing a return. The mail will
-        have a link that gives you access to the return shipping address label. You may simply print, fill with accurate
-        information, paste the shipping address label on the package and courier it back to us. Please bear in mind that
-        we should receive the return package within 10 days of us sending the authorizing email.
-
-        Post receipt of the return package, we will proceed to inspect the same. Once approved as an eligible return, we
-        will issue your refund or merchandise credit in the appropriate amount. If however the return is found not
-        eligible for refund, we will courier the same back to you. In either scenario your return issue will be closed
-        within 7 days of our receiving of the return package from you.
-
-        Please Note: Healthkart will make refund cheques only in the registered name of the customer.(In case of COD or
-        Bank Deposit)
-      </p>
+      <h4>14 Day Return Policy</h4>
 
       <p>
-        We will keep you updated on the status of your return at each step:<br/>
+        We offer you complete peace of mind while ordering at HealthKart - you can return all items within 14 days of receipt of goods.
+      </p>
 
-        1. When we validate your return, we send you a return authorization mail <br/>
-        2. At the closure of your refund, we send you a closure mail <br/>
-        3. The refund process will be initiated once we have received the product(s). Typically refunds are processed in
-        less than 10 working days but in case of payments by Cheque or DD, it may take a few extra days for the cheque
-        to be delivered to your billing address, and for the funds to be credited to your account, once you deposit the
-        cheque.
-      <ul style="list-style:circle">
-        <li> Please note that the product should be unused and should be sent back along with original box and invoice
-             to: 4th Floor, Parsvnath Arcadia, 1, MG Road (Opposite to Motorola) Sector-14 Gurgaon - 122001.
+      <h4>Defective Items:</h4>
+
+      <p>
+        If an item is found defective, please get in touch with our customer care on info@healthkart.com or call us on
+        0124-4551616 within 14 days of receipt of the product. When we receive the item, we will inspect it to ensure
+        everything is present and is in its original condition and then issue either a full refund, Healthkart Cash
+        (store credit) or a different item in exchange, as per your request.
+      </p>
+
+      <p><em>Please note that replacements are subject to availability of the particular product.</em></p>
+
+      <h4>
+        Returns:
+      </h4>
+
+      <p>
+        If you are not satisfied with the product or your purchase, you may return the items back to HealthKart within
+        14 days of receipt of your products. You will be refunded the purchase amount and the return
+        shipping charges in the form of Healthkart Cashback
+      </p>
+
+      <ul class="niceList">
+        <li>
+          All items returned must be unused and in their original condition with all original tags or boxes and packaging intact
         </li>
-        <li>For goods bought through special offers, the refund will be store credit or cheque, and subject to terms and
-            conditions of the prevailing offer.
+        <li>
+          To coordinate a return, send a picture of the item(s) to info@healthkart.com with the email title “Return” or call 0124-4551616
+          within 14 days of the receipt of the product to ensure return eligibility of the product. Please bear in mind that we should
+          receive the return package within 10 days of us sending the authorizing email
         </li>
-        <li>For goods bought without special offers, we will refund the money the way the payment was made. If the
-            payment was by Credit Card or Net-Banking, we will refund the Credit Card or Net-Banking account. If the
-            payment mode was Cheque or DD, we will send you a cheque (not a DD). Cheques will be sent only to the
-            billing address of the customer.
+        <li>
+          Once eligibility is verified, please pack the item(s) securely and ship to following address:
+          <p>
+            Aquamarine Healthcare Pvt Ltd<br/>
+            T-01 MG Road, Parsvnath Arcadia, 2nd Floor<br/>
+            Sector 14, Opp Motorola Bldg,<br/>
+            Gurgaon, Haryana – 122001
+          </p>
+        </li>
+        <li>Once your return package is received by us, you will be reimbursed a cash back equivalent to Rs 100 
+          (for shipping) (in the form of Healthkart Cashback-store credit) + Purchase Amount in your HealthKart account,
+          which could be redeemed towards future purchases. This is subject to your return having met the requirements of
+          being unused and returned within 14 days of receipt of the particular order by the customer</li>
+        <li>
+          If however the return is found not eligible for refund, we will courier the same back to you. In either
+          scenario your return issue will be closed within 7 days of our receiving of the return package from you 
+          <p><em>Please Note (In case of COD or Bank Deposit): Healthkart will make refund cheques only in the registered name of the customer</em></p>
         </li>
       </ul>
-      <p>
-        Return shipping charges will be refunded to your healthkart account.Maximum of xx/- kg
 
-        You may cancel an order within 24 hours of your purchase. You can cancel your order by writing to us at
-        info@healthkart.com. The cancellation will be effective within 24 hours and a confirmation email will be sent
-        immediately.
+      <h5>Following is the specific return policy for various product categories :</h5>
 
-        As part of usual business practice, if we receive a cancellation notice and the order has not been packaged /
-        shipped by us, we shall cancel the order . We will not be able to cancel orders that have already been processed
-        and shipped out by us.
+      <ul class="niceList">
+        <li><strong>Nutrition</strong>: Products should be received in original packaging and sealed condition. Opened or used boxes will not be 
+          accepted as returns. For issues like rashes, stomach upset, headache, flavor like/dislike, flavor difference from one brand
+          to other etc. products would not be applicable for return. Please consult with the doctor before buying the product</li>
+        <li>
+          <strong>Sports & Fitness</strong>: Return policy applicable only in case of issues with size of Apparel and Shoes etc.
+        </li>
+        <li><strong>Diabetes</strong>: Products in this category are NOT eligible for returns</li>
+        <li><strong>Beauty</strong>: Returns will be considered for change of color requests</li>
+        <li><strong>Home Devices</strong>: Products in this category are NOT eligible for returns</li>
+        <li><strong>Eye</strong>: If contact lenses are returned, they have to be returned in sealed boxes;
+          opened or used lenses will not be accepted as returns. Lens solutions, lens cases are NOT eligible for returns</li>
+        <li>
+          <strong>Personal Care</strong>: Adult Diapers, Women hygiene products (sanitary napkins, tampons, panty liners),
+           Condoms, Ovulation Kits, Toothbrushes, Toothpastes etc. are NOT eligible for returns
+        </li>
+        <li><strong>Parenting</strong>: Ovulation Kits and Diapers are NOT eligible for returns</li>
+        <li><strong>Services</strong>: Products in this category are NOT eligible for returns</li>
+      </ul>
 
-        Healthkart will not be liable for any damages in transit when its sent by the customer.
-      </p>
+      <h5>Following shall not be eligible for return or replacement :</h5>
+
+      <ul class="niceList">
+        <li>Damages due to misuse of product</li>
+        <li>Incidental damage due to malfunctioning of product</li>
+        <li>Any consumable item which has been used or installed</li>
+        <li>Products with tampered or missing serial / UPC numbers</li>
+        <li>Any damage / defect which are not covered under the manufacturer's warranty</li>
+        <li>Any product that is returned without all original packaging and accessories, including the box,
+          manufacturer's packaging if any, and all other items originally included with the product(s) delivered</li>
+        <li>Some special rules for promotional offers may override "Healthkart.com's 14 Day Returns Policy"</li>
+      </ul>
+
+      <p>In case of any queries, please write to our customer care on info@healthkart.com or call us on 0124-4551616</p>
 
     </div>
 
