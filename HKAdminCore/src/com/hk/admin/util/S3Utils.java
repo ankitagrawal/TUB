@@ -28,25 +28,30 @@ import com.hk.util.HKFileUtils;
 public class S3Utils {
     private static Logger logger = LoggerFactory.getLogger(S3Utils.class);
 
-    private static S3Service initializeConnectionParams(String awsAccess, String awsSecret, String bucketName) {
-        try {
-            AWSCredentials awsCredentials = new AWSCredentials(awsAccess, awsSecret);
-            S3Service s3Service = new RestS3Service(awsCredentials);
-            S3Bucket s3Bucket = s3Service.getBucket(bucketName);
-            //if the bucket already exists, we won't set its access control everytime.
-            if (s3Bucket == null) {
-                s3Bucket = s3Service.createBucket(bucketName);
-                AccessControlList bucketAcl = s3Service.getBucketAcl(s3Bucket);
-                bucketAcl.grantPermission(GroupGrantee.ALL_USERS, Permission.PERMISSION_READ);
-                s3Bucket.setAcl(bucketAcl);
-                s3Service.putBucketAcl(s3Bucket);
-            }
-            return s3Service;
-        } catch (ServiceException se) {
-            logger.error("error in uplaoding data on s3: " + se);
-        }
-        return null;
-    }
+	public static S3Service s3Service = null;
+
+	private static S3Service initializeConnectionParams(String awsAccess, String awsSecret, String bucketName) {
+		try {
+			if (s3Service == null) {
+				AWSCredentials awsCredentials = new AWSCredentials(awsAccess, awsSecret);
+				s3Service = new RestS3Service(awsCredentials);
+				S3Bucket s3Bucket = s3Service.getBucket(bucketName);
+				//if the bucket already exists, we won't set its access control everytime.
+				if (s3Bucket == null) {
+					s3Bucket = s3Service.createBucket(bucketName);
+					AccessControlList bucketAcl = s3Service.getBucketAcl(s3Bucket);
+					bucketAcl.grantPermission(GroupGrantee.ALL_USERS, Permission.PERMISSION_READ);
+					s3Bucket.setAcl(bucketAcl);
+					s3Service.putBucketAcl(s3Bucket);
+				}
+			}
+			return s3Service;
+
+		} catch (ServiceException se) {
+			logger.error("error in uplaoding data on s3: " + se);
+		}
+		return null;
+	}
 
     /**
      * The method uploads the data to S3 and gives it public read access
