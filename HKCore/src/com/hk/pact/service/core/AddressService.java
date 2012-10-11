@@ -1,7 +1,11 @@
 package com.hk.pact.service.core;
 
+import com.akube.framework.dao.Page;
 import com.hk.domain.user.Address;
+import com.hk.domain.user.User;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,4 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface AddressService {
     @Transactional
     Address save(Address address);
+
+    List<Address> getVisibleAddresses(User user);
+
+    Page getVisibleAddressesForManufacturer(Long manufacturerId, String city, int pageNo, int perPage);
 }

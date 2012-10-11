@@ -37,6 +37,9 @@ public class UserOrderResource {
     @Autowired
     private UserDetailService userDetailService;
 
+    /**
+     * internal class just for helping with JSON Marshalling
+     */
     class OrderDetail{
         public Long id;
         public String status;

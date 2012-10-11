@@ -1,5 +1,6 @@
 package com.hk.impl.service.core;
 
+import com.akube.framework.dao.Page;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
@@ -11,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,5 +46,13 @@ public class AddressServiceImpl implements AddressService {
             logger.error("Unable to save user information in UserDetail table ", ex);
         }
         return addressRec;
+    }
+
+    public List<Address> getVisibleAddresses(User user) {
+        return addressDao.getVisibleAddresses(user);
+    }
+
+    public Page getVisibleAddressesForManufacturer(Long manufacturerId, String city, int pageNo, int perPage) {
+        return addressDao.getVisibleAddressesForManufacturer(manufacturerId, city, pageNo, perPage);
     }
 }
