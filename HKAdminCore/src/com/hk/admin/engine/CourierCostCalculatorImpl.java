@@ -76,7 +76,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
     @SuppressWarnings("unchecked")
     public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight) {
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
-        applicableCourierList = courierServiceInfoDao.searchCouriers(pincode, cod , false , false);
+        applicableCourierList = courierServiceInfoDao.searchCouriers(pincode, cod , false , false, true);
         Double totalCost = 0D;
         List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneDao.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
 

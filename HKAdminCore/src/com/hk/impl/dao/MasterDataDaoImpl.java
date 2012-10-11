@@ -321,9 +321,9 @@ private CourierGroupService courierGroupService;
         return courierService.getAllCouriers();
     }
 
-     public List<Courier> getGroundShippedCourierList() {
-        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableGroundShippedCouriers()));
-    }
+//     public List<Courier> getGroundShippedCourierList() {
+//        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableGroundShippedCouriers()));
+//    }
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation(){
         return EnumShippingOrderStatus.getStatusForReconcilationReport();
