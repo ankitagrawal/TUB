@@ -1,6 +1,7 @@
 package com.hk.manager;
 
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
@@ -55,7 +56,7 @@ public class SMSManager {
 
 	    Order order = shippingOrder.getBaseOrder();
 	    Address address = order.getAddress();
-	    if (order.getOrderStatus().getId().equals(EnumOrderStatus.Shipped.getId())) {
+	    if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
 		    if (order.isCOD()) {
 			    return smsService.sendSMSUsingTemplate(address.getPhone(), SMSTemplateConstants.codOrderShippedSMS, valuesMap);
 		    } else {
@@ -71,13 +72,12 @@ public class SMSManager {
 	    }
     }
 
-    public boolean sendOrderDeliveredSMS(ShippingOrder shippingOrder) {
+    public boolean sendOrderDeliveredSMS(Order order) {
         HashMap valuesMap = new HashMap();
-        valuesMap.put("shippingOrder", shippingOrder);
-        valuesMap.put("shipment", shippingOrder.getShipment());
+        valuesMap.put("order", order);
 
-        if (shippingOrder.getBaseOrder().getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())) {
-            return smsService.sendSMSUsingTemplate(shippingOrder.getBaseOrder().getAddress().getPhone(), SMSTemplateConstants.orderDeliveredSMS, valuesMap);
+        if (order.getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())) {
+            return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.orderDeliveredSMS, valuesMap);
         }
 	    return false;
     }
