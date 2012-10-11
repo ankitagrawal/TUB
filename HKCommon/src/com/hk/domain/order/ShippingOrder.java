@@ -1,28 +1,5 @@
 package com.hk.domain.order;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
-import org.hibernate.annotations.Where;
-
 import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.accounting.AccountingInvoice;
@@ -31,6 +8,12 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
+import org.hibernate.annotations.Where;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @SuppressWarnings("serial")
 @Entity
@@ -51,11 +34,11 @@ public class ShippingOrder implements java.io.Serializable {
     private Double                      amount;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", nullable = false, length = 19)
-    private Date                        createDate;
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date                        createDate = new Date();
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_date", nullable = false, length = 19)
+    @Column(name = "update_dt", nullable = false, length = 19)
     private Date                        updateDate;
 
     @Column(name = "gateway_order_id", length = 30)
@@ -153,11 +136,11 @@ public class ShippingOrder implements java.io.Serializable {
     public Date getUpdateDate() {
         return updateDate;
     }
-
+    /*
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
-
+*/
     public String getGatewayOrderId() {
         return gatewayOrderId;
     }
@@ -284,8 +267,6 @@ public class ShippingOrder implements java.io.Serializable {
     public String toString() {
         return id != null ? id.toString() : "";
     }
-
-    
 
     public Date getLastEscDate() {
         return lastEscDate;
