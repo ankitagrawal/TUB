@@ -44,14 +44,14 @@
 						<td>${replacementOrder.gatewayOrderId}</td>
 						<td>
 							<%--${replacementOrder.rto}--%>
-							<%--<c:choose>
-								<c:when test="${replacementOrder.rto ==1}" >
+							<c:choose>
+								<c:when test="${replacementOrder.rto}" >
 									Yes
 								</c:when>
 								<c:otherwise>
 									No
 								</c:otherwise>
-							</c:choose>--%>
+							</c:choose>
 						</td>
 						<td>
 							<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" target="_blank" event="searchShippingOrder">
