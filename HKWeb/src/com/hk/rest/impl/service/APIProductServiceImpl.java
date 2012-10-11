@@ -242,7 +242,7 @@ public class APIProductServiceImpl implements APIProductService {
 			printWriter.write("ProductID || CATEGORY" + lineSeparator);
 			int counter = 0;
 			for (Product product : nonDeletedProducts) {
-				if (product.getMainImageId() != null && product.getId().compareTo("BCKSUP001") > 0) {
+				if (product.getMainImageId() != null) {
 					File imageFile = new File(getImageFilePath());
 					S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, product.getMainImageId()), hkReadBucket, imageFile);
 					try {
