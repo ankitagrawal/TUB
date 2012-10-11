@@ -74,6 +74,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     @Autowired
     FedExCourier fedExCourier;
     @Autowired
+    DeleteFedExShipment deleteFedExShipment;
+    @Autowired
     CourierServiceInfoDao courierServiceInfoDao;
 
     private String trackingId;
@@ -186,13 +188,14 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
             if ((suggestedAwb != null) && (suggestedCourier != null) && (suggestedCourier.getId().equals(EnumCourier.FedEx.getId()))) {
                 //delete FedEx tracking no. generated previously
-                Boolean result = new DeleteFedExShipment().deleteShipment(suggestedAwb.getAwbNumber());
+                Boolean result = deleteFedExShipment.deleteShipment(suggestedAwb.getAwbNumber());
             }
-            //if((suggestedAwb == null)
+            
             if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())) {
                 Double weightInKg = shipment.getBoxWeight();
-                FedExCourier fedExCourier = new FedExCourier();
-                String trackingNumber = fedExCourier.newFedExShipment(shippingOrder, weightInKg);
+                List<String> barcodeList = new ArrayList<String>();
+                List<String> routingCode = new ArrayList<String>();
+                String trackingNumber = fedExCourier.newFedExShipment(shippingOrder, weightInKg, barcodeList, routingCode);
                 if (trackingNumber == null) {
                     addRedirectAlertMessage(new SimpleMessage(" FedEx tracking number could not be generated"));
                     return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
@@ -203,27 +206,27 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     finalAwb = fedExNumber;
                     finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
 
-                    String routingCode = fedExCourier.getRoutingCode();
+                    //String routingCode = fedExCourier.getRoutingCode();
                     String pincode = shippingOrder.getBaseOrder().getAddress().getPin();
                     CourierServiceInfo courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(EnumCourier.FedEx.getId(), pincode, true, false, false);
                     if (courierServiceInfo == null){
                        courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(EnumCourier.FedEx.getId(), pincode, false, false, false);
                     }
                     if (courierServiceInfo != null) {
-                      if (routingCode != null){
-                        courierServiceInfo.setRoutingCode(routingCode);
+                      if (routingCode.get(0) != null){
+                        courierServiceInfo.setRoutingCode(routingCode.get(0));
                         courierServiceInfoDao.save(courierServiceInfo);
                       }    
                     }
 
-                    String forwardBarCode = fedExCourier.getBarCodeList().get(0);
+                    String forwardBarCode = barcodeList.get(0);
                     fedExNumber.setAwbBarCode(forwardBarCode);
 
 
                     if (shippingOrder.isCOD()) {
-                        String CODReturnBarCode = fedExCourier.getBarCodeList().get(1);
+                        String CODReturnBarCode = barcodeList.get(1);
                         fedExNumber.setReturnAwbBarCode(CODReturnBarCode);
-                        String returnAwb = fedExCourier.getBarCodeList().get(2);
+                        String returnAwb = barcodeList.get(2);
                         fedExNumber.setReturnAwbNumber(returnAwb);
                         
                     }

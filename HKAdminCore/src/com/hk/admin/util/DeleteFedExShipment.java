@@ -1,8 +1,11 @@
 package com.hk.admin.util;
 
 import com.fedex.ship.stub.*;
+import com.hk.constants.core.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * Sample code to call the FedEx Delete Shipment Web Service
@@ -14,9 +17,26 @@ import org.slf4j.LoggerFactory;
  *
  * This sample code has been tested with JDK 5 and Apache Axis 1.4
  */
+@Component
 public class DeleteFedExShipment {
 
     private static Logger logger = LoggerFactory.getLogger(DeleteFedExShipment.class);
+
+     @Value("#{hkEnvProps['" + Keys.Env.fedExAuthKey + "']}")
+    private   String        fedExAuthKey;
+
+    @Value("#{hkEnvProps['" + Keys.Env.fedExAccountNo + "']}")
+    private  String        fedExAccountNo;
+
+    @Value("#{hkEnvProps['" + Keys.Env.fedExMeterNo + "']}")
+    private  String        fedExMeterNo;
+
+    @Value("#{hkEnvProps['" + Keys.Env.fedExPassword + "']}")
+    private  String        fedExPassword;
+
+    @Value("#{hkEnvProps['" + Keys.Env.fedExServerUrl + "']}")
+    private  String        fedExServerUrl;
+
     public DeleteFedExShipment(){
 
     }
@@ -86,7 +106,7 @@ public class DeleteFedExShipment {
 	}
 
 
-	private static ClientDetail createClientDetail() {
+	private ClientDetail createClientDetail() {
         ClientDetail clientDetail = new ClientDetail();
         String accountNumber = System.getProperty("accountNumber");
         String meterNumber = System.getProperty("meterNumber");
@@ -96,17 +116,17 @@ public class DeleteFedExShipment {
         // if set use those values, otherwise default them to "XXX"
         //
         if (accountNumber == null) {
-        	accountNumber = "510087020"; // Replace "XXX" with clients account number
+        	accountNumber = fedExAccountNo; //"510087020"; // Replace "XXX" with clients account number
         }
         if (meterNumber == null) {
-        	meterNumber = "100073086"; // Replace "XXX" with clients meter number
+        	meterNumber = fedExMeterNo; //"100073086"; // Replace "XXX" with clients meter number
         }
         clientDetail.setAccountNumber(accountNumber);
         clientDetail.setMeterNumber(meterNumber);
         return clientDetail;
 	}
 
-	private static WebAuthenticationDetail createWebAuthenticationDetail() {
+	private  WebAuthenticationDetail createWebAuthenticationDetail() {
         WebAuthenticationCredential wac = new WebAuthenticationCredential();
         String key = System.getProperty("key");
         String password = System.getProperty("password");
@@ -116,10 +136,10 @@ public class DeleteFedExShipment {
         // if set use those values, otherwise default them to "XXX"
         //
         if (key == null) {
-        	key = "j2wHG2Wru7j4cKWJ"; // Replace "XXX" with clients key
+        	key = fedExAuthKey; //"j2wHG2Wru7j4cKWJ"; // Replace "XXX" with clients key
         }
         if (password == null) {
-        	password = "6KGHIwA4iLtnHKXMQNbQ3vOBs"; // Replace "XXX" with clients password
+        	password = fedExPassword; //"6KGHIwA4iLtnHKXMQNbQ3vOBs"; // Replace "XXX" with clients password
         }
         wac.setKey(key);
         wac.setPassword(password);
@@ -149,8 +169,8 @@ public class DeleteFedExShipment {
 		}
 	}
 
-	private static void updateEndPoint(ShipServiceLocator serviceLocator) {
-		String endPoint = System.getProperty("endPoint");
+	private  void updateEndPoint(ShipServiceLocator serviceLocator) {
+		String endPoint = fedExServerUrl; //System.getProperty("endPoint");
 		if (endPoint != null) {
 			serviceLocator.setShipServicePortEndpointAddress(endPoint);
 		}
