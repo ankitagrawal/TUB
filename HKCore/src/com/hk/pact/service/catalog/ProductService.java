@@ -115,4 +115,6 @@ public interface ProductService {
 
 
     boolean isComboInStock(String comboId);
+
+    boolean isCombo(String comboId);
 }

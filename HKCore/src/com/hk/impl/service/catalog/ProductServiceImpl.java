@@ -251,7 +251,7 @@ public class ProductServiceImpl implements ProductService {
         return getComboDao().getCombos(product);
     }
 
-    private boolean isCombo(String comboId){
+    public boolean isCombo(String comboId){
         try{
             Combo combo = comboDao.getComboById(comboId);
             if (combo != null){
