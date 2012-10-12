@@ -9280,6 +9280,14 @@
 	<changeSet author="Rahul (generated)" id="1349852020790-65">
 	    <dropColumn columnName="create_date" tableName="user_cart"/>
 	</changeSet>
-
-
+    <changeSet author="Neha (generated)" id="1350020589676-1">
+        <addColumn tableName="awb">
+            <column name="returnAwb_bar_code" type="VARCHAR(70)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1350020589676-2">
+        <addColumn tableName="awb">
+            <column name="returnAwb_number" type="VARCHAR(70)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
