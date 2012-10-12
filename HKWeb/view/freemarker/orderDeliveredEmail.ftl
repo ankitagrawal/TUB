@@ -107,9 +107,14 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 										<td></td>
 										<td></td>
 										<td></td>
+										<td></td>
 										<td><strong>Very likely</strong></td>
 									</tr>
 									<tr>
+										<td>
+											<a href="${feedbackPage}?recommendToFriends=0&baseOrderId=${order}">
+												<input type="radio" name="recommendToFriends" value="0"/></a> 0
+										</td>
 										<td>
 											<a href="${feedbackPage}?recommendToFriends=1&baseOrderId=${order}">
 												<input type="radio" name="recommendToFriends" value="1"/></a> 1

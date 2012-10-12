@@ -6,11 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -95,6 +91,7 @@ public class GRNAction extends BasePaginatedAction {
     Long grnStatusValue;
     private List<GoodsReceivedNote> grnList = new ArrayList<GoodsReceivedNote>();
     private List<GoodsReceivedNote> grnListForPurchaseInvoice = new ArrayList<GoodsReceivedNote>();
+	private Map<Sku,Boolean> skuIsNew = new HashMap<Sku,Boolean>();
     private GoodsReceivedNote grn;
     private List<GrnLineItem> grnLineItems = new ArrayList<GrnLineItem>();
     private Date startDate;
@@ -155,8 +152,13 @@ public class GRNAction extends BasePaginatedAction {
     public Resolution view() {
         if (grn != null) {
             logger.debug("grn@view: " + grn.getId());
-            grnDto = grnManager.generateGRNDto(grn);
-            // grnLineItems = grn.getGrnLineItems();
+            grnDto = grnManager.generateGRNDto(grn);	   
+	        for(GrnLineItem grnlineitem : grn.getGrnLineItems()){
+		     List<GrnLineItem> grnLineItemsList = grnLineItemDao.getAllGrnLineItemBySku(grnlineitem.getSku());
+		     if(grnLineItemsList != null && grnLineItemsList.size() == 1){
+			  skuIsNew.put(grnlineitem.getSku(),true);
+		     }
+	        }
         }
         return new ForwardResolution("/pages/admin/grn.jsp");
     }
@@ -602,4 +604,11 @@ public class GRNAction extends BasePaginatedAction {
         this.skuService = skuService;
     }
 
+	public Map<Sku, Boolean> getSkuIsNew() {
+		return skuIsNew;
+	}
+
+	public void setSkuIsNew(Map<Sku, Boolean> skuIsNew) {
+		this.skuIsNew = skuIsNew;
+	}
 }
