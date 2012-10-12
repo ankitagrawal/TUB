@@ -353,6 +353,7 @@ public class FedExCourierUtil {
         return weight;
     }
 
+    @SuppressWarnings("unused")
     private static Dimensions addPackageDimensions(Integer length, Integer height, Integer width, LinearUnits linearUnits) {
         Dimensions dimensions = new Dimensions();
         dimensions.setLength(new NonNegativeInteger(length.toString()));

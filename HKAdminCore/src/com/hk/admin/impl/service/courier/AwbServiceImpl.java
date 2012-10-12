@@ -46,7 +46,7 @@ public class AwbServiceImpl implements AwbService {
         Long courierId = courier.getId();
 
         ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
-        ThirdPartyAwbDetails thirdPartyAwbDetails = thirdPartyAwbService.getThirdPartyCourierTrackingDetails(shippingOrder, weightInKg);
+        ThirdPartyAwbDetails thirdPartyAwbDetails = thirdPartyAwbService.getThirdPartyAwbDetails(shippingOrder, weightInKg);
 
         Awb hkAwb = createAwb(courier, thirdPartyAwbDetails.getTrackingNumber(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
         hkAwb = thirdPartyAwbService.syncHKAwbWithThirdPartyAwb(hkAwb, thirdPartyAwbDetails);

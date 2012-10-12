@@ -39,7 +39,7 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
     private CourierServiceInfoDao courierServiceInfoDao;
 
     @Override
-    public ThirdPartyAwbDetails getThirdPartyCourierTrackingDetails(ShippingOrder shippingOrder, Double weightInKg) {
+    public ThirdPartyAwbDetails getThirdPartyAwbDetails(ShippingOrder shippingOrder, Double weightInKg) {
         FedExCourierUtil fedExCourierUtil = new FedExCourierUtil(fedExAuthKey, fedExAccountNo, fedExMeterNo, fedExPassword, fedExServerUrl);
         return fedExCourierUtil.newFedExShipment(shippingOrder, weightInKg);
     }

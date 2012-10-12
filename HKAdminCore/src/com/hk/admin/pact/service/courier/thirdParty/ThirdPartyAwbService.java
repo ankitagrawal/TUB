@@ -17,8 +17,13 @@ public interface ThirdPartyAwbService {
     
     public List<Long> integratedCouriers = Arrays.asList(new Long[]{EnumCourier.FedEx.getId()});  
     
-    
-    public ThirdPartyAwbDetails getThirdPartyCourierTrackingDetails(ShippingOrder shippingOrder,Double weightInKg );
+    /**
+     * Would like to call it in async fashion 
+     * @param shippingOrder
+     * @param weightInKg
+     * @return
+     */
+    public ThirdPartyAwbDetails getThirdPartyAwbDetails(ShippingOrder shippingOrder,Double weightInKg );
     
     public Awb syncHKAwbWithThirdPartyAwb(Awb hkAwb, ThirdPartyAwbDetails thirdPartyAwbDetails);
     
