@@ -37,8 +37,9 @@ public class Category implements java.io.Serializable {
   @Column(name = "display_name", length = 100)
   private String displayName;
 
-  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
-  private List<Product> products = new ArrayList<Product>(0);
+    @JsonSkip
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
+    private List<Product> products = new ArrayList<Product>(0);
 
   @JsonSkip
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")

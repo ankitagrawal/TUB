@@ -2,32 +2,16 @@ package com.hk.domain.inventory;
 // Generated Dec 15, 2011 3:32:41 PM by Hibernate Tools 3.2.4.CR1
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @SuppressWarnings("serial")
@@ -87,6 +71,10 @@ public class GoodsReceivedNote implements java.io.Serializable {
             inverseJoinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)}
     )
     private List<PurchaseInvoice> purchaseInvoices = new ArrayList<PurchaseInvoice>();
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_dt", nullable = false)
+	private Date createDate = new Date();
 
     @Transient
     private boolean selected;
@@ -233,6 +221,14 @@ public class GoodsReceivedNote implements java.io.Serializable {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 }
 
 

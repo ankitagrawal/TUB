@@ -29,6 +29,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -44,6 +45,8 @@ public class MasterPincodeAction extends BaseAction {
     PincodeDao                       pincodeDao;
     @Autowired
     CourierServiceInfoDao            courierServiceInfoDao;
+    @Autowired
+    CourierService                   courierService;
     @Autowired
     XslGenerator                     xslGenerator;
 
@@ -79,8 +82,7 @@ public class MasterPincodeAction extends BaseAction {
         try {
             pincode = pincodeDao.getByPincode(pincodeString);
             if (pincode != null) {
-
-                courierServiceList = courierServiceInfoDao.getCourierServicesForPinCode(pincodeString);
+                courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false);
                 return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
             }
             // return new RedirectResolution(MasterPincodeAction.class).addParameter("pincode", pincode.getId());
@@ -195,5 +197,13 @@ public class MasterPincodeAction extends BaseAction {
 
     public void setFileBean(FileBean fileBean) {
         this.fileBean = fileBean;
+    }
+
+    public CourierService getCourierService() {
+        return courierService;
+    }
+
+    public void setCourierService(CourierService courierService) {
+        this.courierService = courierService;
     }
 }

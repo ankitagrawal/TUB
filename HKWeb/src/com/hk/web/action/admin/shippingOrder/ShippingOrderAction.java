@@ -85,26 +85,23 @@ public class ShippingOrderAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution manualEscalateShippingOrder() {
-	    /**
-	     * currently because inventory count and order count issues are there so allowing inv check override
-	     */
-	    //TODO: add check for drop ship items.
 		boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
 		String message = "";
 		if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
-		//if (isManualEscalable) {
-			message = "shipping order manually escalated";
-			shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
+			if (isManualEscalable) {
+				message = "shipping order manually escalated";
+				shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
 
-		} else {
-			message = "Shipping order cant be escalated";
+			} else {
+				message = "Shipping order cant be escalated";
+			}
 		}
-
 		Map<String, Object> data = new HashMap<String, Object>(1);
 		data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, data);
 		return new JsonResolution(healthkartResponse);
 	}
+
 
 	@JsonHandler
 	public Resolution delieverDropShippingOrder() {

@@ -147,20 +147,12 @@
     </ul>
   </div>
   <div class='grid_6'>
-    <c:choose>
-      <c:when test="${categoryBean.category.name == 'nutrition' || categoryBean.category.name == 'sports'}">
-        <a href="${pageContext.request.contextPath}/pages/sheruClassic.jsp"><img src="<hk:vhostImage/>/images/banners/sheru_classic_small.jpg" alt="Sheru Classic 2012"
-             class="small_banner"/></a>
-      </c:when>
-      <c:otherwise>
-        <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
-          <img src="<hk:vhostImage/>/images/banners/refer_earn_new.jpg" alt="refer a friend and earn"
-               class="small_banner"/>
-        </s:link>
-        <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="cash on delivery"
-             class="small_banner"/>
-      </c:otherwise>
-    </c:choose>
+    <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+      <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+           class="small_banner"/>
+    </a>
+    <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="Free shipping and COD"
+         class="small_banner"/>
   </div>
 
 </s:layout-component>

@@ -121,8 +121,8 @@ public class OrderManager {
 	private KarmaProfileService karmaProfileService;
 	@Autowired
 	private SubscriptionService subscriptionService;
-//	@Autowired
-//	private SMSManager smsManager;
+	@Autowired
+	private SMSManager smsManager;
 
 	@Autowired
 	private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
@@ -413,7 +413,7 @@ public class OrderManager {
 			// Send mail to Customer
 			getPaymentService().sendPaymentEmailForOrder(order);
 			sendReferralProgramEmail(order.getUser());
-//			getSmsManager().sendOrderPlacedSMS(order);
+			getSmsManager().sendOrderPlacedSMS(order);
 		}
 		return order;
 	}
@@ -713,6 +713,23 @@ public class OrderManager {
 
 		return margin;
 	}
+     	
+     public void setGroundShippedItemQuantity(Order order) {
+         Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+         for (CartLineItem cartLineItem : cartLineItems) {
+             if (cartLineItem.getProductVariant().getProduct().getGroundShipping()) {
+                 cartLineItem.setQty(0L);
+             }
+         }
+         /*
+         if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
+            for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
+                CartLineItem lineItem = iterator.next();
+                if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId()) || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
+                }
+            }
+        }*/
+    }
 
 	public CartLineItemService getCartLineItemService() {
 		return cartLineItemService;
@@ -890,11 +907,11 @@ public class OrderManager {
 		this.subscriptionService = subscriptionService;
 	}
 
-/*	public SMSManager getSmsManager() {
+	public SMSManager getSmsManager() {
 		return smsManager;
 	}
 
 	public void setSmsManager(SMSManager smsManager) {
 		this.smsManager = smsManager;
-	}*/
+	}
 }
