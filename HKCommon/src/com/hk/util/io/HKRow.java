@@ -1,13 +1,14 @@
 package com.hk.util.io;
 
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @author vaibhav.adlakha
  */
 public class HKRow {
     private int                  lineNo;
-    private Map<String, Integer> headerPositions;
+    private Map<String, Integer> headerPositions ;
     public String[]              columnValues;
 
     public HKRow(int lineNo, String[] columnValues) {
@@ -56,6 +57,8 @@ public class HKRow {
             }
 
         }
+        
+        
         if (columnIndex == null) {
             return null;
         }
