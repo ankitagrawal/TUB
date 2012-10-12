@@ -2,15 +2,6 @@ package com.hk.domain.order;
 
 // Generated 25 Mar, 2011 11:57:39 AM by Hibernate Tools 3.2.4.CR1
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.*;
-
 import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.clm.CLMConstants;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -26,6 +17,9 @@ import com.hk.domain.store.Store;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+
+import javax.persistence.*;
+import java.util.*;
 
 @SuppressWarnings("serial")
 @Entity
@@ -69,13 +63,13 @@ public class Order implements java.io.Serializable {
 
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", nullable = false, length = 19)
-    private Date                      createDate;
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date                      createDate = new Date();
 
-    @JsonSkip
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_date", nullable = false, length = 19)
-    private Date                      updateDate;
+    /*
+     * @JsonSkip @Temporal(TemporalType.TIMESTAMP) @Column(name = "update_date", nullable = false, length = 19) private
+     * Date updateDate;
+     */
 
     @Column(name = "gateway_order_id", length = 30)
     private String                    gatewayOrderId;
@@ -88,19 +82,19 @@ public class Order implements java.io.Serializable {
      */
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private Set<OrderCategory>        categories      = new HashSet<OrderCategory>();
+    private Set<OrderCategory>        categories        = new HashSet<OrderCategory>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private Set<CartLineItem>         cartLineItems   = new HashSet<CartLineItem>();
+    private Set<CartLineItem>         cartLineItems     = new HashSet<CartLineItem>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseOrder")
-    private Set<Subscription>         subscriptions   = new HashSet<Subscription>();
+    private Set<Subscription>         subscriptions     = new HashSet<Subscription>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private Set<Payment>              payments        = new HashSet<Payment>(0);
+    private Set<Payment>              payments          = new HashSet<Payment>(0);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private List<Comment>             comments        = new ArrayList<Comment>();
+    private List<Comment>             comments          = new ArrayList<Comment>();
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
@@ -128,7 +122,7 @@ public class Order implements java.io.Serializable {
 
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private List<OrderLifecycle>      orderLifecycles = new ArrayList<OrderLifecycle>();
+    private List<OrderLifecycle>      orderLifecycles   = new ArrayList<OrderLifecycle>();
 
     /*
      * @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order") private List<AccountingInvoice>
@@ -136,10 +130,10 @@ public class Order implements java.io.Serializable {
      */
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseOrder")
-    private Set<ShippingOrder>        shippingOrders  = new HashSet<ShippingOrder>(0);
+    private Set<ShippingOrder>        shippingOrders    = new HashSet<ShippingOrder>(0);
 
     @Column(name = "version", nullable = false)
-    private Long                      version         = new Long(1);
+    private Long                      version           = new Long(1);
 
     @Column(name = "score", nullable = true)
     private Long                      score;
@@ -158,12 +152,12 @@ public class Order implements java.io.Serializable {
     @JoinColumn(name = "secondary_referrer_for_order_id")
     private SecondaryReferrerForOrder secondaryReferrerForOrder;
 
-	@JsonSkip
+    @JsonSkip
     @Column(name = "target_dispatch_date", nullable = true)
     private Date                      targetDispatchDate;
 
-	@Column(name = "is_delivery_email_sent", nullable = false)
-	private Boolean deliveryEmailSent = false;
+    @Column(name = "is_delivery_email_sent", nullable = false)
+    private Boolean                   deliveryEmailSent = false;
 
     public boolean isPriorityOrder() {
         if (this.score != null) {
@@ -264,13 +258,10 @@ public class Order implements java.io.Serializable {
         this.offerInstance = offerInstance;
     }
 
-    public Date getUpdateDate() {
-        return this.updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
+    /*
+     * public Date getUpdateDate() { return this.updateDate; } public void setUpdateDate(Date updateDate) {
+     * this.updateDate = updateDate; }
+     */
 
     public String getGatewayOrderId() {
         return gatewayOrderId;
@@ -537,15 +528,15 @@ public class Order implements java.io.Serializable {
         this.targetDispatchDate = targetDelDate;
     }
 
-	public Boolean getDeliveryEmailSent() {
-		return deliveryEmailSent;
-	}
+    public Boolean getDeliveryEmailSent() {
+        return deliveryEmailSent;
+    }
 
-	public void setDeliveryEmailSent(Boolean deliveryEmailSent) {
-		this.deliveryEmailSent = deliveryEmailSent;
-	}
+    public void setDeliveryEmailSent(Boolean deliveryEmailSent) {
+        this.deliveryEmailSent = deliveryEmailSent;
+    }
 
-	public Boolean isDeliveryEmailSent() {
-		return deliveryEmailSent;
-	}
+    public Boolean isDeliveryEmailSent() {
+        return deliveryEmailSent;
+    }
 }
