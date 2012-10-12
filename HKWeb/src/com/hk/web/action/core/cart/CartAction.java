@@ -115,7 +115,7 @@ public class CartAction extends BaseAction {
           for (CartLineItem lineItem : cartLineItems) {
             if (lineItem != null && lineItem.getProductVariant() != null) {
               if(lineItem.getComboInstance()!=null){
-                if(comboInstanceValue !=null && comboInstanceValue==lineItem.getComboInstance().getId()){
+                if(comboInstanceValue !=null && comboInstanceValue.equals(lineItem.getComboInstance().getId())){
                   lineItem.setQty(0L);
                 }
                 else{
