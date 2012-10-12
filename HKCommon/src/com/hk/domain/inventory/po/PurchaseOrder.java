@@ -33,7 +33,7 @@ public class PurchaseOrder implements java.io.Serializable {
     private Date createDate = new Date();
     
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_dt", nullable = false, length = 19)
+    @Column(name = "update_dt", length = 19)
     private Date updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
