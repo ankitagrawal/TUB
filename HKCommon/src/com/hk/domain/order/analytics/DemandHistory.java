@@ -41,6 +41,10 @@ public class DemandHistory implements java.io.Serializable {
     @Column (name = "demand_date", length = 10)
     private Date demandDate;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_dt", nullable = false)
+	private Date createDate = new Date();
+
     public Long getId() {
         return id;
     }
@@ -81,6 +85,13 @@ public class DemandHistory implements java.io.Serializable {
         this.demandDate = demandDate;
     }
 
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 }
 
 

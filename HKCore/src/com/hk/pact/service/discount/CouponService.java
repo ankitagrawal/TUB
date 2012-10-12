@@ -3,6 +3,7 @@ package com.hk.pact.service.discount;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.coupon.CouponType;
 import com.hk.domain.offer.Offer;
@@ -19,4 +20,6 @@ public interface CouponService {
 
     public List<Coupon> generateCoupons(String endPart, String couponCode, Long numberOfCoupons, Boolean repetitiveUsage, Date endDate, Long allowedTimes, Long alreadyUsed,
                                         Offer offer, CouponType couponType, User referredUser) throws HealthKartCouponException;
+
+	public List<Coupon> getAffiliateUnusedCoupons(Affiliate affiliate);
 }
