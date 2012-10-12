@@ -602,7 +602,7 @@ public class AdminEmailManager {
                             }
 
                             boolean isProductInStock = !simProduct.getOutOfStock();
-                            isProductInStock = productService.isComboInStock(simProduct.getId());
+                            isProductInStock = productService.isComboInStock(simProduct);
 
                             if ((simProduct != null) && isProductInStock){
                                 simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));

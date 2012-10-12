@@ -8,6 +8,7 @@ import com.hk.pact.dao.seo.SeoDao;
 import com.hk.pact.service.search.ProductIndexService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,6 @@ import com.hk.util.ProductReferrerMapper;
 import com.hk.web.filter.WebContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -233,16 +233,12 @@ public class ProductServiceImpl implements ProductService {
         }
         return true;
     }
-    @SuppressWarnings("unchecked")
-	public boolean isComboInStock(String comboId) {
-        boolean isComboInStock = true;
-        try{
-            Combo combo = getComboDao().getComboById(comboId);
-            if (combo != null){
-                isComboInStock = isComboInStock(combo);
-            }
-        }catch (Exception ex){
 
+    @SuppressWarnings("unchecked")
+    public boolean isComboInStock(Product product) {
+        boolean isComboInStock = true;
+        if (Hibernate.getClass(product).equals(Combo.class)){
+            isComboInStock = isComboInStock(product);
         }
         return isComboInStock;
     }
@@ -251,24 +247,15 @@ public class ProductServiceImpl implements ProductService {
         return getComboDao().getCombos(product);
     }
 
-    public boolean isCombo(String comboId){
-        try{
-            Combo combo = comboDao.getComboById(comboId);
-            if (combo != null){
-                return true;
-            }
-        }//Suppress the exception. Done on multiple places e.g. createSolrProduct
-        catch (Exception ex){
-
-        }
-        return false;
+    public boolean isCombo(Product product){
+        return Hibernate.getClass(product).equals(Combo.class);
     }
 
     public boolean isProductOutOfStock(Product product) {
         List<ProductVariant> productVariants = product.getProductVariants();
         boolean isOutOfStock = true;
-        if (isCombo(product.getId())){
-             return !isComboInStock(product.getId());
+        if (isCombo(product)){
+             return !isComboInStock(product);
         }
         for (ProductVariant pv : productVariants) {
             if (!pv.getOutOfStock() && !pv.getDeleted()) {
@@ -506,19 +493,15 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setHkPrice(price);
         }
 
-	    try {
-		    Combo combo = comboDao.getComboById(product.getId());
-		    if (combo != null) {
-			    solrProduct.setCombo(true);
-			    solrProduct.setMarkedPrice(combo.getMarkedPrice());
-			    if (price == null) {
-				    solrProduct.setHkPrice(combo.getHkPrice());
-			    }
-			    solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
-		    }
-	    } catch (Exception e) {
-
-	    }
+        if (isCombo(product)) {
+            Combo combo = comboDao.getComboById(product.getId());
+            solrProduct.setCombo(true);
+            solrProduct.setMarkedPrice(combo.getMarkedPrice());
+            if (price == null) {
+                solrProduct.setHkPrice(combo.getHkPrice());
+            }
+            solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
+        }
 
         if (product.getService() != null){
             solrProduct.setService(product.getService());
