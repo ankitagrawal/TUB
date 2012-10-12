@@ -156,7 +156,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
 //        get(PincodeDefaultCourier.class, variantId);
 
 //        pincodeDefaultCourierList = pincodeDao.getAll(PincodeDefaultCourier.class);
-          pincodeDefaultCourierList= pincodeDao.searchPincodeDefaultCourierList(null,warehouse,null,null) ;
+//          pincodeDefaultCourierList= pincodeDao.searchPincodeDefaultCourierList(null,warehouse,null,null) ;
 
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
         final File excelFile = new File(excelFilePath);

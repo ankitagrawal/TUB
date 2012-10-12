@@ -37,11 +37,11 @@
                 <s:submit name="search" value="Search"/>
                 <br/>
 				<br/>  				
-                <label>Warehouse</label>
-                <s:select name="pincodeDefaultCourier.warehouse">
-                                    <s:option value="1">Gurgaon</s:option>
-                                    <s:option value="2">Mumbai</s:option>
-                    </s:select>
+                <%--<label>Warehouse</label>--%>
+                <%--<s:select name="pincodeDefaultCourier.warehouse">--%>
+                                    <%--<s:option value="1">Gurgaon</s:option>--%>
+                                    <%--<s:option value="2">Mumbai</s:option>--%>
+                    <%--</s:select>--%>
         <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
 			</s:form>
         </fieldset>
