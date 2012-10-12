@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -51,6 +53,22 @@ public class UserResource {
         }catch (Exception ex){
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unabel to save User Details ", ex);
+        }
+        return response;
+    }
+
+    @GET
+    @Path ("/priority/{priority}")
+    @Produces("application/json")
+    public Response getUserOrders(@PathParam ("priority") long priority) {
+
+        Response response = null;
+        try{
+            List<UserDetail> userDetailList = userDetailService.getByPriority((int)priority);
+            final GenericEntity<List<UserDetail>> entity = new GenericEntity<List<UserDetail>>(userDetailList) { };
+            response = Response.status(Response.Status.OK).entity(entity).build();
+        }catch (Exception ex){
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
         return response;
     }

@@ -1,5 +1,6 @@
 package com.hk.domain.user;
 
+import com.hk.constants.core.EnumCallPriority;
 import com.hk.domain.catalog.product.combo.Combo;
 
 import javax.persistence.*;
@@ -21,7 +22,10 @@ public class UserDetail {
     private Long                  id;
 
     @Column(name = "phone", nullable = false)
-    private int                 phone;
+    private Integer                 phone;
+
+    @Column(name = "priority", nullable = false)
+    private Integer                 priority;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -35,7 +39,7 @@ public class UserDetail {
         this.id = id;
     }
 
-    public int getPhone() {
+    public Integer getPhone() {
         return phone;
     }
 
@@ -49,5 +53,13 @@ public class UserDetail {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

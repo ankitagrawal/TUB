@@ -6,6 +6,8 @@ import com.hk.pact.service.user.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Marut
@@ -28,4 +30,7 @@ public class UserDetailServiceImpl implements UserDetailService {
         return userDetailsDao.findByPhone(phone);  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public List<UserDetail> getByPriority(int priority) {
+         return userDetailsDao.findByPriority(priority);
+    }
 }

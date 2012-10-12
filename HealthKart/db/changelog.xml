@@ -9137,6 +9137,9 @@
             <column name="user_id" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="priority" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>
