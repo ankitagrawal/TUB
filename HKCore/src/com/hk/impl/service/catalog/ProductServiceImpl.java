@@ -233,32 +233,43 @@ public class ProductServiceImpl implements ProductService {
         }
         return true;
     }
-
+    @SuppressWarnings("unchecked")
 	public boolean isComboInStock(String comboId) {
-		Combo combo = getComboDao().getComboById(comboId);
-        if (combo.isDeleted() != null && combo.isDeleted()) {
-            return false;
-        } else {
-            for (ComboProduct comboProduct : combo.getComboProducts()) {
-                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
-                    return false;
-                }
+        boolean isComboInStock = true;
+        try{
+            Combo combo = getComboDao().getComboById(comboId);
+            if (combo != null){
+                isComboInStock = isComboInStock(combo);
             }
+        }catch (Exception ex){
+
         }
-        return true;
+        return isComboInStock;
     }
 
     public List<Combo> getRelatedCombos(Product product) {
         return getComboDao().getCombos(product);
     }
 
+    private boolean isCombo(String comboId){
+        try{
+            Combo combo = comboDao.getComboById(comboId);
+            if (combo != null){
+                return true;
+            }
+        }//Suppress the exception. Done on multiple places e.g. createSolrProduct
+        catch (Exception ex){
+
+        }
+        return false;
+    }
+
     public boolean isProductOutOfStock(Product product) {
         List<ProductVariant> productVariants = product.getProductVariants();
         boolean isOutOfStock = true;
+        if (isCombo(product.getId())){
+             return !isComboInStock(product.getId());
+        }
         for (ProductVariant pv : productVariants) {
             if (!pv.getOutOfStock() && !pv.getDeleted()) {
                 isOutOfStock = false;
