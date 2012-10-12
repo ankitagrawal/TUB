@@ -27,8 +27,7 @@ public class UpdatePvPriceDaoImpl extends BaseDaoImpl implements UpdatePvPriceDa
 			DetachedCriteria productCriteria = productVariantCriteria.createCriteria("product");
 			productCriteria.add(Restrictions.eq("primaryCategory", primaryCategory));
 		} else if (productVariant != null) {
-			DetachedCriteria productVariantCriteria = criteria.createCriteria("productVariant");
-			productVariantCriteria.add(Restrictions.eq("productVariant", productVariant));
+			criteria.add(Restrictions.eq("productVariant", productVariant));
 		}
 
 		criteria.addOrder(org.hibernate.criterion.Order.desc("txnDate"));

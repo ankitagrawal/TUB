@@ -9283,7 +9283,7 @@
    <changeSet author="Ajeet (generated)" id="1348919811628-1">
         <addColumn tableName="update_pv_price">
             <column defaultValue="10" name="status" type="INT">
-		<constraints nullable="false"/>
+				<constraints nullable="false"/>
             </column>
         </addColumn>
 	</changeSet>
