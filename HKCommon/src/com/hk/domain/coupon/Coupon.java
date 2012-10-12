@@ -48,8 +48,8 @@ public class Coupon implements java.io.Serializable {
 	private CouponType couponType;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "create_date", nullable = false, length = 19)
-	private Date createDate;
+	@Column(name = "create_dt", nullable = false, length = 19)
+	private Date createDate = new Date();
 
 	@Column(name = "repetitive_usage", nullable = false)
 	private Boolean repetitiveUsage;
