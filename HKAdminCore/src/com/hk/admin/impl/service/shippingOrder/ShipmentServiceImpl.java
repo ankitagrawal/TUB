@@ -1,10 +1,7 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +13,11 @@ import com.hk.admin.pact.dao.shipment.ShipmentDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.admin.util.DeleteFedExShipment;
-import com.hk.admin.util.FedExCourier;
+import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -29,7 +27,6 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.AwbStatus;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -62,7 +59,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Autowired
     CourierServiceInfoDao courierServiceInfoDao;
     @Autowired
-    FedExCourier          fedExCourier;
+    FedExCourierUtil      fedExCourier;
     @Autowired
     DeleteFedExShipment   deleteFedExShipment;
 
@@ -84,8 +81,6 @@ public class ShipmentServiceImpl implements ShipmentService {
             return null;
         }
 
-        Awb suggestedAwb;
-
         Double estimatedWeight = 100D;
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
@@ -101,54 +96,19 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
 
         Double weightInKg = estimatedWeight / 1000;
+        Long suggestedCourierId = suggestedCourier.getId();
 
-        if (suggestedCourier.getId().equals(EnumCourier.FedEx.getId())) {
-            List<String> barcodeList = new ArrayList<String>();
-            List<String> routingCode = new ArrayList<String>();
-
-            String trackingNumber = fedExCourier.newFedExShipment(shippingOrder, weightInKg, barcodeList, routingCode);
-            Awb fedExNumber;
-            if (trackingNumber != null) {
-                fedExNumber = awbService.createAwb(suggestedCourier, trackingNumber, shippingOrder.getWarehouse(), shippingOrder.isCOD());
-                suggestedAwb = fedExNumber;
-            } else {
-                return null;
-            }
-
-            //logic to update routing codes in hk, in case there is a change from fedex API.
-            CourierServiceInfo courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(EnumCourier.FedEx.getId(), order.getAddress().getPin(), false, false, false);
-
-            if (courierServiceInfo != null) {
-                if (StringUtils.isNotBlank(routingCode.get(0))) {
-                    String routingCodeForPincodeFromFedEx = routingCode.get(0);
-                    String routingCodeForPincodeInHK = courierServiceInfo.getRoutingCode();
-
-                    if (StringUtils.isBlank(routingCodeForPincodeInHK) ||
-                            (StringUtils.isNotBlank(routingCodeForPincodeInHK) && !routingCodeForPincodeInHK.equals(routingCodeForPincodeFromFedEx))) {
-                        courierServiceInfo.setRoutingCode(routingCodeForPincodeFromFedEx);
-                        courierServiceInfoDao.save(courierServiceInfo);
-                    }
-                }
-            }
-
-            // String forwardBarCode = fedExCourier.getBarCodeList().get(0);
-            String forwardBarCode = barcodeList.get(0);
-            fedExNumber.setAwbBarCode(forwardBarCode);
-
-            if (shippingOrder.isCOD()) {
-                String codReturnBarCode = barcodeList.get(1);
-                fedExNumber.setReturnAwbBarCode(codReturnBarCode);
-                String returnAwb = barcodeList.get(2);
-                fedExNumber.setReturnAwbNumber(returnAwb);
-
-            }
-
+        Awb suggestedAwb;
+        if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId)) {
+            suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
         } else {
             suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
                     EnumAwbStatus.Unused.getAsAwbStatus());
-            if (suggestedAwb == null) {
-                return null;
-            }
+        }
+
+        // validate that we have a valid awb to create shipment
+        if (suggestedAwb == null) {
+            return null;
         }
 
         Shipment shipment = new Shipment();

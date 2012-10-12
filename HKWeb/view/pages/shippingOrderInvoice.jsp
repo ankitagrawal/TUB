@@ -6,7 +6,7 @@
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
-<%@ page import="com.hk.admin.util.FedExCourier" %>
+<%@ page import="com.hk.admin.util.courier.thirdParty.FedExCourierUtil" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

@@ -16,7 +16,7 @@ import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.BarcodeGenerator;
-import com.hk.admin.util.FedExCourier;
+import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
 import com.hk.constants.courier.EnumCourier;
 
 import com.hk.constants.core.Keys;
@@ -63,7 +63,7 @@ public class SOInvoiceAction extends BaseAction {
     @Autowired
     AwbService awbService;
      @Autowired
-     FedExCourier fedExCourier;
+     FedExCourierUtil fedExCourier;
 
     @Value("#{hkEnvProps['" + Keys.Env.barcodeDir + "']}")
     String               barcodeDir;

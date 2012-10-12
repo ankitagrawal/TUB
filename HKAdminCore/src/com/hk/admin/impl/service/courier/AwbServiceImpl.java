@@ -5,33 +5,33 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
+import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
 import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.AwbStatus;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.constants.courier.EnumAwbStatus;
 
 /**
- * Created by IntelliJ IDEA.
- * User:Seema
- * Date: Jul 13, 2012
- * Time: 10:56:32 AM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User:Seema Date: Jul 13, 2012 Time: 10:56:32 AM To change this template use File | Settings |
+ * File Templates.
  */
 @Service
 public class AwbServiceImpl implements AwbService {
     @Autowired
-    AwbDao awbDao;
+    AwbDao          awbDao;
     @Autowired
-    ShipmentService  shipmentService;
+    ShipmentService shipmentService;
 
     public Awb find(Long id) {
         return awbDao.get(Awb.class, id);
     }
-
 
     public List<Awb> getAvailableAwbListForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus) {
         return awbDao.getAvailableAwbForCourierByWarehouseCodStatus(courier, awbNumber, warehouse, cod, awbStatus);
@@ -42,23 +42,38 @@ public class AwbServiceImpl implements AwbService {
         return awbList != null && !awbList.isEmpty() ? awbList.get(0) : null;
     }
 
+    public Awb getAwbForThirdPartyCourier(Courier courier, ShippingOrder shippingOrder, Double weightInKg) {
+        Long courierId = courier.getId();
+
+        ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
+        ThirdPartyAwbDetails thirdPartyAwbDetails = thirdPartyAwbService.getThirdPartyCourierTrackingDetails(shippingOrder, weightInKg);
+
+        Awb hkAwb = createAwb(courier, thirdPartyAwbDetails.getTrackingNumber(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
+        hkAwb = thirdPartyAwbService.syncHKAwbWithThirdPartyAwb(hkAwb, thirdPartyAwbDetails);
+        
+        thirdPartyAwbService.syncHKCourierServiceInfo(thirdPartyAwbDetails);
+
+        return hkAwb;
+
+    }
+
     public Awb save(Awb awb) {
         return (Awb) awbDao.save(awb);
     }
 
-    public Awb findByCourierAwbNumber(Courier courier ,String awbNumber){
-        return awbDao.findByCourierAwbNumber(courier ,awbNumber);
+    public Awb findByCourierAwbNumber(Courier courier, String awbNumber) {
+        return awbDao.findByCourierAwbNumber(courier, awbNumber);
     }
 
     public List<Awb> getAllAwb() {
         return awbDao.getAll(Awb.class);
     }
 
-    public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList) {
-        return awbDao.getAlreadyPresentAwb(courier,awbNumberList);
+    public List<Awb> getAlreadyPresentAwb(Courier courier, List<String> awbNumberList) {
+        return awbDao.getAlreadyPresentAwb(courier, awbNumberList);
     }
-    
-    public Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod){
+
+    private Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod) {
         Awb awb = new Awb();
         awb.setCourier(courier);
         awb.setAwbNumber(trackingNumber);
@@ -67,8 +82,8 @@ public class AwbServiceImpl implements AwbService {
         awb.setCod(isCod);
         awb.setAwbBarCode(trackingNumber);
         awb.setUsed(false);
-        
-        
+
         return awb;
     }
+
 }

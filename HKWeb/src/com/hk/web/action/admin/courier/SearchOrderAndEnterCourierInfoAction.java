@@ -26,8 +26,8 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
-import com.hk.admin.util.FedExCourier;
 import com.hk.admin.util.DeleteFedExShipment;
+import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
@@ -72,7 +72,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     @Autowired
     AwbService awbService;
     @Autowired
-    FedExCourier fedExCourier;
+    FedExCourierUtil fedExCourier;
     @Autowired
     DeleteFedExShipment deleteFedExShipment;
     @Autowired
