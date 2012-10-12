@@ -111,8 +111,8 @@ public class CartAction extends BaseAction {
             order = orderManager.getOrCreateOrder(user);
 
          Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+          Long comboInstanceValue = null;
           for (CartLineItem lineItem : cartLineItems) {
-            Long comboInstanceValue = null;
             if (lineItem != null && lineItem.getProductVariant() != null) {
               if(lineItem.getComboInstance()!=null){
                 if(comboInstanceValue !=null && comboInstanceValue==lineItem.getComboInstance().getId()){
