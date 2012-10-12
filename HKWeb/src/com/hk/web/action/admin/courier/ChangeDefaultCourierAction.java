@@ -76,7 +76,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private Pincode pincode;
     private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
     private List<PincodeDefaultCourier> pincodeDefaultCouriers = new ArrayList<PincodeDefaultCourier>();
-    private Warehouse warehouse;    
+    private Warehouse warehouse;
+    private Long warehouseId;
 
 
     @DefaultHandler
@@ -152,11 +153,10 @@ public class ChangeDefaultCourierAction extends BaseAction {
 
     public Resolution generatePincodeExcel() throws Exception {
         List<PincodeDefaultCourier> pincodeDefaultCourierList = new ArrayList<PincodeDefaultCourier>();
-        warehouse = pincodeDefaultCourier.getWarehouse();
-//        get(PincodeDefaultCourier.class, variantId);
-
+//        warehouse = pincodeDefaultCourier.getWarehouse();
+          warehouse = warehouseDao.getWarehouseById( warehouseId);
 //        pincodeDefaultCourierList = pincodeDao.getAll(PincodeDefaultCourier.class);
-//          pincodeDefaultCourierList= pincodeDao.searchPincodeDefaultCourierList(null,warehouse,null,null) ;
+        pincodeDefaultCourierList= pincodeDao.searchPincodeDefaultCourierList(null,warehouse,null,null) ;
 
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
         final File excelFile = new File(excelFilePath);
@@ -287,4 +287,13 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public void setCourierService(CourierService courierService) {
         this.courierService = courierService;
     }
+
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+    
 }
