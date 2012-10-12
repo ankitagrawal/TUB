@@ -237,8 +237,10 @@ public class ProductServiceImpl implements ProductService {
     @SuppressWarnings("unchecked")
     public boolean isComboInStock(Product product) {
         boolean isComboInStock = true;
-        if (Hibernate.getClass(product).equals(Combo.class)){
-            isComboInStock = isComboInStock(product);
+        //if (Hibernate.getClass(product).equals(Combo.class)){
+        if (isCombo(product)){
+            Combo combo = (Combo)product;
+            isComboInStock = isComboInStock(combo);
         }
         return isComboInStock;
     }
@@ -248,7 +250,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public boolean isCombo(Product product){
-        return Hibernate.getClass(product).equals(Combo.class);
+        return product instanceof Combo;
     }
 
     public boolean isProductOutOfStock(Product product) {
