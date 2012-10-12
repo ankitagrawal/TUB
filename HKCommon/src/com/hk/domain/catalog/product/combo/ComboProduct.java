@@ -19,8 +19,6 @@ import javax.persistence.Table;
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 
 @SuppressWarnings("serial")
@@ -40,7 +38,6 @@ public class ComboProduct implements java.io.Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "product_id", nullable = false)
-  @NotFound(action= NotFoundAction.IGNORE)
   private Product product;
 
   @Column(name = "qty")
