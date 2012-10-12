@@ -133,7 +133,7 @@
 
             <fieldset style="float:left; display:none;" id="new-default-courier-form">
                     <label>Add New</label>
-                    <table>
+                    <table>                                                                        
                         <s:form beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">
                             <tr>
                                 <td>Pincode:</td>
