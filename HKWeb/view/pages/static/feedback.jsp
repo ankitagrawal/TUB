@@ -47,16 +47,17 @@
 					<div class='label'><h3>How likely is it that you would recommend HealthKart to a friend or colleague? </h3></div>
 					<table class="tableClass">
 						<tr>
-							<td colspan="12">&nbsp;</td>
+							<td colspan="13">&nbsp;</td>
 						</tr>
 						<tr>
 							<td width="10"></td>
-							<td class="recommendRow1" colspan="9">&nbsp;Not likely</td>
+							<td class="recommendRow1" colspan="10">&nbsp;Not likely</td>
 							<td class="recommendRow1" >Very likely</td>
 							<td width="10"></td>
 						</tr>
 						<tr>
 							<td width="10"></td>
+							<td class="recommend"> &nbsp;&nbsp;0</td>
 							<td class="recommend"> &nbsp;&nbsp;1</td>
 							<td class="recommend"> &nbsp;&nbsp;2</td>
 							<td class="recommend"> &nbsp;&nbsp;3</td>
@@ -72,6 +73,7 @@
 						<tr>
 							<td width="10"></td>
 							<td class="recommend"><s:radio value="1" name="recommendToFriends" /></td>
+							<td class="recommend"><s:radio value="1" name="recommendToFriends" /></td>
 							<td class="recommend"><s:radio value="2" name="recommendToFriends" /></td>
 							<td class="recommend"><s:radio value="3" name="recommendToFriends" /></td>
 							<td class="recommend"><s:radio value="4" name="recommendToFriends" /></td>
@@ -84,7 +86,7 @@
 							<td width="10"></td>
 						</tr>
 						<tr>
-							<td colspan="12">&nbsp;</td>
+							<td colspan="13">&nbsp;</td>
 						</tr>
 
 					</table>
