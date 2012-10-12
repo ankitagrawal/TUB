@@ -67,6 +67,8 @@ public class AwbServiceImpl implements AwbService {
         awb.setCod(isCod);
         awb.setAwbBarCode(trackingNumber);
         awb.setUsed(false);
+        
+        
         return awb;
     }
 }

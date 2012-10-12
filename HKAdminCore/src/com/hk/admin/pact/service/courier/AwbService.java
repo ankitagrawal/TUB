@@ -34,4 +34,6 @@ public interface AwbService {
     public Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
 
 
+    
+    public Awb createAwb();
 }
