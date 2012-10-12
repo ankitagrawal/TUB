@@ -123,7 +123,7 @@ public class Sku implements java.io.Serializable {
 			return false;
 		}
 		Sku sku = (Sku) o;
-		if (!id.equals(sku.getId())) {
+		if (id != null ? !id.equals(sku.getId()) : sku.getId() != null){
 			return false;
 		}
 		return true;
@@ -131,6 +131,6 @@ public class Sku implements java.io.Serializable {
 
 	@Override
 	public int hashCode() {
-		return id.hashCode();
+		return id != null ? id.hashCode() : 0;
 	}
 }
