@@ -27,6 +27,7 @@ public class SendGridUtil {
 
 	  Map sendgridHeaderMap = new HashMap();
 	  sendgridHeaderMap.put("category", categories);
+      sendgridHeaderMap.put("hkCampaignId", emailCampaign.getId().toString());
 	  Gson gson = JsonUtils.getGsonDefault();
 	  return gson.toJson(sendgridHeaderMap);
 	}

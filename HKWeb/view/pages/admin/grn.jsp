@@ -109,13 +109,13 @@
 					taxCategory = 0;
 				}
 				/*if (taxIdentifier == 'finance') {
-					var taxCat = valueChangeRow.find('.taxCategory');
-					var selectedTax = $(taxCat).find('option:selected');
-					taxCategory = selectedTax.text();
-				} else {
-					taxCategory = parseFloat(valueChangeRow.find('.taxCategory').html().trim());
-				}
-*/
+				 var taxCat = valueChangeRow.find('.taxCategory');
+				 var selectedTax = $(taxCat).find('option:selected');
+				 taxCategory = selectedTax.text();
+				 } else {
+				 taxCategory = parseFloat(valueChangeRow.find('.taxCategory').html().trim());
+				 }
+				 */
 				if (isNaN(qty)) {
 					alert("Enter Valid Quantity.");
 					return;
@@ -297,87 +297,99 @@
 		<c:set value="${productVariant.product}" var="product"/>
 
 		<s:hidden name="grnLineItems[${ctr.index}]" value="${grnLineItemDto.grnLineItem.id}"/>
-		<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
-			<td>${ctr.index+1}.</td>
-			<td>
-				<div class='img48' style="vertical-align:top;">
-					<c:choose>
-						<c:when test="${productVariant.product.mainImageId != null}">
-							<hk:productImage imageId="${productVariant.product.mainImageId}"
-							                 size="<%=EnumImageSize.TinySize%>"/>
-						</c:when>
-						<c:otherwise>
-							<img class="prod48"
-							     src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${productVariant.product.id}.jpg"
-							     alt="${productLineItem.productVariant.product.name}"/>
-						</c:otherwise>
-					</c:choose>
-				</div>
-			</td>
-			<td>
-					${productVariant.id}
-				<s:hidden class="variant" name="grnLineItems[${ctr.index}].productVariant"
-				          value="${grnLineItemDto.grnLineItem.productVariant.id}"/>
-					<%--<s:hidden class="sku" name="grnLineItems[${ctr.index}].sku"
-											value="${sku}"></s:hidden>--%>
-			</td>
-			<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.upc" value="${productVariant.upc}"/></td>
-			<td>${productVariant.supplierCode}</td>
-			<td>${productVariant.otherRemark}</td>
-			<td>${product.name}<br/>${productVariant.variantName}<br/>${productVariant.optionsCommaSeparated}
-			</td>
-			<td>
-				<input type="text" class="taxCategory" value="${grnLineItemDto.grnLineItem.sku.tax.value}" disabled="disabled"/>
-			</td>
-			<%--<td class="taxCategory">
-					&lt;%&ndash;<shiro:hasPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
-													  <input type="hidden" value="finance"
-															 class="taxIdentifier"/>
-													  <s:select name="grnLineItems[${ctr.index}].sku.tax"
-																value="${grnLineItemDto.grnLineItem.sku.tax.id}" class="valueChange">
-														  <hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList" value="id"
-																					 label="name"/>
-													  </s:select>
-												  </shiro:hasPermission>
-												  <shiro:lacksPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
-													  ${grnLineItemDto.grnLineItem.sku.tax.value}
-												  </shiro:lacksPermission>&ndash;%&gt;
-					${grnLineItemDto.grnLineItem.sku.tax.value}
-			</td>--%>
-			<td>${hk:askedPOQty(pa.grn.purchaseOrder, productVariant)}</td>
-			<td>
-				<s:text name="grnLineItems[${ctr.index}].qty" value="${grnLineItemDto.grnLineItem.qty}"
-				        class="receivedQuantity valueChange"/>
-			</td>
-			<td>
-				<s:text name="grnLineItems[${ctr.index}].costPrice" value="${grnLineItemDto.grnLineItem.costPrice}"
-				        class="costPrice valueChange"/>
-			</td>
-			<td>
-				<s:text class="mrp" name="grnLineItems[${ctr.index}].mrp" value="${grnLineItemDto.grnLineItem.mrp}"/>
-			</td>
-			<td>
-				<s:text class="discountPercentage valueChange" name="grnLineItems[${ctr.index}].discountPercent" value="${grnLineItemDto.grnLineItem.discountPercent}"/>
-			</td>
-			<td>
-				<fmt:formatNumber value="${grnLineItemDto.marginMrpVsCP}" maxFractionDigits="2"/>
-			</td>
-			<td>
-				<s:text readonly="readonly" class="taxableAmount" name="grnLineItems[${ctr.index}].taxableAmount" value="${grnLineItemDto.taxable}" />
-			</td>
-			<td>
-				<s:text readonly="readonly" class="taxAmount" name="grnLineItems[${ctr.index}].taxAmount" value="${grnLineItemDto.tax}" />
-			</td>
-			<td>
-				<s:text readonly="readonly" class="surchargeAmount" name="grnLineItems[${ctr.index}].surchargeAmount" value="${grnLineItemDto.surcharge}" />
-			</td>
-			<td>
-				<s:text readonly="readonly" class="payableAmount" name="grnLineItems[${ctr.index}].payableAmount" value="${grnLineItemDto.payable}" />
-			</td>
-			<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.weight" class="weight" value="${productVariant.weight}"/></td>
-			<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.length" value="${productVariant.length}"/></td>
-			<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.breadth" value="${productVariant.breadth}"/></td>
-			<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.height" value="${productVariant.height}"/></td>
+		<c:set var="skumap" value="${pa.skuIsNew}"/>
+		<c:set var="skumap" value="${pa.skuIsNew}"/>
+		<c:choose>
+			<c:when test="${skumap[grnLineItemDto.grnLineItem.sku] != null }">
+				<tr style="background-color:goldenrod;"  count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow ':'lineItemRow '}">
+
+			</c:when>
+			<c:otherwise>
+				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+			</c:otherwise>
+		</c:choose>
+
+		<%--<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow ':'lineItemRow'}">--%>
+		<td>${ctr.index+1}.</td>
+		<td>
+			<div class='img48' style="vertical-align:top;">
+				<c:choose>
+					<c:when test="${productVariant.product.mainImageId != null}">
+						<hk:productImage imageId="${productVariant.product.mainImageId}"
+						                 size="<%=EnumImageSize.TinySize%>"/>
+					</c:when>
+					<c:otherwise>
+						<img class="prod48"
+						     src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${productVariant.product.id}.jpg"
+						     alt="${productLineItem.productVariant.product.name}"/>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</td>
+		<td>
+				${productVariant.id}
+			<s:hidden class="variant" name="grnLineItems[${ctr.index}].productVariant"
+			          value="${grnLineItemDto.grnLineItem.productVariant.id}"/>
+				<%--<s:hidden class="sku" name="grnLineItems[${ctr.index}].sku"
+									 value="${sku}"></s:hidden>--%>
+		</td>
+		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.upc" value="${productVariant.upc}"/></td>
+		<td>${productVariant.supplierCode}</td>
+		<td>${productVariant.otherRemark}</td>
+		<td>${product.name}<br/>${productVariant.variantName}<br/>${productVariant.optionsCommaSeparated}
+		</td>
+		<td>
+			<input type="text" class="taxCategory" value="${grnLineItemDto.grnLineItem.sku.tax.value}" disabled="disabled"/>
+		</td>
+		<%--<td class="taxCategory">
+				   &lt;%&ndash;<shiro:hasPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
+													 <input type="hidden" value="finance"
+															class="taxIdentifier"/>
+													 <s:select name="grnLineItems[${ctr.index}].sku.tax"
+															   value="${grnLineItemDto.grnLineItem.sku.tax.id}" class="valueChange">
+														 <hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList" value="id"
+																					label="name"/>
+													 </s:select>
+												 </shiro:hasPermission>
+												 <shiro:lacksPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
+													 ${grnLineItemDto.grnLineItem.sku.tax.value}
+												 </shiro:lacksPermission>&ndash;%&gt;
+				   ${grnLineItemDto.grnLineItem.sku.tax.value}
+		   </td>--%>
+		<td>${hk:askedPOQty(pa.grn.purchaseOrder, productVariant)}</td>
+		<td>
+			<s:text name="grnLineItems[${ctr.index}].qty" value="${grnLineItemDto.grnLineItem.qty}"
+			        class="receivedQuantity valueChange"/>
+		</td>
+		<td>
+			<s:text name="grnLineItems[${ctr.index}].costPrice" value="${grnLineItemDto.grnLineItem.costPrice}"
+			        class="costPrice valueChange"/>
+		</td>
+		<td>
+			<s:text class="mrp" name="grnLineItems[${ctr.index}].mrp" value="${grnLineItemDto.grnLineItem.mrp}"/>
+		</td>
+		<td>
+			<s:text class="discountPercentage valueChange" name="grnLineItems[${ctr.index}].discountPercent" value="${grnLineItemDto.grnLineItem.discountPercent}"/>
+		</td>
+		<td>
+			<fmt:formatNumber value="${grnLineItemDto.marginMrpVsCP}" maxFractionDigits="2"/>
+		</td>
+		<td>
+			<s:text readonly="readonly" class="taxableAmount" name="grnLineItems[${ctr.index}].taxableAmount" value="${grnLineItemDto.taxable}" />
+		</td>
+		<td>
+			<s:text readonly="readonly" class="taxAmount" name="grnLineItems[${ctr.index}].taxAmount" value="${grnLineItemDto.tax}" />
+		</td>
+		<td>
+			<s:text readonly="readonly" class="surchargeAmount" name="grnLineItems[${ctr.index}].surchargeAmount" value="${grnLineItemDto.surcharge}" />
+		</td>
+		<td>
+			<s:text readonly="readonly" class="payableAmount" name="grnLineItems[${ctr.index}].payableAmount" value="${grnLineItemDto.payable}" />
+		</td>
+		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.weight" class="weight" value="${productVariant.weight}"/></td>
+		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.length" value="${productVariant.length}"/></td>
+		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.breadth" value="${productVariant.breadth}"/></td>
+		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.height" value="${productVariant.height}"/></td>
 		</tr>
 	</c:forEach>
 	</tbody>
@@ -390,20 +402,20 @@
 		<td><s:text readonly="readonly" class="totalSurcharge" name="grn.surchargeAmount" value="${pa.grn.surchargeAmount}"/></td>
 		<td><s:text readonly="readonly" class="totalPayable" name="grn.payable" value="${pa.grn.payable}"/></td>
 	</tr>
-	<%--<tr>
-		<td colspan="16"></td><td>Overall Discount<br/>(In Rupees)</td>
-		<td><s:text class="overallDiscount footerChanges" name="grn.discount" value="${pa.grn.discount}"/></td>
-	</tr>
-	<tr>
-	<tr>
-		<td colspan="16"></td><td>Final Payable</td>
-		<td><s:text readonly="readonly" class="finalPayable" name="grn.finalPayableAmount" value="${pa.grn.finalPayableAmount}"/></td>
-	</tr>--%>
+		<%--<tr>
+		 <td colspan="16"></td><td>Overall Discount<br/>(In Rupees)</td>
+		 <td><s:text class="overallDiscount footerChanges" name="grn.discount" value="${pa.grn.discount}"/></td>
+	 </tr>
+	 <tr>
+	 <tr>
+		 <td colspan="16"></td><td>Final Payable</td>
+		 <td><s:text readonly="readonly" class="finalPayable" name="grn.finalPayableAmount" value="${pa.grn.finalPayableAmount}"/></td>
+	 </tr>--%>
 	</tfoot>
 </table>
 <div class="variantDetails info"></div>
 <br/>
-<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
+<%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
 
 <s:submit name="save" value="Save" class="requiredFieldValidator"/>
 </s:form>

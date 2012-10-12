@@ -43,7 +43,7 @@ public class EmailCampaignDaoImpl extends BaseDaoImpl implements EmailCampaignDa
   }
 
   @Transactional
-  private EmailCampaign findCampaignByName(String campaignName) {
+  public EmailCampaign findCampaignByName(String campaignName) {
     Criteria criteria = getSession().createCriteria(EmailCampaign.class);
     criteria.add(Restrictions.eq("name", campaignName));
     return (EmailCampaign) criteria.uniqueResult();

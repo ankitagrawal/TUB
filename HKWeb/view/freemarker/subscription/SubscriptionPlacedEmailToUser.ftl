@@ -10,7 +10,7 @@ Your Subscription with Id ${subscription.id} is placed.
     Thanks for subscribing with us. We will give you a call whenever your shipment is due and then process your subscription.
     In case you need a change in the address or the next shipment date, please call our customer care at 0124-4551616. or just drop us an email at info@healthkart.com.
 </p>
-<p style="margin-bottom:1em">Here are your subscription details for the subscription <strong> ${subscription.id}</strong> placed on<strong> ${subscription.baseOrder.payment.createDate} </strong></p>
+<p style="margin-bottom:1em">Here are your subscription details for the subscription <strong> ${subscription.id}</strong> placed on<strong> ${subscription.baseOrder.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} </strong></p>
 
 <div>
     <h3>Subscription Details</h3>

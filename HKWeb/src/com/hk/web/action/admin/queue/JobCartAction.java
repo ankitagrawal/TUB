@@ -376,7 +376,7 @@ public class JobCartAction extends BaseAction {
   public Resolution putList() {
     List<Sku> skuList = new ArrayList<Sku>();
     List<SkuGroup> skuGroupListPerSku = new ArrayList<SkuGroup>();
-    List<GrnLineItem> grnLineItemList = grnLineItemDao.getAllGrnLineItemByGrn(grn);
+    List<GrnLineItem> grnLineItemList =grn.getGrnLineItems();
     if (grnLineItemList != null) {
       try {
         for (GrnLineItem grnLineItem : grnLineItemList) {

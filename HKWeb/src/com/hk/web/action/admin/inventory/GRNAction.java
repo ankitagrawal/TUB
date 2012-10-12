@@ -94,6 +94,7 @@ public class GRNAction extends BasePaginatedAction {
 	private Sku sku;
 	public GrnStatus grnStatus;
 	public Double surcharge;
+	private Map<Sku,Boolean> skuIsNew = new HashMap<Sku,Boolean>();
 
 	private Integer defaultPerPage = 20;
 
@@ -141,7 +142,13 @@ public class GRNAction extends BasePaginatedAction {
 		if (grn != null) {
 			logger.debug("grn@view: " + grn.getId());
 			grnDto = grnManager.generateGRNDto(grn);
-			// grnLineItems = grn.getGrnLineItems();
+			for(GrnLineItem grnlineitem : grn.getGrnLineItems()){
+				List<GrnLineItem> grnLineItemsList = grnLineItemDao.getAllGrnLineItemBySku(grnlineitem.getSku());
+				if(grnLineItemsList != null && grnLineItemsList.size() == 1){
+					skuIsNew.put(grnlineitem.getSku(),true);
+				}
+			}
+
 		}
 		return new ForwardResolution("/pages/admin/grn.jsp");
 	}
@@ -613,4 +620,11 @@ public class GRNAction extends BasePaginatedAction {
 		this.skuService = skuService;
 	}
 
+	public Map<Sku, Boolean> getSkuIsNew() {
+		return skuIsNew;
+	}
+
+	public void setSkuIsNew(Map<Sku, Boolean> skuIsNew) {
+		this.skuIsNew = skuIsNew;
+	}
 }
