@@ -52,7 +52,7 @@ public class UserResource {
             }
         }catch (Exception ex){
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            logger.error("Unabel to save User Details ", ex);
+            logger.error("Unable to save User Details ", ex);
         }
         return response;
     }
@@ -60,7 +60,7 @@ public class UserResource {
     @GET
     @Path ("/priority/{priority}")
     @Produces("application/json")
-    public Response getUserOrders(@PathParam ("priority") long priority) {
+    public Response getUserListByPriority(@PathParam ("priority") long priority) {
 
         Response response = null;
         try{
@@ -69,6 +69,7 @@ public class UserResource {
             response = Response.status(Response.Status.OK).entity(entity).build();
         }catch (Exception ex){
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            logger.error("Unable to get User Details ", ex);
         }
         return response;
     }
