@@ -53,9 +53,7 @@ public class MSelectAddressAction extends MBaseAction {
     @Autowired
     private RoleService roleService;
     @Autowired
-    private SecurityManager securityManager;
-    @Autowired
-    private AddressBookManager addressManager;
+    AddressBookManager addressManager;
     private List<Address> addresses = new ArrayList<Address>(1);
 
     //@Validate(required = true, on = "remove")
