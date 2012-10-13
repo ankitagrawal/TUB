@@ -15,6 +15,7 @@ import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
 import com.hk.constants.courier.EnumCourier;
@@ -62,8 +63,7 @@ public class SOInvoiceAction extends BaseAction {
     PincodeService pincodeService;
     @Autowired
     AwbService awbService;
-     @Autowired
-     FedExCourierUtil fedExCourier;
+  
 
     @Value("#{hkEnvProps['" + Keys.Env.barcodeDir + "']}")
     String               barcodeDir;
@@ -85,8 +85,7 @@ public class SOInvoiceAction extends BaseAction {
             if (shipment != null) {
                 Awb awb = shipment.getAwb();
                 if (awb != null && awb.getAwbNumber() != null ) {
-
-                    if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
+                      if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
                         String awbBarCode = awb.getAwbBarCode();
                         String forwardBarcodePath = barcodeGenerator.getBarcodePath(awbBarCode, 2.0f, 200, true);
                         if (shippingOrder.isCOD()){
@@ -123,14 +122,13 @@ public class SOInvoiceAction extends BaseAction {
                 routingCode = courierServiceInfo.getRoutingCode();
             }
 
-            if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
-                //routingCode = "DELKG";
-                courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(EnumCourier.FedEx.getId(),address.getPin(), true, false, false);
-                if (courierServiceInfo == null){
-                courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(EnumCourier.FedEx.getId(),address.getPin(), false, false, false);
+             if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
+                courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(shipment.getCourier().getId(),address.getPin(), false, false, false);
+                if (courierServiceInfo != null){
+                   routingCode = courierServiceInfo.getRoutingCode();
                 }
-                routingCode = courierServiceInfo.getRoutingCode();
-            }
+             }
+
             //freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
 
             return new ForwardResolution("/pages/shippingOrderInvoice.jsp");

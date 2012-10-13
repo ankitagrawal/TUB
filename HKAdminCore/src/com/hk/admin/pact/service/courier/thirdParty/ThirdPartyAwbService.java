@@ -34,4 +34,6 @@ public interface ThirdPartyAwbService {
      */
     public boolean syncHKCourierServiceInfo(ThirdPartyAwbDetails thirdPartyAwbDetails);
 
+    public boolean deleteThirdPartyAwb(String awbNumber);
+
 }

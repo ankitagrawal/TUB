@@ -40,6 +40,8 @@ public interface AwbService {
      */
     public Awb getAwbForThirdPartyCourier(Courier courier, ShippingOrder shippingOrder, Double weightInKg);
 
-    //public Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
+    public boolean deleteAwbForThirdPartyCourier(Courier courier, String awbNumber);
+
+    //private Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
     
 }

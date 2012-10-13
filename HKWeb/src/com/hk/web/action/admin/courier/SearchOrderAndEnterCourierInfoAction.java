@@ -24,9 +24,10 @@ import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
-import com.hk.admin.util.DeleteFedExShipment;
+import com.hk.admin.util.FedExShipmentDeleteUtil;
 import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
@@ -38,7 +39,6 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
@@ -71,10 +71,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     private ShipmentPricingEngine shipmentPricingEngine;
     @Autowired
     AwbService awbService;
-    @Autowired
-    FedExCourierUtil fedExCourier;
-    @Autowired
-    DeleteFedExShipment deleteFedExShipment;
+    
     @Autowired
     CourierServiceInfoDao courierServiceInfoDao;
 
@@ -186,55 +183,25 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         if ((suggestedAwb == null) || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
                 (suggestedCourier != null && (!(shipment.getCourier().equals(suggestedCourier))))) {
 
-            if ((suggestedAwb != null) && (suggestedCourier != null) && (suggestedCourier.getId().equals(EnumCourier.FedEx.getId()))) {
-                //delete FedEx tracking no. generated previously
-                Boolean result = deleteFedExShipment.deleteShipment(suggestedAwb.getAwbNumber());
+            if ((suggestedAwb != null) && (suggestedCourier != null) && (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId()))){
+                // To delete the tracking no. generated previously
+                awbService.deleteAwbForThirdPartyCourier(suggestedCourier, suggestedAwb.getAwbNumber());
+                //Boolean result = fedExShipmentDeleteUtil.deleteShipment(suggestedAwb.getAwbNumber());
             }
-            
-            if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())) {
-                Double weightInKg = shipment.getBoxWeight();
-                List<String> barcodeList = new ArrayList<String>();
-                List<String> routingCode = new ArrayList<String>();
-                String trackingNumber = fedExCourier.newFedExShipment(shippingOrder, weightInKg, barcodeList, routingCode);
-                if (trackingNumber == null) {
-                    addRedirectAlertMessage(new SimpleMessage(" FedEx tracking number could not be generated"));
+
+            if (ThirdPartyAwbService.integratedCouriers.contains(shipment.getCourier().getId())) {
+               Double weightInKg = shipment.getBoxWeight();
+               Awb thirdPartyAwb = awbService.getAwbForThirdPartyCourier(shipment.getCourier(), shippingOrder, weightInKg);
+               if (thirdPartyAwb == null) {
+                    addRedirectAlertMessage(new SimpleMessage(" The tracking number could not be generated"));
                     return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-                } else {
-                    Awb fedExNumber = awbService.createAwb(shipment.getCourier(), trackingNumber, shippingOrder.getWarehouse(), shippingOrder.isCOD());
-
-                    fedExNumber = awbService.save(fedExNumber);
-                    finalAwb = fedExNumber;
-                    finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
-
-                    //String routingCode = fedExCourier.getRoutingCode();
-                    String pincode = shippingOrder.getBaseOrder().getAddress().getPin();
-                    CourierServiceInfo courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(EnumCourier.FedEx.getId(), pincode, true, false, false);
-                    if (courierServiceInfo == null){
-                       courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(EnumCourier.FedEx.getId(), pincode, false, false, false);
-                    }
-                    if (courierServiceInfo != null) {
-                      if (routingCode.get(0) != null){
-                        courierServiceInfo.setRoutingCode(routingCode.get(0));
-                        courierServiceInfoDao.save(courierServiceInfo);
-                      }    
-                    }
-
-                    String forwardBarCode = barcodeList.get(0);
-                    fedExNumber.setAwbBarCode(forwardBarCode);
-
-
-                    if (shippingOrder.isCOD()) {
-                        String CODReturnBarCode = barcodeList.get(1);
-                        fedExNumber.setReturnAwbBarCode(CODReturnBarCode);
-                        String returnAwb = barcodeList.get(2);
-                        fedExNumber.setReturnAwbNumber(returnAwb);
-                        
-                    }
-
-
-                }
-            } else {
-
+               } else {
+                   thirdPartyAwb = awbService.save(thirdPartyAwb);
+                   finalAwb = thirdPartyAwb;
+                   finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+               }
+            }           
+            else {
                 Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
                 if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
                     if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {

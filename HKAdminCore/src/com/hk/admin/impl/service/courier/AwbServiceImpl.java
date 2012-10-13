@@ -26,9 +26,7 @@ import com.hk.domain.warehouse.Warehouse;
 public class AwbServiceImpl implements AwbService {
     @Autowired
     AwbDao          awbDao;
-    @Autowired
-    ShipmentService shipmentService;
-
+    
     public Awb find(Long id) {
         return awbDao.get(Awb.class, id);
     }
@@ -55,6 +53,13 @@ public class AwbServiceImpl implements AwbService {
 
         return hkAwb;
 
+    }
+
+    public boolean deleteAwbForThirdPartyCourier(Courier courier, String awbNumber){
+        Long courierId = courier.getId();
+
+        ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
+        return thirdPartyAwbService.deleteThirdPartyAwb(awbNumber);
     }
 
     public Awb save(Awb awb) {

@@ -15,9 +15,7 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.admin.util.BarcodeGenerator;
-import com.hk.admin.util.DeleteFedExShipment;
-import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
+
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -55,13 +53,8 @@ public class ShipmentServiceImpl implements ShipmentService {
     ShipmentDao           shipmentDao;
 
     @Autowired
-    BarcodeGenerator      barcodeGenerator;
-    @Autowired
     CourierServiceInfoDao courierServiceInfoDao;
-    @Autowired
-    FedExCourierUtil      fedExCourier;
-    @Autowired
-    DeleteFedExShipment   deleteFedExShipment;
+    
 
     @Transactional
     public Shipment createShipment(ShippingOrder shippingOrder) {
@@ -161,10 +154,12 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     public void delete(Shipment shipment) {
-        if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())) {
-            // delete FedEx tracking no. generated previously
-            Boolean result = deleteFedExShipment.deleteShipment(shipment.getAwb().getAwbNumber());
+        Courier courier = shipment.getCourier();
+        // Deleting the tracking number generated previously
+        if(ThirdPartyAwbService.integratedCouriers.contains(courier.getId())){
+           awbService.deleteAwbForThirdPartyCourier(courier, shipment.getAwb().getAwbNumber());
         }
+
         shipmentDao.delete(shipment);
     }
 

@@ -17,30 +17,29 @@ import org.springframework.stereotype.Component;
  *
  * This sample code has been tested with JDK 5 and Apache Axis 1.4
  */
-@Component
-public class DeleteFedExShipment {
 
-    private static Logger logger = LoggerFactory.getLogger(DeleteFedExShipment.class);
+public class FedExShipmentDeleteUtil {
 
-     @Value("#{hkEnvProps['" + Keys.Env.fedExAuthKey + "']}")
-    private   String        fedExAuthKey;
+    private static Logger logger = LoggerFactory.getLogger(FedExShipmentDeleteUtil.class);
 
-    @Value("#{hkEnvProps['" + Keys.Env.fedExAccountNo + "']}")
-    private  String        fedExAccountNo;
+     private String        fedExAuthKey;
 
-    @Value("#{hkEnvProps['" + Keys.Env.fedExMeterNo + "']}")
-    private  String        fedExMeterNo;
+    private String        fedExAccountNo;
 
-    @Value("#{hkEnvProps['" + Keys.Env.fedExPassword + "']}")
-    private  String        fedExPassword;
+    private String        fedExMeterNo;
 
-    @Value("#{hkEnvProps['" + Keys.Env.fedExServerUrl + "']}")
-    private  String        fedExServerUrl;
+    private String        fedExPassword;
 
-    public DeleteFedExShipment(){
+    private String        fedExServerUrl;
 
+    public FedExShipmentDeleteUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
+        this.fedExAuthKey = fedExAuthKey;
+        this.fedExAccountNo = fedExAccountNo;
+        this.fedExMeterNo = fedExMeterNo;
+        this.fedExPassword = fedExPassword;
+        this.fedExServerUrl = fedExServerUrl;
     }
-	//
+    //
 	public boolean deleteShipment(String trackingNumber) {
 		// Build a CancelPackageRequest object
 		DeleteShipmentRequest request = new DeleteShipmentRequest();
@@ -87,8 +86,7 @@ public class DeleteFedExShipment {
 			//printNotifications(reply.getNotifications());
 
 		} catch (Exception e) {
-		    logger.error(e.getMessage());
-            return false;
+		    logger.error("Error deleting the FedEx tracking number:" + e);           
 		}
         return false;
 	}
