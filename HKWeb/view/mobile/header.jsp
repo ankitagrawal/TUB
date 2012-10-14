@@ -5,7 +5,7 @@
 <script type="text/javascript"	src="${httpPath}js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript"	src="${httpPath}js/jquery-ui-1.8.23.custom.min.js"></script>
 <script>
-var wSURL = '/healthkart/rest/api/';
+var wSURL = '${pageContext.request.contextPath}/rest/api/';
 var wSURLCart = '';
 var httpPath = '${httpPath}';
 </script>
