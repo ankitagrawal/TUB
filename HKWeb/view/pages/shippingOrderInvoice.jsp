@@ -133,8 +133,8 @@
     <c:when test="${orderSummary.shipment.courier.id == fedExCourier}">
         <div class="grid_12">
 
-            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;Standard
-                Overnight
+            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;               
+                Standard Overnight
                 <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD && orderSummary.invoiceDto.grandTotal > 0}">
                     COD
                 </c:if>

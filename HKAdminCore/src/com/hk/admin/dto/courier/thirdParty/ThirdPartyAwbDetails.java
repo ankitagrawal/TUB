@@ -14,6 +14,8 @@ public class ThirdPartyAwbDetails {
 
     private String       pincode;
 
+//    private boolean      isGroundShipping;
+
     public ThirdPartyAwbDetails(String trackingNumber) {
         this.trackingNumber = trackingNumber;
     }
@@ -58,4 +60,11 @@ public class ThirdPartyAwbDetails {
         this.pincode = pincode;
     }
 
+//    public boolean isGroundShipping() {
+//        return isGroundShipping;
+//    }
+//
+//    public void setGroundShipping(boolean groundShipping) {
+//        isGroundShipping = groundShipping;
+//    }
 }

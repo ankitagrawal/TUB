@@ -77,8 +77,10 @@ import com.fedex.ship.stub.WebAuthenticationDetail;
 import com.fedex.ship.stub.Weight;
 import com.fedex.ship.stub.WeightUnits;
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
+import com.hk.admin.impl.service.shippingOrder.ShipmentServiceImpl;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.service.ServiceLocatorFactory;
 
 /**
  * Sample code to call the FedEx Ship Service
@@ -183,11 +185,18 @@ public class FedExCourierUtil {
         RequestedShipment requestedShipment = new RequestedShipment();
         requestedShipment.setShipTimestamp(Calendar.getInstance()); // Ship date and time
         requestedShipment.setDropoffType(DropoffType.REGULAR_PICKUP);
-        requestedShipment.setServiceType(ServiceType.STANDARD_OVERNIGHT);// FEDEX_EXPRESS_SAVER); // Service types
-        // are STANDARD_OVERNIGHT,
-        // PRIORITY_OVERNIGHT, FEDEX_GROUND ...
-        requestedShipment.setPackagingType(PackagingType.YOUR_PACKAGING); // Packaging type FEDEX_BOX, FEDEX_PAK,
-        // FEDEX_TUBE, YOUR_PACKAGING, ...
+        /*
+        ShipmentServiceImpl shipmentService = ServiceLocatorFactory.getService(ShipmentServiceImpl.class);
+        if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)){
+           requestedShipment.setServiceType(ServiceType.FEDEX_EXPRESS_SAVER);
+        }
+        else{
+        */
+        requestedShipment.setServiceType(ServiceType.STANDARD_OVERNIGHT);
+        //}
+        // Service types are STANDARD_OVERNIGHT, PRIORITY_OVERNIGHT, FEDEX_GROUND ...
+        requestedShipment.setPackagingType(PackagingType.YOUR_PACKAGING);
+        // Packaging type FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...
 
         //
         requestedShipment.setShipper(addShipper(shippingOrder)); // Sender information
@@ -198,7 +207,6 @@ public class FedExCourierUtil {
         //
         if (shippingOrder.isCOD()) {
             requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested(shippingOrder));
-            // requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder));
         }
         //
         requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder));
@@ -250,9 +258,7 @@ public class FedExCourierUtil {
 
     }
 
-    // public List<String> getBarCodeList(){
-    // return retrieveBarcodes;
-    // }
+
 
     public List<String> setRoutingCode(ProcessShipmentReply reply) {
         List<String> routingFedEx = new ArrayList<String>();
@@ -263,10 +269,7 @@ public class FedExCourierUtil {
         return routingFedEx;
     }
 
-    // public String getRoutingCode(){
-    // return routingFedEx;
-    // }
-    //
+   
     @SuppressWarnings("unused")
     private static void writeServiceOutput(ProcessShipmentReply reply) throws Exception {
         try {
