@@ -39,13 +39,15 @@
 						<img src='{{print(imageUrl)}}'/>
 					</td>
 					<td class='text-container' style='padding:20px'>
-						<h3 class='ui-li-heading' style='margin:0px'>{{print(name)}}</h3>
+						<h3 class='ui-li-heading' style='margin:0px;white-space:normal'>{{print(name)}}</h3>
 						<p style='margin:0px'>
 							
 				
 							<span class='svPrcnt'>{{print(brand)}}
 							<br>Delivered in: {{print(minDays)}} - {{print(maxDays)}} days</span>
-							
+							{{if(codAllowed == false) { }}
+							<span class='redText'>COD Not Available</span>
+							{{ } }}
 						</p>
 						<!--span class='ad2Crt'>Add To cart</span-->
 					</td>
@@ -68,7 +70,10 @@
 						<p style='padding-top:3px'>
 							<strike>Rs {{print(markedPrice)}}</strike>
 							<span class='ofrPrc'> Rs {{print(hkPrice)}}</span>
+							{{if(discountPercent > 0) { }}
 							<span class='svPrcnt'>{{print(discountPercent)}}% off</span>
+							{{ } }}
+							
 							
 						</p>
 						<!--a class='ad2Crt' href='#' data-url="addtoCart=Place Order&productVariantList[0]={{print(id)}}&productVariantList[0].qty=1&productVariantList[0].selected=true">Place Order</a-->
@@ -90,6 +95,7 @@ $('#productDetails').bind('pageshow',function(){
 var urlEval = new URLEval();
 var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 var queryString = x.search;
+
 /*****Variant Backnbone**S**********/
 	var ProductVariantModel = Backbone.Model.extend({
 		initialize : function(){
@@ -197,7 +203,7 @@ loadingPop('s','');
 		});
 		$('#productDetails').on('click','.ad2Crt',function(e){
 	//e.preventDefault();
-
+			var ele = e.currentTarget;
 			var requestURL = $(this).attr('data-url');
 			
 			$.ajax({
@@ -213,7 +219,8 @@ loadingPop('s','');
 					}
 					else
 					{
-						alert(response.message);
+						popUpMob.show(response.message);
+						$(ele).removeClass('ad2Crt').addClass('go2Crt').html('<a href="cart.jsp" style="text-decoration:none;color:#333">Added to Cart</a>');
 					}
 				}
 			});

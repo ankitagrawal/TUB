@@ -30,15 +30,19 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.stripesstuff.plugin.session.Session;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
 
+@Path("/mSignup")
 @Component
 public class MSignUpAction extends MBaseAction {
 
@@ -57,8 +61,8 @@ public class MSignUpAction extends MBaseAction {
 	@Validate(required = true)
 	private boolean agreeToTerms;
 
-//	private String redirectUrl;
-//	private String source;
+	// private String redirectUrl;
+	// private String source;
 
 	@Session(key = HealthkartConstants.Session.signupDate)
 	private String signupDate;
@@ -70,85 +74,99 @@ public class MSignUpAction extends MBaseAction {
 	@Autowired
 	private UserService userService;
 
-/*
+	/*
+	 * @DefaultHandler
+	 * 
+	 * @DontValidate public Resolution pre() { return new
+	 * ForwardResolution("/pages/signup.jsp"); }
+	 */
+
+	/*
+	 * @ValidationMethod() public void isValidEmail() { if
+	 * (!BaseUtils.isValidEmail(email)) {
+	 * getContext().getValidationErrors().add("invalidEmail", new
+	 * LocalizableError("/Signup.action.InvalidEmail")); } }
+	 * 
+	 * @ValidationMethod public void conformPassword() { if
+	 * (!password.equals(passwordConfirm)) {
+	 * getContext().getValidationErrors().add("passwordConfirm", new
+	 * LocalizableError("/Signup.action.PasswordDontMatch")); } }
+	 */
+
+	/*
+	 * @ValidationMethod public void signupValidation() { if (!agreeToTerms) {
+	 * getContext().getValidationErrors().add("terms", new
+	 * LocalizableError("/Signup.action.terms.notAgree",
+	 * getLinkManager().getTermsAndConditionsUrl())); } }
+	 */
+
 	@DefaultHandler
-	@DontValidate
-	public Resolution pre() {
-		return new ForwardResolution("/pages/signup.jsp");
-	}
-*/
-
-/*
-	@ValidationMethod()
-	public void isValidEmail() {
-		if (!BaseUtils.isValidEmail(email)) {
-			getContext().getValidationErrors().add("invalidEmail", new LocalizableError("/Signup.action.InvalidEmail"));
-		}
-	}
-
-	@ValidationMethod
-	public void conformPassword() {
-		if (!password.equals(passwordConfirm)) {
-			getContext().getValidationErrors().add("passwordConfirm", new LocalizableError("/Signup.action.PasswordDontMatch"));
-		}
-	}
-*/
-
-/*    @ValidationMethod
-    public void signupValidation() {
-        if (!agreeToTerms) {
-            getContext().getValidationErrors().add("terms", new LocalizableError("/Signup.action.terms.notAgree", getLinkManager().getTermsAndConditionsUrl()));
-        }
-    }*/
-
-	public String signup(@QueryParam("source") String source,@Context HttpServletRequest request) {
+	@POST
+	@Path("/signup/")
+	@Produces("application/json")
+	public String signup(@FormParam("email") String email,
+			@FormParam("name") String name,
+			@FormParam("password") String password,
+			@Context HttpServletRequest request) {
 		User referredBy = null;
-        HealthkartResponse healthkartResponse;
-        String jsonBuilder = "";
-        String message = "Done";
-        String status = HealthkartResponse.STATUS_OK;
-		Cookie referredByCookie = BaseUtils.getCookie(request, HealthkartConstants.Cookie.referred_by);
+		HealthkartResponse healthkartResponse;
+		String jsonBuilder = "";
+		String message = "Done";
+		String status = HealthkartResponse.STATUS_OK;
+		Cookie referredByCookie = BaseUtils.getCookie(request,
+				HealthkartConstants.Cookie.referred_by);
 		if (referredByCookie != null) {
-			referredBy = getUserService().findByUserHash(CryptoUtil.decrypt(referredByCookie.getValue()));
+			referredBy = getUserService().findByUserHash(
+					CryptoUtil.decrypt(referredByCookie.getValue()));
 		}
 		try {
 			userManager.signup(email, name, password, referredBy);
 		} catch (HealthkartSignupException e) {
-            message = "email id already exists";
-            status = HealthkartResponse.STATUS_ERROR;
+			message = "email id already exists";
+			status = HealthkartResponse.STATUS_ERROR;
 		}
 
-		Date currentDate = Calendar.getInstance().getTime();
-		signupDate = GAUtil.formatDate(currentDate);
-        MUserLoginJSONResponse jsonResponse = new MUserLoginJSONResponse();
-        if(null!=userManager.getUserService()&&null!=userManager.getUserService().getLoggedInUser()&&null!=userManager.getUserService().getLoggedInUser().getAddresses()){
-        Address address = userManager.getUserService().getLoggedInUser().getAddresses().get(0);
-        User user = userManager.getUserService().getLoggedInUser();
-        jsonResponse.setCity(address.getCity());
-        jsonResponse.setState(address.getState());
-        jsonResponse.setEmail(user.getEmail());
-        jsonResponse.setId(user.getId());
-        jsonResponse.setLine1(address.getLine1());
-        jsonResponse.setLine2(address.getLine2());
-        jsonResponse.setLogin(user.getLogin());
-        jsonResponse.setName(user.getName());
-        jsonResponse.setPhone(address.getPhone());
-        jsonResponse.setPin(address.getPin());
-        jsonResponse.setType("Logged");
-        }
-/*
-		if (!StringUtils.isBlank(redirectUrl)) {
-			return new RedirectResolution(redirectUrl, false);
-		}
-*/
+		Map map = new HashMap<String, String>();
+		map.put("email", email);
+		map.put("name", name);
 
-		if (!StringUtils.isBlank(source) && source.equals(LoginAction.SOURCE_CHECKOUT)) {
-			//return new RedirectResolution(SelectAddressAction.class);
-		}
+		/*
+		 * Date currentDate = Calendar.getInstance().getTime(); signupDate =
+		 * GAUtil.formatDate(currentDate); MUserLoginJSONResponse jsonResponse =
+		 * new MUserLoginJSONResponse();
+		 * if(null!=userManager.getUserService()&&null
+		 * !=userManager.getUserService
+		 * ().getLoggedInUser()&&null!=userManager.getUserService
+		 * ().getLoggedInUser().getAddresses()){ User user =
+		 * userManager.getUserService().getLoggedInUser(); for(Address
+		 * address:userManager
+		 * .getUserService().getLoggedInUser().getAddresses()){
+		 * jsonResponse.setCity(address.getCity());
+		 * jsonResponse.setState(address.getState());
+		 * jsonResponse.setEmail(user.getEmail());
+		 * jsonResponse.setId(user.getId());
+		 * jsonResponse.setLine1(address.getLine1());
+		 * jsonResponse.setLine2(address.getLine2());
+		 * jsonResponse.setLogin(user.getLogin());
+		 * jsonResponse.setName(user.getName());
+		 * jsonResponse.setPhone(address.getPhone());
+		 * jsonResponse.setPin(address.getPin()); } }
+		 */
+		/*
+		 * if (!StringUtils.isBlank(redirectUrl)) { return new
+		 * RedirectResolution(redirectUrl, false); }
+		 */
+		/*
+		 * 
+		 * if (!StringUtils.isBlank(source) &&
+		 * source.equals(LoginAction.SOURCE_CHECKOUT)) { //return new
+		 * RedirectResolution(SelectAddressAction.class); }
+		 */
 
-        healthkartResponse = new HealthkartResponse(status, message, jsonResponse);
-        jsonBuilder = com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(healthkartResponse);
-        return jsonBuilder;
+		healthkartResponse = new HealthkartResponse(status, message, map);
+		jsonBuilder = com.akube.framework.gson.JsonUtils.getGsonDefault()
+				.toJson(healthkartResponse);
+		return jsonBuilder;
 	}
 
 	public void setEmail(String email) {
@@ -175,23 +193,16 @@ public class MSignUpAction extends MBaseAction {
 		this.agreeToTerms = agreeToTerms;
 	}
 
-/*
-	public String getRedirectUrl() {
-		return redirectUrl;
-	}
-
-	public void setRedirectUrl(String redirectUrl) {
-		this.redirectUrl = redirectUrl;
-	}
-
-	public String getSource() {
-		return source;
-	}
-
-	public void setSource(String source) {
-		this.source = source;
-	}
-*/
+	/*
+	 * public String getRedirectUrl() { return redirectUrl; }
+	 * 
+	 * public void setRedirectUrl(String redirectUrl) { this.redirectUrl =
+	 * redirectUrl; }
+	 * 
+	 * public String getSource() { return source; }
+	 * 
+	 * public void setSource(String source) { this.source = source; }
+	 */
 
 	public UserManager getUserManager() {
 		return userManager;

@@ -11,7 +11,7 @@
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='home.jsp'>Offers</a>
+				<a href='offers.jsp'>Offers</a>
 			</td>
 		</tr>
 		<tr>
@@ -26,7 +26,7 @@
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='home.jsp'>Contact Us</a>
+				<a href='contactUs.jsp'>Contact Us</a>
 			</td>
 		</tr>
 		

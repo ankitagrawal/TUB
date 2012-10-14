@@ -27,17 +27,16 @@
 <!-- start right pannel -->
 <div id='defaultViewContent' class=viewContent>
 <div id="login-header"><h2 style='color:#2186C6;font-weight:normal'>Login using an existing account </h2></div>
-  <div id="signin-block">
+  <div id="signin-block" style='width:95%;margin:0px auto'>
    <form autocomplete="on" id='authenticate' action="mLogin/login" method="post"> 
                                <p style="padding:10px 0 10px 0"> 
-                                    <label for=username> Email</label>
+                                    <!--label for=username> Email</label-->
                                     <input type="text" placeholder="Enter your Email address"  name="email" id="username">
                                 </p>
                                 
                                 <p style="padding:5px 0 10px 0"> 
-                                    <label class="youpasswd" for=password>Password </label>
-                                    <input type="password" placeholder="Enter your Password"  name="password" id="password"> 
-									
+                                    <!--label class="youpasswd" for=password>Password </label-->
+                                    <input type="password" placeholder="Enter your Password"  name="password" id="password"> 							
                                 </p>
                                 
                                 <p class="keeplogin" style='padding-bottom:10px'> 
@@ -55,22 +54,22 @@
 <div id='registarViewContent' class='viewContent hide'>
 <div id="login-header"><h2 style='color:#2186C6;font-weight:normal'>Create account</h2>
  <!-- block -->
-<div id="signin-block">
- <form autocomplete="on" id='registration' action="/webservices/users/registration"> 
+<div id="signin-block" style='width:95%;margin:0px auto'>
+ <form autocomplete="on" id='registration' action="mSignup/signup"> 
    <p style="padding:10px 0 10px 0"> 
-   <label for=usernamesignup>Name <span>*</span></label>
-  <input type="text" placeholder="Enter your name"  name="username" id="usernamesignup" class='ui-corner-all' >
+   <!--label for=usernamesignup>Name <span>*</span></label-->
+  <input type="text" placeholder="Enter your name"  name="name" id="usernamesignup" class='ui-corner-all' >
    </p>
  <p style="padding:10px 0 10px 0"> 
-  <label class="youmail" for="emailsignup"> Email <span>*</span></label>
-  <input type="email" placeholder="Enter your Email address"  name="emailaddress" id="emailsignup"> 
+  <!--label class="youmail" for="emailsignup"> Email <span>*</span></label-->
+  <input type="email" placeholder="Enter your Email address"  name="email" id="emailsignup"> 
                                 </p>
                                 <p style="padding:10px 0 10px 0">  
-  <label for="passwordsignup">Password <span>*</span></label>
+  <!--label for="passwordsignup">Password <span>*</span></label-->
    <input type="password" placeholder="Enter your Password" required="required" name="password" id="passwordsignup">
                                 </p>
                                 <p style="padding:10px 0 10px 0"> 
-   <label for="passwordsignup_confirm">Confirm Password <span>*</span></label>
+   <!--label for="passwordsignup_confirm">Confirm Password <span>*</span></label-->
    <input type="password" placeholder="Re-enter your Password" required="required" name="passwordsignup_confirm" id="passwordsignup_confirm">
                                 </p>
                                 <p class="keeplogin" id='accept'> 
@@ -141,43 +140,17 @@ $('#loginSignup').bind('pageshow',function(){
 		type: 'POST',
 		success: function(data)
 		{
-			
+		    alert(data);	
 			if(hasErr(data))
 			{	$('.loaderContainer').hide();
-				generatePopUpWithTimeout('alert',getErr(data.errors),1500);
 			}
 			else
 			{
 			
-				generate('success','<h3>Registration Successful</h3>Soon you will be redirected');
 				$('#username').val($('#emailsignup').val());
 				$('#password').val($('#passwordsignup').val());
-				var info=$('#authenticate').serialize();
-				$.ajax({
-					url: redirectPath,
-					data: info,
-					type: 'get',
-					async:false,
-					success: function(data)
-					{
-					   
-						if(hasErr(data))
-						{	$('.loaderContainer').hide();
-							generatePopUpWithTimeout('alert',data.getErr(errors),1500);
-							
-						}
-						else
-						{
-							$.mobile.urlHistory.stack = [];
-						   setTimeout(function(){location.href='/m/home'},1000);
-							
-						}
-					},
-					error:function(data){
-					  generate('confirm','Please try later.');
-					}
-				});
-				
+			
+			    authenticateUser();
 				
 				
 			}
@@ -197,33 +170,39 @@ $('#loginSignup').bind('pageshow',function(){
                     message: "Please enter name.",
 		 });
 
-		$("#password").validate({
+	$("#password").validate({
                     expression: "if (VAL=='') return false; else return true;",
                     message: "Please enter password.",
 		});
 	$('#authenticate').validated(function(){
-
+       
 		$('.loaderContainer').show();
-		var path=$('#authenticate').attr('action');
-		var dat=$('#authenticate').serialize();
 		
-		$.ajax({
+	   authenticateUser();
+		return false;
+	});
+	
+	function authenticateUser(path,data){
+	    var path=$('#authenticate').attr('action');
+		var data=$('#authenticate').serialize();
+		
+	   $.ajax({
 		url: wSURL +path,
-		data: dat,
-		type: 'get',
+		data: data,
+		type: 'post',
 		dataType: 'json',
+		async:false,
 		success: function(data)
 		{
-			
 			if(hasErr(data))
 			{	
 				alert(data.message);
 			}
 			else
 			{
-			
-				alert('Login Successful. Soon you will be redirected');
+			     console.log(data);   
 				var rediFlag =getURLParameterValue((($.mobile.path.parseUrl(location.href)).search),'target');
+				$.mobile.urlHistory.stack = [];
 				if(rediFlag ==null || rediFlag=='')
 				{
 					setTimeout(function(){location.href='${httpPath}home.jsp'},500);
@@ -239,13 +218,12 @@ $('#loginSignup').bind('pageshow',function(){
 			alert("Request Failed");			
 		}
 		});
-		return false;
-	});
+	  
+	}
 	
 		
 		
 	$('.gNav').click( function(e){
-		
 		var ele = e.currentTarget;
 		var eleId = $(ele).attr('id');
 		$('.viewContent').hide();

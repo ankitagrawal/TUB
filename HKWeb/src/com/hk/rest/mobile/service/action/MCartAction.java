@@ -146,6 +146,7 @@ public class MCartAction extends MBaseAction{
                     cartItemResponse.setOrder(lineItem.getOrder().getId());
                     if ((productVariant.getProduct().isDeleted() != null && productVariant.getProduct().isDeleted()) || productVariant.isDeleted() || productVariant.isOutOfStock()) {
                         lineItem.setQty(0L);
+                        continue;
                     }
                     cartItemResponse.setQty(lineItem.getQty());
                     cartItemResponse.setCartLineItemId(lineItem.getId().toString());

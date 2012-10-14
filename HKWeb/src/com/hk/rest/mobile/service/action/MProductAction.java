@@ -185,8 +185,7 @@ public class MProductAction extends MBaseAction{
         @Path("/productDetail/")
         @Produces("application/json")
 
-        public String productDetail(@QueryParam("productSlug") String productSlug,
-                                    @QueryParam("productId") String productId,
+        public String productDetail(@QueryParam("productId") String productId,
                                     @Context HttpServletResponse response) {
             // getContext().getResponse().setDateHeader("Expires", System.currentTimeMillis() + (300*1000)); // 5 min in future.
             User user = null;

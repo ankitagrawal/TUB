@@ -4,6 +4,8 @@ import com.hk.rest.models.order.APIOrder;
 import com.hk.rest.pact.service.APIOrderService;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.web.HealthkartResponse;
+import com.hk.pact.service.order.OrderService;
+import com.hk.domain.order.Order;
 import com.akube.framework.gson.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,6 +13,10 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.text.Format;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,6 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 public class MOrderAction extends MBaseAction{
     @Autowired
     private APIOrderService apiOrderService;
+    @Autowired
+    OrderService orderService;
 
 
     @POST
@@ -49,13 +57,24 @@ public class MOrderAction extends MBaseAction{
         String message = MHKConstants.STATUS_DONE;
         String status = MHKConstants.STATUS_OK;
         String orderStatus=MHKConstants.NO_RESULTS;
+        Map statusMap = new HashMap<String,String>();
         try{
-        orderStatus =  getApiOrderService().trackOrder(orderId);
+
+        //orderStatus =  getApiOrderService().trackOrder(orderId);
+            Order order  = orderService.findByGatewayOrderId(orderId);
+            orderStatus = order.getOrderStatus().getName();
+            Format orderDate = new SimpleDateFormat("dd/MM/yy");
+            
+            statusMap.put("orderstatus",orderStatus);
+            statusMap.put("orderId",order.getOrderStatus().getId());
+            statusMap.put("name",order.getAddress().getName());
+            statusMap.put("date",orderDate.format(order.getCreateDate()));
+            
         }catch(Exception e){
             message = MHKConstants.NO_RESULTS;
-            status = MHKConstants.STATUS_OK;
+            status = MHKConstants.STATUS_ERROR;
         }
-        healthkartResponse = new HealthkartResponse(status, message, orderStatus);
+        healthkartResponse = new HealthkartResponse(status, message, statusMap);
         jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
 
         addHeaderAttributes(response);

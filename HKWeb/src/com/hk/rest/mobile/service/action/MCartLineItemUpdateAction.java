@@ -112,6 +112,7 @@ public class MCartLineItemUpdateAction extends MBaseAction {
     @Path("/removeItemfromCart/")
     @Produces("application/json")
     public String removeItemfromCart(@QueryParam("cartLineItemId")long cartLineItemId,
+                                     @QueryParam("qty")long qty,
                           @Context HttpServletResponse response) {
 
         HealthkartResponse healthkartResponse;
@@ -130,9 +131,11 @@ public class MCartLineItemUpdateAction extends MBaseAction {
         if (user != null) {
             order = orderManager.getOrCreateOrder(user);
         }
+
         for(CartLineItem item:order.getCartLineItems()){
             if(cartLineItemId==item.getId().longValue()){
                 cartLineItem = item;
+                cartLineItem.setQty(qty);
                 break;
             }
         }
@@ -140,7 +143,7 @@ public class MCartLineItemUpdateAction extends MBaseAction {
         if (cartLineItem != null && cartLineItem.getHkPrice() != null && cartLineItem.getHkPrice() != 0D) {
             if (cartLineItem.getComboInstance() != null) {
                 List<CartLineItem> siblingLineItems = comboInstanceDao.getSiblingLineItems(cartLineItem);
-                for (CartLineItem cartLi : siblingLineItems) {
+                for (CartLineItem cartLi : siblingLineItems) {  
                     cartLi.setQty(cartLi.getComboInstance().getComboInstanceProductVariant(cartLi.getProductVariant()).getQty() * comboInstance.getQty());
                     cartLi = cartLineItemService.save(cartLi);
                 }
@@ -179,15 +182,15 @@ public class MCartLineItemUpdateAction extends MBaseAction {
                 cartItemResponse.setLineItemType(lineItem.getLineItemType().getName());
                 cartItemResponse.setMarkedPrice(lineItem.getMarkedPrice());
                 cartItemResponse.setOrder(lineItem.getOrder().getId());
-                if ((productVariant.getProduct().isDeleted() != null && productVariant.getProduct().isDeleted()) || productVariant.isDeleted() || productVariant.isOutOfStock()) {
-                    lineItem.setQty(0L);
-                }
                 cartItemResponse.setQty(lineItem.getQty());
+                if(lineItem.getQty()<=0){
+                	continue;
+                }
                 cartItemResponse.setCartLineItemId(lineItem.getId().toString());
                 cartItemsList.add(cartItemResponse);
             }
         }
-        //order = orderManager.trimEmptyLineItems(order);
+        order = orderManager.trimEmptyLineItems(order);
 
         healthkartResponse = new HealthkartResponse(status, message, cartItemsList);
         jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);

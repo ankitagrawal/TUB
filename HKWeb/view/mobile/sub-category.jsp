@@ -21,9 +21,9 @@
 			<ul data-inset=true data-role=listview>
 			</ul>
 		</div>
-		<div style='clear:both;padding:4px'>
+		<!--div style='clear:both;padding:4px'>
 		Top Products
-		</div>
+		</div-->
 		<!--div id='sub-category-scroll'>
 		</div-->
 		<%@ include file='menuFooter.jsp' %>	
@@ -51,7 +51,7 @@
 		{{
 		var urlEval = new URLEval();
 		var pC = ($.mobile.path.parseUrl(urlEval.getURLFromHash(location.href))).search;pC = pC.replace('?','');}}
-			<a href='product.jsp?{{print(pC)}}&secondaryCategory={{print(encodeURIComponent(name))}}&perPage=10&pageNo=1'>{{print(name)}}</a>		
+			<a href='product.jsp?{{print(pC)}}&secondaryCategory={{print(encodeURIComponent(name))}}'>{{print(name)}}</a>		
 		</script>
 		<script type='text/javascript'>
 		

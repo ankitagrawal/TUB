@@ -1,11 +1,12 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <c:set var="httpPath" value="" />
+
 <link	href="${httpPath}css/custom-theme/jquery-ui-1.8.21.custom.css"	rel="stylesheet" type="text/css" />
 <script type="text/javascript"	src="${httpPath}js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript"	src="${httpPath}js/jquery-ui-1.8.23.custom.min.js"></script>
 <script>
 var wSURL = '/healthkart/rest/api/';
-var wSURLCart = 'http://122.176.33.182:9090/healthkart/core/cart/AddToCart.action';
+var wSURLCart = '';
 var httpPath = '${httpPath}';
 </script>
 <script src="${httpPath}js/json2.js"></script>
@@ -47,14 +48,25 @@ $.mobile.changePage.defaults.allowSamePageTransition = true;
 					$.mobile.changePage('product.jsp?query='+encodeURIComponent($(this).val())+'&pageNo=1&perPage=10');
 					}
 					*/
-					$.mobile.changePage('productTemp.jsp?query='+encodeURIComponent($(this).val())+'&pageNo=1&perPage=10');
+					$.mobile.changePage('productTemp.jsp?query='+encodeURIComponent($(this).val()));
 				}
 		});
 	});
 </script>
 <script src="${httpPath}js/jquery.mobile-1.1.1.min.js"></script>
 <script>
-
+function logout(){
+   $.ajax({
+		url: wSURL +"mLogin/logout",
+		type: 'get',
+		async:false,
+		success:function(data){ $.mobile.urlHistory.stack = []; 	setTimeout(function(){location.href='${httpPath}home.jsp'},500);
+		},
+		error: function(data){
+		$.mobile.urlHistory.stack = []; 	setTimeout(function(){location.href='${httpPath}home.jsp'},500);
+		}
+		});
+}
 </script>
 <link href="${httpPath}css/jquery.validate.css" rel="stylesheet" type="text/css" />
 <script src="${httpPath}js/jquery.validate.js" type="text/javascript"></script>

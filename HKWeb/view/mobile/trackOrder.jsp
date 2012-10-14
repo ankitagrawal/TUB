@@ -14,10 +14,7 @@
 </div>
 	<div data-role="content" style='height:auto'>
 	
-		<div style='text-align:center'>
-		Tracking Console
-		</div>
-		<form id=trackOrderForm action='contact.html'>
+		<form id=trackOrderForm>
 		<div style='margin:10px;padding:10px;border:1px solid white;box-shadow:4px 4px 8px #888;-webkit-box-shadow:4px 4px 8px #888'>
 		<label for='login'>Tracking Number</label>
 		<input type=text  id=trackOrderId style='background-color:white'placeholder='Enter Here'/>
@@ -45,14 +42,18 @@ $('#trackOrderForm').bind('submit',function(e){
 	$.ajax({
 		url: wSURL + 'mOrder/' + $('#trackOrderId').val() +'/track/',
 		dataType: 'json',
+		async:false,
 		success : function(data){
 			if(hasErr(data))
 			{
-					alert('Request failed');
+	   		    popUpMob.show(data.message);
 			}
 			else
 			{
-				$('#trackOrderResult').html('<h3>'+data.data+'</h3>');
+			    var resultHtml= '</h3>'+data.orderstatus+'</h3><br/>';
+				resultHtml+='<h3>Date :'+data.date+'</h3><br/>';
+				popUpMob.showWithTitle("Status",resultHtml);
+				
 			}
 		}
 	});

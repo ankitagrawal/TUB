@@ -25,4 +25,9 @@ public class MHKConstants {
     public static final String SERVICES = "services";
     public static final String IMAGEURL = "/images/ProductImages/ProductImagesThumb/";
     public static final String IMAGETYPE = ".jpg";
+    public static final String NOLOGIN_NOADDRESS = "1";
+    public static final String LOGIN_NOADDRESS = "2";
+    public static final String LOGIN_ADDRESS = "3";
+    public static final String NO_ADDRESS = "No address selected";
+    public static final String EMPTY_CART = "No Items in Cart";
 }

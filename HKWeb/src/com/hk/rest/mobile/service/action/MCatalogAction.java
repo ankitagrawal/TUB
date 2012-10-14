@@ -2,6 +2,7 @@ package com.hk.rest.mobile.service.action;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.catalog.SolrSchemaConstants;
+import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
 import com.hk.domain.LocalityMap;
@@ -35,6 +36,7 @@ import com.hk.rest.mobile.service.model.MCatalogJSONResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
+import com.hk.util.HKImageUtils;
 import com.hk.web.ConvertEncryptedToNormalDouble;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.filter.WebContext;
@@ -60,6 +62,7 @@ import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
+import java.text.DecimalFormat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,7 +83,6 @@ public class MCatalogAction extends MBaseAction{
     private String secondaryChildCategorySlug;
     private String tertiaryChildCategorySlug;
     private SeoData seoData;
-
     String urlFragment;
     String topCategoryUrlSlug;
     String allCategories;
@@ -90,7 +92,6 @@ public class MCatalogAction extends MBaseAction{
     private String redirectUrl;
 
     String displayMode;
-    private int pageNo;
     String feed;
 
     Page productPage;
@@ -145,8 +146,6 @@ public class MCatalogAction extends MBaseAction{
     private String preferredZone;
 
 
-    @Session(key = HealthkartConstants.Session.perPageCatalog)
-    private int perPage;
 
     String appBasePath;
     private int defaultPerPage = 20;
@@ -219,7 +218,7 @@ public class MCatalogAction extends MBaseAction{
             categoryList.add(searchFilter);
 
             SortFilter sortFilter = new SortFilter(getCustomSortBy(), getCustomSortOrder());
-            PaginationFilter paginationFilter = new PaginationFilter(getPageNo(), getPerPage());
+            PaginationFilter paginationFilter = new PaginationFilter(pageNo, perPage);
             RangeFilter rangeFilter = new RangeFilter(SolrSchemaConstants.hkPrice, getCustomStartRange(), getCustomEndRange());
 
             SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
@@ -278,7 +277,7 @@ public class MCatalogAction extends MBaseAction{
                     Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
                     groupsCount = groupedFilters.size();
                 }
-                productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice, getPageNo(), getPerPage());
+                productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice, pageNo, perPage);
                 if (productPage != null) {
                     productList = productPage.getList();
                     for (Product product : productList) {
@@ -288,9 +287,9 @@ public class MCatalogAction extends MBaseAction{
                 trimListByCategory(productList, secondaryCategory);
             } else {
                 if (StringUtils.isBlank(brand)) {
-                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
+                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, pageNo, perPage);
                 } else {
-                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, getPageNo(), getPerPage());
+                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, pageNo, perPage);
                 }
                 if (productPage != null) {
                     productList = productPage.getList();
@@ -306,6 +305,7 @@ public class MCatalogAction extends MBaseAction{
 
         }
 
+        HashMap<String,Object> resultMap = new HashMap<String, Object>();
         for (Product product : productList) {
             catalogResponse = new MCatalogJSONResponse();
             catalogResponse = populateCatalogResponse(product, catalogResponse);
@@ -313,7 +313,16 @@ public class MCatalogAction extends MBaseAction{
             product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
             catalogResponse.setProductURL(product.getProductURL());
             catalogList.add(catalogResponse);
+            
         }
+        resultMap.put("data", catalogList);
+        if(productList.size()<perPage){
+        	resultMap.put("hasMore", new Boolean(false));
+        	
+        }else{
+        	resultMap.put("hasMore", new Boolean(true));
+        }
+        
 
         //urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
 /*
@@ -356,7 +365,7 @@ public class MCatalogAction extends MBaseAction{
 
 
         addHeaderAttributes(response);
-        healthkartResponse = new HealthkartResponse(status, message, catalogList);
+        healthkartResponse = new HealthkartResponse(status, message, resultMap);
         jsonBuilder = com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(healthkartResponse);
         return jsonBuilder;
 
@@ -366,8 +375,12 @@ public class MCatalogAction extends MBaseAction{
             catalogJSONResponse.setProductURL(product.getProductURL());
         if(null!=product.getSlug())
             catalogJSONResponse.setProductSlug(product.getSlug());
-        if (null != product.getId ())
-            catalogJSONResponse.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
+        if (null != product.getId ()){
+            if(null!=product.getMainImageId())
+                catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId(),false));
+            else
+                catalogJSONResponse.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
+        }
         if (null != product.getManufacturer())
             catalogJSONResponse.setManufacturer(product.getManufacturer().getName());
         if (null != product.getBrand())
@@ -408,7 +421,7 @@ public class MCatalogAction extends MBaseAction{
         if (null != product.getMinimumMRPProducVariant().getMarkedPrice())
             catalogJSONResponse.setMarkedPrice(product.getMinimumMRPProducVariant().getMarkedPrice());
         if (null != product.getMinimumMRPProducVariant().getDiscountPercent())
-            catalogJSONResponse.setDiscountPercentage(product.getMinimumMRPProducVariant().getDiscountPercent()*100);
+            catalogJSONResponse.setDiscountPercentage(Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent()*100)));
         return catalogJSONResponse;
     }
 
@@ -416,6 +429,7 @@ public class MCatalogAction extends MBaseAction{
         return 1;
     }
 
+/*
     public int getPageNo() {
         return pageNo <= 0 ? 1 : pageNo;
     }
@@ -431,6 +445,7 @@ public class MCatalogAction extends MBaseAction{
     public void setPerPage(int perPage) {
         this.perPage = perPage;
     }
+*/
 
     private List<Product> trimListByDistance(List<Product> productListNonCityFiltered, String preferredZone) throws IOException {
         if (preferredZone == null) {

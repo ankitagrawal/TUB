@@ -5,7 +5,7 @@
 	<%@ include file='header.jsp' %>	
 </head>
 <body>
-<div data-role="page" id=product class="type-home">
+<div data-role="page" id=offers class="type-home">
 <div data-role=header>
 	<%@ include file='menuHeader.jsp'%>
 	<%@ include file='menuNavBtnSrch.jsp'%>
@@ -20,11 +20,9 @@
 		
 		<div style='clear:both;padding:1px 0px'></div>
 		<div id='productTitle'style='clear:both;padding:4px;background-color:#ddd;text-align:center;margin-bottom:6px;font-weight:bold'>
-			
+			Offers
 		</div>
-		<div style='padding-top:4px' id='productList'  data-pageNo='0' data-perPage='10' data-more='true' data-request='free'>
-		<ul>
-		</ul>
+		<div style='padding-top:4px' id='offerList'>
 		</div>
 		<br>
 		<br>
@@ -52,44 +50,22 @@
 		
 		</tr>
 		</script>
-		<script type='text/template' id='product-list-template'>
+		<script type='text/template' id='offers-list-template'>
 		
 		
+			{{for(var i =0;i<data.length;i++){ }}
 			
+			<li class='shadow-4-address'>
 			
-			
-			<a href='productDetails.jsp?productSlug={{print(productSlug)}}&productId={{print(encodeURIComponent(id))}}'>
-				<table width='100%'>
-					<tr>
-					<td class='image-container'>
-						<img src='{{print(imageUrl)}}'/>
-					</td>
-					<td class='text-container'>
-						<h3 style='white-space:normal'>{{print(name)}}</h3>
-						<p>
-							<strike>Rs {{print(markedPrice)}}</strike>
-							<span class='ofrPrc'>Our Price Rs {{print(hkPrice)}}</span>
-							{{if(discountPercentage > 0) { }}
-							<span class='svPrcnt'>{{print(discountPercentage)}}% off</span>
-							{{ } }}
-							{{if(outOfStock == true) { }}
-							<span class='redText'>Out of Stock</span>
-							{{ } }}
-						</p>
-						<!--span class='ad2Crt'>Add To cart</span-->
-					</td>
-					</tr>
-				</table>
-					</a>
-			
-			
+						<img style='width:95%;margin:0px auto' alt='No Image Available' src='{{print(data[i].imageUrl)}}'/>
+			</li>
+			{{ } }}
 		
 		
 		</script>
 		
 <script>
-
-$('#product').bind('pageshow',function(){
+$('#offers').bind('pageshow',function(){
 		var urlEval = new URLEval();
 		//alert(urlEval.getURLFromHash(location.href));
 var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
@@ -155,7 +131,7 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 			},
 			render : function(){
 				var prVi = new ProductView({model : this});
-				$('#productList ul').append(prVi.render().el);
+				$('#offerList').append(prVi.render().el);
 			}
 		});
 		
@@ -166,21 +142,18 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 				this.clearView();
 			},
 			clearView : function(){
-			var par = getURLParameterValue(queryString,'secondaryCategory');
-			if(par==''||par==null)
-				par='Search Result';
-				$('#productTitle').html(par);
-				$('#productList ul').html('');
+				//$('#productTitle').html(getURLParameterValue(queryString,'secondaryCategory'));
+				$('#offerList').html('');
 			}
 		});
 		
 		var ProductView = Backbone.View.extend({
-			tagName : 'li',
+			tagName : 'ul',
 			initialize : function(){
 				_.bindAll(this,'render');
 				
 			},
-			template : _.template($('#product-list-template').html()),
+			template : _.template($('#offers-list-template').html()),
 			render : function(){
 				$(this.el).empty();
 				$(this.el).html(this.template(this.model.toJSON()));
@@ -203,71 +176,32 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 			URL = wSURL + 'mCatalog/catalog'+queryString;
 			//  URL = 'c.json'+queryString;
 		}
-		function getProductList(){
-			var perPage =$('#productList').attr('data-perPage');
-			var pageNo = $('#productList').attr('data-pageNo');
-			var hasMore = $('#productList').attr('data-more');
-			var dataRequest = $('#productList').attr('data-request');
-			if(hasMore=='true'&&dataRequest=='free')
+		$.ajax({
+			url : '/healthkart/rest/api/mCatalog/catalog?primaryCategory=Nutrition&secondaryCategory=Sports%20Nutrition&perPage=10&pageNo=0',
+		dataType: 'json',
+		success : function(response){
+			if(hasErr(response))
 			{
-			loadingPop('s','');
-			$('#productList').attr('data-request','processing');
-				$.ajax({
-					url : URL+'&pageNo='+pageNo+'&perPage='+perPage,
-				dataType: 'json',
+				loadingPop('h');
+				alert(getErr(response.message));
+			}
+			else
+			{
 				
-				success : function(response){
-					if(hasErr(response))
-					{
-						loadingPop('h');
-						alert(getErr(response.message));
-						$('#productList').attr('data-request','free');
-					}
-					else
-					{
-						if(response.data.length == 0 ||response.data == null)
-						{
-							$('#productList ul').html('<h3 style="padding-left:20px">No Data Found!</h3>');
-						}
-						else
-						{
-							if(prCo.add(response.data.data))
-							{
-								$('#productList ul').listview();
-								$('#productList ul').listview('refresh');
-							}
-						}
-						
-						$('#productList').attr('data-pageNo',Number(pageNo)+1);
-						$('#productList').attr('data-more',response.data.hasMore);
-						$('#productList').attr('data-request','free');
-						loadingPop('h');
-					}
-				},
-				error: function(){
-					alert('Request failed');
-					loadingPop('h');
+				if(prCo.add(response.data))
+				{
+					//$('#offerList ul').listview();
 				}
 				
-				});
+				loadingPop('h');
 			}
-			
+		},
+		error: function(){
+			alert('Request failed');
+			loadingPop('h');
 		}
-		getProductList();
-		$(window).scroll( function() {
-				var currentScrollTop = $(window).scrollTop();
-				var windowHeight = $(window).height();
-				var documentHeight = $('#productList').height()+160;
-				console.log(documentHeight);
-				if(documentHeight < (currentScrollTop + windowHeight))
-				{
-					
-					getProductList();
-					
-				}			
-			
-		});
 		
+		});
 		/**Backbone code for product list*E*/
 });
 

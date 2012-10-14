@@ -6,12 +6,14 @@ import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.constants.core.Keys;
 import com.shiro.PrincipalImpl;
+import com.akube.framework.stripes.action.BaseAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.shiro.mgt.*;
 import org.apache.shiro.mgt.SecurityManager;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
+import java.text.DecimalFormat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,27 +22,9 @@ import javax.ws.rs.core.Context;
  * Time: 9:37:54 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MBaseAction {
-
-    @Autowired
-    private org.apache.shiro.mgt.SecurityManager securityManager;
-    @Autowired
-    private UserService userService;
-
-    public PrincipalImpl getPrincipal() {
-        return (PrincipalImpl) securityManager.getSubject().getPrincipal();
-    }
-
-    public User getPrincipalUser() {
-        if (getPrincipal() == null)
-            return null;
-        return getUserService().getUserById(getPrincipal().getId());
-    }
-
-    public UserService getUserService() {
-        return userService;
-    }
-
+public class MBaseAction extends BaseAction {
+    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    
     public void noCache(@Context HttpServletResponse response) {
         response.addHeader("Pragma", "no-cache");
         response.addHeader("Cache-Control", "no-cache");
@@ -79,17 +63,5 @@ public class MBaseAction {
             }
      return imageUrl+MHKConstants.IMAGEURL;
      //return "http://img.healthkart.com
-    }
-    
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public org.apache.shiro.mgt.SecurityManager getSecurityManager() {
-        return securityManager;
-    }
-
-    public void setSecurityManager(SecurityManager securityManager) {
-        this.securityManager = securityManager;
     }
 }

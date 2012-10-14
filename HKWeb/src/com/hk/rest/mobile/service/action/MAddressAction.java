@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import java.util.List;
  */
 @Path("/mAddress")
 @Component
-public class MSelectAddressAction extends MBaseAction {
+public class MAddressAction extends MBaseAction {
     //private static Logger logger    = LoggerFactory.getLogger(SelectAddressAction.class);
 
     @Autowired
@@ -56,8 +57,6 @@ public class MSelectAddressAction extends MBaseAction {
     AddressBookManager addressManager;
     private List<Address> addresses = new ArrayList<Address>(1);
 
-    //@Validate(required = true, on = "remove")
-    Address deleteAddress;
 
     //@Validate(converter = EmailTypeConverter.class)
     private String email;
@@ -100,26 +99,11 @@ public class MSelectAddressAction extends MBaseAction {
     //@ValidationMethod(on = "remove")
     public void validateDelete() {
         User user = getUserService().getUserById(getPrincipal().getId());
-        if (!user.getAddresses().contains(deleteAddress)) {
+    //    if (!user.getAddresses().contains(deleteAddress)) {
             //getContext().getValidationErrors().add("invalid address id", new LocalizableError("/EditAddress.action.invalid.address"));
-        }
+  //      }
     }
 
-    public String remove() {
-        User user = getUserService().getUserById(getPrincipal().getId());
-        Order order = orderManager.getOrCreateOrder(user);
-
-        deleteAddress.setDeleted(true);
-        addressDao.save(deleteAddress);
-
-        order.setAddress(null);
-        orderDao.save(order);
-
-        // addRedirectAlertMessage(new LocalizableMessage("/SelectAddress.action.address.deleted"));
-
-        //return new RedirectResolution(SelectAddressAction.class);
-        return "";
-    }
 
     //    @Validate(on = "checkout", required = true)
     Address selectedAddress;
@@ -147,6 +131,7 @@ public class MSelectAddressAction extends MBaseAction {
         this.addresses = addresses;
     }
 
+/*
     public Address getDeleteAddress() {
         return deleteAddress;
     }
@@ -155,6 +140,7 @@ public class MSelectAddressAction extends MBaseAction {
         this.deleteAddress = deleteAddress;
     }
 
+*/
     public Address getSelectedAddress() {
         return selectedAddress;
     }
@@ -201,13 +187,14 @@ public class MSelectAddressAction extends MBaseAction {
     @Produces("application/json")
 
     public String addAddress(@Context HttpServletResponse response,
-                                      @RequestParam("city") String city,
-                                      @RequestParam("state") String state,
-                                      @RequestParam("line1") String line1,
-                                      @RequestParam("line2") String line2,
-                                      @RequestParam("name") String name,
-                                      @RequestParam("phone") String phone,
-                                      @RequestParam("pin") String pin
+                                      @QueryParam("city") String city,
+                                      @QueryParam("state") String state,
+                                      @QueryParam("line1") String line1,
+                                      @QueryParam("line2") String line2,
+                                      @QueryParam("name") String name,
+                                      @QueryParam("phone") String phone,
+                                      @QueryParam("pin") String pin,
+                                      @QueryParam("addressId") String addressId
                                       ) {
         HealthkartResponse healthkartResponse;
         String jsonBuilder = "";
@@ -216,6 +203,10 @@ public class MSelectAddressAction extends MBaseAction {
 
         try {
             User user = getUserService().getUserById(getPrincipal().getId());
+            if(null!=getUserService().getLoggedInUser()){
+                if(null!=addressId){
+                    selectedAddress = addressDao.get(Address.class,new Long(addressId));
+                }else{
             Address address = new Address();
             address.setCity(city);
             address.setState(state);
@@ -224,8 +215,17 @@ public class MSelectAddressAction extends MBaseAction {
             address.setName(name);
             address.setPhone(phone);
             address.setPin(pin);
-            addressManager.add(user,address);
+            selectedAddress = addressDao.save(address);
+            
+             }
+            Order order = orderManager.getOrCreateOrder(user);
+            order.setAddress(selectedAddress);
+            orderDao.save(order);
 
+            }else{
+                message = "User not logged in";
+                status = MHKConstants.NOLOGIN_NOADDRESS;
+            }
         } catch (Exception e) {
             message = MHKConstants.NO_RESULTS;
             status = MHKConstants.STATUS_ERROR;
@@ -244,14 +244,7 @@ public class MSelectAddressAction extends MBaseAction {
     @Produces("application/json")
 
     public String removeAddress(@Context HttpServletResponse response,
-                                      @RequestParam("city") String city,
-                                      @RequestParam("state") String state,
-                                      @RequestParam("line1") String line1,
-                                      @RequestParam("line2") String line2,
-                                      @RequestParam("name") String name,
-                                      @RequestParam("phone") String phone,
-                                      @RequestParam("pin") String pin
-                                      ) {
+                                      @QueryParam("addressId") Long addressId) {
         HealthkartResponse healthkartResponse;
         String jsonBuilder = "";
         String message = MHKConstants.STATUS_DONE;
@@ -259,15 +252,20 @@ public class MSelectAddressAction extends MBaseAction {
 
         try {
             User user = getUserService().getUserById(getPrincipal().getId());
-            Address address = new Address();
-            address.setCity(city);
-            address.setState(state);
-            address.setLine1(line1);
-            address.setLine2(line2);
-            address.setName(name);
-            address.setPhone(phone);
-            address.setPin(pin);
-            addressManager.remove(user,address);
+            Address deleteAddress = new Address();
+            Order order = orderManager.getOrCreateOrder(user);
+            for(Address addr:getUserService().getLoggedInUser().getAddresses()){
+                            if(addressId.compareTo(addr.getId())==0){
+                                deleteAddress = addr;
+                                break;
+                            }
+            }
+
+                deleteAddress.setDeleted(true);
+                addressDao.save(deleteAddress);
+
+                order.setAddress(null);
+                orderDao.save(order);
 
         } catch (Exception e) {
             message = MHKConstants.NO_RESULTS;
@@ -287,19 +285,32 @@ public class MSelectAddressAction extends MBaseAction {
      @Produces("application/json")
 
      public String userAddressList(@Context HttpServletResponse response) {
-         HealthkartResponse healthkartResponse;
          String jsonBuilder = "";
          String message = MHKConstants.STATUS_DONE;
          String status = MHKConstants.STATUS_OK;
          List<Address> addressList = new ArrayList<Address>();
          try {
+             if(null!=getUserService().getLoggedInUser()){
              addressList = getUserService().getLoggedInUser().getAddresses();
+              if(!addressList.isEmpty()){
+                  jsonBuilder = JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, addressList));
+              }
+                 else {
+                 message = "No address available";
+                 status = MHKConstants.STATUS_ERROR;
+                  jsonBuilder = JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message,new ArrayList()));
+         }
+             }
+             else{
+                message = "Please login";
+                 status = MHKConstants.STATUS_ERROR;
+                 jsonBuilder = JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, new ArrayList()));
+
+             }
          } catch (Exception e) {
              message = MHKConstants.NO_RESULTS;
              status = MHKConstants.STATUS_ERROR;
          }
-         healthkartResponse = new HealthkartResponse(status, message, addressList);
-         jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
 
          addHeaderAttributes(response);
 

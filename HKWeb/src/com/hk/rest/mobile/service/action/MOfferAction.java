@@ -1,158 +1,183 @@
 package com.hk.rest.mobile.service.action;
 
-import org.stripesstuff.plugin.security.Secure;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.pact.service.UserService;
-import com.hk.pact.dao.offer.OfferInstanceDao;
-import com.hk.pact.dao.order.OrderDao;
-import com.hk.manager.OfferManager;
-import com.hk.manager.OrderManager;
-import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.user.User;
-import com.hk.domain.order.Order;
-import com.hk.web.HealthkartResponse;
-import net.sourceforge.stripes.validation.ValidationErrorHandler;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidationErrors;
-import net.sourceforge.stripes.action.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Satish
- * Date: Oct 12, 2012
- * Time: 7:31:33 AM
- * To change this template use File | Settings | File Templates.
- */
-
-import java.util.List;
-import java.util.Locale;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidationErrorHandler;
-import net.sourceforge.stripes.validation.ValidationErrors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.stripes.controller.JsonHandler;
-import com.akube.framework.gson.JsonUtils;
-import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.order.Order;
-import com.hk.domain.user.User;
-import com.hk.manager.OfferManager;
-import com.hk.manager.OrderManager;
-import com.hk.pact.dao.offer.OfferInstanceDao;
-import com.hk.pact.dao.order.OrderDao;
-import com.hk.pact.service.UserService;
-import com.hk.web.HealthkartResponse;
-import com.hk.rest.mobile.service.utils.MHKConstants;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
-@Secure
-@Component
-public class MOfferAction extends MBaseAction{
+import net.sourceforge.stripes.action.DefaultHandler;
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    OfferInstanceDao offerInstanceDao;
-    @Autowired
-    OfferManager offerManager;
-    @Autowired
-    OrderManager orderManager;
-    @Autowired
-    OrderDao orderDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-    private List<OfferInstance> offerInstanceList;
+import com.akube.framework.dao.Page;
+import com.akube.framework.gson.JsonUtils;
+import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.combo.SuperSaverImage;
+import com.hk.pact.service.catalog.combo.SuperSaverImageService;
+import com.hk.rest.mobile.service.model.MCatalogJSONResponse;
+import com.hk.rest.mobile.service.utils.MHKConstants;
+import com.hk.util.HKImageUtils;
+import com.hk.web.HealthkartResponse;
 
-    @Validate(required = true)
-    private OfferInstance       selectedOffer;
+@Path("/mOffers")
+    @Component
+    public class MOfferAction extends MBaseAction{
+        List<SuperSaverImage> superSaverImages;
+        List<String> categories;
+        List<String> brands;
+        private Integer defaultPerPage = 10;
+        Page superSaverPage;
 
+        @Autowired
+        private SuperSaverImageService superSaverImageService;
 
-    @DontValidate
-    @DefaultHandler
-    public String availableOffers(@Context HttpServletResponse response) {
-        HealthkartResponse healthkartResponse;
-        String jsonBuilder = "";
-        String message = MHKConstants.STATUS_DONE;
-        String status = MHKConstants.STATUS_OK;
+        @DefaultHandler
+        @GET
+        @Path("/offers/")
+        @Produces("application/json")
+        public String offers(@Context HttpServletResponse response) {
+            List<MCatalogJSONResponse> catalogList = new ArrayList<MCatalogJSONResponse>();
+            HealthkartResponse healthkartResponse;
+            String jsonBuilder = "";
+            String message = MHKConstants.STATUS_DONE;
+            String status = MHKConstants.STATUS_OK;
+            Map statusMap = new HashMap<String,Object>();
 
-        User user = getUserService().getUserById(getPrincipal().getId());
-        Order order = orderManager.getOrCreateOrder(user);
+            superSaverImages = getSuperSaverImageService().getSuperSaverImages();
+           // superSaverImages = superSaverPage.getList();
+            //return new ForwardResolution("/pages/superSavers.jsp");
+            MCatalogJSONResponse catalogResponse = new MCatalogJSONResponse();
 
-        selectedOffer = order.getOfferInstance();
-        offerInstanceList = offerInstanceDao.getActiveOffers(user);
-        for (OfferInstance offerInstance : offerInstanceList) {
-            if (offerInstance.equals(selectedOffer)) {
-                order.setOfferInstance(offerInstance);
-                orderDao.save(order);
+            for(SuperSaverImage image:superSaverImages){
+                Product product = image.getProduct();
+                if(null!=product){
+                catalogResponse = populateCatalogResponse(product, catalogResponse);
+                catalogResponse.setProductURL(product.getProductURL());
+                catalogList.add(catalogResponse);
+                }
             }
-        }
-    healthkartResponse = new HealthkartResponse(status, message, offerInstanceList);
-    jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
+            statusMap.put("offers",superSaverImages);
+            healthkartResponse = new HealthkartResponse(status, message, statusMap);
+            jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
 
-    addHeaderAttributes(response);
+            addHeaderAttributes(response);
 
-    return jsonBuilder;
-    }
-
-/*
-    @JsonHandler
-    public Resolution applyOffer() {
-        User user = getUserService().getUserById(getPrincipal().getId());
-        Order order = orderManager.getOrCreateOrder(user);
-
-        if (!selectedOffer.getUser().equals(user)) {
-            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, new LocalizableMessage("/AvailabeOfferList.action.invalid.offer"),
-                    getContext().getLocale());
-            return new JsonResolution(healthkartResponse);
+            return jsonBuilder;
         }
 
-        order.setOfferInstance(selectedOffer);
-        orderDao.save(order);
+        public List<SuperSaverImage> getSuperSaverImages() {
+            return superSaverImages;
+        }
 
-        return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Offer applied"));
+        public void setSuperSaverImages(List<SuperSaverImage> superSaverImages) {
+            this.superSaverImages = superSaverImages;
+        }
+
+        public List<String> getCategories() {
+            return categories;
+        }
+
+        public void setCategories(List<String> categories) {
+            this.categories = categories;
+        }
+
+        public List<String> getBrands() {
+            return brands;
+        }
+
+        public void setBrands(List<String> brands) {
+            this.brands = brands;
+        }
+
+        public int getPerPageDefault() {
+            return defaultPerPage;
+        }
+
+        public int getPageCount() {
+            return superSaverPage == null ? 0 : superSaverPage.getTotalPages();
+        }
+
+        public int getResultCount() {
+            return superSaverPage == null ? 0 : superSaverPage.getTotalResults();
+        }
+
+        public Set<String> getParamSet() {
+            HashSet<String> params = new HashSet<String>();
+            params.add("categories");
+            params.add("brands");
+            return params;
+        }
+
+        public SuperSaverImageService getSuperSaverImageService() {
+            return superSaverImageService;
+        }
+    private MCatalogJSONResponse populateCatalogResponse(Product product, MCatalogJSONResponse catalogJSONResponse) {
+        if(null!=product.getProductURL())
+            catalogJSONResponse.setProductURL(product.getProductURL());
+        if(null!=product.getSlug())
+            catalogJSONResponse.setProductSlug(product.getSlug());
+        if (null != product.getId ()){
+            if(null!=product.getMainImageId())
+                catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId(),false));
+            else
+                catalogJSONResponse.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
+        }
+        if (null != product.getManufacturer())
+            catalogJSONResponse.setManufacturer(product.getManufacturer().getName());
+        if (null != product.getBrand())
+            catalogJSONResponse.setBrand(product.getBrand());
+        if (null != product.isCodAllowed())
+            catalogJSONResponse.setCodAllowed(product.isCodAllowed());
+        if (null != product.getDeleted())
+            catalogJSONResponse.setDeleted(product.getDeleted());
+        if (null != product.getDescription())
+            catalogJSONResponse.setDescription(product.getDescription());
+        catalogJSONResponse.setDropShipping(product.getDropShipping());
+        if (null != product.getGoogleAdDisallowed())
+            catalogJSONResponse.setGoogleAdDisallowed(product.getGoogleAdDisallowed());
+        if (null != product.getId())
+            catalogJSONResponse.setId(product.getId());
+        if (null != product.getJit())
+            catalogJSONResponse.setJit(product.getJit());
+        if (null != product.getMaxDays())
+            catalogJSONResponse.setMaxDays(product.getMaxDays());
+        if (null != product.getMinDays())
+            catalogJSONResponse.setMinDays(product.getMinDays());
+        if (null != product.getName())
+            catalogJSONResponse.setName(product.getName());
+        if (null != product.getOrderRanking())
+            catalogJSONResponse.setOrderRanking(product.getOrderRanking());
+        if (null != product.isOutOfStock())
+            catalogJSONResponse.setOutOfStock(product.isOutOfStock());
+        if (null != product.getOverview())
+            catalogJSONResponse.setOverview(product.getOverview());
+        if (null != product.getProductHaveColorOptions())
+            catalogJSONResponse.setProductHaveColorOptions(product.getProductHaveColorOptions());
+        if (null != product.getService())
+            catalogJSONResponse.setService(product.getService());
+        if (null != product.getThumbUrl())
+            catalogJSONResponse.setThumbUrl(product.getThumbUrl());
+        if (null != product.getMinimumMRPProducVariant().getHkPrice())
+            catalogJSONResponse.setHkPrice(product.getMinimumMRPProducVariant().getHkPrice());
+        if (null != product.getMinimumMRPProducVariant().getMarkedPrice())
+            catalogJSONResponse.setMarkedPrice(product.getMinimumMRPProducVariant().getMarkedPrice());
+        if (null != product.getMinimumMRPProducVariant().getDiscountPercent())
+            catalogJSONResponse.setDiscountPercentage(Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent()*100)));
+        if(null!=product.getMainImageId())
+            catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.Original,product.getMainImageId(),false));
+        else
+            catalogJSONResponse.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
+        return catalogJSONResponse;
     }
-
-    @JsonHandler
-    public Resolution removeAppliedOffer() {
-        User user = getUserService().getUserById(getPrincipal().getId());
-        Order order = orderManager.getOrCreateOrder(user);
-        order.setOfferInstance(null);
-        orderDao.save(order);
-
-        return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Offer removed"));
+        
     }
-*/
-
-    public List<OfferInstance> getOfferInstanceList() {
-        return offerInstanceList;
-    }
-
-    public void setOfferInstanceList(List<OfferInstance> offerInstanceList) {
-        this.offerInstanceList = offerInstanceList;
-    }
-
-    public OfferInstance getSelectedOffer() {
-        return selectedOffer;
-    }
-
-    public void setSelectedOffer(OfferInstance selectedOffer) {
-        this.selectedOffer = selectedOffer;
-    }
-}

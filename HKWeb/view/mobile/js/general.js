@@ -219,19 +219,40 @@ function generateWithIcon(icon,text){
 	generateButtonAction('confirm',"<h2 class=border-b style='text-align:left'><img src='/view/images/"+icon+"' align=left style='position:relative;top:-8px' /><center>Help</center></h2><p style='font-weight:100; font-size:13px;'>"+text+"</p>","OK","btn",function($noty){$noty.close();});
 
 }
-function LoadingShadow()
+function PopUpMob()
 	{
-		this.ele =$('.loaderContainer');
+		this.ele = 'popUpMobPar';
+		this.shadow = 'popUpMobShadow';
+		this.text = 'popUpMobContent';
+		this.close = 'popUpMobClose';
 	}
-LoadingShadow.prototype.show = function(){
-
-	$(this.ele).css({'height':$('body').height()});
-	$(this.ele).show();
+	PopUpMob.prototype.init = function(){
+		var curPage = '#'+$.mobile.activePage.attr('id');
+		var scrHei = $(curPage).height();
+		$(curPage).remove('#popUpMobPar');
+		$(curPage).find('div[data-role=content]').append('<div id='+this.ele+'><div id='+this.shadow+'></div><div id='+this.text+'></div></div>');
+		$('#'+this.ele).css({'width':'100%','height':scrHei,'font-size':'14px','position':'fixed','top':'0','z-index':'10'});
+		$('#'+this.shadow).css({'width':'100%','height':'100%','background-color':'#888','opacity':'0.2','filter':' alpha(opacity=0.2)','position':'absolute','top':'0','left':'0'});
+		$('#'+this.text).css({'width':'260px','background':'white','min-height':'50px','margin':'0px auto','text-align':'center','position': 'relative','top': '30%'});
+	}
+PopUpMob.prototype.show = function(text){
+	this.init();
+	$('#'+this.text).html(text);
+	$('#'+this.text).append('<div style="margin-top:10px"><center><img src="images/ok.png" onclick="$(\'#'+this.ele+'\').hide()" alt="ok"/></center></div>');
+	$('#'+this.ele).show();
 }
-LoadingShadow.prototype.hide = function(){
+PopUpMob.prototype.showWithTitle = function(title,text){
+	this.init();
+	$('#'+this.text).html('<div style="background:url(images/navbar_bg.png);min-height:20px;width:100%;padding:5px 0px;color:white;text-shadow:none;-webkit-text-shadow:none;font-weight:bold;font-size:14px;">'+title+'</div>');
+	$('#'+this.text).append(text);
+	$('#'+this.text).append('<div style="margin-top:10px"><center><img src="images/ok.png" onclick="$(\'#'+this.ele+'\').hide()" alt="ok"/></center></div>');
+	$('#'+this.ele).show();
+}
+PopUpMob.prototype.hide = function(){
 	
 	$(this.ele).hide();
 }
+var popUpMob = new PopUpMob();
 function loadingPop(state,msg)//state is mandatory, msg is mandatory for state 's' only
 	{
 		if(state=='h')

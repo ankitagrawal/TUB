@@ -2,6 +2,7 @@ package com.hk.rest.mobile.service.action;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.gson.JsonUtils;
+import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.dto.search.SearchResult;
@@ -10,6 +11,7 @@ import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.service.search.ProductSearchService;
 import com.hk.rest.mobile.service.model.MCatalogJSONResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
+import com.hk.util.HKImageUtils;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.web.HealthkartResponse;
 import org.apache.commons.lang.StringUtils;
@@ -27,6 +29,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +44,7 @@ import java.util.Set;
 @Path("/mSearch")
 @Component
 
-public class MSearchAction {
+public class MSearchAction extends MBaseAction{
     private static Logger logger = LoggerFactory.getLogger(MSearchAction.class);
 
     String searchSuggestion;
@@ -70,6 +73,7 @@ public class MSearchAction {
                          @Context HttpServletResponse response) throws SolrServerException, MalformedURLException {
         HealthkartResponse healthkartresponse;
         String jsonBuilder = "";
+        HashMap<String, Object> resultMap = new HashMap<String, Object>();
         String message = MHKConstants.STATUS_DONE;
         String status = MHKConstants.STATUS_OK;
         List<MCatalogJSONResponse> catalogList = new ArrayList<MCatalogJSONResponse>();
@@ -100,16 +104,21 @@ public class MSearchAction {
                 }
             }
         }
-        if (productList != null && productList.size() == 0) {
+        resultMap.put("hasMore", new Boolean(true));
+        if (productList == null || productList.size() == 0) {
             message = MHKConstants.NO_RESULTS;
             status = MHKConstants.STATUS_ERROR;
+            resultMap.put("hasMore", new Boolean(false));
+        }else if(productList.size()<perPage){
+        	resultMap.put("hasMore", new Boolean(false));
         }
+        
 
-        response.addHeader(MHKConstants.ACCESS_CONTROL_ALLOW_CREDENTIALS, MHKConstants.TRUE);
-        response.addHeader(MHKConstants.ACCESS_CONTROL_ALLOW_METHODS, MHKConstants.ACCESS_CONTROL_ALLOW_METHODS_LIST);
-        response.addHeader(MHKConstants.ACCESS_CONTROL_ALLOW_ORIGIN, MHKConstants.STAR);
-
-        healthkartresponse = new HealthkartResponse(status, message, catalogList);
+        addHeaderAttributes(response);
+        
+        resultMap.put("data", catalogList);
+        
+        healthkartresponse = new HealthkartResponse(status, message, resultMap);
         jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartresponse);
         return jsonBuilder;
     }
@@ -132,10 +141,17 @@ public class MSearchAction {
         catalogJSONResponse.setOverview(product.getOverview());
         catalogJSONResponse.setProductHaveColorOptions(product.getProductHaveColorOptions());
         catalogJSONResponse.setService(product.getService());
+        catalogJSONResponse.setProductSlug(product.getSlug());
         catalogJSONResponse.setThumbUrl(product.getThumbUrl());
         catalogJSONResponse.setHkPrice(product.getMinimumMRPProducVariant().getHkPrice());
         catalogJSONResponse.setMarkedPrice(product.getMinimumMRPProducVariant().getMarkedPrice());
         catalogJSONResponse.setDiscountPercentage(product.getMinimumMRPProducVariant().getDiscountPercent());
+        if (null != product.getId ()){
+            if(null!=product.getMainImageId())
+                catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId(),false));
+            else
+                catalogJSONResponse.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
+        }
         return catalogJSONResponse;
     }
 

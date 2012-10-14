@@ -5,7 +5,7 @@
 	
 </head>
 <body>
-<div data-role="page" id=paymentOption class="type-home">
+<div data-role="page" id=orderSuccess class="type-home">
 <div data-role=header>
 	<%@ include file='menuHeader.jsp'%>
 	<%@ include file='menuNavBtn.jsp'%>
@@ -35,6 +35,7 @@ You will receive a phone call within 1 business day to confirm your order before
 Sunit Jindal
 <b>Contact Phone</b>
 9266780108
+<a href='orderSuccess.jsp' class=ad2Crt>Confirm</a>
 </pre>
 
 

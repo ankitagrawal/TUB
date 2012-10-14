@@ -19,7 +19,7 @@
 		<ul data-role=listview style='padding-top:4px;padding-bottom:20px' id='cartList'>
 		
 		</ul>
-		<a href='javascript:void(0)' id='checkout' data-role=button>CheckOut</a>
+		<a href='<shiro:notAuthenticated>login-signup.jsp?target=address</shiro:notAuthenticated><shiro:authenticated>address.jsp</shiro:authenticated>' id='checkout' style='width:95%;margin:0px auto;margin-bottom:8px;margin-top:12px' data-role=button>CheckOut</a>
 		
 <%@ include file='menuFooter.jsp' %>	
 </div>
@@ -82,7 +82,7 @@ var queryString = x.search;
 			$('#cartList').append(prVaVi.render().el);
 		},
 		unRender : function(){
-		console.log('done');
+
 			this.destroy();
 		}
 	});
@@ -135,12 +135,15 @@ var queryString = x.search;
 				success: function(data){
 					if(hasErr(data))
 					{
-						alert('Request Failed');
+						popUpMob.show('Request Failed');
 					}
 					else
 					{
 						if(prVaCo.reset()){
-						alert('Successfully Removed');
+						if($(ele).hasClass('pl2Crt'))
+							popUpMob.show('Successfully Added');					
+						else
+							popUpMob.show('Successfully Removed');
 						
 						prVaCo.add(data.data);
 						//viewObj.unRender();
@@ -162,7 +165,7 @@ loadingPop('s','');
 			if(hasErr(response))
 			{
 				loadingPop('h');
-				alert(getErr(response.message));
+				popUpMob.show(getErr(response.message));
 			}
 			else
 			{
@@ -170,54 +173,22 @@ loadingPop('s','');
 				if(prVaCo.add(response.data))
 				{
 					$('#cartList').listview();
+					$('#cartList').css('height',$('#cartList').height());
 				}
 				
 				loadingPop('h');
 			}
 		},
 		error: function(){
-			alert('Request failed');
+			popUpMob.show('Request failed');
 			loadingPop('h');
 		}
 		
 		});
 		
-		$('#checkout').on('click',function(e){
-	//e.preventDefault();
-
-			//var requestURL = $(this).attr('data-url');
-			
-			$.ajax({
-				url: 'c.json',
-			//	data: requestURL,
-				dataType: 'json',
-				//type: 'POST',
-				success: function(response){
-					if(hasErr(response))
-					{
-						loadingPop('h');
-						alert(getErr(response.message));
-					}
-					else
-					{
-						if(response.data.type == null)
-						{
-							$.mobile.changePage('login-signup.jsp?target=address');
-						}
-						else if(response.data.type == 'Logged In')
-						{
-							$.mobile.changePage('address.jsp');
-						}
-					}
-				},
-				error: function(e)
-				{
-					alert(e);
-				}
-			});
 		
 
-		});
+
 });
 
 </script>
