@@ -9,6 +9,8 @@ import com.hk.domain.warehouse.Warehouse;
 import javax.persistence.*;
 import java.util.Date;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+
 @Entity
 @Table(name = "sku")
 public class Sku implements java.io.Serializable {
@@ -123,14 +125,22 @@ public class Sku implements java.io.Serializable {
 			return false;
 		}
 		Sku sku = (Sku) o;
-		if (!id.equals(sku.getId())) {
-			return false;
+
+		if (id != null && sku.id != null && id.equals(sku.id)) {
+			return true;
+		} else {
+			EqualsBuilder equalsBuilder = new EqualsBuilder();
+			if (this.warehouse == null || this.productVariant == null || sku.warehouse == null || sku.productVariant == null) {
+				return false;
+			}
+			equalsBuilder.append(this.warehouse.getId(), sku.warehouse.getId());
+			equalsBuilder.append(this.productVariant.getId(), sku.productVariant.getId());
+			return equalsBuilder.isEquals();
 		}
-		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return id.hashCode();
+		return id != null ? id.hashCode() : 0;
 	}
 }
