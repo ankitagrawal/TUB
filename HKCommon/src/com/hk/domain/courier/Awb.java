@@ -116,8 +116,7 @@ public class Awb implements java.io.Serializable {
 
     public boolean equals(Object obj) {
         if (!(obj instanceof Awb)) {
-            throw new ClassCastException("object compared are not of same Type");
-
+           return false;
         }
         Awb awb = (Awb) obj;
         if (this.awbNumber.equals(awb.getAwbNumber()) && this.courier.equals(awb.getCourier())) {
