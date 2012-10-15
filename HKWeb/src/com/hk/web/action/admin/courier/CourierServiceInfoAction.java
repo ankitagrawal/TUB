@@ -42,40 +42,40 @@ import com.hk.util.XslGenerator;
 import com.hk.web.BatchProcessWorkManager;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS })
+@Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
 @Component
 public class CourierServiceInfoAction extends BaseAction {
 
-    private static Logger            logger             = LoggerFactory.getLogger(CourierServiceInfoAction.class);
+    private static Logger logger = LoggerFactory.getLogger(CourierServiceInfoAction.class);
 
     @Autowired
-    XslGenerator                     xslGenerator;
+    XslGenerator xslGenerator;
     @Autowired
-    BatchProcessWorkManager          workManager;
+    BatchProcessWorkManager workManager;
     @Autowired
-    CourierServiceInfoDao            courierServiceInfoDao;
+    CourierServiceInfoDao courierServiceInfoDao;
     @Autowired
-    CourierService                   courierService;
+    CourierService courierService;
     @Autowired
-    PincodeDao                       pincodeDao;
+    PincodeDao pincodeDao;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-    String                           adminDownloadsPath;
+    String adminDownloadsPath;
 
-    Courier                          courier;
-    CourierServiceInfo               courierServiceInfo;
-    String                           pincode;             
+    Courier courier;
+    CourierServiceInfo courierServiceInfo;
+    String pincode;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String                           adminUploadsPath;
+    String adminUploadsPath;
 
     @Autowired
-    XslParser                        xslParser;
+    XslParser xslParser;
 
-    FileBean                         fileBean;
+    FileBean fileBean;
 
     @Autowired
-    XslCourierServiceInfoParser     xslCourierServiceInfoParser;
+    XslCourierServiceInfoParser xslCourierServiceInfoParser;
 
     public void setFileBean(FileBean fileBean) {
         this.fileBean = fileBean;
@@ -83,12 +83,12 @@ public class CourierServiceInfoAction extends BaseAction {
 
     @DefaultHandler
     @DontValidate
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_COURIER_INFO }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp");
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_COURIER_INFO }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution generateCourierServiceInfoExcel() throws Exception {
         String courierName = "All";
         List<CourierServiceInfo> courierServiceInfoList = new ArrayList<CourierServiceInfo>();
@@ -123,7 +123,7 @@ public class CourierServiceInfoAction extends BaseAction {
         };
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_COURIER_INFO }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadCourierServiceInfoExcel() throws Exception {
 
         String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
@@ -132,26 +132,26 @@ public class CourierServiceInfoAction extends BaseAction {
         fileBean.save(excelFile);
         CourierServiceInfo tmpObj = null;
         try {
-//            Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
             Set<CourierServiceInfo> courierServiceInfoSet = xslCourierServiceInfoParser.readCourierServiceInfoList(excelFile);
             for (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) {
                 tmpObj = courierServiceInfo;
-                     CourierServiceInfo tmpObj2 = courierServiceInfoDao.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(),
+                CourierServiceInfo tmpObj2 = courierServiceInfoDao.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(),
                         courierServiceInfo.getPincode().getPincode().toString(), false, false, false);
-                if (tmpObj2 != null) {
-                    if (courierServiceInfo.isDeleted()) {
-                        courierServiceInfoDao.delete(tmpObj2);
+                if (courierServiceInfo != null) {
+                    if (tmpObj2 == null) {
+                        courierServiceInfoDao.save(courierServiceInfo);
                     } else {
                         tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());
                         tmpObj2.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
+                        tmpObj2.setDeleted(courierServiceInfo.isDeleted());
+                        tmpObj2.setRoutingCode(courierServiceInfo.getRoutingCode());
+                        tmpObj2.setPreferred(courierServiceInfo.isPreferred());
+                        tmpObj2.setPreferredCod(courierServiceInfo.isPreferredCod());
                         tmpObj2.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());
-                        if (courierServiceInfo.isCodAvailableOnGroundShipping()){
-                           tmpObj2.setCodAvailable(true);
-                        }
                         courierServiceInfoDao.save(tmpObj2);
+                        logger.info("updating:" + courierServiceInfo.getPincode().getPincode());
+
                     }
-                } else if (courierServiceInfo != null) {
-                    courierServiceInfoDao.save(courierServiceInfo);
                 }
             }
         } catch (Exception e) {
@@ -174,13 +174,13 @@ public class CourierServiceInfoAction extends BaseAction {
         if (pincodeObj == null) {
             addRedirectAlertMessage(new SimpleMessage("This pincode is not in the master list, add it there first."));
         } else {
-            CourierServiceInfo courierServiceInfoLocal = courierService.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(), pincode , false, false,false);
+            CourierServiceInfo courierServiceInfoLocal = courierService.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(), pincode, false, false, false);
             if (courierServiceInfoLocal != null) {
                 courierServiceInfoLocal.setCodAvailable(courierServiceInfo.isCodAvailable());
                 courierServiceInfoLocal.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
                 courierServiceInfoLocal.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());
-                if(courierServiceInfo.isCodAvailableOnGroundShipping()){
-                   courierServiceInfoLocal.setCodAvailable(true); 
+                if (courierServiceInfo.isCodAvailableOnGroundShipping()) {
+                    courierServiceInfoLocal.setCodAvailable(true);
                 }
                 courierServiceInfoDao.save(courierServiceInfoLocal);
             } else {
