@@ -82,7 +82,11 @@ public class UserResource {
         Response response = null;
         try{
             UserDetail userDetail = userDetailService.findByPhone((int)phone);
-            response = Response.status(Response.Status.OK).entity(userDetail).build();
+            if (userDetail != null){
+                response = Response.status(Response.Status.OK).entity(userDetail).build();
+            }else{
+                response = Response.status(Response.Status.NOT_FOUND).entity(userDetail).build();
+            }
         }catch (Exception ex){
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to get User Details ", ex);
