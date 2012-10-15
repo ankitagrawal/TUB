@@ -1,27 +1,27 @@
 <table id='footerLink'>
 		<tr>
 			<td class='arr-r'>
-				<a href='home.jsp'>Home</a>
+				<a href='${httpPath}/home.jsp'>Home</a>
 			</td>
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='trackOrder.jsp'>Track Orders</a>
+				<a href='${httpPath}/trackOrder.jsp'>Track Orders</a>
 			</td>
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='offers.jsp'>Offers</a>
+				<a href='${httpPath}/offers.jsp'>Offers</a>
 			</td>
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='cart.jsp'>Cart</a>
+				<a href='${httpPath}/cart.jsp'>Cart</a>
 			</td>
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='login-signup.jsp'>Login</a>
+				<a href='${httpPath}/login-signup.jsp'>Login</a>
 			</td>
 		</tr><!--
 		<tr>

@@ -20,7 +20,7 @@
 		
 		</ul>
                   <br/>
-		<a href='<%if(session.getAttribute("userName")==null){%>login-signup.jsp?target=address<% }else{%>address.jsp<%}%>' id='checkout' style='width:95%;margin:0px auto;margin-bottom:8px;margin-top:12px' data-role=button id='btnChkOut'>CheckOut</a>
+		<a href='<%if(session.getAttribute("userName")==null){%>${httpPath}/login-signup.jsp?target=address<% }else{%>${httpPath}/address.jsp<%}%>' id='checkout' style='width:95%;margin:0px auto;margin-bottom:8px;margin-top:12px' data-role=button id='btnChkOut'>CheckOut</a>
 		
 <%@ include file='menuFooter.jsp' %>	
 </div>

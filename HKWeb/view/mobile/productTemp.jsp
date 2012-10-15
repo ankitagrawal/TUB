@@ -19,7 +19,7 @@ $('#productTemp').bind('pageshow',function(){
 		//alert(urlEval.getURLFromHash(location.href));
 var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 		var queryString = x.search;
-		$.mobile.changePage('product.jsp'+queryString);
+		$.mobile.changePage('${httpPath}/product.jsp'+queryString);
 		/**Backbone code for product list*E*/
 });
 
