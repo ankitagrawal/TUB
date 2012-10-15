@@ -9281,5 +9281,24 @@
 	    <dropColumn columnName="create_date" tableName="user_cart"/>
 	</changeSet>
 
-
+    <changeSet author="Tarun (generated)" id="1350281977808-1">
+        <addColumn tableName="rv_line_item">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Tarun (generated)" id="1349849616633-1">
+        <addColumn tableName="consignment">
+            <column name="delivery_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Tarun" id="1349849616633-2">
+		<sql>
+			UPDATE consignment c
+			SET c.delivery_date =
+						(SELECT MAX(create_date)
+						FROM consignment_tracking ct
+						WHERE ct.consignment_lifecycle_status_id=80
+						AND ct.consignment_id = c.id);
+		</sql>
+	</changeSet>
 </databaseChangeLog>
