@@ -169,7 +169,7 @@ $('#orderSummary').bind('pageshow',function(){
 			if(hasErr(data))
 			{
 				popUpMob.show(data.message);
-				if((data.message).toLowerCase()=='Cod is not available for this location'){
+				if((data.message).toLowerCase()=='cod is not available for this location'){
                                 setTimeout(function(){location.href="${httpPath}/address.jsp"},800);
 								}
 
