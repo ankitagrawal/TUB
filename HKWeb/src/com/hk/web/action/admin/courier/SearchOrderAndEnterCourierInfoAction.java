@@ -21,14 +21,12 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
-import com.hk.admin.util.FedExShipmentDeleteUtil;
-import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
@@ -217,6 +215,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     finalAwb = awbFromDb;
                     finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
                 } else {
+                    //TODO:#change this all logic should be at one place in awbService
                     Awb awb = new Awb();
                     awb.setAwbNumber(trackingId.trim());
                     awb.setAwbBarCode(trackingId.trim());
