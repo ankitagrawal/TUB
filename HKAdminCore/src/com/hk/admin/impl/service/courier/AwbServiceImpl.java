@@ -10,7 +10,6 @@ import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
 import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.AwbStatus;

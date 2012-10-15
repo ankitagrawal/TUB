@@ -89,7 +89,7 @@ public class XslCourierServiceInfoParser {
                             boolean isPreferred = StringUtils.isNotBlank(preferred) && preferred.trim().toLowerCase().equals("y") ? true : false;
                             courierServiceInfo.setPreferred(isPreferred);
                             boolean isPreferredCod = StringUtils.isNotBlank(preferredCod) && preferredCod.trim().toLowerCase().equals("y") ? true : false;
-                            courierServiceInfo.setPreferredCod(isPreferredCod);
+                            courierServiceInfo.setPreferredCod(isPreferredCod);                             
                             courierServiceInfo.setRoutingCode(routingCode);
                             boolean isGroundShippingAvailable = StringUtils.isNotBlank(groundShippingAvailable) && groundShippingAvailable.trim().toLowerCase().equals("y") ? true : false;
                             courierServiceInfo.setGroundShippingAvailable(isGroundShippingAvailable);
