@@ -66,7 +66,7 @@ public class Consignment implements java.io.Serializable, Comparable<Consignment
     private String address;
 
 	@Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "delivery_date", nullable = false, length = 19)
+    @Column(name = "delivery_date", length = 19)
     private Date deliveryDate;
 
     @ManyToOne(fetch=FetchType.LAZY)
