@@ -200,6 +200,12 @@ public class CatalogAction extends BasePaginatedAction {
             SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
             List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
             searchFilters.add(brandFilter);
+            if (getContext().getRequest().getParameterMap().containsKey("isCombo")){
+                String[] params = (String[])getContext().getRequest().getParameterMap().get("isCombo");
+
+                SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
+                searchFilters.add(comboFilter);
+            }
             SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter, paginationFilter, sortFilter);
 
             List<Product> filteredProducts = searchResult.getSolrProducts();
