@@ -8955,12 +8955,12 @@
             update coupon set coupon_type_id = 10 where offer_id != 1142 and referrer_user_id is not null;
         </sql>
     </changeSet>
-   <!-- <changeSet author="Pratham" id="09-18-2012">
+    <changeSet author="Pratham" id="09-18-2012">
         <sql>
             update affiliate set offer_id = 1357;
             update coupon set offer_id = 1357 where referrer_user_id is not null;
         </sql>
-    </changeSet>-->
+    </changeSet>
     <changeSet author="vaibhav" id="1347716040168-1">
 		<sql>
 			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(999,1,'R','Corporate Retail Invoice 2012');
@@ -9100,7 +9100,7 @@
     <changeSet author="Rahul (generated)" id="1349775702731-11">
         <dropColumn columnName="estimated_shipping_cost_non_cod" tableName="pincode_default_courier"/>
     </changeSet>
-<!--	<changeSet author="Ankit" id="1347620653716-4">
+	<changeSet author="Ankit" id="1347620653716-4">
 	    <sql>
 	        delete from `pincode_default_courier` ;
 
@@ -9121,25 +9121,184 @@
 	        from `pincode_default_courier_bak`
 	        )v1 ;
 	    </sql>
-	</changeSet>-->
+	</changeSet>
 
     <changeSet author="Rahul (generated)" id="1349775925334-1">
         <dropTable tableName="pincode_default_courier_bak"/>
     </changeSet>
-    <changeSet author="Marut (generated)" id="1349947301879-3">
-        <createTable tableName="user_details">
-            <column name="id" autoIncrement="true"  type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="phone" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="user_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="priority" type="TINYINT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+
+	<changeSet author="Rahul" id="1349852020790-50">
+	    <sql>
+
+			alter table  address add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  affiliate_traffic_details add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  awb add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  campaign_tracking add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  emailer_history add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  base_order add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  order_lifecycle add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  cart_line_item add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ;
+			alter table  shipping_order_lifecycle add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  user_cart add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  base_order_category add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  line_item add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  payment add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  shipping_order add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  coupon add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  email_recepient add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  product add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  shipment add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  product_variant add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  notify_me add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  demand_history add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  purchase_order add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  goods_received_note add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  purchase_invoice add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+
+			update address  set create_dt = create_date;
+			update base_order  set create_dt = create_date;
+			update coupon  set create_dt = create_date;
+			update payment  set create_dt = create_date;
+			update product  set create_dt = create_date;
+			update product_variant  set create_dt = created_date;
+			update purchase_invoice  set create_dt = create_date;
+			update purchase_order  set create_dt = create_date;
+			update shipping_order  set create_dt = create_date;
+			update user_cart  set create_dt = create_date;
+
+		    update base_order  set update_dt = update_date;
+		    update purchase_order set update_dt = update_date;
+		    update shipping_order set update_dt = update_date;
+
+			update address  set create_dt = now() where create_dt is null;
+			update affiliate_traffic_details  set create_dt = now() where create_dt is null;
+			update awb  set create_dt = now() where create_dt is null;
+			update campaign_tracking set create_dt = now() where create_dt is null;
+			update emailer_history  set create_dt = now() where create_dt is null;
+			update base_order  set create_dt = now() where create_dt is null;
+			update order_lifecycle  set create_dt = now() where create_dt is null;
+			update cart_line_item  set create_dt = now() where create_dt is null;
+			update shipping_order_lifecycle  set create_dt = now() where create_dt is null;
+			update user_cart  set create_dt = now() where create_dt is null;
+			update base_order_category  set create_dt = now() where create_dt is null;
+			update line_item  set create_dt = now() where create_dt is null;
+			update payment  set create_dt = now() where create_dt is null;
+			update shipping_order  set create_dt = now() where create_dt is null;
+			update coupon  set create_dt = now() where create_dt is null;
+			update email_recepient  set create_dt = now() where create_dt is null;
+			update product  set create_dt = now() where create_dt is null;
+			update shipment  set create_dt = now() where create_dt is null;
+			update product_variant  set create_dt = now() where create_dt is null;
+			update notify_me  set create_dt = now() where create_dt is null;
+			update demand_history  set create_dt = now() where create_dt is null;
+			update purchase_order  set create_dt = now() where create_dt is null;
+			update goods_received_note  set create_dt = now() where create_dt is null;
+			update purchase_invoice  set create_dt = now() where create_dt is null;
+
+			alter table  address MODIFY create_dt datetime NOT NULL;
+			alter table  affiliate_traffic_details MODIFY create_dt datetime NOT NULL;
+			alter table  awb MODIFY create_dt datetime NOT NULL;
+			alter table  campaign_tracking MODIFY create_dt datetime NOT NULL;
+			alter table  emailer_history MODIFY create_dt datetime NOT NULL;
+			alter table  base_order MODIFY create_dt datetime NOT NULL;
+			alter table  order_lifecycle MODIFY create_dt datetime NOT NULL;
+			alter table  cart_line_item MODIFY create_dt datetime NOT NULL;
+			alter table  shipping_order_lifecycle MODIFY create_dt datetime NOT NULL;
+			alter table  user_cart MODIFY create_dt datetime NOT NULL;
+			alter table  base_order_category MODIFY create_dt datetime NOT NULL;
+			alter table  line_item MODIFY create_dt datetime NOT NULL;
+			alter table  payment MODIFY create_dt datetime NOT NULL;
+			alter table  shipping_order MODIFY create_dt datetime NOT NULL;
+			alter table  coupon MODIFY create_dt datetime NOT NULL;
+			alter table  email_recepient MODIFY create_dt datetime NOT NULL;
+			alter table  product MODIFY create_dt datetime NOT NULL;
+			alter table  shipment MODIFY create_dt datetime NOT NULL;
+			alter table  product_variant MODIFY create_dt datetime NOT NULL;
+			alter table  notify_me MODIFY create_dt datetime NOT NULL;
+			alter table  demand_history MODIFY create_dt datetime NOT NULL;
+			alter table  purchase_order MODIFY create_dt datetime NOT NULL;
+			alter table  goods_received_note MODIFY create_dt datetime NOT NULL;
+			alter table  purchase_invoice MODIFY create_dt datetime NOT NULL;
+
+	    </sql>
+	</changeSet>
+
+	<changeSet author="Rahul" id="1349852020790-501">
+	    <sql>
+		    alter table  user add column `create_dt` DATETIME;
+		    alter table  user add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+		    update user  set create_dt = create_date;
+		    update user set update_dt = update_date;
+		    update user  set create_dt = now() where create_dt is null;
+		    alter table  user MODIFY create_dt datetime NOT NULL;
+	    </sql>
+	</changeSet>
+
+	<changeSet author="Rahul (generated)" id="1349852020790-51">
+	    <dropColumn columnName="create_date" tableName="address"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-52">
+	    <dropColumn columnName="create_date" tableName="base_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-53">
+	    <dropColumn columnName="update_date" tableName="base_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-54">
+	    <dropColumn columnName="create_date" tableName="coupon"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-55">
+	    <dropColumn columnName="create_date" tableName="payment"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-56">
+	    <dropColumn columnName="create_date" tableName="product"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-57">
+	    <dropColumn columnName="created_date" tableName="product_variant"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-58">
+	    <dropColumn columnName="create_date" tableName="purchase_invoice"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-59">
+	    <dropColumn columnName="create_date" tableName="purchase_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-60">
+	    <dropColumn columnName="update_date" tableName="purchase_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-61">
+	    <dropColumn columnName="create_date" tableName="shipping_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-62">
+	    <dropColumn columnName="update_date" tableName="shipping_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-63">
+	    <dropColumn columnName="create_date" tableName="user"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-64">
+	    <dropColumn columnName="update_date" tableName="user"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-65">
+	    <dropColumn columnName="create_date" tableName="user_cart"/>
+	</changeSet>
+
+    <changeSet author="Tarun (generated)" id="1350281977808-1">
+        <addColumn tableName="rv_line_item">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
     </changeSet>
+	<changeSet author="Tarun (generated)" id="1349849616633-1">
+        <addColumn tableName="consignment">
+            <column name="delivery_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Tarun" id="1349849616633-2">
+		<sql>
+			UPDATE consignment c
+			SET c.delivery_date =
+						(SELECT MAX(create_date)
+						FROM consignment_tracking ct
+						WHERE ct.consignment_lifecycle_status_id=80
+						AND ct.consignment_id = c.id);
+		</sql>
+	</changeSet>
 </databaseChangeLog>

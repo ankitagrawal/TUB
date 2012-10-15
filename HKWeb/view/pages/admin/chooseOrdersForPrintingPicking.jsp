@@ -1,6 +1,7 @@
 <%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
@@ -92,6 +93,17 @@
 				</c:forEach>
 			</s:select>
 			<s:submit name="searchOrdersForPrinting" value="Search By Basket Category" style="font-size:0.9em"/>
+		</div>
+		<div align="center">
+		<label>Courier</label>
+            <s:select name="courier">
+              <s:option value="">All Couriers</s:option>
+              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
+                                         label="name"/>
+            </s:select>
+            <s:submit name="searchOrdersForPrinting" value="Search By Courier"
+			          style="font-size:0.9em"/>
+		
 		</div>
 		<div align="center">
 			SO Gateway Order Id:<s:text name="gatewayOrderId"/>

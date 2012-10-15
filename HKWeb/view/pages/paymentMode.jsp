@@ -207,8 +207,8 @@
                     </c:when>
                     <c:when test='${codFailureMap["GroundShippingAllowed"] == "Y" && codFailureMap["CodAllowedOnGroundShipping"] == "N" }'>
                         ${message}
-                        <p>COD is not allowed on the GroundShipping product :
-                            <strong> ${codFailureMap["GroundShipProduct"]} </strong> in your cart</p>
+                        <p>The following products in your order are shipped via surface shipping, hence COD is not available :
+                            <strong> ${codFailureMap["GroundShipProduct"]} </strong> .</p>
                     </c:when>
 
                     <c:otherwise>
