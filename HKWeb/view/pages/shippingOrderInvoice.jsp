@@ -80,8 +80,10 @@
 <c:set var="b2bUser" value="<%=EnumRole.B2B_USER.getRoleName()%>"/>
 <c:set var="baseOrder" value="${orderSummary.shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
-<c:set var="fedExCourier" value="<%=EnumCourier.FedEx.getId()%>"/>
+<c:set var="fedEx" value="<%=EnumCourier.FedEx.getId()%>"/>
+<c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.getId()%>"/>
 <c:set var="groundShipped" value="${orderSummary.groundShipped}"/>
+<c:set var="courierId" value="${orderSummary.shipment.courier.id}"/>
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">
@@ -91,7 +93,7 @@
                 <strong>AWB NO.</strong>
 
                 <c:choose>
-                    <c:when test="${orderSummary.shipment.courier.id == fedExCourier}">
+                    <c:when test="${courierId == fedEx || courierId == fedExSurface}">
                         <div>${orderSummary.shipment.awb.awbNumber}</div>
                     </c:when>
                     <c:otherwise>
@@ -131,7 +133,7 @@
 
 
 <c:choose>
-    <c:when test="${orderSummary.shipment.courier.id == fedExCourier}">
+    <c:when test="${courierId == fedEx || courierId == fedExSurface}">
         <div class="grid_12">
 
             <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;
@@ -192,7 +194,7 @@
                 <h2>Cash on Delivery :
                     <fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" type="currency"
                                       currencySymbol="Rs. " maxFractionDigits="0"/></h2>
-                <c:if test="${orderSummary.shipment.courier.id == fedExCourier}">
+                <c:if test="${courierId == fedEx || courierId == fedExSurface}">
                     <div class="clear"></div>
                     <div style="font-weight:bold; margin-top:5px;">COD Return : Priority Overnight
                         &nbsp;&nbsp; ${orderSummary.shipment.awb.returnAwbNumber}
@@ -222,7 +224,7 @@
         <p>
 
         <p></p>
-        <c:if test="${orderSummary.shipment.courier.id == fedExCourier}">
+        <c:if test="${courierId == fedEx || courierId == fedExSurface}">
             <div style="font-size:.8em">
                 Subject to the conditions of Carriage, which limits the liability to FedEx
                 for loss, delay or damage to the consignment. Visit www.fedex.com/in to view the conditions of carriage.<br>
