@@ -92,5 +92,5 @@ public interface ProductDao extends BaseDao {
 
     List<Product> getAllProductsById(List<String> productIdList);
     public Page getNonComboProductByCategoryAndBrand(List<String> categoryNames,
-			String brand, int page, int perPage);
+			String brand, int page, int perPage,boolean isCod);
 }

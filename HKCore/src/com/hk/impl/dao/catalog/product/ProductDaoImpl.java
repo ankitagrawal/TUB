@@ -180,11 +180,12 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
     }
 
 	public Page getNonComboProductByCategoryAndBrand(List<String> categoryNames,
-			String brand, int page, int perPage) {
+			String brand, int page, int perPage,boolean isCod) {
 		if (categoryNames != null && categoryNames.size() > 0) {
+			String query = "select distinct pv.product.id from ProductVariant pv inner join pv.product.categories c where c.name in (:categories) group by pv.product.id having count(*) = :tagCount";
 			List<String> productIds = getSession()
 					.createQuery(
-							"select distinct pv.product.id from ProductVariant pv inner join pv.product.categories c where c.name in (:categories) group by pv.product.id having count(*) = :tagCount")
+							query)
 					.setParameterList("categories", categoryNames)
 					.setInteger("tagCount", categoryNames.size()).list();
 
@@ -199,8 +200,9 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 				criteria.add(Restrictions.eq("deleted", false));
 				criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
 				criteria.add(Restrictions.eq("hidden", false));
+				if(isCod)
+					criteria.add(Restrictions.eq("codAllowed", Boolean.TRUE));
 				criteria.addOrder(Order.asc("orderRanking"));
-
 				return list(criteria, page, perPage);
 			}
 		}

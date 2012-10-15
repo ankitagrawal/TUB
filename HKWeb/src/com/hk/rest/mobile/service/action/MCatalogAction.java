@@ -288,7 +288,7 @@ public class MCatalogAction extends MBaseAction{
 
             } else {
                 if (StringUtils.isBlank(brand)) {
-                    productPage = productDao.getNonComboProductByCategoryAndBrand(categoryNames, null, pageNo, perPage);
+                    productPage = productDao.getNonComboProductByCategoryAndBrand(categoryNames, null, pageNo, perPage,true);
                 } else {
                     productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, pageNo, perPage);
                 }
