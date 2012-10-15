@@ -4,84 +4,23 @@ package com.hk.admin.util.courier.thirdParty;
  * Created by IntelliJ IDEA. User: Neha Date: Sep 21, 2012 Time: 2:29:00 PM To change this template use File | Settings |
  * File Templates.
  */
+import com.fedex.ship.stub.*;
+import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.service.ServiceLocatorFactory;
+import org.apache.axis.types.NonNegativeInteger;
+import org.apache.axis.types.PositiveInteger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import org.apache.axis.types.NonNegativeInteger;
-import org.apache.axis.types.PositiveInteger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fedex.ship.stub.Address;
-import com.fedex.ship.stub.AssociatedShipmentDetail;
-import com.fedex.ship.stub.ClientDetail;
-import com.fedex.ship.stub.CodCollectionType;
-import com.fedex.ship.stub.CodDetail;
-import com.fedex.ship.stub.CommercialInvoice;
-import com.fedex.ship.stub.Commodity;
-import com.fedex.ship.stub.CompletedPackageDetail;
-import com.fedex.ship.stub.CompletedShipmentDetail;
-import com.fedex.ship.stub.Contact;
-import com.fedex.ship.stub.ContactAndAddress;
-import com.fedex.ship.stub.CustomerReference;
-import com.fedex.ship.stub.CustomerReferenceType;
-import com.fedex.ship.stub.CustomsClearanceDetail;
-import com.fedex.ship.stub.Dimensions;
-import com.fedex.ship.stub.DropoffType;
-import com.fedex.ship.stub.FreightBaseCharge;
-import com.fedex.ship.stub.FreightRateDetail;
-import com.fedex.ship.stub.FreightRateNotation;
-import com.fedex.ship.stub.InternationalDocumentContentType;
-import com.fedex.ship.stub.LabelFormatType;
-import com.fedex.ship.stub.LabelSpecification;
-import com.fedex.ship.stub.LinearUnits;
-import com.fedex.ship.stub.Money;
-import com.fedex.ship.stub.Notification;
-import com.fedex.ship.stub.NotificationSeverityType;
-import com.fedex.ship.stub.PackageOperationalDetail;
-import com.fedex.ship.stub.PackageRateDetail;
-import com.fedex.ship.stub.PackageRating;
-import com.fedex.ship.stub.PackagingType;
-import com.fedex.ship.stub.Party;
-import com.fedex.ship.stub.Payment;
-import com.fedex.ship.stub.PaymentType;
-import com.fedex.ship.stub.Payor;
-import com.fedex.ship.stub.ProcessShipmentReply;
-import com.fedex.ship.stub.ProcessShipmentRequest;
-import com.fedex.ship.stub.PurposeOfShipmentType;
-import com.fedex.ship.stub.RateRequestType;
-import com.fedex.ship.stub.RequestedPackageLineItem;
-import com.fedex.ship.stub.RequestedShipment;
-import com.fedex.ship.stub.ServiceType;
-import com.fedex.ship.stub.ShipPortType;
-import com.fedex.ship.stub.ShipServiceLocator;
-import com.fedex.ship.stub.ShipmentOperationalDetail;
-import com.fedex.ship.stub.ShipmentRateDetail;
-import com.fedex.ship.stub.ShipmentRating;
-import com.fedex.ship.stub.ShipmentSpecialServiceType;
-import com.fedex.ship.stub.ShipmentSpecialServicesRequested;
-import com.fedex.ship.stub.ShippingDocument;
-import com.fedex.ship.stub.ShippingDocumentImageType;
-import com.fedex.ship.stub.ShippingDocumentPart;
-import com.fedex.ship.stub.StringBarcode;
-import com.fedex.ship.stub.Surcharge;
-import com.fedex.ship.stub.TrackingId;
-import com.fedex.ship.stub.TransactionDetail;
-import com.fedex.ship.stub.VersionId;
-import com.fedex.ship.stub.WebAuthenticationCredential;
-import com.fedex.ship.stub.WebAuthenticationDetail;
-import com.fedex.ship.stub.Weight;
-import com.fedex.ship.stub.WeightUnits;
-import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
-import com.hk.admin.impl.service.shippingOrder.ShipmentServiceImpl;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.service.ServiceLocatorFactory;
 
 /**
  * Sample code to call the FedEx Ship Service
@@ -270,6 +209,7 @@ public class FedExCourierUtil {
     }
 
    
+/*
     @SuppressWarnings("unused")
     private static void writeServiceOutput(ProcessShipmentReply reply) throws Exception {
         try {
@@ -288,6 +228,8 @@ public class FedExCourierUtil {
             //
         }
     }
+*/
+
 
     private static boolean isResponseOk(NotificationSeverityType notificationSeverityType) {
         if (notificationSeverityType == null) {
@@ -300,6 +242,7 @@ public class FedExCourierUtil {
         return false;
     }
 
+/*
     @SuppressWarnings("unused")
     private static void printNotifications(Notification[] notifications) {
         System.out.println("Notifications:");
@@ -324,23 +267,31 @@ public class FedExCourierUtil {
         }
     }
 
+*/
+
+/*
     private static void printMoney(Money money, String description, String space) {
         if (money != null) {
             System.out.println(space + description + ": " + money.getAmount() + " " + money.getCurrency());
         }
     }
+*/
 
+/*
     private static void printWeight(Weight weight, String description, String space) {
         if (weight != null) {
             System.out.println(space + description + ": " + weight.getValue() + " " + weight.getUnits());
         }
     }
+*/
 
+/*
     private static void printString(String value, String description, String space) {
         if (value != null) {
             System.out.println(space + description + ": " + value);
         }
     }
+*/
 
     private static Money addMoney(String currency, Double value) {
         Money money = new Money();
@@ -356,6 +307,7 @@ public class FedExCourierUtil {
         return weight;
     }
 
+/*
     @SuppressWarnings("unused")
     private static Dimensions addPackageDimensions(Integer length, Integer height, Integer width, LinearUnits linearUnits) {
         Dimensions dimensions = new Dimensions();
@@ -365,7 +317,9 @@ public class FedExCourierUtil {
         dimensions.setUnits(linearUnits);
         return dimensions;
     }
+*/
 
+/*
     // Shipment level reply information
     private static void printShipmentOperationalDetails(ShipmentOperationalDetail shipmentOperationalDetail) {
         if (shipmentOperationalDetail != null) {
@@ -379,7 +333,9 @@ public class FedExCourierUtil {
             System.out.println();
         }
     }
+*/
 
+/*
     private static void printShipmentRating(ShipmentRating shipmentRating) {
         if (shipmentRating != null) {
             System.out.println("Shipment Rate Details");
@@ -402,7 +358,9 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
+/*
     // Package level reply information
     private static void printPackageOperationalDetails(PackageOperationalDetail packageOperationalDetail) {
         if (packageOperationalDetail != null) {
@@ -412,7 +370,9 @@ public class FedExCourierUtil {
             System.out.println();
         }
     }
+*/
 
+/*
     private static void printPackageDetails(CompletedPackageDetail[] cpd) throws Exception {
         if (cpd != null) {
             System.out.println("Package Details");
@@ -430,7 +390,9 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
+/*
     private static void printPackageRating(PackageRating packageRating) {
         if (packageRating != null) {
             System.out.println("Package Rate Details");
@@ -452,7 +414,9 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
+/*
     private static void printTrackingNumbers(CompletedPackageDetail completedPackageDetail) {
         if (completedPackageDetail.getTrackingIds() != null) {
             TrackingId[] trackingId = completedPackageDetail.getTrackingIds();
@@ -465,6 +429,7 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
     private String getPayorAccountNumber() {
         // See if payor account number is set as system property,
@@ -677,6 +642,7 @@ public class FedExCourierUtil {
         return commodity;
     }
 
+/*
     private static void printFreightDetail(FreightRateDetail freightRateDetail) {
         if (freightRateDetail != null) {
             System.out.println("  Freight Details");
@@ -685,7 +651,9 @@ public class FedExCourierUtil {
 
         }
     }
+*/
 
+/*
     private static void printFreightNotations(FreightRateDetail frd) {
         if (null != frd.getNotations()) {
             System.out.println("    Notations");
@@ -696,7 +664,9 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
+/*
     private static void printFreightBaseCharges(FreightRateDetail frd) {
         if (null != frd.getBaseCharges()) {
             FreightBaseCharge baseCharges[] = frd.getBaseCharges();
@@ -713,6 +683,7 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
     private static String printMasterTrackingNumber(CompletedShipmentDetail csd) {
         String trackingNumber = "";
