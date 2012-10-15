@@ -9280,14 +9280,25 @@
 	<changeSet author="Rahul (generated)" id="1349852020790-65">
 	    <dropColumn columnName="create_date" tableName="user_cart"/>
 	</changeSet>
-    <changeSet author="Neha (generated)" id="1350020589676-1">
-        <addColumn tableName="awb">
-            <column name="returnAwb_bar_code" type="VARCHAR(70)"/>
+
+    <changeSet author="Tarun (generated)" id="1350281977808-1">
+        <addColumn tableName="rv_line_item">
+            <column name="remarks" type="TEXT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Neha (generated)" id="1350020589676-2">
-        <addColumn tableName="awb">
-            <column name="returnAwb_number" type="VARCHAR(70)"/>
+	<changeSet author="Tarun (generated)" id="1349849616633-1">
+        <addColumn tableName="consignment">
+            <column name="delivery_date" type="DATETIME"/>
         </addColumn>
     </changeSet>
+	<changeSet author="Tarun" id="1349849616633-2">
+		<sql>
+			UPDATE consignment c
+			SET c.delivery_date =
+						(SELECT MAX(create_date)
+						FROM consignment_tracking ct
+						WHERE ct.consignment_lifecycle_status_id=80
+						AND ct.consignment_id = c.id);
+		</sql>
+	</changeSet>
 </databaseChangeLog>

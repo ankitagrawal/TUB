@@ -70,7 +70,7 @@ public class CartLineItemMatcher {
                 matchFound = false;
             }
             if (matchFound && productVariant != null && comboInstance != null && productVariant.equals(cartLineItem.getProductVariant())
-                    && !comboInstance.getCombo().equals(cartLineItem.getComboInstance().getCombo())) {
+                    && comboInstance.getCombo() ==null && cartLineItem.getComboInstance().getCombo() !=null && !comboInstance.getCombo().equals(cartLineItem.getComboInstance().getCombo())) {
                 matchFound = false;
             }
             if (matchFound && productVariant != null && comboInstance != null && !productVariant.equals(cartLineItem.getProductVariant())) {

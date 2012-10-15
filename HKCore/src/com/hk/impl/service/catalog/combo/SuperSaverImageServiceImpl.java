@@ -66,11 +66,15 @@ public class SuperSaverImageServiceImpl implements SuperSaverImageService {
             }
         }
 
-        int firstResult = (page - 1) * perPage;
-        int lastResult = Math.min(firstResult + perPage, superSaverImages.size() - 1);
-        List resultList = superSaverImages.subList(firstResult,lastResult);
+        if (superSaverImages.size() > 0) {
+            int firstResult = (page - 1) * perPage;
+            int lastResult = Math.min(firstResult + perPage, superSaverImages.size() - 1);
+            List resultList = superSaverImages.subList(firstResult, lastResult);
 
-        superSaverPage = new Page(resultList, perPage, page, superSaverImages.size());
+            superSaverPage = new Page(resultList, perPage, page, superSaverImages.size());
+        } else {
+            superSaverPage = new Page(Collections.EMPTY_LIST, perPage, page, superSaverImages.size());
+        }
         return superSaverPage;
     }
 }
