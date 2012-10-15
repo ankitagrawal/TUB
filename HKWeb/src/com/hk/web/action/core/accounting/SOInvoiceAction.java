@@ -97,13 +97,11 @@ public class SOInvoiceAction extends BaseAction {
         CourierServiceInfo courierServiceInfo = null;
 
             Long courierId = shipment.getCourier().getId();
-            if (courierId.equals(EnumCourier.BlueDart_COD.getId())) {
+            if (courierId.equals(EnumCourier.BlueDart_COD.getId()) || courierId.equals(EnumCourier.BlueDart.getId()) ) {
                 courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, isCod, false, false);
             } else if (courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())) {
                 courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, false, false, false);
-//            if (courierServiceInfo != null) {
-//                routingCode = courierServiceInfo.getRoutingCode();
-//            }
+
             }
 
             if (courierServiceInfo != null) {
