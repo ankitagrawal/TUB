@@ -5,18 +5,20 @@ package com.hk.admin.util.courier.thirdParty;
  * File Templates.
  */
 
+import org.apache.axis.types.NonNegativeInteger;
+import org.apache.axis.types.PositiveInteger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import org.apache.axis.types.NonNegativeInteger;
-import org.apache.axis.types.PositiveInteger;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import com.fedex.ship.stub.Address;
 import com.fedex.ship.stub.AssociatedShipmentDetail;
@@ -84,6 +86,7 @@ import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.service.ServiceLocatorFactory;
+
 
 /**
  * Sample code to call the FedEx Ship Service
@@ -277,6 +280,9 @@ public class FedExCourierUtil {
     }
 
 
+   
+/*
+
     @SuppressWarnings("unused")
     private static void writeServiceOutput(ProcessShipmentReply reply) throws Exception {
         try {
@@ -295,6 +301,8 @@ public class FedExCourierUtil {
             //
         }
     }
+*/
+
 
     private static boolean isResponseOk(NotificationSeverityType notificationSeverityType) {
         if (notificationSeverityType == null) {
@@ -307,6 +315,7 @@ public class FedExCourierUtil {
         return false;
     }
 
+/*
     @SuppressWarnings("unused")
     private static void printNotifications(Notification[] notifications) {
         System.out.println("Notifications:");
@@ -331,23 +340,31 @@ public class FedExCourierUtil {
         }
     }
 
+*/
+
+/*
     private static void printMoney(Money money, String description, String space) {
         if (money != null) {
             System.out.println(space + description + ": " + money.getAmount() + " " + money.getCurrency());
         }
     }
+*/
 
+/*
     private static void printWeight(Weight weight, String description, String space) {
         if (weight != null) {
             System.out.println(space + description + ": " + weight.getValue() + " " + weight.getUnits());
         }
     }
+*/
 
+/*
     private static void printString(String value, String description, String space) {
         if (value != null) {
             System.out.println(space + description + ": " + value);
         }
     }
+*/
 
     private static Money addMoney(String currency, Double value) {
         Money money = new Money();
@@ -363,6 +380,7 @@ public class FedExCourierUtil {
         return weight;
     }
 
+/*
     @SuppressWarnings("unused")
     private static Dimensions addPackageDimensions(Integer length, Integer height, Integer width, LinearUnits linearUnits) {
         Dimensions dimensions = new Dimensions();
@@ -372,7 +390,9 @@ public class FedExCourierUtil {
         dimensions.setUnits(linearUnits);
         return dimensions;
     }
+*/
 
+/*
     // Shipment level reply information
     private static void printShipmentOperationalDetails(ShipmentOperationalDetail shipmentOperationalDetail) {
         if (shipmentOperationalDetail != null) {
@@ -386,7 +406,9 @@ public class FedExCourierUtil {
             System.out.println();
         }
     }
+*/
 
+/*
     private static void printShipmentRating(ShipmentRating shipmentRating) {
         if (shipmentRating != null) {
             System.out.println("Shipment Rate Details");
@@ -409,7 +431,9 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
+/*
     // Package level reply information
     private static void printPackageOperationalDetails(PackageOperationalDetail packageOperationalDetail) {
         if (packageOperationalDetail != null) {
@@ -419,7 +443,9 @@ public class FedExCourierUtil {
             System.out.println();
         }
     }
+*/
 
+/*
     private static void printPackageDetails(CompletedPackageDetail[] cpd) throws Exception {
         if (cpd != null) {
             System.out.println("Package Details");
@@ -437,7 +463,9 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
+/*
     private static void printPackageRating(PackageRating packageRating) {
         if (packageRating != null) {
             System.out.println("Package Rate Details");
@@ -459,7 +487,9 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
+/*
     private static void printTrackingNumbers(CompletedPackageDetail completedPackageDetail) {
         if (completedPackageDetail.getTrackingIds() != null) {
             TrackingId[] trackingId = completedPackageDetail.getTrackingIds();
@@ -472,14 +502,15 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
     private String getPayorAccountNumber() {
         // See if payor account number is set as system property,
         // if not default it to "XXX"
-        String payorAccountNumber = System.getProperty("Payor.AccountNumber");
-        if (payorAccountNumber == null) {
-            payorAccountNumber = fedExAccountNo; // "510087020"; // Replace "XXX" with the payor account number
-        }
+        //String payorAccountNumber = System.getProperty("Payor.AccountNumber");
+        //if (payorAccountNumber == null) {
+          String payorAccountNumber = fedExAccountNo; // "510087020"; // Replace "XXX" with the payor account number
+        //}
         return payorAccountNumber;
     }
 
@@ -493,14 +524,7 @@ public class FedExCourierUtil {
         shipperContact.setPhoneNumber(HKWarehouse.getWhPhone());// "0124-4551616");
         Address shipperAddress = new Address();
         shipperAddress.setStreetLines(new String[]{HKWarehouse.getLine1(), HKWarehouse.getLine2()});// {"4th Floor,
-        // Parshavnath
-        // Arcadia\n"
-        // +"1, MG
-        // Road\n"
-        // +"(Opposite
-        // to
-        // Motorola)\n"
-        // +"Sector-14"});
+
         shipperAddress.setCity(HKWarehouse.getCity());// "Gurgaon");
         shipperAddress.setStateOrProvinceCode(HKWarehouse.getState());// "HR");
         shipperAddress.setPostalCode(HKWarehouse.getPincode());// "122001");
@@ -684,6 +708,7 @@ public class FedExCourierUtil {
         return commodity;
     }
 
+/*
     private static void printFreightDetail(FreightRateDetail freightRateDetail) {
         if (freightRateDetail != null) {
             System.out.println("  Freight Details");
@@ -692,7 +717,9 @@ public class FedExCourierUtil {
 
         }
     }
+*/
 
+/*
     private static void printFreightNotations(FreightRateDetail frd) {
         if (null != frd.getNotations()) {
             System.out.println("    Notations");
@@ -703,7 +730,9 @@ public class FedExCourierUtil {
             }
         }
     }
+*/
 
+/*
     private static void printFreightBaseCharges(FreightRateDetail frd) {
         if (null != frd.getBaseCharges()) {
             FreightBaseCharge baseCharges[] = frd.getBaseCharges();
@@ -720,7 +749,8 @@ public class FedExCourierUtil {
             }
         }
     }
-
+*/
+  /*
     private static String printMasterTrackingNumber(CompletedShipmentDetail csd) {
         String trackingNumber = "";
         if (null != csd.getMasterTrackingId()) {
@@ -774,7 +804,7 @@ public class FedExCourierUtil {
             }
         }
     }
-
+    *//*
     private static void getAssociatedShipmentLabels(AssociatedShipmentDetail[] associatedShipmentDetail) throws Exception {
         if (associatedShipmentDetail != null) {
             for (int j = 0; j < associatedShipmentDetail.length; j++) {
@@ -805,22 +835,22 @@ public class FedExCourierUtil {
             Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + associatedShipmentLabelFile.getAbsolutePath());
         }
     }
-
+    */
     private ClientDetail createClientDetail() {
         ClientDetail clientDetail = new ClientDetail();
-        String accountNumber = System.getProperty("accountNumber");
-        String meterNumber = System.getProperty("meterNumber");
+        //String accountNumber = System.getProperty("accountNumber");
+        //String meterNumber = System.getProperty("meterNumber");
 
         //
         // See if the accountNumber and meterNumber properties are set,
         // if set use those values, otherwise default them to "XXX"
         //
-        if (accountNumber == null) {
-            accountNumber = fedExAccountNo; // "510087020"; // Replace "XXX" with clients account number
-        }
-        if (meterNumber == null) {
-            meterNumber = fedExMeterNo; // "100073086"; // Replace "XXX" with clients meter number
-        }
+        //if (accountNumber == null) {
+            String accountNumber = fedExAccountNo; // "510087020"; // Replace "XXX" with clients account number
+        //}
+        //if (meterNumber == null) {
+         String meterNumber = fedExMeterNo; // "100073086"; // Replace "XXX" with clients meter number
+        //}
         clientDetail.setAccountNumber(accountNumber);
         clientDetail.setMeterNumber(meterNumber);
         return clientDetail;
@@ -828,19 +858,19 @@ public class FedExCourierUtil {
 
     private WebAuthenticationDetail createWebAuthenticationDetail() {
         WebAuthenticationCredential wac = new WebAuthenticationCredential();
-        String key = System.getProperty("key");
-        String password = System.getProperty("password");
+        //String key = System.getProperty("key");
+        //String password = System.getProperty("password");
 
         //
         // See if the key and password properties are set,
         // if set use those values, otherwise default them to "XXX"
         //
-        if (key == null) {
-            key = fedExAuthKey; // Replace "XXX" with clients key
-        }
-        if (password == null) {
-            password = fedExPassword; // "6KGHIwA4iLtnHKXMQNbQ3vOBs"; // Replace "XXX" with clients password
-        }
+        //if (key == null) {
+            String key = fedExAuthKey; // Replace "XXX" with clients key
+        //}
+        //if (password == null) {
+            String password = fedExPassword; // "6KGHIwA4iLtnHKXMQNbQ3vOBs"; // Replace "XXX" with clients password
+        //}
         wac.setKey(key);
         wac.setPassword(password);
         return new WebAuthenticationDetail(wac);
