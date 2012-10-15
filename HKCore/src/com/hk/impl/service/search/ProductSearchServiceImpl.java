@@ -310,12 +310,19 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return sr;
     }
 
-    public SearchResult getSearchResults(String query, int page, int perPage, boolean isRetry) throws SearchException {
+    public SearchResult getSearchResults(String query,List<SearchFilter> searchFilters, int page, int perPage, boolean isRetry) throws SearchException {
 
         QueryResponse response = null;
         SearchResult searchResult = new SearchResult();
         try{
-            //query += " AND hidden:false";
+            if (searchFilters != null)
+            {
+                for (SearchFilter searchFilter : searchFilters){
+                    if (!StringUtils.isBlank(searchFilter.getValue())) {
+                        query += searchFilter.getName() + SolrSchemaConstants.paramAppender + "\"" + searchFilter.getValue() + "\"";
+                    }
+                }
+            }
 
             response = solr.query(getResultsQuery(query, page, perPage));
             List<SolrProduct> productList = getQueryResults(response);
@@ -326,7 +333,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
                 searchResult = getProductSuggestions(response, query, page, perPage);
                 if ((searchResult != null) && searchResult.getResultSize() == 0){
                     query = query.replaceAll(" ","");
-                    searchResult = getSearchResults(query, page, perPage, true);
+                    searchResult = getSearchResults(query,null, page, perPage, true);
                 }
             }
         }catch (SolrServerException ex ){

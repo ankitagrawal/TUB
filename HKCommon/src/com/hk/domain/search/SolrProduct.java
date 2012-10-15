@@ -169,6 +169,11 @@ public class SolrProduct {
     private
     double comboDiscountPercent;
 
+    @Field
+    private
+    boolean isCODAllowed;
+
+
     public
     String getName() {
         return name;
@@ -393,6 +398,14 @@ public class SolrProduct {
 
     public void setPostpaidPrice(double postpaidPrice) {
         this.postpaidPrice = postpaidPrice;
+    }
+
+    public boolean isCODAllowed() {
+        return isCODAllowed;
+    }
+
+    public void setCODAllowed(boolean CODAllowed) {
+        isCODAllowed = CODAllowed;
     }
 
     public boolean getCombo() {

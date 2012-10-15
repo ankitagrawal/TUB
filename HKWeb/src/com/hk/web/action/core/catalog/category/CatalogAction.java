@@ -206,6 +206,11 @@ public class CatalogAction extends BasePaginatedAction {
                 SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
                 searchFilters.add(comboFilter);
             }
+            if (getContext().getRequest().getParameterMap().containsKey("isCOD")){
+                String[] params = (String[])getContext().getRequest().getParameterMap().get("isCOD");
+                SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCOD, params[0].toString());
+                searchFilters.add(codFilter);
+            }
             SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter, paginationFilter, sortFilter);
 
             List<Product> filteredProducts = searchResult.getSolrProducts();

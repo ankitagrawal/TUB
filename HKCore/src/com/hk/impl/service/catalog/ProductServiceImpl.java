@@ -488,6 +488,12 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setHidden(false);
         }
 
+        if(product.getCodAllowed() != null){
+            solrProduct.setCODAllowed(product.getCodAllowed());
+        }else{
+            solrProduct.setCODAllowed(false);
+        }
+
         Double price = null;
         productVariant = product.getMinimumHKPriceProductVariant();
         if (productVariant.getHkPrice() != null){
