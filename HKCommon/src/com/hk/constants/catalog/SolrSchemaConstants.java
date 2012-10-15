@@ -26,11 +26,14 @@ public class SolrSchemaConstants {
     public static final String isDeleted = "deleted";
     public static final String isGoogleAdDisallowed = "isGoogleAdDisallowed";
     public static final String isHidden = "hidden";
+    public static final String isCombo = "isCombo";
+    public static final String isCOD = "isCOD";
     public static final String sortBy = "ranking";
     public static final String sortByRanking = "ranking";
     public static final String sortByHkPrice = "hkPrice";
     public static final String sortByOutOfStock = "outOfStock";
     public static final String hkPrice = "hkPrice";
+
 
 
     public static final String paramAppender = ":";
