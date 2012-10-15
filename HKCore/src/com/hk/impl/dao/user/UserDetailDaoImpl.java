@@ -29,10 +29,14 @@ public class UserDetailDaoImpl  extends BaseDaoImpl implements UserDetailsDao{
        return (UserDetail)super.save(userDetails);
     }
 
-    public UserDetail findByPhone(int phone) {
-       DetachedCriteria criteria = DetachedCriteria.forClass(UserDetail.class);
-       criteria.add(Restrictions.eq("phone", phone));
-       return (UserDetail)super.findByCriteria(criteria).get(0);
+    public UserDetail findByPhone(Long phone) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(UserDetail.class);
+        criteria.add(Restrictions.eq("phone", phone));
+        List<UserDetail> userDetailList = super.findByCriteria(criteria);
+        if (userDetailList != null && !userDetailList.isEmpty()){
+            return userDetailList.get(0);
+        }
+        return null;
     }
 
     public List<UserDetail> findByPriority(int priority) {

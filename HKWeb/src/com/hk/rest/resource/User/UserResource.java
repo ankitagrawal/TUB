@@ -5,6 +5,8 @@ import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.user.UserDetailService;
+import com.hk.rest.models.user.APIUser;
+import com.hk.rest.models.user.APIUserDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,7 @@ public class UserResource {
                 response = Response.status(Response.Status.NOT_FOUND).build();
             }else{
                 UserDetail userDetail = new UserDetail();
-                userDetail.setPhone((int)phone);
+                userDetail.setPhone(phone);
                 userDetail.setUser(user);
                 userDetailService.save(userDetail);
                 response = Response.status(Response.Status.OK).build();
@@ -81,7 +83,11 @@ public class UserResource {
 
         Response response = null;
         try{
-            UserDetail userDetail = userDetailService.findByPhone((int)phone);
+            UserDetail userDetail = userDetailService.findByPhone(phone);
+            APIUserDetail apiUserDetail = new APIUserDetail();
+            apiUserDetail.setId(userDetail.getId());
+            apiUserDetail.setPhone(userDetail.getPhone());
+            apiUserDetail.setPriority(userDetail.getPriority());
             if (userDetail != null){
                 response = Response.status(Response.Status.OK).entity(userDetail).build();
             }else{

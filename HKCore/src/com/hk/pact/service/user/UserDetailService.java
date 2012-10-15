@@ -14,7 +14,7 @@ import java.util.List;
 public interface UserDetailService {
     public UserDetail save(UserDetail userDetails);
 
-    public UserDetail findByPhone(int phone);
+    public UserDetail findByPhone(long phone);
 
     public List<UserDetail> getByPriority(int priority);
 }

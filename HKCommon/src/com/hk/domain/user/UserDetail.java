@@ -22,7 +22,7 @@ public class UserDetail {
     private Long                  id;
 
     @Column(name = "phone", nullable = false)
-    private Integer                 phone;
+    private Long                 phone;
 
     @Column(name = "priority", nullable = false)
     private Integer                 priority;
@@ -39,11 +39,11 @@ public class UserDetail {
         this.id = id;
     }
 
-    public Integer getPhone() {
+    public Long getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(Long phone) {
         this.phone = phone;
     }
 

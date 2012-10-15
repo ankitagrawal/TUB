@@ -15,7 +15,7 @@ import java.util.List;
 public interface UserDetailsDao extends BaseDao {
     public UserDetail save(UserDetail userDetails);
 
-    public UserDetail findByPhone(int phone);
+    public UserDetail findByPhone(Long phone);
 
     List<UserDetail> findByPriority(int priority);
 }
