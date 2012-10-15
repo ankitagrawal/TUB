@@ -23,12 +23,12 @@
 			<td class='arr-r'>
 				<a href='login-signup.jsp'>Login</a>
 			</td>
-		</tr>
+		</tr><!--
 		<tr>
 			<td class='arr-r'>
 				<a href='contactUs.jsp'>Contact Us</a>
 			</td>
 		</tr>
-		
+		-->
 		</table>
-		<center>&copy; HealthKart 2012</center>
+		<center style='padding:4px'>&copy; HealthKart 2012</center>

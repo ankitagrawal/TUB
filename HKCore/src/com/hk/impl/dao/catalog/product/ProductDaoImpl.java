@@ -179,6 +179,35 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return null;
     }
 
+	public Page getNonComboProductByCategoryAndBrand(List<String> categoryNames,
+			String brand, int page, int perPage) {
+		if (categoryNames != null && categoryNames.size() > 0) {
+			List<String> productIds = getSession()
+					.createQuery(
+							"select distinct pv.product.id from ProductVariant pv inner join pv.product.categories c where c.name in (:categories) group by pv.product.id having count(*) = :tagCount")
+					.setParameterList("categories", categoryNames)
+					.setInteger("tagCount", categoryNames.size()).list();
+
+			if (productIds != null && productIds.size() > 0) {
+
+				DetachedCriteria criteria = DetachedCriteria
+						.forClass(Product.class);
+				if (StringUtils.isNotBlank(brand)) {
+					criteria.add(Restrictions.eq("brand", brand));
+				}
+				criteria.add(Restrictions.in("id", productIds));
+				criteria.add(Restrictions.eq("deleted", false));
+				criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+				criteria.add(Restrictions.eq("hidden", false));
+				criteria.addOrder(Order.asc("orderRanking"));
+
+				return list(criteria, page, perPage);
+			}
+		}
+		return null;
+	}
+
+
 	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice, int page, int perPage) {
 		if (categoryNames != null && categoryNames.size() > 0) {
 			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) and p.deleted <> 1 group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
@@ -327,7 +356,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                 value).list();
         return optionList != null && optionList.size() > 0 ? optionList.get(0) : null;
     }
-	
+
 	public List<ProductOption> getProductOptions(List<Long> options) {
         return getSession().createQuery("from ProductOption po where po.id in(:options) order by upper(po.name), po.value asc").setParameterList("options", options).list();
     }

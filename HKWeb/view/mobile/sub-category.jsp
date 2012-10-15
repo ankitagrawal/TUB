@@ -172,12 +172,17 @@ _.templateSettings = {
 			}
 			else
 			{
-				
-				if(suCaCo.add(response.data))
+				if(response.data.length == 0 ||response.data == null)
 				{
-					suCaCo.updateUI();
+					$('#subCategoryContainer ul').append('<h3 style="padding-left:20px">No Data Found!</h3>');
 				}
-				
+				else
+				{
+				if(suCaCo.add(response.data))
+					{
+						suCaCo.updateUI();
+					}
+				}
 				loadingPop('h');
 			}
 		},

@@ -2,6 +2,7 @@ package com.hk.rest.mobile.service.action;
 
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.akube.framework.gson.JsonUtils;
+import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
@@ -31,6 +32,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
+import com.hk.util.HKImageUtils;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.user.SelectAddressAction;
 import com.hk.rest.mobile.service.model.MCartLineItemsJSONResponse;
@@ -129,6 +131,19 @@ public class MCartAction extends MBaseAction{
         if (user != null) {
             order = orderManager.getOrCreateOrder(user);
 
+            
+            order = orderDao.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+            if (order != null) {
+                Set<CartLineItem> cartLineItems = order.getCartLineItems();
+                if (cartLineItems != null && !cartLineItems.isEmpty()) {
+                    Set<CartLineItem> productCartLineItems = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Product).filter();
+                    if (order != null && productCartLineItems != null) {
+                        itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
+                    }
+                }
+                int inCartSubscriptions= new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter().size();
+                itemsInCart+=inCartSubscriptions;
+            }
             Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
             for (CartLineItem lineItem : cartLineItems) {
                 if (lineItem != null && lineItem.getProductVariant() != null) {
@@ -138,6 +153,10 @@ public class MCartAction extends MBaseAction{
                     cartItemResponse.setHkPrice(lineItem.getHkPrice());
                     cartItemResponse.setId(lineItem.getId());
                     cartItemResponse.setName(productVariant.getProduct().getName());
+                    if(null!=productVariant.getProduct() && null!=productVariant.getProduct().getMainImageId())
+                    	cartItemResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,productVariant.getProduct().getMainImageId(),false));
+                    else
+                    	cartItemResponse.setImageUrl(getImageUrl()+productVariant.getProduct().getId()+MHKConstants.IMAGETYPE);
                     if(null!=productVariant.getProduct())
                     cartItemResponse.setProductId(productVariant.getProduct().getId());
                     if(null!=lineItem.getLineItemType())
@@ -201,7 +220,7 @@ public class MCartAction extends MBaseAction{
         }
 
         freebieBanner = cartFreebieService.getFreebieBanner(order);
-
+      
         healthkartResponse = new HealthkartResponse(status, message, cartItemsList);
         jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
 

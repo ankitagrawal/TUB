@@ -2,9 +2,9 @@
 <html>
 <head>
 	<title>Health Kart | Online health Store</title>
-	<%@ include file='header.jsp' %>	
-	
-	
+	<%@ include file='header.jsp' %>
+
+
 </head>
 <body>
 <div data-role="page" id=trackOrder class="type-home">
@@ -13,7 +13,7 @@
 	<%@ include file='menuNavBtn.jsp'%>
 </div>
 	<div data-role="content" style='height:auto'>
-	
+
 		<form id=trackOrderForm>
 		<div style='margin:10px;padding:10px;border:1px solid white;box-shadow:4px 4px 8px #888;-webkit-box-shadow:4px 4px 8px #888'>
 		<label for='login'>Tracking Number</label>
@@ -23,14 +23,14 @@
 		</form>
 		<div id='trackOrderResult'>
 		</div>
-	
-	
-		<%@ include file='menuFooter.jsp' %>	
-	
+
+
+		<%@ include file='menuFooter.jsp' %>
 
 
 
-	
+
+
 
 </div>
 
@@ -50,14 +50,16 @@ $('#trackOrderForm').bind('submit',function(e){
 			}
 			else
 			{
-			    var resultHtml= '</h3>'+data.orderstatus+'</h3><br/>';
-				resultHtml+='<h3>Date :'+data.date+'</h3><br/>';
-				popUpMob.showWithTitle("Status",resultHtml);
-				
+			    var resultHtml= '</h3> Status of your order '+ $('#trackOrderId').val()+' created on '+data.data.date+' is: '+data.data.orderstatus+'</h3><br/>';
+				popUpMob.showWithTitle("Order status",resultHtml);
+
 			}
+		},
+		error: function(){
+			popUpMob.showWithTitle("Status",'Request Failed');
 		}
 	});
-	
+
 	return false;
 });
 });

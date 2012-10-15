@@ -22,7 +22,7 @@
 		<div id='productTitle'style='clear:both;padding:4px;background-color:#ddd;text-align:center;margin-bottom:6px;font-weight:bold'>
 			
 		</div>
-		<div style='padding-top:4px' id='productList'  data-pageNo='0' data-perPage='10' data-more='true' data-request='free'>
+		<div style='padding-top:4px' id='productList'  data-pageNo='0' data-perPage='20' data-more='true' data-request='free'>
 		<ul>
 		</ul>
 		</div>
@@ -151,7 +151,8 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 		/**Backbone code for product list*S*/
 		var ProductModel = Backbone.Model.extend({
 			initialize : function(){
-				this.render();
+				_.bindAll(this,'render');
+				 this.render();
 			},
 			render : function(){
 				var prVi = new ProductView({model : this});
@@ -184,10 +185,10 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 			render : function(){
 				$(this.el).empty();
 				$(this.el).html(this.template(this.model.toJSON()));
+				$(this.el).attr('data-icon','arr');
 				return this;
 			}
 		});
-		jQuery.support.cors = true;
 		loadingPop('s','');
 		var prCo = new ProductCollection();
 		prCo.reset();
@@ -210,8 +211,8 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 			var dataRequest = $('#productList').attr('data-request');
 			if(hasMore=='true'&&dataRequest=='free')
 			{
-			loadingPop('s','');
 			$('#productList').attr('data-request','processing');
+			loadingPop('s','');
 				$.ajax({
 					url : URL+'&pageNo='+pageNo+'&perPage='+perPage,
 				dataType: 'json',
@@ -232,9 +233,9 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 						else
 						{
 							if(prCo.add(response.data.data))
-							{
+							{  
 								$('#productList ul').listview();
-								$('#productList ul').listview('refresh');
+				         			$('#productList ul').listview('refresh');
 							}
 						}
 						
@@ -255,17 +256,19 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 		}
 		getProductList();
 		$(window).scroll( function() {
-				var currentScrollTop = $(window).scrollTop();
-				var windowHeight = $(window).height();
-				var documentHeight = $('#productList').height()+160;
-				console.log(documentHeight);
-				if(documentHeight < (currentScrollTop + windowHeight))
-				{
-					
-					getProductList();
-					
-				}			
-			
+			if($.mobile.activePage.attr('id')=='product')
+			{
+					var currentScrollTop = $(window).scrollTop();
+					var windowHeight = $(window).height();
+					var documentHeight = $('#productList').height()+160;
+					//console.log(documentHeight);
+					if(documentHeight < (currentScrollTop + windowHeight))
+					{
+						
+						getProductList();
+						
+					}			
+			}	
 		});
 		
 		/**Backbone code for product list*E*/

@@ -18,6 +18,7 @@ import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.CartFreebieService;
+import com.hk.util.HKImageUtils;
 import com.hk.web.HealthkartResponse;
 import com.hk.dto.pricing.PricingDto;
 
@@ -29,13 +30,8 @@ import com.hk.dto.pricing.PricingDto;
  * To change this template use File | Settings | File Templates.
  */
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.*;
 
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.*;
 
 import org.slf4j.Logger;
@@ -66,6 +62,7 @@ import com.hk.web.HealthkartResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.rest.mobile.service.model.MCartLineItemsJSONResponse;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.shiro.PrincipalImpl;
 
@@ -178,6 +175,10 @@ public class MCartLineItemUpdateAction extends MBaseAction {
                 cartItemResponse.setHkPrice(lineItem.getHkPrice());
                 cartItemResponse.setId(lineItem.getId());
                 cartItemResponse.setName(productVariant.getProduct().getName());
+                if(null!=productVariant.getProduct() && null!=productVariant.getProduct().getMainImageId())
+                	cartItemResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,productVariant.getProduct().getMainImageId(),false));
+                else
+                	cartItemResponse.setImageUrl(getImageUrl()+productVariant.getProduct().getId()+MHKConstants.IMAGETYPE);
                 if(null!=lineItem.getLineItemType())
                 cartItemResponse.setLineItemType(lineItem.getLineItemType().getName());
                 cartItemResponse.setMarkedPrice(lineItem.getMarkedPrice());

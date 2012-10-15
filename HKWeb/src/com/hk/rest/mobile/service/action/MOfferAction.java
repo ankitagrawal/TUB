@@ -57,17 +57,18 @@ import com.hk.web.HealthkartResponse;
            // superSaverImages = superSaverPage.getList();
             //return new ForwardResolution("/pages/superSavers.jsp");
             MCatalogJSONResponse catalogResponse = new MCatalogJSONResponse();
-
+            ArrayList <String> paths = new ArrayList<String>();
             for(SuperSaverImage image:superSaverImages){
                 Product product = image.getProduct();
+                paths.add(HKImageUtils.getS3SuperSaverImageUrl(EnumImageSize.Original, image.getId(), false));
                 if(null!=product){
                 catalogResponse = populateCatalogResponse(product, catalogResponse);
                 catalogResponse.setProductURL(product.getProductURL());
                 catalogList.add(catalogResponse);
                 }
             }
-            statusMap.put("offers",superSaverImages);
-            healthkartResponse = new HealthkartResponse(status, message, statusMap);
+           // statusMap.put("offers",catalogList);
+            healthkartResponse = new HealthkartResponse(status, message, paths);
             jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
 
             addHeaderAttributes(response);

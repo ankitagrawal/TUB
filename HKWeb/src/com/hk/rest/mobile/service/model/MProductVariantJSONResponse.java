@@ -2,6 +2,7 @@ package com.hk.rest.mobile.service.model;
 
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductOption;
+import com.hk.rest.mobile.service.utils.MHKConstants;
 
 import java.util.Date;
 import java.util.ArrayList;
@@ -16,13 +17,13 @@ import java.util.List;
  */
 public class MProductVariantJSONResponse {
 
-        private String id;
+        private String id="";
         private Product product;
-        private String variantName;
-        private Double hkPrice;
+        private String variantName="";
+        private Double hkPrice=0.0;
         private Double b2bPrice;
-        private Double markedPrice;
-        private Double discountPercent;
+        private Double markedPrice=0.0;
+        private Double discountPercent=0.0;
         private Double costPrice;
         private Long shippingBaseQty;
         private Double shippingBasePrice;
@@ -31,7 +32,7 @@ public class MProductVariantJSONResponse {
         private boolean outOfStock;
         private boolean deleted;
         private Double orderRanking;
-        private Long qty;
+        private Long qty=0l;
         private Boolean selected;
         private String colorHex;
         private Long mainImageId;
@@ -57,18 +58,18 @@ public class MProductVariantJSONResponse {
         private Date followingAvailableDate;
         private String supplierCode;
         private String otherRemark;
-        private String imageUrl;
+        private String imageUrl="";
         private String extraOptions;
         private String colourOptions;
         private List<ProductOption> productOptions = new ArrayList<ProductOption>();
-        private String productId;
+        private String productId="";
 
     public String getProductId() {
         return productId;
     }
 
     public void setProductId(String productId) {
-        this.productId = productId;
+        this.productId = MHKConstants.getStringNullDefault(productId);
     }
 
     public List<ProductOption> getProductOptions() {
@@ -100,7 +101,7 @@ public class MProductVariantJSONResponse {
     }
 
     public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+        this.imageUrl = MHKConstants.getStringNullDefault(imageUrl);
     }
 
         public String getId() {
@@ -108,7 +109,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setId(String id) {
-            this.id = id;
+            this.id = MHKConstants.getStringNullDefault(id);
         }
 
         public Product getProduct() {
@@ -124,7 +125,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setVariantName(String variantName) {
-            this.variantName = variantName;
+            this.variantName = MHKConstants.getStringNullDefault(variantName);
         }
 
         public Double getHkPrice() {
@@ -132,7 +133,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setHkPrice(Double hkPrice) {
-            this.hkPrice = hkPrice;
+            this.hkPrice =MHKConstants.getDoubleNullDefault( hkPrice);
         }
 
         public Double getB2bPrice() {
@@ -148,7 +149,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setMarkedPrice(Double markedPrice) {
-            this.markedPrice = markedPrice;
+            this.markedPrice = MHKConstants.getDoubleNullDefault(markedPrice);
         }
 
         public Double getDiscountPercent() {
@@ -156,7 +157,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setDiscountPercent(Double discountPercent) {
-            this.discountPercent = discountPercent;
+            this.discountPercent = MHKConstants.getDoubleNullDefault(discountPercent);
         }
 
         public Double getCostPrice() {
@@ -164,7 +165,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setCostPrice(Double costPrice) {
-            this.costPrice = costPrice;
+            this.costPrice = MHKConstants.getDoubleNullDefault(costPrice);
         }
 
         public Long getShippingBaseQty() {
@@ -172,7 +173,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setShippingBaseQty(Long shippingBaseQty) {
-            this.shippingBaseQty = shippingBaseQty;
+            this.shippingBaseQty = MHKConstants.getLongNullDefault(shippingBaseQty);
         }
 
         public Double getShippingBasePrice() {
@@ -180,7 +181,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setShippingBasePrice(Double shippingBasePrice) {
-            this.shippingBasePrice = shippingBasePrice;
+            this.shippingBasePrice = MHKConstants.getDoubleNullDefault(shippingBasePrice);
         }
 
         public Long getShippingAddQty() {
@@ -228,7 +229,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setQty(Long qty) {
-            this.qty = qty;
+            this.qty = MHKConstants.getLongNullDefault(qty);
         }
 
         public Boolean isSelected() {
@@ -236,7 +237,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setSelected(Boolean selected) {
-            this.selected = selected;
+            this.selected = selected!=null?selected:false;
         }
 
         public String getColorHex() {
@@ -244,7 +245,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setColorHex(String colorHex) {
-            this.colorHex = colorHex;
+            this.colorHex = MHKConstants.getStringNullDefault(colorHex);
         }
 
         public Long getMainImageId() {
@@ -252,7 +253,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setMainImageId(Long mainImageId) {
-            this.mainImageId = mainImageId;
+            this.mainImageId = MHKConstants.getLongNullDefault(mainImageId);
         }
 
         public Long getMainProductImageId() {
@@ -260,7 +261,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setMainProductImageId(Long mainProductImageId) {
-            this.mainProductImageId = mainProductImageId;
+            this.mainProductImageId = MHKConstants.getLongNullDefault(mainProductImageId);
         }
 
         public Double getLength() {
@@ -268,7 +269,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setLength(Double length) {
-            this.length = length;
+            this.length = MHKConstants.getDoubleNullDefault(length);
         }
 
         public Double getBreadth() {
@@ -276,7 +277,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setBreadth(Double breadth) {
-            this.breadth = breadth;
+            this.breadth = MHKConstants.getDoubleNullDefault(breadth);
         }
 
         public Double getHeight() {
@@ -284,7 +285,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setHeight(Double height) {
-            this.height = height;
+            this.height = MHKConstants.getDoubleNullDefault(height);
         }
 
         public Double getWeight() {
@@ -292,7 +293,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setWeight(Double weight) {
-            this.weight = weight;
+            this.weight = MHKConstants.getDoubleNullDefault(weight);
         }
 
         public String getUpc() {
@@ -300,7 +301,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setUpc(String upc) {
-            this.upc = upc;
+            this.upc = MHKConstants.getStringNullDefault(upc);
         }
 
         public String getAffiliateCategory() {
@@ -308,7 +309,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setAffiliateCategory(String affiliateCategory) {
-            this.affiliateCategory = affiliateCategory;
+            this.affiliateCategory = MHKConstants.getStringNullDefault(affiliateCategory);
         }
 
         public String getPaymentType() {
@@ -316,7 +317,7 @@ public class MProductVariantJSONResponse {
         }
 
         public void setPaymentType(String paymentType) {
-            this.paymentType = paymentType;
+            this.paymentType = MHKConstants.getStringNullDefault(paymentType);
         }
 
         public String getServiceType() {

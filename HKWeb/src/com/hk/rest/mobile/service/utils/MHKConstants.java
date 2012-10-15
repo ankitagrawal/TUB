@@ -30,4 +30,20 @@ public class MHKConstants {
     public static final String LOGIN_ADDRESS = "3";
     public static final String NO_ADDRESS = "No address selected";
     public static final String EMPTY_CART = "No Items in Cart";
+    public static String getStringNullDefault(String data){
+    	if(data==null)
+    		return "";
+    	return data;
+    }
+    public static Double getDoubleNullDefault(Double data){
+    	if(data==null)
+    		return 0.0;
+    	return data;
+    }
+    public static Long getLongNullDefault(Long data){
+    	if(data==null)
+    		return 0l;
+    	return data;
+    }
+   
 }

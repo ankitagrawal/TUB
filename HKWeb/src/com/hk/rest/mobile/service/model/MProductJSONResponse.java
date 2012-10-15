@@ -7,6 +7,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
+import com.hk.rest.mobile.service.utils.MHKConstants;
 
 import javax.persistence.*;
 import java.util.List;
@@ -22,17 +23,17 @@ import java.util.Date;
  */
 public class MProductJSONResponse {
 
-    private String               id;
-    private String               thumbUrl;
-    private Double               orderRanking;
-    private String               brand;
-    private String               packType;
-    private String               overview;
-    private String               description;
-    private String               keywords;
-    private Long                 minDays;
-    private Long                 maxDays;
-    private Boolean              deleted;
+    private String               id="";
+    private String               thumbUrl="";
+    private Double               orderRanking=0.0;
+    private String               brand="";
+    private String               packType="";
+    private String               overview="";
+    private String               description="";
+    private String               keywords="";
+    private Long                 minDays=0l;
+    private Long                 maxDays=0l;
+    private Boolean              deleted=false;
     private Long                 mainImageId;
     private Boolean              isProductHaveColorOptions;
     private Boolean              isService;
@@ -40,29 +41,29 @@ public class MProductJSONResponse {
     private Boolean              hidden;
     private Boolean              isJit;
     private Boolean              isAmazonProduct;
-    private Boolean              outOfStock;
+    private Boolean              outOfStock=false;
     private String               supplier;
     private Date                 createDate;
     private String               videoEmbedCode;
     private List<MProductVariantJSONResponse>        relatedProducts  = new ArrayList<MProductVariantJSONResponse>();
     private List<MProductVariantJSONResponse> productVariants  = new ArrayList<MProductVariantJSONResponse>();
     private List<MProductVariantJSONResponse> similarProducts  = new ArrayList<MProductVariantJSONResponse>();
-    private String             primaryCategory;
-    private String             secondaryCategory;
+    private String             primaryCategory="";
+    private String             secondaryCategory="";
     private boolean              dropShipping;
-    private Boolean              codAllowed;
+    private Boolean              codAllowed=false;
     private Boolean              isSubscribable;
     private String               categoriesPipeSeparated;
-    private String               productURL;
-    private String               imageUrl;
-    private String name;
+    private String               productURL="";
+    private String               imageUrl="";
+    private String name="";
 
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = MHKConstants.getStringNullDefault(name);
     }
 
     public String getImageUrl() {
@@ -70,7 +71,7 @@ public class MProductJSONResponse {
     }
 
     public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+        this.imageUrl = MHKConstants.getStringNullDefault(imageUrl);
     }
 
     public String getSupplier() {
@@ -78,7 +79,7 @@ public class MProductJSONResponse {
     }
 
     public void setSupplier(String supplier) {
-        this.supplier = supplier;
+        this.supplier = MHKConstants.getStringNullDefault(supplier);
     }
 
     public Date getCreateDate() {
@@ -126,7 +127,7 @@ public class MProductJSONResponse {
     }
 
     public void setPrimaryCategory(String primaryCategory) {
-        this.primaryCategory = primaryCategory;
+        this.primaryCategory = MHKConstants.getStringNullDefault(primaryCategory);
     }
 
     public String getSecondaryCategory() {
@@ -134,7 +135,7 @@ public class MProductJSONResponse {
     }
 
     public void setSecondaryCategory(String secondaryCategory) {
-        this.secondaryCategory = secondaryCategory;
+        this.secondaryCategory = MHKConstants.getStringNullDefault(secondaryCategory);
     }
 
     public boolean isDropShipping() {
@@ -150,7 +151,7 @@ public class MProductJSONResponse {
     }
 
     public void setCodAllowed(Boolean codAllowed) {
-        this.codAllowed = codAllowed;
+        this.codAllowed = codAllowed!=null?codAllowed:false;
     }
 
     public Boolean isSubscribable() {
@@ -158,7 +159,7 @@ public class MProductJSONResponse {
     }
 
     public void setSubscribable(Boolean subscribable) {
-        isSubscribable = subscribable;
+        isSubscribable = subscribable!=null?subscribable:false;
     }
 
     public String getCategoriesPipeSeparated() {
@@ -174,7 +175,7 @@ public class MProductJSONResponse {
     }
 
     public void setProductURL(String productURL) {
-        this.productURL = productURL;
+        this.productURL = MHKConstants.getStringNullDefault(productURL);
     }
 
     public String getId() {
@@ -190,7 +191,7 @@ public class MProductJSONResponse {
     }
 
     public void setThumbUrl(String thumbUrl) {
-        this.thumbUrl = thumbUrl;
+        this.thumbUrl = MHKConstants.getStringNullDefault(thumbUrl);
     }
 
     public Double getOrderRanking() {
@@ -198,7 +199,7 @@ public class MProductJSONResponse {
     }
 
     public void setOrderRanking(Double orderRanking) {
-        this.orderRanking = orderRanking;
+        this.orderRanking = MHKConstants.getDoubleNullDefault(orderRanking);
     }
 
     public String getBrand() {
@@ -206,7 +207,7 @@ public class MProductJSONResponse {
     }
 
     public void setBrand(String brand) {
-        this.brand = brand;
+        this.brand = MHKConstants.getStringNullDefault(brand);
     }
 
     public String getPackType() {
@@ -222,7 +223,7 @@ public class MProductJSONResponse {
     }
 
     public void setOverview(String overview) {
-        this.overview = overview;
+        this.overview = MHKConstants.getStringNullDefault(overview);
     }
 
     public String getDescription() {
@@ -230,7 +231,7 @@ public class MProductJSONResponse {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = MHKConstants.getStringNullDefault(description);
     }
 
     public String getKeywords() {
@@ -246,7 +247,7 @@ public class MProductJSONResponse {
     }
 
     public void setMinDays(Long minDays) {
-        this.minDays = minDays;
+        this.minDays = MHKConstants.getLongNullDefault(minDays);
     }
 
     public Long getMaxDays() {
@@ -254,7 +255,7 @@ public class MProductJSONResponse {
     }
 
     public void setMaxDays(Long maxDays) {
-        this.maxDays = maxDays;
+        this.maxDays = MHKConstants.getLongNullDefault(maxDays);
     }
 
     public Boolean isDeleted() {

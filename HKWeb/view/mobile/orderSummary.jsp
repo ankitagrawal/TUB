@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-		<%@ include file='header.jsp' %>	
-	
+		<%@ include file='header.jsp' %>
+
 </head>
 <body>
 <div data-role="page" id=orderSummary class="type-home">
@@ -11,7 +11,7 @@
 	<%@ include file='menuNavBtn.jsp'%>
 </div>
 	<div data-role="content" style='height:auto'>
-	
+
 				<div style='background-color:#319aff;padding:10px;margin-bottom:10px;color:white;font-size:16px'>
 				<center>Order Summary</center>
 				</div>
@@ -47,13 +47,13 @@
 	   <h2 style='color:#888'>Shipping: Rs.{{print(data.pricingDto.shippingTotal)}}</h2>
 	   <h3 style='color:#888'>You Saved: Rs.{{print(data.pricingDto.productsMrpSubTotal- data.pricingDto.productsHkSubTotal)}}</h3>
 	   <h2 style='color:#F87500'>Total: Rs.{{print(data.pricingDto.productsHkSubTotal)}}</h2>
-	
+
 	{{ } }}
-	
+
    </ul>
-  
+
    </div>
-   
+
 
 </script>
   <div id="summary-address-block">
@@ -66,36 +66,36 @@
    <textarea name="codContactName" id="orderSummary_name"></textarea>
    <h2>Cod Contact Number</h2>
    <textarea name="codContactPhone" id="orderSummary_phone"></textarea>
-   
+
    </div>
      <a href='javascript:void(0)' id="orderSummary_makepayment" style='width:95%;margin:0px auto;margin-bottom:10px' data-role=button>Make Payment</a>
    </form>
-  </div> 
+  </div>
 </div>
 <!-- end right pannel -->
-		<%@ include file='menuFooter.jsp' %>	
+		<%@ include file='menuFooter.jsp' %>
 </div>
 
-	
+
 <script>
 $('#orderSummary').bind('pageshow',function(){
 
 			 jQuery.support.cors = true;
-		
+
 	_.templateSettings = {
 			evaluate : /\{\{(.+?)\}\}/g
 		};
-		
+
     	Backbone.emulateJSON = true;
-		
+
 		var OrderSummary = Backbone.Model.extend({
 			initialize: function(){
 				this.render();
 			},
 			render: function(){
-				var adVi = new OrderSummaryView({model:this});		
+				var adVi = new OrderSummaryView({model:this});
 				$("#summary-address-block").append(adVi.render().el);
-							
+
 			}
 		});
 		var OrderSummaryCollection = Backbone.Collection.extend({
@@ -115,20 +115,20 @@ $('#orderSummary').bind('pageshow',function(){
 			initialize: function(){
 				_.bindAll(this,'render');
 			},
-			
+
 			render: function(){
 				$(this.el).empty();
 				$(this.el).html(this.template(this.model.toJSON()));
 				return this;
 			}
-			
+
 		});
-		
+
 		var addrCol = new OrderSummaryCollection();
-		
-		
+
+
 		$.ajax({
-		url : '/healthkart/rest/api/mOrderSummary/orderSummary',
+		url : wSURL+'mOrderSummary/orderSummary',
 		dataType: 'json',
 		async:false,
 		success : function(response){
@@ -143,7 +143,7 @@ $('#orderSummary').bind('pageshow',function(){
 				{
 					$('#summary-address-block').listview();
 				}
-				
+
 				loadingPop('h');
 			}
 		},
@@ -151,11 +151,11 @@ $('#orderSummary').bind('pageshow',function(){
 			popUpMob.show('Request failed');
 			loadingPop('h');
 		}
-		
+
 		});
 
-	
-		
+
+
    $('#orderSummary_makepayment').click(function(){
          var txt = $("#orderSummary_comments").val();
 		$.ajax({
@@ -167,26 +167,29 @@ $('#orderSummary').bind('pageshow',function(){
 		success: function(data)
 		{
 			if(hasErr(data))
-			{	
+			{
 				popUpMob.show(data.message);
-				
+				if((data.message).toLowerCase()=='Cod is not available for this location'){
+                                setTimeout(function(){location.href="${httpPath}/address.jsp"},800);
+								}
+
 			}
 			else
 			{
-			    setTimeout(function(){location.href="${httpPath}orderSuccess"+'.jsp?orderId='+data.gatewayOrderId},500);
+			    setTimeout(function(){location.href="${httpPath}/orderSuccess"+'.jsp?orderId='+data.data.gatewayOrderId},500);
 			}
 		},
-		
+
 		error : function(e) {
-			popUpMob.show("Request Failed");			
+			popUpMob.show("Request Failed");
 		}
 		});
-	  
+
 		return false;
 	});
-	
-	
-	
+
+
+
 });
 
 </script>

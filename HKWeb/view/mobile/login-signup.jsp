@@ -205,11 +205,11 @@ $('#loginSignup').bind('pageshow',function(){
 				$.mobile.urlHistory.stack = [];
 				if(rediFlag ==null || rediFlag=='')
 				{
-					setTimeout(function(){location.href='${httpPath}home.jsp'},500);
+					setTimeout(function(){location.href='${httpPath}/home.jsp'},500);
 				}
 				else if(rediFlag.length>1)
 				{
-					setTimeout(function(){location.href="${httpPath}"+rediFlag+'.jsp'},500);
+					setTimeout(function(){location.href="${httpPath}/"+rediFlag+'.jsp'},500);
 				}
 			}
 		},

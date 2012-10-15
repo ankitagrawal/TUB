@@ -233,7 +233,7 @@ function PopUpMob()
 		$(curPage).find('div[data-role=content]').append('<div id='+this.ele+'><div id='+this.shadow+'></div><div id='+this.text+'></div></div>');
 		$('#'+this.ele).css({'width':'100%','height':scrHei,'font-size':'14px','position':'fixed','top':'0','z-index':'10'});
 		$('#'+this.shadow).css({'width':'100%','height':'100%','background-color':'#888','opacity':'0.2','filter':' alpha(opacity=0.2)','position':'absolute','top':'0','left':'0'});
-		$('#'+this.text).css({'width':'260px','background':'white','min-height':'50px','margin':'0px auto','text-align':'center','position': 'relative','top': '30%'});
+		$('#'+this.text).css({'width':'260px','background':'white','min-height':'65px','margin':'0px auto','text-align':'center','position': 'relative','top': '30%'});
 	}
 PopUpMob.prototype.show = function(text){
 	this.init();

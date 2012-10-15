@@ -195,8 +195,8 @@ $('#address').bind('pageshow',function(){
 		success : function(response){
 			if(hasErr(response))
 			{
-				loadingPop('h');
-				popUpMob.show(getErr(response.message));
+				loadingPop('h');			
+				$('#address-block').html('<h3 style="padding-left:20px">'+getErr(response.message)+'</h3>');
 			}
 			else
 			{
@@ -249,16 +249,16 @@ $('#address').bind('pageshow',function(){
 
 		$("#address_line1").validate({
                     expression: "if (VAL=='') return false; else return true;",
-                    message: "Please enter name.",
+                    message: "Please enter Address Line 1",
 		});
 		
-		$("#address_line2").validate({
-                    expression: "if (VAL=='') return false; else return true;",
-                    message: "Please enter name.",
+		$("#address_pin").validate({
+                    expression: "if (VAL==''||VAL.length>6 || !VAL.match(/^[0-9]*$/)) return false; else return true;",
+                    message: "Please enter valid PIN",
 		});
 		$("#address_phone").validate({
-                    expression: "if (VAL=='') return false; else return true;",
-                    message: "Please enter name.",
+                    expression: "if (VAL==''||!VAL.match(/^[0-9]*$/)) return false; else return true;",
+                    message: "Please Enter correct Phone Number",
 		});
 		
    $('#address_registration').validated(function(){
@@ -289,7 +289,7 @@ $('#address').bind('pageshow',function(){
 			}
 			else
 			{
-			    setTimeout(function(){location.href="${httpPath}orderSummary"+'.jsp'},500);
+			    setTimeout(function(){location.href="${httpPath}/orderSummary"+'.jsp'},500);
 				
 			}
 		},

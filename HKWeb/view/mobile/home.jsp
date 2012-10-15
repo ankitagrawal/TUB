@@ -117,13 +117,18 @@
 			}
 			else
 			{
-				
-				if(catCol.add(response.data))
+				if(response.data.length == 0 ||response.data == null)
 				{
-					catCol.updateUI();
-					console.log(response.data);
+					$('#categoryContainer ul').append('<h3 style="padding-left:20px">No Data Found!</h3>');
 				}
-				
+				else
+				{
+					if(catCol.add(response.data))
+					{
+						catCol.updateUI();
+						console.log(response.data);
+					}
+				}
 				loadingPop('h');
 			}
 		},

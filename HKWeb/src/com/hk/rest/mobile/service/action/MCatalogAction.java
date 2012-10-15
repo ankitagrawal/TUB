@@ -285,9 +285,10 @@ public class MCatalogAction extends MBaseAction{
                     }
                 }
                 trimListByCategory(productList, secondaryCategory);
+
             } else {
                 if (StringUtils.isBlank(brand)) {
-                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, pageNo, perPage);
+                    productPage = productDao.getNonComboProductByCategoryAndBrand(categoryNames, null, pageNo, perPage);
                 } else {
                     productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, pageNo, perPage);
                 }
@@ -312,17 +313,18 @@ public class MCatalogAction extends MBaseAction{
             catalogResponse.setCurrentCategory(secondaryCat);
             product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
             catalogResponse.setProductURL(product.getProductURL());
+
             catalogList.add(catalogResponse);
-            
+
         }
         resultMap.put("data", catalogList);
         if(productList.size()<perPage){
         	resultMap.put("hasMore", new Boolean(false));
-        	
+
         }else{
         	resultMap.put("hasMore", new Boolean(true));
         }
-        
+
 
         //urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
 /*
@@ -416,6 +418,7 @@ public class MCatalogAction extends MBaseAction{
             catalogJSONResponse.setService(product.getService());
         if (null != product.getThumbUrl())
             catalogJSONResponse.setThumbUrl(product.getThumbUrl());
+
         if (null != product.getMinimumMRPProducVariant().getHkPrice())
             catalogJSONResponse.setHkPrice(product.getMinimumMRPProducVariant().getHkPrice());
         if (null != product.getMinimumMRPProducVariant().getMarkedPrice())

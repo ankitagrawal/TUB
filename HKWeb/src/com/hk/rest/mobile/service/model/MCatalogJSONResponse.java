@@ -1,5 +1,7 @@
 package com.hk.rest.mobile.service.model;
 
+import com.hk.rest.mobile.service.utils.MHKConstants;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Satish
@@ -9,16 +11,16 @@ package com.hk.rest.mobile.service.model;
  */
 public class MCatalogJSONResponse {
 
-    private String manufacturer;
-    private String id;
-    private String name;
+    private String manufacturer="";
+    private String id="";
+    private String name="";
     private String thumbUrl;
     private Double orderRanking;
     private String brand;
-    private String overview;
-    private String description;
-    private String productUrl;
-    private String productSlug;
+    private String overview="";
+    private String description="";
+    private String productUrl="";
+    private String productSlug="";
     private String currentCategory;
 
     public String getCurrentCategory() {
@@ -26,7 +28,7 @@ public class MCatalogJSONResponse {
     }
 
     public void setCurrentCategory(String currentCategory) {
-        this.currentCategory = currentCategory;
+        this.currentCategory = MHKConstants.getStringNullDefault(currentCategory);
     }
 
     public String getProductSlug() {
@@ -34,7 +36,7 @@ public class MCatalogJSONResponse {
     }
 
     public void setProductSlug(String productSlug) {
-        this.productSlug = productSlug;
+        this.productSlug = MHKConstants.getStringNullDefault(productSlug);
     }
 
     public String getProductUrl() {
@@ -42,7 +44,7 @@ public class MCatalogJSONResponse {
     }
 
     public void setProductUrl(String productUrl) {
-        this.productUrl = productUrl;
+        this.productUrl = MHKConstants.getStringNullDefault(productUrl);
     }
 
     public String getImageUrl() {
@@ -50,12 +52,12 @@ public class MCatalogJSONResponse {
     }
 
     public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+        this.imageUrl = MHKConstants.getStringNullDefault(imageUrl);
     }
 
-    private String imageUrl;
-    private Long minDays;
-    private Long maxDays;
+    private String imageUrl="";
+    private Long minDays=0l;
+    private Long maxDays=0l;
 
     private boolean deleted;
     private boolean isProductHaveColorOptions;
@@ -75,7 +77,7 @@ public class MCatalogJSONResponse {
     }
 
     public void setMarkedPrice(Double markedPrice) {
-        this.markedPrice = markedPrice;
+        this.markedPrice = MHKConstants.getDoubleNullDefault(markedPrice);
     }
 
     public void setHkPrice(Double hkPrice) {
@@ -83,7 +85,7 @@ public class MCatalogJSONResponse {
     }
 
     public void setDiscountPercentage(Double discountPercentage) {
-        this.discountPercentage = discountPercentage;
+        this.discountPercentage = MHKConstants.getDoubleNullDefault(discountPercentage);
     }
 
     private boolean isGoogleAdDisallowed;
@@ -91,12 +93,12 @@ public class MCatalogJSONResponse {
     private boolean outOfStock;
     private boolean dropShipping;
     private boolean codAllowed;
-    private String productURL;
+    private String productURL="";
     private boolean hasMore;
 
-    private Double markedPrice;
-    private Double hkPrice;
-    private Double discountPercentage;
+    private Double markedPrice=0.0;
+    private Double hkPrice=0.0;
+    private Double discountPercentage=0.0;
 
 
 
@@ -181,7 +183,7 @@ public class MCatalogJSONResponse {
     }
 
     public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
+        this.manufacturer = MHKConstants.getStringNullDefault(manufacturer);
     }
 
     public void setId(String id) {
@@ -189,11 +191,11 @@ public class MCatalogJSONResponse {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = MHKConstants.getStringNullDefault(name);
     }
 
     public void setThumbUrl(String thumbUrl) {
-        this.thumbUrl = thumbUrl;
+        this.thumbUrl = MHKConstants.getStringNullDefault(thumbUrl);
     }
 
     public void setOrderRanking(Double orderRanking) {
@@ -201,23 +203,23 @@ public class MCatalogJSONResponse {
     }
 
     public void setBrand(String brand) {
-        this.brand = brand;
+        this.brand = MHKConstants.getStringNullDefault(brand);
     }
 
     public void setOverview(String overview) {
-        this.overview = overview;
+        this.overview = MHKConstants.getStringNullDefault(overview);
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description =MHKConstants.getStringNullDefault( description);
     }
 
     public void setMinDays(Long minDays) {
-        this.minDays = minDays;
+        this.minDays = MHKConstants.getLongNullDefault(minDays);
     }
 
     public void setMaxDays(Long maxDays) {
-        this.maxDays = maxDays;
+        this.maxDays = MHKConstants.getLongNullDefault(maxDays);
     }
 
     public void setDeleted(boolean deleted) {
@@ -253,7 +255,7 @@ public class MCatalogJSONResponse {
     }
 
     public void setProductURL(String productURL) {
-        this.productURL = productURL;
+        this.productURL = MHKConstants.getStringNullDefault(productURL);
     }
 
     public void setHasMore(boolean hasMore) {

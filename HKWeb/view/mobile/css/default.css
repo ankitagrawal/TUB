@@ -440,10 +440,12 @@ display: inline;
 	height:inherit;
 	background:white;
 	padding-left:8px;	
+	
 }
 #productList .image-container img,#cartList .image-container img,#productDetailMain .image-container img,#variantList .image-container img{
 	width:88px;
 	height:88px;
+	
 }
 #productList .text-container,#cartList .text-container,#productDetailMain .text-container,#variantList .text-container{
 	padding-left:10px;	
@@ -499,7 +501,7 @@ background-color:#00B300;
 	right:15px;
 	font-size:1.1em;
 	overflow:visible;
-	z-index:1000;
+	z-index:5;
 	white-space:nowrap
 	
 	
@@ -524,9 +526,14 @@ background-color:#FFFAB2;
 	right:15px;
 	font-size:1.1em;
 	overflow:visible;
-	z-index:1000
+	z-index:5
 	
 	
+}
+.rm2Crt{
+	display:inline-block;
+	height:32px;
+	width:32px;
 }
 #productList .variantDesc{
 	width:96%;

@@ -23,9 +23,11 @@ import com.hk.domain.user.Address;
 import com.hk.domain.MapIndia;
 import com.hk.dto.AddressDistanceDto;
 import com.hk.dto.menu.MenuNode;
+import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.constants.review.EnumReviewStatus;
+import com.hk.util.HKImageUtils;
 import com.hk.util.SeoManager;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.helper.MenuHelper;
@@ -318,7 +320,11 @@ public class MProductAction extends MBaseAction{
                 }
             }
 */
-                productJSON.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
+           
+                if(null!=product.getMainImageId())
+                	productJSON.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId(),false));
+                else
+                	productJSON.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
                 productJSON.setAmazonProduct(product.getAmazonProduct());
                 productJSON.setBrand(product.getBrand());
                 productJSON.setCategoriesPipeSeparated(product.getCategoriesPipeSeparated());

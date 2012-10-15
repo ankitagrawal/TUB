@@ -15,6 +15,7 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 import com.hk.web.HealthkartResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.dto.menu.MenuNode;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.akube.framework.gson.JsonUtils;
 import net.sourceforge.stripes.action.*;
 import org.apache.commons.lang.StringUtils;
@@ -55,6 +56,8 @@ public class MAddressAction extends MBaseAction {
     private RoleService roleService;
     @Autowired
     AddressBookManager addressManager;
+    @Autowired
+    private CourierService courierService;
     private List<Address> addresses = new ArrayList<Address>(1);
 
 
@@ -214,8 +217,15 @@ public class MAddressAction extends MBaseAction {
             address.setLine2(line2);
             address.setName(name);
             address.setPhone(phone);
+            if(courierService.isCodAllowed(pin))
             address.setPin(pin);
-            selectedAddress = addressDao.save(address);
+            else{
+                message = "Cash on Delivery is not available for pincode: "+pin;
+                status = MHKConstants.STATUS_ERROR;
+                return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,message));
+            }
+            //selectedAddress = addressDao.save(address);
+            selectedAddress = addressManager.add(user,address);        
             
              }
             Order order = orderManager.getOrCreateOrder(user);
@@ -225,10 +235,12 @@ public class MAddressAction extends MBaseAction {
             }else{
                 message = "User not logged in";
                 status = MHKConstants.NOLOGIN_NOADDRESS;
+                return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,message));
             }
         } catch (Exception e) {
             message = MHKConstants.NO_RESULTS;
             status = MHKConstants.STATUS_ERROR;
+            return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,status));
         }
         healthkartResponse = new HealthkartResponse(status, message, status);
         jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
@@ -270,6 +282,7 @@ public class MAddressAction extends MBaseAction {
         } catch (Exception e) {
             message = MHKConstants.NO_RESULTS;
             status = MHKConstants.STATUS_ERROR;
+            return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,status));
         }
         healthkartResponse = new HealthkartResponse(status, message, status);
         jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
@@ -310,6 +323,7 @@ public class MAddressAction extends MBaseAction {
          } catch (Exception e) {
              message = MHKConstants.NO_RESULTS;
              status = MHKConstants.STATUS_ERROR;
+             return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,status));
          }
 
          addHeaderAttributes(response);

@@ -5,6 +5,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.core.CartLineItemType;
+import com.hk.rest.mobile.service.utils.MHKConstants;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
@@ -20,24 +21,35 @@ import javax.persistence.Column;
  */
 public class MCartLineItemsJSONResponse {
 
-    private Long id;
-    private Long orderId;
+    private Long id=0l;
+    private Long orderId=0l;
     private String name;
-    private Long order;
-    private Long qty;
-    private Double markedPrice;
-    private Double hkPrice;
-    private Double discountOnHkPrice;
+    private Long order=0l;
+    private Long qty=0l;
+    private Double markedPrice=0.0;
+    private Double hkPrice=0.0;
+    private Double discountOnHkPrice=0.0;
     private String lineItemType;
     private String cartLineItemId;
     private String productId;
+    private String imageUrl;
+    
+    public String getImageUrl() {
+		return imageUrl;
+	}
 
-    public String getProductId() {
+	public void setImageUrl(String imageUrl) {
+	
+		this.imageUrl =MHKConstants.getStringNullDefault(imageUrl);
+	}
+
+	public String getProductId() {
         return productId;
     }
 
     public void setProductId(String productId) {
-        this.productId = productId;
+    	
+        this.productId = MHKConstants.getStringNullDefault(productId);
     }
 
     public Long getOrderId() {
@@ -45,7 +57,7 @@ public class MCartLineItemsJSONResponse {
     }
 
     public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+        this.orderId = MHKConstants.getLongNullDefault(orderId);
     }
 
     public String getCartLineItemId() {
@@ -53,7 +65,7 @@ public class MCartLineItemsJSONResponse {
     }
 
     public void setCartLineItemId(String cartLineItemId) {
-        this.cartLineItemId = cartLineItemId;
+        this.cartLineItemId = MHKConstants.getStringNullDefault(cartLineItemId);
     }
 
     public String getName() {
@@ -61,7 +73,7 @@ public class MCartLineItemsJSONResponse {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = MHKConstants.getStringNullDefault(name);
     }
 
     public Long getId() {
@@ -69,7 +81,7 @@ public class MCartLineItemsJSONResponse {
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.id = MHKConstants.getLongNullDefault(id);
     }
 
     public Long getOrder() {
@@ -77,7 +89,7 @@ public class MCartLineItemsJSONResponse {
     }
 
     public void setOrder(Long order) {
-        this.order = order;
+        this.order = MHKConstants.getLongNullDefault(order);
     }
 
     public Long getQty() {
@@ -85,7 +97,7 @@ public class MCartLineItemsJSONResponse {
     }
 
     public void setQty(Long qty) {
-        this.qty = qty;
+        this.qty = MHKConstants.getLongNullDefault(qty);
     }
 
     public Double getMarkedPrice() {
@@ -93,7 +105,7 @@ public class MCartLineItemsJSONResponse {
     }
 
     public void setMarkedPrice(Double markedPrice) {
-        this.markedPrice = markedPrice;
+        this.markedPrice = MHKConstants.getDoubleNullDefault(markedPrice);
     }
 
     public Double getHkPrice() {
@@ -101,7 +113,7 @@ public class MCartLineItemsJSONResponse {
     }
 
     public void setHkPrice(Double hkPrice) {
-        this.hkPrice = hkPrice;
+        this.hkPrice = MHKConstants.getDoubleNullDefault(hkPrice);
     }
 
     public Double getDiscountOnHkPrice() {
@@ -109,7 +121,7 @@ public class MCartLineItemsJSONResponse {
     }
 
     public void setDiscountOnHkPrice(Double discountOnHkPrice) {
-        this.discountOnHkPrice = discountOnHkPrice;
+        this.discountOnHkPrice = MHKConstants.getDoubleNullDefault(discountOnHkPrice);
     }
 
     public String getLineItemType() {
@@ -117,6 +129,6 @@ public class MCartLineItemsJSONResponse {
     }
 
     public void setLineItemType(String lineItemType) {
-        this.lineItemType = lineItemType;
+        this.lineItemType = MHKConstants.getStringNullDefault(lineItemType);
     }
 }

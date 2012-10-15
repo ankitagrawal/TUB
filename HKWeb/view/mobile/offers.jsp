@@ -54,11 +54,9 @@
 		
 		
 			{{for(var i =0;i<data.length;i++){ }}
+		                         <br/>	
 			
-			<li class='shadow-4-address'>
-			
-						<img style='width:95%;margin:0px auto' alt='No Image Available' src='{{print(data[i].imageUrl)}}'/>
-			</li>
+					<p align=center>	<img width="90%" alt='No Image Available' src='{{print(data[i])}}'/></p>
 			{{ } }}
 		
 		
@@ -177,7 +175,7 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 			//  URL = 'c.json'+queryString;
 		}
 		$.ajax({
-			url : '/healthkart/rest/api/mCatalog/catalog?primaryCategory=Nutrition&secondaryCategory=Sports%20Nutrition&perPage=10&pageNo=0',
+			url : wSURL+'mOffers/offers',
 		dataType: 'json',
 		success : function(response){
 			if(hasErr(response))
@@ -188,9 +186,9 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 			else
 			{
 				
-				if(prCo.add(response.data))
+				if(prCo.add(response))
 				{
-					//$('#offerList ul').listview();
+				  $('#offerList ul').listview();
 				}
 				
 				loadingPop('h');

@@ -19,7 +19,8 @@
 		<ul data-role=listview style='padding-top:4px;padding-bottom:20px' id='cartList'>
 		
 		</ul>
-		<a href='<shiro:notAuthenticated>login-signup.jsp?target=address</shiro:notAuthenticated><shiro:authenticated>address.jsp</shiro:authenticated>' id='checkout' style='width:95%;margin:0px auto;margin-bottom:8px;margin-top:12px' data-role=button>CheckOut</a>
+                  <br/>
+		<a href='<%if(session.getAttribute("userName")==null){%>login-signup.jsp?target=address<% }else{%>address.jsp<%}%>' id='checkout' style='width:95%;margin:0px auto;margin-bottom:8px;margin-top:12px' data-role=button id='btnChkOut'>CheckOut</a>
 		
 <%@ include file='menuFooter.jsp' %>	
 </div>
@@ -30,7 +31,7 @@
 				<table width='100%'>
 					<tr>
 					<td class='image-container'>
-						<img src='{print(imageUrl)}}'/>
+						<img src='{{print(imageUrl)}}'/>
 					</td>
 					<td class='text-container'>
 						<h3 style='white-space:normal'>{{print(name)}}</h3>
@@ -48,12 +49,12 @@
 				<tr>
 					<td>
 						<table style='margin:0px auto'><tr>
-						<td class='su2Crt' data-url='cartLineItemId={{print(cartLineItemId)}}&qty={{print(qty - 1)}}'><img src='${httpPath}images/sub.png' alt='Minus'/></td><td ><input type='text' value='{{print(qty)}}'  style='text-align:center;width:30px;margin:0px auto; border:none' readonly /></td>
-						<td class='pl2Crt' data-url='cartLineItemId={{print(cartLineItemId)}}&qty={{print(qty + 1)}}'><img src='${httpPath}images/plus.png' alt='Plus'/></td>
+						<td class='su2Crt' data-url='cartLineItemId={{print(cartLineItemId)}}&qty={{print(qty - 1)}}'><img src='${httpPath}/images/sub.png' alt='Minus'/></td><td ><input type='text' value='{{print(qty)}}'  style='text-align:center;width:30px;margin:0px auto; border:none' readonly /></td>
+						<td class='pl2Crt' data-url='cartLineItemId={{print(cartLineItemId)}}&qty={{print(qty + 1)}}'><img src='${httpPath}/images/plus.png' alt='Plus'/></td>
 						</tr></table>
 					</td>
 					<td>
-						<a href='javascript:void(0)' class='rm2Crt' data-url='cartLineItemId={{print(cartLineItemId)}}'><img src='${httpPath}images/remove.png'/>
+						<a href='javascript:void(0)' class='rm2Crt' data-url='cartLineItemId={{print(cartLineItemId)}}'><img src='${httpPath}/images/remove.png'/>
 					</td>
 				</tr>
 				</table>
@@ -95,6 +96,7 @@ var queryString = x.search;
 		},
 		clearView : function(){
 			$('#cartList').html('');
+			$('#cartList').css('height','auto');
 		},
 		updateUI : function(){
 			$('#cartList').listview();
@@ -166,16 +168,24 @@ loadingPop('s','');
 			{
 				loadingPop('h');
 				popUpMob.show(getErr(response.message));
+				$('#btnChkOut').hide();
 			}
 			else
 			{
-	
-				if(prVaCo.add(response.data))
+				if(response.data.length == 0 ||response.data == null)
 				{
-					$('#cartList').listview();
-					$('#cartList').css('height',$('#cartList').height());
+					$('#cartList').html('<h3 style="padding-left:20px;padding-top:20px">No Product in Cart</h3>');
 				}
-				
+				else
+				{
+					if(prVaCo.add(response.data))
+					{
+						if($('#cartList').listview())
+						{
+							setTimeout(function(){$('#cartList').css('height',$('#cartList').height());},400);
+						}
+					}
+				}
 				loadingPop('h');
 			}
 		},

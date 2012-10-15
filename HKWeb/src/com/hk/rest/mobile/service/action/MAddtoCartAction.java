@@ -249,6 +249,9 @@ public class MAddtoCartAction extends MBaseAction {
 			} catch (OutOfStockException e) {
                 message = "Out of Stock";
                 status = MHKConstants.STATUS_ERROR;
+                 noCache(response);
+                 //recomendationEngine.notifyAddToCart(user.getId(), productVariantList);
+                 return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message,null));
 			}
 
 			Map dataMap = new HashMap();

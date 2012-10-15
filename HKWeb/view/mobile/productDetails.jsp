@@ -44,7 +44,9 @@
 							
 				
 							<span class='svPrcnt'>{{print(brand)}}
+							{{ if(minDays>0 && maxDays>0) { }}
 							<br>Delivered in: {{print(minDays)}} - {{print(maxDays)}} days</span>
+							{{ } }}
 							{{if(codAllowed == false) { }}
 							<span class='redText'>COD Not Available</span>
 							{{ } }}
@@ -68,8 +70,14 @@
 					<td class='text-container'>
 						
 						<p style='padding-top:3px'>
+							
+							{{ if(hkPrice != 0) { }}
 							<strike>Rs {{print(markedPrice)}}</strike>
 							<span class='ofrPrc'> Rs {{print(hkPrice)}}</span>
+							{{ } else { }}
+							<span class='ofrPrc'>Rs {{print(markedPrice)}}</span>
+							
+							{{ } }}
 							{{if(discountPercent > 0) { }}
 							<span class='svPrcnt'>{{print(discountPercent)}}% off</span>
 							{{ } }}
@@ -182,16 +190,22 @@ loadingPop('s','');
 			if(hasErr(response))
 			{
 				loadingPop('h');
-				alert(getErr(response.message));
+				popUpMob.show(getErr(response.message));
 			}
 			else
 			{
-				prDeCo.add(response.data);
-				if(prVaCo.add(response.data.productVariants))
+				if(response.data.length == 0 ||response.data == null)
 				{
-					$('#variantList').listview();
+					$('#productDetailMain').html('<h3 style="padding-left:20px">No Data Found!</h3>');
 				}
-				
+				else
+				{
+					prDeCo.add(response.data);
+					if(prVaCo.add(response.data.productVariants))
+					{
+						$('#variantList').listview();
+					}
+				}	
 				loadingPop('h');
 			}
 		},
