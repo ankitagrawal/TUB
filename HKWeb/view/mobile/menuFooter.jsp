@@ -11,7 +11,7 @@
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='${httpPath}/offers.jsp'>Offers</a>
+				<a href='${httpPath}/home.jsp'>Offers</a>
 			</td>
 		</tr>
 		<tr>
