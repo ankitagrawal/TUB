@@ -9,10 +9,11 @@ package com.hk.rest.models.user;
  */
 public class APIUserDetail {
 
+    //User Id
     private Long                  id;
-
+    //Phone number of the user
     private Long                 phone;
-
+    //Priority of the user
     private Integer                 priority;
 
     public Long getId() {

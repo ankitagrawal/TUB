@@ -85,7 +85,7 @@ public class UserResource {
         try{
             UserDetail userDetail = userDetailService.findByPhone(phone);
             APIUserDetail apiUserDetail = new APIUserDetail();
-            apiUserDetail.setId(userDetail.getId());
+            apiUserDetail.setId(userDetail.getUser().getId());
             apiUserDetail.setPhone(userDetail.getPhone());
             apiUserDetail.setPriority(userDetail.getPriority());
             if (userDetail != null){
