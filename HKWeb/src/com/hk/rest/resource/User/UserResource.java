@@ -75,7 +75,7 @@ public class UserResource {
     }
 
     @GET
-    @Path ("/priority/{phone}")
+    @Path ("/priority/phone/{phone}")
     @Produces("application/json")
     public Response getUserDetails(@PathParam ("phone") long phone) {
 
