@@ -81,6 +81,7 @@
 <c:set var="baseOrder" value="${orderSummary.shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
 <c:set var="fedExCourier" value="<%=EnumCourier.FedEx.getId()%>"/>
+<c:set var="groundShipped" value="${orderSummary.groundShipped}"/>
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">
@@ -88,7 +89,7 @@
         <c:when test="${orderSummary.shipment != null}">
             <div style="float: left;">
                 <strong>AWB NO.</strong>
-                    
+
                 <c:choose>
                     <c:when test="${orderSummary.shipment.courier.id == fedExCourier}">
                         <div>${orderSummary.shipment.awb.awbNumber}</div>
@@ -133,8 +134,15 @@
     <c:when test="${orderSummary.shipment.courier.id == fedExCourier}">
         <div class="grid_12">
 
-            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;               
-                Standard Overnight
+            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;
+                <c:choose>
+                    <c:when test="${groundShipped}">
+                        Economy
+                    </c:when>
+                    <c:otherwise>
+                        Standard Overnight
+                    </c:otherwise>
+                </c:choose>
                 <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD && orderSummary.invoiceDto.grandTotal > 0}">
                     COD
                 </c:if>
@@ -211,12 +219,14 @@
         <c:if test="${orderSummary.shippingOrder.warehouse.id == 2}">
             <p>Return Location: <b>BOM/BPT/421302</b></p>
         </c:if>
-        <p><p></p>
+        <p>
+
+        <p></p>
         <c:if test="${orderSummary.shipment.courier.id == fedExCourier}">
-           <div style="font-size:.8em">
-           Subject to the conditions of Carriage, which limits the liability to FedEx
+            <div style="font-size:.8em">
+                Subject to the conditions of Carriage, which limits the liability to FedEx
                 for loss, delay or damage to the consignment. Visit www.fedex.com/in to view the conditions of carriage.<br>
-           </div>    
+            </div>
         </c:if>
     </div>
 </div>

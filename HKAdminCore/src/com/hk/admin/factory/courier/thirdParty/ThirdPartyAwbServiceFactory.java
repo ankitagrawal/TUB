@@ -9,7 +9,7 @@ public class ThirdPartyAwbServiceFactory {
     public static ThirdPartyAwbService getThirdPartyAwbService(Long courierId){
         
         
-        if(courierId.equals(EnumCourier.FedEx.getId())){
+        if(courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())){
             //TODO:#vaibhav refactor this hard cording string is bad way of using service locator
             return (ThirdPartyAwbService) ServiceLocatorFactory.getService("FedExAwbServiceImpl");
         }

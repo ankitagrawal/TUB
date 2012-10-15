@@ -78,6 +78,7 @@ import com.fedex.ship.stub.Weight;
 import com.fedex.ship.stub.WeightUnits;
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
 import com.hk.admin.impl.service.shippingOrder.ShipmentServiceImpl;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.service.ServiceLocatorFactory;
@@ -185,15 +186,14 @@ public class FedExCourierUtil {
         RequestedShipment requestedShipment = new RequestedShipment();
         requestedShipment.setShipTimestamp(Calendar.getInstance()); // Ship date and time
         requestedShipment.setDropoffType(DropoffType.REGULAR_PICKUP);
-        /*
-        ShipmentServiceImpl shipmentService = ServiceLocatorFactory.getService(ShipmentServiceImpl.class);
+
+        ShipmentService shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
         if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)){
            requestedShipment.setServiceType(ServiceType.FEDEX_EXPRESS_SAVER);
         }
         else{
-        */
         requestedShipment.setServiceType(ServiceType.STANDARD_OVERNIGHT);
-        //}
+        }
         // Service types are STANDARD_OVERNIGHT, PRIORITY_OVERNIGHT, FEDEX_GROUND ...
         requestedShipment.setPackagingType(PackagingType.YOUR_PACKAGING);
         // Packaging type FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...

@@ -16,6 +16,7 @@ import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
 import com.hk.constants.courier.EnumCourier;
@@ -63,6 +64,8 @@ public class SOInvoiceAction extends BaseAction {
     PincodeService pincodeService;
     @Autowired
     AwbService awbService;
+    @Autowired
+    ShipmentService shipmentService;
   
 
     @Value("#{hkEnvProps['" + Keys.Env.barcodeDir + "']}")
@@ -75,7 +78,7 @@ public class SOInvoiceAction extends BaseAction {
     private InvoiceDto invoiceDto;
     private B2bUserDetails b2bUserDetails;
     private String freebieItem;
-
+    private boolean groundShipped;
     private Shipment shipment;
 
     @DefaultHandler
@@ -130,7 +133,9 @@ public class SOInvoiceAction extends BaseAction {
              }
 
             //freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
-
+            if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)){
+                setGroundShipped(true);
+            }
             return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
@@ -228,5 +233,13 @@ public class SOInvoiceAction extends BaseAction {
 
     public void setShipment(Shipment shipment) {
         this.shipment = shipment;
+    }
+
+    public boolean isGroundShipped() {
+        return groundShipped;
+    }
+
+    public void setGroundShipped(boolean groundShipped) {
+        this.groundShipped = groundShipped;
     }
 }

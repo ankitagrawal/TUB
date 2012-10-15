@@ -15,7 +15,7 @@ import com.hk.domain.order.ShippingOrder;
  */
 public interface ThirdPartyAwbService {
     
-    public List<Long> integratedCouriers = Arrays.asList(new Long[]{EnumCourier.FedEx.getId()});  
+    public List<Long> integratedCouriers = Arrays.asList(new Long[]{EnumCourier.FedEx.getId(),EnumCourier.FedEx_Surface.getId()});  
     
     /**
      * Would like to call it in async fashion 

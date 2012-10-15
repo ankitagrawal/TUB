@@ -26,8 +26,7 @@ import com.hk.domain.warehouse.Warehouse;
 public class AwbServiceImpl implements AwbService {
     @Autowired
     AwbDao          awbDao;
-    @Autowired
-    ShipmentService shipmentService;
+   
     
     public Awb find(Long id) {
         return awbDao.get(Awb.class, id);

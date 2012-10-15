@@ -34,6 +34,7 @@ public enum EnumCourier {
     EarthMoversPune(200L, "Earth Movers Pune"),
     HK_Delivery(500L, "HealthKart Delivery"),
     FedEx(600L, "FedEx"),
+    FedEx_Surface(610L, "FedEx Surface"),
 
     MIGRATE(-1L, "MIGRATE");
 
