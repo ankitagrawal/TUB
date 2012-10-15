@@ -17,9 +17,9 @@
 $('#productTemp').bind('pageshow',function(){
 		var urlEval = new URLEval();
 		//alert(urlEval.getURLFromHash(location.href));
-var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
+		var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 		var queryString = x.search;
-		$.mobile.changePage('${httpPath}/product.jsp'+queryString);
+		$.mobile.changePage('${pageContext.request.contextPath}/mobile/product.jsp'+queryString);
 		/**Backbone code for product list*E*/
 });
 
