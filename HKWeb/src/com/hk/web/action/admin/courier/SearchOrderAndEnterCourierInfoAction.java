@@ -184,7 +184,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             if ((suggestedAwb != null) && (suggestedCourier != null) && (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId()))){
                 // To delete the tracking no. generated previously
                 awbService.deleteAwbForThirdPartyCourier(suggestedCourier, suggestedAwb.getAwbNumber());
-                //Boolean result = fedExShipmentDeleteUtil.deleteShipment(suggestedAwb.getAwbNumber());
             }
 
             if (ThirdPartyAwbService.integratedCouriers.contains(shipment.getCourier().getId())) {
