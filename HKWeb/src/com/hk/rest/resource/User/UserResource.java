@@ -89,9 +89,9 @@ public class UserResource {
             apiUserDetail.setPhone(userDetail.getPhone());
             apiUserDetail.setPriority(userDetail.getPriority());
             if (userDetail != null){
-                response = Response.status(Response.Status.OK).entity(userDetail).build();
+                response = Response.status(Response.Status.OK).entity(apiUserDetail).build();
             }else{
-                response = Response.status(Response.Status.NOT_FOUND).entity(userDetail).build();
+                response = Response.status(Response.Status.NOT_FOUND).build();
             }
         }catch (Exception ex){
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
