@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,11 +40,25 @@ public class AddressServiceImpl implements AddressService {
         Address addressRec = addressDao.save(address);
         try{
             User user = address.getUser();
-            UserDetail userDetail = new UserDetail();
-            userDetail.setUser(user);
-            int phoneNumber = Integer.parseInt(address.getPhone());
-            userDetail.setPhone(phoneNumber);
-            userDetailsDao.save(userDetailsDao);
+
+            List<Integer> phoneNumbers = new ArrayList<Integer>();
+            String[] phones = null;
+            if (address.getPhone().contains(",")){
+               phones = address.getPhone().split(",");
+            }else if (address.getPhone().contains("/")){
+                phones = address.getPhone().split("/");
+            }
+            for (String phone : phones){
+                UserDetail userDetail = new UserDetail();
+                userDetail.setUser(user);
+                int start = phone.length() - 10;
+                //consider only the last 10 digits
+                String ph = phone.substring(start, phone.length() - 1);
+                int phoneNumber = Integer.parseInt(ph);
+                userDetail.setPhone(phoneNumber);
+                userDetailsDao.save(userDetailsDao);
+            }
+
         }catch (NumberFormatException ex){
             logger.error("Unable to save user information in UserDetail table ", ex);
         }

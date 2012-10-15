@@ -44,6 +44,7 @@ public class UserOrderResource {
         public Long id;
         public String status;
         public String gatewayOrderId;
+        public String createDate;
     }
 
     @GET
@@ -91,6 +92,7 @@ public class UserOrderResource {
             orderDetail.id = order.getId();
             orderDetail.status = order.getOrderStatus().getName();
             orderDetail.gatewayOrderId = order.getGatewayOrderId();
+            orderDetail.createDate = order.getCreateDate().toString();
             orderDetails.add(orderDetail);
         }
         return orderDetails;

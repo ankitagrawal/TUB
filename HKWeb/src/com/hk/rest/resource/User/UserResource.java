@@ -73,4 +73,20 @@ public class UserResource {
         }
         return response;
     }
+
+    @GET
+    @Path ("/priority/{phone}")
+    @Produces("application/json")
+    public Response getUserDetails(@PathParam ("phone") long phone) {
+
+        Response response = null;
+        try{
+            UserDetail userDetail = userDetailService.findByPhone((int)phone);
+            response = Response.status(Response.Status.OK).entity(userDetail).build();
+        }catch (Exception ex){
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            logger.error("Unable to get User Details ", ex);
+        }
+        return response;
+    }
 }
