@@ -112,5 +112,6 @@ public interface ProductService {
 
 	public List<Product> getSimilarProducts(Product product);
 
+    boolean isCombo(Product product);
     boolean isComboInStock(Product product);
 }
