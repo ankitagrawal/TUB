@@ -158,7 +158,7 @@
 		</copy>
 
         <copy todir="${project.dist.dir}/WEB-INF/lib">
-			<fileset dir="${lib.FedEx.root}">
+			<fileset dir="${lib.fedex.root}">
 				<include name="*.jar" />
 			</fileset>
 		</copy>

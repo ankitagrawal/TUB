@@ -24,7 +24,7 @@
 		<fileset file="${lib.root.dir}/thirdParty/itextpdf-5.2.1.jar" />
         <fileset file="${lib.root.dir}/thirdParty/activation.jar" />
         <fileset file="${lib.root.dir}/axis/*" />
-        <fileset file="${lib.root.dir}/FedEx/*" />
+        <fileset file="${lib.root.dir}/fedex/*" />
 		<fileset file="${lib.root.dir}/barcode/barcode4j.jar" />
 		<fileset file="${project.common.dir}/dependencies/groovy-all-1.5.6.jar" />
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />

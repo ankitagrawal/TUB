@@ -96,7 +96,8 @@ public enum EnumCourier {
                 EnumCourier.Safexpress,
                 EnumCourier.Quantium,
                 EnumCourier.HK_Delivery,
-                EnumCourier.FedEx
+                EnumCourier.FedEx,
+                EnumCourier.FedEx_Surface
         );
     }
 
@@ -104,7 +105,8 @@ public enum EnumCourier {
      public static List<EnumCourier> getCurrentlyApplicableGroundShippedCouriers() {
         return Arrays.asList(
                 EnumCourier.DTDC_Surface,
-                EnumCourier.Delhivery_Surface
+                EnumCourier.Delhivery_Surface,
+                EnumCourier.FedEx_Surface
         );
     }
 
