@@ -63,10 +63,10 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
     }
 
     @Override
-    public boolean syncHKCourierServiceInfo(ThirdPartyAwbDetails thirdPartyAwbDetails) {
+    public boolean syncHKCourierServiceInfo(Long courierId, ThirdPartyAwbDetails thirdPartyAwbDetails) {
 
         // logic to update routing codes in hk, in case there is a change from fedex API.
-        CourierServiceInfo courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(EnumCourier.FedEx.getId(), thirdPartyAwbDetails.getPincode(), false, false, false);
+        CourierServiceInfo courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, thirdPartyAwbDetails.getPincode(), false, false, false);
 
         List<String> routingCode = thirdPartyAwbDetails.getRoutingCode();
         if (courierServiceInfo != null) {

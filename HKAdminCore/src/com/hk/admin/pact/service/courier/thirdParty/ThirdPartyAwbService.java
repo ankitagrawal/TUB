@@ -28,11 +28,12 @@ public interface ThirdPartyAwbService {
     public Awb syncHKAwbWithThirdPartyAwb(Awb hkAwb, ThirdPartyAwbDetails thirdPartyAwbDetails);
     
     /**
-     * Would like to call it in async fashion 
+     * Would like to call it in async fashion
+     * @param courierId
      * @param thirdPartyAwbDetails
      * @return
      */
-    public boolean syncHKCourierServiceInfo(ThirdPartyAwbDetails thirdPartyAwbDetails);
+    public boolean syncHKCourierServiceInfo(Long courierId, ThirdPartyAwbDetails thirdPartyAwbDetails);
 
     public boolean deleteThirdPartyAwb(String awbNumber);
 

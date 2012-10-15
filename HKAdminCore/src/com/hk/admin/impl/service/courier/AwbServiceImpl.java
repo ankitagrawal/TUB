@@ -50,7 +50,7 @@ public class AwbServiceImpl implements AwbService {
             Awb hkAwb = createAwb(courier, thirdPartyAwbDetails.getTrackingNumber(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
             hkAwb = thirdPartyAwbService.syncHKAwbWithThirdPartyAwb(hkAwb, thirdPartyAwbDetails);
 
-            thirdPartyAwbService.syncHKCourierServiceInfo(thirdPartyAwbDetails);
+            thirdPartyAwbService.syncHKCourierServiceInfo(courierId, thirdPartyAwbDetails);
 
             return hkAwb;
         }
