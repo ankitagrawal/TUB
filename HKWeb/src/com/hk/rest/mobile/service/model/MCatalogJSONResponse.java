@@ -89,7 +89,7 @@ public class MCatalogJSONResponse {
     }
 
     private boolean isGoogleAdDisallowed;
-    private boolean isJit;
+    private Boolean isJit;
     private boolean outOfStock;
     private boolean dropShipping;
     private boolean codAllowed;
@@ -158,7 +158,7 @@ public class MCatalogJSONResponse {
         return isGoogleAdDisallowed;
     }
 
-    public boolean isJit() {
+    public Boolean isJit() {
         return isJit;
     }
 
@@ -238,7 +238,7 @@ public class MCatalogJSONResponse {
         isGoogleAdDisallowed = googleAdDisallowed;
     }
 
-    public void setJit(boolean jit) {
+    public void setJit(Boolean jit) {
         isJit = jit;
     }
 

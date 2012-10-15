@@ -45,7 +45,7 @@ $.mobile.changePage.defaults.allowSamePageTransition = true;
 					$.mobile.changePage('product.jsp?query='+encodeURIComponent($(this).val())+'&pageNo=1&perPage=10');
 					}
 					*/
-					$.mobile.changePage('productTemp.jsp?query='+encodeURIComponent($(this).val()));
+					$.mobile.changePage('${httpPath}/productTemp.jsp?query='+encodeURIComponent($(this).val()));
 				}
 		});
 	});

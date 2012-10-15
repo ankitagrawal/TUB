@@ -58,7 +58,7 @@
 			
 			
 			
-			<a href='productDetails.jsp?productSlug={{print(productSlug)}}&productId={{print(encodeURIComponent(id))}}'>
+			<a href='${httpPath}/productDetails.jsp?productSlug={{print(productSlug)}}&productId={{print(encodeURIComponent(id))}}'>
 				<table width='100%'>
 					<tr>
 					<td class='image-container'>

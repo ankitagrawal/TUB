@@ -370,7 +370,7 @@ public class MProductAction extends MBaseAction{
                         variantJSONResponse.setCostPrice(productChoice.getCostPrice());
                         variantJSONResponse.setCutOffInventory(productChoice.getCutOffInventory());
                         variantJSONResponse.setDeleted(productChoice.getDeleted());
-                        variantJSONResponse.setDiscountPercent(productChoice.getDiscountPercent());
+	                    variantJSONResponse.setDiscountPercent(Double.valueOf(decimalFormat.format(productChoice.getDiscountPercent()*100)));
                         variantJSONResponse.setFollowingAvailableDate(productChoice.getFollowingAvailableDate());
                         variantJSONResponse.setHeight(productChoice.getHeight());
                         variantJSONResponse.setHkPrice(productChoice.getHkPrice());

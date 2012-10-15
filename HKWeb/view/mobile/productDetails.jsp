@@ -234,7 +234,7 @@ loadingPop('s','');
 					else
 					{
 						popUpMob.show(response.message);
-						$(ele).removeClass('ad2Crt').addClass('go2Crt').html('<a href="cart.jsp" style="text-decoration:none;color:#333">Added to Cart</a>');
+						$(ele).removeClass('ad2Crt').addClass('go2Crt').html('<a href="${httpPath}/cart.jsp" style="text-decoration:none;color:#333">Added to Cart</a>');
 					}
 				}
 			});
