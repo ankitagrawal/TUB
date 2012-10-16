@@ -27,7 +27,7 @@ public class SolrSchemaConstants {
     public static final String isGoogleAdDisallowed = "isGoogleAdDisallowed";
     public static final String isHidden = "hidden";
     public static final String isCombo = "isCombo";
-    public static final String isCOD = "isCOD";
+    public static final String isCODAllowed = "isCODAllowed";
     public static final String sortBy = "ranking";
     public static final String sortByRanking = "ranking";
     public static final String sortByHkPrice = "hkPrice";

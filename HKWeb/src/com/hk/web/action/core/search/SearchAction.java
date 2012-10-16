@@ -65,7 +65,7 @@ public class SearchAction extends BasePaginatedAction {
                 }
                 if (getContext().getRequest().getParameterMap().containsKey("isCOD")){
                     String[] params = (String[])getContext().getRequest().getParameterMap().get("isCOD");
-                    SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCOD, params[0].toString());
+                    SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, params[0].toString());
                     searchFilters.add(codFilter);
                 }
 
