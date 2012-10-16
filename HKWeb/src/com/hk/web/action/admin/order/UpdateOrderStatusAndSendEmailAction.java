@@ -19,6 +19,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
+import com.hk.manager.SMSManager;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
@@ -38,6 +39,8 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
     private ShipmentServiceImpl  shipmentService;
     @Autowired
     private SubscriptionOrderService subscriptionOrderService;
+	@Autowired
+    private SMSManager smsManager;
 
     public Resolution pre() {
         List<ShippingOrder> shippingOrderList = shippingOrderService.getShippingOrdersToSendShipmentEmail();
@@ -48,6 +51,8 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
             boolean isEmailSent = false;
             if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
                 isEmailSent = emailManager.sendOrderShippedEmail(shippingOrder, linkManager.getShippingOrderInvoiceLink(shippingOrder));
+	            smsManager.sendOrderShippedSMS(shippingOrder);
+
             }else if(order.isSubscriptionOrder()){
                 isEmailSent = emailManager.sendSubscriptionOrderShippedEmail(shippingOrder,getSubscriptionOrderService().findSubscriptionOrderByBaseOrder(shippingOrder.getBaseOrder()).getSubscription(), linkManager.getShippingOrderInvoiceLink(shippingOrder));
             }else {
