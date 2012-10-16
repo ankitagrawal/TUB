@@ -9281,5 +9281,9 @@
 	    <dropColumn columnName="create_date" tableName="user_cart"/>
 	</changeSet>
 
-
+    <changeSet author="Tarun (generated)" id="1350281977808-1">
+        <addColumn tableName="rv_line_item">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
