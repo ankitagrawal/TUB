@@ -245,7 +245,7 @@ public class MCatalogAction extends MBaseAction{
             //logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for "+urlFragment, e);
             logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for " + urlFragment);
             List<String> categoryNames = new ArrayList<String>();
-            Category primaryCategory = categoryDao.getCategoryByName(smallestCategory);
+            Category primaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(smallestCategory));
             category = primaryCategory;
             if (primaryCategory != null) {
                 categoryNames.add(primaryCategory.getName());
@@ -253,7 +253,7 @@ public class MCatalogAction extends MBaseAction{
 
             Category secondaryCategory = null;
             if (secondSmallestCategory != null) {
-                secondaryCategory = categoryDao.getCategoryByName(secondSmallestCategory);
+                secondaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondSmallestCategory));
                 if (secondaryCategory != null) {
                     categoryNames.add(secondaryCategory.getName());
                 }
@@ -261,7 +261,7 @@ public class MCatalogAction extends MBaseAction{
 
             Category tertiaryCategory = null;
             if (thirdSmallestCategory != null) {
-                tertiaryCategory = categoryDao.getCategoryByName(thirdSmallestCategory);
+                tertiaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(thirdSmallestCategory));
                 if (tertiaryCategory != null) {
                     categoryNames.add(tertiaryCategory.getName());
                 }
