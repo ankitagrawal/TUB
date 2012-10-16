@@ -111,7 +111,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     @DefaultHandler
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
-
         return new ForwardResolution("/pages/admin/searchOrderAndEnterCouierInfo.jsp");
     }
 
@@ -163,33 +162,38 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution saveShipmentDetails() {
         shipment.setEmailSent(false);
-        if (trackingId == null) {
-            addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
-            return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-        }
-        Awb finalAwb = null;
-        Awb suggestedAwb = null;
-        if (shippingOrder.getShipment() != null) {
-            suggestedAwb = shippingOrder.getShipment().getAwb();
-        }
-        finalAwb = suggestedAwb;
-        if ((suggestedAwb == null) || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
-                (suggestedCourier != null && (!(shipment.getCourier().equals(suggestedCourier))))) {
+	    if (trackingId == null) {
+		    addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
+		    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+	    }
+	    Awb finalAwb = null;
+	    Awb suggestedAwb = null;
+	    if (shippingOrder.getShipment() != null) {
+		    suggestedAwb = shippingOrder.getShipment().getAwb();
+	    }
+	    finalAwb = suggestedAwb;
+	    if ((suggestedAwb == null) || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
+			    (suggestedCourier != null && (!(shipment.getCourier().equals(suggestedCourier))))) {
 
-            Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
-            if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
-                if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
-                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
-                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-                }
-                if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
-                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
-                            "  : " + shipment.getCourier().getName() + "  you are Trying to use COD tracking id with NON COD   TRY AGAIN "));
-                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-                }
+		    Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
+		    if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
+			    if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
+				    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
+				    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+			    }
+			    if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
+				    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
+						    "  : " + shipment.getCourier().getName() + "  you are Trying to use COD tracking id with NON COD   TRY AGAIN "));
+				    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+			    }
+			    finalAwb = awbFromDb;
+			   int rowsUpdate = (Integer)awbService.save(finalAwb,EnumAwbStatus.Attach.getId().intValue());
+			    if (rowsUpdate == 0) {
+				    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is Already Used with Another User Order   ,  Try again With New Tracking ID"));
+				    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+			    }
 
-                finalAwb = awbFromDb;
-                finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+//                finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
             } else {
                 Awb awb = new Awb();
                 awb.setAwbNumber(trackingId.trim());
@@ -198,7 +202,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 awb.setCourier(shipment.getCourier());
                 awb.setCod(shippingOrder.isCOD());
                 awb.setWarehouse(shippingOrder.getWarehouse());
-                awb = awbService.save(awb);
+                awb = (Awb)awbService.save(awb,null);
                 finalAwb = awb;
                 finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());
             }
@@ -209,7 +213,14 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             }*/
 
         } else {
-            finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+//            finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+	        int rowsUpdate = (Integer)awbService.save(finalAwb,EnumAwbStatus.Attach.getId().intValue());
+	        if(rowsUpdate == 0){
+		    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is Already Used with Another User Order   ,  Try again With New Tracking ID" ));
+                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+	        }
+
+	        
         }
 
 

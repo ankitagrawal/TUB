@@ -25,11 +25,13 @@ public interface AwbService {
 
     public Awb getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus);
 
-    public Awb save(Awb awb);
+    public Object save(Awb awb ,Integer newStatus);
 
     public List<Awb> getAllAwb();
 
     public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList);
+
+
 
 
 }

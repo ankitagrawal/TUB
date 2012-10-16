@@ -62,8 +62,10 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (suggestedCourier == null) {
             return null;
         }
-        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
-                EnumAwbStatus.Unused.getAsAwbStatus());
+//        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
+//                EnumAwbStatus.Unused.getAsAwbStatus());
+
+	    Awb suggestedAwb =  attachAwbToShipment(suggestedCourier, shippingOrder);
         if (suggestedAwb == null) {
             return null;
         }
@@ -84,8 +86,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setCourier(suggestedCourier);
         shipment.setEmailSent(false);
         suggestedAwb.setUsed(true);
-        suggestedAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
-        suggestedAwb = awbService.save(suggestedAwb);
+//        suggestedAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+//        suggestedAwb = awbService.save(suggestedAwb);
         shipment.setAwb(suggestedAwb);
         shipment.setShippingOrder(shippingOrder);
         shipment.setBoxWeight(estimatedWeight / 1000);
@@ -112,18 +114,23 @@ public class ShipmentServiceImpl implements ShipmentService {
         return (Shipment) shipmentDao.save(shipment);
     }
 
-    public Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
-        Shipment shipment = shippingOrder.getShipment();
-        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
-                EnumAwbStatus.Unused.getAsAwbStatus());
-        if (suggestedAwb != null) {
-            AwbStatus awbStatus = EnumAwbStatus.Attach.getAsAwbStatus();
-            suggestedAwb.setAwbStatus(awbStatus);
-            shipment.setAwb(suggestedAwb);
-            return suggestedAwb;
-        }
-        return null;
-    }
+	public Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
+		Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
+				EnumAwbStatus.Unused.getAsAwbStatus());
+		if (suggestedAwb == null) {
+			return null;
+		}
+//            AwbStatus awbStatus = EnumAwbStatus.Attach.getAsAwbStatus();
+//            suggestedAwb.setAwbStatus(awbStatus);
+		int rowsUpdate = awbService.changeStatusToAttach(suggestedAwb);
+		if (rowsUpdate == 1) {
+			Shipment shipment = shippingOrder.getShipment();
+			shipment.setAwb(suggestedAwb);
+			return suggestedAwb;
+		} else {
+			return attachAwbToShipment(courier, shippingOrder);
+		}
+	}
 
     public Shipment findByAwb(Awb awb) {
         return shipmentDao.findByAwb(awb);
