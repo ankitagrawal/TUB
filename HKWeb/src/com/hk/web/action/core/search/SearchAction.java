@@ -63,10 +63,13 @@ public class SearchAction extends BasePaginatedAction {
                     SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
                     searchFilters.add(comboFilter);
                 }
-                if (getContext().getRequest().getParameterMap().containsKey("isCOD")){
-                    String[] params = (String[])getContext().getRequest().getParameterMap().get("isCOD");
-                    SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, params[0].toString());
-                    searchFilters.add(codFilter);
+                if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")){
+                    String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
+                    Boolean onlyCOD = Boolean.parseBoolean( params[0].toString());
+                    if (onlyCOD){
+                        SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, params[0].toString());
+                        searchFilters.add(codFilter);
+                    }
                 }
 
 				SearchResult sr = productSearchService.getSearchResults(query,searchFilters, getPageNo(), getPerPage(), false);
