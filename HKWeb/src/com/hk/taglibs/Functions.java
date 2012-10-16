@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.image.ProductImageService;
+import com.hk.pact.service.inventory.SkuService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -61,7 +65,6 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
-import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.LinkManager;
@@ -76,8 +79,6 @@ import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
-import com.hk.pact.service.image.ProductImageService;
-import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
@@ -631,4 +632,8 @@ public class Functions {
 		return showOptionOnUI;
 	}
 
+	public static String getDisplayNameForHkdeliveryTracking(String status){
+		CourierStatusUpdateHelper courierStatusUpdateHelper = new CourierStatusUpdateHelper();
+		return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
+	}
 }

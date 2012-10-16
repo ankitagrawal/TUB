@@ -936,4 +936,16 @@
             ${hk:getApplicableWarehouses(${object})}
         </example>
     </function>
+
+	<function>
+        <description>
+            Returns status/default source and distination in user friendly way
+        </description>
+        <name>getDisplayNameForHkdeliveryTracking</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getDisplayNameForHkdeliveryTracking(java.lang.String)</function-signature>
+        <example>
+            ${hk:getDisplayNameForHkdeliveryTracking(${status})}
+        </example>
+    </function>
 </taglib>

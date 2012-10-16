@@ -22,6 +22,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -81,6 +82,16 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
+            if(shippingOrder.getShipment()!= null){
+                Awb awbToRemove = shippingOrder.getShipment().getAwb();
+                //shippingOrder.getShipment().setAwb(null);
+                //shipmentService.save(shippingOrder.getShipment());
+                awbService.removeAwbForShipment(shippingOrder.getShipment().getCourier(),awbToRemove);
+                Shipment shipmentToDelete = shippingOrder.getShipment();
+                shippingOrder.setShipment(null);
+                shippingOrderService.save(shippingOrder);
+                shipmentService.delete(shipmentToDelete);
+            }
         }
     }
 

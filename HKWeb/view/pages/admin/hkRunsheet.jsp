@@ -49,6 +49,9 @@
                 if(confirm_action==false){
                     event.preventDefault();
                 }
+	            else{
+	                createChangedConsignmentList();
+                }
             });
 
             $('.markAllConfirmationDialogue').click(function(event){
