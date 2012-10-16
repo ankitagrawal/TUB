@@ -4,6 +4,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.web.validation.ShippingOrderStatusTypeConverter" %>
 <%@ page import="com.hk.domain.order.ShippingOrderStatus" %>
+<%@ page import="java.util.Date" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit shipment details">
@@ -14,8 +15,7 @@
 	<c:set var="delivered" value="<%=EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus()%>"/>
 	<c:set var="lost" value="<%=EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus()%>"/>
 	<c:set var="shipped" value="<%=EnumShippingOrderStatus.SO_Shipped.asShippingOrderStatus()%>"/>
-	<c:set var="returned" value="<%=EnumShippingOrderStatus.SO_Returned.asShippingOrderStatus()%>"/>
-	<c:set var="rtoinitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.asShippingOrderStatus()%>"/>
+
 	<s:layout-component name="heading">
 		Change Shipping Order Status
 	</s:layout-component>
@@ -27,6 +27,23 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 		<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+
+		<script type="text/javascript">
+
+			$(document).ready(function() {
+				$('#delivered').click(function() {
+					var deiveryDate = $('#deliverydate').val();
+					if (deiveryDate == "yyyy-mm-dd hh:mm:ss" || deiveryDate == "") {
+						alert("Enter Delivery Date");
+						return false;
+					}
+
+				});
+
+
+			});
+    </script>
+
 		<style type="text/css">
 			.text {
 				margin-left: 100px;
@@ -44,7 +61,6 @@
 	</s:layout-component>
 	<s:layout-component name="content">
 		<div class="error" style="background-color:salmon; width:380px; display:none;">
-
 		</div>
 
 		<div>
@@ -85,7 +101,7 @@
 								</li>
 
 								<li>
-									<s:label name="Delivery Date" class="label"/>
+									<s:label name="Delivery Date" class="label" />
 									<s:format formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
 									          value="${csda.shippingOrder.shipment.deliveryDate}"/>
 								</li>
@@ -119,14 +135,14 @@
 					<s:label name="Delivery Date" class="label"/>
 					<s:text name="shipment.deliveryDate" class="date_input startDate text fields"
 					        style="width:160px"
-					        id="deliveryDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/>
+					        id="deliverydate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/>
 				</div>
 
 				<div class="clear" style="height:50px;"></div>
 
 
 				<div>
-					<s:submit name="markDelivered" value="Delivered"/>
+					<s:submit id="delivered" name="markDelivered" value="Delivered"/>
 					<s:submit name="markLost" value="Lost" style="margin-left:300px;"/>
 
 				</div>
