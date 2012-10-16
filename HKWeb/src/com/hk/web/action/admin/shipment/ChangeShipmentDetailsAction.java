@@ -158,7 +158,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 			return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
 			}
 			else if (shipment.getShipDate().after(deliverydate)){
-			addRedirectAlertMessage(new SimpleMessage("Delivery Date cannot be befor Shipping Date :::  "+ shipment.getShipDate()));
+			addRedirectAlertMessage(new SimpleMessage("Delivery Date cannot be before Shipping Date :::  "+ shipment.getShipDate()));
 			return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
 			}
 			if (shipment != null) {
