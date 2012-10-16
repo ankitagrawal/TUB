@@ -262,7 +262,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return new SearchResult(sortedProducts, totalResultCount);
     }
 
-    private SearchResult getProductSuggestions(QueryResponse response, String userQuery, int page, int perPage) throws SolrServerException
+    private SearchResult getProductSuggestions(QueryResponse response,List<SearchFilter> searchFilters, String userQuery, int page, int perPage) throws SolrServerException
     {
         ModifiableSolrParams params = new ModifiableSolrParams();
         SearchResult sr = new SearchResult();
@@ -300,7 +300,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
         if (canRunSpellQuery)
         {
-            SolrQuery solrQuery = getResultsQuery(suggestions,page,perPage);
+            SolrQuery solrQuery = getResultsQuery(suggestions,searchFilters, page,perPage);
             response = solr.query(solrQuery);
             List<SolrProduct> solrProductList = getQueryResults(response);
             int totalResultCount = (int)response.getResults().getNumFound();
@@ -319,18 +319,18 @@ class ProductSearchServiceImpl implements ProductSearchService {
             {
                 for (SearchFilter searchFilter : searchFilters){
                     if (!StringUtils.isBlank(searchFilter.getValue())) {
-                        query += searchFilter.getName() + SolrSchemaConstants.paramAppender + "\"" + searchFilter.getValue() + "\"";
+                        query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender + "\"" + searchFilter.getValue() + "\"";
                     }
                 }
             }
 
-            response = solr.query(getResultsQuery(query, page, perPage));
+            response = solr.query(getResultsQuery(query,searchFilters, page, perPage));
             List<SolrProduct> productList = getQueryResults(response);
             searchResult = getSearchResult(productList, (int)response.getResults().getNumFound());
 
             long resultsCount = response.getResults().getNumFound();
             if(resultsCount == 0 && !isRetry){
-                searchResult = getProductSuggestions(response, query, page, perPage);
+                searchResult = getProductSuggestions(response,searchFilters, query, page, perPage);
                 if ((searchResult != null) && searchResult.getResultSize() == 0){
                     query = query.replaceAll(" ","");
                     searchResult = getSearchResults(query,null, page, perPage, true);
@@ -349,11 +349,14 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return productList;
     }
 
-    private SolrQuery buildSolrQuery(String query, String qf,  int page, int perPage){
+    private SolrQuery buildSolrQuery(String query,List<SearchFilter> searchFilters, String qf,  int page, int perPage){
         SolrQuery solrQuery = new SolrQuery(); // &defType=dismax&qf=
         String fq= String.format("{!cache=false}hidden:false");  //Do not cache the results*/
         solrQuery.setParam("q", query);
-        solrQuery.setParam("fq", fq);
+        for (SearchFilter searchFilter : searchFilters){
+           fq += "+" + searchFilter.getName() + ":" + searchFilter.getValue();
+        }
+        solrQuery.setParam("fq","+" + fq);
         solrQuery.setParam("defType", "dismax");
         solrQuery.setParam("qf", qf);
         //solrQuery.setParam("fq", fq);
@@ -369,7 +372,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return solrQuery;
     }
 
-    private SolrQuery getResultsQuery(String query, int page, int perPage){
+    private SolrQuery getResultsQuery(String query,List<SearchFilter> searchFilters, int page, int perPage){
 
         String qf = "";
         qf += SolrSchemaConstants.name + "^2.0 ";
@@ -385,7 +388,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         qf += SolrSchemaConstants.metaDescription + "^0.5 ";
         qf += SolrSchemaConstants.seoDescription + "^0.5 ";
         qf += SolrSchemaConstants.description_title + "^0.5 ";
-        SolrQuery solrQuery = buildSolrQuery(query, qf, page, perPage);
+        SolrQuery solrQuery = buildSolrQuery(query, searchFilters,qf, page, perPage);
 
         return solrQuery;
     }

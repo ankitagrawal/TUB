@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.catalog.SolrSchemaConstants;
+import com.hk.domain.search.SearchFilter;
 import com.hk.dto.search.SearchResult;
 import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -54,7 +56,20 @@ public class SearchAction extends BasePaginatedAction {
 	public Resolution search() throws SolrServerException, MalformedURLException {
 		if (StringUtils.isNotBlank(query)) {
 			try {
-				SearchResult sr = productSearchService.getSearchResults(query, getPageNo(), getPerPage(), false);
+                List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
+                if (getContext().getRequest().getParameterMap().containsKey("isCombo")){
+                    String[] params = (String[])getContext().getRequest().getParameterMap().get("isCombo");
+
+                    SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
+                    searchFilters.add(comboFilter);
+                }
+                if (getContext().getRequest().getParameterMap().containsKey("isCOD")){
+                    String[] params = (String[])getContext().getRequest().getParameterMap().get("isCOD");
+                    SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCOD, params[0].toString());
+                    searchFilters.add(codFilter);
+                }
+
+				SearchResult sr = productSearchService.getSearchResults(query,searchFilters, getPageNo(), getPerPage(), false);
 				productPage = new Page(sr.getSolrProducts(), getPerPage(), getPageNo(), (int) sr.getResultSize());
 				productList = productPage.getList();
 				for (Product product : productList) {

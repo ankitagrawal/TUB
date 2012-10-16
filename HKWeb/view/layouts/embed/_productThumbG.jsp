@@ -17,10 +17,11 @@
 		}
 
 		pageContext.setAttribute("product", product_productThumb);
-
-		ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
-		Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
-		pageContext.setAttribute("combo", combo);
+        if (product_productThumb instanceof Combo){
+		    ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
+		    Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
+		    pageContext.setAttribute("combo", combo);
+        }
 	%>
 	<style type="text/css">
 		.opaque {
