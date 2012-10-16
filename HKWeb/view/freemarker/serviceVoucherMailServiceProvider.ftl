@@ -7,7 +7,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId} placed at HealthKart
 <#include "header.ftl">
 <p style="margin-bottom:1em">Hi ${lineItem.productVariant.product.manufacturer.name}!,</p>
 
-<p style="margin-bottom:1em">Here are the order details for the order <strong> ${order.gatewayOrderId}</strong> placed on<strong> ${order.payment.createDate} at HealthKart.com</strong></p>
+<p style="margin-bottom:1em">Here are the order details for the order <strong> ${order.gatewayOrderId}</strong> placed on<strong> ${order.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} at HealthKart.com</strong></p>
 
 <div>
   <h3>Order Details</h3>

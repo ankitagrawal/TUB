@@ -244,7 +244,7 @@
   <s:form beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
        <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
            <tr>
-               <td colspan="2" class="web_dialog_title" style="color:#444;">Undeliverable Items</td>
+               <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
                <td class="web_dialog_title align_right">
                    <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
                </td>
@@ -255,7 +255,7 @@
            </tr>
            <tr>
                <td colspan="3" style="padding-left: 15px;">
-                   <b>We are sorry below items cannot be delivered to your pincode. </b>
+                   <b>The following items cannot be delivered at your pincode. </b>
                </td>
            </tr>
            <tr>
