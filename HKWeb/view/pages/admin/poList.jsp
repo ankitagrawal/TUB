@@ -5,6 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="approved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
+<c:set var="cancelled" value="<%=EnumPurchaseOrderStatus.Cancelled.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
  <%
     WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
@@ -101,7 +102,7 @@
           <td>${purchaseOrder.purchaseOrderStatus.name}</td>
           <td><fmt:formatDate value="${purchaseOrder.updateDate}" type="both" timeStyle="short"/></td>
           <td>
-            <fmt:formatNumber value="${purchaseOrder.payable}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
+            <fmt:formatNumber value="${purchaseOrder.finalPayableAmount}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td>
             ${purchaseOrder.paymentDetails}
             <br />
@@ -129,7 +130,7 @@
               <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
               <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInPdf" target="_blank">PDF
                             <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
-            <c:if test="${purchaseOrder.purchaseOrderStatus.id >= approved}">
+            <c:if test="${(purchaseOrder.purchaseOrderStatus.id >= approved) && (purchaseOrder.purchaseOrderStatus.id < cancelled)}">
                 <br/>
                 <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
                   <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
