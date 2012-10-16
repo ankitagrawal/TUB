@@ -102,7 +102,7 @@
 			}
 			var surchargeCategory = 0.0;
 			var stateIdentifier = $('.state').html();
-			if (stateIdentifier == 'CST') {
+			if (stateIdentifier == 'CST' && taxCategory != 0) {
 				surchargeCategory = 0.0;
 				taxCategory = 0.02;
 			} else {
