@@ -33,6 +33,7 @@ public class ComboProduct implements java.io.Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "combo_id", nullable = false)
+  //@NotFound(action=NotFoundAction.IGNORE)
   private Combo combo;
 
   @ManyToOne(fetch = FetchType.LAZY)

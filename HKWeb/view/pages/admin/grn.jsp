@@ -3,6 +3,7 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.util.HKImageUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
@@ -17,8 +18,16 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
-    <script type="text/javascript">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.lightbox-0.5.js"></script>
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquery.lightbox-0.5.css" media="screen" />
+	<script type="text/javascript">
         $(document).ready(function() {
+	        $('a.lightbox').lightBox({conPath:"${pageContext.request.contextPath}/"});
+
+	        $('.hkProductLightbox').each(function(){
+		        var valueChangeRow = $(this).parents('.lineItemRow');
+		        this.href = valueChangeRow.find('#mediumImage').attr('src');
+	        }).lightBox({conPath:"${pageContext.request.contextPath}/"});
 
             function updateTotal(fromTotalClass,toTotalClass){
                 var total=0;
@@ -301,13 +310,18 @@
                     <div class='img48' style="vertical-align:top;">
                         <c:choose>
                             <c:when test="${productVariant.product.mainImageId != null}">
-                                <hk:productImage imageId="${productVariant.product.mainImageId}"
-                                                 size="<%=EnumImageSize.TinySize%>"/>
+	                        <div style="display: none;">
+		                        <hk:productImage imageId="${productVariant.product.mainImageId}" size="<%=EnumImageSize.MediumSize%>" id="mediumImage"/>
+	                        </div>
+	                            <a href="#" class="hkProductLightbox">
+	                                <hk:productImage imageId="${productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
+	                            </a>
                             </c:when>
                             <c:otherwise>
+	                            <a href="${pageContext.request.contextPath}/images/ProductImages/ProductImagesOriginal/${productVariant.product.id}.jpg" class="lightbox">
                                 <img class="prod48"
                                      src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${productVariant.product.id}.jpg"
-                                     alt="${productLineItem.productVariant.product.name}"/>
+                                     alt="${productLineItem.productVariant.product.name}" /></a>
                             </c:otherwise>
                         </c:choose>
                     </div>

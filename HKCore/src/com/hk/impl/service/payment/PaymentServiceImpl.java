@@ -95,7 +95,6 @@ public class PaymentServiceImpl implements PaymentService {
             case FREE_CHECKOUT:
                 if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
                     paymentEmailSent = getEmailManager().sendOrderConfirmEmailToUser(order);
-	                smsManager.sendOrderConfirmedSMS(order);
                     getOrderService().sendEmailToServiceProvidersForOrder(order);
                 } else if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
                     paymentEmailSent = getEmailManager().sendOrderPlacedPaymentPendingEmailToUser(order);
