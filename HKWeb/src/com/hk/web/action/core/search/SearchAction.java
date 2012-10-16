@@ -57,11 +57,13 @@ public class SearchAction extends BasePaginatedAction {
 		if (StringUtils.isNotBlank(query)) {
 			try {
                 List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
-                if (getContext().getRequest().getParameterMap().containsKey("isCombo")){
-                    String[] params = (String[])getContext().getRequest().getParameterMap().get("isCombo");
-
-                    SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
-                    searchFilters.add(comboFilter);
+                if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
+                    String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
+                    Boolean includeCombo = Boolean.parseBoolean( params[0].toString());
+                    if (!includeCombo){
+                        SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
+                        searchFilters.add(comboFilter);
+                    }
                 }
                 if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")){
                     String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");

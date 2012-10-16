@@ -200,17 +200,23 @@ public class CatalogAction extends BasePaginatedAction {
             SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
             List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
             searchFilters.add(brandFilter);
-            if (getContext().getRequest().getParameterMap().containsKey("isCombo")){
-                String[] params = (String[])getContext().getRequest().getParameterMap().get("isCombo");
+            if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
+                String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
+                Boolean includeCombo = Boolean.parseBoolean( params[0].toString());
+                if (!includeCombo){
+                    SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
+                    searchFilters.add(comboFilter);
+                }
+            }
+            if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")){
+                String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
+                Boolean onlyCOD = Boolean.parseBoolean( params[0].toString());
+                if (onlyCOD){
+                    SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, params[0].toString());
+                    searchFilters.add(codFilter);
+                }
+            }
 
-                SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
-                searchFilters.add(comboFilter);
-            }
-            if (getContext().getRequest().getParameterMap().containsKey("isCOD")){
-                String[] params = (String[])getContext().getRequest().getParameterMap().get("isCOD");
-                SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCOD, params[0].toString());
-                searchFilters.add(codFilter);
-            }
             SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter, paginationFilter, sortFilter);
 
             List<Product> filteredProducts = searchResult.getSolrProducts();
