@@ -39,5 +39,18 @@ public class HKDeliveryConstants {
     public static final String TOTAL_COD_AMT = "totalCODAmount";
     public static final String TOTAL_COD_PKTS = "totalCODPackets";
 
+	public static final String USER_STATUS_RECEIVED = "Shipment received at courier hub.";
+	public static final String USER_STATUS_DISPATCHED = "Shipment has been dispatched from hub.";
+	public static final String USER_STATUS_CUSTOMERHOLD = "You asked us to hold your shipment.";
+	public static final String USER_STATUS_HOLD = "Shipment On Hold at courier hub.";
+	public static final String USER_STATUS_DELIVERED = "Shipment has been delivered.";
+	public static final String USER_STATUS_DAMAGED = "Shipment is damaged.";
+	public static final String USER_STATUS_LOST = "Shipment is lost.";
+	public static final String USER_STATUS_RTH = "Shipment returned.";
+	public static final String USER_STATUS_RTO = "Shipment returned to healthkart.";
+	public static final String USER_SOURCE = "Healthkart Warehouse";
+	public static final String USER_DESTINATION = "Customer";
+
+
 
 }
