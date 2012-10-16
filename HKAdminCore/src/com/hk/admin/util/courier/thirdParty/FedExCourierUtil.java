@@ -129,6 +129,7 @@ public class FedExCourierUtil {
         //
         try {
             // Initialize the service
+            logger.debug("inside newFedExShipment: " + shippingOrder.getGatewayOrderId() + " ");
             ShipServiceLocator service;
             ShipPortType port;
             //
@@ -220,7 +221,7 @@ public class FedExCourierUtil {
             requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested(shippingOrder));
         }
         //
-        requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder));
+        requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder,weightInKg));
         //
         requestedShipment.setLabelSpecification(addLabelSpecification());
         //
@@ -670,13 +671,13 @@ public class FedExCourierUtil {
         return labelSpecification;
     }
 
-    private CustomsClearanceDetail addCustomsClearanceDetail(ShippingOrder shippingOrder) {
+    private CustomsClearanceDetail addCustomsClearanceDetail(ShippingOrder shippingOrder, Double weightInKg) {
         CustomsClearanceDetail customs = new CustomsClearanceDetail(); // International details
         customs.setDutiesPayment(addDutiesPayment());
         customs.setCustomsValue(addMoney("INR", shippingOrder.getAmount()));// 400.00));
         customs.setDocumentContent(InternationalDocumentContentType.NON_DOCUMENTS);
         customs.setCommercialInvoice(addCommercialInvoice());
-        customs.setCommodities(new Commodity[]{addCommodity(shippingOrder)});// Commodity details
+        customs.setCommodities(new Commodity[]{addCommodity(shippingOrder, weightInKg)});// Commodity details
         return customs;
     }
 
@@ -687,13 +688,13 @@ public class FedExCourierUtil {
         return commercialInvoice;
     }
 
-    private static Commodity addCommodity(ShippingOrder shippingOrder) {
+    private static Commodity addCommodity(ShippingOrder shippingOrder, Double weightInKg) {
         Commodity commodity = new Commodity();
         commodity.setNumberOfPieces(new NonNegativeInteger("1"));
         commodity.setDescription("Books");
         commodity.setCountryOfManufacture("IN");
         commodity.setWeight(new Weight());
-        commodity.getWeight().setValue(new BigDecimal(1.0));
+        commodity.getWeight().setValue(new BigDecimal(weightInKg));   //1.0
         commodity.getWeight().setUnits(WeightUnits.KG);
         commodity.setQuantity(new NonNegativeInteger("4"));
         commodity.setQuantityUnits("EA");
