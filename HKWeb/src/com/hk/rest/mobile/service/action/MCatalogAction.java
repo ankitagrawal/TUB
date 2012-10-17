@@ -39,10 +39,13 @@ import com.hk.util.SeoManager;
 import com.hk.util.HKImageUtils;
 import com.hk.web.ConvertEncryptedToNormalDouble;
 import com.hk.web.HealthkartResponse;
+import com.hk.web.action.core.catalog.category.CategoryAction;
+import com.hk.web.action.HomeAction;
 import com.hk.web.filter.WebContext;
 import com.hk.service.ServiceLocatorFactory;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.util.CryptoUtil;
 import net.sourceforge.stripes.validation.Validate;
 import org.apache.commons.lang.StringUtils;
@@ -171,9 +174,7 @@ public class MCatalogAction extends MBaseAction{
         childCategorySlug = secondaryCat;
 
         category = categoryDao.getCategoryByName(rootCategorySlug);
-        if (category != null) {
-   //         message = "No category found for root category slug : " + rootCategorySlug;
-   //         status = MHKConstants.STATUS_ERROR;
+        if (category == null) {
             logger.error("No category found for root category slug : " + rootCategorySlug);
         }
 

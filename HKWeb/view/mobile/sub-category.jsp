@@ -47,11 +47,7 @@
 		</tr>
 		</script>
 		<script type='text/template' id='sub-category-template'>
-
-		{{
-		var urlEval = new URLEval();
-		var pC = ($.mobile.path.parseUrl(urlEval.getURLFromHash(location.href))).search;pC = pC.replace('?','');}}
-			<a href='${httpPath}/product.jsp?{{print(pC)}}&secondaryCategory={{print(encodeURIComponent(name))}}'>{{print(name)}}</a>
+			<a href='product.jsp?primaryCategory={{print(currentCategory)}}&secondaryCategory={{print(encodeURIComponent(url))}}'>{{print(name)}}</a>
 		</script>
 		<script type='text/javascript'>
 
