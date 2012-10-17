@@ -53,7 +53,7 @@ Order Cancellation for Order ID ${order.gatewayOrderId}
           <td width="579" valign="top">Hi ${order.user.name}! <br/>
             <br/>
             Your order, dated ${order.payment.paymentDate}, for INR ${pricingDto.grandTotalPayable}, with order
-            confirmation number ${order.gatewayOrderId} has been canceled, as you instructed. <br/>
+            confirmation number ${order.gatewayOrderId} has been canceled. <br/>
             <br/>
 
             You had ordered for:<br/>

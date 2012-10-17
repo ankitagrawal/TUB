@@ -1,22 +1,10 @@
 package com.hk.domain.courier;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.order.ShippingOrder;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @SuppressWarnings ("serial")
 @Entity
@@ -84,6 +72,10 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 
 	@Column (name = "packer")
 	private String packer;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_dt", nullable = false)
+	private Date createDate = new Date();
 
 	@Transient
 	private String trackLink;
@@ -241,5 +233,13 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
     @Override
 	public String toString() {
 		return id != null ? id.toString() : "";
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 }

@@ -1,1 +1,1 @@
-We are pleased to inform you that your Order No.${order.gatewayOrderId} has been delivered. This completes your order. Team HealthKart.
+We are delighted to inform you that Order No.${order.gatewayOrderId} has been delivered. Stay Healthy with HealthKart.
