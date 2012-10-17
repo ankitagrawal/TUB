@@ -289,7 +289,7 @@
 <c:if test="${hk:equalsIgnoreCase('neutrogena', brandLabel)}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="6WBkCMmm5wMQ_4XqxAM" id="949650175"/>
 </c:if>
-<c:if test="${hk:equalsIgnoreCase('l\'oreal+paris', brandLabel)}">
+<c:if test="${hk:equalsIgnoreCase('loreal+paris', brandLabel)}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="NSpnCMGn5wMQ_4XqxAM" id="949650175"/>
 </c:if>
 <c:if test="${hk:equalsIgnoreCase('garnier', brandLabel)}">
