@@ -60,11 +60,11 @@
   </div>
    <form id="order_makeapayment" >
    <div style='border-bottom:none;border-right:none;padding:10px;;margin:10px;box-shadow:2px 2px 8px #888,-2px -2px 8px #888;-webkit-box-shadow:2px 2px 8px #888,-2px -2px 8px #888'>
-   <h2>Instuctions(If any)</h2>
+   <h2>Instructions(If any)</h2>
    <textarea name="comment" id="orderSummary_comments"></textarea>
-   <h2>Cod Contact Name</h2>
+   <h2>COD Contact Name</h2>
    <textarea name="codContactName" id="orderSummary_name"></textarea>
-   <h2>Cod Contact Number</h2>
+   <h2>COD Contact Number</h2>
    <textarea name="codContactPhone" id="orderSummary_phone"></textarea>
 
    </div>
