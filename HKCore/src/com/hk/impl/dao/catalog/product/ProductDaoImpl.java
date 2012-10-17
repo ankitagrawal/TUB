@@ -161,16 +161,14 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
     public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, Boolean onlyCOD, Boolean includeCombo,int page, int perPage) {
         if (categoryNames != null && categoryNames.size() > 0) {
             List<String> productIds =  new ArrayList<String>();
-            if (includeCombo){
                 productIds =  getSession().createQuery(
                         "select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories",
                         categoryNames).setInteger("tagCount", categoryNames.size()).list();
 
-            }else{
+	        if (includeCombo){
                 productIds = getSession().createQuery(
-                        "select distinct pv.product.id from ProductVariant pv inner join pv.product.categories c where c.name in (:categories) group by pv.product.id having count(*) = :tagCount").setParameterList("categories",
-                        categoryNames).setInteger("tagCount", categoryNames.size()).list();
-
+                        "select distinct pv.product.id from ProductVariant pv where pv.product.id in (:productIds)").setParameterList("productIds",
+                        productIds).list();
             }
 
             if (productIds != null && productIds.size() > 0) {
