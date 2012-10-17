@@ -160,9 +160,10 @@ public class MSearchAction extends MBaseAction {
 			if (product.getMinimumMRPProducVariant() != null)
 				catalogJSONResponse.setMarkedPrice(product
 						.getMinimumMRPProducVariant().getMarkedPrice());
-			catalogJSONResponse.setDiscountPercentage(product
-					.getMinimumMRPProducVariant().getDiscountPercent()!=null?product
-							.getMinimumMRPProducVariant().getDiscountPercent():0);
+			catalogJSONResponse.setDiscountPercentage(
+					product.getMinimumMRPProducVariant().getDiscountPercent() !=null ?
+							Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent()*100)) :
+							0);
 		}
 	
 		if (null != product.getId()) {

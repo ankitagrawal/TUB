@@ -68,7 +68,7 @@
 						<h3 style='white-space:normal'>{{print(name)}}</h3>
 						<p>
 							<strike>Rs {{print(markedPrice)}}</strike>
-							<span class='ofrPrc'>Our Price Rs {{print(hkPrice)}}</span>
+							<span class='ofrPrc'>Rs {{print(hkPrice)}}</span>
 							{{if(discountPercentage > 0) { }}
 							<span class='svPrcnt'>{{print(discountPercentage)}}% off</span>
 							{{ } }}
