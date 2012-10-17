@@ -151,18 +151,15 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 
 	public Resolution markDelivered() {
 		shippingOrder.setShipment(shipment);
-		if (shipment.getDeliveryDate() == null) {
-			addRedirectAlertMessage(new SimpleMessage("Select delivery date"));
-			return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
-		}
-
 		Date deliverydate = shipment.getDeliveryDate();
 		if (EnumShippingOrderStatus.getStatusForChangingShipmentDetails().contains(shippingOrder.getOrderStatus())) {
-			if (shipment.getShipDate().after(deliverydate) || deliverydate.after(new Date())) {
-				Calendar deliveryDateAsShipDatePlusOne = Calendar.getInstance();
-				deliveryDateAsShipDatePlusOne.setTime(shipment.getShipDate());
-				deliveryDateAsShipDatePlusOne.add(Calendar.DAY_OF_MONTH, 1);
-				deliverydate = deliveryDateAsShipDatePlusOne.getTime();
+			if( deliverydate.after(new Date())){
+			addRedirectAlertMessage(new SimpleMessage("Delivery Date Cannot be after Today's Date"));
+			return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
+			}
+			else if (shipment.getShipDate().after(deliverydate)){
+			addRedirectAlertMessage(new SimpleMessage("Delivery Date cannot be before Shipping Date :::  "+ shipment.getShipDate()));
+			return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
 			}
 			if (shipment != null) {
 				shipment.setDeliveryDate(deliverydate);
