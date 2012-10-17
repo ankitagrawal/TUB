@@ -55,7 +55,7 @@ public class AddressServiceImpl implements AddressService {
                 String ph = phone.substring(start, phone.length() - 1);
                 long phoneNumber = Long.parseLong(ph);
                 userDetail.setPhone(phoneNumber);
-                userDetailsDao.save(userDetailsDao);
+                userDetailsDao.save(userDetail);
             }
 
         }catch (NumberFormatException ex){

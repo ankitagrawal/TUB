@@ -41,7 +41,6 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
 
     private PaymentMode paymentMode;
 
-    private String        login;
     private String        email;
     private String        phone;
 
@@ -53,18 +52,20 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/agentSearchOrder.jsp");
-    }
-
-    public Resolution searchOrders() {
+        email = getContext().getRequest().getParameter("email");
         OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
-        orderSearchCriteria.setEmail(email).setLogin(login);
+        orderSearchCriteria.setEmail(email).setLogin(email);
         orderSearchCriteria.setOrderAsc(false);
         orderSearchCriteria.getSearchCriteria().addOrder(org.hibernate.criterion.Order.desc("updateDate"));
         orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), MAX_ORDERS);
         // orderPage = orderDao.searchOrders(startDate, endDate, orderId, email, name, phone, orderStatus,paymentMode,
         // gatewayOrderId, trackingId, getPageNo(), getPerPage());
         orderList = orderPage.getList();
+        return new ForwardResolution("/pages/admin/agentSearchOrder.jsp");
+    }
+
+    public Resolution searchOrders() {
+
         return new ForwardResolution("/pages/admin/searchOrder.jsp");
     }
 
@@ -132,14 +133,4 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
     public void setShippingOrder(ShippingOrder shippingOrder) {
         this.shippingOrder = shippingOrder;
     }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-
 }
