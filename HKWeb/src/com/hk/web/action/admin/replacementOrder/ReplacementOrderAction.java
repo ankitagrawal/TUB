@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.domain.order.ReplacementOrder;
@@ -12,6 +14,7 @@ import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -38,6 +41,8 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 @Secure(hasAnyPermissions = { PermissionConstants.CREATE_REPLACEMENT_ORDER })
 @Component
 public class ReplacementOrderAction extends BaseAction {
+	private static Logger logger = LoggerFactory.getLogger(ReplacementOrderAction.class);
+	
     private String shippingOrderId;
 	private String gatewayOrderId;
     private ShippingOrder shippingOrder;
@@ -59,6 +64,9 @@ public class ReplacementOrderAction extends BaseAction {
 
 	private ReplacementOrder replacementOrder;
 
+
+
+
     @ValidationMethod(on = "searchShippingOrder")
     public void validateSearch() {
         if (shippingOrderId == null && gatewayOrderId == null) {
@@ -73,7 +81,11 @@ public class ReplacementOrderAction extends BaseAction {
 
     public Resolution searchShippingOrder() {
 	    if(shippingOrderId != null){
-            shippingOrder = shippingOrderService.find(Long.parseLong(shippingOrderId));
+		    try{
+                shippingOrder = shippingOrderService.find(Long.parseLong(shippingOrderId));
+		    }catch(NumberFormatException e){
+			    logger.error("Shipping order id cannot a string.");
+		    }
 	    }
 	    else if(gatewayOrderId != null){
 		    shippingOrder = shippingOrderService.findByGatewayOrderId(gatewayOrderId);
@@ -158,7 +170,11 @@ public class ReplacementOrderAction extends BaseAction {
 		if(shippingOrderId == null){
 			return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
 		}
-		replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(Long.parseLong(shippingOrderId));
+		try{
+			replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(Long.parseLong(shippingOrderId));
+		}catch (NumberFormatException e){
+			logger.error("Shipping order id cannot be string.");
+		}
 		return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
 	}
 
