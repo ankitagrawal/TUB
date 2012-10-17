@@ -6,10 +6,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.catalog.product.combo.Combo;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -151,15 +153,25 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         criteria.add(Restrictions.eq("deleted", false));
         DetachedCriteria categoryCriteria = criteria.createCriteria("categories");
         categoryCriteria.add(Restrictions.eq("name", category));
+        criteria.addOrder(Order.asc("outOfStock"));
         criteria.addOrder(Order.asc("orderRanking"));
         return list(criteria, page, perPage);
     }
 
-    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage) {
+    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, Boolean onlyCOD, Boolean includeCombo,int page, int perPage) {
         if (categoryNames != null && categoryNames.size() > 0) {
-            List<String> productIds = getSession().createQuery(
-                    "select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories",
-                    categoryNames).setInteger("tagCount", categoryNames.size()).list();
+            List<String> productIds =  new ArrayList<String>();
+            if (includeCombo){
+                productIds =  getSession().createQuery(
+                        "select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories",
+                        categoryNames).setInteger("tagCount", categoryNames.size()).list();
+
+            }else{
+                productIds = getSession().createQuery(
+                        "select distinct pv.product.id from ProductVariant pv inner join pv.product.categories c where c.name in (:categories) group by pv.product.id having count(*) = :tagCount").setParameterList("categories",
+                        categoryNames).setInteger("tagCount", categoryNames.size()).list();
+
+            }
 
             if (productIds != null && productIds.size() > 0) {
 
@@ -171,6 +183,11 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                 criteria.add(Restrictions.eq("deleted", false));
                 criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
                 criteria.add(Restrictions.eq("hidden", false));
+                if (onlyCOD){
+                    criteria.add(Restrictions.eq("codAllowed", true));
+                }
+
+                criteria.addOrder(Order.asc("outOfStock"));
                 criteria.addOrder(Order.asc("orderRanking"));
 
                 return list(criteria, page, perPage);
@@ -179,9 +196,16 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return null;
     }
 
-	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice, int page, int perPage) {
+	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice,
+                                                    Boolean onlyCOD, Boolean includeCombo, int page, int perPage) {
 		if (categoryNames != null && categoryNames.size() > 0) {
-			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) and p.deleted <> 1 group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
+			List<String> productIds = new ArrayList<String>();
+            if (includeCombo){
+                productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) and p.deleted <> 1 group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
+            }else{
+                productIds = getSession().createQuery("select  distinct pv.product.id from ProductVariant pv inner join pv.product.categories c where c.name in (:categories) and pv.product.deleted <> 1 group by pv.product.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
+            }
+
 			if (productIds != null && !productIds.isEmpty()) {
 				productIds = getSession().createQuery("select pv.product.id from ProductVariant pv where pv.product.id in (:productIds) and pv.hkPrice between :minPrice and :maxPrice and pv.deleted <> 1").setParameterList("productIds", productIds).setParameter("minPrice", minPrice).setParameter("maxPrice", maxPrice).list();
 				if (productIds != null && !productIds.isEmpty() && filterOptions != null && !filterOptions.isEmpty() && groupsCount > 0) {
@@ -196,6 +220,11 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 					criteria.add(Restrictions.eq("deleted", false));
 					criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
 					criteria.add(Restrictions.eq("hidden", false));
+                    if (onlyCOD){
+                        criteria.add(Restrictions.eq("codAllowed", true));
+                    }
+
+                    criteria.addOrder(Order.asc("outOfStock"));
 					criteria.addOrder(Order.asc("orderRanking"));
 					return list(criteria, page, perPage);
 				}
@@ -236,6 +265,23 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
         criteria.add(Restrictions.like("name", "%" + name + "%"));
         criteria.add(Restrictions.eq("deleted", false));
+        criteria.addOrder(Order.asc("orderRanking"));
+        return list(criteria, page, perPage);
+    }
+
+    public Page getProductByName(String name,boolean onlyCOD, boolean includeCombo, int page, int perPage) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+        criteria.add(Restrictions.eq("deleted", false));
+        if (onlyCOD){
+            criteria.add(Restrictions.eq("codAllowed", true));
+        }
+        if (!includeCombo){
+            List<String> productIds =  getSession().createQuery("select distinct pv.product.id from ProductVariant pv where pv.product.name like (:name) group by pv.product.id")
+                    .setString("name","%" + name + "%").list();
+            criteria.add(Restrictions.in("id", productIds));
+        }else{
+            criteria.add(Restrictions.like("name", "%" + name + "%"));
+        }
         criteria.addOrder(Order.asc("orderRanking"));
         return list(criteria, page, perPage);
     }

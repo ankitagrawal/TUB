@@ -25,15 +25,14 @@ import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
-import com.hk.pact.service.UserService;
 import com.hk.web.HealthkartResponse;
 
 @Secure
 @Component
 public class AvailabeOfferListAction extends BaseAction implements ValidationErrorHandler {
 
-    @Autowired
-    private UserService         userService;
+    /*@Autowired
+    private UserService         userService;*/
     @Autowired
     OfferInstanceDao            offerInstanceDao;
     @Autowired
