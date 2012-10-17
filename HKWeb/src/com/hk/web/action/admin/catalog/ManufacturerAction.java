@@ -3,12 +3,15 @@ package com.hk.web.action.admin.catalog;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.ValidationMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +51,23 @@ public class ManufacturerAction extends BasePaginatedAction {
     manufacturerPage = manufacturerDao.findManufacturersOrderedByName(getPageNo(), getPerPage());
     manufacturerList = manufacturerPage.getList();
     return new ForwardResolution("/pages/admin/manufacturer.jsp");
+  }
+
+  @ValidationMethod(on = "saveManufacturerDetails")
+  public void ValidateManufacturerDetails(){
+    if(manufacturer==null || manufacturer.getName()==null || manufacturer.getName().trim().equals("")){
+        getContext().getValidationErrors().add("1", new SimpleError("Please Enter Name"));
+    }
+     final String STRING_PATTERN = "^[A-Za-z]*$";
+    Pattern pattern = Pattern.compile(STRING_PATTERN);
+    if(manufacturer!=null && manufacturer.getName()!=null && !pattern.matcher(manufacturer.getName()).matches()){
+        getContext().getValidationErrors().add("2", new SimpleError("Please Enter only characters in Name"));
+      }
+    final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    pattern = Pattern.compile(EMAIL_PATTERN);
+    if(manufacturer!=null && manufacturer.getEmail()!=null && !pattern.matcher(manufacturer.getEmail()).matches()){
+      getContext().getValidationErrors().add("3", new SimpleError("Please Enter Email ID in correct format"));
+    }
   }
 
   public Resolution createOrEditManufacturer() {
