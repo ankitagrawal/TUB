@@ -54,12 +54,14 @@ public class SearchAction extends BasePaginatedAction {
   private int defaultPerPage = 24;
 
 	public Resolution search() throws SolrServerException, MalformedURLException {
+        boolean includeCombo = true;
+        boolean onlyCOD = false;
 		if (StringUtils.isNotBlank(query)) {
 			try {
                 List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
                 if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
                     String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
-                    Boolean includeCombo = Boolean.parseBoolean( params[0].toString());
+                    includeCombo = Boolean.parseBoolean( params[0].toString());
                     if (!includeCombo){
                         SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
                         searchFilters.add(comboFilter);
@@ -67,7 +69,7 @@ public class SearchAction extends BasePaginatedAction {
                 }
                 if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")){
                     String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
-                    Boolean onlyCOD = Boolean.parseBoolean( params[0].toString());
+                    onlyCOD = Boolean.parseBoolean( params[0].toString());
                     if (onlyCOD){
                         SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, params[0].toString());
                         searchFilters.add(codFilter);
@@ -83,7 +85,7 @@ public class SearchAction extends BasePaginatedAction {
 				searchSuggestion = sr.getSearchSuggestions();
 			} catch (Exception e) {
 				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
-				productPage = productDao.getProductByName(query, getPageNo(), getPerPage());
+				productPage = productDao.getProductByName(query,onlyCOD, includeCombo, getPageNo(), getPerPage());
 				productList = productPage.getList();
 				for (Product product : productList) {
 					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
