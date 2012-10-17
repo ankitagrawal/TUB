@@ -50,6 +50,13 @@ public class Awb implements java.io.Serializable {
     @Column(name = "create_dt", nullable = false, length = 19)
     private Date      createDate = new Date();
 
+    @Column(name = "returnAwb_number", nullable = true, length = 70)
+    private String returnAwbNumber;
+
+
+    @Column(name = "returnAwb_bar_code", nullable = true, length = 70)
+    private String returnAwbBarCode;
+
     public Long getId() {
         return this.id;
     }
@@ -112,6 +119,22 @@ public class Awb implements java.io.Serializable {
 
     public void setCod(boolean cod) {
         this.cod = cod;
+    }
+
+    public String getReturnAwbNumber() {
+        return returnAwbNumber;
+    }
+
+    public void setReturnAwbNumber(String returnAwbNumber) {
+        this.returnAwbNumber = returnAwbNumber;
+    }
+
+    public String getReturnAwbBarCode() {
+        return returnAwbBarCode;
+    }
+
+    public void setReturnAwbBarCode(String returnAwbBarCode) {
+        this.returnAwbBarCode = returnAwbBarCode;
     }
 
     public boolean equals(Object obj) {

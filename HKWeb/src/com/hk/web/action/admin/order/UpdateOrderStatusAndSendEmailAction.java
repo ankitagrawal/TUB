@@ -12,6 +12,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.service.shippingOrder.ShipmentServiceImpl;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.courier.Shipment;
@@ -36,7 +37,7 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
     @Autowired
     private LinkManager          linkManager;
     @Autowired
-    private ShipmentServiceImpl  shipmentService;
+    private ShipmentService shipmentService;
     @Autowired
     private SubscriptionOrderService subscriptionOrderService;
 	@Autowired
