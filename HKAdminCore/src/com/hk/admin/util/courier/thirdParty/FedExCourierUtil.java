@@ -5,20 +5,16 @@ package com.hk.admin.util.courier.thirdParty;
  * File Templates.
  */
 
-import org.apache.axis.types.NonNegativeInteger;
-import org.apache.axis.types.PositiveInteger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 
+import org.apache.axis.types.NonNegativeInteger;
+import org.apache.axis.types.PositiveInteger;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fedex.ship.stub.Address;
 import com.fedex.ship.stub.AssociatedShipmentDetail;
@@ -34,21 +30,12 @@ import com.fedex.ship.stub.ContactAndAddress;
 import com.fedex.ship.stub.CustomerReference;
 import com.fedex.ship.stub.CustomerReferenceType;
 import com.fedex.ship.stub.CustomsClearanceDetail;
-import com.fedex.ship.stub.Dimensions;
 import com.fedex.ship.stub.DropoffType;
-import com.fedex.ship.stub.FreightBaseCharge;
-import com.fedex.ship.stub.FreightRateDetail;
-import com.fedex.ship.stub.FreightRateNotation;
 import com.fedex.ship.stub.InternationalDocumentContentType;
 import com.fedex.ship.stub.LabelFormatType;
 import com.fedex.ship.stub.LabelSpecification;
-import com.fedex.ship.stub.LinearUnits;
 import com.fedex.ship.stub.Money;
-import com.fedex.ship.stub.Notification;
 import com.fedex.ship.stub.NotificationSeverityType;
-import com.fedex.ship.stub.PackageOperationalDetail;
-import com.fedex.ship.stub.PackageRateDetail;
-import com.fedex.ship.stub.PackageRating;
 import com.fedex.ship.stub.PackagingType;
 import com.fedex.ship.stub.Party;
 import com.fedex.ship.stub.Payment;
@@ -64,16 +51,10 @@ import com.fedex.ship.stub.ServiceType;
 import com.fedex.ship.stub.ShipPortType;
 import com.fedex.ship.stub.ShipServiceLocator;
 import com.fedex.ship.stub.ShipmentOperationalDetail;
-import com.fedex.ship.stub.ShipmentRateDetail;
-import com.fedex.ship.stub.ShipmentRating;
 import com.fedex.ship.stub.ShipmentSpecialServiceType;
 import com.fedex.ship.stub.ShipmentSpecialServicesRequested;
-import com.fedex.ship.stub.ShippingDocument;
 import com.fedex.ship.stub.ShippingDocumentImageType;
-import com.fedex.ship.stub.ShippingDocumentPart;
 import com.fedex.ship.stub.StringBarcode;
-import com.fedex.ship.stub.Surcharge;
-import com.fedex.ship.stub.TrackingId;
 import com.fedex.ship.stub.TransactionDetail;
 import com.fedex.ship.stub.VersionId;
 import com.fedex.ship.stub.WebAuthenticationCredential;
@@ -81,7 +62,6 @@ import com.fedex.ship.stub.WebAuthenticationDetail;
 import com.fedex.ship.stub.Weight;
 import com.fedex.ship.stub.WeightUnits;
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
-import com.hk.admin.impl.service.shippingOrder.ShipmentServiceImpl;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
