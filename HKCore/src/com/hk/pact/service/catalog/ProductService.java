@@ -62,7 +62,7 @@ public interface ProductService {
 
     public Page getProductByCategoryAndBrand(String category, String brand, int page, int perPage);
 
-    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage);
+    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand,boolean onlyCOD, boolean includeCombo, int page, int perPage);
 
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage);
 

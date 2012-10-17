@@ -143,8 +143,8 @@ public class ProductServiceImpl implements ProductService {
         return getProductDAO().getProductByCategoryAndBrand(category, brand, page, perPage);
     }
 
-    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage) {
-        return getProductDAO().getProductByCategoryAndBrand(categoryNames, brand, page, perPage);
+    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand,boolean onlyCOD, boolean includeCombo, int page, int perPage) {
+        return getProductDAO().getProductByCategoryAndBrand(categoryNames, brand,onlyCOD, includeCombo, page, perPage);
     }
 
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage) {
