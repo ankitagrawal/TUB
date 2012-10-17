@@ -198,9 +198,11 @@ public class CatalogAction extends BasePaginatedAction {
             PaginationFilter paginationFilter = new PaginationFilter(getPageNo(), getPerPage());
             RangeFilter rangeFilter = new RangeFilter(SolrSchemaConstants.hkPrice, getCustomStartRange(), getCustomEndRange());
 
-            SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
             List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
-            searchFilters.add(brandFilter);
+            if (StringUtils.isNotBlank(brand)){
+                SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
+                searchFilters.add(brandFilter);
+            }
 
             if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
                 String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");

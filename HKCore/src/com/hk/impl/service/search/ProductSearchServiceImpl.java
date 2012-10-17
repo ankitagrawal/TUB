@@ -189,11 +189,19 @@ class ProductSearchServiceImpl implements ProductSearchService {
             throws SolrServerException {
 
         SolrQuery solrQuery = new SolrQuery();
-        String query = "";
+        String query = "*";
         for (SearchFilter searchFilter : searchFilters){
             if (!StringUtils.isBlank(searchFilter.getValue())) {
                 //query += SolrSchemaConstants.brand + SolrSchemaConstants.paramAppender + "\"" + brand + "\"";
-                query += searchFilter.getName() + SolrSchemaConstants.paramAppender + "\"" + searchFilter.getValue() + "\"";
+                if (searchFilter.getName().equals(SolrSchemaConstants.isCombo) ||
+                        searchFilter.getName().equals(SolrSchemaConstants.isCODAllowed))
+                {
+                    query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender + searchFilter.getValue() + SolrSchemaConstants.queryTerminator;
+                }
+                else
+                {
+                    query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender + "\"" + searchFilter.getValue() + "\"";
+                }
             }
         }
         query = buildCategoryQuery(query, categories);
