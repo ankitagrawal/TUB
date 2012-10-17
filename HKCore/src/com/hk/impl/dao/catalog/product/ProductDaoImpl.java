@@ -165,7 +165,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                         "select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories",
                         categoryNames).setInteger("tagCount", categoryNames.size()).list();
 
-	        if (includeCombo){
+	        if (!includeCombo){
                 productIds = getSession().createQuery(
                         "select distinct pv.product.id from ProductVariant pv where pv.product.id in (:productIds)").setParameterList("productIds",
                         productIds).list();
