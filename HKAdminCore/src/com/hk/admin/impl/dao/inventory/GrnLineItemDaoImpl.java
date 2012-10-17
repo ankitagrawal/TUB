@@ -2,10 +2,9 @@ package com.hk.admin.impl.dao.inventory;
 
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.Criteria;
+import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.domain.catalog.product.ProductVariant;

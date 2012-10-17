@@ -75,259 +75,267 @@ import java.text.DecimalFormat;
  * To change this template use File | Settings | File Templates.
  */
 
-@Path("/mCatalog")
+@Path ("/mCatalog")
 @Component
-public class MCatalogAction extends MBaseAction{
+public class MCatalogAction extends MBaseAction {
 
-    private static Logger logger = LoggerFactory.getLogger(MCatalogAction.class);
+	private static Logger logger = LoggerFactory.getLogger(MCatalogAction.class);
 
-    private String rootCategorySlug;
-    private String childCategorySlug;
-    private String secondaryChildCategorySlug;
-    private String tertiaryChildCategorySlug;
-    private SeoData seoData;
-    String urlFragment;
-    String topCategoryUrlSlug;
-    String allCategories;
-    Category category;
-    String brand;
-    List<String> brandList;
-    private String redirectUrl;
+	private String rootCategorySlug;
+	private String childCategorySlug;
+	private String secondaryChildCategorySlug;
+	private String tertiaryChildCategorySlug;
+	private SeoData seoData;
+	String urlFragment;
+	String topCategoryUrlSlug;
+	String allCategories;
+	Category category;
+	String brand;
+	List<String> brandList;
+	private String redirectUrl;
 
-    String displayMode;
-    String feed;
+	String displayMode;
+	String feed;
 
-    Page productPage;
-    List<Product> productList = new ArrayList<Product>();
-    List<Product> productListNonCityFiltered = new ArrayList<Product>();
-    List<String> productIDList = new ArrayList<String>();
-    List<MenuNode> menuNodes;
+	Page productPage;
+	List<Product> productList = new ArrayList<Product>();
+	List<Product> productListNonCityFiltered = new ArrayList<Product>();
+	List<String> productIDList = new ArrayList<String>();
+	List<MenuNode> menuNodes;
 
-    List<Long> filterOptions = new ArrayList<Long>();
-    List<ProductOption> filterProductOptions = new ArrayList<ProductOption>();
-    Double minPrice;
-    Double maxPrice;
+	List<Long> filterOptions = new ArrayList<Long>();
+	List<ProductOption> filterProductOptions = new ArrayList<ProductOption>();
+	Double minPrice;
+	Double maxPrice;
 
-    MenuNode menuNode;
+	MenuNode menuNode;
 
-    String sortBy;
-    String sortOrder;
-    Double startRange;
-    @Validate(converter = ConvertEncryptedToNormalDouble.class)
-    Double endRange;
+	String sortBy;
+	String sortOrder;
+	Double startRange;
+	@Validate (converter = ConvertEncryptedToNormalDouble.class)
+	Double endRange;
 
-    @Autowired
-    MenuHelper menuHelper;
-    @Autowired
-    LocalityMapDao localityMapDao;
-    @Autowired
-    MapIndiaDao mapIndiaDao;
-    @Autowired
-    CategoryImageDaoImpl categoryImageDao;
-    @Autowired
-    ProductDao productDao;
-    @Autowired
-    ProductService productService;
-    @Autowired
-    ComboDao comboDao;
-    @Autowired
-    UserDao userDao;
-    @Autowired
-    private BaseDao baseDao;
-    @Autowired
-    CategoryDaoImpl categoryDao;
-    @Autowired
-    SeoManager seoManager;
-    @Autowired
-    ProductSearchService productSearchService;
-    @Autowired
-    UserManager userManager;
-    @Autowired
-    LinkManager linkManager;
+	@Autowired
+	MenuHelper menuHelper;
+	@Autowired
+	LocalityMapDao localityMapDao;
+	@Autowired
+	MapIndiaDao mapIndiaDao;
+	@Autowired
+	CategoryImageDaoImpl categoryImageDao;
+	@Autowired
+	ProductDao productDao;
+	@Autowired
+	ProductService productService;
+	@Autowired
+	ComboDao comboDao;
+	@Autowired
+	UserDao userDao;
+	@Autowired
+	private BaseDao baseDao;
+	@Autowired
+	CategoryDaoImpl categoryDao;
+	@Autowired
+	SeoManager seoManager;
+	@Autowired
+	ProductSearchService productSearchService;
+	@Autowired
+	UserManager userManager;
+	@Autowired
+	LinkManager linkManager;
 
-    @Session(key = HealthkartConstants.Cookie.preferredZone)
-    private String preferredZone;
-
-
-
-    String appBasePath;
-    private int defaultPerPage = 20;
+	@Session (key = HealthkartConstants.Cookie.preferredZone)
+	private String preferredZone;
 
 
-    @GET
-    @Path("/catalog/")
-    @Produces("application/json")
-    public String fetchCatalog(@QueryParam("primaryCategory") String primaryCat,
-                               @QueryParam("secondaryCategory") String secondaryCat,
-                               @QueryParam("pageNo") int pageNo,
-                               @QueryParam("perPage") int perPage,
-                               @Context HttpServletResponse response)
-            throws SolrServerException, MalformedURLException, IOException {
-
-        HealthkartResponse healthkartResponse;
-        String jsonBuilder = "";
-        String message = MHKConstants.STATUS_DONE;
-        String status = MHKConstants.STATUS_OK;
-        List<MCatalogJSONResponse> catalogList = new ArrayList<MCatalogJSONResponse>();
-        MCatalogJSONResponse catalogResponse;
-        rootCategorySlug = primaryCat;
-        childCategorySlug = secondaryCat;
-
-        category = categoryDao.getCategoryByName(rootCategorySlug);
-        if (category == null) {
-            logger.error("No category found for root category slug : " + rootCategorySlug);
-        }
-
-        String smallestCategory = null;
-        String secondSmallestCategory = null;
-        String thirdSmallestCategory = null;
-        if (StringUtils.isNotBlank(tertiaryChildCategorySlug)) {
-            smallestCategory = tertiaryChildCategorySlug;
-            secondSmallestCategory = secondaryChildCategorySlug;
-            thirdSmallestCategory = childCategorySlug;
-        } else if (StringUtils.isNotBlank(secondaryChildCategorySlug)) {
-            smallestCategory = secondaryChildCategorySlug;
-            secondSmallestCategory = childCategorySlug;
-        } else if (StringUtils.isNotBlank(childCategorySlug)) {
-            smallestCategory = childCategorySlug;
-            secondSmallestCategory = rootCategorySlug;
-        } else {
-            smallestCategory = rootCategorySlug;
-        }
-
-        try {
-            //      boolean renderNewCatalogUI = Functions.renderNewCatalogUI(childCategorySlug, secondaryChildCategorySlug);
-            /*    if(renderNewCatalogUI){
-                    defaultPerPage = 21;
-                }
-            */
-            if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
-                if (!filterOptions.isEmpty()) {
-                    filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
-                }
-                logger.error("Using filters. SOLR can't return results so hitting DB");
-                throw new Exception("Using filters. SOLR can't return results so hitting DB");
-            }
-            List<SearchFilter> categoryList = new ArrayList<SearchFilter>();
-            SearchFilter searchFilter = new SearchFilter(SolrSchemaConstants.category, rootCategorySlug);
-            categoryList.add(searchFilter);
-            searchFilter = new SearchFilter(SolrSchemaConstants.category, smallestCategory);
-            categoryList.add(searchFilter);
-            searchFilter = new SearchFilter(SolrSchemaConstants.category, secondSmallestCategory);
-            categoryList.add(searchFilter);
-            searchFilter = new SearchFilter(SolrSchemaConstants.category, thirdSmallestCategory);
-            categoryList.add(searchFilter);
-
-            SortFilter sortFilter = new SortFilter(getCustomSortBy(), getCustomSortOrder());
-            PaginationFilter paginationFilter = new PaginationFilter(pageNo, perPage);
-            RangeFilter rangeFilter = new RangeFilter(SolrSchemaConstants.hkPrice, getCustomStartRange(), getCustomEndRange());
-
-            SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
-            List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
-            searchFilters.add(brandFilter);
-            SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter, paginationFilter, sortFilter);
-
-            List<Product> filteredProducts = searchResult.getSolrProducts();
-            if (rootCategorySlug.equals(MHKConstants.SERVICES)) {
-                productList = trimListByDistance(filteredProducts, preferredZone);
-            }
-            //Find out how many products have been filtered
-            int diff = 0;
-            long totalResultSize = searchResult.getResultSize();
-            //totalResultSize = filteredProducts.size();
-
-            productPage = new Page(filteredProducts, perPage, pageNo, (int) totalResultSize);
-            if (productPage != null) {
-                productList = productPage.getList();
-            }
-            category = categoryDao.getCategoryByName(smallestCategory);
-        } catch (Exception e) {
-            //urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
-            //logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for "+urlFragment, e);
-            logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for " + urlFragment);
-            List<String> categoryNames = new ArrayList<String>();
-            Category primaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(smallestCategory));
-            category = primaryCategory;
-            if (primaryCategory != null) {
-                categoryNames.add(primaryCategory.getName());
-            }
-
-            Category secondaryCategory = null;
-            if (secondSmallestCategory != null) {
-                secondaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondSmallestCategory));
-                if (secondaryCategory != null) {
-                    categoryNames.add(secondaryCategory.getName());
-                }
-            }
-
-            Category tertiaryCategory = null;
-            if (thirdSmallestCategory != null) {
-                tertiaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(thirdSmallestCategory));
-                if (tertiaryCategory != null) {
-                    categoryNames.add(tertiaryCategory.getName());
-                }
-            }
-
-            /*  if (categoryNames.size() == 0) {
-                            return new RedirectResolution(HomeAction.class);
-                        }
-            */
-            if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
-                int groupsCount = 0;
-                if (!filterOptions.isEmpty()) {
-                    Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
-                    groupsCount = groupedFilters.size();
-                }
-                productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice, pageNo, perPage);
-                if (productPage != null) {
-                    productList = productPage.getList();
-                    for (Product product : productList) {
-                        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
-                    }
-                }
-                trimListByCategory(productList, secondaryCategory);
-
-            } else {
-                if (StringUtils.isBlank(brand)) {
-                    productPage = productDao.getNonComboProductByCategoryAndBrand(categoryNames, null, pageNo, perPage,true);
-                } else {
-                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, pageNo, perPage);
-                }
-                if (productPage != null) {
-                    productList = productPage.getList();
-                    for (Product product : productList) {
-                        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
-                    }
-                }
-                trimListByCategory(productList, secondaryCategory);
-                if (rootCategorySlug.equals(MHKConstants.SERVICES)) {
-                    productList = trimListByDistance(productList, preferredZone);
-                }
-            }
-
-        }
-
-        HashMap<String,Object> resultMap = new HashMap<String, Object>();
-        for (Product product : productList) {
-            catalogResponse = new MCatalogJSONResponse();
-            catalogResponse = populateCatalogResponse(product, catalogResponse);
-            catalogResponse.setCurrentCategory(secondaryCat);
-            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
-            catalogResponse.setProductURL(product.getProductURL());
-
-            catalogList.add(catalogResponse);
-
-        }
-        resultMap.put("data", catalogList);
-        if(productList.size()<perPage){
-        	resultMap.put("hasMore", new Boolean(false));
-
-        }else{
-        	resultMap.put("hasMore", new Boolean(true));
-        }
+	String appBasePath;
+	private int defaultPerPage = 20;
 
 
-        //urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
+	@GET
+	@Path ("/catalog/")
+	@Produces ("application/json")
+	public String fetchCatalog(@QueryParam ("primaryCategory") String primaryCat,
+	                           @QueryParam ("secondaryCategory") String secondaryCat,
+	                           @QueryParam ("pageNo") int pageNo,
+	                           @QueryParam ("perPage") int perPage,
+	                           @Context HttpServletResponse response)
+			throws SolrServerException, MalformedURLException, IOException {
+
+		HealthkartResponse healthkartResponse;
+		String jsonBuilder = "";
+		String message = MHKConstants.STATUS_DONE;
+		String status = MHKConstants.STATUS_OK;
+		List<MCatalogJSONResponse> catalogList = new ArrayList<MCatalogJSONResponse>();
+		MCatalogJSONResponse catalogResponse;
+		rootCategorySlug = primaryCat;
+		childCategorySlug = secondaryCat;
+
+		category = categoryDao.getCategoryByName(rootCategorySlug);
+		if (category == null) {
+			logger.error("No category found for root category slug : " + rootCategorySlug);
+		}
+
+		String smallestCategory = null;
+		String secondSmallestCategory = null;
+		String thirdSmallestCategory = null;
+		if (StringUtils.isNotBlank(tertiaryChildCategorySlug)) {
+			smallestCategory = tertiaryChildCategorySlug;
+			secondSmallestCategory = secondaryChildCategorySlug;
+			thirdSmallestCategory = childCategorySlug;
+		} else if (StringUtils.isNotBlank(secondaryChildCategorySlug)) {
+			smallestCategory = secondaryChildCategorySlug;
+			secondSmallestCategory = childCategorySlug;
+		} else if (StringUtils.isNotBlank(childCategorySlug)) {
+			smallestCategory = childCategorySlug;
+			secondSmallestCategory = rootCategorySlug;
+		} else {
+			smallestCategory = rootCategorySlug;
+		}
+
+		boolean includeCombo = false;
+		boolean onlyCOD = true;
+		try {
+			
+			if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
+				if (!filterOptions.isEmpty()) {
+					filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
+				}
+				logger.error("Using filters. SOLR can't return results so hitting DB");
+				throw new Exception("Using filters. SOLR can't return results so hitting DB");
+			}
+			List<SearchFilter> categoryList = new ArrayList<SearchFilter>();
+			SearchFilter searchFilter = new SearchFilter(SolrSchemaConstants.category, rootCategorySlug);
+			categoryList.add(searchFilter);
+			searchFilter = new SearchFilter(SolrSchemaConstants.category, smallestCategory);
+			categoryList.add(searchFilter);
+			searchFilter = new SearchFilter(SolrSchemaConstants.category, secondSmallestCategory);
+			categoryList.add(searchFilter);
+			searchFilter = new SearchFilter(SolrSchemaConstants.category, thirdSmallestCategory);
+			categoryList.add(searchFilter);
+
+			SortFilter sortFilter = new SortFilter(getCustomSortBy(), getCustomSortOrder());
+			PaginationFilter paginationFilter = new PaginationFilter(pageNo, perPage);
+			RangeFilter rangeFilter = new RangeFilter(SolrSchemaConstants.hkPrice, getCustomStartRange(), getCustomEndRange());
+
+			List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
+
+			SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
+			searchFilters.add(brandFilter);
+
+			if (!includeCombo) {
+				SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, "false");
+				searchFilters.add(comboFilter);
+			}
+			if (onlyCOD) {
+				SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, "true");
+				searchFilters.add(codFilter);
+			}
+
+			SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter, paginationFilter, sortFilter);
+
+			List<Product> filteredProducts = searchResult.getSolrProducts();
+			if (rootCategorySlug.equals(MHKConstants.SERVICES)) {
+				productList = trimListByDistance(filteredProducts, preferredZone);
+			}
+			//Find out how many products have been filtered
+			int diff = 0;
+			long totalResultSize = searchResult.getResultSize();
+			//totalResultSize = filteredProducts.size();
+
+			productPage = new Page(filteredProducts, perPage, pageNo, (int) totalResultSize);
+			if (productPage != null) {
+				productList = productPage.getList();
+			}
+			category = categoryDao.getCategoryByName(smallestCategory);
+		} catch (Exception e) {
+			//urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
+			//logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for "+urlFragment, e);
+			logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for " + urlFragment);
+			List<String> categoryNames = new ArrayList<String>();
+			Category primaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(smallestCategory));
+			category = primaryCategory;
+			if (primaryCategory != null) {
+				categoryNames.add(primaryCategory.getName());
+			}
+
+			Category secondaryCategory = null;
+			if (secondSmallestCategory != null) {
+				secondaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondSmallestCategory));
+				if (secondaryCategory != null) {
+					categoryNames.add(secondaryCategory.getName());
+				}
+			}
+
+			Category tertiaryCategory = null;
+			if (thirdSmallestCategory != null) {
+				tertiaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(thirdSmallestCategory));
+				if (tertiaryCategory != null) {
+					categoryNames.add(tertiaryCategory.getName());
+				}
+			}
+
+			/*  if (categoryNames.size() == 0) {
+										return new RedirectResolution(HomeAction.class);
+									}
+						*/
+			if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
+				int groupsCount = 0;
+				if (!filterOptions.isEmpty()) {
+					Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
+					groupsCount = groupedFilters.size();
+				}
+				productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice, onlyCOD, includeCombo, pageNo, perPage);
+				if (productPage != null) {
+					productList = productPage.getList();
+					for (Product product : productList) {
+						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+					}
+				}
+				trimListByCategory(productList, secondaryCategory);
+
+			} else {
+				if (StringUtils.isBlank(brand)) {
+					productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, onlyCOD, includeCombo, pageNo, perPage);
+				} else {
+					productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, onlyCOD, includeCombo, pageNo, perPage);
+				}
+				if (productPage != null) {
+					productList = productPage.getList();
+					for (Product product : productList) {
+						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+					}
+				}
+				trimListByCategory(productList, secondaryCategory);
+				if (rootCategorySlug.equals(MHKConstants.SERVICES)) {
+					productList = trimListByDistance(productList, preferredZone);
+				}
+			}
+
+		}
+
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		for (Product product : productList) {
+			catalogResponse = new MCatalogJSONResponse();
+			catalogResponse = populateCatalogResponse(product, catalogResponse);
+			catalogResponse.setCurrentCategory(secondaryCat);
+			product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+			catalogResponse.setProductURL(product.getProductURL());
+
+			catalogList.add(catalogResponse);
+
+		}
+		resultMap.put("data", catalogList);
+		if (productList.size() < perPage) {
+			resultMap.put("hasMore", new Boolean(false));
+
+		} else {
+			resultMap.put("hasMore", new Boolean(true));
+		}
+
+
+		//urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
 /*
         menuNodes = menuHelper.getSiblings(urlFragment);
         if (menuNodes == null) {
@@ -340,15 +348,15 @@ public class MCatalogAction extends MBaseAction{
         }
 */
 
-        /*if (jspFile.exists() && menuNodes == null) {
-            //WebContext.getResponse().setHeader("Location", getContext().getRequest().getContextPath() + "/" + rootCategorySlug);
-            return new ForwardResolution(jspRelativePath);
-        }*/
-        /*       menuNode = menuHelper.getMenuNode(urlFragment);
-                topCategoryUrlSlug = menuHelper.getTopCategorySlug(menuNode);
-                allCategories = menuHelper.getAllCategoriesString(menuNode);
-                brandList = categoryDao.getBrandsByCategory(menuHelper.getAllCategoriesList(menuNode));
-        */
+		/*if (jspFile.exists() && menuNodes == null) {
+					//WebContext.getResponse().setHeader("Location", getContext().getRequest().getContextPath() + "/" + rootCategorySlug);
+					return new ForwardResolution(jspRelativePath);
+				}*/
+		/*       menuNode = menuHelper.getMenuNode(urlFragment);
+						topCategoryUrlSlug = menuHelper.getTopCategorySlug(menuNode);
+						allCategories = menuHelper.getAllCategoriesString(menuNode);
+						brandList = categoryDao.getBrandsByCategory(menuHelper.getAllCategoriesList(menuNode));
+				*/
 /*
         if (StringUtils.isNotBlank(brand)) {
             String keyForBrandInCat = urlFragment.concat(SeoManager.KEY_BRAND_IN_CAT).concat(brand);
@@ -358,80 +366,81 @@ public class MCatalogAction extends MBaseAction{
         }
 */
 
-        /*if (StringUtils.isNotBlank(feed)) {
-            if (feed.equals("xml")) {
-                return new ForwardResolution("/pages/category/catalogFeedXml.jsp");
-            }
-        }*/
+		/*if (StringUtils.isNotBlank(feed)) {
+					if (feed.equals("xml")) {
+						return new ForwardResolution("/pages/category/catalogFeedXml.jsp");
+					}
+				}*/
 
-        // return new ForwardResolution("/pages/category/service.jsp");
+		// return new ForwardResolution("/pages/category/service.jsp");
 
 
-        addHeaderAttributes(response);
-        healthkartResponse = new HealthkartResponse(status, message, resultMap);
-        jsonBuilder = com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(healthkartResponse);
-        return jsonBuilder;
+		addHeaderAttributes(response);
+		healthkartResponse = new HealthkartResponse(status, message, resultMap);
+		jsonBuilder = com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(healthkartResponse);
+		return jsonBuilder;
 
-    }
-    private MCatalogJSONResponse populateCatalogResponse(Product product, MCatalogJSONResponse catalogJSONResponse) {
-        if(null!=product.getProductURL())
-            catalogJSONResponse.setProductURL(product.getProductURL());
-        if(null!=product.getSlug())
-            catalogJSONResponse.setProductSlug(product.getSlug());
-        if (null != product.getId ()){
-            if(null!=product.getMainImageId())
-                catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId(),false));
-            else
-                catalogJSONResponse.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
-        }
-        if (null != product.getManufacturer())
-            catalogJSONResponse.setManufacturer(product.getManufacturer().getName());
-        if (null != product.getBrand())
-            catalogJSONResponse.setBrand(product.getBrand());
-        if (null != product.isCodAllowed())
-            catalogJSONResponse.setCodAllowed(product.isCodAllowed());
-        if (null != product.getDeleted())
-            catalogJSONResponse.setDeleted(product.getDeleted());
-        if (null != product.getDescription())
-            catalogJSONResponse.setDescription(product.getDescription());
-        catalogJSONResponse.setDropShipping(product.getDropShipping());
-        if (null != product.getGoogleAdDisallowed())
-            catalogJSONResponse.setGoogleAdDisallowed(product.getGoogleAdDisallowed());
-        if (null != product.getId())
-            catalogJSONResponse.setId(product.getId());
-        if (null != product.getJit())
-            catalogJSONResponse.setJit(product.getJit());
-        if (null != product.getMaxDays())
-            catalogJSONResponse.setMaxDays(product.getMaxDays());
-        if (null != product.getMinDays())
-            catalogJSONResponse.setMinDays(product.getMinDays());
-        if (null != product.getName())
-            catalogJSONResponse.setName(product.getName());
-        if (null != product.getOrderRanking())
-            catalogJSONResponse.setOrderRanking(product.getOrderRanking());
-        if (null != product.isOutOfStock())
-            catalogJSONResponse.setOutOfStock(product.isOutOfStock());
-        if (null != product.getOverview())
-            catalogJSONResponse.setOverview(product.getOverview());
-        if (null != product.getProductHaveColorOptions())
-            catalogJSONResponse.setProductHaveColorOptions(product.getProductHaveColorOptions());
-        if (null != product.getService())
-            catalogJSONResponse.setService(product.getService());
-        if (null != product.getThumbUrl())
-            catalogJSONResponse.setThumbUrl(product.getThumbUrl());
+	}
 
-        if (null != product.getMinimumMRPProducVariant().getHkPrice())
-            catalogJSONResponse.setHkPrice(product.getMinimumMRPProducVariant().getHkPrice());
-        if (null != product.getMinimumMRPProducVariant().getMarkedPrice())
-            catalogJSONResponse.setMarkedPrice(product.getMinimumMRPProducVariant().getMarkedPrice());
-        if (null != product.getMinimumMRPProducVariant().getDiscountPercent())
-            catalogJSONResponse.setDiscountPercentage(Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent()*100)));
-        return catalogJSONResponse;
-    }
+	private MCatalogJSONResponse populateCatalogResponse(Product product, MCatalogJSONResponse catalogJSONResponse) {
+		if (null != product.getProductURL())
+			catalogJSONResponse.setProductURL(product.getProductURL());
+		if (null != product.getSlug())
+			catalogJSONResponse.setProductSlug(product.getSlug());
+		if (null != product.getId()) {
+			if (null != product.getMainImageId())
+				catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId(), false));
+			else
+				catalogJSONResponse.setImageUrl(getImageUrl() + product.getId() + MHKConstants.IMAGETYPE);
+		}
+		if (null != product.getManufacturer())
+			catalogJSONResponse.setManufacturer(product.getManufacturer().getName());
+		if (null != product.getBrand())
+			catalogJSONResponse.setBrand(product.getBrand());
+		if (null != product.isCodAllowed())
+			catalogJSONResponse.setCodAllowed(product.isCodAllowed());
+		if (null != product.getDeleted())
+			catalogJSONResponse.setDeleted(product.getDeleted());
+		if (null != product.getDescription())
+			catalogJSONResponse.setDescription(product.getDescription());
+		catalogJSONResponse.setDropShipping(product.getDropShipping());
+		if (null != product.getGoogleAdDisallowed())
+			catalogJSONResponse.setGoogleAdDisallowed(product.getGoogleAdDisallowed());
+		if (null != product.getId())
+			catalogJSONResponse.setId(product.getId());
+		if (null != product.getJit())
+			catalogJSONResponse.setJit(product.getJit());
+		if (null != product.getMaxDays())
+			catalogJSONResponse.setMaxDays(product.getMaxDays());
+		if (null != product.getMinDays())
+			catalogJSONResponse.setMinDays(product.getMinDays());
+		if (null != product.getName())
+			catalogJSONResponse.setName(product.getName());
+		if (null != product.getOrderRanking())
+			catalogJSONResponse.setOrderRanking(product.getOrderRanking());
+		if (null != product.isOutOfStock())
+			catalogJSONResponse.setOutOfStock(product.isOutOfStock());
+		if (null != product.getOverview())
+			catalogJSONResponse.setOverview(product.getOverview());
+		if (null != product.getProductHaveColorOptions())
+			catalogJSONResponse.setProductHaveColorOptions(product.getProductHaveColorOptions());
+		if (null != product.getService())
+			catalogJSONResponse.setService(product.getService());
+		if (null != product.getThumbUrl())
+			catalogJSONResponse.setThumbUrl(product.getThumbUrl());
 
-    public int getPageDefault() {
-        return 1;
-    }
+		if (null != product.getMinimumMRPProducVariant().getHkPrice())
+			catalogJSONResponse.setHkPrice(product.getMinimumMRPProducVariant().getHkPrice());
+		if (null != product.getMinimumMRPProducVariant().getMarkedPrice())
+			catalogJSONResponse.setMarkedPrice(product.getMinimumMRPProducVariant().getMarkedPrice());
+		if (null != product.getMinimumMRPProducVariant().getDiscountPercent())
+			catalogJSONResponse.setDiscountPercentage(Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent() * 100)));
+		return catalogJSONResponse;
+	}
+
+	public int getPageDefault() {
+		return 1;
+	}
 
 /*
     public int getPageNo() {
@@ -451,310 +460,310 @@ public class MCatalogAction extends MBaseAction{
     }
 */
 
-    private List<Product> trimListByDistance(List<Product> productListNonCityFiltered, String preferredZone) throws IOException {
-        if (preferredZone == null) {
-            preferredZone = "Delhi"; //hardcoded default results
-        } else if (preferredZone.equals("All")) {//returning the whole list if preferred zone is blank
-            return productListNonCityFiltered;
-        }
-        MapIndia mi = mapIndiaDao.findByCity(preferredZone);
-        List<Product> cityFiltered = new ArrayList<Product>();
-        for (Iterator<Product> productIterator = productListNonCityFiltered.iterator(); productIterator.hasNext();) {
-            Product product = productIterator.next();
-            if (product.isService()) {
-                Manufacturer manufacturer = product.getManufacturer();
-                if (manufacturer != null) {
-                    List<Address> manufacturerAddresses = manufacturer.getAddresses();
-                    if (manufacturerAddresses != null && manufacturerAddresses.size() > 0) {
-                        for (Address serviceAddress : manufacturerAddresses) {
-                            LocalityMap lm = localityMapDao.findByAddress(serviceAddress);
-                            if (lm != null && mi != null) {
-                                if (localityMapDao.getDistanceInMeters(lm.getLattitude(), lm.getLongitude(), mi.getLattitude(), mi.getLongitude()) < 100) {
-                                    cityFiltered.add(product);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (manufacturer != null && manufacturer.isAvailableAllOverIndia() != null && manufacturer.isAvailableAllOverIndia()) {
-                    if (!cityFiltered.contains(product)) cityFiltered.add(product);
-                }
-            } else {
-                cityFiltered.add(product);
-            }
-        }
-        return cityFiltered;
-    }
+	private List<Product> trimListByDistance(List<Product> productListNonCityFiltered, String preferredZone) throws IOException {
+		if (preferredZone == null) {
+			preferredZone = "Delhi"; //hardcoded default results
+		} else if (preferredZone.equals("All")) {//returning the whole list if preferred zone is blank
+			return productListNonCityFiltered;
+		}
+		MapIndia mi = mapIndiaDao.findByCity(preferredZone);
+		List<Product> cityFiltered = new ArrayList<Product>();
+		for (Iterator<Product> productIterator = productListNonCityFiltered.iterator(); productIterator.hasNext();) {
+			Product product = productIterator.next();
+			if (product.isService()) {
+				Manufacturer manufacturer = product.getManufacturer();
+				if (manufacturer != null) {
+					List<Address> manufacturerAddresses = manufacturer.getAddresses();
+					if (manufacturerAddresses != null && manufacturerAddresses.size() > 0) {
+						for (Address serviceAddress : manufacturerAddresses) {
+							LocalityMap lm = localityMapDao.findByAddress(serviceAddress);
+							if (lm != null && mi != null) {
+								if (localityMapDao.getDistanceInMeters(lm.getLattitude(), lm.getLongitude(), mi.getLattitude(), mi.getLongitude()) < 100) {
+									cityFiltered.add(product);
+									break;
+								}
+							}
+						}
+					}
+				}
+				if (manufacturer != null && manufacturer.isAvailableAllOverIndia() != null && manufacturer.isAvailableAllOverIndia()) {
+					if (!cityFiltered.contains(product)) cityFiltered.add(product);
+				}
+			} else {
+				cityFiltered.add(product);
+			}
+		}
+		return cityFiltered;
+	}
 
-    public Resolution setCookie() {
-        Cookie preferredZoneCookie = new Cookie(HealthkartConstants.Cookie.preferredZone, CryptoUtil.encrypt(preferredZone));
-        preferredZoneCookie.setPath("/");
-        preferredZoneCookie.setMaxAge(365 * 24 * 3600);
-        WebContext.getResponse().addCookie(preferredZoneCookie);
-        WebContext.getResponse().setContentType("text/html");
-        return new RedirectResolution(redirectUrl);
-    }
-
-
-    private void trimListByCategory(List<Product> productList, Category category) {
-        if (category != null) {
-            for (Iterator<Product> productIterator = productList.iterator(); productIterator.hasNext();) {
-                Product product = productIterator.next();
-                if (!product.getCategories().contains(category)) {
-                    productIterator.remove();
-                }
-            }
-        }
-    }
-
-    public void setRootCategorySlug(String rootCategorySlug) {
-        this.rootCategorySlug = rootCategorySlug;
-    }
-
-    public void setChildCategorySlug(String childCategorySlug) {
-        this.childCategorySlug = childCategorySlug;
-    }
-
-    public void setSecondaryChildCategorySlug(String secondaryChildCategorySlug) {
-        this.secondaryChildCategorySlug = secondaryChildCategorySlug;
-    }
-
-    public String getRootCategorySlug() {
-        return rootCategorySlug;
-    }
-
-    public String getChildCategorySlug() {
-        return childCategorySlug;
-    }
-
-    public String getSecondaryChildCategorySlug() {
-        return secondaryChildCategorySlug;
-    }
-
-    public List<MenuNode> getMenuNodes() {
-        return menuNodes;
-    }
-
-    public MenuNode getMenuNode() {
-        return menuNode;
-    }
-
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public String getUrlFragment() {
-        return urlFragment;
-    }
-
-    public void setUrlFragment(String urlFragment) {
-        this.urlFragment = urlFragment;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getTopCategoryUrlSlug() {
-        return topCategoryUrlSlug;
-    }
-
-    public String getAllCategories() {
-        return allCategories;
-    }
-
-    public int getPerPageDefault() {
-        return defaultPerPage;
-    }
-
-    public int getPageCount() {
-        return productPage == null ? 0 : productPage.getTotalPages();
-    }
-
-    public int getResultCount() {
-        return productPage == null ? 0 : productPage.getTotalResults();
-    }
+	public Resolution setCookie() {
+		Cookie preferredZoneCookie = new Cookie(HealthkartConstants.Cookie.preferredZone, CryptoUtil.encrypt(preferredZone));
+		preferredZoneCookie.setPath("/");
+		preferredZoneCookie.setMaxAge(365 * 24 * 3600);
+		WebContext.getResponse().addCookie(preferredZoneCookie);
+		WebContext.getResponse().setContentType("text/html");
+		return new RedirectResolution(redirectUrl);
+	}
 
 
-    public SeoData getSeoData() {
-        return seoData;
-    }
+	private void trimListByCategory(List<Product> productList, Category category) {
+		if (category != null) {
+			for (Iterator<Product> productIterator = productList.iterator(); productIterator.hasNext();) {
+				Product product = productIterator.next();
+				if (!product.getCategories().contains(category)) {
+					productIterator.remove();
+				}
+			}
+		}
+	}
 
-    public void setSeoData(SeoData seoData) {
-        this.seoData = seoData;
-    }
+	public void setRootCategorySlug(String rootCategorySlug) {
+		this.rootCategorySlug = rootCategorySlug;
+	}
 
-    public String getDisplayMode() {
-        return displayMode;
-    }
+	public void setChildCategorySlug(String childCategorySlug) {
+		this.childCategorySlug = childCategorySlug;
+	}
 
-    public void setDisplayMode(String displayMode) {
-        this.displayMode = displayMode;
-    }
+	public void setSecondaryChildCategorySlug(String secondaryChildCategorySlug) {
+		this.secondaryChildCategorySlug = secondaryChildCategorySlug;
+	}
 
-    public List<String> getProductIDList() {
-        return productIDList;
-    }
+	public String getRootCategorySlug() {
+		return rootCategorySlug;
+	}
 
-    public void setProductIDList(List<String> productIDList) {
-        this.productIDList = productIDList;
-    }
+	public String getChildCategorySlug() {
+		return childCategorySlug;
+	}
 
-    public Set<String> getParamSet() {
-        HashSet<String> params = new HashSet<String>();
-        params.add("rootCategorySlug");
-        params.add("childCategorySlug");
-        params.add("secondaryChildCategorySlug");
-        params.add("tertiaryChildCategorySlug");
-        params.add("brand");
-        params.add("sortBy");
-        params.add("sortOrder");
-        params.add("startRange");
-        params.add("endRange");
-        params.add("maxPrice");
-        params.add("minPrice");
-        if (filterOptions != null && !filterOptions.isEmpty()) {
-            for (int i = 0; i < filterOptions.size(); i++) {
-                params.add("filterOptions[" + i + "]");
-            }
+	public String getSecondaryChildCategorySlug() {
+		return secondaryChildCategorySlug;
+	}
 
-        }
-        if (getTopCategoryUrlSlug().equals("services")) {
-            params.add("preferredZone");
-        }
-        return params;
-    }
+	public List<MenuNode> getMenuNodes() {
+		return menuNodes;
+	}
 
-    public String getSortBy() {
-        return sortBy;
-    }
+	public MenuNode getMenuNode() {
+		return menuNode;
+	}
 
-    public String getCustomSortBy() {
-        return StringUtils.isBlank(sortBy) ? "ranking" : sortBy;
-    }
+	public List<Product> getProductList() {
+		return productList;
+	}
 
-    public void setSortBy(String sortBy) {
-        this.sortBy = sortBy;
-    }
+	public String getUrlFragment() {
+		return urlFragment;
+	}
 
-    public String getSortOrder() {
-        return sortOrder;
-    }
+	public void setUrlFragment(String urlFragment) {
+		this.urlFragment = urlFragment;
+	}
 
-    public String getCustomSortOrder() {
-        return StringUtils.isBlank(sortOrder) ? "asc" : sortOrder;
-    }
+	public Category getCategory() {
+		return category;
+	}
 
-    public void setSortOrder(String sortOrder) {
-        this.sortOrder = sortOrder;
-    }
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 
-    public Double getCustomStartRange() {
-        return startRange != null ? startRange : 0.0;
-    }
+	public String getBrand() {
+		return brand;
+	}
 
-    public Double getStartRange() {
-        return startRange;
-    }
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
 
-    public void setStartRange(Double startRange) {
-        this.startRange = startRange;
-    }
+	public String getTopCategoryUrlSlug() {
+		return topCategoryUrlSlug;
+	}
 
-    public Double getEndRange() {
-        return endRange;
-    }
+	public String getAllCategories() {
+		return allCategories;
+	}
 
-    public Double getCustomEndRange() {
-        return endRange != null ? endRange : 1000000;
-    }
+	public int getPerPageDefault() {
+		return defaultPerPage;
+	}
 
-    public void setEndRange(Double endRange) {
-        this.endRange = endRange;
-    }
+	public int getPageCount() {
+		return productPage == null ? 0 : productPage.getTotalPages();
+	}
 
-    public String getPreferredZone() {
-        return getTopCategoryUrlSlug().equals("services") ? preferredZone : null;
-    }
+	public int getResultCount() {
+		return productPage == null ? 0 : productPage.getTotalResults();
+	}
 
-    public void setPreferredZone(String preferredZone) {
-        this.preferredZone = preferredZone;
-    }
 
-    public String getRedirectUrl() {
-        return redirectUrl;
-    }
+	public SeoData getSeoData() {
+		return seoData;
+	}
 
-    public void setRedirectUrl(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
-    }
+	public void setSeoData(SeoData seoData) {
+		this.seoData = seoData;
+	}
 
-    public void setFeed(String feed) {
-        this.feed = feed;
-    }
+	public String getDisplayMode() {
+		return displayMode;
+	}
 
-    public String getTertiaryChildCategorySlug() {
-        return tertiaryChildCategorySlug;
-    }
+	public void setDisplayMode(String displayMode) {
+		this.displayMode = displayMode;
+	}
 
-    public void setTertiaryChildCategorySlug(String tertiaryChildCategorySlug) {
-        this.tertiaryChildCategorySlug = tertiaryChildCategorySlug;
-    }
+	public List<String> getProductIDList() {
+		return productIDList;
+	}
 
-    public List<String> getBrandList() {
-        return brandList;
-    }
+	public void setProductIDList(List<String> productIDList) {
+		this.productIDList = productIDList;
+	}
 
-    public void setBrandList(List<String> brandList) {
-        this.brandList = brandList;
-    }
+	public Set<String> getParamSet() {
+		HashSet<String> params = new HashSet<String>();
+		params.add("rootCategorySlug");
+		params.add("childCategorySlug");
+		params.add("secondaryChildCategorySlug");
+		params.add("tertiaryChildCategorySlug");
+		params.add("brand");
+		params.add("sortBy");
+		params.add("sortOrder");
+		params.add("startRange");
+		params.add("endRange");
+		params.add("maxPrice");
+		params.add("minPrice");
+		if (filterOptions != null && !filterOptions.isEmpty()) {
+			for (int i = 0; i < filterOptions.size(); i++) {
+				params.add("filterOptions[" + i + "]");
+			}
 
-    public List<Long> getFilterOptions() {
-        return filterOptions;
-    }
+		}
+		if (getTopCategoryUrlSlug().equals("services")) {
+			params.add("preferredZone");
+		}
+		return params;
+	}
 
-    public void setFilterOptions(List<Long> filterOptions) {
-        this.filterOptions = filterOptions;
-    }
+	public String getSortBy() {
+		return sortBy;
+	}
 
-    public Double getMinPrice() {
-        return minPrice;
-    }
+	public String getCustomSortBy() {
+		return StringUtils.isBlank(sortBy) ? "ranking" : sortBy;
+	}
 
-    public void setMinPrice(Double minPrice) {
-        this.minPrice = minPrice;
-    }
+	public void setSortBy(String sortBy) {
+		this.sortBy = sortBy;
+	}
 
-    public Double getMaxPrice() {
-        return maxPrice;
-    }
+	public String getSortOrder() {
+		return sortOrder;
+	}
 
-    public void setMaxPrice(Double maxPrice) {
-        this.maxPrice = maxPrice;
-    }
+	public String getCustomSortOrder() {
+		return StringUtils.isBlank(sortOrder) ? "asc" : sortOrder;
+	}
 
-    public List<ProductOption> getFilterProductOptions() {
-        return filterProductOptions;
-    }
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
+	}
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
+	public Double getCustomStartRange() {
+		return startRange != null ? startRange : 0.0;
+	}
 
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
+	public Double getStartRange() {
+		return startRange;
+	}
+
+	public void setStartRange(Double startRange) {
+		this.startRange = startRange;
+	}
+
+	public Double getEndRange() {
+		return endRange;
+	}
+
+	public Double getCustomEndRange() {
+		return endRange != null ? endRange : 1000000;
+	}
+
+	public void setEndRange(Double endRange) {
+		this.endRange = endRange;
+	}
+
+	public String getPreferredZone() {
+		return getTopCategoryUrlSlug().equals("services") ? preferredZone : null;
+	}
+
+	public void setPreferredZone(String preferredZone) {
+		this.preferredZone = preferredZone;
+	}
+
+	public String getRedirectUrl() {
+		return redirectUrl;
+	}
+
+	public void setRedirectUrl(String redirectUrl) {
+		this.redirectUrl = redirectUrl;
+	}
+
+	public void setFeed(String feed) {
+		this.feed = feed;
+	}
+
+	public String getTertiaryChildCategorySlug() {
+		return tertiaryChildCategorySlug;
+	}
+
+	public void setTertiaryChildCategorySlug(String tertiaryChildCategorySlug) {
+		this.tertiaryChildCategorySlug = tertiaryChildCategorySlug;
+	}
+
+	public List<String> getBrandList() {
+		return brandList;
+	}
+
+	public void setBrandList(List<String> brandList) {
+		this.brandList = brandList;
+	}
+
+	public List<Long> getFilterOptions() {
+		return filterOptions;
+	}
+
+	public void setFilterOptions(List<Long> filterOptions) {
+		this.filterOptions = filterOptions;
+	}
+
+	public Double getMinPrice() {
+		return minPrice;
+	}
+
+	public void setMinPrice(Double minPrice) {
+		this.minPrice = minPrice;
+	}
+
+	public Double getMaxPrice() {
+		return maxPrice;
+	}
+
+	public void setMaxPrice(Double maxPrice) {
+		this.maxPrice = maxPrice;
+	}
+
+	public List<ProductOption> getFilterProductOptions() {
+		return filterProductOptions;
+	}
+
+	public BaseDao getBaseDao() {
+		return baseDao;
+	}
+
+	public void setBaseDao(BaseDao baseDao) {
+		this.baseDao = baseDao;
+	}
 }

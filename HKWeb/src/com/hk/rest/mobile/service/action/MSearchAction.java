@@ -3,8 +3,10 @@ package com.hk.rest.mobile.service.action;
 import com.akube.framework.dao.Page;
 import com.akube.framework.gson.JsonUtils;
 import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.catalog.SolrSchemaConstants;
 import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.search.SearchFilter;
 import com.hk.dto.search.SearchResult;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
@@ -38,7 +40,7 @@ import java.util.Set;
  * Created by IntelliJ IDEA. User: Satish Date: Sep 21, 2012 Time: 11:32:59 AM
  * To change this template use File | Settings | File Templates.
  */
-@Path("/mSearch")
+@Path ("/mSearch")
 @Component
 public class MSearchAction extends MBaseAction {
 	private static Logger logger = LoggerFactory.getLogger(MSearchAction.class);
@@ -60,52 +62,51 @@ public class MSearchAction extends MBaseAction {
 	private int defaultPerPage = 20;
 
 	@GET
-	@Path("/search/")
-	@Produces("application/json")
-	public String search(@QueryParam("query") String query,
-			@QueryParam("pageNo") int pageNo,
-			@QueryParam("perPage") int perPage,
-			@Context HttpServletResponse response) throws SolrServerException,
-			MalformedURLException {
+	@Path ("/search/")
+	@Produces ("application/json")
+	public String search(@QueryParam ("query") String query,
+	                     @QueryParam ("pageNo") int pageNo,
+	                     @QueryParam ("perPage") int perPage,
+	                     @Context HttpServletResponse response) throws SolrServerException, MalformedURLException {
 		HealthkartResponse healthkartresponse;
 		String jsonBuilder = "";
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		String message = MHKConstants.STATUS_DONE;
 		String status = MHKConstants.STATUS_OK;
 		List<MCatalogJSONResponse> catalogList = new ArrayList<MCatalogJSONResponse>();
+		boolean includeCombo = false;
+		boolean onlyCOD = true;
 		if (StringUtils.isNotBlank(query)) {
 			MCatalogJSONResponse catalogJSONResponse;
 			try {
-				SearchResult sr = productSearchService.getSearchResults(query,
-						pageNo, perPage, false);
-				productPage = new Page(sr.getSolrProducts(), perPage, pageNo,
-						(int) sr.getResultSize());
+				List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
+				if (!includeCombo) {
+					SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, "false");
+					searchFilters.add(comboFilter);
+				}
+				if (onlyCOD) {
+					SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, "true");
+					searchFilters.add(codFilter);
+				}
+				SearchResult sr = productSearchService.getSearchResults(query, searchFilters, pageNo, perPage, false);
+				productPage = new Page(sr.getSolrProducts(), perPage, pageNo, (int) sr.getResultSize());
 				productList = productPage.getList();
 				for (Product product : productList) {
 					catalogJSONResponse = new MCatalogJSONResponse();
+					catalogJSONResponse = populateCatalogResponse(product, catalogJSONResponse);
+					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
 					catalogJSONResponse.setProductURL(product.getProductURL());
-					catalogJSONResponse = populateCatalogResponse(product,
-							catalogJSONResponse);
-                    if(null!=product.getProductVariants()&&!product.getProductVariants().isEmpty())
 					catalogList.add(catalogJSONResponse);
 				}
-				searchSuggestion = sr.getSearchSuggestions();
 			} catch (Exception e) {
 				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
-				catalogList = new ArrayList<MCatalogJSONResponse>();
-				productPage = productDao.getProductByName(query, pageNo,
-						perPage);
+				productPage = productDao.getProductByName(query, onlyCOD, includeCombo, pageNo, perPage);
 				productList = productPage.getList();
 				for (Product product : productList) {
 					catalogJSONResponse = new MCatalogJSONResponse();
-					product.setProductURL(linkManager.getRelativeProductURL(
-							product,
-							ProductReferrerMapper
-									.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
-					catalogJSONResponse = populateCatalogResponse(product,
-							catalogJSONResponse);
+					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+					catalogJSONResponse = populateCatalogResponse(product, catalogJSONResponse);
 					catalogJSONResponse.setProductURL(product.getProductURL());
-                 if(null!=product.getProductVariants()&&!product.getProductVariants().isEmpty())
 					catalogList.add(catalogJSONResponse);
 				}
 			}
@@ -128,53 +129,59 @@ public class MSearchAction extends MBaseAction {
 		return jsonBuilder;
 	}
 
-	private MCatalogJSONResponse populateCatalogResponse(Product product,
-			MCatalogJSONResponse catalogJSONResponse) {
-		if (product.getManufacturer() != null)
-			catalogJSONResponse.setManufacturer(product.getManufacturer()
-					.getName());
-		catalogJSONResponse.setBrand(product.getBrand());
-		catalogJSONResponse.setCodAllowed(product.isCodAllowed());
-		catalogJSONResponse.setDeleted(product.getDeleted());
-		catalogJSONResponse.setDescription(product.getDescription());
-		catalogJSONResponse.setDropShipping(product.getDropShipping());
-		catalogJSONResponse.setGoogleAdDisallowed(product
-				.getGoogleAdDisallowed());
-		catalogJSONResponse.setId(product.getId());
-		catalogJSONResponse.setJit(product.getJit());
-		catalogJSONResponse.setMaxDays(product.getMaxDays());
-		catalogJSONResponse.setMinDays(product.getMinDays());
-		catalogJSONResponse.setName(product.getName());
-		catalogJSONResponse.setOrderRanking(product.getOrderRanking());
-		catalogJSONResponse.setOutOfStock(product.isOutOfStock());
-		catalogJSONResponse.setOverview(product.getOverview());
-		catalogJSONResponse.setProductHaveColorOptions(product
-				.getProductHaveColorOptions());
-		catalogJSONResponse.setService(product.getService());
-		catalogJSONResponse.setProductSlug(product.getSlug());
-		catalogJSONResponse.setThumbUrl(product.getThumbUrl());
-		if (product.getMinimumMRPProducVariant() != null) {
-			catalogJSONResponse.setHkPrice(product.getMinimumMRPProducVariant()
-					.getHkPrice() != null ? product
-					.getMinimumMRPProducVariant().getHkPrice() : 0);
-			if (product.getMinimumMRPProducVariant() != null)
-				catalogJSONResponse.setMarkedPrice(product
-						.getMinimumMRPProducVariant().getMarkedPrice());
-			catalogJSONResponse.setDiscountPercentage(
-					product.getMinimumMRPProducVariant().getDiscountPercent() !=null ?
-							Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent()*100)) :
-							0);
-		}
-	
+	private MCatalogJSONResponse populateCatalogResponse(Product product, MCatalogJSONResponse catalogJSONResponse) {
+		if (null != product.getProductURL())
+			catalogJSONResponse.setProductURL(product.getProductURL());
+		if (null != product.getSlug())
+			catalogJSONResponse.setProductSlug(product.getSlug());
 		if (null != product.getId()) {
 			if (null != product.getMainImageId())
-				catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(
-						EnumImageSize.SmallSize, product.getMainImageId(),
-						false));
+				catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId(), false));
 			else
-				catalogJSONResponse.setImageUrl(getImageUrl() + product.getId()
-						+ MHKConstants.IMAGETYPE);
+				catalogJSONResponse.setImageUrl(getImageUrl() + product.getId() + MHKConstants.IMAGETYPE);
 		}
+		if (null != product.getManufacturer())
+			catalogJSONResponse.setManufacturer(product.getManufacturer().getName());
+		if (null != product.getBrand())
+			catalogJSONResponse.setBrand(product.getBrand());
+		if (null != product.isCodAllowed())
+			catalogJSONResponse.setCodAllowed(product.isCodAllowed());
+		if (null != product.getDeleted())
+			catalogJSONResponse.setDeleted(product.getDeleted());
+		if (null != product.getDescription())
+			catalogJSONResponse.setDescription(product.getDescription());
+		catalogJSONResponse.setDropShipping(product.getDropShipping());
+		if (null != product.getGoogleAdDisallowed())
+			catalogJSONResponse.setGoogleAdDisallowed(product.getGoogleAdDisallowed());
+		if (null != product.getId())
+			catalogJSONResponse.setId(product.getId());
+		if (null != product.getJit())
+			catalogJSONResponse.setJit(product.getJit());
+		if (null != product.getMaxDays())
+			catalogJSONResponse.setMaxDays(product.getMaxDays());
+		if (null != product.getMinDays())
+			catalogJSONResponse.setMinDays(product.getMinDays());
+		if (null != product.getName())
+			catalogJSONResponse.setName(product.getName());
+		if (null != product.getOrderRanking())
+			catalogJSONResponse.setOrderRanking(product.getOrderRanking());
+		if (null != product.isOutOfStock())
+			catalogJSONResponse.setOutOfStock(product.isOutOfStock());
+		if (null != product.getOverview())
+			catalogJSONResponse.setOverview(product.getOverview());
+		if (null != product.getProductHaveColorOptions())
+			catalogJSONResponse.setProductHaveColorOptions(product.getProductHaveColorOptions());
+		if (null != product.getService())
+			catalogJSONResponse.setService(product.getService());
+		if (null != product.getThumbUrl())
+			catalogJSONResponse.setThumbUrl(product.getThumbUrl());
+
+		if (null != product.getMinimumMRPProducVariant().getHkPrice())
+			catalogJSONResponse.setHkPrice(product.getMinimumMRPProducVariant().getHkPrice());
+		if (null != product.getMinimumMRPProducVariant().getMarkedPrice())
+			catalogJSONResponse.setMarkedPrice(product.getMinimumMRPProducVariant().getMarkedPrice());
+		if (null != product.getMinimumMRPProducVariant().getDiscountPercent())
+			catalogJSONResponse.setDiscountPercentage(Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent() * 100)));
 		return catalogJSONResponse;
 	}
 

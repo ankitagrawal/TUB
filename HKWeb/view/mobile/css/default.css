@@ -443,8 +443,8 @@ display: inline;
 	
 }
 #productList .image-container img,#cartList .image-container img,#productDetailMain .image-container img,#variantList .image-container img{
-	width:88px;
-	height:88px;
+	max-width:88px;
+	max-height:88px;
 	
 }
 #productList .text-container,#cartList .text-container,#productDetailMain .text-container,#variantList .text-container{
