@@ -167,13 +167,27 @@ public class ReplacementOrderAction extends BaseAction {
 	}
 
 	public Resolution searchReplacementOrders(){
-		if(shippingOrderId == null){
-			return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
-		}
+		if(shippingOrderId != null){
+		    try{
+                shippingOrder = shippingOrderService.find(Long.parseLong(shippingOrderId));
+		    }catch(NumberFormatException e){
+			    logger.error("Shipping order id cannot a string.");
+		    }
+	    }
+	    else if(gatewayOrderId != null){
+		    shippingOrder = shippingOrderService.findByGatewayOrderId(gatewayOrderId);
+	    }
+        if (shippingOrder == null) {
+            addRedirectAlertMessage(new SimpleMessage("No shipping order found  "));
+            return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
+        }
 		try{
-			replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(Long.parseLong(shippingOrderId));
+			replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(Long.parseLong(shippingOrder.getId()));
 		}catch (NumberFormatException e){
 			logger.error("Shipping order id cannot be string.");
+		}
+		if(replacementOrderList.isEmpty()){
+			addRedirectAlertMessage(new SimpleMessage("No Replacment order for given shipping order"));
 		}
 		return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
 	}
