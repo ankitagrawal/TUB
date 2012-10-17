@@ -7,9 +7,9 @@ import com.hk.domain.catalog.product.ProductVariant;
 
 public interface UpdatePvPriceDao {
 
-	Page getPVForPriceUpdate(Category primaryCategory, boolean updated, int pageNo, int perPage);
+	Page getPVForPriceUpdate(Category primaryCategory, ProductVariant productVariant, Long status, int pageNo, int perPage);
 
-	UpdatePvPrice getPVForPriceUpdate(ProductVariant productVariant, boolean updated);
+	UpdatePvPrice getPVForPriceUpdate(ProductVariant productVariant, Long status);
 
 	boolean isBrandAudited(String brand);
 }
