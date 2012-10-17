@@ -17,21 +17,25 @@ import java.util.List;
 @Repository
 public class UpdatePvPriceDaoImpl extends BaseDaoImpl implements UpdatePvPriceDao {
 
-	public Page getPVForPriceUpdate(Category primaryCategory, boolean updated, int pageNo, int perPage) {
+	public Page getPVForPriceUpdate(Category primaryCategory, ProductVariant productVariant, Long status, int pageNo, int perPage) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(UpdatePvPrice.class);
-		criteria.add(Restrictions.eq("updated", updated));
+		if (status != null) {
+			criteria.add(Restrictions.eq("status", status));
+		}
 		if (primaryCategory != null) {
 			DetachedCriteria productVariantCriteria = criteria.createCriteria("productVariant");
 			DetachedCriteria productCriteria = productVariantCriteria.createCriteria("product");
 			productCriteria.add(Restrictions.eq("primaryCategory", primaryCategory));
+		} else if (productVariant != null) {
+			criteria.add(Restrictions.eq("productVariant", productVariant));
 		}
 
 		criteria.addOrder(org.hibernate.criterion.Order.desc("txnDate"));
 		return list(criteria, pageNo, perPage);
 	}
 
-	public UpdatePvPrice getPVForPriceUpdate(ProductVariant productVariant, boolean updated) {
-		List<UpdatePvPrice> updatePvPriceList = (List<UpdatePvPrice>) findByNamedParams("from UpdatePvPrice upp where upp.productVariant =  :productVariant and upp.updated = :updated", new String[]{"productVariant", "updated"}, new Object[]{productVariant, updated});
+	public UpdatePvPrice getPVForPriceUpdate(ProductVariant productVariant, Long status) {
+		List<UpdatePvPrice> updatePvPriceList = (List<UpdatePvPrice>) findByNamedParams("from UpdatePvPrice upp where upp.productVariant =  :productVariant and upp.status = :status", new String[]{"productVariant", "status"}, new Object[]{productVariant, status});
 		if (updatePvPriceList != null && !updatePvPriceList.isEmpty()) {
 			return updatePvPriceList.get(0);
 		}

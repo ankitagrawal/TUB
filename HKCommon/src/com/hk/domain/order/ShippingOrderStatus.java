@@ -38,15 +38,15 @@ public class ShippingOrderStatus {
   }
 
 	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
 		if (!(obj instanceof ShippingOrderStatus)) {
-			throw new ClassCastException("object compared are not of same Type");
-
+			return false;
 		}
 		ShippingOrderStatus shippingOrderStatus = (ShippingOrderStatus) obj;
-		if (this.id.equals(shippingOrderStatus.getId())) {
-			return true;
-		} else
-			return false;
-
+		if (this.id != null && shippingOrderStatus.getId() != null) {
+			return this.id.equals(shippingOrderStatus.getId());
+		}
+		return false;
 	}
 }
