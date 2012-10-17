@@ -65,9 +65,11 @@
             <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
                 <label>Search Shipping Order</label>
                 <br/><br/>
-                <s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/>
+                <label>Shipping order id: </label>
+	            <s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/>
                 <br/>
                 <br/>
+	            label>Gateway order id: </label>
 	            <s:text name="gatewayOrderId" id="shippingOrderIdText" style="width:200px;"/>
                 <br/>
                 <br/>
