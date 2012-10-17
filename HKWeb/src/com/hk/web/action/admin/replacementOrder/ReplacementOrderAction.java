@@ -61,7 +61,7 @@ public class ReplacementOrderAction extends BaseAction {
 
     @ValidationMethod(on = "searchShippingOrder")
     public void validateSearch() {
-        if (shippingOrderId == null) {
+        if (shippingOrderId == null && gatewayOrderId == null) {
             getContext().getValidationErrors().add("1", new SimpleError("Please Enter a Search Parameter"));
         }
     }
