@@ -9421,4 +9421,9 @@
             <column name="returnAwb_number" type="VARCHAR(70)"/>
         </addColumn>
     </changeSet>    
+    <changeSet author="Rohit (generated)" id="1350458749534-1">
+        <addColumn tableName="base_order">
+            <column name="comment_type" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
