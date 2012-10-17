@@ -69,7 +69,7 @@
 	            <s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/>
                 <br/>
                 <br/>
-	            label>Gateway order id: </label>
+	            <label>Gateway order id: </label>
 	            <s:text name="gatewayOrderId" id="shippingOrderIdText" style="width:200px;"/>
                 <br/>
                 <br/>
