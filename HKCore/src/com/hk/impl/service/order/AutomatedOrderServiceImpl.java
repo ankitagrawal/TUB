@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -17,8 +18,8 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.OrderCategory;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
@@ -77,6 +78,7 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
      * @param isSubscriptionOrder
      * @return
      */
+    @Transactional
     public Order placeOrder(Order order, Set<CartLineItem> cartLineItems, Address address, Payment payment, Store store, boolean isSubscriptionOrder){
         //first of all save the cartLine items
         order.setCartLineItems(cartLineItems);
