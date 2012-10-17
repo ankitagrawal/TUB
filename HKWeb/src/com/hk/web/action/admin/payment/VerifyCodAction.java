@@ -55,8 +55,6 @@ public class VerifyCodAction extends BaseAction {
             getOrderService().processOrderForAutoEsclationAfterPaymentConfirmed(order);
             getOrderLoggingService().logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), null);
 
-	        smsManager.sendOrderConfirmedSMS(order);
-
 	        data.put("paymentStatus", JsonUtils.hydrateHibernateObject(payment.getPaymentStatus()));
             data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);

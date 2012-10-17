@@ -2,6 +2,9 @@ package com.hk.constants.courier;
 
 import com.hk.domain.courier.AwbStatus;
 
+import java.util.List;
+import java.util.Arrays;
+
 /**
  * Created by IntelliJ IDEA.
  * User:User
@@ -47,4 +50,8 @@ public enum EnumAwbStatus {
         awbStatus.setStatus(this.status);
         return awbStatus;
     }
+
+	public static List<AwbStatus> getAllStatusExceptUnused(){
+		return Arrays.asList(Attach.getAsAwbStatus(),Authorization_Pending.getAsAwbStatus(),Used.getAsAwbStatus());
+	}
 }

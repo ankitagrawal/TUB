@@ -21,9 +21,11 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
@@ -35,6 +37,7 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.AwbStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
@@ -47,277 +50,296 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
-    private static Logger logger = LoggerFactory.getLogger(SearchOrderAndEnterCourierInfoAction.class);
+	private static Logger logger = LoggerFactory.getLogger(SearchOrderAndEnterCourierInfoAction.class);
 
-    List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
-    ShippingOrder shippingOrder;
-    @Autowired
-    ShippingOrderDao shippingOrderDao;
-    @Autowired
-    ShipmentService shipmentService;
-    @Autowired
-    ShippingOrderService shippingOrderService;
-    @Autowired
-    UserService userService;
-    @Autowired
-    PincodeDao pincodeDao;
-    @Autowired
-    CourierGroupService courierGroupService;
-    @Autowired
-    private ShipmentPricingEngine shipmentPricingEngine;
-    @Autowired
-    AwbService awbService;
+	List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
+	ShippingOrder shippingOrder;
+	@Autowired
+	ShippingOrderDao shippingOrderDao;
+	@Autowired
+	ShipmentService shipmentService;
+	@Autowired
+	ShippingOrderService shippingOrderService;
+	@Autowired
+	UserService userService;
+	@Autowired
+	PincodeDao pincodeDao;
+	@Autowired
+	CourierGroupService courierGroupService;
+	@Autowired
+	private ShipmentPricingEngine shipmentPricingEngine;
+	@Autowired
+	AwbService awbService;
 
-    private String trackingId;
-    private String gatewayOrderId;
-    Courier suggestedCourier;
-    List<Courier> availableCouriers;
-    Double approxWeight = 0D;
-    boolean isGroundShipped = false;
+	@Autowired
+	CourierServiceInfoDao courierServiceInfoDao;
 
-    Shipment shipment;
+	private String trackingId;
+	private String gatewayOrderId;
+	Courier suggestedCourier;
+	List<Courier> availableCouriers;
+	Double approxWeight = 0D;
+	boolean isGroundShipped = false;
 
-    @Autowired
-    private CourierService courierService;
-    @Autowired
-    private ShippingOrderStatusService shippingOrderStatusService;
+	Shipment shipment;
 
-    @ValidationMethod(on = "saveShipmentDetails")
-    public void verifyShipmentDetails() {
-        if (StringUtils.isBlank(trackingId) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || shipment.getCourier() == null) {
-            getContext().getValidationErrors().add("1", new SimpleError("Tracking Id, Box weight, Box Size, Courier all are mandatory"));
-        }
-        if (shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId()) || shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId())) {
-            getContext().getValidationErrors().add("2", new SimpleError("None of the values can be migrate"));
-        }
-        Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
-        if (pinCode == null) {
-            getContext().getValidationErrors().add("3", new SimpleError("Pincode is invalid, It cannot be packed"));
-        } else {
-            boolean isCod = shippingOrder.isCOD();
-            
+	@Autowired
+	private CourierService courierService;
+	@Autowired
+	private ShippingOrderStatusService shippingOrderStatusService;
+
+	@ValidationMethod(on = "saveShipmentDetails")
+	public void verifyShipmentDetails() {
+		if (StringUtils.isBlank(trackingId) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || shipment.getCourier() == null) {
+			getContext().getValidationErrors().add("1", new SimpleError("Tracking Id, Box weight, Box Size, Courier all are mandatory"));
+		}
+		if (shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId()) || shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId())) {
+			getContext().getValidationErrors().add("2", new SimpleError("None of the values can be migrate"));
+		}
+		Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+		if (pinCode == null) {
+			getContext().getValidationErrors().add("3", new SimpleError("Pincode is invalid, It cannot be packed"));
+		} else {
+			boolean isCod = shippingOrder.isCOD();
+
 //  groundShipping logic Starts---
-        isGroundShipped =  shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-        availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
+			isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
+			availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
 //  ground shipping logic ends
 
-            if (availableCouriers == null || availableCouriers.isEmpty()) {
-                getContext().getValidationErrors().add("4", new SimpleError("No Couriers are applicable on this pincode, Please contact logistics, Order cannot be packed"));
-            }
-        }
-    }
+			if (availableCouriers == null || availableCouriers.isEmpty()) {
+				getContext().getValidationErrors().add("4", new SimpleError("No Couriers are applicable on this pincode, Please contact logistics, Order cannot be packed"));
+			}
+		}
+	}
 
-    @DontValidate
-    @DefaultHandler
-    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
-    public Resolution pre() {
-        return new ForwardResolution("/pages/admin/searchOrderAndEnterCouierInfo.jsp");
-    }
+	@DontValidate
+	@DefaultHandler
+	@Secure(hasAnyPermissions = {PermissionConstants.VIEW_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
+	public Resolution pre() {
 
-    @DontValidate
-    public Resolution searchOrders() {
-        shippingOrder = shippingOrderDao.findByGatewayOrderId(gatewayOrderId);
-        if (shippingOrder == null) {
-            addRedirectAlertMessage(new SimpleMessage("Shipping Order not found for the corresponding gateway order id"));
-            return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-        } else {
-            if (EnumShippingOrderStatus.getStatusForSearchOrderAndEnterCourierInfo().contains(shippingOrder.getOrderStatus().getId())) {
-                shipment = shippingOrder.getShipment();
-                shippingOrderList.add(shippingOrder);
-                for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    if (lineItem.getSku().getProductVariant().getWeight() != null) {
-                        approxWeight += lineItem.getSku().getProductVariant().getWeight();
-                    }
-                }
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("Shipping Order is not checked out. It cannot be packed. "));
-                return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-            }
-        }
+		return new ForwardResolution("/pages/admin/searchOrderAndEnterCouierInfo.jsp");
+	}
 
-        try {
-            Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
-            if (pinCode != null) {
-                boolean isCod = shippingOrder.isCOD();
-                isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
-                if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
-                    suggestedCourier = shippingOrder.getShipment().getCourier();
-                    trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
-                } else {
-                     suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);                    
-                    //Todo: Seema ."reason=create  shipment with default Awb  " Action: default Tracking id= gateway_order_id: Might remove when we have all the awb in system
-                    trackingId = shippingOrder.getGatewayOrderId();
-                }
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
-            }
+	@DontValidate
+	public Resolution searchOrders() {
+		shippingOrder = shippingOrderDao.findByGatewayOrderId(gatewayOrderId);
+		if (shippingOrder == null) {
+			addRedirectAlertMessage(new SimpleMessage("Shipping Order not found for the corresponding gateway order id"));
+			return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+		} else {
+			if (EnumShippingOrderStatus.getStatusForSearchOrderAndEnterCourierInfo().contains(shippingOrder.getOrderStatus().getId())) {
+				shipment = shippingOrder.getShipment();
+				shippingOrderList.add(shippingOrder);
+				for (LineItem lineItem : shippingOrder.getLineItems()) {
+					if (lineItem.getSku().getProductVariant().getWeight() != null) {
+						approxWeight += lineItem.getSku().getProductVariant().getWeight();
+					}
+				}
+			} else {
+				addRedirectAlertMessage(new SimpleMessage("Shipping Order is not checked out. It cannot be packed. "));
+				return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+			}
+		}
 
-        } catch (Exception e) {
-            logger.error("Error while getting suggested courier for shippingOrder#" + shippingOrder.getId(), e);
-        }
-        return new ForwardResolution("/pages/admin/searchOrderAndEnterCouierInfo.jsp");
-    }
+		try {
+			Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			if (pinCode != null) {
+				boolean isCod = shippingOrder.isCOD();
+				isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
+				availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
+				if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
+					suggestedCourier = shippingOrder.getShipment().getCourier();
+					trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
+				} else {
+					suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
+					//Todo: Seema ."reason=create  shipment with default Awb  " Action: default Tracking id= gateway_order_id: Might remove when we have all the awb in system
+					trackingId = shippingOrder.getGatewayOrderId();
+				}
+			} else {
+				addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
+			}
 
-    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
-    public Resolution saveShipmentDetails() {
-        shipment.setEmailSent(false);
-	    if (trackingId == null) {
-		    addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
-		    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-	    }
-	    Awb finalAwb = null;
-	    Awb suggestedAwb = null;
-	    if (shippingOrder.getShipment() != null) {
-		    suggestedAwb = shippingOrder.getShipment().getAwb();
-	    }
-	    finalAwb = suggestedAwb;
-	    if ((suggestedAwb == null) || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
-			    (suggestedCourier != null && (!(shipment.getCourier().equals(suggestedCourier))))) {
+		} catch (Exception e) {
+			logger.error("Error while getting suggested courier for shippingOrder#" + shippingOrder.getId(), e);
+		}
+		return new ForwardResolution("/pages/admin/searchOrderAndEnterCouierInfo.jsp");
+	}
 
-		    Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
-		    if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
-			    if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
-				    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
-				    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-			    }
-			    if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
-				    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
-						    "  : " + shipment.getCourier().getName() + "  you are Trying to use COD tracking id with NON COD   TRY AGAIN "));
-				    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-			    }
-			    finalAwb = awbFromDb;
-			   int rowsUpdate = (Integer)awbService.save(finalAwb,EnumAwbStatus.Attach.getId().intValue());
-			    if (rowsUpdate == 0) {
-				    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is Already Used with Another User Order   ,  Try again With New Tracking ID"));
-				    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-			    }
+	@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
+	public Resolution saveShipmentDetails() {
+		shipment.setEmailSent(false);
+		if (trackingId == null) {
+			addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
+			return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+		}
+		Awb finalAwb = null;
+		Awb suggestedAwb = null;
+		if (shippingOrder.getShipment() != null) {
+			suggestedAwb = shippingOrder.getShipment().getAwb();
+		}
+		finalAwb = suggestedAwb;
+		if ((suggestedAwb == null) || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
+				(suggestedCourier != null && (!(shipment.getCourier().equals(suggestedCourier))))) {
+			  //User has not used suggested one and  has enetered  AWB manually
+			if ((suggestedAwb != null) && (suggestedCourier != null) && (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId()))) {
+				// To delete the tracking no. generated previously
+				awbService.deleteAwbForThirdPartyCourier(suggestedCourier, suggestedAwb.getAwbNumber());
+			}
 
-//                finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
-            } else {
-                Awb awb = new Awb();
-                awb.setAwbNumber(trackingId.trim());
-                awb.setAwbBarCode(trackingId.trim());
-                awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                awb.setCourier(shipment.getCourier());
-                awb.setCod(shippingOrder.isCOD());
-                awb.setWarehouse(shippingOrder.getWarehouse());
-                awb = (Awb)awbService.save(awb,null);
-                finalAwb = awb;
-                finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());
-            }
-            //Todo: Seema --  Awb which are detached from Shipment,their status should not change:Need to check if awb should be deleted or made free for reuse
-            /*if (suggestedAwb != null) {
-                suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                awbService.save(suggestedAwb);
-            }*/
+			if (ThirdPartyAwbService.integratedCouriers.contains(shipment.getCourier().getId())) {
+				Double weightInKg = shipment.getBoxWeight();
+				Awb thirdPartyAwb = awbService.getAwbForThirdPartyCourier(shipment.getCourier(), shippingOrder, weightInKg);
+				if (thirdPartyAwb == null) {
+					addRedirectAlertMessage(new SimpleMessage(" The tracking number could not be generated"));
+					return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+				} else {
+					finalAwb = updateAttachStatus(thirdPartyAwb);
+				}
+			}
+			else {
+				// For Non Fedex Couriers
+				Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
+				if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
+					//User has eneterd AWB manually which is present in database Already
+					boolean error=false;
+					AwbStatus awbStatus = awbFromDb.getAwbStatus();
+					if (EnumAwbStatus.getAllStatusExceptUnused().contains(awbStatus)) {
+					error = true;
+					}
+					else if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
+					 error = true;
+					}
+					if(error){
+					addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "       is already Used with other  shipping Order  OR  already Present in another warehouse with same courier"));
+						return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+					}
+					finalAwb = updateAttachStatus(awbFromDb);
 
-        } else {
-//            finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
-	        int rowsUpdate = (Integer)awbService.save(finalAwb,EnumAwbStatus.Attach.getId().intValue());
-	        if(rowsUpdate == 0){
-		    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is Already Used with Another User Order   ,  Try again With New Tracking ID" ));
-                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-	        }
+				} else {
+					//Create New AWb (When No AWB present in system , Authorization_Pending shows since Admin has added AWb manually so it might not valid one.
+					Awb awb = awbService.createAwb(shipment.getCourier(), trackingId.trim(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
+					awb = (Awb)awbService.save(awb,null);
+					awbService.save(awb, EnumAwbStatus.Authorization_Pending.getId().intValue());
+					awbService.refresh(awb);
+					finalAwb = awb;
+				}
+				//Todo: Seema --  Awb which are detached from Shipment,their status should not change:Need to check if awb should be deleted or made free for reuse
+				/*if (suggestedAwb != null) {
+									suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+									awbService.save(suggestedAwb);
+								}*/
+			}
+		} else {
+			//user has used suggested one
+			finalAwb=updateAttachStatus(finalAwb);
+		}
+		shipment.setAwb(finalAwb);
+		shipment.setShippingOrder(shippingOrder);
+		shippingOrder.setShipment(shipment);
+		if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
+			shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+			shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+			shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+		}
+		shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+		shippingOrderDao.save(shippingOrder);
+		String comment = "";
+		if (shipment != null) {
+			String trackingId = shipment.getAwb().getAwbNumber();
+			comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + trackingId;
+		}
+		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, comment);
 
-	        
-        }
+		return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+	}
 
-
-        shipment.setAwb(finalAwb);
-        shipment.setShippingOrder(shippingOrder);
-        shippingOrder.setShipment(shipment);
-        if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
-            shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-            shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-            shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-        }
-        shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
-        shippingOrderDao.save(shippingOrder);
-        String comment = "";
-        if (shipment != null) {
-            String trackingId = shipment.getAwb().getAwbNumber();
-            comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + trackingId;
-        }
-        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, comment);
-
-        return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-    }
-
-    public List<ShippingOrder> getShippingOrderList() {
-        return shippingOrderList;
-    }
-
-    public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
-        this.shippingOrderList = shippingOrderList;
-    }
-
-    public ShippingOrder getShippingOrder() {
-        return shippingOrder;
-    }
-
-    public void setShippingOrder(ShippingOrder shippingOrder) {
-        this.shippingOrder = shippingOrder;
-    }
-
-    public void setGatewayOrderId(String gatewayOrderId) {
-        this.gatewayOrderId = gatewayOrderId;
-    }
+	private Awb updateAttachStatus(Awb finalAwb) {
+		int rowsUpdate = (Integer) awbService.save(finalAwb, EnumAwbStatus.Attach.getId().intValue());
+		if (rowsUpdate == 0) {
+			addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is Already Used with Another User Order   ,  Try again With New Tracking ID"));
+			pre();
+		}
+		awbService.refresh(finalAwb);
+		return finalAwb;
 
 
-    public String getGatewayOrderId() {
-        return gatewayOrderId;
-    }
+	}
 
-    public Courier getSuggestedCourier() {
-        return suggestedCourier;
-    }
+	public List<ShippingOrder> getShippingOrderList() {
+		return shippingOrderList;
+	}
 
-    public void setSuggestedCourier(Courier suggestedCourier) {
-        this.suggestedCourier = suggestedCourier;
-    }
+	public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
+		this.shippingOrderList = shippingOrderList;
+	}
 
-    public Shipment getShipment() {
-        return shipment;
-    }
+	public ShippingOrder getShippingOrder() {
+		return shippingOrder;
+	}
 
-    public void setShipment(Shipment shipment) {
-        this.shipment = shipment;
-    }
+	public void setShippingOrder(ShippingOrder shippingOrder) {
+		this.shippingOrder = shippingOrder;
+	}
 
-    public List<Courier> getAvailableCouriers() {
-        return availableCouriers;
-    }
+	public void setGatewayOrderId(String gatewayOrderId) {
+		this.gatewayOrderId = gatewayOrderId;
+	}
 
-    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-        this.shippingOrderStatusService = shippingOrderStatusService;
-    }
 
-    public void setCourierService(CourierService courierService) {
-        this.courierService = courierService;
-    }
+	public String getGatewayOrderId() {
+		return gatewayOrderId;
+	}
 
-    public Double getApproxWeight() {
-        return approxWeight;
-    }
+	public Courier getSuggestedCourier() {
+		return suggestedCourier;
+	}
 
-    public void setApproxWeight(Double approxWeight) {
-        this.approxWeight = approxWeight;
-    }
+	public void setSuggestedCourier(Courier suggestedCourier) {
+		this.suggestedCourier = suggestedCourier;
+	}
 
-    public String getTrackingId() {
-        return trackingId;
-    }
+	public Shipment getShipment() {
+		return shipment;
+	}
 
-    public void setTrackingId(String trackingId) {
-        this.trackingId = trackingId;
-    }
+	public void setShipment(Shipment shipment) {
+		this.shipment = shipment;
+	}
 
-    public boolean isGroundShipped() {
-        return isGroundShipped;
-    }
+	public List<Courier> getAvailableCouriers() {
+		return availableCouriers;
+	}
 
-    public void setGroundShipped(boolean groundShipped) {
-        isGroundShipped = groundShipped;
-    }
+	public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
+		this.shippingOrderStatusService = shippingOrderStatusService;
+	}
+
+	public void setCourierService(CourierService courierService) {
+		this.courierService = courierService;
+	}
+
+	public Double getApproxWeight() {
+		return approxWeight;
+	}
+
+	public void setApproxWeight(Double approxWeight) {
+		this.approxWeight = approxWeight;
+	}
+
+	public String getTrackingId() {
+		return trackingId;
+	}
+
+	public void setTrackingId(String trackingId) {
+		this.trackingId = trackingId;
+	}
+
+	public boolean isGroundShipped() {
+		return isGroundShipped;
+	}
+
+	public void setGroundShipped(boolean groundShipped) {
+		isGroundShipped = groundShipped;
+	}
 }

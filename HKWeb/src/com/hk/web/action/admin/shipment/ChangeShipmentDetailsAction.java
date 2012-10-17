@@ -110,7 +110,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
                 awb.setCourier(shipment.getCourier());
                 awb.setCod(shippingOrder.isCOD());
                 awb.setWarehouse(shippingOrder.getWarehouse());
-                awb = awbService.save(awb);
+                awb = (Awb)awbService.save(awb,null);
                 finalAwb = awb;
             }
             //Todo Seema -- Awb  detached from Shipment, their status should not change : Need to decide whether awb will be deleted or made available

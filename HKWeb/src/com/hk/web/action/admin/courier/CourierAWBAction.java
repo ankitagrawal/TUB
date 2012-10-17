@@ -153,7 +153,7 @@ public class CourierAWBAction extends BaseAction {
 
                 }
                 for (Awb awb : awbListFromExcel) {
-                    awbService.save(awb);
+                    awbService.save(awb,null);
 
                 }
                 addRedirectAlertMessage(new SimpleMessage("database updated"));

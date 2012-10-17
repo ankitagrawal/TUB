@@ -86,7 +86,23 @@ public class GoodsReceivedNote implements java.io.Serializable {
     @Column(name = "remarks")
     private String remarks;
 
-    public Long getId() {
+	@Column(name = "taxable_amount")
+	private Double taxableAmount;
+
+	@Column(name = "tax_amount")
+	private Double taxAmount;
+
+	@Column(name = "surcharge_amount")
+	private Double surchargeAmount;
+
+	@Column(name = "discount")
+	private Double discount;
+
+	@Column(name = "final_payable_amount")
+	private Double finalPayableAmount;
+
+
+	public Long getId() {
         return this.id;
     }
 
@@ -228,6 +244,46 @@ public class GoodsReceivedNote implements java.io.Serializable {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public Double getTaxableAmount() {
+		return taxableAmount;
+	}
+
+	public void setTaxableAmount(Double taxableAmount) {
+		this.taxableAmount = taxableAmount;
+	}
+
+	public Double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(Double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public Double getSurchargeAmount() {
+		return surchargeAmount;
+	}
+
+	public void setSurchargeAmount(Double surchargeAmount) {
+		this.surchargeAmount = surchargeAmount;
+	}
+
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
+	}
+
+	public Double getFinalPayableAmount() {
+		return finalPayableAmount;
+	}
+
+	public void setFinalPayableAmount(Double finalPayableAmount) {
+		this.finalPayableAmount = finalPayableAmount;
 	}
 }
 

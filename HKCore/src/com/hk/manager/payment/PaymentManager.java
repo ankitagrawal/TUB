@@ -263,7 +263,6 @@ public class PaymentManager {
 			Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
 			if (orderCount != null && orderCount >= 3) {
 				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
-				smsManager.sendOrderConfirmedSMS(payment.getOrder());
 			} else {
 				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
 			}

@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
+import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -366,6 +369,23 @@ public class CourierStatusUpdateHelper {
         }
         return responseMap;
     }
+
+	@SuppressWarnings("unchecked")
+	public String getHkDeliveryStatusForUser(String status){
+		Map responseMap = new HashMap<String, String>();
+		responseMap.put(EnumConsignmentLifecycleStatus.ReceivedAtHub.getStatus(), HKDeliveryConstants.USER_STATUS_RECEIVED);
+		responseMap.put(EnumConsignmentLifecycleStatus.Dispatched.getStatus(),HKDeliveryConstants.USER_STATUS_DISPATCHED);
+		responseMap.put(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getStatus(), HKDeliveryConstants.USER_STATUS_CUSTOMERHOLD);
+		responseMap.put(EnumConsignmentLifecycleStatus.Hold.getStatus(), HKDeliveryConstants.USER_STATUS_HOLD);
+		responseMap.put(EnumConsignmentLifecycleStatus.Delivered.getStatus(), HKDeliveryConstants.USER_STATUS_DELIVERED);
+		responseMap.put(EnumConsignmentLifecycleStatus.Damaged.getStatus(), HKDeliveryConstants.USER_STATUS_DAMAGED);
+		responseMap.put(EnumConsignmentLifecycleStatus.ConsignmentLost.getStatus(), HKDeliveryConstants.USER_STATUS_LOST);
+		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToHub.getStatus(), HKDeliveryConstants.USER_STATUS_RTH);
+		responseMap.put(EnumConsignmentLifecycleStatus.ReturnedToSource.getStatus(), HKDeliveryConstants.USER_STATUS_RTO);
+		responseMap.put(HKDeliveryConstants.HEALTHKART_HUB, HKDeliveryConstants.USER_SOURCE);
+		responseMap.put(HKDeliveryConstants.DELIVERY_HUB, HKDeliveryConstants.USER_DESTINATION);
+		return (String)responseMap.get(status);
+	}
 
 
 }
