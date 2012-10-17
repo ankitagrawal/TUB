@@ -23,102 +23,104 @@ import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.util.LatLongGenerator;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Pratham
- * Date: Nov 5, 2011
- * Time: 6:10:42 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: Pratham Date: Nov 5, 2011 Time: 6:10:42 PM To change this template use File |
+ * Settings | File Templates.
  */
 @Component
 public class ManufacturerAction extends BasePaginatedAction {
-  private Manufacturer manufacturer;
-  private Manufacturer manufacturerDb;
-  String name;
-  String mainAddressId;
-  private Integer defaultPerPage = 20;
-  List<Manufacturer> manufacturerList = new ArrayList<Manufacturer>();
-  Page manufacturerPage;
 
-  @Autowired
-  ManufacturerDao manufacturerDao;
-  @Autowired
-  LatLongGenerator latLongGenerator;
-  @Autowired
-  LocalityMapDao localityMapDao;
+    private final String STRING_PATTERN   = "^[A-Za-z]*$";
+    private final String EMAIL_PATTERN    = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-  @DefaultHandler
-  public Resolution pre() {
-    manufacturerPage = manufacturerDao.findManufacturersOrderedByName(getPageNo(), getPerPage());
-    manufacturerList = manufacturerPage.getList();
-    return new ForwardResolution("/pages/admin/manufacturer.jsp");
-  }
+    private Manufacturer manufacturer;
+    private Manufacturer manufacturerDb;
+    String               name;
+    String               mainAddressId;
+    private Integer      defaultPerPage   = 20;
+    List<Manufacturer>   manufacturerList = new ArrayList<Manufacturer>();
+    Page                 manufacturerPage;
 
-  @ValidationMethod(on = "saveManufacturerDetails")
-  public void ValidateManufacturerDetails(){
-    if(manufacturer==null || manufacturer.getName()==null || manufacturer.getName().trim().equals("")){
-        getContext().getValidationErrors().add("1", new SimpleError("Please Enter Name"));
+    @Autowired
+    ManufacturerDao      manufacturerDao;
+    @Autowired
+    LatLongGenerator     latLongGenerator;
+    @Autowired
+    LocalityMapDao       localityMapDao;
+
+    @SuppressWarnings("unchecked")
+    @DefaultHandler
+    public Resolution pre() {
+        manufacturerPage = manufacturerDao.findManufacturersOrderedByName(getPageNo(), getPerPage());
+        manufacturerList = manufacturerPage.getList();
+        return new ForwardResolution("/pages/admin/manufacturer.jsp");
     }
-     final String STRING_PATTERN = "^[A-Za-z]*$";
-    Pattern pattern = Pattern.compile(STRING_PATTERN);
-    if(manufacturer!=null && manufacturer.getName()!=null && !pattern.matcher(manufacturer.getName()).matches()){
-        getContext().getValidationErrors().add("2", new SimpleError("Please Enter only characters in Name"));
-      }
-    final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    pattern = Pattern.compile(EMAIL_PATTERN);
-    if(manufacturer!=null && manufacturer.getEmail()!=null && !pattern.matcher(manufacturer.getEmail()).matches()){
-      getContext().getValidationErrors().add("3", new SimpleError("Please Enter Email ID in correct format"));
+
+    @ValidationMethod(on = "saveManufacturerDetails")
+    public void validateManufacturerDetails() {
+        if (manufacturer == null || manufacturer.getName() == null || manufacturer.getName().trim().equals("")) {
+            getContext().getValidationErrors().add("1", new SimpleError("Please Enter Name"));
+        }
+
+        Pattern pattern = Pattern.compile(STRING_PATTERN);
+        if (manufacturer != null && manufacturer.getName() != null && !pattern.matcher(manufacturer.getName()).matches()) {
+            getContext().getValidationErrors().add("2", new SimpleError("Please Enter only characters in Name"));
+        }
+
+        pattern = Pattern.compile(EMAIL_PATTERN);
+        if (manufacturer != null && manufacturer.getEmail() != null && !pattern.matcher(manufacturer.getEmail()).matches()) {
+            getContext().getValidationErrors().add("3", new SimpleError("Please Enter Email ID in correct format"));
+        }
     }
-  }
 
-  public Resolution createOrEditManufacturer() {
-    return new ForwardResolution("/pages/admin/editManufacturerDetails.jsp");
-  }
-
-  public Resolution saveManufacturerDetails() {
-    if (manufacturer.getId() == null)
-      manufacturerDao.save(manufacturer);
-    else {
-      manufacturerDb = getBaseDao().get(Manufacturer.class, manufacturer.getId());
-      manufacturerDb.setName(manufacturer.getName());
-      manufacturerDb.setEmail(manufacturer.getEmail());
-      manufacturerDb.setDescription(manufacturer.getDescription());
-      manufacturerDb.setWebsite(manufacturer.getWebsite());
-      manufacturerDb = (Manufacturer) getBaseDao().save(manufacturerDb);
+    public Resolution createOrEditManufacturer() {
+        return new ForwardResolution("/pages/admin/editManufacturerDetails.jsp");
     }
-    addRedirectAlertMessage(new SimpleMessage("Manufacturer is saved!!"));
-    return new ForwardResolution("/pages/admin/editManufacturerDetails.jsp");
-  }
 
-  public Manufacturer getManufacturer() {
-    return manufacturer;
-  }
+    public Resolution saveManufacturerDetails() {
+        if (manufacturer.getId() == null)
+            manufacturerDao.save(manufacturer);
+        else {
+            manufacturerDb = getBaseDao().get(Manufacturer.class, manufacturer.getId());
+            manufacturerDb.setName(manufacturer.getName());
+            manufacturerDb.setEmail(manufacturer.getEmail());
+            manufacturerDb.setDescription(manufacturer.getDescription());
+            manufacturerDb.setWebsite(manufacturer.getWebsite());
+            manufacturerDb = (Manufacturer) getBaseDao().save(manufacturerDb);
+        }
+        addRedirectAlertMessage(new SimpleMessage("Manufacturer is saved!!"));
+        return new ForwardResolution("/pages/admin/editManufacturerDetails.jsp");
+    }
 
-  public void setManufacturer(Manufacturer manufacturer) {
-    this.manufacturer = manufacturer;
-  }
+    public Manufacturer getManufacturer() {
+        return manufacturer;
+    }
 
-  public Set<String> getParamSet() {
-    return null;
-  }
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+    }
 
-  public int getPerPageDefault() {
-    return defaultPerPage;
-  }
+    public Set<String> getParamSet() {
+        return null;
+    }
 
-  public int getPageCount() {
-    return manufacturerPage == null ? 0 : manufacturerPage.getTotalPages();
-  }
+    public int getPerPageDefault() {
+        return defaultPerPage;
+    }
 
-  public int getResultCount() {
-    return manufacturerPage == null ? 0 : manufacturerPage.getTotalResults();
-  }
+    public int getPageCount() {
+        return manufacturerPage == null ? 0 : manufacturerPage.getTotalPages();
+    }
 
-  public List<Manufacturer> getManufacturerList() {
-    return manufacturerList;
-  }
+    public int getResultCount() {
+        return manufacturerPage == null ? 0 : manufacturerPage.getTotalResults();
+    }
 
-  public void setManufacturerList(List<Manufacturer> manufacturerList) {
-    this.manufacturerList = manufacturerList;
-  }
+    public List<Manufacturer> getManufacturerList() {
+        return manufacturerList;
+    }
+
+    public void setManufacturerList(List<Manufacturer> manufacturerList) {
+        this.manufacturerList = manufacturerList;
+    }
 
 }
