@@ -44,11 +44,9 @@ public class ShippingOrderStatus {
 			return false;
 		}
 		ShippingOrderStatus shippingOrderStatus = (ShippingOrderStatus) obj;
-		if (this.id != null ? this.id.equals(shippingOrderStatus.getId()) : shippingOrderStatus.id == null) {
-			return true;
-		} else {
-			return false;
+		if(this.id != null && shippingOrderStatus.getId() != null){
+		return this.id.equals(shippingOrderStatus.getId());
 		}
-
+		return false;
 	}
 }
