@@ -1,9 +1,6 @@
 package com.hk.web.action.core.cart;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -111,33 +108,25 @@ public class CartAction extends BaseAction {
             order = orderManager.getOrCreateOrder(user);
 
          Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-          Long comboInstanceValue = null;
+          Set<Long> comboInstanceIds = new TreeSet<Long>();
           for (CartLineItem lineItem : cartLineItems) {
             if (lineItem != null && lineItem.getProductVariant() != null) {
-              if(lineItem.getComboInstance()!=null){
-                if(comboInstanceValue !=null && comboInstanceValue.equals(lineItem.getComboInstance().getId())){
-                  lineItem.setQty(0L);
-                }
-                else{
-                  comboInstanceValue = null;
-                  for(ComboInstanceHasProductVariant comboInstanceHasProductVariant : lineItem.getComboInstance().getComboInstanceProductVariants()){
-                    if(comboInstanceHasProductVariant.getProductVariant().isOutOfStock()){
-                      comboInstanceValue = lineItem.getComboInstance().getId();
-                      lineItem.setQty(0L);
-                      break;
-                    }
-                  }
-                }
-              }
-              else{
                 ProductVariant productVariant = lineItem.getProductVariant();
                 if ((productVariant.getProduct().isDeleted() != null && productVariant.getProduct().isDeleted()) || productVariant.isDeleted() || productVariant.isOutOfStock()) {
                   lineItem.setQty(0L);
+                  if(lineItem.getComboInstance()!=null){
+                    comboInstanceIds.add(lineItem.getComboInstance().getId());
+                  }
                 }
-              }
             }
           }
-
+          for(Long comboInstanceId : comboInstanceIds){
+           for(CartLineItem cartLineItem : cartLineItems){
+             if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().getId().equals(comboInstanceId)){
+                cartLineItem.setQty(0L);
+              }
+             }
+          }
             // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
             order = orderManager.trimEmptyLineItems(order);
 
