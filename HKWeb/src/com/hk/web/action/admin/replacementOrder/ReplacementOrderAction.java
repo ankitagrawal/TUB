@@ -182,7 +182,7 @@ public class ReplacementOrderAction extends BaseAction {
             return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
         }
 		try{
-			replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(Long.parseLong(shippingOrder.getId()));
+			replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(shippingOrder.getId());
 		}catch (NumberFormatException e){
 			logger.error("Shipping order id cannot be string.");
 		}
