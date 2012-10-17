@@ -90,10 +90,13 @@
       <div class="fb-contents">
         <span class="serif"> &copy; 2012 healthkart.com</span>
 
-        <a href="http://www.facebook.com/healthkart" target="_blank" style="border-bottom:none">
+        <a rel="nofollow" href="http://www.facebook.com/healthkart" target="_blank" style="border-bottom:none">
           <img src="<hk:vhostImage/>/images/banners/home/facebook.png"></a>
-        <a href="http://www.twitter.com/healthkart" target="_blank" style="border-bottom:none">
+        <a rel="nofollow" href="http://www.twitter.com/healthkart" target="_blank" style="border-bottom:none">
           <img src="<hk:vhostImage/>/images/banners/home/twitter.png" alt="HealthKart Twitter">
+        </a>
+          <a href="https://plus.google.com/116027214366934328880" rel="publisher" target="_blank" style="border-bottom:none">
+          <img src="<hk:vhostImage/>/images/banners/home/googleplus.png" alt="HealthKart Google Plus">
         </a>
         <a href="${pageContext.request.contextPath}/blog" target="_blank" style="border-bottom:none">
           <img src="<hk:vhostImage/>/images/banners/home/Blog.png" alt="HealthKart Blog"></a>

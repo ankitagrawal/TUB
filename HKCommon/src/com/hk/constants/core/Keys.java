@@ -111,6 +111,11 @@ public class Keys {
         public static final String healthkartRestUrl               = "healthkartRestUrl";
         public static final String mihRestUrl                      = "mihRestUrl";
 
+        public static final String fedExServerUrl                  = "fedExServerUrl";
+        public static final String fedExAuthKey                    = "fedExAuthKey";
+        public static final String fedExPassword                   = "fedExPassword";
+        public static final String fedExMeterNo                    = "fedExMeterNo";
+        public static final String fedExAccountNo                  = "fedExAccountNo";
     }
 
     /*
