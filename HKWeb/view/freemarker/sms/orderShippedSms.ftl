@@ -1,1 +1,2 @@
-Your order ${order.gatewayOrderId} has been shipped via HealthKart Self Delivery and will be delivered in 2-3 working days. Shipment Tracking ID ${shipment.awb.awb_number}. <#if order.isCod??>Outstanding Amount payable at delivery is Rs.${order.payment.amount}.</#if>
+Final part of your Order No. ${shippingOrder.baseOrder.gatewayOrderId} is shipped via ${shipment.courier.name} Tracking No. ${shipment.awb.awbNumber}.
+Thanks for choosing HealthKart.

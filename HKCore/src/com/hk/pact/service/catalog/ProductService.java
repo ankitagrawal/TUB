@@ -110,9 +110,8 @@ public interface ProductService {
 
     SolrProduct createSolrProduct(Product pr);
 
-
 	public List<Product> getSimilarProducts(Product product);
 
-
-    boolean isComboInStock(String comboId);
+    boolean isCombo(Product product);
+    boolean isComboInStock(Product product);
 }

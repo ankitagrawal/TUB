@@ -8,6 +8,7 @@ import com.hk.pact.dao.seo.SeoDao;
 import com.hk.pact.service.search.ProductIndexService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,6 @@ import com.hk.util.ProductReferrerMapper;
 import com.hk.web.filter.WebContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -234,31 +234,31 @@ public class ProductServiceImpl implements ProductService {
         return true;
     }
 
-	public boolean isComboInStock(String comboId) {
-		Combo combo = getComboDao().getComboById(comboId);
-        if (combo.isDeleted() != null && combo.isDeleted()) {
-            return false;
-        } else {
-            for (ComboProduct comboProduct : combo.getComboProducts()) {
-                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
-                    return false;
-                }
-            }
+    @SuppressWarnings("unchecked")
+    public boolean isComboInStock(Product product) {
+        boolean isComboInStock = true;
+        //if (Hibernate.getClass(product).equals(Combo.class)){
+        if (isCombo(product)){
+            Combo combo = (Combo)product;
+            isComboInStock = isComboInStock(combo);
         }
-        return true;
+        return isComboInStock;
     }
 
     public List<Combo> getRelatedCombos(Product product) {
         return getComboDao().getCombos(product);
     }
 
+    public boolean isCombo(Product product){
+        return product instanceof Combo;
+    }
+
     public boolean isProductOutOfStock(Product product) {
         List<ProductVariant> productVariants = product.getProductVariants();
         boolean isOutOfStock = true;
+        if (isCombo(product)){
+             return !isComboInStock(product);
+        }
         for (ProductVariant pv : productVariants) {
             if (!pv.getOutOfStock() && !pv.getDeleted()) {
                 isOutOfStock = false;
@@ -495,19 +495,15 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setHkPrice(price);
         }
 
-	    try {
-		    Combo combo = comboDao.getComboById(product.getId());
-		    if (combo != null) {
-			    solrProduct.setCombo(true);
-			    solrProduct.setMarkedPrice(combo.getMarkedPrice());
-			    if (price == null) {
-				    solrProduct.setHkPrice(combo.getHkPrice());
-			    }
-			    solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
-		    }
-	    } catch (Exception e) {
-
-	    }
+        if (isCombo(product)) {
+            Combo combo = comboDao.getComboById(product.getId());
+            solrProduct.setCombo(true);
+            solrProduct.setMarkedPrice(combo.getMarkedPrice());
+            if (price == null) {
+                solrProduct.setHkPrice(combo.getHkPrice());
+            }
+            solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
+        }
 
         if (product.getService() != null){
             solrProduct.setService(product.getService());
