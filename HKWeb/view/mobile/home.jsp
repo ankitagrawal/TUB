@@ -28,7 +28,7 @@
 	
 		 //for( var i=0;i<totalElements ;i++ ) { 
 			
-					print("<a href='${httpPath}/sub-category.jsp?primaryCategory="+encodeURIComponent(name)+"'>"+name+"</a>");
+					print("<a href='${httpPath}/sub-category.jsp?primaryCategory="+encodeURIComponent(url)+"'>"+name+"</a>");
 			//	}
 		  }}
 	</script>

@@ -47,14 +47,14 @@
 		</tr>
 		</script>
 		<script type='text/template' id='sub-category-template'>
-		
+
 		{{
 		var urlEval = new URLEval();
 		var pC = ($.mobile.path.parseUrl(urlEval.getURLFromHash(location.href))).search;pC = pC.replace('?','');}}
-			<a href='${httpPath}/product.jsp?{{print(pC)}}&secondaryCategory={{print(encodeURIComponent(name))}}'>{{print(name)}}</a>		
+			<a href='${httpPath}/product.jsp?{{print(pC)}}&secondaryCategory={{print(encodeURIComponent(name))}}'>{{print(name)}}</a>
 		</script>
 		<script type='text/javascript'>
-		
+
 $("#sub-category").bind("pageshow", function(event,ui) {
 //var wSURL = 'http://healthtest:9090/healthkart/rest/api/';
 var urlEval = new URLEval();

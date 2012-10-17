@@ -53,7 +53,8 @@ public class MShopAction extends MBaseAction{
                 primaryMenuNode = new MMenuNode();
                 primaryMenuNode.setLevel(menu.getLevel());
                 primaryMenuNode.setName(menu.getName());
-                primaryMenuNode.setUrl(menu.getUrl());
+                //primaryMenuNode.setUrl(menu.getUrl());
+                primaryMenuNode.setUrl(menu.getUrl().substring(menu.getUrl().lastIndexOf('/')+1, menu.getUrl().length()));
                 primaryMenuList.add(primaryMenuNode);
             }
         } catch (Exception e) {
@@ -84,12 +85,13 @@ public class MShopAction extends MBaseAction{
             menuNodes = menuHelper.getMenuNodes();
             MMenuNode secondaryMenuNode;
             for (MenuNode menu : menuNodes) {
-                if (menu.getName().equals(primaryNode)) {
+                if (menu.getUrl().equals('/'+primaryNode)) {
                     for (MenuNode secondaryMenu : menu.getChildNodes()) {
                         secondaryMenuNode = new MMenuNode();
                         secondaryMenuNode.setLevel(secondaryMenu.getLevel());
                         secondaryMenuNode.setName(secondaryMenu.getName());
-                        secondaryMenuNode.setUrl(secondaryMenu.getUrl());
+                        //secondaryMenuNode.setUrl(secondaryMenu.getUrl());
+                        secondaryMenuNode.setUrl(secondaryMenu.getUrl().substring(secondaryMenu.getUrl().lastIndexOf('/')+1, secondaryMenu.getUrl().length()));
                         secondaryMenuNode.setCurrentCategory(primaryNode);
                         secondaryMenuList.add(secondaryMenuNode);
                     }
