@@ -181,7 +181,7 @@ public class CatalogAction extends BasePaginatedAction {
                     filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
                 }
                 logger.error("Using filters. SOLR can't return results so hitting DB");
-                throw new Exception("Using filters. SOLR can't return results so hitting DB");
+                throw new Exception("Using filters. SOLR can't return results so hitt`ing DB");
             }
             List<SearchFilter> categoryList = new ArrayList<SearchFilter>();
             SearchFilter searchFilter = new SearchFilter(SolrSchemaConstants.category, rootCategorySlug);

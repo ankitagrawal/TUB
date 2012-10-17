@@ -1,22 +1,5 @@
 package com.hk.web.action.admin.order.search;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
@@ -28,23 +11,37 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
+import java.util.*;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Marut
+ * Date: 10/17/12
+ * Time: 5:01 PM
+ * To change this template use File | Settings | File Templates.
+ */
 @Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
 @Component
-public class SearchOrderAction extends BasePaginatedAction {
-
+public class AgentSearchOrderAction extends BasePaginatedAction {
     private static Logger logger    = LoggerFactory.getLogger(SearchOrderAction.class);
 
     @Autowired
     OrderService          orderService;
-    @Autowired
-    KarmaProfileService karmaProfileService;
 
-    private OrderStatus   orderStatus;
+    private OrderStatus orderStatus;
     private Long          orderId;
 
     private String        gatewayOrderId;
-    private PaymentMode   paymentMode;
+    private PaymentMode paymentMode;
 
     private String        login;
     private String        email;
@@ -54,8 +51,8 @@ public class SearchOrderAction extends BasePaginatedAction {
     private Date          startDate;
     private Date          endDate;
 
-    private List<Order>   orderList = new ArrayList<Order>();
-    private Page          orderPage;
+    private List<Order> orderList = new ArrayList<Order>();
+    private Page orderPage;
     private Order         order;
     private ShippingOrder shippingOrder;
 
@@ -79,6 +76,9 @@ public class SearchOrderAction extends BasePaginatedAction {
         orderSearchCriteria.setOrderAsc(false);
 
         orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
+
+        // orderPage = orderDao.searchOrders(startDate, endDate, orderId, email, name, phone, orderStatus,paymentMode,
+        // gatewayOrderId, trackingId, getPageNo(), getPerPage());
         orderList = orderPage.getList();
         return new ForwardResolution("/pages/admin/searchOrder.jsp");
     }
@@ -97,12 +97,17 @@ public class SearchOrderAction extends BasePaginatedAction {
 
     public Set<String> getParamSet() {
         Set<String> params = new HashSet<String>();
+        params.add("orderStatus");
+        params.add("paymentMode");
         params.add("email");
         params.add("orderId");
         params.add("gatewayOrderId");
         params.add("login");
+        // params.add("trackingId");
         params.add("name");
         params.add("phone");
+        params.add("startDate");
+        params.add("endDate");
         return params;
     }
 
