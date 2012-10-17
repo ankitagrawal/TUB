@@ -88,87 +88,96 @@ public class SupplierManagementAction extends BasePaginatedAction {
     @ValidationMethod(on = "save")
     public void validateSaveSupplier() {
         String regex = "^0-9$";
-        if (supplier.getState() != null && supplier.getTinNumber() != null) {
+        if (supplier != null) {
+            if (supplier.getState() != null && supplier.getTinNumber() != null) {
 
-            if (supplier.getTinNumber().length() != LenghtOfTIN) {
-                getContext().getValidationErrors().add("e1", new SimpleError("TIN should be of 11 digits"));
-            }
-            if (!(supplier.getTinNumber().substring(0, 2).equals(StateList.stateMapTIN.get(supplier.getState())))) {
-                getContext().getValidationErrors().add("e1", new SimpleError("check the first two digits of TIN"));
-            }
-        }
-
-        //validation for the margins
-        if(supplier.getMargins() !=null){
-            //Validating for entering only valid double values
-            Pattern pattern;
-
-
-            String margin = supplier.getMargins();
-            final String DOUBLE_PATTERN = "^\\d+\\.?\\d*$";
-            pattern = Pattern.compile(DOUBLE_PATTERN);
-            boolean bool=pattern.matcher(margin).matches();
-            if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
-                //To check the value in range of percentage
-            else{
-                double d = Double.valueOf(supplier.getMargins().trim()).doubleValue();
-                if(d < 0 || d > 100)
-                    getContext().getValidationErrors().add("e1", new SimpleError("Margins is in percentage and must be Enter within the Range(0 to 100)"));
-                else if(bool){
-                    int x = margin.indexOf(".");
-                    if(x==(margin.length()-1))
-                        getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
+                if (supplier.getTinNumber().length() != LenghtOfTIN) {
+                    getContext().getValidationErrors().add("e1", new SimpleError("TIN should be of 11 digits"));
+                }
+                if (!(supplier.getTinNumber().substring(0, 2).equals(StateList.stateMapTIN.get(supplier.getState())))) {
+                    getContext().getValidationErrors().add("e1", new SimpleError("check the first two digits of TIN"));
                 }
             }
-        }
 
-        //Validation for the Credit Period
-        if(supplier.getCreditPeriod() != null){
-            Pattern pattern;
+            //validation for the margins
+            if (supplier.getMargins() != null) {
+                //Validating for entering only valid double values
+                Pattern pattern;
 
-            String credit_period = supplier.getCreditPeriod();
-            final String INTEGER_PATTERN = "^[0-9]*$";
-            pattern = Pattern.compile(INTEGER_PATTERN);
-            boolean bool=pattern.matcher(credit_period).matches();
-            if(!bool)
-                getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number"));
-        }
 
-        // Validation for the Email Id
-        if(supplier.getEmail_id() != null){
-            Pattern pattern;
-            String email_id = supplier.getEmail_id();
-            final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-            pattern = Pattern.compile(EMAIL_PATTERN);
-            boolean bool = pattern.matcher(email_id).matches();
-            if(!bool)
-                getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"));
+                String margin = supplier.getMargins();
+                final String DOUBLE_PATTERN = "^\\d+\\.?\\d*$";
+                pattern = Pattern.compile(DOUBLE_PATTERN);
+                boolean bool = pattern.matcher(margin).matches();
+                if (!bool)
+                    getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
+                    //To check the value in range of percentage
+                else {
+                    double d = Double.valueOf(supplier.getMargins().trim()).doubleValue();
+                    if (d < 0 || d > 100)
+                        getContext().getValidationErrors().add("e1", new SimpleError("Margins is in percentage and must be Enter within the Range(0 to 100)"));
+                    else if (bool) {
+                        int x = margin.indexOf(".");
+                        if (x == (margin.length() - 1))
+                            getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
+                    }
+                }
+            }
+
+            //Validation for the Credit Period
+            if (supplier.getCreditPeriod() != null) {
+                Pattern pattern;
+
+                String credit_period = supplier.getCreditPeriod();
+                final String INTEGER_PATTERN = "^[0-9]*$";
+                pattern = Pattern.compile(INTEGER_PATTERN);
+                boolean bool = pattern.matcher(credit_period).matches();
+                if (!bool)
+                    getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number"));
+            }
+
+            // Validation for the Email Id
+            if (supplier.getEmail_id() != null) {
+                Pattern pattern;
+                String email_id = supplier.getEmail_id();
+                final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+                pattern = Pattern.compile(EMAIL_PATTERN);
+                boolean bool = pattern.matcher(email_id).matches();
+                if (!bool)
+                    getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"));
+            }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Please enter values."));
         }
     }
 
     public Resolution save() {
-        Supplier oldSupplier = supplierDao.findByTIN(supplier.getTinNumber());
-        if (oldSupplier == null) {
-            if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
-                addRedirectAlertMessage(new SimpleMessage("Supplier added successfully."));
-                supplierDao.save(supplier);
+        if (supplier != null) {
+            Supplier oldSupplier = supplierDao.findByTIN(supplier.getTinNumber());
+            if (oldSupplier == null) {
+                if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
+                    addRedirectAlertMessage(new SimpleMessage("Supplier added successfully."));
+                    supplierDao.save(supplier);
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
+                    return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
+                }
+            } else if (supplier.getId() != null) {
+                if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
+                    addRedirectAlertMessage(new SimpleMessage("Supplier edited successfully."));
+                    supplierDao.save(supplier);
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
+                    return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
+                }
             } else {
-                addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
-                return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
+                addRedirectAlertMessage(new SimpleMessage("Supplier with provided TIN already exists."));
             }
-        } else if (supplier.getId() != null) {
-            if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
-                addRedirectAlertMessage(new SimpleMessage("Supplier edited successfully."));
-                supplierDao.save(supplier);
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
-                return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
-            }
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Supplier with provided TIN already exists."));
-        }
 
-        return new RedirectResolution(SupplierManagementAction.class);
+            return new RedirectResolution(SupplierManagementAction.class);
+        } else {
+            return new RedirectResolution("/pages/admin/supplier.jsp");
+        }
     }
 
     public Resolution generateExcelReport() {
@@ -177,10 +186,8 @@ public class SupplierManagementAction extends BasePaginatedAction {
         xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
 
 
-
         if (supplierList != null) {
             xslGenerator.generateSupplierListExcel(xlsFile, supplierList);
-
 
 
             return new HTTPResponseResolution();
