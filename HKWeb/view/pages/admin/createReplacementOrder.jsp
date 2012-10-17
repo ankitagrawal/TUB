@@ -48,6 +48,10 @@
 							            $('#createReplacementOrderForm').submit();
 						            }
 					            }
+					            else{
+						            $('#createReplacementOrderForm').attr('action', formUrl+"?createReplacementOrder=");
+									$('#createReplacementOrderForm').submit();
+					            }
 				            });
 	            });
             })
@@ -62,6 +66,9 @@
                 <label>Search Shipping Order</label>
                 <br/><br/>
                 <s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/>
+                <br/>
+                <br/>
+	            <s:text name="gatewayOrderId" id="shippingOrderIdText" style="width:200px;"/>
                 <br/>
                 <br/>
                 <s:submit name="searchShippingOrder" value="Search"/>

@@ -39,6 +39,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 @Component
 public class ReplacementOrderAction extends BaseAction {
     private String shippingOrderId;
+	private String gatewayOrderId;
     private ShippingOrder shippingOrder;
     private Boolean isRto;
     private List<LineItem> lineItems = new ArrayList<LineItem>();
@@ -71,9 +72,12 @@ public class ReplacementOrderAction extends BaseAction {
     }
 
     public Resolution searchShippingOrder() {
-        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setOrderId(Long.parseLong(shippingOrderId));
-        shippingOrder = shippingOrderService.find(Long.parseLong(shippingOrderId));
+	    if(shippingOrderId != null){
+            shippingOrder = shippingOrderService.find(Long.parseLong(shippingOrderId));
+	    }
+	    else if(gatewayOrderId != null){
+		    shippingOrder = shippingOrderService.findByGatewayOrderId(gatewayOrderId);
+	    }
         if (shippingOrder == null) {
             addRedirectAlertMessage(new SimpleMessage("No shipping order found  "));
             return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
@@ -81,6 +85,7 @@ public class ReplacementOrderAction extends BaseAction {
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem));
         }
+	    shippingOrderId = shippingOrder.getId().toString();
         return new ForwardResolution("/pages/admin/createReplacementOrder.jsp").addParameter("shippingOrderId", shippingOrderId);
     }
 
@@ -208,5 +213,13 @@ public class ReplacementOrderAction extends BaseAction {
 
 	public void setReplacementOrderList(List<ReplacementOrder> replacementOrderList) {
 		this.replacementOrderList = replacementOrderList;
+	}
+
+	public String getGatewayOrderId() {
+		return gatewayOrderId;
+	}
+
+	public void setGatewayOrderId(String gatewayOrderId) {
+		this.gatewayOrderId = gatewayOrderId;
 	}
 }
