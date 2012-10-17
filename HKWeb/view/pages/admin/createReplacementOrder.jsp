@@ -34,7 +34,14 @@
 	            $('.createReplacementOrderButton').click(function(event){
 		            event.preventDefault();
 		            var shippingOrderId= $('#shippingOrderIdText').val();
-		            var formUrl = $('#createReplacementOrderForm').attr('action');
+		            var formName;
+		            if($(this).hasClass('rto')){
+			            formName =  $('#createReplacementOrderForRtoForm');
+		            }
+		            else{
+			            formName = $('#createReplacementOrderForRepForm');
+		            }
+		            var formUrl = formName.attr('action');
 		            $.getJSON(
 				            $('#checkReplacementOrderLink').attr('href'), {shippingOrderId:shippingOrderId},
 				            function(res) {
@@ -44,13 +51,13 @@
 							            event.preventDefault();
 						            }
 						            else{
-							            $('#createReplacementOrderForm').attr('action', formUrl+"?createReplacementOrder=");
-							            $('#createReplacementOrderForm').submit();
+							            formName.attr('action', formUrl+"?createReplacementOrder=");
+							            formName.submit();
 						            }
 					            }
 					            else{
-						            $('#createReplacementOrderForm').attr('action', formUrl+"?createReplacementOrder=");
-									$('#createReplacementOrderForm').submit();
+						            formName.attr('action', formUrl+"?createReplacementOrder=");
+									formName.submit();
 					            }
 				            });
 	            });
@@ -128,7 +135,7 @@
 
             <fieldset style="display:none;" id="is-rto">
                 <h4>Returned to origin</h4>
-                <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForm">
+                <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForRtoForm">
                     <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
                     <table border="1">
                         <thead>
@@ -161,13 +168,13 @@
                             </tr>
                         </c:forEach>
                     </table>
-                    <s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order"/>
+                    <s:submit class="createReplacementOrderButton rto" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
 
             <fieldset style="display:none;" id="is-replacement">
                 <h4>Replacement</h4>
-                <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
+                <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForRepForm">
                     <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
                     <table border="1">
                         <thead>
@@ -194,7 +201,7 @@
                                         ${lineItem.cartLineItem.productVariant.product.name}
                                 </td>
                                 <td>${lineItem.qty}</td>
-                                <td><s:text name="lineItems[${lineItemCtr.index}].qty" value="0"></s:text></td>
+                                <td><s:text name="lineItems[${lineItemCtr.index}].qty" /></td>
                             </tr>
                         </c:forEach>
                     </table>

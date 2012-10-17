@@ -107,7 +107,6 @@ public class ReplacementOrderAction extends BaseAction {
         }
 
         int valid_item_flag = 0;
-        int negative_qty_flag = 0;
         for (LineItem lineItem : lineItems) {
             if(lineItem.getQty() > 0){
                 valid_item_flag++;
