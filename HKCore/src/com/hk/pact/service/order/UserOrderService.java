@@ -14,5 +14,5 @@ import java.util.List;
 public interface UserOrderService {
     List<Order> getUserOrders(String emailId);
 
-    List<Order> getUserOrders(int phone);
+    List<Order> getUserOrders(long phone);
 }

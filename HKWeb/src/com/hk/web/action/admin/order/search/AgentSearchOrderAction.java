@@ -14,6 +14,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.UrlBinding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,54 +30,38 @@ import java.util.*;
  * Time: 5:01 PM
  * To change this template use File | Settings | File Templates.
  */
-@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
+//@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
 @Component
+@UrlBinding("/agent/order")
 public class AgentSearchOrderAction extends BasePaginatedAction {
     private static Logger logger    = LoggerFactory.getLogger(SearchOrderAction.class);
 
     @Autowired
     OrderService          orderService;
 
-    private OrderStatus orderStatus;
-    private Long          orderId;
-
-    private String        gatewayOrderId;
     private PaymentMode paymentMode;
 
     private String        login;
     private String        email;
-    private String        name;
     private String        phone;
-
-    private Date          startDate;
-    private Date          endDate;
 
     private List<Order> orderList = new ArrayList<Order>();
     private Page orderPage;
-    private Order         order;
     private ShippingOrder shippingOrder;
+
+    private final int MAX_ORDERS = 3;
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/searchOrder.jsp");
+        return new ForwardResolution("/pages/admin/agentSearchOrder.jsp");
     }
 
     public Resolution searchOrders() {
         OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
-        orderSearchCriteria.setOrderId(orderId);
-        orderSearchCriteria.setGatewayOrderId(gatewayOrderId);
-        // We need to do this not null check otherwise there would an 'in' clause for empty list
-        if (orderStatus != null)
-            orderSearchCriteria.setOrderStatusList(Arrays.asList(orderStatus));
-        if (paymentMode != null) {
-            orderSearchCriteria.setPaymentModes(Arrays.asList(paymentMode));
-        }
-        orderSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
-        orderSearchCriteria.setEmail(email).setLogin(login).setName(name).setPhone(phone);
+        orderSearchCriteria.setEmail(email).setLogin(login);
         orderSearchCriteria.setOrderAsc(false);
-
-        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
-
+        orderSearchCriteria.getSearchCriteria().addOrder(org.hibernate.criterion.Order.desc("updateDate"));
+        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), MAX_ORDERS);
         // orderPage = orderDao.searchOrders(startDate, endDate, orderId, email, name, phone, orderStatus,paymentMode,
         // gatewayOrderId, trackingId, getPageNo(), getPerPage());
         orderList = orderPage.getList();
@@ -119,37 +104,10 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
         this.orderList = orderList;
     }
 
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
     public String getEmail() {
         return email;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getPhone() {
         return phone;
@@ -157,43 +115,6 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    /*
-     * public String getTrackingId() { return trackingId; } public void setTrackingId(String trackingId) {
-     * this.trackingId = trackingId; }
-     */
-
-    public String getGatewayOrderId() {
-        return gatewayOrderId;
-    }
-
-    public void setGatewayOrderId(String gatewayOrderId) {
-        this.gatewayOrderId = gatewayOrderId;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 
     public PaymentMode getPaymentMode() {
@@ -220,11 +141,5 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
         this.login = login;
     }
 
-    public KarmaProfileService getKarmaProfileService() {
-        return karmaProfileService;
-    }
 
-    public void setKarmaProfileService(KarmaProfileService karmaProfileService) {
-        this.karmaProfileService = karmaProfileService;
-    }
 }

@@ -3,7 +3,7 @@ package com.hk.impl.service.order;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
-import com.hk.pact.dao.user.UserDetailsDao;
+import com.hk.pact.dao.user.UserDetailDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.UserOrderService;
@@ -25,7 +25,7 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     final int MAX_ORDER_COUNT = 50;
     @Autowired
-    UserDetailsDao userDetailsDao;
+    UserDetailDao userDetailsDao;
 
     @Autowired
     OrderService orderService;
@@ -41,7 +41,7 @@ public class UserOrderServiceImpl implements UserOrderService {
         return new ArrayList<Order>();
     }
 
-    public List<Order> getUserOrders(int phone){
+    public List<Order> getUserOrders(long phone){
         UserDetail userDetail = userDetailsDao.findByPhone(phone);
         if (userDetail != null){
             //Maximum of 50 orders for now

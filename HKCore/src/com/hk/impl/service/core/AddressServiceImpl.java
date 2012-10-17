@@ -5,9 +5,8 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 import com.hk.pact.dao.core.AddressDao;
-import com.hk.pact.dao.user.UserDetailsDao;
+import com.hk.pact.dao.user.UserDetailDao;
 import com.hk.pact.service.core.AddressService;
-import com.hk.pact.service.user.UserDetailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class AddressServiceImpl implements AddressService {
     AddressDao addressDao;
 
     @Autowired
-    UserDetailsDao userDetailsDao;
+    UserDetailDao userDetailsDao;
 
     @Transactional
     public Address save(Address address) {
@@ -54,7 +53,7 @@ public class AddressServiceImpl implements AddressService {
                 int start = phone.length() - 10;
                 //consider only the last 10 digits
                 String ph = phone.substring(start, phone.length() - 1);
-                int phoneNumber = Integer.parseInt(ph);
+                long phoneNumber = Long.parseLong(ph);
                 userDetail.setPhone(phoneNumber);
                 userDetailsDao.save(userDetailsDao);
             }

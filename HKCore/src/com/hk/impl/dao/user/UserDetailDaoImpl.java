@@ -1,11 +1,9 @@
 package com.hk.impl.dao.user;
 
 import com.hk.constants.core.EnumCallPriority;
-import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.user.UserDetailsDao;
-import org.hibernate.Criteria;
+import com.hk.pact.dao.user.UserDetailDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -20,7 +18,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Repository
-public class UserDetailDaoImpl  extends BaseDaoImpl implements UserDetailsDao{
+public class UserDetailDaoImpl  extends BaseDaoImpl implements UserDetailDao {
 
     public UserDetail save(UserDetail userDetails) {
         if(userDetails.getPriority() == null){

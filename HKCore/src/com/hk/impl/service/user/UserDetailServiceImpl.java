@@ -1,7 +1,7 @@
 package com.hk.impl.service.user;
 
 import com.hk.domain.user.UserDetail;
-import com.hk.pact.dao.user.UserDetailsDao;
+import com.hk.pact.dao.user.UserDetailDao;
 import com.hk.pact.service.user.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.List;
 public class UserDetailServiceImpl implements UserDetailService {
 
     @Autowired
-    UserDetailsDao userDetailsDao;
+    UserDetailDao userDetailsDao;
 
     public UserDetail save(UserDetail userDetails) {
         return userDetailsDao.save(userDetails);  //To change body of implemented methods use File | Settings | File Templates.
