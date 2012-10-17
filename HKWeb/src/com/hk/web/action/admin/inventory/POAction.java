@@ -168,7 +168,7 @@ public class POAction extends BasePaginatedAction {
         grn.setReceivedBy(loggedOnUser);
         grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.GoodsReceived.getId()));
         grn.setWarehouse(warehouse);
-        grn = (GoodsReceivedNote) getGoodsReceivedNoteDao().save(grn);
+	    grn = (GoodsReceivedNote) getGoodsReceivedNoteDao().save(grn);
         for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
             ProductVariant productVariant = poLineItem.getSku().getProductVariant();
             Sku sku = getSkuService().getSKU(productVariant, warehouse);
@@ -193,6 +193,7 @@ public class POAction extends BasePaginatedAction {
             } else {
                 grnLineItem.setMrp(0.0);
             }
+	        grnLineItem.setDiscountPercent(poLineItem.getDiscountPercent());
             getGoodsReceivedNoteDao().save(grnLineItem);
         }
 

@@ -51,6 +51,7 @@
 <c:set var="shippingOrderStatusDelivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
 <c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
 <c:set var="shippingOrderStatusRTOInitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
+<c:set var="shippingOrderStatusLost" value="<%=EnumShippingOrderStatus.SO_Lost.getId()%>"/>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 
 
@@ -200,7 +201,7 @@
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_LOGISTICS_ADMIN%>">
                 <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>
                 <c:if
-                        test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusDelivered}">
+                        test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusDelivered || shippingOrderStatusId == shippingOrderStatusLost}">
                     <br/>
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>

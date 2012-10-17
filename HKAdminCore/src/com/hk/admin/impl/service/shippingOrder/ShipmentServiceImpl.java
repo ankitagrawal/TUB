@@ -1,13 +1,23 @@
 package com.hk.admin.impl.service.shippingOrder;
 
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.AwbDao;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.shipment.ShipmentDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -21,10 +31,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
@@ -46,6 +52,11 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Autowired
     ShipmentDao           shipmentDao;
 
+    @Autowired
+    CourierServiceInfoDao courierServiceInfoDao;
+    
+
+    @Transactional
     public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
@@ -62,11 +73,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (suggestedCourier == null) {
             return null;
         }
-        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
-                EnumAwbStatus.Unused.getAsAwbStatus());
-        if (suggestedAwb == null) {
-            return null;
-        }
+
         Double estimatedWeight = 100D;
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
@@ -80,6 +87,23 @@ public class ShipmentServiceImpl implements ShipmentService {
                 estimatedWeight += variantWeight;
             }
         }
+
+        Double weightInKg = estimatedWeight / 1000;
+        Long suggestedCourierId = suggestedCourier.getId();
+
+        Awb suggestedAwb;
+        if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId)) {
+            suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
+        } else {
+            suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
+                    EnumAwbStatus.Unused.getAsAwbStatus());
+        }
+
+        // validate that we have a valid awb to create shipment
+        if (suggestedAwb == null) {
+            return null;
+        }
+
         Shipment shipment = new Shipment();
         shipment.setCourier(suggestedCourier);
         shipment.setEmailSent(false);
@@ -133,14 +157,14 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipmentDao.delete(shipment);
     }
 
+
+
     @Override
     public Shipment recreateShipment(ShippingOrder shippingOrder) {
         Shipment newShipment = null;
         if (shippingOrder.getShipment() != null) {
             Shipment oldShipment = shippingOrder.getShipment();
-            Awb awb = oldShipment.getAwb();
-            awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-            awbService.save(awb);
+            awbService.removeAwbForShipment(oldShipment.getCourier(),oldShipment.getAwb());
             newShipment = createShipment(shippingOrder);
             shippingOrder.setShipment(newShipment);
             delete(oldShipment);
