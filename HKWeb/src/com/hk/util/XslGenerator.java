@@ -98,7 +98,7 @@ public class XslGenerator {
 		Row row = sheet1.createRow(0);
 		row.setHeightInPoints((short) 25);
 
-		int totalColumnNo = 50;
+		int totalColumnNo = 54;
 
 		Set<Manufacturer> manufacturers = new HashSet<Manufacturer>();
 		Cell cell;
@@ -120,6 +120,10 @@ public class XslGenerator {
 		setHeaderCellValue(row, cellCounter++, XslConstants.SUPPLIER_STATE);
 		setHeaderCellValue(row, cellCounter++, XslConstants.MIN_DAYS_TO_PROCESS);
 		setHeaderCellValue(row, cellCounter++, XslConstants.MAX_DAYS_TO_PROCESS);
+    setHeaderCellValue(row, cellCounter++, XslConstants.IS_DELETED);
+    setHeaderCellValue(row, cellCounter++, XslConstants.OUT_OF_STOCK);
+    setHeaderCellValue(row, cellCounter++, XslConstants.GROUND_SHIPPING_AVAILABLE);
+    setHeaderCellValue(row, cellCounter++, XslConstants.IS_HIDDEN);
 		setHeaderCellValue(row, cellCounter++, XslConstants.OVERVIEW);
 		setHeaderCellValue(row, cellCounter++, XslConstants.DESCRIPTION);
 		setHeaderCellValue(row, cellCounter++, XslConstants.RELATED_PRODUCTS);
@@ -197,6 +201,10 @@ public class XslGenerator {
 					}
 					setCellValue(row, this.getColumnIndex(XslConstants.MIN_DAYS_TO_PROCESS), product.getMinDays());
 					setCellValue(row, this.getColumnIndex(XslConstants.MAX_DAYS_TO_PROCESS), product.getMaxDays());
+          setCellValue(row, this.getColumnIndex(XslConstants.IS_DELETED), product.isDeleted() !=null ? product.isDeleted() ? "Y" : "N" : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.OUT_OF_STOCK), product.isOutOfStock()!=null ? product.isOutOfStock() ? "Y": "N" : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.GROUND_SHIPPING_AVAILABLE),product.isGroundShipping() ? "Y" : "N");
+          setCellValue(row, this.getColumnIndex(XslConstants.IS_HIDDEN), product.isHidden()!=null ? product.isHidden() ? "Y" : "N" : null);
 					setCellValue(row, this.getColumnIndex(XslConstants.OVERVIEW), "");
 					setCellValue(row, this.getColumnIndex(XslConstants.DESCRIPTION), "");
 					setCellValue(row, this.getColumnIndex(XslConstants.RELATED_PRODUCTS), getRelatedProducts(product));

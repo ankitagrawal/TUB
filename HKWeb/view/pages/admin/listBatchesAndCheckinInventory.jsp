@@ -38,8 +38,7 @@
               <th>Checkin Date</th>
               <th>Checked-In Units</th>
               <th>In-stock Units</th>
-                <%--<th>Adjust Inventory</th>
-                <th></th>--%>
+              <th></th>
 
             </tr>
             </thead>
@@ -76,25 +75,22 @@
                 <td><fmt:formatDate value="${skuGroup.createDate}" pattern="dd/MM/yyyy"/></td>
                 <td>${fn:length(skuGroup.skuItems)}</td>
 	            <td>${batchInv}</td>
-                <%--<shiro:hasRole name="<%=RoleConstants.GOD%>">
-                  <s:form beanclass="com.hk.web.action.admin.inventory.ListBatchesAndCheckinInventory">
-                    <td>
-                      <s:hidden name="batch" value="${skuGroup.batchNumber}"/>
-                      <s:hidden name="upc" value="${skuGroup.productVariant.id}"/>
-                      <s:hidden name="skuGroup" value="${skuGroup.id}"/>
-                      <s:text name="qty" size="10" style="width:30px;"/>
-                    </td>
-                    <td><s:submit name="adjust" value="Reduce" style="padding:0; background:blue"/></td>
-                  </s:form>
-                </shiro:hasRole>--%>
+	            <td>
+		            <shiro:hasRole name="<%=RoleConstants.GOD%>">
+		              <s:link beanclass="com.hk.web.action.admin.inventory.SkuGroupAction" target="_blank">
+			              <s:param name="skuGroup" value="${skuGroup.id}"/>
+			              <img src="${pageContext.request.contextPath}/images/edit.gif" alt="Edit Batch"/>
+		              </s:link>
+		            </shiro:hasRole>
+	              </td>                
               </tr>
             </c:forEach>
-            <tr>
+            <%--<tr>
               <td colspan="5" align="right" style="font-weight:bold;">Total</td>
               <td style="font-weight:bold;"><h2>${hk:netInventory(ica.productVariant)}</h2></td>
               <td></td>
               <td></td>
-            </tr>
+            </tr>--%>
           </table>
         </c:when>
         <c:otherwise>

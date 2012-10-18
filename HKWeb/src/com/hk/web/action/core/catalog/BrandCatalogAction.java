@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.catalog.SolrSchemaConstants;
+import com.hk.domain.search.SearchFilter;
 import com.hk.dto.search.SearchResult;
 import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -90,16 +92,27 @@ public class BrandCatalogAction extends BasePaginatedAction {
 	  List<String> categoryNames = new ArrayList<String>();
 	  categoryNames.add(topLevelCategory);
 	  urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
+      Boolean includeCombo = true;
+      Boolean onlyCOD = false;
 	  if (StringUtils.isBlank(brand)) {
 		  return new RedirectResolution("/" + topLevelCategory);
 	  } else {
 		  try {
+              if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
+                  String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
+                  includeCombo = Boolean.parseBoolean( params[0].toString());
+              }
+
+              if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")){
+                  String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
+                  onlyCOD = Boolean.parseBoolean( params[0].toString());
+              }
 			  SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
 			  productPage = new Page(searchResult.getSolrProducts(), getPerPage(), getPageNo(), searchResult.getResultSize());
 		  } catch (Exception e) {
 			  logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
 			  categories = categoryDao.getCategoriesByBrand(brand, topLevelCategory);
-			  productPage = productDao.getProductByCategoryAndBrand(categoryNames, URLDecoder.decode(brand), getPageNo(), getPerPage());
+			  productPage = productDao.getProductByCategoryAndBrand(categoryNames, URLDecoder.decode(brand),onlyCOD, includeCombo, getPageNo(), getPerPage());
 		  }
 		  if (productPage != null) {
 			  productList = productPage.getList();

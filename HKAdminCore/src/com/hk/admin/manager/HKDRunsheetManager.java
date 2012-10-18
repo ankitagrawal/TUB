@@ -27,14 +27,15 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.hk.admin.util.BarcodeGenerator;
+
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.courier.CourierConstants;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.user.Address;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
+import com.hk.domain.user.Address;
 import com.hk.pact.service.store.StoreService;
 
 

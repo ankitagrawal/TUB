@@ -1,18 +1,20 @@
 package com.hk.admin.manager;
 
-import java.io.*;
+import java.io.File;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import com.hk.domain.catalog.product.SimilarProduct;
-import com.hk.util.HKDateUtil;
-import com.hk.util.io.HKFileWriter;
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.template.TemplateHashModel;
-import freemarker.template.TemplateModelException;
-import com.hk.domain.email.OrderEmailExclusion;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.hibernate.Session;
@@ -35,11 +37,13 @@ import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.SimilarProduct;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.email.EmailerHistory;
+import com.hk.domain.email.OrderEmailExclusion;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.order.Order;
@@ -60,9 +64,13 @@ import com.hk.service.impl.FreeMarkerService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.SendGridUtil;
 import com.hk.util.io.ExcelSheetParser;
+import com.hk.util.io.HKFileWriter;
 import com.hk.util.io.HKRow;
 
+import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Template;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateModelException;
 
 @SuppressWarnings("unchecked")
 @Component
