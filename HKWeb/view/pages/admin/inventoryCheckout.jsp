@@ -158,7 +158,7 @@
                   <td>${skuGroup.mrp}</td>
                   <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
 	              <td>
-		              <s:link beanclass="com.hk.web.action.admin.inventory.SkuGroupAction">
+		              <s:link beanclass="com.hk.web.action.admin.inventory.SkuGroupAction" target="_blank">
 			              <s:param name="gatewayOrderId" value="${icBean.shippingOrder.gatewayOrderId}"/>
 			              <s:param name="skuGroup" value="${skuGroup.id}"/>
 			              <img src="${pageContext.request.contextPath}/images/edit.gif" alt="Edit Batch"/>

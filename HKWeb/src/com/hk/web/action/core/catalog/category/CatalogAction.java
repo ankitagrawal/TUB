@@ -174,7 +174,8 @@ public class CatalogAction extends BasePaginatedAction {
         } else {
             smallestCategory = rootCategorySlug;
         }
-
+        Boolean includeCombo = true;
+        Boolean onlyCOD = false;
         try {            
             if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
                 if (!filterOptions.isEmpty()) {
@@ -200,6 +201,25 @@ public class CatalogAction extends BasePaginatedAction {
             SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
             List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
             searchFilters.add(brandFilter);
+
+            if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
+                String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
+                includeCombo = Boolean.parseBoolean( params[0].toString());
+                if (!includeCombo){
+                    SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
+                    searchFilters.add(comboFilter);
+                }
+            }
+
+            if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")){
+                String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
+                onlyCOD = Boolean.parseBoolean( params[0].toString());
+                if (onlyCOD){
+                    SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, params[0].toString());
+                    searchFilters.add(codFilter);
+                }
+            }
+
             SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter, paginationFilter, sortFilter);
 
             List<Product> filteredProducts = searchResult.getSolrProducts();
@@ -256,7 +276,8 @@ public class CatalogAction extends BasePaginatedAction {
                     Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
                     groupsCount = groupedFilters.size();
                 }
-                productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice, getPageNo(), getPerPage());
+                productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice,onlyCOD, includeCombo,
+                        getPageNo(), getPerPage());
                 if (productPage != null) {
                     productList = productPage.getList();
                     for (Product product : productList) {
@@ -266,9 +287,9 @@ public class CatalogAction extends BasePaginatedAction {
                 productList = trimListByCategory(productList, secondaryCategory);
             } else {
                 if (StringUtils.isBlank(brand)) {
-                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
+                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, null,onlyCOD, includeCombo, getPageNo(), getPerPage());
                 } else {
-                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, getPageNo(), getPerPage());
+                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand,onlyCOD, includeCombo, getPageNo(), getPerPage());
                 }
                 if (productPage != null) {
                     productList = productPage.getList();
