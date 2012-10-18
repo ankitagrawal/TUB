@@ -79,9 +79,6 @@ public class SearchOrderAction extends BasePaginatedAction {
         orderSearchCriteria.setOrderAsc(false);
 
         orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
-
-        // orderPage = orderDao.searchOrders(startDate, endDate, orderId, email, name, phone, orderStatus,paymentMode,
-        // gatewayOrderId, trackingId, getPageNo(), getPerPage());
         orderList = orderPage.getList();
         return new ForwardResolution("/pages/admin/searchOrder.jsp");
     }
@@ -100,17 +97,12 @@ public class SearchOrderAction extends BasePaginatedAction {
 
     public Set<String> getParamSet() {
         Set<String> params = new HashSet<String>();
-        params.add("orderStatus");
-        params.add("paymentMode");
         params.add("email");
         params.add("orderId");
         params.add("gatewayOrderId");
         params.add("login");
-        // params.add("trackingId");
         params.add("name");
         params.add("phone");
-        params.add("startDate");
-        params.add("endDate");
         return params;
     }
 
