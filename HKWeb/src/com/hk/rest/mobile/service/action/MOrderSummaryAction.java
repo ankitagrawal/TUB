@@ -236,6 +236,18 @@ public class MOrderSummaryAction extends MBaseAction {
             codCharges = 0.0;
         }
         orderMap.put("codCharges",codCharges);
+        Double saved = 0.0;
+        if(null!=pricingDto.getProductsMrpSubTotal()&&null!=pricingDto.getProductsHkSubTotal())
+        	saved = pricingDto.getProductsMrpSubTotal()- pricingDto.getProductsHkSubTotal();
+        	
+        String saveRs = priceFormat.format(saved);
+        orderMap.put("saved",saveRs);
+        
+        String total="0.0";
+        if(null!=pricingDto.getProductsHkSubTotal())
+        	total = priceFormat.format(pricingDto.getProductsHkSubTotal());
+        	orderMap.put("total", total);
+        
         availableCourierList = courierService.getAvailableCouriers(order);
         if (availableCourierList != null && availableCourierList.size() == 0) {
             availableCourierList = null;

@@ -45,8 +45,8 @@
 	</table>
 	{{ if(data.pricingDto!=null){ }}
 	   <h2 style='color:#888'>Shipping: Rs.{{print(data.pricingDto.shippingTotal)}}</h2>
-	   <h3 style='color:#888'>You Saved: Rs.{{print(data.pricingDto.productsMrpSubTotal- data.pricingDto.productsHkSubTotal)}}</h3>
-	   <h2 style='color:#F87500'>Total: Rs.{{print(data.pricingDto.productsHkSubTotal)}}</h2>
+	   <h3 style='color:#888'>You Saved: Rs.{{print(data.saved)}}</h3>
+	   <h2 style='color:#F87500'>Total: Rs.{{print(data.total)}}</h2>
 
 	{{ } }}
 

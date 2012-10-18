@@ -75,7 +75,7 @@
                                 <p class="keeplogin" id='accept'> 
 								<br>
 									<input type="checkbox" data-role=none style='zoom:2' value="loginkeeping" id="loginkeeping" name="loginkeeping"> 
-									<label for="loginkeeping">Agree to <a data-role=none href="nc" target='_blank'>terms and conditions *</a></label>
+									<label for="loginkeeping">Agree to <a data-role=none href="${httpPath}/tnc.jsp" target='_blank'>terms and conditions *</a></label>
 								
 								</p>
                                 <p class="signin button"> 

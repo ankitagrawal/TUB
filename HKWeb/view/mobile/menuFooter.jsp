@@ -28,11 +28,11 @@
 				<%}%>
 			</td>
 		</tr>
-		<tr>
+		<!--tr>
 			<td class='arr-r'>
 				<a href='http://www.healthkart.com'>Go To DeskTop Version</a>
 			</td>
-		</tr>
+		</tr-->
 		<!--
 		<tr>
 			<td class='arr-r'>
