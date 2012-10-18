@@ -146,7 +146,6 @@ $('#loginSignup').bind('pageshow',function(){
 		type: 'POST',
 		success: function(data)
 		{
-		    alert(data);	
 			if(hasErr(data))
 			{	$('.loaderContainer').hide();
 			}
