@@ -21,9 +21,11 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
@@ -67,6 +69,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     private ShipmentPricingEngine shipmentPricingEngine;
     @Autowired
     AwbService awbService;
+    
+    @Autowired
+    CourierServiceInfoDao courierServiceInfoDao;
 
     private String trackingId;
     private String gatewayOrderId;
@@ -176,40 +181,59 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         if ((suggestedAwb == null) || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
                 (suggestedCourier != null && (!(shipment.getCourier().equals(suggestedCourier))))) {
 
-            Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
-            if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
-                if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
-                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
-                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-                }
-                if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
-                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
-                            "  : " + shipment.getCourier().getName() + "  you are Trying to use COD tracking id with NON COD   TRY AGAIN "));
-                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-                }
-
-                finalAwb = awbFromDb;
-                finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
-            } else {
-                Awb awb = new Awb();
-                awb.setAwbNumber(trackingId.trim());
-                awb.setAwbBarCode(trackingId.trim());
-                awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                awb.setCourier(shipment.getCourier());
-                awb.setCod(shippingOrder.isCOD());
-                awb.setWarehouse(shippingOrder.getWarehouse());
-                awb = awbService.save(awb);
-                finalAwb = awb;
-                finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());
+            if ((suggestedAwb != null) && (suggestedCourier != null) && (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId()))){
+                // To delete the tracking no. generated previously
+                awbService.deleteAwbForThirdPartyCourier(suggestedCourier, suggestedAwb.getAwbNumber());
             }
-            //Todo: Seema --  Awb which are detached from Shipment,their status should not change:Need to check if awb should be deleted or made free for reuse
-            /*if (suggestedAwb != null) {
-                suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                awbService.save(suggestedAwb);
-            }*/
 
+            if (ThirdPartyAwbService.integratedCouriers.contains(shipment.getCourier().getId())) {
+               Double weightInKg = shipment.getBoxWeight();
+               Awb thirdPartyAwb = awbService.getAwbForThirdPartyCourier(shipment.getCourier(), shippingOrder, weightInKg);
+               if (thirdPartyAwb == null) {
+                    addRedirectAlertMessage(new SimpleMessage(" The tracking number could not be generated"));
+                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+               } else {
+                   thirdPartyAwb = awbService.save(thirdPartyAwb);
+                   finalAwb = thirdPartyAwb;
+                   finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+               }
+            }           
+            else {
+                Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
+                if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
+                    if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
+                        addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
+                        return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+                    }
+                    if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
+                        addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
+                                "  : " + shipment.getCourier().getName() + "  you are Trying to use COD tracking id with NON COD   TRY AGAIN "));
+                        return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+                    }
+
+                    finalAwb = awbFromDb;
+                    finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+                } else {
+                    //TODO:#change this all logic should be at one place in awbService
+                    Awb awb = new Awb();
+                    awb.setAwbNumber(trackingId.trim());
+                    awb.setAwbBarCode(trackingId.trim());
+                    awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+                    awb.setCourier(shipment.getCourier());
+                    awb.setCod(shippingOrder.isCOD());
+                    awb.setWarehouse(shippingOrder.getWarehouse());
+                    awb = awbService.save(awb);
+                    finalAwb = awb;
+                    finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());     //new awb taken according to trackingId manually entered, as DB has none
+                }
+                //Todo: Seema --  Awb which are detached from Shipment,their status should not change:Need to check if awb should be deleted or made free for reuse
+                /*if (suggestedAwb != null) {
+                    suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+                    awbService.save(suggestedAwb);
+                }*/
+            }
         } else {
-            finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+            finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());  //comes here when no change at all
         }
 
 

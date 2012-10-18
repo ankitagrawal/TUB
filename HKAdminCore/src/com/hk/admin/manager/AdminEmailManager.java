@@ -601,7 +601,10 @@ public class AdminEmailManager {
                                 }
                             }
 
-                            if ((simProduct != null) && !simProduct.isOutOfStock() && productService.isComboInStock(simProduct.getId())){
+                            boolean isProductInStock = !simProduct.getOutOfStock();
+                            isProductInStock = productService.isComboInStock(simProduct);
+
+                            if ((simProduct != null) && isProductInStock){
                                 simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
                                 similarProducts.add(simProduct);
                                 sendAlternateTemplate = Boolean.FALSE;

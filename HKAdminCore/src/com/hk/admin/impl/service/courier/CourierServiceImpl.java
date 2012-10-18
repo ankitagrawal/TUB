@@ -61,7 +61,7 @@ public class CourierServiceImpl implements CourierService {
     }
 
     public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping , Boolean active) {
-        return getCourierServiceInfoDao().searchCouriers(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping , true);
+        return getCourierServiceInfoDao().searchCouriers(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping , active);
     }
 
     public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping) {

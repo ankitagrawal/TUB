@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -354,6 +355,7 @@ private CourierGroupService courierGroupService;
         return getBaseDao().getAll(ConsignmentStatus.class);
     }
 
+
 	public List<CourierGroup>  getCourierGroupList(){
 	return courierGroupService.getAllCourierGroup();	
 	}
@@ -364,5 +366,9 @@ private CourierGroupService courierGroupService;
 
 	public List<Courier> getAvailableCouriers(){
 		return courierService.getAvailableCouriers();
+	}
+	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
+	       return EnumPurchaseOrderStatus.getStatusForNonApprover();
+
 	}
 }

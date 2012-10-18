@@ -138,4 +138,7 @@ public interface MasterDataDao
 	public List<Courier> getDisableCourier();
 
 	public List<Courier> getAvailableCouriers();
+
+	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover();
+
 }

@@ -38,10 +38,14 @@
                 <br/>
 				<br/>  				
                 <label>Warehouse</label>
-                <s:select name="pincodeDefaultCourier.warehouse">
-                                    <s:option value="1">Gurgaon</s:option>
-                                    <s:option value="2">Mumbai</s:option>
-                    </s:select>
+                <%--<s:select name="pincodeDefaultCourier.warehouse">--%>
+                                    <%--<s:option value="1">Gurgaon</s:option>--%>
+                                    <%--<s:option value="2">Mumbai</s:option>--%>
+                    <%--</s:select>--%>
+                <s:select name="warehouseId">  								
+								<s:option value="1">Gurgaon</s:option>
+								<s:option value="2">Mumbai</s:option>
+				</s:select>
         <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
 			</s:form>
         </fieldset>
@@ -133,7 +137,7 @@
 
             <fieldset style="float:left; display:none;" id="new-default-courier-form">
                     <label>Add New</label>
-                    <table>
+                    <table>                                                                        
                         <s:form beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">
                             <tr>
                                 <td>Pincode:</td>

@@ -414,7 +414,7 @@ public class OrderServiceImpl implements OrderService {
         if (serviceCartLineItems != null && serviceCartLineItems.size() > 0) {
 //         orderSplitterService.createSOForService(serviceCartLineItems) ;
            for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
-             createSOForService(serviceCartLineItem);
+             shippingOrders.add(createSOForService(serviceCartLineItem));
            }
 
         }
