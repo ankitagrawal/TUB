@@ -9438,4 +9438,17 @@
 	<changeSet author="Ajeet (generated)" id="1348919811628-3">
 			<dropColumn columnName="updated" tableName="update_pv_price"/>
 	</changeSet>
+		 <changeSet author="Seema (generated)" id="1349781909753-1">
+        <addColumn tableName="courier">
+            <column name="deleted" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+	 <changeSet author="Seema (generated)" id="1349781909753-2">
+		 <sql>
+			update courier set `deleted` = 0;
+		 </sql>
+		   </changeSet>
+    <changeSet author="Seema (generated)" id="1349782838900-1">
+        <addNotNullConstraint columnDataType="TINYINT" columnName="deleted" tableName="courier"/>
+    </changeSet>
 </databaseChangeLog>
