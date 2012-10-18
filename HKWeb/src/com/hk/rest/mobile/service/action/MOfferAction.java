@@ -169,9 +169,9 @@ import com.hk.web.HealthkartResponse;
         if (null != product.getThumbUrl())
             catalogJSONResponse.setThumbUrl(product.getThumbUrl());
         if (null != product.getMinimumMRPProducVariant().getHkPrice())
-            catalogJSONResponse.setHkPrice(product.getMinimumMRPProducVariant().getHkPrice());
+            catalogJSONResponse.setHkPrice(priceFormat.format(product.getMinimumMRPProducVariant().getHkPrice()));
         if (null != product.getMinimumMRPProducVariant().getMarkedPrice())
-            catalogJSONResponse.setMarkedPrice(product.getMinimumMRPProducVariant().getMarkedPrice());
+            catalogJSONResponse.setMarkedPrice(priceFormat.format(product.getMinimumMRPProducVariant().getMarkedPrice()));
         if (null != product.getMinimumMRPProducVariant().getDiscountPercent())
             catalogJSONResponse.setDiscountPercentage(Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent()*100)));
         if(null!=product.getMainImageId())

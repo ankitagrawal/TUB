@@ -37,8 +37,10 @@
 						<h3 style='white-space:normal'>{{print(name)}}</h3>
 						<p>
 							<strike>Rs {{print(markedPrice)}}</strike>
-							<span class='ofrPrc'>Our Price Rs {{print(hkPrice)}}</span>
-							<span class='svPrcnt'>Rs {{print(discountOnHkPrice)}} off</span>
+							<span class='ofrPrc'>Rs {{print(hkPrice)}}</span>
+							{{ if(discountOnHkPrice>0) {}}
+								<span class='svPrcnt'>Rs {{print(discountOnHkPrice)}} off</span>
+							{{ } }}
 							
 						</p>
 						<!--span class='ad2Crt'>Add To cart</span-->

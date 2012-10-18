@@ -200,15 +200,18 @@ public class MOrderSummaryAction extends MBaseAction {
             if (lineItem != null && lineItem.getProductVariant() != null) {
                 ProductVariant productVariant = lineItem.getProductVariant();
                 cartItemResponse = new MCartLineItemsJSONResponse();
-                cartItemResponse.setDiscountOnHkPrice(lineItem.getDiscountOnHkPrice());
-                cartItemResponse.setHkPrice(lineItem.getHkPrice());
+                if(null!=lineItem.getDiscountOnHkPrice())
+                cartItemResponse.setDiscountOnHkPrice(priceFormat.format(lineItem.getDiscountOnHkPrice()));
+                if(null!=lineItem.getHkPrice())
+                cartItemResponse.setHkPrice(priceFormat.format(lineItem.getHkPrice()));
                 cartItemResponse.setId(lineItem.getId());
                 cartItemResponse.setName(productVariant.getProduct().getName());
                 if(null!=productVariant.getProduct())
                 cartItemResponse.setProductId(productVariant.getProduct().getId());
                 if(null!=lineItem.getLineItemType())
                 cartItemResponse.setLineItemType(lineItem.getLineItemType().getName());
-                cartItemResponse.setMarkedPrice(lineItem.getMarkedPrice());
+                if(null!=lineItem.getMarkedPrice())
+                cartItemResponse.setMarkedPrice(priceFormat.format(lineItem.getMarkedPrice()));
                 cartItemResponse.setOrder(lineItem.getOrder().getId());
                 cartItemResponse.setQty(lineItem.getQty());
                 cartItemResponse.setCartLineItemId(lineItem.getId().toString());

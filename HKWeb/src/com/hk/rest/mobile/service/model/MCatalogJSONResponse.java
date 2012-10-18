@@ -64,11 +64,11 @@ public class MCatalogJSONResponse {
     private boolean isService;
 
 
-    public Double getMarkedPrice() {
+    public String getMarkedPrice() {
         return markedPrice;
     }
 
-    public Double getHkPrice() {
+    public String getHkPrice() {
         return hkPrice;
     }
 
@@ -76,11 +76,11 @@ public class MCatalogJSONResponse {
         return discountPercentage;
     }
 
-    public void setMarkedPrice(Double markedPrice) {
-        this.markedPrice = MHKConstants.getDoubleNullDefault(markedPrice);
+    public void setMarkedPrice(String markedPrice) {
+        this.markedPrice = MHKConstants.getStringNullDefault(markedPrice);
     }
 
-    public void setHkPrice(Double hkPrice) {
+    public void setHkPrice(String hkPrice) {
         this.hkPrice = hkPrice;
     }
 
@@ -96,8 +96,8 @@ public class MCatalogJSONResponse {
     private String productURL="";
     private boolean hasMore;
 
-    private Double markedPrice=0.0;
-    private Double hkPrice=0.0;
+    private String markedPrice="0.0";
+    private String hkPrice="0.0";
     private Double discountPercentage=0.0;
 
 

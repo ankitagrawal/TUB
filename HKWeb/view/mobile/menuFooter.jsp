@@ -21,9 +21,19 @@
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='${httpPath}/login-signup.jsp'>Login</a>
+				<% if (session.getAttribute("userName") != null) {%>
+					<a href='javascript:void(0)' onclick='javascript:logout()' >Logout</a>
+				<%} else {%>
+					<a href='${httpPath}/login-signup.jsp'>Login</a>
+				<%}%>
 			</td>
-		</tr><!--
+		</tr>
+		<tr>
+			<td class='arr-r'>
+				<a href='http://www.healthkart.com'>Go To DeskTop Version</a>
+			</td>
+		</tr>
+		<!--
 		<tr>
 			<td class='arr-r'>
 				<a href='contactUs.jsp'>Contact Us</a>

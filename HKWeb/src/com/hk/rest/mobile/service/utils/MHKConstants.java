@@ -30,6 +30,8 @@ public class MHKConstants {
     public static final String LOGIN_ADDRESS = "3";
     public static final String NO_ADDRESS = "No address selected";
     public static final String EMPTY_CART = "No Items in Cart";
+    public static final String USER_DOES_NOT_EXIST = "User with the mentioned email is not in the record";
+    
     public static String getStringNullDefault(String data){
     	if(data==null)
     		return "";

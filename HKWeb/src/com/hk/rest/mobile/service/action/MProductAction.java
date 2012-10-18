@@ -361,25 +361,29 @@ public class MProductAction extends MBaseAction{
                         if(null!=productChoice.getAffiliateCategory())
                         variantJSONResponse.setAffiliateCategory(productChoice.getAffiliateCategory().getAffiliateCategoryName());
                         variantJSONResponse.setProductId(product.getId());
-                        variantJSONResponse.setB2bPrice(productChoice.getB2bPrice());
+                        if(null!=productChoice.getB2bPrice())
+                        variantJSONResponse.setB2bPrice(priceFormat.format(productChoice.getB2bPrice()));
                         variantJSONResponse.setBreadth(productChoice.getBreadth());
                         variantJSONResponse.setBufferTime(productChoice.getBufferTime());
                         variantJSONResponse.setClearanceSale(productChoice.getClearanceSale());
                         variantJSONResponse.setColorHex(productChoice.getColorHex());
                         variantJSONResponse.setConsumptionTime(productChoice.getConsumptionTime());
-                        variantJSONResponse.setCostPrice(productChoice.getCostPrice());
+                        if(null!=productChoice.getCostPrice())
+                        variantJSONResponse.setCostPrice(priceFormat.format(productChoice.getCostPrice()));
                         variantJSONResponse.setCutOffInventory(productChoice.getCutOffInventory());
                         variantJSONResponse.setDeleted(productChoice.getDeleted());
 	                    variantJSONResponse.setDiscountPercent(Double.valueOf(decimalFormat.format(productChoice.getDiscountPercent()*100)));
                         variantJSONResponse.setFollowingAvailableDate(productChoice.getFollowingAvailableDate());
                         variantJSONResponse.setHeight(productChoice.getHeight());
-                        variantJSONResponse.setHkPrice(productChoice.getHkPrice());
+                        if(null!=productChoice.getHkPrice())
+                        variantJSONResponse.setHkPrice(priceFormat.format(productChoice.getHkPrice()));
                         variantJSONResponse.setId(productChoice.getId());
                         variantJSONResponse.setLeadTime(productChoice.getLeadTime());
                         variantJSONResponse.setLeadTimeFactor(productChoice.getLeadTimeFactor());
                         variantJSONResponse.setLength(productChoice.getLength());
                         variantJSONResponse.setMainImageId(productChoice.getMainImageId());
-                        variantJSONResponse.setMarkedPrice(productChoice.getMarkedPrice());
+                        if(null!=productChoice.getMarkedPrice())
+                        variantJSONResponse.setMarkedPrice(priceFormat.format(productChoice.getMarkedPrice()));
                         variantJSONResponse.setOrderRanking(productChoice.getOrderRanking());
                         variantJSONResponse.setOtherRemark(productChoice.getOtherRemark());
                         variantJSONResponse.setOutOfStock(productChoice.getOutOfStock());
@@ -389,9 +393,11 @@ public class MProductAction extends MBaseAction{
                         variantJSONResponse.setQty(productChoice.getQty());
                         if(null!=productChoice.getServiceType())
                         variantJSONResponse.setServiceType(productChoice.getServiceType().getName());
-                        variantJSONResponse.setShippingAddPrice(productChoice.getShippingAddPrice());
+                        if(null!=productChoice.getShippingAddPrice())
+                        variantJSONResponse.setShippingAddPrice(priceFormat.format(productChoice.getShippingAddPrice()));
                         variantJSONResponse.setShippingAddQty(productChoice.getShippingAddQty());
-                        variantJSONResponse.setShippingBasePrice(productChoice.getShippingBasePrice());
+                        if(null!=productChoice.getShippingBasePrice())
+                        variantJSONResponse.setShippingBasePrice(priceFormat.format(productChoice.getShippingBasePrice()));
                         variantJSONResponse.setShippingBaseQty(productChoice.getShippingBaseQty());
                         variantJSONResponse.setSupplierCode(productChoice.getSupplierCode());
                         variantJSONResponse.setUpc(productChoice.getUpc());

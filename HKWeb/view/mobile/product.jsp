@@ -19,9 +19,9 @@
 		</div-->
 		
 		<div style='clear:both;padding:1px 0px'></div>
-		<div id='productTitle'style='clear:both;padding:4px;background-color:#ddd;text-align:center;margin-bottom:6px;font-weight:bold'>
+		<!-- div id='productTitle'style='clear:both;padding:4px;background-color:#ddd;text-align:center;margin-bottom:6px;font-weight:bold'>
 			
-		</div>
+		</div-->
 		<div style='padding-top:4px' id='productList'  data-pageNo='1' data-perPage='20' data-more='true' data-request='free'>
 		<ul>
 		</ul>

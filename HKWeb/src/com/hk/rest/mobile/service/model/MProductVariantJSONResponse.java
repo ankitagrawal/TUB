@@ -20,15 +20,15 @@ public class MProductVariantJSONResponse {
         private String id="";
         private Product product;
         private String variantName="";
-        private Double hkPrice=0.0;
-        private Double b2bPrice;
-        private Double markedPrice=0.0;
+        private String hkPrice="0.0";
+        private String b2bPrice="0.0";
+        private String markedPrice="0.0";
         private Double discountPercent=0.0;
-        private Double costPrice;
+        private String costPrice="0.0";
         private Long shippingBaseQty;
-        private Double shippingBasePrice;
+        private String shippingBasePrice="0.0";
         private Long shippingAddQty;
-        private Double shippingAddPrice;
+        private String shippingAddPrice="0.0";
         private boolean outOfStock;
         private boolean deleted;
         private Double orderRanking;
@@ -128,28 +128,28 @@ public class MProductVariantJSONResponse {
             this.variantName = MHKConstants.getStringNullDefault(variantName);
         }
 
-        public Double getHkPrice() {
+        public String getHkPrice() {
             return hkPrice;
         }
 
-        public void setHkPrice(Double hkPrice) {
-            this.hkPrice =MHKConstants.getDoubleNullDefault( hkPrice);
+        public void setHkPrice(String hkPrice) {
+            this.hkPrice =MHKConstants.getStringNullDefault(hkPrice);
         }
 
-        public Double getB2bPrice() {
+        public String getB2bPrice() {
             return b2bPrice;
         }
 
-        public void setB2bPrice(Double b2bPrice) {
+        public void setB2bPrice(String b2bPrice) {
             this.b2bPrice = b2bPrice;
         }
 
-        public Double getMarkedPrice() {
+        public String getMarkedPrice() {
             return markedPrice;
         }
 
-        public void setMarkedPrice(Double markedPrice) {
-            this.markedPrice = MHKConstants.getDoubleNullDefault(markedPrice);
+        public void setMarkedPrice(String markedPrice) {
+            this.markedPrice = MHKConstants.getStringNullDefault(markedPrice);
         }
 
         public Double getDiscountPercent() {
@@ -160,12 +160,12 @@ public class MProductVariantJSONResponse {
             this.discountPercent = MHKConstants.getDoubleNullDefault(discountPercent);
         }
 
-        public Double getCostPrice() {
+        public String getCostPrice() {
             return costPrice;
         }
 
-        public void setCostPrice(Double costPrice) {
-            this.costPrice = MHKConstants.getDoubleNullDefault(costPrice);
+        public void setCostPrice(String costPrice) {
+            this.costPrice = MHKConstants.getStringNullDefault(costPrice);
         }
 
         public Long getShippingBaseQty() {
@@ -176,12 +176,12 @@ public class MProductVariantJSONResponse {
             this.shippingBaseQty = MHKConstants.getLongNullDefault(shippingBaseQty);
         }
 
-        public Double getShippingBasePrice() {
+        public String getShippingBasePrice() {
             return shippingBasePrice;
         }
 
-        public void setShippingBasePrice(Double shippingBasePrice) {
-            this.shippingBasePrice = MHKConstants.getDoubleNullDefault(shippingBasePrice);
+        public void setShippingBasePrice(String shippingBasePrice) {
+            this.shippingBasePrice = MHKConstants.getStringNullDefault(shippingBasePrice);
         }
 
         public Long getShippingAddQty() {
@@ -192,11 +192,11 @@ public class MProductVariantJSONResponse {
             this.shippingAddQty = shippingAddQty;
         }
 
-        public Double getShippingAddPrice() {
+        public String getShippingAddPrice() {
             return shippingAddPrice;
         }
 
-        public void setShippingAddPrice(Double shippingAddPrice) {
+        public void setShippingAddPrice(String shippingAddPrice) {
             this.shippingAddPrice = shippingAddPrice;
         }
 

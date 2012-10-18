@@ -171,8 +171,10 @@ public class MCartLineItemUpdateAction extends MBaseAction {
             if (lineItem != null && lineItem.getProductVariant() != null) {
                 ProductVariant productVariant = lineItem.getProductVariant();
                 cartItemResponse = new MCartLineItemsJSONResponse();
-                cartItemResponse.setDiscountOnHkPrice(lineItem.getDiscountOnHkPrice());
-                cartItemResponse.setHkPrice(lineItem.getHkPrice());
+                if(null!=lineItem.getDiscountOnHkPrice())
+                cartItemResponse.setDiscountOnHkPrice(priceFormat.format(lineItem.getDiscountOnHkPrice()));
+                if(null!=lineItem.getHkPrice())
+                	cartItemResponse.setHkPrice(priceFormat.format(lineItem.getHkPrice()));
                 cartItemResponse.setId(lineItem.getId());
                 cartItemResponse.setName(productVariant.getProduct().getName());
                 if(null!=productVariant.getProduct() && null!=productVariant.getProduct().getMainImageId())
@@ -181,7 +183,8 @@ public class MCartLineItemUpdateAction extends MBaseAction {
                 	cartItemResponse.setImageUrl(getImageUrl()+productVariant.getProduct().getId()+MHKConstants.IMAGETYPE);
                 if(null!=lineItem.getLineItemType())
                 cartItemResponse.setLineItemType(lineItem.getLineItemType().getName());
-                cartItemResponse.setMarkedPrice(lineItem.getMarkedPrice());
+                if(null!=lineItem.getMarkedPrice())
+                cartItemResponse.setMarkedPrice(priceFormat.format(lineItem.getMarkedPrice()));
                 cartItemResponse.setOrder(lineItem.getOrder().getId());
                 cartItemResponse.setQty(lineItem.getQty());
                 if(lineItem.getQty()<=0){

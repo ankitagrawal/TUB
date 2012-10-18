@@ -8,12 +8,14 @@ import com.hk.constants.core.Keys;
 import com.shiro.PrincipalImpl;
 import com.akube.framework.stripes.action.BaseAction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.number.CurrencyFormatter;
 import org.apache.shiro.mgt.*;
 import org.apache.shiro.mgt.SecurityManager;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +26,8 @@ import java.text.DecimalFormat;
  */
 public class MBaseAction extends BaseAction {
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
-    
+    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+    DecimalFormat priceFormat = new DecimalFormat("###,###,###.##");
     public void noCache(@Context HttpServletResponse response) {
         response.addHeader("Pragma", "no-cache");
         response.addHeader("Cache-Control", "no-cache");

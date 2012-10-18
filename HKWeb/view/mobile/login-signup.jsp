@@ -40,7 +40,7 @@
                                 </p>
                                 
                                 <p class="keeplogin" style='padding-bottom:10px'> 
-									<label for="loginkeeping"><a href="/m/forgotpassword">Forgot password ?</a></label>
+									<label for="loginkeeping"><a href="javascript:void(0)" id='frgPwd'>Forgot password ?</a></label>
 								</p>
 								<input type=hidden name=protocol value='REST'/>
                                 <p class="login button"> 
@@ -96,6 +96,12 @@
 
 	
 <script>
+$('#loginSignup').bind('pagebeforeshow',function(){
+	<% if (session.getAttribute("userName") != null) {%>
+					$.mobile.changePage('${httpPath}/home.jsp');
+					
+				<%} %>
+})
 $('#loginSignup').bind('pageshow',function(){
 
 		
@@ -221,7 +227,34 @@ $('#loginSignup').bind('pageshow',function(){
 	  
 	}
 	
-		
+	$('#frgPwd').click(function(){
+		popUpMob.showWithConfirm('Forgot Password','<input type=text placeholder="Enter your email" style="border:none;background:#eee;width:90%;margin:0px auto;height:1.7em;;border-radius:0px;-webkit-border-radius:0px" id="frgPwdFld"/>',function(){
+	popUpMob.message('','remove');
+	if($('#frgPwdFld').val()=='')
+	{
+		popUpMob.message('Please specify Email','add');
+		return;
+	}
+		$.ajax({
+		url: wSURL+'mForgotPassword/forgotPassword?email='+$('#frgPwdFld').val(),
+		dataType: 'json',
+		success : function(response){
+			if(hasErr(response))
+				{
+					popUpMob.message(response.message,'add');
+				}
+				else
+				{
+					popUpMob.message(response.message,'add');
+					$('#frgPwdFld').hide();
+					$('#popUpMobOk').hide();
+					$('#popUpMobCancel').attr('src','${httpPath}/images/ok.png');
+				}
+			}
+		})
+	},function(){popUpMob.hide();})
+	})	
+	
 		
 	$('.gNav').click( function(e){
 		var ele = e.currentTarget;

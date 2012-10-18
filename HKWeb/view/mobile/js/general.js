@@ -221,10 +221,13 @@ function generateWithIcon(icon,text){
 }
 function PopUpMob()
 	{
-		this.ele = 'popUpMobPar';
-		this.shadow = 'popUpMobShadow';
-		this.text = 'popUpMobContent';
-		this.close = 'popUpMobClose';
+		this.ele = 'popUpMobPar';		//global container
+		this.shadow = 'popUpMobShadow';	//shadow element, child of ele and sibling of text
+		this.text = 'popUpMobContent';	//child of ele and sibling of shadow
+		this.close = 'popUpMobClose';	
+		this.textInternal = 'popUpMobInternal';//text container, child of text
+		this.msgBox = 'popUpMobMsg'		//message for confirm box
+		
 	}
 	PopUpMob.prototype.init = function(){
 		var curPage = '#'+$.mobile.activePage.attr('id');
@@ -248,9 +251,38 @@ PopUpMob.prototype.showWithTitle = function(title,text){
 	$('#'+this.text).append('<div style="margin-top:10px"><center><img src="images/ok.png" onclick="$(\'#'+this.ele+'\').hide()" alt="ok"/></center></div>');
 	$('#'+this.ele).show();
 }
+PopUpMob.prototype.showWithConfirm = function(title,field,callBackOk,callBackCancel){
+	this.init();
+	$('#'+this.text).html('<div style="background:url(images/navbar_bg.png);min-height:20px;width:100%;padding:5px 0px;color:white;text-shadow:none;-webkit-text-shadow:none;font-weight:bold;font-size:14px;">'+title+'</div>');
+	$('#'+this.text).append("<div style='padding-top:10px' id='"+this.textInternal+"'></div>")
+	$('#'+this.text+' '+'#'+this.textInternal).append(field);
+	$('#'+this.text+' '+'#'+this.textInternal).append('<div style="margin-top:10px"><center><img src="images/ok.png" id="popUpMobOk" alt="ok"/>&nbsp;&nbsp&nbsp;<img src="images/cancel.png" id="popUpMobCancel" alt="Cancel"/></center></div>');
+	$('#popUpMobOk').click(callBackOk);
+	$('#popUpMobCancel').click(callBackCancel);
+	$('#'+this.ele).show();
+}
+PopUpMob.prototype.message = function(msg,type){
+	if(type=='add')
+	{
+		this.addMessage(msg);
+		console.log(msg);
+	}
+	else
+		this.removeMessage();
+}
+PopUpMob.prototype.addMessage = function(msg){
+	$('#'+this.msgBox).remove();
+	var content = "<div style='background:url(images/navbar_bg.png);border:1px solid #BBB;padding:5px;color:white;text-shadow:none;-webkit-text-shadow:none;font-size:1em' id='"+this.msgBox+"'>";
+	content = content + msg;
+	content = content + '</div>';
+	$('#'+this.text).append(content);
+}
+PopUpMob.prototype.removeMessage = function(){
+	$('#'+this.msgBox).remove();
+}
 PopUpMob.prototype.hide = function(){
 	
-	$(this.ele).hide();
+	$('#'+this.ele).hide();
 }
 var popUpMob = new PopUpMob();
 function loadingPop(state,msg)//state is mandatory, msg is mandatory for state 's' only

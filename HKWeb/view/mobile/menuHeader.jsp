@@ -1,6 +1,6 @@
 <!--table class='menuContainer'><tr><td style='width:40px;padding:0px'><div id=homeButton></div></td><td><img src='images/logo.png'/></td><td><img src='images/cart_empty.png' height='35px' align=right /></td></tr></table-->
 
-<table class='menuContainer'><tr><td><img src='${httpPath}/images/logo.png' style='position:relative;top:3px;left:3px'/></td><td>
+<table class='menuContainer'><tr><td><a href='${httpPath}/home.jsp'><img src='${httpPath}/images/logo.png' style='position:relative;top:3px;left:3px'/></a></td><td>
 	<div class=sessionOptions>
 		<b>Hi <%=(session.getAttribute("userName") != null ? session.getAttribute("userName") : "Guest")%>
 		</b><br>

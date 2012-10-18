@@ -26,9 +26,9 @@ public class MCartLineItemsJSONResponse {
     private String name;
     private Long order=0l;
     private Long qty=0l;
-    private Double markedPrice=0.0;
-    private Double hkPrice=0.0;
-    private Double discountOnHkPrice=0.0;
+    private String markedPrice="0.0";
+    private String hkPrice="0.0";
+    private String discountOnHkPrice="0.0";
     private String lineItemType;
     private String cartLineItemId;
     private String productId;
@@ -100,28 +100,28 @@ public class MCartLineItemsJSONResponse {
         this.qty = MHKConstants.getLongNullDefault(qty);
     }
 
-    public Double getMarkedPrice() {
+    public String getMarkedPrice() {
         return markedPrice;
     }
 
-    public void setMarkedPrice(Double markedPrice) {
-        this.markedPrice = MHKConstants.getDoubleNullDefault(markedPrice);
+    public void setMarkedPrice(String markedPrice) {
+        this.markedPrice = MHKConstants.getStringNullDefault(markedPrice);
     }
 
-    public Double getHkPrice() {
+    public String getHkPrice() {
         return hkPrice;
     }
 
-    public void setHkPrice(Double hkPrice) {
-        this.hkPrice = MHKConstants.getDoubleNullDefault(hkPrice);
+    public void setHkPrice(String hkPrice) {
+        this.hkPrice = MHKConstants.getStringNullDefault(hkPrice);
     }
 
-    public Double getDiscountOnHkPrice() {
+    public String getDiscountOnHkPrice() {
         return discountOnHkPrice;
     }
 
-    public void setDiscountOnHkPrice(Double discountOnHkPrice) {
-        this.discountOnHkPrice = MHKConstants.getDoubleNullDefault(discountOnHkPrice);
+    public void setDiscountOnHkPrice(String discountOnHkPrice) {
+        this.discountOnHkPrice = MHKConstants.getStringNullDefault(discountOnHkPrice);
     }
 
     public String getLineItemType() {

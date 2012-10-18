@@ -68,7 +68,7 @@
    <textarea name="codContactPhone" id="orderSummary_phone"></textarea>
 
    </div>
-     <a href='javascript:void(0)' id="orderSummary_makepayment" style='width:95%;margin:0px auto;margin-bottom:10px' data-role=button>Make Payment</a>
+     <a href='javascript:void(0)' id="orderSummary_makepayment" style='width:95%;margin:0px auto;margin-bottom:10px' data-role=button>Place Order</a>
    </form>
   </div>
 </div>
