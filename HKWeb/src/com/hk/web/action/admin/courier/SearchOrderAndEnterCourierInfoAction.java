@@ -262,8 +262,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 		}
 		awbService.refresh(finalAwb);
 		return finalAwb;
-
-
 	}
 
 	public List<ShippingOrder> getShippingOrderList() {

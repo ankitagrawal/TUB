@@ -94,7 +94,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 			suggestedAwb = attachAwbToShipment(suggestedCourier, shippingOrder);
 		}
 
-		// validate that we have awb to create shipment
+		// If we dont have AWB , shipment will not be created
 		if (suggestedAwb == null) {
 			return null;
 		}
@@ -102,11 +102,6 @@ public class ShipmentServiceImpl implements ShipmentService {
 		Shipment shipment = new Shipment();
 		shipment.setCourier(suggestedCourier);
 		shipment.setEmailSent(false);
-
-//        suggestedAwb.setUsed(true);
-//        suggestedAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
-//        suggestedAwb = awbService.save(suggestedAwb);
-
 		shipment.setAwb(suggestedAwb);
 		shipment.setShippingOrder(shippingOrder);
 		shipment.setBoxWeight(estimatedWeight / 1000);
@@ -134,9 +129,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 	}
 
 	@Transactional
-	public Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
-		Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
-				EnumAwbStatus.Unused.getAsAwbStatus());
+	private Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
+		Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
 		if (suggestedAwb == null) {
 			return null;
 		}
