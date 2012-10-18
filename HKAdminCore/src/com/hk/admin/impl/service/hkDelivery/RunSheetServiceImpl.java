@@ -208,9 +208,13 @@ public class RunSheetServiceImpl implements RunSheetService {
 	public Runsheet closeRunsheet(Runsheet runsheet) {
 		Set<Consignment> consignments = runsheet.getConsignments();
 		runsheet = updateExpectedAmountForClosingRunsheet(runsheet);
+		markShippingOrderDeliveredAgainstConsignments(consignments); 		//mark shipments delivered on healthkart side
+		for(Consignment consignment : consignments){
+				if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
+					consignment.setDeliveryDate(new Date());
+				}
+			}
 		runsheet.setRunsheetStatus(runsheetDao.get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
-		//mark shipments delivered on healthkart side
-		markShippingOrderDeliveredAgainstConsignments(consignments); 
 		return runsheet;
 	}
 }

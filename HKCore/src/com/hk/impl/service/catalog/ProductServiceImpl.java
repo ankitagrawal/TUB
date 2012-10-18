@@ -1,11 +1,13 @@
 package com.hk.impl.service.catalog;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.hk.domain.content.SeoData;
-import com.hk.domain.search.SolrProduct;
-import com.hk.pact.dao.seo.SeoDao;
-import com.hk.pact.service.search.ProductIndexService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +16,28 @@ import org.springframework.stereotype.Service;
 import com.akube.framework.dao.Page;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.*;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductExtraOption;
+import com.hk.domain.catalog.product.ProductGroup;
+import com.hk.domain.catalog.product.ProductImage;
+import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.SimilarProduct;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.content.PrimaryCategoryHeading;
+import com.hk.domain.content.SeoData;
+import com.hk.domain.search.SolrProduct;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.dao.seo.SeoDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.review.ReviewService;
+import com.hk.pact.service.search.ProductIndexService;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.web.filter.WebContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -54,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private SeoDao seoDao;
 
-    private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+    /*private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);*/
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -143,8 +152,8 @@ public class ProductServiceImpl implements ProductService {
         return getProductDAO().getProductByCategoryAndBrand(category, brand, page, perPage);
     }
 
-    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage) {
-        return getProductDAO().getProductByCategoryAndBrand(categoryNames, brand, page, perPage);
+    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand,boolean onlyCOD, boolean includeCombo, int page, int perPage) {
+        return getProductDAO().getProductByCategoryAndBrand(categoryNames, brand,onlyCOD, includeCombo, page, perPage);
     }
 
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage) {
@@ -234,31 +243,31 @@ public class ProductServiceImpl implements ProductService {
         return true;
     }
 
-	public boolean isComboInStock(String comboId) {
-		Combo combo = getComboDao().getComboById(comboId);
-        if (combo.isDeleted() != null && combo.isDeleted()) {
-            return false;
-        } else {
-            for (ComboProduct comboProduct : combo.getComboProducts()) {
-                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
-                    return false;
-                }
-            }
+    @SuppressWarnings("unchecked")
+    public boolean isComboInStock(Product product) {
+        boolean isComboInStock = true;
+        //if (Hibernate.getClass(product).equals(Combo.class)){
+        if (isCombo(product)){
+            Combo combo = (Combo)product;
+            isComboInStock = isComboInStock(combo);
         }
-        return true;
+        return isComboInStock;
     }
 
     public List<Combo> getRelatedCombos(Product product) {
         return getComboDao().getCombos(product);
     }
 
+    public boolean isCombo(Product product){
+        return product instanceof Combo;
+    }
+
     public boolean isProductOutOfStock(Product product) {
         List<ProductVariant> productVariants = product.getProductVariants();
         boolean isOutOfStock = true;
+        if (isCombo(product)){
+             return !isComboInStock(product);
+        }
         for (ProductVariant pv : productVariants) {
             if (!pv.getOutOfStock() && !pv.getDeleted()) {
                 isOutOfStock = false;
@@ -488,6 +497,12 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setHidden(false);
         }
 
+        if(product.getCodAllowed() != null){
+            solrProduct.setCODAllowed(product.getCodAllowed());
+        }else{
+            solrProduct.setCODAllowed(false);
+        }
+
         Double price = null;
         productVariant = product.getMinimumHKPriceProductVariant();
         if (productVariant.getHkPrice() != null){
@@ -495,19 +510,15 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setHkPrice(price);
         }
 
-	    try {
-		    Combo combo = comboDao.getComboById(product.getId());
-		    if (combo != null) {
-			    solrProduct.setCombo(true);
-			    solrProduct.setMarkedPrice(combo.getMarkedPrice());
-			    if (price == null) {
-				    solrProduct.setHkPrice(combo.getHkPrice());
-			    }
-			    solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
-		    }
-	    } catch (Exception e) {
-
-	    }
+        if (isCombo(product)) {
+            Combo combo = comboDao.getComboById(product.getId());
+            solrProduct.setCombo(true);
+            solrProduct.setMarkedPrice(combo.getMarkedPrice());
+            if (price == null) {
+                solrProduct.setHkPrice(combo.getHkPrice());
+            }
+            solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
+        }
 
         if (product.getService() != null){
             solrProduct.setService(product.getService());

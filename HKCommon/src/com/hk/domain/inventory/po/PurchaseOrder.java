@@ -33,7 +33,7 @@ public class PurchaseOrder implements java.io.Serializable {
     private Date createDate = new Date();
     
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_dt", nullable = false, length = 19)
+    @Column(name = "update_dt", length = 19)
     private Date updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -96,7 +96,22 @@ public class PurchaseOrder implements java.io.Serializable {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
-    @Transient
+	@Column(name = "taxable_amount")
+	private Double taxableAmount;
+
+	@Column(name = "tax_amount")
+	private Double taxAmount;
+
+	@Column(name = "surcharge_amount")
+	private Double surchargeAmount;
+
+	@Column(name = "discount")
+	private Double discount;
+
+	@Column(name = "final_payable_amount")
+	private Double finalPayableAmount;
+
+	@Transient
     private int noOfSku;
 
     public Long getId() {
@@ -266,8 +281,46 @@ public class PurchaseOrder implements java.io.Serializable {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
-    
-    
+
+	public Double getTaxableAmount() {
+		return taxableAmount;
+	}
+
+	public void setTaxableAmount(Double taxableAmount) {
+		this.taxableAmount = taxableAmount;
+	}
+
+	public Double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(Double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public Double getSurchargeAmount() {
+		return surchargeAmount;
+	}
+
+	public void setSurchargeAmount(Double surchargeAmount) {
+		this.surchargeAmount = surchargeAmount;
+	}
+
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
+	}
+
+	public Double getFinalPayableAmount() {
+		return finalPayableAmount;
+	}
+
+	public void setFinalPayableAmount(Double finalPayableAmount) {
+		this.finalPayableAmount = finalPayableAmount;
+	}
 }
 
 

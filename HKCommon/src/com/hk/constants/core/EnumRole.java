@@ -1,9 +1,9 @@
 package com.hk.constants.core;
 
+import com.hk.domain.user.Role;
+
 import java.util.Arrays;
 import java.util.List;
-
-import com.hk.domain.user.Role;
 
 public enum EnumRole {
 
@@ -109,6 +109,7 @@ public enum EnumRole {
                 EnumRole.OPS_MANAGER.getRoleName(),
                 EnumRole.WH_EMPLOYEE.getRoleName(),
                 EnumRole.WH_MANAGER.getRoleName(),
+                EnumRole.WH_MANAGER_L1.getRoleName(),
 	            EnumRole.HK_DELIVERY_HUB_MANAGER.getRoleName());
     }
 

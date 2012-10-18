@@ -2,13 +2,11 @@ package com.hk.pact.service.catalog;
 
 import java.util.List;
 import java.util.Set;
-import java.util.Map;
 
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.dto.ProductOptionDto;
 import com.hk.dto.PriceRangeDto;
+import com.hk.dto.ProductOptionDto;
 
 public interface CategoryService {
     

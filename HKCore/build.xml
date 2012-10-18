@@ -30,15 +30,7 @@
 		<fileset file="${project.common.dir}/dependencies/javaee.jar" />
 		<fileset file="${project.common.dir}/dependencies/testng-5.8-jdk15.jar" />
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
-        <fileset file="${project.mooga.dir}/dist/hk-mooga.jar" />
-        <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>
-        <fileset file="${lib.root.dir}/mooga/axis.jar" />
-        <fileset file="${lib.root.dir}/mooga/commons-discovery-0.2.jar" />
-        <fileset file="${lib.root.dir}/mooga/commons-logging-1.0.4.jar" />
-        <fileset file="${lib.root.dir}/mooga/jaxrpc.jar" />
-        <fileset file="${lib.root.dir}/mooga/log4j-1.2.8.jar" />
-        <fileset file="${lib.root.dir}/mooga/saaj.jar" />
-        <fileset file="${lib.root.dir}/mooga/wsdl4j-1.5.1.jar" />
+        <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>        
 	</path>
 
 
@@ -58,14 +50,12 @@
 	</target>
 	-->
 
-	<target name="build.dependencies" depends="dependencies.check,build.common,build.mooga" />
+	<target name="build.dependencies" depends="dependencies.check,build.common" />
 	<target name="dependencies.check">
 		<condition property="build.common.available">
 			<available file="${project.common}/dist/hk-common.jar" />
 		</condition>
-        <condition property="build.mooga.available">
-            <available file="${project.common}/dist/hk-mooga.jar" />
-        </condition>
+
 	</target>
 
 	<target name="build.common" unless="build.common.available">
@@ -73,11 +63,7 @@
 			<property name="build.env" value="${build.env}" />
 		</ant>
 	</target>
-    <target name="build.mooga">
-        <ant dir="${project.mooga.dir}" target="build" inheritall="false">
-            <property name="build.env" value="${build.env}" />
-        </ant>
-    </target>
+
 
 	<target name="compile" depends="prepare, build.dependencies">
 		<javac srcdir="src" destdir="${package.target.dir}" debug="true" debuglevel="lines,vars,source" source="1.6" deprecation="false" nowarn="true">

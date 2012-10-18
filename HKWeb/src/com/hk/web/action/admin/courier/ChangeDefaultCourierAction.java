@@ -1,31 +1,5 @@
 package com.hk.web.action.admin.courier;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.FileBean;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
@@ -41,6 +15,20 @@ import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.util.XslGenerator;
+import net.sourceforge.stripes.action.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
 @Component
@@ -76,7 +64,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private Pincode pincode;
     private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
     private List<PincodeDefaultCourier> pincodeDefaultCouriers = new ArrayList<PincodeDefaultCourier>();
-    private Warehouse warehouse;    
+    private Warehouse warehouse;
+    private Long warehouseId;
 
 
     @DefaultHandler
@@ -152,11 +141,10 @@ public class ChangeDefaultCourierAction extends BaseAction {
 
     public Resolution generatePincodeExcel() throws Exception {
         List<PincodeDefaultCourier> pincodeDefaultCourierList = new ArrayList<PincodeDefaultCourier>();
-        warehouse = pincodeDefaultCourier.getWarehouse();
-//        get(PincodeDefaultCourier.class, variantId);
-
+//        warehouse = pincodeDefaultCourier.getWarehouse();
+          warehouse = warehouseDao.getWarehouseById( warehouseId);
 //        pincodeDefaultCourierList = pincodeDao.getAll(PincodeDefaultCourier.class);
-          pincodeDefaultCourierList= pincodeDao.searchPincodeDefaultCourierList(null,warehouse,null,null) ;
+        pincodeDefaultCourierList= pincodeDao.searchPincodeDefaultCourierList(null,warehouse,null,pincodeDefaultCourier.isGroundShipping()) ;
 
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
         final File excelFile = new File(excelFilePath);
@@ -287,4 +275,13 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public void setCourierService(CourierService courierService) {
         this.courierService = courierService;
     }
+
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+    
 }
