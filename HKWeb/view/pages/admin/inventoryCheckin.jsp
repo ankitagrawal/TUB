@@ -18,7 +18,7 @@
   <s:layout-component name="content">
     <div style="display:inline;float:left;">
       <h2>Item Checkin against GRN#${ica.grn.id}</h2>
-      <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction">
+      <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="checkinForm">
         <s:hidden name="grn" value="${ica.grn.id}"/>
         <table border="1">
           <tr>
@@ -71,14 +71,13 @@
 
         </script>
         <br/>
-	      <c:set var="variable" value=""/>
         <s:submit class="invCheckin" name="save" value="Save"/>
       </s:form>
       <span style="display:inline;float:right;"><h2><s:link beanclass="com.hk.web.action.admin.inventory.GRNAction">&lang;&lang;&lang;
         Back to GRN List</s:link></h2></span>
     </div>
 	  <div style="display: none;">
-	  	<s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="pvInfoLink"
+	  	<s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="validationLink"
 	  	        event="validateFields"></s:link>
 	  </div>
 
@@ -132,30 +131,32 @@
           </s:form>
         </fieldset>
       </div>--%>
-	    <input type="hidden" value="${test}" id="testHid">
 
     </div>
     <script type="text/javascript">
-      $(document).ready(function() {
-      $('.invCheckin').click(function disableSaveButton(event){
-	      event.preventDefault();
-      //$(this).css("display", "none");
-
-	      $.getJSON(
-	      					$('#pvInfoLink').attr('href'), {upc : $('.variant').val(), costPrice : $('#costPrice').val()},
-	      					function (res) {
-	      						if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-	      							alert(res.message);
-								      return false;
-	      						} else {
-	      							alert(res.message);
-								      return false;
-	      						}
-	      					}
-	      			);
-
-    });
-      });
+	    $(document).ready(function() {
+		    $('.invCheckin').click(function(event){
+			    //$(this).css("display", "none");
+			    event.preventDefault();
+			    $.getJSON(
+					    $('#validationLink').attr('href'), {upc : $('.variant').val(), costPrice : $('#costPrice').val(), mrp : $('#mrp').val()},
+					    function (res) {
+						    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+							    $('#checkinForm').attr('action', $('#checkinForm').attr('action') + "?save=");
+							    $('#checkinForm').submit();
+						    } else {
+							    var confirmMessage = confirm(res.message);
+							    if(confirmMessage == true) {
+								    $('#checkinForm').attr('action', $('#checkinForm').attr('action') + "?save=");
+								    $('#checkinForm').submit();
+							    } else {
+								    return false;
+							    }
+						    }
+					    }
+			    );
+		    });
+	    });
     </script>
   </s:layout-component>
 </s:layout-render>

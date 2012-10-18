@@ -120,6 +120,9 @@ public class InventoryCheckinAction extends BaseAction {
 	@Validate(required = true, on = "parse")
 	private FileBean              fileBean;
 
+	private final double TOLERANCE_LEVEL_PERCENTAGE = 10; // Max allowed percentage value for CP, MRP etc to be higher or lower than
+														// the corresponding product variant value.
+
 	@DefaultHandler
 	@DontValidate
 	public Resolution pre() {
@@ -136,11 +139,35 @@ public class InventoryCheckinAction extends BaseAction {
 				productVariant = getProductVariantService().getVariantById(upc);
 			}
 			if (productVariant != null) {
-				if(costPrice != null && costPrice.doubleValue() > productVariant.getCostPrice() + .01 * productVariant.getCostPrice()) {
-					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Cost price is greater", dataMap);
-				} else {
-					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "OK", dataMap);
+				if(costPrice != null && (costPrice > productVariant.getCostPrice() + TOLERANCE_LEVEL_PERCENTAGE * productVariant.getCostPrice() / 100)) {
+					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
+							"Cost price is higher than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE + " %. \n" +
+							"Cost price of the variant in the system is Rs. " + productVariant.getCostPrice() + "\n Do you want to continue?", dataMap);
 				}
+
+				else if(costPrice != null && (costPrice < productVariant.getCostPrice() - TOLERANCE_LEVEL_PERCENTAGE * productVariant.getCostPrice() / 100)) {
+					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
+							"Cost price is lesser than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE + " %. \n" +
+							"Cost price of the variant in the system is Rs. " + productVariant.getCostPrice() + "\n Do you want to continue?", dataMap);
+				}
+
+				else if(mrp != null && (mrp > productVariant.getMarkedPrice() + TOLERANCE_LEVEL_PERCENTAGE * productVariant.getMarkedPrice() / 100)) {
+					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
+							"MRP is higher than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE +" %. \n" +
+							"MRP of the variant in the system is Rs. " + productVariant.getMarkedPrice() + "\n Do you want to continue?", dataMap);
+				}
+
+				else if(mrp != null && (mrp < productVariant.getMarkedPrice() - TOLERANCE_LEVEL_PERCENTAGE * productVariant.getMarkedPrice() / 100)) {
+					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
+							"MRP is lesser than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE +" %. \n" +
+							"MRP of the variant in the system is Rs. " + productVariant.getMarkedPrice() + "\n Do you want to continue?", dataMap);
+				}
+
+				else {
+					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Cost price and MRP are within the permissible limit", dataMap);
+				}
+			} else {
+				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "No such UPC or Variant Id. Do you want to continue?", dataMap);
 			}
 
 		} catch (Exception e) {
