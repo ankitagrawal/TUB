@@ -168,13 +168,15 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     private String buildCategoryQuery(String query, List<SearchFilter> categories){
         for (SearchFilter searchFilter : categories){
-            Category category = categoryService.getCategoryByName(searchFilter.getValue());
-            if (category != null){
-                if (StringUtils.isNotBlank(query)) {
-                    query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender + category.getName()
-                            + SolrSchemaConstants.queryTerminator;// " AND _query_:\"category_name:cat\""
-                } else {
-                    query += SolrSchemaConstants.category + SolrSchemaConstants.paramAppender + category.getName();
+            if (searchFilter.getValue() != null){
+                Category category = categoryService.getCategoryByName(searchFilter.getValue().toString());
+                if (category != null){
+                    if (StringUtils.isNotBlank(query)) {
+                        query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender + category.getName()
+                                + SolrSchemaConstants.queryTerminator;// " AND _query_:\"category_name:cat\""
+                    } else {
+                        query += SolrSchemaConstants.category + SolrSchemaConstants.paramAppender + category.getName();
+                    }
                 }
             }
         }
@@ -191,16 +193,18 @@ class ProductSearchServiceImpl implements ProductSearchService {
         SolrQuery solrQuery = new SolrQuery();
         String query = "*";
         for (SearchFilter searchFilter : searchFilters){
-            if (!StringUtils.isBlank(searchFilter.getValue())) {
+            //if (!StringUtils.isBlank(searchFilter.getValue()))
+            {
                 //query += SolrSchemaConstants.brand + SolrSchemaConstants.paramAppender + "\"" + brand + "\"";
-                if (searchFilter.getName().equals(SolrSchemaConstants.isCombo) ||
-                        searchFilter.getName().equals(SolrSchemaConstants.isCODAllowed))
+                if (searchFilter.getValue() instanceof  String)
                 {
-                    query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender + searchFilter.getValue() + SolrSchemaConstants.queryTerminator;
+                    if (!StringUtils.isBlank(searchFilter.getValue().toString())){
+                        query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender + "\"" + searchFilter.getValue() + "\"";
+                    }
                 }
                 else
                 {
-                    query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender + "\"" + searchFilter.getValue() + "\"";
+                    query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender + searchFilter.getValue() + SolrSchemaConstants.queryTerminator;
                 }
             }
         }

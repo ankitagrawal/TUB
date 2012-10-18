@@ -81,11 +81,11 @@ public class MSearchAction extends MBaseAction {
 			try {
 				List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
 				if (!includeCombo) {
-					SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, "false");
+					SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, includeCombo);
 					searchFilters.add(comboFilter);
 				}
 				if (onlyCOD) {
-					SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, "true");
+					SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, onlyCOD);
 					searchFilters.add(codFilter);
 				}
 				SearchResult sr = productSearchService.getSearchResults(query, searchFilters, pageNo, perPage, false);
