@@ -43,7 +43,7 @@ public class SkuGroupAction extends BaseAction {
 			}
 			skuGroupDao.save(skuGroup);
 			addRedirectAlertMessage(new SimpleMessage("SkuGroupUpdated."));
-			return new RedirectResolution(InventoryCheckoutAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+			return new RedirectResolution(SkuGroupAction.class).addParameter("skuGroup", skuGroup.getId()).addParameter("gatewayOrderId", gatewayOrderId);
 		} catch (Exception e) {
 
 		}

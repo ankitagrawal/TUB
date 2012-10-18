@@ -7,6 +7,7 @@ package com.hk.exception;
  * Time: 1:48:53 PM
  * To change this template use File | Settings | File Templates.
  */
+@SuppressWarnings("serial")
 public class InvalidRewardPointsException extends HealthkartRuntimeException {
 
   private double rewardPointsValue;

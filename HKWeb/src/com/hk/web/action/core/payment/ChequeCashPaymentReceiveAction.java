@@ -1,27 +1,28 @@
 package com.hk.web.action.core.payment;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.util.BaseUtils;
-import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.domain.order.Order;
-import com.hk.domain.payment.Payment;
-import com.hk.domain.user.User;
-import com.hk.exception.HealthkartPaymentGatewayException;
-import com.hk.manager.OrderManager;
-import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.service.RoleService;
-import com.hk.pact.service.UserService;
-import com.hk.pact.service.payment.PaymentService;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
+
+import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.util.BaseUtils;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.domain.order.Order;
+import com.hk.domain.payment.Payment;
+import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.manager.OrderManager;
+import com.hk.manager.payment.PaymentManager;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.payment.PaymentService;
 
 /**
  * User: kani Time: 12 Feb, 2010 3:59:02 PM
@@ -57,7 +58,7 @@ public class ChequeCashPaymentReceiveAction extends BaseAction {
 
 	private String chequeNumber;
 
-	private User user;
+	/*private User user;*/
 
 	@ValidationMethod
 	public void validate() {
