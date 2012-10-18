@@ -1,11 +1,22 @@
 package com.hk.impl.service.search;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.hk.constants.catalog.SolrSchemaConstants;
+import com.hk.constants.marketing.ProductReferrerConstants;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.search.*;
+import com.hk.dto.search.SearchResult;
+import com.hk.exception.SearchException;
+import com.hk.manager.LinkManager;
+import com.hk.pact.dao.location.LocalityMapDao;
+import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.search.ProductIndexService;
+import com.hk.pact.service.search.ProductSearchService;
+import com.hk.util.ProductReferrerMapper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -20,27 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hk.constants.catalog.SolrSchemaConstants;
-import com.hk.constants.marketing.ProductReferrerConstants;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.search.PaginationFilter;
-import com.hk.domain.search.RangeFilter;
-import com.hk.domain.search.SearchFilter;
-import com.hk.domain.search.SolrProduct;
-import com.hk.domain.search.SortFilter;
-import com.hk.dto.search.SearchResult;
-import com.hk.exception.SearchException;
-import com.hk.manager.LinkManager;
-import com.hk.pact.dao.location.LocalityMapDao;
-import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.service.catalog.CategoryService;
-import com.hk.pact.service.catalog.ProductService;
-import com.hk.pact.service.search.ProductIndexService;
-import com.hk.pact.service.search.ProductSearchService;
-import com.hk.util.ProductReferrerMapper;
+import java.util.*;
 
 @Service
 class ProductSearchServiceImpl implements ProductSearchService {
@@ -130,7 +121,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     public SearchResult getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException {
         SolrQuery query = new SolrQuery();
         //Create the query syntax
-        String myQuery = SolrSchemaConstants.brand + SolrSchemaConstants.paramAppender +  brand  + SolrSchemaConstants.queryInnerJoin + SolrSchemaConstants.category
+        String myQuery = SolrSchemaConstants.brand + SolrSchemaConstants.paramAppender + brand + SolrSchemaConstants.queryTerminator + SolrSchemaConstants.queryInnerJoin + SolrSchemaConstants.category
                 + SolrSchemaConstants.paramAppender + topLevelCategory + SolrSchemaConstants.queryTerminator + SolrSchemaConstants.queryInnerJoin
                 + SolrSchemaConstants.isGoogleAdDisallowed + SolrSchemaConstants.paramAppender + 0 + SolrSchemaConstants.queryTerminator + SolrSchemaConstants.queryInnerJoin
                 + SolrSchemaConstants.isHidden + SolrSchemaConstants.paramAppender + 0 + SolrSchemaConstants.queryTerminator + SolrSchemaConstants.queryInnerJoin
@@ -199,7 +190,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
                 if (searchFilter.getValue() instanceof  String)
                 {
                     if (!StringUtils.isBlank(searchFilter.getValue().toString())){
-                        query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender  + searchFilter.getValue() ;
+                        query += SolrSchemaConstants.queryInnerJoin + searchFilter.getName() + SolrSchemaConstants.paramAppender + searchFilter.getValue() + SolrSchemaConstants.queryTerminator;;
                     }
                 }
                 else
