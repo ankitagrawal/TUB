@@ -144,9 +144,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 			return null;
 		}
 		int rowsUpdate = (Integer) awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
+	    awbService.refresh(suggestedAwb);
 		if (rowsUpdate == 1) {
-			Shipment shipment = shippingOrder.getShipment();
-			shipment.setAwb(suggestedAwb);
 			return suggestedAwb;
 		} else {
 			return attachAwbToShipment(courier, shippingOrder);

@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.domain.courier.Awb;
@@ -61,11 +62,12 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
     }
 
-
+	@Transactional
 	public Object save(Awb awb, Integer newStatus) {
 		if (awb.getId() != null) {
+			Integer originalStatus =  awb.getAwbStatus().getId().intValue();
 			String query = "UPDATE awb SET awb_status_id=? WHERE id=? AND awb_status_id=?";
-			Object[] param = {newStatus, awb.getId(), awb.getAwbStatus().getId()};
+			Object[] param = {newStatus, awb.getId(),originalStatus};
 			int rowsUpdate = executeNativeSql(query, param);
 			return rowsUpdate;
 		} else {

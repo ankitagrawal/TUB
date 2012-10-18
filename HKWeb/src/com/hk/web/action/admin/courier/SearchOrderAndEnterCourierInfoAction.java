@@ -234,7 +234,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			//user has used suggested one
 			finalAwb=updateAttachStatus(finalAwb);
 		}
-		shipment.setAwb(finalAwb);
+		shipment.setAwb(finalAwb);                              
 		shipment.setShippingOrder(shippingOrder);
 		shippingOrder.setShipment(shipment);
 		if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
