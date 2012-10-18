@@ -1,5 +1,9 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="com.hk.domain.catalog.product.ProductVariant" %>
+<%@ page import="com.hk.pact.service.catalog.ProductVariantService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" var="ica"/>
@@ -27,11 +31,11 @@
           </tr>
 		<tr>
 			<td>Cost Price:</td>
-			<td><s:text name="costPrice" value="0.0"/></td>
+			<td><s:text name="costPrice" value="0.0" id="costPrice"/></td>
 		</tr>
 		<tr>
 			<td>MRP:</td>
-			<td><s:text name="mrp" value="0.0"/></td>
+			<td><s:text name="mrp" value="0.0" id="mrp"/></td>
 		</tr>
           <tr>
             <td>Batch Number:</td>
@@ -67,11 +71,17 @@
 
         </script>
         <br/>
+	      <c:set var="variable" value=""/>
         <s:submit class="invCheckin" name="save" value="Save"/>
       </s:form>
       <span style="display:inline;float:right;"><h2><s:link beanclass="com.hk.web.action.admin.inventory.GRNAction">&lang;&lang;&lang;
         Back to GRN List</s:link></h2></span>
     </div>
+	  <div style="display: none;">
+	  	<s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="pvInfoLink"
+	  	        event="validateFields"></s:link>
+	  </div>
+
     <div style="display:inline;" align="center">
 
       <table style="font-size: .8em;">
@@ -122,12 +132,28 @@
           </s:form>
         </fieldset>
       </div>--%>
+	    <input type="hidden" value="${test}" id="testHid">
 
     </div>
     <script type="text/javascript">
       $(document).ready(function() {
-      $('.invCheckin').click(function disableSaveButton(){
-      $(this).css("display", "none");
+      $('.invCheckin').click(function disableSaveButton(event){
+	      event.preventDefault();
+      //$(this).css("display", "none");
+
+	      $.getJSON(
+	      					$('#pvInfoLink').attr('href'), {upc : $('.variant').val(), costPrice : $('#costPrice').val()},
+	      					function (res) {
+	      						if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+	      							alert(res.message);
+								      return false;
+	      						} else {
+	      							alert(res.message);
+								      return false;
+	      						}
+	      					}
+	      			);
+
     });
       });
     </script>
