@@ -220,16 +220,16 @@ public class MCatalogAction extends MBaseAction {
 			RangeFilter rangeFilter = new RangeFilter(SolrSchemaConstants.hkPrice, getCustomStartRange(), getCustomEndRange());
 
 			List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
-
-			SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
-			searchFilters.add(brandFilter);
-
+			if (StringUtils.isNotBlank(brand)) {
+				SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
+				searchFilters.add(brandFilter);
+			}
 			if (!includeCombo) {
-				SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, "false");
+				SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, false);
 				searchFilters.add(comboFilter);
 			}
 			if (onlyCOD) {
-				SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, "true");
+				SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, true);
 				searchFilters.add(codFilter);
 			}
 
