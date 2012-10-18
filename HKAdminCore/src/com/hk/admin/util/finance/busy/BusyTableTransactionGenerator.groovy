@@ -63,7 +63,7 @@ public class BusyTableTransactionGenerator {
       // get  all records from healthkart_dev   to healthkart_busy  where  healthkart_dev.create_date > healthkart_busy.create_date.
 
 
-      sqlProd.eachRow(""" SELECT  pv.create_date as createDate ,pv.invoice_number as invoiceNumber,  s.name supName,  s.line1 as supAddress1, s.line2 as supAddress2
+      sqlProd.eachRow(""" SELECT  pv.create_dt as createDate ,pv.invoice_number as invoiceNumber,  s.name supName,  s.line1 as supAddress1, s.line2 as supAddress2
                        ,s.state as supState, s.pincode as supPincode , s.tin_number as supTin
                         ,w.name  as warehouseName ,w.state as warehouseState  , pv.final_payable_amount as finalPayable , pv.warehouse_id  as warehouseId
                           ,pv.id  as purchaseInvoiceId, pv.freight_forwarding_charges  as freight_forwarding_charges ,s.id as suppId, pv.invoice_date as purInvoiceDate
@@ -73,7 +73,7 @@ public class BusyTableTransactionGenerator {
                            INNER JOIN  warehouse w ON  w.id=pv.warehouse_id  WHERE
                            pv.reconcilation_date > ${lastUpdateDate}
                            and pv.reconciled = 1  
-                           and pv.create_date > '2011-11-08 16:10:50'   """) {
+                           and pv.create_dt > '2011-11-08 16:10:50'   """) {
 
         purchaseRow ->
 
