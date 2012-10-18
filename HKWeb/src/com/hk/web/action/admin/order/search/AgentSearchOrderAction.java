@@ -8,6 +8,8 @@ import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.user.User;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -39,28 +41,33 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
     @Autowired
     OrderService          orderService;
 
+    @Autowired
+    UserService         userService;
+
     private PaymentMode paymentMode;
 
     private String        email;
     private String        phone;
+    private String        remoteAddress;
 
     private List<Order> orderList = new ArrayList<Order>();
     private Page orderPage;
-    private ShippingOrder shippingOrder;
-
     private final int MAX_ORDERS = 3;
 
     @DefaultHandler
     public Resolution pre() {
-        email = getContext().getRequest().getParameter("email");
-        OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
-        orderSearchCriteria.setEmail(email).setLogin(email);
-        orderSearchCriteria.setOrderAsc(false);
-        orderSearchCriteria.getSearchCriteria().addOrder(org.hibernate.criterion.Order.desc("updateDate"));
-        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), MAX_ORDERS);
-        // orderPage = orderDao.searchOrders(startDate, endDate, orderId, email, name, phone, orderStatus,paymentMode,
-        // gatewayOrderId, trackingId, getPageNo(), getPerPage());
-        orderList = orderPage.getList();
+
+        remoteAddress = getContext().getRequest().getRemoteHost();
+        User customer = null;
+        if (getContext().getRequest().getParameterMap().containsKey("phone")){
+            phone = getContext().getRequest().getParameter("phone");
+        }
+        if (getContext().getRequest().getParameterMap().containsKey("email")){
+            email = getContext().getRequest().getParameter("email");
+            customer = userService.findByLogin(email);
+        }
+
+        orderList = orderService.listOrdersForUser(customer, 1, MAX_ORDERS).getList();
         return new ForwardResolution("/pages/admin/agentSearchOrder.jsp");
     }
 
