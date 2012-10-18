@@ -58,15 +58,18 @@ public class CourierGroup implements java.io.Serializable {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof CourierGroup)) return false;
-		
+
 		CourierGroup courierGroup = (CourierGroup) o;
-		return this.name.equals(courierGroup.getName());
+		if (this.name != null && courierGroup.getName() != null) {
+			return this.name.equals(courierGroup.getName());
+		}
+		return false;
 
 	}
 
 	@Override
 	public int hashCode() {
-		return name.hashCode();
+		return this.name != null ?  name.hashCode() :0;
 	}
 
 	@Override

@@ -96,15 +96,15 @@ public class Courier implements java.io.Serializable {
 			return false;
 
 		Courier courier = (Courier) o;
-		return id.equals(courier.getId());
+		if (this.id != null && courier.getId() != null) {
+			return id.equals(courier.getId());
+		}
+		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = id.hashCode();
-		result = 31 * result + name.hashCode();
-		return result;
-	}
+	return this.id != null ? id.hashCode() :0 ;
 
 }
 
