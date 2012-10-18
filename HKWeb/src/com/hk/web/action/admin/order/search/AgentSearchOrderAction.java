@@ -133,11 +133,11 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
         this.paymentMode = paymentMode;
     }
 
-    public ShippingOrder getShippingOrder() {
-        return shippingOrder;
+    public String getRemoteAddress() {
+        return remoteAddress;
     }
 
-    public void setShippingOrder(ShippingOrder shippingOrder) {
-        this.shippingOrder = shippingOrder;
+    public void setRemoteAddress(String remoteAddress) {
+        this.remoteAddress = remoteAddress;
     }
 }
