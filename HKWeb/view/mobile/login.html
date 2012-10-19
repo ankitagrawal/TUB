@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>jQuery Mobile: Demos and Documentation</title>
+	<link rel="stylesheet"  href="css/themes/default/jquery.mobile-1.1.1.css" />
+	<link rel='stylesheet' href='css/default.css' />
+	<script src="js/jquery.js"></script>
+	
+	<script src="js/jquery.mobile-1.1.1.js"></script>
+	<style>
+	#homeButton{
+	background-color:#FF8213;
+	display:inline-block;
+	padding:4px;
+	height:32px;
+	width:32px;
+	margin-right:10px;
+	
+	background-image:url(images/home.png);
+	background-repeat:no-repeat;
+	background-position:3px 3px
+	}
+	.grid img{
+		clear:both
+	}
+	.grid .center{
+		
+		
+	}
+	.ui-content{
+		padding:0px;
+		
+		
+	}
+	.ui-header{
+		background:white;
+		position:fixed
+	}
+	.grid{
+	background-color:#1D456B;
+	}
+	.grid .ui-block-a,.grid .ui-block-b,.grid .ui-block-c,.grid .ui-block-d,.grid .ui-block-e{
+	border:1px solid;
+	border-right:none;
+	border-bottom:none;
+	text-align:center;
+	background-color:#1D456B;
+	color:white;
+	padding:10px
+	}
+	.grid .ui-block-c{
+	border-right:1px solid
+	}
+	.grid .border-bottom{
+		border-bottom:1px solid
+	}
+	.ui-input-text.ui-focus{
+	-moz-box-shadow: none;
+-webkit-box-shadow: none;
+box-shadow: none;
+	}
+	#categoryListing li{
+		padding-left:10px;
+		padding-right:10px;
+		background-position-x:95%
+	}
+	
+	</style>
+	
+</head>
+<body>
+<div data-role="page" id=p1 class="type-home">
+<div data-role=header data-position=fixed  style='height:75px'>
+<table style='width:100%;border-spacing:0px'><tr><td style='width:40px'><div id=homeButton></div></td><td><img src='images/logo.png'/></td><td><img src='images/cart_empty.png' height='35px' align=right /></td></tr></table>
+			<div style="height:35px;background-color:#66B0FF;padding-top:5px;position:relative;top:-5px" id="img-ser">
+                    
+						<table style='width:98%;border-spacing:0px' align=center>
+						<tr>
+							 <td style='width:27px;padding:0px'><span class='bgSearchLeft'></span></td>
+							 <td style='padding:0px'><div style='display:inline-block;width:100%;background:url(images/bg_search_center.png) repeat-x;height:29px'><input type="text" class=searchIcon size="10" id="medicineSearch" data-theme="c" placeholder="Search" style='border-width:0px;background:transparent;padding:0px;margin-left:0px;' /></div></td>
+							 <td style='width:27px;padding:0px'><span class='bgSearchRight'></span></td>
+							</tr>
+						 </table>
+					
+                    
+             </div>
+</div>
+	<div data-role="content" style='height:auto'>
+	
+		<div style='clear:both;padding-top:6px;background-color:#ddd;font-weight:bold;text-align:center'>
+		Primary Information
+		</div>
+		<form action='contact.html'>
+		<div style='margin:10px;padding:10px;border:1px solid white;box-shadow:4px 4px 8px #888;-webkit-box-shadow:4px 4px 8px #888'>
+		<label for='login'>Email Address</label>
+		<input type=email required id=login style='background-color:white'placeholder='Your Email Address'/>
+			<center><input type=submit data-inline=true value='Proceed'/></center>
+			</div>
+		</form>
+	
+	
+	
+
+
+
+	
+
+</div>
+<script>
+$(document).ready(function(){
+$('.ad2Crt').click(function(e){
+	e.preventDefault();
+	
+	return false;
+});
+});
+</script>
+</body>
+</html>

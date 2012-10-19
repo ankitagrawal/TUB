@@ -550,6 +550,7 @@ any data added to them will be ignored outright.  -->
         <field name="comboDiscountPercent" type="float" indexed="true" stored="true"/>
         <field name="deleted" type="boolean" indexed="true" stored="true" />
         <field name="isCombo" type="boolean" indexed="true" stored="true" />
+        <field name="isCODAllowed" type="boolean" indexed="true" stored="true" />
         <field name="outOfStock" type="boolean" indexed="true" stored="true" />
         <field name="isService" type="boolean" indexed="true" stored="true" />
         <field name="title_autocomplete" type="lowercase" indexed="true" stored="true" multiValued="true"/>

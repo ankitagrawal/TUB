@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Health Kart | Online health Store</title>
+	<%@ include file='header.jsp' %>	
+</head>
+<body>
+<div data-role="page" id=product class="type-home">
+<div data-role=header>
+	<%@ include file='menuHeader.jsp'%>
+</div>
+	<div data-role="content" style='background-color:white'>
+	
+		<div style='clear:both;padding-top:6px;background-color:#ddd;font-weight:bold;text-align:center'>
+		Top Products
+		</div>
+		<table width=100% style='font-size:12px'id='productListing'>
+					<tr>
+					<td class='image-container'>
+						<img src='images/1.jpg'/>
+					</td>
+					<td class='text-container' style='padding:20px'>
+						<h3 class='ui-li-heading' style='margin:0px'>Product 1</h3>
+						<p style='margin:0px'>
+							Rs 1599
+							<span class='ofrPrc'>Our Price Rs 1,328</span>
+							<span class='svPrcnt'>16% off</span>
+							
+						</p>
+						<!--span class='ad2Crt'>Add To cart</span-->
+					</td>
+					</tr>
+		</table>
+		<p style='padding-left:20%;font-size:14px'>API's Creatine Monohydrate is pure, uncut, microparticulated German creatine monohydrate. We add no fillers, flow agents or sugars - this is simply the real thing.</p>
+		
+	<div style='font-size:12px;' data-role=collapsible data-content-theme=d>
+	<h3>Details</h3>
+		<p>Features<br>
+Simply put, creatine monohydrate can help increase both muscle size and strength, increase muscle pumps and increase intensity levels. Be sure to use the good stuff, API, and experience the full effect of creatine monohydrate.</p>
+
+<p>Supplement Facts<br>
+Serving Size: 1 Level Scoop (5 grams)<br>
+Servings Per Bottle: 60<br>
+Amount Per ServingPer 100gCreatine<br>
+Monohydrate   5 g   100g<br></p>
+
+<p>How to use<br>
+During the loading phase, take one level scoop (5 grams) 4 times per day (20 grams total) for 5 days. For maintenance period, take one level scoop (5 grams) 2 times daily. Dissolve in juice or water.
+</p>
+	</div>
+	
+	<div style='clear:both;padding:4px;background-color:#ddd;text-align:center;margin-bottom:6px;font-weight:bold'>
+		Variants
+		</div>
+		<ul data-role=listview style='padding-top:4px;padding-bottom:20px' id='productListing'>
+			<li  data-icon='arr'>
+				<a href='x.html'>
+				<table width=100%>
+					<tr>
+					<td class='image-container'>
+						<img src='images/1.jpg'/>
+					</td>
+					<td class='text-container'>
+						<h3>Product 1</h3>
+						<p>
+							Rs 1599
+							<span class='ofrPrc'>Our Price Rs 1,328</span>
+							<span class='svPrcnt'>16% off</span>
+							
+						</p>
+						<span class='ad2Crt'>Place Order</span>
+					</td>
+					</tr>
+				</table>
+					</a>
+			</li>
+			<li data-icon='arr'>
+			<a href='x.html'>
+				<table width=100%>
+					<tr>
+					<td class='image-container'>
+						<img src='images/2.jpg'/>
+					</td>
+					<td class='text-container'>
+						<h3>Product 1</h3>
+						<p>
+							Rs 1599
+							<span class='ofrPrc'>Our Price Rs 1,328</span>
+							<span class='svPrcnt'>16% off</span>
+							
+						</p>
+						<span class='ad2Crt'>Place Order</span>
+					</td>
+					</tr>
+				</table>
+					</a>
+			</li>
+			<li data-icon='arr'>
+			<a href='x.html'>
+				<table width=100%>
+					<tr>
+					<td class='image-container'>
+						<img src='images/3.jpg'/>
+					</td>
+					<td class='text-container'>
+						<h3>Product 1</h3>
+						<p>
+							Rs 1599
+							<span class='ofrPrc'>Our Price Rs 1,328</span>
+							<span class='svPrcnt'>16% off</span>
+							
+						</p>
+						<span class='ad2Crt'>Place Order</span>
+					</td>
+					</tr>
+				</table>
+					</a>
+			</li>
+			<li data-icon='arr'>
+			<a href='x.html'>
+				<table width=100%>
+					<tr>
+					<td class='image-container'>
+						<img src='images/1.jpg'/>
+					</td>
+					<td class='text-container'>
+						<h3>Product 1</h3>
+						<p>
+							Rs 1599
+							<span class='ofrPrc'>Our Price Rs 1,328</span>
+							<span class='svPrcnt'>16% off</span>
+							
+						</p>
+						<span class='ad2Crt'>Place Order</span>
+					</td>
+					</tr>
+				</table>
+					</a>
+			</li>
+			<li data-icon='arr'>
+			<a href='x.html'>
+				<table width=100%>
+					<tr>
+					<td class='image-container'>
+						<img src='images/2.jpg'/>
+					</td>
+					<td class='text-container'>
+						<h3>Product 1</h3>
+						<p>
+							Rs 1599
+							<span class='ofrPrc'>Our Price Rs 1,328</span>
+							<span class='svPrcnt'>16% off</span>
+							
+						</p>
+						<span class='ad2Crt'>Place Order</span>
+					</td>
+					</tr>
+				</table>
+					</a>
+			</li>
+		</ul>
+		</div>
+		<br>
+		<br>
+		<br><br>
+
+
+
+	
+<link rel='stylesheet' href='css/default.css' />
+<script>
+
+
+$('.ad2Crt').click(function(e){
+	e.preventDefault();
+	location.href='login.html';
+	return false;
+
+});
+</script>
+</div>
+
+</body>
+</html>
