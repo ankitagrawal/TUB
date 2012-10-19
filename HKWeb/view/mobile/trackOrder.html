@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Health Kart | Online health Store</title>
+	<%@ include file='header.jsp' %>	
+	
+	
+</head>
+<body>
+<div data-role="page" id=trackOrder class="type-home">
+<div data-role=header data-position=fixed  style='height:41px'>
+<%@ include file='menuHeader.jsp'%>
+	<%@ include file='menuNavBtn.jsp'%>
+</div>
+	<div data-role="content" style='height:auto'>
+	
+		<div style='clear:both;padding-top:6px;background-color:#ddd;font-weight:bold;text-align:center'>
+		Tracking Console
+		</div>
+		<form id=trackOrderForm action='contact.html'>
+		<div style='margin:10px;padding:10px;border:1px solid white;box-shadow:4px 4px 8px #888;-webkit-box-shadow:4px 4px 8px #888'>
+		<label for='login'>Tracking Number</label>
+		<input type=text required id=login style='background-color:white'placeholder='Enter Here'/>
+			<center><input type=submit data-inline=true value='Track Now'/></center>
+			</div>
+		</form>
+		<div id='trackOrderResult'>
+		</div>
+	
+	
+	
+
+
+
+	
+
+</div>
+
+<script>
+
+
+$('#trackOrderForm').bind('submit',function(e){
+	e.preventDefault();
+	$('#trackOrderResult').html('<h3>Sorry! Your order is still in transit</h3>');
+	return false;
+});
+</script>
+</div>
+</body>
+</html>

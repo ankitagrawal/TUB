@@ -167,6 +167,8 @@ public class SkuXslParser {
                         skuProduct.setTax(taxObj);
                         skuProduct.setCutOffInventory(cutOffInventory);
                         skuProduct.setForecastedQuantity(forecastedQty);
+	                    skuProduct.setCreateDate(new Date());
+	                    skuProduct.setUpdateDate(new Date());
                         skuSet.add(skuProduct);
                     } else {
                         throw new HealthKartCatalogUploadException("SKU already exists in db.", rowCount);
