@@ -32,6 +32,8 @@ public class ProductReferrerMapper {
     referrerMap.put(ProductReferrerConstants.HOME_PAGE, EnumProductReferrer.homePage.getId());
     referrerMap.put(ProductReferrerConstants.RELATED_PRODUCTS_PAGE, EnumProductReferrer.relatedProductsPage.getId());
     referrerMap.put(ProductReferrerConstants.SEARCH_PAGE, EnumProductReferrer.searchPage.getId());
+    referrerMap.put(ProductReferrerConstants.MOBILE_CATALOG, EnumProductReferrer.mobile_catalog.getId());
+    referrerMap.put(ProductReferrerConstants.MOBILE_SEARCH, EnumProductReferrer.mobile_search.getId());
   }
 
   public static Long getProductReferrerid(String referrer){
