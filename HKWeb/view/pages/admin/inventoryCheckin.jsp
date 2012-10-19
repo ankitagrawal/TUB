@@ -144,11 +144,13 @@
 						    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 							    $('#checkinForm').attr('action', $('#checkinForm').attr('action') + "?save=");
 							    $('#checkinForm').submit();
+							    $(this).css("display", "none");
 						    } else {
 							    var confirmMessage = confirm(res.message);
 							    if(confirmMessage == true) {
 								    $('#checkinForm').attr('action', $('#checkinForm').attr('action') + "?save=");
 								    $('#checkinForm').submit();
+								    $(this).css("display", "none");
 							    } else {
 								    return false;
 							    }
