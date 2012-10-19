@@ -232,10 +232,6 @@
 </c:if>
 
 <%-- PARENTING --%>
-<c:if test="${hk:collectionContains(remarketingLabelList, 'parenting') && !codeSet}">
-    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="hTFCCMSIxgMQpIrJ3QM" id="1001538852"/>
-    <c:set var="codeSet" value="<%=true%>"/>
-</c:if>
 <c:if test="${hk:collectionContains(remarketingLabelList, 'am-i-pregnant') && !codeSet}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="BgNSCLyJxgMQpIrJ3QM" id="1001538852"/>
     <c:set var="codeSet" value="<%=true%>"/>
@@ -254,6 +250,10 @@
 </c:if>
 <c:if test="${hk:collectionContains(remarketingLabelList, 'sippers-mugs') && !codeSet}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="w-8TCJSOxgMQpIrJ3QM" id="1001538852"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'parenting') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="hTFCCMSIxgMQpIrJ3QM" id="1001538852"/>
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
 

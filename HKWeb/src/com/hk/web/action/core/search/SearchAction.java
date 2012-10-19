@@ -63,7 +63,7 @@ public class SearchAction extends BasePaginatedAction {
                     String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
                     includeCombo = Boolean.parseBoolean( params[0].toString());
                     if (!includeCombo){
-                        SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
+                        SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo,includeCombo);
                         searchFilters.add(comboFilter);
                     }
                 }
@@ -71,7 +71,7 @@ public class SearchAction extends BasePaginatedAction {
                     String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
                     onlyCOD = Boolean.parseBoolean( params[0].toString());
                     if (onlyCOD){
-                        SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, params[0].toString());
+                        SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, onlyCOD);
                         searchFilters.add(codFilter);
                     }
                 }
