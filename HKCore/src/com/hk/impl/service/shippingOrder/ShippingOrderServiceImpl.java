@@ -242,7 +242,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         shippingOrder.setBaseOrder(baseOrder);
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ActionAwaiting));
         shippingOrder.setCreateDate(new Date());
-        shippingOrder.setUpdateDate(new Date());
+        //shippingOrder.setUpdateDate(new Date());
         shippingOrder.setWarehouse(warehouse);
         shippingOrder.setAmount(0D);
         shippingOrder.setReconciliationStatus(getReconciliationStatusDao().getReconciliationStatusById(EnumReconciliationStatus.PENDING));

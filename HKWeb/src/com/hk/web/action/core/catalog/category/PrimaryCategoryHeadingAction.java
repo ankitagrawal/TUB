@@ -77,7 +77,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
         // products related to heading to be deleted have to be set null else a not-null exception for products' primary
         // category arises
         heading.setProducts(null);
-        primaryCategoryHeadingDao.delete(heading.getId());
+        primaryCategoryHeadingDao.delete(heading);
         addRedirectAlertMessage(new SimpleMessage("heading deleted."));
         return new ForwardResolution(CategoryAction.class, "editPrimaryCategoryHeadings").addParameter("category", heading.getCategory().getName());
     }

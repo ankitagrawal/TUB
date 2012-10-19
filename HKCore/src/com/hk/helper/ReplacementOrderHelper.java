@@ -47,7 +47,7 @@ public class ReplacementOrderHelper {
         replacementOrder.setVersion(shippingOrder.getVersion());
         replacementOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess));
         replacementOrder.setCreateDate(new Date());
-        replacementOrder.setUpdateDate(new Date());
+        //replacementOrder.setUpdateDate(new Date());
         replacementOrder.setAmount(0D);
         replacementOrder.setReconciliationStatus(reconciliationStatusDao.getReconciliationStatusById(EnumReconciliationStatus.PENDING));
         return replacementOrder;

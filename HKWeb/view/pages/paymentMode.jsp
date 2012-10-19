@@ -180,85 +180,91 @@
 <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
     <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
         <div id="tabs_content4" class="tab_content" style="display: none;">
-            <c:choose>
-                <c:when test="${orderSummary.codAllowed && hk:isCodAllowedOnOrder(orderSummary.order)}">
+                <c:set var="message" value=" <h4 style=\"text-align: center;\">We are sorry Cash on Delivery is not available for your order</h4>"/>
+                <c:set var="codFailureMap" value="${orderSummary.codFailureMap}"/>
+              
+                <c:choose>
+                    <c:when test='${codFailureMap["CodAllowedOnPin"] == "N" }'>                       
+                        ${message}
+                        <p>COD is not available for your delivery
+                            location (Pincode : <strong> ${codFailureMap["Pincode"]}</strong>).
+                            <br/>
+                            We provide cash on delivery option for select PIN codes only.</p>
+                    </c:when>
+                    <c:when test='${codFailureMap["CodOnAmount"] == "N" }'>
+                        ${message}
+                        <p>The net payable is not in the range of <strong>Rs. ${codMinAmount} -
+                            Rs. ${codMaxAmount}</strong></p>
+                    </c:when>
+                    <c:when test='${codFailureMap["CodAllowedOnProduct"] == "N" }'>
+                        ${message}
+                        <p>COD is not allowed on the product :
+                            <strong> ${codFailureMap["ProductName"]} </strong>. </p>
+                    </c:when>
+                     <c:when test='${codFailureMap["CodOnSubscription"] == "N" }'>
+                        ${message}
+                         <p>You have subscriptions in your cart</p>
+                    </c:when>
+                    <c:when test='${codFailureMap["GroundShippingAllowed"] == "Y" && codFailureMap["CodAllowedOnGroundShipping"] == "N" }'>
+                        ${message}
+                        <p>The following products in your order are shipped via surface shipping, hence COD is not available :
+                            <strong> ${codFailureMap["GroundShipProduct"]} </strong> .</p>
+                    </c:when>
 
-                    <div class="grid_5">
-                        <h4>Order Total</h4>
-                        <br />
+                    <c:otherwise>
+                        <div class="grid_5">
+                            <h4>Order Total</h4>
+                            <br/>
 
-                        <p><strong><u>Order Total</u></strong> <fmt:formatNumber
-                                value="${orderSummary.pricingDto.grandTotalPayable}"
-                                currencySymbol="Rs. " type="currency" /><br />
-                            <u>COD Charges</u> <fmt:formatNumber
-                                    value="${orderSummary.codCharges}" currencySymbol="Rs. "
-                                    type="currency" /> <br />
-                            <strong class="orange"><u>Grand Total</u></strong> <strong
-                                    class="orange"><fmt:formatNumber
-                                    value="${orderSummary.pricingDto.grandTotalPayable + orderSummary.codCharges}"
-                                    currencySymbol="Rs. " type="currency" /></strong><br />
-                        </p>
-                    </div>
-                    <h4>Contact Details</h4>
+                            <p><strong><u>Order Total</u></strong> <fmt:formatNumber
+                                    value="${orderSummary.pricingDto.grandTotalPayable}"
+                                    currencySymbol="Rs. " type="currency"/><br/>
+                                <u>COD Charges</u> <fmt:formatNumber
+                                        value="${orderSummary.codCharges}" currencySymbol="Rs. "
+                                        type="currency"/> <br/>
+                                <strong class="orange"><u>Grand Total</u></strong> <strong
+                                        class="orange"><fmt:formatNumber
+                                        value="${orderSummary.pricingDto.grandTotalPayable + orderSummary.codCharges}"
+                                        currencySymbol="Rs. " type="currency"/></strong><br/>
+                            </p>
+                        </div>
+                        <h4>Contact Details</h4>
 
-                    <p>Please verify the name and contact number of the person
-                        who will receive this order. You will receive a phone call within
-                        1 business day to confirm your order before it is sent for
-                        processing.</p>
-                    <s:form
-                            beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
-                            method="post">
-                        <s:hidden name="order" value="${orderSummary.order}" />
-                        <div class="label">Contact Name</div>
-                        <s:text name="codContactName"
-                                value="${orderSummary.order.address.name}" />
-                        <div class="label">Contact Phone</div>
-                        <s:text name="codContactPhone"
-                                value="${orderSummary.order.address.phone}" />
-                        <div class="buttons" style="font-size: 1.3em;"><br />
-                            <br />
-                            <s:submit name="pre" value="Place Order"
-                                      class="positive makePayment" /></div>
-                        <br />
-                        <br />
+                        <p>Please verify the name and contact number of the person
+                            who will receive this order. You will receive a phone call within
+                            1 business day to confirm your order before it is sent for
+                            processing.</p>
+                        <s:form
+                                beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
+                                method="post">
+                            <s:hidden name="order" value="${orderSummary.order}"/>
+                            <div class="label">Contact Name</div>
+                            <s:text name="codContactName"
+                                    value="${orderSummary.order.address.name}"/>
+                            <div class="label">Contact Phone</div>
+                            <s:text name="codContactPhone"
+                                    value="${orderSummary.order.address.phone}"/>
+                            <div class="buttons" style="font-size: 1.3em;"><br/>
+                                <br/>
+                                <s:submit name="pre" value="Place Order"
+                                          class="positive makePayment"/></div>
+                            <br/>
+                            <br/>
 
-                        <div class="clear"></div>
-                        <hr />
-                        <br />
+                            <div class="clear"></div>
+                            <hr/>
+                            <br/>
 
-                        <h4>Terms and Conditions for Cash on Delivery</h4>
+                            <h4>Terms and Conditions for Cash on Delivery</h4>
 
-                        <p>Please ensure that the above person is available at the
-                            given location for pick-up at all times.<br />
-                        </p>
-                    </s:form>
-                </c:when>
-	            <c:otherwise>
-		            <h4 style="text-align: center;">We are sorry Cash on Delivery is not available for your order</h4>
-		            <c:if test="${!orderSummary.codAllowed}">
-			            <c:choose>
-				            <c:when test="${orderSummary.pricingDto.grandTotalPayable > codMinAmount && orderSummary.pricingDto.grandTotalPayable < codMaxAmount}">
-					            <p>COD is not available for your delivery
-					               location (Pincode : <strong>${orderSummary.order.address.pin}</strong>).
-						            <br/>
-					               We provide cash on delivery option for select PIN codes only.</p>
-				            </c:when>
-				            <c:otherwise>
-					            <p>The net payable is not in the range of <strong>Rs.
-							            ${codMinAmount} - Rs. ${codMaxAmount}</strong></p>
-				            </c:otherwise>
-			            </c:choose>
-		            </c:if>
+                            <p>Please ensure that the above person is available at the
+                                given location for pick-up at all times.<br/>
+                            </p>
+                        </s:form>
+                    </c:otherwise>
+                </c:choose>
 
-		            <c:if test="${!hk:isCodAllowedOnOrder(orderSummary.order)}">
-			            <p>COD is not allowed on one of the products in your cart</p>
-		            </c:if>
-					<c:if test="${orderSummary.order.subscriptionOrder}">
-						<p>You have subscriptions in your cart</p>
-		            </c:if>
-
-	            </c:otherwise>
-            </c:choose></div>
+        </div>
         <div id="tabs_content5" class="tab_content" style="display: none;">
             <h2 class="offer">Payment Details</h2>
 

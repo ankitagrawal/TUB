@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.catalog.SolrSchemaConstants;
+import com.hk.domain.search.SearchFilter;
 import com.hk.dto.search.SearchResult;
 import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -52,9 +54,29 @@ public class SearchAction extends BasePaginatedAction {
   private int defaultPerPage = 24;
 
 	public Resolution search() throws SolrServerException, MalformedURLException {
+        boolean includeCombo = true;
+        boolean onlyCOD = false;
 		if (StringUtils.isNotBlank(query)) {
 			try {
-				SearchResult sr = productSearchService.getSearchResults(query, getPageNo(), getPerPage(), false);
+                List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
+                if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
+                    String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
+                    includeCombo = Boolean.parseBoolean( params[0].toString());
+                    if (!includeCombo){
+                        SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo,includeCombo);
+                        searchFilters.add(comboFilter);
+                    }
+                }
+                if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")){
+                    String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
+                    onlyCOD = Boolean.parseBoolean( params[0].toString());
+                    if (onlyCOD){
+                        SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, onlyCOD);
+                        searchFilters.add(codFilter);
+                    }
+                }
+
+				SearchResult sr = productSearchService.getSearchResults(query,searchFilters, getPageNo(), getPerPage(), false);
 				productPage = new Page(sr.getSolrProducts(), getPerPage(), getPageNo(), (int) sr.getResultSize());
 				productList = productPage.getList();
 				for (Product product : productList) {
@@ -63,7 +85,7 @@ public class SearchAction extends BasePaginatedAction {
 				searchSuggestion = sr.getSearchSuggestions();
 			} catch (Exception e) {
 				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
-				productPage = productDao.getProductByName(query, getPageNo(), getPerPage());
+				productPage = productDao.getProductByName(query,onlyCOD, includeCombo, getPageNo(), getPerPage());
 				productList = productPage.getList();
 				for (Product product : productList) {
 					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));

@@ -4,6 +4,7 @@
 <%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
 <%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -18,9 +19,11 @@
 
 		pageContext.setAttribute("product", product_productThumb);
 
-		ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
-		Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
-		pageContext.setAttribute("combo", combo);
+        if (product_productThumb instanceof Combo){
+            ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
+            Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
+            pageContext.setAttribute("combo", combo);
+        }
 	%>
 	<style type="text/css">
 		.opaque {

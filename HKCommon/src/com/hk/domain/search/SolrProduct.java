@@ -37,6 +37,11 @@ public class SolrProduct {
 
     @Field
     private
+    boolean hidden;
+
+
+    @Field
+    private
     double ranking;
 
     @Field
@@ -163,6 +168,11 @@ public class SolrProduct {
     @Field
     private
     double comboDiscountPercent;
+
+    @Field
+    private
+    boolean isCODAllowed;
+
 
     public
     String getName() {
@@ -390,6 +400,14 @@ public class SolrProduct {
         this.postpaidPrice = postpaidPrice;
     }
 
+    public boolean isCODAllowed() {
+        return isCODAllowed;
+    }
+
+    public void setCODAllowed(boolean CODAllowed) {
+        isCODAllowed = CODAllowed;
+    }
+
     public boolean getCombo() {
         return isCombo;
     }
@@ -420,6 +438,14 @@ public class SolrProduct {
 
     public void setVariantNames(List<String> variantNames) {
         this.variantNames = variantNames;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public SolrProduct(){
