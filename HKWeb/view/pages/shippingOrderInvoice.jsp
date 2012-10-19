@@ -355,6 +355,7 @@
                                                    var="configValue" varStatus="configValueCtr">
                                             <c:set var="additinalParam"
                                                    value="${configValue.variantConfigOption.additionalParam}"/>
+	                                        <c:set var="side" value="${configValue.variantConfigOption.name}"/>
                                             <c:if
                                                     test="${fn:startsWith(side,'L' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
