@@ -415,9 +415,9 @@
 
 	    $('.phoneValidation').click(function() {
 		        var phone = $('#phoneNo').val();
-		        var phoneRegEx = /^([0-9]{10})$/;
+		        var phoneRegEx = /^([0-9]{10,11})$/;
 		        if(!phoneRegEx.test(phone)){
-			        alert("Please enter 10 digit phone number only.")
+			        alert("Please enter a valid phone number (10 or 11 digits.")
 			        return false;
 		        }
 		        else{

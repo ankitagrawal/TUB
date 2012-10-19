@@ -162,14 +162,14 @@
                 var pincodeRegEx = /^([0-9]{6})$/;
                 var pincode = $('.pincode').val();
 		        var phone = $('#phoneNo').val();
-		        var phoneRegEx = /^([0-9]{10})$/;
+		        var phoneRegEx = /^([0-9]{10,11})$/;
                 var state = $('.stateselect').val();
                 if (!pincodeRegEx.test(pincode)) {
                     alert("Please enter a valid (6 digit) Pincode.");
                     return false;
                 }
 		        if(!phoneRegEx.test(phone)){
-			        alert("Please enter 10 digit phone number only.")
+			        alert("Please enter a valid phone number (10 or 11 digits).")
 			        return false;
 		        }
 	        });
