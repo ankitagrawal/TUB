@@ -31,8 +31,10 @@
         $(this).parents('tr').addClass('item_selected');
       } else {
         $(this).parents('tr').removeClass('item_selected');
-      }                                                                           l
+      }
     }
+
+
 
 
   </script>
@@ -159,11 +161,17 @@
 	        $('.addressValidation').click(function() {
                 var pincodeRegEx = /^([0-9]{6})$/;
                 var pincode = $('.pincode').val();
+		        var phone = $('#phoneNo').val();
+		        var phoneRegEx = /^([0-9]{10})$/;
                 var state = $('.stateselect').val();
                 if (!pincodeRegEx.test(pincode)) {
                     alert("Please enter a valid (6 digit) Pincode.");
                     return false;
                 }
+		        if(!phoneRegEx.test(phone)){
+			        alert("Please enter 10 digit phone number only.")
+			        return false;
+		        }
 	        });
         });
 
@@ -207,7 +215,7 @@
           <div class='label'>PIN Code<span class="aster">*</span></div>
           <s:text name="address.pin" class="pincode" maxlength="6"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
-          <s:text name="address.phone"/>
+          <s:text name="address.phone" id="phoneNo"/>
           <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>
           <div class="special" style="text-align: right;">
             Proceed to Order Confirmation <br/>(This address will be added to your address book so you can use it later)
