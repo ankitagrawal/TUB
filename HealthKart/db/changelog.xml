@@ -9438,4 +9438,7 @@
 	<changeSet author="Ajeet (generated)" id="1348919811628-3">
 			<dropColumn columnName="updated" tableName="update_pv_price"/>
 	</changeSet>
+    <changeSet author="Seema (generated)" id="1350638740147-3">
+        <dropColumn columnName="used" tableName="awb"/>
+    </changeSet>
 </databaseChangeLog>
