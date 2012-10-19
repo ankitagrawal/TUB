@@ -281,7 +281,7 @@ public class APIOrderServiceImpl implements APIOrderService {
                         trackingId = shipment.getAwb().getAwbNumber();
                     }
 
-                    trackingItem.setStatus("Shipped by" + shipment.getCourier().getName() + " - " + trackingId + " on " + shipment.getShipDate());
+                    trackingItem.setStatus("Shipped by" + shipment.getAwb().getCourier().getName() + " - " + trackingId + " on " + shipment.getShipDate());
                 } else {
                     trackingItem.setStatus(shippingOrder.getOrderStatus().getName());
                 }

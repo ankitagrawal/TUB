@@ -46,7 +46,7 @@ public class ShipmentPricingEngine {
 
     public Double calculateShipmentCost(ShippingOrder shippingOrder){
         Shipment shipment = shippingOrder.getShipment();
-        Courier courier = shipment.getCourier();
+        Courier courier = shipment.getAwb().getCourier();
         Double weight = shipment.getBoxWeight() * 1000;
         if (EnumCourierGroup.COMMON.getId().equals(courierGroupService.getCourierGroup(courier).getId())) {
             EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
@@ -97,7 +97,7 @@ public class ShipmentPricingEngine {
     public Double calculateReconciliationCost(ShippingOrder shippingOrder){
         Shipment shipment = shippingOrder.getShipment();
         Order order = shippingOrder.getBaseOrder();
-        Courier courier = shipment.getCourier();
+        Courier courier = shipment.getAwb().getCourier();
         String pincode = order.getAddress().getPin();
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
         if(pincodeObj == null)   {

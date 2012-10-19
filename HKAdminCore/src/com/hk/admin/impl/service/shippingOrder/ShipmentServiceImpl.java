@@ -100,21 +100,21 @@ public class ShipmentServiceImpl implements ShipmentService {
 		}
 
 		Shipment shipment = new Shipment();
-		shipment.setCourier(suggestedCourier);
+//		shipment.setCourier(suggestedCourier);
 		shipment.setEmailSent(false);
 		shipment.setAwb(suggestedAwb);
 		shipment.setShippingOrder(shippingOrder);
 		shipment.setBoxWeight(estimatedWeight / 1000);
 		shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
 		shippingOrder.setShipment(shipment);
-		if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
+		if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
 			shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
 			shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
 			shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
 		}
 		shippingOrder = shippingOrderService.save(shippingOrder);
 		String trackingId = shipment.getAwb().getAwbNumber();
-		String comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + trackingId;
+		String comment = "Shipment Details: " + shipment.getAwb().getCourier().getName() + "/" + trackingId;
 		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created, comment);
 		return shippingOrder.getShipment();
 	}
@@ -157,7 +157,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		Shipment newShipment = null;
 		if (shippingOrder.getShipment() != null) {
 			Shipment oldShipment = shippingOrder.getShipment();
-			awbService.removeAwbForShipment(oldShipment.getCourier(), oldShipment.getAwb());
+			awbService.removeAwbForShipment(oldShipment.getAwb().getCourier(), oldShipment.getAwb());
 			newShipment = createShipment(shippingOrder);
 			shippingOrder.setShipment(newShipment);
 			delete(oldShipment);

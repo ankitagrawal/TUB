@@ -90,9 +90,9 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 		Awb attachedAwb = shipment.getAwb();
 		Awb finalAwb = attachedAwb;
 		if ((!(attachedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
-				((!(shipment.getCourier().equals(attachedCourier))))) {
+				((!(shipment.getAwb().getCourier().equals(attachedCourier))))) {
 
-			Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
+			Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getAwb().getCourier(), trackingId.trim(), null, null, null);
 			if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
 				if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
 					addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
@@ -100,7 +100,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 				}
 				if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
 					addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
-							"  : " + shipment.getCourier().getName() + "  you are Trying to use COD tracking id with NON COD --->   TRY AGAIN "));
+							"  : " + shipment.getAwb().getCourier().getName() + "  you are Trying to use COD tracking id with NON COD --->   TRY AGAIN "));
 					return new RedirectResolution(ChangeShipmentDetailsAction.class);
 				}
 
@@ -111,7 +111,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 				awb.setAwbNumber(trackingId.trim());
 				awb.setAwbBarCode(trackingId.trim());
 				awb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
-				awb.setCourier(shipment.getCourier());
+				awb.setCourier(shipment.getAwb().getCourier());
 				awb.setCod(shippingOrder.isCOD());
 				awb.setWarehouse(shippingOrder.getWarehouse());
 				awb = (Awb)awbService.save(awb,null);

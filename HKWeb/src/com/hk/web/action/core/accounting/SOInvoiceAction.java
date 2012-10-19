@@ -79,7 +79,7 @@ public class SOInvoiceAction extends BaseAction {
     private Shipment shipment;
 
     private void generateBarcodesForInvoice(Awb awb) {
-        Long courierId = shipment.getCourier().getId();
+        Long courierId = shipment.getAwb().getCourier().getId();
         if (courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())) {
             String awbBarCode = awb.getAwbBarCode();
             barcodeGenerator.getBarcodePath(awbBarCode, 2.0f, 200, true);
@@ -96,7 +96,7 @@ public class SOInvoiceAction extends BaseAction {
     private void generateRoutingCodeForInvoice(String pincode, boolean isCod) {
         CourierServiceInfo courierServiceInfo = null;
 
-            Long courierId = shipment.getCourier().getId();
+            Long courierId = shipment.getAwb().getCourier().getId();
             if (courierId.equals(EnumCourier.BlueDart_COD.getId()) || courierId.equals(EnumCourier.BlueDart.getId()) ) {
                 courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, isCod, false, false);
             } else if (courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())) {
