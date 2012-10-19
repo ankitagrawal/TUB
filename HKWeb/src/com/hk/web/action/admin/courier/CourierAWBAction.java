@@ -20,8 +20,6 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -38,7 +36,6 @@ import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.exception.DuplicateAwbexception;
-import com.hk.pact.service.UserService;
 import com.hk.util.XslGenerator;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -48,13 +45,13 @@ import com.hk.web.action.error.AdminPermissionAction;
  */
 @Component
 public class CourierAWBAction extends BaseAction {
-    private static Logger logger = LoggerFactory.getLogger(CourierServiceInfoAction.class);
+    /*private static Logger logger = LoggerFactory.getLogger(CourierServiceInfoAction.class);*/
     @Autowired
     XslGenerator xslGenerator;
     @Autowired
     CourierServiceInfoDao courierServiceInfoDao;
-    @Autowired
-    private UserService userService;
+    /*@Autowired
+    private UserService userService;*/
     @Autowired
     AwbService awbService;
     @Autowired

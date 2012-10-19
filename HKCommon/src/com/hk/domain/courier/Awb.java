@@ -127,6 +127,7 @@ public class Awb implements java.io.Serializable {
         this.returnAwbBarCode = returnAwbBarCode;
     }
 
+
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
