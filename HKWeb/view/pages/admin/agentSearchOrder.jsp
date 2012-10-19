@@ -19,15 +19,13 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.admin.order.search.AgentSearchOrderAction" var="orderAdmin" event="pre"/>
-
 <s:layout-render name="/layouts/agentLayout.jsp" pageTitle="User Orders" >
-
  <s:layout-component name="content">
-<s:form beanclass="com.hk.web.action.admin.order.search.AgentSearchOrderAction" method="get" autocomplete="false">
+<s:form beanclass="com.hk.web.action.admin.order.search.AgentSearchOrderAction" method="get" autocomplete="false" style="">
     Recent orders for user ${orderAdmin.email} phone: ${orderAdmin.phone}
     </br>
     Request originating from ${orderAdmin.remoteAddress}
-    <table width="100%" style="border: #222277; border-width: thick ">
+    <table>
     <thead>
     <tr>
         <th>Order Status</th>

@@ -2,6 +2,7 @@ package com.hk.web.action.admin.order.search;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.util.drishti.PopulateUserDetail;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.core.OrderStatus;
@@ -9,14 +10,13 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
+import com.hk.domain.user.UserDetail;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.user.UserDetailService;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.UrlBinding;
+import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +39,13 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
     private static Logger logger    = LoggerFactory.getLogger(SearchOrderAction.class);
 
     @Autowired
-    OrderService          orderService;
+    OrderService        orderService;
 
     @Autowired
     UserService         userService;
+
+    @Autowired
+    UserDetailService   userDetailService;
 
     private PaymentMode paymentMode;
 
@@ -57,6 +60,9 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
     @DefaultHandler
     public Resolution pre() {
 
+        /*PopulateUserDetail populateUserDetail = new PopulateUserDetail("localhost", "healthkart_stag", "root", "admin");
+        populateUserDetail.populateItemData();*/
+
         remoteAddress = getContext().getRequest().getRemoteHost();
         User customer = null;
         if (getContext().getRequest().getParameterMap().containsKey("phone")){
@@ -66,14 +72,24 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
             email = getContext().getRequest().getParameter("email");
             customer = userService.findByLogin(email);
         }
+        List<UserDetail> userDetailList = null;
+        Long phNo = Long.parseLong(phone);
+        if ((phone != null) && (email != null)){
 
-        orderList = orderService.listOrdersForUser(customer, 1, MAX_ORDERS).getList();
-        return new ForwardResolution("/pages/admin/agentSearchOrder.jsp");
-    }
+        }else{
+            userDetailList = userDetailService.findByPhone(phNo);
+            if (userDetailList.size() == 1 ){
+                customer = userDetailList.get(0).getUser();
+            }
+        }
 
-    public Resolution searchOrders() {
 
-        return new ForwardResolution("/pages/admin/searchOrder.jsp");
+        if ((customer != null) ){
+            orderList = orderService.listOrdersForUser(customer, 1, MAX_ORDERS).getList();
+            return new ForwardResolution("/pages/admin/agentSearchOrder.jsp");
+        }else{
+            return  new ForwardResolution("/pages/admin/userDetail.jsp");
+        }
     }
 
     public int getPerPageDefault() {
@@ -114,6 +130,10 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 

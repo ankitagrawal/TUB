@@ -1,6 +1,7 @@
 package com.hk.impl.dao.user;
 
 import com.hk.constants.core.EnumCallPriority;
+import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.user.UserDetailDao;
@@ -8,6 +9,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,14 +29,15 @@ public class UserDetailDaoImpl  extends BaseDaoImpl implements UserDetailDao {
        return (UserDetail)super.save(userDetails);
     }
 
-    public UserDetail findByPhone(Long phone) {
+    public List<UserDetail>  findByPhone(Long phone) {
+        List<UserDetail> userDetailList = new ArrayList<UserDetail>();
         DetachedCriteria criteria = DetachedCriteria.forClass(UserDetail.class);
         criteria.add(Restrictions.eq("phone", phone));
-        List<UserDetail> userDetailList = super.findByCriteria(criteria);
-        if (userDetailList != null && !userDetailList.isEmpty()){
-            return userDetailList.get(0);
+        List<UserDetail> users = super.findByCriteria(criteria);
+        if (users != null){
+            userDetailList = users;
         }
-        return null;
+        return userDetailList;
     }
 
     public List<UserDetail> findByPriority(int priority) {

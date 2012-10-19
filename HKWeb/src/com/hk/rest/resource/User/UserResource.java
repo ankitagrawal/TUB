@@ -83,7 +83,7 @@ public class UserResource {
 
         Response response = null;
         try{
-            UserDetail userDetail = userDetailService.findByPhone(phone);
+            UserDetail userDetail = userDetailService.findByPhone(phone).get(0);
             APIUserDetail apiUserDetail = new APIUserDetail();
             apiUserDetail.setId(userDetail.getUser().getId());
             apiUserDetail.setPhone(userDetail.getPhone());

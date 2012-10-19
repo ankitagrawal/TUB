@@ -12,9 +12,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface UserDetailDao {
+
     UserDetail save(UserDetail userDetails);
-
-    UserDetail findByPhone(Long phone);
-
+    List<UserDetail> findByPhone(Long phone);
     List<UserDetail> findByPriority(int priority);
 }

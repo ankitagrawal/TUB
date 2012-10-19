@@ -42,10 +42,10 @@ public class UserOrderServiceImpl implements UserOrderService {
     }
 
     public List<Order> getUserOrders(long phone){
-        UserDetail userDetail = userDetailsDao.findByPhone(phone);
-        if (userDetail != null){
+        List<UserDetail> userDetail = userDetailsDao.findByPhone(phone);
+        if ((userDetail != null) && (userDetail.size() == 1)){
             //Maximum of 50 orders for now
-            return (List<Order>)orderService.listOrdersForUser(userDetail.getUser(), 1, MAX_ORDER_COUNT).getList();
+            return (List<Order>)orderService.listOrdersForUser(userDetail.get(0).getUser(), 1, MAX_ORDER_COUNT).getList();
         }
         return new ArrayList<Order>();
     }

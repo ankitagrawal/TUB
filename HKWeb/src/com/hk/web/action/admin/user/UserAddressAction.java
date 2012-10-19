@@ -1,0 +1,72 @@
+package com.hk.web.action.admin.user;
+
+import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.domain.user.User;
+import com.hk.domain.user.UserDetail;
+import com.hk.pact.service.user.UserDetailService;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Marut
+ * Date: 10/19/12
+ * Time: 4:58 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class UserAddressAction extends BaseAction {
+
+    @Autowired
+    UserDetailService userDetailService;
+
+    List<UserDetail> userDetailList = new ArrayList<UserDetail>();
+
+    String remoteAddress;
+    String phone;
+
+    @DefaultHandler
+    public Resolution pre() {
+
+        remoteAddress = getContext().getRequest().getRemoteHost();
+        User customer = null;
+        Long userPhone = 0L;
+        if (getContext().getRequest().getParameterMap().containsKey("phone")){
+            userPhone = Long.parseLong(getContext().getRequest().getParameter("phone"));
+        }
+        userDetailList = userDetailService.findByPhone(userPhone);
+        return new ForwardResolution("/pages/admin/userAddress.jsp");
+    }
+
+    public String getRemoteAddress() {
+        return remoteAddress;
+    }
+
+    public void setRemoteAddress(String remoteAddress) {
+        this.remoteAddress = remoteAddress;
+    }
+
+    public List<UserDetail> getUserDetailList() {
+        return userDetailList;
+    }
+
+    public void setUserDetailList(List<UserDetail> userDetailList) {
+        this.userDetailList = userDetailList;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+}

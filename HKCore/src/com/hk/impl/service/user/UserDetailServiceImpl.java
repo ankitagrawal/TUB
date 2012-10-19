@@ -26,7 +26,7 @@ public class UserDetailServiceImpl implements UserDetailService {
         return userDetailsDao.save(userDetails);  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public UserDetail findByPhone(long phone) {
+    public List<UserDetail> findByPhone(long phone) {
         return userDetailsDao.findByPhone(phone);  //To change body of implemented methods use File | Settings | File Templates.
     }
 
