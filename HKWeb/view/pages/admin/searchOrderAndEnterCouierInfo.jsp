@@ -39,7 +39,7 @@
                       $('.error').show();
                       return false;
                   }
-                  if (tracking.length > 20) {
+                  if (tracking.length > 40) {
                       $('.error').html("");
                       $('.error').append(" Tracking Id length can not be greater than 20");
                       $('.error').show();

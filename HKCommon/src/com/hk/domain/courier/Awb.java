@@ -40,9 +40,6 @@ public class Awb implements java.io.Serializable {
     @Column(name = "awb_bar_code", nullable = false, length = 70)
     private String    awbBarCode;
 
-    @Column(name = "used", nullable = false)
-    private boolean   used;
-
     @Column(name = "cod", nullable = false)
     private boolean   cod;
 
@@ -104,14 +101,6 @@ public class Awb implements java.io.Serializable {
 
     public void setAwbBarCode(String awbBarCode) {
         this.awbBarCode = awbBarCode;
-    }
-
-    public boolean getUsed() {
-        return this.used;
-    }
-
-    public void setUsed(boolean used) {
-        this.used = used;
     }
 
     public boolean getCod() {

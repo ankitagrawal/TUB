@@ -106,8 +106,7 @@ public class XslAwbParser {
                 }
                 awb.setAwbNumber(awbNumber);
                 awb.setAwbBarCode(awbNumber);
-                awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                awb.setUsed(false);
+                awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());                
                 if (StringUtils.isEmpty(warehouse)) {
                     logger.error("warehouse cannot be call");
                     throw new ExcelBlankFieldException("warehouse cannot be empty " + "    ", rowCount);

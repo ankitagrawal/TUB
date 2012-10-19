@@ -101,9 +101,7 @@ public class AwbServiceImpl implements AwbService {
         awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
         awb.setWarehouse(warehouse);
         awb.setCod(isCod);
-        awb.setAwbBarCode(trackingNumber);
-        awb.setUsed(false);
-
+        awb.setAwbBarCode(trackingNumber); 
 	    return awb;
 
     }

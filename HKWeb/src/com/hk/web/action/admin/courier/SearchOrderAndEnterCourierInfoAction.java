@@ -148,13 +148,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 				boolean isCod = shippingOrder.isCOD();
 				isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
 				availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
-				if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
+				if (shippingOrder.getShipment() != null) {
 					suggestedCourier = shippingOrder.getShipment().getCourier();
 					trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
 				} else {
 					suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
-					//Todo: Seema ."reason=create  shipment with default Awb  " Action: default Tracking id= gateway_order_id: Might remove when we have all the awb in system
-					trackingId = shippingOrder.getGatewayOrderId();
 				}
 			} else {
 				addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
@@ -217,18 +215,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 					finalAwb = updateAttachStatus(awbFromDb);
 
 				} else {
-					//Create New AWb (When No AWB present in system , Authorization_Pending shows since Admin has added AWb manually so it might not valid one.
+					//Create New AWb (Authorization_Pending shows it might not  valid one since Admin has added  thr AWb manually.
 					Awb awb = awbService.createAwb(shipment.getCourier(), trackingId.trim(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
 					awb = (Awb)awbService.save(awb,null);
 					awbService.save(awb, EnumAwbStatus.Authorization_Pending.getId().intValue());
 					awbService.refresh(awb);
 					finalAwb = awb;
 				}
-				//Todo: Seema --  Awb which are detached from Shipment,their status should not change:Need to check if awb should be deleted or made free for reuse
-				/*if (suggestedAwb != null) {
-									suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-									awbService.save(suggestedAwb);
-								}*/
 			}
 		} else {
 			//user has used suggested one
