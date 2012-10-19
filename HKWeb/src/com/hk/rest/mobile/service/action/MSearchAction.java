@@ -94,7 +94,7 @@ public class MSearchAction extends MBaseAction {
 				for (Product product : productList) {
 					catalogJSONResponse = new MCatalogJSONResponse();
 					catalogJSONResponse = populateCatalogResponse(product, catalogJSONResponse);
-					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_SEARCH)));
 					catalogJSONResponse.setProductURL(product.getProductURL());
 					catalogList.add(catalogJSONResponse);
 				}
@@ -104,7 +104,7 @@ public class MSearchAction extends MBaseAction {
 				productList = productPage.getList();
 				for (Product product : productList) {
 					catalogJSONResponse = new MCatalogJSONResponse();
-					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_SEARCH)));
 					catalogJSONResponse = populateCatalogResponse(product, catalogJSONResponse);
 					catalogJSONResponse.setProductURL(product.getProductURL());
 					catalogList.add(catalogJSONResponse);
