@@ -126,7 +126,7 @@
         <th>Status</th>
         <th>Reconciled</th>
         <th>Payable</th>
-        <th>Payment Details</th>
+        <th>Est Payment Date</th>
         <th>Actions</th>
 	      <th>Select GRNs</th>
       </tr>
@@ -167,7 +167,7 @@
           </td>
           <td>
             <fmt:formatNumber value="${grn.payable}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
-          <td>${grn.paymentDetails}</td>
+          <td><fmt:formatDate value="${grn.estPaymentDate}" type="both" timeStyle="short"/></td>
           <td>
             <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">Edit
               <s:param name="grn" value="${grn.id}"/></s:link>

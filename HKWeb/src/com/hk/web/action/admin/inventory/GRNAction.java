@@ -160,7 +160,7 @@ public class GRNAction extends BasePaginatedAction {
 		if (grn != null && grn.getId() != null) {
 			logger.debug("grnLineItems@Save: " + grnLineItems.size());
 
-			if (StringUtils.isBlank(grn.getInvoiceNumber()) || grn.getInvoiceDate() == null) {
+			if (StringUtils.isBlank(grn.getInvoiceNumber()) || StringUtils.equals(grn.getInvoiceNumber(), "-") || grn.getInvoiceDate() == null) {
 				addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
 				return new RedirectResolution(GRNAction.class).addParameter("view").addParameter("grn", grn.getId());
 			}
@@ -308,6 +308,9 @@ public class GRNAction extends BasePaginatedAction {
 		PurchaseInvoice purchaseInvoice = new PurchaseInvoice();
 		purchaseInvoice.setCreateDate(new Date());
 		purchaseInvoice.setCreatedBy(loggedOnUser);
+		if (grnListForPurchaseInvoice.get(0) != null && grnListForPurchaseInvoice.get(0).getEstPaymentDate() != null) {
+			purchaseInvoice.setEstPaymentDate(grnListForPurchaseInvoice.get(0).getEstPaymentDate());
+		}
 		purchaseInvoice.setPurchaseInvoiceStatus(getPurchaseInvoiceDao().get(PurchaseInvoiceStatus.class, EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getId()));
 		if (supplier != null) {
 			purchaseInvoice.setSupplier(supplier);

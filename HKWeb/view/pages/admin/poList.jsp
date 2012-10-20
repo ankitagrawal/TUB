@@ -81,8 +81,8 @@
         <th>Warehouse</th>
         <th>Status</th>
         <th>Last Update Date</th>
-          <%--<th>Reconciled</th>--%>
         <th>Payable</th>
+        <th>Est Payment Date</th>
         <th>Payment Details</th>
         <th>GRNs</th>
         <th>Actions</th>
@@ -102,7 +102,8 @@
           <td>${purchaseOrder.purchaseOrderStatus.name}</td>
           <td><fmt:formatDate value="${purchaseOrder.updateDate}" type="both" timeStyle="short"/></td>
           <td>
-            <fmt:formatNumber value="${purchaseOrder.finalPayableAmount}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
+            <fmt:formatNumber value="${purchaseOrder.finalPayableAmount - purchaseOrder.advPayment}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
+	      <td><fmt:formatDate value="${purchaseOrder.estPaymentDate}" pattern="yyyy-MM-dd"/></td>
           <td>
             ${purchaseOrder.paymentDetails}
             <br />

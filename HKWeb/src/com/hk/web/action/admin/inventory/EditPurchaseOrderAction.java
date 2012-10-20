@@ -34,236 +34,246 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
+@Secure (hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
 public class EditPurchaseOrderAction extends BaseAction {
 
-    private static Logger    logger      = LoggerFactory.getLogger(EditPurchaseOrderAction.class);
-    @Autowired
-    PurchaseOrderDao         purchaseOrderDao;
-    @Autowired
-    PoLineItemDao            poLineItemDao;
-    @Autowired
-    PurchaseOrderManager     purchaseOrderManager;
+	private static Logger logger = LoggerFactory.getLogger(EditPurchaseOrderAction.class);
+	@Autowired
+	PurchaseOrderDao purchaseOrderDao;
+	@Autowired
+	PoLineItemDao poLineItemDao;
+	@Autowired
+	PurchaseOrderManager purchaseOrderManager;
 
-    @Autowired
-    private ProductVariantService    productVariantService;
-    @Autowired
-    XslParser                xslParser;
-    @Autowired
-    EmailManager             emailManager;
-    @Autowired
-    SkuService               skuService;
+	@Autowired
+	private ProductVariantService productVariantService;
+	@Autowired
+	XslParser xslParser;
+	@Autowired
+	EmailManager emailManager;
+	@Autowired
+	SkuService skuService;
 
-    // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String                   adminUploadsPath;
+	// @Named(Keys.Env.adminUploads)
+	@Value ("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+	String adminUploadsPath;
 
-    @Validate(required = true, on = "parse")
-    private FileBean         fileBean;
+	@Validate (required = true, on = "parse")
+	private FileBean fileBean;
 
-    private PurchaseOrder    purchaseOrder;
-    private List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
-    public PurchaseOrderDto  purchaseOrderDto;
-    public String            productVariantId;
-    public Warehouse         warehouse;
-	private PurchaseOrderStatus       previousPurchaseOrderStatus ;
+	private PurchaseOrder purchaseOrder;
+	private List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
+	public PurchaseOrderDto purchaseOrderDto;
+	public String productVariantId;
+	public Warehouse warehouse;
+	private PurchaseOrderStatus previousPurchaseOrderStatus;
 
-    @DefaultHandler
-    public Resolution pre() {
-        logger.debug("purchaseOrder@Pre: " + purchaseOrder.getId());
-        purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
-        return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
-    }
+	@DefaultHandler
+	public Resolution pre() {
+		logger.debug("purchaseOrder@Pre: " + purchaseOrder.getId());
+		purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
+		return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
+	}
 
-    @SuppressWarnings("unchecked")
-    public Resolution getPVDetails() {
-        Map dataMap = new HashMap();
-        if (StringUtils.isNotBlank(productVariantId)) {
-            ProductVariant pv = getProductVariantService().getVariantById(productVariantId);
-            if (pv != null) {
-                try {
-                    dataMap.put("variant", pv);
-                    if (warehouse != null) {
-                        Sku sku = skuService.getSKU(pv, warehouse);
-	                    if(sku != null) {
-		                    dataMap.put("sku", sku);
-		                    if(sku.getTax() != null) {
-			                    dataMap.put("tax", sku.getTax().getValue());
-		                    }
-	                    }
-                    }
-                    dataMap.put("product", pv.getProduct().getName());
-                    dataMap.put("options", pv.getOptionsCommaSeparated());
-                    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant", dataMap);
-                    noCache();
-                    return new JsonResolution(healthkartResponse);
-                } catch (Exception e) {
-                    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), dataMap);
-                    noCache();
-                    return new JsonResolution(healthkartResponse);
-                }
-            }
-        } else {
-            logger.error("null or empty product variant id passed to load pv details in getPvDetails method of EditPurchaseOrderAction");
-        }
-        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product VariantID", dataMap);
-        noCache();
-        return new JsonResolution(healthkartResponse);
-    }
+	@SuppressWarnings ("unchecked")
+	public Resolution getPVDetails() {
+		Map dataMap = new HashMap();
+		if (StringUtils.isNotBlank(productVariantId)) {
+			ProductVariant pv = getProductVariantService().getVariantById(productVariantId);
+			if (pv != null) {
+				try {
+					dataMap.put("variant", pv);
+					if (warehouse != null) {
+						Sku sku = skuService.getSKU(pv, warehouse);
+						if (sku != null) {
+							dataMap.put("sku", sku);
+							if (sku.getTax() != null) {
+								dataMap.put("tax", sku.getTax().getValue());
+							}
+						}
+					}
+					dataMap.put("product", pv.getProduct().getName());
+					dataMap.put("options", pv.getOptionsCommaSeparated());
+					HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant", dataMap);
+					noCache();
+					return new JsonResolution(healthkartResponse);
+				} catch (Exception e) {
+					HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), dataMap);
+					noCache();
+					return new JsonResolution(healthkartResponse);
+				}
+			}
+		} else {
+			logger.error("null or empty product variant id passed to load pv details in getPvDetails method of EditPurchaseOrderAction");
+		}
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product VariantID", dataMap);
+		noCache();
+		return new JsonResolution(healthkartResponse);
+	}
 
-    public Resolution save() {
-	    if (purchaseOrder != null && purchaseOrder.getId() != null) {
-		    logger.debug("poLineItems@Save: " + poLineItems.size());
-		    boolean errorReturn = false;
-		    if (purchaseOrder.getPurchaseOrderStatus() == null) {
-			    addRedirectAlertMessage(new SimpleMessage("Please Select status"));
-		    }
-		    long newStatus = purchaseOrder.getPurchaseOrderStatus().getId().longValue();
-		    long oldStatus = getPreviousPurchaseOrderStatus().getId().longValue();
-		    if (newStatus < oldStatus) {
-			    if ((newStatus == EnumPurchaseOrderStatus.Generated.getId().longValue()) && (oldStatus == EnumPurchaseOrderStatus.Cancelled.getId().longValue())) {
-				    errorReturn = false;
-			    } else {
-				    addRedirectAlertMessage(new SimpleMessage("The Selected Status Should Be After  : " + getPreviousPurchaseOrderStatus().getName()));
-				    errorReturn = true;
-			    }
-		    } else if (newStatus > oldStatus) {
-			    PurchaseOrderStatus expectPurchaseStatus = EnumPurchaseOrderStatus.getNextPurchaseOrderStatus(previousPurchaseOrderStatus);
-			    if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Cancelled.getId())) {
-				    errorReturn = false;
-			    } else if (!(expectPurchaseStatus.equals(purchaseOrder.getPurchaseOrderStatus()))) {
-				    addRedirectAlertMessage(new SimpleMessage("Please Choose Correct Next  Status : " + expectPurchaseStatus.getName()));
-				    errorReturn = true;
-			    }
-		    } else if (newStatus == oldStatus && (oldStatus != EnumPurchaseOrderStatus.Generated.getId().longValue())) {
-			    addRedirectAlertMessage(new SimpleMessage("PO is Already : " + purchaseOrder.getPurchaseOrderStatus().getName()));
-			    errorReturn = true;
-		    }
-		    if (errorReturn) {
-			    return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
-		    }
-		    double discountRatio = 0;
-		    if (purchaseOrder.getPayable() != null && purchaseOrder.getPayable() > 0 && purchaseOrder.getDiscount() != null) {
-			    discountRatio = purchaseOrder.getDiscount() / purchaseOrder.getPayable();
-		    }
-            for (PoLineItem poLineItem : poLineItems) {
-                if (poLineItem.getQty() != null) {
-                    if (poLineItem.getQty() == 0 && poLineItem.getId() != null) {
-                        getBaseDao().delete(poLineItem);
-                    } else if (poLineItem.getQty() > 0) {
-	                    if(poLineItem.getPayableAmount() != null) {
-		                    poLineItem.setProcurementPrice((poLineItem.getPayableAmount() / poLineItem.getQty()) - (poLineItem.getPayableAmount() / poLineItem.getQty() * discountRatio ));
-	                    }
-                        Sku sku = null;
-                        try {
-                            sku = skuService.getSKU(poLineItem.getProductVariant(), purchaseOrder.getWarehouse());
-                        } catch (Exception e) {
-                            addRedirectAlertMessage(new SimpleMessage("SKU doesn't exist for " + poLineItem.getProductVariant().getId()));
-                            return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
-                        }
-                        poLineItem.setSku(sku);
-                        poLineItem.setPurchaseOrder(purchaseOrder);
-                        try {
-                            poLineItemDao.save(poLineItem);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            addRedirectAlertMessage(new SimpleMessage("Duplicate variant - " + poLineItem.getSku().getProductVariant().getId()));
-                            return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
-                        }
-                    }
-                }
-            }
+	public Resolution save() {
+		if (purchaseOrder != null && purchaseOrder.getId() != null) {
+			logger.debug("poLineItems@Save: " + poLineItems.size());
+			boolean errorReturn = false;
+			if (purchaseOrder.getPurchaseOrderStatus() == null) {
+				addRedirectAlertMessage(new SimpleMessage("Please Select status"));
+			}
+			long newStatus = purchaseOrder.getPurchaseOrderStatus().getId().longValue();
+			long oldStatus = getPreviousPurchaseOrderStatus().getId().longValue();
+			if (newStatus < oldStatus) {
+				if ((newStatus == EnumPurchaseOrderStatus.Generated.getId().longValue()) && (oldStatus == EnumPurchaseOrderStatus.Cancelled.getId().longValue())) {
+					errorReturn = false;
+				} else {
+					addRedirectAlertMessage(new SimpleMessage("The Selected Status Should Be After  : " + getPreviousPurchaseOrderStatus().getName()));
+					errorReturn = true;
+				}
+			} else if (newStatus > oldStatus) {
+				PurchaseOrderStatus expectPurchaseStatus = EnumPurchaseOrderStatus.getNextPurchaseOrderStatus(previousPurchaseOrderStatus);
+				if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Cancelled.getId())) {
+					errorReturn = false;
+				} else if (!(expectPurchaseStatus.equals(purchaseOrder.getPurchaseOrderStatus()))) {
+					addRedirectAlertMessage(new SimpleMessage("Please Choose Correct Next  Status : " + expectPurchaseStatus.getName()));
+					errorReturn = true;
+				}
+			} else if (newStatus == oldStatus && (oldStatus != EnumPurchaseOrderStatus.Generated.getId().longValue())) {
+				addRedirectAlertMessage(new SimpleMessage("PO is Already : " + purchaseOrder.getPurchaseOrderStatus().getName()));
+				errorReturn = true;
+			}
+			if (errorReturn) {
+				return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+			}
+			double discountRatio = 0;
+			if (purchaseOrder.getPayable() != null && purchaseOrder.getPayable() > 0 && purchaseOrder.getDiscount() != null) {
+				discountRatio = purchaseOrder.getDiscount() / purchaseOrder.getPayable();
+			}
+			for (PoLineItem poLineItem : poLineItems) {
+				if (poLineItem.getQty() != null) {
+					if (poLineItem.getQty() == 0 && poLineItem.getId() != null) {
+						getBaseDao().delete(poLineItem);
+					} else if (poLineItem.getQty() > 0) {
+						if (poLineItem.getPayableAmount() != null) {
+							poLineItem.setProcurementPrice((poLineItem.getPayableAmount() / poLineItem.getQty()) - (poLineItem.getPayableAmount() / poLineItem.getQty() * discountRatio));
+						}
+						Sku sku = null;
+						try {
+							sku = skuService.getSKU(poLineItem.getProductVariant(), purchaseOrder.getWarehouse());
+						} catch (Exception e) {
+							addRedirectAlertMessage(new SimpleMessage("SKU doesn't exist for " + poLineItem.getProductVariant().getId()));
+							return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+						}
+						poLineItem.setSku(sku);
+						poLineItem.setPurchaseOrder(purchaseOrder);
+						try {
+							poLineItemDao.save(poLineItem);
+						} catch (Exception e) {
+							e.printStackTrace();
+							addRedirectAlertMessage(new SimpleMessage("Duplicate variant - " + poLineItem.getSku().getProductVariant().getId()));
+							return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+						}
+					}
+				}
+			}
 
-            purchaseOrder.setUpdateDate(new Date());
-            purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
-            purchaseOrder.setPayable(purchaseOrderDto.getTotalPayable());
-	        double overallDiscount = purchaseOrder.getDiscount() != null ? purchaseOrder.getDiscount() : 0;
-	        purchaseOrder.setFinalPayableAmount(purchaseOrder.getPayable() - overallDiscount);
-            purchaseOrderDao.save(purchaseOrder);
+			purchaseOrder.setUpdateDate(new Date());
+			purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
+			purchaseOrder.setPayable(purchaseOrderDto.getTotalPayable());
+			double overallDiscount = purchaseOrder.getDiscount() != null ? purchaseOrder.getDiscount() : 0;
+			purchaseOrder.setFinalPayableAmount(purchaseOrder.getPayable() - overallDiscount);
+			purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
-            if (purchaseOrder.getPurchaseOrderStatus().getId().equals( EnumPurchaseOrderStatus.SentForApproval.getId())) {
-                emailManager.sendPOSentForApprovalEmail(purchaseOrder);
-            } else if (purchaseOrder.getPurchaseOrderStatus().getId().equals( EnumPurchaseOrderStatus.SentToSupplier.getId())) {
-                emailManager.sendPOPlacedEmail(purchaseOrder);
-            }
-        }
-        addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-        return new RedirectResolution(POAction.class);
-    }
 
-    public Resolution parse() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String excelFilePath = adminUploadsPath + "/poFiles/" + sdf.format(new Date()) + "/POID-" + purchaseOrder + "-" + sdf.format(new Date()) + ".xls";
-        File excelFile = new File(excelFilePath);
-        excelFile.getParentFile().mkdirs();
-        fileBean.save(excelFile);
+			if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentForApproval.getId())) {
+				emailManager.sendPOSentForApprovalEmail(purchaseOrder);
+			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentToSupplier.getId())) {
+				purchaseOrder.setPoPlaceDate(new Date());
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(new Date());
+				calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getLeadTime());
+				purchaseOrder.setEstDelDate(calendar.getTime());
+				calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
+				purchaseOrder.setEstPaymentDate(calendar.getTime());
+				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
-        try {
-            Set<PoLineItem> poLineItems = xslParser.readAndCreatePOLineItems(excelFile, purchaseOrder);
-            addRedirectAlertMessage(new SimpleMessage(poLineItems.size() + " PO Line Items Created Successfully."));
-        } catch (Exception e) {
-            logger.error("Exception while reading excel sheet.", e);
-            addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-        }
-        return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
-    }
+				emailManager.sendPOPlacedEmail(purchaseOrder);
+			}
+		}
+		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+		return new RedirectResolution(POAction.class);
+	}
 
-    public PurchaseOrder getPurchaseOrder() {
-        return purchaseOrder;
-    }
+	public Resolution parse() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String excelFilePath = adminUploadsPath + "/poFiles/" + sdf.format(new Date()) + "/POID-" + purchaseOrder + "-" + sdf.format(new Date()) + ".xls";
+		File excelFile = new File(excelFilePath);
+		excelFile.getParentFile().mkdirs();
+		fileBean.save(excelFile);
 
-    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
-        this.purchaseOrder = purchaseOrder;
-    }
+		try {
+			Set<PoLineItem> poLineItems = xslParser.readAndCreatePOLineItems(excelFile, purchaseOrder);
+			addRedirectAlertMessage(new SimpleMessage(poLineItems.size() + " PO Line Items Created Successfully."));
+		} catch (Exception e) {
+			logger.error("Exception while reading excel sheet.", e);
+			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+		}
+		return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+	}
 
-    public List<PoLineItem> getPoLineItems() {
-        return poLineItems;
-    }
+	public PurchaseOrder getPurchaseOrder() {
+		return purchaseOrder;
+	}
 
-    public void setPoLineItems(List<PoLineItem> poLineItems) {
-        this.poLineItems = poLineItems;
-    }
+	public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+		this.purchaseOrder = purchaseOrder;
+	}
 
-    public PurchaseOrderDto getPurchaseOrderDto() {
-        return purchaseOrderDto;
-    }
+	public List<PoLineItem> getPoLineItems() {
+		return poLineItems;
+	}
 
-    public void setPurchaseOrderDto(PurchaseOrderDto purchaseOrderDto) {
-        this.purchaseOrderDto = purchaseOrderDto;
-    }
+	public void setPoLineItems(List<PoLineItem> poLineItems) {
+		this.poLineItems = poLineItems;
+	}
 
-    public FileBean getFileBean() {
-        return fileBean;
-    }
+	public PurchaseOrderDto getPurchaseOrderDto() {
+		return purchaseOrderDto;
+	}
 
-    public void setFileBean(FileBean fileBean) {
-        this.fileBean = fileBean;
-    }
+	public void setPurchaseOrderDto(PurchaseOrderDto purchaseOrderDto) {
+		this.purchaseOrderDto = purchaseOrderDto;
+	}
 
-    public String getProductVariantId() {
-        return productVariantId;
-    }
+	public FileBean getFileBean() {
+		return fileBean;
+	}
 
-    public void setProductVariantId(String productVariantId) {
-        this.productVariantId = productVariantId;
-    }
+	public void setFileBean(FileBean fileBean) {
+		this.fileBean = fileBean;
+	}
 
-    public Warehouse getWarehouse() {
-        return warehouse;
-    }
+	public String getProductVariantId() {
+		return productVariantId;
+	}
 
-    public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
-    }
+	public void setProductVariantId(String productVariantId) {
+		this.productVariantId = productVariantId;
+	}
 
-    public ProductVariantService getProductVariantService() {
-        return productVariantService;
-    }
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
 
-    public void setProductVariantService(ProductVariantService productVariantService) {
-        this.productVariantService = productVariantService;
-    }
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
+	}
+
+	public ProductVariantService getProductVariantService() {
+		return productVariantService;
+	}
+
+	public void setProductVariantService(ProductVariantService productVariantService) {
+		this.productVariantService = productVariantService;
+	}
 
 	public PurchaseOrderManager getPurchaseOrderManager() {
 		return purchaseOrderManager;

@@ -14,6 +14,12 @@
                 <label>Tin Number:</label><s:text name="supplierTin" style="width:150px"/>
                 &nbsp; &nbsp;
                 <label>Name:</label><s:text name="supplierName" style="width:150px"/>
+	            &nbsp; &nbsp;
+                <label>Status:</label><label>Status:</label><s:select name="status">
+			        <s:option value="">-ALL-</s:option>
+			        <s:option value="true">Active</s:option>
+			        <s:option value="false">Inactive</s:option>
+	            </s:select>
 
                 <s:submit name="pre" value="Search"/>
                 <s:submit name="generateExcelReport" value="Download to Excel" />
@@ -31,10 +37,13 @@
                 <th>Address</th>
                 <th>Contact Person</th>
                 <th>Contact Number</th>
-                <th>Credit Period</th>
+                <th>Credit Days</th>
+                <th>Target Credit Days</th>
+                <th>Lead Time (Days)</th>
                 <th>Margin %</th>
                 <th>Company/Brands Name</th>
                 <th>Validity of Terms of Trade</th>
+                <th>Active?</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -46,10 +55,13 @@
                     </td>
                     <td>${supplier.contactPerson}</td>
                     <td>${supplier.contactNumber}</td>
-                    <td>${supplier.creditPeriod}</td>
+                    <td>${supplier.creditDays}</td>
+                    <td>${supplier.targetCreditDays}</td>
+                    <td>${supplier.leadTime}</td>
                     <td>${supplier.margins}</td>
                     <td>${supplier.brandName}</td>
                     <td>${supplier.TOT}</td>
+	                <td>${supplier.active}</td>
                     <td>
                         <s:link beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction" event="createOrEdit">Edit
                             <s:param name="supplier" value="${supplier.id}"/></s:link>

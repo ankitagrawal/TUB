@@ -6,11 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -164,10 +160,14 @@ public class POAction extends BasePaginatedAction {
         grn.setPurchaseOrder(purchaseOrder);
         grn.setGrnDate(new Date());
         grn.setInvoiceDate(new Date());
-        grn.setInvoiceNumber("Please Enter Invoice");
+        grn.setInvoiceNumber("-");
         grn.setReceivedBy(loggedOnUser);
         grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.GoodsReceived.getId()));
         grn.setWarehouse(warehouse);
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(new Date());
+	    calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
+	    grn.setEstPaymentDate(calendar.getTime());
 	    grn = (GoodsReceivedNote) getGoodsReceivedNoteDao().save(grn);
         for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
             ProductVariant productVariant = poLineItem.getSku().getProductVariant();

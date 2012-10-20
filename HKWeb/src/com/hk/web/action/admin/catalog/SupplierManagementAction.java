@@ -33,13 +33,14 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.domain.catalog.Supplier;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.util.XslGenerator;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = {PermissionConstants.SUPPLIER_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
 public class SupplierManagementAction extends BasePaginatedAction {
 
@@ -60,6 +61,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
     public static final int LenghtOfTIN = 11;
     private String supplierTin;
     private String supplierName;
+    private Boolean status;
 
     Page supplierPage;
     private Integer defaultPerPage = 30;
@@ -75,7 +77,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
-        supplierPage = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, getPageNo(), getPerPage());
+        supplierPage = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, status, getPageNo(), getPerPage());
         supplierList = supplierPage.getList();
         return new ForwardResolution("/pages/admin/supplierList.jsp");
     }
@@ -122,18 +124,6 @@ public class SupplierManagementAction extends BasePaginatedAction {
             }
         }
 
-        //Validation for the Credit Period
-        if(supplier.getCreditPeriod() != null){
-            Pattern pattern;
-
-            String credit_period = supplier.getCreditPeriod();
-            final String INTEGER_PATTERN = "^[0-9]*$";
-            pattern = Pattern.compile(INTEGER_PATTERN);
-            boolean bool=pattern.matcher(credit_period).matches();
-            if(!bool)
-                getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number"));
-        }
-
         // Validation for the Email Id
         if(supplier.getEmail_id() != null){
             Pattern pattern;
@@ -146,6 +136,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
         }
     }
 
+	@Secure(hasAnyRoles = { RoleConstants.PO_APPROVER }, authActionBean = AdminPermissionAction.class)
     public Resolution save() {
         Supplier oldSupplier = supplierDao.findByTIN(supplier.getTinNumber());
         if (oldSupplier == null) {
@@ -172,7 +163,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
     }
 
     public Resolution generateExcelReport() {
-        supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName);
+        supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, status);
 
         xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
 
@@ -238,7 +229,15 @@ public class SupplierManagementAction extends BasePaginatedAction {
         this.supplierTin = supplierTin;
     }
 
-    public int getPerPageDefault() {
+	public Boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public int getPerPageDefault() {
         return defaultPerPage;
     }
 

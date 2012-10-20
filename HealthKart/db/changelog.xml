@@ -9438,4 +9438,70 @@
 	<changeSet author="Ajeet (generated)" id="1348919811628-3">
 			<dropColumn columnName="updated" tableName="update_pv_price"/>
 	</changeSet>
+	
+    <changeSet author="Ajeet (generated)" id="1350715789183-1">
+        <addColumn tableName="goods_received_note">
+            <column name="est_payment_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-2">
+        <addColumn tableName="purchase_invoice">
+            <column name="est_payment_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-3">
+        <addColumn tableName="supplier">
+            <column defaultValue="1" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-4">
+        <addColumn tableName="supplier">
+            <column defaultValue="15" name="credit_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-5">
+        <addColumn tableName="supplier">
+            <column defaultValue="7" name="lead_time" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-6">
+        <addColumn tableName="supplier">
+            <column defaultValue="30" name="target_credit_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-7">
+        <dropColumn columnName="payment_amount" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-8">
+        <dropColumn columnName="payment_date" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-9">
+        <dropColumn columnName="payment_details" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-10">
+        <dropColumn columnName="invoice_date" tableName="purchase_order"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-11">
+        <dropColumn columnName="invoice_number" tableName="purchase_order"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-12">
+        <dropColumn columnName="credit_period" tableName="supplier"/>
+    </changeSet>
+    
+    <changeSet author="Ajeet (generated)" id="1350720752742-1">
+        <addColumn tableName="purchase_order">
+            <column name="approval_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350720752742-2">
+        <dropColumn columnName="po_date" tableName="purchase_order"/>
+    </changeSet>
 </databaseChangeLog>

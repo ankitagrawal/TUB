@@ -12,240 +12,286 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "supplier")
+@Table (name = "supplier")
 /* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
 public class Supplier implements java.io.Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long   id;
+	@Id
+	@GeneratedValue (strategy = GenerationType.AUTO)
+	@Column (name = "id", unique = true, nullable = false)
+	private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;
+	@Column (name = "name", nullable = false, length = 100)
+	private String name;
 
-    @Column(name = "line1")
-    private String line1;
+	@Column (name = "line1")
+	private String line1;
 
-    @Column(name = "line2")
-    private String line2;
+	@Column (name = "line2")
+	private String line2;
 
-    @Column(name = "city")
-    private String city;
+	@Column (name = "city")
+	private String city;
 
-    @Column(name = "state")
-    private String state;
+	@Column (name = "state")
+	private String state;
 
-    @Column(name = "pincode")
-    private String pincode;
+	@Column (name = "pincode")
+	private String pincode;
 
-    @Column(name = "tin_number", unique = true)
-    private String tinNumber;
+	@Column (name = "tin_number", unique = true)
+	private String tinNumber;
 
-    @Column(name = "contact_person")
-    private String contactPerson;
+	@Column (name = "contact_person")
+	private String contactPerson;
 
-    @Column(name = "contact_number")
-    private String contactNumber;
+	@Column (name = "contact_number")
+	private String contactNumber;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", length = 19)
-    private Date   createDate;
+	@Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "create_date", length = 19)
+	private Date createDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_date", length = 19)
-    private Date   updateDate;
+	@Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "update_date", length = 19)
+	private Date updateDate;
 
-      @Column(name = "brands")
-    private String  brandName;
-    
-    @Column(name = "credit_period")
-    private  String creditPeriod;
+	@Column (name = "brands")
+	private String brandName;
 
-     @Column(name = "dam_exp_cond")
-    private String damageConditions;
+	@Column (name = "dam_exp_cond")
+	private String damageConditions;
 
-     @Column(name = "email_id")
-    private String email_id;
+	@Column (name = "email_id")
+	private String email_id;
 
-     @Column(name = "margins")
-    private String margins;
+	@Column (name = "margins")
+	private String margins;
 
-     @Column(name = "terms_of_trade")
-    private String tot;
-    
-    public Long getId() {
-        return id;
-    }
+	@Column (name = "terms_of_trade")
+	private String tot;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Column (name = "credit_days", nullable = false)
+	private Integer creditDays;
 
-    public String getName() {
-        return name;
-    }
+	@Column (name = "target_credit_days", nullable = false)
+	private Integer targetCreditDays;
+
+	@Column (name = "lead_time", nullable = false)
+	private Integer leadTime;
+
+	@Column (name = "active", nullable = false)
+	private Boolean active;
 
 
-    public String getTOT() {
-        return tot;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setTOT(String TOT) {
-        this.tot = TOT;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
+	public String getName() {
+		return name;
+	}
 
-    }
 
-    public String getMargins() {
-        return margins;
-    }
+	public String getTOT() {
+		return tot;
+	}
 
-    public void setMargins(String margins) {
-        this.margins = margins;
-    }
+	public void setTOT(String TOT) {
+		this.tot = TOT;
+	}
 
-    public String getEmail_id() {
-        return email_id;
-    }
+	public void setName(String name) {
+		this.name = name;
 
-    public void setEmail_id(String email_id) {
-        this.email_id = email_id;
-    }
+	}
 
-    public String getDamageConditions() {
-        return damageConditions;
-    }
+	public String getMargins() {
+		return margins;
+	}
 
-    public void setDamageConditions(String damageConditions) {
-        this.damageConditions = damageConditions;
-    }
+	public void setMargins(String margins) {
+		this.margins = margins;
+	}
 
-    public String getBrandName() {
-        return brandName;
-    }
+	public String getEmail_id() {
+		return email_id;
+	}
 
-    public void setBrandName(String brandName) {
-        this.brandName = brandName;
-    }
+	public void setEmail_id(String email_id) {
+		this.email_id = email_id;
+	}
 
-    public String getCreditPeriod() {
-        return creditPeriod;
-    }
+	public String getDamageConditions() {
+		return damageConditions;
+	}
 
-    public void setCreditPeriod(String creditPeriod) {
-        this.creditPeriod = creditPeriod;
-    }
+	public void setDamageConditions(String damageConditions) {
+		this.damageConditions = damageConditions;
+	}
 
-    public String getLine1() {
-        return line1;
+	public String getBrandName() {
+		return brandName;
+	}
 
-    }
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
+	}
 
-    public void setLine1(String line1) {
-        this.line1 = line1;
-    }
+	public String getLine1() {
+		return line1;
 
-    public String getLine2() {
-        return line2;
-    }
+	}
 
-    public void setLine2(String line2) {
-        this.line2 = line2;
-    }
+	public void setLine1(String line1) {
+		this.line1 = line1;
+	}
 
-    public String getCity() {
-        return city;
-    }
+	public String getLine2() {
+		return line2;
+	}
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+	public void setLine2(String line2) {
+		this.line2 = line2;
+	}
 
-    public String getState() {
-        return state;
-    }
+	public String getCity() {
+		return city;
+	}
 
-    public void setState(String state) {
-        this.state = state;
-    }
+	public void setCity(String city) {
+		this.city = city;
+	}
 
-    public String getPincode() {
-        return pincode;
-    }
+	public String getState() {
+		return state;
+	}
 
-    public void setPincode(String pincode) {
-        this.pincode = pincode;
-    }
+	public void setState(String state) {
+		this.state = state;
+	}
 
-    public String getTinNumber() {
-        return tinNumber;
-    }
+	public String getPincode() {
+		return pincode;
+	}
 
-    public void setTinNumber(String tinNumber) {
-        this.tinNumber = tinNumber;
-    }
+	public void setPincode(String pincode) {
+		this.pincode = pincode;
+	}
 
-    public String getContactPerson() {
-        return contactPerson;
-    }
+	public String getTinNumber() {
+		return tinNumber;
+	}
 
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
-    }
+	public void setTinNumber(String tinNumber) {
+		this.tinNumber = tinNumber;
+	}
 
-    public Date getCreateDate() {
-        return createDate;
-    }
+	public String getContactPerson() {
+		return contactPerson;
+	}
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
 
-    public Date getUpdateDate() {
-        return updateDate;
-    }
+	public Date getCreateDate() {
+		return createDate;
+	}
 
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 
-    public String getContactNumber() {
-        return contactNumber;
-    }
+	public Date getUpdateDate() {
+		return updateDate;
+	}
 
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        // if (o == null || getClass() != o.getClass()) return false;
+	public String getContactNumber() {
+		return contactNumber;
+	}
 
-        if (o instanceof Supplier) {
-            Supplier that = (Supplier) o;
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
 
-            if (getTinNumber() != null ? !getTinNumber().equals(that.getTinNumber()) : that.getTinNumber() != null)
-                return false;
+	public String getTot() {
+		return tot;
+	}
 
-            return true;
-        } else {
-            return false;
-        }
-    }
+	public void setTot(String tot) {
+		this.tot = tot;
+	}
 
-    @Override
-    public int hashCode() {
-        return getName() != null ? getName().hashCode() : 0;
-    }
+	public Integer getCreditDays() {
+		return creditDays;
+	}
 
-    @Override
-    public String toString() {
-        return this.id != null ? this.id.toString() : "";
-    }
+	public void setCreditDays(Integer creditDays) {
+		this.creditDays = creditDays;
+	}
+
+	public Integer getTargetCreditDays() {
+		return targetCreditDays;
+	}
+
+	public void setTargetCreditDays(Integer targetCreditDays) {
+		this.targetCreditDays = targetCreditDays;
+	}
+
+	public Integer getLeadTime() {
+		return leadTime;
+	}
+
+	public void setLeadTime(Integer leadTime) {
+		this.leadTime = leadTime;
+	}
+
+	public Boolean isActive() {
+		return active;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		// if (o == null || getClass() != o.getClass()) return false;
+
+		if (o instanceof Supplier) {
+			Supplier that = (Supplier) o;
+
+			if (getTinNumber() != null ? !getTinNumber().equals(that.getTinNumber()) : that.getTinNumber() != null)
+				return false;
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return getName() != null ? getName().hashCode() : 0;
+	}
+
+	@Override
+	public String toString() {
+		return this.id != null ? this.id.toString() : "";
+	}
 }
