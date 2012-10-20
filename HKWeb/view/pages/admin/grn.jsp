@@ -3,6 +3,7 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.inventory.EnumGrnStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
@@ -11,6 +12,7 @@
 	WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 	pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
 %>
+<c:set var="inCheckedIn" value="<%=EnumGrnStatus.InventoryCheckedIn.getId()%>"/>
 <s:layout-component name="htmlHead">
 
 	<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -436,8 +438,9 @@
 <div class="variantDetails info"></div>
 <br/>
 <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
-
-<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+<c:if test="${pa.grn.grnStatus.id < inCheckedIn}">
+	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+</c:if>
 </s:form>
 
 </s:layout-component>

@@ -79,8 +79,8 @@
   <tr>
     <td><b>Supplier</b></td>
     <td>${orderSummary.purchaseOrder.supplier.name}</td>
-    <td><b>PO Date</b></td>
-    <td><fmt:formatDate value="${orderSummary.purchaseOrder.poDate}" pattern="yyyy-MM-dd"/></td>
+    <td><b>PO Place Date</b></td>
+    <td><fmt:formatDate value="${orderSummary.purchaseOrder.poPlaceDate}" pattern="dd-MMM-yyyy"/></td>
   </tr>
   <tr valign="top">
     <td><b>Address</b></td>

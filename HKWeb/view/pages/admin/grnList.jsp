@@ -2,6 +2,7 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.inventory.EnumGrnStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Goods Received Note (GRN) List">
@@ -9,6 +10,8 @@
       WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
       pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
   %>
+	<c:set var="checkinInProcess" value="<%=EnumGrnStatus.InventoryCheckinInProcess.getId()%>"/>
+	<c:set var="inventoryCheckedIn" value="<%=EnumGrnStatus.InventoryCheckedIn.getId()%>"/>
   <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="poa"/>
   <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
   <s:layout-component name="htmlHead">
@@ -102,7 +105,7 @@
             </c:otherwise>
           </c:choose>
         <s:submit name="pre" value="Search GRN"/>
-          <s:submit name="generateExcelReport" value="Download to Excel" />
+        <s:submit name="generateExcelReport" value="Download to Excel" />
       </s:form>
     </fieldset>
 
@@ -168,25 +171,26 @@
           <td>
             <fmt:formatNumber value="${grn.payable}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td><fmt:formatDate value="${grn.estPaymentDate}" type="both" timeStyle="short"/></td>
-          <td>
-            <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">Edit
-              <s:param name="grn" value="${grn.id}"/></s:link>
-            &nbsp;
-            <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="print" target="_blank">Print
-              <s:param name="grn" value="${grn.id}"/></s:link>
-            &nbsp;
-            <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="pre">
-              Inventory Checkin
-              <s:param name="grn" value="${grn.id}"/></s:link>
+	        <td>
+		        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="print" target="_blank">Print
+			        <s:param name="grn" value="${grn.id}"/></s:link>
+		        <br/>
+		        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">Edit/View
+				        <s:param name="grn" value="${grn.id}"/></s:link>
+			        <br/>
+		        <c:if test="${grn.grnStatus.id < inventoryCheckedIn}">
+			        <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="pre">
+			        Inv.Checkin
+			        <s:param name="grn" value="${grn.id}"/></s:link>
+		        <br/>
+		        </c:if>
 
-               <s:link beanclass="com.hk.web.action.admin.queue.JobCartAction" event="putList">
-              Put List
-              <s:param name="grn" value="${grn.id}"/></s:link>
-           <%-- &nbsp;
-            <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">
-              Raise Debit Note
-              <s:param name="grn" value="${grn.id}"/></s:link>--%>
-          </td>
+		        <c:if test="${grn.grnStatus.id == checkinInProcess || grn.grnStatus.id == inventoryCheckedIn}">
+			        <s:link beanclass="com.hk.web.action.admin.queue.JobCartAction" event="putList">
+				        Put List
+				        <s:param name="grn" value="${grn.id}"/></s:link>
+		        </c:if>
+	        </td>
 	        <td>
             <s:checkbox name="grnListForPurchaseInvoice[]" value="${grn.id}" class="purchaseLineItemCheckBox"/>
 	        </td>

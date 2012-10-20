@@ -9504,4 +9504,12 @@
     <changeSet author="Ajeet (generated)" id="1350720752742-2">
         <dropColumn columnName="po_date" tableName="purchase_order"/>
     </changeSet>
+
+	<changeSet author="Ajeet (written)" id="20121020">
+		<sql>
+			update purchase_order set purchase_order_status_id=1000 where purchase_order_status_id=100; 
+			update goods_received_note set grn_status_id=30 where grn_status_id=20; 
+			delete from grn_status where id in (25, 40); 
+		</sql>
+	</changeSet>
 </databaseChangeLog>

@@ -62,7 +62,7 @@
 	</c:if>
 	<h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
 	<shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
-		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction"> Ant Builds </s:link></h3>
+		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction">Run Ant Tasks </s:link></h3>
 	</shiro:hasRole>
     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction"> Populate Busy Data </s:link></h3>
