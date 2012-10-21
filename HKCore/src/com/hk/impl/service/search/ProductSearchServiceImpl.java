@@ -119,15 +119,13 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
     public SearchResult getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException {
-        SolrQuery query = new SolrQuery();
-        String myQuery = "*";
+        SolrQuery query = new SolrQuery("*:*");
         query.addFilterQuery(SolrSchemaConstants.brand  + ":" + brand);
         query.addFilterQuery(SolrSchemaConstants.category + ":" + topLevelCategory);
         query.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isHidden + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);
 
-        query.setQuery(myQuery);
         query.set("fl", "*");
         query.setStart((page - 1) * perPage);
         query.setRows(perPage);
@@ -164,7 +162,8 @@ class ProductSearchServiceImpl implements ProductSearchService {
                                                  SortFilter sortFilter)
             throws SolrServerException {
 
-        SolrQuery solrQuery = new SolrQuery();
+        SolrQuery solrQuery = new SolrQuery("*:*");
+
         String query = "*";
         for (SearchFilter searchFilter : searchFilters){
             if (searchFilter.getValue() != null){
@@ -179,8 +178,8 @@ class ProductSearchServiceImpl implements ProductSearchService {
         solrQuery.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);
         solrQuery.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
         solrQuery.addFilterQuery(SolrSchemaConstants.isHidden + ":" + 0);
-
-      /*  String rangeQuery=   rangeFilter.getName() + ": [" +  rangeFilter.getStartRange() + " TO " +  rangeFilter.getEndRange() + "]";
+        /*solrQuery.addFacetField(rangeFilter.getName());
+        String rangeQuery=   rangeFilter.getName() + ": [" +  rangeFilter.getStartRange() + " TO " +  rangeFilter.getEndRange() + "]";
         solrQuery.addFacetQuery(rangeQuery);*/
         query += SolrSchemaConstants.queryInnerJoin + rangeFilter.getName() + SolrSchemaConstants.paramAppender +
                 "[" + rangeFilter.getStartRange() + " TO " + rangeFilter.getEndRange() + "]" + SolrSchemaConstants.queryTerminator;
@@ -327,11 +326,8 @@ class ProductSearchServiceImpl implements ProductSearchService {
         for (SearchFilter searchFilter : searchFilters){
             String fq1 = searchFilter.getName() + ":" + searchFilter.getValue();
             solrQuery = solrQuery.setParam("fq", fq1);
-            /*String fq1 = "fq = " + searchFilter.getName() + ":" + searchFilter.getValue();
-            finalfq += " & " + fq1;*/
         }
         solrQuery.setParam("q", query);
-        //solrQuery.setParam("fq","+" + fq);
         solrQuery.setParam("defType", "dismax");
         solrQuery.setParam("qf", qf);
 
