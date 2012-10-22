@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,13 +84,18 @@ public class UserResource {
 
         Response response = null;
         try{
-            UserDetail userDetail = userDetailService.findByPhone(phone).get(0);
-            APIUserDetail apiUserDetail = new APIUserDetail();
-            apiUserDetail.setId(userDetail.getUser().getId());
-            apiUserDetail.setPhone(userDetail.getPhone());
-            apiUserDetail.setPriority(userDetail.getPriority());
-            if (userDetail != null){
-                response = Response.status(Response.Status.OK).entity(apiUserDetail).build();
+            List<UserDetail> userDetails = userDetailService.findByPhone(phone);
+            ArrayList<APIUserDetail> userDetailList = new ArrayList<APIUserDetail>();
+            for (UserDetail userDetail : userDetails){
+                APIUserDetail apiUserDetail = new APIUserDetail();
+                apiUserDetail.setId(userDetail.getUser().getId());
+                apiUserDetail.setPhone(userDetail.getPhone());
+                apiUserDetail.setPriority(userDetail.getPriority());
+                userDetailList.add(apiUserDetail);
+            }
+            if (userDetails != null && (userDetails.size() > 0)){
+                final GenericEntity<List<APIUserDetail>> entity = new GenericEntity<List<APIUserDetail>>(userDetailList) { };
+                response = Response.status(Response.Status.OK).entity(entity).build();
             }else{
                 response = Response.status(Response.Status.NOT_FOUND).build();
             }
