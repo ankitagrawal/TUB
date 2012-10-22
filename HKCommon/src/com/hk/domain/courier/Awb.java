@@ -140,8 +140,9 @@ public class Awb implements java.io.Serializable {
 		if (this.id != null && awb.getId() != null) {
 			return this.id.equals(awb.getId());
 		} else {
-			if (this.awbNumber == null || awb.getAwbNumber() == null || this.courier == null || awb.getCourier() == null)
+			if (this.awbNumber == null || awb.getAwbNumber() == null || this.courier == null || awb.getCourier() == null) {
 				return false;
+			}
 			EqualsBuilder equalsBuilder = new EqualsBuilder();
 			equalsBuilder.append(this.awbNumber, awb.getAwbNumber());
 			equalsBuilder.append(this.courier, awb.getCourier());
