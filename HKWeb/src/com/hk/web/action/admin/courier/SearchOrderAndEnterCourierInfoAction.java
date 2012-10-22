@@ -252,7 +252,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 	private Awb updateAttachStatus(Awb finalAwb) {
 		int rowsUpdate = (Integer) awbService.save(finalAwb, EnumAwbStatus.Attach.getId().intValue());
 		if (rowsUpdate == 0) {
-			addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is Already Used with Another User Order   ,  Try again With New Tracking ID"));
+			addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "       is Already Used with Another User Order   ,     Try again With New Tracking ID"));
 			pre();
 		}
 		awbService.refresh(finalAwb);
