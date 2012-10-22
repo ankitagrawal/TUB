@@ -33,7 +33,8 @@ class PopulateUserDetail {
         Long phone;
         int cnt = 0;
         sql.eachRow("""
-                    select u.id, a.phone from user u join address a on u.id = a.user_id;
+                    select u.id, a.phone, kp.karma_points from user u join address a on u.id = a.user_id
+                    join user_karma_profile kp on u.id = kp.user_id;
                       """){
             userDetails ->
             String[] phones = null;
@@ -59,9 +60,9 @@ class PopulateUserDetail {
                     String strPh = userPhone.substring(start, userPhone.length() - 1);
                     long phoneNumber = Long.parseLong(strPh);
                     long id = userDetails.id;
-
+                    int priority = userDetails.karma_points > 300 ? 1 : 0;
                   sql.executeInsert("""
-                    INSERT INTO user_detail values (${cnt}, ${phoneNumber}, ${id}, 0)
+                    INSERT INTO user_detail values (${cnt}, ${phoneNumber}, ${id}, ${priority})
                    """);
                   }catch (Exception ex){
 
