@@ -888,6 +888,7 @@
 	<script type="text/javascript">
 		var validateCheckbox;
 		$(document).ready(function () {
+           
 			var params = {};
 			params.productReferrerId = $('#productReferrerId').val();
 			function _addToCart(res) {
@@ -903,8 +904,13 @@
 					$('.progressLoader').hide();
 
 					show_message();
+                    $('#gulal').show();
 				}
-				$('#gulal').show();
+                else if(res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+                   alert(res.message);
+                    location.reload();
+                }
+
 			}
 
 			function _addToCart2(res) {
@@ -947,10 +953,12 @@
 				params.nameToBeEngraved = $("#engrave").val();
 
 				if (!window.validateCheckbox) {
+
 					$(this).parents().find('.progressLoader').show();
 					$(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
 					$(this).hide();
 					e.stopPropagation();
+
 				} else {
 					var selected = 0;
 					$('.checkbox').each(function () {
