@@ -21,8 +21,10 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.order.search.AgentSearchOrderAction" var="orderAdmin" event="pre"/>
 <s:layout-render name="/layouts/agentLayout.jsp" pageTitle="User Orders" >
  <s:layout-component name="content">
-<s:form beanclass="com.hk.web.action.admin.order.search.AgentSearchOrderAction" method="get" autocomplete="false" style="">
-    Recent orders for user ${orderAdmin.email} phone: ${orderAdmin.phone}
+<s:form beanclass="com.hk.web.action.admin.order.search.AgentSearchOrderAction" method="get"  autocomplete="false" style="">
+    Recent orders for user Email: <strong><span class="or">${orderAdmin.email}</span></strong>
+    <br/>
+    phone: <strong><span class="or">${orderAdmin.phone}</span></strong>
     </br>
     Request originating from ${orderAdmin.remoteAddress}
     <table>
@@ -75,12 +77,16 @@
                                 </td>
                                 <td>
                                 <table>
+                                    <tbody>
                                     Line Items:
-                                    <c:forEach items="${shippingOrder.lineItems}" var="lineItem">
-                                        <tr>
-                                            Id: <span class="sml gry em" style="color: #009900;">  ${lineItem.id}  </span>
-                                        </tr>
-                                    </c:forEach>
+                                        <c:forEach items="${shippingOrder.lineItems}" var="lineItem">
+                                            <tr>
+                                                <td>
+                                                Id: <span class="sml gry em" style="color: #009900;">  ${lineItem.id}  </span>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
                                 </table>
                                 </td>
                             </tr>
@@ -89,29 +95,29 @@
                 </c:if>
                 </td>
                <td class="has_table">
-               dummy
                <c:if test="${not empty order.cartLineItems}">
                <table>
                    <c:forEach items="${order.cartLineItems}" var="lineItem">
-                      <%-- <c:if test="${lineItem.lineItemType.id == lineItemType_Product}">--%>
+                       <c:if test="${lineItem.productVariant != null}">
                            <tr>
                                <td width="300">
                                    <c:if test="${lineItem.comboInstance != null}">
                                         <span style="color:crimson;text-decoration:underline">
                                           (Part of Combo: ${lineItem.comboInstance.combo.name})
                                         </span><br/>
-                                      </c:if>${lineItem.productVariant.product.name}<br/>
-                              <span class="sml gry em">
-                                <c:forEach items="${lineItem.productVariant.productOptions}" var="productOption">
-                                    ${productOption.name} ${productOption.value}
-                                </c:forEach>
-                              </span>
+                                   </c:if>
+                                   ${lineItem.productVariant.product.name}<br/>
+                                      <span class="sml gry em">
+                                        <c:forEach items="${lineItem.productVariant.productOptions}" var="productOption">
+                                            ${productOption.name} ${productOption.value}
+                                        </c:forEach>
+                                      </span>
                                </td>
                                <td>
                                   ${lineItem.qty}
                                </td>
                            </tr>
-                       <%--</c:if>--%>
+                       </c:if>
                    </c:forEach>
                    </c:if>
 

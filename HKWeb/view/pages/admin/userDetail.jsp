@@ -14,7 +14,7 @@
         <s:form beanclass="com.hk.web.action.admin.user.UserAddressAction" method="get" style="">
             Users for phone: ${userAdmin.phone}
             <table>
-                <th>Emailadf</th>
+                <th>Email Id</th>
                 <th>Phone</th>
                 <c:forEach items="${userAdmin.userDetailList}" var="user">
                 <tr>

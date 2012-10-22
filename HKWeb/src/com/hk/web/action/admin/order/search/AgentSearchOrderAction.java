@@ -65,21 +65,23 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
 
         remoteAddress = getContext().getRequest().getRemoteHost();
         User customer = null;
+        Long phNo = 0L;
         if (getContext().getRequest().getParameterMap().containsKey("phone")){
             phone = getContext().getRequest().getParameter("phone");
+            phNo = Long.parseLong(phone);
         }
         if (getContext().getRequest().getParameterMap().containsKey("email")){
             email = getContext().getRequest().getParameter("email");
             customer = userService.findByLogin(email);
         }
         List<UserDetail> userDetailList = null;
-        Long phNo = Long.parseLong(phone);
         if ((phone != null) && (email != null)){
 
         }else{
             userDetailList = userDetailService.findByPhone(phNo);
             if (userDetailList.size() == 1 ){
                 customer = userDetailList.get(0).getUser();
+                email = customer.getEmail();
             }
         }
 

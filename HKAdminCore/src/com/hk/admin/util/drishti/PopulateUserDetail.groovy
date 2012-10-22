@@ -38,6 +38,9 @@ class PopulateUserDetail {
             userDetails ->
             String[] phones = null;
             String ph = userDetails.phone;
+            if (ph.contains('-')){
+                ph = ph.replace('-','');
+            }
             if (ph.contains(",")){
                 phones = ph.split(",");
             }else if (ph.contains("/")){

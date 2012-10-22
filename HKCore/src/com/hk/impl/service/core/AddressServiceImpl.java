@@ -42,23 +42,30 @@ public class AddressServiceImpl implements AddressService {
 
             List<Integer> phoneNumbers = new ArrayList<Integer>();
             String[] phones = null;
-            if (address.getPhone().contains(",")){
-               phones = address.getPhone().split(",");
-            }else if (address.getPhone().contains("/")){
-                phones = address.getPhone().split("/");
+            String ph = address.getPhone();
+            if (ph.contains("-")){
+                ph = ph.replace("-","");
+            }
+            if (ph.contains(",")){
+                phones = ph.split(",");
+            }else if (ph.contains("/")){
+                phones = ph.split("/");
+            }else{
+                phones = new String[1];
+                phones[0] = ph;
             }
             for (String phone : phones){
                 UserDetail userDetail = new UserDetail();
                 userDetail.setUser(user);
                 int start = phone.length() - 10;
                 //consider only the last 10 digits
-                String ph = phone.substring(start, phone.length() - 1);
-                long phoneNumber = Long.parseLong(ph);
+                String userPhone = phone.substring(start, phone.length() - 1);
+                long phoneNumber = Long.parseLong(userPhone);
                 userDetail.setPhone(phoneNumber);
                 userDetailsDao.save(userDetail);
             }
 
-        }catch (NumberFormatException ex){
+        }catch (Exception ex){
             logger.error("Unable to save user information in UserDetail table ", ex);
         }
         return addressRec;
