@@ -75,9 +75,7 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
             customer = userService.findByLogin(email);
         }
         List<UserDetail> userDetailList = null;
-        if ((phone != null) && (email != null)){
-
-        }else{
+        if (customer == null){
             userDetailList = userDetailService.findByPhone(phNo);
             if (userDetailList.size() == 1 ){
                 customer = userDetailList.get(0).getUser();
