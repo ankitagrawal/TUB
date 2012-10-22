@@ -200,14 +200,19 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 				// For Non Fedex Couriers
 				Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(selectedCourier, trackingId.trim(), null, null, null);
 				if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
-					//User has eneterd AWB manually which is present in database Already				\
+					//User has eneterd AWB manually which is present in database Already
+					boolean error=false;
 					AwbStatus awbStatus = awbFromDb.getAwbStatus();
 					if (EnumAwbStatus.getAllStatusExceptUnused().contains(awbStatus)) {
+					error = true;
+					}
+					else if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
+					 error = true;
+					}
+					if(error){
 					addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "       is already Used with other  shipping Order  OR  already Present in another warehouse with same courier"));
 						return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
 					}
-//					else if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
-//					 error = true;
 					finalAwb = updateAttachStatus(awbFromDb);
 
 				} else {
