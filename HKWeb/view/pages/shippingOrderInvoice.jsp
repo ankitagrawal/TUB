@@ -337,8 +337,10 @@
                                                    var="configValue" varStatus="configValueCtr">
                                             <c:set var="additinalParam"
                                                    value="${configValue.variantConfigOption.additionalParam}"/>
+
+	                                        <c:set var="side" value="${configValue.variantConfigOption.name}"/>
                                             <c:if
-                                                    test="${configValueCtr.index %2 ==0 && !( additinalParam == TH || additinalParam == THBF
+                                                    test="${  fn:startsWith(side,'R' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF) }">
                                                 <td>
@@ -353,8 +355,9 @@
                                                    var="configValue" varStatus="configValueCtr">
                                             <c:set var="additinalParam"
                                                    value="${configValue.variantConfigOption.additionalParam}"/>
+	                                        <c:set var="side" value="${configValue.variantConfigOption.name}"/>
                                             <c:if
-                                                    test="${configValueCtr.index %2 !=0 && !( additinalParam == TH || additinalParam == THBF
+                                                    test="${fn:startsWith(side,'L' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF)}">
                                                 <td>

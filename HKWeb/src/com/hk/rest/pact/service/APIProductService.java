@@ -16,4 +16,6 @@ public interface APIProductService {
 
     public String syncProductImages();
 
+	public String getProductsWithLowResolutionImages();
+
 }
