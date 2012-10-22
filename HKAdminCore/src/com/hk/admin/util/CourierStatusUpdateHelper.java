@@ -1,5 +1,4 @@
 package com.hk.admin.util;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -163,7 +162,7 @@ public class CourierStatusUpdateHelper {
 
         try {
              //added for debugging
-           //trackingId ="10410239481";
+           //trackingId ="1000077-17646";
            url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&waybill=" + trackingId);
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
 
@@ -211,7 +210,7 @@ public class CourierStatusUpdateHelper {
 
         try {
             //added for debugging
-            //trackingId ="10410239481";
+            trackingId ="10410239481";
             url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&waybill=" + trackingId);
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
 
@@ -248,6 +247,59 @@ public class CourierStatusUpdateHelper {
         return shipmentList;
     }
 
+    public List<Element> bulkUpdateDeliveryStatusBlueDart(String trackingId) throws HealthkartCheckedException {
+        Element    xmlElement   = null;
+        String inputLine = "";
+        String response = "";
+        courierName="(Bluedart)";
+        List xmlElementList= null;
+
+        //added for debugging
+        trackingId              = "43925352531,43925346323,43925356311";
+
+        try {
+            url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid=" + loginIdForBlueDart + "&awb=awb&numbers=" + trackingId + "&format=xml&lickey=" + licenceKeyForBlueDart + "&verno=1.3&scan=1");
+            bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                if (inputLine != null) {
+                    response += inputLine;
+                }
+            }
+
+            Document doc = new SAXBuilder().build(new StringReader(response));
+            XPath xPath = XPath.newInstance("/*/Shipment");
+            xmlElementList = xPath.selectNodes(doc);
+            //xmlElement = (Element) xPath.selectSingleNode(doc);
+
+        } catch (MalformedURLException mue) {
+            logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION +courierName+ trackingId);
+            throw new HealthkartCheckedException(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
+
+        } catch (IOException ioe) {
+            logger.debug(CourierConstants.IO_EXCEPTION +courierName+ trackingId);
+            throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
+
+        } catch (NullPointerException npe) {
+            logger.debug(CourierConstants.NULL_POINTER_EXCEPTION +courierName+ trackingId);
+            throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
+
+        } catch (Exception e) {
+            logger.debug(CourierConstants.EXCEPTION +courierName + trackingId);
+            throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
+
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                logger.debug(CourierConstants.IO_EXCEPTION +courierName+ trackingId);
+                throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
+
+            }
+        }
+        return xmlElementList;
+        }
+
 
     public Element updateDeliveryStatusBlueDart(String trackingId) throws HealthkartCheckedException{
         Element    xmlElement   = null;
@@ -256,7 +308,7 @@ public class CourierStatusUpdateHelper {
         courierName="(Bluedart)";
 
         //added for debugging
-        //trackingId              = "43872110553";
+        //trackingId              = "43925351842";
 
         try {
             url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid=" + loginIdForBlueDart + "&awb=awb&numbers=" + trackingId + "&format=xml&lickey=" + licenceKeyForBlueDart + "&verno=1.3&scan=1");
