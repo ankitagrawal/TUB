@@ -65,13 +65,15 @@
                     <td>
                         <s:link beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction" event="createOrEdit">Edit
                             <s:param name="supplier" value="${supplier.id}"/></s:link>
-                        <br/>
-                        <s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
-                            <s:param name="supplier" value="${supplier.id}"/></s:link>
-                        <br/>
-                        <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">
-                            Raise Debit Note
-                            <s:param name="supplier" value="${supplier.id}"/></s:link>
+	                    <c:if test="${supplier.active}">
+		                    <br/>
+		                    <s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
+			                    <s:param name="supplier" value="${supplier.id}"/></s:link>
+		                    <br/>
+		                    <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">
+			                    Raise Debit Note
+			                    <s:param name="supplier" value="${supplier.id}"/></s:link>
+	                    </c:if>
                     </td>
                 </tr>
             </c:forEach>

@@ -195,37 +195,57 @@
 			finalPayable-=overallDiscount;
 			$('.finalPayable').val(finalPayable.toFixed(2));
 		} );
+	});
 
-		$('.requiredFieldValidator').click(function () {
-			var quantity = $('.quantity').val();
+	function validateSubmitForm() {
+
+		var returnFalse = false;
+		if (${actionBean.purchaseOrder.supplier.creditDays == 0}) {
+			var advPayment = $('.advPayment').val();
+			if (advPayment == "" || isNaN(advPayment)) {
+				alert("Please enter a valid adv payment as credit days are Zero");
+				returnFalse = true;
+				return false;
+			}
+		}
+		$.each($('.quantity'), function checkQty() {
+			var quantity = $(this).val();
 			if (quantity == "" || isNaN(quantity)) {
 				alert("Please enter a valid quantity.");
+				returnFalse = true;
 				return false;
 			}
-			var returnFalse = false;
-			$.each($('.discountPercentage'), function(index, value){
-				var eachRow=$(value);
-				var discountPercentage=eachRow.val().trim();
-				if(discountPercentage < 0){
-					alert("Discount percentage should be greater than zero");
-					returnFalse = true;
-					return false;
-				}
-			});
-			if(returnFalse) {
-				return false;
-			}
-			var statusSelected = $('.status').find('option:selected');
-			var approver = $('.approver').find('option:selected');
-			var test = approver.text();
-			if (statusSelected.text() == "Sent For Approval" && approver.text() == "-Select Approver-") {
-				alert("Approver Not Selected.");
+		});
+		$.each($('.discountPercentage'), function(index, value) {
+			var eachRow = $(value);
+			var discountPercentage = eachRow.val().trim();
+			if (discountPercentage < 0) {
+				alert("Discount percentage should be greater than zero");
+				returnFalse = true;
 				return false;
 			}
 		});
 
+		var statusSelected = $('.status').find('option:selected');
+		var approver = $('.approver').find('option:selected');
+		if (statusSelected.text() == "Sent For Approval" && approver.text() == "-Select Approver-") {
+			alert("Approver Not Selected.");
+			return false;
+		}
 
-	});
+		if(returnFalse){
+			return false;
+		}else{
+			return true;
+		}
+
+	}
+
+	function temp(){
+		var submit =  validateSubmitForm();
+		alert("submit? "+submit);
+		return submit;
+	}
 </script>
 <%--<style type="text/css">
 			input {
@@ -240,7 +260,7 @@
 	        event="getPVDetails"></s:link>
 </div>
 <h2>Edit PO# ${pa.purchaseOrder.id}</h2>
-<s:form beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">
+<s:form beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" onsubmit="return validateSubmitForm();">
 <s:hidden name="purchaseOrder" value="${pa.purchaseOrder}"/>
 <s:hidden name="previousPurchaseOrderStatus" value="${pa.purchaseOrder.purchaseOrderStatus}"/>
 <table>
@@ -292,7 +312,7 @@
 		<td class="payable">
 			<fmt:formatNumber value="${actionBean.purchaseOrderDto.finalPayable}" type="currency" currencySymbol=" "
 			                  maxFractionDigits="0"/>
-			<br/> <s:text name="purchaseOrder.advPayment"/>
+			<br/> <s:text name="purchaseOrder.advPayment" class="advPayment"/>
 		</td>
 
 		<td>Payment Details<br/><span class="sml gry">(eg. Adv. Amount)</span></td>
@@ -490,9 +510,10 @@
 
 	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poApproved}">
 		<a href="editPurchaseOrder.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
+		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 	</c:if>
 
-	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poPlaced}">
+	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id == poApproved}">
 		<shiro:hasRole name="<%=RoleConstants.PO_APPROVER%>">
 			<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 		</shiro:hasRole>

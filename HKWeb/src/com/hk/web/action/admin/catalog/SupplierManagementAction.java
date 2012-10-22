@@ -77,7 +77,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
-        supplierPage = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, status, getPageNo(), getPerPage());
+	    supplierPage = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, status, getPageNo(), getPerPage());
         supplierList = supplierPage.getList();
         return new ForwardResolution("/pages/admin/supplierList.jsp");
     }

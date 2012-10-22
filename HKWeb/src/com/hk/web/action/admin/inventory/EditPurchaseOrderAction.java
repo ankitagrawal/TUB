@@ -13,6 +13,7 @@ import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.payment.PaymentHistory;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.EmailManager;
@@ -196,6 +197,21 @@ public class EditPurchaseOrderAction extends BaseAction {
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
 				emailManager.sendPOPlacedEmail(purchaseOrder);
+				if (purchaseOrder.getSupplier().getCreditDays() == 0 && purchaseOrder.getAdvPayment() > 0) {
+					try {
+						PaymentHistory paymentHistoryNew = new PaymentHistory();
+						paymentHistoryNew.setPurchaseOrder(purchaseOrder);
+						paymentHistoryNew.setAmount(purchaseOrder.getAdvPayment());
+						paymentHistoryNew.setScheduledPaymentDate(new Date());
+						paymentHistoryNew.setActualPaymentDate(new Date());
+						paymentHistoryNew.setModeOfPayment("NEFT");
+						getBaseDao().save(paymentHistoryNew);
+					} catch (Exception e) {
+						logger.error("Could not insert new payment detail: ", e);
+						addRedirectAlertMessage(new SimpleMessage("Couldn't create payment history"));
+						return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+					}
+				}
 			}
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
