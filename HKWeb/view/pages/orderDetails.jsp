@@ -79,10 +79,10 @@
                       ${shippingOrder.baseOrder.orderStatus.name}
                     </c:when>
                     <c:when test="${shippingOrder.orderStatus.id == shippingOrderStatus_shipped && shipment != null}">
-                      Shipped by ${shipment.courier.name} - ${shipment.awb.awbNumber} on <fmt:formatDate
+                      Shipped by ${shipment.awb.courier.name} - ${shipment.awb.awbNumber} on <fmt:formatDate
                         value="${shipment.shipDate}"/><br/>
                       <s:link beanclass="com.hk.web.action.core.order.TrackCourierAction" target="_blank">
-                        <s:param name="courierId" value="${shipment.courier.id}"/>
+                        <s:param name="courierId" value="${shipment.awb.courier.id}"/>
                         <s:param name="trackingId" value="${shipment.awb.awbNumber}"/>
                         <s:param name="shippingOrder"  value="${shippingOrder.id}"/>
                         (Track this)

@@ -83,7 +83,7 @@
 <c:set var="fedEx" value="<%=EnumCourier.FedEx.getId()%>"/>
 <c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.getId()%>"/>
 <c:set var="groundShipped" value="${orderSummary.groundShipped}"/>
-<c:set var="courierId" value="${orderSummary.shipment.courier.id}"/>
+<c:set var="courierId" value="${orderSummary.shipment.awb.courier.id}"/>
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">
@@ -98,7 +98,7 @@
                     </c:when>
                     <c:otherwise>
                         <div class="clear"></div>
-                        <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name}</div>
+                        <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.awb.courier.name}</div>
                         <div class="clear"></div>
                         <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
                              src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
@@ -136,7 +136,7 @@
     <c:when test="${courierId == fedEx || courierId == fedExSurface}">
         <div class="grid_12">
 
-            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;
+            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.awb.courier.name} &nbsp;&nbsp;
                 <c:choose>
                     <c:when test="${groundShipped}">
                         Economy

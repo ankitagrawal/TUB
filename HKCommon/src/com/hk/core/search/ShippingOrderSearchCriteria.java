@@ -132,21 +132,20 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             criteria.add(Restrictions.in("shippingOrderStatus", shippingOrderStatusList));
         }
 
-        DetachedCriteria shipmentCriteria = null;
-        if (awbList != null && awbList.size() > 0) {
+	    DetachedCriteria shipmentCriteria = null;
+	    if (awbList != null && awbList.size() > 0) {
+		    shipmentCriteria = criteria.createCriteria("shipment");
 
-            if (shipmentCriteria == null) {
-                shipmentCriteria = criteria.createCriteria("shipment");
-            }
-            shipmentCriteria.add(Restrictions.in("awb", awbList));
-        }
+		    shipmentCriteria.add(Restrictions.in("awb", awbList));
+	    }
 
-        if (courierList != null && !courierList.isEmpty()) {
-            if (shipmentCriteria == null) {
-                shipmentCriteria = criteria.createCriteria("shipment");
-            }
-            shipmentCriteria.add(Restrictions.in("courier", courierList));
-        }
+	    if (courierList != null && !courierList.isEmpty()) {
+		    if (shipmentCriteria == null) {
+			    DetachedCriteria shipCriteria = criteria.createCriteria("shipment");
+			    shipmentCriteria = shipCriteria.createCriteria("awb");
+		    }
+		    shipmentCriteria.add(Restrictions.in("courier", courierList));
+	    }
 
         if (shipmentStartDate != null && shipmentEndDate != null) {
             if (shipmentCriteria == null) {

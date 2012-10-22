@@ -80,7 +80,7 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
 	@SuppressWarnings("unchecked")
 	public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
 
-		String query = "select distinct so.id  " + " from Shipment shipment, ShippingOrder so where " + " so.shipment = shipment" + " and shipment.courier.id = :courierId "
+		String query = "select distinct so.id  " + " from Shipment shipment, ShippingOrder so where " + " so.shipment = shipment" + " and shipment.awb .courier.id = :courierId "
 				+ " and shipment.shipDate between :startDate and :endDate " + " and shipment.deliveryDate is null ";
 		return getSession().createQuery(query).setParameter("courierId", courierId).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
 	}

@@ -91,7 +91,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
                                     </#if>
                                 </td>
                                 <td>
-                                    ${order.shipment.courier.name}
+                                    ${order.shipment.awb.courier.name}
                                 </td>
                             </tr>
                             </#list>

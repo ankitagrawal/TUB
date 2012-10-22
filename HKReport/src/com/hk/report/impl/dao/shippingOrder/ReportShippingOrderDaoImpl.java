@@ -54,7 +54,7 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
       }
 
       String hqlQuery = "select so.gatewayOrderId as invoiceId, p.paymentDate as orderDate, user.name as name, adr.city as city, adr.pin as pincode, "
-                + " pm.name as payment, so.amount as total,  ship.courier as courier, aw.awbNumber as awb, ship.shipDate as shipmentDate,"
+                + " pm.name as payment, so.amount as total,  aw.courier as courier, aw.awbNumber as awb, ship.shipDate as shipmentDate,"
                 + " ship.deliveryDate as deliveryDate, rs.name as reconciled, os.name as orderStatus, ship.boxWeight as boxWeight,"
                 + " bs.name as boxSize, so.warehouse as warehouse" + " from ShippingOrder so join so.baseOrder bo join bo.payment p join bo.user user join bo.address adr "
                 + " join so.shipment ship join ship.awb aw join ship.boxSize bs join so.shippingOrderStatus os " + " join p.paymentMode pm join so.reconciliationStatus rs join so.shipment shp "
@@ -68,7 +68,7 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
     @SuppressWarnings("unchecked")
     public List<ShippingOrder> getDeliveredSOForCourierByDate(Date startDate, Date endDate, Long courierId) {
         String query = "from ShippingOrder so where so.shipment.shipDate>= :startDate and so.shipment.shipDate <= :endDate"
-                + " and so.shipment.courier.id = :courierId and so.shipment.deliveryDate is not null";
+                + " and so.shipment.awb.courier.id = :courierId and so.shipment.deliveryDate is not null";
         return getSession().createQuery(query).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("courierId", courierId).list();
     }
 
@@ -120,7 +120,7 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
     }
 
     public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate, Date endDate, List<Courier> courierList, Warehouse warehouse) {
-        String query = "from ShippingOrder so where " + " so.shipment.shipDate between :startDate and :endDate and so.shipment.courier in (:courierList) " +
+        String query = "from ShippingOrder so where " + " so.shipment.shipDate between :startDate and :endDate and so.shipment.awb.courier in (:courierList) " +
                 " and so.warehouse = :warehouse ";
         List<ShippingOrder> shippingOrderList =
                 findByNamedParams(query, new String[]{"startDate", "endDate", "courierList", "warehouse"}, new Object[]{startDate, endDate, courierList, warehouse});
