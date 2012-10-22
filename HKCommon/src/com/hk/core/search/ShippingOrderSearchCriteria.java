@@ -139,12 +139,13 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 		    shipmentCriteria.add(Restrictions.in("awb", awbList));
 	    }
 
+	    DetachedCriteria awbCriteria = null;
 	    if (courierList != null && !courierList.isEmpty()) {
 		    if (shipmentCriteria == null) {
-			    DetachedCriteria shipCriteria = criteria.createCriteria("shipment");
-			    shipmentCriteria = shipCriteria.createCriteria("awb");
+			    shipmentCriteria = criteria.createCriteria("shipment");
 		    }
-		    shipmentCriteria.add(Restrictions.in("courier", courierList));
+		    awbCriteria = shipmentCriteria.createCriteria("awb");
+		    awbCriteria.add(Restrictions.in("courier", courierList));
 	    }
 
         if (shipmentStartDate != null && shipmentEndDate != null) {
