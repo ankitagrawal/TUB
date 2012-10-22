@@ -70,16 +70,17 @@
         <th>Created By</th>
         <th>Supplier</th>
         <th>Supplier TIN</th>
+        <th>Credit Days</th>
+	    <th>GRNs/Invoice No.</th>
+	    <th>GRN-Date</th>
         <th>Warehouse</th>
-        <%--<th>Status</th>--%>
         <th>Last Update Date</th>
+	    <th>Adv Payment</th>
         <th>Payable</th>
         <th>Est. Payment Date</th>
         <th>Payment Date</th>
         <th>Payment Details</th>
         <th>Reconciled</th>
-        <th>GRNs</th>
-	    <th>Invoice No.</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -90,18 +91,36 @@
           <td>${purchaseInvoice.createdBy.name}</td>
           <td>${purchaseInvoice.supplier.name}</td>
           <td>${purchaseInvoice.supplier.tinNumber}</td>
-          <td>${purchaseInvoice.warehouse.city}</td>
-          <%--<td>${purchaseInvoice.purchaseInvoiceStatus.name}</td>--%>
-          <td><fmt:formatDate value="${purchaseInvoice.createDate}" type="both" timeStyle="short"/></td>
-          <td>
-            <fmt:formatNumber value="${purchaseInvoice.finalPayableAmount}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
-	         <td><fmt:formatDate value="${purchaseInvoice.estPaymentDate}" pattern="dd-MMM-yyyy"/></td>
+          <td>${purchaseInvoice.supplier.creditDays}</td>
+	        <td>
+		        <c:set var="advPayment" value="0"/>
+		        <c:forEach var="grn" items="${purchaseInvoice.goodsReceivedNotes}">
+			        <c:set var="advPayment" value="${grn.purchaseOrder.advPayment + advPayment}"/>
+			        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
+				        <s:param name="grn" value="${grn.id}"/>
+				        ${grn.id}
+			        </s:link>
+			        - ${grn.invoiceNumber}
+			        <br/>
+		        </c:forEach>
+	        </td>
+	        <td><fmt:formatDate value="${purchaseInvoice.goodsReceivedNotes[0].grnDate}" type="both" timeStyle="short"/></td>
+	        <td>${purchaseInvoice.warehouse.city}</td>
+		        <%--<td>${purchaseInvoice.purchaseInvoiceStatus.name}</td>--%>
+	        <td><fmt:formatDate value="${purchaseInvoice.createDate}" type="both" timeStyle="short"/></td>
+	        <td>
+		        <fmt:formatNumber value="${advPayment}" type="currency" currencySymbol=" "
+		                          maxFractionDigits="0"/></td>
+	        <td>
+		        <fmt:formatNumber value="${purchaseInvoice.finalPayableAmount - advPayment}" type="currency" currencySymbol=" "
+		                          maxFractionDigits="0"/></td>
+	        <td><fmt:formatDate value="${purchaseInvoice.estPaymentDate}" pattern="dd-MMM-yyyy"/></td>
 	        <td><fmt:formatDate value="${purchaseInvoice.paymentDate}" pattern="dd-MMM-yyyy"/></td>
-          <td>${purchaseInvoice.paymentDetails}
-                      <s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction" target="_blank">Payment History
-                        <s:param name="purchaseInvoiceId" value="${purchaseInvoice.id}"/>
-                      </s:link>
-          </td>
+	        <td>${purchaseInvoice.paymentDetails}
+		        <s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction" target="_blank">Payment History
+			        <s:param name="purchaseInvoiceId" value="${purchaseInvoice.id}"/>
+		        </s:link>
+	        </td>
 
           <td>
             <c:choose>
@@ -113,20 +132,7 @@
               </c:otherwise>                                                   
             </c:choose>
           </td>
-          <td>
-            <c:forEach var="grn" items="${purchaseInvoice.goodsReceivedNotes}">
-              <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
-                <s:param name="grn" value="${grn.id}"/>
-                ${grn.id}
-              </s:link>
-              &nbsp;
-            </c:forEach>
-          </td>
-	        <td>
-            <c:forEach var="grn" items="${purchaseInvoice.goodsReceivedNotes}">
-              ${grn.invoiceNumber}&nbsp;
-            </c:forEach>
-          </td>
+
           <td>
             <s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="view" target="_blank">Edit/View
               <s:param name="purchaseInvoice" value="${purchaseInvoice.id}"/></s:link>

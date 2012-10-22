@@ -81,6 +81,7 @@
         <th>Warehouse</th>
         <th>Status</th>
         <th>Last Update Date</th>
+        <th>Adv Payment</th>
         <th>Payable</th>
         <th>Est Payment Date</th>
         <th>Payment Details</th>
@@ -93,7 +94,7 @@
           <td>${purchaseOrder.id}</td>
           <td><fmt:formatDate value="${purchaseOrder.createDate}" type="both" timeStyle="short"/></td>
           <td>${purchaseOrder.createdBy.name}</td>
-            <td>${purchaseOrder.noOfSku}                                              po
+            <td>${purchaseOrder.noOfSku}                                             
             </td>
           <td>${purchaseOrder.approvedBy.name}</td>
           <td>${purchaseOrder.supplier.name}</td>
@@ -101,6 +102,8 @@
           <td>${purchaseOrder.warehouse.city}</td>
           <td>${purchaseOrder.purchaseOrderStatus.name}</td>
           <td><fmt:formatDate value="${purchaseOrder.updateDate}" type="both" timeStyle="short"/></td>
+	      <td>
+            <fmt:formatNumber value="${purchaseOrder.advPayment}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td>
             <fmt:formatNumber value="${purchaseOrder.finalPayableAmount - purchaseOrder.advPayment}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
 	      <td><fmt:formatDate value="${purchaseOrder.estPaymentDate}" pattern="yyyy-MM-dd"/></td>

@@ -165,7 +165,7 @@ public class POAction extends BasePaginatedAction {
         grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.GoodsReceived.getId()));
         grn.setWarehouse(warehouse);
 	    Calendar calendar = Calendar.getInstance();
-	    calendar.setTime(new Date());
+	    calendar.setTime(grn.getGrnDate());
 	    calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
 	    grn.setEstPaymentDate(calendar.getTime());
 	    grn = (GoodsReceivedNote) getGoodsReceivedNoteDao().save(grn);

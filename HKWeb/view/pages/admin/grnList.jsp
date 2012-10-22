@@ -151,7 +151,7 @@
               </s:link>
             </c:forEach>
           </td>
-          <td><fmt:formatDate value="${grn.grnDate}" type="both" timeStyle="short"/></td>
+          <td><fmt:formatDate value="${grn.grnDate}"/></td>
           <td>${grn.invoiceNumber}</td>
           <td>${grn.receivedBy.name}</td>
           <td>${grn.warehouse.city}</td>
@@ -170,7 +170,7 @@
           </td>
           <td>
             <fmt:formatNumber value="${grn.payable}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
-          <td><fmt:formatDate value="${grn.estPaymentDate}" type="both" timeStyle="short"/></td>
+          <td><fmt:formatDate value="${grn.estPaymentDate}"/></td>
 	        <td>
 		        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">Edit/View
 			        <s:param name="grn" value="${grn.id}"/></s:link>

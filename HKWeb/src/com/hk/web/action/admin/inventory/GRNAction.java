@@ -211,6 +211,11 @@ public class GRNAction extends BasePaginatedAction {
 			grnDto = grnManager.generateGRNDto(grn);
 			grn.setPayable(grnDto.getTotalPayable());
 
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(grn.getGrnDate());
+			calendar.add(Calendar.DATE, grn.getPurchaseOrder().getSupplier().getCreditDays());
+			grn.setEstPaymentDate(calendar.getTime());
+
 			grn.setFinalPayableAmount(grn.getPayable() - overallDiscount);
 			goodsReceivedNoteDao.save(grn);
 		}

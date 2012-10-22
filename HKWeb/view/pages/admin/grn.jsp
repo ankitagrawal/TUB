@@ -237,7 +237,7 @@
 
 	<tr>
 		<td>GRN Date</td>
-		<td><fmt:formatDate value="${pa.grn.createDate}"/></td>
+		<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="grn.grnDate"/></td>
 		<td>Received By</td>
 		<td>
 				${pa.grn.receivedBy.name}</td>

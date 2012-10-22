@@ -286,6 +286,23 @@
 	</tr>
 
 	<tr>
+		<td>Credit Days</td>
+		<td>${pia.purchaseInvoice.supplier.creditDays}</td>
+		<td>Adv .Payment</td>
+		<td>
+			<c:set var="advPayment" value="0"/>
+			<c:forEach items="${pia.purchaseInvoice.goodsReceivedNotes}" var="grn">
+				<c:set var="advPayment" value="${grn.purchaseOrder.advPayment + advPayment}"/>
+				${advPayment}
+			</c:forEach>
+
+		</td>
+		<td>Payable</td>
+		<td><fmt:formatNumber value="${pia.purchaseInvoice.finalPayableAmount - advPayment}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
+
+	</tr>
+
+	<tr>
 		<td>Est. Payment Date</td>
 		<td><fmt:formatDate value="${pia.purchaseInvoice.estPaymentDate}"/></td>
 		<td>Payment Date</td>

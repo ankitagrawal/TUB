@@ -58,8 +58,12 @@ public class CreatePurchaseOrderAction extends BaseAction {
 	    calendar.setTime(new Date());
 	    calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getLeadTime());
 	    purchaseOrder.setEstDelDate(calendar.getTime());
-	    calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
-	    purchaseOrder.setEstPaymentDate(calendar.getTime());
+	    if (purchaseOrder.getSupplier().getCreditDays() != null && purchaseOrder.getSupplier().getCreditDays() >= 0) {
+		    calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
+		    purchaseOrder.setEstPaymentDate(calendar.getTime());
+	    } else {
+		    purchaseOrder.setEstPaymentDate(new Date());
+	    }
 
         purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
