@@ -206,7 +206,7 @@ public class POAction extends BasePaginatedAction {
 
     public Resolution delete() {
         logger.debug("purchaseOrder: " + purchaseOrder);
-        purchaseOrder.setPurchaseOrderStatus(getPurchaseOrderDao().get(PurchaseOrderStatus.class, EnumPurchaseOrderStatus.Deleted.getId()));
+        purchaseOrder.setPurchaseOrderStatus(getPurchaseOrderDao().get(PurchaseOrderStatus.class, EnumPurchaseOrderStatus.Cancelled.getId()));
         purchaseOrder.setUpdateDate(new Date());
         getPurchaseOrderDao().save(purchaseOrder);
         addRedirectAlertMessage(new SimpleMessage("PO Deleted successfully."));

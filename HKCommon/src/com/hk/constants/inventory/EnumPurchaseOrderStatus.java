@@ -16,7 +16,7 @@ public enum EnumPurchaseOrderStatus {
 	Approved(30L, "Approved"),
 	SentToSupplier(40L, "Sent To Supplier"),
 	Closed(100L, "Closed"),
-	Deleted(1000L, "Deleted/Cancelled"),;
+	Cancelled(1000L, "Cancelled");
 
 	private String name;
 	private Long id;
@@ -50,7 +50,7 @@ public enum EnumPurchaseOrderStatus {
 
 		List<PurchaseOrderStatus> PurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentForApproval.getPurchaseOrderStatus(),
 				Approved.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(),
-				Closed.getPurchaseOrderStatus(), Deleted.getPurchaseOrderStatus());
+				Closed.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
 		Collections.sort(PurchaseOrderStatusList);
 		return PurchaseOrderStatusList;
 

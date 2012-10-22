@@ -14,7 +14,7 @@
 	WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 	pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
 %>
-<c:set var="poDeleted" value="<%=EnumPurchaseOrderStatus.Deleted.getId()%>"/>
+<c:set var="poCancelled" value="<%=EnumPurchaseOrderStatus.Cancelled.getId()%>"/>
 <c:set var="poApproved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
 <c:set var="poPlaced" value="<%=EnumPurchaseOrderStatus.SentToSupplier.getId()%>"/>
 <s:layout-component name="htmlHead">
@@ -305,7 +305,7 @@
 		<td>Status</td>
 		<td class="status">
 			<c:choose>
-				<c:when test="${pa.purchaseOrder.purchaseOrderStatus.id == poDeleted}">
+				<c:when test="${pa.purchaseOrder.purchaseOrderStatus.id == poCancelled}">
 					${pa.purchaseOrder.purchaseOrderStatus.name}
 				</c:when>
 				<c:otherwise>
