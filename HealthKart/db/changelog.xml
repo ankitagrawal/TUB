@@ -9438,4 +9438,9 @@
 	<changeSet author="Ajeet (generated)" id="1348919811628-3">
 			<dropColumn columnName="updated" tableName="update_pv_price"/>
 	</changeSet>
+	<changeSet author="Rohit (generated)" id="1350458749534-1">
+		<addColumn tableName="base_order">
+			<column name="comment_type" type="INT"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>
