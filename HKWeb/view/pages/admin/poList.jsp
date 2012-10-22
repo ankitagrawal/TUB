@@ -93,7 +93,7 @@
           <td>${purchaseOrder.id}</td>
           <td><fmt:formatDate value="${purchaseOrder.createDate}" type="both" timeStyle="short"/></td>
           <td>${purchaseOrder.createdBy.name}</td>
-            <td>${purchaseOrder.noOfSku}
+            <td>${purchaseOrder.noOfSku}                                              po
             </td>
           <td>${purchaseOrder.approvedBy.name}</td>
           <td>${purchaseOrder.supplier.name}</td>
@@ -121,11 +121,9 @@
             </c:forEach>
           </td>
 	        <td>
-		        <c:if test="${(purchaseOrder.purchaseOrderStatus.id < approved)}">
-			        <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">Edit
+		        <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">Edit/View
 				        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
 			         &nbsp;
-		        </c:if>
 		        <c:if test="${(purchaseOrder.purchaseOrderStatus.id == approved)}">			        
 			        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInExcel" target="_blank">Excel
 				        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>

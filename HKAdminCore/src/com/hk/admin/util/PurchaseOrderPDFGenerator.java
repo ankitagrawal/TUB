@@ -63,6 +63,7 @@ public class PurchaseOrderPDFGenerator {
                 createFooter(purchaseOrderDocument);
             }
         } catch (Exception e) {
+	        e.printStackTrace();
             logger.error("Exception occurred while generating pdf." + e.getMessage());
         } finally {
             purchaseOrderDocument.close();

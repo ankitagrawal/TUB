@@ -119,15 +119,22 @@
       </thead>
       <tbody id="poTable">
       <c:forEach var="poLineItemDto" items="${orderSummary.purchaseOrderDto.poLineItemDtoList}" varStatus="ctr">
+	      <c:set var="variant" value="${poLineItemDto.poLineItem.sku.productVariant}"/>
         <tr>
           <td>${ctr.index+1}.</td>
           <td>
-              ${poLineItemDto.poLineItem.productVariant.id}
+              ${variant.id}
           </td>
           <td>
-              ${poLineItemDto.poLineItem.productVariant.upc}
+              ${variant.upc}
           </td>
-          <td>${poLineItemDto.poLineItem.productVariant.product.name}<br/>${poLineItemDto.poLineItem.productVariant.optionsCommaSeparated}
+          <td>${variant.product.name}<br/>
+	          <c:forEach items="${variant.productOptions}" var="variantOption">
+		          <c:if test="${hk:showOptionOnUI(variantOption.name)}">
+			          ${variantOption.name}:${variantOption.value}
+			          <br/>
+		          </c:if>
+	          </c:forEach>
           </td>
           <td>${poLineItemDto.poLineItem.qty}
           </td>
@@ -136,7 +143,7 @@
           <td>${poLineItemDto.poLineItem.mrp}
           </td>
           <td>
-            <fmt:formatNumber value="${poLineItemDto.poLineItem.productVariant.tax.value * 100}" maxFractionDigits="2"/>%
+            <fmt:formatNumber value="${poLineItemDto.poLineItem.sku.tax.value * 100}" maxFractionDigits="2"/>%
           </td>
           <td>
             <fmt:formatNumber value="${poLineItemDto.taxable}" maxFractionDigits="2"/>

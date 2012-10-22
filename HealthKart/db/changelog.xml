@@ -9512,4 +9512,9 @@
 			delete from grn_status where id in (25, 40); 
 		</sql>
 	</changeSet>
+	<changeSet author="Ajeet (written)" id="20121022-01">
+		<sql>
+			update purchase_order set po_place_date=update_dt;
+		</sql>
+	</changeSet>
 </databaseChangeLog>
