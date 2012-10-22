@@ -68,8 +68,7 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 			Integer originalStatus =  awb.getAwbStatus().getId().intValue();
 			String query = "UPDATE awb SET awb_status_id=? WHERE id=? AND awb_status_id=?";
 			Object[] param = {newStatus, awb.getId(),originalStatus};
-			int rowsUpdate = executeNativeSql(query, param);
-			return rowsUpdate;
+			return  executeNativeSql(query, param);
 		} else {
 			return save(awb);
 		}
