@@ -26,21 +26,14 @@
   <s:layout-component name="htmlHead">
 	  <script type="text/javascript">
 		  $(document).ready(function() {
-			 $('#userComments').val('');
-			 $('.commentType').removeAttr("checked");
-			 $('#userComments').change(function() {
-				 if($.trim($('#userComments').val()) == '') {
-					 $('.commentType').removeAttr("checked");
-					 $('.comment_type').hide();
-				 } else {
-					 $('.comment_type').show();
-				 }
-			 });
 
 			 $('.requiredFieldValidator').click(function() {
 				 if( $.trim($('#userComments').val()) != '' && ! $('.commentType').is(':checked') ) {
 					 alert('Please select the type of Comment');
 					 return false;
+				 }
+				 if( $.trim($('#userComments').val()) == '' && $('.commentType').is(':checked') ) {
+					 $('.commentType').attr("checked", false);
 				 }
 
 			 });
@@ -182,7 +175,7 @@
               Confirm order
             </h5>
           </div>--%>
-	      <div class="comment_type" style="display: none;">
+	      <div class="comment_type">
 		      <br><s:radio value="1" name="order.commentType" class="commentType"/> Packing Type
 		      <br><s:radio value="2" name="order.commentType" class="commentType"/> Delivery Type
 		      <br><s:radio value="3" name="order.commentType" class="commentType"/> Others
