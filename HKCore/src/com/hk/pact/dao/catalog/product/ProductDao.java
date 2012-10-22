@@ -26,7 +26,7 @@ public interface ProductDao extends BaseDao {
 
     /**
      * returns list of all the products irrespective of whether they are deleted or not.
-     * 
+     *
      * @param category
      * @return
      */
@@ -40,7 +40,7 @@ public interface ProductDao extends BaseDao {
 
     /**
      * checks if a brand name exists or not
-     * 
+     *
      * @param brandName
      * @return
      */
@@ -60,15 +60,17 @@ public interface ProductDao extends BaseDao {
 
     public Page getProductByCategoryAndBrand(String category, String brand, int page, int perPage);
 
-    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage);
+    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand,Boolean onlyCOD, Boolean includeCombo, int page, int perPage);
 
-	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> filters, int groupsCount, Double minPrice, Double maxPrice, int page, int perPage);
+	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> filters, int groupsCount, Double minPrice, Double maxPrice,Boolean onlyCOD, Boolean includeCombo, int page, int perPage);
 
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage);
 
     public List<Product> getProductByName(String name);
 
     public Page getProductByName(String name, int page, int perPage);
+
+    public Page getProductByName(String name,boolean onlyCOD, boolean includeCombo, int page, int perPage);
 
     public List<Product> getRelatedProducts(Product product);
 
@@ -91,4 +93,5 @@ public interface ProductDao extends BaseDao {
 	public List<ProductOption> getProductOptions(List<Long> options);
 
     List<Product> getAllProductsById(List<String> productIdList);
+
 }

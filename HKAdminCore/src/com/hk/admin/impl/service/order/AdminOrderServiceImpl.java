@@ -26,6 +26,7 @@ import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.StoreOrderService;
+import com.hk.manager.SMSManager;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
@@ -87,6 +88,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private AdminEmailManager         adminEmailManager;
     @Autowired
     private CourierService            courierService;
+	@Autowired
+    private SMSManager                smsManager;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double                    codMinAmount;
@@ -273,11 +276,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     order = orderService.save(order);
                     storeOrderService.updateOrderStatusInStore(order);
                 }
-                if (!order.isDeliveryEmailSent() && order.getUser().getStore() != null && order.getUser().getStore().getId() == StoreService.DEFAULT_STORE_ID) {
+                if (!order.isDeliveryEmailSent() && order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
                     if (getAdminEmailManager().sendOrderDeliveredEmail(order)) {
                         order.setDeliveryEmailSent(true);
                         getOrderService().save(order);
                     }
+	                smsManager.sendOrderDeliveredSMS(order);
                 }
             }
         }
@@ -317,6 +321,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     @Override
+    @Transactional
     public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderExists = orderService.isShippingOrderExists(order);

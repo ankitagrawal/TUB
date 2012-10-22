@@ -2,6 +2,7 @@ package com.hk.admin.manager;
 
 import com.hk.admin.dto.inventory.PoLineItemDto;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
+import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.TaxUtil;
 import com.hk.domain.accounting.PoLineItem;
@@ -40,6 +41,9 @@ public class PurchaseOrderManager {
 
     @Autowired
     SkuService skuService;
+
+	@Autowired
+	PoLineItemDao poLineItemDao;
 
     private List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
     private List<PoLineItem> poLineItemList = new ArrayList<PoLineItem>();
@@ -204,6 +208,10 @@ public class PurchaseOrderManager {
                 if(poLineItem.getMrp() != null && poLineItem.getMrp() > 0) {
                     marginMrpVsCP = (poLineItem.getMrp() - poLineItem.getCostPrice())/poLineItem.getMrp()*100;
                 }
+	            if (poLineItem.getDiscountPercent() != null) {
+		            taxable = taxable - poLineItem.getDiscountPercent() / 100 * taxable;
+	            }
+
             }
             if (purchaseOrder.getSupplier() != null && purchaseOrder.getSupplier().getState() != null && productVariant != null && sku.getTax() != null) {
                 TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(purchaseOrder.getSupplier(), sku, taxable);
@@ -231,14 +239,25 @@ public class PurchaseOrderManager {
             totalTax += tax;
             totalSurcharge += surcharge;
             totalPayable += payable;
+	        poLineItem.setTaxableAmount(taxable);
+	        poLineItem.setPayableAmount(payable);
+	        poLineItem.setSurchargeAmount(surcharge);
+	        poLineItem.setTaxAmount(tax);
+	        poLineItemDao.save(poLineItem);
         }
         purchaseOrderDto.setPoLineItemDtoList(poLineItemDtoList);
         purchaseOrderDto.setTotalTaxable(totalTaxable);
         purchaseOrderDto.setTotalTax(totalTax);
         purchaseOrderDto.setTotalSurcharge(totalSurcharge);
         purchaseOrderDto.setTotalPayable(totalPayable);
-        return purchaseOrderDto;
+	    double overallDiscount = purchaseOrder.getDiscount() == null ? 0.0 : purchaseOrder.getDiscount();
+	    purchaseOrderDto.setFinalPayable(totalPayable - overallDiscount);
 
+	    purchaseOrder.setTaxableAmount(totalTaxable);
+	    purchaseOrder.setTaxAmount(totalTax);
+	    purchaseOrder.setSurchargeAmount(totalSurcharge);
+	    purchaseOrderDao.save(purchaseOrder);
+        return purchaseOrderDto;
     }
 
     private void setCellValue(Row row, int column, Long cellValue) {

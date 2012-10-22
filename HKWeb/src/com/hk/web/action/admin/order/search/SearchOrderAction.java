@@ -11,8 +11,6 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -33,7 +31,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class SearchOrderAction extends BasePaginatedAction {
 
-    private static Logger logger    = LoggerFactory.getLogger(SearchOrderAction.class);
+    /*private static Logger logger    = LoggerFactory.getLogger(SearchOrderAction.class);*/
 
     @Autowired
     OrderService          orderService;
