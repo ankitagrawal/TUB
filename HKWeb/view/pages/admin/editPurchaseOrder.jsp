@@ -200,7 +200,7 @@
 	function validateSubmitForm() {
 
 		var returnFalse = false;
-		if (${actionBean.purchaseOrder.supplier.creditDays == 0}) {
+		if (${actionBean.purchaseOrder.supplier.creditDays < 0}) {
 			var advPayment = $('.advPayment').val();
 			if (advPayment == "" || isNaN(advPayment)) {
 				alert("Please enter a valid adv payment as credit days are Zero");
