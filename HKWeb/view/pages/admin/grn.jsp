@@ -237,8 +237,7 @@
 
 	<tr>
 		<td>GRN Date</td>
-		<td>
-			<s:text class="date_input" formatPattern="yyyy-MM-dd" name="grn.grnDate"/></td>
+		<td><fmt:formatDate value="${pa.grn.createDate}"/></td>
 		<td>Received By</td>
 		<td>
 				${pa.grn.receivedBy.name}</td>
@@ -259,7 +258,7 @@
 			<fmt:formatNumber value="${actionBean.grnDto.totalPayable}" type="currency" currencySymbol=" "
 			                  maxFractionDigits="0"/></td>
 		<td>Est Payment Date</td>
-		<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="grn.estPaymentDate" readonly="readonly"/></td>
+		<td><fmt:formatDate value="${pa.grn.estPaymentDate}"/></td>
 		<td></td>
 		<td></td>
 	</tr>

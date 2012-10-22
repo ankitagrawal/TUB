@@ -287,8 +287,7 @@
 
 	<tr>
 		<td>Est. Payment Date</td>
-		<td><fmt:formatDate value="${pia.purchaseInvoice.estPaymentDate}"
-		                    pattern="dd-MMM-yyyy"/></td>
+		<td><fmt:formatDate value="${pia.purchaseInvoice.estPaymentDate}"/></td>
 		<td>Payment Date</td>
 		<td>
 			<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseInvoice.paymentDate"/></td>

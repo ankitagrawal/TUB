@@ -299,9 +299,7 @@
 	</tr>
 	<tr>
 		<td>Create Date</td>
-		<td>
-			<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseOrder.createDate"/></td>
-
+		<td><fmt:formatDate value="${pa.purchaseOrder.createDate}"/></td>
 		<td>PO Number</td>
 		<td><s:text name="purchaseOrder.poNumber"/></td>
 		<td></td>
@@ -361,11 +359,11 @@
 	<tr>
 		<td>Est. Delivery Date</td>
 		<td>
-			<fmt:formatDate value="${pa.purchaseOrder.estDelDate}" pattern="dd-MMM-yyyy"/></td>
+			<fmt:formatDate value="${pa.purchaseOrder.estDelDate}"/></td>
 
 		<td>Est. Payment Date</td>
 		<td>
-			<fmt:formatDate value="${pa.purchaseOrder.estPaymentDate}" pattern="dd-MMM-yyyy"/></td>
+			<fmt:formatDate value="${pa.purchaseOrder.estPaymentDate}"/></td>
 		<td></td>
 		<td></td>
 	</tr>

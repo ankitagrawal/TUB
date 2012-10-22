@@ -99,7 +99,10 @@ public class PurchaseOrderPDFGenerator {
         supplierDetailTable.addCell(PdfGenerator.createCell("Supplier", font1));
         supplierDetailTable.addCell(PdfGenerator.createCell(purchaseOrder.getSupplier().getName(), font2));
         supplierDetailTable.addCell(PdfGenerator.createCell("PO Place Date", font1));
-        supplierDetailTable.addCell(PdfGenerator.createCell(simpleDateFormat.format(purchaseOrder.getPoPlaceDate()), font2));
+	    if (purchaseOrder.getPoPlaceDate() != null)
+		    supplierDetailTable.addCell(PdfGenerator.createCell(simpleDateFormat.format(purchaseOrder.getPoPlaceDate()), font2));
+	    else
+		    supplierDetailTable.addCell(PdfGenerator.createCell(""));
         supplierDetailTable.addCell(PdfGenerator.createCell("Address", font1));
         supplierDetailTable.addCell(PdfGenerator.createCell(supplierAddress.toString(), font2));
         supplierDetailTable.addCell(PdfGenerator.createCell("PO#", font1));

@@ -172,19 +172,18 @@
             <fmt:formatNumber value="${grn.payable}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td><fmt:formatDate value="${grn.estPaymentDate}" type="both" timeStyle="short"/></td>
 	        <td>
+		        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">Edit/View
+			        <s:param name="grn" value="${grn.id}"/></s:link>
+		        <br/>
 		        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="print" target="_blank">Print
 			        <s:param name="grn" value="${grn.id}"/></s:link>
 		        <br/>
-		        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">Edit/View
-				        <s:param name="grn" value="${grn.id}"/></s:link>
-			        <br/>
 		        <c:if test="${grn.grnStatus.id < inventoryCheckedIn}">
 			        <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="pre">
-			        Inv.Checkin
-			        <s:param name="grn" value="${grn.id}"/></s:link>
-		        <br/>
+				        Inv.Checkin
+				        <s:param name="grn" value="${grn.id}"/></s:link>
+			        <br/>
 		        </c:if>
-
 		        <c:if test="${grn.grnStatus.id == checkinInProcess || grn.grnStatus.id == inventoryCheckedIn}">
 			        <s:link beanclass="com.hk.web.action.admin.queue.JobCartAction" event="putList">
 				        Put List
