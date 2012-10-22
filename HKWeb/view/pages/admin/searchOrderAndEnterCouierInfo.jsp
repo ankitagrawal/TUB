@@ -16,6 +16,8 @@
    pageContext.setAttribute("groundShippedCourierList", masterDataDao.getGroundShippedCourierList());  
 %>
 
+<c:set var="commentTypeDelivery" value="<%= MasterDataDao.USER_COMMENT_TYPE_DELIVERY_BASE_ORDER %>" />
+
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -24,6 +26,12 @@
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
       <script type="text/javascript">
           $(document).ready(function() {
+
+	          var commentType = $('#commentType').val();
+	          if(commentType == ${commentTypeDelivery}) {
+		          alert("User Instruction : " + $('#userComments').val());
+	          }
+
               $('.weight').keyup(function() {
                   var weight = $('.weight').val();
                   if (weight > 5) {
@@ -55,6 +63,8 @@
   </s:layout-component>
   <s:layout-component name="heading">Enter Tracking Details for Packed Orders</s:layout-component>
   <s:layout-component name="content">
+	<input type="hidden" id="commentType" value="${shipmentQueueBean.shippingOrder.baseOrder.commentType}">
+	<input type="hidden" id="userComments" value="${shipmentQueueBean.shippingOrder.baseOrder.userComments}">
     <div  class="error" style= "background-color:salmon; width:380px; display:none;">       
 
     </div>
@@ -133,9 +143,9 @@
               <div class="buttons" style="margin-left: 90%;"><s:submit id="shipmentbutton" name="saveShipmentDetails" value="Save"/></div>
 
                <div style="margin:5px;color:red;font-size:18px;">
-              <c:if test="${shipmentQueueBean.shippingOrder.baseOrder.userComments != null}">
-              	User Instructions: ${shipmentQueueBean.shippingOrder.baseOrder.userComments}
-              </c:if>
+                    <c:if test="${shipmentQueueBean.shippingOrder.baseOrder.commentType == commentTypeDelivery}">
+              	        User Instructions: ${shipmentQueueBean.shippingOrder.baseOrder.userComments}
+                    </c:if>
               </div>
           </s:form>
         </fieldset>

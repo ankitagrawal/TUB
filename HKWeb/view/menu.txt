@@ -201,6 +201,8 @@
 --/sports/sports-equipment/squash
 ---/sports/sports-equipment/squash/rackets
 ---/sports/sports-equipment/squash/balls
+---/sports/sports-equipment/squash/strings
+---/sports/sports-equipment/squash/accessories
 --/sports/sports-equipment/boxing
 ---/sports/sports-equipment/boxing/punching-bags
 ---/sports/sports-equipment/boxing/gloves
