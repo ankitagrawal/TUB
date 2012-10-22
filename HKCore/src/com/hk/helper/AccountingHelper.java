@@ -61,7 +61,11 @@ public class AccountingHelper {
 
 		double baseAmountOnBaseOrder = 0;
 		for (CartLineItem productCartLineItem : productCartLineItems) {
-			baseAmountOnBaseOrder += (productCartLineItem.getHkPrice() * productCartLineItem.getQty());
+			double orderLevelDiscount = getOrderLevelDiscOnCartLI(baseOrder.getCartLineItems(), productCartLineItem.getProductVariant(), productCartLineItem.getCartLineItemConfig());
+
+			baseAmountOnBaseOrder = baseAmountOnBaseOrder + (productCartLineItem.getHkPrice() * productCartLineItem.getQty()) -
+					(productCartLineItem.getDiscountOnHkPrice() * productCartLineItem.getQty()) -
+					orderLevelDiscount;
 		}
 
 		return baseAmountOnBaseOrder;

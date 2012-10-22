@@ -82,15 +82,20 @@ public class ShippingOrderHelper {
 
         Set<CartLineItem> cartLIOnOrder = order.getCartLineItems();
         for (LineItem shippingOrderLineItem : shippingOrder.getLineItems()) {
-            double lineItemAmt = (shippingOrderLineItem.getHkPrice() * shippingOrderLineItem.getQty());
+	        double orderLvlDiscOnLI = AccountingHelper.getOrderLevelDiscOnCartLI(cartLIOnOrder, shippingOrderLineItem.getSku().getProductVariant(),
+                    shippingOrderLineItem.getCartLineItem().getCartLineItemConfig());
+
+            double lineItemAmt = (shippingOrderLineItem.getHkPrice() * shippingOrderLineItem.getQty()) -
+		                           orderLvlDiscOnLI -
+		                          shippingOrderLineItem.getDiscountOnHkPrice();
+	        
             double lineItemMf = soBaseAmt != 0 ? lineItemAmt / soBaseAmt : 0;
 
             shippingOrderLineItem.setRewardPoints(lineItemMf * rewardPointsOnSO);
             shippingOrderLineItem.setShippingCharges(lineItemMf * shippingChargeOnSO);
             shippingOrderLineItem.setCodCharges(lineItemMf * codChargesOnSO);
 
-            double orderLvlDiscOnLI = AccountingHelper.getOrderLevelDiscOnCartLI(cartLIOnOrder, shippingOrderLineItem.getSku().getProductVariant(),
-                    shippingOrderLineItem.getCartLineItem().getCartLineItemConfig());
+
 
             shippingOrderLineItem.setOrderLevelDiscount(orderLvlDiscOnLI);
         }
@@ -100,7 +105,11 @@ public class ShippingOrderHelper {
     private static double getBaseAmountForSO(ShippingOrder shippingOrder) {
         double soBaseAmt = 0.0;
         for (LineItem lineItem : shippingOrder.getLineItems()) {
-            soBaseAmt += (lineItem.getHkPrice() * lineItem.getQty());
+	        Double orderLevelDiscount = AccountingHelper.getOrderLevelDiscOnCartLI(shippingOrder.getBaseOrder().getCartLineItems(), lineItem.getSku().getProductVariant(),
+                    lineItem.getCartLineItem().getCartLineItemConfig());
+            soBaseAmt = soBaseAmt +(lineItem.getHkPrice() * lineItem.getQty()) -
+		            lineItem.getDiscountOnHkPrice() -
+		            orderLevelDiscount;
         }
 
         return soBaseAmt;
