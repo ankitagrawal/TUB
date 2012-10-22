@@ -66,19 +66,19 @@ public class MLoginAction extends MBaseAction {
 			@FormParam("password") String password,@Context HttpServletRequest request) throws Exception {
 		HealthkartResponse healthkartResponse;
 		String jsonBuilder = "";
-		String message = "Done";
-		String status = HealthkartResponse.STATUS_OK;
+		String message = MHKConstants.STATUS_DONE;
+		String status = MHKConstants.STATUS_OK;
 		UserLoginDto userLoginDto = null;
 		List<MUserLoginJSONResponse> userItemList = null;
 		try {
 			userLoginDto = userManager.login(email, password, true);
 		} catch (HealthkartLoginException e) {
-			message = "Invalid login credentials.";
-			status = HealthkartResponse.STATUS_ERROR;
+			message = MHKConstants.INVALID_LOGIN_CRDNTLS;
+			status = MHKConstants.STATUS_ERROR;
 		}
 		userName = null;
 
-		if (status == HealthkartResponse.STATUS_OK) {
+		if (status == MHKConstants.STATUS_OK) {
 			// healthkartresponse = new
 			// HealthkartResponse(status,message,userLoginDto);
 			userItemList = new ArrayList<MUserLoginJSONResponse>();

@@ -145,7 +145,7 @@ public class MOrderSummaryAction extends MBaseAction {
         String jsonBuilder = "";
         String message = "Done";
         String status = HealthkartResponse.STATUS_OK;
-        Map orderMap = new HashMap<String,Object>();
+        Map<String,Object> orderMap = new HashMap<String,Object>();
         User user = getUserService().getUserById(getPrincipal().getId());
         order = orderManager.getOrCreateOrder(user);
         // Trimming empty line items once again.

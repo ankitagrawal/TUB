@@ -1,54 +1,36 @@
 package com.hk.rest.mobile.service.action;
 
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.catalog.product.combo.ComboInstance;
-import com.hk.domain.user.Address;
-import com.hk.report.dto.pricing.PricingSubDto;
-import com.hk.manager.OrderManager;
-import com.hk.pricing.PricingEngine;
-import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
-import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
-import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
-import com.hk.pact.service.order.CartLineItemService;
-import com.hk.pact.service.order.CartFreebieService;
-import com.hk.util.HKImageUtils;
-import com.hk.web.HealthkartResponse;
-import com.hk.dto.pricing.PricingDto;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Satish
- * Date: Oct 7, 2012
- * Time: 2:01:12 PM
- * To change this template use File | Settings | File Templates.
- */
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
-import java.util.*;
-
-import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.action.DefaultHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.stripes.controller.JsonHandler;
 import com.akube.framework.gson.JsonUtils;
-import com.hk.domain.catalog.product.combo.ComboInstance;
+import com.akube.framework.shiro.Principal;
+import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
-import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
@@ -58,20 +40,10 @@ import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
-import com.hk.web.HealthkartResponse;
-import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.rest.mobile.service.model.MCartLineItemsJSONResponse;
-import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.shiro.PrincipalImpl;
-
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.servlet.http.HttpServletResponse;
+import com.hk.rest.mobile.service.utils.MHKConstants;
+import com.hk.util.HKImageUtils;
+import com.hk.web.HealthkartResponse;
 
 @Path("/mRemoveItem")
 @Component
@@ -118,7 +90,7 @@ public class MCartLineItemUpdateAction extends MBaseAction {
         String status = MHKConstants.STATUS_OK;
         User user = null;
         if (getSecurityManager().getSubject().getPrincipal() != null) {
-            user = getUserService().getUserById(((PrincipalImpl) getSecurityManager().getSubject().getPrincipal()).getId());
+            user = getUserService().getUserById(((Principal) getSecurityManager().getSubject().getPrincipal()).getId());
             if (user == null) {
                 user = userManager.createAndLoginAsGuestUser(null, null);
             }
@@ -156,7 +128,7 @@ public class MCartLineItemUpdateAction extends MBaseAction {
 
                 }else{
                   cartLineItemDao.refresh(cartLineItem);
-                  healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "fail", cartLineItem.getQty());
+                  healthkartResponse = new HealthkartResponse(MHKConstants.STATUS_ERROR, "fail", cartLineItem.getQty());
                   return JsonUtils.getGsonDefault().toJson(healthkartResponse);
                 }
             }

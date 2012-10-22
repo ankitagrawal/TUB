@@ -1,100 +1,70 @@
 package com.hk.rest.mobile.service.action;
 
-import org.stripesstuff.plugin.security.Secure;
-import org.springframework.stereotype.Component;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+
+import net.sourceforge.stripes.util.CryptoUtil;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.apache.commons.lang.StringUtils;
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.util.BaseUtils;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.manager.OrderManager;
-import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.service.payment.PaymentService;
-import com.hk.constants.core.Keys;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.domain.user.User;
-import com.hk.domain.user.Address;
-import com.hk.domain.payment.Payment;
-import com.hk.web.action.core.payment.PaymentModeAction;
-import com.hk.web.action.core.payment.PaymentSuccessAction;
-import com.hk.web.HealthkartResponse;
-import com.hk.web.filter.WebContext;
-import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.exception.HealthkartPaymentGatewayException;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Satish
- * Date: Oct 14, 2012
- * Time: 1:20:21 AM
- * To change this template use File | Settings | File Templates.
- */
-
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.util.BaseUtils;
 import com.akube.framework.gson.JsonUtils;
+import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.order.AdminOrderService;
-import com.hk.constants.core.Keys;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.order.*;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.core.Keys;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderLifecycleActivity;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.coupon.Coupon;
+import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
+import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.order.*;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
-import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.offer.rewardPoint.RewardPointMode;
-import com.hk.domain.offer.rewardPoint.RewardPoint;
-import com.hk.domain.coupon.Coupon;
+import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.service.payment.PaymentService;
-import com.hk.pact.service.order.OrderService;
-import com.hk.pact.service.order.RewardPointService;
-import com.hk.pact.service.order.OrderLoggingService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.order.OrderLoggingService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.payment.PaymentService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.rest.mobile.service.utils.MHKConstants;
-import com.hk.dto.pricing.PricingDto;
 import com.hk.util.ga.GAUtil;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.util.CryptoUtil;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-import org.joda.time.DateTime;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Cookie;
-import java.util.Set;
-import java.util.*;
-import java.text.DecimalFormat;
+import com.hk.web.HealthkartResponse;
 
 @Secure
 @Path("/mPayment")
@@ -175,27 +145,27 @@ public class MCodPaymentReceiveAction extends MBaseAction {
 		if (order != null && order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
 
 			if (StringUtils.isBlank(codContactName)) {
-                message = "Cod Contact Name cannot be blank";
+                message = MHKConstants.COD_CONTCT_NAME_BLANK;
                 status = MHKConstants.STATUS_ERROR;
                 return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, status));
 
             } else if (StringUtils.isBlank(codContactPhone)) {
-                message = "Cod Contact Phone cannot be blank";
+                message = MHKConstants.COD_CONTACT_PHN_BLANK;
                 status = MHKConstants.STATUS_ERROR;
                 return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, status));
 			} else if (codContactName.length() > 80) {
-                message = "Cod Contact Name cannot be longer than 80 characters";
+                message = MHKConstants.COD_CONTACT_NAME_LENGTH;
                 status = MHKConstants.STATUS_ERROR;
                 return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, status));
 			} else if (codContactPhone.length() > 25) {
-                message = "Cod Contact Phone cannot be longer than 25 characters";
+                message = MHKConstants.COD_CONTACT_PHN_LENGTH;
                 status = MHKConstants.STATUS_ERROR;
                 return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, status));
             }
 
 			Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
 			if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
-                message = "Cod is not allowed as you have subscriptions in your cart";
+                message = MHKConstants.COD_CONTACT_SUBSCR_CART;
                 status = MHKConstants.STATUS_ERROR;
 			}
 		   if(comments!=null){
@@ -214,15 +184,15 @@ public class MCodPaymentReceiveAction extends MBaseAction {
 			String pin = address != null ? address.getPin() : null;
 
 			if (!getCourierService().isCodAllowed(pin)) {
-                message = "Cod is not available for this location";
+                message = MHKConstants.COD_NOT_IN_PINCODE + pin;
                 status = MHKConstants.STATUS_ERROR;
                 return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, status));
 			} else if (order.getIsExclusivelyServiceOrder()) {
-                message = "Currently Cod is not available for services";
+                message = MHKConstants.COD_NOT_FOR_SERVICES;
                 status = MHKConstants.STATUS_ERROR;
                 return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, status));
 			} else if (order.getContainsServices()) {
-                message = "Currently Cod is not available for services, Please make payments separately for products and services";
+                message = MHKConstants.COD_NOT_FOR_SERVICES_PYMT;
                 status = MHKConstants.STATUS_ERROR;
                 return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, status));
 			} else if (order.getAmount() < codMinAmount || order.getAmount() > codMaxAmount) {

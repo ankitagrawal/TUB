@@ -3,18 +3,12 @@
  */
 package com.hk.rest.mobile.service.action;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.validation.LocalizableError;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -80,7 +74,7 @@ public class MForgotPasswordAction extends MBaseAction{
         }
 
         healthkartResponse = new HealthkartResponse(MHKConstants.STATUS_OK,
-                "Password reset mail has been sent to your email id. Please check your Inbox/Spam/Junk folders.", MHKConstants.STATUS_DONE);
+                MHKConstants.PWD_RESET_MSG, MHKConstants.STATUS_DONE);
 
         noCache(response);
 

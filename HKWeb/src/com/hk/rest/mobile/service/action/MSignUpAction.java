@@ -22,6 +22,8 @@ import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.user.SelectAddressAction;
 import com.hk.web.HealthkartResponse;
 import com.hk.rest.mobile.service.model.MUserLoginJSONResponse;
+import com.hk.rest.mobile.service.utils.MHKConstants;
+
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.util.CryptoUtil;
 import net.sourceforge.stripes.validation.LocalizableError;
@@ -111,8 +113,8 @@ public class MSignUpAction extends MBaseAction {
 		User referredBy = null;
 		HealthkartResponse healthkartResponse;
 		String jsonBuilder = "";
-		String message = "Done";
-		String status = HealthkartResponse.STATUS_OK;
+		String message = MHKConstants.STATUS_DONE;
+		String status = MHKConstants.STATUS_OK;
 		Cookie referredByCookie = BaseUtils.getCookie(request,
 				HealthkartConstants.Cookie.referred_by);
 		if (referredByCookie != null) {
@@ -122,11 +124,11 @@ public class MSignUpAction extends MBaseAction {
 		try {
 			userManager.signup(email, name, password, referredBy);
 		} catch (HealthkartSignupException e) {
-			message = "email id already exists";
-			status = HealthkartResponse.STATUS_ERROR;
+			message = MHKConstants.EMAIL_ID_ALRDY_EXIST;
+			status = MHKConstants.STATUS_ERROR;
 		}
 
-		Map map = new HashMap<String, String>();
+		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("email", email);
 		map.put("name", name);
 
