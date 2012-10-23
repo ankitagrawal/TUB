@@ -1,15 +1,11 @@
 package com.hk.helper;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Set;
 
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.util.HKDateUtil;
-import com.hk.util.OrderUtil;
 import com.hk.util.TokenUtils;
 
 /**
@@ -34,38 +30,11 @@ public class ShippingOrderHelper {
         String shippingOrderGatewayId = TokenUtils.generateShippingOrderGatewayOrderId(shippingOrder);
         shippingOrder.setGatewayOrderId(shippingOrderGatewayId);
 
-        Long[] dispatchDays = OrderUtil.getDispatchDaysForSO(shippingOrder);
-        //Date targetDelDate = HKDateUtil.addToDate(shippingOrder.getBaseOrder().getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH, Integer.parseInt(dispatchDays[0].toString()));
-        
-        Date targetDispatchDate = getTargetDispatchDateForSO(shippingOrder.getBaseOrder().getPayment().getPaymentDate(),dispatchDays[0]);
-        shippingOrder.setTargetDispatchDate(targetDispatchDate);
 
         return shippingOrder;
     }
 
-    private static Date getTargetDispatchDateForSO(Date paymentDate, Long minDispatchDaysForSO) {
-        int daysToAddToPaymentDate = 0;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(paymentDate);
-
-        int hour = calendar.get(Calendar.HOUR);
-        int minute = calendar.get(Calendar.MINUTE);
-        boolean isPM = calendar.get(Calendar.AM_PM) == Calendar.PM;
-
-        if (isPM && hour != 0) {
-            hour += 12; // if this beyond 12:00 noon
-        } else if (isPM && hour == 0) {
-            hour = 12; // if this is noon
-        }
-        
-        if(hour < 16){
-            daysToAddToPaymentDate =  Integer.parseInt(minDispatchDaysForSO.toString()) -1;
-        }else {
-            daysToAddToPaymentDate = Integer.parseInt(minDispatchDaysForSO.toString());
-        }
-        return  HKDateUtil.addToDate(paymentDate, Calendar.DAY_OF_MONTH, daysToAddToPaymentDate);
-    }
-
+    
     public static void updateAccountingOnSOLineItems(ShippingOrder shippingOrder, Order order) {
 
         double rewardPointsOnBO = AccountingHelper.getRewardPointsForBaseOrder(order.getCartLineItems());

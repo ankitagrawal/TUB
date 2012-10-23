@@ -1,6 +1,7 @@
 package com.hk.impl.service.shippingOrder;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.helper.OrderDateUtil;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
@@ -34,6 +36,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
+import com.hk.util.OrderUtil;
 
 /**
  * @author vaibhav.adlakha
@@ -105,6 +108,22 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
     public ShippingOrderLifeCycleActivity getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity) {
         return getShippingOrderDao().getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
+    }
+    
+    @Transactional
+    @Override
+    public void setTargetDispatchDelDatesOnSO(Date refDate, ShippingOrder shippingOrder){
+        Long[] dispatchDays = OrderUtil.getDispatchDaysForSO(shippingOrder);
+        
+        Date targetDispatchDate = OrderDateUtil.getTargetDispatchDateForWH(refDate,dispatchDays[0]);
+        shippingOrder.setTargetDispatchDate(targetDispatchDate);
+        
+        Long diffInPromisedTimes = (dispatchDays[1] - dispatchDays[0]);
+        int daysTakenForDelievery = Integer.valueOf(diffInPromisedTimes.toString());
+        Date targetDelDate = HKDateUtil.addToDate(refDate, Calendar.DAY_OF_MONTH, daysTakenForDelievery);
+        shippingOrder.setTargetDelDate(targetDelDate);
+        
+        getShippingOrderDao().save(shippingOrder);
     }
 
     /**
