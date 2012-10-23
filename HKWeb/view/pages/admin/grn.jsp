@@ -191,16 +191,12 @@
 				$.each($('.receivedQuantity'), function(index, value){
 					var valueChangeRow = $(this).parents('.lineItemRow');
 					var eachRow=$(value);
-					//alert(" "+ valueChangeRow.find('#alreadyGRNQty').val());
 
-					var receivedQuantity=parseFloat(eachRow.val().trim());
-					var addi = receivedQuantity + parseFloat(valueChangeRow.find('#alreadyGRNQty').val());
-					var comp = parseFloat(valueChangeRow.find('#poLineItemQty').val());
-					alert(addi + " " + comp);
-
-					if( receivedQuantity + parseFloat(valueChangeRow.find('#alreadyGRNQty').val())){
-						alert("" + receivedQuantity + " " + valueChangeRow.find('#alreadyGRNQty').val() + " " + valueChangeRow.find('#poLineItemQty').val());
-						alert("Check grn qty for " + valueChangeRow.find('.variant').val());
+					var receivedQuantity = parseFloat(eachRow.val().trim());
+					var alreadyGrnQty = parseFloat(valueChangeRow.find('#alreadyGRNQty').val());
+					var poLineItemQty = parseFloat(valueChangeRow.find('#poLineItemQty').val());
+					if( receivedQuantity + alreadyGrnQty > poLineItemQty){
+						alert("GRN for " + valueChangeRow.find('#variantHidden').val() + " is more than PO. Please change it to save the GRN" );
 						returnFalse = true;
 						return false;
 					}
@@ -400,6 +396,7 @@
 			        class="receivedQuantity valueChange"/>
 			<input type="hidden" id="alreadyGRNQty" value="${grnLineItemDto.grnLineItem.grnLineItemQtyAlreadySet}"/>
 			<input type="hidden" id="poLineItemQty" value="${grnLineItemDto.grnLineItem.poLineItemQty}"/>
+			<input type="hidden" id="variantHidden" value="${productVariant.id}" />
 		</td>
 		<td>
 			<s:text name="grnLineItems[${ctr.index}].costPrice" value="${grnLineItemDto.grnLineItem.costPrice}"
