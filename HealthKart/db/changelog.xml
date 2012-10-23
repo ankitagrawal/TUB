@@ -9443,4 +9443,13 @@
 			<column name="comment_type" type="INT"/>
 		</addColumn>
 	</changeSet>
+	<changeSet author="Seema (generated)" id="1350638740147-3">
+        <dropColumn columnName="used" tableName="awb"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1350891782684-2">
+        <dropForeignKeyConstraint baseTableName="shipment" baseTableSchemaName="healthkart_dev1" constraintName="fk_package_courier1"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1350891782684-6">
+        <dropColumn columnName="courier_id" tableName="shipment"/>
+    </changeSet>
 </databaseChangeLog>

@@ -79,7 +79,7 @@
 
       <p><strong>Payment Mode:</strong>${baseOrder.payment.paymentMode.name}</p>
 
-      <p><strong>Courier:</strong>${shippingOrder.shipment.courier.name}</p>
+      <p><strong>Courier:</strong>${shippingOrder.shipment.awb.courier.name}</p>
 
       <p><strong>Order#: </strong>${shippingOrder.gatewayOrderId} on <fmt:formatDate
           value="${baseOrder.payment.createDate}" type="both" timeStyle="short"/></p>

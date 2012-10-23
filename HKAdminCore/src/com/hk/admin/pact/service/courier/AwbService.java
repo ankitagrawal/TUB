@@ -27,7 +27,7 @@ public interface AwbService {
 
     public Awb getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus);
 
-    public Awb save(Awb awb);
+//    public Awb save(Awb awb);
 
     public List<Awb> getAllAwb();
 
@@ -47,6 +47,11 @@ public interface AwbService {
 
     public void delete(Awb awb);
 
-    //private Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
+	public Object save(Awb awb, Integer newStatus);
+
+    public  Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
+
+	public void refresh(Awb awb);
+
     
 }

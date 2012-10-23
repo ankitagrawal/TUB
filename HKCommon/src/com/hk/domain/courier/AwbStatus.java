@@ -39,4 +39,21 @@ public class AwbStatus {
     public void setStatus(String status) {
         this.status = status;
     }
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj instanceof AwbStatus) {
+			AwbStatus awbStatus = (AwbStatus) obj;
+			if (this.id != null && awbStatus.getId() != null) {
+				return this.id.equals(awbStatus.getId());
+			}
+
+		}
+		return false;
+	}
+
+	
+
 }

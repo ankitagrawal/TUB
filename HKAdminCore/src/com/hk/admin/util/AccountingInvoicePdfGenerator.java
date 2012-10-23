@@ -194,7 +194,7 @@ public class AccountingInvoicePdfGenerator {
         Font.NORMAL)));
     invoiceDetailParagraph.add(new Paragraph("Payment Mode:" + shippingOrder.getBaseOrder().getPayment().getPaymentMode().getName(), new Font(Font.FontFamily.TIMES_ROMAN, 8,
         Font.NORMAL)));
-    invoiceDetailParagraph.add(new Paragraph("Courier:" + shippingOrder.getShipment().getCourier().getName(), new Font(Font.FontFamily.TIMES_ROMAN, 8,
+    invoiceDetailParagraph.add(new Paragraph("Courier:" + shippingOrder.getShipment().getAwb().getCourier().getName(), new Font(Font.FontFamily.TIMES_ROMAN, 8,
         Font.NORMAL)));
     invoiceDetailParagraph.add(new Paragraph("Order#:" + shippingOrder.getGatewayOrderId() + "on" + shippingOrder.getBaseOrder().getPayment().getCreateDate(), new Font(Font.FontFamily.TIMES_ROMAN, 8,
         Font.NORMAL)));

@@ -93,7 +93,7 @@
 								</li>
 								<li>
 									<s:label name="courier" class="label">Courier</s:label>
-										${csda.shipment.courier.name}
+										${csda.shipment.awb.courier.name}
 								</li>
 								<li>
 									<s:label name="trackingId" class="label">Tracking Id</s:label>

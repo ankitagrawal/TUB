@@ -428,7 +428,7 @@
 <c:if test="${shipment !=null}">
     <td>
         <div class="floatleft">
-            Courier: <strong>${shipment.courier.name}</strong>
+            Courier: <strong>${shipment.awb.courier.name}</strong>
         </div>
         <div class="clear"></div>
         <div class="floatleft">

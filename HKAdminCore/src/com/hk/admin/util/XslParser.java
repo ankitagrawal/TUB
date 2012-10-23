@@ -828,7 +828,7 @@ public class XslParser {
                     continue;
                 }
                 if (courier != null) {
-                    if (!(shipment.getCourier().equals(courier))) {
+                    if (!(shipment.getAwb().getCourier().equals(courier))) {
                         messagePostUpdation += "Courier Name in the list and present in our DataBase mismatches at Row " + rowCount + "<br/>";
                         continue;
                     }
@@ -978,7 +978,7 @@ public class XslParser {
                     continue;
                 }
                 if (courier != null) {
-                    if (!(shipment.getCourier().equals(courier))) {
+                    if (!(shipment.getAwb().getCourier().equals(courier))) {
                         messagePostUpdation += "Courier Name in the list and present in our DataBase mismatches at Row " + rowCount + "<br/>";
                         continue;
                     }
