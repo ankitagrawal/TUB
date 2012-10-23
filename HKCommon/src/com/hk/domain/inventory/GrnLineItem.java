@@ -185,25 +185,21 @@ public class GrnLineItem implements java.io.Serializable {
 
 	public Long getPoLineItemQty() {
 		List<PoLineItem> poLineItemList = this.getGoodsReceivedNote().getPurchaseOrder().getPoLineItems();
-		for(PoLineItem poLineItem : poLineItemList) {
-			if(this.sku.getId().equals(poLineItem.getSku().getId())) {
+		for (PoLineItem poLineItem : poLineItemList) {
+			if (this.sku.getId().equals(poLineItem.getSku().getId())) {
 				return poLineItem.getQty();
 			}
 		}
-		return null;
-	}
-
-	public void setPoLineItemQty(Long poLineItemQty) {
-		this.poLineItemQty = poLineItemQty;
+		return 0L;
 	}
 
 	public Long getGrnLineItemQtyAlreadySet() {
 		long grnLineItemQtyAlreadySet = 0;
 		List<GoodsReceivedNote> allGrnForThisPO = this.getGoodsReceivedNote().getPurchaseOrder().getGoodsReceivedNotes();
-		for(GoodsReceivedNote goodsReceivedNote : allGrnForThisPO) {
-			if( !goodsReceivedNote.getId().equals(this.getGoodsReceivedNote().getId()) ) {
-				for(GrnLineItem grnLineItemForOtherGrn : goodsReceivedNote.getGrnLineItems()) {
-					if(this.getSku().getId().equals(grnLineItemForOtherGrn.getSku().getId())) {
+		for (GoodsReceivedNote goodsReceivedNote : allGrnForThisPO) {
+			if (!goodsReceivedNote.getId().equals(this.getGoodsReceivedNote().getId())) {
+				for (GrnLineItem grnLineItemForOtherGrn : goodsReceivedNote.getGrnLineItems()) {
+					if (this.getSku().getId().equals(grnLineItemForOtherGrn.getSku().getId())) {
 						grnLineItemQtyAlreadySet += grnLineItemForOtherGrn.getQty().longValue();
 					}
 				}
@@ -213,9 +209,6 @@ public class GrnLineItem implements java.io.Serializable {
 		return grnLineItemQtyAlreadySet;
 	}
 
-	public void setGrnLineItemQtyAlreadySet(Long grnLineItemQtyAlreadySet) {
-		this.grnLineItemQtyAlreadySet = grnLineItemQtyAlreadySet;
-	}
 }
 
 
