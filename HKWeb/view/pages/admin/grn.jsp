@@ -182,6 +182,12 @@
 			};
 
 			$('.requiredFieldValidator').click(function() {
+				var invoice = $('.invoiceNumber').val();
+				if(invoice == "-"){
+					alert("Enter Invoice Number");
+					return false;
+				}
+
 				var qty = $('.receivedQuantity').val();
 				var costPrice = $('.costPrice').val();
 				if(qty=="" || costPrice=="" || qty<0 || costPrice<0){
@@ -248,7 +254,7 @@
 		<td>Invoice Date <em class="mandatory">*</em></td>
 		<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="grn.invoiceDate"/></td>
 		<td>Invoice Number <em class="mandatory">*</em></td>
-		<td><s:text name="grn.invoiceNumber"/></td>
+		<td><s:text name="grn.invoiceNumber" class="invoiceNumber"/></td>
 		<td></td>
 		<td></td>
 	</tr>
