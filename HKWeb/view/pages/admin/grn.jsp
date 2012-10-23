@@ -186,6 +186,29 @@
 					alert("Enter values in correct format.");
 					return false;
 				}
+
+				var returnFalse = false;
+				$.each($('.receivedQuantity'), function(index, value){
+					var valueChangeRow = $(this).parents('.lineItemRow');
+					var eachRow=$(value);
+					//alert(" "+ valueChangeRow.find('#alreadyGRNQty').val());
+
+					var receivedQuantity=parseFloat(eachRow.val().trim());
+					var addi = receivedQuantity + parseFloat(valueChangeRow.find('#alreadyGRNQty').val());
+					var comp = parseFloat(valueChangeRow.find('#poLineItemQty').val());
+					alert(addi + " " + comp);
+
+					if( receivedQuantity + parseFloat(valueChangeRow.find('#alreadyGRNQty').val())){
+						alert("" + receivedQuantity + " " + valueChangeRow.find('#alreadyGRNQty').val() + " " + valueChangeRow.find('#poLineItemQty').val());
+						alert("Check grn qty for " + valueChangeRow.find('.variant').val());
+						returnFalse = true;
+						return false;
+					}
+				});
+				if(returnFalse) {
+					return false;
+				}
+
 				$(this).css("display", "none");
 			} );
 
@@ -375,6 +398,8 @@
 		<td>
 			<s:text name="grnLineItems[${ctr.index}].qty" value="${grnLineItemDto.grnLineItem.qty}"
 			        class="receivedQuantity valueChange"/>
+			<input type="hidden" id="alreadyGRNQty" value="${grnLineItemDto.grnLineItem.grnLineItemQtyAlreadySet}"/>
+			<input type="hidden" id="poLineItemQty" value="${grnLineItemDto.grnLineItem.poLineItemQty}"/>
 		</td>
 		<td>
 			<s:text name="grnLineItems[${ctr.index}].costPrice" value="${grnLineItemDto.grnLineItem.costPrice}"
