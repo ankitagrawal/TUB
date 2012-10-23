@@ -209,7 +209,7 @@ public class InventoryCheckinAction extends BaseAction {
 					getInventoryService().checkInventoryHealth(productVariant);
 
 					if (grn.getGrnStatus().getId() != EnumGrnStatus.InventoryCheckedIn.getId()) {
-						grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.InventoryCheckedIn.getId()));
+						grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.InventoryCheckinInProcess.getId()));
 						getGoodsReceivedNoteDao().save(grn);
 					}
 					//Barcode File

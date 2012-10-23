@@ -46,6 +46,15 @@ public class LineItemDaoImpl extends BaseDaoImpl implements LineItemDao {
                 "shippingOrder", shippingOrder).setParameter("srcSKu", srcSKu).executeUpdate();*/
     }
 
+	public LineItem getMatchingLineItemForDuplicateShippingOrder(LineItem lineItem, ShippingOrder shippingOrderOld){
+		for(LineItem lineItemOld : shippingOrderOld.getLineItems()){
+			if(lineItemOld.getCartLineItem().getId().equals(lineItem.getCartLineItem().getId())){
+				return lineItemOld;
+			}
+		}
+		return null;
+	}
+
     public List<String> getLineItemListShippedByCourier(Date startDate, Date endDate, Long courier_id) {
 
         /*
