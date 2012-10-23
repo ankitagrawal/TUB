@@ -4,7 +4,7 @@ import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 
 
 public enum EnumPurchaseInvoiceStatus {
-	PurchaseInvoiceGenerated(10L, "Purchase Invoice Generated"),;
+	PurchaseInvoiceGenerated(10L, "Generated"),;
 	private String name;
 	private Long id;
 
