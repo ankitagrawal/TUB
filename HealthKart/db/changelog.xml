@@ -9438,4 +9438,24 @@
 	<changeSet author="Ajeet (generated)" id="1348919811628-3">
 			<dropColumn columnName="updated" tableName="update_pv_price"/>
 	</changeSet>
+    <changeSet author="Marut (generated)" id="1350979581374-1">
+        <createTable tableName="user_detail">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="phone" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="INT"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1350979581374-2">
+        <createIndex indexName="user_detail_key" tableName="user_detail" unique="false">
+            <column name="phone"/>
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

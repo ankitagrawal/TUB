@@ -3,6 +3,7 @@ package com.hk.web.action.admin.order.search;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.util.drishti.PopulateUserDetail;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.core.OrderStatus;
@@ -17,12 +18,15 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.user.UserDetailService;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.util.CryptoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
+import javax.ws.rs.core.Response;
 import java.util.*;
 
 /**
@@ -37,6 +41,9 @@ import java.util.*;
 @UrlBinding("/agent/order")
 public class AgentSearchOrderAction extends BasePaginatedAction {
     private static Logger logger    = LoggerFactory.getLogger(SearchOrderAction.class);
+
+    @Value("#{hkEnvProps['" + Keys.Env.hkApiAccessKey + "']}")
+    private String API_KEY;
 
     @Autowired
     OrderService        orderService;
@@ -63,6 +70,12 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
         /*PopulateUserDetail populateUserDetail = new PopulateUserDetail("localhost", "healthkart_stag", "root", "admin");
         populateUserDetail.populateItemData();*/
 
+        Response response = null;
+        String key = getContext().getRequest().getParameter("key");
+        String decryptKey = CryptoUtil.decrypt(key);
+        if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)){
+            return new JsonResolution(Response.status(Response.Status.UNAUTHORIZED).build());
+        }
         remoteAddress = getContext().getRequest().getRemoteHost();
         User customer = null;
         Long phNo = 0L;

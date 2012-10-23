@@ -1,6 +1,7 @@
 package com.hk.rest.resource.User;
 
 import com.hk.admin.pact.service.order.AdminOrderService;
+import com.hk.constants.core.Keys;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
@@ -9,9 +10,11 @@ import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.user.UserDetailService;
 import com.hk.rest.models.user.APIUser;
 import com.hk.rest.models.user.APIUserDetail;
+import net.sourceforge.stripes.util.CryptoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -32,6 +35,9 @@ import java.util.List;
 public class UserResource {
 
     private static Logger logger = LoggerFactory.getLogger(UserResource.class);
+    @Value("#{hkEnvProps['" + Keys.Env.hkApiAccessKey + "']}")
+    private String API_KEY;
+
     @Autowired
     UserDetailService userDetailService;
 
@@ -85,9 +91,14 @@ public class UserResource {
     @GET
     @Path ("/priority/phone/{phone}")
     @Produces("application/json")
-    public Response getUserDetails(@PathParam ("phone") long phone) {
+    @Encoded
+    public Response getUserDetails(@PathParam ("phone") long phone, @QueryParam("key")String key) {
 
         Response response = null;
+        String decryptKey = CryptoUtil.decrypt(key);
+        if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)){
+             return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
         try{
             List<UserDetail> userDetails = userDetailService.findByPhone(phone);
             ArrayList<APIUserDetail> userDetailList = new ArrayList<APIUserDetail>();

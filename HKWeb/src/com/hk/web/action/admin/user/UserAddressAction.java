@@ -42,7 +42,7 @@ public class UserAddressAction extends BaseAction {
             userPhone = Long.parseLong(getContext().getRequest().getParameter("phone"));
         }
         userDetailList = userDetailService.findByPhone(userPhone);
-        return new ForwardResolution("/pages/admin/userAddress.jsp");
+        return new ForwardResolution("/pages/admin/userDetail.jsp");
     }
 
     public String getRemoteAddress() {

@@ -59,7 +59,7 @@ public class AddressServiceImpl implements AddressService {
                 userDetail.setUser(user);
                 int start = phone.length() - 10;
                 //consider only the last 10 digits
-                String userPhone = phone.substring(start, phone.length() - 1);
+                String userPhone = phone.substring(start, phone.length());
                 long phoneNumber = Long.parseLong(userPhone);
                 userDetail.setPhone(phoneNumber);
                 userDetailsDao.save(userDetail);

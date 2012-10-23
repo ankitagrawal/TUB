@@ -34,7 +34,7 @@ class PopulateUserDetail {
         int cnt = 0;
         sql.eachRow("""
                     select u.id, a.phone, kp.karma_points from user u join address a on u.id = a.user_id
-                    join user_karma_profile kp on u.id = kp.user_id;
+                    left join user_karma_profile kp on u.id = kp.user_id;
                       """){
             userDetails ->
             String[] phones = null;
@@ -57,12 +57,15 @@ class PopulateUserDetail {
                     UserDetail userDetail = new UserDetail();
                     int start = userPhone.length() - 10;
                     //consider only the last 10 digits
-                    String strPh = userPhone.substring(start, userPhone.length() - 1);
+                    String strPh = userPhone.substring(start, userPhone.length());
                     long phoneNumber = Long.parseLong(strPh);
                     long id = userDetails.id;
-                    int priority = userDetails.karma_points > 300 ? 1 : 0;
+                    int priority = 0;
+                    if (userDetails.karma_points){
+                       priority = (userDetails.karma_points > 300 ? 1 : 0);
+                    }
                   sql.executeInsert("""
-                    INSERT INTO user_detail values (${cnt}, ${phoneNumber}, ${id}, ${priority})
+                    INSERT INTO user_detail values (${cnt}, ${phoneNumber}, ${priority}, ${id})
                    """);
                   }catch (Exception ex){
 
