@@ -1,9 +1,11 @@
 package com.hk.rest.resource.User;
 
 import com.hk.admin.pact.service.order.AdminOrderService;
+import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.user.UserDetailService;
 import com.hk.rest.models.user.APIUser;
 import com.hk.rest.models.user.APIUserDetail;
@@ -35,6 +37,9 @@ public class UserResource {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    KarmaProfileService karmaProfileService;
 
     @POST
     @Path ("email/{email}/phone/{phone}")
@@ -88,9 +93,13 @@ public class UserResource {
             ArrayList<APIUserDetail> userDetailList = new ArrayList<APIUserDetail>();
             for (UserDetail userDetail : userDetails){
                 APIUserDetail apiUserDetail = new APIUserDetail();
-                apiUserDetail.setId(userDetail.getUser().getId());
+                User user = userDetail.getUser();
+                apiUserDetail.setId(user.getId());
                 apiUserDetail.setPhone(userDetail.getPhone());
-                apiUserDetail.setPriority(userDetail.getPriority());
+                KarmaProfile karmaProfile = karmaProfileService.findByUser(user);
+                if (karmaProfile != null){
+                    apiUserDetail.setPriority(karmaProfile.getKarmaPoints() >= 300 ? 1 : 0);
+                }
                 userDetailList.add(apiUserDetail);
             }
             if (userDetails != null && (userDetails.size() > 0)){

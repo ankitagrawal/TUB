@@ -53,7 +53,7 @@ class PopulateUserDetail {
 
             for (String userPhone : phones){
               try{
-                  cnt++;
+                    cnt++;
                     UserDetail userDetail = new UserDetail();
                     int start = userPhone.length() - 10;
                     //consider only the last 10 digits

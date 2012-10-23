@@ -14,7 +14,7 @@ public class APIUserDetail {
     //Phone number of the user
     private Long                 phone;
     //Priority of the user
-    private Integer                 priority;
+    private Integer                 priority = 0;
 
     public Long getId() {
         return id;
