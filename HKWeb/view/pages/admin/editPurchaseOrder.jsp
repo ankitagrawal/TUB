@@ -5,6 +5,7 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" var="pa"/>
@@ -13,8 +14,9 @@
 	WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 	pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
 %>
-<c:set var="poDeleted" value="<%=EnumPurchaseOrderStatus.Deleted.getId()%>"/>
+<c:set var="poCancelled" value="<%=EnumPurchaseOrderStatus.Cancelled.getId()%>"/>
 <c:set var="poApproved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
+<c:set var="poPlaced" value="<%=EnumPurchaseOrderStatus.SentToSupplier.getId()%>"/>
 <s:layout-component name="htmlHead">
 <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -193,37 +195,57 @@
 			finalPayable-=overallDiscount;
 			$('.finalPayable').val(finalPayable.toFixed(2));
 		} );
+	});
 
-		$('.requiredFieldValidator').click(function () {
-			var quantity = $('.quantity').val();
+	function validateSubmitForm() {
+
+		var returnFalse = false;
+		if (${actionBean.purchaseOrder.supplier.creditDays < 0}) {
+			var advPayment = $('.advPayment').val();
+			if (advPayment == "" || isNaN(advPayment)) {
+				alert("Please enter a valid adv payment as credit days are Zero");
+				returnFalse = true;
+				return false;
+			}
+		}
+		$.each($('.quantity'), function checkQty() {
+			var quantity = $(this).val();
 			if (quantity == "" || isNaN(quantity)) {
 				alert("Please enter a valid quantity.");
+				returnFalse = true;
 				return false;
 			}
-			var returnFalse = false;
-			$.each($('.discountPercentage'), function(index, value){
-				var eachRow=$(value);
-				var discountPercentage=eachRow.val().trim();
-				if(discountPercentage < 0){
-					alert("Discount percentage should be greater than zero");
-					returnFalse = true;
-					return false;
-				}
-			});
-			if(returnFalse) {
-				return false;
-			}
-			var statusSelected = $('.status').find('option:selected');
-			var approver = $('.approver').find('option:selected');
-			var test = approver.text();
-			if (statusSelected.text() == "Sent For Approval" && approver.text() == "-Select Approver-") {
-				alert("Approver Not Selected.");
+		});
+		$.each($('.discountPercentage'), function(index, value) {
+			var eachRow = $(value);
+			var discountPercentage = eachRow.val().trim();
+			if (discountPercentage < 0) {
+				alert("Discount percentage should be greater than zero");
+				returnFalse = true;
 				return false;
 			}
 		});
 
+		var statusSelected = $('.status').find('option:selected');
+		var approver = $('.approver').find('option:selected');
+		if (statusSelected.text() == "Sent For Approval" && approver.text() == "-Select Approver-") {
+			alert("Approver Not Selected.");
+			return false;
+		}
 
-	});
+		if(returnFalse){
+			return false;
+		}else{
+			return true;
+		}
+
+	}
+
+	function temp(){
+		var submit =  validateSubmitForm();
+		alert("submit? "+submit);
+		return submit;
+	}
 </script>
 <%--<style type="text/css">
 			input {
@@ -238,7 +260,7 @@
 	        event="getPVDetails"></s:link>
 </div>
 <h2>Edit PO# ${pa.purchaseOrder.id}</h2>
-<s:form beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">
+<s:form beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" onsubmit="return validateSubmitForm();">
 <s:hidden name="purchaseOrder" value="${pa.purchaseOrder}"/>
 <s:hidden name="previousPurchaseOrderStatus" value="${pa.purchaseOrder.purchaseOrderStatus}"/>
 <table>
@@ -261,21 +283,34 @@
 		</td>
 	</tr>
 	<tr>
-		<td>PO Date</td>
+		<td>For Warehouse</td>
 		<td>
-			<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseOrder.poDate"/></td>
-
+			<s:hidden name="purchaseOrder.warehouse" value="${pa.purchaseOrder.warehouse}" class="warehouse"/>
+				${pa.purchaseOrder.warehouse}
+		</td>
+		<td>Credit Days</td>
+		<td>
+				${pa.purchaseOrder.supplier.creditDays}
+		</td>
+		<td>Lead Time</td>
+		<td>
+			${pa.purchaseOrder.supplier.leadTime}
+		</td>
+	</tr>
+	<tr>
+		<td>Create Date</td>
+		<td><fmt:formatDate value="${pa.purchaseOrder.createDate}"/></td>
 		<td>PO Number</td>
 		<td><s:text name="purchaseOrder.poNumber"/></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td>Payable<br/>Adv. Payment</td>
+		<td>Payable<br/>Adv. Payment <em class="mandatory">*</em></td>
 		<td class="payable">
 			<fmt:formatNumber value="${actionBean.purchaseOrderDto.finalPayable}" type="currency" currencySymbol=" "
 			                  maxFractionDigits="0"/>
-			<br/> <s:text name="purchaseOrder.advPayment"/>
+			<br/> <s:text name="purchaseOrder.advPayment" class="advPayment"/>
 		</td>
 
 		<td>Payment Details<br/><span class="sml gry">(eg. Adv. Amount)</span></td>
@@ -288,7 +323,7 @@
 		<td>Status</td>
 		<td class="status">
 			<c:choose>
-				<c:when test="${pa.purchaseOrder.purchaseOrderStatus.id == poDeleted}">
+				<c:when test="${pa.purchaseOrder.purchaseOrderStatus.id == poCancelled}">
 					${pa.purchaseOrder.purchaseOrderStatus.name}
 				</c:when>
 				<c:otherwise>
@@ -324,21 +359,16 @@
 	<tr>
 		<td>Est. Delivery Date</td>
 		<td>
-			<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseOrder.estDelDate"/></td>
+			<fmt:formatDate value="${pa.purchaseOrder.estDelDate}"/></td>
 
-		<td>Est Payment Date</td>
+		<td>Est. Payment Date</td>
 		<td>
-			<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseOrder.estPaymentDate"/></td>
+			<fmt:formatDate value="${pa.purchaseOrder.estPaymentDate}"/></td>
 		<td></td>
 		<td></td>
 	</tr>
-	<tr>
-		<td>For Warehouse</td>
-		<td>
-			<s:hidden name="purchaseOrder.warehouse" value="${pa.purchaseOrder.warehouse}" class="warehouse"/>
-				${pa.purchaseOrder.warehouse}
-		</td>
-	</tr>
+	<tr><td colspan="6" style="text-align:right;"><em class="mandatory">*</em> marked fields are mandatory</td></tr>
+
 </table>
 
 <table border="1">
@@ -474,24 +504,21 @@
 	</tfoot>
 </table>
 <div class="variantDetails info"></div>
-<shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
+<shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
 
-	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poDeleted}">
+	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poApproved}">
 		<a href="editPurchaseOrder.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 	</c:if>
 
-	<%--<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id >= poApproved}">
+	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id == poApproved}">
 		<shiro:hasRole name="<%=RoleConstants.PO_APPROVER%>">
-			<a href="editPurchaseOrder.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 			<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 		</shiro:hasRole>
-	</c:if>--%>
-</shiro:hasAnyRoles>
-
-
+	</c:if>
+</shiro:hasPermission>
 </s:form>
-<shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
+<shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
 	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poApproved}">
 		<hr/>
 
@@ -510,7 +537,7 @@
 			</s:form>
 		</fieldset>
 	</c:if>
-</shiro:hasAnyRoles>
+</shiro:hasPermission>
 </s:layout-component>
 
 </s:layout-render>

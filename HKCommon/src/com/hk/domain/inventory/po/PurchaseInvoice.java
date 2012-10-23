@@ -54,6 +54,10 @@ public class PurchaseInvoice implements java.io.Serializable {
 	private String paymentDetails;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "est_payment_date")
+	private Date estPaymentDate;
+
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "payment_date")
 	private Date paymentDate;
 
@@ -166,6 +170,14 @@ public class PurchaseInvoice implements java.io.Serializable {
 
 	public void setPaymentDetails(String paymentDetails) {
 		this.paymentDetails = paymentDetails;
+	}
+
+	public Date getEstPaymentDate() {
+		return estPaymentDate;
+	}
+
+	public void setEstPaymentDate(Date estPaymentDate) {
+		this.estPaymentDate = estPaymentDate;
 	}
 
 	public Date getPaymentDate() {
