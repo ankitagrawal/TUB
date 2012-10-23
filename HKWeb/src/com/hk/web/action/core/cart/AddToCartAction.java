@@ -3,6 +3,7 @@ package com.hk.web.action.core.cart;
 
 import java.util.*;
 
+import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -56,6 +57,8 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 	OrderManager orderManager;
 	@Autowired
 	ComboInstanceDao comboInstanceDao;
+  @Autowired
+  CartLineItemDao cartLineItemDao;
 	@Autowired
 	ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 	@Autowired
@@ -111,45 +114,9 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 						}
 					}
 				}
-         //validation to check if product variant is adding on combo and vice versa
-        int x = 0;
-        Set<String> comboIds = new TreeSet<String>();
-        Set<CartLineItem> cartLineItems= order.getCartLineItems();
-        for(ProductVariant productVariant : productVariantList){
-          for(CartLineItem cartLineItem : cartLineItems){
-            if(combo!=null){
-              if(productVariant!=null && cartLineItem.getProductVariant()!=null && productVariant.equals(cartLineItem.getProductVariant()) && ((cartLineItem.getComboInstance()!=null && !cartLineItem.getComboInstance().getCombo().getId().equals(combo.getId()))||(cartLineItem.getComboInstance()==null))){
-                comboIds.add(combo.getId());
-                x = 1;
-              }
-            }
-            else{
-              if(productVariant!=null && cartLineItem.getProductVariant()!=null && productVariant.equals(cartLineItem.getProductVariant()) && cartLineItem.getComboInstance()!=null){
-                x = 2;
-              }
-            }
-          }
-        }
-        for(String comboId : comboIds){
-          for(CartLineItem cartLineItem : order.getCartLineItems()){
-            if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().getCombo().getId().equals(comboId)){
-              cartLineItem.setQty(0L);
-            }
-          }
-        }
-        if(x==1){
-          addValidationError("You can't add any combo whose product is already added in the cart", new SimpleError("You can't add any combo whose product is already added in the cart"));
-          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "You can't add any combo whose product is already added in the cart", new HashMap());
-          noCache();
-          return new JsonResolution(healthkartResponse);
-        }
-        else if (x==2){
-          addValidationError("You can't add any product whose combo is already added in the cart", new SimpleError("You can't add any product whose combo is already added in the cart"));
-          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "You can't add any product whose combo is already added in the cart", new HashMap());
-          noCache();
-          return new JsonResolution(healthkartResponse);
-        }
+
 				ComboInstance comboInstance = null;
+        Long comboInstanceValue = null;
 				if (combo != null) {
 					if (combo != null && combo.getId() != null) {
 						Long maxQty = 0L;
@@ -187,9 +154,57 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 					comboInstance = new ComboInstance();
 					comboInstance.setCombo(combo);
 					comboInstance = (ComboInstance) comboInstanceDao.save(comboInstance);
+          comboInstanceValue = comboInstance.getId();
 				}
 
-
+        //validation to check if product variant is adding on combo and vice versa and combo having atleast one common product variant
+        int x = 0;
+        Set<Long> comboInstanceIds = new TreeSet<Long>();
+        Set<CartLineItem> cartLineItems= order.getCartLineItems();
+        for(ProductVariant productVariant : productVariantList){
+          for(CartLineItem cartLineItem : cartLineItems){
+            if(combo!=null){
+              if(productVariant!=null && cartLineItem.getProductVariant()!=null && productVariant.equals(cartLineItem.getProductVariant())){
+                if((cartLineItem.getComboInstance()!=null && !cartLineItem.getComboInstance().getCombo().getId().equals(combo.getId()))||(cartLineItem.getComboInstance()==null)){
+                 comboInstanceIds.add(comboInstanceValue);
+                 x = 1;
+                }
+                else if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().getCombo().getId().equals(combo.getId())){
+                  for(ComboInstanceHasProductVariant comboInstanceHasProductVariant : cartLineItem.getComboInstance().getComboInstanceProductVariants()){
+                     if(!comboInstanceHasProductVariant.getProductVariant().equals(productVariant)) {
+                        comboInstanceIds.add(comboInstanceValue);
+                        x = 1;
+                    }
+                  }
+                }
+              }
+            }
+            else{
+              if(productVariant!=null && cartLineItem.getProductVariant()!=null && productVariant.equals(cartLineItem.getProductVariant()) && cartLineItem.getComboInstance()!=null){
+                x = 2;
+              }
+            }
+          }
+        }
+        for(Long comboInstanceId : comboInstanceIds){
+          for(CartLineItem cartLineItem : order.getCartLineItems()){
+            if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().equals(comboInstanceId)){
+              getCartLineItemDao().delete(cartLineItem);
+            }
+          }
+        }
+        if(x==1){
+          addValidationError("You can't add any combo whose product is already added in the cart", new SimpleError("You can't add any combo whose product is already added in the cart"));
+          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "You can't add any combo whose product is already added in the cart", new HashMap());
+          noCache();
+          return new JsonResolution(healthkartResponse);
+        }
+        else if (x==2){
+          addValidationError("You can't add any product whose combo is already added in the cart", new SimpleError("You can't add any product whose combo is already added in the cart"));
+          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "You can't add any product whose combo is already added in the cart", new HashMap());
+          noCache();
+          return new JsonResolution(healthkartResponse);
+        }
 				if (comboInstance != null) {
 					if (selectedProductVariants != null && selectedProductVariants.size() > 0) {
 						for (ProductVariant variant : selectedProductVariants) {
@@ -311,4 +326,8 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 	public void setProductReferrerId(Long productReferrerId) {
 		this.productReferrerId = productReferrerId;
 	}
+
+  public CartLineItemDao getCartLineItemDao() {
+    return cartLineItemDao;
+  }
 }

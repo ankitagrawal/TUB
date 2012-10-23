@@ -582,7 +582,7 @@ public class OrderManager {
       for(Long comboInstanceId : comboInstanceIds){
         for(CartLineItem cartLineItem : order.getCartLineItems()){
            if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().getId().equals(comboInstanceId)){
-                cartLineItem.setQty(0L);
+                getCartLineItemDao().delete(cartLineItem);
            }
         }
       }
