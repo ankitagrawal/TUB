@@ -9527,5 +9527,21 @@
 			update goods_received_note set grn_status_id=20 where grn_status_id=30;
 		</sql>
 	</changeSet>-->
-	
+
+    <changeSet author="AdminUser (generated)" id="1351008534081-1">
+        <addColumn tableName="base_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1351008534081-2">
+        <addColumn tableName="base_order">
+            <column name="target_dispatch_date_on_verify" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1351008534081-3">
+        <addColumn tableName="shipping_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>

@@ -70,6 +70,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ShippingOrderService       shippingOrderService;
+    
     @Autowired
     private BaseDao                    baseDao;
     @Autowired
@@ -155,29 +156,34 @@ public class OrderServiceImpl implements OrderService {
      */
     @Transactional
     @Override
-    public void setTargetDispatchDelDatesOnBO(Date refDateForBO, Order order) {
+    public void setTargetDispatchDelDatesOnBO(Order order) {
         Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
+        Date refDateForBO =  order.getPayment().getPaymentDate();
         Date refDateForSO = null;
 
         if (order.getTargetDispatchDate() == null) {
-            Date targetDispatchDate = OrderDateUtil.getTargetDispatchDateForWH(order.getPayment().getPaymentDate(), dispatchDays[0]);
+            Date targetDispatchDate = OrderDateUtil.getTargetDispatchDateForWH(refDateForBO, dispatchDays[0]);
             order.setTargetDispatchDate(targetDispatchDate);
+            order.setTargetDispatchDateOnVerification(targetDispatchDate);
             refDateForSO = order.getPayment().getPaymentDate();
         }
 
-        if (order.getTargetDelDate() == null) {
+        if (order.getTargetDelDate() == null && order.getTargetDispatchDate() !=null) {
             Long diffInPromisedTimes = (dispatchDays[1] - dispatchDays[0]);
             int daysTakenForDelievery = Integer.valueOf(diffInPromisedTimes.toString());
-            Date targetDelDate = HKDateUtil.addToDate(refDateForBO, Calendar.DAY_OF_MONTH, daysTakenForDelievery);
+            Date targetDelDate = HKDateUtil.addToDate(order.getTargetDispatchDate(), Calendar.DAY_OF_MONTH, daysTakenForDelievery);
             order.setTargetDelDate(targetDelDate);
         }
 
-        if (order.getTargetDispatchDateOnVerification() == null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
+        if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
             Date targetDispatchDateOnVerification = OrderDateUtil.getTargetDispatchDateForWH(new Date(), dispatchDays[0]);
             order.setTargetDispatchDateOnVerification(targetDispatchDateOnVerification);
             refDateForSO = new Date();
         }
 
+        /**
+         * if target dispatch date was updated either on payment or on verification of payment, the change needs to reflect to SO.
+         */
         if (refDateForSO != null) {
             for (ShippingOrder shippingOrder : order.getShippingOrders()) {
                 getShippingOrderService().setTargetDispatchDelDatesOnSO(refDateForSO, shippingOrder);
@@ -442,7 +448,7 @@ public class OrderServiceImpl implements OrderService {
                              * this additional call to save is done so that we have shipping order id to generate
                              * shipping order gateway id
                              */
-                            shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+                            shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
                             shippingOrder = shippingOrderService.save(shippingOrder);
                             shippingOrders.add(shippingOrder);
                         }
@@ -649,7 +655,7 @@ public class OrderServiceImpl implements OrderService {
         /**
          * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
          */
-        shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+        shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
         shippingOrder = getShippingOrderService().save(shippingOrder);
 
         return shippingOrder;

@@ -161,7 +161,7 @@ public class Order implements java.io.Serializable {
     private Date                      targetDelDate;
     
     @JsonSkip
-    @Column(name = "target_del_date", nullable = true)
+    @Column(name = "target_dispatch_date_on_verify", nullable = true)
     private Date                      targetDispatchDateOnVerification;
 
     @Column(name = "is_delivery_email_sent", nullable = false)

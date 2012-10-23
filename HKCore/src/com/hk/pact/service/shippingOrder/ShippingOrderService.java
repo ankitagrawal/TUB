@@ -62,6 +62,8 @@ public interface ShippingOrderService {
 
 	public void nullifyCodCharges(ShippingOrder shippingOrder);
 	
+	public ShippingOrder setGatewayIdAndTargetDateOnShippingOrder(ShippingOrder shippingOrder) ;
+	
 	public void setTargetDispatchDelDatesOnSO(Date refDate, ShippingOrder shippingOrder);
 
 

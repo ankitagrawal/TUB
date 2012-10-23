@@ -26,14 +26,7 @@ public class ShippingOrderHelper {
         return soBaseAmt;
     }
 
-    public static ShippingOrder setGatewayIdAndTargetDateOnShippingOrder(ShippingOrder shippingOrder) {
-        String shippingOrderGatewayId = TokenUtils.generateShippingOrderGatewayOrderId(shippingOrder);
-        shippingOrder.setGatewayOrderId(shippingOrderGatewayId);
-
-
-        return shippingOrder;
-    }
-
+    
     
     public static void updateAccountingOnSOLineItems(ShippingOrder shippingOrder, Order order) {
 

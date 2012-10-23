@@ -73,7 +73,7 @@ public interface OrderService {
 
     public boolean isShippingOrderExists (Order order);
     
-    public void setTargetDispatchDelDatesOnBO(Date refDate, Order order);
+    public void setTargetDispatchDelDatesOnBO(Order order);
 
 }
 
