@@ -57,8 +57,6 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 	OrderManager orderManager;
 	@Autowired
 	ComboInstanceDao comboInstanceDao;
-  @Autowired
-  CartLineItemDao cartLineItemDao;
 	@Autowired
 	ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 	@Autowired
@@ -170,10 +168,13 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 						}
 					}
 				}
+
          //validation to check if product variant is adding on combo and vice versa and combo having atleast one common product variant
-        int x = 0;
+        int x = 0,y = 0;
+        Boolean bool = true;
         Set<CartLineItem> cartLineItems= order.getCartLineItems();
         for(ProductVariant productVariant : productVariantList){
+          if(productVariant!=null && productVariant.getQty()>0L){
           for(CartLineItem cartLineItem : cartLineItems){
             if(combo!=null){
               if(productVariant!=null && cartLineItem.getProductVariant()!=null && productVariant.equals(cartLineItem.getProductVariant())){
@@ -181,14 +182,17 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
                  x = 1;
                 }
                 else if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().getCombo().getId().equals(combo.getId())){
-                  for(ComboInstanceHasProductVariant comboInstanceHasProductVariant : cartLineItem.getComboInstance().getComboInstanceProductVariants()){
-                     if(comboInstanceHasProductVariant.getProductVariant().equals(productVariant) && productVariant.getQty() != null && productVariant.getQty()>0L) {
-                        x = 0;
-                        break;
-                    }
-                    else
-                      x = 1; 
+                  y++;
+                  if(cartLineItem.getComboInstance().getComboInstanceProductVariants().size()==y){
+                    bool = false;
                   }
+
+//                  for(ComboInstanceHasProductVariant comboInstanceHasProductVariant : cartLineItem.getComboInstance().getComboInstanceProductVariants()){
+//                     if(comboInstanceHasProductVariant.getProductVariant().equals(productVariant)) {
+//                        x = 0;
+//                        break;
+//                    }
+//                  }
                 }
               }
             }
@@ -198,6 +202,10 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
               }
             }
           }
+        }
+       }
+        if(bool && x == 0 && y > 0){
+            x = 1;
         }
         if(x==1){
           addValidationError("You can't add any combo whose product is already added in the cart", new SimpleError("You can't add any combo whose product is already added in the cart"));
@@ -321,7 +329,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 		this.productReferrerId = productReferrerId;
 	}
 
-  public CartLineItemDao getCartLineItemDao() {
-    return cartLineItemDao;
+  public ComboInstanceDao getComboInstanceDao() {
+    return comboInstanceDao;
   }
 }
