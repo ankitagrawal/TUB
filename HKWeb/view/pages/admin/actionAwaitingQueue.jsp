@@ -13,6 +13,7 @@
 <%@ page import="com.hk.pact.dao.store.StoreDao" %>
 <%@ page import="com.hk.pact.service.store.StoreService" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -26,6 +27,7 @@
 <c:set var="paymentStatusOnDelivery" value="<%=EnumPaymentStatus.ON_DELIVERY.getId()%>"/>
 
 <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
+<c:set var="commentTypeOthers" value="<%=MasterDataDao.USER_COMMENT_TYPE_OTHERS_BASE_ORDER%>" />
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Action Awaiting Queue">
 <s:layout-component name="htmlHead">
@@ -125,7 +127,7 @@
 
                 return false;
             });
-            
+
             $('.cancelSO').click(function() {
                 var proceed = confirm('Are you sure you want to cancel shipping order?');
                 if (!proceed) return false;
@@ -535,11 +537,11 @@
                     </div>
                     </div>
                     <div class="clear"></div>
-                    <c:if test="${order.userComments != null}">
+                    <c:if test="${order.commentType == commentTypeOthers}">
                         <div id="userComments-${order.id}" class="detailDiv" style="margin-top:3px;">
-                            <div class="headingLabel">User Instructions:</div>
+	                        <div class="headingLabel">User Instructions:</div>
             <span style="word-wrap:break-word">
-                ${order.userComments}
+		            ${order.userComments}
             </span>
                         </div>
                     </c:if>
