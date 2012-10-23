@@ -143,12 +143,10 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 			<tr>
 				<td width="579" valign="top">
 					<#if shippingOrder.targetDispatchDate??>
-						<br><br>Due to the assortment of products in your current order, following items are expected to be
-						shipped on ${shippingOrder.targetDispatchDate?date} :
+						<br><br>Due to the assortment of products in your current order, following items will be shipped shortly.
 						<br>
 					<#else>
-						<br><br>Due to the assortment of products in your current order, following items are expected to be
-						shipped at a later date :
+						<br><br>Due to the assortment of products in your current order, following items will be shipped shortly.
 						<br>
 					</#if>
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
