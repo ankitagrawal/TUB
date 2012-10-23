@@ -21,9 +21,11 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
@@ -67,12 +69,16 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     private ShipmentPricingEngine shipmentPricingEngine;
     @Autowired
     AwbService awbService;
+    
+    @Autowired
+    CourierServiceInfoDao courierServiceInfoDao;
 
     private String trackingId;
     private String gatewayOrderId;
     Courier suggestedCourier;
     List<Courier> availableCouriers;
     Double approxWeight = 0D;
+    boolean isGroundShipped = false;
 
     Shipment shipment;
 
@@ -94,7 +100,12 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             getContext().getValidationErrors().add("3", new SimpleError("Pincode is invalid, It cannot be packed"));
         } else {
             boolean isCod = shippingOrder.isCOD();
-            availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+            
+//  groundShipping logic Starts---
+        isGroundShipped =  shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
+        availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
+//  ground shipping logic ends
+
             if (availableCouriers == null || availableCouriers.isEmpty()) {
                 getContext().getValidationErrors().add("4", new SimpleError("No Couriers are applicable on this pincode, Please contact logistics, Order cannot be packed"));
             }
@@ -134,12 +145,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
-                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+                isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
+                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
                 } else {
-                    suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod);
+                     suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);                    
                     //Todo: Seema ."reason=create  shipment with default Awb  " Action: default Tracking id= gateway_order_id: Might remove when we have all the awb in system
                     trackingId = shippingOrder.getGatewayOrderId();
                 }
@@ -169,40 +181,59 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         if ((suggestedAwb == null) || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
                 (suggestedCourier != null && (!(shipment.getCourier().equals(suggestedCourier))))) {
 
-            Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
-            if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
-                if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
-                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
-                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-                }
-                if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
-                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
-                            "  : " + shipment.getCourier().getName() + "  you are Trying to use COD tracking id with NON COD   TRY AGAIN "));
-                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
-                }
-
-                finalAwb = awbFromDb;
-                finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
-            } else {
-                Awb awb = new Awb();
-                awb.setAwbNumber(trackingId.trim());
-                awb.setAwbBarCode(trackingId.trim());
-                awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                awb.setCourier(shipment.getCourier());
-                awb.setCod(shippingOrder.isCOD());
-                awb.setWarehouse(shippingOrder.getWarehouse());
-                awb = awbService.save(awb);
-                finalAwb = awb;
-                finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());
+            if ((suggestedAwb != null) && (suggestedCourier != null) && (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId()))){
+                // To delete the tracking no. generated previously
+                awbService.deleteAwbForThirdPartyCourier(suggestedCourier, suggestedAwb.getAwbNumber());
             }
-            //Todo: Seema --  Awb which are detached from Shipment,their status should not change:Need to check if awb should be deleted or made free for reuse
-            /*if (suggestedAwb != null) {
-                suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                awbService.save(suggestedAwb);
-            }*/
 
+            if (ThirdPartyAwbService.integratedCouriers.contains(shipment.getCourier().getId())) {
+               Double weightInKg = shipment.getBoxWeight();
+               Awb thirdPartyAwb = awbService.getAwbForThirdPartyCourier(shipment.getCourier(), shippingOrder, weightInKg);
+               if (thirdPartyAwb == null) {
+                    addRedirectAlertMessage(new SimpleMessage(" The tracking number could not be generated"));
+                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+               } else {
+                   thirdPartyAwb = awbService.save(thirdPartyAwb);
+                   finalAwb = thirdPartyAwb;
+                   finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+               }
+            }           
+            else {
+                Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);
+                if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
+                    if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
+                        addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
+                        return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+                    }
+                    if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
+                        addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
+                                "  : " + shipment.getCourier().getName() + "  you are Trying to use COD tracking id with NON COD   TRY AGAIN "));
+                        return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+                    }
+
+                    finalAwb = awbFromDb;
+                    finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+                } else {
+                    //TODO:#change this all logic should be at one place in awbService
+                    Awb awb = new Awb();
+                    awb.setAwbNumber(trackingId.trim());
+                    awb.setAwbBarCode(trackingId.trim());
+                    awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+                    awb.setCourier(shipment.getCourier());
+                    awb.setCod(shippingOrder.isCOD());
+                    awb.setWarehouse(shippingOrder.getWarehouse());
+                    awb = awbService.save(awb);
+                    finalAwb = awb;
+                    finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());     //new awb taken according to trackingId manually entered, as DB has none
+                }
+                //Todo: Seema --  Awb which are detached from Shipment,their status should not change:Need to check if awb should be deleted or made free for reuse
+                /*if (suggestedAwb != null) {
+                    suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+                    awbService.save(suggestedAwb);
+                }*/
+            }
         } else {
-            finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+            finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());  //comes here when no change at all
         }
 
 
@@ -293,5 +324,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
     public void setTrackingId(String trackingId) {
         this.trackingId = trackingId;
+    }
+
+    public boolean isGroundShipped() {
+        return isGroundShipped;
+    }
+
+    public void setGroundShipped(boolean groundShipped) {
+        isGroundShipped = groundShipped;
     }
 }

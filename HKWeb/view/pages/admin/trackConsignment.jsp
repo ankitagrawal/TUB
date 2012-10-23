@@ -8,84 +8,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Healthkart Delivery">
 
     <s:layout-component name="htmlHead">
-        <script type="text/javascript">
-            $(document).ready(function() {
-
-
-                function stopRKey(evt) {
-                    var evt = (evt) ? evt : ((event) ? event : null);
-                    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-
-                    /*Checking if key pressed is enter then add another row in awbTable body.*/
-                    if ((evt.keyCode == 13) && (node.type == "text")) {
-
-                        /*function to add new row.*/
-                        /*getting last row index using its attribute count*/
-                        var lastIndex = $('.lastRow').attr('count');
-                        if (!lastIndex) {
-                            lastIndex = -1;
-                        }
-                        /* removing the 'class' attribute of <tr> .Earlier it was 'lastRow lineItemRow',now removing 'lastRow' from it,so that
-                         * its no more the last one.*/
-                        $('.lastRow').removeClass('lastRow');
-
-                        var nextIndex = eval(lastIndex + "+1");
-
-                        var newRowHtml =
-                                '<tr count="' + nextIndex + '" class="lastRow lineItemRow" id="awbTableTr' + nextIndex + '">' +
-                                '  <td>' +
-                                '    <input type="text" id="trackingIdList' + nextIndex + '" name="trackingIdList[' + nextIndex + ']"/>' +
-                                '  </td>' +
-                                '</tr>';
-
-                        /*appending the new row*/
-                        $('#awbTable').append(newRowHtml);
-                        var elmId = '#trackingIdList' + nextIndex;
-                        $(elmId).focus();
-                        return false;
-
-
-                    }
-                }
-
-                /*calling stopRKey on pressing any key.*/
-                document.onkeypress = stopRKey;
-
-
-                /*setting focus on first Awb Number text onbodyload*/
-                $('#trackingIdList0').focus();
-
-                /* reloading page on submitting it*/
-                $('.reloadLink').click(function() {
-                    location.reload();
-                    return false;
-
-                });
-
-
-                /*function to delete last row.*/
-                $('.removeRowButton').click(function() {
-
-                    /*Fetching last row index.*/
-                    var lastIndex = $('.lastRow').attr('count');
-
-                    /*checking if index is 0 then don't delete the row,else delete it.*/
-                    if (lastIndex == 0) {
-                        return false;
-                    } else {
-                        $('#awbTable tr:last').remove();
-                        /*After deleting the row,changing the class attribute from 'lineItemRow' to 'lastRow lineItemRow' to make it the last row. */
-                        var previousIndex = eval(lastIndex + "-1");
-                        var previousRow = "#awbTableTr" + previousIndex;
-                        $(previousRow).removeClass("lineItemRow").addClass("lastRow lineItemRow");
-                    }
-                    return false;
-                });
-
-            });
-
-        </script>
-
+        
         <style type="text/css">
 
             fieldset input[type="text"], input[type="text"] {
@@ -123,6 +46,8 @@
         </div>
         <c:if test="${!empty hkdBean.consignmentTrackingList}">
         <div id="consignmentTrackingData">
+	        <label style="font-size:medium; font-weight:bold;">Assignned to: </label>
+			${hkdBean.consignment.runsheet.agent.name}
           <table class="zebra_vert">
             <thead>
             <tr>
@@ -132,6 +57,7 @@
                 <th>Destination Hub</th>
                 <th>Date</th>
                 <th>Status</th>
+	            <th>Activity by user:</th>
             </tr>
             </thead>
             <c:forEach items="${hkdBean.consignmentTrackingList}" var="consignmentTrackingList" varStatus="ctr">
@@ -142,6 +68,7 @@
                     <td>${consignmentTrackingList.destinationHub.name}</td>
                     <td><fmt:formatDate value="${consignmentTrackingList.createDate}" type="both" timeStyle="short"/></td>
                     <td>${consignmentTrackingList.consignmentLifecycleStatus.status}</td>
+	                <td>${consignmentTrackingList.user.name}</td>
                 </tr>
             </c:forEach>
         </table>       

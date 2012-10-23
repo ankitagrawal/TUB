@@ -1,6 +1,7 @@
 <%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
@@ -94,6 +95,17 @@
 			<s:submit name="searchOrdersForPrinting" value="Search By Basket Category" style="font-size:0.9em"/>
 		</div>
 		<div align="center">
+		<label>Courier</label>
+            <s:select name="courier">
+              <s:option value="">All Couriers</s:option>
+              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
+                                         label="name"/>
+            </s:select>
+            <s:submit name="searchOrdersForPrinting" value="Search By Courier"
+			          style="font-size:0.9em"/>
+		
+		</div>
+		<div align="center">
 			SO Gateway Order Id:<s:text name="gatewayOrderId"/>
 			BO Gateway Order Id:<s:text name="baseGatewayOrderId"/>
 			<s:submit name="searchOrdersForPrinting" value="Search By Gateway OrderId"
@@ -121,7 +133,11 @@
 			<s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
 			                 shippingOrders="${printPickBean.shippingOrdersList}"/>
 			<s:hidden name="category" value="${printPickBean.category}"/>
+			<s:hidden name="baseGatewayOrderId" value="${printPickBean.baseGatewayOrderId}"/>
 			<s:hidden name="gatewayOrderId" value="${printPickBean.gatewayOrderId}"/>
+			<s:hidden name="courier" value="${printPickBean.courier}"/>
+			<s:hidden name="startDate" value="${printPickBean.startDate}"/>
+			<s:hidden name="endDate" value="${printPickBean.endDate}"/>
 			<div id="hiddenShippingIds"></div>
 			<%-- <div>
 					<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${printPickBean}"/>
@@ -134,6 +150,9 @@
 						<s:submit name="batchPrintOrders" class="batchPrinting" value=" Do Batch Printing"/>
 						<s:hidden name="baseGatewayOrderId" value="${printPickBean.baseGatewayOrderId}"/>
 						<s:hidden name="gatewayOrderId" value="${printPickBean.gatewayOrderId}"/>
+						<s:hidden name="courier" value="${printPickBean.courier}"/>
+						<s:hidden name="startDate" value="${printPickBean.startDate}"/>
+						<s:hidden name="endDate" value="${printPickBean.endDate}"/>
 					</div>
 				</c:if>
 				<c:if test="${printPickBean.shippingOrderStatus == statusForPicking}">
@@ -142,8 +161,11 @@
 						          value="Move orders to processing Queue"/>
 						<s:link beanclass="com.hk.web.action.admin.queue.JobCartAction" target="_blank" class="button_orange">
 							<s:param name="category" value="${printPickBean.category}"/>
-							<s:hidden name="baseGatewayOrderId" value="${printPickBean.baseGatewayOrderId}"/>
-							<s:hidden name="gatewayOrderId" value="${printPickBean.gatewayOrderId}"/>
+							<s:param name="courier" value="${printPickBean.courier}"/>
+							<s:param name="baseGatewayOrderId" value="${printPickBean.baseGatewayOrderId}"/>
+							<s:param name="gatewayOrderId" value="${printPickBean.gatewayOrderId}"/>
+							<s:param name="startDate" value="${printPickBean.startDate}"/>
+							<s:param name="endDate" value="${printPickBean.endDate}"/>
 							Print Job Card
 						</s:link>
 						<s:submit name="clearPickingQueue" value="Job Done - Clear Queue"/>

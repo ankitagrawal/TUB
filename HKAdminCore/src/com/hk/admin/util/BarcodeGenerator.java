@@ -61,7 +61,8 @@ public class BarcodeGenerator {
                 out.close();
             }
         } catch (IOException e) {
-            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+            logger.error("Error while generating/fetching barcode", e);
+            
         }
 
         return barcodeFilePath;
