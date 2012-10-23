@@ -156,25 +156,38 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 					comboInstance = (ComboInstance) comboInstanceDao.save(comboInstance);
           comboInstanceValue = comboInstance.getId();
 				}
-
-        //validation to check if product variant is adding on combo and vice versa and combo having atleast one common product variant
+        
+				if (comboInstance != null) {
+					if (selectedProductVariants != null && selectedProductVariants.size() > 0) {
+						for (ProductVariant variant : selectedProductVariants) {
+							ComboInstanceHasProductVariant comboInstanceProductVariant = new ComboInstanceHasProductVariant();
+							if (variant != null && variant.getQty() != null && variant.getQty() != 0) {
+								comboInstanceProductVariant.setComboInstance(comboInstance);
+								comboInstanceProductVariant.setProductVariant(variant);
+								comboInstanceProductVariant.setQty(variant.getQty());
+								comboInstanceProductVariant = (ComboInstanceHasProductVariant) comboInstanceHasProductVariantDao.save(comboInstanceProductVariant);
+							}
+						}
+					}
+				}
+         //validation to check if product variant is adding on combo and vice versa and combo having atleast one common product variant
         int x = 0;
-        Set<Long> comboInstanceIds = new TreeSet<Long>();
         Set<CartLineItem> cartLineItems= order.getCartLineItems();
         for(ProductVariant productVariant : productVariantList){
           for(CartLineItem cartLineItem : cartLineItems){
             if(combo!=null){
               if(productVariant!=null && cartLineItem.getProductVariant()!=null && productVariant.equals(cartLineItem.getProductVariant())){
                 if((cartLineItem.getComboInstance()!=null && !cartLineItem.getComboInstance().getCombo().getId().equals(combo.getId()))||(cartLineItem.getComboInstance()==null)){
-                 comboInstanceIds.add(comboInstanceValue);
                  x = 1;
                 }
                 else if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().getCombo().getId().equals(combo.getId())){
                   for(ComboInstanceHasProductVariant comboInstanceHasProductVariant : cartLineItem.getComboInstance().getComboInstanceProductVariants()){
-                     if(!comboInstanceHasProductVariant.getProductVariant().equals(productVariant)) {
-                        comboInstanceIds.add(comboInstanceValue);
-                        x = 1;
+                     if(comboInstanceHasProductVariant.getProductVariant().equals(productVariant)) {
+                        x = 0;
+                        break;
                     }
+                    else
+                      x = 1; 
                   }
                 }
               }
@@ -183,13 +196,6 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
               if(productVariant!=null && cartLineItem.getProductVariant()!=null && productVariant.equals(cartLineItem.getProductVariant()) && cartLineItem.getComboInstance()!=null){
                 x = 2;
               }
-            }
-          }
-        }
-        for(Long comboInstanceId : comboInstanceIds){
-          for(CartLineItem cartLineItem : order.getCartLineItems()){
-            if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().equals(comboInstanceId)){
-              getCartLineItemDao().delete(cartLineItem);
             }
           }
         }
@@ -205,19 +211,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
           noCache();
           return new JsonResolution(healthkartResponse);
         }
-				if (comboInstance != null) {
-					if (selectedProductVariants != null && selectedProductVariants.size() > 0) {
-						for (ProductVariant variant : selectedProductVariants) {
-							ComboInstanceHasProductVariant comboInstanceProductVariant = new ComboInstanceHasProductVariant();
-							if (variant != null && variant.getQty() != null && variant.getQty() != 0) {
-								comboInstanceProductVariant.setComboInstance(comboInstance);
-								comboInstanceProductVariant.setProductVariant(variant);
-								comboInstanceProductVariant.setQty(variant.getQty());
-								comboInstanceProductVariant = (ComboInstanceHasProductVariant) comboInstanceHasProductVariantDao.save(comboInstanceProductVariant);
-							}
-						}
-					}
-				}
+        
 				if (productReferrerId != null) {
 					productReferrer = userCartDao.get(ProductReferrer.class, productReferrerId);
 				}
