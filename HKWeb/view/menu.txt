@@ -22,7 +22,7 @@
 --/nutrition/dietary-supplements/all-minerals           :All Minerals
 --/nutrition/dietary-supplements/anti-oxidant            : Anti-Oxidant
 --/nutrition/dietary-supplements/fishoil-omegas   :Fishoil & Omegas
---/nutrition/dietary-supplements/hair-skin-nails  :Hair Skin & Nails
+--/nutrition/dietary-supplements/hair-skin-nails  :Hair,Skin & Nails
 --/nutrition/dietary-supplements/bones             :Bones
 --/nutrition/dietary-supplements/eye               :Eye
 --/nutrition/dietary-supplements/herbal-cleanser :Herbal Cleanser
@@ -110,6 +110,7 @@
 ---/nutrition/fitness-accessories/support-gear/elbow
 ---/nutrition/fitness-accessories/support-gear/thighs
 ---/nutrition/fitness-accessories/support-gear/ankle
+--/nutrition/fitness-accessories/rehabilitation-supports
 --/nutrition/fitness-accessories/combos
 --/nutrition/fitness-accessories/miscellaneous-accessories
 --/nutrition/fitness-accessories/sklz : SKLZ
@@ -139,6 +140,7 @@
 ---/sports/fitness-accessories/support-gear/elbow
 ---/sports/fitness-accessories/support-gear/thighs
 ---/sports/fitness-accessories/support-gear/ankle
+--/sports/fitness-accessories/rehabilitation-supports
 --/sports/fitness-accessories/combos
 --/sports/fitness-accessories/miscellaneous-accessories
 --/sports/fitness-accessories/sklz : SKLZ
@@ -199,6 +201,8 @@
 --/sports/sports-equipment/squash
 ---/sports/sports-equipment/squash/rackets
 ---/sports/sports-equipment/squash/balls
+---/sports/sports-equipment/squash/strings
+---/sports/sports-equipment/squash/accessories
 --/sports/sports-equipment/boxing
 ---/sports/sports-equipment/boxing/punching-bags
 ---/sports/sports-equipment/boxing/gloves
@@ -266,16 +270,15 @@
 --/home-devices/blood-pressure/bp-monitor : BP Monitors
 ---/home-devices/blood-pressure/bp-monitor/arm-bp-monitor
 ---/home-devices/blood-pressure/bp-monitor/wrist-bp-monitor
---/home-devices/blood-pressure/heart-rate-monitor
+--/home-devices/blood-pressure/heart-rate-monitor : Heart Rate Monitors
 --/home-devices/blood-pressure/bp : BP Apparatus
 ---/home-devices/blood-pressure/bp/aneroid-sphygmomanometer
 ---/home-devices/blood-pressure/bp/clock-type-sphygmomanometer
 ---/home-devices/blood-pressure/bp/mercury-sphygmomanometer
 ---/home-devices/blood-pressure/bp/mercury-free-sphygmomanometer
 ---/home-devices/blood-pressure/bp/electrical-sphygmomanometer
---/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
---/home-devices/blood-pressure/combo : Stars of the Month
+--/home-devices/blood-pressure/combo : Combos
 -/home-devices/respiratory-care
 --/home-devices/respiratory-care/nebulizer
 ---/home-devices/respiratory-care/nebulizer/compressor-nebulizer
@@ -318,11 +321,6 @@
 --/home-devices/rehabilitation-aids/orthotic-aids
 ---/home-devices/rehabilitation-aids/orthotic-aids/knee
 ---/home-devices/rehabilitation-aids/orthotic-aids/foot-drop-splints
---/home-devices/rehabilitation-aids/cosmetic-restoration
----/home-devices/rehabilitation-aids/cosmetic-restoration/face
----/home-devices/rehabilitation-aids/cosmetic-restoration/breast
----/home-devices/rehabilitation-aids/cosmetic-restoration/hand
----/home-devices/rehabilitation-aids/cosmetic-restoration/foot
 --/home-devices/rehabilitation-aids/traction-kits
 --/home-devices/rehabilitation-aids/bandages
 ---/home-devices/rehabilitation-aids/bandages/crepe-bandages
@@ -368,7 +366,6 @@
 --/home-devices/clinical-supplies/suction-devices
 --/home-devices/clinical-supplies/health-aids
 -/home-devices/miscellaneous
---/home-devices/miscellaneous/weighing-scales
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
 ---/home-devices/miscellaneous/flexible-tip
 ---/home-devices/miscellaneous/rigid-tip

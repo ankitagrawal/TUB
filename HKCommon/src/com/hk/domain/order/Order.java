@@ -159,6 +159,9 @@ public class Order implements java.io.Serializable {
     @Column(name = "is_delivery_email_sent", nullable = false)
     private Boolean                   deliveryEmailSent = false;
 
+	@Column(name = "comment_type")
+	private Long                      commentType;
+
     public boolean isPriorityOrder() {
         if (this.score != null) {
             return (this.score >= CLMConstants.thresholdScore);
@@ -539,4 +542,12 @@ public class Order implements java.io.Serializable {
     public Boolean isDeliveryEmailSent() {
         return deliveryEmailSent;
     }
+
+	public Long getCommentType() {
+		return commentType;
+	}
+
+	public void setCommentType(Long commentType) {
+		this.commentType = commentType;
+	}
 }
