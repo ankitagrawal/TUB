@@ -5,6 +5,8 @@ import com.hk.constants.catalog.SolrSchemaConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
+import com.hk.constants.marketing.EnumProductReferrer;
+import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
@@ -320,7 +322,7 @@ public class MCatalogAction extends MBaseAction {
 			catalogResponse = new MCatalogJSONResponse();
 			catalogResponse = populateCatalogResponse(product, catalogResponse);
 			catalogResponse.setCurrentCategory(secondaryCat);
-			product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+			product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_CATALOG)));
 			catalogResponse.setProductURL(product.getProductURL());
 
 			catalogList.add(catalogResponse);
