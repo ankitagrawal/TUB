@@ -169,7 +169,7 @@
                     return false;
                 }
 		        if(!phoneRegEx.test(phone)){
-			   //     alert("Please enter a valid phone number (10 or 11 digits).")
+			        alert("Please enter a valid phone number.");
 			        return false;
 		        }
 	        });

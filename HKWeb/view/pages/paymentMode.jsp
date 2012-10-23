@@ -417,11 +417,11 @@
 		        var phone = $('#phoneNo').val();
 		        var phoneRegEx = /^((\+91)?[0-9]{10,13}?)$/;
 		        if(!phoneRegEx.test(phone)){
-			        alert("Please enter a valid phone number (10 or 11 digits.")
+			        alert("Please enter a valid phone number.");
 			        return false;
 		        }
 		        else{
-			        $(this).css("display", "none")
+			        $(this).css("display", "none");
 		        }
 	        });
     });
