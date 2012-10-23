@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="approved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
-<c:set var="cancelled" value="<%=EnumPurchaseOrderStatus.Cancelled.getId()%>"/>
+<c:set var="sentToSupplier" value="<%=EnumPurchaseOrderStatus.SentToSupplier.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
  <%
     WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
@@ -81,8 +81,9 @@
         <th>Warehouse</th>
         <th>Status</th>
         <th>Last Update Date</th>
-          <%--<th>Reconciled</th>--%>
+        <th>Adv Payment</th>
         <th>Payable</th>
+        <th>Est Payment Date</th>
         <th>Payment Details</th>
         <th>GRNs</th>
         <th>Actions</th>
@@ -93,7 +94,7 @@
           <td>${purchaseOrder.id}</td>
           <td><fmt:formatDate value="${purchaseOrder.createDate}" type="both" timeStyle="short"/></td>
           <td>${purchaseOrder.createdBy.name}</td>
-            <td>${purchaseOrder.noOfSku}
+            <td>${purchaseOrder.noOfSku}                                             
             </td>
           <td>${purchaseOrder.approvedBy.name}</td>
           <td>${purchaseOrder.supplier.name}</td>
@@ -101,8 +102,11 @@
           <td>${purchaseOrder.warehouse.city}</td>
           <td>${purchaseOrder.purchaseOrderStatus.name}</td>
           <td><fmt:formatDate value="${purchaseOrder.updateDate}" type="both" timeStyle="short"/></td>
+	      <td>
+            <fmt:formatNumber value="${purchaseOrder.advPayment}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td>
-            <fmt:formatNumber value="${purchaseOrder.finalPayableAmount}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
+            <fmt:formatNumber value="${purchaseOrder.finalPayableAmount - purchaseOrder.advPayment}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
+	      <td><fmt:formatDate value="${purchaseOrder.estPaymentDate}" pattern="yyyy-MM-dd"/></td>
           <td>
             ${purchaseOrder.paymentDetails}
             <br />
@@ -119,23 +123,24 @@
               &nbsp;
             </c:forEach>
           </td>
-          <td>
-            <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">Edit
-              <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
-            &nbsp;
-            <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="print" target="_blank">Print
-              <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
-            &nbsp;
-            <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInExcel" target="_blank">Excel
-              <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
-              <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInPdf" target="_blank">PDF
-                            <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
-            <c:if test="${(purchaseOrder.purchaseOrderStatus.id >= approved) && (purchaseOrder.purchaseOrderStatus.id < cancelled)}">
-                <br/>
-                <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
-                  <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
-            </c:if>
-          </td>
+	        <td>
+		        <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">Edit/View
+			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
+		        &nbsp;
+		        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInExcel" target="_blank">Excel
+			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
+		        &nbsp;
+		        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="print" target="_blank">Print
+			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
+		        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInPdf" target="_blank">PDF
+			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
+		        &nbsp;
+		        <c:if test="${(purchaseOrder.purchaseOrderStatus.id == sentToSupplier)}">
+			        <br/>
+			        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
+				        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
+		        </c:if>
+	        </td>
         </tr>
       </c:forEach>
     </table>
