@@ -417,7 +417,7 @@
 		        var phone = $('#phoneNo').val();
 		        var phoneRegEx = /^((\+91)?[0-9]{10,13}?)$/;
 		        if(!phoneRegEx.test(phone)){
-			        alert("Please enter a valid phone number.");
+			        alert("Please enter a valid phone number (+91xxxxxxxxxx).");
 			        return false;
 		        }
 		        else{
