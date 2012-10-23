@@ -116,17 +116,18 @@
                         <td>
                             <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusDelivrd
                             || replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusShipped}">
-                                <s:link href="#" id="is-replacement-radio">
+                                <a href="#" id="is-replacement-radio">
                                     <h5>Create RO<br />for replacement</h5>
-                                </s:link>
+                                </a>
                             </c:if>
                         </td>
                         <td>
+	                   
                             <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusRTO_instantiated
                             || replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusSO_returned}">
-                                <s:link href="#" id="is-rto-radio">
+                                <a href="#" id="is-rto-radio">
                                     <h5>Create RO<br />for Returned Goods</h5>
-                                </s:link>
+                                </a>
                             </c:if>
                         </td>
                     </tr>
