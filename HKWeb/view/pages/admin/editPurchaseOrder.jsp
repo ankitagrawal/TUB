@@ -328,7 +328,13 @@
 					${pa.purchaseOrder.purchaseOrderStatus.name}
 				</c:when>
 				<c:otherwise>
-					<shiro:hasRole name="<%=RoleConstants.PO_APPROVER%>">
+					<s:select name="purchaseOrder.purchaseOrderStatus"
+					          value="${pa.purchaseOrder.purchaseOrderStatus.id}">
+						<hk:master-data-collection service="<%=MasterDataDao.class%>"
+						                           serviceProperty="purchaseOrderStatusList"
+						                           value="id" label="name"/>
+					</s:select>
+					<%--<shiro:hasRole name="<%=RoleConstants.PO_APPROVER%>">
 						<s:select name="purchaseOrder.purchaseOrderStatus"
 						          value="${pa.purchaseOrder.purchaseOrderStatus.id}">
 							<hk:master-data-collection service="<%=MasterDataDao.class%>"
@@ -343,7 +349,7 @@
 							                           serviceProperty="purchaseOrderStatusListForNonApprover"
 							                           value="id" label="name"/>
 						</s:select>
-					</shiro:lacksRole>
+					</shiro:lacksRole>--%>
 				</c:otherwise>
 			</c:choose>
 		</td>

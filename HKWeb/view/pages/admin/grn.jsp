@@ -293,6 +293,7 @@
 		<th>Tax<br/>Category</th>
 		<th>Asked Qty</th>
 		<th>Received Qty<br/>(Adjust -)</th>
+		<th>Checkedin Qty</th>
 		<th>Cost Price<br/>(Without TAX)</th>
 		<th>MRP</th>
 		<th>Discount<br/>(%)</th>
@@ -384,6 +385,9 @@
 		<td>
 			<s:text name="grnLineItems[${ctr.index}].qty" value="${grnLineItemDto.grnLineItem.qty}"
 			        class="receivedQuantity valueChange"/>
+		</td>
+		<td>
+			${grnLineItemDto.grnLineItem.checkedInQty}
 		</td>
 		<td>
 			<s:text name="grnLineItems[${ctr.index}].costPrice" value="${grnLineItemDto.grnLineItem.costPrice}"

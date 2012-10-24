@@ -178,13 +178,17 @@
 		        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="print" target="_blank">Print
 			        <s:param name="grn" value="${grn.id}"/></s:link>
 		        <br/>
-		        <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="pre">
-			        Inv.Checkin
-			        <s:param name="grn" value="${grn.id}"/></s:link>
-		        <br/>
-		        <s:link beanclass="com.hk.web.action.admin.queue.JobCartAction" event="putList">
-			        Put List
-			        <s:param name="grn" value="${grn.id}"/></s:link>
+		        <c:if test="${grn.grnStatus.id < inventoryCheckedIn}">
+			        <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="pre">
+				        Inv.Checkin
+				        <s:param name="grn" value="${grn.id}"/></s:link>
+			        <br/>
+		        </c:if>
+		        <c:if test="${grn.grnStatus.id == checkinInProcess || grn.grnStatus.id == inventoryCheckedIn}">
+			        <s:link beanclass="com.hk.web.action.admin.queue.JobCartAction" event="putList">
+				        Put List
+				        <s:param name="grn" value="${grn.id}"/></s:link>
+		        </c:if>
 	        </td>
 	        <td>
             <s:checkbox name="grnListForPurchaseInvoice[]" value="${grn.id}" class="purchaseLineItemCheckBox"/>
