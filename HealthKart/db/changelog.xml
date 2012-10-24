@@ -9487,7 +9487,7 @@
             <column name="approval_date" type="DATETIME"/>
         </addColumn>
     </changeSet>
-    <!--<changeSet author="Ajeet (generated)" id="1350715789183-8">
+    <changeSet author="Ajeet (generated)" id="1350715789183-8">
         <dropColumn columnName="payment_amount" tableName="goods_received_note"/>
     </changeSet>
     <changeSet author="Ajeet (generated)" id="1350715789183-9">
@@ -9507,7 +9507,7 @@
     </changeSet>
     <changeSet author="Ajeet (generated)" id="1350715789183-14">
         <dropColumn columnName="po_date" tableName="purchase_order"/>
-    </changeSet>-->
+    </changeSet>
 
 	<changeSet author="Ajeet (written)" id="20121020-01">
 		<sql>
@@ -9516,16 +9516,10 @@
 			update purchase_order set po_place_date=update_dt;
 		</sql>
 	</changeSet>
-	<!--<changeSet author="Ajeet (written)" id="20121020-02">
+	<changeSet author="Ajeet (written)" id="20121020-02">
 		<sql>
 			delete from grn_status where id in (25, 40);
 		</sql>
-	</changeSet>-->
-
-	<!--<changeSet author="Ajeet (written)" id="20121020-03">
-		<sql>
-			update goods_received_note set grn_status_id=20 where grn_status_id=30;
-		</sql>
-	</changeSet>-->
+	</changeSet>
 	
 </databaseChangeLog>

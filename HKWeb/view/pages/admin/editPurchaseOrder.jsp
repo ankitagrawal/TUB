@@ -59,7 +59,7 @@
 							'<td><input type="text" class="taxCategory" readonly="readonly" name="poLineItems[' + nextIndex + '].taxCategory"/></td>' +
 							'<td></td>' +
 							'<td></td>' +
-							'<td></td>' +
+							'<td class="last30DaysSales"></td>' +
 							'  <td>' +
 							'    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity valueChange" />' +
 							'  </td>' +
@@ -174,6 +174,7 @@
 							variantRow.find('.mrp').val(res.data.variant.markedPrice);
 							variantRow.find('.costPrice').val(res.data.variant.costPrice);
 							variantRow.find('.taxCategory').val(res.data.tax);
+							variantRow.find('.last30DaysSales').html(res.data.last30DaysSales);
 							productVariantDetails.html(
 									res.data.product + '<br/>' +
 											res.data.options
@@ -203,7 +204,7 @@
 		if (${actionBean.purchaseOrder.supplier.creditDays < 0}) {
 			var advPayment = $('.advPayment').val();
 			if (advPayment == "" || isNaN(advPayment)) {
-				alert("Please enter a valid adv payment as credit days are Zero");
+				alert("Please enter a valid adv payment as credit days is negative (i.e. No Credit)");
 				returnFalse = true;
 				return false;
 			}
@@ -453,7 +454,7 @@
 					${hk:findInventorySoldInGivenNoOfDays(sku, 30)}
 			</td>
 			<td>
-				<s:text name="poLineItems[${ctr.index}].qty" value="${poLineItemDto.poLineItem.qty}" class="quantity valueChange"/>
+				<s:text name="poLineItems[${ctr.index}].qty" value="${poLineItemDto.poLineItem.qty}" class="quantity valueChange" readonly="${actionBean.purchaseOrder.purchaseOrderStatus.id >= poApproved ? 'readonly' : ''}"/>
 			</td>
 			<td>
 				<s:text class="costPrice valueChange" name="poLineItems[${ctr.index}].costPrice"
@@ -508,13 +509,11 @@
 
 	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poApproved}">
 		<a href="editPurchaseOrder.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
-		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+		<br/>
 	</c:if>
 
-	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id == poApproved}">
-		<shiro:hasRole name="<%=RoleConstants.PO_APPROVER%>">
+	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poPlaced}">
 			<s:submit name="save" value="Save" class="requiredFieldValidator"/>
-		</shiro:hasRole>
 	</c:if>
 </shiro:hasPermission>
 </s:form>
