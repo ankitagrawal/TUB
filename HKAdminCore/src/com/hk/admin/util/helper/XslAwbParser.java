@@ -2,11 +2,7 @@ package com.hk.admin.util.helper;
 
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -67,7 +63,7 @@ public class XslAwbParser {
                 Awb awb = new Awb();
                 if (StringUtils.isEmpty(courierId)) {
 
-                    if ((awbNumber == null || StringUtils.isEmpty(awbNumber)) && (cod == null || cod.isEmpty()) && (warehouse == null || warehouse.isEmpty())) {
+                    if ((awbNumber == null || StringUtils.isEmpty(awbNumber)) && (cod == null || cod.isEmpty()) && (warehouse == null || warehouse.isEmpty()) ) {
                         if (awbList.size() > 0) {
                             return awbList;
                         }
@@ -88,7 +84,7 @@ public class XslAwbParser {
                 awb.setCourier(courier);
                 if (StringUtils.isEmpty(awbNumber)) {
                     logger.error("awbNumber cannot be null/empty");
-                    throw new ExcelBlankFieldException("awbNumber cannot be empty " + "    ", rowCount);
+                    throw new ExcelBlankFieldException("awbNumber cannot be empty " + "    ", rowCount);                         
                 }
                 if (courierWithAllAwbsInExcel.containsKey(courier)) {
                     awbNumber = awbNumber.trim();
@@ -125,9 +121,10 @@ public class XslAwbParser {
                 } else if (XslUtil.getLong(cod).equals(0l)) {
                     awb.setCod(false);
                 }
+	             if ((StringUtils.isEmpty(cod))) {
+                    throw new ExcelBlankFieldException("DELETE cannot be empty " + "    ", rowCount);
+                }
                 awbList.add(awb);
-
-
             }
 
 

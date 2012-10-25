@@ -41,7 +41,7 @@ public class Awb implements java.io.Serializable {
     private String    awbBarCode;
 
     @Column(name = "cod", nullable = false)
-    private boolean   cod;
+    private Boolean   cod;
 
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
@@ -51,9 +51,11 @@ public class Awb implements java.io.Serializable {
     @Column(name = "returnAwb_number", nullable = true, length = 70)
     private String returnAwbNumber;
 
-
     @Column(name = "returnAwb_bar_code", nullable = true, length = 70)
     private String returnAwbBarCode;
+
+//   @Column(name = "deleted")
+//    private boolean   deleted;
 
     public Long getId() {
         return this.id;
@@ -103,15 +105,15 @@ public class Awb implements java.io.Serializable {
         this.awbBarCode = awbBarCode;
     }
 
-    public boolean getCod() {
-        return this.cod;
-    }
+	public Boolean getCod() {
+		return cod;
+	}
 
-    public void setCod(boolean cod) {
-        this.cod = cod;
-    }
+	public void setCod(Boolean cod) {
+		this.cod = cod;
+	}
 
-    public String getReturnAwbNumber() {
+	public String getReturnAwbNumber() {
         return returnAwbNumber;
     }
 
@@ -140,11 +142,15 @@ public class Awb implements java.io.Serializable {
 		if (this.id != null && awb.getId() != null) {
 			return this.id.equals(awb.getId());
 		} else {
-			if (this.awbNumber == null || awb.getAwbNumber() == null || this.courier == null || awb.getCourier() == null)
+			if (awb.getAwbNumber() == null || awb.getWarehouse() == null || awb.getCourier() == null
+					|| this.getAwbNumber() == null || this.getWarehouse() == null || this.getCourier() == null) {
 				return false;
+			}
 			EqualsBuilder equalsBuilder = new EqualsBuilder();
-			equalsBuilder.append(this.awbNumber, awb.getAwbNumber());
-			equalsBuilder.append(this.courier, awb.getCourier());
+			equalsBuilder.append(awb.getAwbNumber(), this.getAwbNumber());
+			equalsBuilder.append(awb.getCourier(), this.getCourier());
+			equalsBuilder.append(awb.getWarehouse(), this.getWarehouse());
+			equalsBuilder.append(awb.getCod(), this.getCod());
 			return equalsBuilder.isEquals();
 		}
 
@@ -163,4 +169,11 @@ public class Awb implements java.io.Serializable {
         this.createDate = createDate;
     }
 
+//	public boolean isDeleted() {
+//		return deleted;
+//	}
+//
+//	public void setDeleted(boolean deleted) {
+//		this.deleted = deleted;
+//	}
 }
