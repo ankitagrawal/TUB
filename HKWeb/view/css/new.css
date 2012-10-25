@@ -5453,3 +5453,8 @@ td.top {
     cursor: default;
     background-position: 0 -96px;
 }
+
+.mandatory{
+	color:red;
+	font-weight:bold;
+}

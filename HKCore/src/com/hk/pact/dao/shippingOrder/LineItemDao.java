@@ -19,6 +19,8 @@ public interface LineItemDao extends BaseDao {
 
     public void flipProductVariants(Sku srcSKu, Sku dstSku, ShippingOrder shippingOrder);
 
+	public LineItem getMatchingLineItemForDuplicateShippingOrder(LineItem lineItem, ShippingOrder originalShippingOrder);
+
     public List<String> getLineItemListShippedByCourier(Date startDate, Date endDate, Long courier_id);
 
     @Deprecated

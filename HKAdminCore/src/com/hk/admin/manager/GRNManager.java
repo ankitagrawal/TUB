@@ -113,7 +113,7 @@ public class GRNManager {
         for (GoodsReceivedNote grn : grnList) {
             String poDetail = "";
             poDetail += ID + grn.getId() + " " + CREATED_DATE + dateFormat.format(grn.getGrnDate()) + " ";
-            poDetail += CREATED_BY + grn.getPurchaseOrder().getCreatedBy().getName() + " " + PO_DATE + dateFormat.format(grn.getPurchaseOrder().getPoDate()) + " ";
+            poDetail += CREATED_BY + grn.getPurchaseOrder().getCreatedBy().getName() + " " + PO_DATE + dateFormat.format(grn.getPurchaseOrder().getPoPlaceDate()) + " ";
             poDetail += SUPPLIER + grn.getPurchaseOrder().getSupplier().getName() + " " + STATUS + grn.getGrnStatus().getName();
             rowCounter++;
             row1 = sheet1.createRow(rowCounter);
