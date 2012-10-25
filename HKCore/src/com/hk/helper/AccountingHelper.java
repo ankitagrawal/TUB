@@ -64,7 +64,7 @@ public class AccountingHelper {
 			double orderLevelDiscount = getOrderLevelDiscOnCartLI(baseOrder.getCartLineItems(), productCartLineItem.getProductVariant(), productCartLineItem.getCartLineItemConfig());
 
 			baseAmountOnBaseOrder = baseAmountOnBaseOrder + (productCartLineItem.getHkPrice() * productCartLineItem.getQty()) -
-					(productCartLineItem.getDiscountOnHkPrice() * productCartLineItem.getQty()) -
+					productCartLineItem.getDiscountOnHkPrice() -
 					orderLevelDiscount;
 		}
 
