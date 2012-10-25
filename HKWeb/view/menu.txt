@@ -201,6 +201,8 @@
 --/sports/sports-equipment/squash
 ---/sports/sports-equipment/squash/rackets
 ---/sports/sports-equipment/squash/balls
+---/sports/sports-equipment/squash/strings
+---/sports/sports-equipment/squash/accessories
 --/sports/sports-equipment/boxing
 ---/sports/sports-equipment/boxing/punching-bags
 ---/sports/sports-equipment/boxing/gloves
@@ -235,33 +237,31 @@
 --/sports/footwear/accessories
 
 /diabetes
--/diabetes/what-s-new : What's New
---/diabetes/what-s-new/daily-deals :Daily Deals
---/diabetes/what-s-new/top-deals  :Top Deals
---/diabetes/what-s-new/just-in  :Just In
---/diabetes/what-s-new/diabetes-checkups :Diabetes Checkups
---/diabetes/what-s-new/diabetes-management :Diabetes Management
+-/diabetes/devices : Monitoring Devices
+--/diabetes/devices/meters : Glucose Meters
+--/diabetes/devices/bp-monitor : BP Monitors
+--/diabetes/devices/body-fat-monitor: Body Fat Monitors
+--/diabetes/devices/step-counter: Step Counters
 -/diabetes/testing-supplies
 --/diabetes/testing-supplies/strips
---/diabetes/testing-supplies/meters
 --/diabetes/testing-supplies/lancets
 --/diabetes/testing-supplies/lancing-devices
 --/diabetes/testing-supplies/insulin-supplies
---/diabetes/testing-supplies/accessories
---/diabetes/testing-supplies/combos
 -/diabetes/diabetic-food
---/diabetes/diabetic-food/sweetener
+--/diabetes/diabetic-food/sweetener : Sweetners
 --/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
---/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food & Candy
+--/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food
 --/diabetes/diabetic-food/diabetic-supplements
---/diabetes/diabetic-food/combos
--/diabetes/devices
---/diabetes/devices/step-counter: Step Counter
---/diabetes/devices/body-fat-monitor: Body Fat Monitor
---/diabetes/devices/bp-monitor : BP Monitor
 -/diabetes/foot-care
---/diabetes/foot-care/foot-care-products : Foot Care Products
---/diabetes/foot-care/foot-wear
+--/diabetes/foot-care/insoles-and-heelcups : Insoles & Heel Cups
+--/diabetes/foot-care/sock-and-slippers : Socks & Slippers
+--/diabetes/foot-care/neat-and-fresh-feet : Neat & Fresh Feet
+--/diabetes/foot-care/guards-and-supports : Guards & Supports
+-/diabetes/what-s-new : What's New
+--/diabetes/what-s-new/just-in  :Just In
+--/diabetes/what-s-new/combos
+--/diabetes/what-s-new/diabetes-checkups : Diabetes Checkups
+--/diabetes/what-s-new/diabetes-management : Diabetes Management
 
 /home-devices
 -/home-devices/blood-pressure

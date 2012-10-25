@@ -64,7 +64,7 @@ public class Order implements java.io.Serializable {
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_dt", nullable = false, length = 19)
-    private Date                      createDate = new Date();
+    private Date                      createDate        = new Date();
 
     /*
      * @JsonSkip @Temporal(TemporalType.TIMESTAMP) @Column(name = "update_date", nullable = false, length = 19) private
@@ -156,8 +156,19 @@ public class Order implements java.io.Serializable {
     @Column(name = "target_dispatch_date", nullable = true)
     private Date                      targetDispatchDate;
 
+    @JsonSkip
+    @Column(name = "target_del_date", nullable = true)
+    private Date                      targetDelDate;
+    
+    @JsonSkip
+    @Column(name = "target_dispatch_date_on_verify", nullable = true)
+    private Date                      targetDispatchDateOnVerification;
+
     @Column(name = "is_delivery_email_sent", nullable = false)
     private Boolean                   deliveryEmailSent = false;
+
+    @Column(name = "comment_type")
+    private Long                      commentType;
 
     public boolean isPriorityOrder() {
         if (this.score != null) {
@@ -539,4 +550,31 @@ public class Order implements java.io.Serializable {
     public Boolean isDeliveryEmailSent() {
         return deliveryEmailSent;
     }
+
+    public Long getCommentType() {
+        return commentType;
+    }
+
+    public void setCommentType(Long commentType) {
+        this.commentType = commentType;
+    }
+
+    public Date getTargetDelDate() {
+        return targetDelDate;
+    }
+
+    public void setTargetDelDate(Date targetDelDate) {
+        this.targetDelDate = targetDelDate;
+    }
+
+    public Date getTargetDispatchDateOnVerification() {
+        return targetDispatchDateOnVerification;
+    }
+
+    public void setTargetDispatchDateOnVerification(Date targetDispatchDateOnVerification) {
+        this.targetDispatchDateOnVerification = targetDispatchDateOnVerification;
+    }
+    
+    
+
 }
