@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Health Kart | Online health Store</title>
+	<title>HealthKart | Online Health Store</title>
 	<%@ include file='header.jsp' %>	
 </head>
 <body>
