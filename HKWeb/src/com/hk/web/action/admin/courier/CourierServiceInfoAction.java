@@ -137,11 +137,28 @@ public class CourierServiceInfoAction extends BaseAction {
                 tmpObj = courierServiceInfo;
                 CourierServiceInfo tmpObj2 = courierServiceInfoDao.searchCourierServiceInfo(courierServiceInfo.getCourier().getId(),
                         courierServiceInfo.getPincode().getPincode().toString(), false, false, false);
-                if (courierServiceInfo != null) {
-                    if (tmpObj2 == null) {
-                        courierServiceInfoDao.save(courierServiceInfo);
+//                if (courierServiceInfo != null) {
+//                    if (tmpObj2 == null) {
+//                        courierServiceInfoDao.save(courierServiceInfo);
+//                    } else {
+//                        tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());
+//                        tmpObj2.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
+//                        tmpObj2.setDeleted(courierServiceInfo.isDeleted());
+//                        tmpObj2.setRoutingCode(courierServiceInfo.getRoutingCode());
+//                        tmpObj2.setPreferred(courierServiceInfo.isPreferred());
+//                        tmpObj2.setPreferredCod(courierServiceInfo.isPreferredCod());
+//                        tmpObj2.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());
+//                        courierServiceInfoDao.save(tmpObj2);
+//                        logger.info("updating:" + courierServiceInfo.getPincode().getPincode());
+//
+//                    }
+//                }
+
+                 if (tmpObj2 != null) {
+                    if (courierServiceInfo.isDeleted()) {
+                        courierServiceInfoDao.delete(tmpObj2);
                     } else {
-                        tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());
+                       tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());
                         tmpObj2.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
                         tmpObj2.setDeleted(courierServiceInfo.isDeleted());
                         tmpObj2.setRoutingCode(courierServiceInfo.getRoutingCode());
@@ -149,16 +166,17 @@ public class CourierServiceInfoAction extends BaseAction {
                         tmpObj2.setPreferredCod(courierServiceInfo.isPreferredCod());
                         tmpObj2.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());
                         courierServiceInfoDao.save(tmpObj2);
-                        logger.info("updating:" + courierServiceInfo.getPincode().getPincode());
-
+//                        logger.info("updating:" + courierServiceInfo.getPincode().getPincode());
                     }
-                }
+                } else if (courierServiceInfo != null) {
+                    courierServiceInfoDao.save(courierServiceInfo);
+                }                  
             }
         } catch (Exception e) {
             logger.error("Exception while reading excel sheet.", e);
             addRedirectAlertMessage(new SimpleMessage("Upload failed for -  " + tmpObj.getPincode() + "; courier - " + tmpObj.getCourier().getId()));
             return new ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp");
-        }
+        }                                                                    gi
 
         excelFile.delete();
         addRedirectAlertMessage(new SimpleMessage("Database Updated"));

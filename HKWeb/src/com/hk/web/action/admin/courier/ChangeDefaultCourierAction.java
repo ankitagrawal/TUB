@@ -195,7 +195,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
                         existingDefaultCourierObject.setGroundShipping(defaultPincode.isGroundShipping());
                         existingDefaultCourierObject.setEstimatedShippingCost(defaultPincode.getEstimatedShippingCost());
                         pincodeDao.save(existingDefaultCourierObject);
-                        logger.info("updating:" + defaultPincode.getPincode().getPincode());
+//                        logger.info("updating:" + defaultPincode.getPincode().getPincode());
                     }
 
                 }
