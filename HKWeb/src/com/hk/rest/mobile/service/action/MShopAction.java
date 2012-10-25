@@ -86,15 +86,24 @@ public class MShopAction extends MBaseAction{
             MMenuNode secondaryMenuNode;
             for (MenuNode menu : menuNodes) {
                 if (menu.getUrl().equals('/'+primaryNode)) {
-                    for (MenuNode secondaryMenu : menu.getChildNodes()) {
-                        secondaryMenuNode = new MMenuNode();
-                        secondaryMenuNode.setLevel(secondaryMenu.getLevel());
-                        secondaryMenuNode.setName(secondaryMenu.getName());
-                        //secondaryMenuNode.setUrl(secondaryMenu.getUrl());
-                        secondaryMenuNode.setUrl(secondaryMenu.getUrl().substring(secondaryMenu.getUrl().lastIndexOf('/')+1, secondaryMenu.getUrl().length()));
-                        secondaryMenuNode.setCurrentCategory(primaryNode);
-                        secondaryMenuList.add(secondaryMenuNode);
-                    }
+					for (MenuNode secondaryMenu : menu.getChildNodes()) {
+						String url =secondaryMenu.getUrl();
+						if (null!=url&& !(url.contains("lenses")
+								||url.contains("eyeglasses"))) {
+							secondaryMenuNode = new MMenuNode();
+							secondaryMenuNode
+									.setLevel(secondaryMenu.getLevel());
+							secondaryMenuNode.setName(secondaryMenu.getName());
+							// secondaryMenuNode.setUrl(secondaryMenu.getUrl());
+							secondaryMenuNode.setUrl(secondaryMenu.getUrl()
+									.substring(
+											secondaryMenu.getUrl().lastIndexOf(
+													'/') + 1,
+											secondaryMenu.getUrl().length()));
+							secondaryMenuNode.setCurrentCategory(primaryNode);
+							secondaryMenuList.add(secondaryMenuNode);
+						}
+					}
                 }
             }
         } catch (Exception e) {
