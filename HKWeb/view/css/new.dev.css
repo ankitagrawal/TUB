@@ -2992,3 +2992,8 @@ i{
     background-color: Highlight;
     color: HighlightText;
 }
+
+.mandatory{
+	color:red;
+	font-weight:bold;
+}

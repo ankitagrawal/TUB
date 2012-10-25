@@ -240,7 +240,7 @@
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="HXYoCLSKxgMQpIrJ3QM" id="1001538852"/>
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
-<c:if test="${hk:collectionContains(remarketingLabelList, 'breast-feeding') && !codeSet}">
+<c:if test="${hk:collectionContains(remarketingLabelList, 'breastfeeding-aids') && !codeSet}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="Xp3LCKyLxgMQpIrJ3QM" id="1001538852"/>
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
@@ -248,7 +248,7 @@
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="J6KPCKSMxgMQpIrJ3QM" id="1001538852"/>
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
-<c:if test="${hk:collectionContains(remarketingLabelList, 'sippers-mugs') && !codeSet}">
+<c:if test="${hk:collectionContains(remarketingLabelList, 'nuby') && !codeSet}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="w-8TCJSOxgMQpIrJ3QM" id="1001538852"/>
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
