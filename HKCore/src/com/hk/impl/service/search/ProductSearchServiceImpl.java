@@ -120,7 +120,8 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     public SearchResult getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException {
         SolrQuery query = new SolrQuery("*:*");
-        query.addFilterQuery(SolrSchemaConstants.brand  + ":" + brand);
+        query.addFilterQuery("{!field f= brand}" + brand);
+        //query.addFilterQuery(SolrSchemaConstants.brand  + ":" + brand);
         query.addFilterQuery(SolrSchemaConstants.category + ":" + topLevelCategory);
         query.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isHidden + ":" + 0);
@@ -172,7 +173,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
         }
         for (SearchFilter categoryFilter : categories){
             if (categoryFilter.getValue() != null){
-                solrQuery.addFilterQuery(categoryFilter.getName() + ":" + categoryFilter.getValue());
+                //query.addFilterQuery("{!field f= brand}" + brand);
+                String categoryQuery = String.format("{!field f= %s}%s",categoryFilter.getName(), categoryFilter.getValue() );
+                solrQuery.addFilterQuery(categoryQuery);
             }
         }
         solrQuery.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);
