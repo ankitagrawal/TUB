@@ -1,6 +1,7 @@
 package com.hk.impl.service.shippingOrder;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.helper.OrderDateUtil;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
@@ -34,6 +36,8 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
+import com.hk.util.OrderUtil;
+import com.hk.util.TokenUtils;
 
 /**
  * @author vaibhav.adlakha
@@ -107,6 +111,32 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return getShippingOrderDao().getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
     }
 
+    @Override
+    @Transactional
+    public ShippingOrder setGatewayIdAndTargetDateOnShippingOrder(ShippingOrder shippingOrder) {
+        String shippingOrderGatewayId = TokenUtils.generateShippingOrderGatewayOrderId(shippingOrder);
+        shippingOrder.setGatewayOrderId(shippingOrderGatewayId);
+
+        setTargetDispatchDelDatesOnSO(shippingOrder.getBaseOrder().getPayment().getPaymentDate(), shippingOrder);
+        return shippingOrder;
+    }
+
+    @Transactional
+    @Override
+    public void setTargetDispatchDelDatesOnSO(Date refDate, ShippingOrder shippingOrder) {
+        Long[] dispatchDays = OrderUtil.getDispatchDaysForSO(shippingOrder);
+
+        Date targetDispatchDate = OrderDateUtil.getTargetDispatchDateForWH(refDate, dispatchDays[0]);
+        shippingOrder.setTargetDispatchDate(targetDispatchDate);
+
+        Long diffInPromisedTimes = (dispatchDays[1] - dispatchDays[0]);
+        int daysTakenForDelievery = Integer.valueOf(diffInPromisedTimes.toString());
+        Date targetDelDate = HKDateUtil.addToDate(targetDispatchDate, Calendar.DAY_OF_MONTH, daysTakenForDelievery);
+        shippingOrder.setTargetDelDate(targetDelDate);
+
+        getShippingOrderDao().save(shippingOrder);
+    }
+
     /**
      * Auto-escalation logic for all successful transactions This method will check inventory availability and escalate
      * orders from action queue to processing queue accordingly.
@@ -132,15 +162,15 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
-	                if (productVariant.getProduct().isService() != null && productVariant.getProduct().isService()) {
-		                continue;
-	                }
-	                if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
-		                String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
-		                logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
-				                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
-		                return false;
-	                } else if (productVariant.getProduct().isDropShipping()) {
+                    if (productVariant.getProduct().isService() != null && productVariant.getProduct().isService()) {
+                        continue;
+                    }
+                    if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
+                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
+                        logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
+                        return false;
+                    } else if (productVariant.getProduct().isDropShipping()) {
                         String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
                         logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
@@ -177,8 +207,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
-	                Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
-	                // is after including placed order qty
+                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
+                    // is after including placed order qty
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
@@ -242,7 +272,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         shippingOrder.setBaseOrder(baseOrder);
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ActionAwaiting));
         shippingOrder.setCreateDate(new Date());
-        //shippingOrder.setUpdateDate(new Date());
+        // shippingOrder.setUpdateDate(new Date());
         shippingOrder.setWarehouse(warehouse);
         shippingOrder.setAmount(0D);
         shippingOrder.setReconciliationStatus(getReconciliationStatusDao().getReconciliationStatusById(EnumReconciliationStatus.PENDING));

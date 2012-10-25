@@ -21,8 +21,8 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -150,7 +150,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
              * this additional call to save is done so that we have shipping order id to generate shipping order gateway
              * id
              */
-            shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+            shippingOrder = getShippingOrderService().setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
 	        // auto escalate shipping orders if possible
@@ -161,6 +161,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }
         return null;
     }
+    
+    
+    
+    
 
     @Transactional
     public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder) {
