@@ -1,4 +1,4 @@
-package com.hk.web.action.admin.user;
+package com.hk.web.action.admin.crm;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -22,7 +22,7 @@ import java.util.Set;
  * Time: 4:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public class UserAddressAction extends BaseAction {
+public class UserListByPhoneAction extends BaseAction {
 
     @Autowired
     UserDetailService userDetailService;

@@ -1,4 +1,4 @@
-package com.hk.web.action.admin.order.search;
+package com.hk.web.action.admin.crm;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -16,6 +16,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.user.UserDetailService;
+import com.hk.web.action.admin.order.search.SearchOrderAction;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.util.CryptoUtil;
@@ -62,7 +63,6 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
 
     private List<Order> orderList = new ArrayList<Order>();
     private Page orderPage;
-    private final int MAX_ORDERS = 3;
 
     @DefaultHandler
     public Resolution pre() {
@@ -74,7 +74,7 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
         String key = getContext().getRequest().getParameter("key");
         String decryptKey = CryptoUtil.decrypt(key);
         if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)){
-            return new JsonResolution(Response.status(Response.Status.UNAUTHORIZED).build());
+            return new JsonResolution(" ");
         }
         remoteAddress = getContext().getRequest().getRemoteHost();
         User customer = null;
@@ -98,7 +98,7 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
 
 
         if ((customer != null) ){
-            orderList = orderService.listOrdersForUser(customer, 1, MAX_ORDERS).getList();
+            orderList = orderService.listOrdersForUser(customer, 1, UserDetailService.MAX_COUNT).getList();
             return new ForwardResolution("/pages/admin/agentSearchOrder.jsp");
         }else{
             return  new ForwardResolution("/pages/admin/userDetail.jsp");
@@ -119,17 +119,8 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
 
     public Set<String> getParamSet() {
         Set<String> params = new HashSet<String>();
-        params.add("orderStatus");
-        params.add("paymentMode");
-        params.add("email");
-        params.add("orderId");
-        params.add("gatewayOrderId");
-        params.add("login");
-        // params.add("trackingId");
         params.add("name");
         params.add("phone");
-        params.add("startDate");
-        params.add("endDate");
         return params;
     }
 

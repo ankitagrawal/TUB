@@ -8,17 +8,17 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.user.UserAddressAction" var="userAdmin" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.crm.UserListByPhoneAction" var="userAdmin" event="pre"/>
 <s:layout-render name="/layouts/agentLayout.jsp" pageTitle="User Orders" >
     <s:layout-component name="content">
-        <s:form beanclass="com.hk.web.action.admin.user.UserAddressAction" method="get" style="">
+        <s:form beanclass="com.hk.web.action.admin.crm.UserListByPhoneAction" method="get" style="">
             Users for phone: ${userAdmin.phone}
             <table>
                 <th>Email Id</th>
                 <th>Phone</th>
                 <c:forEach items="${userAdmin.userDetailList}" var="user">
                 <tr>
-                    <td><s:link beanclass="com.hk.web.action.admin.order.search.AgentSearchOrderAction"
+                    <td><s:link beanclass="com.hk.web.action.admin.crm.AgentSearchOrderAction"
                                 event="pre">
                         <s:param name="phone" value="${userAdmin.phone}"/>
                         <s:param name="email" value="${user.user.email}"/>

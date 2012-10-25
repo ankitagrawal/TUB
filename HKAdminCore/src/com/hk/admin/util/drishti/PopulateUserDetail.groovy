@@ -3,6 +3,8 @@ package com.hk.admin.util.drishti
 import groovy.sql.Sql
 import org.slf4j.LoggerFactory
 import com.hk.domain.user.UserDetail
+import com.akube.framework.util.StringUtils
+import com.hk.pact.service.user.UserDetailService
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,30 +41,17 @@ class PopulateUserDetail {
             userDetails ->
             String[] phones = null;
             String ph = userDetails.phone;
-            if (ph.contains('-')){
-                ph = ph.replace('-','');
-            }
-            if (ph.contains(",")){
-                phones = ph.split(",");
-            }else if (ph.contains("/")){
-                phones = ph.split("/");
-            }else{
-                phones = new String[1];
-                phones[0] = ph;
-            }
+            phones = StringUtils.getUserPhoneList(ph);
 
             for (String userPhone : phones){
               try{
                     cnt++;
                     UserDetail userDetail = new UserDetail();
-                    int start = userPhone.length() - 10;
-                    //consider only the last 10 digits
-                    String strPh = userPhone.substring(start, userPhone.length());
-                    long phoneNumber = Long.parseLong(strPh);
+                    long phoneNumber = StringUtils.getUserPhone(userPhone);
                     long id = userDetails.id;
                     int priority = 0;
                     if (userDetails.karma_points){
-                       priority = (userDetails.karma_points > 300 ? 1 : 0);
+                       priority = (userDetails.karma_points > UserDetailService.MIN_KARMA_POINTS ? 1 : 0);
                     }
                   sql.executeInsert("""
                     INSERT INTO user_detail values (${cnt}, ${phoneNumber}, ${priority}, ${id})

@@ -1,6 +1,7 @@
 package com.hk.impl.service.core;
 
 import com.akube.framework.dao.Page;
+import com.akube.framework.util.StringUtils;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
@@ -43,30 +44,18 @@ public class AddressServiceImpl implements AddressService {
             List<Integer> phoneNumbers = new ArrayList<Integer>();
             String[] phones = null;
             String ph = address.getPhone();
-            if (ph.contains("-")){
-                ph = ph.replace("-","");
-            }
-            if (ph.contains(",")){
-                phones = ph.split(",");
-            }else if (ph.contains("/")){
-                phones = ph.split("/");
-            }else{
-                phones = new String[1];
-                phones[0] = ph;
-            }
+            phones = StringUtils.getUserPhoneList(ph);
             for (String phone : phones){
                 UserDetail userDetail = new UserDetail();
                 userDetail.setUser(user);
-                int start = phone.length() - 10;
-                //consider only the last 10 digits
-                String userPhone = phone.substring(start, phone.length());
-                long phoneNumber = Long.parseLong(userPhone);
+                long phoneNumber = StringUtils.getUserPhone(phone);
                 userDetail.setPhone(phoneNumber);
                 userDetailsDao.save(userDetail);
             }
 
         }catch (Exception ex){
-            logger.error("Unable to save user information in UserDetail table ", ex);
+            //Nothing can be done if user enters some weird mobile..Logging here will only give false alarm
+            //logger.error("Unable to save user information in UserDetail table ", ex);
         }
         return addressRec;
     }

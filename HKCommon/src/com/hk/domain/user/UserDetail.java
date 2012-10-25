@@ -24,7 +24,7 @@ public class UserDetail {
     @Column(name = "phone", nullable = false)
     private Long                 phone;
 
-    @Column(name = "priority", nullable = false)
+    @Column(name = "crm_priority", nullable = false)
     private Integer                 priority;
 
     @ManyToOne(fetch = FetchType.LAZY)
