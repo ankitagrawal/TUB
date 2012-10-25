@@ -329,10 +329,9 @@ public class Functions {
         return adminInventoryService.areAllUnitsOfOrderCheckedOut(order);
     }
 
-    public static Long checkedinUnitsCount(Object o1, Object o2) {
+    public static Long checkedinUnitsCount(Object o) {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
-        // ProductVariant productVariant = (ProductVariant) o1;
-        GrnLineItem grnLineItem = (GrnLineItem) o2;
+        GrnLineItem grnLineItem = (GrnLineItem) o;
         return adminInventoryService.countOfCheckedInUnitsForGrnLineItem(grnLineItem);
     }
 

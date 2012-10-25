@@ -13,9 +13,9 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.helper.ReplacementOrderHelper;
 import com.hk.helper.ShippingOrderHelper;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 
@@ -30,13 +30,14 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     @Autowired
     LineItemDao                        lineItemDao;
     @Autowired
-    BaseDao                            baseDao;
+    ReplacementOrderDao                replacementOrderDao;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private ReconciliationStatusDao    reconciliationStatusDao;
+    
 
-    public void createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto) {
+    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto) {
         Set<LineItem> lineItemSet = new HashSet<LineItem>();
         ReplacementOrder replacementOrder = ReplacementOrderHelper.getReplacementOrderFromShippingOrder(shippingOrder, shippingOrderStatusService, reconciliationStatusDao);
         for (LineItem lineItem : lineItems) {
@@ -62,17 +63,18 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         replacementOrder.setRto(isRto);
 
         replacementOrder.setRefShippingOrder(shippingOrder);
-        replacementOrder = (ReplacementOrder) getBaseDao().save(replacementOrder);
-        ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
-        getBaseDao().saveOrUpdate(replacementOrder);
+        replacementOrder = (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
+        shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
+        return (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
+    @Override
+    public List<ReplacementOrder> getReplacementOrderForRefShippingOrder(Long refShippingOrderId) {
+        return getReplacementOrderDao().getReplacementOrderFromShippingOrder(refShippingOrderId);
     }
 
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
+    public ReplacementOrderDao getReplacementOrderDao() {
+        return replacementOrderDao;
     }
 
     public ShippingOrderStatusService getShippingOrderStatusService() {
@@ -90,4 +92,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     public void setReconciliationStatusDao(ReconciliationStatusDao reconciliationStatusDao) {
         this.reconciliationStatusDao = reconciliationStatusDao;
     }
+
+    
+    
+    
 }
