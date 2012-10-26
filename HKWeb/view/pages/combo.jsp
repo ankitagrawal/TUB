@@ -618,7 +618,6 @@
             } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
                 alert(res.message);
                 $('.progressLoader').hide();
-                location.reload();
             }
         }
 
