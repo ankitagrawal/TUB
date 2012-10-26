@@ -610,7 +610,8 @@
 
         function _addToCart(res) {
             if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                location.reload();                
+                location.reload();
+                $.delay(300);
                 $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
                 $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
                 $('.progressLoader').hide();
