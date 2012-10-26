@@ -186,13 +186,6 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
                   if(cartLineItem.getComboInstance().getComboInstanceProductVariants().size()==y){
                     bool = false;
                   }
-
-//                  for(ComboInstanceHasProductVariant comboInstanceHasProductVariant : cartLineItem.getComboInstance().getComboInstanceProductVariants()){
-//                     if(comboInstanceHasProductVariant.getProductVariant().equals(productVariant)) {
-//                        x = 0;
-//                        break;
-//                    }
-//                  }
                 }
               }
             }

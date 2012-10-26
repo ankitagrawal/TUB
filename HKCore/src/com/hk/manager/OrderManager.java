@@ -583,7 +583,8 @@ public class OrderManager {
       for(Long comboInstanceId : comboInstanceIds){
         for(CartLineItem cartLineItem : order.getCartLineItems()){
            if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().getId().equals(comboInstanceId)){
-                getCartLineItemDao().delete(cartLineItem);
+                cartLineItem.setQty(0L);
+              cartLineItemService.save(cartLineItem);
            }
         }
       }
