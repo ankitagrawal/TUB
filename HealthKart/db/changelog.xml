@@ -9538,4 +9538,24 @@
         </addColumn>
     </changeSet>
     
+    <changeSet author="Ajeet (generated)" id="1351236795227-1">
+        <createTable tableName="supplier_balance">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="supplier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="balance" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1351236795227-2">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="supplier_balance" constraintName="fk_supplier_balance_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
+    
 </databaseChangeLog>
