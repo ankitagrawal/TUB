@@ -16,51 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fedex.ship.stub.Address;
-import com.fedex.ship.stub.AssociatedShipmentDetail;
-import com.fedex.ship.stub.ClientDetail;
-import com.fedex.ship.stub.CodCollectionType;
-import com.fedex.ship.stub.CodDetail;
-import com.fedex.ship.stub.CommercialInvoice;
-import com.fedex.ship.stub.Commodity;
-import com.fedex.ship.stub.CompletedPackageDetail;
-import com.fedex.ship.stub.CompletedShipmentDetail;
-import com.fedex.ship.stub.Contact;
-import com.fedex.ship.stub.ContactAndAddress;
-import com.fedex.ship.stub.CustomerReference;
-import com.fedex.ship.stub.CustomerReferenceType;
-import com.fedex.ship.stub.CustomsClearanceDetail;
-import com.fedex.ship.stub.DropoffType;
-import com.fedex.ship.stub.InternationalDocumentContentType;
-import com.fedex.ship.stub.LabelFormatType;
-import com.fedex.ship.stub.LabelSpecification;
-import com.fedex.ship.stub.Money;
-import com.fedex.ship.stub.NotificationSeverityType;
-import com.fedex.ship.stub.PackagingType;
-import com.fedex.ship.stub.Party;
-import com.fedex.ship.stub.Payment;
-import com.fedex.ship.stub.PaymentType;
-import com.fedex.ship.stub.Payor;
-import com.fedex.ship.stub.ProcessShipmentReply;
-import com.fedex.ship.stub.ProcessShipmentRequest;
-import com.fedex.ship.stub.PurposeOfShipmentType;
-import com.fedex.ship.stub.RateRequestType;
-import com.fedex.ship.stub.RequestedPackageLineItem;
-import com.fedex.ship.stub.RequestedShipment;
-import com.fedex.ship.stub.ServiceType;
-import com.fedex.ship.stub.ShipPortType;
-import com.fedex.ship.stub.ShipServiceLocator;
-import com.fedex.ship.stub.ShipmentOperationalDetail;
-import com.fedex.ship.stub.ShipmentSpecialServiceType;
-import com.fedex.ship.stub.ShipmentSpecialServicesRequested;
-import com.fedex.ship.stub.ShippingDocumentImageType;
-import com.fedex.ship.stub.StringBarcode;
-import com.fedex.ship.stub.TransactionDetail;
-import com.fedex.ship.stub.VersionId;
-import com.fedex.ship.stub.WebAuthenticationCredential;
-import com.fedex.ship.stub.WebAuthenticationDetail;
-import com.fedex.ship.stub.Weight;
-import com.fedex.ship.stub.WeightUnits;
+import com.fedex.ship.stub.*;
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.domain.order.ShippingOrder;
@@ -109,7 +65,7 @@ public class FedExCourierUtil {
         //
         try {
             // Initialize the service
-            logger.debug("inside newFedExShipment: " + shippingOrder.getGatewayOrderId() + " ");
+            logger.debug("inside newFedExShipment WebService call: " + shippingOrder.getGatewayOrderId() + " ");
             ShipServiceLocator service;
             ShipPortType port;
             //
@@ -127,6 +83,8 @@ public class FedExCourierUtil {
                 // writeServiceOutput(reply);
             }
             // printNotifications(reply.getNotifications());
+
+            logNotifications(reply.getNotifications());
 
             CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
 
@@ -147,8 +105,7 @@ public class FedExCourierUtil {
                 thirdPartyAwbDetails.setRoutingCode(setRoutingCode(reply));
                 thirdPartyAwbDetails.setCod(shippingOrder.isCOD());
                 thirdPartyAwbDetails.setPincode(shippingOrder.getBaseOrder().getAddress().getPin());
-            }
-            else{
+            } else {
                 logger.debug("FedEx awb number could not be generated");
             }
 
@@ -260,8 +217,24 @@ public class FedExCourierUtil {
         return routingFedEx;
     }
 
+    public void logNotifications(Notification[] notifications) {
+        if (notifications != null && notifications.length != 0) {
+            for (int i = 0; i < notifications.length; i++) {
+                Notification n = notifications[i];
+                logger.info("  FedEx Notification no. " + i + ": ");
+                if (n == null) {
+                    continue;
+                }
+                NotificationSeverityType nst = n.getSeverity();
 
-   
+                logger.info("    Severity: " + (nst == null ? "null" : nst.getValue()));
+                logger.info("    Code: " + n.getCode());
+                logger.info("    Message: " + n.getMessage());
+            }
+        }
+    }
+
+
 /*
 
     @SuppressWarnings("unused")
@@ -490,7 +463,7 @@ public class FedExCourierUtil {
         // if not default it to "XXX"
         //String payorAccountNumber = System.getProperty("Payor.AccountNumber");
         //if (payorAccountNumber == null) {
-          String payorAccountNumber = fedExAccountNo; // "510087020"; // Replace "XXX" with the payor account number
+        String payorAccountNumber = fedExAccountNo; // "510087020"; // Replace "XXX" with the payor account number
         //}
         return payorAccountNumber;
     }
@@ -629,7 +602,7 @@ public class FedExCourierUtil {
         requestedPackageLineItem.setWeight(addPackageWeight(weightInKg, WeightUnits.KG));// 50.5, WeightUnits.LB));
         // requestedPackageLineItem.setDimensions(addPackageDimensions(108, 5, 5, LinearUnits.IN));
         requestedPackageLineItem.setCustomerReferences(new CustomerReference[]{
-                addCustomerReference(CustomerReferenceType.CUSTOMER_REFERENCE.getValue(), "CR1234"),
+                addCustomerReference(CustomerReferenceType.CUSTOMER_REFERENCE.getValue(), shippingOrder.getGatewayOrderId()), //"CR1234"
                 addCustomerReference(CustomerReferenceType.INVOICE_NUMBER.getValue(), "IV1234"),// shippingOrder.getAccountingInvoiceNumber().toString()),
                 addCustomerReference(CustomerReferenceType.P_O_NUMBER.getValue(), "PO1234"),});
         return requestedPackageLineItem;
@@ -731,7 +704,7 @@ public class FedExCourierUtil {
         }
     }
 */
-  /*
+    /*
     private static String printMasterTrackingNumber(CompletedShipmentDetail csd) {
         String trackingNumber = "";
         if (null != csd.getMasterTrackingId()) {
@@ -817,6 +790,7 @@ public class FedExCourierUtil {
         }
     }
     */
+
     private ClientDetail createClientDetail() {
         ClientDetail clientDetail = new ClientDetail();
         //String accountNumber = System.getProperty("accountNumber");
@@ -827,10 +801,10 @@ public class FedExCourierUtil {
         // if set use those values, otherwise default them to "XXX"
         //
         //if (accountNumber == null) {
-            String accountNumber = fedExAccountNo; // "510087020"; // Replace "XXX" with clients account number
+        String accountNumber = fedExAccountNo; // "510087020"; // Replace "XXX" with clients account number
         //}
         //if (meterNumber == null) {
-         String meterNumber = fedExMeterNo; // "100073086"; // Replace "XXX" with clients meter number
+        String meterNumber = fedExMeterNo; // "100073086"; // Replace "XXX" with clients meter number
         //}
         clientDetail.setAccountNumber(accountNumber);
         clientDetail.setMeterNumber(meterNumber);
@@ -847,10 +821,10 @@ public class FedExCourierUtil {
         // if set use those values, otherwise default them to "XXX"
         //
         //if (key == null) {
-            String key = fedExAuthKey; // Replace "XXX" with clients key
+        String key = fedExAuthKey; // Replace "XXX" with clients key
         //}
         //if (password == null) {
-            String password = fedExPassword; // "6KGHIwA4iLtnHKXMQNbQ3vOBs"; // Replace "XXX" with clients password
+        String password = fedExPassword; // "6KGHIwA4iLtnHKXMQNbQ3vOBs"; // Replace "XXX" with clients password
         //}
         wac.setKey(key);
         wac.setPassword(password);
