@@ -8810,6 +8810,116 @@
 			AND so.shipping_order_status_id = 200
 		</sql>
 	</changeSet>
+	<changeSet author="Rohit (generated)" id="1347279976393-1">
+	        <addColumn tableName="goods_received_note">
+	            <column name="discount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-2">
+	        <addColumn tableName="goods_received_note">
+	            <column name="final_payable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-3">
+	        <addColumn tableName="goods_received_note">
+	            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-4">
+	        <addColumn tableName="goods_received_note">
+	            <column name="tax_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-5">
+	        <addColumn tableName="goods_received_note">
+	            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-6">
+	        <addColumn tableName="grn_line_item">
+	            <column name="discount_percent" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-7">
+	        <addColumn tableName="grn_line_item">
+	            <column name="payable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-8">
+	        <addColumn tableName="grn_line_item">
+	            <column name="procurement_price" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-9">
+	        <addColumn tableName="grn_line_item">
+	            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-10">
+	        <addColumn tableName="grn_line_item">
+	            <column name="tax_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-11">
+	        <addColumn tableName="grn_line_item">
+	            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-12">
+	        <addColumn tableName="po_line_item">
+	            <column name="discount_percent" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-13">
+	        <addColumn tableName="po_line_item">
+	            <column name="payable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-14">
+	        <addColumn tableName="po_line_item">
+	            <column name="procurement_price" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-15">
+	        <addColumn tableName="po_line_item">
+	            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-16">
+	        <addColumn tableName="po_line_item">
+	            <column name="tax_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-17">
+	        <addColumn tableName="po_line_item">
+	            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-18">
+	        <addColumn tableName="purchase_order">
+	            <column name="discount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-19">
+	        <addColumn tableName="purchase_order">
+	            <column name="final_payable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-20">
+	        <addColumn tableName="purchase_order">
+	            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-21">
+	        <addColumn tableName="purchase_order">
+	            <column name="tax_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-22">
+	        <addColumn tableName="purchase_order">
+	            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
     <changeSet author="Pratham (generated)" id="1347259898238-10">
         <addColumn tableName="product_image">
             <column name="image_type" type="INT"/>
@@ -9301,4 +9411,131 @@
 						AND ct.consignment_id = c.id);
 		</sql>
 	</changeSet>
+    <changeSet author="Neha (generated)" id="1350020589676-1">
+        <addColumn tableName="awb">
+            <column name="returnAwb_bar_code" type="VARCHAR(70)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1350020589676-2">
+        <addColumn tableName="awb">
+            <column name="returnAwb_number" type="VARCHAR(70)"/>
+        </addColumn>
+    </changeSet>
+	
+	<changeSet author="Ajeet (generated)" id="1348919811628-1">
+        <addColumn tableName="update_pv_price">
+            <column defaultValue="10" name="status" type="INT">
+				<constraints nullable="false"/>
+            </column>
+        </addColumn>
+	</changeSet>
+	<changeSet author="Ajeet (generated)" id="1348919811628-2">
+			<sql>
+				update  update_pv_price set status = 10 where updated = 0;
+				update  update_pv_price set status = 20 where updated = 1;
+			</sql>
+	</changeSet>
+	<changeSet author="Ajeet (generated)" id="1348919811628-3">
+			<dropColumn columnName="updated" tableName="update_pv_price"/>
+	</changeSet>
+	<changeSet author="Rohit (generated)" id="1350458749534-1">
+		<addColumn tableName="base_order">
+			<column name="comment_type" type="INT"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="Ajeet (generated)" id="1350715789183-1">
+        <addColumn tableName="goods_received_note">
+            <column name="est_payment_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-2">
+        <addColumn tableName="purchase_invoice">
+            <column name="est_payment_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-3">
+        <addColumn tableName="supplier">
+            <column defaultValue="1" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-4">
+        <addColumn tableName="supplier">
+            <column defaultValue="15" name="credit_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-5">
+        <addColumn tableName="supplier">
+            <column defaultValue="7" name="lead_time" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-6">
+        <addColumn tableName="supplier">
+            <column defaultValue="30" name="target_credit_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Ajeet (generated)" id="1350715789183-7">
+        <addColumn tableName="purchase_order">
+            <column name="approval_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-8">
+        <dropColumn columnName="payment_amount" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-9">
+        <dropColumn columnName="payment_date" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-10">
+        <dropColumn columnName="payment_details" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-11">
+        <dropColumn columnName="invoice_date" tableName="purchase_order"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-12">
+        <dropColumn columnName="invoice_number" tableName="purchase_order"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-13">
+        <dropColumn columnName="credit_period" tableName="supplier"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-14">
+        <dropColumn columnName="po_date" tableName="purchase_order"/>
+    </changeSet>
+
+	<changeSet author="Ajeet (written)" id="20121020-01">
+		<sql>
+			update purchase_order set purchase_order_status_id=1000 where purchase_order_status_id=100;
+			update goods_received_note set grn_status_id=30 where grn_status_id=20;
+			update purchase_order set po_place_date=update_dt;
+		</sql>
+	</changeSet>
+	<changeSet author="Ajeet (written)" id="20121020-02">
+		<sql>
+			delete from grn_status where id in (25, 40);
+		</sql>
+	</changeSet>
+
+    <changeSet author="AdminUser (generated)" id="1351008534081-1">
+        <addColumn tableName="base_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1351008534081-2">
+        <addColumn tableName="base_order">
+            <column name="target_dispatch_date_on_verify" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1351008534081-3">
+        <addColumn tableName="shipping_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>

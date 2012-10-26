@@ -1,6 +1,7 @@
 package com.hk.admin.impl.dao.inventory;
 
 import java.util.List;
+import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
@@ -21,7 +22,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 public class PurchaseInvoiceDaoImpl extends BaseDaoImpl implements PurchaseInvoiceDao {
 
     public Page searchPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseInvoiceStatus purchaseInvoiceStatus, User createdBy, String invoiceNumber, String tinNumber,
-            String supplierName, int pageNo, int perPage, Boolean isReconciled , Warehouse warehouse) {
+            String supplierName, int pageNo, int perPage, Boolean isReconciled , Warehouse warehouse, Date startDate, Date endDate) {
 
         DetachedCriteria purchaseInvoiceCriteria = DetachedCriteria.forClass(PurchaseInvoice.class);
 
@@ -57,6 +58,10 @@ public class PurchaseInvoiceDaoImpl extends BaseDaoImpl implements PurchaseInvoi
         if(warehouse!= null){
           purchaseInvoiceCriteria.add(Restrictions.eq("warehouse",warehouse));
         }
+
+	    if(startDate != null && endDate != null){
+		    purchaseInvoiceCriteria.add(Restrictions.between("estPaymentDate",startDate, endDate));
+	    }
 
         purchaseInvoiceCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
         return list(purchaseInvoiceCriteria, pageNo, perPage);

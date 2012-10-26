@@ -113,7 +113,7 @@ public class GRNManager {
         for (GoodsReceivedNote grn : grnList) {
             String poDetail = "";
             poDetail += ID + grn.getId() + " " + CREATED_DATE + dateFormat.format(grn.getGrnDate()) + " ";
-            poDetail += CREATED_BY + grn.getPurchaseOrder().getCreatedBy().getName() + " " + PO_DATE + dateFormat.format(grn.getPurchaseOrder().getPoDate()) + " ";
+            poDetail += CREATED_BY + grn.getPurchaseOrder().getCreatedBy().getName() + " " + PO_DATE + dateFormat.format(grn.getPurchaseOrder().getPoPlaceDate()) + " ";
             poDetail += SUPPLIER + grn.getPurchaseOrder().getSupplier().getName() + " " + STATUS + grn.getGrnStatus().getName();
             rowCounter++;
             row1 = sheet1.createRow(rowCounter);
@@ -175,6 +175,10 @@ public class GRNManager {
                 if(grnLineItem.getMrp() != null && grnLineItem.getMrp() > 0) {
                     marginMrpVsCP = (grnLineItem.getMrp() - grnLineItem.getCostPrice())/grnLineItem.getMrp()*100;
                 }
+	            if (grnLineItem.getDiscountPercent() != null) {
+		            taxable = taxable - grnLineItem.getDiscountPercent() / 100 * taxable;
+	            }
+
             }
 
             Sku sku = grnLineItem.getSku();
@@ -202,6 +206,14 @@ public class GRNManager {
         grnDto.setTotalTax(totalTax);
         grnDto.setTotalSurcharge(totalSurcharge);
         grnDto.setTotalPayable(totalPayable);
+	    double overallDiscount = grn.getDiscount() == null ? 0.0 : grn.getDiscount();
+	    grnDto.setFinalPayable(totalPayable - overallDiscount);
+
+	    grn.setTaxableAmount(totalTaxable);
+	    grn.setTaxAmount(totalTax);
+	    grn.setSurchargeAmount(totalSurcharge);
+	    goodsReceivedNoteDao.save(grn);
+
         return grnDto;
 
     }

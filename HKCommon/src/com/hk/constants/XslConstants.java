@@ -57,7 +57,10 @@ public class XslConstants {
     public static final String    BREADTH                         = "BREADTH(cm)";
     public static final String    HEIGHT                          = "HEIGHT(cm)";
     public static final String    WEIGHT                          = "WEIGHT(gm)";
-    public static final String    UPC                             = "UPC";                                   // Universal
+    public static final String    UPC                             = "UPC";
+    public static final String    IS_HIDDEN                       = "IS_HIDDEN";
+    public static final String    OUT_OF_STOCK                    = "OUT_OF_STOCK";
+  // Universal
     // Product
     // Code
 
@@ -140,7 +143,10 @@ public class XslConstants {
     public static final String ADDRESS = "ADDRESS";
     public static final String CONTACT_PERSON = "CONTACT PERSON";
     public static final String CONTACT_NUMBER = "CONTACT NUMBER";
-    public static final String CREDIT_PERIOD = "CREDIT PERIOD";
+    public static final String CREDIT_DAYS = "CREDIT DAYS";
+    public static final String TARGET_CREDIT_DAYS = "TARGET CREDIT DAYS";
+    public static final String LEAD_TIME = "LEAD TIME";
+    public static final String ACTIVE = "ACTIVE";
     public static final String MARGIN = "MARGIN";
     public static final String VALIDITY_TERMS_OF_TRADE = "VALIDITY OF TERMS OF TRADE";
 

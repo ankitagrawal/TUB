@@ -39,12 +39,9 @@ public class GoodsReceivedNote implements java.io.Serializable {
     @Column(name = "payable", precision = 12)
     private Double payable;
 
-    @Column(name = "payment_details", length = 100)
-    private String paymentDetails;
-
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "payment_date", length = 19)
-    private Date paymentDate;
+    @Column(name = "est_payment_date")
+    private Date estPaymentDate;
 
     @Column(name = "invoice_number", length = 100)
     private String invoiceNumber;
@@ -86,7 +83,23 @@ public class GoodsReceivedNote implements java.io.Serializable {
     @Column(name = "remarks")
     private String remarks;
 
-    public Long getId() {
+	@Column(name = "taxable_amount")
+	private Double taxableAmount;
+
+	@Column(name = "tax_amount")
+	private Double taxAmount;
+
+	@Column(name = "surcharge_amount")
+	private Double surchargeAmount;
+
+	@Column(name = "discount")
+	private Double discount;
+
+	@Column(name = "final_payable_amount")
+	private Double finalPayableAmount;
+
+
+	public Long getId() {
         return this.id;
     }
 
@@ -126,23 +139,15 @@ public class GoodsReceivedNote implements java.io.Serializable {
         this.payable = payable;
     }
 
-    public String getPaymentDetails() {
-        return this.paymentDetails;
-    }
+	public Date getEstPaymentDate() {
+		return estPaymentDate;
+	}
 
-    public void setPaymentDetails(String paymentDetails) {
-        this.paymentDetails = paymentDetails;
-    }
+	public void setEstPaymentDate(Date estPaymentDate) {
+		this.estPaymentDate = estPaymentDate;
+	}
 
-    public Date getPaymentDate() {
-        return this.paymentDate;
-    }
-
-    public void setPaymentDate(Date paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public List<GrnLineItem> getGrnLineItems() {
+	public List<GrnLineItem> getGrnLineItems() {
         return this.grnLineItems;
     }
 
@@ -228,6 +233,46 @@ public class GoodsReceivedNote implements java.io.Serializable {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public Double getTaxableAmount() {
+		return taxableAmount;
+	}
+
+	public void setTaxableAmount(Double taxableAmount) {
+		this.taxableAmount = taxableAmount;
+	}
+
+	public Double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(Double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public Double getSurchargeAmount() {
+		return surchargeAmount;
+	}
+
+	public void setSurchargeAmount(Double surchargeAmount) {
+		this.surchargeAmount = surchargeAmount;
+	}
+
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
+	}
+
+	public Double getFinalPayableAmount() {
+		return finalPayableAmount;
+	}
+
+	public void setFinalPayableAmount(Double finalPayableAmount) {
+		this.finalPayableAmount = finalPayableAmount;
 	}
 }
 

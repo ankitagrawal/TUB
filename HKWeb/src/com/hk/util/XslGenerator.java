@@ -97,7 +97,7 @@ public class XslGenerator {
 		Row row = sheet1.createRow(0);
 		row.setHeightInPoints((short) 25);
 
-		int totalColumnNo = 50;
+		int totalColumnNo = 54;
 
 		Set<Manufacturer> manufacturers = new HashSet<Manufacturer>();
 		Cell cell;
@@ -119,6 +119,10 @@ public class XslGenerator {
 		setHeaderCellValue(row, cellCounter++, XslConstants.SUPPLIER_STATE);
 		setHeaderCellValue(row, cellCounter++, XslConstants.MIN_DAYS_TO_PROCESS);
 		setHeaderCellValue(row, cellCounter++, XslConstants.MAX_DAYS_TO_PROCESS);
+    setHeaderCellValue(row, cellCounter++, XslConstants.IS_DELETED);
+    setHeaderCellValue(row, cellCounter++, XslConstants.OUT_OF_STOCK);
+    setHeaderCellValue(row, cellCounter++, XslConstants.GROUND_SHIPPING_AVAILABLE);
+    setHeaderCellValue(row, cellCounter++, XslConstants.IS_HIDDEN);
 		setHeaderCellValue(row, cellCounter++, XslConstants.OVERVIEW);
 		setHeaderCellValue(row, cellCounter++, XslConstants.DESCRIPTION);
 		setHeaderCellValue(row, cellCounter++, XslConstants.RELATED_PRODUCTS);
@@ -196,6 +200,10 @@ public class XslGenerator {
 					}
 					setCellValue(row, this.getColumnIndex(XslConstants.MIN_DAYS_TO_PROCESS), product.getMinDays());
 					setCellValue(row, this.getColumnIndex(XslConstants.MAX_DAYS_TO_PROCESS), product.getMaxDays());
+          setCellValue(row, this.getColumnIndex(XslConstants.IS_DELETED), product.isDeleted() !=null ? product.isDeleted() ? "Y" : "N" : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.OUT_OF_STOCK), product.isOutOfStock()!=null ? product.isOutOfStock() ? "Y": "N" : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.GROUND_SHIPPING_AVAILABLE),product.isGroundShipping() ? "Y" : "N");
+          setCellValue(row, this.getColumnIndex(XslConstants.IS_HIDDEN), product.isHidden()!=null ? product.isHidden() ? "Y" : "N" : null);
 					setCellValue(row, this.getColumnIndex(XslConstants.OVERVIEW), "");
 					setCellValue(row, this.getColumnIndex(XslConstants.DESCRIPTION), "");
 					setCellValue(row, this.getColumnIndex(XslConstants.RELATED_PRODUCTS), getRelatedProducts(product));
@@ -656,7 +664,10 @@ File file = new File(xslFilePath);
 		xlsWriter.addHeader(XslConstants.ADDRESS, XslConstants.ADDRESS);
 		xlsWriter.addHeader(XslConstants.CONTACT_PERSON, XslConstants.CONTACT_PERSON);
 		xlsWriter.addHeader(XslConstants.CONTACT_NUMBER, XslConstants.CONTACT_NUMBER);
-		xlsWriter.addHeader(XslConstants.CREDIT_PERIOD, XslConstants.CREDIT_PERIOD);
+		xlsWriter.addHeader(XslConstants.CREDIT_DAYS, XslConstants.CREDIT_DAYS);
+		xlsWriter.addHeader(XslConstants.TARGET_CREDIT_DAYS, XslConstants.TARGET_CREDIT_DAYS);
+		xlsWriter.addHeader(XslConstants.LEAD_TIME, XslConstants.LEAD_TIME);
+		xlsWriter.addHeader(XslConstants.ACTIVE, XslConstants.ACTIVE);
 		xlsWriter.addHeader(XslConstants.MARGIN, XslConstants.MARGIN);
 		xlsWriter.addHeader(XslConstants.BRAND, XslConstants.BRAND);
 		xlsWriter.addHeader(XslConstants.VALIDITY_TERMS_OF_TRADE, XslConstants.VALIDITY_TERMS_OF_TRADE);
@@ -689,7 +700,10 @@ File file = new File(xslFilePath);
 			xlsWriter.addCell(xlsRow, supplierAddress.toString());
 			xlsWriter.addCell(xlsRow, supplier.getContactPerson());
 			xlsWriter.addCell(xlsRow, supplier.getContactNumber());
-			xlsWriter.addCell(xlsRow, supplier.getCreditPeriod());
+			xlsWriter.addCell(xlsRow, supplier.getCreditDays());
+			xlsWriter.addCell(xlsRow, supplier.getTargetCreditDays());
+			xlsWriter.addCell(xlsRow, supplier.getLeadTime());
+			xlsWriter.addCell(xlsRow, supplier.getActive());
 			xlsWriter.addCell(xlsRow, supplier.getMargins());
 			xlsWriter.addCell(xlsRow, supplier.getBrandName());
 			xlsWriter.addCell(xlsRow, supplier.getTOT());

@@ -30,7 +30,7 @@ public interface ProductSearchService {
                                    PaginationFilter paginationFilter,
                                    SortFilter sortFilter) throws SearchException;
 
-    SearchResult getSearchResults(String query, int page, int perPage,boolean isRetry) throws SearchException;
+    SearchResult getSearchResults(String query,List<SearchFilter> searchFilters, int page, int perPage,boolean isRetry) throws SearchException;
 
     SearchResult getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException;
 }
