@@ -50,7 +50,10 @@ public class MHKConstants {
     public static final String PWD_RESET_MSG = "Password reset mail has been sent to your email id. Please check your Inbox/Spam/Junk folders.";
     public static final String INVALID_LOGIN_CRDNTLS = "Invalid login credentials.";
     public static final String NO_SUCH_PRDCT ="No such product found";
-    public static final String EMAIL_ID_ALRDY_EXIST = "email id already exists"; 
+    public static final String EMAIL_ID_ALRDY_EXIST = "email id already exists";
+    public static final String EYEGLASSES = "eyeglasses";
+    public static final String LENSES = "lenses";
+    
     public static String getStringNullDefault(String data){
     	if(data==null)
     		return "";

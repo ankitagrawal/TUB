@@ -88,8 +88,8 @@ public class MShopAction extends MBaseAction{
                 if (menu.getUrl().equals('/'+primaryNode)) {
 					for (MenuNode secondaryMenu : menu.getChildNodes()) {
 						String url =secondaryMenu.getUrl();
-						if (null!=url&& !(url.contains("lenses")
-								||url.contains("eyeglasses"))) {
+						if (null!=url&& !(url.contains(MHKConstants.EYEGLASSES)
+								||url.contains(MHKConstants.LENSES))) {
 							secondaryMenuNode = new MMenuNode();
 							secondaryMenuNode
 									.setLevel(secondaryMenu.getLevel());
