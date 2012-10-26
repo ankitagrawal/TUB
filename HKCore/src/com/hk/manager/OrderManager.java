@@ -381,10 +381,11 @@ public class OrderManager {
 			order.setScore(new Long(karmaProfile.getKarmaPoints()));
 		}
 		
-		Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
+		/*Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
 		Date targetDelDate = HKDateUtil.addToDate(order.getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH, Integer.parseInt(dispatchDays[0].toString()));
-		order.setTargetDispatchDate(targetDelDate);
+		order.setTargetDispatchDate(targetDelDate);*/
 
+		getOrderService().setTargetDispatchDelDatesOnBO( order);
 		order = getOrderService().save(order);
 
 		//Order lifecycle activity logging - Order Placed

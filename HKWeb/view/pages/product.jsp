@@ -844,7 +844,7 @@
 								</script>
 							</div>
 						</td>
-						<td style="border-style:none">
+						<td style="border-style:none">                    
 							<div style="word-wrap:break-word">
 									${review.review}
 							</div>

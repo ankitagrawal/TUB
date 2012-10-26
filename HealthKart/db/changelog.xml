@@ -9443,4 +9443,99 @@
 			<column name="comment_type" type="INT"/>
 		</addColumn>
 	</changeSet>
+
+	<changeSet author="Ajeet (generated)" id="1350715789183-1">
+        <addColumn tableName="goods_received_note">
+            <column name="est_payment_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-2">
+        <addColumn tableName="purchase_invoice">
+            <column name="est_payment_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-3">
+        <addColumn tableName="supplier">
+            <column defaultValue="1" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-4">
+        <addColumn tableName="supplier">
+            <column defaultValue="15" name="credit_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-5">
+        <addColumn tableName="supplier">
+            <column defaultValue="7" name="lead_time" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-6">
+        <addColumn tableName="supplier">
+            <column defaultValue="30" name="target_credit_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Ajeet (generated)" id="1350715789183-7">
+        <addColumn tableName="purchase_order">
+            <column name="approval_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-8">
+        <dropColumn columnName="payment_amount" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-9">
+        <dropColumn columnName="payment_date" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-10">
+        <dropColumn columnName="payment_details" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-11">
+        <dropColumn columnName="invoice_date" tableName="purchase_order"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-12">
+        <dropColumn columnName="invoice_number" tableName="purchase_order"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-13">
+        <dropColumn columnName="credit_period" tableName="supplier"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-14">
+        <dropColumn columnName="po_date" tableName="purchase_order"/>
+    </changeSet>
+
+	<changeSet author="Ajeet (written)" id="20121020-01">
+		<sql>
+			update purchase_order set purchase_order_status_id=1000 where purchase_order_status_id=100;
+			update goods_received_note set grn_status_id=30 where grn_status_id=20;
+			update purchase_order set po_place_date=update_dt;
+		</sql>
+	</changeSet>
+	<changeSet author="Ajeet (written)" id="20121020-02">
+		<sql>
+			delete from grn_status where id in (25, 40);
+		</sql>
+	</changeSet>
+
+    <changeSet author="AdminUser (generated)" id="1351008534081-1">
+        <addColumn tableName="base_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1351008534081-2">
+        <addColumn tableName="base_order">
+            <column name="target_dispatch_date_on_verify" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1351008534081-3">
+        <addColumn tableName="shipping_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>
