@@ -149,7 +149,7 @@ public class CourierServiceInfoAction extends BaseAction {
                         tmpObj2.setPreferredCod(courierServiceInfo.isPreferredCod());
                         tmpObj2.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());
                         courierServiceInfoDao.save(tmpObj2);
-                        logger.info("updating:" + courierServiceInfo.getPincode().getPincode());
+                        //logger.info("updating:" + courierServiceInfo.getPincode().getPincode());
 
                     }
                 }

@@ -34,7 +34,7 @@
         </c:forEach>
         <%--<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">--%>
         <%--</shiro:hasPermission>--%>
-        <%--menuStr += "<li class='lvl1' id='offers_button' style='float:left;'><a href='${pageContext.request.contextPath}/pages/valentineGifts.jsp'>Gifts</a></li>"--%>
+            menuStr += "<li class='' id='brands_button' style='float:right; margin: 4px 6px 0 0; padding: 2px 4px; background-color: #2b659d; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #4c97df;'><a href='http://www.healthkartplus.com' style='color: yellow; border-bottom: 0;' target='_blank'>HealthKartPlus &gt;</a></li>";
             return menuStr;
         }
 

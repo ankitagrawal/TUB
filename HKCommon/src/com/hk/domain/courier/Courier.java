@@ -105,6 +105,7 @@ public class Courier implements java.io.Serializable {
 	@Override
 	public int hashCode() {
 	return this.id != null ? id.hashCode() :0 ;
+}
 
 }
 
