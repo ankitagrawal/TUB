@@ -46,7 +46,7 @@
     %>
     <div class="siteNotice" style="width:960px; margin-left:auto; margin-right:auto;">
         <div style="height: 48px; padding-top: 6px; font-size: 1em; color: black; background-color: yellow;">
-            <strong>Pre Diwali Weekend Discount!</strong> 10% OFF Sitewide*, Use Coupon Code <strong>HKPREDIWALISALE</strong><br/>
+            <strong>Pre Diwali Weekend Discount!</strong> 10% OFF Sitewide* (only on prepaid orders, TnC apply), Use Coupon Code <strong>HKPREDIWALISALE</strong><br/>
             <span style="font-size: 1.2em;">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</span>
         </div>
     </div>
