@@ -220,7 +220,7 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <div class="grid_24 optionsDiv">
+                    <div class="grid_24 optionsDiv" style="margin-left:10px;">
                         <fieldset>
                             <legend>&nbsp;&nbsp;Available Options</legend>
                             <c:forEach items="${inStockVariants}" var="variant" varStatus="variantCtr">
@@ -275,7 +275,7 @@
                                      style="height:20px; width:25px;"/>
                             </div>
 
-                            <fieldset style="float:right;">
+                            <fieldset style="float:right;margin-right:10px;">
                                 <legend>&nbsp;&nbsp;Selected Option</legend>
                                 <div class="grid_4 result">
                                 </div>
