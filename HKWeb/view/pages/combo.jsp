@@ -220,7 +220,7 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <div class="grid_24 optionsDiv" style="margin-left:10px;">
+                    <div class="grid_24 optionsDiv">
                         <fieldset>
                             <legend>&nbsp;&nbsp;Available Options</legend>
                             <c:forEach items="${inStockVariants}" var="variant" varStatus="variantCtr">
@@ -591,7 +591,7 @@
         });
 
         $('.optionsDiv').css({
-            marginLeft:($('.grid_23').width() - $('.optionsDiv').outerWidth()) / 2
+            marginLeft:($('.grid_24').width() - $('.optionsDiv').outerWidth()) / 2
         });
 
         $('.options').click(function() {
