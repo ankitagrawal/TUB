@@ -12,6 +12,10 @@
 <s:layout-render name="/layouts/agentLayout.jsp" pageTitle="User Orders" >
     <s:layout-component name="content">
         <s:form beanclass="com.hk.web.action.admin.crm.UserListByPhoneAction" method="get" style="">
+            <s:text name="email" value="Email Id" size="200"/>
+            <s:hidden name="phone" value="${userAdmin.phone}"/>
+            <s:submit name="searchByEmail" value="Search by Email" />
+            </br>
             Users for phone: ${userAdmin.phone}
             <table>
                 <th>Email Id</th>
@@ -22,7 +26,8 @@
                                 event="pre">
                         <s:param name="phone" value="${userAdmin.phone}"/>
                         <s:param name="email" value="${user.user.email}"/>
-
+                        <%--Hard-coded for auth--%>
+                        <s:param name="key" value="US3jbSEN5EKVVzlabDl95loyWf_hloCZ"/>
                         ${user.user.email}</s:link><br/>
                     </td>
                     <td>

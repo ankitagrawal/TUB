@@ -15,6 +15,7 @@ public interface UserDetailService {
 
     final int MAX_COUNT = 3;
     final int MIN_KARMA_POINTS = 300;
+    final String AUTH_KEY = "US3jbSEN5EKVVzlabDl95loyWf_hloCZ";
     public UserDetail save(UserDetail userDetails);
 
     public List<UserDetail> findByPhone(long phone);
