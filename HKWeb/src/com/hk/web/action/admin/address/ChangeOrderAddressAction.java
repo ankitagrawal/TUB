@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.address;
 
+import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -32,7 +33,7 @@ public class ChangeOrderAddressAction extends BaseAction {
     @Autowired
     AddressBookManager          addressBookManager;
     @Autowired
-    AddressDao                  addressDao;
+    AddressService              addressDao;
     @Autowired
     AddressMatchScoreCalculator addressMatchScoreCalculator;
 
