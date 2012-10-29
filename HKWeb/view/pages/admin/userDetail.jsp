@@ -12,7 +12,7 @@
 <s:layout-render name="/layouts/agentLayout.jsp" pageTitle="User Orders" >
     <s:layout-component name="content">
         <s:form beanclass="com.hk.web.action.admin.crm.UserListByPhoneAction" method="get" style="">
-            <s:text name="email" value="Email Id" size="200"/>
+            <s:text name="email" value="Email Id"  style="width: 300px"/>
             <s:hidden name="phone" value="${userAdmin.phone}"/>
             <s:submit name="searchByEmail" value="Search by Email" />
             </br>
