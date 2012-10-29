@@ -39,8 +39,7 @@ public class AddressServiceImpl implements AddressService {
     public Address save(Address address) {
         Address addressRec = addressDao.save(address);
         try{
-            User user = address.getUser();
-
+            User user = addressRec.getUser();
             List<Integer> phoneNumbers = new ArrayList<Integer>();
             String[] phones = null;
             String ph = address.getPhone();
