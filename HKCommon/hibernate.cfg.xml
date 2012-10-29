@@ -187,5 +187,7 @@
 	    <mapping class="com.hk.domain.feedback.Feedback" />
 		<mapping class="com.hk.domain.offer.OfferEmailDomain" />
 	    <mapping class="com.hk.domain.catalog.product.UpdatePvPrice" />
+	    <mapping class="com.hk.domain.order.OrderPaymentReconciliation" />
+	    <mapping class="com.hk.domain.order.analytics.DemandHistory" />
     </session-factory>
 </hibernate-configuration>

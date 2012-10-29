@@ -8810,6 +8810,116 @@
 			AND so.shipping_order_status_id = 200
 		</sql>
 	</changeSet>
+	<changeSet author="Rohit (generated)" id="1347279976393-1">
+	        <addColumn tableName="goods_received_note">
+	            <column name="discount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-2">
+	        <addColumn tableName="goods_received_note">
+	            <column name="final_payable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-3">
+	        <addColumn tableName="goods_received_note">
+	            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-4">
+	        <addColumn tableName="goods_received_note">
+	            <column name="tax_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-5">
+	        <addColumn tableName="goods_received_note">
+	            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-6">
+	        <addColumn tableName="grn_line_item">
+	            <column name="discount_percent" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-7">
+	        <addColumn tableName="grn_line_item">
+	            <column name="payable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-8">
+	        <addColumn tableName="grn_line_item">
+	            <column name="procurement_price" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-9">
+	        <addColumn tableName="grn_line_item">
+	            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-10">
+	        <addColumn tableName="grn_line_item">
+	            <column name="tax_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-11">
+	        <addColumn tableName="grn_line_item">
+	            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-12">
+	        <addColumn tableName="po_line_item">
+	            <column name="discount_percent" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-13">
+	        <addColumn tableName="po_line_item">
+	            <column name="payable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-14">
+	        <addColumn tableName="po_line_item">
+	            <column name="procurement_price" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-15">
+	        <addColumn tableName="po_line_item">
+	            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-16">
+	        <addColumn tableName="po_line_item">
+	            <column name="tax_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-17">
+	        <addColumn tableName="po_line_item">
+	            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-18">
+	        <addColumn tableName="purchase_order">
+	            <column name="discount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-19">
+	        <addColumn tableName="purchase_order">
+	            <column name="final_payable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-20">
+	        <addColumn tableName="purchase_order">
+	            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-21">
+	        <addColumn tableName="purchase_order">
+	            <column name="tax_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
+	    <changeSet author="Rohit (generated)" id="1347279976393-22">
+	        <addColumn tableName="purchase_order">
+	            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+	        </addColumn>
+	    </changeSet>
     <changeSet author="Pratham (generated)" id="1347259898238-10">
         <addColumn tableName="product_image">
             <column name="image_type" type="INT"/>
@@ -9000,4 +9110,486 @@
     <changeSet author="Tarun (generated)" id="1348554794998-2">
         <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="runsheet" constraintName="fk_runsheet_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>   
+    <changeSet author="Rohit (generated)" id="1348648571172-1">
+        <createTable tableName="order_payment_reconciliation">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipping_order_id" type="INT"/>
+            <column name="payment_process_type" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reconciled" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reconciled_amount" type="DECIMAL(12,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="reward_points_against_cancellation" type="DECIMAL(12,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1348648571172-2">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1348648571172-3">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="order_payment_reconciliation" constraintName="fk_order_payment_reconciliation_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+	<changeSet author="Ankit" id="10-11-2012">
+	    <sql>
+		    create table `pincode_default_courier_bak` as (select * from `pincode_default_courier` );
+	    </sql>
+	</changeSet>
+
+
+    <changeSet author="Ankit (generated)" id="1347620653716-1">
+        <addColumn tableName="courier_service_info">
+            <column name="cod_on_ground_shipping" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1347620653716-2">
+        <addColumn tableName="courier_service_info">
+            <column name="ground_shipping_available" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1347620653716-3">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="ground_shipping" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-1">
+        <addColumn tableName="pincode_default_courier">
+            <column defaultValue="0" name="cod" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-2">
+        <addColumn tableName="pincode_default_courier">
+            <column name="courier_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-3">
+        <addColumn tableName="pincode_default_courier">
+            <column name="estimated_shipping_cost" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-4">
+        <addColumn tableName="pincode_default_courier">
+            <column defaultValue="0" name="ground_shipping" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-5">
+        <dropForeignKeyConstraint baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_cod"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-6">
+        <dropForeignKeyConstraint baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_non_cod"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-7">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-8">
+        <dropColumn columnName="courier_id_cod" tableName="pincode_default_courier"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-9">
+        <dropColumn columnName="courier_id_non_cod" tableName="pincode_default_courier"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-10">
+        <dropColumn columnName="estimated_shipping_cost_cod" tableName="pincode_default_courier"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1349775702731-11">
+        <dropColumn columnName="estimated_shipping_cost_non_cod" tableName="pincode_default_courier"/>
+    </changeSet>
+	<changeSet author="Ankit" id="1347620653716-4">
+	    <sql>
+	        delete from `pincode_default_courier` ;
+
+	        insert into `pincode_default_courier` (pincode_id, warehouse_id,courier_id,estimated_shipping_cost,cod,
+	        ground_shipping)
+	        select v1.pincode_id,v1.warehouse_id,v1.courier_id,v1.estimated_shipping_cost,v1.cod,v1.ground_shipping
+	        from
+	        (select pincode_id,warehouse_id,courier_id_cod as courier_id,estimated_shipping_cost_cod as
+	        estimated_shipping_cost,'0' as cod,
+	        '0' as ground_shipping
+	        from `pincode_default_courier_bak`
+
+	        union
+
+	        select pincode_id,warehouse_id,courier_id_non_cod as courier_id,estimated_shipping_cost_non_cod as
+	        estimated_shipping_cost,'1' as cod ,
+	        '0' as ground_shipping
+	        from `pincode_default_courier_bak`
+	        )v1 ;
+	    </sql>
+	</changeSet>
+
+    <changeSet author="Rahul (generated)" id="1349775925334-1">
+        <dropTable tableName="pincode_default_courier_bak"/>
+    </changeSet>
+
+	<changeSet author="Rahul" id="1349852020790-50">
+	    <sql>
+
+			alter table  address add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  affiliate_traffic_details add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  awb add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  campaign_tracking add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  emailer_history add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  base_order add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  order_lifecycle add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  cart_line_item add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ;
+			alter table  shipping_order_lifecycle add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  user_cart add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  base_order_category add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  line_item add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  payment add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  shipping_order add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  coupon add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  email_recepient add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  product add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  shipment add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  product_variant add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  notify_me add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  demand_history add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  purchase_order add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  goods_received_note add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  purchase_invoice add column `create_dt` DATETIME, add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+
+			update address  set create_dt = create_date;
+			update base_order  set create_dt = create_date;
+			update coupon  set create_dt = create_date;
+			update payment  set create_dt = create_date;
+			update product  set create_dt = create_date;
+			update product_variant  set create_dt = created_date;
+			update purchase_invoice  set create_dt = create_date;
+			update purchase_order  set create_dt = create_date;
+			update shipping_order  set create_dt = create_date;
+			update user_cart  set create_dt = create_date;
+
+		    update base_order  set update_dt = update_date;
+		    update purchase_order set update_dt = update_date;
+		    update shipping_order set update_dt = update_date;
+
+			update address  set create_dt = now() where create_dt is null;
+			update affiliate_traffic_details  set create_dt = now() where create_dt is null;
+			update awb  set create_dt = now() where create_dt is null;
+			update campaign_tracking set create_dt = now() where create_dt is null;
+			update emailer_history  set create_dt = now() where create_dt is null;
+			update base_order  set create_dt = now() where create_dt is null;
+			update order_lifecycle  set create_dt = now() where create_dt is null;
+			update cart_line_item  set create_dt = now() where create_dt is null;
+			update shipping_order_lifecycle  set create_dt = now() where create_dt is null;
+			update user_cart  set create_dt = now() where create_dt is null;
+			update base_order_category  set create_dt = now() where create_dt is null;
+			update line_item  set create_dt = now() where create_dt is null;
+			update payment  set create_dt = now() where create_dt is null;
+			update shipping_order  set create_dt = now() where create_dt is null;
+			update coupon  set create_dt = now() where create_dt is null;
+			update email_recepient  set create_dt = now() where create_dt is null;
+			update product  set create_dt = now() where create_dt is null;
+			update shipment  set create_dt = now() where create_dt is null;
+			update product_variant  set create_dt = now() where create_dt is null;
+			update notify_me  set create_dt = now() where create_dt is null;
+			update demand_history  set create_dt = now() where create_dt is null;
+			update purchase_order  set create_dt = now() where create_dt is null;
+			update goods_received_note  set create_dt = now() where create_dt is null;
+			update purchase_invoice  set create_dt = now() where create_dt is null;
+
+			alter table  address MODIFY create_dt datetime NOT NULL;
+			alter table  affiliate_traffic_details MODIFY create_dt datetime NOT NULL;
+			alter table  awb MODIFY create_dt datetime NOT NULL;
+			alter table  campaign_tracking MODIFY create_dt datetime NOT NULL;
+			alter table  emailer_history MODIFY create_dt datetime NOT NULL;
+			alter table  base_order MODIFY create_dt datetime NOT NULL;
+			alter table  order_lifecycle MODIFY create_dt datetime NOT NULL;
+			alter table  cart_line_item MODIFY create_dt datetime NOT NULL;
+			alter table  shipping_order_lifecycle MODIFY create_dt datetime NOT NULL;
+			alter table  user_cart MODIFY create_dt datetime NOT NULL;
+			alter table  base_order_category MODIFY create_dt datetime NOT NULL;
+			alter table  line_item MODIFY create_dt datetime NOT NULL;
+			alter table  payment MODIFY create_dt datetime NOT NULL;
+			alter table  shipping_order MODIFY create_dt datetime NOT NULL;
+			alter table  coupon MODIFY create_dt datetime NOT NULL;
+			alter table  email_recepient MODIFY create_dt datetime NOT NULL;
+			alter table  product MODIFY create_dt datetime NOT NULL;
+			alter table  shipment MODIFY create_dt datetime NOT NULL;
+			alter table  product_variant MODIFY create_dt datetime NOT NULL;
+			alter table  notify_me MODIFY create_dt datetime NOT NULL;
+			alter table  demand_history MODIFY create_dt datetime NOT NULL;
+			alter table  purchase_order MODIFY create_dt datetime NOT NULL;
+			alter table  goods_received_note MODIFY create_dt datetime NOT NULL;
+			alter table  purchase_invoice MODIFY create_dt datetime NOT NULL;
+
+	    </sql>
+	</changeSet>
+
+	<changeSet author="Rahul" id="1349852020790-501">
+	    <sql>
+		    alter table  user add column `create_dt` DATETIME;
+		    alter table  user add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+		    update user  set create_dt = create_date;
+		    update user set update_dt = update_date;
+		    update user  set create_dt = now() where create_dt is null;
+		    alter table  user MODIFY create_dt datetime NOT NULL;
+	    </sql>
+	</changeSet>
+
+	<changeSet author="Rahul (generated)" id="1349852020790-51">
+	    <dropColumn columnName="create_date" tableName="address"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-52">
+	    <dropColumn columnName="create_date" tableName="base_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-53">
+	    <dropColumn columnName="update_date" tableName="base_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-54">
+	    <dropColumn columnName="create_date" tableName="coupon"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-55">
+	    <dropColumn columnName="create_date" tableName="payment"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-56">
+	    <dropColumn columnName="create_date" tableName="product"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-57">
+	    <dropColumn columnName="created_date" tableName="product_variant"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-58">
+	    <dropColumn columnName="create_date" tableName="purchase_invoice"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-59">
+	    <dropColumn columnName="create_date" tableName="purchase_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-60">
+	    <dropColumn columnName="update_date" tableName="purchase_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-61">
+	    <dropColumn columnName="create_date" tableName="shipping_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-62">
+	    <dropColumn columnName="update_date" tableName="shipping_order"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-63">
+	    <dropColumn columnName="create_date" tableName="user"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-64">
+	    <dropColumn columnName="update_date" tableName="user"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1349852020790-65">
+	    <dropColumn columnName="create_date" tableName="user_cart"/>
+	</changeSet>
+
+    <changeSet author="Tarun (generated)" id="1350281977808-1">
+        <addColumn tableName="rv_line_item">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Tarun (generated)" id="1349849616633-1">
+        <addColumn tableName="consignment">
+            <column name="delivery_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Tarun" id="1349849616633-2">
+		<sql>
+			UPDATE consignment c
+			SET c.delivery_date =
+						(SELECT MAX(create_date)
+						FROM consignment_tracking ct
+						WHERE ct.consignment_lifecycle_status_id=80
+						AND ct.consignment_id = c.id);
+		</sql>
+	</changeSet>
+    <changeSet author="Neha (generated)" id="1350020589676-1">
+        <addColumn tableName="awb">
+            <column name="returnAwb_bar_code" type="VARCHAR(70)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1350020589676-2">
+        <addColumn tableName="awb">
+            <column name="returnAwb_number" type="VARCHAR(70)"/>
+        </addColumn>
+    </changeSet>
+	
+	<changeSet author="Ajeet (generated)" id="1348919811628-1">
+        <addColumn tableName="update_pv_price">
+            <column defaultValue="10" name="status" type="INT">
+				<constraints nullable="false"/>
+            </column>
+        </addColumn>
+	</changeSet>
+	<changeSet author="Ajeet (generated)" id="1348919811628-2">
+			<sql>
+				update  update_pv_price set status = 10 where updated = 0;
+				update  update_pv_price set status = 20 where updated = 1;
+			</sql>
+	</changeSet>
+	<changeSet author="Ajeet (generated)" id="1348919811628-3">
+			<dropColumn columnName="updated" tableName="update_pv_price"/>
+	</changeSet>
+	<changeSet author="Rohit (generated)" id="1350458749534-1">
+		<addColumn tableName="base_order">
+			<column name="comment_type" type="INT"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="Ajeet (generated)" id="1350715789183-1">
+        <addColumn tableName="goods_received_note">
+            <column name="est_payment_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-2">
+        <addColumn tableName="purchase_invoice">
+            <column name="est_payment_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-3">
+        <addColumn tableName="supplier">
+            <column defaultValue="1" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-4">
+        <addColumn tableName="supplier">
+            <column defaultValue="15" name="credit_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-5">
+        <addColumn tableName="supplier">
+            <column defaultValue="7" name="lead_time" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-6">
+        <addColumn tableName="supplier">
+            <column defaultValue="30" name="target_credit_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Ajeet (generated)" id="1350715789183-7">
+        <addColumn tableName="purchase_order">
+            <column name="approval_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-8">
+        <dropColumn columnName="payment_amount" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-9">
+        <dropColumn columnName="payment_date" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-10">
+        <dropColumn columnName="payment_details" tableName="goods_received_note"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-11">
+        <dropColumn columnName="invoice_date" tableName="purchase_order"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-12">
+        <dropColumn columnName="invoice_number" tableName="purchase_order"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-13">
+        <dropColumn columnName="credit_period" tableName="supplier"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1350715789183-14">
+        <dropColumn columnName="po_date" tableName="purchase_order"/>
+    </changeSet>
+
+	<changeSet author="Ajeet (written)" id="20121020-01">
+		<sql>
+			update purchase_order set purchase_order_status_id=1000 where purchase_order_status_id=100;
+			update goods_received_note set grn_status_id=30 where grn_status_id=20;
+			update purchase_order set po_place_date=update_dt;
+		</sql>
+	</changeSet>
+	<changeSet author="Ajeet (written)" id="20121020-02">
+		<sql>
+			delete from grn_status where id in (25, 40);
+		</sql>
+	</changeSet>
+
+    <changeSet author="AdminUser (generated)" id="1351008534081-1">
+        <addColumn tableName="base_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1351008534081-2">
+        <addColumn tableName="base_order">
+            <column name="target_dispatch_date_on_verify" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1351008534081-3">
+        <addColumn tableName="shipping_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="Ajeet (generated)" id="1351236795227-1">
+        <createTable tableName="supplier_balance">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="supplier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="balance" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1351236795227-2">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="supplier_balance" constraintName="fk_supplier_balance_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1351173120154-1">
+        <createTable tableName="user_detail">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="phone" type="BIGINT"/>
+            <column name="crm_priority" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1351173120154-4">
+        <createIndex indexName="user_detail_key" tableName="user_detail" unique="true">
+            <column name="phone"/>
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="Ajeet (generated)" id="1351491739428-1">
+        <addColumn tableName="feedback">
+            <column name="feedback_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+	<changeSet author="Ajeet (written)" id="20121029-01">
+		<sql>
+			update feedback f, base_order bo set f.feedback_date=bo.update_dt where f.base_order_id=bo.id;			
+		</sql>
+	</changeSet>
+    
 </databaseChangeLog>

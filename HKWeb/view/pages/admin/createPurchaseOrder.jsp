@@ -102,10 +102,7 @@
 
             </td>
           </tr>
-          <tr>
-            <td>PO Date</td>
-            <td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseOrder.poDate" value="<%=new Date()%>"/></td>
-          </tr>
+        
           <tr>
             <td>PO Number</td>
             <td><s:text name="purchaseOrder.poNumber"/></td>

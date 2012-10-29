@@ -73,6 +73,9 @@
                                 '  <td>' +
                                 '    <input class="date_input" formatPattern="yyyy-MM-dd" type="text" name="rvLineItems[' + nextIndex + '].expiryDate" />' +
                                 '  </td>' +
+                                '  <td>'  +
+								'    <textarea rows="4" columns="10" name="rvLineItems[' + nextIndex + '].remarks" style="height:50px;"/>' +
+                                '  </td>' +
                                 '</tr>';
 
                 $('#poTable').append(newRowHtml);
@@ -147,6 +150,7 @@
                 <th>Batch Number</th>
                 <th>Mfg. Date<br/>(yyyy-MM-dd)</th>
                 <th>Exp. Date<br/>(yyyy-MM-dd)</th>
+	            <th>Remarks</th>
 
             </tr>
             </thead>
@@ -180,7 +184,7 @@
                         <fmt:formatDate value="${rvLineItem.mfgDate}" type="both"/></td>
                     <td>
                         <fmt:formatDate value="${rvLineItem.expiryDate}" type="both"/></td>
-
+	                <td>${rvLineItem.remarks}</td>
 
                 </tr>
 

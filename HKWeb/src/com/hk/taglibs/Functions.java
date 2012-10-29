@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.hk.domain.catalog.product.*;
+import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
@@ -43,6 +43,13 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductImage;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.VariantConfig;
+import com.hk.domain.catalog.product.VariantConfigOption;
+import com.hk.domain.catalog.product.VariantConfigOptionParam;
+import com.hk.domain.catalog.product.VariantConfigValues;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.hkDelivery.Hub;
@@ -267,8 +274,9 @@ public class Functions {
     }
 
     public static List<String> brandsInCategory(Object o) {
+	    Category primaryCategory = (Category) o;
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-        return categoryDao.getBrandsByCategory(Arrays.asList(((Category) o).getName()));
+        return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
     }
 
     @SuppressWarnings("deprecation")
@@ -321,10 +329,9 @@ public class Functions {
         return adminInventoryService.areAllUnitsOfOrderCheckedOut(order);
     }
 
-    public static Long checkedinUnitsCount(Object o1, Object o2) {
+    public static Long checkedinUnitsCount(Object o) {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
-        // ProductVariant productVariant = (ProductVariant) o1;
-        GrnLineItem grnLineItem = (GrnLineItem) o2;
+        GrnLineItem grnLineItem = (GrnLineItem) o;
         return adminInventoryService.countOfCheckedInUnitsForGrnLineItem(grnLineItem);
     }
 
@@ -432,7 +439,11 @@ public class Functions {
     }
 
     public static String escapeHtml(String str) {
-        return StringEscapeUtils.escapeHtml(str);
+        return StringEscapeUtils.escapeHtml(str.trim());
+    }
+
+    public static String escapeXML(String str) {
+        return StringEscapeUtils.escapeXml(str.trim());
     }
 
     public static Double getApplicableOfferPrice(Object o) {
@@ -453,14 +464,11 @@ public class Functions {
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
-    public static List<Courier> getAvailableCouriers(Object o) {
-
-        // so this will work like, The system gets input as pincode and code available or not, and Then system returns
-        // the couriers in a sorted order on price
+    public static List<Courier> getAvailableCouriers(Object o) {     
 
         ShippingOrder shippingOrder = (ShippingOrder) o;
         CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
-        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD());
+        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false , false);
     }
 
     public static boolean equalsIgnoreCase(String str1, String str2) {
@@ -585,10 +593,10 @@ public class Functions {
 		return linkManager.getCodConverterLink(order);
 	}
 
-	public static boolean isCODAllowed(Order order) {
-		OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
-        return orderService.isCODAllowed(order);
-    }
+	/*public static boolean isCODAllowed(Order order) {
+	    AdminOrderService adminOrderService = ServiceLocatorFactory.getService(AdminOrderService.class);
+        return adminOrderService.isCODAllowed(order);
+    }*/
 
     public static Hub getHubForHkdeliveryUser(User user){
         HubService hubService = ServiceLocatorFactory.getService(HubService.class);
@@ -596,7 +604,7 @@ public class Functions {
     }
 
 	public static boolean renderNewCatalogFilter(String child, String secondChild) {
-		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine");
+		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer");
 		boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter, secondChild));
 		return renderNewCatalogFilter;
 	}
@@ -618,9 +626,13 @@ public class Functions {
 	}
 
 	public static boolean showOptionOnUI(String optionType) {
-		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY");
+		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY", "FRAGRANCE");
 		boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
 		return showOptionOnUI;
 	}
 
+	public static String getDisplayNameForHkdeliveryTracking(String status){
+		CourierStatusUpdateHelper courierStatusUpdateHelper = new CourierStatusUpdateHelper();
+		return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
+	}
 }

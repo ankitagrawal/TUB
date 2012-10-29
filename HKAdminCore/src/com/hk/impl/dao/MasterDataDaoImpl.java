@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,14 +16,11 @@ import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
-import com.hk.domain.hkDelivery.ConsignmentStatus;
-import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
@@ -44,6 +42,8 @@ import com.hk.domain.core.Tax;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
@@ -315,6 +315,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
     }
 
+     public List<Courier> getGroundShippedCourierList() {
+        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableGroundShippedCouriers()));
+    }
+
     public List<ShippingOrderStatus> getSOStatusForReconcilation(){
         return EnumShippingOrderStatus.getStatusForReconcilationReport();
     }
@@ -343,4 +347,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     public List<ConsignmentStatus> getConsignmentStatusList(){
         return getBaseDao().getAll(ConsignmentStatus.class);
     }
+
+	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
+	       return EnumPurchaseOrderStatus.getStatusForNonApprover();
+	}
 }

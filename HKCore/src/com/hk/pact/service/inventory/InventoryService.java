@@ -7,6 +7,7 @@ import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.inventory.GoodsReceivedNote;
 
 public interface InventoryService {
 
@@ -37,6 +38,12 @@ public interface InventoryService {
 
     public Long getBookedQtyOfSkuInQueue(List<Sku> sku);
 
+    public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList);
+
+    public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList);
+
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant);
+
+    public boolean allInventoryCheckedIn(GoodsReceivedNote grn);
 
 }

@@ -2,32 +2,16 @@ package com.hk.domain.inventory;
 // Generated Dec 15, 2011 3:32:41 PM by Hibernate Tools 3.2.4.CR1
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @SuppressWarnings("serial")
@@ -55,12 +39,9 @@ public class GoodsReceivedNote implements java.io.Serializable {
     @Column(name = "payable", precision = 12)
     private Double payable;
 
-    @Column(name = "payment_details", length = 100)
-    private String paymentDetails;
-
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "payment_date", length = 19)
-    private Date paymentDate;
+    @Column(name = "est_payment_date")
+    private Date estPaymentDate;
 
     @Column(name = "invoice_number", length = 100)
     private String invoiceNumber;
@@ -88,6 +69,10 @@ public class GoodsReceivedNote implements java.io.Serializable {
     )
     private List<PurchaseInvoice> purchaseInvoices = new ArrayList<PurchaseInvoice>();
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_dt", nullable = false)
+	private Date createDate = new Date();
+
     @Transient
     private boolean selected;
 
@@ -98,7 +83,23 @@ public class GoodsReceivedNote implements java.io.Serializable {
     @Column(name = "remarks")
     private String remarks;
 
-    public Long getId() {
+	@Column(name = "taxable_amount")
+	private Double taxableAmount;
+
+	@Column(name = "tax_amount")
+	private Double taxAmount;
+
+	@Column(name = "surcharge_amount")
+	private Double surchargeAmount;
+
+	@Column(name = "discount")
+	private Double discount;
+
+	@Column(name = "final_payable_amount")
+	private Double finalPayableAmount;
+
+
+	public Long getId() {
         return this.id;
     }
 
@@ -138,23 +139,15 @@ public class GoodsReceivedNote implements java.io.Serializable {
         this.payable = payable;
     }
 
-    public String getPaymentDetails() {
-        return this.paymentDetails;
-    }
+	public Date getEstPaymentDate() {
+		return estPaymentDate;
+	}
 
-    public void setPaymentDetails(String paymentDetails) {
-        this.paymentDetails = paymentDetails;
-    }
+	public void setEstPaymentDate(Date estPaymentDate) {
+		this.estPaymentDate = estPaymentDate;
+	}
 
-    public Date getPaymentDate() {
-        return this.paymentDate;
-    }
-
-    public void setPaymentDate(Date paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public List<GrnLineItem> getGrnLineItems() {
+	public List<GrnLineItem> getGrnLineItems() {
         return this.grnLineItems;
     }
 
@@ -233,6 +226,54 @@ public class GoodsReceivedNote implements java.io.Serializable {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Double getTaxableAmount() {
+		return taxableAmount;
+	}
+
+	public void setTaxableAmount(Double taxableAmount) {
+		this.taxableAmount = taxableAmount;
+	}
+
+	public Double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(Double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public Double getSurchargeAmount() {
+		return surchargeAmount;
+	}
+
+	public void setSurchargeAmount(Double surchargeAmount) {
+		this.surchargeAmount = surchargeAmount;
+	}
+
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
+	}
+
+	public Double getFinalPayableAmount() {
+		return finalPayableAmount;
+	}
+
+	public void setFinalPayableAmount(Double finalPayableAmount) {
+		this.finalPayableAmount = finalPayableAmount;
+	}
 }
 
 

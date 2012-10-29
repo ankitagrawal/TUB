@@ -1,12 +1,15 @@
 package com.hk.impl.service.inventory;
 
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.LowInventory;
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.manager.EmailManager;
@@ -187,7 +190,7 @@ public class InventoryServiceImpl implements InventoryService {
 			    if (leastMRPSkuGroup != null && leastMRPSkuGroup.getMrp() != null
 					    && !productVariant.getMarkedPrice().equals(leastMRPSkuGroup.getMrp())) {
 				    //logger.info("MRP: "+productVariant.getMarkedPrice()+"-->"+leastMRPSkuGroup.getMrp());
-				    UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, false);
+				    UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, EnumUpdatePVPriceStatus.Pending.getId());
 				    if (updatePvPrice == null) {
 					    updatePvPrice = new UpdatePvPrice();
 				    }
@@ -197,8 +200,10 @@ public class InventoryServiceImpl implements InventoryService {
 				    updatePvPrice.setOldMrp(productVariant.getMarkedPrice());
 				    updatePvPrice.setNewMrp(leastMRPSkuGroup.getMrp());
 				    updatePvPrice.setOldHkprice(productVariant.getHkPrice());
-				    updatePvPrice.setNewHkprice(leastMRPSkuGroup.getMrp() * (1 - productVariant.getDiscountPercent()));
+				    Double newHkPrice = leastMRPSkuGroup.getMrp() * (1 - productVariant.getDiscountPercent());
+				    updatePvPrice.setNewHkprice(newHkPrice);
 				    updatePvPrice.setTxnDate(new Date());
+				    updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
 				    baseDao.save(updatePvPrice);
 			    }
 		    }
@@ -227,6 +232,13 @@ public class InventoryServiceImpl implements InventoryService {
 	    return availableUnbookedInventory;
     }
 
+	@Override
+	public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList) {
+		Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
+		Long  bookedInventory = this.getBookedQtyOfSkuInProcessingQueue(skuList);
+		return netInventory - bookedInventory;
+	}
+
 	public Long getBookedQty(ProductVariant productVariant) {
 		Long bookedInventory = 0L;
 		if (productVariant != null) {
@@ -238,25 +250,31 @@ public class InventoryServiceImpl implements InventoryService {
 		}
 		return bookedInventory;
 	}
+
+	public boolean allInventoryCheckedIn(GoodsReceivedNote grn){
+		for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
+			if(!grnLineItem.getQty().equals(grnLineItem.getCheckedInQty())){
+				return false;
+			}
+		}
+		return true;
+	}
     
     @Override
     public Long getBookedQtyOfSkuInQueue(List<Sku> skuList){
         return getShippingOrderDao().getBookedQtyOfSkuInQueue(skuList);
     }
 
-    @Override
+	@Override
+	public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList){
+		return getShippingOrderDao().getBookedQtyOfSkuInProcessingQueue(skuList);
+	}
+
+	@Override
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant){
         return getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
     }
-    /*
-     * public List<Warehouse> getWarehousesForSkuAndQty(List<Sku> skuList, Long qty) { Long
-     * bookedInventoryOfSplitOrders = shippingOrderDaoProvider.get().getBookedQtyOfSkuInQueue(skuList); Long
-     * bookedInventoryOfUnsplitOrders = 0L; if (skuList != null && !skuList.isEmpty()) { bookedInventoryOfUnsplitOrders =
-     * orderDaoProvider.get().getBookedQtyOfProductVariantInQueue(skuList.get(0).getProductVariant()); // Here order
-     * status of the order is placed thus the 'qty' is already included. } Long netQtyCheck =
-     * bookedInventoryOfSplitOrders + bookedInventoryOfUnsplitOrders; return
-     * skuItemDaoProvider.get().getWarehousesForSkuAndQty(skuList, netQtyCheck); }
-     */
+
     @Override
     public Supplier getSupplierForSKU(Sku sku) {
         List<SkuGroup> availableSkuGroups = getSkuItemDao().getInStockSkuGroups(sku);

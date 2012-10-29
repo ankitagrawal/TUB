@@ -482,9 +482,9 @@
         </description>
         <name>checkedInUnitsCount</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long checkedinUnitsCount(java.lang.Object,java.lang.Object)</function-signature>
+        <function-signature>java.lang.Long checkedinUnitsCount(java.lang.Object)</function-signature>
         <example>
-            ${hk:checkedInUnitsCount(${object1}, ${object2})}
+            ${hk:checkedInUnitsCount(${object1})}
         </example>
     </function>
 
@@ -629,6 +629,18 @@
         <function-signature>java.lang.String escapeHtml(java.lang.String)</function-signature>
         <example>
             ${hk:escapeHtml(${str)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            escape special chars for valid HTML or XML
+        </description>
+        <name>escapeXML</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String escapeXML(java.lang.String)</function-signature>
+        <example>
+            ${hk:escapeXML(${str)}
         </example>
     </function>
 
@@ -922,6 +934,18 @@
         <function-signature>java.util.List getApplicableWarehouses(com.hk.domain.catalog.product.ProductVariant)</function-signature>
         <example>
             ${hk:getApplicableWarehouses(${object})}
+        </example>
+    </function>
+
+	<function>
+        <description>
+            Returns status/default source and distination in user friendly way
+        </description>
+        <name>getDisplayNameForHkdeliveryTracking</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getDisplayNameForHkdeliveryTracking(java.lang.String)</function-signature>
+        <example>
+            ${hk:getDisplayNameForHkdeliveryTracking(${status})}
         </example>
     </function>
 </taglib>

@@ -41,6 +41,9 @@ import com.hk.domain.user.User;
 
 public interface MasterDataDao 
 {
+	public static final int USER_COMMENT_TYPE_PACKING_BASE_ORDER = 1;
+	public static final int USER_COMMENT_TYPE_DELIVERY_BASE_ORDER = 2;
+	public static final int USER_COMMENT_TYPE_OTHERS_BASE_ORDER = 3;
 
     public List<PaymentStatus> getPaymentStatusList();
 
@@ -49,6 +52,8 @@ public interface MasterDataDao
     public List<OrderStatus> getOrderStatusList();
 
     public List<Courier> getCourierList();
+
+    public List<Courier> getGroundShippedCourierList();
 
     public List<ReconciliationStatus> getReconciliationStatus();
 
@@ -129,4 +134,7 @@ public interface MasterDataDao
     public List<User> getAgentsWithOpenRunsheet();
 
     public List<ConsignmentStatus> getConsignmentStatusList();
+
+	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover();
+
 }

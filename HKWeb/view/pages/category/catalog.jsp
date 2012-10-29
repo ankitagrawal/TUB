@@ -317,13 +317,13 @@
 				<s:layout-render name="/layouts/embed/_productThumb200.jsp" product="${product}"/>
           <div class="clear"></div>
 
-          <div class="compareDiv">
+          <%--<div class="compareDiv">
             <c:if test="${hk:collectionContainsCollection(product.categories, applicableCategories)}">
               <s:checkbox name="products[]" value="${product.id}" class="compare_checkbox"/>
               <s:submit name="createTable" value="Compare" class="checkSubmit"
                         style="display:inline;padding:0;margin:0;font-size:10px;"/>
             </c:if>
-          </div>
+          </div>--%>
         </div>
       </c:if>
     </c:forEach>

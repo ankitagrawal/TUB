@@ -1,46 +1,12 @@
 package com.hk.domain.user;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-
-import com.hk.domain.hkDelivery.Hub;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Where;
-
+import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.clm.CLMConstants;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.coupon.Coupon;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointTxn;
@@ -48,6 +14,13 @@ import com.hk.domain.order.Order;
 import com.hk.domain.store.Store;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.warehouse.Warehouse;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Where;
+
+import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * Author: Kani Date: Aug 29, 2008
@@ -86,14 +59,16 @@ public class User {
     @Column(name = "gender", nullable = true, length = 6)
     private String                gender;
 
+    @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", nullable = false, length = 19)
-    private Date                  createDate;
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date                  createDate = new Date();
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_date", nullable = false, length = 19)
-    private Date                  updateDate;
-
+    /*
+     * @JsonSkip @Temporal(TemporalType.TIMESTAMP) @Column(name = "update_date", nullable = false, length = 19) private
+     * Date updateDate;
+     */
+    @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_login_date", nullable = false, length = 19)
     private Date                  lastLoginDate;
@@ -104,63 +79,82 @@ public class User {
     @Transient
     private String                confirmPassword;
 
+    @JsonSkip
     @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SELECT)
     @JoinTable(name = "user_has_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
     /* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
     private Set<Role>             roles              = new HashSet<Role>();
 
+
+    @JsonSkip
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<UserDetail>   userDetails = new HashSet<UserDetail>();
+
     @Column(name = "user_hash", nullable = false, length = 32, unique = true)
     private String                userHash;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "referred_by", nullable = true)
     private User                  referredBy;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "affiliate_to", nullable = true)
     private User                  affiliateTo;
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "referrerUser")
     private List<Coupon>          referrerCoupons    = new ArrayList<Coupon>(1);
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OrderBy("createDate desc")
     private List<RewardPoint>     rewardPointList    = new ArrayList<RewardPoint>();
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<RewardPointTxn>  rewardPointTxnList = new ArrayList<RewardPointTxn>();
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserAccountInfo> userAccountInfos   = new ArrayList<UserAccountInfo>(1);
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @Where(clause = "deleted = 0")
     private List<Address>         addresses          = new ArrayList<Address>();
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<OfferInstance>   offerInstances     = new ArrayList<OfferInstance>();
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Order>           orders             = new ArrayList<Order>();
 
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Subscription> subscriptions;
+    private List<Subscription>    subscriptions;
 
+    @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "warehouse_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "warehouse_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "warehouse_id", nullable = false, updatable = false) })
     private Set<Warehouse>        warehouses         = new HashSet<Warehouse>(0);
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", nullable = true)
+    @JoinColumn(name = "store_id", nullable = false)
     private Store                 store;
 
+    @JsonSkip
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     private KarmaProfile          karmaProfile;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonSkip
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "hub_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "hub_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "hub_id", updatable = false) })
-    private Hub hub;
+    private Hub                   hub;
 
     public KarmaProfile getKarmaProfile() {
         return karmaProfile;
@@ -256,9 +250,9 @@ public class User {
         return password;
     }
 
-    public Date getUpdateDate() {
-        return this.updateDate;
-    }
+    /*
+     * public Date getUpdateDate() { return this.updateDate; }
+     */
 
     public void setPassword(String password) {
         this.password = password;
@@ -338,9 +332,9 @@ public class User {
         this.createDate = createDate;
     }
 
-    public void setUpdateDate(Timestamp updateDate) {
-        this.updateDate = updateDate;
-    }
+    /*
+     * public void setUpdateDate(Timestamp updateDate) { this.updateDate = updateDate; }
+     */
 
     public String toString() {
         return id == null ? "" : id.toString();
@@ -446,19 +440,19 @@ public class User {
         this.createDate = createDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
+    /*
+     * public void setUpdateDate(Date updateDate) { this.updateDate = updateDate; }
+     */
+
+    public Hub getHub() {
+        return hub;
     }
 
-	public Hub getHub() {
-		return hub;
-	}
+    public void setHub(Hub hub) {
+        this.hub = hub;
+    }
 
-	public void setHub(Hub hub) {
-		this.hub = hub;
-	}
-
-	public boolean hasPermission(EnumPermission enumPermission) {
+    public boolean hasPermission(EnumPermission enumPermission) {
         if (roles == null || roles.isEmpty()) {
             return false;
         }

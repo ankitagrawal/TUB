@@ -57,7 +57,10 @@ public class XslConstants {
     public static final String    BREADTH                         = "BREADTH(cm)";
     public static final String    HEIGHT                          = "HEIGHT(cm)";
     public static final String    WEIGHT                          = "WEIGHT(gm)";
-    public static final String    UPC                             = "UPC";                                   // Universal
+    public static final String    UPC                             = "UPC";
+    public static final String    IS_HIDDEN                       = "IS_HIDDEN";
+    public static final String    OUT_OF_STOCK                    = "OUT_OF_STOCK";
+  // Universal
     // Product
     // Code
 
@@ -75,9 +78,9 @@ public class XslConstants {
     public static final String    IS_DELETED                      = "IS_DELETED";
     public static final String    DEFAULT_COURIER_ID              = "DEFAULT_COURIER_ID";
     public static final String    WAREHOUSE                       = "WAREHOUSE";
-    public static final String    COD_COURIER_ID                  = "COD_COURIER_ID";
+//    public static final String    COD_COURIER_ID                  = "COD_COURIER_ID";
     public static final String    TECH_PROCESS_COURIER_ID         = "TECH_PROCESS_COURIER_ID";
-    public static final String    ESTIMATED_SHIPPING_COST_COD     = "ESTIMATED_SHIPPING_COST_COD";
+    public static final String    ESTIMATED_SHIPPING_COST         = "ESTIMATED_SHIPPING_COST";
     public static final String    ESTIMATED_SHIPPING_COST_NON_COD = "ESTIMATED_SHIPPING_COST_TECH";
     public static final String    DEFAULT_COURIER_SHEET           = "DEFAULT_COURIER";
 
@@ -100,6 +103,8 @@ public class XslConstants {
 
     public static final String   OTHER_REMARK                     = "OTHER_REMARK";
     public static final String   SUPPLIER_CODE                    = "SUPPLIER_CODE" ;
+    public static final String   GROUND_SHIPPING_AVAILABLE      = "GROUND_SHIPPING_AVAILABLE";
+    public static final String    COD_ON_GROUND_SHIPPING         = "COD_ON_GROUND_SHIPPING";
 
 
     //Excel Constants needed while uploading AWB for couriers
@@ -138,7 +143,14 @@ public class XslConstants {
     public static final String ADDRESS = "ADDRESS";
     public static final String CONTACT_PERSON = "CONTACT PERSON";
     public static final String CONTACT_NUMBER = "CONTACT NUMBER";
-    public static final String CREDIT_PERIOD = "CREDIT PERIOD";
+    public static final String CREDIT_DAYS = "CREDIT DAYS";
+    public static final String TARGET_CREDIT_DAYS = "TARGET CREDIT DAYS";
+    public static final String LEAD_TIME = "LEAD TIME";
+    public static final String ACTIVE = "ACTIVE";
     public static final String MARGIN = "MARGIN";
     public static final String VALIDITY_TERMS_OF_TRADE = "VALIDITY OF TERMS OF TRADE";
+
+	public static final String GATEWAY_ORDER_ID = "GATEWAY ORDER ID";
+	public static final String AMOUNT = "AMOUNT";
+
 }

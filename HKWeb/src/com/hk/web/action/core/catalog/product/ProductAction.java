@@ -125,12 +125,12 @@ public class ProductAction extends BaseAction {
             WebContext.getResponse().setStatus(310); // redirection
             return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
         }
-        try {
-            combo = getBaseDao().get(Combo.class, productId);
-        } catch (Exception e) {
 
-        }
         product = getProductService().getProductById(productId);
+
+        if(product instanceof Combo){
+            combo = (Combo)product;
+        }
         if (product == null) {
             WebContext.getResponse().setStatus(310); // redirection
             return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);

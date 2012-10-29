@@ -3,6 +3,7 @@ package com.hk.web.action.core.cart;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -45,10 +46,10 @@ import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
 import com.hk.web.HealthkartResponse;
+import com.hk.web.action.core.order.OrderSummaryAction;
 import com.hk.web.action.core.user.SelectAddressAction;
 
 @Component
@@ -64,7 +65,7 @@ public class CartAction extends BaseAction {
     private PricingDto          pricingDto;
     private Long                itemsInCart   = 0L;
     private String              freebieBanner;
-    private Set<Subscription> subscriptions;
+    private Set<Subscription>   subscriptions;
 
     @Autowired
     private UserService         userService;
@@ -86,8 +87,8 @@ public class CartAction extends BaseAction {
     OfferManager                offerManager;
     @Autowired
     private OrderDao            orderDao;
-    @Autowired
-    private CartFreebieService  cartFreebieService;
+    /*@Autowired
+    private CartFreebieService  cartFreebieService;*/
 
     boolean                     verifyMessage = false;
 
@@ -108,15 +109,25 @@ public class CartAction extends BaseAction {
             order = orderManager.getOrCreateOrder(user);
 
             Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+            Set<Long> comboInstanceIds = new TreeSet<Long>();
             for (CartLineItem lineItem : cartLineItems) {
                 if (lineItem != null && lineItem.getProductVariant() != null) {
                     ProductVariant productVariant = lineItem.getProductVariant();
                     if ((productVariant.getProduct().isDeleted() != null && productVariant.getProduct().isDeleted()) || productVariant.isDeleted() || productVariant.isOutOfStock()) {
                         lineItem.setQty(0L);
+                        if (lineItem.getComboInstance() != null) {
+                            comboInstanceIds.add(lineItem.getComboInstance().getId());
+                        }
                     }
                 }
             }
-
+            for (Long comboInstanceId : comboInstanceIds) {
+                for (CartLineItem cartLineItem : cartLineItems) {
+                    if (cartLineItem.getComboInstance() != null && cartLineItem.getComboInstance().getId().equals(comboInstanceId)) {
+                        cartLineItem.setQty(0L);
+                    }
+                }
+            }
             // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
             order = orderManager.trimEmptyLineItems(order);
 
@@ -156,14 +167,14 @@ public class CartAction extends BaseAction {
              */
             pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
 
-            Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-            if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
+            Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+            if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
                 subscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-                itemsInCart+=subscriptions.size();
+                itemsInCart += subscriptions.size();
             }
         }
 
-        //freebieBanner = cartFreebieService.getFreebieBanner(order);
+        // freebieBanner = cartFreebieService.getFreebieBanner(order);
         return new ForwardResolution("/pages/cart.jsp");
     }
 
@@ -183,8 +194,8 @@ public class CartAction extends BaseAction {
                         itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
                     }
                 }
-                int inCartSubscriptions= new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter().size();
-                itemsInCart+=inCartSubscriptions;
+                int inCartSubscriptions = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter().size();
+                itemsInCart += inCartSubscriptions;
             }
         }
         return new ForwardResolution("/pages/cart.jsp");
@@ -192,7 +203,7 @@ public class CartAction extends BaseAction {
 
     /**
      * method used to update the latest pricing, for eg when an offer is applied/changed
-     *
+     * 
      * @return
      */
     @JsonHandler
@@ -214,6 +225,12 @@ public class CartAction extends BaseAction {
          */
 
         return new RedirectResolution(SelectAddressAction.class);
+    }
+
+    public Resolution removeGroundShippedItem() {
+        orderManager.setGroundShippedItemQuantity(order);
+        orderManager.trimEmptyLineItems(order);
+        return new RedirectResolution(OrderSummaryAction.class);
     }
 
     public Order getOrder() {

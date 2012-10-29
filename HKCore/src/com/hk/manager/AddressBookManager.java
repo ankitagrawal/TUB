@@ -1,5 +1,6 @@
 package com.hk.manager;
 
+import com.hk.pact.service.core.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import com.hk.util.AddressMatchScoreCalculator;
 public class AddressBookManager {
 
     @Autowired
-    private AddressDao                  addressDao;
+    private AddressService              addressDao;
     @Autowired
     private UserService                 userService;
     @Autowired
@@ -75,11 +76,11 @@ public class AddressBookManager {
         getUserService().save(user);
     }
 
-    public AddressDao getAddressDao() {
+    public AddressService getAddressDao() {
         return addressDao;
     }
 
-    public void setAddressDao(AddressDao addressDao) {
+    public void setAddressDao(AddressService addressDao) {
         this.addressDao = addressDao;
     }
 

@@ -9,8 +9,6 @@ import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
@@ -28,7 +26,7 @@ import com.hk.web.action.admin.AdminHomeAction;
 @Component
 public class LoginAction extends BaseAction {
 
-  private static Logger logger = LoggerFactory.getLogger(LoginAction.class);
+  /*private static Logger logger = LoggerFactory.getLogger(LoginAction.class);*/
 
   @Validate(required = true)
   String email;

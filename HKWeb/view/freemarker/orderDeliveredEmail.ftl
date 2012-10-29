@@ -12,13 +12,9 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 	<td align="center" valign="top">
 		<table width="500" border="0" cellspacing="0" cellpadding="0" align="center"
 		       style="font-size:13px; line-height:1.75em;">
-
-
 			<tr>
 				<td height="20"></td>
 			</tr>
-
-
 			<tr>
 				<td>
 					<table width="500" border="0" cellpadding="0" cellspacing="0">
@@ -29,63 +25,28 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 									height="30" border="0"/></a></td>
 							<td width="15" style="border-left: solid 1px #999999"></td>
 							<td width="245" align="left" style="font-size:13px; font-weight:bold; color:#666666"><a
-									href="http://www.healthkart.com" style="color:#666666; text-decoration:none">India&#39;s
-								premier
-								e-health store!</a></td>
+									href="http://www.healthkart.com" style="color:#666666; text-decoration:none">India&#39;s premier e-health store!</a></td>
 							<td width="18">&nbsp;</td>
 						</tr>
 						<tr>
 							<td colspan="5" height="10"></td>
 						</tr>
-
 					</table>
 				</td>
 			</tr>
-
 
 			<tr>
 				<td align="left" height="15"></td>
 			</tr>
 			<tr>
 				<td width="579" valign="top">Dear ${order.user.name}<br/> <br/>
-					Thank you for shopping with HealthKart. We trust that you had a good shopping experience and are on your way to the zenith of health.<br/><br/>
-					Your Order No.: ${order.gatewayOrderId} has been successfully delivered.<br/>
-					Summary of your order: <br/>
+					Thank you for shopping with HealthKart. We trust that you had a good shopping experience and are on your way to the zenith of health.<br/>
+					Your Order No.: ${order.gatewayOrderId} has been successfully delivered.<br/><br/>
 
-					<br/>
-					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
-						<tr>
-							<td><strong>Item</strong></td>
-							<td><strong>Quantity</strong></td>
-						</tr>
-					<#list order.shippingOrders as shippingOrder>
-						<#list shippingOrder.lineItems as lineItem>
-							<tr>
-
-								<td>${lineItem.sku.productVariant.product.name}
-									<#if lineItem.sku.productVariant.variantName??>
-									${lineItem.sku.productVariant.variantName}
-									</#if>
-									<br/>
-
-									<#list lineItem.sku.productVariant.productOptions as
-									productOption>
-										<em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
-									</#list>
-								</td>
-								<td>
-								${lineItem.qty}
-								</td>
-							</tr>
-						</#list>
-					</#list>
-					</table> <br>
-					<div class="line-separator" style="height:1px; background:#717171; border-bottom:1px solid #313030;"></div>
-					<br>
 					We would like to know more about your experience shopping with us, so that we can improve our services. <br>
 					While we like positive feedback, we think your criticism can help us correct our course & serve you better.<br>
 					Feel free to be frank, we're listening.<br/>
-					<br>
+
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1" RULES=COLS >
 						<tr>
 							<td>
@@ -107,9 +68,14 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 										<td></td>
 										<td></td>
 										<td></td>
+										<td></td>
 										<td><strong>Very likely</strong></td>
 									</tr>
 									<tr>
+										<td>
+											<a href="${feedbackPage}?recommendToFriends=0&baseOrderId=${order}">
+												<input type="radio" name="recommendToFriends" value="0"/></a> 0
+										</td>
 										<td>
 											<a href="${feedbackPage}?recommendToFriends=1&baseOrderId=${order}">
 												<input type="radio" name="recommendToFriends" value="1"/></a> 1
@@ -158,7 +124,42 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
 							<td></td>
 						</tr>
 					</table>
-					<br/> <br/>
+
+					<br/>
+					
+					<div class="line-separator" style="height:1px; background:#717171; border-bottom:1px solid #313030;"></div>
+
+					<br/>Summary of your order: <br/>
+
+					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
+						<tr>
+							<td><strong>Item</strong></td>
+							<td><strong>Quantity</strong></td>
+						</tr>
+					<#list order.shippingOrders as shippingOrder>
+						<#list shippingOrder.lineItems as lineItem>
+							<tr>
+
+								<td>${lineItem.sku.productVariant.product.name}
+									<#if lineItem.sku.productVariant.variantName??>
+									${lineItem.sku.productVariant.variantName}
+									</#if>
+									<br/>
+
+									<#list lineItem.sku.productVariant.productOptions as
+									productOption>
+										<em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
+									</#list>
+								</td>
+								<td>
+								${lineItem.qty}
+								</td>
+							</tr>
+						</#list>
+					</#list>
+					</table>
+
+					<br/>
 					If you have any problems or concerns about your recent purchase, please get in touch with our customer service as soon as possible and we will do everything we can to help.
 					<br/> <br/>
 					Reach our Customer Care at 0124-4551616.

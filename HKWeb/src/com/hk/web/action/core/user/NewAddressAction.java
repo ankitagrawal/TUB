@@ -1,5 +1,6 @@
 package com.hk.web.action.core.user;
 
+import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -35,7 +36,7 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 public class NewAddressAction extends BaseAction implements ValidationErrorHandler {
 
     @Autowired
-    AddressDao                  addressDao;
+    AddressService              addressDao;
     @Autowired
     LinkManager                 linkManager;
     @Autowired

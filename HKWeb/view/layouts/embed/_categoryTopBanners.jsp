@@ -57,7 +57,7 @@
 
   <c:if test="${hk:collectionContains(topCategoryNameList, 'nutrition')}">
     <%--<jsp:include page="/categoryBanners/nutriTenDiscount.jsp"/>--%>
-    <%--<jsp:include page="/categoryBanners/nutriCallback.jsp"/>--%>
+    <jsp:include page="/categoryBanners/nutriCallback.jsp"/>
     <%--<jsp:include page="/categoryBanners/fitnessAccessoriesCashback.jsp"/>--%>
   </c:if>
 
@@ -71,10 +71,10 @@
     </c:if>
     <c:if test="${hk:collectionContains(topCategoryNameList, 'home-devices')}">
       <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
-      <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
+      <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>                       
     </c:if>
     <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
-      <jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>
+      <%--<jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>--%>
     </c:if>
     <c:if test="${hk:collectionContains(topCategoryNameList, 'diabetes')}">
       <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>

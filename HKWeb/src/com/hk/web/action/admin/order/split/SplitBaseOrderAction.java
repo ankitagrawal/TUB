@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.hk.domain.order.ShippingOrder;
-import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -18,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -29,10 +28,12 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
 import com.hk.pact.service.OrderStatusService;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
@@ -64,6 +65,7 @@ public class SplitBaseOrderAction extends BaseAction {
         return new ForwardResolution("/pages/admin/order/splitBaseOrder.jsp");
     }
 
+    @Transactional
     public Resolution splitBaseOrder() {
 
         if (baseOrder != null && EnumOrderStatus.Placed.getId().equals(baseOrder.getOrderStatus().getId())) {
@@ -97,12 +99,12 @@ public class SplitBaseOrderAction extends BaseAction {
             /**
              * if order has any services products create a shipping order and send it to service queue
              */
-            if (baseOrder.getContainsServices()) {
                 Set<CartLineItem> serviceCartLineItems = new CartLineItemFilter(baseOrder.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(
                         true).filter();
+                if (serviceCartLineItems != null && serviceCartLineItems.size()>0) {
                 for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
                     try {
-                        adminShippingOrderService.createSOForService(serviceCartLineItem);
+                        orderService.createSOForService(serviceCartLineItem);
                     } catch (NoSkuException e) {
                         logger.error("No sku found", e);
                         addRedirectAlertMessage(new SimpleMessage(e.getMessage()));

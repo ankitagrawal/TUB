@@ -121,8 +121,8 @@ public class OrderManager {
 	private KarmaProfileService karmaProfileService;
 	@Autowired
 	private SubscriptionService subscriptionService;
-//	@Autowired
-//	private SMSManager smsManager;
+	@Autowired
+	private SMSManager smsManager;
 
 	@Autowired
 	private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
@@ -386,10 +386,11 @@ public class OrderManager {
 			order.setScore(new Long(karmaProfile.getKarmaPoints()));
 		}
 		
-		Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
+		/*Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
 		Date targetDelDate = HKDateUtil.addToDate(order.getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH, Integer.parseInt(dispatchDays[0].toString()));
-		order.setTargetDispatchDate(targetDelDate);
+		order.setTargetDispatchDate(targetDelDate);*/
 
+		getOrderService().setTargetDispatchDelDatesOnBO( order);
 		order = getOrderService().save(order);
 
 		//Order lifecycle activity logging - Order Placed
@@ -413,7 +414,7 @@ public class OrderManager {
 			// Send mail to Customer
 			getPaymentService().sendPaymentEmailForOrder(order);
 			sendReferralProgramEmail(order.getUser());
-//			getSmsManager().sendOrderPlacedSMS(order);
+			getSmsManager().sendOrderPlacedSMS(order);
 		}
 		return order;
 	}
@@ -572,7 +573,7 @@ public class OrderManager {
 								}
 							}
 						}
-						cartLineItemService.save(lineItem);
+            cartLineItemService.save(lineItem);
 					}
 				}
 			}
@@ -713,6 +714,23 @@ public class OrderManager {
 
 		return margin;
 	}
+     	
+     public void setGroundShippedItemQuantity(Order order) {
+         Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+         for (CartLineItem cartLineItem : cartLineItems) {
+             if (cartLineItem.getProductVariant().getProduct().getGroundShipping()) {
+                 cartLineItem.setQty(0L);
+             }
+         }
+         /*
+         if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
+            for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
+                CartLineItem lineItem = iterator.next();
+                if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId()) || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
+                }
+            }
+        }*/
+    }
 
 	public CartLineItemService getCartLineItemService() {
 		return cartLineItemService;
@@ -890,11 +908,11 @@ public class OrderManager {
 		this.subscriptionService = subscriptionService;
 	}
 
-/*	public SMSManager getSmsManager() {
+	public SMSManager getSmsManager() {
 		return smsManager;
 	}
 
 	public void setSmsManager(SMSManager smsManager) {
 		this.smsManager = smsManager;
-	}*/
+	}
 }

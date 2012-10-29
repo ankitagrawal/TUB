@@ -1,5 +1,6 @@
 build/
 dev/
+mih_dev/
 bin/
 dist/
 out/
@@ -23,3 +24,4 @@ Thumbs.db
 .project
 environmentLocator.properties
 rebel.xml
+.swp

@@ -38,7 +38,9 @@ public class SitemapAction extends BaseAction {
         }
         List<Product> products = getProductService().getAllProducts();
         for (Product product : products) {
-            productUrls.add("http://www.healthkart.com/product/" + product.getSlug() + "/" + product.getId());
+            if ((product.isDeleted() != null) && !product.isDeleted()){
+                productUrls.add("http://www.healthkart.com/product/" + product.getSlug() + "/" + product.getId());
+            }
         }
         return new ForwardResolution("/sitemap.jsp");
     }

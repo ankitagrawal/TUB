@@ -11,16 +11,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
-import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -81,6 +82,16 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
+            if(shippingOrder.getShipment()!= null){
+                Awb awbToRemove = shippingOrder.getShipment().getAwb();
+                //shippingOrder.getShipment().setAwb(null);
+                //shipmentService.save(shippingOrder.getShipment());
+                awbService.removeAwbForShipment(shippingOrder.getShipment().getCourier(),awbToRemove);
+                Shipment shipmentToDelete = shippingOrder.getShipment();
+                shippingOrder.setShipment(null);
+                shippingOrderService.save(shippingOrder);
+                shipmentService.delete(shipmentToDelete);
+            }
         }
     }
 
@@ -139,7 +150,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
              * this additional call to save is done so that we have shipping order id to generate shipping order gateway
              * id
              */
-            shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+            shippingOrder = getShippingOrderService().setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
 	        // auto escalate shipping orders if possible
@@ -150,37 +161,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }
         return null;
     }
-
-    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem) {
-        Order baseOrder = serviceCartLineItem.getOrder();
-        Warehouse corporateOffice = getWarehouseService().getCorporateOffice();
-        ShippingOrder shippingOrder = getShippingOrderService().createSOWithBasicDetails(baseOrder, corporateOffice);
-        shippingOrder.setBaseOrder(baseOrder);
-
-        ProductVariant productVariant = serviceCartLineItem.getProductVariant();
-        Sku sku = getSkuService().getSKU(productVariant, corporateOffice);
-        if (sku != null) {
-            LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, serviceCartLineItem);
-            shippingOrder.getLineItems().add(shippingOrderLineItem);
-        } else {
-            throw new NoSkuException(productVariant, corporateOffice);
-        }
-
-        shippingOrder.setBasketCategory("services");
-        shippingOrder.setServiceOrder(true);
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
-        ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
-        shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-        /**
-         * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
-         */
-        shippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-
-        return shippingOrder;
-
-    }
+    
+    
+    
+    
 
     @Transactional
     public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder) {
