@@ -52,4 +52,19 @@ public class TaxUtil {
       }
       return surchargeValue;
     }
+
+	public static double getApplicableTaxRate(Supplier supplier, Sku sku) {
+		String warehouseState = sku.getWarehouse().getState();
+		double taxRate = 0D;
+		if(sku.getTax() != null) {
+			taxRate = sku.getTax().getValue();
+		}
+
+		if (! supplier.getState().equalsIgnoreCase(warehouseState)) {
+			if (taxRate != 0.0) {
+				taxRate = TaxConstants.CST;
+			}
+		}
+		return taxRate;
+	}
 }

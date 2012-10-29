@@ -145,11 +145,11 @@ public class PurchaseOrderPDFGenerator {
             poDetailTable.addCell(PdfGenerator.createCell("" + counter++, font2));
             poDetailTable.addCell(PdfGenerator.createCell(productVariant.getId(), font2));
             poDetailTable.addCell(PdfGenerator.createCell(productVariant.getUpc(), font2));
-            poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName(), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName() + "\n" + productVariant.getOptionsCommaSeparated(), font2));
             poDetailTable.addCell(PdfGenerator.createCell("" + poLineItemDto.getPoLineItem().getQty(), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getMrp()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getCostPrice()), font2));
-            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getSku().getTax().getValue() * 100), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(TaxUtil.getApplicableTaxRate(purchaseOrderDto.getPurchaseOrder().getSupplier(), poLineItemDto.getPoLineItem().getSku()) * 100), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getTaxable()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getTax()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getSurcharge()), font2));
