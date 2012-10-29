@@ -42,9 +42,23 @@ public class UserDetailDaoImpl  extends BaseDaoImpl implements UserDetailDao {
         return userDetailList;
     }
 
+    public UserDetail findByUserAndPhone(Long phone, User user){
+        DetachedCriteria criteria = DetachedCriteria.forClass(UserDetail.class);
+        criteria.add(Restrictions.eq("phone", phone));
+        criteria.add(Restrictions.eq("user", user));
+        List<UserDetail> users = super.findByCriteria(criteria);
+        if ((users == null) || users.isEmpty())
+            return null;
+        return users.get(0);
+    }
+
     public List<UserDetail> findByPriority(int priority) {
         DetachedCriteria criteria = DetachedCriteria.forClass(UserDetail.class);
         criteria.add(Restrictions.eq("priority", priority));
         return (List<UserDetail>)super.findByCriteria(criteria);
+    }
+
+    public void delete(UserDetail userDetail) {
+        super.delete(userDetail);
     }
 }

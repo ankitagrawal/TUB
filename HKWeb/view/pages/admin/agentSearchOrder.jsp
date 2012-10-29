@@ -24,7 +24,7 @@
      <s:form beanclass="com.hk.web.action.admin.crm.AgentSearchOrderAction" method="get"  autocomplete="false" style="">
     Recent orders for user Email: <strong><span class="or" id="email">${orderAdmin.email}</span></strong>
     <br/>
-    <label>Phone: </label><input type="text" id="uPhone"/> <input type="button" value="Assign Phone to this email" id="updateUserDetail"/>
+    <label>Phone: </label><input type="text" style="width: 120px; height: 30px" disabled="true" id="uPhone" value="${orderAdmin.phone}"/> <input type="button" value="Assign Phone to this email" id="updateUserDetail"/>
     <br/>
     phone: <strong><span class="or">${orderAdmin.phone}</span></strong>
     </br>
@@ -133,7 +133,6 @@
      <script type="text/javascript">
      //$(document).ready(function() {
      $("#updateUserDetail").click(function() {
-         alert('a');
          $.ajax({
              type: "POST",
              url: "${pageContext.request.contextPath}/rest/api/user/email/${orderAdmin.email}" + "/phone/" + $("#uPhone").val(),

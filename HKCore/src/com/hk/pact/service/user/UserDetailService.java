@@ -1,5 +1,6 @@
 package com.hk.pact.service.user;
 
+import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 
 import java.util.List;
@@ -18,7 +19,11 @@ public interface UserDetailService {
     final String AUTH_KEY = "US3jbSEN5EKVVzlabDl95loyWf_hloCZ";
     public UserDetail save(UserDetail userDetails);
 
+    public void delete(UserDetail userDetail);
+
     public List<UserDetail> findByPhone(long phone);
 
     public List<UserDetail> getByPriority(int priority);
+
+    UserDetail findByPhoneAndUser(long phone, User user);
 }
