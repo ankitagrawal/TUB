@@ -4,6 +4,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.inventory.EnumGrnStatus" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
@@ -272,7 +273,15 @@
 			<%--<td>Reconciled</td>
 								<td><s:checkbox name="grn.reconciled"/></td>--%>
 		<td>Status</td>
-		<td>${pa.grn.grnStatus.name}</td>
+		<td>${pa.grn.grnStatus.name}
+			<shiro:hasRole name="<%=RoleConstants.GOD%>">
+				<s:select name="grn.grnStatus" value="${pa.grn.grnStatus.id}">
+					<hk:master-data-collection service="<%=MasterDataDao.class%>"
+											   serviceProperty="grnStatusList"
+											   value="id" label="name"/>
+				</s:select>
+			</shiro:hasRole>
+		</td>
 		<td>Remarks</td>
 		<td><s:textarea name="grn.remarks" style="height:50px;"/></td>
 	</tr>
@@ -444,9 +453,17 @@
 <div class="variantDetails info"></div>
 <br/>
 <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
-<c:if test="${pa.grn.grnStatus.id < inCheckedIn}">
-	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
-</c:if>
+<c:choose>
+	<c:when test="${pa.grn.grnStatus.id < inCheckedIn}">
+		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+	</c:when>
+	<c:otherwise>
+		<shiro:hasRole name="<%=RoleConstants.GOD%>">
+			<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+		</shiro:hasRole>
+	</c:otherwise>
+</c:choose>
+
 </s:form>
 
 </s:layout-component>

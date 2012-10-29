@@ -55,9 +55,10 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
 
       String hqlQuery = "select so.gatewayOrderId as invoiceId, p.paymentDate as orderDate, user.name as name, adr.city as city, adr.pin as pincode, "
                 + " pm.name as payment, so.amount as total,  ship.courier as courier, aw.awbNumber as awb, ship.shipDate as shipmentDate,"
-                + " ship.deliveryDate as deliveryDate, rs.name as reconciled, os.name as orderStatus, ship.boxWeight as boxWeight,"
-                + " bs.name as boxSize, so.warehouse as warehouse" + " from ShippingOrder so join so.baseOrder bo join bo.payment p join bo.user user join bo.address adr "
-                + " join so.shipment ship join ship.awb aw join ship.boxSize bs join so.shippingOrderStatus os " + " join p.paymentMode pm join so.reconciliationStatus rs join so.shipment shp "
+                + " ship.deliveryDate as deliveryDate, coalesce(opr.reconciled, false) as reconciled, os.name as orderStatus, ship.boxWeight as boxWeight,"
+                + " bs.name as boxSize, so.warehouse as warehouse" + " from OrderPaymentReconciliation opr right join opr.shippingOrder so join so.baseOrder bo join bo.payment p join bo.user user join bo.address adr "
+                + " join so.shipment ship join ship.awb aw join ship.boxSize bs join so.shippingOrderStatus os " + " join p.paymentMode pm "
+	            + " join so.shipment shp "
                 + " where shp.shipDate >= :startDate" + " and shp.shipDate <= :endDate"  + " " + paymentWhereClause +shippingOrderClause
                 + courierWhereClause + warehouseWhereClause;
 
