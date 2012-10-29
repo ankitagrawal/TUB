@@ -4,6 +4,7 @@ import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
  * Time: 1:04 PM
  * To change this template use File | Settings | File Templates.
  */
+
+@Service
 public class GrnLineItemServiceImpl implements GrnLineItemService {
 
 	public Long getPoLineItemQty(GrnLineItem grnLineItem) {
