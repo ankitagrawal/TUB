@@ -42,14 +42,15 @@ public class AddressServiceImpl implements AddressService {
         try{
             User user = addressRec.getUser();
             if (user != null){
-                List<Integer> phoneNumbers = new ArrayList<Integer>();
+                //List<Integer> phoneNumbers = new ArrayList<Integer>();
                 String[] phones = null;
                 String ph = address.getPhone();
                 phones = StringUtils.getUserPhoneList(ph);
                 for (String phone : phones){
                     long phoneNumber = StringUtils.getUserPhone(phone);
                     UserDetail dbUserDetail = userDetailsService.findByPhoneAndUser(phoneNumber, user);
-                    if (addressRec.getDeleted()){
+                    
+                    if (dbUserDetail !=null && addressRec.getDeleted()){
                         userDetailsService.delete(dbUserDetail);
                     }
                     else{
