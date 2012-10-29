@@ -50,7 +50,7 @@ public class AddressServiceImpl implements AddressService {
                 userDetail.setUser(user);
                 long phoneNumber = StringUtils.getUserPhone(phone);
                 userDetail.setPhone(phoneNumber);
-                userDetailsDao.save(userDetail);
+                //userDetailsDao.save(userDetail);
             }
 
         }catch (Exception ex){

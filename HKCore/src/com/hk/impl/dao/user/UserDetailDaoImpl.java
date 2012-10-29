@@ -8,6 +8,7 @@ import com.hk.pact.dao.user.UserDetailDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 @Repository
 public class UserDetailDaoImpl  extends BaseDaoImpl implements UserDetailDao {
 
+	@Transactional
     public UserDetail save(UserDetail userDetails) {
         if(userDetails.getPriority() == null){
             userDetails.setPriority(EnumCallPriority.PRIORITY_ONE.getValue());
