@@ -47,6 +47,6 @@ public interface AwbService {
 
     public void delete(Awb awb);
 
-    //private Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
+    public Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
     
 }

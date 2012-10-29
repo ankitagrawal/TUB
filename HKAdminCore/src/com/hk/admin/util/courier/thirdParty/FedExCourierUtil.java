@@ -156,9 +156,11 @@ public class FedExCourierUtil {
         //
         if (shippingOrder.isCOD()) {
             requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested(shippingOrder));
+            requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder.getAmount(),weightInKg));
         }
-        //
-        requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder,weightInKg));
+        else{
+        requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(400.00,weightInKg));
+        }
         //
         requestedShipment.setLabelSpecification(addLabelSpecification());
         //
@@ -624,13 +626,13 @@ public class FedExCourierUtil {
         return labelSpecification;
     }
 
-    private CustomsClearanceDetail addCustomsClearanceDetail(ShippingOrder shippingOrder, Double weightInKg) {
+    private CustomsClearanceDetail addCustomsClearanceDetail(Double amount , Double weightInKg) {
         CustomsClearanceDetail customs = new CustomsClearanceDetail(); // International details
         customs.setDutiesPayment(addDutiesPayment());
-        customs.setCustomsValue(addMoney("INR", shippingOrder.getAmount()));// 400.00));
+        customs.setCustomsValue(addMoney("INR", amount));// 400.00));
         customs.setDocumentContent(InternationalDocumentContentType.NON_DOCUMENTS);
         customs.setCommercialInvoice(addCommercialInvoice());
-        customs.setCommodities(new Commodity[]{addCommodity(shippingOrder, weightInKg)});// Commodity details
+        customs.setCommodities(new Commodity[]{addCommodity(amount, weightInKg)});// Commodity details
         return customs;
     }
 
@@ -641,7 +643,7 @@ public class FedExCourierUtil {
         return commercialInvoice;
     }
 
-    private static Commodity addCommodity(ShippingOrder shippingOrder, Double weightInKg) {
+    private static Commodity addCommodity(Double amount, Double weightInKg) {
         Commodity commodity = new Commodity();
         commodity.setNumberOfPieces(new NonNegativeInteger("1"));
         commodity.setDescription("Books");
@@ -655,7 +657,7 @@ public class FedExCourierUtil {
         commodity.getUnitPrice().setAmount(new java.math.BigDecimal(100.000000));
         commodity.getUnitPrice().setCurrency("INR");
         commodity.setCustomsValue(new Money());
-        commodity.getCustomsValue().setAmount(new java.math.BigDecimal(shippingOrder.getAmount()));// (400.000000));
+        commodity.getCustomsValue().setAmount(new java.math.BigDecimal(amount));// (400.000000));
         commodity.getCustomsValue().setCurrency("INR");
         commodity.setCountryOfManufacture("IN");
         commodity.setHarmonizedCode("490199009100");

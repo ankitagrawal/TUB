@@ -9,6 +9,7 @@ import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.apache.commons.lang.StringUtils;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.accounting.InvoiceDto;
@@ -82,10 +83,14 @@ public class SOInvoiceAction extends BaseAction {
         Long courierId = shipment.getCourier().getId();
         if (courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())) {
             String awbBarCode = awb.getAwbBarCode();
-            barcodeGenerator.getBarcodePath(awbBarCode, 2.0f, 200, true);
+            if (StringUtils.isNotBlank(awbBarCode)) {
+                barcodeGenerator.getBarcodePath(awbBarCode, 2.0f, 200, true);
+            }
             if (shippingOrder.isCOD()) {
-                String codBarCode = awb.getReturnAwbBarCode();
-                barcodeGenerator.getBarcodePath(codBarCode, 2.0f, 200, true);
+                String codReturnBarCode = awb.getReturnAwbBarCode();
+                if (StringUtils.isNotBlank(codReturnBarCode)) {
+                    barcodeGenerator.getBarcodePath(codReturnBarCode, 2.0f, 200, true);
+                }
             }
         } else {
             String trackingId = awb.getAwbNumber();
@@ -96,18 +101,18 @@ public class SOInvoiceAction extends BaseAction {
     private void generateRoutingCodeForInvoice(String pincode, boolean isCod) {
         CourierServiceInfo courierServiceInfo = null;
 
-            Long courierId = shipment.getCourier().getId();
-            if (courierId.equals(EnumCourier.BlueDart_COD.getId()) || courierId.equals(EnumCourier.BlueDart.getId()) ) {
-                courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, isCod, false, false);
-            } else if (courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())) {
-                courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, false, false, false);
+        Long courierId = shipment.getCourier().getId();
+        if (courierId.equals(EnumCourier.BlueDart_COD.getId()) || courierId.equals(EnumCourier.BlueDart.getId())) {
+            courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, isCod, false, false);
+        } else if (courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())) {
+            courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, false, false, false);
 
-            }
+        }
 
-            if (courierServiceInfo != null) {
-                routingCode = courierServiceInfo.getRoutingCode();
-            }
-        
+        if (courierServiceInfo != null) {
+            routingCode = courierServiceInfo.getRoutingCode();
+        }
+
     }
 
 
@@ -149,7 +154,6 @@ public class SOInvoiceAction extends BaseAction {
              }
 
             */
-
 
 
             if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)) {
