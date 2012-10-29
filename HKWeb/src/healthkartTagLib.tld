@@ -482,9 +482,9 @@
         </description>
         <name>checkedInUnitsCount</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long checkedinUnitsCount(java.lang.Object,java.lang.Object)</function-signature>
+        <function-signature>java.lang.Long checkedinUnitsCount(java.lang.Object)</function-signature>
         <example>
-            ${hk:checkedInUnitsCount(${object1}, ${object2})}
+            ${hk:checkedInUnitsCount(${object1})}
         </example>
     </function>
 
