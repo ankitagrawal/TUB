@@ -615,8 +615,7 @@
                 $('#productsInCart').html(res.data.itemsInCart);
                 $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
                 $('.progressLoader').hide();
-                $('addToCartButton').remove();
-                $("appendCartSign").append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
+                $(".right_col").append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
                 show_message();
             } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
                 alert(res.message);
@@ -650,6 +649,7 @@
 
         $('.addToCartButton').click(function() {
             $('.progressLoader').show();
+            $(this).remove();
             /*var isResultEmpty = 0 ;
              $('.result').each(function() {
              if ($(this).find('img').size() == 0) {
