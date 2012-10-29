@@ -413,8 +413,8 @@
 		<td>
 			<s:text name="grnLineItems[${ctr.index}].qty" value="${grnLineItemDto.grnLineItem.qty}"
 			        class="receivedQuantity valueChange"/>
-			<input type="hidden" id="alreadyGRNQty" value="${grnLineItemDto.grnLineItem.grnLineItemQtyAlreadySet}"/>
-			<input type="hidden" id="poLineItemQty" value="${grnLineItemDto.grnLineItem.poLineItemQty}"/>
+			<input type="hidden" id="alreadyGRNQty" value="${hk:getGrnLineItemQtyAlreadySet(grnLineItemDto.grnLineItem)}"/>
+			<input type="hidden" id="poLineItemQty" value="${hk:getPoLineItemQty(grnLineItemDto.grnLineItem)}"/>
 			<input type="hidden" id="variantHidden" value="${productVariant.id}" />
 		</td>
 		<td>
