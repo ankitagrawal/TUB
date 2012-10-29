@@ -38,6 +38,7 @@ public class EmailTemplateConstants {
 	public static final String protocolViolationEmail = "/protocolViolationEmail.ftl";
 	public static final String poPlacedEmail = "/poPlacedEmail.ftl";
 	public static final String poSentForApprovalEmail = "/poSentForApprovalEmail.ftl";
+	public static final String poApprovedEmail = "/poApprovedEmail.ftl";
 	public static final String notifyUserEmail = "/notifyUserEmailProductNew.ftl";
 	public static final String notifyUserEmailOld = "/notifyUserEmailProduct.ftl";
 	public static final String dailyGoogleBannedWordReport = "/dailyGoogleBannedWordReport.ftl";
