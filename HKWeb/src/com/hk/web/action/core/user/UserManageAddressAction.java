@@ -3,6 +3,7 @@ package com.hk.web.action.core.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -51,7 +52,7 @@ public class UserManageAddressAction extends BaseAction {
   @Autowired
   UserDao userDao;
   @Autowired
-  AddressDao addressDao;
+  AddressService addressDao;
   @Autowired
   UserService userService;
 

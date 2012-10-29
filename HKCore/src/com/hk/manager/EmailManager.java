@@ -613,6 +613,14 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getApprovedBy().getEmail(), purchaseOrder.getApprovedBy().getName());
     }
 
+	public boolean sendPOApprovedEmail(PurchaseOrder purchaseOrder) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("purchaseOrder", purchaseOrder);
+
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
+    }
+
     public boolean sendPOPlacedEmail(PurchaseOrder purchaseOrder) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("purchaseOrder", purchaseOrder);
