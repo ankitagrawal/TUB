@@ -9588,7 +9588,6 @@
             </column>
         </addColumn>
     </changeSet>
-
     <changeSet author="Ajeet (written)" id="20121029-01">
         <sql>
             update feedback f, base_order bo set f.feedback_date=bo.update_dt where f.base_order_id=bo.id;
