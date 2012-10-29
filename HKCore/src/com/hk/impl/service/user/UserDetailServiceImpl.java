@@ -1,5 +1,6 @@
 package com.hk.impl.service.user;
 
+import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 import com.hk.pact.dao.user.UserDetailDao;
 import com.hk.pact.service.user.UserDetailService;
@@ -26,8 +27,16 @@ public class UserDetailServiceImpl implements UserDetailService {
         return userDetailsDao.save(userDetails);  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public void delete(UserDetail userDetail) {
+        userDetailsDao.delete(userDetail);
+    }
+
     public List<UserDetail> findByPhone(long phone) {
         return userDetailsDao.findByPhone(phone);  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public UserDetail findByPhoneAndUser(long phone, User user) {
+        return userDetailsDao.findByUserAndPhone(phone, user);  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public List<UserDetail> getByPriority(int priority) {

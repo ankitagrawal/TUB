@@ -31,6 +31,7 @@ public class UserListByPhoneAction extends BaseAction {
 
     String remoteAddress;
     String phone;
+    String email;
 
     @DefaultHandler
     public Resolution pre() {
@@ -39,10 +40,16 @@ public class UserListByPhoneAction extends BaseAction {
         User customer = null;
         Long userPhone = 0L;
         if (getContext().getRequest().getParameterMap().containsKey("phone")){
-            userPhone = Long.parseLong(getContext().getRequest().getParameter("phone"));
+            phone = getContext().getRequest().getParameter("phone");
+            userPhone = Long.parseLong(phone);
         }
         userDetailList = userDetailService.findByPhone(userPhone);
         return new ForwardResolution("/pages/admin/userDetail.jsp");
+    }
+
+    public Resolution searchByEmail(){
+        return new ForwardResolution("/pages/admin/agentSearchOrder.jsp").addParameter("key",UserDetailService.AUTH_KEY)
+                .addParameter("phone", phone);
     }
 
     public String getRemoteAddress() {
@@ -69,4 +76,11 @@ public class UserListByPhoneAction extends BaseAction {
         this.phone = phone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

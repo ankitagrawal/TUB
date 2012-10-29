@@ -28,7 +28,7 @@ public class NotifyMe implements java.io.Serializable {
   @Column(name = "email", nullable = false, length = 45)
   private String email;
 
-  @Column(name = "phone", nullable = false, length = 45)
+  @Column(name = "phone", length = 45)
   private String phone;
 
 
