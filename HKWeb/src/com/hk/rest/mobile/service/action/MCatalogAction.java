@@ -292,7 +292,7 @@ public class MCatalogAction extends MBaseAction {
 				if (productPage != null) {
 					productList = productPage.getList();
 					for (Product product : productList) {
-						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_CATALOG)));
 					}
 				}
 				trimListByCategory(productList, secondaryCategory);
@@ -306,7 +306,7 @@ public class MCatalogAction extends MBaseAction {
 				if (productPage != null) {
 					productList = productPage.getList();
 					for (Product product : productList) {
-						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_CATALOG)));
 					}
 				}
 				trimListByCategory(productList, secondaryCategory);

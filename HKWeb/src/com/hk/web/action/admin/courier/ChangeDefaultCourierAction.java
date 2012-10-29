@@ -149,7 +149,21 @@ public class ChangeDefaultCourierAction extends BaseAction {
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
         final File excelFile = new File(excelFilePath);
 
-        xslGenerator.generatePincodeDefaultCourierXsl(pincodeDefaultCourierList, excelFilePath);
+	    //IMPORTANT::: DO NOT TOUCH THE CODE BELOW---- YE LOG HATANE SE GAME CHANGE HO JAAYEGA -- ADDED AS A LAST RESORT
+	    for (PincodeDefaultCourier pdcl : pincodeDefaultCourierList) {
+		    logger.error("pincode id --> " + pdcl.getPincode().getId().toString());
+		    //String x = pdcl.getPincode().getId().toString();
+		    logger.error("pincode    ---->" + pdcl.getPincode().getPincode());
+		    //String y = pdcl.getPincode().getPincode();
+		    logger.error("courier id ------->" + (pdcl.getCourier() != null ? pdcl.getCourier().getId().toString() : "-1"));
+		    //String z = pdcl.getCourier() != null ? pdcl.getCourier().getId().toString(): "-1";
+		    //logger.error("pincode id:" + pdcl.getPincode().getId().toString() +
+		    //                      "pincode:" + pdcl.getPincode().getPincode() +
+		    //                      "courier id:" + (pdcl.getCourier() != null ? pdcl.getCourier().getId().toString(): "-1"))  ;
+	    }
+	    //IMPORTANT::: DO NOT TOUCH THE CODE BELOW---- YE LOG HATANE SE GAME CHANGE HO JAAYEGA -- ADDED AS A LAST RESORT
+
+	    xslGenerator.generatePincodeDefaultCourierXsl(pincodeDefaultCourierList, excelFilePath);
         addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
         return new Resolution() {
 
