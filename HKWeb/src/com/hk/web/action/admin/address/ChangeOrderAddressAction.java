@@ -80,23 +80,14 @@ public class ChangeOrderAddressAction extends BaseAction {
 
     public Resolution save() {
         if (copyToUserAddressBook) {
-            newAddress = addressBookManager.editAddress(order.getUser(), order.getAddress(), this.newAddress); // here
-                                                                                                                // edited
-                                                                                                                // address
-                                                                                                                // is
-                                                                                                                // the
-                                                                                                                // new
-                                                                                                                // address
-                                                                                                                // which
-                                                                                                                // is to
-                                                                                                                // be
-                                                                                                                // saved
+            newAddress = addressBookManager.editAddress(order.getUser(), order.getAddress(), this.newAddress); 
         } else {
             if (address == null) {
                 address = order.getAddress();
             }
             boolean isDuplicateAddress = addressMatchScoreCalculator.isDuplicateAddress(address);
             if (!isDuplicateAddress) {
+	            newAddress.setUser(order.getUser());
                 newAddress = addressDao.save(newAddress);
             }
         }
