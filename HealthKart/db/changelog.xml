@@ -9595,5 +9595,7 @@
 		</sql>
 	</changeSet>
 
-
+	<changeSet author="Tarun (generated)" id="1351231777053-1">
+        <dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="phone" tableName="notify_me"/>
+    </changeSet>
 </databaseChangeLog>
