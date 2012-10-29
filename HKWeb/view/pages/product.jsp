@@ -894,7 +894,6 @@
 			function _addToCart(res) {
 				if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 					$('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
-					//alert(res.data.itemsInCart);
 					$('#productsInCart').html(res.data.itemsInCart);
 					if(res.data.itemsInCart > 0){
 						$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart.png");
