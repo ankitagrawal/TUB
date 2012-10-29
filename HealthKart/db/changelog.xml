@@ -7990,7 +7990,7 @@
     </changeSet>
     <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
         <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
-    <!--&lt;!&ndash;</changeSet>->-->
+    <!--&lt;!&ndash;</changeSet>->&ndash;&gt;
     <changeSet author="Seema (generated)" id="1342273389422-100">
         <createTable tableName="awb_status">
             <column name="id" type="INT">
@@ -8110,7 +8110,7 @@
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="awb" referencesUniqueColumn="false"/>
     </changeSet>
-    <!-- delete shipment which are not present in shipping order -->
+    &lt;!&ndash; delete shipment which are not present in shipping order &ndash;&gt;
     <changeSet author="Seema (generated)" id="1342274075684-3">
         <sql>
             delete s.* from `shipment` s left join `shipping_order` so on s.id=so.shipment_id where so.id is null;
@@ -8121,7 +8121,7 @@
             update `shipment` set tracking_id = '' WHERE length(tracking_id) &gt; 17 or length(tracking_id) &lt; 9;
         </sql>
     </changeSet>
-    <!-- change all redundant tracking id in shipment to unique values -->
+    &lt;!&ndash; change all redundant tracking id in shipment to unique values &ndash;&gt;
     <changeSet author="Seema (generated)" id="1342274075684-5">
         <sql>
             update `shipment`
@@ -8140,7 +8140,7 @@
 
         </sql>
     </changeSet>
-    <!-- populate awb from shipment -->
+    &lt;!&ndash; populate awb from shipment &ndash;&gt;
     <changeSet author="Seema (generated)" id="1342274075684-30">
         <sql>
             insert into awb_status(`id`,`status`) values (10,'Unused'),(20,'Attach'),(30,'Authorization Pending'),(40,'Used');
@@ -8155,7 +8155,7 @@
             inner join `payment` p on bo.payment_id=p.id;
         </sql>
     </changeSet>
-    <!-- populate  awb_id  in shipment -->
+    &lt;!&ndash; populate  awb_id  in shipment &ndash;&gt;
     <changeSet author="Seema (generated)" id="1342274075684-7">
         <sql>
             update `shipment` s inner join `awb` a
@@ -8358,7 +8358,7 @@
     </changeSet>
     <changeSet author="Pradeep (generated)" id="1343989161150-4">
         <addForeignKeyConstraint baseColumnNames="cart_line_item_id" baseTableName="subscription_cart_line_item" constraintName="fk_subscription_cart_line_item_cart_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cart_line_item" referencesUniqueColumn="false"/>
-       <!-- <sql>
+       &lt;!&ndash; <sql>
             ALTER TABLE subscription_cart_line_item ADD FOREIGN KEY fk_subscription_cart_line_item_cart_line_item1 (cart_line_item_id) REFERENCES cart_line_item(id) ON DELETE CASCADE;
         </sql>-->
     </changeSet>
@@ -9594,6 +9594,14 @@
 			update feedback f, base_order bo set f.feedback_date=bo.update_dt where f.base_order_id=bo.id;			
 		</sql>
 	</changeSet>
-
-
+    <changeSet author="Marut (generated)" id="1351515049101-2">
+        <addColumn tableName="user_detail">
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <sql>
+            Update user_detail set create_dt = now();
+        </sql>
+    </changeSet>
 </databaseChangeLog>
