@@ -221,7 +221,7 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <div class="grid_24 optionsDiv">
+                    <div class="grid_20 optionsDiv">
                         <fieldset>
                             <legend>&nbsp;&nbsp;Available Options</legend>
                             <div class="parentAvail">
@@ -254,7 +254,8 @@
                                             </div>
                                             <div class="productOptions">
                                                 <c:forEach items="${variant.productOptions}" var="option">
-                                                    <p class="productOptions">${option.name}:${option.value}</p>
+                                                    <p class="productOptions"
+                                                       style="word-wrap:break-word;">${option.name}:${option.value}</p>
                                                 </c:forEach>
                                             </div>
                                             <c:if test="${variant.outOfStock}">
