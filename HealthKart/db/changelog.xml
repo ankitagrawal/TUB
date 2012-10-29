@@ -9487,7 +9487,7 @@
             <column name="approval_date" type="DATETIME"/>
         </addColumn>
     </changeSet>
-    <!--<changeSet author="Ajeet (generated)" id="1350715789183-8">
+    <changeSet author="Ajeet (generated)" id="1350715789183-8">
         <dropColumn columnName="payment_amount" tableName="goods_received_note"/>
     </changeSet>
     <changeSet author="Ajeet (generated)" id="1350715789183-9">
@@ -9507,7 +9507,7 @@
     </changeSet>
     <changeSet author="Ajeet (generated)" id="1350715789183-14">
         <dropColumn columnName="po_date" tableName="purchase_order"/>
-    </changeSet>-->
+    </changeSet>
 
 	<changeSet author="Ajeet (written)" id="20121020-01">
 		<sql>
@@ -9516,16 +9516,80 @@
 			update purchase_order set po_place_date=update_dt;
 		</sql>
 	</changeSet>
-	<!--<changeSet author="Ajeet (written)" id="20121020-02">
+	<changeSet author="Ajeet (written)" id="20121020-02">
 		<sql>
 			delete from grn_status where id in (25, 40);
 		</sql>
-	</changeSet>-->
+	</changeSet>
 
-	<!--<changeSet author="Ajeet (written)" id="20121020-03">
+    <changeSet author="AdminUser (generated)" id="1351008534081-1">
+        <addColumn tableName="base_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1351008534081-2">
+        <addColumn tableName="base_order">
+            <column name="target_dispatch_date_on_verify" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1351008534081-3">
+        <addColumn tableName="shipping_order">
+            <column name="target_del_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="Ajeet (generated)" id="1351236795227-1">
+        <createTable tableName="supplier_balance">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="supplier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="balance" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1351236795227-2">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="supplier_balance" constraintName="fk_supplier_balance_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1351173120154-1">
+        <createTable tableName="user_detail">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="phone" type="BIGINT"/>
+            <column name="crm_priority" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1351173120154-4">
+        <createIndex indexName="user_detail_key" tableName="user_detail" unique="true">
+            <column name="phone"/>
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="Ajeet (generated)" id="1351491739428-1">
+        <addColumn tableName="feedback">
+            <column name="feedback_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+	<changeSet author="Ajeet (written)" id="20121029-01">
 		<sql>
-			update goods_received_note set grn_status_id=20 where grn_status_id=30;
+			update feedback f, base_order bo set f.feedback_date=bo.update_dt where f.base_order_id=bo.id;			
 		</sql>
-	</changeSet>-->
-	
+	</changeSet>
+    
 </databaseChangeLog>

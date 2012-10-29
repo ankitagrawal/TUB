@@ -211,6 +211,7 @@
 		<url-pattern>/autocomplete-search/*</url-pattern>
 		<url-pattern>/admin</url-pattern>
 		<url-pattern>/admin/*</url-pattern>
+        <url-pattern>/agent/order</url-pattern>
 		<url-pattern>/core</url-pattern>
 		<url-pattern>/core/*</url-pattern>
 		<url-pattern>/affiliate</url-pattern>

@@ -166,8 +166,13 @@ public class POAction extends BasePaginatedAction {
         grn.setWarehouse(warehouse);
 	    Calendar calendar = Calendar.getInstance();
 	    calendar.setTime(grn.getGrnDate());
-	    calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
-	    grn.setEstPaymentDate(calendar.getTime());
+	    if (purchaseOrder.getSupplier().getCreditDays() != null && purchaseOrder.getSupplier().getCreditDays() >= 0) {
+		    calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
+		    grn.setEstPaymentDate(calendar.getTime());
+	    } else {
+		    grn.setEstPaymentDate(purchaseOrder.getPoPlaceDate());
+	    }
+
 	    grn = (GoodsReceivedNote) getGoodsReceivedNoteDao().save(grn);
         for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
             ProductVariant productVariant = poLineItem.getSku().getProductVariant();

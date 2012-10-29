@@ -53,6 +53,7 @@ public class VerifyCodAction extends BaseAction {
             Payment payment = paymentManager.verifyCodPayment(order.getPayment());
 
             getOrderService().processOrderForAutoEsclationAfterPaymentConfirmed(order);
+            getOrderService().setTargetDispatchDelDatesOnBO(order);
             getOrderLoggingService().logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), null);
 
 	        data.put("paymentStatus", JsonUtils.hydrateHibernateObject(payment.getPaymentStatus()));

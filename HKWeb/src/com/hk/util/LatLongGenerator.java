@@ -13,6 +13,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import com.hk.pact.service.core.AddressService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class LatLongGenerator {
   @Autowired
   LocalityMapDao localityMapDao;
   @Autowired
-  AddressDao addressDao;
+  AddressService addressDao;
   @Autowired
   ManufacturerDao manufacturerDao;
   String line2;
