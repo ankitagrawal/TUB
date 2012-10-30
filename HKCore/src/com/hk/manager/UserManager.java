@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hk.pact.service.core.AddressService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -78,7 +79,7 @@ public class UserManager {
     @Autowired
     private OfferInstanceDao offerInstanceDao;
     @Autowired
-    private AddressDao       addressDao;
+    private AddressService       addressDao;
     @Autowired
     private SubscriptionService subscriptionService;
 
@@ -417,11 +418,11 @@ public class UserManager {
         this.offerInstanceDao = offerInstanceDao;
     }
 
-    public AddressDao getAddressDao() {
+    public AddressService getAddressDao() {
         return addressDao;
     }
 
-    public void setAddressDao(AddressDao addressDao) {
+    public void setAddressDao(AddressService addressDao) {
         this.addressDao = addressDao;
     }
 
