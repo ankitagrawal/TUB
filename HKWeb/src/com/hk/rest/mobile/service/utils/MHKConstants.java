@@ -53,7 +53,7 @@ public class MHKConstants {
     public static final String EMAIL_ID_ALRDY_EXIST = "email id already exists";
     public static final String EYEGLASSES = "eyeglasses";
     public static final String LENSES = "lenses";
-    
+    public static final String NO_STEP_UP="Maximum quantity reached";
     public static String getStringNullDefault(String data){
     	if(data==null)
     		return "";

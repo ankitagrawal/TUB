@@ -157,6 +157,9 @@ public class MCartAction extends MBaseAction{
                 if (lineItem != null && lineItem.getProductVariant() != null) {
                     ProductVariant productVariant = lineItem.getProductVariant();
                     cartItemResponse = new MCartLineItemsJSONResponse();
+                    if(null!=productVariant.getProductOptions()){
+                    cartItemResponse.setProductOptions(productVariant.getProductOptions());	
+                    }                    	
                     if(null!=lineItem.getDiscountOnHkPrice())
                     cartItemResponse.setDiscountOnHkPrice(priceFormat.format(lineItem.getDiscountOnHkPrice()));
                     if(null!=lineItem.getHkPrice())

@@ -128,8 +128,7 @@ public class MCartLineItemUpdateAction extends MBaseAction {
 
                 }else{
                   cartLineItemDao.refresh(cartLineItem);
-                  healthkartResponse = new HealthkartResponse(MHKConstants.STATUS_ERROR, "fail", cartLineItem.getQty());
-                  return JsonUtils.getGsonDefault().toJson(healthkartResponse);
+                  return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(MHKConstants.STATUS_ERROR, MHKConstants.NO_STEP_UP, cartLineItem.getQty()));
                 }
             }
             order = orderManager.trimEmptyLineItems(cartLineItem.getOrder());
