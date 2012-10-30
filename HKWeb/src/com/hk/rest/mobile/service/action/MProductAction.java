@@ -42,13 +42,10 @@ import com.hk.domain.user.User;
 import com.hk.dto.AddressDistanceDto;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.LinkManager;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.affiliate.AffiliateDao;
-import com.hk.pact.dao.catalog.product.ProductCountDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
@@ -97,13 +94,6 @@ public class MProductAction extends MBaseAction{
 
         @Session(key = HealthkartConstants.Cookie.preferredZone)
         private String preferredZone;
-        //private String urlFragment;
-
-        @Autowired
-        private SeoManager seoManager;
-
-        @Autowired
-        private MenuHelper menuHelper;
         @Autowired
         private AffiliateDao affiliateDao;
 
@@ -112,13 +102,7 @@ public class MProductAction extends MBaseAction{
         @Autowired
         private LocalityMapDao localityMapDao;
         @Autowired
-        private ProductCountDao productCountDao;
-        @Autowired
-        private UserProductHistoryDao userProductHistoryDao;
-        @Autowired
         private AddressDao addressDao;
-        @Autowired
-        private BaseDao baseDao;
         @Autowired
         private ProductService productService;
         @Autowired

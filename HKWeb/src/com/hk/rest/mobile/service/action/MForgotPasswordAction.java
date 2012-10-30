@@ -21,6 +21,7 @@ import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.core.TempTokenDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.UserService;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.web.HealthkartResponse;
 
@@ -34,7 +35,7 @@ public class MForgotPasswordAction extends MBaseAction{
 
 
     @Autowired
-    UserDao                 userDao;
+    UserService                 userService;
     @Autowired
     TempTokenDao            tempTokenDao;
     @Autowired
@@ -57,7 +58,7 @@ public class MForgotPasswordAction extends MBaseAction{
 		String message = MHKConstants.STATUS_DONE;
 		String status = MHKConstants.STATUS_OK;
 		try{
-		User user = userDao.findByLogin(email);
+		User user = userService.findByLogin(email);
         if (user == null) {
             message = MHKConstants.NO_RESULTS;
             status = MHKConstants.STATUS_ERROR;

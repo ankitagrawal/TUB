@@ -34,8 +34,6 @@ import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
-import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
-import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pricing.PricingEngine;
@@ -63,13 +61,9 @@ public class MCartLineItemUpdateAction extends MBaseAction {
     @Autowired
     ComboInstanceDao comboInstanceDao;
     @Autowired
-    ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
-    @Autowired
     CartLineItemService cartLineItemService;
     @Autowired
     CartFreebieService cartFreebieService;
-    @Autowired
-    CartLineItemDao cartLineItemDao;
     @Autowired
     UserManager userManager;
 
@@ -127,7 +121,7 @@ public class MCartLineItemUpdateAction extends MBaseAction {
                   cartLineItem = cartLineItemService.save(cartLineItem);
 
                 }else{
-                  cartLineItemDao.refresh(cartLineItem);
+                  orderManager.getCartLineItemDao().refresh(cartLineItem);
                   return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(MHKConstants.STATUS_ERROR, MHKConstants.NO_STEP_UP, cartLineItem.getQty()));
                 }
             }

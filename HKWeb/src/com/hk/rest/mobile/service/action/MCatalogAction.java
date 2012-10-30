@@ -52,14 +52,11 @@ import com.hk.dto.search.SearchResult;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
-import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.catalog.category.CategoryDao;
-import com.hk.pact.dao.catalog.category.CategoryImageDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductSearchService;
 import com.hk.rest.mobile.service.model.MCatalogJSONResponse;
@@ -127,19 +124,13 @@ public class MCatalogAction extends MBaseAction {
 	@Autowired
 	MapIndiaDao mapIndiaDao;
 	@Autowired
-	CategoryImageDao categoryImageDao;
-	@Autowired
 	ProductDao productDao;
 	@Autowired
 	ProductService productService;
 	@Autowired
 	ComboDao comboDao;
 	@Autowired
-	UserDao userDao;
-	@Autowired
-	private BaseDao baseDao;
-	@Autowired
-	CategoryDao categoryDao;
+	CategoryService categoryService;
 	@Autowired
 	SeoManager seoManager;
 	@Autowired
@@ -176,7 +167,7 @@ public class MCatalogAction extends MBaseAction {
 		rootCategorySlug = primaryCat;
 		childCategorySlug = secondaryCat;
 
-		category = categoryDao.getCategoryByName(rootCategorySlug);
+		category = categoryService.getCategoryByName(rootCategorySlug);
 		if (category == null) {
 			logger.error("No category found for root category slug : " + rootCategorySlug);
 		}
@@ -252,13 +243,13 @@ public class MCatalogAction extends MBaseAction {
 			if (productPage != null) {
 				productList = productPage.getList();
 			}
-			category = categoryDao.getCategoryByName(smallestCategory);
+			category = categoryService.getCategoryByName(smallestCategory);
 		} catch (Exception e) {
 			//urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
 			//logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for "+urlFragment, e);
 			logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for " + urlFragment);
 			List<String> categoryNames = new ArrayList<String>();
-			Category primaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(smallestCategory));
+			Category primaryCategory = categoryService.getCategoryByName(Category.getNameFromDisplayName(smallestCategory));
 			category = primaryCategory;
 			if (primaryCategory != null) {
 				categoryNames.add(primaryCategory.getName());
@@ -266,7 +257,7 @@ public class MCatalogAction extends MBaseAction {
 
 			Category secondaryCategory = null;
 			if (secondSmallestCategory != null) {
-				secondaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondSmallestCategory));
+				secondaryCategory = categoryService.getCategoryByName(Category.getNameFromDisplayName(secondSmallestCategory));
 				if (secondaryCategory != null) {
 					categoryNames.add(secondaryCategory.getName());
 				}
@@ -274,7 +265,7 @@ public class MCatalogAction extends MBaseAction {
 
 			Category tertiaryCategory = null;
 			if (thirdSmallestCategory != null) {
-				tertiaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(thirdSmallestCategory));
+				tertiaryCategory = categoryService.getCategoryByName(Category.getNameFromDisplayName(thirdSmallestCategory));
 				if (tertiaryCategory != null) {
 					categoryNames.add(tertiaryCategory.getName());
 				}
@@ -761,13 +752,5 @@ public class MCatalogAction extends MBaseAction {
 
 	public List<ProductOption> getFilterProductOptions() {
 		return filterProductOptions;
-	}
-
-	public BaseDao getBaseDao() {
-		return baseDao;
-	}
-
-	public void setBaseDao(BaseDao baseDao) {
-		this.baseDao = baseDao;
 	}
 }

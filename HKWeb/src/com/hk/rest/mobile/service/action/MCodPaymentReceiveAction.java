@@ -55,8 +55,6 @@ import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.dao.payment.PaymentDao;
-import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
@@ -78,10 +76,6 @@ public class MCodPaymentReceiveAction extends MBaseAction {
     private String couponCode;
     private int couponAmount = 0;
 
-    @Autowired
-    private PaymentDao paymentDao;
-    @Autowired
-    UserDao userDao;
     @Autowired
     private OrderService orderService;
     @Autowired
@@ -229,7 +223,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
         return jsonBuilder;
 	}
     public void paymentSuccess(String gatewayOrderId,HttpServletRequest request,HttpServletResponse response){
-        payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+        payment = paymentService.findByGatewayOrderId(gatewayOrderId);
         if (payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(payment.getPaymentStatus().getId())) {
 
             Long paymentStatusId = payment.getPaymentStatus() != null ? payment.getPaymentStatus().getId() : null;
