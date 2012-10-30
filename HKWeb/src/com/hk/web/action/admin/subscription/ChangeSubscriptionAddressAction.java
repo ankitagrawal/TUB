@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.subscription;
 
+import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -36,7 +37,7 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
     @Autowired
     AddressBookManager addressBookManager;
     @Autowired
-    AddressDao addressDao;
+    AddressService addressDao;
     @Autowired
     AddressMatchScoreCalculator addressMatchScoreCalculator;
 

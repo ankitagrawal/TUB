@@ -71,7 +71,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
             Criteria pinCodeCriteria = courierServiceInfoCriteria.createCriteria("pincode");
             pinCodeCriteria.add(Restrictions.eq("pincode", pincode));
         }
-
+              
         return courierServiceInfoCriteria.list();
     }
 

@@ -3,6 +3,7 @@ package com.hk.web.action.admin.courier;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
@@ -25,7 +26,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class SetDefaultCourierAction extends BaseAction {
     @Autowired
-   AddressDao addressDao;
+    AddressService addressDao;
 
   @Validate(required = true)
   private Address address;
