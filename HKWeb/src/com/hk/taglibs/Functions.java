@@ -94,9 +94,6 @@ public class Functions {
 
     private static final String          DEFAULT_DELIEVERY_DAYS = "1-3";
     private static final String          BUSINESS_DAYS          = " business days";
-    
-    
-
 
     // TODO: rewrite
     static {
@@ -215,6 +212,7 @@ public class Functions {
 
     /**
      * checks if c1 contains all elements of c2
+     * 
      * @param c1
      * @param c2
      * @return
@@ -224,20 +222,19 @@ public class Functions {
         if (c1 == null || c2 == null)
             return false;
         boolean collectionContainsCollection = true;
-        
-        for(Object o : c2 ){
-            if(!c1.contains(o)){
-               collectionContainsCollection = false;
-               break;
+
+        for (Object o : c2) {
+            if (!c1.contains(o)) {
+                collectionContainsCollection = false;
+                break;
             }
         }
-        
-        /*for (Object o : c2) {
-            if (collectionContains(c1, o) && collectionContains(c2, o)) {
-                return collectionContains(c, o);
-            }
-        }*/
-        
+
+        /*
+         * for (Object o : c2) { if (collectionContains(c1, o) && collectionContains(c2, o)) { return
+         * collectionContains(c, o); } }
+         */
+
         return collectionContainsCollection;
     }
 
@@ -274,7 +271,7 @@ public class Functions {
     }
 
     public static List<String> brandsInCategory(Object o) {
-	    Category primaryCategory = (Category) o;
+        Category primaryCategory = (Category) o;
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
         return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
     }
@@ -342,8 +339,12 @@ public class Functions {
 
     public static Long getComboCount(Object o1) {
 
-        CartLineItem lineItem = (CartLineItem) o1;
-        return lineItem.getQty() / lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant()).getQty();
+        if (o1 != null) {
+            CartLineItem lineItem = (CartLineItem) o1;
+            return lineItem.getQty() / lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant()).getQty();
+        }else{
+            return 0L;
+        }
     }
 
     public static Double getPostpaidAmount(Object o) {
@@ -464,11 +465,11 @@ public class Functions {
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
-    public static List<Courier> getAvailableCouriers(Object o) {     
+    public static List<Courier> getAvailableCouriers(Object o) {
 
         ShippingOrder shippingOrder = (ShippingOrder) o;
         CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
-        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false , false);
+        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false, false);
     }
 
     public static boolean equalsIgnoreCase(String str1, String str2) {
@@ -497,7 +498,7 @@ public class Functions {
         return skuDao.filterProductVariantsByWarehouse(sku.getProductVariant().getProduct().getProductVariants(), sku.getWarehouse());
     }
 
-    public static List<Product> getCategoryHeadingProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
+    public static List<Product> getCategoryHeadingProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         return productService.productsSortedByOrder(primaryCategoryHeadingId, productReferrer);
     }
@@ -510,7 +511,7 @@ public class Functions {
 
     public static boolean isCombo(String id) {
         Combo combo = getCombo(id);
-        if (combo != null){
+        if (combo != null) {
             return true;
         }
         return false;
@@ -526,9 +527,9 @@ public class Functions {
         if (order != null) {
             Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
             long minDays = dispatchDays[0], maxDays = dispatchDays[1];
-            
-            if(minDays == OrderUtil.DEFAULT_MIN_DEL_DAYS && maxDays == OrderUtil.DEFAULT_MIN_DEL_DAYS){
-              return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
+
+            if (minDays == OrderUtil.DEFAULT_MIN_DEL_DAYS && maxDays == OrderUtil.DEFAULT_MIN_DEL_DAYS) {
+                return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
             }
             return String.valueOf(minDays).concat("-").concat(String.valueOf(maxDays)).concat(BUSINESS_DAYS);
         } else {
@@ -537,7 +538,6 @@ public class Functions {
 
     }
 
-
     public static boolean isCollectionContainsObject(Collection c, Object o) {
         return c.contains(o);
     }
@@ -545,11 +545,11 @@ public class Functions {
     public static Double getEngravingPrice(Object o) {
         ProductVariant productVariant = (ProductVariant) o;
         VariantConfig variantConfig = productVariant.getVariantConfig();
-        if(variantConfig != null) {
+        if (variantConfig != null) {
             Set<VariantConfigOption> variantConfigOptions = variantConfig.getVariantConfigOptions();
-            for(VariantConfigOption variantConfigOption : variantConfigOptions) {
-                if(variantConfigOption.getAdditionalParam().equals(VariantConfigOptionParam.ENGRAVING.param())){
-                    for(VariantConfigValues variantConfigValue : variantConfigOption.getVariantConfigValues()) {
+            for (VariantConfigOption variantConfigOption : variantConfigOptions) {
+                if (variantConfigOption.getAdditionalParam().equals(VariantConfigOptionParam.ENGRAVING.param())) {
+                    for (VariantConfigValues variantConfigValue : variantConfigOption.getVariantConfigValues()) {
                         return variantConfigValue.getAdditonalPrice();
                     }
                 }
@@ -561,10 +561,10 @@ public class Functions {
     public static boolean isEngravingProvidedForProduct(Object o) {
         ProductVariant productVariant = (ProductVariant) o;
         VariantConfig variantConfig = productVariant.getVariantConfig();
-        if(variantConfig != null) {
+        if (variantConfig != null) {
             Set<VariantConfigOption> variantConfigOptions = variantConfig.getVariantConfigOptions();
-            for(VariantConfigOption variantConfigOption : variantConfigOptions) {
-                if(variantConfigOption.getAdditionalParam().equals(VariantConfigOptionParam.ENGRAVING.param())){
+            for (VariantConfigOption variantConfigOption : variantConfigOptions) {
+                if (variantConfigOption.getAdditionalParam().equals(VariantConfigOptionParam.ENGRAVING.param())) {
                     return true;
                 }
             }
@@ -580,59 +580,61 @@ public class Functions {
 
         return reportProductVariantService.findSkuInventorySold(DateUtils.getDateMinusDays(noOfDays), endDate, sku);
     }
-    
-    public static String getProductURL(Product product, Long productReferrerId){
-       LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
-       
-       return linkManager.getProductURL(product, productReferrerId);
+
+    public static String getProductURL(Product product, Long productReferrerId) {
+        LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
+
+        return linkManager.getProductURL(product, productReferrerId);
     }
 
-	public static String getCodConverterLink(Order order){
-		LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
+    public static String getCodConverterLink(Order order) {
+        LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
 
-		return linkManager.getCodConverterLink(order);
-	}
+        return linkManager.getCodConverterLink(order);
+    }
 
-	/*public static boolean isCODAllowed(Order order) {
-	    AdminOrderService adminOrderService = ServiceLocatorFactory.getService(AdminOrderService.class);
-        return adminOrderService.isCODAllowed(order);
-    }*/
+    /*
+     * public static boolean isCODAllowed(Order order) { AdminOrderService adminOrderService =
+     * ServiceLocatorFactory.getService(AdminOrderService.class); return adminOrderService.isCODAllowed(order); }
+     */
 
-    public static Hub getHubForHkdeliveryUser(User user){
+    public static Hub getHubForHkdeliveryUser(User user) {
         HubService hubService = ServiceLocatorFactory.getService(HubService.class);
         return hubService.getHubForUser(user);
     }
 
-	public static boolean renderNewCatalogFilter(String child, String secondChild) {
-		List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer");
-		boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter, secondChild));
-		return renderNewCatalogFilter;
-	}
+    public static boolean renderNewCatalogFilter(String child, String secondChild) {
+        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer");
+        boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter,
+                secondChild));
+        return renderNewCatalogFilter;
+    }
 
-	public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, boolean showHiddenImages) {
-		ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
-		List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
-		return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
-	}
+    public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, boolean showHiddenImages) {
+        ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
+        List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
+        return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
+    }
 
-	public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
-		SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
-		List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
-		List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
-		for (Sku applicableSku : applicableSkus) {
-			applicableWarehouses.add(applicableSku.getWarehouse());
-		}
-		return applicableWarehouses;
-	}
+    public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
+        SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
+        List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
+        List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
+        for (Sku applicableSku : applicableSkus) {
+            applicableWarehouses.add(applicableSku.getWarehouse());
+        }
+        return applicableWarehouses;
+    }
 
-	public static boolean showOptionOnUI(String optionType) {
-		List<String> allowedOptions = Arrays.asList( "BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT","QTY", "FRAGRANCE");
-		boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
-		return showOptionOnUI;
-	}
+    public static boolean showOptionOnUI(String optionType) {
+        List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY",
+                "FRAGRANCE");
+        boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
+        return showOptionOnUI;
+    }
 
-	public static String getDisplayNameForHkdeliveryTracking(String status){
-		CourierStatusUpdateHelper courierStatusUpdateHelper = new CourierStatusUpdateHelper();
-		return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
-	}
+    public static String getDisplayNameForHkdeliveryTracking(String status) {
+        CourierStatusUpdateHelper courierStatusUpdateHelper = new CourierStatusUpdateHelper();
+        return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
+    }
 }
