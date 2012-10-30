@@ -1,0 +1,745 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Facial Features-->
+<FACIAL>
+  <IsMouthOpen>False</IsMouthOpen>
+  <HEAD
+    POSITION="75"
+    X="349"
+    Y="135" />
+  <EARS
+    POSITION="1"
+    X="199"
+    Y="399" />
+  <EARS
+    POSITION="13"
+    X="516"
+    Y="401" />
+  <NECK
+    POSITION="7"
+    X="168"
+    Y="595" />
+  <BINDI
+    POSITION="24"
+    X="348"
+    Y="296" />
+  <GLOSS
+    POSITION="37"
+    X="372"
+    Y="325" />
+  <NOSERINGLEFT
+    POSITION="47"
+    X="303"
+    Y="434" />
+  <NOSERINGRIGHT
+    POSITION="51"
+    X="400"
+    Y="439" />
+  <FACE
+    POSITION="75"
+    X="349"
+    Y="136" />
+  <FACE
+    POSITION="14"
+    X="496"
+    Y="266" />
+  <FACE
+    POSITION="13"
+    X="475"
+    Y="415" />
+  <FACE
+    POSITION="10"
+    X="478"
+    Y="522" />
+  <FACE
+    POSITION="7"
+    X="353"
+    Y="608" />
+  <FACE
+    POSITION="4"
+    X="222"
+    Y="420" />
+  <FACE
+    POSITION="1"
+    X="195"
+    Y="398" />
+  <FACE
+    POSITION="0"
+    X="211"
+    Y="255" />
+  <LIPS
+    POSITION="56"
+    X="286"
+    Y="504" />
+  <LIPS
+    POSITION="58"
+    X="335"
+    Y="492" />
+  <LIPS
+    POSITION="59"
+    X="350"
+    Y="498" />
+  <LIPS
+    POSITION="60"
+    X="369"
+    Y="494" />
+  <LIPS
+    POSITION="62"
+    X="411"
+    Y="505" />
+  <LIPS
+    POSITION="63"
+    X="385"
+    Y="532" />
+  <LIPS
+    POSITION="65"
+    X="351"
+    Y="541" />
+  <LIPS
+    POSITION="67"
+    X="316"
+    Y="533" />
+  <NOSE
+    POSITION="45"
+    X="332"
+    Y="345" />
+  <NOSE
+    POSITION="46"
+    X="326"
+    Y="405" />
+  <NOSE
+    POSITION="47"
+    X="303"
+    Y="434" />
+  <NOSE
+    POSITION="48"
+    X="312"
+    Y="454" />
+  <NOSE
+    POSITION="49"
+    X="350"
+    Y="470" />
+  <NOSE
+    POSITION="50"
+    X="388"
+    Y="456" />
+  <NOSE
+    POSITION="51"
+    X="400"
+    Y="439" />
+  <NOSE
+    POSITION="52"
+    X="373"
+    Y="404" />
+  <NOSE
+    POSITION="53"
+    X="369"
+    Y="345" />
+  <LEFTEYE
+    POSITION="27"
+    X="241"
+    Y="339" />
+  <LEFTEYE
+    POSITION="29"
+    X="269"
+    Y="322" />
+  <LEFTEYE
+    POSITION="31"
+    X="300"
+    Y="342" />
+  <LEFTEYE
+    POSITION="33"
+    X="269"
+    Y="351" />
+  <RIGHTEYE
+    POSITION="36"
+    X="462"
+    Y="339" />
+  <RIGHTEYE
+    POSITION="38"
+    X="432"
+    Y="323" />
+  <RIGHTEYE
+    POSITION="40"
+    X="402"
+    Y="342" />
+  <RIGHTEYE
+    POSITION="42"
+    X="433"
+    Y="353" />
+  <LEFTEYEBROW
+    POSITION="21"
+    X="216"
+    Y="303" />
+  <LEFTEYEBROW
+    POSITION="22"
+    X="243"
+    Y="285" />
+  <LEFTEYEBROW
+    POSITION="23"
+    X="274"
+    Y="287" />
+  <LEFTEYEBROW
+    POSITION="24"
+    X="308"
+    Y="304" />
+  <LEFTEYEBROW
+    POSITION="25"
+    X="273"
+    Y="299" />
+  <LEFTEYEBROW
+    POSITION="26"
+    X="244"
+    Y="298" />
+  <RIGHREYEBROW
+    POSITION="15"
+    X="483"
+    Y="302" />
+  <RIGHREYEBROW
+    POSITION="16"
+    X="452"
+    Y="285" />
+  <RIGHREYEBROW
+    POSITION="17"
+    X="420"
+    Y="288" />
+  <RIGHREYEBROW
+    POSITION="18"
+    X="389"
+    Y="305" />
+  <RIGHREYEBROW
+    POSITION="19"
+    X="422"
+    Y="301" />
+  <RIGHREYEBROW
+    POSITION="20"
+    X="451"
+    Y="298" />
+  <LEFTEYESHADOW
+    POSITION="27"
+    X="241"
+    Y="339" />
+  <LEFTEYESHADOW
+    POSITION="29"
+    X="269"
+    Y="322" />
+  <LEFTEYESHADOW
+    POSITION="31"
+    X="300"
+    Y="342" />
+  <LEFTEYESHADOW
+    POSITION="25"
+    X="273"
+    Y="299" />
+  <LEFTEYESHADOW
+    POSITION="26"
+    X="244"
+    Y="298" />
+  <LEFTEYESHADOW
+    POSITION="21"
+    X="216"
+    Y="303" />
+  <RIGHTEYESHADOW
+    POSITION="36"
+    X="462"
+    Y="339" />
+  <RIGHTEYESHADOW
+    POSITION="38"
+    X="432"
+    Y="323" />
+  <RIGHTEYESHADOW
+    POSITION="40"
+    X="402"
+    Y="342" />
+  <RIGHTEYESHADOW
+    POSITION="19"
+    X="422"
+    Y="301" />
+  <RIGHTEYESHADOW
+    POSITION="20"
+    X="451"
+    Y="298" />
+  <RIGHTEYESHADOW
+    POSITION="15"
+    X="483"
+    Y="302" />
+  <LEFTEYELINER
+    POSITION="27"
+    X="241"
+    Y="339" />
+  <LEFTEYELINER
+    POSITION="29"
+    X="269"
+    Y="322" />
+  <LEFTEYELINER
+    POSITION="31"
+    X="300"
+    Y="342" />
+  <LEFTEYELINER
+    POSITION="33"
+    X="269"
+    Y="351" />
+  <RIGHTEYELINER
+    POSITION="36"
+    X="462"
+    Y="339" />
+  <RIGHTEYELINER
+    POSITION="38"
+    X="432"
+    Y="323" />
+  <RIGHTEYELINER
+    POSITION="40"
+    X="402"
+    Y="342" />
+  <RIGHTEYELINER
+    POSITION="42"
+    X="433"
+    Y="353" />
+  <EYESHADOWLIDLEFT
+    POSITION="27"
+    X="227"
+    Y="339" />
+  <EYESHADOWLIDLEFT
+    POSITION="29"
+    X="269"
+    Y="322" />
+  <EYESHADOWLIDLEFT
+    POSITION="31"
+    X="314"
+    Y="347" />
+  <EYESHADOWLIDLEFT
+    POSITION="30"
+    X="299"
+    Y="322" />
+  <EYESHADOWLIDLEFT
+    POSITION="25"
+    X="273"
+    Y="311" />
+  <EYESHADOWLIDLEFT
+    POSITION="26"
+    X="244"
+    Y="314" />
+  <EYESHADOWLIDLEFT
+    POSITION="21"
+    X="224"
+    Y="323" />
+  <EYESHADOWLIDRIGHT
+    POSITION="36"
+    X="477"
+    Y="339" />
+  <EYESHADOWLIDRIGHT
+    POSITION="38"
+    X="432"
+    Y="323" />
+  <EYESHADOWLIDRIGHT
+    POSITION="40"
+    X="390"
+    Y="348" />
+  <EYESHADOWLIDRIGHT
+    POSITION="39"
+    X="403"
+    Y="323" />
+  <EYESHADOWLIDRIGHT
+    POSITION="19"
+    X="422"
+    Y="312" />
+  <EYESHADOWLIDRIGHT
+    POSITION="20"
+    X="451"
+    Y="315" />
+  <EYESHADOWLIDRIGHT
+    POSITION="15"
+    X="476"
+    Y="323" />
+  <EYESHADOWCONTOURLEFT
+    POSITION="27"
+    X="224"
+    Y="329" />
+  <EYESHADOWCONTOURLEFT
+    POSITION="35"
+    X="244"
+    Y="318" />
+  <EYESHADOWCONTOURLEFT
+    POSITION="29"
+    X="273"
+    Y="316" />
+  <EYESHADOWCONTOURLEFT
+    POSITION="31"
+    X="305"
+    Y="335" />
+  <EYESHADOWCONTOURLEFT
+    POSITION="30"
+    X="296"
+    Y="318" />
+  <EYESHADOWCONTOURLEFT
+    POSITION="25"
+    X="273"
+    Y="305" />
+  <EYESHADOWCONTOURLEFT
+    POSITION="26"
+    X="244"
+    Y="304" />
+  <EYESHADOWCONTOURLEFT
+    POSITION="21"
+    X="223"
+    Y="312" />
+  <EYESHADOWCONTOURRIGHT
+    POSITION="36"
+    X="476"
+    Y="328" />
+  <EYESHADOWCONTOURRIGHT
+    POSITION="44"
+    X="451"
+    Y="319" />
+  <EYESHADOWCONTOURRIGHT
+    POSITION="38"
+    X="422"
+    Y="317" />
+  <EYESHADOWCONTOURRIGHT
+    POSITION="40"
+    X="397"
+    Y="336" />
+  <EYESHADOWCONTOURRIGHT
+    POSITION="39"
+    X="403"
+    Y="319" />
+  <EYESHADOWCONTOURRIGHT
+    POSITION="19"
+    X="422"
+    Y="307" />
+  <EYESHADOWCONTOURRIGHT
+    POSITION="20"
+    X="451"
+    Y="305" />
+  <EYESHADOWCONTOURRIGHT
+    POSITION="15"
+    X="477"
+    Y="311" />
+  <EYESHADOWHIGHLIGHTLEFT
+    POSITION="27"
+    X="216"
+    Y="321" />
+  <EYESHADOWHIGHLIGHTLEFT
+    POSITION="29"
+    X="244"
+    Y="309" />
+  <EYESHADOWHIGHLIGHTLEFT
+    POSITION="25"
+    X="273"
+    Y="311" />
+  <EYESHADOWHIGHLIGHTLEFT
+    POSITION="26"
+    X="244"
+    Y="298" />
+  <EYESHADOWHIGHLIGHTLEFT
+    POSITION="21"
+    X="224"
+    Y="303" />
+  <EYESHADOWHIGHLIGHTRIGHT
+    POSITION="36"
+    X="483"
+    Y="320" />
+  <EYESHADOWHIGHLIGHTRIGHT
+    POSITION="38"
+    X="451"
+    Y="309" />
+  <EYESHADOWHIGHLIGHTRIGHT
+    POSITION="19"
+    X="422"
+    Y="313" />
+  <EYESHADOWHIGHLIGHTRIGHT
+    POSITION="20"
+    X="451"
+    Y="298" />
+  <EYESHADOWHIGHLIGHTRIGHT
+    POSITION="15"
+    X="476"
+    Y="302" />
+  <SMOKEYEYELEFT
+    POSITION="21"
+    X="212"
+    Y="324" />
+  <SMOKEYEYELEFT
+    POSITION="26"
+    X="240"
+    Y="306" />
+  <SMOKEYEYELEFT
+    POSITION="25"
+    X="273"
+    Y="303" />
+  <SMOKEYEYELEFT
+    POSITION="30"
+    X="296"
+    Y="318" />
+  <SMOKEYEYELEFT
+    POSITION="31"
+    X="308"
+    Y="336" />
+  <SMOKEYEYELEFT
+    POSITION="32"
+    X="284"
+    Y="353" />
+  <SMOKEYEYELEFT
+    POSITION="33"
+    X="255"
+    Y="355" />
+  <SMOKEYEYELEFT
+    POSITION="27"
+    X="227"
+    Y="347" />
+  <SMOKEYEYERIGHT
+    POSITION="40"
+    X="393"
+    Y="336" />
+  <SMOKEYEYERIGHT
+    POSITION="39"
+    X="403"
+    Y="319" />
+  <SMOKEYEYERIGHT
+    POSITION="19"
+    X="422"
+    Y="305" />
+  <SMOKEYEYERIGHT
+    POSITION="20"
+    X="454"
+    Y="306" />
+  <SMOKEYEYERIGHT
+    POSITION="15"
+    X="487"
+    Y="324" />
+  <SMOKEYEYERIGHT
+    POSITION="36"
+    X="477"
+    Y="348" />
+  <SMOKEYEYERIGHT
+    POSITION="42"
+    X="447"
+    Y="357" />
+  <SMOKEYEYERIGHT
+    POSITION="41"
+    X="417"
+    Y="355" />
+  <CONCEALERLEFT
+    POSITION="27"
+    X="240"
+    Y="339" />
+  <CONCEALERLEFT
+    POSITION="33"
+    X="269"
+    Y="351" />
+  <CONCEALERLEFT
+    POSITION="31"
+    X="285"
+    Y="342" />
+  <CONCEALERLEFT
+    POSITION="45"
+    X="332"
+    Y="345" />
+  <CONCEALERLEFT
+    POSITION="46"
+    X="300"
+    Y="342" />
+  <CONCEALERLEFT
+    POSITION="35"
+    X="271"
+    Y="373" />
+  <CONCEALERLEFT
+    POSITION="1"
+    X="241"
+    Y="373" />
+  <CONCEALERLEFT
+    POSITION="0"
+    X="213"
+    Y="351" />
+  <CONCEALERRIGHT
+    POSITION="36"
+    X="462"
+    Y="339" />
+  <CONCEALERRIGHT
+    POSITION="42"
+    X="433"
+    Y="353" />
+  <CONCEALERRIGHT
+    POSITION="40"
+    X="385"
+    Y="342" />
+  <CONCEALERRIGHT
+    POSITION="53"
+    X="369"
+    Y="345" />
+  <CONCEALERRIGHT
+    POSITION="52"
+    X="373"
+    Y="404" />
+  <CONCEALERRIGHT
+    POSITION="44"
+    X="402"
+    Y="361" />
+  <CONCEALERRIGHT
+    POSITION="13"
+    X="462"
+    Y="371" />
+  <CONCEALERRIGHT
+    POSITION="14"
+    X="491"
+    Y="353" />
+  <LEFTCHEEK
+    POSITION="1"
+    X="199"
+    Y="399" />
+  <LEFTCHEEK
+    POSITION="2"
+    X="210"
+    Y="451" />
+  <LEFTCHEEK
+    POSITION="47"
+    X="274"
+    Y="434" />
+  <LEFTCHEEK
+    POSITION="33"
+    X="242"
+    Y="386" />
+  <RIGHTCHEEK
+    POSITION="13"
+    X="516"
+    Y="401" />
+  <RIGHTCHEEK
+    POSITION="12"
+    X="506"
+    Y="457" />
+  <RIGHTCHEEK
+    POSITION="51"
+    X="438"
+    Y="439" />
+  <RIGHTCHEEK
+    POSITION="42"
+    X="475"
+    Y="388" />
+  <LIPSINNER
+    POSITION="68"
+    X="325"
+    Y="518" />
+  <LIPSINNER
+    POSITION="69"
+    X="350"
+    Y="522" />
+  <LIPSINNER
+    POSITION="70"
+    X="376"
+    Y="518" />
+  <LIPSINNER
+    POSITION="71"
+    X="376"
+    Y="512" />
+  <LIPSINNER
+    POSITION="72"
+    X="351"
+    Y="512" />
+  <LIPSINNER
+    POSITION="73"
+    X="325"
+    Y="512" />
+  <LIPLINERUPPER
+    POSITION="56"
+    X="292"
+    Y="511" />
+  <LIPLINERUPPER
+    POSITION="57"
+    X="314"
+    Y="501" />
+  <LIPLINERUPPER
+    POSITION="58"
+    X="336"
+    Y="499" />
+  <LIPLINERUPPER
+    POSITION="59"
+    X="350"
+    Y="501" />
+  <LIPLINERUPPER
+    POSITION="60"
+    X="365"
+    Y="499" />
+  <LIPLINERUPPER
+    POSITION="61"
+    X="387"
+    Y="502" />
+  <LIPLINERUPPER
+    POSITION="62"
+    X="411"
+    Y="510" />
+  <LIPLINERLOWER
+    POSITION="56"
+    X="292"
+    Y="511" />
+  <LIPLINERLOWER
+    POSITION="67"
+    X="306"
+    Y="528" />
+  <LIPLINERLOWER
+    POSITION="66"
+    X="325"
+    Y="538" />
+  <LIPLINERLOWER
+    POSITION="65"
+    X="351"
+    Y="541" />
+  <LIPLINERLOWER
+    POSITION="64"
+    X="376"
+    Y="537" />
+  <LIPLINERLOWER
+    POSITION="63"
+    X="395"
+    Y="527" />
+  <LIPLINERLOWER
+    POSITION="62"
+    X="411"
+    Y="510" />
+  <EYELINERLOWERLEFT
+    POSITION="27"
+    X="241"
+    Y="339" />
+  <EYELINERLOWERLEFT
+    POSITION="33"
+    X="269"
+    Y="351" />
+  <EYELINERLOWERLEFT
+    POSITION="31"
+    X="300"
+    Y="342" />
+  <EYELINERLOWERRIGHT
+    POSITION="40"
+    X="402"
+    Y="342" />
+  <EYELINERLOWERRIGHT
+    POSITION="42"
+    X="433"
+    Y="353" />
+  <EYELINERLOWERRIGHT
+    POSITION="36"
+    X="462"
+    Y="339" />
+  <EYELINERUPPERRIGHT
+    POSITION="36"
+    X="462"
+    Y="339" />
+  <EYELINERUPPERRIGHT
+    POSITION="38"
+    X="432"
+    Y="323" />
+  <EYELINERUPPERRIGHT
+    POSITION="40"
+    X="402"
+    Y="342" />
+  <EYELINERUPPERLEFT
+    POSITION="27"
+    X="241"
+    Y="339" />
+  <EYELINERUPPERLEFT
+    POSITION="29"
+    X="269"
+    Y="322" />
+  <EYELINERUPPERLEFT
+    POSITION="31"
+    X="300"
+    Y="342" />
+</FACIAL>

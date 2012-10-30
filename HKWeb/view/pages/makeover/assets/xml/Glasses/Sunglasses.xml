@@ -1,0 +1,231 @@
+<Glasses>
+	<Category>
+
+	<Glass type="Large" gender="Male" color="Black" id="1011">
+			<imgPath>assets/accessories/SunGlasses/IMG_4880.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_4880.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_4880.png
+			</thumbPath>
+			<mid x="438.50   " y="136.00   "/>
+			<price>1200.00</price>
+			<mrp>185.00</mrp>
+			<name>Vincent Chase 1216 Black White Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Medium" gender="Male" color="Mettalic" id="1011">
+			<imgPath>assets/accessories/SunGlasses/IMG_4893.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_4893.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_4893.png
+			</thumbPath>
+			<mid x="438.50   " y="136.00   "/>
+			<price>1500.00</price>
+			<mrp>185.00</mrp>
+			<name>Vincent Chase 1216 Black White Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Large" gender="Male" color="Black" id="1011">
+			<imgPath>assets/accessories/SunGlasses/IMG_4902.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_4902.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_4902.png
+			</thumbPath>
+			<mid x="438.50   " y="136.00   "/>
+			<price>2000.00</price>
+			<mrp>185.00</mrp>
+			<name>Vincent Chase 1216 Black White Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Small" gender="Female" color="Mettalic" id="1011">
+			<imgPath>assets/accessories/SunGlasses/IMG_4907.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_4907.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_4907.png
+			</thumbPath>
+			<mid x="438.50   " y="136.00   "/>
+			<price>1800.00</price>
+			<mrp>185.00</mrp>
+			<name>Vincent Chase 1216 Black White Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Large" gender="Male" color="Black" id="1011">
+			<imgPath>assets/accessories/SunGlasses/IMG_4923.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_4923.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_4923.png
+			</thumbPath>
+			<mid x="438.50   " y="136.00   "/>
+			<price>1500.00</price>
+			<mrp>185.00</mrp>
+			<name>Vincent Chase 1216 Black White Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Medium" gender="Male" color="Green" id="1011">
+			<imgPath>assets/accessories/SunGlasses/IMG_4932.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_4932.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_4932.png
+			</thumbPath>
+			<mid x="438.50   " y="136.00   "/>
+			<price>1200.00</price>
+			<mrp>185.00</mrp>
+			<name>Vincent Chase 1216 Black White Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+
+	<!--<Glass type="Large" gender="Male" color="Green" id="1011">
+			<imgPath>assets/accessories/SunGlasses/IMG_4503.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_4503.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_4503.png
+			</thumbPath>
+			<mid x="438.50   " y="136.00   "/>
+			<price>200.00</price>
+			<mrp>185.00</mrp>
+			<name>Vincent Chase 1216 Black White Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+	
+		<Glass type="Large" gender="Male" color="Green" id="1001">
+			<imgPath>assets/accessories/SunGlasses/IMG_0313_1.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_0313_1.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_0313_1.png
+			</thumbPath>
+			<mid x="460.00  " y="129.50  "/>
+			<price>200.00</price>
+			<mrp>185.00</mrp>
+			<name>Vincent Chase 1216 Black White Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Small" gender="Kids" color="Black" id="1002">
+			<imgPath>assets/accessories/SunGlasses/IMG_2617_2.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_2617_2.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_2617_2.png
+			</thumbPath>
+			<mid x="438.50" y="132.50"/>
+			<price>900.00</price>
+			<mrp>285.00</mrp>
+			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Medium" gender="Male" color="Black" id="1003">
+			<imgPath>assets/accessories/SunGlasses/IMG_4031_3.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_4031_3.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_4031_3.png
+			</thumbPath>
+			<mid x="427.50 " y="95.50 "/>
+			<price>900.00</price>
+			<mrp>285.00</mrp>
+			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Medium" gender="Female" color="Black" id="1004">
+			<imgPath>assets/accessories/SunGlasses/IMG_4225_2.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_4225_2.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_4225_2.png
+			</thumbPath>
+			<mid x="439.00  " y="119.00  "/>
+			<price>900.00</price>
+			<mrp>285.00</mrp>
+			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Small" gender="Female" color="Black" id="1005">
+			<imgPath>assets/accessories/SunGlasses/IMG_6381_1.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_6381_1.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_6381_1.png
+			</thumbPath>
+			<mid x="433.00" y="115.00"/>
+			<price>900.00</price>
+			<mrp>285.00</mrp>
+			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Small" gender="Female" color="Black" id="1006">
+			<imgPath>assets/accessories/SunGlasses/IMG_6603_2.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_6603_2.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_6603_2.png
+			</thumbPath>
+			<mid x="412.50 " y="148.00 "/>
+			<price>900.00</price>
+			<mrp>285.00</mrp>
+			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Large" gender="Male" color="Mettalic" id="1007">
+			<imgPath>assets/accessories/SunGlasses/IMG_6963_2.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_6963_2.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_6963_2.png
+			</thumbPath>
+			<mid x="438.00 " y="88.50 "/>
+			<price>900.00</price>
+			<mrp>285.00</mrp>
+			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+
+		<Glass type="Large" gender="Female" color="Black" id="1008">
+			<imgPath>assets/accessories/SunGlasses/IMG_7481.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_7481.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_7481.png
+			</thumbPath>
+			<mid x="432.00  " y="168.50  "/>
+			<price>1900.00</price>
+			<mrp>285.00</mrp>
+			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+		<Glass type="Large" gender="Male" color="Red" id="1009">
+			<imgPath>assets/accessories/SunGlasses/IMG_8013_4.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_8013_4.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_8013_4.png
+			</thumbPath>
+			<mid x="444.50" y="103.00"/>
+			<price>1900.00</price>
+			<mrp>285.00</mrp>
+			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+
+	<Glass type="Large" gender="Kids" color="Yellow" id="1010">
+			<imgPath>assets/accessories/SunGlasses/img_8163.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/img_8163.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/img_8163.png</thumbPath>
+			<mid x="442.00  " y="110.00  "/>
+			<price>1900.00</price>
+			<mrp>285.00</mrp>
+			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass>
+		<Glass type="Large" gender="Kids" color="Yellow" id="1012">
+			<imgPath>assets/accessories/SunGlasses/IMG_9374_2.png</imgPath>
+			<imgPathDup>assets/accessories/SunGlasses/IMG_9374_2.png</imgPathDup>
+			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_9374_2.png
+			</thumbPath>
+			<mid x="491.00   " y="163.00   "/>
+			<price>1900.00</price>
+			<mrp>285.00</mrp>
+			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>
+			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>
+		</Glass> -->
+<!--			<Glass type="Large" gender="Kids" color="Yellow" id="1011">-->
+<!--			<imgPath>assets/accessories/SunGlasses/IMG_9152.png</imgPath>-->
+<!--			<imgPathDup>assets/accessories/SunGlasses/IMG_9152.png</imgPathDup>-->
+<!--			<thumbPath>assets/accessories/SunGlasses/Thumb/IMG_9152.png-->
+<!--			</thumbPath>-->
+<!--			<mid x="440.50" y="71.50 "/>-->
+<!--			<price>900.00</price>-->
+<!--			<mrp>285.00</mrp>2-->
+<!--			<name>Vegas TR-3100 GUN-BLACK Reading Eyeglasses</name>-->
+<!--			<description>For the highly fashion conscious men and women of the modern day the BB6057 C1 eye gear from Blueberry is a real great product. It is a perfect blend of protection and style that anyone can look for during the hot summer days. It is a product that looks unique and different from the old fashioned models of eye accessories most people wear while going out to the sun. It is suitable with any of your attires and you can be sure of the way you are looking whenever you wear them.</description>-->
+<!--		</Glass>-->
+	</Category>
+</Glasses>
