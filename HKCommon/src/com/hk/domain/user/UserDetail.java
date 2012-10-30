@@ -1,9 +1,11 @@
 package com.hk.domain.user;
 
+import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.core.EnumCallPriority;
 import com.hk.domain.catalog.product.combo.Combo;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,6 +32,11 @@ public class UserDetail {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @JsonSkip
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date createDate = new Date();
 
     public Long getId() {
         return id;
@@ -61,5 +68,13 @@ public class UserDetail {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }
