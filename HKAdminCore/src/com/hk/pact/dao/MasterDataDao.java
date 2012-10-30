@@ -41,6 +41,9 @@ import com.hk.domain.user.User;
 
 public interface MasterDataDao 
 {
+	public static final int USER_COMMENT_TYPE_PACKING_BASE_ORDER = 1;
+	public static final int USER_COMMENT_TYPE_DELIVERY_BASE_ORDER = 2;
+	public static final int USER_COMMENT_TYPE_OTHERS_BASE_ORDER = 3;
 
     public List<PaymentStatus> getPaymentStatusList();
 

@@ -89,7 +89,7 @@ public class SplitShippingOrderAction extends BaseAction {
 
       ShippingOrderHelper.updateAccountingOnSOLineItems(newShippingOrder, newShippingOrder.getBaseOrder());
       newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
-      newShippingOrder = ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
+      newShippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
       newShippingOrder = shippingOrderService.save(newShippingOrder);
 
 	    shipmentService.createShipment(newShippingOrder);

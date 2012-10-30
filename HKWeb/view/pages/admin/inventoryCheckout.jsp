@@ -1,14 +1,16 @@
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" var="icBean"/>
 <c:set var="lineItemStatusId_picking" value="<%=EnumShippingOrderStatus.SO_Picking.getId()%>"/>
 <c:set var="lineItemStatusId_shipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
+<c:set var="commentTypePacking" value="<%= MasterDataDao.USER_COMMENT_TYPE_PACKING_BASE_ORDER %>" />
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Inventory Checkout">
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
       $(document).ready(function() {
-        var boolWronglyPickedBox = "${icBean.wronglyPickedBox}" == 'true';
+	    var boolWronglyPickedBox = "${icBean.wronglyPickedBox}" == 'true';
         if(boolWronglyPickedBox) {
            alert("Cannot checkout the item, there is another item with inventory with Batch details: \n" +
                  "\n batch number - ${icBean.earlierSkuGroup.batchNumber}" +
@@ -40,6 +42,9 @@
   <s:layout-component
       name="heading">Inventory Checkout for Gateway Order ID#${icBean.shippingOrder.gatewayOrderId}</s:layout-component>
   <s:layout-component name="content">
+  <input type="hidden" id="commentType" value="${icBean.shippingOrder.baseOrder.commentType}">
+  <input type="hidden" id="userComments" value="${icBean.shippingOrder.baseOrder.userComments}">
+
     <c:choose>
         <c:when test="${! hk:allItemsCheckedOut(icBean.shippingOrder)}">
           <div align="center" class="prom yellow help" style="height:30px; font-size:20px; color:red; font-weight:bold;">
@@ -52,6 +57,13 @@
           </div>
         </c:otherwise>
       </c:choose>
+    <c:if test="${icBean.shippingOrder.baseOrder.commentType == commentTypePacking }" >
+	    <br>
+	    <div style="margin:5px;color:red;font-size:25px;">
+		    User Instructions: ${icBean.shippingOrder.baseOrder.userComments}
+	    </div>
+    </c:if>
+
     <div style="display:inline;float:left;">
 
       <c:choose><c:when test="${empty icBean.skuGroups}">
@@ -197,7 +209,9 @@
           <th width="75px;">Checked Out Qty</th>
         </tr>
         </thead>
+	    <c:set var="alertCount" value="0" />
         <c:forEach items="${icBean.shippingOrder.lineItems}" var="lineItem">
+	       <c:set var="alertCount" value="${alertCount + hk:checkedoutItemsCount(lineItem)}"/>
           <c:set var="productVariant" value="${lineItem.sku.productVariant}"/>
           <tr class="productVariantRow">
             <input type="hidden" value="${productVariant.id}" class="productVariantId"/>
@@ -235,6 +249,13 @@
 
           </tr>
         </c:forEach>
+	      <script type="text/javascript">
+		      var commentType = $('#commentType').val();
+		      var upc = $('#upc').val();
+		      if(${alertCount == 0} && upc == '' && commentType == ${commentTypePacking}) {
+			      alert("User Instruction : " + $('#userComments').val());
+		      }
+	      </script>
       </table>
     </div>
   </s:layout-component>

@@ -99,7 +99,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
             purchaseInvoiceList = purchaseInvoiceDao.listPurchaseInvoiceWithProductVariant(productVariant);
         } else {
             purchaseInvoicePage = purchaseInvoiceDao.searchPurchaseInvoice(purchaseInvoice, purchaseInvoiceStatus, createdBy, invoiceNumber, tinNumber, supplierName, getPageNo(),
-                    getPerPage(), reconciled, warehouse);
+                    getPerPage(), reconciled, warehouse, startDate, endDate);
             purchaseInvoiceList = purchaseInvoicePage.getList();
         }
         // purchaseInvoiceList = purchaseInvoiceDao.listAll();
@@ -234,6 +234,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         params.add("purchaseInvoice");
         params.add("warehouse");
         params.add("reconciled");
+        params.add("startDate");
+        params.add("endDate");
         return params;
     }
 
@@ -357,7 +359,23 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         return grnDate;
     }
 
-    @Validate(converter = CustomDateTypeConvertor.class)
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	@Validate(converter = CustomDateTypeConvertor.class)
     public void setGrnDate(Date grnDate) {
         this.grnDate = grnDate;
     }

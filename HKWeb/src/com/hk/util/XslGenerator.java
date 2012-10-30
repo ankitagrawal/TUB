@@ -509,7 +509,7 @@ public class XslGenerator {
 	}
 
 	public File generatePincodeDefaultCourierXsl(List<PincodeDefaultCourier> pincodeDefaultCourierList, String xslFilePath) throws Exception {
-File file = new File(xslFilePath);
+       File file = new File(xslFilePath);
         file.getParentFile().mkdirs();
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
@@ -664,7 +664,10 @@ File file = new File(xslFilePath);
 		xlsWriter.addHeader(XslConstants.ADDRESS, XslConstants.ADDRESS);
 		xlsWriter.addHeader(XslConstants.CONTACT_PERSON, XslConstants.CONTACT_PERSON);
 		xlsWriter.addHeader(XslConstants.CONTACT_NUMBER, XslConstants.CONTACT_NUMBER);
-		xlsWriter.addHeader(XslConstants.CREDIT_PERIOD, XslConstants.CREDIT_PERIOD);
+		xlsWriter.addHeader(XslConstants.CREDIT_DAYS, XslConstants.CREDIT_DAYS);
+		xlsWriter.addHeader(XslConstants.TARGET_CREDIT_DAYS, XslConstants.TARGET_CREDIT_DAYS);
+		xlsWriter.addHeader(XslConstants.LEAD_TIME, XslConstants.LEAD_TIME);
+		xlsWriter.addHeader(XslConstants.ACTIVE, XslConstants.ACTIVE);
 		xlsWriter.addHeader(XslConstants.MARGIN, XslConstants.MARGIN);
 		xlsWriter.addHeader(XslConstants.BRAND, XslConstants.BRAND);
 		xlsWriter.addHeader(XslConstants.VALIDITY_TERMS_OF_TRADE, XslConstants.VALIDITY_TERMS_OF_TRADE);
@@ -697,7 +700,10 @@ File file = new File(xslFilePath);
 			xlsWriter.addCell(xlsRow, supplierAddress.toString());
 			xlsWriter.addCell(xlsRow, supplier.getContactPerson());
 			xlsWriter.addCell(xlsRow, supplier.getContactNumber());
-			xlsWriter.addCell(xlsRow, supplier.getCreditPeriod());
+			xlsWriter.addCell(xlsRow, supplier.getCreditDays());
+			xlsWriter.addCell(xlsRow, supplier.getTargetCreditDays());
+			xlsWriter.addCell(xlsRow, supplier.getLeadTime());
+			xlsWriter.addCell(xlsRow, supplier.getActive());
 			xlsWriter.addCell(xlsRow, supplier.getMargins());
 			xlsWriter.addCell(xlsRow, supplier.getBrandName());
 			xlsWriter.addCell(xlsRow, supplier.getTOT());

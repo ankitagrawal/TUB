@@ -24,6 +24,23 @@
 
 <s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Order Summary">
   <s:layout-component name="htmlHead">
+	  <script type="text/javascript">
+		  $(document).ready(function() {
+
+			 $('.requiredFieldValidator').click(function() {
+				 if( $.trim($('#userComments').val()) != '' && ! $('.commentType').is(':checked') ) {
+					 alert('Please select the type of Comment');
+					 return false;
+				 }
+				 if( $.trim($('#userComments').val()) == '' && $('.commentType').is(':checked') ) {
+					 $('.commentType').attr("checked", false);
+				 }
+
+			 });
+
+		  });
+
+	  </script>
 
 
   </s:layout-component>
@@ -152,15 +169,20 @@
         </h5>
         <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
-        <s:textarea name="order.userComments" rows="2" cols="20" style="width:175px;height:110px"/>
-          <div class="title">
+        <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" style="width:175px;height:110px"/>
+          <%--<div class="title">
             <h5>
               Confirm order
             </h5>
-          </div>
+          </div>--%>
+	      <div class="comment_type">
+		      <br><s:radio value="1" name="order.commentType" class="commentType"/> Packing Type
+		      <br><s:radio value="2" name="order.commentType" class="commentType"/> Delivery Type
+		      <br><s:radio value="3" name="order.commentType" class="commentType"/> Others
+	      </div>
           <div style="margin:10px; padding-top:10px">
             <div class="buttons">
-              <s:submit name="orderReviewed" value="Make Payment"/>
+              <s:submit name="orderReviewed" value="Make Payment" class="requiredFieldValidator"/>
             </div>
           </div>
 

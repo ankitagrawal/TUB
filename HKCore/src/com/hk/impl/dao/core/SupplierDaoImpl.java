@@ -39,15 +39,15 @@ public class SupplierDaoImpl extends BaseDaoImpl implements SupplierDao {
         return (Supplier) super.save(supplier);
     }
 
-    public Page getSupplierByTinAndName(String tinNumber, String name, int page, int perPage) {
-        return list(getSupplierSearchCriteria(tinNumber, name), page, perPage);
+    public Page getSupplierByTinAndName(String tinNumber, String name, Boolean status, int page, int perPage) {
+        return list(getSupplierSearchCriteria(tinNumber, name, status), page, perPage);
     }
 
-    public List<Supplier> getSupplierByTinAndName(String tinNumber, String name) {
-        return findByCriteria(getSupplierSearchCriteria(tinNumber, name));
+    public List<Supplier> getSupplierByTinAndName(String tinNumber, String name, Boolean status) {
+        return findByCriteria(getSupplierSearchCriteria(tinNumber, name, status));
     }
 
-    private DetachedCriteria getSupplierSearchCriteria(String tinNumber, String name) {
+    private DetachedCriteria getSupplierSearchCriteria(String tinNumber, String name, Boolean status) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Supplier.class);
         // Criteria criteria = getSession().createCriteria(Supplier.class);
         if (!StringUtils.isBlank(tinNumber))
@@ -55,6 +55,9 @@ public class SupplierDaoImpl extends BaseDaoImpl implements SupplierDao {
 
         if (!StringUtils.isBlank(name))
             criteria.add(Restrictions.like("name".toLowerCase(), "%" + name.toLowerCase() + "%"));
+
+	    if (status != null)
+            criteria.add(Restrictions.eq("active", status));
 
         criteria.addOrder(Order.asc("name"));
         return criteria;

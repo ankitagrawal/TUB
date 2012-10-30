@@ -62,10 +62,11 @@
 	</c:if>
 	<h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
 	<shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
-		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction"> Ant Builds </s:link></h3>
+		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction">Run Ant Tasks </s:link></h3>
 	</shiro:hasRole>
     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction"> Populate Busy Data </s:link></h3>
+        <h3><s:link beanclass="com.hk.web.action.admin.user.PopulateUserDetailAction"> Populate User Detail Data </s:link></h3>
 	</shiro:hasRole>
 		<%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
@@ -164,7 +165,10 @@
 	<h3><s:link beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction">Search HK Batch</s:link></h3>
 
 	<h3><s:link
-			beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">Create Repalcement Order</s:link></h3>
+			beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">Create Replacement Order</s:link></h3>
+
+	<h3><s:link
+			beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" event="searchReplacementOrders">Search Replacement Order</s:link></h3>
 </div>
 
 <div class="cl"></div>
