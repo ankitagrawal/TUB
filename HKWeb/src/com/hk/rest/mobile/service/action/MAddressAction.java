@@ -88,8 +88,7 @@ public class MAddressAction extends MBaseAction {
 			User user = getUserService().getUserById(getPrincipal().getId());
 			if (null != getUserService().getLoggedInUser()) {
 				if (null != addressId) {
-					selectedAddress = addressManager.getAddressDao().get(Address.class, new Long(
-							addressId));
+					selectedAddress = addressManager.getAddressDao().get(Address.class, new Long(addressId));
 				} else {
 					Address address = new Address();
 					address.setCity(city);
