@@ -48,7 +48,7 @@
 						}
 					},
 					error: function(){
-						popUpMob.showWithTitle("Status",'Request Failed');
+						popUpMob.showWithTitle("Status",'Invalid Order Id');
 					}
 				});
 			

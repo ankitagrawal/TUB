@@ -40,20 +40,6 @@ public class MOrderAction extends MBaseAction{
     @Autowired
     OrderService orderService;
 
-
-    @POST
-    @Path("/create")
-    @Consumes("application/json")
-    @Produces("application/json")
-    public String createOrderInHK(APIOrder apiOrder) {
-        if (apiOrder != null) {
-            String response = getApiOrderService().createOrderInHK(apiOrder);
-            return response;
-        } else {
-            return "invalid json";
-        }
-    }
-
     @GET
     @Path("/{orderId}/track/")
     @Produces("application/json")
@@ -78,7 +64,7 @@ public class MOrderAction extends MBaseAction{
             statusMap.put("date",orderDate.format(order.getCreateDate()));
             
         }catch(Exception e){
-            message = MHKConstants.NO_RESULTS;
+            message = MHKConstants.NO_ORDER_EXIST;
             status = MHKConstants.STATUS_ERROR;
         }
         healthkartResponse = new HealthkartResponse(status, message, statusMap);

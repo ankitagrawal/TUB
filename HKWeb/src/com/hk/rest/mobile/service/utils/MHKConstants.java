@@ -54,6 +54,9 @@ public class MHKConstants {
     public static final String EYEGLASSES = "eyeglasses";
     public static final String LENSES = "lenses";
     public static final String NO_STEP_UP="Maximum quantity reached";
+    public static final String NO_ORDER_EXIST = "No such order exist. Please check again.";
+    
+    
     public static String getStringNullDefault(String data){
     	if(data==null)
     		return "";
