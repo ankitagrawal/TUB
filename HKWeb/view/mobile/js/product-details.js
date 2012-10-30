@@ -126,7 +126,7 @@ $('#productDetails').bind('pagebeforeshow', function () {
 
     });
     $('#productDetails').on('click', '.ad2Crt', function (e) {
-       
+       loadingPop('s','');
         var ele = e.currentTarget;
         var requestURL = $(this).attr('data-url');
 
@@ -142,6 +142,7 @@ $('#productDetails').bind('pagebeforeshow', function () {
                 } else {
                     popUpMob.show(response.message);
                     $(ele).removeClass('ad2Crt').addClass('go2Crt').html('<a href="'+httpPath+'/cart.jsp" style="text-decoration:none;color:#333">Added to Cart</a>');
+					loadingPop('h');
                 }
             }
         });
@@ -149,3 +150,4 @@ $('#productDetails').bind('pagebeforeshow', function () {
 
     });
 });
+$('#productDetails').bind('pageshow',function(){loadingPop('s','');});

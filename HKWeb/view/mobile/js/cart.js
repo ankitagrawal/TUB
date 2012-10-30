@@ -68,6 +68,7 @@ $('#cart').bind('pagebeforeshow', function () {
             var ele = e.currentTarget;
             var query = $(ele).attr('data-url');
             var viewObj = this;
+			loadingPop('s','');
             $.ajax({
                 url: wSURL + __hkG.urls.removeFromCart,
                 data: query,
@@ -75,6 +76,7 @@ $('#cart').bind('pagebeforeshow', function () {
                 success: function (data) {
                     if (hasErr(data)) {
                         popUpMob.show(data.message);
+						loadingPop('h');
                     } else {
                     	
                         if (prVaCo.reset()) {
@@ -82,11 +84,14 @@ $('#cart').bind('pagebeforeshow', function () {
                             else popUpMob.show(__hkG.msgs.successRemove);
 
                             prVaCo.add(data.data);
+							loadingPop('h');
                             }
                         
                     }
                 }
+				
             });
+			
         }
     });
     
@@ -124,3 +129,4 @@ $('#cart').bind('pagebeforeshow', function () {
 
     });
 });
+$('#cart').bind('pageshow',function(){loadingPop('s','');});

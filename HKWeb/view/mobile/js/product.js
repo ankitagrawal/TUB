@@ -222,3 +222,4 @@ $('#product').bind('pagebeforeshow', function () {
 loadingPop('s', '');
     /**Backbone code for product list*E*/
 });
+$('#product').bind('pageshow',function(){loadingPop('s','');});

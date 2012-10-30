@@ -153,3 +153,4 @@ $('#address').bind('pagebeforeshow', function () {
     }
 
 });
+$('#address').bind('pageshow',function(){loadingPop('s','');});
