@@ -339,9 +339,14 @@ public class Functions {
 
     public static Long getComboCount(Object o1) {
 
-        if (o1 != null) {
+      if (o1 != null) {
             CartLineItem lineItem = (CartLineItem) o1;
-            return lineItem.getQty() / lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant()).getQty();
+            if(lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant())!=null){
+             return lineItem.getQty()/lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant()).getQty();
+            }
+          else{
+              return 0L;
+            }
         }else{
             return 0L;
         }
