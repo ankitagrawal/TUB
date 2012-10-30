@@ -189,5 +189,6 @@
 	    <mapping class="com.hk.domain.catalog.product.UpdatePvPrice" />
 	    <mapping class="com.hk.domain.order.OrderPaymentReconciliation" />
 	    <mapping class="com.hk.domain.order.analytics.DemandHistory" />
+	    <mapping class="com.hk.domain.user.UserDetail" />
     </session-factory>
 </hibernate-configuration>
