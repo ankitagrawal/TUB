@@ -2,6 +2,11 @@ package com.hk.admin.impl.service.subscription;
 
 import java.util.List;
 
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.CartLineItem;
+import com.hk.pact.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +38,8 @@ public class AdminSubscriptionServiceImpl implements AdminSubscriptionService{
     SubscriptionService subscriptionService;
     @Autowired
     SubscriptionLoggingService subscriptionLoggingService;
+    @Autowired
+    OrderService orderService;
 
     public Double getRewardPointsForSubscriptionCancellation(Subscription subscription){
         Double rewardPoints=0.0;
@@ -42,7 +49,7 @@ public class AdminSubscriptionServiceImpl implements AdminSubscriptionService{
         for(SubscriptionOrder subscriptionOrder : subscriptionOrderList){
             if(!subscriptionOrder.getSubscriptionOrderStatus().getId().equals(EnumSubscriptionOrderStatus.Cancelled.getId())){
                 double hkPrice=subscriptionOrder.getHkPriceNow();
-                double benifit=0.0;
+                double benifit = 0.0;
                 if(hkPrice>subscriptionPrice){
                     benifit=hkPrice-subscriptionPrice;
                     rewardPoints=rewardPoints-benifit;
@@ -65,9 +72,26 @@ public class AdminSubscriptionServiceImpl implements AdminSubscriptionService{
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Cancelled.asSubscriptionStatus());
             subscription= subscriptionService.save(subscription);
             subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionCancelled,cancellationRemark);
-
+            Order bo=subscription.getBaseOrder();
+            boolean parentBOHasProducts=false;
+             if(bo.getOrderStatus().getId().equals(EnumOrderStatus.InProcess.getId())){
+                 for(CartLineItem cartLineItem : bo.getCartLineItems()){
+                   if(cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())){
+                        parentBOHasProducts=true;
+                        break;
+                   }
+                 }
+               if(!parentBOHasProducts){
+                 bo.setOrderStatus(EnumOrderStatus.Cancelled.asOrderStatus());
+                 getOrderService().save(bo);
+               }
+          }
             sendSubscriptionCancellationEmails(subscription);
         }
         return subscription;
     }
+
+  public OrderService getOrderService() {
+    return orderService;
+  }
 }
