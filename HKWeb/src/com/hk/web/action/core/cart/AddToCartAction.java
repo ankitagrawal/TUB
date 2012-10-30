@@ -119,85 +119,105 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
                 }
 
                 ComboInstance comboInstance = null;
-                if (combo != null) {
-                    /**
-                     * do combo specific validations
-                     */
-                    if (combo != null && combo.getId() != null) {
-                        Long maxQty = 0L;
-                        Long netQty = 0L;
-                        for (ComboProduct comboProduct : combo.getComboProducts()) {
-                            maxQty += comboProduct.getQty();
-                        }
-                        for (ProductVariant productVariant : productVariantList) {
-                            if (productVariant.getQty() != null) {
-                                netQty += productVariant.getQty();
-                            } else {
-                                logger.error("Null qty for Combo=" + combo.getId());
-                            }
-                        }
-                        if (netQty != maxQty) {
-                            addValidationError("Combo product variant qty are not in accordance to offer", new SimpleError(
-                                    "Combo product variant qty are not in accordance to offer"));
-                            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
-                                    "Combo product variant qty are not in accordance to offer", new HashMap());
-                            noCache();
-                            return new JsonResolution(healthkartResponse);
-                        }
+              if(combo != null) {
+                /**
+                 * do combo specific validations
+                 */
+                if (combo != null && combo.getId() != null) {
+                  Long maxQty = 0L;
+                  Long netQty = 0L;
+                  for (ComboProduct comboProduct : combo.getComboProducts()) {
+                    maxQty += comboProduct.getQty();
+                  }
+                  for (ProductVariant productVariant : productVariantList) {
+                    if (productVariant.getQty() != null) {
+                      netQty += productVariant.getQty();
                     } else {
-                        if (productVariantList != null && productVariantList.size() > 0) {
-                            for (ProductVariant productVariant : productVariantList) {
-                                // can pv be null here? have to check, putting a null check --> still null pointer on
-                                // above line --> null check for PVlist
-                                if (productVariant != null && productVariant.getQty() != null && productVariant.getQty() < 1) {
-                                    addValidationError("Min Qty should be 1", new SimpleError("Min Qty should be 1"));
-                                    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Min Qty should be 1", new HashMap());
-                                    noCache();
-                                    return new JsonResolution(healthkartResponse);
-                                }
-                            }
-                        }
+                      logger.error("Null qty for Combo=" + combo.getId());
                     }
-
-                    /**
-                     * check selectedProductVariants if (variant != null && variant.getQty() != null && variant.getQty() !=
-                     * 0) a) if pv already exits in CLI a.1 without combo/ with diff combo id -> error a.2 with combo
-                     * check all existing variants, any diff error
-                     */
-
-                    if (order != null && order.getCartLineItems() != null && order.getCartLineItems().size() > 0) {
-                        Set<CartLineItem> existingProductCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-                        for (ProductVariant selectedProductVariant : selectedProductVariants) {
-
-                            for (CartLineItem existingProductCartLineItem : existingProductCartLineItems) {
-                                if (selectedProductVariant.equals(existingProductCartLineItem.getProductVariant())) {
-                                    ComboInstance existingComboInstance = existingProductCartLineItem.getComboInstance();
-                                    if (existingComboInstance != null) {
-
-                                        if (existingComboInstance.getCombo().getId().equals(combo.getId())) {
-                                            // same combo addition, check variants
-                                            Set<ProductVariant> existingPVInCombo = new HashSet<ProductVariant>(existingComboInstance.getVariants());
-                                            Set<ProductVariant> selectedPV = new HashSet<ProductVariant>(selectedProductVariants);
-                                            
-                                            Collection<ProductVariant> diffInPV = CollectionUtils.subtract(existingPVInCombo, selectedPV);
-                                            if(diffInPV !=null && diffInPV.size() >0){
-                                                //error
-                                            }
-                                        }
-                                    } else {
-                                        // error
-                                    }
-                                } else {
-                                    // error coz we are adding a product thru combo which already exists in cart
-                                }
-                            }
-                        }
+                  }
+                  if (netQty != maxQty) {
+                    addValidationError("Combo product variant qty are not in accordance to offer", new SimpleError(
+                        "Combo product variant qty are not in accordance to offer"));
+                    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
+                        "Combo product variant qty are not in accordance to offer", new HashMap());
+                    noCache();
+                    return new JsonResolution(healthkartResponse);
+                  }
+                } else {
+                  if (productVariantList != null && productVariantList.size() > 0) {
+                    for (ProductVariant productVariant : productVariantList) {
+                      // can pv be null here? have to check, putting a null check --> still null pointer on
+                      // above line --> null check for PVlist
+                      if (productVariant != null && productVariant.getQty() != null && productVariant.getQty() < 1) {
+                        addValidationError("Min Qty should be 1", new SimpleError("Min Qty should be 1"));
+                        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Min Qty should be 1", new HashMap());
+                        noCache();
+                        return new JsonResolution(healthkartResponse);
+                      }
                     }
+                  }
+                }
+
+                if (order != null && order.getCartLineItems() != null && order.getCartLineItems().size() > 0) {
+                  Set<CartLineItem> existingProductCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+                  for (ProductVariant selectedProductVariant : selectedProductVariants) {
+
+                    for (CartLineItem existingProductCartLineItem : existingProductCartLineItems) {
+                      if (selectedProductVariant.equals(existingProductCartLineItem.getProductVariant())) {
+                        ComboInstance existingComboInstance = existingProductCartLineItem.getComboInstance();
+                        if (existingComboInstance != null) {
+
+                          if (existingComboInstance.getCombo().getId().equals(combo.getId())) {
+                            // same combo addition, check variants
+                            Set<ProductVariant> existingPVInCombo = new HashSet<ProductVariant>(existingComboInstance.getVariants());
+                            Set<ProductVariant> selectedPV = new HashSet<ProductVariant>(selectedProductVariants);
+
+                            Collection<ProductVariant> diffInPV = CollectionUtils.subtract(existingPVInCombo, selectedPV);
+                            if(diffInPV !=null && diffInPV.size() >0){
+                              addValidationError("You can't add any combo whose product is already in the cart", new SimpleError("You can't add any combo whose product is already in the cart"));
+                              HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,"You can't add any combo whose product is already in the cart", new HashMap());
+                              noCache();
+                              return new JsonResolution(healthkartResponse);
+                            }
+                          }
+                          else if(!existingComboInstance.getCombo().getId().equals(combo.getId())){
+                            addValidationError("You can't add any combo whose product is already in the cart", new SimpleError("You can't add any combo whose product is already in the cart"));
+                              HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,"You can't add any combo whose product is already in the cart", new HashMap());
+                              noCache();
+                              return new JsonResolution(healthkartResponse);
+                          }
+                        } else {
+                          addValidationError("You can't add any combo whose product is already in the cart", new SimpleError("You can't add any combo whose product is already in the cart"));
+                          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,"You can't add any combo whose product is already in the cart", new HashMap());
+                          noCache();
+                          return new JsonResolution(healthkartResponse);
+                        }
+                      }
+                  }
+                }
+              }
 
                     comboInstance = new ComboInstance();
                     comboInstance.setCombo(combo);
                     comboInstance = (ComboInstance) comboInstanceDao.save(comboInstance);
-                } 
+                }
+              else{
+                 if (order != null && order.getCartLineItems() != null && order.getCartLineItems().size() > 0) {
+                  Set<CartLineItem> existingProductCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+                   for (ProductVariant selectedProductVariant : selectedProductVariants) {
+                    for (CartLineItem existingProductCartLineItem : existingProductCartLineItems) {
+                        if(existingProductCartLineItem.getProductVariant().equals(selectedProductVariant) && existingProductCartLineItem.getComboInstance()!=null){
+                          addValidationError("You can't add any product whose combo is already added in the cart", new SimpleError("You can't add any product whose combo is already added in the cart"));
+                          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,"You can't add any product whose combo is already added in the cart", new HashMap());
+                          noCache();
+                          return new JsonResolution(healthkartResponse);
+                        }
+                      }
+                    }
+                   }
+                 }
+
 
                 if (comboInstance != null) {
                     if (selectedProductVariants != null && selectedProductVariants.size() > 0) {
