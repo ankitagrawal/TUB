@@ -324,6 +324,7 @@ public class APIOrderServiceImpl implements APIOrderService {
 
         Address address = order.getAddress();
         address.setId(null);
+	    address.setUser(hkUser);
         address = addressDao.save(address);
 
         Payment payment = order.getPayment();

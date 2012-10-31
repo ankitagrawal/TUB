@@ -8,6 +8,7 @@ import com.hk.domain.user.UserDetail;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.user.UserDetailDao;
 import com.hk.pact.service.core.AddressService;
+import com.hk.pact.service.user.UserDetailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,24 +34,34 @@ public class AddressServiceImpl implements AddressService {
     AddressDao addressDao;
 
     @Autowired
-    UserDetailDao userDetailsDao;
+    UserDetailService userDetailsService;
 
     @Transactional
     public Address save(Address address) {
         Address addressRec = addressDao.save(address);
         try{
-            User user = address.getUser();
-
-            List<Integer> phoneNumbers = new ArrayList<Integer>();
-            String[] phones = null;
-            String ph = address.getPhone();
-            phones = StringUtils.getUserPhoneList(ph);
-            for (String phone : phones){
-                UserDetail userDetail = new UserDetail();
-                userDetail.setUser(user);
-                long phoneNumber = StringUtils.getUserPhone(phone);
-                userDetail.setPhone(phoneNumber);
-                userDetailsDao.save(userDetail);
+            User user = addressRec.getUser();
+            if (user != null){
+                //List<Integer> phoneNumbers = new ArrayList<Integer>();
+                String[] phones = null;
+                String ph = address.getPhone();
+                phones = StringUtils.getUserPhoneList(ph);
+                for (String phone : phones){
+                    long phoneNumber = StringUtils.getUserPhone(phone);
+                    UserDetail dbUserDetail = userDetailsService.findByPhoneAndUser(phoneNumber, user);
+                    
+                    if (dbUserDetail !=null && addressRec.getDeleted()){
+                        userDetailsService.delete(dbUserDetail);
+                    }
+                    else{
+                        if (dbUserDetail == null){
+                            UserDetail userDetail = new UserDetail();
+                            userDetail.setUser(user);
+                            userDetail.setPhone(phoneNumber);
+                            userDetailsService.save(userDetail);
+                        }
+                    }
+                }
             }
 
         }catch (Exception ex){

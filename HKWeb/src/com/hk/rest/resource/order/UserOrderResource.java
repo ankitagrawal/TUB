@@ -61,7 +61,7 @@ public class UserOrderResource {
         User user = userService.findByLogin(email);
         Response response = null;
         try{
-            if (user != null){
+            if (user == null){
                 response = Response.status(Response.Status.NOT_FOUND).build();
             }else{
                 UserDetail userDetail = new UserDetail();

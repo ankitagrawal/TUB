@@ -1,22 +1,29 @@
 package com.hk.rest.mobile.service.action;
 
-import com.hk.rest.models.order.APIOrder;
-import com.hk.rest.pact.service.APIOrderService;
-import com.hk.rest.mobile.service.utils.MHKConstants;
-import com.hk.web.HealthkartResponse;
-import com.hk.pact.service.order.OrderService;
-import com.hk.domain.order.Order;
-import com.akube.framework.gson.JsonUtils;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
-import java.text.SimpleDateFormat;
-import java.text.Format;
+import com.akube.framework.gson.JsonUtils;
+import com.hk.domain.order.Order;
+import com.hk.pact.service.order.OrderService;
+import com.hk.rest.mobile.service.utils.MHKConstants;
+import com.hk.rest.models.order.APIOrder;
+import com.hk.rest.pact.service.APIOrderService;
+import com.hk.web.HealthkartResponse;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,20 +40,6 @@ public class MOrderAction extends MBaseAction{
     @Autowired
     OrderService orderService;
 
-
-    @POST
-    @Path("/create")
-    @Consumes("application/json")
-    @Produces("application/json")
-    public String createOrderInHK(APIOrder apiOrder) {
-        if (apiOrder != null) {
-            String response = getApiOrderService().createOrderInHK(apiOrder);
-            return response;
-        } else {
-            return "invalid json";
-        }
-    }
-
     @GET
     @Path("/{orderId}/track/")
     @Produces("application/json")
@@ -57,7 +50,7 @@ public class MOrderAction extends MBaseAction{
         String message = MHKConstants.STATUS_DONE;
         String status = MHKConstants.STATUS_OK;
         String orderStatus=MHKConstants.NO_RESULTS;
-        Map statusMap = new HashMap<String,String>();
+        Map<String,Object> statusMap = new HashMap<String,Object>();
         try{
 
         //orderStatus =  getApiOrderService().trackOrder(orderId);
@@ -71,7 +64,7 @@ public class MOrderAction extends MBaseAction{
             statusMap.put("date",orderDate.format(order.getCreateDate()));
             
         }catch(Exception e){
-            message = MHKConstants.NO_RESULTS;
+            message = MHKConstants.NO_ORDER_EXIST;
             status = MHKConstants.STATUS_ERROR;
         }
         healthkartResponse = new HealthkartResponse(status, message, statusMap);

@@ -21,8 +21,10 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.crm.AgentSearchOrderAction" var="orderAdmin" event="pre"/>
 <s:layout-render name="/layouts/agentLayout.jsp" pageTitle="User Orders" >
  <s:layout-component name="content">
-<s:form beanclass="com.hk.web.action.admin.crm.AgentSearchOrderAction" method="get"  autocomplete="false" style="">
-    Recent orders for user Email: <strong><span class="or">${orderAdmin.email}</span></strong>
+     <s:form beanclass="com.hk.web.action.admin.crm.AgentSearchOrderAction" method="get"  autocomplete="false" style="">
+    Recent orders for user Email: <strong><span class="or" id="email">${orderAdmin.email}</span></strong>
+    <br/>
+    <label>Phone: </label><input type="text" style="width: 120px; height: 30px" disabled="true" id="uPhone" value="${orderAdmin.phone}"/> <input type="button" value="Assign Phone to this email" id="updateUserDetail"/>
     <br/>
     phone: <strong><span class="or">${orderAdmin.phone}</span></strong>
     </br>
@@ -32,7 +34,7 @@
     <tr>
         <th>Order Status</th>
         <th>Shipping Order Details</th>
-        <th> Invoice Details</th>
+        <th>Invoice Details</th>
     </tr>
     </thead>
      <tbody>
@@ -128,5 +130,24 @@
      </tbody>
     </table>
 </s:form>
-   </s:layout-component>
+     <script type="text/javascript">
+     //$(document).ready(function() {
+     $("#updateUserDetail").click(function() {
+         $.ajax({
+             type: "POST",
+             url: "${pageContext.request.contextPath}/rest/api/user/email/${orderAdmin.email}" + "/phone/" + $("#uPhone").val(),
+             //data: params,
+             dataType: 'json',
+             success: function(){
+                 alert('user details are saved!');
+             },
+             error:function onError() {
+                 alert('Could not save user details please try again');
+             }
+         });
+         })
+         //})
+    </script>
+ </s:layout-component>
 </s:layout-render>
+
