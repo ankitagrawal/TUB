@@ -10,6 +10,8 @@ import com.hk.pact.dao.feedback.FeedbackDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.feedback.FeedbackService;
 
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Rohit
@@ -40,6 +42,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			feedback = new Feedback();
 			feedback.setOrder(order);
 			feedback.setUser(order.getUser());
+			feedback.setFeedbackDate(new Date());
 		}
 		return feedback;
 	}
@@ -47,6 +50,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public Feedback createFeedbackForUser(User user, Long recommendToFriends, Long customerServiceFeedback, Long websiteExperienceFeedback, String comments) {
 		Feedback feedback = new Feedback();
 		feedback.setUser(user);
+		feedback.setFeedbackDate(new Date());
 		return updateFeedback(feedback, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
 	}
 

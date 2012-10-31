@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.pact.service.core.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,7 +77,7 @@ public class APIOrderServiceImpl implements APIOrderService {
     @Autowired
     OrderService          orderService;
     @Autowired
-    AddressDao            addressDao;
+    AddressService        addressDao;
     @Autowired
     PaymentModeDao        paymentModeDao;
     @Autowired
@@ -323,6 +324,7 @@ public class APIOrderServiceImpl implements APIOrderService {
 
         Address address = order.getAddress();
         address.setId(null);
+	    address.setUser(hkUser);
         address = addressDao.save(address);
 
         Payment payment = order.getPayment();
@@ -390,11 +392,11 @@ public class APIOrderServiceImpl implements APIOrderService {
         this.orderService = orderService;
     }
 
-    public AddressDao getAddressDao() {
+    public AddressService getAddressDao() {
         return addressDao;
     }
 
-    public void setAddressDao(AddressDao addressDao) {
+    public void setAddressDao(AddressService addressDao) {
         this.addressDao = addressDao;
     }
 
