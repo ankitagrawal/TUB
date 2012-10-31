@@ -592,11 +592,7 @@ public class OrderManager {
 		}
 
      getOrderDao().refresh(order);
-    if(order.getCartLineItems()!=null && order.getCartLineItems().size()!=0){
-       getCartLineItemDao().refresh(order.getCartLineItems());
-    }
-   
-		return order;
+    return order;
 	}
 
 	public boolean isStepUpAllowed(CartLineItem cartLineItem) {

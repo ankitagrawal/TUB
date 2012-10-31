@@ -107,7 +107,7 @@ public class CartAction extends BaseAction {
         }
         if (user != null) {
             order = orderManager.getOrCreateOrder(user);
-
+                getOrderDao().refresh(order);  
             Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
             Set<Long> comboInstanceIds = new TreeSet<Long>();
             for (CartLineItem lineItem : cartLineItems) {
@@ -186,6 +186,7 @@ public class CartAction extends BaseAction {
         }
         if (user != null) {
             order = orderDao.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+           getOrderDao().refresh(order);
             if (order != null) {
                 Set<CartLineItem> cartLineItems = order.getCartLineItems();
                 if (cartLineItems != null && !cartLineItems.isEmpty()) {
@@ -289,4 +290,8 @@ public class CartAction extends BaseAction {
     public void setSubscriptions(Set<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
     }
+
+  public OrderDao getOrderDao() {
+    return orderDao;
+  }
 }
