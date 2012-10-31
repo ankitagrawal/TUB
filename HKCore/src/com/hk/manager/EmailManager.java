@@ -21,7 +21,6 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
-import com.hk.constants.email.EmailConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -120,8 +119,16 @@ public class EmailManager {
     private String              sportsAdminEmailsString       = null;
     @Value("#{hkEnvProps['" + Keys.Env.servicesAdminEmails + "']}")
     private String              servicesAdminEmailsString     = null;
+	
+	@Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
+    private String hkNoReplyEmail;
+    @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyName + "']}")
+    private String hkNoReplyName;
+    @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
+    private String hkContactEmail;
+    @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}")
+    private String hkContactName;
 
-    @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
     @PostConstruct
     public void postConstruction() {
         this.hkAdminEmails = BaseUtils.split(hkAdminEmailsString, ",");
@@ -425,7 +432,8 @@ public class EmailManager {
             if (!sent)
                 success = false;
         }
-        boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, EmailConstants.getHkContactEmail(), "Admin", email);
+        //boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, EmailConstants.getHkContactEmail(), "Admin", email);
+        boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, hkContactEmail, "HK Info", email);
         if (!sent)
             success = false;
         return success;
@@ -613,6 +621,14 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getApprovedBy().getEmail(), purchaseOrder.getApprovedBy().getName());
     }
 
+	public boolean sendPOApprovedEmail(PurchaseOrder purchaseOrder) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("purchaseOrder", purchaseOrder);
+
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
+    }
+
     public boolean sendPOPlacedEmail(PurchaseOrder purchaseOrder) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("purchaseOrder", purchaseOrder);
@@ -695,7 +711,7 @@ public class EmailManager {
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.paymentFailEmail);
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
 
-        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), EmailConstants.getHkContactEmail());
+        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), hkContactEmail);
 
     }
 
@@ -732,12 +748,12 @@ public class EmailManager {
                 valuesMap.put("user", emailRecepient.getUser());
             }
             valuesMap.put("coupon", coupon);
-            emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getEmail(), EmailConstants.getHkContactEmail(), headerMap);
+            emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getEmail(), hkContactEmail, headerMap);
             // keep a record in history
             emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
             emailRecepient.setLastEmailDate(new Date());
             getEmailRecepientDao().save(emailRecepient);
-            getEmailerHistoryDao().createEmailerHistory(EmailConstants.getHkNoReplyEmail(), EmailConstants.getHkNoReplyName(),
+            getEmailerHistoryDao().createEmailerHistory(hkNoReplyEmail, hkNoReplyName,
                     getBaseDao().get(EmailType.class, EnumEmailType.MissYouEmail.getId()), emailRecepient, emailCampaign, "");
         }
     }
