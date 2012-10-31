@@ -237,7 +237,7 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
     }
 
     public Double getDiscountOnHkPrice() {
-        return discountOnHkPrice;
+        return (discountOnHkPrice != null ? discountOnHkPrice : 0);
     }
 
     public void setDiscountOnHkPrice(Double discountOnHkPrice) {

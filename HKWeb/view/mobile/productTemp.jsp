@@ -1,33 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-	
+
 </head>
 <body>
-<div data-role="page" id=productTemp class="type-home">
+	<div data-role="page" id=productTemp class="type-home">
 
-	<div data-role="content" style='background-color:white'>
-	
-	</div>
-	
-	
-		
+		<div data-role="content" style='background-color: white'></div>
+
+
+
 <script>
-
-$('#productTemp').bind('pageshow',function(){
+	$('#productTemp').bind('pageshow',function() {
+		$('div[id=product]').remove();
 		var urlEval = new URLEval();
-		//alert(urlEval.getURLFromHash(location.href));
+		
 		var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 		var queryString = x.search;
-		$.mobile.changePage('${pageContext.request.contextPath}/mobile/product.jsp'+queryString);
-		/**Backbone code for product list*E*/
-});
-
+		$.mobile.changePage('${pageContext.request.contextPath}/mobile/product.jsp'+ queryString);
+		
+	});
 </script>
-
-
-	
-</div>
+	</div>
 
 </body>
 </html>
