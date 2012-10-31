@@ -5,6 +5,8 @@ import com.akube.framework.service.PaymentGatewayWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Ankit
@@ -30,6 +32,8 @@ public static final String PAYMENTACTION = "PAYMENTACTION";
 public static String merchantURLPart = "merchantURLPart";
 public static final String METHOD = "METHOD";    
 
+public String Token;
+public String Ack;
 
 public static final String account_id = "account_id";
 public static final String reqResParameter = "DR";
@@ -58,7 +62,13 @@ public static final String ACK =  "ACK";
 		return url;
 	}
 
-	public void setGatewayUrl(String url) {
+    
+    public boolean isPaypal() {
+        return true;
+    }
+
+    public void setGatewayUrl(String url) {
 		this.url = url;
 	}
+
 }

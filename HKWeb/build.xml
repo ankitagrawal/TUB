@@ -55,6 +55,7 @@
 		<fileset file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<fileset file="${project.report.dir}/dist/hk-report.jar" />
         <fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
+        <fileset file="${lib.root.dir}/thirdParty/paypal_base.jar" />
         <fileset file="${lib.root.dir}/commons/commons-collections-3.1.jar" />
   </path>
 
