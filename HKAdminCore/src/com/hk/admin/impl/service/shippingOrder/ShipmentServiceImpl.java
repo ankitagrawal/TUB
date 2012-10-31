@@ -36,25 +36,25 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 public class ShipmentServiceImpl implements ShipmentService {
 
     @Autowired
-    CourierService        courierService;
+    CourierService courierService;
     @Autowired
-    PincodeDao            pincodeDao;
+    PincodeDao pincodeDao;
     @Autowired
-    AwbDao                awbDao;
+    AwbDao awbDao;
     @Autowired
-    CourierGroupService   courierGroupService;
+    CourierGroupService courierGroupService;
     @Autowired
     ShipmentPricingEngine shipmentPricingEngine;
     @Autowired
-    AwbService            awbService;
+    AwbService awbService;
     @Autowired
-    ShippingOrderService  shippingOrderService;
+    ShippingOrderService shippingOrderService;
     @Autowired
-    ShipmentDao           shipmentDao;
+    ShipmentDao shipmentDao;
 
     @Autowired
     CourierServiceInfoDao courierServiceInfoDao;
-    
+
 
     @Transactional
     public Shipment createShipment(ShippingOrder shippingOrder) {
@@ -68,7 +68,11 @@ public class ShipmentServiceImpl implements ShipmentService {
         boolean isGroundShipped = false;
         Courier suggestedCourier = null;
         isGroundShipped = isShippingOrderHasGroundShippedItem(shippingOrder);
-        suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
+        if (shippingOrder.getAmount() == 0) {
+            suggestedCourier = courierService.getDefaultCourier(pincode, false, isGroundShipped, shippingOrder.getWarehouse());
+        } else {
+            suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
+        }
         // Ground Shipping logic ends -- suggested courier
         if (suggestedCourier == null) {
             return null;
@@ -95,6 +99,10 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId)) {
             suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
         } else {
+            if (shippingOrder.getAmount() == 0) {
+                suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), false,
+                        EnumAwbStatus.Unused.getAsAwbStatus());
+            }
             suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
                     EnumAwbStatus.Unused.getAsAwbStatus());
         }
@@ -158,13 +166,12 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
 
-
     @Override
     public Shipment recreateShipment(ShippingOrder shippingOrder) {
         Shipment newShipment = null;
         if (shippingOrder.getShipment() != null) {
             Shipment oldShipment = shippingOrder.getShipment();
-            awbService.removeAwbForShipment(oldShipment.getCourier(),oldShipment.getAwb());
+            awbService.removeAwbForShipment(oldShipment.getCourier(), oldShipment.getAwb());
             newShipment = createShipment(shippingOrder);
             shippingOrder.setShipment(newShipment);
             delete(oldShipment);

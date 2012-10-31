@@ -22,11 +22,11 @@ import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.service.ServiceLocatorFactory;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 
 
 /**
- * Sample code to call the FedEx Ship Service
- * <p/>
  * com.fedex.ship.stub is generated via WSDL2Java, like this:<br>
  * <p/>
  * <pre>
@@ -36,7 +36,7 @@ import com.hk.service.ServiceLocatorFactory;
  * This sample code has been tested with JDK 5 and Apache Axis 1.4
  */
 //
-// Sample code to call the FedEx Ship Service - GDE Express Domestic India Shipment
+// Code to call the FedEx Ship Service - GDE Express Domestic India Shipment
 //
 public class FedExCourierUtil {
 
@@ -52,6 +52,10 @@ public class FedExCourierUtil {
 
     private String fedExServerUrl;
 
+    private ShipmentService shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
+
+    private ShippingOrderService shippingOrderService = ServiceLocatorFactory.getService(ShippingOrderService.class);
+
     public FedExCourierUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
         this.fedExAuthKey = fedExAuthKey;
         this.fedExAccountNo = fedExAccountNo;
@@ -62,10 +66,12 @@ public class FedExCourierUtil {
 
     public ThirdPartyAwbDetails newFedExShipment(ShippingOrder shippingOrder, Double weightInKg) {
         ProcessShipmentRequest request = buildRequest(shippingOrder, weightInKg); // Build a request object
+
+        String noAwbMessage = "FedEx awb not generated: ";
         //
         try {
             // Initialize the service
-            logger.debug("inside newFedExShipment WebService call: " + shippingOrder.getGatewayOrderId() + " ");
+            logger.debug("inside newFedExShipment WebService call for order: " + shippingOrder.getGatewayOrderId() + " ");
             ShipServiceLocator service;
             ShipPortType port;
             //
@@ -84,14 +90,17 @@ public class FedExCourierUtil {
             }
             // printNotifications(reply.getNotifications());
 
-            logNotifications(reply.getNotifications());
-
+            String notificationComment = logNotifications(reply.getNotifications());
+            if (StringUtils.isNotBlank(notificationComment)) {
+                noAwbMessage = noAwbMessage + notificationComment;
+                //shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, notificationComment);
+                //return null;
+            }
             CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
 
             CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
             String trackingNumber = null;
             if (cpd != null) {
-                // System.out.println("Package Details");
                 for (int i = 0; i < cpd.length; i++) { // Package details / Rating information for each package
                     trackingNumber = cpd[i].getTrackingIds()[0].getTrackingNumber();
                 }
@@ -111,7 +120,8 @@ public class FedExCourierUtil {
 
             return thirdPartyAwbDetails;
         } catch (Exception e) {
-            logger.error("Exception while getting awb number from fedEx:", e);
+            logger.error("Exception while getting awb number from FedEx:");
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, noAwbMessage);
         }
         return null;
     }
@@ -137,7 +147,7 @@ public class FedExCourierUtil {
         requestedShipment.setShipTimestamp(Calendar.getInstance()); // Ship date and time
         requestedShipment.setDropoffType(DropoffType.REGULAR_PICKUP);
 
-        ShipmentService shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
+
         if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)) {
             requestedShipment.setServiceType(ServiceType.FEDEX_EXPRESS_SAVER);
         } else {
@@ -154,12 +164,17 @@ public class FedExCourierUtil {
         //
         requestedShipment.setShippingChargesPayment(addShippingChargesPayment());
         //
+
+
         if (shippingOrder.isCOD()) {
-            requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested(shippingOrder));
-            requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder.getAmount(),weightInKg));
-        }
-        else{
-        requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(400.00,weightInKg));
+            if (shippingOrder.getAmount() == 0) {
+                requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(400.00, weightInKg));
+            } else {
+                requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested(shippingOrder));
+                requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder.getAmount(), weightInKg));
+            }
+        } else {
+            requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(400.00, weightInKg));
         }
         //
         requestedShipment.setLabelSpecification(addLabelSpecification());
@@ -219,7 +234,8 @@ public class FedExCourierUtil {
         return routingFedEx;
     }
 
-    public void logNotifications(Notification[] notifications) {
+    public String logNotifications(Notification[] notifications) {
+        String messages = "";
         if (notifications != null && notifications.length != 0) {
             for (int i = 0; i < notifications.length; i++) {
                 Notification n = notifications[i];
@@ -232,8 +248,13 @@ public class FedExCourierUtil {
                 logger.info("    Severity: " + (nst == null ? "null" : nst.getValue()));
                 logger.info("    Code: " + n.getCode());
                 logger.info("    Message: " + n.getMessage());
+                if (nst != null && nst.getValue().equals("ERROR")) {
+                    messages = messages.concat(n.getMessage() + "");
+                }
+
             }
         }
+        return messages;
     }
 
 
@@ -626,7 +647,7 @@ public class FedExCourierUtil {
         return labelSpecification;
     }
 
-    private CustomsClearanceDetail addCustomsClearanceDetail(Double amount , Double weightInKg) {
+    private CustomsClearanceDetail addCustomsClearanceDetail(Double amount, Double weightInKg) {
         CustomsClearanceDetail customs = new CustomsClearanceDetail(); // International details
         customs.setDutiesPayment(addDutiesPayment());
         customs.setCustomsValue(addMoney("INR", amount));// 400.00));
