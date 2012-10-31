@@ -78,23 +78,21 @@
     </thead>
     <tbody>
      <c:forEach var="similarProductItem" items="${spa.similarProductsList}" varStatus="ctr">
-         <s:hidden name="similarProductsList[${ctr.index}].id" value="${similarProductItem.id}" />
+         <input type="hidden" name="similarProductsList[${ctr.index}]" value="${similarProductItem.id}" />
          <tr>
              <td>
-                 <s:hidden name="similarProductsList[${ctr.index}].product" value="${similarProductItem.product}" />
+
                     ${similarProductItem.product}
              </td>
              <td>
-                   <s:hidden name="similarProductsList[${ctr.index}].similarProduct" value="${similarProductItem.similarProduct}" />
+
                     ${similarProductItem.similarProduct}
              </td>
              <td>
                     <input type="text" name="similarProductsList[${ctr.index}].relationShip" value ="${similarProductItem.relationShip}" />
              </td>
              <td>
-                  <s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction" id="deleteLink" event="delete">
-                      <%--<s:hidden name="similarProductsList" value="${spa.similarProductsList}" />--%>
-                      <%--<s:param name="delSimProduct" value="${similarProductItem.similarProduct}" />--%>
+                  <s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction" id="deleteLink" event="delete">                       
                      <s:param name="similarProductToDel" value="${similarProductItem.id}"/>
                      <s:param name="inputProduct" value="${spa.inputProduct.id}" /> 
                       Delete
