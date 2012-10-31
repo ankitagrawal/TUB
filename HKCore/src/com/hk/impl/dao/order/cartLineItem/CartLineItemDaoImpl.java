@@ -1,7 +1,5 @@
 package com.hk.impl.dao.order.cartLineItem;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -38,16 +36,18 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
         if (cartLineItem.getDiscountOnHkPrice() == null) {
             cartLineItem.setDiscountOnHkPrice(0D);
         }
-        if (cartLineItem.getHkPrice() == 0) {
+        /*if (cartLineItem.getHkPrice() == 0) {
             logger.error("Update cart Line Item hk price in dao:" + cartLineItem.getHkPrice() + ", id : " + cartLineItem.getId() + ", qty :" + cartLineItem.getQty() + ", type :"
                     + cartLineItem.getLineItemType());
 	        if (productVariant != null) {
                 logger.error("HK price null for variant" + productVariant.getId());
             }
             logger.error("HK price null for order " + cartLineItem.getOrder());
-        }else if(productVariant != null && cartLineItem.getHkPrice() != null
+        }else 
+            */
+            if(productVariant != null && cartLineItem.getHkPrice() != null
 		        && cartLineItem.getHkPrice() > productVariant.getHkPrice() && cartLineItem.getCartLineItemConfig() == null ){
-	        logger.error("HK price of CLI is more than PV. Setting it as PV");
+	        //logger.error("HK price of CLI is more than PV. Setting it as PV");
 	        cartLineItem.setHkPrice(productVariant.getHkPrice());
         }
 
