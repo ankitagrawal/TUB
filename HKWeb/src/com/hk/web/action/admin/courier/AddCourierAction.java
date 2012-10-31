@@ -58,7 +58,7 @@ public class AddCourierAction extends BaseAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		courierList = courierService.getCouriers(null,false);
+		courierList = courierService.getCouriers(null,null,false);
 		courierGroupList = courierGroupService.getAllCourierGroup();
 		return new ForwardResolution("/pages/addCourier.jsp");
 	}

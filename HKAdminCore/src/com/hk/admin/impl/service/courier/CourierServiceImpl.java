@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class CourierServiceImpl implements CourierService {
@@ -39,8 +40,13 @@ public class CourierServiceImpl implements CourierService {
 
     @Override
     public Courier getCourierByName(String name) {
-       List<Courier> courierList = getCourierDao().getCouriers(name,null);
-	    return courierList.size() > 0 ? courierList.get(0) :null;
+	    if(name != null){
+	    List<String> nameList = new ArrayList<String>();
+	    nameList.add(name);
+	    List<Courier> courierList = getCourierDao().getCouriers(null, nameList, null);
+	    return courierList.size() > 0 ? courierList.get(0) : null;
+	    }
+	    return null;
     }
 
     public List<Courier> getAllCouriers() {
@@ -122,8 +128,8 @@ public class CourierServiceImpl implements CourierService {
 	 return(Courier)getCourierDao().save(courier);
 
 	}
-	public List<Courier> getCouriers(String name ,Boolean disabled){
-	return courierDao.getCouriers( name ,disabled);
+	public List<Courier> getCouriers(List<Long> courierIds ,List<String> courierNames , Boolean disabled){
+	return courierDao.getCouriers(courierIds, courierNames ,disabled);
 	}
 
 }

@@ -36,6 +36,6 @@ public interface CourierService {
 
 	public Courier save(Courier courier);
 
-	public List<Courier> getCouriers(String name ,Boolean disabled);
+	public List<Courier> getCouriers(List<Long> courierIds ,List<String> courierNames , Boolean disabled);
 
 }

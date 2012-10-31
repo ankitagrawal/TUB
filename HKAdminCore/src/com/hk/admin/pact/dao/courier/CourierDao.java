@@ -11,6 +11,6 @@ public interface CourierDao extends BaseDao {
 
     public Courier getPreferredCourierForState(String state);
 
-	public List<Courier> getCouriers(String name ,Boolean disabled);
+	public List<Courier> getCouriers(List<Long> courierIds ,List<String> courierNames , Boolean disabled);
 
 }

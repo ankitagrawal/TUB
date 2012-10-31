@@ -357,11 +357,11 @@ private CourierGroupService courierGroupService;
 	}
 
 	public List<Courier> getDisableCourier(){
-		return courierService.getCouriers(null, true);
+		return courierService.getCouriers(null,null, true);
 	}
 
 	public List<Courier> getAvailableCouriers(){
-		return courierService.getCouriers(null, false);
+		return courierService.getCouriers(null,null, false);
 	}
 	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
 	       return EnumPurchaseOrderStatus.getStatusForNonApprover();

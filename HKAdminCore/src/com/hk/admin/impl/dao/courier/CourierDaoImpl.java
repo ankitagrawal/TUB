@@ -31,15 +31,19 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 
 
     @SuppressWarnings("unchecked")
-	public List<Courier> getCouriers(String name, Boolean disabled) {
-		DetachedCriteria courierCriteria = DetachedCriteria.forClass(Courier.class);
-		if (name != null) {
-			courierCriteria.add(Restrictions.eq("name", name));
-		}
-		if (disabled != null) {
-			courierCriteria.add(Restrictions.eq("disabled", disabled));
-		}
-		return (List<Courier>) findByCriteria(courierCriteria);
+    public List<Courier> getCouriers(List<Long> courierIds, List<String> courierNames, Boolean disabled) {
+	    DetachedCriteria courierCriteria = DetachedCriteria.forClass(Courier.class);
+	    if (courierIds != null && courierIds.size() > 0) {
+		    courierCriteria.add(Restrictions.in("id", courierIds));
+	    }
+	    if (courierNames != null && courierNames.size() > 0) {
+		    courierCriteria.add(Restrictions.in("name", courierNames));
+	    }
 
-	}
+	    if (disabled != null) {
+		    courierCriteria.add(Restrictions.eq("disabled", disabled));
+	    }
+	    return (List<Courier>) findByCriteria(courierCriteria);
+
+    }
 }
