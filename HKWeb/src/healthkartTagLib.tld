@@ -963,13 +963,13 @@
 
 	<function>
 		<description>
-			Returns status/default source and distination in user friendly way
+			Returns the line item qty for all other grns
 		</description>
 		<name>getGrnLineItemQtyAlreadySet</name>
 		<function-class>com.hk.taglibs.Functions</function-class>
-		<function-signature>java.lang.Long getGrnLineItemQtyAlreadySet(com.hk.domain.inventory.GrnLineItem)</function-signature>
+		<function-signature>java.lang.Long getGrnLineItemQtyAlreadySet(com.hk.domain.inventory.GoodsReceivedNote,com.hk.domain.sku.Sku))</function-signature>
 		<example>
-			${hk:getGrnLineItemQtyAlreadySet(${grnLineItem})}
+			${hk:getGrnLineItemQtyAlreadySet(${grn, sku})}
 		</example>
 	</function>
 

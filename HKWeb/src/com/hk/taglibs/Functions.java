@@ -13,6 +13,7 @@ import java.util.Set;
 
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
@@ -648,9 +649,9 @@ public class Functions {
 				return grnLineItemService.getPoLineItemQty(grnLineItem);
 		}
 
-		public static Long getGrnLineItemQtyAlreadySet(GrnLineItem grnLineItem) {
+		public static Long getGrnLineItemQtyAlreadySet(GoodsReceivedNote goodsReceivedNote, Sku sku) {
 				GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
-				return grnLineItemService.getGrnLineItemQtyAlreadySet(grnLineItem);
+				return grnLineItemService.getGrnLineItemQtyAlreadySet(goodsReceivedNote, sku);
 		}
 
 }

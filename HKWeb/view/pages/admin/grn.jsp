@@ -410,7 +410,7 @@
 		   </td>--%>
 		<td>${hk:askedPOQty(pa.grn.purchaseOrder, productVariant)}</td>
 		<td>
-			<input type="text" id="alreadyGRNQty" value="${hk:getGrnLineItemQtyAlreadySet(grnLineItemDto.grnLineItem)}" disabled="disabled"/>
+			<input type="text" id="alreadyGRNQty" value="${hk:getGrnLineItemQtyAlreadySet(grnLineItemDto.grnLineItem.goodsReceivedNote, grnLineItemDto.grnLineItem.sku)}" disabled="disabled"/>
 			<input type="hidden" id="poLineItemQty" value="${hk:getPoLineItemQty(grnLineItemDto.grnLineItem)}"/>
 			<input type="hidden" id="variantHidden" value="${productVariant.id}" />
 		</td>
