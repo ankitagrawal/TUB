@@ -579,6 +579,7 @@ public class OrderManager {
 			}
 			order = getOrderService().save(order);
 		}
+   getOrderDao().refresh(order);
 		return order;
 	}
 
