@@ -68,11 +68,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         boolean isGroundShipped = false;
         Courier suggestedCourier = null;
         isGroundShipped = isShippingOrderHasGroundShippedItem(shippingOrder);
-        if (shippingOrder.getAmount() == 0) {
-            suggestedCourier = courierService.getDefaultCourier(pincode, false, isGroundShipped, shippingOrder.getWarehouse());
-        } else {
-            suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
-        }
+        suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
         // Ground Shipping logic ends -- suggested courier
         if (suggestedCourier == null) {
             return null;
@@ -98,11 +94,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         Awb suggestedAwb;
         if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId)) {
             suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
-        } else {
-            if (shippingOrder.getAmount() == 0) {
-                suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), false,
-                        EnumAwbStatus.Unused.getAsAwbStatus());
-            }
+        } else {           
             suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
                     EnumAwbStatus.Unused.getAsAwbStatus());
         }

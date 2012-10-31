@@ -165,74 +165,78 @@ public class FedExCourierUtil {
         requestedShipment.setShippingChargesPayment(addShippingChargesPayment());
         //
 
-
-        if (shippingOrder.isCOD()) {
-            if (shippingOrder.getAmount() == 0) {
-                requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(400.00, weightInKg));
+        if (shippingOrder.getAmount() == 0) {
+            requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(400.00, weightInKg));
+        } else {
+            if (shippingOrder.isCOD()) {
+                requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested(shippingOrder));   // requests COD shipment
+                requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder.getAmount(), weightInKg));
             } else {
-                requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested(shippingOrder));
                 requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(shippingOrder.getAmount(), weightInKg));
             }
-        } else {
-            requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(400.00, weightInKg));
         }
-        //
-        requestedShipment.setLabelSpecification(addLabelSpecification());
-        //
-        RateRequestType[] rrt = new RateRequestType[]{RateRequestType.ACCOUNT}; // Rate types requested LIST,
-        // MULTIWEIGHT, ...
-        requestedShipment.setRateRequestTypes(rrt);
-        requestedShipment.setPackageCount(new NonNegativeInteger("1"));
-        //
-        requestedShipment.setRequestedPackageLineItems(new RequestedPackageLineItem[]{addRequestedPackageLineItem(shippingOrder, weightInKg)});
-        request.setRequestedShipment(requestedShipment);
-        //
-        return request;
-    }
-
-    public List<String> setBarCodeList(ProcessShipmentReply reply, ShippingOrder shippingOrder) {
-
-        List<String> retrieveBarcodes = new ArrayList<String>();
-        // forward going label (outbound label)
-        CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
-        CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
-
-        if (cpd != null) {
-            // System.out.println("Package Details");
-            for (int i = 0; i < cpd.length; i++) { // Package details / Rating information for each package
-                StringBarcode sb = cpd[i].getOperationalDetail().getBarcodes().getStringBarcodes(0);
-                retrieveBarcodes.add(sb.getValue());
-            }
+            //
+            requestedShipment.setLabelSpecification(addLabelSpecification());
+            //
+            RateRequestType[] rrt = new RateRequestType[]{RateRequestType.ACCOUNT}; // Rate types requested LIST,
+            // MULTIWEIGHT, ...
+            requestedShipment.setRateRequestTypes(rrt);
+            requestedShipment.setPackageCount(new NonNegativeInteger("1"));
+            //
+            requestedShipment.setRequestedPackageLineItems(new RequestedPackageLineItem[]{addRequestedPackageLineItem(shippingOrder, weightInKg)});
+            request.setRequestedShipment(requestedShipment);
+            //
+            return request;
         }
 
-        // return COD label now
-        if (shippingOrder.isCOD()) {
-            AssociatedShipmentDetail asd[] = csd.getAssociatedShipments();
+        public List<String> setBarCodeList
+        (ProcessShipmentReply
+        reply, ShippingOrder
+        shippingOrder){
+
+            List<String> retrieveBarcodes = new ArrayList<String>();
+            // forward going label (outbound label)
+            CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
+            CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
+
             if (cpd != null) {
                 // System.out.println("Package Details");
                 for (int i = 0; i < cpd.length; i++) { // Package details / Rating information for each package
-                    StringBarcode sb = asd[i].getPackageOperationalDetail().getBarcodes().getStringBarcodes(0);
-                    String returnAwb = asd[i].getTrackingId().getTrackingNumber();
+                    StringBarcode sb = cpd[i].getOperationalDetail().getBarcodes().getStringBarcodes(0);
                     retrieveBarcodes.add(sb.getValue());
-                    retrieveBarcodes.add(returnAwb);
                 }
             }
 
+            // return COD label now
+            if (shippingOrder.isCOD()) {
+                AssociatedShipmentDetail asd[] = csd.getAssociatedShipments();
+                if (cpd != null) {
+                    // System.out.println("Package Details");
+                    for (int i = 0; i < cpd.length; i++) { // Package details / Rating information for each package
+                        StringBarcode sb = asd[i].getPackageOperationalDetail().getBarcodes().getStringBarcodes(0);
+                        String returnAwb = asd[i].getTrackingId().getTrackingNumber();
+                        retrieveBarcodes.add(sb.getValue());
+                        retrieveBarcodes.add(returnAwb);
+                    }
+                }
+
+            }
+
+            return retrieveBarcodes;
+
         }
 
-        return retrieveBarcodes;
 
-    }
+        public List<String> setRoutingCode
+        (ProcessShipmentReply
+        reply){
+            List<String> routingFedEx = new ArrayList<String>();
+            CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
+            ShipmentOperationalDetail sod = csd.getOperationalDetail();
+            routingFedEx.add(sod.getUrsaSuffixCode());
 
-
-    public List<String> setRoutingCode(ProcessShipmentReply reply) {
-        List<String> routingFedEx = new ArrayList<String>();
-        CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
-        ShipmentOperationalDetail sod = csd.getOperationalDetail();
-        routingFedEx.add(sod.getUrsaSuffixCode());
-
-        return routingFedEx;
-    }
+            return routingFedEx;
+        }
 
     public String logNotifications(Notification[] notifications) {
         String messages = "";
@@ -249,7 +253,7 @@ public class FedExCourierUtil {
                 logger.info("    Code: " + n.getCode());
                 logger.info("    Message: " + n.getMessage());
                 if (nst != null && nst.getValue().equals("ERROR")) {
-                    messages = messages.concat(n.getMessage() + "");
+                    messages = messages.concat(n.getMessage() + ". ");
                 }
 
             }
