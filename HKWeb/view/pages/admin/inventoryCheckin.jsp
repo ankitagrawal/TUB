@@ -94,7 +94,7 @@
         </tr>
         <c:forEach items="${ica.grn.grnLineItems}" var="grnLineItem" varStatus="ctr">
           <c:set value="${grnLineItem.sku.productVariant}" var="productVariant"/>
-          <tr>
+          <tr class="chkInInfo">
             <td>${ctr.index+1}</td>
             <td>
                 ${productVariant.product.name}<br/>
@@ -103,9 +103,9 @@
               </c:forEach></em>
             </td>
             <td><a href="#" onclick="$('.variant').val(this.innerHTML);">${productVariant.id}</a></td>
-            <td>${productVariant.upc}</td>
-            <td>${grnLineItem.qty}</td>
-            <td style="color:green; font-weight:bold">${grnLineItem.checkedInQty}</td>
+            <td >${productVariant.upc}</td>
+            <td class="chkInInfoQty">${grnLineItem.qty}</td>
+            <td class="chkInQty" style="color:green; font-weight:bold">${grnLineItem.checkedInQty}</td>
           </tr>
         </c:forEach>
       </table>
@@ -135,6 +135,15 @@
     </div>
     <script type="text/javascript">
 	    $(document).ready(function() {
+		    $('.chkInInfo').each(function(){
+			     var qty = Number($(this).find('.chkInInfoQty').text());
+			     var upc = Number($(this).find('.chkInQty').text());
+			    if(qty != upc)
+			    {
+				    $(this).css('background-color','#FFA07A');
+			    }
+
+		    });
 		    $('.invCheckin').click(function(event){
 			    //$(this).css("display", "none");
 			    event.preventDefault();
