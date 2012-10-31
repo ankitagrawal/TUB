@@ -9605,4 +9605,7 @@
 		</sql>
 	</changeSet>
 
+    <changeSet author="Rahul (generated)" id="1351679062102-3">
+        <modifyDataType columnName="template_ftl" newDataType="LONGTEXT" tableName="email_campaign"/>
+    </changeSet>
 </databaseChangeLog>
