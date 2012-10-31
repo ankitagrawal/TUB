@@ -1,5 +1,6 @@
 package com.hk.pact.dao.user;
 
+import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface UserDetailDao {
     UserDetail save(UserDetail userDetails);
     List<UserDetail> findByPhone(Long phone);
     List<UserDetail> findByPriority(int priority);
+    void delete(UserDetail userDetail);
+    UserDetail findByUserAndPhone(Long phone, User user);
 }
