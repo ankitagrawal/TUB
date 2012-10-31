@@ -74,7 +74,7 @@ public class AdminSubscriptionServiceImpl implements AdminSubscriptionService{
             subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionCancelled,cancellationRemark);
             Order bo=subscription.getBaseOrder();
             boolean parentBOHasProducts=false;
-             if(bo.getOrderStatus().getId().equals(EnumOrderStatus.InProcess.getId())){
+             if(bo.getOrderStatus().getId().equals(EnumOrderStatus.InProcess.getId())||bo.getOrderStatus().getId().equals(EnumOrderStatus.Placed.getId())){
                  for(CartLineItem cartLineItem : bo.getCartLineItems()){
                    if(cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())){
                         parentBOHasProducts=true;

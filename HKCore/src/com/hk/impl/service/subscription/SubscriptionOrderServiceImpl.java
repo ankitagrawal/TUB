@@ -88,8 +88,27 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
         subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderPlaced, "automated order generation");
         //create an entry in subscription_order table
         createSubscriptionOrder(subscription, order);
+        updateParentBOStatus(subscription);
 
         return order;
+    }
+
+    private Order updateParentBOStatus(Subscription subscription){
+      Order bo=subscription.getBaseOrder();
+       boolean parentBOHasProducts=false;
+                if(bo.getOrderStatus().getId().equals(EnumOrderStatus.Placed.getId())){
+                  for(CartLineItem  cartLineItem : bo.getCartLineItems()){
+                    if(cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())){
+                      parentBOHasProducts=true;
+                      break;
+                    }
+                  }
+                  if(!parentBOHasProducts){
+                    bo.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
+                    orderService.save(bo);
+                  }
+                }
+      return bo;
     }
 
     /**
@@ -174,19 +193,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
                 subscription.setQtyDelivered(new Long(subscriptionOrders.size()));
                 subscriptionService.updateSubscriptionAfterOrderDelivery(subscription);
               if(subscription.getQty()<=subscription.getQtyDelivered()){
-                boolean parentBOHasProducts=false;
-                if(order.getOrderStatus().getId().equals(EnumOrderStatus.InProcess.getId())){
-                  for(CartLineItem  cartLineItem : order.getCartLineItems()){
-                    if(cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())){
-                      parentBOHasProducts=true;
-                      break;
-                    }
-                  }
-                  if(!parentBOHasProducts){
-                    order.setOrderStatus(EnumOrderStatus.Delivered.asOrderStatus());
-                    orderService.save(order);
-                  }
-                }
+
               }
             }
         }
