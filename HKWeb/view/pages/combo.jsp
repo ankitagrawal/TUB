@@ -221,7 +221,7 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <div class="grid_20 optionsDiv">
+                    <div class="grid_23 optionsDiv">
                         <fieldset>
                             <legend>&nbsp;&nbsp;Available Options</legend>
                             <div class="parentAvail">
@@ -750,6 +750,11 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
+        float: none;
+        display: inline-block;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        text-align:center;
     }
 
     div.arrowDiv {
@@ -788,6 +793,7 @@
         display: inline-block;
         margin-bottom: 10px;
         margin-top: 10px;
+        text-align:center;
 
         -webkit-transition-duration: 0.2s;
         -moz-transition-duration: 0.2s;
@@ -877,7 +883,7 @@
     }
 
     div.parentAvail {
-        width: 500px;
+        width: 670px;
         overflow-x: auto;
         overflow-y: hidden;
         white-space: nowrap;
