@@ -189,11 +189,7 @@ public class FedExCourierUtil {
             return request;
         }
 
-        public List<String> setBarCodeList
-        (ProcessShipmentReply
-        reply, ShippingOrder
-        shippingOrder){
-
+        public List<String> setBarCodeList (ProcessShipmentReply reply, ShippingOrder shippingOrder){
             List<String> retrieveBarcodes = new ArrayList<String>();
             // forward going label (outbound label)
             CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
@@ -219,22 +215,16 @@ public class FedExCourierUtil {
                         retrieveBarcodes.add(returnAwb);
                     }
                 }
-
             }
-
             return retrieveBarcodes;
-
         }
 
 
-        public List<String> setRoutingCode
-        (ProcessShipmentReply
-        reply){
+        public List<String> setRoutingCode (ProcessShipmentReply reply){
             List<String> routingFedEx = new ArrayList<String>();
             CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
             ShipmentOperationalDetail sod = csd.getOperationalDetail();
             routingFedEx.add(sod.getUrsaSuffixCode());
-
             return routingFedEx;
         }
 
@@ -255,7 +245,6 @@ public class FedExCourierUtil {
                 if (notificationSeverityType != null && notificationSeverityType.getValue().equals(ERROR)) {
                     messages = messages.concat(notification.getMessage() + ". ");
                 }
-
             }
         }
         return messages;
