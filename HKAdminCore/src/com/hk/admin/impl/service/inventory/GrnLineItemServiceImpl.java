@@ -4,6 +4,7 @@ import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.sku.Sku;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,17 +30,16 @@ public class GrnLineItemServiceImpl implements GrnLineItemService {
 		return 0L;
 	}
 
-	public Long getGrnLineItemQtyAlreadySet(GrnLineItem grnLineItem) {
+	public Long getGrnLineItemQtyAlreadySet(GoodsReceivedNote grn, Sku sku) {
 		long grnLineItemQtyAlreadySet = 0;
-		List<GoodsReceivedNote> allGrnForThisPO = grnLineItem.getGoodsReceivedNote().getPurchaseOrder().getGoodsReceivedNotes();
+		List<GoodsReceivedNote> allGrnForThisPO = grn.getPurchaseOrder().getGoodsReceivedNotes();
 		for (GoodsReceivedNote goodsReceivedNote : allGrnForThisPO) {
-			if (!goodsReceivedNote.getId().equals(grnLineItem.getGoodsReceivedNote().getId())) {
+			if (!goodsReceivedNote.getId().equals(grn.getId())) {
 				for (GrnLineItem grnLineItemForOtherGrn : goodsReceivedNote.getGrnLineItems()) {
-					if (grnLineItem.getSku().getId().equals(grnLineItemForOtherGrn.getSku().getId())) {
+					if (sku.getId().equals(grnLineItemForOtherGrn.getSku().getId())) {
 						grnLineItemQtyAlreadySet += grnLineItemForOtherGrn.getQty().longValue();
 					}
 				}
-
 			}
 		}
 		return grnLineItemQtyAlreadySet;

@@ -1,6 +1,9 @@
 package com.hk.admin.pact.service.inventory;
 
+import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.sku.Sku;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,5 +16,6 @@ public interface GrnLineItemService {
 
 	public Long getPoLineItemQty(GrnLineItem grnLineItem);
 
-	public Long getGrnLineItemQtyAlreadySet(GrnLineItem grnLineItem);
+	public Long getGrnLineItemQtyAlreadySet(GoodsReceivedNote grn ,Sku sku);
+
 }
