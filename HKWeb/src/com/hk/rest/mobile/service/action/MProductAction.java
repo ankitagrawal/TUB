@@ -1,117 +1,61 @@
 package com.hk.rest.mobile.service.action;
 
-import net.sourceforge.stripes.action.*;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
-import org.stripesstuff.plugin.session.Session;
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.dao.Page;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.combo.Combo;
-import com.hk.domain.catalog.product.combo.SuperSaverImage;
-import com.hk.domain.catalog.Manufacturer;
-import com.hk.domain.content.SeoData;
-import com.hk.domain.affiliate.Affiliate;
-import com.hk.domain.review.UserReview;
-import com.hk.domain.subscription.SubscriptionProduct;
-import com.hk.domain.user.User;
-import com.hk.domain.user.Address;
-import com.hk.domain.MapIndia;
-import com.hk.dto.AddressDistanceDto;
-import com.hk.dto.menu.MenuNode;
-import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.marketing.EnumProductReferrer;
-import com.hk.constants.review.EnumReviewStatus;
-import com.hk.util.HKImageUtils;
-import com.hk.util.SeoManager;
-import com.hk.util.ProductReferrerMapper;
-import com.hk.helper.MenuHelper;
-import com.hk.pact.dao.affiliate.AffiliateDao;
-import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.dao.location.LocalityMapDao;
-import com.hk.pact.dao.catalog.product.ProductCountDao;
-import com.hk.pact.dao.user.UserProductHistoryDao;
-import com.hk.pact.dao.core.AddressDao;
-import com.hk.pact.service.catalog.ProductService;
-import com.hk.pact.service.catalog.combo.SuperSaverImageService;
-import com.hk.pact.service.subscription.SubscriptionProductService;
-import com.hk.manager.LinkManager;
-import com.hk.web.filter.WebContext;
-import com.hk.web.action.core.search.SearchAction;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.UrlBinding;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.session.Session;
-
-import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.gson.JsonUtils;
-import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.marketing.EnumProductReferrer;
-import com.hk.constants.review.EnumReviewStatus;
-import com.hk.domain.MapIndia;
-import com.hk.domain.affiliate.Affiliate;
-import com.hk.domain.catalog.Manufacturer;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.SimilarProduct;
-import com.hk.domain.catalog.product.combo.Combo;
-import com.hk.domain.catalog.product.combo.SuperSaverImage;
-import com.hk.domain.content.SeoData;
-import com.hk.domain.review.UserReview;
-import com.hk.domain.subscription.SubscriptionProduct;
-import com.hk.domain.user.Address;
-import com.hk.domain.user.User;
-import com.hk.dto.AddressDistanceDto;
-import com.hk.dto.menu.MenuNode;
-import com.hk.helper.MenuHelper;
-import com.hk.manager.LinkManager;
-import com.hk.pact.dao.affiliate.AffiliateDao;
-import com.hk.pact.dao.catalog.product.ProductCountDao;
-import com.hk.pact.dao.core.AddressDao;
-import com.hk.pact.dao.location.LocalityMapDao;
-import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.dao.user.UserProductHistoryDao;
-import com.hk.pact.dao.BaseDao;
-import com.hk.pact.service.catalog.ProductService;
-import com.hk.pact.service.catalog.combo.SuperSaverImageService;
-import com.hk.pact.service.subscription.SubscriptionProductService;
-import com.hk.util.ProductReferrerMapper;
-import com.hk.util.SeoManager;
-import com.hk.web.action.core.search.SearchAction;
-import com.hk.web.filter.WebContext;
-import com.hk.web.HealthkartResponse;
-import com.hk.rest.mobile.service.utils.MHKConstants;
-import com.hk.rest.mobile.service.model.MProductJSONResponse;
-import com.hk.rest.mobile.service.model.MProductVariantJSONResponse;
-
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.DontValidate;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.session.Session;
+
+import com.akube.framework.gson.JsonUtils;
+import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
+import com.hk.domain.MapIndia;
+import com.hk.domain.affiliate.Affiliate;
+import com.hk.domain.catalog.Manufacturer;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductImage;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.combo.Combo;
+import com.hk.domain.content.SeoData;
+import com.hk.domain.review.UserReview;
+import com.hk.domain.subscription.SubscriptionProduct;
+import com.hk.domain.user.Address;
+import com.hk.domain.user.User;
+import com.hk.dto.AddressDistanceDto;
+import com.hk.helper.MenuHelper;
+import com.hk.manager.LinkManager;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.dao.location.LocalityMapDao;
+import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.combo.SuperSaverImageService;
+import com.hk.pact.service.subscription.SubscriptionProductService;
+import com.hk.rest.mobile.service.model.MProductJSONResponse;
+import com.hk.rest.mobile.service.model.MProductVariantJSONResponse;
+import com.hk.rest.mobile.service.utils.MHKConstants;
+import com.hk.util.HKImageUtils;
+import com.hk.util.ProductReferrerMapper;
+import com.hk.util.SeoManager;
+import com.hk.web.HealthkartResponse;
 
 /**
  * Created by IntelliJ IDEA.
@@ -150,13 +94,6 @@ public class MProductAction extends MBaseAction{
 
         @Session(key = HealthkartConstants.Cookie.preferredZone)
         private String preferredZone;
-        //private String urlFragment;
-
-        @Autowired
-        private SeoManager seoManager;
-
-        @Autowired
-        private MenuHelper menuHelper;
         @Autowired
         private AffiliateDao affiliateDao;
 
@@ -165,13 +102,7 @@ public class MProductAction extends MBaseAction{
         @Autowired
         private LocalityMapDao localityMapDao;
         @Autowired
-        private ProductCountDao productCountDao;
-        @Autowired
-        private UserProductHistoryDao userProductHistoryDao;
-        @Autowired
         private AddressDao addressDao;
-        @Autowired
-        private BaseDao baseDao;
         @Autowired
         private ProductService productService;
         @Autowired
@@ -197,9 +128,9 @@ public class MProductAction extends MBaseAction{
             String status = MHKConstants.STATUS_OK;
             MProductJSONResponse productJSON = new MProductJSONResponse();
             if (productId == null || StringUtils.isBlank(productId)) {
-                    message = "No such product found";
+                    message = MHKConstants.NO_SUCH_PRDCT;
                     status = MHKConstants.STATUS_ERROR;
-                    logger.error("No such product found");
+                    logger.error( MHKConstants.NO_SUCH_PRDCT);
             }
 /*
             try {
@@ -211,7 +142,7 @@ public class MProductAction extends MBaseAction{
 
             product = getProductService().getProductById(productId);
             if (product == null) {
-                message = "No such product found";
+                message =  MHKConstants.NO_SUCH_PRDCT;
                 status = MHKConstants.STATUS_ERROR;
             }
 

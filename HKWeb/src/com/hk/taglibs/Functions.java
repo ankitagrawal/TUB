@@ -342,8 +342,12 @@ public class Functions {
 
         if (o1 != null) {
             CartLineItem lineItem = (CartLineItem) o1;
-            return lineItem.getQty() / lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant()).getQty();
-        }else{
+            if (lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant()) != null) {
+                return lineItem.getQty() / lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant()).getQty();
+            } else {
+                return 0L;
+            }
+        } else {
             return 0L;
         }
     }

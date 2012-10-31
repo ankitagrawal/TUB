@@ -56,10 +56,29 @@
   </s:layout-component>
 
   <s:layout-component name="checkoutStep">
-    <div class='current_step_content login_page'>
+    <div class='current_step_content'>
       <s:errors/>
-      <div class="left"></div>
-      <div class='right'>
+      <div class='left' style="height:440px;">
+        <h3>
+          Welcome to the HealthKart Family
+        </h3>
+
+        <p>We are proud to have you as a member of our growing Business family. Joining hands with HealthKart will
+           guarantee you:</p>
+        <ul>
+          <li>assured genuine products</li>
+          <li>great customer service</li>
+          <li>timely delivery of products</li>
+          <li>attractive pricing & loyalty schemes</li>
+          <li>no hassles, no tension; just order online & relax!</li>
+        </ul>
+        <p>Sign up to enter HealthKart'e Exclusive Business Program. In case of any queries, call us at: 0124-455 1616
+           or email at: info@healthkart.com</p>
+
+      </div>
+      <div class='or'>
+      </div>
+      <div class='right' style="height:440px;">
         <h3>
           Signup as a HealthKart partner
         </h3>

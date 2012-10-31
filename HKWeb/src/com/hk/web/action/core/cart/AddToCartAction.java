@@ -1,8 +1,9 @@
 package com.hk.web.action.core.cart;
 
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +16,7 @@ import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,233 +49,306 @@ import com.hk.web.action.core.user.SignupAction;
 @Component
 public class AddToCartAction extends BaseAction implements ValidationErrorHandler {
 
-	private static Logger logger = LoggerFactory.getLogger(AddToCartAction.class);
+    private static Logger             logger = LoggerFactory.getLogger(AddToCartAction.class);
 
-	List<ProductVariant> productVariantList;
-	Combo combo;
+    List<ProductVariant>              productVariantList;
+    Combo                             combo;
 
-	@Autowired
-	UserDao userDao;
-	@Autowired
-	UserManager userManager;
-	@Autowired
-	OrderManager orderManager;
-	@Autowired
-	ComboInstanceDao comboInstanceDao;
-	@Autowired
-	ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
-	@Autowired
-	UserCartDao userCartDao;
-	@Autowired
-	UserProductHistoryDao userProductHistoryDao;
+    @Autowired
+    UserDao                           userDao;
+    @Autowired
+    UserManager                       userManager;
+    @Autowired
+    OrderManager                      orderManager;
+    @Autowired
+    ComboInstanceDao                  comboInstanceDao;
+    @Autowired
+    ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
+    @Autowired
+    UserCartDao                       userCartDao;
+    @Autowired
+    UserProductHistoryDao             userProductHistoryDao;
 
-	private Long productReferrerId;
-	@Autowired
-	SignupAction signupAction;
+    private Long                      productReferrerId;
+    @Autowired
+    SignupAction                      signupAction;
 
-	private boolean variantConfigProvided;
+    private boolean                   variantConfigProvided;
 
-	private String variantId;
+    private String                    variantId;
 
-	private String jsonConfigValues;
+    private String                    jsonConfigValues;
 
-	private String nameToBeEngraved;
+    private String                    nameToBeEngraved;
 
-	private String engravingRequired;
+    private String                    engravingRequired;
 
-	@SuppressWarnings({"unchecked", "deprecation"})
-	@DefaultHandler
-	@JsonHandler
-	public Resolution addToCart() {
-		if (isVariantConfigProvided()) {
-			if (productVariantList != null && productVariantList.size() > 0) {
-				setVariantId(productVariantList.get(0).getId());
-			}
-			return new ForwardResolution(AddToCartWithLineItemConfigAction.class).addParameter("variantId", variantId);
-		} else {
-			// I need to pass product info
-			User user = null;
-			ProductReferrer productReferrer = null;
-			if (getPrincipal() != null) {
-				user = userDao.getUserById(getPrincipal().getId());
-				if (user == null) {
-					user = userManager.createAndLoginAsGuestUser(null, null);
-				}
-			} else {
-				user = userManager.createAndLoginAsGuestUser(null, null);
-			}
+    @SuppressWarnings( { "unchecked", "deprecation" })
+    @DefaultHandler
+    @JsonHandler
+    public Resolution addToCart() {
+        if (isVariantConfigProvided()) {
+            if (productVariantList != null && productVariantList.size() > 0) {
+                setVariantId(productVariantList.get(0).getId());
+            }
+            return new ForwardResolution(AddToCartWithLineItemConfigAction.class).addParameter("variantId", variantId);
+        } else {
+            // I need to pass product info
+            User user = null;
+            ProductReferrer productReferrer = null;
+            if (getPrincipal() != null) {
+                user = userDao.getUserById(getPrincipal().getId());
+                if (user == null) {
+                    user = userManager.createAndLoginAsGuestUser(null, null);
+                }
+            } else {
+                user = userManager.createAndLoginAsGuestUser(null, null);
+            }
 
-			Order order = orderManager.getOrCreateOrder(user);
-			List<ProductVariant> selectedProductVariants = new ArrayList<ProductVariant>();
-			try {
-				if (productVariantList != null && productVariantList.size() > 0) {
-					for (ProductVariant productVariant : productVariantList) {
-						if (productVariant != null && productVariant.isSelected() != null && productVariant.isSelected()) {
-							selectedProductVariants.add(productVariant);
-							userCartDao.addToCartHistory(productVariant.getProduct(), user);
-							userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
-						}
-					}
-				}
-				ComboInstance comboInstance = null;
-				if (combo != null) {
-					if (combo != null && combo.getId() != null) {
-						Long maxQty = 0L;
-						Long netQty = 0L;
-						for (ComboProduct comboProduct : combo.getComboProducts()) {
-							maxQty += comboProduct.getQty();
-						}
-						for (ProductVariant productVariant : productVariantList) {
-							if (productVariant.getQty() != null) {
-								netQty += productVariant.getQty();
-							} else {
-								logger.error("Null qty for Combo=" + combo.getId());
-							}
-						}
-						if (netQty != maxQty) {
-							addValidationError("Combo product variant qty are not in accordance to offer", new SimpleError("Combo product variant qty are not in accordance to offer"));
-							HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Combo product variant qty are not in accordance to offer", new HashMap());
-							noCache();
-							return new JsonResolution(healthkartResponse);
-						}
-					} else {
-						if (productVariantList != null && productVariantList.size() > 0) {
-							for (ProductVariant productVariant : productVariantList) {
-								//can pv be null here? have to check, putting a null check  --> still null pointer on above line --> null check for PVlist
-								if (productVariant != null && productVariant.getQty() != null && productVariant.getQty() < 1) {
-									addValidationError("Min Qty should be 1", new SimpleError("Min Qty should be 1"));
-									HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Min Qty should be 1", new HashMap());
-									noCache();
-									return new JsonResolution(healthkartResponse);
-								}
-							}
-						}
-					}
+            Order order = orderManager.getOrCreateOrder(user);
+            List<ProductVariant> selectedProductVariants = new ArrayList<ProductVariant>();
+            try {
+                if (productVariantList != null && productVariantList.size() > 0) {
+                    for (ProductVariant productVariant : productVariantList) {
+                        if (productVariant != null && productVariant.isSelected() != null && productVariant.isSelected() && productVariant.getQty() > 0) {
+                            selectedProductVariants.add(productVariant);
+                            userCartDao.addToCartHistory(productVariant.getProduct(), user);
+                            userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
+                        }
+                    }
+                }
 
-					comboInstance = new ComboInstance();
-					comboInstance.setCombo(combo);
-					comboInstance = (ComboInstance) comboInstanceDao.save(comboInstance);
-				}
+                ComboInstance comboInstance = null;
+                if (combo != null) {
+                    /**
+                     * do combo specific validations
+                     */
+                    if (combo != null && combo.getId() != null) {
+                        Long maxQty = 0L;
+                        Long netQty = 0L;
+                        for (ComboProduct comboProduct : combo.getComboProducts()) {
+                            maxQty += comboProduct.getQty();
+                        }
+                        for (ProductVariant productVariant : productVariantList) {
+                            if (productVariant.getQty() != null) {
+                                netQty += productVariant.getQty();
+                            } else {
+                                logger.error("Null qty for Combo=" + combo.getId());
+                            }
+                        }
+                        if (netQty != maxQty) {
+                            addValidationError("Combo product variant qty are not in accordance to offer", new SimpleError(
+                                    "Combo product variant qty are not in accordance to offer"));
+                            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
+                                    "Combo product variant qty are not in accordance to offer", new HashMap());
+                            noCache();
+                            return new JsonResolution(healthkartResponse);
+                        }
+                    } else {
+                        if (productVariantList != null && productVariantList.size() > 0) {
+                            for (ProductVariant productVariant : productVariantList) {
+                                // can pv be null here? have to check, putting a null check --> still null pointer on
+                                // above line --> null check for PVlist
+                                if (productVariant != null && productVariant.getQty() != null && productVariant.getQty() < 1) {
+                                    addValidationError("Min Qty should be 1", new SimpleError("Min Qty should be 1"));
+                                    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Min Qty should be 1", new HashMap());
+                                    noCache();
+                                    return new JsonResolution(healthkartResponse);
+                                }
+                            }
+                        }
+                    }
 
-				if (comboInstance != null) {
-					if (selectedProductVariants != null && selectedProductVariants.size() > 0) {
-						for (ProductVariant variant : selectedProductVariants) {
-							ComboInstanceHasProductVariant comboInstanceProductVariant = new ComboInstanceHasProductVariant();
-							if (variant != null && variant.getQty() != null && variant.getQty() != 0) {
-								comboInstanceProductVariant.setComboInstance(comboInstance);
-								comboInstanceProductVariant.setProductVariant(variant);
-								comboInstanceProductVariant.setQty(variant.getQty());
-								comboInstanceProductVariant = (ComboInstanceHasProductVariant) comboInstanceHasProductVariantDao.save(comboInstanceProductVariant);
-							}
-						}
-					}
-				}
-				if (productReferrerId != null) {
-					productReferrer = userCartDao.get(ProductReferrer.class, productReferrerId);
-				}
-				orderManager.createLineItems(selectedProductVariants, order, combo, comboInstance, productReferrer);
-			} catch (OutOfStockException e) {
-				getContext().getValidationErrors().add("e2", new SimpleError(e.getMessage()));
-				return new JsonResolution(getContext().getValidationErrors(), getContext().getLocale());
-			}
+                    if (order != null && order.getCartLineItems() != null && order.getCartLineItems().size() > 0) {
+                        Set<CartLineItem> existingProductCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+                        for (ProductVariant selectedProductVariant : selectedProductVariants) {
 
-			Map dataMap = new HashMap();
-			//null pointer here --> putting a null check
-			if (selectedProductVariants != null && selectedProductVariants.size() > 0) {
-				if (combo != null) {
-					dataMap.put("name", combo.getName());
-				} else {
-					dataMap.put("name", selectedProductVariants.get(0).getProduct().getName());
-				}
-				if (combo != null) {
-					dataMap.put("addedProducts", combo.getName());
-				} else {
-					String addedProducts = "";
-					for (ProductVariant selectedProductVariant : selectedProductVariants) {
-						addedProducts = addedProducts.concat(selectedProductVariant.getProduct().getName()).concat("  |");
-					}
-					dataMap.put("addedProducts", addedProducts);
-				}
-				dataMap.put("options", selectedProductVariants.get(0).getOptionsCommaSeparated());
-				dataMap.put("qty", selectedProductVariants.get(0).getQty());
-				Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-				dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + subscriptionCartLineItems.size() + 1L);
-				HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product has been added to cart", dataMap);
-				noCache();
-				//recomendationEngine.notifyAddToCart(user.getId(), productVariantList);
-				return new JsonResolution(healthkartResponse);
-			}
-			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Product has not been added to cart", dataMap);
-			noCache();
-			return new JsonResolution(healthkartResponse);
-		}
-	}
+                            for (CartLineItem existingProductCartLineItem : existingProductCartLineItems) {
+                                if (selectedProductVariant.equals(existingProductCartLineItem.getProductVariant())) {
+                                    ComboInstance existingComboInstance = existingProductCartLineItem.getComboInstance();
+                                    if (existingComboInstance != null) {
 
-	public List<ProductVariant> getProductVariantList() {
-		return productVariantList;
-	}
+                                        if (existingComboInstance.getCombo().getId().equals(combo.getId())) {
+                                            // same combo addition, check variants
+                                            Set<ProductVariant> existingPVInCombo = new HashSet<ProductVariant>(existingComboInstance.getVariants());
+                                            Set<ProductVariant> selectedPV = new HashSet<ProductVariant>(selectedProductVariants);
 
-	public void setProductVariantList(List<ProductVariant> productVariantList) {
-		this.productVariantList = productVariantList;
-	}
+                                            Collection<ProductVariant> diffInPV = CollectionUtils.subtract(existingPVInCombo, selectedPV);
+                                            if (diffInPV != null && diffInPV.size() > 0) {
+                                                addValidationError("You can't add any combo whose product is already in the cart", new SimpleError(
+                                                        "You can't add any combo whose product is already in the cart"));
+                                                HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
+                                                        "You can't add any combo whose product is already in the cart", new HashMap());
+                                                noCache();
+                                                return new JsonResolution(healthkartResponse);
+                                            }
+                                        } else if (!existingComboInstance.getCombo().getId().equals(combo.getId())) {
+                                            addValidationError("You can't add any combo whose product is already in the cart", new SimpleError(
+                                                    "You can't add any combo whose product is already in the cart"));
+                                            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
+                                                    "You can't add any combo whose product is already in the cart", new HashMap());
+                                            noCache();
+                                            return new JsonResolution(healthkartResponse);
+                                        }
+                                    } else {
+                                        addValidationError("You can't add any combo whose product is already in the cart", new SimpleError(
+                                                "You can't add any combo whose product is already in the cart"));
+                                        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
+                                                "You can't add any combo whose product is already in the cart", new HashMap());
+                                        noCache();
+                                        return new JsonResolution(healthkartResponse);
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-	public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
-		return new JsonResolution(validationErrors, getContext().getLocale());
-	}
+                    comboInstance = new ComboInstance();
+                    comboInstance.setCombo(combo);
+                    comboInstance = (ComboInstance) comboInstanceDao.save(comboInstance);
+                } else {
+                    if (order != null && order.getCartLineItems() != null && order.getCartLineItems().size() > 0) {
+                        Set<CartLineItem> existingProductCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+                        for (ProductVariant selectedProductVariant : selectedProductVariants) {
+                            for (CartLineItem existingProductCartLineItem : existingProductCartLineItems) {
+                                if (existingProductCartLineItem.getProductVariant().equals(selectedProductVariant) && existingProductCartLineItem.getComboInstance() != null) {
+                                    addValidationError("You can't add any product whose combo is already added in the cart", new SimpleError(
+                                            "You can't add any product whose combo is already added in the cart"));
+                                    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
+                                            "You can't add any product whose combo is already added in the cart", new HashMap());
+                                    noCache();
+                                    return new JsonResolution(healthkartResponse);
+                                }
+                            }
+                        }
+                    }
+                }
 
-	public Combo getCombo() {
-		return combo;
-	}
+                if (comboInstance != null) {
+                    if (selectedProductVariants != null && selectedProductVariants.size() > 0) {
+                        for (ProductVariant variant : selectedProductVariants) {
+                            ComboInstanceHasProductVariant comboInstanceProductVariant = new ComboInstanceHasProductVariant();
+                            if (variant != null && variant.getQty() != null && variant.getQty() != 0) {
+                                comboInstanceProductVariant.setComboInstance(comboInstance);
+                                comboInstanceProductVariant.setProductVariant(variant);
+                                comboInstanceProductVariant.setQty(variant.getQty());
+                                comboInstanceProductVariant = (ComboInstanceHasProductVariant) comboInstanceHasProductVariantDao.save(comboInstanceProductVariant);
+                            }
+                        }
+                    }
+                }
 
-	public void setCombo(Combo combo) {
-		this.combo = combo;
-	}
+                if (productReferrerId != null) {
+                    productReferrer = userCartDao.get(ProductReferrer.class, productReferrerId);
+                }
+                orderManager.createLineItems(selectedProductVariants, order, combo, comboInstance, productReferrer);
+            } catch (OutOfStockException e) {
+                getContext().getValidationErrors().add("e2", new SimpleError(e.getMessage()));
+                return new JsonResolution(getContext().getValidationErrors(), getContext().getLocale());
+            }
 
-	public String getNameToBeEngraved() {
-		return nameToBeEngraved;
-	}
+            Map dataMap = new HashMap();
+            // null pointer here --> putting a null check
+            if (selectedProductVariants != null && selectedProductVariants.size() > 0) {
+                if (combo != null) {
+                    dataMap.put("name", combo.getName());
+                } else {
+                    dataMap.put("name", selectedProductVariants.get(0).getProduct().getName());
+                }
+                if (combo != null) {
+                    dataMap.put("addedProducts", combo.getName());
+                } else {
+                    String addedProducts = "";
+                    for (ProductVariant selectedProductVariant : selectedProductVariants) {
+                        addedProducts = addedProducts.concat(selectedProductVariant.getProduct().getName()).concat("  |");
+                    }
+                    dataMap.put("addedProducts", addedProducts);
+                }
+                dataMap.put("options", selectedProductVariants.get(0).getOptionsCommaSeparated());
+                dataMap.put("qty", selectedProductVariants.get(0).getQty());
+                Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+                dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size())
+                        + subscriptionCartLineItems.size() + 1L);
+                HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product has been added to cart", dataMap);
+                noCache();
+                // recomendationEngine.notifyAddToCart(user.getId(), productVariantList);
+                return new JsonResolution(healthkartResponse);
+            }
+            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Product has not been added to cart", dataMap);
+            noCache();
+            return new JsonResolution(healthkartResponse);
+        }
+    }
 
-	public void setNameToBeEngraved(String nameToBeEngraved) {
-		this.nameToBeEngraved = nameToBeEngraved;
-	}
+    public List<ProductVariant> getProductVariantList() {
+        return productVariantList;
+    }
 
-	public boolean isVariantConfigProvided() {
-		return variantConfigProvided;
-	}
+    public void setProductVariantList(List<ProductVariant> productVariantList) {
+        this.productVariantList = productVariantList;
+    }
 
-	public void setVariantConfigProvided(boolean variantConfigProvided) {
-		this.variantConfigProvided = variantConfigProvided;
-	}
+    public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
+        return new JsonResolution(validationErrors, getContext().getLocale());
+    }
 
-	public String getVariantId() {
-		return variantId;
-	}
+    public Combo getCombo() {
+        return combo;
+    }
 
-	public void setVariantId(String variantId) {
-		this.variantId = variantId;
-	}
+    public void setCombo(Combo combo) {
+        this.combo = combo;
+    }
 
-	public String getJsonConfigValues() {
-		return jsonConfigValues;
-	}
+    public String getNameToBeEngraved() {
+        return nameToBeEngraved;
+    }
 
-	public void setJsonConfigValues(String configValue) {
-		this.jsonConfigValues = configValue;
-	}
+    public void setNameToBeEngraved(String nameToBeEngraved) {
+        this.nameToBeEngraved = nameToBeEngraved;
+    }
 
-	public String getEngravingRequired() {
-		return engravingRequired;
-	}
+    public boolean isVariantConfigProvided() {
+        return variantConfigProvided;
+    }
 
-	public void setEngravingRequired(String engravingRequired) {
-		this.engravingRequired = engravingRequired;
-	}
+    public void setVariantConfigProvided(boolean variantConfigProvided) {
+        this.variantConfigProvided = variantConfigProvided;
+    }
 
-	public Long getProductReferrerId() {
-		return productReferrerId;
-	}
+    public String getVariantId() {
+        return variantId;
+    }
 
-	public void setProductReferrerId(Long productReferrerId) {
-		this.productReferrerId = productReferrerId;
-	}
+    public void setVariantId(String variantId) {
+        this.variantId = variantId;
+    }
+
+    public String getJsonConfigValues() {
+        return jsonConfigValues;
+    }
+
+    public void setJsonConfigValues(String configValue) {
+        this.jsonConfigValues = configValue;
+    }
+
+    public String getEngravingRequired() {
+        return engravingRequired;
+    }
+
+    public void setEngravingRequired(String engravingRequired) {
+        this.engravingRequired = engravingRequired;
+    }
+
+    public Long getProductReferrerId() {
+        return productReferrerId;
+    }
+
+    public void setProductReferrerId(Long productReferrerId) {
+        this.productReferrerId = productReferrerId;
+    }
+
+    public ComboInstanceDao getComboInstanceDao() {
+        return comboInstanceDao;
+    }
 }
