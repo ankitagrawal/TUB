@@ -39,7 +39,8 @@ public class CourierServiceImpl implements CourierService {
 
     @Override
     public Courier getCourierByName(String name) {
-        return getCourierDao().getCourierByName(name);
+       List<Courier> courierList = getCourierDao().getCouriers(name,null);
+	    return courierList.size() > 0 ? courierList.get(0) :null;
     }
 
     public List<Courier> getAllCouriers() {
@@ -60,8 +61,8 @@ public class CourierServiceImpl implements CourierService {
         return getCourierServiceInfoDao().searchCouriers(order.getAddress().getPin(), isCOD, false, false , true);
     }
 
-    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping , Boolean active) {
-        return getCourierServiceInfoDao().searchCouriers(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping , active);
+    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping , Boolean disabled) {
+        return getCourierServiceInfoDao().searchCouriers(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping , disabled);
     }
 
     public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping) {
@@ -121,13 +122,8 @@ public class CourierServiceImpl implements CourierService {
 	 return(Courier)getCourierDao().save(courier);
 
 	}
-
-	public List<Courier> getDisableCourier(){
-		return courierDao.getDisableCourier();
+	public List<Courier> getCouriers(String name ,Boolean disabled){
+	return courierDao.getCouriers( name ,disabled);
 	}
-
-	 public List<Courier> getAvailableCouriers() {
-		 return courierDao.getAvailableCouriers();
-	 }
 
 }

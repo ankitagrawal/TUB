@@ -58,7 +58,7 @@ public class AddCourierAction extends BaseAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		courierList = courierService.getAvailableCouriers();
+		courierList = courierService.getCouriers(null,false);
 		courierGroupList = courierGroupService.getAllCourierGroup();
 		return new ForwardResolution("/pages/addCourier.jsp");
 	}
@@ -78,7 +78,7 @@ public class AddCourierAction extends BaseAction {
 				courier.setName(courierName.trim());
 				addRedirectAlertMessage(new SimpleMessage("Courier Saved"));
 			}
-			courier.setDeleted(false);
+			courier.setDisabled(false);
 			courierService.save(courier);
 		}
 		return pre();
@@ -116,7 +116,7 @@ public class AddCourierAction extends BaseAction {
 	}
 
 	public Resolution deleteCourier() {
-		courier.setDeleted(true);
+		courier.setDisabled(true);
 		courierService.save(courier);
 		addRedirectAlertMessage(new SimpleMessage("Courier Deleted"));
 		return pre();

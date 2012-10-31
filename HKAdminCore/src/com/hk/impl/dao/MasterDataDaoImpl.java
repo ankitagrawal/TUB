@@ -322,10 +322,6 @@ private CourierGroupService courierGroupService;
         return courierService.getAllCouriers();
     }
 
-//     public List<Courier> getGroundShippedCourierList() {
-//        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableGroundShippedCouriers()));
-//    }
-
     public List<ShippingOrderStatus> getSOStatusForReconcilation(){
         return EnumShippingOrderStatus.getStatusForReconcilationReport();
     }
@@ -361,11 +357,11 @@ private CourierGroupService courierGroupService;
 	}
 
 	public List<Courier> getDisableCourier(){
-		return courierService.getDisableCourier();
+		return courierService.getCouriers(null, true);
 	}
 
 	public List<Courier> getAvailableCouriers(){
-		return courierService.getAvailableCouriers();
+		return courierService.getCouriers(null, false);
 	}
 	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
 	       return EnumPurchaseOrderStatus.getStatusForNonApprover();

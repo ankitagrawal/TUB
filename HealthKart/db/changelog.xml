@@ -9606,16 +9606,16 @@
 	</changeSet>
 	<changeSet author="Seema (generated)" id="1349781909753-1">
         <addColumn tableName="courier">
-            <column name="deleted" type="TINYINT"/>
+            <column name="disabled" type="TINYINT"/>
         </addColumn>
     </changeSet>
 	 <changeSet author="Seema (generated)" id="1349781909753-2">
 		 <sql>
-			update courier set `deleted` = 0;
+			update courier set `disabled` = 0;
 		 </sql>
 		   </changeSet>
     <changeSet author="Seema (generated)" id="1349782838900-1">
-        <addNotNullConstraint columnDataType="TINYINT" columnName="deleted" tableName="courier"/>
+        <addNotNullConstraint columnDataType="TINYINT" columnName="disabled" tableName="courier"/>
     </changeSet>
 
 </databaseChangeLog>

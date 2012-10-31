@@ -7,14 +7,10 @@ import com.hk.pact.dao.BaseDao;
 
 public interface CourierDao extends BaseDao {
 
-    public Courier getCourierByName(String name);
-
     public List<Courier> getCourierByIds(List<Long> courierId);
 
-	public List<Courier> getAvailableCouriers();
+    public Courier getPreferredCourierForState(String state);
 
-    public Courier getPreferredCourierForState(String state); 
-
-   public List<Courier> getDisableCourier();
+	public List<Courier> getCouriers(String name ,Boolean disabled);
 
 }

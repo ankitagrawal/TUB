@@ -28,7 +28,7 @@ public interface CourierService {
 
 	public boolean isCodAllowedOnGroundShipping(String pin);
 
-	public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping ,Boolean active);
+	public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping ,Boolean disabled);
 
 	public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
 
@@ -36,8 +36,6 @@ public interface CourierService {
 
 	public Courier save(Courier courier);
 
-	public List<Courier> getDisableCourier();
-
-	public List<Courier> getAvailableCouriers();
+	public List<Courier> getCouriers(String name ,Boolean disabled);
 
 }

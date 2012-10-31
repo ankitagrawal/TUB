@@ -16,9 +16,6 @@ import com.hk.constants.courier.CourierConstants;
 @Repository
 public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 
-    public Courier getCourierByName(String name) {
-        return (Courier) findUniqueByNamedParams("from Courier c where c.name = :name", new String[]{"name"}, new Object[]{name});
-    }
 
     @SuppressWarnings("unchecked")
     public List<Courier> getCourierByIds(List<Long> courierIds) {
@@ -27,19 +24,22 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
         return findByCriteria(criteria1);
     }
 
-    public List<Courier> getAvailableCouriers() {
-        DetachedCriteria criteria1 = DetachedCriteria.forClass(Courier.class);
-        criteria1.add(Restrictions.eq("deleted",new Boolean(false) ));
-        return (List<Courier>)  findByCriteria(criteria1);
-    }
 
     public Courier getPreferredCourierForState(String state) {
         return (Courier) getSession().createQuery("select scs.courier from StateCourierService scs where lower(scs.state) = :state").setParameter("state", state.toLowerCase()).uniqueResult();
-    }
+    }	
 
-	 public List<Courier> getDisableCourier(){
-		 DetachedCriteria criteria1 = DetachedCriteria.forClass(Courier.class);
-        criteria1.add(Restrictions.eq("deleted", new Boolean(true)));
-        return(List<Courier>) findByCriteria(criteria1);
-	 }
+
+    @SuppressWarnings("unchecked")
+	public List<Courier> getCouriers(String name, Boolean disabled) {
+		DetachedCriteria courierCriteria = DetachedCriteria.forClass(Courier.class);
+		if (name != null) {
+			courierCriteria.add(Restrictions.eq("name", name));
+		}
+		if (disabled != null) {
+			courierCriteria.add(Restrictions.eq("disabled", disabled));
+		}
+		return (List<Courier>) findByCriteria(courierCriteria);
+
+	}
 }

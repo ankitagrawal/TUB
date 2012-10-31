@@ -33,8 +33,8 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         return null;
     }
 
-    public List<Courier> searchCouriers(String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping ,Boolean active) {
-        List<CourierServiceInfo> servicesList = getCourierServiceInfoList(null, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping ,active);
+    public List<Courier> searchCouriers(String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping ,Boolean disabled) {
+        List<CourierServiceInfo> servicesList = getCourierServiceInfoList(null, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping ,disabled);
         List<Courier> courierList = new ArrayList<Courier>();
         if (servicesList != null && servicesList.size() > 0) {
             for (CourierServiceInfo serviceInfo : servicesList) {
@@ -44,7 +44,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         return courierList;
     }
 
-    public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping ,Boolean active) {
+    public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping ,Boolean disabled) {
 
         Criteria courierServiceInfoCriteria = getSession().createCriteria(CourierServiceInfo.class);
         if (forCOD) {
@@ -61,9 +61,8 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
 	    if (courierId != null) {
 		    courierCriteria.add(Restrictions.eq("id", courierId));
 	    }
-	    if (active != null) {
-		    boolean value = !active;
-		    courierCriteria.add(Restrictions.eq("deleted", value));
+	    if ( disabled != null) {
+		    courierCriteria.add(Restrictions.eq("disabled", disabled));
 	    }
 
 

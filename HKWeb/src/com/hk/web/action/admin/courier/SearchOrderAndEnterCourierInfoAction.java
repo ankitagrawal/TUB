@@ -103,7 +103,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             
 //  groundShipping logic Starts---
         isGroundShipped =  shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-        availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false,true);
+        availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false,false);
 //  ground shipping logic ends
 
             if (availableCouriers == null || availableCouriers.isEmpty()) {
@@ -146,7 +146,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
                 isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false,true);
+                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false,false);
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();

@@ -25,8 +25,8 @@ public class Courier implements java.io.Serializable {
 	@Column(name = "name", nullable = false, length = 45)
 	private String name;
 
-	@Column(name = "deleted", nullable = false, length = 10)
-	private Boolean  deleted;
+	@Column(name = "disabled", nullable = false, length = 10)
+	private Boolean  disabled;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courier")
 	private Set<CourierServiceInfo> courierServiceInfos = new HashSet<CourierServiceInfo>(0);
@@ -80,14 +80,13 @@ public class Courier implements java.io.Serializable {
 		this.courierGroup = courierGroup;
 	}
 
-	public Boolean isDeleted() {
-		return deleted;
+	public Boolean getDisabled() {
+		return disabled;
 	}
 
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
 	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
