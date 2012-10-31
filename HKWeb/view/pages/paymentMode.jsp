@@ -143,6 +143,11 @@
             src="<hk:vhostImage/>/images/gateway/citrus.png" height="30px">
     </p>
 
+    <p><label><s:radio name="paymentMode" value="100" />
+        Paypal </label>
+ <img  src="<hk:vhostImage/>/images/gateway/paypal.png" height="30px"><span style="font-size:11px; font-family: Arial, Verdana;">The safer, easier way to pay.</span>
+   </p>
+
     <div style="float: right; width: 90%;"><s:submit
             name="proceed" value="Make Payment >" class="button"
             disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />

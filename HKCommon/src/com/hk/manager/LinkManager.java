@@ -137,6 +137,18 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
+    public String getPayPalPaymentGatewayReturnUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/PayPalCreditDebitSendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
+
+    public String getPayPalPaymentGatewayCancelUrl() {
+          RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/PayPalCreditDebitSendReceive.action");
+          return getUrlFromResolution(redirectResolution);
+      }
+
+
     public String getRelativeProductURL(Product product, Long productReferrerId) {
        /* String productURL = null;
         String productSlug = product.getSlug();

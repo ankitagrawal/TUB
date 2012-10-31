@@ -83,7 +83,8 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao{
     String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.sku in (:skuList) " + "group by pvi.skuItem.id having sum(pvi.qty) > 0";
     List<Long> inStockSkuItemIds = (List<Long>) getSession().createQuery(inStockSkuItemIdQuery).setParameterList("skuList", skuList).list();
     if (inStockSkuItemIds != null && inStockSkuItemIds.size() > 0) {
-      String query = "select si from SkuItem si where si.id in (:inStockSkuItemIds) and si.skuGroup.sku in (:skuList)";
+//      String query = "select si from SkuItem si where si.id in (:inStockSkuItemIds) and si.skuGroup.sku in (:skuList)";
+         String query = "select si from SkuItem si where  si.skuGroup.sku in (:skuList) and si.id in (:inStockSkuItemIds)";
       inStockSkuItems = (List<SkuItem>) getSession().createQuery(query).setParameterList("inStockSkuItemIds", inStockSkuItemIds).setParameterList("skuList", skuList).list();
     }
     return inStockSkuItems;

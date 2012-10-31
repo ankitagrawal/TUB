@@ -28,8 +28,11 @@
     <c:set var="paymentGateway" value="<%=paymentGateway%>"/>
     <form action="<%=gatewayUrl%>" method="POST" id="gatewayForm">
       <c:forEach items="${paymentGateway.parameters}" var="entry">
-        <input type="hidden" name="${entry.key}" value="${entry.value}"/>
+          ${entry.key}  -->${entry.value}
+        <input type="hidden" name="${entry.key}" value="${entry.value}"/>     <br/>
       </c:forEach>
+        <input type="hidden" name="paymentType" value="order"/>
+        <%--<input type="hidden" name="currencyCodeType" value="USD"/>--%>
     </form>
     </div>
   </div>
