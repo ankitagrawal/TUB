@@ -590,7 +590,12 @@ public class OrderManager {
       }
 			order = getOrderService().save(order);
 		}
-   getOrderDao().refresh(order);
+
+     getOrderDao().refresh(order);
+    if(order.getCartLineItems()!=null && order.getCartLineItems().size()!=0){
+       getCartLineItemDao().refresh(order.getCartLineItems());
+    }
+   
 		return order;
 	}
 
