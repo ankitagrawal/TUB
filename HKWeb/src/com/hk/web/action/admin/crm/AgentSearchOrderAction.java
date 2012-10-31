@@ -59,6 +59,8 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
 
     private String        email;
     private String        phone;
+    //Authorization key
+    private String        key;
     private String        remoteAddress;
 
     private List<Order> orderList = new ArrayList<Order>();
@@ -71,7 +73,7 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
         populateUserDetail.populateItemData();*/
 
         Response response = null;
-        String key = getContext().getRequest().getParameter("key");
+        key = getContext().getRequest().getParameter("key");
         String decryptKey = CryptoUtil.decrypt(key);
         if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)){
             return new JsonResolution(" ");
@@ -163,5 +165,13 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
 
     public void setRemoteAddress(String remoteAddress) {
         this.remoteAddress = remoteAddress;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

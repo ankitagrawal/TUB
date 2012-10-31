@@ -64,13 +64,6 @@ public class GrnLineItem implements java.io.Serializable {
 	@Column(name = "checkedin_qty")
 	private Long checkedInQty;
 
-	@Transient
-	private Long poLineItemQty;
-
-	@Transient
-	private Long grnLineItemQtyAlreadySet;
-
-
 	public Long getId() {
 		return this.id;
 	}
@@ -182,33 +175,6 @@ public class GrnLineItem implements java.io.Serializable {
 	public void setProcurementPrice(Double procurementPrice) {
 		this.procurementPrice = procurementPrice;
 	}
-
-	public Long getPoLineItemQty() {
-		List<PoLineItem> poLineItemList = this.getGoodsReceivedNote().getPurchaseOrder().getPoLineItems();
-		for (PoLineItem poLineItem : poLineItemList) {
-			if (this.sku.getId().equals(poLineItem.getSku().getId())) {
-				return poLineItem.getQty();
-			}
-		}
-		return 0L;
-	}
-
-	public Long getGrnLineItemQtyAlreadySet() {
-		long grnLineItemQtyAlreadySet = 0;
-		List<GoodsReceivedNote> allGrnForThisPO = this.getGoodsReceivedNote().getPurchaseOrder().getGoodsReceivedNotes();
-		for (GoodsReceivedNote goodsReceivedNote : allGrnForThisPO) {
-			if (!goodsReceivedNote.getId().equals(this.getGoodsReceivedNote().getId())) {
-				for (GrnLineItem grnLineItemForOtherGrn : goodsReceivedNote.getGrnLineItems()) {
-					if (this.getSku().getId().equals(grnLineItemForOtherGrn.getSku().getId())) {
-						grnLineItemQtyAlreadySet += grnLineItemForOtherGrn.getQty().longValue();
-					}
-				}
-
-			}
-		}
-		return grnLineItemQtyAlreadySet;
-	}
-
 }
 
 

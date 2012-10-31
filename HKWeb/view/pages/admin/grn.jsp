@@ -314,12 +314,12 @@
 		<th>S.No.</th>
 		<th></th>
 		<th>VariantID</th>
-		<th>UPC</th>
 		<th>Supplier Code</th>
 		<th>Remarks</th>
 		<th>Details</th>
 		<th>Tax<br/>Category</th>
 		<th>Asked Qty</th>
+		<th>Other<br> GRN qty</th>
 		<th>Received Qty<br/>(Adjust -)</th>
 		<th>Checkedin Qty</th>
 		<th>Cost Price<br/>(Without TAX)</th>
@@ -386,7 +386,6 @@
 				<%--<s:hidden class="sku" name="grnLineItems[${ctr.index}].sku"
 									 value="${sku}"></s:hidden>--%>
 		</td>
-		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.upc" value="${productVariant.upc}"/></td>
 		<td>${productVariant.supplierCode}</td>
 		<td>${productVariant.otherRemark}</td>
 		<td>${product.name}<br/>${productVariant.variantName}<br/>${productVariant.optionsCommaSeparated}
@@ -411,11 +410,13 @@
 		   </td>--%>
 		<td>${hk:askedPOQty(pa.grn.purchaseOrder, productVariant)}</td>
 		<td>
+			<input type="text" id="alreadyGRNQty" value="${hk:getGrnLineItemQtyAlreadySet(grnLineItemDto.grnLineItem)}" disabled="disabled"/>
+			<input type="hidden" id="poLineItemQty" value="${hk:getPoLineItemQty(grnLineItemDto.grnLineItem)}"/>
+			<input type="hidden" id="variantHidden" value="${productVariant.id}" />
+		</td>
+		<td>
 			<s:text name="grnLineItems[${ctr.index}].qty" value="${grnLineItemDto.grnLineItem.qty}"
 			        class="receivedQuantity valueChange"/>
-			<input type="hidden" id="alreadyGRNQty" value="${grnLineItemDto.grnLineItem.grnLineItemQtyAlreadySet}"/>
-			<input type="hidden" id="poLineItemQty" value="${grnLineItemDto.grnLineItem.poLineItemQty}"/>
-			<input type="hidden" id="variantHidden" value="${productVariant.id}" />
 		</td>
 		<td>
 			${grnLineItemDto.grnLineItem.checkedInQty}
@@ -455,7 +456,7 @@
 	<tfoot>
 	<tr>
 		<td colspan="9">Total</td>
-		<td colspan="5" class="totalQuantity"></td>
+		<td colspan="6" class="totalQuantity"></td>
 		<td><s:text readonly="readonly" class="totalTaxable" name="grn.taxableAmount" value="${pa.grn.taxableAmount}" /></td>
 		<td><s:text readonly="readonly" class="totalTax" name="grn.taxAmount" value="${pa.grn.taxAmount}" /></td>
 		<td><s:text readonly="readonly" class="totalSurcharge" name="grn.surchargeAmount" value="${pa.grn.surchargeAmount}"/></td>

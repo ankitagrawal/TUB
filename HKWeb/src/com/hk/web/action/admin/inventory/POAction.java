@@ -182,7 +182,7 @@ public class POAction extends BasePaginatedAction {
             grnLineItem.setGoodsReceivedNote(grn);
             grnLineItem.setProductVariant(productVariant);
             grnLineItem.setSku(poLineItem.getSku());
-            grnLineItem.setQty(-1L); // Negative so that while entring GRN they know what they have filled and what
+            grnLineItem.setQty(0L); // Negative so that while entring GRN they know what they have filled and what
             // they have not.
             if (poLineItem.getCostPrice() != null) {
                 grnLineItem.setCostPrice(poLineItem.getCostPrice());

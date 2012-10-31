@@ -4,7 +4,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction" var="spa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 <s:layout-component name="htmlHead">
- <script type="text/javascript">
+ <script type="text/javascript">                                                  
         $(document).ready(function() {
             $('.addRowButton').click(function() {
 

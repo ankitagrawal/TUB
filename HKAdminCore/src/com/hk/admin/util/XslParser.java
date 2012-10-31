@@ -265,6 +265,18 @@ public class XslParser {
                     product.setOrderRanking(sortingOrder);
                     product.setBrand(getCellValue(XslConstants.BRAND, rowMap, headerMap));
                     product.setManufacturer(getManufacturerDetails(getCellValue(XslConstants.MANUFACTURER, rowMap, headerMap), manufacturerSheet));
+                    String isDeleted = getCellValue(XslConstants.IS_DELETED, rowMap, headerMap);
+                    boolean isDeletedBoolean =  StringUtils.isNotBlank(isDeleted) && isDeleted.trim().toLowerCase().equals("y") ? true : false;
+                    product.setDeleted(isDeletedBoolean);
+                    String isOutOfStock = getCellValue(XslConstants.OUT_OF_STOCK, rowMap, headerMap);
+                    boolean isOutOfStockBoolean =  StringUtils.isNotBlank(isOutOfStock) && isOutOfStock.trim().toLowerCase().equals("y") ? true : false;
+                    product.setOutOfStock(isOutOfStockBoolean);
+                    String isHidden = getCellValue(XslConstants.IS_HIDDEN, rowMap, headerMap);
+                    boolean isHiddenBoolean =  StringUtils.isNotBlank(isHidden) && isHidden.trim().toLowerCase().equals("y") ? true : false;
+                    product.setHidden(isHiddenBoolean);
+                    String isGroundShippingAvailable = getCellValue(XslConstants.GROUND_SHIPPING_AVAILABLE, rowMap, headerMap);
+                    boolean isGroundShippingAvailableBoolean = StringUtils.isNotBlank(isGroundShippingAvailable) && isGroundShippingAvailable.trim().toLowerCase().equals("y") ? true : false;
+                    product.setGroundShipping(isGroundShippingAvailableBoolean);
                     product.setOverview(overview);
                     product.setDescription(description);
                     product.setVideoEmbedCode(videoEmbedCode);
