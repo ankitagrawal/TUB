@@ -99,6 +99,7 @@ public class MSearchAction extends MBaseAction {
 					catalogList.add(catalogJSONResponse);
 				}
 			} catch (Exception e) {
+				try{
 				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
 				productPage = productDao.getProductByName(query, onlyCOD, includeCombo, pageNo, perPage);
 				productList = productPage.getList();
@@ -108,6 +109,11 @@ public class MSearchAction extends MBaseAction {
 					catalogJSONResponse = populateCatalogResponse(product, catalogJSONResponse);
 					catalogJSONResponse.setProductURL(product.getProductURL());
 					catalogList.add(catalogJSONResponse);
+				}
+				}catch(Exception dbe){
+					status = MHKConstants.STATUS_ERROR;
+					message = MHKConstants.NO_SUCH_PRDCT;
+					return  JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, message));
 				}
 			}
 		}
