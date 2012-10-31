@@ -55,6 +55,8 @@ public class FedExCourierUtil {
     private ShipmentService shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
 
     private ShippingOrderService shippingOrderService = ServiceLocatorFactory.getService(ShippingOrderService.class);
+    private static final String ERROR = "ERROR";
+    private static final String FED_EX_AWB_NOT_GENERATED = "FedEx awb not generated: ";
 
     public FedExCourierUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
         this.fedExAuthKey = fedExAuthKey;
@@ -67,7 +69,7 @@ public class FedExCourierUtil {
     public ThirdPartyAwbDetails newFedExShipment(ShippingOrder shippingOrder, Double weightInKg) {
         ProcessShipmentRequest request = buildRequest(shippingOrder, weightInKg); // Build a request object
 
-        String noAwbMessage = "FedEx awb not generated: ";
+        String noAwbMessage = FED_EX_AWB_NOT_GENERATED;
         //
         try {
             // Initialize the service
@@ -93,8 +95,6 @@ public class FedExCourierUtil {
             String notificationComment = logNotifications(reply.getNotifications());
             if (StringUtils.isNotBlank(notificationComment)) {
                 noAwbMessage = noAwbMessage + notificationComment;
-                //shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, notificationComment);
-                //return null;
             }
             CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
 
@@ -166,7 +166,7 @@ public class FedExCourierUtil {
         //
 
         if (shippingOrder.getAmount() == 0) {
-            requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(400.00, weightInKg));
+            requestedShipment.setCustomsClearanceDetail(addCustomsClearanceDetail(1.00, weightInKg));   // Amount cannot be passed as Rs. 0
         } else {
             if (shippingOrder.isCOD()) {
                 requestedShipment.setSpecialServicesRequested(addShipmentSpecialServicesRequested(shippingOrder));   // requests COD shipment
@@ -242,18 +242,18 @@ public class FedExCourierUtil {
         String messages = "";
         if (notifications != null && notifications.length != 0) {
             for (int i = 0; i < notifications.length; i++) {
-                Notification n = notifications[i];
+                Notification notification = notifications[i];
                 logger.info("  FedEx Notification no. " + i + ": ");
-                if (n == null) {
+                if (notification == null) {
                     continue;
                 }
-                NotificationSeverityType nst = n.getSeverity();
+                NotificationSeverityType notificationSeverityType = notification.getSeverity();
 
-                logger.info("    Severity: " + (nst == null ? "null" : nst.getValue()));
-                logger.info("    Code: " + n.getCode());
-                logger.info("    Message: " + n.getMessage());
-                if (nst != null && nst.getValue().equals("ERROR")) {
-                    messages = messages.concat(n.getMessage() + ". ");
+                logger.info("    Severity: " + (notificationSeverityType == null ? "null" : notificationSeverityType.getValue()));
+                logger.info("    Code: " + notification.getCode());
+                logger.info("    Message: " + notification.getMessage());
+                if (notificationSeverityType != null && notificationSeverityType.getValue().equals(ERROR)) {
+                    messages = messages.concat(notification.getMessage() + ". ");
                 }
 
             }
