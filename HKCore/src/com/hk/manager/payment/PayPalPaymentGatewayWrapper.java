@@ -30,7 +30,9 @@ public static final String CANCELURL = "CANCELURL";
 public static final String MODE = "MODE";
 public static final String PAYMENTACTION = "PAYMENTACTION";
 public static String merchantURLPart = "merchantURLPart";
-public static final String METHOD = "METHOD";    
+public static final String METHOD = "METHOD";
+public static  final String merchantTxnId = "merchantTxnId";
+ public static  final String   ENVIRONMENT   = "ENVIRONMENT" ;
 
 public String Token;
 public String Ack;

@@ -3,6 +3,7 @@ package com.hk.web.action.core.payment.gateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang.math.NumberUtils;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.manager.payment.PaymentManager;
@@ -10,6 +11,8 @@ import com.hk.manager.payment.PayPalPaymentGatewayWrapper;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
 import com.hk.web.action.core.payment.PaymentSuccessAction;
+import com.hk.web.action.core.payment.PaymentFailAction;
+import com.hk.web.action.core.payment.PaymentPendingApprovalAction;
 import com.hk.web.filter.WebContext;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.order.Order;
@@ -21,6 +24,7 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import com.hk.domain.user.User;
 import com.hk.domain.user.Address;
+import com.hk.exception.HealthkartPaymentGatewayException;
 import com.paypal.sdk.services.NVPCallerServices;
 import com.paypal.sdk.core.nvp.NVPEncoder;
 import com.paypal.sdk.core.nvp.NVPDecoder;
@@ -53,6 +57,8 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
     @Autowired
     EmailManager emailManager;
 
+    private static String ack1 = null;
+
 
     protected PayPalPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
 //      PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper(AppConstants.appBasePath);
@@ -60,8 +66,9 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         Order order = payment.getOrder();
         User user = order.getUser();
         Address address = order.getAddress();
+        String merchantTxnId = data.getGatewayOrderId();
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
-        amountStr = "10.10";
+//        String amountStr = "10.10";
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/paypal.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
         String userid = properties.getProperty(PayPalPaymentGatewayWrapper.USER);
@@ -71,18 +78,21 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String Version = properties.getProperty(PayPalPaymentGatewayWrapper.VERSION);
         String paymentAction = properties.getProperty(PayPalPaymentGatewayWrapper.PAYMENTACTION);
         String method = properties.getProperty(PayPalPaymentGatewayWrapper.METHOD);
+        String environment = properties.getProperty(PayPalPaymentGatewayWrapper.ENVIRONMENT);
 
         PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper();
 
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.SIGNATURE, signature);
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.USER, userid);
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.PWD, pwd);
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.AMT, amountStr);
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.VERSION, Version);
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.RETURNURL, linkManager.getPayPalPaymentGatewayReturnUrl());
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.CANCELURL, linkManager.getPayPalPaymentGatewayCancelUrl());
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.PAYMENTACTION, paymentAction);
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.METHOD, method);
+//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.SIGNATURE, signature);
+//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.USER, userid);
+//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.PWD, pwd);
+//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.AMT, amountStr);
+//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.VERSION, Version);
+//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.RETURNURL, linkManager.getPayPalPaymentGatewayReturnUrl());
+//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.CANCELURL, linkManager.getPayPalPaymentGatewayCancelUrl());
+//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.PAYMENTACTION, paymentAction);
+//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.METHOD, method);
+//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.merchantTxnId, merchantTxnId);
+
 //        payPalPaymentGatewayWrapper.setGatewayUrl(properties.getProperty(payPalPaymentGatewayWrapper.merchantURLPart));
 
         NVPEncoder encoder = new NVPEncoder();
@@ -90,127 +100,30 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
         try {
 
-
-    /*
-            //NVPCallerServiced object is taken from the session
-            NVPCallerServices caller = (NVPCallerServices) WebContext.getRequest().getSession().getValue("caller");
-
-            String returnURL = linkManager.getPayPalPaymentGatewayReturnUrl() + "?currencyCodeType=" + "USD";
-            String cancelURL = linkManager.getPayPalPaymentGatewayReturnUrl() + "?paymentType=" + "order";
-
-            String strNVPRequest = "";
-            StringBuffer sbErrorMessages = new StringBuffer("");
-
-            //NVPEncoder object is created and all the name value pairs are loaded into it.
-            NVPEncoder encoder = new NVPEncoder();
-
-            encoder.add("METHOD", "SetExpressCheckout");
-            encoder.add("RETURNURL", returnURL + "&paymentAmount=" + "19.85");
-            encoder.add("CANCELURL", cancelURL);
-
-            //encoder.add("AMT",request.getParameter("paymentAmount"));
-            String paymentType = "Order";
-            String currencyCodeType = "USD";
-            encoder.add("PAYMENTACTION", paymentType);
-            encoder.add("CURRENCYCODE", currencyCodeType);
-
-            encoder.add("SHIPTONAME", "NAME");
-            encoder.add("SHIPTOSTREET", "SHIPTOSTREET");
-            encoder.add("SHIPTOCITY", "SHIPTOCITY");
-            encoder.add("SHIPTOSTATE", "SHIPTOSTATE");
-            encoder.add("SHIPTOCOUNTRY", "SHIPTOCOUNTRYCODE");
-            encoder.add("SHIPTOZIP", "SHIPTOZIP");
-            encoder.add("L_NAME0", "L_NAME0");
-            encoder.add("L_NUMBER0", "1000");
-            encoder.add("L_DESC0", "Size: 8.8-oz");
-            encoder.add("L_AMT0", "10.01");
-            encoder.add("L_QTY0", "1");
-            encoder.add("L_NAME1", "L_NAME1");
-            encoder.add("L_NUMBER1", "10001");
-            encoder.add("L_DESC1", "Size: Two 24-piece boxes");
-            encoder.add("L_AMT1", "10.02");
-            encoder.add("L_QTY1", "1");
-            encoder.add("L_ITEMWEIGHTVALUE1", "0.5");
-            encoder.add("L_ITEMWEIGHTUNIT1", "lbs");
-            encoder.add("ADDROVERRIDE", "1");
-
-            float ft = 11.85F;
-
-            encoder.add("ITEMAMT", String.valueOf(ft));
-            encoder.add("TAXAMT", "2.00");
-            //amount = itemamount+ shippingamt+shippingdisc+taxamt+insuranceamount;
-            float amt = Util.round(ft + 5.00f + 2.00f + 1.00f, 2);
-            float maxamt = Util.round(amt + 25.00f, 2);
-            encoder.add("SHIPDISCAMT", "-3.00");
-            encoder.add("AMT", "11.85");
-            encoder.add("SHIPPINGAMT", "8.00");
-            encoder.add("MAXAMT", String.valueOf(maxamt));
-            encoder.add("CALLBACK", "https://www.ppcallback.com/callback.pl");
-            encoder.add("INSURANCEOPTIONOFFERED", "true");
-            encoder.add("INSURANCEAMT", "1.00");
-            encoder.add("L_SHIPPINGOPTIONISDEFAULT0", "false");
-            encoder.add("L_SHIPPINGOPTIONNAME0", "Ground");
-            encoder.add("L_SHIPPINGOPTIONLABEL0", "UPS Ground 7 Days");
-            encoder.add("L_SHIPPINGOPTIONAMOUNT0", "3.00");
-            encoder.add("L_SHIPPINGOPTIONISDEFAULT1", "true");
-            encoder.add("L_SHIPPINGOPTIONNAME1", "UPS Air");
-            encoder.add("L_SHIPPINGOPTIONlABEL1", "UPS Next Day Air");
-            encoder.add("L_SHIPPINGOPTIONAMOUNT1", "8.00");
-            encoder.add("CALLBACKTIMEOUT", "4");
-
-            WebContext.getRequest().getSession().setAttribute("paymentType", paymentType);
-            WebContext.getRequest().getSession().setAttribute("currencyCodeType", currencyCodeType);
-
-            String testEnv = "beta-developer";
-
-            //encode method will encode the name and value and form NVP string for the request
-            strNVPRequest = encoder.encode();
-
-            //call method will send the request to the server and return the response NVPString
-            String ppresponse =
-                    (String) caller.call(strNVPRequest);
-
-            //NVPDecoder object is created
-            NVPDecoder resultValues = new NVPDecoder();
-
-            //decode method of NVPDecoder will parse the request and decode the name and value pair
-            resultValues.decode(ppresponse);
-
-            //checks for Acknowledgement and redirects accordingly to display error messages
-            String strAck = resultValues.get("ACK");
-            if (strAck != null && !(strAck.equals("Success") || strAck.equals("SuccessWithWarning"))) {
-                WebContext.getRequest().getSession().setAttribute("response", resultValues);
-                paymentManager.fail(payment.getGatewayOrderId());
-            } else {
-                payPalPaymentGatewayWrapper.setGatewayUrl("https://www." + testEnv + ".paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + resultValues.get("TOKEN"));
-            }
-
-            */
-
-
-          NVPCallerServices   caller = new NVPCallerServices();
-			APIProfile profile = ProfileFactory.createSignatureAPIProfile();
+            NVPCallerServices caller = new NVPCallerServices();
+            APIProfile profile = ProfileFactory.createSignatureAPIProfile();
 
             profile.setAPIUsername(userid);
-			profile.setAPIPassword(pwd);
-			profile.setSignature(signature);
-			profile.setEnvironment("sandbox");
-			profile.setSubject("");
-			caller.setAPIProfile(profile);
-			encoder.add("VERSION", "51.0");
-			encoder.add("METHOD","SetExpressCheckout");
+            profile.setAPIPassword(pwd);
+            profile.setSignature(signature);
+            profile.setEnvironment(environment);
+            profile.setSubject("");
+            caller.setAPIProfile(profile);
+            encoder.add("VERSION", Version);
+            encoder.add("METHOD", "SetExpressCheckout");
 
-		// Add request-specific fields to the request string.
-			encoder.add("RETURNURL",linkManager.getPayPalPaymentGatewayReturnUrl());
-			encoder.add("CANCELURL",linkManager.getPayPalPaymentGatewayCancelUrl());
-			encoder.add("AMT","10.10");
-			encoder.add("PAYMENTACTION","sale");
-			encoder.add("CURRENCYCODE","USD");
+            // Add request-specific fields to the request string.
+            encoder.add("RETURNURL", linkManager.getPayPalPaymentGatewayReturnUrl());
+            encoder.add("CANCELURL", linkManager.getPayPalPaymentGatewayCancelUrl());
+            encoder.add("AMT", amountStr);
+            encoder.add("PAYMENTACTION", "sale");
+            encoder.add("CURRENCYCODE", "USD");
+            encoder.add("INVNUM", merchantTxnId);
 
-		// Execute the API operation and obtain the response.
-			String NVPRequest= encoder.encode();
-			String NVPResponse =caller.call(NVPRequest);
-			decoder.decode(NVPResponse);
+            // Execute the API operation and obtain the response.
+            String NVPRequest = encoder.encode();
+            String NVPResponse = caller.call(NVPRequest);
+            decoder.decode(NVPResponse);
 
 
         } catch (Exception e) {
@@ -218,39 +131,40 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             paymentManager.fail(payment.getGatewayOrderId());
         }
 
+        String ack = decoder.get("ACK");
+        String Token = decoder.get("TOKEN");
+        String CORRELATIONID = decoder.get("CORRELATIONID");
 
-            String ack = decoder.get("ACK");
-            String Token = decoder.get("TOKEN");
-               String CORRELATIONID = decoder.get("CORRELATIONID");
-//            payPalPaymentGatewayWrapper.Ack = ack;
-//            payPalPaymentGatewayWrapper.Token = Token;
 
-             payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.ACK ,ack);
-             payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.TOKEN ,Token);
-             payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.CORRELATIONID ,CORRELATIONID);
-        /*
+        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.ACK, ack);
+        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.TOKEN, Token);
+        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.CORRELATIONID, CORRELATIONID);
+
+
+        try {
             if (ack.equals("Success")) {
-                String paypalurl = " https://www.sandbox.paypal.com/cgi-bin/webscr? cmd=_express-checkout&token=" + Token;
-//                getContext().getResponse().sendRedirect(paypalurl);
-                HttpServletResponse httpResponse = (HttpServletResponse)  getContext().getResponse();
-                httpResponse.sendRedirect(paypalurl);
-
+                String gatewayUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + Token;
+                payPalPaymentGatewayWrapper.setGatewayUrl(gatewayUrl);
             }
-        }catch(Exception e1){
-                logger.info("exception", e1);
-            }
-
-          */
-            return payPalPaymentGatewayWrapper;
+        } catch (Exception e1) {
+//                logger.info("exception", e1);
+        }
+        logger.info("sending to payment gateway paypal for gateway order id " + merchantTxnId + "and amount " + amountStr);
+        return payPalPaymentGatewayWrapper;
     }
 
 
     @DefaultHandler
     public Resolution callback() {
-       NVPEncoder encoder = new NVPEncoder();
+        NVPEncoder encoder = new NVPEncoder();
+        NVPEncoder encoder1 = new NVPEncoder();
         NVPDecoder decoder = new NVPDecoder();
+        NVPDecoder decoder1 = new NVPDecoder();
+        Resolution resolution = null;
 
-          String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/paypal.live.properties";
+        String amount = null;
+
+        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/paypal.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
         String userid = properties.getProperty(PayPalPaymentGatewayWrapper.USER);
         String pwd = properties.getProperty(PayPalPaymentGatewayWrapper.PWD);
@@ -258,41 +172,98 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String signature = properties.getProperty(PayPalPaymentGatewayWrapper.SIGNATURE);
         String Version = properties.getProperty(PayPalPaymentGatewayWrapper.VERSION);
         String paymentAction = properties.getProperty(PayPalPaymentGatewayWrapper.PAYMENTACTION);
-      
 
         String Token = getContext().getRequest().getParameter("token");
         String payerid = getContext().getRequest().getParameter("PayerID");
-       try {
-        NVPCallerServices   caller = new NVPCallerServices();
-                   APIProfile profile = ProfileFactory.createSignatureAPIProfile();
+        String gatewayOrderId = null;
 
-                   profile.setAPIUsername(userid);
-                   profile.setAPIPassword(pwd);
-                   profile.setSignature(signature);
-                   profile.setEnvironment("sandbox");
-                   profile.setSubject("");
-                   caller.setAPIProfile(profile);
-                   encoder.add("VERSION", "51.0");
-                   encoder.add("METHOD","DoExpressCheckoutPayment");
+        NVPCallerServices caller = new NVPCallerServices();
 
-                   encoder.add("TOKEN",Token);
-			encoder.add("PAYERID",payerid);
-			encoder.add("AMT","11.20");
-			encoder.add("PAYMENTACTION","sale");
-			encoder.add("CURRENCYCODE","USD");
+        if (ack1 == null) {
+//        String gatewayOrderId1 = decoder.get("INVNUM");
+            try {
 
-           String NVPRequest = encoder.encode();
-			String NVPResponse =caller.call(NVPRequest);
-			decoder.decode(NVPResponse);
+                APIProfile profile = ProfileFactory.createSignatureAPIProfile();
 
-       }catch(Exception e){
-           
-       }
-       String ack =  decoder.get("ACK");
+                profile.setAPIUsername(userid);
+                profile.setAPIPassword(pwd);
+                profile.setSignature(signature);
+                profile.setEnvironment("sandbox");
+                profile.setSubject("");
+                caller.setAPIProfile(profile);
 
-        if (ack.equals("Success")){
-         new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", "88-67897");
+                encoder1.add("VERSION", "51.0");
+                encoder1.add("METHOD", "GetExpressCheckoutDetails");
+                encoder1.add("TOKEN", Token);
+
+                String NVPRequest1 = encoder1.encode();
+                String NVPResponse1 = caller.call(NVPRequest1);
+                decoder1.decode(NVPResponse1);
+
+                gatewayOrderId = decoder1.get("INVNUM");
+                amount = decoder1.get("AMT");
+                ack1 = decoder1.get("ACK");
+
+            }
+            catch (Exception e) {
+
+            }
         }
-        return null;
+//            encoder1.add()
+      else {
+        if (ack1.equals("Success")) {
+
+            try {
+                encoder.add("VERSION", "51.0");
+                encoder.add("METHOD", "DoExpressCheckoutPayment");
+
+                encoder.add("TOKEN", Token);
+                encoder.add("PAYERID", payerid);
+                encoder.add("AMT", amount);
+                encoder.add("PAYMENTACTION", "sale");
+                encoder.add("CURRENCYCODE", "USD");
+                encoder.add("INVNUM", gatewayOrderId);
+
+                String NVPRequest = encoder.encode();
+                String NVPResponse = caller.call(NVPRequest);
+                decoder.decode(NVPResponse);
+            } catch (Exception e) {
+
+            }
+            String ack = decoder.get("ACK");
+//       String gatewayOrderId = decoder.get("INVNUM");
+//         String  gatewayOrderId = "77-77192";
+//         String  amount = "2829.00";
+            amount = decoder.get("AMT");
+            String merchantParam = null;
+
+            gatewayOrderId = decoder.get("INVNUM");
+
+            if (ack.equals("Success")) {
+
+                try {
+                    // our own validations
+                    paymentManager.verifyPayment(gatewayOrderId, NumberUtils.toDouble(amount), merchantParam);
+
+                    // payment callback has been verified. now see if it is successful or failed from the gateway response
+                    if (ack.equals("Success")) {
+                        paymentManager.success(gatewayOrderId);
+                        resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+//			} else if (EbsPaymentGatewayWrapper.is_Flagged_True.equalsIgnoreCase(flag_status)) {
+//				paymentManager.pendingApproval(gatewayOrderId);
+//				resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+                    } else {
+                        paymentManager.fail(gatewayOrderId);
+                        resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+                    }
+                } catch (HealthkartPaymentGatewayException e) {
+                    paymentManager.error(gatewayOrderId, e);
+                    resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
+                }
+            }
+        }
+        }
+        return resolution;
     }
+
 }

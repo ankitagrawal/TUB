@@ -107,7 +107,7 @@ public class PaymentAction extends BaseAction {
 			if (gateway != null) {
                 gateway = EnumPaymentMode.PAYPAL_CreditDebit;
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(gateway);
-				redirectResolution = new RedirectResolution(actionClass, "proceed1");
+				redirectResolution = new RedirectResolution(actionClass, "proceed");
 				return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
 						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode));
 			} else {
