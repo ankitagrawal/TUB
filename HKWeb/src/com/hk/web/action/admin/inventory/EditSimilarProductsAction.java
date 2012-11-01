@@ -80,6 +80,7 @@ public class EditSimilarProductsAction extends BaseAction {
         if (inputProduct != null && inputProduct.getId() != null) {
             similarProductsList = similarProductsDao.getSimProdsFromDB(inputProduct);
         } else {
+            similarProductsList = new ArrayList<SimilarProduct>();
             addRedirectAlertMessage(new SimpleMessage("Please enter a valid product in the text field above."));
         }
         if (similarProductsList.size() == 0) {
@@ -104,7 +105,7 @@ public class EditSimilarProductsAction extends BaseAction {
         } else {
             addRedirectAlertMessage(new SimpleMessage("Nothing to Update"));
         }
-        return new ForwardResolution("/pages/admin/addSimilarProducts.jsp");
+        return new RedirectResolution(EditSimilarProductsAction.class, "search").addParameter("inputProduct", inputProduct.getId());
     }
 
     public Resolution save() {
