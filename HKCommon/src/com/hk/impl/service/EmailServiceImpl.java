@@ -203,19 +203,20 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public void run() {
-      try {
+
         for (Map<String, HtmlEmail> emailMap : emails) {
 
           for (String emailId : emailMap.keySet()) {
             Email email = emailMap.get(emailId);
             logger.debug("sending mail : " + emailId);
-            email.send();
+              try {
+                email.send();
+              } catch (Exception e) {
+                  logger.error(String.format("Unable to send email to user %s", emailId), e);
+              }
           }
         }
-      } catch (EmailException e) {
-        logger.error("EmailException in SendEmailAsyncThread.run", e);
       }
     }
-  }
 
 }

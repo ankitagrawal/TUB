@@ -60,8 +60,8 @@
   </s:layout-component>
 
   <s:layout-component name="checkoutStep">
-    <div class='current_step_content login_page'>
-      <div class='left'>
+    <div class='current_step_content'>
+      <div class='left' style="height:300px;">
         <h3>
           Welcome to the HealthKart Family
         </h3>
@@ -78,7 +78,7 @@
         <p>Sign up to enter HealthKart'e Exclusive Business Program. In case of any queries, call us at: 0124-455 1616
            or email at: info@healthkart.com</p>
 
-        <div style="float:left; font-size: 1.2em; width: 85%; margin-top: 5px; margin-left:20px">
+        <div style="float:right; font-size: 1.2em; width: 85%; margin-top: 10px; margin-left:20px">
           <s:link beanclass="com.hk.web.action.core.b2b.B2BAction" event="goToSignUp" class="button_orange">Sign up Now!!
           </s:link>
         </div>
@@ -86,7 +86,7 @@
       </div>
       <div class='or'>
       </div>
-      <div class='right'>
+      <div class='right' style="height:300px;">
         <h3>
           Login
         </h3>
