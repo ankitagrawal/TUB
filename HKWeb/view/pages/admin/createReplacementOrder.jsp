@@ -67,7 +67,7 @@
 	     <div style="display: none;">
 		    <s:link beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="checkReplacementOrderLink"
 		            event="checkExistingReplacementOrder"></s:link>
-	    </div>
+	    </div>                                                      
         <fieldset class="right_label">
             <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
                 <label>Search Shipping Order</label>
@@ -169,6 +169,13 @@
                             </tr>
                         </c:forEach>
                     </table>
+					<s:label name="Reason for Replacement:" style="margin-left:7px;"/>
+					<s:select name="replacementOrderStatus">
+						<s:option value="-Select Status-">-Select Status-</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>"
+												   serviceProperty="replacementOrderStatusForRto" value="id"
+												   label="name"/>
+					</s:select>
                     <s:submit class="createReplacementOrderButton rto" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
@@ -206,6 +213,14 @@
                             </tr>
                         </c:forEach>
                     </table>
+	                <s:label name="Reason for Replacement:" style="margin-left:7px;"/>
+	                <s:select name="replacementOrderStatus">
+		                <s:option value="-Select Status-">-Select Status-</s:option>
+		                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+		                                           serviceProperty="replacementOrderStatusForReplacement" value="id"
+		                                           label="name"/>
+	                </s:select>
+					
                     <s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>

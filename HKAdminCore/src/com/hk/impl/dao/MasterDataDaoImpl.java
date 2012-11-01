@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.constants.shippingOrder.EnumReplacementOrderStatus;
+import com.hk.domain.order.ReplacementOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -350,5 +352,31 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
 	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
 	       return EnumPurchaseOrderStatus.getStatusForNonApprover();
+	}
+
+	public List<ReplacementOrderStatus> getReplacementOrderStatusForReplacement() {
+		List<Long> replacementOrderStatusIds = EnumReplacementOrderStatus.getStatusForReplacementOrder();
+		List<ReplacementOrderStatus> replacementOrderStatusList = new ArrayList<ReplacementOrderStatus>();
+		ReplacementOrderStatus replacementOrderStatus;
+		for(Long replacementOrderStatusId : replacementOrderStatusIds){
+			replacementOrderStatus = getBaseDao().get(ReplacementOrderStatus.class, replacementOrderStatusId);
+			if(replacementOrderStatus != null){
+				replacementOrderStatusList.add(replacementOrderStatus);
+			}
+		}
+		return replacementOrderStatusList;
+	}
+
+	public List<ReplacementOrderStatus> getReplacementOrderStatusForRto() {
+		List<Long> replacementOrderStatusIds = EnumReplacementOrderStatus.getStatusForReplacementForRTO();
+		List<ReplacementOrderStatus> replacementOrderStatusList = new ArrayList<ReplacementOrderStatus>();
+		ReplacementOrderStatus replacementOrderStatus;
+		for(Long replacementOrderStatusId : replacementOrderStatusIds){
+			replacementOrderStatus = getBaseDao().get(ReplacementOrderStatus.class, replacementOrderStatusId);
+			if(replacementOrderStatus != null){
+				replacementOrderStatusList.add(replacementOrderStatus);
+			}
+		}
+		return replacementOrderStatusList;
 	}
 }

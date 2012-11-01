@@ -9605,4 +9605,22 @@
 		</sql>
 	</changeSet>
 
+    <changeSet author="Tarun (generated)" id="1351680298096-1">
+        <createTable tableName="replacement_order_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1351680298096-2">
+        <addColumn tableName="replacement_order">
+            <column name="replacement_order_status_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1351680298096-3">
+        <addForeignKeyConstraint baseColumnNames="replacement_order_status_id" baseTableName="replacement_order" constraintName="fk_replacement_order_replacement_order_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="replacement_order_status" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

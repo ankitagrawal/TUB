@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.domain.order.ReplacementOrderStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +51,7 @@ public class ReplacementOrderAction extends BaseAction {
 	private Boolean isRto;
 	private List<LineItem> lineItems = new ArrayList<LineItem>();
 	private List<ReplacementOrder> replacementOrderList;
+	private ReplacementOrderStatus replacementOrderStatus;
 
 	@Autowired
 	private ShippingOrderService shippingOrderService;
@@ -135,7 +137,7 @@ public class ReplacementOrderAction extends BaseAction {
 			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 
-		replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto);
+		replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto, replacementOrderStatus);
 		if (replacementOrder == null) {
 			addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order."));
 			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
@@ -235,5 +237,13 @@ public class ReplacementOrderAction extends BaseAction {
 
 	public void setGatewayOrderId(String gatewayOrderId) {
 		this.gatewayOrderId = gatewayOrderId;
+	}
+
+	public ReplacementOrderStatus getReplacementOrderStatus() {
+		return replacementOrderStatus;
+	}
+
+	public void setReplacementOrderStatus(ReplacementOrderStatus replacementOrderStatus) {
+		this.replacementOrderStatus = replacementOrderStatus;
 	}
 }

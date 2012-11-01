@@ -3,6 +3,7 @@ package com.hk.admin.pact.service.shippingOrder;
 import java.util.List;
 
 import com.hk.domain.order.ReplacementOrder;
+import com.hk.domain.order.ReplacementOrderStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 
@@ -13,7 +14,7 @@ import com.hk.domain.shippingOrder.LineItem;
 
 public interface ReplacementOrderService {
 
-    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto);
+    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderStatus replacementOrderStatus);
 
 	public List<ReplacementOrder> getReplacementOrderForRefShippingOrder(Long refShippingOrderId);
 
