@@ -12,7 +12,8 @@ public enum EnumReplacementOrderStatus {
 	Damaged(10L, "Shipment was damaged"),
 	WrongDispatched(20L, "Wrong variant was sent"),
     CustomerUnavailable(30L, "Customer was not present hence shipment was RTO"),
-	WrongAddress(40L, "Shipment was RTO due to wrong address mentioned");
+	WrongAddress(40L, "RTO due to wrong address mentioned"),
+	ServiceUnavailable(50L, "RTO due to service unavailability of the courier.");
 
 
 	private String name;
@@ -40,6 +41,6 @@ public enum EnumReplacementOrderStatus {
 
 	public static List<Long> getStatusForReplacementForRTO() {
         return Arrays.asList(EnumReplacementOrderStatus.CustomerUnavailable.getId(),
-                EnumReplacementOrderStatus.WrongAddress.getId());
+                EnumReplacementOrderStatus.WrongAddress.getId(), EnumReplacementOrderStatus.ServiceUnavailable.getId());
     }
 }
