@@ -88,7 +88,7 @@ public class CourierServiceImpl implements CourierService {
         return StringUtils.isNotBlank(pin) && getCourierServiceInfoDao().isCourierServiceInfoAvailable(null, pin, false, false, true);
     }
 
-    public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+    public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping ,Boolean disabled) {
         return getCourierServiceInfoDao().getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping,null);
     }
 
