@@ -9607,7 +9607,7 @@
     <changeSet author="Rahul (generated)" id="1351679062102-3">
         <modifyDataType columnName="template_ftl" newDataType="LONGTEXT" tableName="email_campaign"/>
     </changeSet>
-	<changeSet author="Seema (generated)" id="1349781909753-2">
+	<changeSet author="Seema (generated)" id="1349781909753-4">
 		 <sql>
 			 ALTER TABLE courier MODIFY COLUMN id INT NOT NULL AUTO_INCREMENT;
 			 ALTER TABLE courier AUTO_INCREMENT=600;
