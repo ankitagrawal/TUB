@@ -156,7 +156,10 @@
                             <s:hidden name="lineItems[${lineItemCtr.index}].hkPrice" value="${lineItem.hkPrice}"/>
                             <s:hidden name="lineItems[${lineItemCtr.index}].discountOnHkPrice"
                                       value="${lineItem.discountOnHkPrice}"/>
-                            <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
+                            <s:hidden name="lineItems[${lineItemCtr.index}].rewardPoints" value="${lineItem.rewardPoints}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount" value="${lineItem.orderLevelDiscount}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].codCharges" value="${lineItem.codCharges}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges" value="${lineItem.shippingCharges}"/>
 
                             <tr>
                                 <td>${lineItemCtr.count}</td>
@@ -203,6 +206,10 @@
                             <s:hidden name="lineItems[${lineItemCtr.index}].discountOnHkPrice"
                                       value="${lineItem.discountOnHkPrice}"/>
                             <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
+	                        <s:hidden name="lineItems[${lineItemCtr.index}].rewardPoints" value="${lineItem.rewardPoints}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount" value="${lineItem.orderLevelDiscount}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].codCharges" value="${lineItem.codCharges}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges" value="${lineItem.shippingCharges}"/>
                             <tr>
                                 <td>${lineItemCtr.count}</td>
                                 <td>
