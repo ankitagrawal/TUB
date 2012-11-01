@@ -705,6 +705,16 @@ with age old remedies to help build your toddler’s immune system early.</div>
  <div class="cl"></div>
 
     <!-- Container Ends-->
+
+ <!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_floating_style addthis_counter_style" style="right:10px;top:50px;">
+<a class="addthis_button_facebook_like" fb:like:layout="box_count"></a>
+<a class="addthis_button_tweet" tw:count="vertical"></a>
+<a class="addthis_button_google_plusone" g:plusone:size="tall"></a>
+<a class="addthis_counter"></a>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-509261de45f6e306"></script>
+<!-- AddThis Button END --    >
   
 </s:layout-component>
 
