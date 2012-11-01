@@ -34,6 +34,8 @@ import com.paypal.sdk.profiles.APIProfile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Properties;
+import java.util.Map;
+import java.util.HashMap;
 import java.net.URLConnection;
 import java.net.URL;
 import java.net.MalformedURLException;
@@ -57,8 +59,6 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
     @Autowired
     EmailManager emailManager;
 
-    private static String ack1 = null;
-
 
     protected PayPalPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
 //      PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper(AppConstants.appBasePath);
@@ -81,20 +81,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String environment = properties.getProperty(PayPalPaymentGatewayWrapper.ENVIRONMENT);
 
         PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper();
-
-//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.SIGNATURE, signature);
-//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.USER, userid);
-//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.PWD, pwd);
-//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.AMT, amountStr);
-//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.VERSION, Version);
-//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.RETURNURL, linkManager.getPayPalPaymentGatewayReturnUrl());
-//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.CANCELURL, linkManager.getPayPalPaymentGatewayCancelUrl());
-//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.PAYMENTACTION, paymentAction);
-//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.METHOD, method);
-//        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.merchantTxnId, merchantTxnId);
-
-//        payPalPaymentGatewayWrapper.setGatewayUrl(properties.getProperty(payPalPaymentGatewayWrapper.merchantURLPart));
-
+        
         NVPEncoder encoder = new NVPEncoder();
         NVPDecoder decoder = new NVPDecoder();
 
@@ -156,13 +143,11 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
     @DefaultHandler
     public Resolution callback() {
-        NVPEncoder encoder = new NVPEncoder();
-        NVPEncoder encoder1 = new NVPEncoder();
-        NVPDecoder decoder = new NVPDecoder();
-        NVPDecoder decoder1 = new NVPDecoder();
-        Resolution resolution = null;
 
-        String amount = null;
+        NVPEncoder encoder = new NVPEncoder();
+        NVPDecoder decoder = new NVPDecoder();
+        Resolution resolution = null;
+        NVPCallerServices caller = null;
 
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/paypal.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
@@ -175,95 +160,67 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
         String Token = getContext().getRequest().getParameter("token");
         String payerid = getContext().getRequest().getParameter("PayerID");
-        String gatewayOrderId = null;
 
-        NVPCallerServices caller = new NVPCallerServices();
+//        caller = new NVPCallerServices();
 
-        if (ack1 == null) {
-//        String gatewayOrderId1 = decoder.get("INVNUM");
-            try {
+        try {
+            APIProfile profile = ProfileFactory.createSignatureAPIProfile();
+            caller = new NVPCallerServices();
+            profile.setAPIUsername(userid);
+            profile.setAPIPassword(pwd);
+            profile.setSignature(signature);
+            profile.setEnvironment("sandbox");
+            profile.setSubject("");
+            caller.setAPIProfile(profile);
 
-                APIProfile profile = ProfileFactory.createSignatureAPIProfile();
+            encoder.add("VERSION", Version);
+            encoder.add("METHOD", "DoExpressCheckoutPayment");
+            encoder.add("TOKEN", Token);
+            encoder.add("PAYERID", payerid);
+            encoder.add("AMT", "10.03");
+            encoder.add("PAYMENTACTION", "sale");
+            encoder.add("CURRENCYCODE", "USD");
 
-                profile.setAPIUsername(userid);
-                profile.setAPIPassword(pwd);
-                profile.setSignature(signature);
-                profile.setEnvironment("sandbox");
-                profile.setSubject("");
-                caller.setAPIProfile(profile);
+//                encoder.add("INVNUM", gatewayOrderId);
 
-                encoder1.add("VERSION", "51.0");
-                encoder1.add("METHOD", "GetExpressCheckoutDetails");
-                encoder1.add("TOKEN", Token);
+            String NVPRequest = encoder.encode();
+            String NVPResponse = caller.call(NVPRequest);
+            decoder.decode(NVPResponse);
 
-                String NVPRequest1 = encoder1.encode();
-                String NVPResponse1 = caller.call(NVPRequest1);
-                decoder1.decode(NVPResponse1);
+        } catch (Exception e) {
 
-                gatewayOrderId = decoder1.get("INVNUM");
-                amount = decoder1.get("AMT");
-                ack1 = decoder1.get("ACK");
-
-            }
-            catch (Exception e) {
-
-            }
         }
-//            encoder1.add()
-      else {
-        if (ack1.equals("Success")) {
 
+        String ack = decoder.get("ACK");
+        String amount = decoder.get("AMT");
+        String gatewayOrderId = decoder.get("INVNUM");
+        String merchantParam = null;
+
+        if (ack.equals("Success")) {
             try {
-                encoder.add("VERSION", "51.0");
-                encoder.add("METHOD", "DoExpressCheckoutPayment");
+                // our own validations
+                paymentManager.verifyPayment(gatewayOrderId, NumberUtils.toDouble(amount), merchantParam);
 
-                encoder.add("TOKEN", Token);
-                encoder.add("PAYERID", payerid);
-                encoder.add("AMT", amount);
-                encoder.add("PAYMENTACTION", "sale");
-                encoder.add("CURRENCYCODE", "USD");
-                encoder.add("INVNUM", gatewayOrderId);
-
-                String NVPRequest = encoder.encode();
-                String NVPResponse = caller.call(NVPRequest);
-                decoder.decode(NVPResponse);
-            } catch (Exception e) {
-
-            }
-            String ack = decoder.get("ACK");
-//       String gatewayOrderId = decoder.get("INVNUM");
-//         String  gatewayOrderId = "77-77192";
-//         String  amount = "2829.00";
-            amount = decoder.get("AMT");
-            String merchantParam = null;
-
-            gatewayOrderId = decoder.get("INVNUM");
-
-            if (ack.equals("Success")) {
-
-                try {
-                    // our own validations
-                    paymentManager.verifyPayment(gatewayOrderId, NumberUtils.toDouble(amount), merchantParam);
-
-                    // payment callback has been verified. now see if it is successful or failed from the gateway response
-                    if (ack.equals("Success")) {
-                        paymentManager.success(gatewayOrderId);
-                        resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+                // payment callback has been verified. now see if it is successful or failed from the gateway response
+                if (ack.equals("Success")) {
+                    paymentManager.success(gatewayOrderId);
+                    resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 //			} else if (EbsPaymentGatewayWrapper.is_Flagged_True.equalsIgnoreCase(flag_status)) {
 //				paymentManager.pendingApproval(gatewayOrderId);
 //				resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-                    } else {
-                        paymentManager.fail(gatewayOrderId);
-                        resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-                    }
-                } catch (HealthkartPaymentGatewayException e) {
-                    paymentManager.error(gatewayOrderId, e);
-                    resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
+                } else {
+                    paymentManager.fail(gatewayOrderId);
+                    resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
                 }
+            } catch (HealthkartPaymentGatewayException e) {
+                paymentManager.error(gatewayOrderId, e);
+                resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
             }
-        }
         }
         return resolution;
     }
 
+
 }
+
+
