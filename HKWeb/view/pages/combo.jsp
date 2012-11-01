@@ -221,7 +221,7 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <div class="grid_20 optionsDiv">
+                    <div class="grid_23 optionsDiv">
                         <fieldset>
                             <legend>&nbsp;&nbsp;Available Options</legend>
                             <div class="parentAvail">
@@ -615,13 +615,16 @@
         function _addToCart(res) {
             if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
                 $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
+                $('#productsInCart').html(res.data.itemsInCart);
                 $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
                 $('.progressLoader').hide();
-
+                $('.addToCartButton').remove();
+                $(".right_col").append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
                 show_message();
             } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
                 alert(res.message);
                 $('.progressLoader').hide();
+                location.reload();
             }
         }
 
@@ -750,6 +753,11 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
+        float: none;
+        display: inline-block;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        text-align:center;
     }
 
     div.arrowDiv {
@@ -788,6 +796,7 @@
         display: inline-block;
         margin-bottom: 10px;
         margin-top: 10px;
+        text-align:center;
 
         -webkit-transition-duration: 0.2s;
         -moz-transition-duration: 0.2s;
@@ -877,7 +886,7 @@
     }
 
     div.parentAvail {
-        width: 500px;
+        width: 670px;
         overflow-x: auto;
         overflow-y: hidden;
         white-space: nowrap;

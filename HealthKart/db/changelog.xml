@@ -9605,7 +9605,11 @@
 		</sql>
 	</changeSet>
 
-    <changeSet author="Tarun (generated)" id="1351680298096-1">
+    <changeSet author="Rahul (generated)" id="1351679062102-3">
+        <modifyDataType columnName="template_ftl" newDataType="LONGTEXT" tableName="email_campaign"/>
+    </changeSet>
+
+	<changeSet author="Tarun (generated)" id="1351680298096-1">
         <createTable tableName="replacement_order_status">
             <column name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
