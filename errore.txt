@@ -1,0 +1,262 @@
+Buildfile: build.xml
+
+build:
+
+prepare:
+
+prepare:
+
+prepare:
+
+prepare:
+
+prepare:
+
+build.common.jar:
+
+prepare:
+
+compile:
+    [javac] Compiling 3 source files to C:\DevProjects\rewrite\HKRejuvenate\HKCommon\build
+
+compile.groovy:
+  [groovyc] Compiling 3 source files to C:\DevProjects\rewrite\HKRejuvenate\HKCommon\build
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKCommon\src\com\hk\db\seed\courier\CourierGroupHasCourierSeedData.java
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKCommon\src\com\hk\db\seed\courier\CourierGroupSeedData.java
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKCommon\src\com\hk\db\seed\courier\CourierSeedData.java
+
+build:
+
+build-dependencies:
+
+prepare:
+
+dependencies.check:
+
+build.common:
+
+prepare:
+
+compile:
+    [javac] Compiling 3 source files to C:\DevProjects\rewrite\HKRejuvenate\HKCommon\build
+
+compile.groovy:
+  [groovyc] Compiling 3 source files to C:\DevProjects\rewrite\HKRejuvenate\HKCommon\build
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKCommon\src\com\hk\db\seed\courier\CourierGroupHasCourierSeedData.java
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKCommon\src\com\hk\db\seed\courier\CourierGroupSeedData.java
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKCommon\src\com\hk\db\seed\courier\CourierSeedData.java
+
+build:
+
+build.dependencies:
+
+compile:
+
+build:
+
+prepare:
+
+compile.groovy:
+
+dependencies.check:
+
+build.core:
+
+build.dependencies:
+
+compile:
+
+build:
+
+prepare:
+
+dependencies.check:
+
+build.core:
+
+build.dependencies:
+
+compile:
+
+build:
+
+prepare:
+
+dependencies.check:
+
+build.common:
+
+build.core:
+
+build.admin.core:
+
+build.report:
+
+build.dependencies:
+
+copyresources:
+
+compile:
+    [javac] Compiling 298 source files to C:\DevProjects\rewrite\HKRejuvenate\HKWeb\build
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\shipment\ShipmentCostCalculatorAction.java:161: getCouriers(java.util.List<java.lang.Long>,java.util.List<java.lang.String>,java.lang.Boolean) in com.hk.admin.pact.dao.courier.CourierDao cannot be applied to (<nulltype>,boolean)
+    [javac]             courierList = courierDao.getCouriers(null,false);
+    [javac]                                     ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\subscription\SearchSubscriptionAction.java:79: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.subscription.Subscription>
+    [javac]         subscriptionList = subscriptionPage.getList();
+    [javac]                                                    ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\ticket\SearchTicketAction.java:75: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.Ticket>
+    [javac]         ticketList = ticketPage.getList();
+    [javac]                                        ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\user\PendingRewardPointQueueAction.java:58: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.offer.rewardPoint.RewardPoint>
+    [javac]             rewardPointList = rewardPointPage.getList();
+    [javac]                                                      ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\user\SearchUserAction.java:58: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.user.User>
+    [javac]     userList = userPage.getList();
+    [javac]                                ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\affiliate\AffiliateInsightsAction.java:62: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.affiliate.AffiliateTxn>
+    [javac]                 affiliateTxnOrdersList = affiliateTxnPage.getList();
+    [javac]                                                                  ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\affiliate\AffiliatePaymentAction.java:85: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.affiliate.Affiliate>
+    [javac] 			affiliates = affiliatePage.getList();
+    [javac] 			                                  ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\affiliate\AffiliatePaymentAction.java:105: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.affiliate.Affiliate>
+    [javac] 			affiliates = affiliatePage.getList();
+    [javac] 			                                  ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\affiliate\AffiliateStatisticsAction.java:64: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.affiliate.AffiliateTrafficDetails>
+    [javac]                 affiliateTrafficDetails = affiliateTrafficDetailsPage.getList();
+    [javac]                                                                              ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\affiliate\SearchAffiliateAction.java:51: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.affiliate.Affiliate>
+    [javac] 		affiliates = affiliatePage != null ? affiliatePage.getList() : null;
+    [javac] 		                                   ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\cart\AddToCartWithLineItemConfigAction.java:149: warning: [deprecation] getExclusivelyProductCartLineItems() in com.hk.domain.order.Order has been deprecated
+    [javac]         Long itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
+    [javac]                                              ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\cart\AddToCartWithLineItemConfigAction.java:149: warning: [deprecation] getExclusivelyComboCartLineItems() in com.hk.domain.order.Order has been deprecated
+    [javac]         Long itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
+    [javac]                                                                                                  ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\cart\AddToCartWithLineItemConfigAction.java:217: warning: [unchecked] unchecked cast
+    [javac] found   : java.lang.Object
+    [javac] required: java.util.List<com.hk.report.dto.order.LineItemConfigValuesDTO>
+    [javac]             List<LineItemConfigValuesDTO> lineItemConfigValuesDTOs = (List<LineItemConfigValuesDTO>)obj;
+    [javac]                                                                                                     ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\cart\CartAction.java:135: warning: [deprecation] getExclusivelyProductCartLineItems() in com.hk.domain.order.Order has been deprecated
+    [javac]                 itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
+    [javac]                                                 ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\cart\CartAction.java:135: warning: [deprecation] getExclusivelyComboCartLineItems() in com.hk.domain.order.Order has been deprecated
+    [javac]                 itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
+    [javac]                                                                                                     ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\cart\CartAction.java:194: warning: [deprecation] getExclusivelyProductCartLineItems() in com.hk.domain.order.Order has been deprecated
+    [javac]                         itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
+    [javac]                                                         ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\cart\CartAction.java:194: warning: [deprecation] getExclusivelyComboCartLineItems() in com.hk.domain.order.Order has been deprecated
+    [javac]                         itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
+    [javac]                                                                                                             ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\catalog\BrandCatalogAction.java:110: warning: [deprecation] decode(java.lang.String) in java.net.URLDecoder has been deprecated
+    [javac] 			  SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
+    [javac] 			                                                                                    ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\catalog\BrandCatalogAction.java:115: warning: [deprecation] decode(java.lang.String) in java.net.URLDecoder has been deprecated
+    [javac] 			  productPage = productDao.getProductByCategoryAndBrand(categoryNames, URLDecoder.decode(brand),onlyCOD, includeCombo, getPageNo(), getPerPage());
+    [javac] 			                                                                                 ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\catalog\BrandCatalogAction.java:118: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.catalog.product.Product>
+    [javac] 			  productList = productPage.getList();
+    [javac] 			                                   ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\catalog\SuperSaversAction.java:35: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.catalog.product.combo.SuperSaverImage>
+    [javac]         superSaverImages = superSaverPage.getList();
+    [javac]                                                  ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\catalog\image\UploadSuperSaverImageAction.java:99: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.catalog.product.combo.SuperSaverImage>
+    [javac]         superSaverImages = superSaverPage.getList();
+    [javac]                                                  ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\catalog\image\UploadSuperSaverImageAction.java:118: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.catalog.product.combo.SuperSaverImage>
+    [javac]                     superSaverImages = superSaverPage.getList();
+    [javac]                                                              ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\catalog\image\UploadSuperSaverImageAction.java:135: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.catalog.product.combo.SuperSaverImage>
+    [javac]         superSaverImages = superSaverPage.getList();
+    [javac]                                                  ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\catalog\product\ProductAction.java:208: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.review.UserReview>
+    [javac]                 userReviews = userReviewPage.getList();
+    [javac]                                                     ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\catalog\product\ProductReviewAction.java:57: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.review.UserReview>
+    [javac] 			productReviews = productReviewPage.getList();
+    [javac] 			                                          ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\payment\CodPaymentReceiveAction.java:103: warning: [deprecation] getIsExclusivelyServiceOrder() in com.hk.domain.order.Order has been deprecated
+    [javac] 			} else if (order.getIsExclusivelyServiceOrder()) {
+    [javac] 			                ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\payment\CodPaymentReceiveAction.java:106: warning: [deprecation] getContainsServices() in com.hk.domain.order.Order has been deprecated
+    [javac] 			} else if (order.getContainsServices()) {
+    [javac] 			                ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\payment\gateway\EbsSendReceiveAction.java:134: warning: [deprecation] readLine() in java.io.DataInputStream has been deprecated
+    [javac] 			recvString1 = dataIn.readLine();
+    [javac] 			                    ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\payment\gateway\EbsSendReceiveAction.java:144: warning: [deprecation] readLine() in java.io.DataInputStream has been deprecated
+    [javac] 				recvString1 = dataIn.readLine();
+    [javac] 				                    ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\search\SearchAction.java:81: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.catalog.product.Product>
+    [javac] 				productList = productPage.getList();
+    [javac] 				                                 ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\search\SearchAction.java:89: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.catalog.product.Product>
+    [javac] 				productList = productPage.getList();
+    [javac] 				                                 ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\user\CustomerOrderHistoryAction.java:35: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.order.Order>
+    [javac]       orderList = orderPage.getList();
+    [javac]                                    ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\core\user\CustomerSubscriptionHistoryAction.java:41: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.subscription.Subscription>
+    [javac]             subscriptionList = subscriptionPage.getList();
+    [javac]                                                        ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\facebook\app\coupon\FanCouponClaimAction.java:79: warning: [unchecked] unchecked call to put(K,V) as a member of the raw type java.util.Map
+    [javac]       dataMap.put("coupon", fbcouponUserCampaign.getFbcouponCoupon().getCoupon());
+    [javac]                  ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\facebook\app\coupon\FanCouponClaimAction.java:80: warning: [unchecked] unchecked call to put(K,V) as a member of the raw type java.util.Map
+    [javac]       dataMap.put("shared", fbcouponUserCampaign.getShared());
+    [javac]                  ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\faq\FaqAction.java:54: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.faq.Faq>
+    [javac]             faqList = faqPage.getList();
+    [javac]                                      ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\faq\FaqAction.java:57: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.faq.Faq>
+    [javac]             faqList = faqPage.getList();
+    [javac]                                      ^
+    [javac] 1 error
+    [javac] 37 warnings
