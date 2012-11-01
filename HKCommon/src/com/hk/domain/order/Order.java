@@ -328,7 +328,7 @@ public class Order implements java.io.Serializable {
         Set<CartLineItem> cartLineItemList = new HashSet<CartLineItem>(0);
         for (CartLineItem cartLineItem : this.getProductCartLineItems()) {
             if (cartLineItem.getComboInstance() != null) {
-                if (cartLineItemList!=null && cartLineItemList.size()!=0 && cartLineItemList.contains(cartLineItem)) {
+                if (cartLineItemList!=null && cartLineItemList.size()!=0 && !cartLineItemList.contains(cartLineItem)) {
                     cartLineItemList.add(cartLineItem);
                 }
             }
