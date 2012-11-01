@@ -64,7 +64,7 @@ public class CourierServiceImpl implements CourierService {
         } else if (order.getPayment().getPaymentMode().equals(getPaymentService().findPaymentMode(EnumPaymentMode.COD))) {
             isCOD = true;
         }
-        return getCourierServiceInfoDao().searchCouriers(order.getAddress().getPin(), isCOD, false, false , true);
+        return getCourierServiceInfoDao().searchCouriers(order.getAddress().getPin(), isCOD, false, false , false);
     }
 
     public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping , Boolean disabled) {
