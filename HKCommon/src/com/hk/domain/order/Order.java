@@ -324,14 +324,12 @@ public class Order implements java.io.Serializable {
     }
 
     @Deprecated
-    public List<CartLineItem> getExclusivelyComboCartLineItems() {
-        List<CartLineItem> cartLineItemList = new ArrayList<CartLineItem>();
-        Long oldComboInstanceId = null;
+    public Set<CartLineItem> getExclusivelyComboCartLineItems() {
+        Set<CartLineItem> cartLineItemList = new HashSet<CartLineItem>(0);
         for (CartLineItem cartLineItem : this.getProductCartLineItems()) {
             if (cartLineItem.getComboInstance() != null) {
-                if (oldComboInstanceId == null || oldComboInstanceId != cartLineItem.getComboInstance().getId()) {
+                if (cartLineItemList!=null && cartLineItemList.size()!=0 && cartLineItemList.contains(cartLineItem)) {
                     cartLineItemList.add(cartLineItem);
-                    oldComboInstanceId = cartLineItem.getComboInstance().getId();
                 }
             }
         }
