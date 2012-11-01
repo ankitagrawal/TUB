@@ -9623,7 +9623,7 @@
 	 <changeSet author="Seema (generated)" id="1349781909753-2">
 		 <sql>
 			update courier set `disabled` = 1;
-			update courier set `disabled` = 0 where `id` in (11,13,12,30,40,41,190,195,60,70,71,170,180,500,600,610);
+			update courier set `disabled` = 0 where `id` in (10,11,13,12,30,40,41,190,195,60,70,71,170,180,500,600,610);
 		 </sql>
 		   </changeSet>
     <changeSet author="Seema (generated)" id="1349782838900-1">
