@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.FormatUtils;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.payment.CurrencyConverter;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.payment.PaymentDao;
 
@@ -37,5 +38,10 @@ public class PaymentDaoImpl extends BaseDaoImpl implements PaymentDao {
         // noinspection unchecked
         return (List<Payment>) getSession().createQuery("from Payment p where p.order.id = :orderId").setLong("orderId", orderId).list();
     }
+
+
+//    public CurrencyConverter findLatestConversionRate (String baseCurrencyCode , String foreigncurrencycode ){
+//
+//    }
 
 }

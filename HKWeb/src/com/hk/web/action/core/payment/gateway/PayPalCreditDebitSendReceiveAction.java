@@ -67,8 +67,14 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         User user = order.getUser();
         Address address = order.getAddress();
         String merchantTxnId = data.getGatewayOrderId();
-        String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
-//        String amountStr = "10.10";
+//        String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
+
+        // conversion logic
+        Double coversion_rate = 55.05;
+        Double coverted_amount = data.getAmount()/coversion_rate ;
+        String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(coverted_amount);
+
+        //  Reading property files
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/paypal.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
         String userid = properties.getProperty(PayPalPaymentGatewayWrapper.USER);
@@ -80,8 +86,10 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String method = properties.getProperty(PayPalPaymentGatewayWrapper.METHOD);
         String environment = properties.getProperty(PayPalPaymentGatewayWrapper.ENVIRONMENT);
 
+//  appending gateway and amount in return url      
+        String return_url = linkManager.getPayPalPaymentGatewayReturnUrl() + "?gateway=" + merchantTxnId + "&amount=" + amountStr;
+
         PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper();
-        
         NVPEncoder encoder = new NVPEncoder();
         NVPDecoder decoder = new NVPDecoder();
 
@@ -90,22 +98,27 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             NVPCallerServices caller = new NVPCallerServices();
             APIProfile profile = ProfileFactory.createSignatureAPIProfile();
 
+//    setting up profile           
             profile.setAPIUsername(userid);
             profile.setAPIPassword(pwd);
             profile.setSignature(signature);
             profile.setEnvironment(environment);
             profile.setSubject("");
             caller.setAPIProfile(profile);
+
             encoder.add("VERSION", Version);
             encoder.add("METHOD", "SetExpressCheckout");
-
-            // Add request-specific fields to the request string.
-            encoder.add("RETURNURL", linkManager.getPayPalPaymentGatewayReturnUrl());
+            encoder.add("RETURNURL", return_url);
             encoder.add("CANCELURL", linkManager.getPayPalPaymentGatewayCancelUrl());
             encoder.add("AMT", amountStr);
             encoder.add("PAYMENTACTION", "sale");
             encoder.add("CURRENCYCODE", "USD");
-            encoder.add("INVNUM", merchantTxnId);
+
+            encoder.add("ITEMAMT",amountStr);
+
+            encoder.add("SOLUTIONTYPE", "Sole");
+//            SOLUTIONTYPE= Sole
+
 
             // Execute the API operation and obtain the response.
             String NVPRequest = encoder.encode();
@@ -122,11 +135,11 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String Token = decoder.get("TOKEN");
         String CORRELATIONID = decoder.get("CORRELATIONID");
 
-
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.ACK, ack);
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.TOKEN, Token);
-        payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.CORRELATIONID, CORRELATIONID);
-
+        /*
+            payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.ACK, ack);
+            payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.TOKEN, Token);
+            payPalPaymentGatewayWrapper.addParameter(PayPalPaymentGatewayWrapper.CORRELATIONID, CORRELATIONID);
+        */
 
         try {
             if (ack.equals("Success")) {
@@ -136,7 +149,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         } catch (Exception e1) {
 //                logger.info("exception", e1);
         }
-        logger.info("sending to payment gateway paypal for gateway order id " + merchantTxnId + "and amount " + amountStr);
+        logger.info("sending to payment gateway paypal for gateway order id " + merchantTxnId + "and amount " + amountStr + "and correlation id" + CORRELATIONID );
         return payPalPaymentGatewayWrapper;
     }
 
@@ -158,10 +171,11 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String Version = properties.getProperty(PayPalPaymentGatewayWrapper.VERSION);
         String paymentAction = properties.getProperty(PayPalPaymentGatewayWrapper.PAYMENTACTION);
 
+        // Retrieving the mandatory fields
         String Token = getContext().getRequest().getParameter("token");
         String payerid = getContext().getRequest().getParameter("PayerID");
-
-//        caller = new NVPCallerServices();
+        String gatewayOrderId = getContext().getRequest().getParameter("gateway");
+        String amount_1 = getContext().getRequest().getParameter("amount");
 
         try {
             APIProfile profile = ProfileFactory.createSignatureAPIProfile();
@@ -176,13 +190,10 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             encoder.add("VERSION", Version);
             encoder.add("METHOD", "DoExpressCheckoutPayment");
             encoder.add("TOKEN", Token);
-            encoder.add("PAYERID", payerid);
-            encoder.add("AMT", "10.03");
+            encoder.add("PAYERID", payerid); ;
             encoder.add("PAYMENTACTION", "sale");
             encoder.add("CURRENCYCODE", "USD");
-
-//                encoder.add("INVNUM", gatewayOrderId);
-
+            encoder.add("AMT", amount_1);
             String NVPRequest = encoder.encode();
             String NVPResponse = caller.call(NVPRequest);
             decoder.decode(NVPResponse);
@@ -193,13 +204,17 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
         String ack = decoder.get("ACK");
         String amount = decoder.get("AMT");
-        String gatewayOrderId = decoder.get("INVNUM");
         String merchantParam = null;
+
+
+        Double amount_in_rupee = NumberUtils.toDouble(amount)*55.05;
+
 
         if (ack.equals("Success")) {
             try {
                 // our own validations
-                paymentManager.verifyPayment(gatewayOrderId, NumberUtils.toDouble(amount), merchantParam);
+//                paymentManager.verifyPayment(gatewayOrderId, NumberUtils.toDouble(amount), merchantParam);
+                  paymentManager.verifyPayment(gatewayOrderId, amount_in_rupee, merchantParam);
 
                 // payment callback has been verified. now see if it is successful or failed from the gateway response
                 if (ack.equals("Success")) {
