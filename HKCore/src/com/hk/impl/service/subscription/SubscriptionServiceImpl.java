@@ -5,6 +5,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +48,8 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     private SubscriptionStatusService subscriptionStatusService;
     @Autowired
     private EmailManager emailManager;
+    @Autowired
+    private BaseDao baseDao;
 
     @Transactional
     public Subscription save(Subscription subscription){
@@ -192,6 +198,20 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         if(totalQty<=qtyDelivered){
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Expired.asSubscriptionStatus());
             subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.SubscriptionExpired, "Subscription marked as expired");
+          Order order=subscription.getBaseOrder();
+          boolean parentBOHasProducts=false;
+                if(order.getOrderStatus().getId().equals(EnumOrderStatus.InProcess.getId())||order.getOrderStatus().getId().equals(EnumOrderStatus.Placed.getId())){
+                  for(CartLineItem  cartLineItem : order.getCartLineItems()){
+                    if(cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())){
+                      parentBOHasProducts=true;
+                      break;
+                    }
+                  }
+                  if(!parentBOHasProducts){
+                    order.setOrderStatus(EnumOrderStatus.Delivered.asOrderStatus());
+                    baseDao.save(order);
+                  }
+                }
         }else{
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Idle.asSubscriptionStatus());
             Calendar c = Calendar.getInstance();
