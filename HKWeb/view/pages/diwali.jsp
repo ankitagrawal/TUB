@@ -96,172 +96,10 @@
 
 <s:layout-component name="content">
 <div class="outer">
-  <div class="down"><img src="${pageContext.request.contextPath}/images/diwali2012/be-the-festival.jpg" alt="Be The Festival" border="0" /></div>
-  <div class="cl"></div>
-  
-  <h2>Gift Ideas for your gracefully matured loved ones</h2>
-    <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
-    <h3><a href="http://www.healthkart.com/product/karma-walking-stick-ws-131/KARM010" target="_blank">Karma Walking Stick WS-131</a></h3>
-    <div class="down">
-    	<div class="proImage" style="padding:0px 30px 0px 100px;"><a href="http://www.healthkart.com/product/karma-walking-stick-ws-131/KARM010" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/karma-walking-stick.jpg" alt="Karma Walking Stick" border="0" /></a></div>
-    	<div class="proData" style="width:450px; padding-top:10px;">
-        	<div class="txt" style="padding-bottom:30px;">A perfect companion for those long walks, Karma walking stick is strong and durable.
-But it’s not just that, it folds nice and easy, and is extremely light because of its special plastic composite.</div>
-            <div class="btmBrdr" style="width:400px; clear:both;">&nbsp;</div>
+	<div class="down"><img src="${pageContext.request.contextPath}/images/diwali2012/be-the-festival.jpg" alt="Be The Festival" border="0" /></div>
+  	<div class="down">&nbsp;</div>
 
-          <div class="price1" style="width:170px;">Rs.512<br />
-          <span>20% off</span>
-          </div>
-
-          <div class="buyTxt" style="margin-right:50px;"><a href="http://www.healthkart.com/product/karma-walking-stick-ws-131/KARM010" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-      </div>
-  </div>
-    <div class="down">&nbsp;</div>
-    <h3><a href="http://www.healthkart.com/product/aasaan-senior-mobile-phone/MOB001" target="_blank">Aasaan Senior Mobile Phone</a></h3>
-    <div class="down">
-  	  <div class="proData" style="width:400px; padding:10px 0px 0px 150px;">
-        	<div class="txt" align="right" style="padding-bottom:30px;">A rugged phone with a big numberpad, the Aasan phone from iBall is ideal for those
-who find it difficult to see or are easily overwhelmed by technology. A perfect example of calling made easy.</div>
-            <div class="btmBrdr" style="width:380px; float:right;">&nbsp;</div>
-
-            <div class="price1">Rs.2,700<br />
-            <span>10% off</span></div>
-            <div class="buyTxt" style="margin-right:20px;"><a href="http://www.healthkart.com/product/aasaan-senior-mobile-phone/MOB001" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-      </div>
-    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/aasaan-senior-mobile-phone/MOB001" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/aasaan-senior-mobile-phone.jpg" alt="Aasaan Senior Mobile Phone" border="0"/></a></div>
-  </div>
-    <div class="down" style="height:50px;">&nbsp;</div>
-    <h2>Ideas for those little devils in the house</h2>
-    <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
-  <h3><a href="http://www.healthkart.com/product/kindergarten-bag-of-goodies/CMB-BAB0356" target="_blank">Kindergarten Bag of Goodies</a></h3>
-    <div class="down">
-    	<div class="proImage" style="padding:7px 20px 0px 50px;"><a href="http://www.healthkart.com/product/kindergarten-bag-of-goodies/CMB-BAB0356" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/kindergarten-bag-of-goodies.jpg" alt="Kindergarten Bag of Goodies" border="0"/></a></div>
-   	  <div class="proData" style="width:440px; padding-top:10px;">
-        	<div class="txt" style="padding-bottom:30px;">A Smash <strong><i>‘rubbish free’</i></strong> lunchbox, a Smash 3D Hippo School Bag and Chhota Bheem Vol.61 ‘The Hiding Game’ is waiting to be picked up. This is all your little devil needs for a little picnic under the tree.</div>
-            <div class="btmBrdr" style="width:400px;">&nbsp;</div>
-
-            <div class="price1" style="width:160px;">Rs.749 <br /><span>40% off</span>
-            </div>
-            <div class="buyTxt" style="margin-right:60px;"><a href="http://www.healthkart.com/product/kindergarten-bag-of-goodies/CMB-BAB0356" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-        </div>
- 	</div>
-    <div class="down">&nbsp;</div>
-  <h3><a href="http://www.healthkart.com/product/johnson-s-baby-care-collection-5/BAB128" target="_blank">Johnson's Baby Care Collection</a></h3>
-    <div class="down">
-  	 	<div class="proData" style="width:400px; padding:10px 0px 0px 120px;">
-        	<div class="txt" align="right" style="padding-bottom:10px;">The Johnson's Baby Care Collection is a simple solution to all your baby’s bathing and grooming needs. This convenient combo pack has Johnson's Baby Powder, Johnson's No More Tear Shampoo, Baby Lotion, Baby Cream, Hair Oil, Baby Oil,
-Baby Soap, Buds, DVD and Booklet.</div>
-            <div class="btmBrdr" style="width:380px; float:right;">&nbsp;</div>
-
-            <div class="price1" style="width:160px">Rs.495<br />
-            	<span>1% off</span>
-            </div>
-            <div class="buyTxt"><a href="http://www.healthkart.com/product/johnson-s-baby-care-collection-5/BAB128" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-      </div>
-    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/johnson-s-baby-care-collection-5/BAB128" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/johnsons-baby-care-collection.jpg" alt="Johnson's Baby Care Collection" border="0"/></a></div>
-  	</div>
-    <div class="down">&nbsp;</div>
-  <h3><a href="http://www.healthkart.com/product/baby-feeding-hygeine-essentials/CMB-BAB0355" target="_blank">Baby Feeding Hygeine Essentials</a></h3>
-    <div class="down">
-   	  <div class="proImage" style="padding:0px 0px 0px 30px;"><a href="http://www.healthkart.com/product/baby-feeding-hygeine-essentials/CMB-BAB0355" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/baby-feeding-hygeine-essentials.jpg" alt="Baby Feeding Hygeine Essentials" border="0" /></a></div>
-    	<div class="proData" style="width:450px; padding-top:10px;">
-        	<div class="txt" style="padding-bottom:30px;">Pigeon Bottle & Nipple Brush with Pigeon Bottle Nipple & Vegetable's Cleanser Liquid
-and Mee Mee Baby Wrapper/Blanket. A great combo to keep your little devil safe and warm.</div>
-            <div class="btmBrdr" style="width:400px;">&nbsp;</div>
-
-            <div class="price1" style="width:160px;">Rs.489<br />
-            	<span>15% off</span></div>
-            <div class="buyTxt" style="margin-right:50px;"><a href="http://www.healthkart.com/product/baby-feeding-hygeine-essentials/CMB-BAB0355" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-        </div>
- 	</div>
-    <div class="down" style="height:50px;">&nbsp;</div>
-  <h2>Ideas for expecting Mommies who need all the care</h2>
-  <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
-  <h3><a href="http://www.healthkart.com/product/pigeon-maternity-adjustable-belt/BAB1801" target="_blank">Maternity Adjustable Belt</a></h3>
-    <div class="down">
-  	 	<div class="proData" style="width:450px; padding:10px 10px 0px 80px;">
-        	<div class="txt" align="right" style="padding-bottom:30px;">In the second trimester, it becomes difficult to support the abdomen region because of the additional weight of the baby. Pigeon Maternity Adjustable Belt has been specially designed to provide extra support
-during those crucial months so that you can get the required amount of stability and safety.</div>
-            <div class="btmBrdr" style="width:430px; float:right;">&nbsp;</div>
-
-            <div class="price1">Rs.1,256<br />
-            	<span>10% off</span></div>
-            <div class="buyTxt"><a href="http://www.healthkart.com/product/pigeon-maternity-adjustable-belt/BAB1801" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-      </div>
-    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/pigeon-maternity-adjustable-belt/BAB1801" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/maternity-adjustable-belt.jpg" alt="Maternity Adjustable Belt" border="0"/></a></div>
-  	</div>
-  <div class="down" style="height:70px;">&nbsp;</div>
-  <h2>Ideas for a Diwali full of vitality</h2>
-  <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
-  <h3><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB100" target="_blank">Healthier, Glowing Skin and Hair</a></h3>
-    <div class="down">
-   	  <div class="proImage" style="padding:0px 20px 0px 30px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB100" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/healthier-glowing-skin-and-hair.jpg" alt="Healthier Glowing Skin and Hair" border="0" /></a></div>
-    	<div class="proData" style="width:450px; padding-top:10px;">
-        	<div class="txt" style="padding-bottom:30px;">Nature's Bounty Hair, Skin and Nails, Organic India Original Tulsi Tea & Vista Nutritions Vitamin-E tablets together make a great idea to get your hair and skin glow all the more. Do it the organic way and keep yourself healthy for long.</div>
-            <div class="btmBrdr" style="width:420px;">&nbsp;</div>
-
-            <div class="price1">Rs.1,499<br />
-            	<span>14% off</span>
-            </div>
-            <div class="buyTxt" style="margin-right:40px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB100" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-        </div>
- 	</div>
-    <div class="down">&nbsp;</div>
-    <h3><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB99" target="_blank">Complete Family Multivitamin Kit</a></h3>
-    <div class="down">
-  	 	<div class="proData" style="width:400px; padding:10px 0px 0px 120px;">
-        	<div class="txt" align="right" style="padding-bottom:30px;">Even if you eat healthy, it's likely you're still not getting all the vitamins and minerals your body requires. Here’s an idea for taking care of that. Supractiv Complete Man, Organic India Women's Well Being Capsules & Revital Senior.</div>
-            <div class="btmBrdr" style="width:370px; float:right;">&nbsp;</div>
-
-            <div class="price1" style="width:180px;">Rs.500<br />
-            	<span>14% off</span>
-            </div>
-            <div class="buyTxt" style="margin-right:10px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB99" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-      </div>
-    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB99" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/complete-family-multivitamin-kit.jpg" alt="Complete Family Multivitamin Kit" border="0"/></a></div>
-  	</div>
-    <div class="down">&nbsp;</div>
-    <h3><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB98" target="_blank">The Healthier Breakfast Set</a></h3>
-    <div class="down">
-   	  <div class="proImage" style="padding:0px 20px 0px 50px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB98" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/the-healthier-breakfast-set.jpg" alt="The Healthier Breakfast Set" border="0" /></a></div>
-    	<div class="proData" style="width:450px; padding-top:10px;">
-        	<div class="txt" style="padding-bottom:30px;">Twinings English Breakfast Tea, GAIA Muesli Fruit & Nut and Nourish Organic Honey Roasted
-Almonds make the most important meal of the day a healthier one. A great idea to go along with the fresh fruits you take after your morning jog!</div>
-            <div class="btmBrdr" style="width:430px;">&nbsp;</div>
-
-            <div class="price1">Rs.1,000<br />
-            <span>9% off</span></div>
-            <div class="buyTxt"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB98" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-        </div>
- 	</div>
-    <div class="down">&nbsp;</div>
-    <div class="down">&nbsp;</div>
-    <h3><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB97" target="_blank">Tea Time for Healthy Toddlers?</a></h3>
-    <div class="down">
-  	 	<div class="proData" style="width:450px; padding:10px 0px 0px 50px;">
-        	<div class="txt" align="right" style="padding-bottom:30px;">Good things come in small bags this time. Tea bags, to be precise. Traditional Medicinals Tummy Comfort herbal tea, Traditional Medicinals Throat Coat herbal tea &Traditional Medicinals Cold Care herbal tea come packed
-with age old remedies to help build your toddler’s immune system early.</div>
-            <div class="btmBrdr" style="width:410px; float:right;">&nbsp;</div>
-
-            <div class="price1" style="margin-left:10px;">Rs.1501<br />
-            <span>13% off</span>
-            </div>
-            <div class="buyTxt"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB97" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-      </div>
-    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB97" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/tea-time-for-healthy-toddlers.jpg" alt="Tea Time For Healthy Toddlers" border="0"/></a></div>
-  	</div>
-    <div class="down" style="height:70px;">&nbsp;</div>
-  <h2>Ideas for a Stylish Diwali</h2>
+  	<h2>Ideas for a Stylish Diwali</h2>
   <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
   <h3><a href="http://www.healthkart.com/product/it-takes-two-to-tango!/CMB-EYE101" target="_blank">It takes Two to Tango!</a></h3>
     <div class="down">
@@ -273,7 +111,7 @@ for men.</div>
 
             <div class="price1">Rs.1,395<br />
             	<span>70% off</span>
-             </div>
+          </div>
             <div class="buyTxt" style="margin-right:50px;"><a href="http://www.healthkart.com/product/it-takes-two-to-tango!/CMB-EYE101" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
         </div>
@@ -339,22 +177,6 @@ for men on the go.</div>
         </div>
  	</div>
     <div class="down">&nbsp;</div>
-  <%--<h3><a href="http://www.healthkart.com/product/denim-after-shave-lotion/VAADI61" target="_blank">Back to Nature with Vaadi Herbals</a></h3>--%>
-    <%--<div class="down">--%>
- 	  	<%--<div class="proData" style="width:450px; padding:10px 0px 0px 60px;">--%>
-        	<%--<div class="txt" align="right" style="padding-bottom:30px;">An assortment of bath and body care products from Vaadi, made from exotic herbs,--%>
-<%--fruits, and flowers. There is a little magic in each!</div>--%>
-            <%--<div class="btmBrdr" style="width:380px; float:right;">&nbsp;</div>--%>
-
-            <%--<div class="price1" style="margin-left:20px;">Rs.319--%>
-
-            <%--</div>--%>
-            <%--<div class="buyTxt" style="margin-right:0px;"><a href="http://www.healthkart.com/product/denim-after-shave-lotion/VAADI61" target="_blank">buy this now</a></div>--%>
-            <%--<div class="clr">&nbsp;</div>--%>
-      <%--</div>--%>
-    	<%--<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/denim-after-shave-lotion/VAADI61" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/back-to-nature-with-vaadi-herbals.jpg" alt="Back to Nature with Vaadi Herbals" border="0"/></a></div>--%>
-  	<%--</div>--%>
-    <%--<div class="down">&nbsp;</div>--%>
   <h3><a href="http://www.healthkart.com/product/maybelline-combo-for-women/RKHCMB7" target="_blank">Maybelline Party All Night Set</a></h3>
     <div class="down">
    	  <div class="proImage" style="padding:10px 20px 0px 70px;"><a href="http://www.healthkart.com/product/maybelline-combo-for-women/RKHCMB7" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/maybelline-party-all-night-set.jpg" alt="Maybelline Party All Night Set" border="0" /></a></div>
@@ -367,7 +189,7 @@ for men on the go.</div>
             </div>
             <div class="buyTxt"><a href="http://www.healthkart.com/product/maybelline-combo-for-women/RKHCMB7" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
-        </div>
+      </div>
  	</div>
     <div class="down">&nbsp;</div>
   <h3><a href="http://www.healthkart.com/product/manufaktura-mojito-home-perfume/MNFCR39" target="_blank">From the Czech Republic, with Love</a></h3>
@@ -396,11 +218,12 @@ pleasant smell. It is a mixture of natural fruit extracts, including Lemon, Berg
             <div class="clr">&nbsp;</div>
         </div>
  	</div>
-  <div class="down" style="height:50px;">&nbsp;</div>
+  <div class="down" style="height:30px;">&nbsp;</div>
+
   <h2>Ideas for a fitter Diwali</h2>
   <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
   	<h3><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2500" target="_blank">A Beautiful Kit for the Beautiful Game</a></h3>
-    <div class="down">
+  <div class="down">
    	  <div class="proImage" style="padding:10px 20px 0px 50px;"><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2500" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/a-beautiful-kit-for-the-beautiful-game.jpg" alt="A Beautiful Kit for the Beautiful Game" border="0" /></a></div>
    	  <div class="proData" style="width:430px; padding-top:15px;">
         	<div class="txt" style="padding-bottom:30px;">Kipsta F500 Football with VX Destiny Football Shoes. A great pair to get intimate with the greatest game ever.</div>
@@ -411,9 +234,8 @@ pleasant smell. It is a mixture of natural fruit extracts, including Lemon, Berg
             </div>
             <div class="buyTxt"><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2500" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
-        </div>
+    </div>
  	</div>
-    <div class="down">&nbsp;</div>
     <div class="down">&nbsp;</div>
   <h3><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2507" target="_blank">Workout In Style</a></h3>
     <div class="down">
@@ -421,8 +243,8 @@ pleasant smell. It is a mixture of natural fruit extracts, including Lemon, Berg
         	<div class="txt" align="right" style="padding-bottom:30px;">Adidas Training Gloves (Velcro Closure-Red Line) along with Invincible T-11 T Shirt and Invincible G-105 Shorts. A gear with zero compromise on performance or on style.</div>
             <div class="btmBrdr" style="width:410px; float:right;">&nbsp;</div>
 
-            <div class="price1" style="margin-left:20px;">Rs.2,239<br />
-            	<span>30% off</span>
+            <div class="price1" style="margin-left:20px;">Rs.2,240<br />
+            	<span>41% off</span>
             </div>
             <div class="buyTxt" style="margin-right:10px;"><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2507" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
@@ -438,15 +260,15 @@ pleasant smell. It is a mixture of natural fruit extracts, including Lemon, Berg
 and portable Tunturi Doorway Chinning Bar.</div>
             <div class="btmBrdr" style="width:420px;">&nbsp;</div>
 
-            <div class="price1">Rs.3,871<br />
-            	<span>30% off</span>
+            <div class="price1">Rs.3,861<br />
+            	<span>37% off</span>
             </div>
             <div class="buyTxt"><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2506" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
         </div>
  	</div>
     <div class="down">&nbsp;</div>
-    <h3><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2505" target="_blank">I against I, flesh of my flesh,
+    <h3><a href="http://www.healthkart.com/product/i-against-i-lonsdale-boxing-pack/SPT2509" target="_blank">I against I, flesh of my flesh,
       <br />
   and mind of my mind</a></h3>
     <div class="down">
@@ -454,13 +276,13 @@ and portable Tunturi Doorway Chinning Bar.</div>
         	<div class="txt" align="right" style="padding-bottom:30px;">Two of a kind but one won't survive. Upto the challenge? Then may we present the Lonsdale Club Bag Mitt, Heavy Punch Bag and Punchbag Set. Train harder for only you can better yourself!</div>
             <div class="btmBrdr" style="width:410px; float:right;">&nbsp;</div>
 
-            <div class="price1" style="margin-left:30px;">Rs.3,394<br />
-            	<span>20% off</span>
+            <div class="price1" style="margin-left:30px;">Rs.2,616<br />
+            	<span>32% off</span>
             </div>
-            <div class="buyTxt" style="margin-right:10px;"><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2505" target="_blank">buy this now</a></div>
+            <div class="buyTxt" style="margin-right:10px;"><a href="http://www.healthkart.com/product/i-against-i-lonsdale-boxing-pack/SPT2509" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
       </div>
-    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2505" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/lonsdale-club-bag.jpg" alt="against I, flesh of my flesh,
+    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/i-against-i-lonsdale-boxing-pack/SPT2509" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/lonsdale-club-bag.jpg" alt="against I, flesh of my flesh,
 and mind of my mind" border="0"/></a></div>
   	</div>
     <div class="down">&nbsp;</div>
@@ -471,8 +293,8 @@ and mind of my mind" border="0"/></a></div>
         	<div class="txt" style="padding-bottom:30px;">Prince T22 Team Triple Squash Bag with TF Quake Squash Racket and Double Dot Yellow Rebel Squash Balls gets you all set for that campaign.</div>
             <div class="btmBrdr" style="width:420px;">&nbsp;</div>
 
-            <div class="price1">Rs.3,778<br />
-            	<span>40% off</span>
+            <div class="price1">Rs.3,103<br />
+            	<span>55% off</span>
             </div>
             <div class="buyTxt"><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2504" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
@@ -485,8 +307,8 @@ and mind of my mind" border="0"/></a></div>
         	<div class="txt" align="right" style="padding-bottom:30px;">Titanium 3000 Tennis Racket from HEAD is a brilliant racket for its price. It’s lightweight yet resilient. Along with HEAD tennis balls, it makes a formidable combination. Up for any challenge, be it clay or grass.</div>
             <div class="btmBrdr" style="width:410px; float:right;">&nbsp;</div>
 
-            <div class="price1" style="margin-left:20px;">Rs.2,505<br />
-            	<span>25% off</span>
+            <div class="price1" style="margin-left:20px;">Rs.2,521<br />
+            	<span>36% off</span>
             </div>
             <div class="buyTxt" style="margin-right:15px;"><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2503" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
@@ -524,55 +346,73 @@ style and substance!</div>
       </div>
     	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/invincible-w-116-reflective-capri/SPT2501" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/just-run-till-the-day-comes.jpg" alt="Just Run, Till the Day Comes" border="0"/></a></div>
   	</div>
+
     <div class="down" style="height:50px;">&nbsp;</div>
-    <h2>Be prepared this Diwali</h2>
-     <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
-    <h3><a href="http://www.healthkart.com/product/omron-hem-7111-onetouch-ultra-2-meter/CMB-HD002" target="_blank">Dynamic Duo!</a></h3>
+  <h2>Celebrate Life, with Extend Nutrion</h2>
+  <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
+  <div class="extTxtCenter">Extend is an internationally acclaimed line of products that helps you
+control your sugar for upto 9 hours. Formulated by world renowned diabetes experts,
+Extend holds 17 international patents and a brilliant taste to go!</div>
+	<div class="down" style="padding:10px 0px 30px 0px;" align="center"><a href="http://www.healthkart.com/brand/nutrition/extend" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/extend-products.jpg" alt="Extend" border="0" /></a></div>
+  	<h3><a href="http://www.healthkart.com/product/extend-wholesome-combo/CMB-DIA26" target="_blank">The Wholesome Option</a></h3>
+    <div class="down htTen">&nbsp;</div>
     <div class="down">
-   	  <div class="proImage" style="padding:10px 20px 0px 100px;"><a href="http://www.healthkart.com/product/omron-hem-7111-onetouch-ultra-2-meter/CMB-HD002" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/omron-HEM-and-onetouch-ultra-meter.jpg" alt="Omron HEM-7111 & OneTouch Ultra 2 Meter" border="0" /></a></div>
-    	<div class="proData" style="width:430px; padding-top:15px;">
-        	<div class="txt" style="padding-bottom:30px;">A fantastic combo for those suffering from Hypertension or Diabetes. You can comfortably keep a record on your Sugar level & BP rate while staying at home.</div>
-            <div class="btmBrdr" style="width:420px;">&nbsp;</div>
-
-            <div class="price1">Rs.2,982<br />
-            	<span>40% off</span>
+   	  <div class="extendTxtNew" style="width:350px; padding:10px 10px 0px 90px; text-align:right;">Extend Savory Crisps, Indulgent Drizzles and
+Delightful Bars, in a neat little pack. Perfect for fitness fanatics and diabetics alike.</div>
+    	<div class="proData" style="width:400px; padding-top:15px;">
+            <div class="btmBrdr" style="width:380px;">&nbsp;</div>
+            <div class="price1">Rs.1,050<br />
+            	<span>30% off</span>
             </div>
-            <div class="buyTxt"><a href="http://www.healthkart.com/product/omron-hem-7111-onetouch-ultra-2-meter/CMB-HD002" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-        </div>
- 	</div>
-    <div class="down">&nbsp;</div>
-     <h3><a href="http://www.healthkart.com/product/omron-hem-7200-accu-chek-active-meter/CMB-HD003" target="_blank">Combat High Blood Pressure & Diabetes</a></h3>
-    <div class="down">
- 	  	<div class="proData" style="width:450px; padding:10px 0px 0px 60px;">
-        	<div class="txt" align="right" style="padding-bottom:30px;">Own Omron BP Monitor and Accu-Check Active meter and keep a check on your Blood Pressure and High Sugar Levels without visiting the doctor.</div>
-            <div class="btmBrdr" style="width:410px; float:right;">&nbsp;</div>
-
-            <div class="price1" style="margin-left:30px;">Rs.3,850<br />
-            	<span>35% off</span>
-            </div>
-            <div class="buyTxt" style="margin-right:0px;"><a href="http://www.healthkart.com/product/omron-hem-7200-accu-chek-active-meter/CMB-HD003" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-      </div>
-    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/omron-hem-7200-accu-chek-active-meter/CMB-HD003" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/omron-HEM-and-accu-chek-ctive-meter.jpg" alt="Combat High Blood Pressure & Diabetes" border="0"/></a></div>
-  	</div>
-    <div class="down">&nbsp;</div>
-    <h3><a href="http://www.healthkart.com/product/equinox-irresistible-offer-free-equinox-body-fat-monitor-with-equinox-bp-monitor/CMB-HD005" target="_blank">Restore Your Health with Equinox</a></h3>
-    <div class="down">
-   	  <div class="proImage" style="padding:10px 20px 0px 50px;"><a href="http://www.healthkart.com/product/equinox-irresistible-offer-free-equinox-body-fat-monitor-with-equinox-bp-monitor/CMB-HD005" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/equinox-irresistible-offer.jpg" alt="Omron HEM-7111 & OneTouch Ultra 2 Meter" border="0" /></a></div>
-    	<div class="proData" style="width:430px; padding-top:15px;">
-        	<div class="txt" style="padding-bottom:30px;">Avail this Amazing Combo to Keep a track of your Blood Pressure Level. Also monitor the Fat Gained because of the number of Sweets You take in, this Festive season.</div>
-            <div class="btmBrdr" style="width:420px;">&nbsp;</div>
-
-            <div class="price1">Rs.1,740<br />
-            	<span>50% off</span>
-            </div>
-            <div class="buyTxt"><a href="http://www.healthkart.com/product/equinox-irresistible-offer-free-equinox-body-fat-monitor-with-equinox-bp-monitor/CMB-HD005" target="_blank">buy this now</a></div>
+            <div class="buyTxt" style="margin-right:20px;"><a href="http://www.healthkart.com/product/extend-wholesome-combo/CMB-DIA26" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
         </div>
  	</div>
     <div class="down" style="height:50px;">&nbsp;</div>
-    <h2>The Festive Glow</h2>
+    <h3><a href="http://www.healthkart.com/product/extend-savory-crisps-combo/CMB-DIA24" target="_blank">The Savory Crisps Option</a></h3>
+    <div class="down htTen">&nbsp;</div>
+    <div class="down">
+    	<div class="proData" style="width:410px; padding:15px 0px 0px 120px;">
+            <div class="btmBrdr" style="width:380px; float:right;">&nbsp;</div>
+            <div class="price1" style="margin-left:10px;">Rs.1,050<br />
+            	<span>30% off</span>
+            </div>
+            <div class="buyTxt" style="margin-right:10px;"><a href="http://www.healthkart.com/product/extend-savory-crisps-combo/CMB-DIA24" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+        </div>
+        <div class="extendTxtNew" style="width:300px; float:left; padding:7px 10px 0px 15px;">A pack of 6 Extend Savory Crisps. Keep hunger and sugar at bay!</div>
+ 	</div>
+    <div class="down" style="height:50px;">&nbsp;</div>
+    <h3><a href="http://www.healthkart.com/product/extend-indulgent-drizzles-combo/CMB-DIA25" target="_blank">The Indulgent Drizzles Option</a></h3>
+    <div class="down htTen">&nbsp;</div>
+    <div class="down">
+   	  <div class="proImage extendTxt" style="width:350px; padding:10px 10px 0px 70px; text-align:right;">Extend Indulgent Drizzles in a pack of 6.
+Keep within reach of your mother and child. We are serious about this.</div>
+    	<div class="proData" style="width:400px; padding-top:15px;">
+            <div class="btmBrdr" style="width:400px;">&nbsp;</div>
+            <div class="price1">Rs.1,050<br />
+            	<span>30% off</span></div>
+            <div class="buyTxt" style="margin-right:20px;"><a href="http://www.healthkart.com/product/extend-indulgent-drizzles-combo/CMB-DIA25" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+        </div>
+ 	</div>
+    <div class="down" style="height:50px;">&nbsp;</div>
+    <h3><a href="http://www.healthkart.com/product/extend-delighful-bars-combo/CMB-DIA23" target="_blank">The Delightful Bars Option</a></h3>
+    <div class="down htTen">&nbsp;</div>
+    <div class="down">
+    	<div class="proData" style="width:380px; padding:15px 0px 0px 170px;">
+            <div class="btmBrdr" style="width:380px;">&nbsp;</div>
+            <div class="price1">Rs.1,050<br />
+            	<span>30% off</span>
+            </div>
+            <div class="buyTxt" style="margin-right:0px;"><a href="http://www.healthkart.com/product/extend-delighful-bars-combo/CMB-DIA23" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+        </div>
+        <div class="extendTxtNew" style="width:300px; padding:7px 10px 0px 10px;">A pack of 6 Delightful Bars. No more sugar spikes
+or the crashes after the 4pm snack. Guaranteed!</div>
+ 	</div>
+  <div class="down" style="height:50px;">&nbsp;</div>
+  <h2>The Festive Glow</h2>
   <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
   <div class="down">&nbsp;</div>
   <h3><a href="http://www.healthkart.com/product/vibes-unisex-:beauty-packages-across-delhi-kolkata-hyderabad-bangalore/CMBS-132" target="_blank">This Diwali, Indulge Yourself with Vibes</a></h3>
@@ -649,77 +489,232 @@ style and substance!</div>
       </div>
     	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/the-weight-monitor-online-weight-loss-diet-program-with-bodyfuelz-fat-burner/CMBS-134" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/onquest.jpg" alt="The Gift of Health and Fitness" border="0"/></a></div>
   	</div>
-    <div class="down">&nbsp;</div>
     <div class="down" style="height:50px;">&nbsp;</div>
-  <h2>Celebrate Life, with Extend Nutrion</h2>
-  <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
-  <div class="extTxtCenter">Extend is an internationally acclaimed line of products that helps you
-control your sugar for upto 9 hours. Formulated by world renowned diabetes experts,
-Extend holds 17 international patents and a brilliant taste to go!</div>
-	<div class="down" style="padding:10px 0px 30px 0px;" align="center"><a href="http://www.healthkart.com/brand/nutrition/extend" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/extend-products.jpg" alt="Extend" border="0" /></a></div>
-  	<h3><a href="http://www.healthkart.com/product/extend-wholesome-combo/CMB-DIA26" target="_blank">The Wholesome Option</a></h3>
-    <div class="down htTen">&nbsp;</div>
+    <h2>Ideas for those little devils in the house</h2>
+    <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
+  <h3><a href="http://www.healthkart.com/product/kindergarten-bag-of-goodies/CMB-BAB0356" target="_blank">Kindergarten Bag of Goodies</a></h3>
     <div class="down">
-   	  <div class="extendTxtNew" style="width:350px; padding:10px 10px 0px 90px; text-align:right;">Extend Savory Crisps, Indulgent Drizzles and
-Delightful Bars, in a neat little pack. Perfect for fitness fanatics and diabetics alike.</div>
-    	<div class="proData" style="width:400px; padding-top:15px;">
-            <div class="btmBrdr" style="width:380px;">&nbsp;</div>
-            <div class="price1">Rs.1,050<br />
-            	<span>30% off</span>
-            </div>
-            <div class="buyTxt" style="margin-right:20px;"><a href="http://www.healthkart.com/product/extend-wholesome-combo/CMB-DIA26" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-        </div>
- 	</div>
-    <div class="down" style="height:50px;">&nbsp;</div>
-    <h3><a href="http://www.healthkart.com/product/extend-savory-crisps-combo/CMB-DIA24" target="_blank">The Savory Crisps Option</a></h3>
-    <div class="down htTen">&nbsp;</div>
-    <div class="down">
-    	<div class="proData" style="width:410px; padding:15px 0px 0px 120px;">
-            <div class="btmBrdr" style="width:380px; float:right;">&nbsp;</div>
-            <div class="price1" style="margin-left:10px;">Rs.1,050<br />
-            	<span>30% off</span>
-            </div>
-            <div class="buyTxt" style="margin-right:10px;"><a href="http://www.healthkart.com/product/extend-savory-crisps-combo/CMB-DIA24" target="_blank">buy this now</a></div>
-            <div class="clr">&nbsp;</div>
-        </div>
-        <div class="extendTxtNew" style="width:300px; float:left; padding:7px 10px 0px 15px;">A pack of 6 Extend Savory Crisps. Keep hunger and sugar at bay!</div>
- 	</div>
-    <div class="down" style="height:50px;">&nbsp;</div>
-    <h3><a href="http://www.healthkart.com/product/extend-indulgent-drizzles-combo/CMB-DIA25" target="_blank">The Indulgent Drizzles Option</a></h3>
-    <div class="down htTen">&nbsp;</div>
-    <div class="down">
-   	  <div class="proImage extendTxt" style="width:350px; padding:10px 10px 0px 70px; text-align:right;">Extend Indulgent Drizzles in a pack of 6.
-Keep within reach of your mother and child. We are serious about this.</div>
-    	<div class="proData" style="width:400px; padding-top:15px;">
+    	<div class="proImage" style="padding:7px 20px 0px 50px;"><a href="http://www.healthkart.com/product/kindergarten-bag-of-goodies/CMB-BAB0356" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/kindergarten-bag-of-goodies.jpg" alt="Kindergarten Bag of Goodies" border="0"/></a></div>
+   	  <div class="proData" style="width:440px; padding-top:10px;">
+        	<div class="txt" style="padding-bottom:30px;">A Smash <strong><i>‘rubbish free’</i></strong> lunchbox, a Smash 3D Hippo School Bag and Chhota Bheem Vol.61 ‘The Hiding Game’ is waiting to be picked up. This is all your little devil needs for a little picnic under the tree.</div>
             <div class="btmBrdr" style="width:400px;">&nbsp;</div>
-            <div class="price1">Rs.1,050<br />
-            	<span>30% off</span></div>
-            <div class="buyTxt" style="margin-right:20px;"><a href="http://www.healthkart.com/product/extend-indulgent-drizzles-combo/CMB-DIA25" target="_blank">buy this now</a></div>
+
+            <div class="price1" style="width:160px;">Rs.749 <br /><span>40% off</span>
+            </div>
+            <div class="buyTxt" style="margin-right:60px;"><a href="http://www.healthkart.com/product/kindergarten-bag-of-goodies/CMB-BAB0356" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+        </div>
+ 	</div>
+    <div class="down">&nbsp;</div>
+  <h3><a href="http://www.healthkart.com/product/johnson-s-baby-care-collection-5/BAB128" target="_blank">Johnson's Baby Care Collection</a></h3>
+    <div class="down">
+  	 	<div class="proData" style="width:400px; padding:10px 0px 0px 120px;">
+        	<div class="txt" align="right" style="padding-bottom:10px;">The Johnson's Baby Care Collection is a simple solution to all your baby’s bathing and grooming needs. This convenient combo pack has Johnson's Baby Powder, Johnson's No More Tear Shampoo, Baby Lotion, Baby Cream, Hair Oil, Baby Oil,
+Baby Soap, Buds, DVD and Booklet.</div>
+            <div class="btmBrdr" style="width:380px; float:right;">&nbsp;</div>
+
+            <div class="price1" style="width:160px">Rs.495<br />
+            	<span>1% off</span>
+            </div>
+            <div class="buyTxt"><a href="http://www.healthkart.com/product/johnson-s-baby-care-collection-5/BAB128" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+      </div>
+    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/johnson-s-baby-care-collection-5/BAB128" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/johnsons-baby-care-collection.jpg" alt="Johnson's Baby Care Collection" border="0"/></a></div>
+  	</div>
+    <div class="down">&nbsp;</div>
+  <h3><a href="http://www.healthkart.com/product/baby-feeding-hygeine-essentials/CMB-BAB0355" target="_blank">Baby Feeding Hygeine Essentials</a></h3>
+    <div class="down">
+   	  <div class="proImage" style="padding:0px 0px 0px 30px;"><a href="http://www.healthkart.com/product/baby-feeding-hygeine-essentials/CMB-BAB0355" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/baby-feeding-hygeine-essentials.jpg" alt="Baby Feeding Hygeine Essentials" border="0" /></a></div>
+    	<div class="proData" style="width:450px; padding-top:10px;">
+        	<div class="txt" style="padding-bottom:30px;">Pigeon Bottle & Nipple Brush with Pigeon Bottle Nipple & Vegetable's Cleanser Liquid
+and Mee Mee Baby Wrapper/Blanket. A great combo to keep your little devil safe and warm.</div>
+            <div class="btmBrdr" style="width:400px;">&nbsp;</div>
+
+            <div class="price1" style="width:160px;">Rs.489<br />
+            	<span>15% off</span></div>
+            <div class="buyTxt" style="margin-right:50px;"><a href="http://www.healthkart.com/product/baby-feeding-hygeine-essentials/CMB-BAB0355" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
         </div>
  	</div>
     <div class="down" style="height:50px;">&nbsp;</div>
-    <h3><a href="http://www.healthkart.com/product/extend-delighful-bars-combo/CMB-DIA23" target="_blank">The Delightful Bars Option</a></h3>
-    <div class="down htTen">&nbsp;</div>
+  <h2>Ideas for expecting Mommies who need all the care</h2>
+  <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
+  <h3><a href="http://www.healthkart.com/product/pigeon-maternity-adjustable-belt/BAB1801" target="_blank">Maternity Adjustable Belt</a></h3>
     <div class="down">
-    	<div class="proData" style="width:380px; padding:15px 0px 0px 170px;">
-            <div class="btmBrdr" style="width:380px;">&nbsp;</div>
-            <div class="price1">Rs.1,050<br />
-            	<span>30% off</span>
+  	 	<div class="proData" style="width:450px; padding:10px 10px 0px 80px;">
+        	<div class="txt" align="right" style="padding-bottom:30px;">In the second trimester, it becomes difficult to support the abdomen region because of the additional weight of the baby. Pigeon Maternity Adjustable Belt has been specially designed to provide extra support
+during those crucial months so that you can get the required amount of stability and safety.</div>
+            <div class="btmBrdr" style="width:430px; float:right;">&nbsp;</div>
+
+            <div class="price1">Rs.1,256<br />
+            	<span>10% off</span></div>
+            <div class="buyTxt"><a href="http://www.healthkart.com/product/pigeon-maternity-adjustable-belt/BAB1801" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+      </div>
+    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/pigeon-maternity-adjustable-belt/BAB1801" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/maternity-adjustable-belt.jpg" alt="Maternity Adjustable Belt" border="0"/></a></div>
+  	</div>
+    <div class="down" style="height:50px;">&nbsp;</div>
+  <h2>Gift Ideas for your gracefully matured loved ones</h2>
+  <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
+  <h3><a href="http://www.healthkart.com/product/karma-walking-stick-ws-131/KARM010" target="_blank">Karma Walking Stick WS-131</a></h3>
+  <div class="down">
+    	<div class="proImage" style="padding:0px 30px 0px 100px;"><a href="http://www.healthkart.com/product/karma-walking-stick-ws-131/KARM010" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/karma-walking-stick.jpg" alt="Karma Walking Stick" border="0" /></a></div>
+    	<div class="proData" style="width:450px; padding-top:10px;">
+        	<div class="txt" style="padding-bottom:30px;">A perfect companion for those long walks, Karma walking stick is strong and durable.
+But it’s not just that, it folds nice and easy, and is extremely light because of its special plastic composite.</div>
+            <div class="btmBrdr" style="width:400px; clear:both;">&nbsp;</div>
+
+          <div class="price1" style="width:170px;">Rs.512<br />
+          <span>20% off</span>
+          </div>
+
+          <div class="buyTxt" style="margin-right:50px;"><a href="http://www.healthkart.com/product/karma-walking-stick-ws-131/KARM010" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+      </div>
+  </div>
+    <div class="down">&nbsp;</div>
+    <h3><a href="http://www.healthkart.com/product/aasaan-senior-mobile-phone/MOB001" target="_blank">Aasaan Senior Mobile Phone</a></h3>
+    <div class="down">
+  	  <div class="proData" style="width:400px; padding:10px 0px 0px 150px;">
+        	<div class="txt" align="right" style="padding-bottom:30px;">A rugged phone with a big numberpad, the Aasan phone from iBall is ideal for those
+who find it difficult to see or are easily overwhelmed by technology. A perfect example of calling made easy.</div>
+            <div class="btmBrdr" style="width:380px; float:right;">&nbsp;</div>
+
+            <div class="price1">Rs.2,700<br />
+            <span>10% off</span></div>
+            <div class="buyTxt" style="margin-right:20px;"><a href="http://www.healthkart.com/product/aasaan-senior-mobile-phone/MOB001" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+      </div>
+    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/aasaan-senior-mobile-phone/MOB001" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/aasaan-senior-mobile-phone.jpg" alt="Aasaan Senior Mobile Phone" border="0"/></a></div>
+  </div>
+
+  <div class="down" style="height:50px;">&nbsp;</div>
+  <h2>Ideas for a Diwali full of vitality</h2>
+  <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
+  <h3><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB100" target="_blank">Healthier, Glowing Skin and Hair</a></h3>
+    <div class="down">
+   	  <div class="proImage" style="padding:0px 20px 0px 30px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB100" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/healthier-glowing-skin-and-hair.jpg" alt="Healthier Glowing Skin and Hair" border="0" /></a></div>
+    	<div class="proData" style="width:450px; padding-top:10px;">
+        	<div class="txt" style="padding-bottom:30px;">Nature's Bounty Hair, Skin and Nails, Organic India Original Tulsi Tea & Vista Nutritions Vitamin-E tablets together make a great idea to get your hair and skin glow all the more. Do it the organic way and keep yourself healthy for long.</div>
+            <div class="btmBrdr" style="width:420px;">&nbsp;</div>
+
+            <div class="price1">Rs.1,499<br />
+            	<span>14% off</span>
             </div>
-            <div class="buyTxt" style="margin-right:0px;"><a href="http://www.healthkart.com/product/extend-delighful-bars-combo/CMB-DIA23" target="_blank">buy this now</a></div>
+            <div class="buyTxt" style="margin-right:40px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB100" target="_blank">buy this now</a></div>
             <div class="clr">&nbsp;</div>
         </div>
-        <div class="extendTxtNew" style="width:300px; padding:7px 10px 0px 10px;">A pack of 6 Delightful Bars. No more sugar spikes
-or the crashes after the 4pm snack. Guaranteed!</div>
  	</div>
     <div class="down">&nbsp;</div>
+    <h3><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB99" target="_blank">Complete Family Multivitamin Kit</a></h3>
+    <div class="down">
+  	 	<div class="proData" style="width:400px; padding:10px 0px 0px 120px;">
+        	<div class="txt" align="right" style="padding-bottom:30px;">Even if you eat healthy, it's likely you're still not getting all the vitamins and minerals your body requires. Here’s an idea for taking care of that. Supractiv Complete Man, Organic India Women's Well Being Capsules & Revital Senior.</div>
+            <div class="btmBrdr" style="width:370px; float:right;">&nbsp;</div>
+
+            <div class="price1" style="width:180px;">Rs.500<br />
+            	<span>14% off</span>
+            </div>
+            <div class="buyTxt" style="margin-right:10px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB99" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+      </div>
+    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB99" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/complete-family-multivitamin-kit.jpg" alt="Complete Family Multivitamin Kit" border="0"/></a></div>
+  	</div>
+    <div class="down">&nbsp;</div>
+    <h3><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB98" target="_blank">The Healthier Breakfast Set</a></h3>
+    <div class="down">
+   	  <div class="proImage" style="padding:0px 20px 0px 50px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB98" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/the-healthier-breakfast-set.jpg" alt="The Healthier Breakfast Set" border="0" /></a></div>
+    	<div class="proData" style="width:450px; padding-top:10px;">
+        	<div class="txt" style="padding-bottom:30px;">Twinings English Breakfast Tea, GAIA Muesli Fruit & Nut and Nourish Organic Honey Roasted
+Almonds make the most important meal of the day a healthier one. A great idea to go along with the fresh fruits you take after your morning jog!</div>
+            <div class="btmBrdr" style="width:430px;">&nbsp;</div>
+
+            <div class="price1">Rs.1,000<br />
+            <span>9% off</span></div>
+            <div class="buyTxt"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB98" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+        </div>
+ 	</div>
+    <div class="down">&nbsp;</div>
+    <div class="down">&nbsp;</div>
+    <h3><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB97" target="_blank">Tea Time for Healthy Toddlers?</a></h3>
+    <div class="down">
+  	 	<div class="proData" style="width:450px; padding:10px 0px 0px 50px;">
+        	<div class="txt" align="right" style="padding-bottom:30px;">Good things come in small bags this time. Tea bags, to be precise. Traditional Medicinals Tummy Comfort herbal tea, Traditional Medicinals Throat Coat herbal tea &Traditional Medicinals Cold Care herbal tea come packed
+with age old remedies to help build your toddler’s immune system early.</div>
+            <div class="btmBrdr" style="width:410px; float:right;">&nbsp;</div>
+
+            <div class="price1" style="margin-left:10px;">Rs.1501<br />
+            <span>13% off</span>
+            </div>
+            <div class="buyTxt"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB97" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+      </div>
+    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/twinings-english-breakfast-tea/NUTCMB97" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/tea-time-for-healthy-toddlers.jpg" alt="Tea Time For Healthy Toddlers" border="0"/></a></div>
+  	</div>
+  <div class="down" style="height:50px;">&nbsp;</div>
+  <h2>Be prepared this Diwali</h2>
+     <div class="down pad1"><img src="${pageContext.request.contextPath}/images/diwali2012/floral.jpg" alt="Floral" border="0" /></div>
+    <h3><a href="http://www.healthkart.com/product/omron-hem-7111-onetouch-ultra-2-meter/CMB-HD002" target="_blank">Dynamic Duo!</a></h3>
+    <div class="down">
+   	  <div class="proImage" style="padding:10px 20px 0px 100px;"><a href="http://www.healthkart.com/product/omron-hem-7111-onetouch-ultra-2-meter/CMB-HD002" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/omron-HEM-and-onetouch-ultra-meter.jpg" alt="Omron HEM-7111 & OneTouch Ultra 2 Meter" border="0" /></a></div>
+    	<div class="proData" style="width:430px; padding-top:15px;">
+        	<div class="txt" style="padding-bottom:30px;">A fantastic combo for those suffering from Hypertension or Diabetes. You can comfortably keep a record on your Sugar level & BP rate while staying at home.</div>
+            <div class="btmBrdr" style="width:420px;">&nbsp;</div>
+
+            <div class="price1">Rs.2,982<br />
+            	<span>40% off</span>
+            </div>
+            <div class="buyTxt"><a href="http://www.healthkart.com/product/omron-hem-7111-onetouch-ultra-2-meter/CMB-HD002" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+        </div>
+ 	</div>
+    <div class="down">&nbsp;</div>
+     <h3><a href="http://www.healthkart.com/product/omron-hem-7200-accu-chek-active-meter/CMB-HD003" target="_blank">Combat High Blood Pressure & Diabetes</a></h3>
+    <div class="down">
+ 	  	<div class="proData" style="width:450px; padding:10px 0px 0px 60px;">
+        	<div class="txt" align="right" style="padding-bottom:30px;">Own Omron BP Monitor and Accu-Check Active meter and keep a check on your Blood Pressure and High Sugar Levels without visiting the doctor.</div>
+            <div class="btmBrdr" style="width:410px; float:right;">&nbsp;</div>
+
+            <div class="price1" style="margin-left:30px;">Rs.3,850<br />
+            	<span>35% off</span>
+            </div>
+            <div class="buyTxt" style="margin-right:0px;"><a href="http://www.healthkart.com/product/omron-hem-7200-accu-chek-active-meter/CMB-HD003" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+      </div>
+    	<div class="proImage" style="padding:0px 0px 0px 20px;"><a href="http://www.healthkart.com/product/omron-hem-7200-accu-chek-active-meter/CMB-HD003" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/omron-HEM-and-accu-chek-ctive-meter.jpg" alt="Combat High Blood Pressure & Diabetes" border="0"/></a></div>
+  	</div>
+    <div class="down">&nbsp;</div>
+    <h3><a href="http://www.healthkart.com/product/equinox-irresistible-offer-free-equinox-body-fat-monitor-with-equinox-bp-monitor/CMB-HD005" target="_blank">Restore Your Health with Equinox</a></h3>
+    <div class="down">
+   	  <div class="proImage" style="padding:10px 20px 0px 50px;"><a href="http://www.healthkart.com/product/equinox-irresistible-offer-free-equinox-body-fat-monitor-with-equinox-bp-monitor/CMB-HD005" target="_blank"><img src="${pageContext.request.contextPath}/images/diwali2012/equinox-irresistible-offer.jpg" alt="Omron HEM-7111 & OneTouch Ultra 2 Meter" border="0" /></a></div>
+    	<div class="proData" style="width:430px; padding-top:15px;">
+        	<div class="txt" style="padding-bottom:30px;">Avail this Amazing Combo to Keep a track of your Blood Pressure Level. Also monitor the Fat Gained because of the number of Sweets You take in, this Festive season.</div>
+            <div class="btmBrdr" style="width:420px;">&nbsp;</div>
+
+            <div class="price1">Rs.1,740<br />
+            	<span>50% off</span>
+            </div>
+            <div class="buyTxt"><a href="http://www.healthkart.com/product/equinox-irresistible-offer-free-equinox-body-fat-monitor-with-equinox-bp-monitor/CMB-HD005" target="_blank">buy this now</a></div>
+            <div class="clr">&nbsp;</div>
+        </div>
+ 	</div>
+  <div class="down">&nbsp;</div>
 </div>
 
  <div class="cl"></div>
 
     <!-- Container Ends-->
+
+ <!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_floating_style addthis_counter_style" style="right:10px;top:50px;">
+<a class="addthis_button_facebook_like" fb:like:layout="box_count"></a>
+<a class="addthis_button_tweet" tw:count="vertical"></a>
+<a class="addthis_button_google_plusone" g:plusone:size="tall"></a>
+<a class="addthis_counter"></a>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-509261de45f6e306"></script>
+<!-- AddThis Button END --    >
   
 </s:layout-component>
 
