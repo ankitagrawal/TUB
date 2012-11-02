@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
-import com.hk.constants.shippingOrder.EnumReplacementOrderStatus;
-import com.hk.domain.order.ReplacementOrderStatus;
+import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
+import com.hk.domain.order.ReplacementOrderReason;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -354,29 +354,29 @@ public class MasterDataDaoImpl implements MasterDataDao {
 	       return EnumPurchaseOrderStatus.getStatusForNonApprover();
 	}
 
-	public List<ReplacementOrderStatus> getReplacementOrderStatusForReplacement() {
-		List<Long> replacementOrderStatusIds = EnumReplacementOrderStatus.getStatusForReplacementOrder();
-		List<ReplacementOrderStatus> replacementOrderStatusList = new ArrayList<ReplacementOrderStatus>();
-		ReplacementOrderStatus replacementOrderStatus;
-		for(Long replacementOrderStatusId : replacementOrderStatusIds){
-			replacementOrderStatus = getBaseDao().get(ReplacementOrderStatus.class, replacementOrderStatusId);
-			if(replacementOrderStatus != null){
-				replacementOrderStatusList.add(replacementOrderStatus);
+	public List<ReplacementOrderReason> getReplacementOrderReasonForReplacement() {
+		List<Long> replacementOrderReasonIds = EnumReplacementOrderReason.getReasonForReplacementOrder();
+		List<ReplacementOrderReason> replacementOrderReasonList = new ArrayList<ReplacementOrderReason>();
+		ReplacementOrderReason replacementOrderReason;
+		for(Long replacementOrderReasonId : replacementOrderReasonIds){
+			replacementOrderReason = getBaseDao().get(ReplacementOrderReason.class, replacementOrderReasonId);
+			if(replacementOrderReason != null){
+				replacementOrderReasonList.add(replacementOrderReason);
 			}
 		}
-		return replacementOrderStatusList;
+		return replacementOrderReasonList;
 	}
 
-	public List<ReplacementOrderStatus> getReplacementOrderStatusForRto() {
-		List<Long> replacementOrderStatusIds = EnumReplacementOrderStatus.getStatusForReplacementForRTO();
-		List<ReplacementOrderStatus> replacementOrderStatusList = new ArrayList<ReplacementOrderStatus>();
-		ReplacementOrderStatus replacementOrderStatus;
-		for(Long replacementOrderStatusId : replacementOrderStatusIds){
-			replacementOrderStatus = getBaseDao().get(ReplacementOrderStatus.class, replacementOrderStatusId);
-			if(replacementOrderStatus != null){
-				replacementOrderStatusList.add(replacementOrderStatus);
+	public List<ReplacementOrderReason> getReplacementOrderReasonForRto() {
+		List<Long> replacementOrderReasonIds = EnumReplacementOrderReason.getReasonForReplacementForRTO();
+		List<ReplacementOrderReason> replacementOrderReasonList = new ArrayList<ReplacementOrderReason>();
+		ReplacementOrderReason replacementOrderReason;
+		for(Long replacementOrderReasonId : replacementOrderReasonIds){
+			replacementOrderReason = getBaseDao().get(ReplacementOrderReason.class, replacementOrderReasonId);
+			if(replacementOrderReason != null){
+				replacementOrderReasonList.add(replacementOrderReason);
 			}
 		}
-		return replacementOrderStatusList;
+		return replacementOrderReasonList;
 	}
 }

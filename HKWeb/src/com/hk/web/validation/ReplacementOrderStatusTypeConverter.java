@@ -1,6 +1,6 @@
 package com.hk.web.validation;
 
-import com.hk.domain.order.ReplacementOrderStatus;
+import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.pact.dao.BaseDao;
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
@@ -12,7 +12,7 @@ import java.util.Locale;
 
 
 @Component
-public class ReplacementOrderStatusTypeConverter implements TypeConverter<ReplacementOrderStatus> {
+public class ReplacementOrderStatusTypeConverter implements TypeConverter<ReplacementOrderReason> {
 
     public void setLocale(Locale locale) {
         // nothing
@@ -22,7 +22,7 @@ public class ReplacementOrderStatusTypeConverter implements TypeConverter<Replac
     private BaseDao            baseDao;
 
 
-    public ReplacementOrderStatus convert(String id, Class<? extends ReplacementOrderStatus> aClass, Collection<ValidationError> validationErrors) {
+    public ReplacementOrderReason convert(String id, Class<? extends ReplacementOrderReason> aClass, Collection<ValidationError> validationErrors) {
         Long idLong = null;
         try {
             idLong = Long.parseLong(id);
@@ -31,7 +31,7 @@ public class ReplacementOrderStatusTypeConverter implements TypeConverter<Replac
         if (idLong == null) {
             return null;
         } else {
-            return getBaseDao().get(ReplacementOrderStatus.class, idLong);
+            return getBaseDao().get(ReplacementOrderReason.class, idLong);
         }
 
     }

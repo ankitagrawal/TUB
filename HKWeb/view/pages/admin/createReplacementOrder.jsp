@@ -174,10 +174,10 @@
                         </c:forEach>
                     </table>
 					<s:label name="Reason for Replacement:" style="margin-left:7px;"/>
-					<s:select name="replacementOrderStatus">
-						<s:option value="-Select Status-">-Select Status-</s:option>
+					<s:select name="replacementOrderReason">
+						<s:option value="-Select Reason-">-Select Reason-</s:option>
 						<hk:master-data-collection service="<%=MasterDataDao.class%>"
-												   serviceProperty="replacementOrderStatusForRto" value="id"
+												   serviceProperty="replacementOrderReasonForRto" value="id"
 												   label="name"/>
 					</s:select>
                     <s:submit class="createReplacementOrderButton rto" name="createReplacementOrder" value="Generate Replacement Order"/>
@@ -222,10 +222,10 @@
                         </c:forEach>
                     </table>
 	                <s:label name="Reason for Replacement:" style="margin-left:7px;"/>
-	                <s:select name="replacementOrderStatus">
-		                <s:option value="-Select Status-">-Select Status-</s:option>
+	                <s:select name="replacementOrderReason">
+		                <s:option value="-Select Reason-">-Select Reason-</s:option>
 		                <hk:master-data-collection service="<%=MasterDataDao.class%>"
-		                                           serviceProperty="replacementOrderStatusForReplacement" value="id"
+		                                           serviceProperty="replacementOrderReasonForReplacement" value="id"
 		                                           label="name"/>
 	                </s:select>
 					

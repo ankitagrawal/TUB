@@ -2,7 +2,6 @@ package com.hk.admin.impl.task.dbmaster;
 
 import com.hk.db.seed.courier.*;
 import com.hk.db.seed.order.*;
-import com.hk.domain.order.ReplacementOrderStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,9 +145,9 @@ public class MasterDataService {
     @Autowired
     ConsignmentLifecycleStatusSeedData consignmentLifecycleStatusSeedData;
 	@Autowired
-	ReplacementOrderStatusSeedData replacementOrderStatusSeedData;
+	ReplacementOrderReasonSeedData replacementOrderReasonSeedData;
 
-    public void insert() {
+	public void insert() {
 
         logger.debug("inserting roles");
         roleSeedData.invokeInsert();
@@ -298,7 +297,7 @@ public class MasterDataService {
         logger.debug("inserting consignment lifecycle status");
         consignmentLifecycleStatusSeedData.invokeInsert();
 
-	    logger.debug("inserting consignment Replacement order status");
-        replacementOrderStatusSeedData.invokeInsert();
+	    logger.debug("inserting consignment Replacement order reasons");
+        replacementOrderReasonSeedData.invokeInsert();
     }
 }

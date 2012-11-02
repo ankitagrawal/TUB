@@ -33,7 +33,7 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
-import com.hk.domain.order.ReplacementOrderStatus;
+import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
@@ -138,8 +138,8 @@ public interface MasterDataDao
 
 	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover();
 
-	public List<ReplacementOrderStatus> getReplacementOrderStatusForReplacement();
+	public List<ReplacementOrderReason> getReplacementOrderReasonForReplacement();
 
-	public List<ReplacementOrderStatus> getReplacementOrderStatusForRto();
+	public List<ReplacementOrderReason> getReplacementOrderReasonForRto();
 
 }

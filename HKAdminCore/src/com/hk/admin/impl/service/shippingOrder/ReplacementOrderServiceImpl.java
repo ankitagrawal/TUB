@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.domain.order.ReplacementOrderStatus;
+import com.hk.domain.order.ReplacementOrderReason;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     private ReconciliationStatusDao    reconciliationStatusDao;
     
 
-    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderStatus replacementOrderStatus) {
+    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason) {
         Set<LineItem> lineItemSet = new HashSet<LineItem>();
         ReplacementOrder replacementOrder = ReplacementOrderHelper.getReplacementOrderFromShippingOrder(shippingOrder, shippingOrderStatusService, reconciliationStatusDao);
         for (LineItem lineItem : lineItems) {
@@ -62,7 +62,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         replacementOrder.setLineItems(lineItemSet);
         replacementOrder.setAmount(ShippingOrderHelper.getAmountForSO(replacementOrder));
         replacementOrder.setRto(isRto);
-	    replacementOrder.setReplacementOrderStatus(replacementOrderStatus);
+	    replacementOrder.setReplacementOrderReason(replacementOrderReason);
 
         replacementOrder.setRefShippingOrder(shippingOrder);
         replacementOrder = (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
