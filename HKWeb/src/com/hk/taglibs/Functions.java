@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
@@ -341,8 +343,12 @@ public class Functions {
 
         if (o1 != null) {
             CartLineItem lineItem = (CartLineItem) o1;
-            return lineItem.getQty() / lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant()).getQty();
-        }else{
+            if (lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant()) != null) {
+                return lineItem.getQty() / lineItem.getComboInstance().getComboInstanceProductVariant(lineItem.getProductVariant()).getQty();
+            } else {
+                return 0L;
+            }
+        } else {
             return 0L;
         }
     }
@@ -637,4 +643,15 @@ public class Functions {
         CourierStatusUpdateHelper courierStatusUpdateHelper = new CourierStatusUpdateHelper();
         return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
     }
+
+		public static Long getPoLineItemQty(GrnLineItem grnLineItem) {
+				GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
+				return grnLineItemService.getPoLineItemQty(grnLineItem);
+		}
+
+		public static Long getGrnLineItemQtyAlreadySet(GoodsReceivedNote goodsReceivedNote, Sku sku) {
+				GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
+				return grnLineItemService.getGrnLineItemQtyAlreadySet(goodsReceivedNote, sku);
+		}
+
 }

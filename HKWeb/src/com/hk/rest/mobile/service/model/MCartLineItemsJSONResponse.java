@@ -1,7 +1,11 @@
 package com.hk.rest.mobile.service.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.order.Order;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.core.CartLineItemType;
@@ -33,8 +37,17 @@ public class MCartLineItemsJSONResponse {
     private String cartLineItemId;
     private String productId;
     private String imageUrl;
-    
-    public String getImageUrl() {
+    private List<ProductOption> productOptions = new ArrayList<ProductOption>();
+
+    public List<ProductOption> getProductOptions() {
+		return productOptions;
+	}
+
+	public void setProductOptions(List<ProductOption> productOptions) {
+		this.productOptions = productOptions;
+	}
+
+	public String getImageUrl() {
 		return imageUrl;
 	}
 

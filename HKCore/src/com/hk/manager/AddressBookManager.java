@@ -16,7 +16,9 @@ import com.hk.util.AddressMatchScoreCalculator;
 public class AddressBookManager {
 
     @Autowired
-    private AddressService              addressDao;
+    private AddressService              addressService;
+	@Autowired
+    private AddressDao                  addressDao;
     @Autowired
     private UserService                 userService;
     @Autowired
@@ -62,7 +64,7 @@ public class AddressBookManager {
         address.setUser(user);
         boolean isDuplicateAddress = addressMatchScoreCalculator.isDuplicateAddress(address);
         if (!isDuplicateAddress) {
-            address = getAddressDao().save(address);
+            address = getAddressService().save(address);
             user.getAddresses().add(address);
             getUserService().save(user);
             return address;
@@ -76,15 +78,23 @@ public class AddressBookManager {
         getUserService().save(user);
     }
 
-    public AddressService getAddressDao() {
-        return addressDao;
+    public AddressService getAddressService() {
+        return addressService;
     }
 
-    public void setAddressDao(AddressService addressDao) {
-        this.addressDao = addressDao;
+    public void setAddressService(AddressService addressService) {
+        this.addressService = addressService;
     }
 
-    public UserService getUserService() {
+	public AddressDao getAddressDao() {
+		return addressDao;
+	}
+
+	public void setAddressDao(AddressDao addressDao) {
+		this.addressDao = addressDao;
+	}
+
+	public UserService getUserService() {
         return userService;
     }
 
