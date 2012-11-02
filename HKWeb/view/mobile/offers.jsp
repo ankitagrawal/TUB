@@ -33,23 +33,7 @@
 
 
 	</div>
-	<script type='text/template' id='product-fav-template'>
-		<tr>
-		
-			{{for(var i =0;i<favItem.length;i++){ }}
-			<td class=scrollBlock>
-			
-				<div class=scrollBlockContent>
-					<img src='images/{{print(favItem[i].img)}}'/>
-					<div>
-						{{print(favItem[i].label)}}
-					</div>
-				</div>
-			</td>
-			{{ } }}
-		
-		</tr>
-		</script>
+
 		<script type='text/template' id='offers-list-template'>
 		
 		
@@ -76,51 +60,7 @@ var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
 		};
 		
 	Backbone.emulateJSON = true;
-			var ProductScrollModel = Backbone.Model.extend({
-			initialize: function(){
-				_.bindAll(this,'render');
-				this.render();
-			},
-			render: function(){
-				var prScVi = new ProductScrollView({model:this});
-				$('#product-scroll').append(prScVi.render().el);
-			}
-		});
-		
-		var ProductScrollCollection = Backbone.Collection.extend({
-			model: ProductScrollModel,
-			initialize : function(){
-				this.on('reset',this.clearView,this);
-				this.clearView();
-			},
-			clearView : function(){
-				$('#product-scroll').html('');
-			}
-		});
-		
-		var ProductScrollView = Backbone.View.extend({
-			tagName: 'table',
-			className: 'scrollWindow',
-			initialize: function(){
-				_.bindAll(this,'render');
-			},
-			template: _.template($('#product-fav-template').html()),
-			render: function(){
-				$(this.el).empty();
-				$(this.el).html(this.template(this.model.toJSON()));
-				return this;
-			}
-		});
-		var prScCo = new ProductScrollCollection();
-		if(prScCo.add({"favItem":[{"id":1,"label":"Nutrition","img":"1.jpg"},{"id":2,"label":"Sports & Fitness","img":"2.jpg"},
-		{"id":3,"label":"Diabetes","img":"3.jpg"},{"id":4,"label":"Home Devices","img":"4.jpg"},
-		{"id":5,"label":"Eye","img":"5.jpg"},{"id":6,"label":"Personal Care","img":"6.jpg"},
-		{"id":7,"label":"Beauty","img":"7.jpg"},{"id":8,"label":"Parenting","img":"8.jpg"},
-		{"id":9,"label":"Services","img":"9.jpg"}]}))
-		{
-			$('.scrollWindow').scrollWindow({scrollFactor:35});   
-		}
-		
+			
 		
 		/**Backbone code for product list*S*/
 		var ProductModel = Backbone.Model.extend({

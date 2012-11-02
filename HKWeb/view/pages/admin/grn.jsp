@@ -4,6 +4,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.inventory.EnumGrnStatus" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
@@ -194,6 +195,25 @@
 					alert("Enter values in correct format.");
 					return false;
 				}
+
+				var returnFalse = false;
+				$.each($('.receivedQuantity'), function(index, value){
+					var valueChangeRow = $(this).parents('.lineItemRow');
+					var eachRow=$(value);
+
+					var receivedQuantity = parseFloat(eachRow.val().trim());
+					var alreadyGrnQty = parseFloat(valueChangeRow.find('#alreadyGRNQty').val());
+					var poLineItemQty = parseFloat(valueChangeRow.find('#poLineItemQty').val());
+					if( receivedQuantity + alreadyGrnQty > poLineItemQty){
+						alert("GRN for " + valueChangeRow.find('#variantHidden').val() + " is more than PO. Please change it to save the GRN" );
+						returnFalse = true;
+						return false;
+					}
+				});
+				if(returnFalse) {
+					return false;
+				}
+
 				$(this).css("display", "none");
 			} );
 
@@ -272,7 +292,15 @@
 			<%--<td>Reconciled</td>
 								<td><s:checkbox name="grn.reconciled"/></td>--%>
 		<td>Status</td>
-		<td>${pa.grn.grnStatus.name}</td>
+		<td>${pa.grn.grnStatus.name}
+			<shiro:hasRole name="<%=RoleConstants.GOD%>">
+				<s:select name="grn.grnStatus" value="${pa.grn.grnStatus.id}">
+					<hk:master-data-collection service="<%=MasterDataDao.class%>"
+											   serviceProperty="grnStatusList"
+											   value="id" label="name"/>
+				</s:select>
+			</shiro:hasRole>
+		</td>
 		<td>Remarks</td>
 		<td><s:textarea name="grn.remarks" style="height:50px;"/></td>
 	</tr>
@@ -286,12 +314,12 @@
 		<th>S.No.</th>
 		<th></th>
 		<th>VariantID</th>
-		<th>UPC</th>
 		<th>Supplier Code</th>
 		<th>Remarks</th>
 		<th>Details</th>
 		<th>Tax<br/>Category</th>
 		<th>Asked Qty</th>
+		<th>Other<br> GRN qty</th>
 		<th>Received Qty<br/>(Adjust -)</th>
 		<th>Checkedin Qty</th>
 		<th>Cost Price<br/>(Without TAX)</th>
@@ -358,7 +386,6 @@
 				<%--<s:hidden class="sku" name="grnLineItems[${ctr.index}].sku"
 									 value="${sku}"></s:hidden>--%>
 		</td>
-		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.upc" value="${productVariant.upc}"/></td>
 		<td>${productVariant.supplierCode}</td>
 		<td>${productVariant.otherRemark}</td>
 		<td>${product.name}<br/>${productVariant.variantName}<br/>${productVariant.optionsCommaSeparated}
@@ -382,6 +409,11 @@
 				   ${grnLineItemDto.grnLineItem.sku.tax.value}
 		   </td>--%>
 		<td>${hk:askedPOQty(pa.grn.purchaseOrder, productVariant)}</td>
+		<td>
+			<input type="text" id="alreadyGRNQty" value="${hk:getGrnLineItemQtyAlreadySet(grnLineItemDto.grnLineItem.goodsReceivedNote, grnLineItemDto.grnLineItem.sku)}" disabled="disabled"/>
+			<input type="hidden" id="poLineItemQty" value="${hk:getPoLineItemQty(grnLineItemDto.grnLineItem)}"/>
+			<input type="hidden" id="variantHidden" value="${productVariant.id}" />
+		</td>
 		<td>
 			<s:text name="grnLineItems[${ctr.index}].qty" value="${grnLineItemDto.grnLineItem.qty}"
 			        class="receivedQuantity valueChange"/>
@@ -424,7 +456,7 @@
 	<tfoot>
 	<tr>
 		<td colspan="9">Total</td>
-		<td colspan="5" class="totalQuantity"></td>
+		<td colspan="6" class="totalQuantity"></td>
 		<td><s:text readonly="readonly" class="totalTaxable" name="grn.taxableAmount" value="${pa.grn.taxableAmount}" /></td>
 		<td><s:text readonly="readonly" class="totalTax" name="grn.taxAmount" value="${pa.grn.taxAmount}" /></td>
 		<td><s:text readonly="readonly" class="totalSurcharge" name="grn.surchargeAmount" value="${pa.grn.surchargeAmount}"/></td>
@@ -444,9 +476,17 @@
 <div class="variantDetails info"></div>
 <br/>
 <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
-<c:if test="${pa.grn.grnStatus.id < inCheckedIn}">
-	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
-</c:if>
+<c:choose>
+	<c:when test="${pa.grn.grnStatus.id < inCheckedIn}">
+		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+	</c:when>
+	<c:otherwise>
+		<shiro:hasRole name="<%=RoleConstants.GOD%>">
+			<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+		</shiro:hasRole>
+	</c:otherwise>
+</c:choose>
+
 </s:form>
 
 </s:layout-component>

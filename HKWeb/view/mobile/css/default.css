@@ -440,6 +440,7 @@ display: inline;
 	height:inherit;
 	background:white;
 	padding-left:8px;	
+	text-align: center;
 	
 }
 #productList .image-container img,#cartList .image-container img,#productDetailMain .image-container img,#variantList .image-container img{
@@ -450,19 +451,23 @@ display: inline;
 #productList .text-container,#cartList .text-container,#productDetailMain .text-container,#variantList .text-container{
 	padding-left:10px;	
 }
-#variantList .variant-description {
+#variantList .variant-description{
 	max-width:140px;
+	
 	width:50%;
 	overflow:hidden;
 	text-overflow:ellipsis;
 	font-weight:normal;
-	vertical-align:top
+	vertical-align:top	
 }
-#variantList .text-container {
-
+#variantList .variant-description .svPrcnt{
+	font-size:13px;
 	
+}
+#variantList .text-container {	
 	overflow:hidden;
 	text-overflow:ellipsis;
+	vertical-align:top
 }
 #productList .ofrPrc,#cartList .ofrPrc,#productDetailMain .ofrPrc,#variantList .ofrPrc{
 	font-size:1em;

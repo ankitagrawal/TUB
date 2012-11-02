@@ -147,7 +147,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
 				xlsWriter.addCell(row, reconcilationReportDto.getDeliveryDate() != null ? simpleDateFormat.format(reconcilationReportDto.getDeliveryDate()) : "");
 			}
 
-			xlsWriter.addCell(row, reconcilationReportDto.getReconciled());
+			xlsWriter.addCell(row, reconcilationReportDto.isReconciled() ? 'Y' : 'N');
 			xlsWriter.addCell(row, reconcilationReportDto.getOrderStatus());
 			xlsWriter.addCell(row, reconcilationReportDto.getBoxWeight());
 			xlsWriter.addCell(row, reconcilationReportDto.getBoxSize());
