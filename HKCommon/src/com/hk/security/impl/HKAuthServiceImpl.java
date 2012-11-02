@@ -30,10 +30,16 @@ public class HKAuthServiceImpl implements HKAuthService {
             if(userName.equals("abc") && password.equals("abc") && appId.equals("abc")){
                 Collection<GrantedOperation> allowedOperations = GrantedOperationUtil.ALL_OPERATIONS;
                 authentication = new HKUsernamePasswordAuthenticationToken(userName, password, allowedOperations);
+            }else{
+               //throw some authentication exception 
             }
+            return authentication;
+        }else{
+            //throw some authentication exception here.
         }
 
-        return authentication;
+        return null;
+        
     }
 
 }

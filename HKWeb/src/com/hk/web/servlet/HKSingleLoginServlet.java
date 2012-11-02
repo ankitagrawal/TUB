@@ -94,7 +94,7 @@ public class HKSingleLoginServlet extends HttpServlet {
         getSuccessHandler().handleAuthenticationSuccess(request, response, authResult);
     }
 
-    public HKAuthentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws HKAuthenticationException {
+    protected HKAuthentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws HKAuthenticationException {
 
         String username = obtainUsername(request);
         String password = obtainPassword(request);
