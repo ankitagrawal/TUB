@@ -217,7 +217,7 @@
 				$(this).css("display", "none");
 			} );
 
-			//updateTotal('.receivedQuantity','.totalQuantity',1);
+			updateTotal('.receivedQuantity','.totalQuantity',1);
 		});
 	</script>
 </s:layout-component>
