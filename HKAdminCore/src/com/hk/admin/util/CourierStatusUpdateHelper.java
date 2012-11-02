@@ -247,15 +247,14 @@ public class CourierStatusUpdateHelper {
         return shipmentList;
     }
 
-    public List<Element> bulkUpdateDeliveryStatusBlueDart(String trackingId) throws HealthkartCheckedException {
-        Element    xmlElement   = null;
+    public List<Element> bulkUpdateDeliveryStatusBlueDart(String trackingId) throws HealthkartCheckedException {         
         String inputLine = "";
         String response = "";
         courierName="(Bluedart)";
         List xmlElementList= null;
 
         //added for debugging
-        trackingId              = "43925348331,43892306382,43925355342";
+        //trackingId              = "43925348331,43892306382,43925355342";
 
         try {
             url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid=" + loginIdForBlueDart + "&awb=awb&numbers=" + trackingId + "&format=xml&lickey=" + licenceKeyForBlueDart + "&verno=1.3&scan=1");
@@ -270,7 +269,7 @@ public class CourierStatusUpdateHelper {
             Document doc = new SAXBuilder().build(new StringReader(response));
             XPath xPath = XPath.newInstance("/*/Shipment");
             xmlElementList = xPath.selectNodes(doc);
-            //xmlElement = (Element) xPath.selectSingleNode(doc);
+
 
         } catch (MalformedURLException mue) {
             logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION +courierName+ trackingId);
