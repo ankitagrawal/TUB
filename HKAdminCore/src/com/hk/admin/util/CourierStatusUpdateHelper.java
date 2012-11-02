@@ -255,7 +255,7 @@ public class CourierStatusUpdateHelper {
         List xmlElementList= null;
 
         //added for debugging
-        trackingId              = "43925352531,43925346323,43925356311";
+        trackingId              = "43925348331,43892306382,43925355342";
 
         try {
             url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid=" + loginIdForBlueDart + "&awb=awb&numbers=" + trackingId + "&format=xml&lickey=" + licenceKeyForBlueDart + "&verno=1.3&scan=1");

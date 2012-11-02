@@ -330,7 +330,7 @@ public class DeliveryStatusUpdateManager {
                             continue;
                         }
                         if (elementList != null && elementList.size() > 0) {
-                            ordersDelivered = updateBlueDartStatus(elementList);
+                            ordersDelivered = updateBlueDartStatus(elementList, shippingOrderSubList);
                         }
                         i = endIndex;
                     }
@@ -342,7 +342,7 @@ public class DeliveryStatusUpdateManager {
                         elementList = courierStatusUpdateHelper.bulkUpdateDeliveryStatusBlueDart(trackingId);
                     }
                     if (elementList != null && elementList.size() > 0) {
-                        ordersDelivered = updateBlueDartStatus(elementList);
+                        ordersDelivered = updateBlueDartStatus(elementList, shippingOrderList );
                     }
                 }
             }
@@ -439,10 +439,14 @@ public class DeliveryStatusUpdateManager {
         return ordersDelivered;
     }
 
-    private int updateBlueDartStatus(List<Element> elementList) {
+    private int updateBlueDartStatus(List<Element> elementList,List<ShippingOrder> shippingOrderList) {
         ShippingOrder shippingOrder;
         SimpleDateFormat sdf_date = new SimpleDateFormat("dd MMMMM yyyy");
-        for (Element ele : elementList) {
+        Iterator elementListIterator = elementList.listIterator();
+        Iterator shippingOrderListIterator = shippingOrderList.listIterator();
+        while (elementListIterator.hasNext() && shippingOrderListIterator.hasNext()) {
+            Element ele = (Element) elementListIterator.next();
+            shippingOrder = (ShippingOrder) shippingOrderListIterator.next();
             if (ele != null) {
                 String status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
                 String statusDate = ele.getChildText(CourierConstants.BLUEDART_STATUS_DATE);
@@ -450,11 +454,9 @@ public class DeliveryStatusUpdateManager {
                 try {
                     if (status.equals(CourierConstants.BLUEDART_SHIPMENT_DELIVERED) && statusDate != null) {
                         Date delivery_date = sdf_date.parse(statusDate);
-                        Awb awb = awbService.findByCourierAwbNumber(EnumCourier.BlueDart.asCourier(), trackingId);
-                        Shipment shipment = shipmentService.findByAwb(awb);
-                        shippingOrder = shipment.getShippingOrder();
-                        //for (ShippingOrder shippingOrder : shippingOrderSubList) {
-                        ordersDelivered = updateCourierDeliveryStatus(shippingOrder, shippingOrder.getShipment(), trackingId, delivery_date);
+                        if(shippingOrder != null){
+                            ordersDelivered = updateCourierDeliveryStatus(shippingOrder, shippingOrder.getShipment(), trackingId, delivery_date);
+                        }
                     }
                 }
                 catch (ParseException pe) {
