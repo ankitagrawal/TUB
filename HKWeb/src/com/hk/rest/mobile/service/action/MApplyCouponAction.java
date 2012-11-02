@@ -1,5 +1,6 @@
 package com.hk.rest.mobile.service.action;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -37,6 +37,7 @@ import com.hk.manager.OrderManager;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.service.discount.CouponService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.rest.mobile.service.model.MCouponResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.web.HealthkartResponse;
 
@@ -281,9 +282,20 @@ public class MApplyCouponAction extends MBaseAction {
 					new HealthkartResponse(MHKConstants.STATUS_ERROR,
 							MHKConstants.STATUS_ERROR, null));
 		}
+		List<MCouponResponse> couponList = new ArrayList<MCouponResponse>();
+		MCouponResponse couponResponse = null;
+		for(OfferInstance offer:offerInstanceList){
+			couponResponse = new MCouponResponse();
+			couponResponse.setCouponCode(offer.getCoupon().getCode());
+			couponResponse.setEndDate(offer.getEndDate().toString());
+			couponResponse.setId(offer.getId().toString());
+			couponResponse.setOfferDescription(offer.getOffer().getDescription());
+			couponResponse.setOfferTerms(offer.getOffer().getTerms());
+			couponList.add(couponResponse);
+		}
 		return JsonUtils.getGsonDefault().toJson(
 				new HealthkartResponse(MHKConstants.STATUS_OK,
-						MHKConstants.STATUS_DONE, offerInstanceList));
+						MHKConstants.STATUS_DONE, couponList));
 	}
 
 	@POST
