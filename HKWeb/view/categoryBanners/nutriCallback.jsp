@@ -7,24 +7,26 @@
     text-decoration: none;
     border-bottom: 0;
   }
+
   #sendCouponLink :hover {
     text-decoration: none;
     border-bottom: 0;
   }
 </style>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-  <%--<s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
+  <s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
+    <%--<img src="${pageContext.request.contextPath}/images/banners/top/nutrition_faq_banner.jpg" alt="All Your Nutrition Questions - Answered Here.">--%>
+    <img src="${pageContext.request.contextPath}/images/banners/top/nutrition_strip_banner3.jpg"
+         alt="Introductory Nutrition Discount - 10% off">
+  </s:link>
+  <%--<a href="${pageContext.request.contextPath}/faq" >
     <img src="${pageContext.request.contextPath}/images/banners/top/nutrition_faq_banner.jpg" alt="All Your Nutrition Questions - Answered Here.">
-  </s:link>--%>
-	 <a href="${pageContext.request.contextPath}/faq" >
-    <%--<img src="${pageContext.request.contextPath}/images/banners/top/nutrition_strip_banner.jpg" alt="Introductory Nutrition Discount - 10% off">--%>
-    <img src="${pageContext.request.contextPath}/images/banners/top/nutrition_faq_banner.jpg" alt="All Your Nutrition Questions - Answered Here.">
-  </a>
+  </a>--%>
   <script type="text/javascript">
     var params = {};
-    params['srcUrl']=document.location.href;
-    params['topLevelCategory']=$('#topCategoryContainer').html();
-    $('#sendCouponLink').attr('href', $('#sendCouponLink').attr('href')+'?'+$.param(params));
+    params['srcUrl'] = document.location.href;
+    params['topLevelCategory'] = $('#topCategoryContainer').html();
+    $('#sendCouponLink').attr('href', $('#sendCouponLink').attr('href') + '?' + $.param(params));
 
     $('#discountCouponModal').jqm({trigger: '#sendCouponLink', ajax: '@href'});
 
