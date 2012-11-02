@@ -82,17 +82,16 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
 
         for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
             Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
-	        if(couriers != null && couriers.size() > 0){
             for (Courier courier : couriers) {
                 CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
 	            if (courierPricingInfo == null) {
-		            return null;
+		            continue;
 	            }
 	            totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
                 logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
                 courierCostingMap.put(courier, totalCost.longValue());
             }
-	        }
+
         }
 
         MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
