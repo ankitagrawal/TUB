@@ -13,6 +13,17 @@
 				</p>
 			</td>
 		</tr>
+		<tr>
+			
+				{{ if(productOptions.length>0) { }}
+			<td class='variant-description' style='padding-left:20px;font-size:12px;font-weight:normal'colspan=2>
+				{{for(i=0;i<productOptions.length;i++) {
+					print("<span class='svPrcnt'>"+productOptions[i].name+" : "+productOptions[i].value+"</span>");
+				} }}					
+			</td>
+		{{ } }}
+			
+		</tr>
 	</table>
 	<table style='width:90%;margin:0px auto'>
 		<tr>
