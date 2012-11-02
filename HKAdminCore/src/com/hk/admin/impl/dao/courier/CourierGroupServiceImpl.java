@@ -36,9 +36,11 @@ public class CourierGroupServiceImpl extends BaseDaoImpl implements CourierGroup
         Set<Courier> commonCouriers = new HashSet<Courier>();
 	    if(courierGroup != null){
         for (Courier courier : courierList) {
+	        if(courier.getCourierGroup() != null){
             if(courier.getCourierGroup().equals(courierGroup)){
                 commonCouriers.add(courier);
             }
+	        } 
         }
 	    }
         return commonCouriers;
