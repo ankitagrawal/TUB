@@ -301,20 +301,21 @@ public class MApplyCouponAction extends MBaseAction {
 	@POST
 	@Path("/applyOffer/")
 	@Produces("application/json")
-	public String applyOffer() {
+	public String applyOffer(@FormParam("offer") String couponId,
+	@Context HttpServletResponse response) {
 		try {
 			User user = getUserService().getUserById(getPrincipal().getId());
 			Order order = orderManager.getOrCreateOrder(user);
-			Offer offer = offerManager.getAffiliateOffer();
-			if (null == offer)
-				offer = offerManager.getOfferForEmployee();
-			if (null == offer)
-				offer = offerManager.getOfferForIHO();
-			if (null == offer)
-				offer = offerManager.getOfferForReferralAndAffiliateProgram();
-			if (null == offer)
-				offer = offerManager.getOfferForReferrelProgram();
-				selectedOffer = offerInstanceDao.findByUserAndOffer(user, offer);
+
+			offerInstanceList = offerInstanceDao.getActiveOffers(user);
+			for (OfferInstance offerInstance : offerInstanceList) {
+				if (offerInstance.getId().equals(couponId)) {
+					order.setOfferInstance(offerInstance);
+					//orderService.save(order);
+					selectedOffer = offerInstance;
+				}
+			}
+			//selectedOffer = offerInstanceDao.findByUserAndOffer(user, offer);
 			if(null!=selectedOffer){
 			if (!selectedOffer.getUser().equals(user)) {
 				HealthkartResponse healthkartResponse = new HealthkartResponse(
