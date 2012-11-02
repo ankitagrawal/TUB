@@ -1,33 +1,34 @@
 package com.hk.rest.mobile.service.action;
 
-import com.hk.constants.core.HealthkartConstants;
-import com.hk.dto.user.UserLoginDto;
-import com.hk.exception.HealthkartLoginException;
-import com.hk.manager.UserManager;
-import com.hk.pact.dao.RoleDao;
-import com.hk.pact.service.RoleService;
-import com.hk.rest.mobile.service.model.MUserLoginJSONResponse;
-import com.hk.rest.mobile.service.utils.MHKConstants;
-import com.hk.web.HealthkartResponse;
-import com.hk.domain.user.Address;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+
 import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.stripesstuff.plugin.session.Session;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.hk.constants.core.HealthkartConstants;
+import com.hk.domain.user.Address;
+import com.hk.dto.user.UserLoginDto;
+import com.hk.exception.HealthkartLoginException;
+import com.hk.manager.UserManager;
+import com.hk.pact.service.RoleService;
+import com.hk.rest.mobile.service.model.MUserLoginJSONResponse;
+import com.hk.rest.mobile.service.utils.MHKConstants;
+import com.hk.web.HealthkartResponse;
 
 /**
  * Created by IntelliJ IDEA. User: Satish Date: Sep 21, 2012 Time: 5:48:22 PM To
@@ -52,8 +53,6 @@ public class MLoginAction extends MBaseAction {
 
 	@Autowired
 	UserManager userManager;
-	@Autowired
-	RoleDao roleDao;
 
 	@Autowired
 	private RoleService roleService;
@@ -66,19 +65,19 @@ public class MLoginAction extends MBaseAction {
 			@FormParam("password") String password,@Context HttpServletRequest request) throws Exception {
 		HealthkartResponse healthkartResponse;
 		String jsonBuilder = "";
-		String message = "Done";
-		String status = HealthkartResponse.STATUS_OK;
+		String message = MHKConstants.STATUS_DONE;
+		String status = MHKConstants.STATUS_OK;
 		UserLoginDto userLoginDto = null;
 		List<MUserLoginJSONResponse> userItemList = null;
 		try {
 			userLoginDto = userManager.login(email, password, true);
 		} catch (HealthkartLoginException e) {
-			message = "Invalid login credentials.";
-			status = HealthkartResponse.STATUS_ERROR;
+			message = MHKConstants.INVALID_LOGIN_CRDNTLS;
+			status = MHKConstants.STATUS_ERROR;
 		}
 		userName = null;
 
-		if (status == HealthkartResponse.STATUS_OK) {
+		if (status == MHKConstants.STATUS_OK) {
 			// healthkartresponse = new
 			// HealthkartResponse(status,message,userLoginDto);
 			userItemList = new ArrayList<MUserLoginJSONResponse>();

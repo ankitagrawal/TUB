@@ -1,11 +1,6 @@
 package com.hk.manager;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -542,6 +537,7 @@ public class OrderManager {
 
 	public Order trimEmptyLineItems(Order order) {
 		//orderDao.refresh(order);
+    Set<Long> comboInstanceIds = new TreeSet<Long>();
 		if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
 			for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext(); ) {
 				CartLineItem lineItem = iterator.next();
@@ -567,16 +563,31 @@ public class OrderManager {
 	                                if (unbookedInventory < 0) {
 		                                unbookedInventory = 0L;
 	                                }
+                   if(lineItem.getComboInstance()!=null){
+                     comboInstanceIds.add(lineItem.getComboInstance().getId());
+                     lineItem.setQty(0L);
+                    logger.debug("Deleting Combo because unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId() + "is less than combo Product Variant Quantity");
+                   }
+                  else{
 									lineItem.setQty(unbookedInventory);
 									cartLineItemService.save(lineItem);
 									logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
-								}
+                 }
+                   }
 							}
 						}
             cartLineItemService.save(lineItem);
 					}
 				}
 			}
+      for(Long comboInstanceId : comboInstanceIds){
+        for(CartLineItem cartLineItem : order.getCartLineItems()){
+           if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().getId().equals(comboInstanceId)){
+                cartLineItem.setQty(0L);
+              cartLineItemService.save(cartLineItem);
+           }
+        }
+      }
 			order = getOrderService().save(order);
 		}
 		return order;

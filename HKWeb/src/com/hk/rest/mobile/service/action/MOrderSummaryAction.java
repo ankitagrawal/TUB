@@ -5,6 +5,8 @@ import org.stripesstuff.plugin.session.Session;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
@@ -57,6 +59,7 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.payment.PaymentService;
 import com.hk.pricing.PricingEngine;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.payment.PaymentModeAction;
@@ -90,8 +93,6 @@ public class MOrderSummaryAction extends MBaseAction {
     @Autowired
     private CourierService courierService;
     @Autowired
-    UserDao userDao;
-    @Autowired
     OrderManager orderManager;
     @Autowired
     PricingEngine pricingEngine;
@@ -118,8 +119,6 @@ public class MOrderSummaryAction extends MBaseAction {
     // COD related changes
     @Autowired
     PaymentManager paymentManager;
-    @Autowired
-    PaymentModeDao paymentModeDao;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double            codCharges;
@@ -145,7 +144,8 @@ public class MOrderSummaryAction extends MBaseAction {
         String jsonBuilder = "";
         String message = "Done";
         String status = HealthkartResponse.STATUS_OK;
-        Map orderMap = new HashMap<String,Object>();
+        Map<String,Object> orderMap = new HashMap<String,Object>();
+        try{
         User user = getUserService().getUserById(getPrincipal().getId());
         order = orderManager.getOrCreateOrder(user);
         // Trimming empty line items once again.
@@ -172,7 +172,7 @@ public class MOrderSummaryAction extends MBaseAction {
             status = MHKConstants.STATUS_ERROR;
             return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,message));
         } else if (pricingDto.getProductLineCount() == 0) {
-            addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
+            //addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
             message = MHKConstants.EMPTY_CART;
             status = MHKConstants.STATUS_ERROR;
             return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,message));
@@ -254,9 +254,13 @@ public class MOrderSummaryAction extends MBaseAction {
         }
         orderMap.put("availableCourierList",availableCourierList);
 
-
+        }catch(Exception e){
+        	status = MHKConstants.STATUS_ERROR;
+        	message = MHKConstants.STATUS_ERROR;
+        	return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, orderMap));
+        }
         healthkartResponse = new HealthkartResponse(status, message, orderMap);
-        jsonBuilder = com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(healthkartResponse);
+        jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
         return jsonBuilder;
     }
 
