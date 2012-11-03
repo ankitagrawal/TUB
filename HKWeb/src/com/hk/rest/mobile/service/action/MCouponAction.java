@@ -1,5 +1,6 @@
 package com.hk.rest.mobile.service.action;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ import com.hk.web.HealthkartResponse;
 
 @Path("/mCoupon")
 @Component
-public class MApplyCouponAction extends MBaseAction {
+public class MCouponAction extends MBaseAction {
 
 	@Autowired
 	private CouponService couponService;
@@ -243,7 +244,10 @@ public class MApplyCouponAction extends MBaseAction {
 					Map<String, Object> couponMap = new HashMap<String, Object>();
 					Offer offer = offerInstance.getOffer();
 					couponMap.put("terms", offer.getTerms());
-					couponMap.put("valid_till", offer.getEndDate());
+					String endDate = offer.getEndDate().toString();
+					if(null!=offer.getEndDate()&&!"".equals(offer.getEndDate()))
+						endDate = DateFormat.getDateInstance().format(offer.getEndDate());
+					couponMap.put("valid_till", endDate);
 					couponMap.put("coupon",
 							null != coupon.getCode() ? coupon.getCode()
 									: MHKConstants.NO_COUPON_CODE);
@@ -287,7 +291,12 @@ public class MApplyCouponAction extends MBaseAction {
 		for(OfferInstance offer:offerInstanceList){
 			couponResponse = new MCouponResponse();
 			couponResponse.setCouponCode(offer.getCoupon().getCode());
-			couponResponse.setEndDate(offer.getEndDate().toString());
+
+			String endDate = offer.getEndDate().toString();
+			if(null!=offer.getEndDate()&&!"".equals(offer.getEndDate()))
+				endDate = DateFormat.getDateInstance().format(offer.getEndDate());
+			
+			couponResponse.setEndDate(endDate);
 			couponResponse.setId(offer.getId().toString());
 			couponResponse.setOfferDescription(offer.getOffer().getDescription());
 			couponResponse.setOfferTerms(offer.getOffer().getTerms());
