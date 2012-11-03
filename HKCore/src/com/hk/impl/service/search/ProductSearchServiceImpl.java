@@ -174,8 +174,11 @@ class ProductSearchServiceImpl implements ProductSearchService {
         for (SearchFilter categoryFilter : categories){
             if (categoryFilter.getValue() != null){
                 //query.addFilterQuery("{!field f= brand}" + brand);
-                String categoryQuery = String.format("{!field f= %s}%s",categoryFilter.getName(), categoryFilter.getValue() );
-                solrQuery.addFilterQuery(categoryQuery);
+                //Only if it's a valid category
+                if (categoryService.getCategoryByName(categoryFilter.getValue().toString()) != null){
+                    String categoryQuery = String.format("{!field f= %s}%s",categoryFilter.getName(), categoryFilter.getValue() );
+                    solrQuery.addFilterQuery(categoryQuery);
+                }
             }
         }
         solrQuery.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);

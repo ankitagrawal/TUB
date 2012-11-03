@@ -7759,12 +7759,12 @@
       <sql>
         UPDATE `purchase_invoice` pi SET pi.`reconcilation_date`= DATE_ADD(pi.`create_date`, INTERVAL 3 DAY) WHERE `reconciled`=1 AND `reconcilation_date` IS NULL
       </sql>
-    </changeSet>    
+    </changeSet>
     <changeSet author="Rimal (generated)" id="1341381517333-1">
         <addColumn tableName="category_image">
             <column name="position" type="VARCHAR(20)"/>
         </addColumn>
-    </changeSet>    
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1341923692621-1">
         <createTable tableName="brands_to_audit">
             <column autoIncrement="true" name="id" type="INT">
@@ -8230,7 +8230,7 @@
        delete from `demand_history` where `base_order_id` is null;
         </sql>
     </changeSet>
-    
+
     <changeSet author="Seema (generated)" id="1343136104792-1">
         <dropForeignKeyConstraint baseTableName="demand_history"  constraintName="fk_demand_history_base_order1"/>
     </changeSet>
@@ -8264,7 +8264,7 @@
         <addColumn tableName="faq">
             <column name="page_rank" type="INT"/>
         </addColumn>
-    </changeSet>        
+    </changeSet>
 	<changeSet author="Rahul (generated)" id="1343129589883-1">
 	    <dropForeignKeyConstraint baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku1"/>
 	</changeSet>
@@ -8305,7 +8305,7 @@
         <addColumn tableName="pincode">
             <column name="tier" type="VARCHAR(20)"/>
         </addColumn>
-    </changeSet>    
+    </changeSet>
     <changeSet author="Neha (generated)" id="1343293102089-1">
         <createTable tableName="demand_forecast">
             <column autoIncrement="true" name="id" type="INT">
@@ -8445,7 +8445,7 @@
     <changeSet author="vaibhav (generated)" id="1345107754347-5">
         <addForeignKeyConstraint baseColumnNames="similar_product_id" baseTableName="similar_product" constraintName="fk_similar_product_product2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
     </changeSet>
-	
+
     <changeSet author="Ajeet (generated)" id="1345455498259-2">
         <addNotNullConstraint columnDataType="TINYINT" columnName="cod_allowed" defaultNullValue="1" tableName="product"/>
     </changeSet>
@@ -8781,7 +8781,7 @@
     </changeSet>
     <changeSet author="Pratham (generated)" id="1345723398289-18">
         <addForeignKeyConstraint baseColumnNames="coupon_type_id" baseTableName="coupon" constraintName="fk_coupon_coupon_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="coupon_type" referencesUniqueColumn="false"/>
-    </changeSet>	
+    </changeSet>
     <changeSet author="Pratham (generated)" id="1346752484668-1">
         <createTable tableName="affiliate_has_category">
             <column name="affiliate_id" type="INT">
@@ -8968,7 +8968,7 @@
             </column>
         </addColumn>
     </changeSet>
-	
+
     <changeSet author="Ajeet (generated)" id="1347689819294-1">
         <createTable tableName="offer_email_domain">
             <column autoIncrement="true" name="id" type="INT">
@@ -9022,7 +9022,7 @@
     <changeSet author="Ajeet (generated)" id="1347564843152-3">
         <addForeignKeyConstraint baseColumnNames="updated_by" baseTableName="update_pv_price" constraintName="fk_update_pv_price_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
-	
+
     <changeSet author="Ajeet (generated)" id="1347716040167-1">
         <addColumn tableName="update_pv_price">
             <column name="old_costprice" type="DECIMAL(10,2)">
@@ -9109,7 +9109,7 @@
     </changeSet>
     <changeSet author="Tarun (generated)" id="1348554794998-2">
         <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="runsheet" constraintName="fk_runsheet_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-    </changeSet>   
+    </changeSet>
     <changeSet author="Rohit (generated)" id="1348648571172-1">
         <createTable tableName="order_payment_reconciliation">
             <column autoIncrement="true" name="id" type="INT">
@@ -9421,7 +9421,7 @@
             <column name="returnAwb_number" type="VARCHAR(70)"/>
         </addColumn>
     </changeSet>
-	
+
 	<changeSet author="Ajeet (generated)" id="1348919811628-1">
         <addColumn tableName="update_pv_price">
             <column defaultValue="10" name="status" type="INT">
@@ -9537,7 +9537,7 @@
             <column name="target_del_date" type="DATE"/>
         </addColumn>
     </changeSet>
-    
+
     <changeSet author="Ajeet (generated)" id="1351236795227-1">
         <createTable tableName="supplier_balance">
             <column autoIncrement="true" name="id" type="INT">
@@ -9557,5 +9557,52 @@
     <changeSet author="Ajeet (generated)" id="1351236795227-2">
         <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="supplier_balance" constraintName="fk_supplier_balance_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
     </changeSet>
-    
+    <changeSet author="Marut (generated)" id="1351173120154-1">
+        <createTable tableName="user_detail">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="phone" type="BIGINT"/>
+            <column name="crm_priority" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1351173120154-4">
+        <createIndex indexName="user_detail_key" tableName="user_detail" unique="true">
+            <column name="phone"/>
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1351491739428-1">
+        <addColumn tableName="feedback">
+            <column name="feedback_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+	<changeSet author="Ajeet (written)" id="20121029-01">
+		<sql>
+			update feedback f, base_order bo set f.feedback_date=bo.update_dt where f.base_order_id=bo.id;
+		</sql>
+	</changeSet>
+	<changeSet author="Tarun (generated)" id="1351231777053-1">
+		<dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="phone" tableName="notify_me"/>
+	</changeSet>
+	<changeSet author="Marut (generated)" id="1351515049101-2">
+		<addColumn tableName="user_detail">
+			<column name="create_dt" type="DATETIME">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+		<sql>
+			Update user_detail set create_dt = now();
+		</sql>
+	</changeSet>
+
 </databaseChangeLog>
