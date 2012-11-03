@@ -20,18 +20,57 @@
 				id='cartList'>
 
 			</ul>
+			<table class=hide id='couponContainer' style='margin:0px auto'>
+				<tr>
+					<td>
+						<input type=text id=couponText name=couponText  placeholder='Dicount Coupon' />
+					</td>
+					<td>
+						<button id=submitCoupon>Apply</button>
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2 style='text-align:center'>
+						<a href='#couponManage' id='mngCpn' data-role=none>(see previously applied offers)</a>
+					</td>
+				</tr>
+			</table>
 			<br /> <a
 				href='<%if(session.getAttribute("userName")==null){%>${httpPath}/login-signup.jsp?target=address<% }else{%>${httpPath}/address.jsp<%}%>'
 				id='checkout'
-				style='width: 95%; margin: 0px auto; margin-bottom: 8px; margin-top: 12px'
+				style=' margin: 0px auto; margin-bottom: 8px; '
 				data-role=button id='btnChkOut'>CheckOut</a>
 
 			<%@ include file='menuFooter.jsp'%>
 		</div>
+		
 
-		<%@ include file='template/cart-templates.jsp'%>
-		<script type="text/javascript" src='${httpPath}/js/cart.js'></script>
+		
 	</div>
+	<div id='couponManage' data-role=page>
+		<div data-role=header>
+			<%@ include file='menuHeader.jsp'%>
+			<%@ include file='menuNavBtn.jsp'%>
+		</div>
+		<div data-role=content>
+			<table id='couponManagerContainer'>
+			</table>
+			<table style='width:100%;margin:0px auto;text-align:center'>
+				<tr>
+					<td>
+						<div id='couponApply' class='greenBtn'>Apply Offer</div>
+					</td>
+					<td>
+						<div id='couponRemove' class='greenBtn'>Remove Applied Offer</div>
+					</td>
+				</tr>
+			</table>
+			<div class=clear></div>
+			<a href='javascript:void(0)' data-role=button data-rel=back>Go Back</a>
+		</div>
+	</div>
+	<%@ include file='template/cart-templates.jsp'%>
+		<script type="text/javascript" src='${httpPath}/js/cart.js'></script>
 
 </body>
 </html>

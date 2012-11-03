@@ -300,6 +300,9 @@ public class MCouponAction extends MBaseAction {
 			couponResponse.setId(offer.getId().toString());
 			couponResponse.setOfferDescription(offer.getOffer().getDescription());
 			couponResponse.setOfferTerms(offer.getOffer().getTerms());
+			if(null!=selectedOffer)
+			if(offer.getId().equals(selectedOffer.getId()))
+				couponResponse.setSelectedOffer(true);
 			couponList.add(couponResponse);
 		}
 		return JsonUtils.getGsonDefault().toJson(
@@ -310,7 +313,7 @@ public class MCouponAction extends MBaseAction {
 	@POST
 	@Path("/applyOffer/")
 	@Produces("application/json")
-	public String applyOffer(@FormParam("offer") String couponId,
+	public String applyOffer(@FormParam("offer") long couponId,
 	@Context HttpServletResponse response) {
 		try {
 			User user = getUserService().getUserById(getPrincipal().getId());

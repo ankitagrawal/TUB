@@ -1,7 +1,5 @@
 package com.hk.rest.mobile.service.model;
 
-import com.hk.domain.coupon.Coupon;
-import com.hk.domain.offer.Offer;
 
 public class MCouponResponse {
 
@@ -10,6 +8,14 @@ public class MCouponResponse {
 	private String offerTerms;
 	private String endDate;
 	private String couponCode;
+	private boolean selectedOffer;
+	
+	public boolean isSelectedOffer() {
+		return selectedOffer;
+	}
+	public void setSelectedOffer(boolean selectedOffer) {
+		this.selectedOffer = selectedOffer;
+	}
 	public String getId() {
 		return id;
 	}
