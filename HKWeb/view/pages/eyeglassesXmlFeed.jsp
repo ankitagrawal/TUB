@@ -11,27 +11,39 @@
         <c:set var="frontFacingEyeImageTypeId" value="<%=EnumImageType.FrontFacingEye.getId()%>"/>
         <c:set var="sideFacingEyeImageTypeId" value="<%=EnumImageType.SideFacingEye.getId()%>"/>
         <c:if test="${!productVariant.deleted && !productVariant.outOfStock && product.mainImageId != null}">
+            <%--COLOR:Black|Size:Small|Material:Plastic|Gender:Kids|Brand:Blue Wine.T|Style:Rectangular--%>
+            <%--<Glass type="Large" gender="Male" color="Black" id="1011">--%>
             <c:forEach items="${productVariant.productOptions}" var="productOption">
-                <c:if test="${hk:equalsIgnoreCase(productOption.name,'size')}">
-                    <c:set var="sizeType" value="${productOption.value}"/>
+                <c:if test="${hk:equalsIgnoreCase(productOption.name,'Size')}">
+                    <c:set var="type" value="${productOption.value}"/>
+                </c:if>
+                <c:if test="${hk:equalsIgnoreCase(productOption.name,'Gender')}">
+                    <c:set var="gender" value="${productOption.value}"/>
+                </c:if>
+                <c:if test="${hk:equalsIgnoreCase(productOption.name,'COLOR')}">
+                    <c:set var="color" value="${productOption.value}"/>
                 </c:if>
             </c:forEach>
             <c:set var="frontFacingEyeImageId"
-                   value="${hk:searchProductImages(product,productVariant,frontFacingEyeImageTypeId,false,false)}"/>
+                   value="${hk:searchProductImages(product,productVariant,frontFacingEyeImageTypeId,false,null)}"/>
             <c:set var="sideFacingEyeImageId"
-                   value="${hk:searchProductImages(product,productVariant,sideFacingEyeImageTypeId,false,false)}"/>
+                   value="${hk:searchProductImages(product,productVariant,sideFacingEyeImageTypeId,false,null)}"/>
             <%Long frontFacingEyeImageId = (Long) pageContext.getAttribute("frontFacingEyeImageId");%>
             <%Long sideFacingEyeImageId = (Long) pageContext.getAttribute("sideFacingEyeImageId");%>
-            <c:if test="${frontFacingEyeImageId != null && sideFacingEyeImageId != null && sizeType != null}">
-                <Glasses id="${productVariant.id}" type="${sizeType}" price="${productVariant.hkPrice}"
-                         mrp="${productVariant.markedPrice}" name="${hk:escapeHtml(product.name)}">
-                    desc="">
-                    <imgPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, frontFacingEyeImageId, false)%>
-                    </imgPath>
-                    <thumbPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, sideFacingEyeImageId, false)%>
-                    </thumbPath>
+            <c:if test="${frontFacingEyeImageId != null && sideFacingEyeImageId != null && type != null && gender != null && color != null}">
+                <Glasses type="${type}" gender="${gender}" color="${color}" id="${productVariant.id}">
+                    <imgPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, frontFacingEyeImageId, false)%></imgPath>
+                    <thumbPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, sideFacingEyeImageId, false)%></thumbPath>
+                    <price>${productVariant.hkPrice}</price>
+                    <name>${hk:escapeHtml(product.name)}</name>
+                    <desc></desc>
                 </Glasses>
             </c:if>
+            <c:set var="type" value="null"/>
+            <c:set var="color" value="null"/>
+            <c:set var="gender" value="null"/>
+            <c:set var="frontFacingEyeImageId" value="null"/>
+            <c:set var="sideFacingEyeImageId" value="null"/>
         </c:if>
     </c:forEach>
 </accessories>
