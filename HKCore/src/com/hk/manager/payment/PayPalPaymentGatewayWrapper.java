@@ -30,26 +30,25 @@ public static final String CANCELURL = "CANCELURL";
 public static final String MODE = "MODE";
 public static final String PAYMENTACTION = "PAYMENTACTION";
 public static String merchantURLPart = "merchantURLPart";
-public static final String METHOD = "METHOD";
-public static  final String merchantTxnId = "merchantTxnId";
- public static  final String   ENVIRONMENT   = "ENVIRONMENT" ;
+public static final String  DoExpressPaymentMethod = "DoExpressPaymentMethod";
+public static final String  setExpressMethod = "SetExpressMethod";
+public static final String merchantTxnId = "merchantTxnId";
+public static final String  ENVIRONMENT   = "ENVIRONMENT" ;
+public static final String  currencyCode = "currencyCode";
 
-public String Token;
-public String Ack;
+//public static final String account_id = "account_id";
+//public static final String reqResParameter = "DR";
+//public static final String address = "address";
+//public static final String city = "city";
+//public static final String state = "state";
+//public static final String phone = "phone";
+//public static final String postal_code = "postal_code";
+//public static final String name = "name";
+//public static final String email = "email";
 
-public static final String account_id = "account_id";
-public static final String reqResParameter = "DR";
-public static final String address = "address";
-public static final String city = "city";
-public static final String state = "state";
-public static final String phone = "phone";
-public static final String postal_code = "postal_code";
-public static final String name = "name";
-public static final String email = "email";
+//public static final String secure_hash_decrypted = "secure_hash_decrypted";
 
-public static final String secure_hash_decrypted = "secure_hash_decrypted";
-
-public static final String country = "country";
+//public static final String country = "country";
 
 
 //   response parameters
@@ -64,10 +63,6 @@ public static final String ACK =  "ACK";
 		return url;
 	}
 
-    
-    public boolean isPaypal() {
-        return true;
-    }
 
     public void setGatewayUrl(String url) {
 		this.url = url;

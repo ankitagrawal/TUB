@@ -23,16 +23,16 @@ public class CurrencyConverter implements java.io.Serializable {
   private Long id;
 
   @Column(name = "base_currency_code", nullable = false, length = 45)
-  private String basecurrencycode;
+  private String baseCurrencyCode;
 
   @Column(name = "foreign_currency_code", length = 45)
-  private String foreigncurrencycode;
+  private String foreignCurrencyCode;
 
   @Column(name = "conversion_rate")
-  private Double conversionrate;
+  private Double conversionRate;
 
   @Temporal(TemporalType.TIMESTAMP)
-	@Column (name = "update_date", length = 19)
+	@Column (name = "updated_date", length = 19)
 	private Date updateDate;
 
 
@@ -44,32 +44,33 @@ public class CurrencyConverter implements java.io.Serializable {
         this.id = id;
     }
 
-    public String getBasecurrencycode() {
-        return basecurrencycode;
-    }
-
-    public void setBasecurrencycode(String basecurrencycode) {
-        this.basecurrencycode = basecurrencycode;
-    }
-
-    public Double getConversionrate() {
-        return conversionrate;
-    }
-
-    public void setConversionrate(Double conversionrate) {
-        this.conversionrate = conversionrate;
-    }
-
-    public String getForeigncurrencycode() {
-        return foreigncurrencycode;
-    }
-
-    public void setForeigncurrencycode(String foreigncurrencycode) {
-        this.foreigncurrencycode = foreigncurrencycode;
-    }
 
     public Date getUpdateDate() {
         return updateDate;
+    }
+
+    public String getBaseCurrencyCode() {
+        return baseCurrencyCode;
+    }
+
+    public void setBaseCurrencyCode(String baseCurrencyCode) {
+        this.baseCurrencyCode = baseCurrencyCode;
+    }
+
+    public String getForeignCurrencyCode() {
+        return foreignCurrencyCode;
+    }
+
+    public void setForeignCurrencyCode(String foreignCurrencyCode) {
+        this.foreignCurrencyCode = foreignCurrencyCode;
+    }
+
+    public Double getConversionRate() {
+        return conversionRate;
+    }
+
+    public void setConversionRate(Double conversionRate) {
+        this.conversionRate = conversionRate;
     }
 
     public void setUpdateDate(Date updateDate) {

@@ -144,9 +144,11 @@
     </p>
 
     <p><label><s:radio name="paymentMode" value="100" />
-        Paypal </label>
- <img  src="<hk:vhostImage/>/images/gateway/paypal.png" height="30px"><span style="font-size:11px; font-family: Arial, Verdana;">The safer, easier way to pay.</span>
-   </p>
+        <%--Paypal </label>--%>
+ <%--<img  src="<hk:vhostImage/>/images/gateway/paypal.png" height="30px"><span style="font-size:11px; font-family: Arial, Verdana;">The safer, easier way to pay.</span>--%>
+     <img src="https://www.paypal.com/cgi-bin/webscr?cmd=/i/logo/PayPal_mark_37x23.gif" align="left" style="margin-right:7px;"><span style="font-size:11px; font-family: Arial, Verdana;">The safer, easier way to pay.</span>
+
+    </p>
 
     <div style="float: right; width: 90%;"><s:submit
             name="proceed" value="Make Payment >" class="button"
