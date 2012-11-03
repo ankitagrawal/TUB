@@ -110,7 +110,7 @@
 		</init-param>
 		<init-param>
 			<param-name>SSL.UnsecureHost</param-name>
-			<param-value>staging01.healthkart.com:9090</param-value>
+			<param-value>staging01.healthkart.com:8080</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SSL.SessionMode</param-name>
