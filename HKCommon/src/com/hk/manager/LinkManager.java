@@ -122,6 +122,11 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
+    public String getIciciPaymentGatewayUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/IciciGatewaySendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
     public String getCitrusPaymentCreditDebitGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusCreditDebitSendReceive.action");
         return getUrlFromResolution(redirectResolution);

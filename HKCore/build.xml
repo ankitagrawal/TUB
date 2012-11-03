@@ -19,6 +19,7 @@
 		<fileset file="${lib.root.dir}/thirdParty/lambdaj-2.0-with-dependencies.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
 		<fileset file="${lib.root.dir}/citrus/SFA-1.2.jar" />
+		<fileset file="${lib.root.dir}/icici/sfa.jar" />
 		<fileset file="${lib.root.dir}/citrus/citruspay-merchant-kit-1.0.jar" />
 		<fileset file="${lib.root.dir}/stripes/stripes-1.5.3-patched.jar" />
 		<fileset file="${lib.root.dir}/solr/apache-solr-solrj-3.3.0.jar" />
