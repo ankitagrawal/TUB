@@ -67,8 +67,15 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         User user = order.getUser();
         Address address = order.getAddress();
         String merchantTxnId = data.getGatewayOrderId();
-//        String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
 
+        // Address details
+
+
+
+
+
+//        String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
+//          PAYMENTREQUEST_0_AMT
         // conversion logic
         Double coversion_rate = 55.05;
         Double coverted_amount = data.getAmount()/coversion_rate ;
@@ -110,15 +117,25 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             encoder.add("METHOD", "SetExpressCheckout");
             encoder.add("RETURNURL", return_url);
             encoder.add("CANCELURL", linkManager.getPayPalPaymentGatewayCancelUrl());
-            encoder.add("AMT", amountStr);
-            encoder.add("PAYMENTACTION", "sale");
-            encoder.add("CURRENCYCODE", "USD");
 
-            encoder.add("ITEMAMT",amountStr);
+//            encoder.add("AMT", amountStr);
 
-            encoder.add("SOLUTIONTYPE", "Sole");
-//            SOLUTIONTYPE= Sole
+//              encoder.add("NOSHIPPING","1");
+//              encoder.add("ADDROVERRIDE","1");
+//              encoder.add("PAYMENTREQUEST_0_SHIPTONAME",address.getName()) ;
+//              encoder.add("PAYMENTREQUEST_0_SHIPTOSTREET",address.getLine1());
+//              encoder.add("PAYMENTREQUEST_0_SHIPTOCITY",address.getCity());
+//              encoder.add("PAYMENTREQUEST_0_SHIPTOSTATE",address.getState());
+//              encoder.add("PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE","INDIA");
+//              encoder.add("PAYMENTREQUEST_0_SHIPTOZIP",address.getPin());
+//              encoder.add("PAYMENTREQUEST_0_EMAIL",user.getEmail());
+//              encoder.add("PAYMENTREQUEST_0_SHIPTOPHONENUM",address.getPhone());
 
+              encoder.add("PAYMENTREQUEST_0_AMT", amountStr);
+              encoder.add("PAYMENTREQUEST_0_PAYMENTACTION", "sale");
+               encoder.add("CURRENCYCODE", "USD");
+//              encoder.add("PAYMENTREQUEST_0_ITEMAMT",amountStr);
+              encoder.add("SOLUTIONTYPE", "Sole");
 
             // Execute the API operation and obtain the response.
             String NVPRequest = encoder.encode();
@@ -191,9 +208,9 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             encoder.add("METHOD", "DoExpressCheckoutPayment");
             encoder.add("TOKEN", Token);
             encoder.add("PAYERID", payerid); ;
-            encoder.add("PAYMENTACTION", "sale");
-            encoder.add("CURRENCYCODE", "USD");
-            encoder.add("AMT", amount_1);
+            encoder.add("PAYMENTREQUEST_0_PAYMENTACTION", "sale");
+            encoder.add("PAYMENTREQUEST_0_CURRENCYCODE", "USD");
+            encoder.add("PAYMENTREQUEST_0_AMT", amount_1);
             String NVPRequest = encoder.encode();
             String NVPResponse = caller.call(NVPRequest);
             decoder.decode(NVPResponse);
@@ -203,7 +220,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         }
 
         String ack = decoder.get("ACK");
-        String amount = decoder.get("AMT");
+        String amount = decoder.get("PAYMENTINFO_0_AMT");
         String merchantParam = null;
 
 
