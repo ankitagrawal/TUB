@@ -120,7 +120,7 @@ $('#cart').bind('pagebeforeshow', function () {
 					}
 					else
 					{
-						popUpMob.show(response.data);
+						popUpMob.show(response.message);
 					}
 				},
 				async : false

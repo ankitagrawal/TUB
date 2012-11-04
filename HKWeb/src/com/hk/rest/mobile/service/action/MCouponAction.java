@@ -61,9 +61,6 @@ public class MCouponAction extends MBaseAction {
 
 	@Autowired
 	OrderService orderService;
-	private List<OfferInstance> offerInstanceList;
-
-	private OfferInstance selectedOffer;
 
 	// private String couponCode;
 
@@ -269,6 +266,9 @@ public class MCouponAction extends MBaseAction {
 	@Path("/getOffers/")
 	@Produces("application/json")
 	public String getOffers() {
+		List<OfferInstance> offerInstanceList=null;
+
+		OfferInstance selectedOffer=null;
 		try {
 			User user = getUserService().getUserById(getPrincipal().getId());
 			Order order = orderManager.getOrCreateOrder(user);
@@ -315,6 +315,9 @@ public class MCouponAction extends MBaseAction {
 	@Produces("application/json")
 	public String applyOffer(@FormParam("offer") long couponId,
 	@Context HttpServletResponse response) {
+		List<OfferInstance> offerInstanceList= null;
+		OfferInstance selectedOffer = null;
+
 		try {
 			User user = getUserService().getUserById(getPrincipal().getId());
 			Order order = orderManager.getOrCreateOrder(user);

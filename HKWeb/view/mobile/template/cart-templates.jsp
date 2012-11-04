@@ -53,7 +53,7 @@
 
 <script id='coupon-manage-template' type='text/template'>
 	<td class='couponSelectFlag'>
-		<input type=radio name='couponId' value='{{print(id)}}' />
+		<input type=radio name='couponId' {{if(selectedOffer==true)print('checked')}} value='{{print(id)}}' />
 	</td>
 	<td class='couponDesc'>
 		{{print(offerDescription)}}

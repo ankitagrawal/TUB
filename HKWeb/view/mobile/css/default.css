@@ -557,7 +557,8 @@ background-color:#FFFAB2;
 	padding:7px;
 	color:white;
 	font-weight:bold;
-	text-shadow:none
+	text-shadow:none;
+	cursor: hand
 }
 #couponManagerContainer{
 	width:99%;

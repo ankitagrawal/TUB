@@ -20,10 +20,11 @@
 				id='cartList'>
 
 			</ul>
+			<%if(session.getAttribute("userName")!=null){%>
 			<table class=hide id='couponContainer' style='margin:0px auto'>
 				<tr>
 					<td>
-						<input type=text id=couponText name=couponText  placeholder='Dicount Coupon' />
+						<input type=text id=couponText name=couponText  placeholder='Discount Coupon' />
 					</td>
 					<td>
 						<button id=submitCoupon>Apply</button>
@@ -35,6 +36,7 @@
 					</td>
 				</tr>
 			</table>
+			<%} %>
 			<br /> <a
 				href='<%if(session.getAttribute("userName")==null){%>${httpPath}/login-signup.jsp?target=address<% }else{%>${httpPath}/address.jsp<%}%>'
 				id='checkout'
