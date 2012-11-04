@@ -590,7 +590,9 @@ public class OrderManager {
       }
 			order = getOrderService().save(order);
 		}
-		return order;
+    if(order!=null)
+      getOrderDao().refresh(order);
+    return order;
 	}
 
 	public boolean isStepUpAllowed(CartLineItem cartLineItem) {
