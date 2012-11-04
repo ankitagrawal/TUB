@@ -325,10 +325,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
     private SolrQuery buildSolrQuery(String query,List<SearchFilter> searchFilters, String qf,  int page, int perPage){
-        SolrQuery solrQuery = new SolrQuery(); // &defType=dismax&qf=
+        SolrQuery solrQuery = new SolrQuery();
         String fq = String.format("{!cache=false}hidden:false");  //Do not cache the results*/
         solrQuery.setParam("fq", fq);
-        String finalfq = "fq = hidden:false";
         for (SearchFilter searchFilter : searchFilters){
             String fq1 = searchFilter.getName() + ":" + searchFilter.getValue();
             solrQuery = solrQuery.setParam("fq", fq1);
