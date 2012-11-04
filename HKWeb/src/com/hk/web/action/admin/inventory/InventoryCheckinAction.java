@@ -117,7 +117,8 @@ public class InventoryCheckinAction extends BaseAction {
 		return new ForwardResolution("/pages/admin/inventoryCheckin.jsp");
 	}
 
-	@JsonHandler
+	@SuppressWarnings("unchecked")
+    @JsonHandler
 	public Resolution validateFields() {
 		Map dataMap = new HashMap();
 		HealthkartResponse healthkartResponse = null;

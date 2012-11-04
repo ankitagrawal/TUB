@@ -3,7 +3,6 @@ package com.hk.web.action.core.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -24,10 +23,10 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.AddressService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.order.OrderSummaryAction;
 
