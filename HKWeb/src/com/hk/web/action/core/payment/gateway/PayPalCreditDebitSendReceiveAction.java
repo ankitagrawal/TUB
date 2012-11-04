@@ -125,7 +125,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 //      Countrycode need to be discuss
             encoder.add("PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE", "IN");
             encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPin());
-            encoder.add("PAYMENTREQUEST_0_EMAIL", user.getEmail());
+            encoder.add("EMAIL", user.getEmail());
             encoder.add("PAYMENTREQUEST_0_SHIPTOPHONENUM", address.getPhone());
             encoder.add("PAYMENTREQUEST_0_AMT", amountStr);
             encoder.add("PAYMENTREQUEST_0_PAYMENTACTION", paymentAction);

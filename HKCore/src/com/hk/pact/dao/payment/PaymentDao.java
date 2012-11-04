@@ -14,6 +14,6 @@ public interface PaymentDao extends BaseDao {
 
     public List<Payment> listByOrderId(Long orderId);
 
-   public CurrencyConverter findLatestConversionRate (String baseCurrencyCode , String foreignCurrencyCode );
+    public CurrencyConverter findLatestConversionRate (String baseCurrencyCode , String foreignCurrencyCode );
 
 }
