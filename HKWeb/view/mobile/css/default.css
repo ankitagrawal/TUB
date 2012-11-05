@@ -125,6 +125,15 @@ table.menuContainer .sessionOptions{
 	padding-top:5px;
 	font-weight:bold;
 }
+.green{
+	color : #090 !important;
+}
+.blue{
+	color : #37BCDD !important;
+}
+.orange{
+	color: #F87500 !important;
+}
 /***Text Color*E**/
 
 /***General Layout*S**/
@@ -550,6 +559,31 @@ background-color:#FFFAB2;
 	
 }
 /***Product & Category Listing Layout*E**/
+
+/***Cart Total Layout*S**/
+#cartTotal{
+	margin:0px;
+	font-size:12px;
+	text-align:center
+}
+.cart-total-container{
+	width: 97%;	
+	margin:5px auto;
+	color: #888
+}
+.cart-total-container .product-mrp{
+	text-decoration : line-through;
+}
+.cart-total-container .product-discount .value,.cart-total-container .product-promo-discount .value{
+	font-weight:bold;
+	font-ize:1.1em
+}
+.cart-total-container .grand-total .value{
+	font-size:16px;
+	font-weight:bold
+}
+/***Cart Total Layout*E**/
+
 /***Coupon Manage Layout*S**/
 #couponManage .greenBtn{
 	background-color:#00B300;
@@ -558,7 +592,7 @@ background-color:#FFFAB2;
 	color:white;
 	font-weight:bold;
 	text-shadow:none;
-	cursor: hand
+	
 }
 #couponManagerContainer{
 	width:99%;

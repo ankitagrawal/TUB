@@ -50,20 +50,56 @@
 		</tr>
 	</table>			
 </script>
+<script type="text/template" id="cart-total-template">
+	
+	{{if( productsMrpSubTotal + prepaidServiceMrpSubTotal + postpaidServiceMrpSubTotal > productsHkSubTotal + prepaidServiceHkSubTotal + postpaidServiceHkSubTotal) { }}
+		<div class=product-mrp >
+			Total Price : Rs. {{ print(productsMrpSubTotal + prepaidServiceMrpSubTotal + postpaidServiceMrpSubTotal) }}
+		</div>
+	{{ } }}
+		
+	<div class=product-hk-price>
+		Our Price : Rs. {{ print(productsHkSubTotal + prepaidServiceHkSubTotal + postpaidServiceHkSubTotal) }}
+	</div>
 
-<script id='coupon-manage-template' type='text/template'>
-	<td class='couponSelectFlag'>
-		<input type=radio name='couponId' {{if(selectedOffer==true)print('checked')}} value='{{print(id)}}' />
-	</td>
-	<td class='couponDesc'>
-		{{print(offerDescription)}}
-		<!--<h3>Terms:</h3>
-		{{print(offerTerms)}}-->
-	</td>
-	<td class='couponDate'>
-		{{print(endDate)}}
-	</td>
-	<td class='couponCode'>
-		{{print(couponCode)}}
-	</td>
+	{{ if(productsMrpSubTotal + prepaidServiceMrpSubTotal > productsHkSubTotal + prepaidServiceHkSubTotal +postpaidServiceHkSubTotal) { }}
+		<div class='product-discount green'>
+			<span class='product-discount-text'>HealthKart Discount</span> : (<span class='blue value'>Rs. {{print(totalHkProductsDiscount + totalHkPrepaidServiceDiscount + totalHkPostpaidServiceDiscount - totalPostpaidAmount)}}</span>)
+		</div>
+	{{ } }}
+
+	{{ if(shippingSubTotal - shippingDiscount >= .005) { }}
+		<div class='product-shipping green'>
+			Shipping : (<span class=blue>Rs. {{ print(shippingSubTotal - shippingDiscount) }}</span>)
+		</div>
+	{{ } }}
+
+	{{ if(shippingSubTotal - shippingDiscount == 0) { }}
+		<div class=product-shipping>
+			Shipping : Free!
+		</div>
+	{{ } }}
+
+	{{ if(subscriptionDiscount > 0) { }}
+		<div class='product-subscription-discount green'>
+			Subscription Discount : (<span class=blue>Rs. {{ print(subscriptionDiscount) }}</span>)
+		</div>
+	{{ } }}
+
+	{{if(totalPromoDiscount > 0) { }}
+		<div class='product-promo-discount green'>
+			Promo Discount : (<span class='blue value'>Rs. {{ print(totalPromoDiscount) }}</span>)
+		</div>
+	{{ } }}
+		
+	<div class='grand-total green'>
+		you pay <div class='orange value'>Rs. {{ print(grandTotalPayable) }}</div>
+		<sub>(inclusive of shipping, handling and taxes.)</sub>
+	</div>
+
+	{{ if(totalCashback > 0) { }}
+		<div class='product-cashback'>
+			Total Cash back : Rs. {{ print(totalCashback) }}
+		</div>
+	{{ } }}
 </script>

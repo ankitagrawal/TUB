@@ -10,7 +10,58 @@ $('#cart').bind('pagebeforeshow', function () {
     var x = $.mobile.path.parseUrl(location.href);
     var queryString = x.search;
     
-    /*****Cart Backnbone**S**********/
+    /*****Cart total Backbone**S**********/
+    var CartTotalModel = Backbone.Model.extend({
+    	initialize : function() {
+			this.render();
+		},
+		render : function() {
+			var caToVi = new CartTotalView({model:this});
+			$('#cartTotal').html(caToVi.render().el);
+		},
+		unRender : function(){
+			this.destroy();
+		}
+    })
+    
+    var CartTotalCollection = Backbone.Collection.extend({
+    	model : CartTotalModel,
+    	initialize: function () {
+            this.on('reset', this.clearView, this);
+            this.on('add', this.updateUI, this);
+            this.clearView();
+        },
+        clearView: function () {
+            $('#cartTotal').html('');
+        },
+        updateUI: function () {
+            $('#cartTotal').listview();
+            $('#cartTotal').listview('refresh');
+        }
+    })
+    
+    var CartTotalView = Backbone.View.extend({
+    	className : 'cart-total-container',
+    	initialize : function(){
+    		_.bindAll(this,'render','unRender');
+    		  this.on('unRender', this.model.unRender, this);
+    	},
+    	template : _.template($('#cart-total-template').html()),
+    	render : function(){
+    		$(this.el).empty();
+    		$(this.el).html(this.template(this.model.toJSON()));
+    		return this
+    	},
+    	unRender: function () {
+            this.remove();
+        }
+    })
+    
+    var caToCo = new CartTotalCollection();
+    /*****Cart totalBackbone**E**********/
+    
+    
+    /*****Cart Items Backnbone**S**********/
     var CartModel = Backbone.Model.extend({
         initialize: function () {
             this.render();
@@ -80,11 +131,12 @@ $('#cart').bind('pagebeforeshow', function () {
                         popUpMob.show(data.message);
 						loadingPop('h');
                     } else {                    	
-                        if (caCo.reset()) {
+                        if (caCo.reset()&&caToCo.reset()) {
                             if ($(ele).hasClass('pl2Crt')) popUpMob.show(__hkG.msgs.successAdd);
                             else popUpMob.show(__hkG.msgs.successRemove);
 
-                            caCo.add(data.data);
+                            caCo.add(data.data.cartItemsList);
+                            caToCo.add(data.data.pricingDto);
 							loadingPop('h');
                             }                        
                     }
@@ -128,7 +180,9 @@ $('#cart').bind('pagebeforeshow', function () {
 			loadingPop('h');
 		}
 	});
-    /*****Cart Backnbone**E**********/
+    /*****Cart Items Backbone**E**********/
+    
+
     caPaVi = new CartParentView();
     loadingPop('s', '');
 
@@ -141,10 +195,10 @@ $('#cart').bind('pagebeforeshow', function () {
                 popUpMob.show(getErr(response.message));
                 $('#btnChkOut').hide();
             } else {
-                if (response.data.length == 0 || response.data == null) {
+                if (response.data.cartItemsList.length == 0 || response.data.cartItemsList == null) {
                     $('#cartList').html('<h3 style="padding-left:20px;padding-top:20px">No Product in Cart</h3>');
                 } else {
-                    if (caCo.add(response.data)) {
+                    if (caCo.add(response.data.cartItemsList) && caToCo.add(response.data.pricingDto)) {
                         if ($('#cartList').listview()) {
                             setTimeout(function () {
                                 $('#cartList').css('height', $('#cartList').height());
@@ -163,146 +217,10 @@ $('#cart').bind('pagebeforeshow', function () {
 
     });
 });
-$('#cart').bind('pageshow',function(){loadingPop('s','');});
+$('#cart').bind('pageshow',function(){
+		loadingPop('s','');
+		
+	});
 $('#cart').bind('pagebeforehide',function(){
 	caPaVi.undelegateEvents();
-});
-$('#couponManage').bind('pagebeforeshow',function(){
-console.log('coupon manager');
-	var CouponManagerModel = Backbone.Model.extend({
-		initialize: function(){
-			var coMaVi = new CouponManagerView({
-				model:this
-				});
-			$('#couponManagerContainer').append(coMaVi.render().el);
-		}
-	});
-	
-	var CouponManagerCollection = Backbone.Collection.extend({
-		model : CouponManagerModel,
-		//url : wSURL + __hkG.urls.getOffers,
-		// parse : function(response){
-			// if(hasErr(response))
-			// {
-				// popUpMob.show(response.messgae);
-			// }
-			// else
-			// {
-				// return response.data
-			// }
-		// },
-		initialize: function () {
-            this.on('reset', this.clearView, this);
-            this.on('add', this.updateUI, this);
-            this.clearView();
-			var col =this;
-			getOffers();
-        },
-        clearView: function () {
-            $('#couponManagerContainer').html('');
-            //$('#couponManagerContainer').css('height', 'auto');
-        },
-        updateUI: function () {
-            $('#couponManagerContainer').listview();
-            $('#couponManagerContainer').listview('refresh');
-        }
-	});
-	
-	var coMaCo = new CouponManagerCollection();
-	
-	var CouponManagerView = Backbone.View.extend({
-		tagName : 'tr',
-		template : _.template($('#coupon-manage-template').html()),
-		initialize : function(){
-			_.bindAll(this,'render');
-		},
-		render : function(){
-			$(this.el).empty();
-            $(this.el).html(this.template(this.model.toJSON()));
-            return this;
-		}
-	});
-	
-	function getOffers(){
-		$.ajax({
-				url: wSURL + __hkG.urls.getOffers,
-				dataType: 'json',
-				success: function (response) {
-					if (hasErr(response)) {
-						loadingPop('h');
-						popUpMob.show(getErr(response.message));
-					} else {
-						if (response.data.length == 0 || response.data == null) {
-							//$('#cartList').html('<h3 style="padding-left:20px;padding-top:20px">No Product in Cart</h3>');
-						} else {
-							coMaCo.add(response.data);
-						}
-						loadingPop('h');
-					}
-				},
-				error: function () {
-					popUpMob.show(__hkG.errs.requestFail);
-					loadingPop('h');
-				}
-
-		});
-	}
-	$('#couponRemove').click(function(){
-	loadingPop('s','');
-		$.ajax({
-				url: wSURL + __hkG.urls.removeOffer,
-				dataType: 'json',
-				type: 'post',
-				success: function (response) {
-					if (hasErr(response)) {
-						loadingPop('h');
-						popUpMob.show(getErr(response.message));
-					} else {
-						coMaCo.reset();
-						getOffers();
-						popUpMob.show(response.message);
-						loadingPop('h');
-					}
-				},
-				error: function () {
-					popUpMob.show(__hkG.errs.requestFail);
-					loadingPop('h');
-				}
-
-			});
-	});
-	$('#couponApply').click(function(){
-	loadingPop('s','');
-	var x = $('#couponManage input[name=couponId]:checked').val();
-	if(String(x)=='undefined')
-	{
-		popUpMob.show('Select a Coupon');
-		return
-	}
-	
-	$.ajax({
-				url: wSURL + __hkG.urls.applyOffer,
-				dataType: 'json',
-				type: 'post',
-				data: 'offer='+x,
-				success: function (response) {
-					if (hasErr(response)) {
-						loadingPop('h');
-						popUpMob.show(getErr(response.message));
-					} else {
-						coMaCo.reset();
-						getOffers();
-						popUpMob.show(response.message);
-						loadingPop('h');
-					}
-				},
-				error: function () {
-					popUpMob.show(__hkG.errs.requestFail);
-					loadingPop('h');
-				}
-
-			});
-	});
-	
-	
 });

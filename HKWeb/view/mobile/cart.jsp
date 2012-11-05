@@ -20,6 +20,9 @@
 				id='cartList'>
 
 			</ul>
+			<div id=cartTotal data-role=none>
+			
+			</div>
 			<%if(session.getAttribute("userName")!=null){%>
 			<table class=hide id='couponContainer' style='margin:0px auto'>
 				<tr>
@@ -32,7 +35,7 @@
 				</tr>
 				<tr>
 					<td colspan=2 style='text-align:center'>
-						<a href='#couponManage' id='mngCpn' data-role=none>(see previously applied offers)</a>
+						<a href='${httpPath}/coupon-manage.jsp'>(see previously applied offers)</a>
 					</td>
 				</tr>
 			</table>
@@ -45,7 +48,8 @@
 
 			<%@ include file='menuFooter.jsp'%>
 		</div>
-		
+	<%@ include file='template/cart-templates.jsp'%>
+		<script type="text/javascript" src='${httpPath}/js/cart.js'></script>	
 
 		
 	</div>
@@ -70,9 +74,10 @@
 			<div class=clear></div>
 			<a href='javascript:void(0)' data-role=button data-rel=back>Go Back</a>
 		</div>
+		<%@ include file='template/coupon-manage-templates.jsp'%>
+		<script type="text/javascript" src='${httpPath}/js/couponManage.js'></script>
 	</div>
-	<%@ include file='template/cart-templates.jsp'%>
-		<script type="text/javascript" src='${httpPath}/js/cart.js'></script>
+	
 
 </body>
 </html>
