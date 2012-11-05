@@ -74,6 +74,7 @@ public class FedExCourierUtil {
         try {
             // Initialize the service
             logger.info("inside newFedExShipment WebService call for order: " + shippingOrder.getGatewayOrderId() + " ");
+
             ShipServiceLocator service;
             ShipPortType port;
             //
@@ -88,39 +89,42 @@ public class FedExCourierUtil {
 
             if (isResponseOk(reply.getHighestSeverity())) // check if the call was successful
             {
+                logNotifications(reply.getNotifications());
                 // writeServiceOutput(reply);
-            }
-            // printNotifications(reply.getNotifications());
+                CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
+                CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
+                String trackingNumber = null;
+                if (cpd != null) {
+                    for (int i = 0; i < cpd.length; i++) { // Package details / Rating information for each package
+                        trackingNumber = cpd[i].getTrackingIds()[0].getTrackingNumber();
+                    }
+                }
 
+                ThirdPartyAwbDetails thirdPartyAwbDetails = null;
+
+                if (StringUtils.isNotBlank(trackingNumber)) {
+                    thirdPartyAwbDetails = new ThirdPartyAwbDetails(trackingNumber);
+                    thirdPartyAwbDetails.setBarcodeList(setBarCodeList(reply, shippingOrder));
+                    thirdPartyAwbDetails.setRoutingCode(setRoutingCode(reply));
+                    thirdPartyAwbDetails.setCod(shippingOrder.isCOD());
+                    thirdPartyAwbDetails.setPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+                } else {
+                    logger.debug("FedEx awb number could not be generated");
+                }
+
+                return thirdPartyAwbDetails;
+            }
+
+            // printNotifications(reply.getNotifications());
+            // comes here when there is an ERROR notification returned
             String notificationComment = logNotifications(reply.getNotifications());
             if (StringUtils.isNotBlank(notificationComment)) {
                 noAwbMessage = noAwbMessage + notificationComment;
             }
-            CompletedShipmentDetail csd = reply.getCompletedShipmentDetail();
-
-            CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
-            String trackingNumber = null;
-            if (cpd != null) {
-                for (int i = 0; i < cpd.length; i++) { // Package details / Rating information for each package
-                    trackingNumber = cpd[i].getTrackingIds()[0].getTrackingNumber();
-                }
-            }
-
-            ThirdPartyAwbDetails thirdPartyAwbDetails = null;
-
-            if (StringUtils.isNotBlank(trackingNumber)) {
-                thirdPartyAwbDetails = new ThirdPartyAwbDetails(trackingNumber);
-                thirdPartyAwbDetails.setBarcodeList(setBarCodeList(reply, shippingOrder));
-                thirdPartyAwbDetails.setRoutingCode(setRoutingCode(reply));
-                thirdPartyAwbDetails.setCod(shippingOrder.isCOD());
-                thirdPartyAwbDetails.setPincode(shippingOrder.getBaseOrder().getAddress().getPin());
-            } else {
-                logger.debug("FedEx awb number could not be generated");
-            }
-
-            return thirdPartyAwbDetails;
-        } catch (Exception e) {
             logger.error("Exception while getting awb number from FedEx:");
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, noAwbMessage);
+        } catch (Exception e) {
+            logger.error("Exception while getting awb number from FedEx: Axis fault");
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, noAwbMessage);
         }
         return null;
