@@ -1,6 +1,5 @@
 package com.hk.web.action.core.user;
 
-import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -23,9 +22,9 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.AddressService;
 import com.hk.util.AddressMatchScoreCalculator;
 import com.hk.web.action.core.affiliate.AffiliateAccountAction;
 import com.hk.web.action.core.order.OrderSummaryAction;
