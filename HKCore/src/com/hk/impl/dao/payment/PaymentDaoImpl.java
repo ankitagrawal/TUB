@@ -41,8 +41,9 @@ public class PaymentDaoImpl extends BaseDaoImpl implements PaymentDao {
 
 
     public CurrencyConverter findLatestConversionRate (String baseCurrencyCode , String foreignCurrencyCode ){
-         String query = "from CurrencyConverter cc where cc.updateDate in ( select max( cc1.updateDate )from CurrencyConverter  cc1 where  cc1.baseCurrencyCode = baseCurrencyCode  and  cc1.foreignCurrencyCode = foreignCurrencyCode) ";
-        return (CurrencyConverter) getSession().createQuery(query).uniqueResult();
+//         String query = "from CurrencyConverter cc where cc.updateDate in ( select max( cc1.updateDate )from CurrencyConverter  cc1 where  cc1.baseCurrencyCode = baseCurrencyCode  and  cc1.foreignCurrencyCode = foreignCurrencyCode) ";
+          String query = "from CurrencyConverter cc where  cc.baseCurrencyCode = baseCurrencyCode  and  cc.foreignCurrencyCode = foreignCurrencyCode";
+          return (CurrencyConverter) getSession().createQuery(query).uniqueResult();
     }
 
 }
