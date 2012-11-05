@@ -9577,6 +9577,9 @@
             <column name="user_id"/>
         </createIndex>
     </changeSet>
+	<changeSet author="Marut (generated)" id="1351173120154-5">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_detail" constraintName="fk_user_detail_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>	
 
     <changeSet author="Ajeet (generated)" id="1351491739428-1">
         <addColumn tableName="feedback">
