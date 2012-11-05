@@ -266,55 +266,64 @@
 /home-devices
 -/home-devices/blood-pressure
 --/home-devices/blood-pressure/bp-monitor : BP Monitors
----/home-devices/blood-pressure/bp-monitor/arm-bp-monitor
----/home-devices/blood-pressure/bp-monitor/wrist-bp-monitor
+---/home-devices/blood-pressure/bp-monitor/arm-bp-monitor : Arm Type
+---/home-devices/blood-pressure/bp-monitor/wrist-bp-monitor : Wrist Type
+--/home-devices/blood-pressure/bp : BP Appratus
+---/home-devices/blood-pressure/bp/aneroid-sphygmomanometer : Aneroid
+---/home-devices/blood-pressure/bp/clock-type-sphygmomanometer: Clock
+---/home-devices/blood-pressure/bp/mercury-sphygmomanometer : Mercury
+---/home-devices/blood-pressure/bp/mercury-free-sphygmomanometer: Mercury Free
+---/home-devices/blood-pressure/bp/electrical-sphygmomanometer: Electrical
 --/home-devices/blood-pressure/heart-rate-monitor : Heart Rate Monitors
---/home-devices/blood-pressure/bp : BP Apparatus
----/home-devices/blood-pressure/bp/aneroid-sphygmomanometer
----/home-devices/blood-pressure/bp/clock-type-sphygmomanometer
----/home-devices/blood-pressure/bp/mercury-sphygmomanometer
----/home-devices/blood-pressure/bp/mercury-free-sphygmomanometer
----/home-devices/blood-pressure/bp/electrical-sphygmomanometer
+
+
+
+
+
+
 --/home-devices/blood-pressure/accessories
 --/home-devices/blood-pressure/combo : Combos
 -/home-devices/respiratory-care
---/home-devices/respiratory-care/nebulizer
----/home-devices/respiratory-care/nebulizer/compressor-nebulizer
----/home-devices/respiratory-care/nebulizer/ultrasonic-nebulizer
----/home-devices/respiratory-care/nebulizer/nebulizer-for-kids
+--/home-devices/respiratory-care/nebulizer: Nebulizers
+---/home-devices/respiratory-care/nebulizer/compressor-nebulizer: Compressor
+---/home-devices/respiratory-care/nebulizer/ultrasonic-nebulizer: Ultrasonic
+---/home-devices/respiratory-care/nebulizer/nebulizer-for-kids: For Kids
 --/home-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
 --/home-devices/respiratory-care/pulse-oximeters : Pulse Oximeters
----/home-devices/respiratory-care/pulse-oximeters/fingertip-oximeter
----/home-devices/respiratory-care/pulse-oximeters/Wrist-oximeter
----/home-devices/respiratory-care/pulse-oximeters/handheld-oximeter
+---/home-devices/respiratory-care/pulse-oximeters/fingertip-oximeter: Finger Tip
+---/home-devices/respiratory-care/pulse-oximeters/Wrist-oximeter: Wrist
+---/home-devices/respiratory-care/pulse-oximeters/handheld-oximeter: Handheld
+--/home-devices/respiratory-care/cpap-machines : CPAP Machines
+--/home-devices/respiratory-care/vpap-devices : BiPAP Machines
 --/home-devices/respiratory-care/nasal-face-masks : Nasal Face Masks
---/home-devices/respiratory-care/cpap-machines
---/home-devices/respiratory-care/vpap-devices : Bilevel/VPAP/BiPAP Machines
---/home-devices/respiratory-care/lung-exerciser
---/home-devices/respiratory-care/accessories
+--/home-devices/respiratory-care/lung-exerciser: Lung Exercisers
+
+
+
 -/home-devices/supports
 --/home-devices/supports/cervical-support
 ---/home-devices/supports/cervical-support/collars
 ---/home-devices/supports/cervical-support/pillows
----/home-devices/supports/cervical-support/supplements
---/home-devices/supports/shoulder-support
---/home-devices/supports/elbow-support
---/home-devices/supports/wrist-support
---/home-devices/supports/finger-splints
---/home-devices/supports/back-support
---/home-devices/supports/knee-support
---/home-devices/supports/thigh-support
---/home-devices/supports/calf-support
---/home-devices/supports/ankle-support
---/home-devices/supports/backrest
+
+--/home-devices/supports/shoulder-support : Shoulder
+--/home-devices/supports/elbow-support : Elbow
+--/home-devices/supports/wrist-support : Wrist
+--/home-devices/supports/finger-splints : Finger
+--/home-devices/supports/back-support : Back
+--/home-devices/supports/knee-support : Knee
+--/home-devices/supports/thigh-support : Thigh
+--/home-devices/supports/calf-support : Calf
+--/home-devices/supports/ankle-support : Ankle
+
 -/home-devices/rehabilitation-aids
 --/home-devices/rehabilitation-aids/walking-aids
 ---/home-devices/rehabilitation-aids/walking-aids/walking-sticks
 ---/home-devices/rehabilitation-aids/walking-aids/crutches
 ---/home-devices/rehabilitation-aids/walking-aids/walkers
 --/home-devices/rehabilitation-aids/wheel-chair
---/home-devices/rehabilitation-aids/power-wheel-chair: Power Wheel Chair
---/home-devices/rehabilitation-aids/commode : Commode WheelChair/Stools
+---/home-devices/rehabilitation-aids/wheel-chair/power-wheel-chairs: Powered
+---/home-devices/rehabilitation-aids/wheel-chair/manual-wheel-chairs: Manual
+---/home-devices/rehabilitation-aids/wheel-chair/commode : Commode/Stools
 --/home-devices/rehabilitation-aids/physiotherapy-aids
 --/home-devices/rehabilitation-aids/orthotic-aids
 ---/home-devices/rehabilitation-aids/orthotic-aids/knee
@@ -370,6 +379,7 @@
 ---/home-devices/miscellaneous/forehead-thermometer
 ---/home-devices/miscellaneous/no-contact-thermometer
 ---/home-devices/miscellaneous/ear-thermometer
+--/home-devices/miscellaneous/weighing-scales : Weighing Scales
 --/home-devices/miscellaneous/weight-management
 ---/home-devices/miscellaneous/weight-management/body-fat-monitor
 ---/home-devices/miscellaneous/weight-management/step-counter
