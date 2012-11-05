@@ -1,15 +1,22 @@
 package com.hk.rest.impl.service;
 
-import java.io.*;
-import java.util.List;
-import java.util.Iterator;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import javax.ws.rs.core.MediaType;
-import javax.imageio.ImageReader;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.slf4j.Logger;
@@ -17,8 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.io.IOUtils;
 
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.imaging.ImageUtils;
@@ -34,7 +39,6 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.rest.pact.service.APIProductService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.ImageManager;
-import com.hk.util.FtlUtils;
 
 /**
  * Created with IntelliJ IDEA. User: Pradeep Date: 8/28/12 Time: 3:47 PM

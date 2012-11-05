@@ -13,7 +13,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import com.hk.pact.service.core.AddressService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +24,10 @@ import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.user.Address;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.core.ManufacturerDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.service.core.AddressService;
 
 /**
  * Created by IntelliJ IDEA.

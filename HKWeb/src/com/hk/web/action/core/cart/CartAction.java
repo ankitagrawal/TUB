@@ -197,7 +197,6 @@ public class CartAction extends BaseAction {
                 itemsInCart += inCartSubscriptions;
             }
         }
-      getOrderDao().refresh(order);
         return new ForwardResolution("/pages/cart.jsp");
     }
 
