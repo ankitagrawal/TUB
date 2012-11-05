@@ -18,7 +18,7 @@
 						$.getJSON(
 								$('#selectgroup').attr('href'), {courier:courieren}, function(response) {
 							if (response.code == '<%=HealthkartResponse.STATUS_OK%>') {
-								$('#groupDropDown').val(response.data.id);
+								$('#groupDropDown').val(response.data.couriergroup.id);
 							}
 							else {
 								$('#groupDropDown').val("");

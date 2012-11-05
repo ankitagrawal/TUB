@@ -13,10 +13,7 @@ import com.hk.web.HealthkartResponse;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.ArrayList;
+import java.util.*;
 
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -130,8 +127,9 @@ public class AddCourierAction extends BaseAction {
 		courierGroup = courier.getCourierGroup();
 		HealthkartResponse healthkartResponse = null;
 		if (courierGroup != null) {
-			courierGroup = (CourierGroup) JsonUtils.hydrateHibernateObject(courierGroup);
-			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", courierGroup);
+			Map<String, Object> data = new HashMap<String, Object>(1);
+			data.put("couriergroup", JsonUtils.hydrateHibernateObject(courierGroup));
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", data);
 		} else {
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Not assiged to any group");
 		}
