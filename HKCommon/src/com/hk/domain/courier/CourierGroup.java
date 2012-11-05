@@ -20,7 +20,7 @@ public class CourierGroup implements java.io.Serializable {
 	@Column(name = "name", length = 45)
 	private String name;
 
-	
+	@JsonSkip
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	//@Fetch(value = FetchMode.SELECT)
 	@JoinTable(name = "courier_group_has_courier",

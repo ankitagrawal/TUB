@@ -2,6 +2,8 @@ package com.hk.domain.courier;
 // Generated Dec 26, 2011 1:31:41 PM by Hibernate Tools 3.2.4.CR1
 
 
+import com.akube.framework.gson.JsonSkip;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -31,6 +33,7 @@ public class Courier implements java.io.Serializable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courier")
 	private Set<CourierServiceInfo> courierServiceInfos = new HashSet<CourierServiceInfo>(0);
 
+	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "couriers")
 	private List<CourierGroup> courierGroup = new ArrayList<CourierGroup>(0);
 

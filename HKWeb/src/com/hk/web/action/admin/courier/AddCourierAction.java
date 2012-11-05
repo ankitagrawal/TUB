@@ -124,11 +124,11 @@ public class AddCourierAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution getCourierGroupForCourier() {
-		courierGroup = courier.getCourierGroup();
+	CourierGroup courierGroupcr = courier.getCourierGroup();
 		HealthkartResponse healthkartResponse = null;
-		if (courierGroup != null) {
+		if (courierGroupcr != null) {
 			Map<String, Object> data = new HashMap<String, Object>(1);
-			data.put("couriergroup", JsonUtils.hydrateHibernateObject(courierGroup));
+			data.put("couriergroup", JsonUtils.hydrateHibernateObject(courierGroupcr.getId()));
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", data);
 		} else {
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Not assiged to any group");
