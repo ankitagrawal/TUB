@@ -81,32 +81,4 @@ public abstract class BasePaymentGatewaySendReceiveAction<T extends PaymentGatew
         return SslUtil.encodeUrlFullForced(getContext().getRequest(), getContext().getResponse(), redirectUrl, null);
     }
 
-
-    public Resolution proceed1() throws IOException{
-
-         String encodedData = getContext().getRequest().getParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM);
-        BasePaymentGatewayWrapper.TransactionData data = BasePaymentGatewayWrapper.decodeTransactionDataParam(encodedData);
-        PaymentGatewayWrapper paymentGatewayWrapper = getPaymentGatewayWrapperFromTransactionData(data);
-                  String paypalurl = null;
-//        if (paymentGatewayWrapper.isPaypal()){
-        if(true) {
-            Map<String, Object> paypalmap=  paymentGatewayWrapper.getParameters();
-            String ack = paypalmap.get("ACK").toString();
-            String Token = paypalmap.get("TOKEN").toString();
-
-
-            try { if (ack.equals("Success")) {                    
-                 paypalurl = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + Token;
-//                getContext().getResponse().sendRedirect(paypalurl);
-            HttpServletResponse httpResponse = (HttpServletResponse)getContext().getResponse();
-                httpResponse.sendRedirect(paypalurl);
-            }
-        }catch(Exception e1){
-//                logger.info("exception", e1);
-            }
-
-    }
-       return null;
-    }
-
 }
