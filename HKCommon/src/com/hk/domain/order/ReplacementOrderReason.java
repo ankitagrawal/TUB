@@ -1,5 +1,7 @@
 package com.hk.domain.order;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -52,7 +54,7 @@ public class ReplacementOrderReason {
 
 	@Override
 	public int hashCode() {
-		return id != null ? id.hashCode() : 0;
+		return new HashCodeBuilder().append(id).toHashCode();
 	}
 
 }
