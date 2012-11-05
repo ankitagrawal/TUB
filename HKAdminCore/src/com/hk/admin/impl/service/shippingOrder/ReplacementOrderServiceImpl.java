@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ReplacementOrderReason;
+import com.hk.pact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private ReconciliationStatusDao    reconciliationStatusDao;
+	@Autowired
+	UserService                        userService;
     
 
     public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason) {
@@ -67,7 +71,12 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         replacementOrder.setRefShippingOrder(shippingOrder);
         replacementOrder = (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
         shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
-        return (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
+
+	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
+	    shippingOrderService.logShippingOrderActivity(replacementOrder, userService.getAdminUser(),
+				        EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
+				        "Replacement order created");
+        return replacementOrder;
     }
 
     @Override
@@ -81,10 +90,6 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 
     public ShippingOrderStatusService getShippingOrderStatusService() {
         return shippingOrderStatusService;
-    }
-
-    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-        this.shippingOrderStatusService = shippingOrderStatusService;
     }
 
     public ReconciliationStatusDao getReconciliationStatusDao() {
