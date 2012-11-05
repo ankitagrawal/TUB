@@ -40,6 +40,7 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -143,8 +144,10 @@ public class InventoryCheckoutAction extends BaseAction {
 			skuGroupBarcode = skuGroupDao.getSkuGroup(upc);
 			if (skuGroupBarcode != null && skuGroupBarcode.getSku() != null) {
 				productVariant = skuGroupBarcode.getSku().getProductVariant();
+				skuGroups = new ArrayList<SkuGroup>();
+				skuGroups.add(skuGroupBarcode);
 
-				inStockSkuGroupList = skuItemDao.getInStockSkuGroups(skuGroupBarcode.getSku());
+				/*inStockSkuGroupList = skuItemDao.getInStockSkuGroups(skuGroupBarcode.getSku());
 				if (inStockSkuGroupList != null && inStockSkuGroupList.size() > 0) {
 					if (inStockSkuGroupList.size() == 1) {
 						if (upc.equalsIgnoreCase(skuGroupBarcode.getBarcode())) {
@@ -163,7 +166,7 @@ public class InventoryCheckoutAction extends BaseAction {
 							upc = null;
 						}
 					}
-				}
+				}*/
 			} else {
 				List<ProductVariant> pvList = productVariantDao.findVariantListFromUPC(upc);
 				if (pvList != null && !pvList.isEmpty()) {
@@ -212,7 +215,7 @@ public class InventoryCheckoutAction extends BaseAction {
 				}
 				if (lineItem != null) {
 					ProductVariant variant = skuGroup.getSku().getProductVariant();
-					if (skuGroup.getMrp() != null && skuGroup.getMrp() < variant.getMarkedPrice()) {
+					if (skuGroup.getMrp() != null && skuGroup.getMrp() < lineItem.getMarkedPrice()) {
 					  addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
 					} else {
 						Long checkedOutItemCount = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItem);
