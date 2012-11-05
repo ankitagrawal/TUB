@@ -103,7 +103,7 @@ ul.bullet1 li span	{font-size:13px;}
 <div class="outer">
 	<div class="down">&nbsp;</div>
     <div class="down"><a href="http://www.healthkart.com/diabetes" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/header.jpg" alt="World Diabetes Day, Nov.14th, Join the Blue Circle, HealthKart Celebrates World Diabetes Day with OneTouch and Splenda" border="0" /></a></div>
-    <div class="pad1 des" align="center">Bring back the balance in your life by cutting down glucose levels. Find yourself amid a breath of relief with exclusive diabetic combos which aid easy monitoring of blood sugar levels & controling it effectively.
+    <div class="pad1 des" align="center">Bring back the balance in your life by cutting down glucose levels. Find yourself amid a breath of relief with exclusive diabetic combos which aid easy monitoring of blood sugar levels & controlling it effectively.
     </div>
     <div class="clr">&nbsp;</div>
     <div class="line1">&nbsp;</div>
