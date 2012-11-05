@@ -45,7 +45,7 @@ public class PurchaseOrderPDFGenerator {
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getState(), font));
                 addressParagraph.add(new Paragraph("TIN: " + purchaseOrder.getWarehouse().getTin(), font));
 
-                Paragraph header = new Paragraph("PURCHASE ORDER \n\n", new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD));
+                Paragraph header = new Paragraph("PURCHASE ORDER " + newline + newline , new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD));
                 header.setAlignment(Element.ALIGN_CENTER);
 
                 Image image = Image.getInstance(logoImagePath);
@@ -55,7 +55,7 @@ public class PurchaseOrderPDFGenerator {
                 purchaseOrderDocument.add(image);
                 purchaseOrderDocument.add(header);
                 createSupplierDetailTable(purchaseOrderDocument, purchaseOrder);
-                purchaseOrderDocument.add(new Paragraph("\n"));
+                purchaseOrderDocument.add(new Paragraph(newline));
                 createPODetails(purchaseOrderDocument, purchaseOrderDto);
                 createFooter(purchaseOrderDocument);
             }
@@ -80,15 +80,15 @@ public class PurchaseOrderPDFGenerator {
         if(purchaseOrder.getSupplier().getLine1() != null) {
             supplierAddress.append(purchaseOrder.getSupplier().getLine1());
         }
-        supplierAddress.append("\n");
+        supplierAddress.append(newline);
         if(purchaseOrder.getSupplier().getLine2() != null) {
             supplierAddress.append(purchaseOrder.getSupplier().getLine2());
         }
-        supplierAddress.append("\n");
+        supplierAddress.append(newline);
         if(purchaseOrder.getSupplier().getCity() != null) {
             supplierAddress.append(purchaseOrder.getSupplier().getCity());
         }
-        supplierAddress.append("\n");
+        supplierAddress.append(newline);
         if(purchaseOrder.getSupplier().getState() != null) {
             supplierAddress.append(purchaseOrder.getSupplier().getState());
         }
@@ -129,7 +129,7 @@ public class PurchaseOrderPDFGenerator {
         poDetailTable.addCell(PdfGenerator.createCell("Details", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Qty", font1));
         poDetailTable.addCell(PdfGenerator.createCell("MRP", font1));
-        poDetailTable.addCell(PdfGenerator.createCell("Cost Price\n (Without Tax)", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Cost Price" + newline + " (Without Tax)", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Tax %", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Taxable", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Tax", font1));
@@ -169,9 +169,9 @@ public class PurchaseOrderPDFGenerator {
 
     private void createFooter(Document document) throws Exception{
         Paragraph footerParagraph = new Paragraph();
-        footerParagraph.add(new Paragraph("1) Please indicate Purchase Order number on all invoice and challan and correspondence.\n", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        footerParagraph.add(new Paragraph("2) The item supplied will be subject to our approval and all rejections will be to your account.\n", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        footerParagraph.add(new Paragraph("3) No excess supply will be accepted, unless agreed in writing by us.\n", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("1) Please indicate Purchase Order number on all invoice and challan and correspondence." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("2) The item supplied will be subject to our approval and all rejections will be to your account." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("3) No excess supply will be accepted, unless agreed in writing by us." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
 
         document.add(footerParagraph);
     }
