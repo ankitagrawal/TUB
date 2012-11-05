@@ -1,6 +1,6 @@
 package com.hk.domain.catalog.product;
-// Generated Feb 7, 2012 4:39:32 PM by Hibernate Tools 3.2.4.CR1
 
+// Generated Feb 7, 2012 4:39:32 PM by Hibernate Tools 3.2.4.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,91 +27,91 @@ import org.hibernate.annotations.SortType;
 @Table(name = "variant_config_option")
 public class VariantConfigOption implements java.io.Serializable, Comparable<VariantConfigOption> {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long                     id;
 
-  @Column(name = "name", nullable = false, length = 45)
-  private String name;
+    @Column(name = "name", nullable = false, length = 45)
+    private String                   name;
 
-  @Column(name = "display_name", nullable = false, length = 50)
-  private String displayName;
+    @Column(name = "display_name", nullable = false, length = 50)
+    private String                   displayName;
 
-  @Column(name = "display_order", nullable = false)
-  private long displayOrder;
+    @Column(name = "display_order", nullable = false)
+    private long                     displayOrder;
 
-  @Column(name = "additional_param", length = 20)
-  private String additionalParam;
+    @Column(name = "additional_param", length = 20)
+    private String                   additionalParam;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "variant_config_id", nullable = false)
-  private VariantConfig variantConfig;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "variant_config_id", nullable = false)
+    private VariantConfig            variantConfig;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "variantConfigOption")
-  @Sort(type= SortType.NATURAL)
-  private Set<VariantConfigValues> variantConfigValues = new HashSet<VariantConfigValues>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "variantConfigOption")
+    @Sort(type = SortType.NATURAL)
+    private Set<VariantConfigValues> variantConfigValues = new HashSet<VariantConfigValues>();
 
+    public Long getId() {
+        return this.id;
+    }
 
-  public Long getId() {
-    return this.id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public VariantConfig getVariantConfig() {
+        return this.variantConfig;
+    }
 
-  public VariantConfig getVariantConfig() {
-    return this.variantConfig;
-  }
+    public void setVariantConfig(VariantConfig variantConfig) {
+        this.variantConfig = variantConfig;
+    }
 
-  public void setVariantConfig(VariantConfig variantConfig) {
-    this.variantConfig = variantConfig;
-  }
+    public String getName() {
+        return this.name;
+    }
 
-  public String getName() {
-    return this.name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public Set<VariantConfigValues> getVariantConfigValues() {
+        return variantConfigValues;
+    }
 
-  public Set<VariantConfigValues> getVariantConfigValues() {
-    return variantConfigValues;
-  }
+    public void setVariantConfigValues(Set<VariantConfigValues> variantConfigValues) {
+        this.variantConfigValues = variantConfigValues;
+    }
 
-  public void setVariantConfigValues(Set<VariantConfigValues> variantConfigValues) {
-    this.variantConfigValues = variantConfigValues;
-  }
+    public String getDisplayName() {
+        return displayName;
+    }
 
-  public String getDisplayName() {
-    return displayName;
-  }
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-  public void setDisplayName(String displayName) {
-    this.displayName = displayName;
-  }
+    public long getDisplayOrder() {
+        return displayOrder;
+    }
 
-  public long getDisplayOrder() {
-    return displayOrder;
-  }
+    public void setDisplayOrder(long displayOrder) {
+        this.displayOrder = displayOrder;
+    }
 
-  public void setDisplayOrder(long displayOrder) {
-    this.displayOrder = displayOrder;
-  }
+    public String getAdditionalParam() {
+        return additionalParam;
+    }
 
-  public String getAdditionalParam() {
-    return additionalParam;
-  }
+    public void setAdditionalParam(String additionalParam) {
+        this.additionalParam = additionalParam;
+    }
 
-  public void setAdditionalParam(String additionalParam) {
-    this.additionalParam = additionalParam;
-  }
-
-  public int compareTo(VariantConfigOption o) {
-    return ((Long)o.getDisplayOrder()).compareTo(this.displayOrder);
-  }
+    public int compareTo(VariantConfigOption o) {
+        if (o.getDisplayOrder() == this.displayOrder) {
+            return -1;
+        }
+        return ((Long) o.getDisplayOrder()).compareTo(this.displayOrder);
+    }
 }
-
-

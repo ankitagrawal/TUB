@@ -32,10 +32,10 @@
 
 .outer	{ margin:15px auto; width:950px; overflow:auto; clear:both; padding-bottom:240px; }
 
-.blueHeadings, h2	{ font-size:30px; line-height:36px; color:#0093d8; font-family:'DidotHTF-11LightItalic'; font-style:italic; font-weight:normal; text-align:center; margin:0px; padding:0px;}
+.blueHeadings, h2	{ font-size:30px; line-height:36px; color:#0093d8; font-family:'DidotHTF-11LightItalic';  font-weight:normal; text-align:center; margin:0px; padding:0px;}
 
 
-.greyHeadings, h3	{ font-size:58px; line-height:66px; color:#77787b; font-family:'DidotHTF-11LightItalic'; font-style:italic; font-weight:normal; text-align:center; margin:0px; padding:0px;}
+.greyHeadings, h3	{ font-size:58px; line-height:66px; color:#77787b; font-family:'DidotHTF-11LightItalic'; font-weight:normal; text-align:center; margin:0px; padding:0px;}
 .greyHeadings, h3 a			{ font-size:58px;  color:#77787b; text-decoration:none; border:none;}
 .greyHeadings, h3 a:hover	{ color:#77787b; text-decoration:none;}
 
@@ -47,14 +47,14 @@
 .proData .btmBrdr	{ background:#cbcdcf; height:2px; line-height:2px;}
 
 .proData .price1		{ float:left; text-align:right; width:200px; font-size:54px; line-height:60px; color:#0093d8;
-						  font-family:'DidotHTF-11LightItalic'; font-style:italic; font-weight:normal; margin-top:15px;}
+						  font-family:'DidotHTF-11LightItalic'; font-weight:normal; margin-top:15px;}
 .proData .price1	span { font-size:22px; line-height:24px; color:#221f1f; }
 
 
 
 
 .proData .discountRed			{ width:100px; position:absolute; color:#515254; font-size:22px; line-height:24px; color:#221f1f;
-							  	  font-family: Didot HTF; font-style:italic; font-weight:normal;}
+							  	  font-family: Didot HTF; font-weight:normal;}
 .proData .discountRed a			{ color:#d6611d; text-decoration:none;}
 .proData .discountRed a:hover	{ color:#d6611d; text-decoration:none;}
 
@@ -91,7 +91,7 @@
   
 </s:layout-component>
 
-<s:layout-component name="metaDescription">Breast Feeding Week Special Products from HealthKart.</s:layout-component>
+<s:layout-component name="metaDescription">Special Diwali Offers from HealthKart.com</s:layout-component>
 <s:layout-component name="metaKeywords"></s:layout-component>
 
 <s:layout-component name="content">

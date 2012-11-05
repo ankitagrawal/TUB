@@ -1,7 +1,35 @@
 package com.hk.rest.mobile.service.action;
 
-import com.akube.framework.stripes.controller.JsonHandler;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.DontValidate;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.gson.JsonUtils;
+import com.akube.framework.shiro.Principal;
+import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -19,40 +47,22 @@ import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
+import com.hk.manager.AddressBookManager;
+import com.hk.manager.AffiliateManager;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
-import com.hk.pact.dao.affiliate.AffiliateDao;
-import com.hk.pact.dao.coupon.CouponDao;
-import com.hk.pact.dao.offer.OfferInstanceDao;
-import com.hk.pact.dao.order.OrderDao;
-import com.hk.pact.dao.shippingOrder.LineItemDao;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.discount.CouponService;
 import com.hk.pact.service.order.CartFreebieService;
+import com.hk.pact.service.order.CartLineItemService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
-import com.hk.util.HKImageUtils;
-import com.hk.web.HealthkartResponse;
-import com.hk.web.action.core.user.SelectAddressAction;
 import com.hk.rest.mobile.service.model.MCartLineItemsJSONResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
-import com.shiro.PrincipalImpl;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import java.util.*;
+import com.hk.util.HKImageUtils;
+import com.hk.web.HealthkartResponse;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,7 +90,7 @@ public class MCartAction extends MBaseAction{
     @Autowired
     private UserService userService;
     @Autowired
-    AffiliateDao affiliateDao;
+    AffiliateManager affiliateManager;
     @Autowired
     UserManager userManager;
     @Autowired
@@ -88,17 +98,15 @@ public class MCartAction extends MBaseAction{
     @Autowired
     OrderManager orderManager;
     @Autowired
-    LineItemDao lineItemDao;
+    CartLineItemService lineItemService;
     @Autowired
-    CouponDao couponDao;
-    @Autowired
-    OfferInstanceDao offerInstanceDao;
+    CouponService couponService;
     @Autowired
     OfferManager offerManager;
     @Autowired
-    private OrderDao orderDao;
+    private OrderService orderService;
     @Autowired
-    private AddressDao addressDao;
+    private AddressBookManager addressManager;
     @Autowired
     private CartFreebieService cartFreebieService;
     @Autowired
@@ -121,7 +129,7 @@ public class MCartAction extends MBaseAction{
         MCartLineItemsJSONResponse cartItemResponse;
         User user = null;
         if (securityManager.getSubject().getPrincipal() != null) {
-            user = getUserService().getUserById(((PrincipalImpl) securityManager.getSubject().getPrincipal()).getId());
+            user = getUserService().getUserById(((Principal) securityManager.getSubject().getPrincipal()).getId());
             if (user == null) {
                 user = userManager.createAndLoginAsGuestUser(null, null);
             }
@@ -132,7 +140,7 @@ public class MCartAction extends MBaseAction{
             order = orderManager.getOrCreateOrder(user);
 
             
-            order = orderDao.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+            order = orderService.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
             if (order != null) {
                 Set<CartLineItem> cartLineItems = order.getCartLineItems();
                 if (cartLineItems != null && !cartLineItems.isEmpty()) {
@@ -149,6 +157,9 @@ public class MCartAction extends MBaseAction{
                 if (lineItem != null && lineItem.getProductVariant() != null) {
                     ProductVariant productVariant = lineItem.getProductVariant();
                     cartItemResponse = new MCartLineItemsJSONResponse();
+                    if(null!=productVariant.getProductOptions()){
+                    cartItemResponse.setProductOptions(productVariant.getProductOptions());	
+                    }                    	
                     if(null!=lineItem.getDiscountOnHkPrice())
                     cartItemResponse.setDiscountOnHkPrice(priceFormat.format(lineItem.getDiscountOnHkPrice()));
                     if(null!=lineItem.getHkPrice())
@@ -187,14 +198,14 @@ public class MCartAction extends MBaseAction{
             if (user.getReferredBy() != null) {
                 Coupon coupon = (user.getReferredBy()).getReferrerCoupon();
                 if (coupon != null && coupon.isValid()) {
-                    List<OfferInstance> offerInstances = offerInstanceDao.findByUserAndCoupon(user, coupon);
+                    List<OfferInstance> offerInstances = userManager.getOfferInstanceDao().findByUserAndCoupon(user, coupon);
                     if (offerInstances == null || offerInstances.isEmpty()) {
                         if (offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
                             Date offerInstanceEndDate = new DateTime().plusDays(OfferConstants.MAX_ALLOWED_DAYS_FOR_15_PERCENT_REFERREL_DISCOUNT).toDate();
-                            OfferInstance offerInstance = offerInstanceDao.createOfferInstance(coupon.getOffer(), coupon, user, offerInstanceEndDate);
+                            OfferInstance offerInstance = userManager.getOfferInstanceDao().createOfferInstance(coupon.getOffer(), coupon, user, offerInstanceEndDate);
                             order.setOfferInstance(offerInstance);
                             coupon.setAlreadyUsed(coupon.getAlreadyUsed() + 1);
-                            couponDao.save(coupon);
+                            couponService.save(coupon);
                         } else {
                             verifyMessage = true;
                         }
@@ -203,9 +214,9 @@ public class MCartAction extends MBaseAction{
             }
 
             if (order.getOfferInstance() != null && !order.getOfferInstance().isValid()) {
-                offerInstanceDao.save(order.getOfferInstance());
+                userManager.getOfferInstanceDao().save(order.getOfferInstance());
                 order.setOfferInstance(null);
-                order = orderDao.save(order);
+                order = orderService.save(order);
             }
 
             Address address = order.getAddress() != null ? order.getAddress() : new Address();
@@ -236,10 +247,10 @@ public class MCartAction extends MBaseAction{
     public Resolution getCartItems() {
         User user = null;
         if (securityManager.getSubject().getPrincipal() != null) {
-            user = getUserService().getUserById(((PrincipalImpl) securityManager.getSubject().getPrincipal()).getId());
+            user = getUserService().getUserById(((Principal) securityManager.getSubject().getPrincipal()).getId());
         }
         if (user != null) {
-            order = orderDao.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+            order = orderService.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
             if (order != null) {
                 Set<CartLineItem> cartLineItems = order.getCartLineItems();
                 if (cartLineItems != null && !cartLineItems.isEmpty()) {
@@ -296,7 +307,7 @@ public class MCartAction extends MBaseAction{
 
         User user = getUserService().getUserById(getPrincipal().getId());
         String email = user.getEmail();
-        List<Address> addresses = addressDao.getVisibleAddresses(user);
+        List<Address> addresses = addressManager.getAddressDao().getVisibleAddresses(user);
         Order order = orderManager.getOrCreateOrder(user);
         Address selectedAddress = order.getAddress();
         if (selectedAddress == null) {
@@ -305,11 +316,11 @@ public class MCartAction extends MBaseAction{
                 selectedAddress = addresses.get(0);
                 healthkartResponse = new HealthkartResponse(status, message, selectedAddress);
             }else{
-                healthkartResponse = new HealthkartResponse(status, message, "No Address");
+                healthkartResponse = new HealthkartResponse(status, message, MHKConstants.NO_ADDRESS);
             }
         }else{
 
-            Map addressMap = new HashMap();
+            Map<String,Object> addressMap = new HashMap<String,Object>();
             addressMap.put("name",selectedAddress.getName());
             addressMap.put("city",selectedAddress.getCity());
             addressMap.put("line1",selectedAddress.getLine1());
