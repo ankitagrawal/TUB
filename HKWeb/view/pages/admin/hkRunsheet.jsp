@@ -44,6 +44,19 @@
                 createChangedConsignmentList();
             });
 
+	        $('.popup-expected-amount').click(function(event){
+		        var expected_amount = 0;
+		        $('.consignment-row').each(function(index){
+			        var payment_type = $(this).find('.payment-type').text();
+			        if(payment_type.toLowerCase() == "COD".toLowerCase()){
+						var current_amount_string= $(this).find('.amount').text();
+						var current_amount = (parseFloat(current_amount_string.toString().replace(/\D+/g,''), 10))/100;
+						expected_amount += current_amount;
+			        }
+		        });
+		        alert("Current expected amount = "+expected_amount);
+	        });
+
             $('.closeConfirmationDialogue').click(function(event){
                 var confirm_action = confirm("Are you sure you want to close the runsheet?");
                 if(confirm_action==false){
@@ -162,9 +175,9 @@
                         <td><s:hidden name="runsheetConsignments[${ctr.index}]" value="${consignment.id}"/>${ctr.index+1}</td>
                         <td>${consignment.awbNumber}</td>
                         <td>${consignment.cnnNumber}</td>
-                        <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
+                        <td class="amount"><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
                                               maxFractionDigits="2"/></td>
-                        <td>${consignment.paymentMode}</td>
+                        <td class="payment-type">${consignment.paymentMode}</td>
                         <td>${consignment.hkdeliveryPaymentReconciliation.id}</td>
                         <td><s:hidden class="consignment-status" id= "${consignment.id}" name="runsheetConsignments[${ctr.index}].consignmentStatus"
                                       value="${consignment.consignmentStatus.id}">
@@ -187,9 +200,9 @@
                 </c:forEach>
             </table>
             <c:if test="${runsheetAction.runsheet.runsheetStatus.id !=  20}" >
-                <s:submit id="save-runsheet" name="saveRunsheet" value="Save runsheet" />
-                <s:submit class="closeConfirmationDialogue" name="closeRunsheet" value="Close runsheet" />
-                <s:submit class="markAllConfirmationDialogue" name="markAllDelivered" value="Mark all as delivered"/>
+                <s:submit id="save-runsheet" name="saveRunsheet" value="Save runsheet" class="popup-expected-amount"/>
+                <s:submit class="popup-expected-amount closeConfirmationDialogue" name="closeRunsheet popup-expected-amount" value="Close runsheet" />
+                <s:submit class="popup-expected-amount markAllConfirmationDialogue" name="markAllDelivered" value="Mark all as delivered"/>
             </c:if>
         </s:form>
     </s:layout-component>
