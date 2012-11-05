@@ -9579,7 +9579,7 @@
     </changeSet>
 	<changeSet author="Marut (generated)" id="1351173120154-5">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_detail" constraintName="fk_user_detail_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-    </changeSet>	
+    </changeSet>
 
     <changeSet author="Ajeet (generated)" id="1351491739428-1">
         <addColumn tableName="feedback">
@@ -9611,7 +9611,8 @@
     <changeSet author="Rahul (generated)" id="1351679062102-3">
         <modifyDataType columnName="template_ftl" newDataType="LONGTEXT" tableName="email_campaign"/>
     </changeSet>
-	
+
+
     <changeSet author="Tarun (generated)" id="1351849520135-1">
         <createTable tableName="replacement_order_reason">
             <column name="id" type="INT">
@@ -9630,7 +9631,7 @@
     <changeSet author="Tarun (generated)" id="1351849520135-3">
         <addForeignKeyConstraint baseColumnNames="replacement_order_reason_id" baseTableName="replacement_order" constraintName="fk_replacement_order_replacement_order_reason1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="replacement_order_reason" referencesUniqueColumn="false"/>
     </changeSet>
-		<changeSet author="Seema (generated)" id="1349781909753-4">
+			<changeSet author="Seema (generated)" id="1349781909753-4">
 		 <sql>
 			 ALTER TABLE courier MODIFY COLUMN id INT NOT NULL AUTO_INCREMENT;
 			 ALTER TABLE courier AUTO_INCREMENT=700;
