@@ -69,8 +69,6 @@ public class MAddtoCartAction extends MBaseAction {
 	UserCartDao userCartDao;
 	@Autowired
 	UserProductHistoryDao userProductHistoryDao;
-
-	private Long productReferrerId;
 	@Autowired
 	SignupAction signupAction;
 
@@ -96,7 +94,7 @@ public class MAddtoCartAction extends MBaseAction {
 	public String addToCart(@Context HttpServletResponse response,
 			@QueryParam("productVariantId") String productVariantId,
 			@QueryParam("productId") String productId,
-			@QueryParam("productReferrerId") String productReferrerId) {
+			@QueryParam("productReferrerId") Long productReferrerId) {
 		HealthkartResponse healthkartResponse;
 		String jsonBuilder = "";
 		String message = MHKConstants.STATUS_DONE;
@@ -330,13 +328,5 @@ public class MAddtoCartAction extends MBaseAction {
 
 	public void setEngravingRequired(String engravingRequired) {
 		this.engravingRequired = engravingRequired;
-	}
-
-	public Long getProductReferrerId() {
-		return productReferrerId;
-	}
-
-	public void setProductReferrerId(Long productReferrerId) {
-		this.productReferrerId = productReferrerId;
 	}
 }
