@@ -2,7 +2,6 @@ package com.hk.admin.pact.service.inventory;
 
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
-import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 
 /**
