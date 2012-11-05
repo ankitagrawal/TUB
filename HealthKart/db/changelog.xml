@@ -9631,4 +9631,21 @@
     <changeSet author="Tarun (generated)" id="1351849520135-3">
         <addForeignKeyConstraint baseColumnNames="replacement_order_reason_id" baseTableName="replacement_order" constraintName="fk_replacement_order_replacement_order_reason1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="replacement_order_reason" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Ankit (generated)" id="1352121457612-1">
+        <createTable tableName="currency_converter">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="base_currency_code" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="foreign_currency_code" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="conversion_rate" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
