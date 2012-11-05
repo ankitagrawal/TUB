@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
+import com.hk.domain.order.ReplacementOrderReason;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -366,5 +368,31 @@ private CourierGroupService courierGroupService;
 	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
 	       return EnumPurchaseOrderStatus.getStatusForNonApprover();
 
+	}
+
+	public List<ReplacementOrderReason> getReplacementOrderReasonForReplacement() {
+		List<Long> replacementOrderReasonIds = EnumReplacementOrderReason.getReasonForReplacementOrder();
+		List<ReplacementOrderReason> replacementOrderReasonList = new ArrayList<ReplacementOrderReason>();
+		ReplacementOrderReason replacementOrderReason;
+		for(Long replacementOrderReasonId : replacementOrderReasonIds){
+			replacementOrderReason = getBaseDao().get(ReplacementOrderReason.class, replacementOrderReasonId);
+			if(replacementOrderReason != null){
+				replacementOrderReasonList.add(replacementOrderReason);
+			}
+		}
+		return replacementOrderReasonList;
+	}
+
+	public List<ReplacementOrderReason> getReplacementOrderReasonForRto() {
+		List<Long> replacementOrderReasonIds = EnumReplacementOrderReason.getReasonForReplacementForRTO();
+		List<ReplacementOrderReason> replacementOrderReasonList = new ArrayList<ReplacementOrderReason>();
+		ReplacementOrderReason replacementOrderReason;
+		for(Long replacementOrderReasonId : replacementOrderReasonIds){
+			replacementOrderReason = getBaseDao().get(ReplacementOrderReason.class, replacementOrderReasonId);
+			if(replacementOrderReason != null){
+				replacementOrderReasonList.add(replacementOrderReason);
+			}
+		}
+		return replacementOrderReasonList;
 	}
 }
