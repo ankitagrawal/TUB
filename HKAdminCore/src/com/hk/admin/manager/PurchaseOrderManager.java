@@ -1,10 +1,12 @@
 package com.hk.admin.manager;
 
+import static com.akube.framework.util.BaseUtils.newline;
 import com.hk.admin.dto.inventory.PoLineItemDto;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.TaxUtil;
+import static com.hk.constants.core.HealthkartConstants.CompanyName.brightLifeCarePvtLtd;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -101,33 +103,33 @@ public class PurchaseOrderManager {
 
 
 		StringBuffer warehouseAddress = new StringBuffer();
-		warehouseAddress.append("Billing Address- \nBright Lifecare Pvt. Ltd.");
+		warehouseAddress.append("Billing Address- " + newline + brightLifeCarePvtLtd);
 		if (purchaseOrder.getWarehouse() != null) {
 			if (purchaseOrder.getWarehouse().getLine1() != null) {
-				warehouseAddress.append("\n" + purchaseOrder.getWarehouse().getLine1());
+				warehouseAddress.append(newline + purchaseOrder.getWarehouse().getLine1());
 			}
 			if (purchaseOrder.getWarehouse().getLine2() != null) {
-				warehouseAddress.append("\n" + purchaseOrder.getWarehouse().getLine2());
+				warehouseAddress.append(newline + purchaseOrder.getWarehouse().getLine2());
 			}
-			warehouseAddress.append("\n" + purchaseOrder.getWarehouse().getCity());
-			warehouseAddress.append("\n" + purchaseOrder.getWarehouse().getState());
-			warehouseAddress.append("\nTIN: " + purchaseOrder.getWarehouse().getTin());
+			warehouseAddress.append(newline + purchaseOrder.getWarehouse().getCity());
+			warehouseAddress.append(newline + purchaseOrder.getWarehouse().getState());
+			warehouseAddress.append(newline + "TIN: " + purchaseOrder.getWarehouse().getTin());
 
 		}
 
 		StringBuffer supplierDetails = new StringBuffer();
 		supplierDetails.append(purchaseOrder.getSupplier().getName());
 		if (purchaseOrder.getSupplier().getLine1() != null) {
-			supplierDetails.append("\n" + purchaseOrder.getSupplier().getLine1());
+			supplierDetails.append(newline + purchaseOrder.getSupplier().getLine1());
 		}
 		if (purchaseOrder.getSupplier().getLine2() != null) {
-			supplierDetails.append("\n" + purchaseOrder.getSupplier().getLine2());
+			supplierDetails.append(newline + purchaseOrder.getSupplier().getLine2());
 		}
 		if (purchaseOrder.getSupplier().getCity() != null) {
-			supplierDetails.append("\n" + purchaseOrder.getSupplier().getCity());
+			supplierDetails.append(newline + purchaseOrder.getSupplier().getCity());
 		}
 		if (purchaseOrder.getSupplier().getState() != null) {
-			supplierDetails.append("\n" + purchaseOrder.getSupplier().getState());
+			supplierDetails.append(newline + purchaseOrder.getSupplier().getState());
 		}
 
 		for (int columnNo = 0; columnNo < NO_OF_COLUMNS_IN_ROW0; columnNo++) {
@@ -138,10 +140,10 @@ public class PurchaseOrderManager {
 		for (int columnNo = 0; columnNo < NO_OF_COLUMNS_IN_ROW1; columnNo++) {
 			row1.createCell(columnNo);
 		}
-		setCellValue(row1, 0, "Supplier - \n" + supplierDetails);
-		setCellValue(row1, 1, "PO#: " + (purchaseOrder.getPoNumber() != null ? purchaseOrder.getPoNumber() : " ") + "\n PO Date: " + (purchaseOrder.getPoPlaceDate() != null ? purchaseOrder.getPoPlaceDate() : " "));
+		setCellValue(row1, 0, "Supplier - " + newline + supplierDetails);
+		setCellValue(row1, 1, "PO#: " + (purchaseOrder.getPoNumber() != null ? purchaseOrder.getPoNumber() : " ") + newline +" PO Date: " + (purchaseOrder.getPoPlaceDate() != null ? purchaseOrder.getPoPlaceDate() : " "));
 		setCellValue(row1, 2, "Contact Name: " + (purchaseOrder.getSupplier().getContactPerson() != null ? purchaseOrder.getSupplier().getContactPerson() : "")
-				+ "\n Contact Number: " + (purchaseOrder.getSupplier().getContactNumber() != null ? purchaseOrder.getSupplier().getContactNumber() : " "));
+				+ newline + " Contact Number: " + (purchaseOrder.getSupplier().getContactNumber() != null ? purchaseOrder.getSupplier().getContactNumber() : " "));
 
 		int totalColumnNoInSheet1 = 12;
 
@@ -188,6 +190,7 @@ public class PurchaseOrderManager {
 
 			//check for variant name null
 			String variantName = productVariant.getProduct().getName().concat(" ").concat(productVariant.getVariantName() == null ? "" : productVariant.getVariantName());
+			TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(purchaseOrder.getSupplier(), poLineItem.getSku(), poLineItem.getTaxableAmount());
 			setCellValue(row2, 1, variantName);
 
 			setCellValue(row2, 2, productVariant.getUpc());
@@ -195,7 +198,7 @@ public class PurchaseOrderManager {
 			setCellValue(row2, 4, poLineItem.getQty());
 			setCellValue(row2, 5, String.valueOf(poLineItem.getMrp()));
 			setCellValue(row2, 6, String.valueOf(poLineItem.getCostPrice()));
-			setCellValue(row2, 7, String.valueOf(TaxUtil.getApplicableTaxRate(purchaseOrder.getSupplier(), poLineItem.getSku()) * 100));
+			setCellValue(row2, 7, String.valueOf(taxComponent.getTaxRate() * 100));
 			setCellValue(row2, 8, poLineItem.getTaxableAmount() != null ? String.valueOf(poLineItem.getTaxableAmount()) : "");
 			setCellValue(row2, 9, poLineItem.getTaxAmount() != null ? String.valueOf(poLineItem.getTaxAmount()) : "");
 			setCellValue(row2, 10, poLineItem.getSurchargeAmount() != null ? String.valueOf(poLineItem.getSurchargeAmount()) : "");

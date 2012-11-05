@@ -1,26 +1,23 @@
 package com.hk.admin.util;
 
-import java.io.FileOutputStream;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-
+import static com.akube.framework.util.BaseUtils.newline;
+import com.hk.admin.dto.inventory.PoLineItemDto;
+import com.hk.admin.dto.inventory.PurchaseOrderDto;
+import static com.hk.constants.core.HealthkartConstants.CompanyName.brightLifeCarePvtLtd;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.dto.TaxComponent;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.dto.inventory.PoLineItemDto;
-import com.hk.admin.dto.inventory.PurchaseOrderDto;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.inventory.po.PurchaseOrder;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-
+import java.io.FileOutputStream;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 /**
  * Created with IntelliJ IDEA.
  * User: Rohit
@@ -41,7 +38,7 @@ public class PurchaseOrderPDFGenerator {
             if(purchaseOrder != null) {
                 Paragraph addressParagraph = new Paragraph();
                 Font font = new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL);
-                addressParagraph.add(new Paragraph("Bright Lifecare Pvt. Ltd.", font));
+                addressParagraph.add(new Paragraph(brightLifeCarePvtLtd, font));
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine1(), font));
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine2(), font));
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getCity() + " -" + purchaseOrder.getWarehouse().getPincode(), font));
@@ -142,14 +139,15 @@ public class PurchaseOrderPDFGenerator {
         int counter = 1;
         for(PoLineItemDto poLineItemDto : poLineItemDtoList) {
             ProductVariant productVariant = poLineItemDto.getPoLineItem().getSku().getProductVariant();
+	        TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(purchaseOrderDto.getPurchaseOrder().getSupplier(), poLineItemDto.getPoLineItem().getSku(), poLineItemDto.getTaxable());
             poDetailTable.addCell(PdfGenerator.createCell("" + counter++, font2));
             poDetailTable.addCell(PdfGenerator.createCell(productVariant.getId(), font2));
             poDetailTable.addCell(PdfGenerator.createCell(productVariant.getUpc(), font2));
-            poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName() + "\n" + productVariant.getOptionsCommaSeparated(), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName() + newline + productVariant.getOptionsCommaSeparated(), font2));
             poDetailTable.addCell(PdfGenerator.createCell("" + poLineItemDto.getPoLineItem().getQty(), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getMrp()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getCostPrice()), font2));
-            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(TaxUtil.getApplicableTaxRate(purchaseOrderDto.getPurchaseOrder().getSupplier(), poLineItemDto.getPoLineItem().getSku()) * 100), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(taxComponent.getTaxRate() * 100), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getTaxable()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getTax()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getSurcharge()), font2));

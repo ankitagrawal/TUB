@@ -2,15 +2,17 @@ package com.hk.dto;
 
 public class TaxComponent {
 
-    public TaxComponent(Double surcharge, Double tax, Double payable) {
+	public TaxComponent(Double surcharge, Double tax, Double payable, Double taxRate) {
         this.surcharge = surcharge;
         this.tax = tax;
         this.payable = payable;
+	    this.taxRate = taxRate;
     }
 
     private Double tax;
     private Double surcharge;
     private Double payable;
+	private Double taxRate;
 
     public Double getTax() {
         return tax;
@@ -24,4 +26,7 @@ public class TaxComponent {
         return payable;
     }
 
+	public Double getTaxRate() {
+		return taxRate;
+	}
 }
