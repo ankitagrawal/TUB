@@ -24,7 +24,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
-
+import org.apache.axis.AxisFault;
 
 /**
  * com.fedex.ship.stub is generated via WSDL2Java, like this:<br>
@@ -57,6 +57,8 @@ public class FedExCourierUtil {
     private ShippingOrderService shippingOrderService = ServiceLocatorFactory.getService(ShippingOrderService.class);
     
     private static final String FED_EX_AWB_NOT_GENERATED = "FedEx awb not generated: ";
+    private static final String FEDEX_RESPONSE = "FedEx #RSP: ";
+    private static final String AXIS_FAULT = "FedEx awb not generated: FedEx #AF";
 
     public FedExCourierUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
         this.fedExAuthKey = fedExAuthKey;
@@ -74,7 +76,7 @@ public class FedExCourierUtil {
         try {
             // Initialize the service
             logger.info("inside newFedExShipment WebService call for order: " + shippingOrder.getGatewayOrderId() + " ");
-
+           
             ShipServiceLocator service;
             ShipPortType port;
             //
@@ -119,13 +121,13 @@ public class FedExCourierUtil {
             // comes here when there is an ERROR notification returned
             String notificationComment = logNotifications(reply.getNotifications());
             if (StringUtils.isNotBlank(notificationComment)) {
-                noAwbMessage = noAwbMessage + notificationComment;
+                noAwbMessage = noAwbMessage + FEDEX_RESPONSE + notificationComment;
             }
             logger.error("Exception while getting awb number from FedEx:");
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, noAwbMessage);
         } catch (Exception e) {
             logger.error("Exception while getting awb number from FedEx: Axis fault");
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, noAwbMessage);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, AXIS_FAULT);
         }
         return null;
     }
