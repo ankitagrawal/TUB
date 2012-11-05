@@ -48,7 +48,9 @@
 		        var expected_amount = 0;
 		        $('.consignment-row').each(function(index){
 			        var payment_type = $(this).find('.payment-type').text();
-			        if(payment_type.toLowerCase() == "COD".toLowerCase()){
+			        var cons_status = $(this).find('.cons-status').text();
+			        if(payment_type.toLowerCase() == "COD".toLowerCase()
+					        && cons_status.toLowerCase().indexOf("Delivered".toLowerCase()) != -1){
 						var current_amount_string= $(this).find('.amount').text();
 						var current_amount = (parseFloat(current_amount_string.toString().replace(/\D+/g,''), 10))/100;
 						expected_amount += current_amount;
@@ -179,7 +181,7 @@
                                               maxFractionDigits="2"/></td>
                         <td class="payment-type">${consignment.paymentMode}</td>
                         <td>${consignment.hkdeliveryPaymentReconciliation.id}</td>
-                        <td><s:hidden class="consignment-status" id= "${consignment.id}" name="runsheetConsignments[${ctr.index}].consignmentStatus"
+                        <td class="cons-status"><s:hidden class="consignment-status" id= "${consignment.id}" name="runsheetConsignments[${ctr.index}].consignmentStatus"
                                       value="${consignment.consignmentStatus.id}">
                             </s:hidden>
                             <span id="current-status-${consignment.id}">${consignment.consignmentStatus.status}</span>
