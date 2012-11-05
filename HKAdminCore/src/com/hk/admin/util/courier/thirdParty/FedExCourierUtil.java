@@ -55,7 +55,7 @@ public class FedExCourierUtil {
     private ShipmentService shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
 
     private ShippingOrderService shippingOrderService = ServiceLocatorFactory.getService(ShippingOrderService.class);
-    private static final String ERROR = "ERROR";
+    
     private static final String FED_EX_AWB_NOT_GENERATED = "FedEx awb not generated: ";
 
     public FedExCourierUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
@@ -73,7 +73,7 @@ public class FedExCourierUtil {
         //
         try {
             // Initialize the service
-            logger.debug("inside newFedExShipment WebService call for order: " + shippingOrder.getGatewayOrderId() + " ");
+            logger.info("inside newFedExShipment WebService call for order: " + shippingOrder.getGatewayOrderId() + " ");
             ShipServiceLocator service;
             ShipPortType port;
             //
@@ -196,7 +196,6 @@ public class FedExCourierUtil {
             CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
 
             if (cpd != null) {
-                // System.out.println("Package Details");
                 for (int i = 0; i < cpd.length; i++) { // Package details / Rating information for each package
                     StringBarcode sb = cpd[i].getOperationalDetail().getBarcodes().getStringBarcodes(0);
                     retrieveBarcodes.add(sb.getValue());
@@ -205,9 +204,9 @@ public class FedExCourierUtil {
 
             // return COD label now
             if (shippingOrder.isCOD()) {
+              if(shippingOrder.getAmount() != 0){
                 AssociatedShipmentDetail asd[] = csd.getAssociatedShipments();
                 if (cpd != null) {
-                    // System.out.println("Package Details");
                     for (int i = 0; i < cpd.length; i++) { // Package details / Rating information for each package
                         StringBarcode sb = asd[i].getPackageOperationalDetail().getBarcodes().getStringBarcodes(0);
                         String returnAwb = asd[i].getTrackingId().getTrackingNumber();
@@ -215,6 +214,7 @@ public class FedExCourierUtil {
                         retrieveBarcodes.add(returnAwb);
                     }
                 }
+              }
             }
             return retrieveBarcodes;
         }
@@ -242,7 +242,7 @@ public class FedExCourierUtil {
                 logger.info("    Severity: " + (notificationSeverityType == null ? "null" : notificationSeverityType.getValue()));
                 logger.info("    Code: " + notification.getCode());
                 logger.info("    Message: " + notification.getMessage());
-                if (notificationSeverityType != null && notificationSeverityType.getValue().equals(ERROR)) {
+                if (notificationSeverityType != null && notificationSeverityType.equals(NotificationSeverityType.ERROR)) {
                     messages = messages.concat(notification.getMessage() + ". ");
                 }
             }
