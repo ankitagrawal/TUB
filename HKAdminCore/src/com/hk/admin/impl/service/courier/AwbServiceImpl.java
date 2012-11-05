@@ -14,7 +14,6 @@ import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.AwbStatus;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 
