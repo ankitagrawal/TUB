@@ -112,6 +112,11 @@ public class ReplacementOrderAction extends BaseAction {
 			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 
+		if (replacementOrderReason == null) {
+			addRedirectAlertMessage(new SimpleMessage("Please select a reason for creating a replacement order."));
+			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+		}
+
 		int valid_item_flag = 0;
 		for (LineItem lineItem : lineItems) {
 			if (lineItem.getQty() > 0) {

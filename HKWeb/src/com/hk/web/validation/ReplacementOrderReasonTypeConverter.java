@@ -12,7 +12,7 @@ import java.util.Locale;
 
 
 @Component
-public class ReplacementOrderStatusTypeConverter implements TypeConverter<ReplacementOrderReason> {
+public class ReplacementOrderReasonTypeConverter implements TypeConverter<ReplacementOrderReason> {
 
     public void setLocale(Locale locale) {
         // nothing
