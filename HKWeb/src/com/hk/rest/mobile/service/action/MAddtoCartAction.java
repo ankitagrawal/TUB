@@ -95,7 +95,8 @@ public class MAddtoCartAction extends MBaseAction {
 	@Produces("application/json")
 	public String addToCart(@Context HttpServletResponse response,
 			@QueryParam("productVariantId") String productVariantId,
-			@QueryParam("productId") String productId) {
+			@QueryParam("productId") String productId,
+			@QueryParam("productReferrerId") String productReferrerId) {
 		HealthkartResponse healthkartResponse;
 		String jsonBuilder = "";
 		String message = MHKConstants.STATUS_DONE;
