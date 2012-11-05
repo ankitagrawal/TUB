@@ -5,8 +5,9 @@
 <%@ page import="com.hk.util.HKImageUtils" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.EyeGlassesFeedAction" var="eyeglassBean"/>
-<accessories>
-    <c:forEach items="${eyeglassBean.productVariants}" var="productVariant">
+<Glasses>
+    <Category>
+       <c:forEach items="${eyeglassBean.productVariants}" var="productVariant">
         <c:set var="product" value="${productVariant.product}"/>
         <c:set var="frontFacingEyeImageTypeId" value="<%=EnumImageType.FrontFacingEye.getId()%>"/>
         <c:set var="sideFacingEyeImageTypeId" value="<%=EnumImageType.SideFacingEye.getId()%>"/>
@@ -31,13 +32,13 @@
             <%Long frontFacingEyeImageId = (Long) pageContext.getAttribute("frontFacingEyeImageId");%>
             <%Long sideFacingEyeImageId = (Long) pageContext.getAttribute("sideFacingEyeImageId");%>
             <c:if test="${frontFacingEyeImageId != null && sideFacingEyeImageId != null && type != null && gender != null && color != null}">
-                <Glasses type="${type}" gender="${gender}" color="${color}" id="${productVariant.id}">
+                <Glass type="${type}" gender="${gender}" color="${color}" id="${productVariant.id}">
                     <imgPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, frontFacingEyeImageId, false)%></imgPath>
                     <thumbPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, sideFacingEyeImageId, false)%></thumbPath>
                     <price>${productVariant.hkPrice}</price>
                     <name>${hk:escapeHtml(product.name)}</name>
                     <desc></desc>
-                </Glasses>
+                </Glass>
             </c:if>
             <c:set var="type" value="null"/>
             <c:set var="color" value="null"/>
@@ -46,4 +47,5 @@
             <c:set var="sideFacingEyeImageId" value="null"/>
         </c:if>
     </c:forEach>
-</accessories>
+    </Category>
+</Glasses>
