@@ -213,7 +213,7 @@ public class MOrderSummaryAction extends MBaseAction {
         if (availableCourierList != null && availableCourierList.size() == 0) {
             availableCourierList = null;
         }
-        orderMap.put("availableCourierList",availableCourierList);
+        //orderMap.put("availableCourierList",availableCourierList);
 
         }catch(Exception e){
         	status = MHKConstants.STATUS_ERROR;
