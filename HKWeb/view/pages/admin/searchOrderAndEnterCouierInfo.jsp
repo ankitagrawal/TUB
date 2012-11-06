@@ -12,8 +12,8 @@
   BaseDao baseDao = ServiceLocatorFactory.getService(BaseDao.class);
   MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
   pageContext.setAttribute("boxSizeList", baseDao.getAll(BoxSize.class));
-  pageContext.setAttribute("courierList", masterDataDao.getCourierList());
-   pageContext.setAttribute("groundShippedCourierList", masterDataDao.getGroundShippedCourierList());  
+//  pageContext.setAttribute("courierList", masterDataDao.getCourierList());
+//   pageContext.setAttribute("groundShippedCourierList", masterDataDao.getGroundShippedCourierList());
 %>
 
 <c:set var="commentTypeDelivery" value="<%= MasterDataDao.USER_COMMENT_TYPE_DELIVERY_BASE_ORDER %>" />
@@ -47,7 +47,7 @@
                       $('.error').show();
                       return false;
                   }
-                  if (tracking.length > 40) {
+                  if (tracking.length > 20) {
                       $('.error').html("");
                       $('.error').append(" Tracking Id length can not be greater than 20");
                       $('.error').show();
@@ -121,20 +121,11 @@
             <label>Box Weight(Kgs):</label><s:text name="shipment.boxWeight" size="5" class="weight"/>
             <label>Tracking ID:</label><s:text class="tracking" name="trackingId"/>
             <label>Courier</label>
-           <c:if test="${!shipmentQueueBean.groundShipped}">
             <s:select name="selectedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
-              <c:forEach var="courier" items="${courierList}">
+              <c:forEach var="courier" items="${shipmentQueueBean.availableCouriers}">
                 <s:option value="${courier.id}">${courier.name}</s:option>
               </c:forEach>
             </s:select>
-            </c:if>
-            <c:if test="${shipmentQueueBean.groundShipped}">
-            <s:select name="selectedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
-              <c:forEach var="courier" items="${groundShippedCourierList}">
-                <s:option value="${courier.id}">${courier.name}</s:option>
-              </c:forEach>
-            </s:select>
-            </c:if>
             <c:if test="${shipmentQueueBean.suggestedCourier != null}">
               <label style="margin-top:5px;margin-bottom:5px;color:green;">Suggested Courier:  <b>${shipmentQueueBean.suggestedCourier.name}</b></label>
             </c:if>

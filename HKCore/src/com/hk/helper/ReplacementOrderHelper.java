@@ -33,6 +33,12 @@ public class ReplacementOrderHelper {
         replacementOrderLineItem.setDiscountOnHkPrice(lineItem.getCartLineItem().getDiscountOnHkPrice());
         replacementOrderLineItem.setTax(lineItem.getSku().getTax());
         replacementOrderLineItem.setQty(lineItem.getQty());
+
+	    replacementOrderLineItem.setRewardPoints(lineItem.getRewardPoints());
+	    replacementOrderLineItem.setOrderLevelDiscount(lineItem.getOrderLevelDiscount());
+	    replacementOrderLineItem.setCodCharges(lineItem.getCodCharges());
+	    replacementOrderLineItem.setShippingCharges(lineItem.getShippingCharges());
+
         return replacementOrderLineItem;
     }
 
