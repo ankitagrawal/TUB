@@ -89,78 +89,34 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         Double coverted_amount = data.getAmount() / coversion_rate;
 
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(coverted_amount);
-
-//  appending gateway and amount in return url      
+       //  appending gateway and amount in return url
         String return_url = linkManager.getPayPalPaymentGatewayReturnUrl() + "?gateway=" + merchantTxnId + "&amount=" + amountStr;
 
         PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper();
-        NVPEncoder encoder = new NVPEncoder();
+        NVPEncoder encoder;
         NVPDecoder decoder = new NVPDecoder();
 
         try {
-
             NVPCallerServices caller = new NVPCallerServices();
-            APIProfile profile = ProfileFactory.createSignatureAPIProfile();
-
-//    setting up profile           
-            profile.setAPIUsername(userid);
-            profile.setAPIPassword(pwd);
-            profile.setSignature(signature);
-            profile.setEnvironment(environment);
-            profile.setSubject("");
+            APIProfile profile = payPalPaymentGatewayWrapper.createPaypalApiProfile(userid, pwd, signature, environment);
             caller.setAPIProfile(profile);
-
-            encoder.add("VERSION", version);
-            encoder.add("METHOD", setExpressMethod);
-            encoder.add("RETURNURL", return_url);
-            encoder.add("CANCELURL", linkManager.getPayPalPaymentGatewayCancelUrl());
-
-            encoder.add("NOSHIPPING", "1");
-
-        // Billing Address user need to fill itself    
-  /*
-//            encoder.add("ADDROVERRIDE","1");
-            encoder.add("PAYMENTREQUEST_0_SHIPTONAME", address.getName());
-            encoder.add("PAYMENTREQUEST_0_SHIPTONAME2", "HK");
-            encoder.add("PAYMENTREQUEST_0_SHIPTOSTREET", address.getLine1());
-            encoder.add("PAYMENTREQUEST_0_SHIPTOSTREET2", address.getLine2());
-            encoder.add("PAYMENTREQUEST_0_SHIPTOCITY", address.getCity());
-            encoder.add("PAYMENTREQUEST_0_SHIPTOSTATE", address.getState());
-//      Countrycode need to be discuss
-            encoder.add("PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE", "IN");
-            encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPin());
-            encoder.add("EMAIL", user.getEmail());
-            encoder.add("PAYMENTREQUEST_0_SHIPTOPHONENUM", address.getPhone());
-     */
-
-            encoder.add("PAYMENTREQUEST_0_AMT", amountStr);
-            encoder.add("PAYMENTREQUEST_0_PAYMENTACTION", paymentAction);
-            encoder.add("CURRENCYCODE", currencyCode);
-            encoder.add("SOLUTIONTYPE", "Sole");
-
-             encoder.add("PAYMENTREQUEST_0_INVNUM", merchantTxnId);
-             encoder.add("L_PAYMENTREQUEST_0_DESC0", "HealthKart");
-             encoder.add("L_PAYMENTREQUEST_0_AMT0", amountStr);
-             encoder.add("CUSTOMERSERVICENUMBER","011-8887777");
-            
-             encoder.add ("BRANDNAME", "HEALTHKART");
-
+            NVPEncoder baseEncoder = payPalPaymentGatewayWrapper.createPayPalBasicEncodedRequest(version, setExpressMethod, paymentAction, currencyCode, amountStr);
+            encoder = payPalPaymentGatewayWrapper.encodeRequestForSetExpressCheckout(baseEncoder, return_url, linkManager.getPayPalPaymentGatewayCancelUrl(), user, address, merchantTxnId, amountStr);
             // Execute the API operation and obtain the response.
             String NVPRequest = encoder.encode();
             String NVPResponse = caller.call(NVPRequest);
             decoder.decode(NVPResponse);
 
-            String ack = decoder.get("ACK");               
+            String ack = decoder.get("ACK");
             String Token = decoder.get("TOKEN");
             String CORRELATIONID = decoder.get("CORRELATIONID");
-            String errorCode =  decoder.get("L_ERRORCODE0");
+            String errorCode = decoder.get("L_ERRORCODE0");
             String errorShortMessage = decoder.get("L_SHORTMESSAGE0");
             String errorLongMessage = decoder.get("L_LONGMESSAGE0");
 
-
-            if (ack != null && !(ack.equals("Success") || ack.equals("SuccessWithWarning"))) {
+            if (ack != null && !(ack.equals(PayPalPaymentGatewayWrapper.Success_Ack) || ack.equals(PayPalPaymentGatewayWrapper.Success_with_Warning_Ack))) {
                 logger.error(" SetExpressCheckout Failed : sending to payment gateway paypal for gateway order id " + merchantTxnId + "and amount " + amountStr + "and correlation id" + CORRELATIONID);
-                logger.error ("SetExpressCheckout Failed : Error Code : " + errorCode + " Error Short Message :" + errorShortMessage + " Error Long Message :" + errorLongMessage);
+                logger.error("SetExpressCheckout Failed : Error Code : " + errorCode + " Error Short Message :" + errorShortMessage + " Error Long Message :" + errorLongMessage);
                 paymentManager.fail(payment.getGatewayOrderId());
 
             } else {
@@ -168,8 +124,6 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
                 payPalPaymentGatewayWrapper.setGatewayUrl(gatewayUrl);
                 logger.info("sending to payment gateway paypal for gateway order id " + merchantTxnId + "and amount " + amountStr + "and correlation id" + CORRELATIONID);
             }
-
-
 
         } catch (Exception e) {
             logger.info("exception", e);
@@ -182,10 +136,10 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
     @DefaultHandler
     public Resolution callback() {
 
-        NVPEncoder encoder = new NVPEncoder();
+        NVPEncoder encoder;
         NVPDecoder decoder = new NVPDecoder();
         Resolution resolution = null;
-        NVPCallerServices caller = null;
+//        NVPCallerServices caller = null;
 
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/paypal.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
@@ -200,31 +154,20 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String baseCurrencyCode = properties.getProperty(PayPalPaymentGatewayWrapper.baseCurrencyCode);
         String foreignCurrencyCode = properties.getProperty(PayPalPaymentGatewayWrapper.foreignCurrencyCode);
 
-
         // Retrieving the mandatory fields
         String Token = getContext().getRequest().getParameter("token");
         String payerid = getContext().getRequest().getParameter("PayerID");
         String gatewayOrderId = getContext().getRequest().getParameter("gateway");
         String amount_thru_set = getContext().getRequest().getParameter("amount");
 
+        PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper();
+
         try {
-            APIProfile profile = ProfileFactory.createSignatureAPIProfile();
-            caller = new NVPCallerServices();
-            profile.setAPIUsername(userid);
-            profile.setAPIPassword(pwd);
-            profile.setSignature(signature);
-            profile.setEnvironment(environment);
-            profile.setSubject("");
+            NVPCallerServices caller = new NVPCallerServices();
+            APIProfile profile = payPalPaymentGatewayWrapper.createPaypalApiProfile(userid, pwd, signature, environment);
             caller.setAPIProfile(profile);
-
-            encoder.add("VERSION", version);
-            encoder.add("METHOD", DoExpressPaymentMethod);
-            encoder.add("TOKEN", Token);
-            encoder.add("PAYERID", payerid);
-
-            encoder.add("PAYMENTREQUEST_0_PAYMENTACTION", paymentAction);
-            encoder.add("PAYMENTREQUEST_0_CURRENCYCODE", currencyCode);
-            encoder.add("PAYMENTREQUEST_0_AMT", amount_thru_set);
+            NVPEncoder baseEncoder = payPalPaymentGatewayWrapper.createPayPalBasicEncodedRequest(version, DoExpressPaymentMethod, paymentAction, currencyCode, amount_thru_set);
+            encoder = payPalPaymentGatewayWrapper.encodeRequestForDoExpressPayment(baseEncoder, Token, payerid);
 
             String NVPRequest = encoder.encode();
             String NVPResponse = caller.call(NVPRequest);
@@ -239,7 +182,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String amount = decoder.get("PAYMENTINFO_0_AMT");
         String CORRELATIONID = decoder.get("CORRELATIONID");
 
-        String errorCode =  decoder.get("L_ERRORCODE0");
+        String errorCode = decoder.get("L_ERRORCODE0");
         String errorShortMessage = decoder.get("L_SHORTMESSAGE0");
         String errorLongMessage = decoder.get("L_LONGMESSAGE0");
 
@@ -248,30 +191,32 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         Double coversion_rate = currencyconverter.getConversionRate();
         Double amount_in_rupee = NumberUtils.toDouble(amount) * coversion_rate;
 
-
-//         String paymentStatus = decoder.get("PAYMENTINFO_0_PAYMENTSTATUS");
+        String paymentStatus = decoder.get("PAYMENTINFO_0_PAYMENTSTATUS");
+        String pendingReason = decoder.get("PAYMENTINFO_0_PENDINGREASON");
 
         try {
             // our own validations
-             paymentManager.verifyPayment(gatewayOrderId, amount_in_rupee, merchantParam);
+            paymentManager.verifyPayment(gatewayOrderId, amount_in_rupee, merchantParam);
             // payment callback has been verified. now see if it is successful or failed from the gateway response
-            if (ack !=null && ack.equals("Success")) {
+            if (ack != null && ack.equals(PayPalPaymentGatewayWrapper.Success_Ack) && paymentStatus.equals(PayPalPaymentGatewayWrapper.Payment_Completed_Status)) {
                 paymentManager.success(gatewayOrderId);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+            } else if (ack != null && ack.equals(PayPalPaymentGatewayWrapper.Success_Ack) && paymentStatus.equals(PayPalPaymentGatewayWrapper.Payment_Pending_Status) && pendingReason.equals(PayPalPaymentGatewayWrapper.Payment_Pending_Reason)) {
+                paymentManager.pendingApproval(gatewayOrderId);
+                resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else {
                 paymentManager.fail(gatewayOrderId);
                 logger.error("sending to payment gateway paypal for gateway order id " + gatewayOrderId + "and amount " + amount_in_rupee + "and correlation id" + CORRELATIONID);
-                logger.error ("DoExpressCheckoutPayment Failed : Error Code : " + errorCode + " Error Short Message :" + errorShortMessage + " Error Long Message :" + errorLongMessage);
+                logger.error("DoExpressCheckoutPayment Failed : Error Code : " + errorCode + " Error Short Message :" + errorShortMessage + " Error Long Message :" + errorLongMessage);
                 resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             }
         } catch (HealthkartPaymentGatewayException e) {
             paymentManager.error(gatewayOrderId, e);
-            logger.error ("DoExpressCheckoutPayment Failed : Error Code : " + errorCode + " Error Short Message :" + errorShortMessage + " Error Long Message :" + errorLongMessage);
+            logger.error("DoExpressCheckoutPayment Failed : Error Code : " + errorCode + " Error Short Message :" + errorShortMessage + " Error Long Message :" + errorLongMessage);
             resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
         }
         return resolution;
     }
-
 
 }
 
