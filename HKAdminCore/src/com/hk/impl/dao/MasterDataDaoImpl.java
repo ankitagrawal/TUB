@@ -320,9 +320,12 @@ private CourierGroupService courierGroupService;
     return cityList;
   }
 
-    public List<Courier> getCourierList() {
-        return courierService.getAllCouriers();
-    }
+	public List<Courier> getCourierList() {
+		List<Courier> courierList = courierService.getAllCouriers();
+		Courier migrateCourier = EnumCourier.MIGRATE.asCourier();
+		courierList.remove(migrateCourier);
+		return courierList;
+	}
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation(){
         return EnumShippingOrderStatus.getStatusForReconcilationReport();
