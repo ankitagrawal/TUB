@@ -9,6 +9,7 @@ import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -29,7 +30,7 @@ import com.hk.util.SeoManager;
 
 @Component
 public class ProductReviewAction extends BasePaginatedAction {
-
+	private static Logger logger       = Logger.getLogger(ProductReviewAction.class);
 	private Product product;
 	private Page productReviewPage;
 	private List<UserReview> productReviews = new ArrayList<UserReview>();
@@ -56,7 +57,12 @@ public class ProductReviewAction extends BasePaginatedAction {
 		if (productReviewPage != null) {
 			productReviews = productReviewPage.getList();
 		}
-		seoData = seoManager.generateSeo(product.getId());
+		if(product != null) {
+			seoData = seoManager.generateSeo(product.getId());
+		} else {
+			logger.error("Null product found for Product Review");
+		}
+
 		return new ForwardResolution("/pages/productReviews.jsp");
 	}
 
