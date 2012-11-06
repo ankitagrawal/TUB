@@ -1,84 +1,48 @@
 package com.hk.rest.mobile.service.action;
 
-import org.stripesstuff.plugin.security.Secure;
-import org.stripesstuff.plugin.session.Session;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.order.AdminOrderService;
-import com.hk.pact.dao.user.UserDao;
-import com.hk.pact.dao.payment.PaymentModeDao;
-import com.hk.manager.OrderManager;
-import com.hk.manager.ReferrerProgramManager;
-import com.hk.manager.payment.PaymentManager;
-import com.hk.pricing.PricingEngine;
-import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.core.Keys;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.dto.pricing.PricingDto;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.user.Address;
-import com.hk.domain.user.User;
-import com.hk.domain.courier.Courier;
-import com.hk.web.action.core.user.SelectAddressAction;
-import com.hk.web.action.core.cart.CartAction;
-import com.hk.web.action.core.payment.PaymentModeAction;
-import com.hk.core.fliter.CartLineItemFilter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import net.sourceforge.stripes.action.*;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Satish
- * Date: Oct 13, 2012
- * Time: 11:13:13 PM
- * To change this template use File | Settings | File Templates.
- */
-
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.order.AdminOrderService;
-import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.core.Keys;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.user.Address;
-import com.hk.domain.user.User;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.dto.pricing.PricingDto;
-import com.hk.manager.OrderManager;
-import com.hk.manager.ReferrerProgramManager;
-import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.dao.payment.PaymentModeDao;
-import com.hk.pact.dao.user.UserDao;
-import com.hk.pricing.PricingEngine;
-import com.hk.web.action.core.cart.CartAction;
-import com.hk.web.action.core.payment.PaymentModeAction;
-import com.hk.web.action.core.user.SelectAddressAction;
-import com.hk.web.HealthkartResponse;
-import com.hk.rest.mobile.service.utils.MHKConstants;
-import com.hk.rest.mobile.service.model.MUserLoginJSONResponse;
-import com.hk.rest.mobile.service.model.MCartLineItemsJSONResponse;
-import net.sourceforge.stripes.action.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-import org.stripesstuff.plugin.session.Session;
-
-import javax.ws.rs.Path;
-import javax.ws.rs.POST;
-import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
-import java.util.*;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+import org.stripesstuff.plugin.session.Session;
+
+import com.akube.framework.gson.JsonUtils;
+import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.order.AdminOrderService;
+import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.core.Keys;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
+import com.hk.domain.user.Address;
+import com.hk.domain.user.User;
+import com.hk.dto.pricing.PricingDto;
+import com.hk.manager.OrderManager;
+import com.hk.manager.ReferrerProgramManager;
+import com.hk.manager.payment.PaymentManager;
+import com.hk.pricing.PricingEngine;
+import com.hk.rest.mobile.service.model.MCartLineItemsJSONResponse;
+import com.hk.rest.mobile.service.model.MUserLoginJSONResponse;
+import com.hk.rest.mobile.service.utils.MHKConstants;
+import com.hk.web.HealthkartResponse;
+import com.hk.web.action.core.payment.PaymentModeAction;
 
 @Secure
 @Path("/mOrderSummary")
@@ -89,8 +53,6 @@ public class MOrderSummaryAction extends MBaseAction {
 
     @Autowired
     private CourierService courierService;
-    @Autowired
-    UserDao userDao;
     @Autowired
     OrderManager orderManager;
     @Autowired
@@ -118,8 +80,6 @@ public class MOrderSummaryAction extends MBaseAction {
     // COD related changes
     @Autowired
     PaymentManager paymentManager;
-    @Autowired
-    PaymentModeDao paymentModeDao;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double            codCharges;
@@ -145,7 +105,8 @@ public class MOrderSummaryAction extends MBaseAction {
         String jsonBuilder = "";
         String message = "Done";
         String status = HealthkartResponse.STATUS_OK;
-        Map orderMap = new HashMap<String,Object>();
+        Map<String,Object> orderMap = new HashMap<String,Object>();
+        try{
         User user = getUserService().getUserById(getPrincipal().getId());
         order = orderManager.getOrCreateOrder(user);
         // Trimming empty line items once again.
@@ -172,7 +133,7 @@ public class MOrderSummaryAction extends MBaseAction {
             status = MHKConstants.STATUS_ERROR;
             return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,message));
         } else if (pricingDto.getProductLineCount() == 0) {
-            addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
+            //addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
             message = MHKConstants.EMPTY_CART;
             status = MHKConstants.STATUS_ERROR;
             return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,message));
@@ -254,9 +215,13 @@ public class MOrderSummaryAction extends MBaseAction {
         }
         orderMap.put("availableCourierList",availableCourierList);
 
-
+        }catch(Exception e){
+        	status = MHKConstants.STATUS_ERROR;
+        	message = MHKConstants.STATUS_ERROR;
+        	return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, orderMap));
+        }
         healthkartResponse = new HealthkartResponse(status, message, orderMap);
-        jsonBuilder = com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(healthkartResponse);
+        jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
         return jsonBuilder;
     }
 

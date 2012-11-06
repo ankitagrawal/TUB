@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.Email;
@@ -138,7 +140,9 @@ public class EmailServiceImpl implements EmailService {
 
   public void sendBulkHtmlEmail(List<Map<String, HtmlEmail>> htmlEmails, EmailCampaign emailCampaign) {
     // send this email asynchrounously, we do not want to wait for this process
-    emailExecutorService.execute(new SendBulkEmailAsyncThread(htmlEmails, emailCampaign));
+    //Future<?> f = new FutureTask<Object>(new SendBulkEmailAsyncThread(htmlEmails, emailCampaign), null);
+      sendBulkEmails(htmlEmails);
+      //Future<?> f = emailExecutorService.submit(new SendBulkEmailAsyncThread(htmlEmails, emailCampaign));
   }
 
     public boolean sendHtmlEmail(String subject, String message, String toEmail, String toName, String attachementPath) {
@@ -203,19 +207,30 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public void run() {
-      try {
-        for (Map<String, HtmlEmail> emailMap : emails) {
-
-          for (String emailId : emailMap.keySet()) {
-            Email email = emailMap.get(emailId);
-            logger.debug("sending mail : " + emailId);
-            email.send();
-          }
-        }
-      } catch (EmailException e) {
-        logger.error("EmailException in SendEmailAsyncThread.run", e);
+        sendBulkEmails(emails);
       }
     }
-  }
 
+    private void sendBulkEmails(List<Map<String, HtmlEmail>> emails){
+        try{
+            for (Map<String, HtmlEmail> emailMap : emails) {
+                for (String emailId : emailMap.keySet()) {
+                    try {
+                        Email email = emailMap.get(emailId);
+                        logger.debug("sending mail : " + emailId);
+                        email.send();
+                    } catch (Exception e) {
+                        String errorMsg = "Unable to send email to user";
+                        if (StringUtils.isNotBlank(emailId)){
+                            errorMsg = errorMsg + " " + emailId;
+                        }
+                        logger.error(errorMsg, e);
+                    }
+                }
+            }
+        }
+        catch (Exception ex){
+            logger.error("Error while sending bulk emails", ex);
+        }
+    }
 }

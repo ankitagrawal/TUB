@@ -482,9 +482,9 @@
         </description>
         <name>checkedInUnitsCount</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long checkedinUnitsCount(java.lang.Object,java.lang.Object)</function-signature>
+        <function-signature>java.lang.Long checkedinUnitsCount(java.lang.Object)</function-signature>
         <example>
-            ${hk:checkedInUnitsCount(${object1}, ${object2})}
+            ${hk:checkedInUnitsCount(${object1})}
         </example>
     </function>
 
@@ -948,4 +948,29 @@
             ${hk:getDisplayNameForHkdeliveryTracking(${status})}
         </example>
     </function>
+
+	<function>
+		<description>
+			Returns PO Line Item qty corresponding to the grn Line Item Qty
+		</description>
+		<name>getPoLineItemQty</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>java.lang.Long getPoLineItemQty(com.hk.domain.inventory.GrnLineItem)</function-signature>
+		<example>
+			${hk:getPoLineItemQty(${grnLineItem})}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			Returns the line item qty for all other grns
+		</description>
+		<name>getGrnLineItemQtyAlreadySet</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>java.lang.Long getGrnLineItemQtyAlreadySet(com.hk.domain.inventory.GoodsReceivedNote,com.hk.domain.sku.Sku))</function-signature>
+		<example>
+			${hk:getGrnLineItemQtyAlreadySet(${grn, sku})}
+		</example>
+	</function>
+
 </taglib>

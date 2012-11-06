@@ -21,6 +21,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.taglibs.Functions;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.apache.commons.lang.StringUtils;
@@ -89,6 +90,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 						Sku sku = skuService.getSKU(pv, warehouse);
 						if (sku != null) {
 							dataMap.put("sku", sku);
+							dataMap.put("last30DaysSales", Functions.findInventorySoldInGivenNoOfDays(sku, 30));
 							if (sku.getTax() != null) {
 								dataMap.put("tax", sku.getTax().getValue());
 							}
@@ -186,6 +188,8 @@ public class EditPurchaseOrderAction extends BaseAction {
 
 			if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentForApproval.getId())) {
 				emailManager.sendPOSentForApprovalEmail(purchaseOrder);
+			}else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
+				emailManager.sendPOApprovedEmail(purchaseOrder);
 			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentToSupplier.getId())) {
 				purchaseOrder.setPoPlaceDate(new Date());
 				Calendar calendar = Calendar.getInstance();

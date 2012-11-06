@@ -1,11 +1,40 @@
 package com.hk.rest.mobile.service.action;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.util.CryptoUtil;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.session.Session;
+
 import com.akube.framework.dao.Page;
 import com.hk.constants.catalog.SolrSchemaConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.core.Keys;
-import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
@@ -22,52 +51,23 @@ import com.hk.domain.user.Address;
 import com.hk.dto.menu.MenuNode;
 import com.hk.dto.search.SearchResult;
 import com.hk.helper.MenuHelper;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
-import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
 import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductSearchService;
 import com.hk.rest.mobile.service.model.MCatalogJSONResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
+import com.hk.util.HKImageUtils;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
-import com.hk.util.HKImageUtils;
 import com.hk.web.ConvertEncryptedToNormalDouble;
 import com.hk.web.HealthkartResponse;
-import com.hk.web.action.core.catalog.category.CategoryAction;
-import com.hk.web.action.HomeAction;
 import com.hk.web.filter.WebContext;
-import com.hk.service.ServiceLocatorFactory;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.util.CryptoUtil;
-import net.sourceforge.stripes.validation.Validate;
-import org.apache.commons.lang.StringUtils;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.session.Session;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.*;
-import java.text.DecimalFormat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -125,19 +125,13 @@ public class MCatalogAction extends MBaseAction {
 	@Autowired
 	MapIndiaDao mapIndiaDao;
 	@Autowired
-	CategoryImageDaoImpl categoryImageDao;
-	@Autowired
 	ProductDao productDao;
 	@Autowired
 	ProductService productService;
 	@Autowired
 	ComboDao comboDao;
 	@Autowired
-	UserDao userDao;
-	@Autowired
-	private BaseDao baseDao;
-	@Autowired
-	CategoryDaoImpl categoryDao;
+	CategoryService categoryService;
 	@Autowired
 	SeoManager seoManager;
 	@Autowired
@@ -174,7 +168,7 @@ public class MCatalogAction extends MBaseAction {
 		rootCategorySlug = primaryCat;
 		childCategorySlug = secondaryCat;
 
-		category = categoryDao.getCategoryByName(rootCategorySlug);
+		category = categoryService.getCategoryByName(rootCategorySlug);
 		if (category == null) {
 			logger.error("No category found for root category slug : " + rootCategorySlug);
 		}
@@ -250,13 +244,13 @@ public class MCatalogAction extends MBaseAction {
 			if (productPage != null) {
 				productList = productPage.getList();
 			}
-			category = categoryDao.getCategoryByName(smallestCategory);
+			category = categoryService.getCategoryByName(smallestCategory);
 		} catch (Exception e) {
 			//urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
 			//logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for "+urlFragment, e);
 			logger.error("SOLR NOT WORKING, HITTING DB TO ACCESS DATA for " + urlFragment);
 			List<String> categoryNames = new ArrayList<String>();
-			Category primaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(smallestCategory));
+			Category primaryCategory = categoryService.getCategoryByName(Category.getNameFromDisplayName(smallestCategory));
 			category = primaryCategory;
 			if (primaryCategory != null) {
 				categoryNames.add(primaryCategory.getName());
@@ -264,7 +258,7 @@ public class MCatalogAction extends MBaseAction {
 
 			Category secondaryCategory = null;
 			if (secondSmallestCategory != null) {
-				secondaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondSmallestCategory));
+				secondaryCategory = categoryService.getCategoryByName(Category.getNameFromDisplayName(secondSmallestCategory));
 				if (secondaryCategory != null) {
 					categoryNames.add(secondaryCategory.getName());
 				}
@@ -272,7 +266,7 @@ public class MCatalogAction extends MBaseAction {
 
 			Category tertiaryCategory = null;
 			if (thirdSmallestCategory != null) {
-				tertiaryCategory = categoryDao.getCategoryByName(Category.getNameFromDisplayName(thirdSmallestCategory));
+				tertiaryCategory = categoryService.getCategoryByName(Category.getNameFromDisplayName(thirdSmallestCategory));
 				if (tertiaryCategory != null) {
 					categoryNames.add(tertiaryCategory.getName());
 				}
@@ -292,7 +286,7 @@ public class MCatalogAction extends MBaseAction {
 				if (productPage != null) {
 					productList = productPage.getList();
 					for (Product product : productList) {
-						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_CATALOG)));
 					}
 				}
 				trimListByCategory(productList, secondaryCategory);
@@ -306,7 +300,7 @@ public class MCatalogAction extends MBaseAction {
 				if (productPage != null) {
 					productList = productPage.getList();
 					for (Product product : productList) {
-						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_CATALOG)));
 					}
 				}
 				trimListByCategory(productList, secondaryCategory);
@@ -759,13 +753,5 @@ public class MCatalogAction extends MBaseAction {
 
 	public List<ProductOption> getFilterProductOptions() {
 		return filterProductOptions;
-	}
-
-	public BaseDao getBaseDao() {
-		return baseDao;
-	}
-
-	public void setBaseDao(BaseDao baseDao) {
-		this.baseDao = baseDao;
 	}
 }

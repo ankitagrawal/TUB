@@ -22,9 +22,9 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.AddressService;
 import com.hk.util.AddressMatchScoreCalculator;
 import com.hk.web.action.core.affiliate.AffiliateAccountAction;
 import com.hk.web.action.core.order.OrderSummaryAction;
@@ -35,7 +35,7 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 public class NewAddressAction extends BaseAction implements ValidationErrorHandler {
 
     @Autowired
-    AddressDao                  addressDao;
+    AddressService              addressDao;
     @Autowired
     LinkManager                 linkManager;
     @Autowired

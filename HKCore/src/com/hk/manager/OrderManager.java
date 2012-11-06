@@ -1,11 +1,10 @@
 package com.hk.manager;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +67,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pricing.PricingEngine;
-import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 import com.hk.web.filter.WebContext;
 
@@ -386,10 +384,11 @@ public class OrderManager {
 			order.setScore(new Long(karmaProfile.getKarmaPoints()));
 		}
 		
-		Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
+		/*Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
 		Date targetDelDate = HKDateUtil.addToDate(order.getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH, Integer.parseInt(dispatchDays[0].toString()));
-		order.setTargetDispatchDate(targetDelDate);
+		order.setTargetDispatchDate(targetDelDate);*/
 
+		getOrderService().setTargetDispatchDelDatesOnBO( order);
 		order = getOrderService().save(order);
 
 		//Order lifecycle activity logging - Order Placed
@@ -541,6 +540,7 @@ public class OrderManager {
 
 	public Order trimEmptyLineItems(Order order) {
 		//orderDao.refresh(order);
+    Set<Long> comboInstanceIds = new TreeSet<Long>();
 		if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
 			for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext(); ) {
 				CartLineItem lineItem = iterator.next();
@@ -566,19 +566,36 @@ public class OrderManager {
 	                                if (unbookedInventory < 0) {
 		                                unbookedInventory = 0L;
 	                                }
+                   if(lineItem.getComboInstance()!=null){
+                     comboInstanceIds.add(lineItem.getComboInstance().getId());
+                     lineItem.setQty(0L);
+                    logger.debug("Deleting Combo because unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId() + "is less than combo Product Variant Quantity");
+                   }
+                  else{
 									lineItem.setQty(unbookedInventory);
 									cartLineItemService.save(lineItem);
 									logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
-								}
+                 }
+                   }
 							}
 						}
             cartLineItemService.save(lineItem);
 					}
 				}
 			}
+      for(Long comboInstanceId : comboInstanceIds){
+        for(CartLineItem cartLineItem : order.getCartLineItems()){
+           if(cartLineItem.getComboInstance()!=null && cartLineItem.getComboInstance().getId().equals(comboInstanceId)){
+                cartLineItem.setQty(0L);
+              cartLineItemService.save(cartLineItem);
+           }
+        }
+      }
 			order = getOrderService().save(order);
 		}
-		return order;
+    if(order!=null)
+      getOrderDao().refresh(order);
+    return order;
 	}
 
 	public boolean isStepUpAllowed(CartLineItem cartLineItem) {

@@ -64,7 +64,8 @@ public enum EnumOrderStatus {
         EnumOrderStatus.InProcess,
         EnumOrderStatus.OnHold,
         EnumOrderStatus.Shipped,
-        EnumOrderStatus.Delivered);
+        EnumOrderStatus.Delivered,
+		    EnumOrderStatus.RTO);
   }
 
 

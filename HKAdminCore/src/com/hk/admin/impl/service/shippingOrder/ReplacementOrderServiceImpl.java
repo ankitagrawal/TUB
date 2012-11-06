@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.domain.order.ReplacementOrderReason;
+import com.hk.pact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +16,9 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.helper.ReplacementOrderHelper;
 import com.hk.helper.ShippingOrderHelper;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 
@@ -36,8 +38,11 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private ReconciliationStatusDao    reconciliationStatusDao;
+	@Autowired
+	UserService                        userService;
+    
 
-    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto) {
+    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason) {
         Set<LineItem> lineItemSet = new HashSet<LineItem>();
         ReplacementOrder replacementOrder = ReplacementOrderHelper.getReplacementOrderFromShippingOrder(shippingOrder, shippingOrderStatusService, reconciliationStatusDao);
         for (LineItem lineItem : lineItems) {
@@ -61,28 +66,30 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         replacementOrder.setLineItems(lineItemSet);
         replacementOrder.setAmount(ShippingOrderHelper.getAmountForSO(replacementOrder));
         replacementOrder.setRto(isRto);
+	    replacementOrder.setReplacementOrderReason(replacementOrderReason);
 
         replacementOrder.setRefShippingOrder(shippingOrder);
         replacementOrder = (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
-        ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
-        return (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
+        shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
+
+	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
+	    shippingOrderService.logShippingOrderActivity(replacementOrder, userService.getAdminUser(),
+				        EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
+				        "Replacement order created");
+        return replacementOrder;
     }
 
-	@Override
-	public List<ReplacementOrder> getReplacementOrderForRefShippingOrder(Long refShippingOrderId) {
-		return getReplacementOrderDao().getReplacementOrderFromShippingOrder(refShippingOrderId);
-	}
+    @Override
+    public List<ReplacementOrder> getReplacementOrderForRefShippingOrder(Long refShippingOrderId) {
+        return getReplacementOrderDao().getReplacementOrderFromShippingOrder(refShippingOrderId);
+    }
 
-	public ReplacementOrderDao getReplacementOrderDao() {
-		return replacementOrderDao;
-	}
+    public ReplacementOrderDao getReplacementOrderDao() {
+        return replacementOrderDao;
+    }
 
-	public ShippingOrderStatusService getShippingOrderStatusService() {
+    public ShippingOrderStatusService getShippingOrderStatusService() {
         return shippingOrderStatusService;
-    }
-
-    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-        this.shippingOrderStatusService = shippingOrderStatusService;
     }
 
     public ReconciliationStatusDao getReconciliationStatusDao() {
@@ -92,4 +99,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     public void setReconciliationStatusDao(ReconciliationStatusDao reconciliationStatusDao) {
         this.reconciliationStatusDao = reconciliationStatusDao;
     }
+
+    
+    
+    
 }

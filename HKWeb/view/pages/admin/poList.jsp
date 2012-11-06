@@ -106,7 +106,7 @@
             <fmt:formatNumber value="${purchaseOrder.advPayment}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td>
             <fmt:formatNumber value="${purchaseOrder.finalPayableAmount - purchaseOrder.advPayment}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
-	      <td><fmt:formatDate value="${purchaseOrder.estPaymentDate}" pattern="yyyy-MM-dd"/></td>
+	      <td><fmt:formatDate value="${purchaseOrder.estPaymentDate}" pattern="dd-MMM-yyyy"/></td>
           <td>
             ${purchaseOrder.paymentDetails}
             <br />
