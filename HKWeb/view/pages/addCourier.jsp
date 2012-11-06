@@ -9,7 +9,7 @@
 	<s:layout-component name="htmlHead">
 		<script type="text/javascript">
 			$(document).ready(function() {
-				$('#courierDropDown').blur(function() {
+				$('#courierDropDown').change(function() {
 					var courieren = $('#courierDropDown').val();
 					if (courieren == "") {
 						return false;
@@ -69,7 +69,7 @@
 						<li>
 							<label>Enter New Courier Name</label>
 							<s:text name="courierName"></s:text>
-							&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp;
+							&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp; 
 							<label>Enable Courier</label>
 							<s:select  name="courier">
 								<s:option value="">--Select Courier --</s:option>
