@@ -2,8 +2,6 @@ package com.hk.domain.catalog.product;
 
 // Generated 10 Mar, 2011 5:37:39 PM by Hibernate Tools 3.2.4.CR1
 
-import com.hk.report.dto.Table;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
