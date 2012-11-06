@@ -1,22 +1,21 @@
 package com.hk.impl.service.core;
 
-import com.akube.framework.dao.Page;
-import com.akube.framework.util.StringUtils;
-import com.hk.domain.user.Address;
-import com.hk.domain.user.User;
-import com.hk.domain.user.UserDetail;
-import com.hk.pact.dao.core.AddressDao;
-import com.hk.pact.dao.user.UserDetailDao;
-import com.hk.pact.service.core.AddressService;
-import com.hk.pact.service.user.UserDetailService;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.akube.framework.dao.Page;
+import com.akube.framework.util.StringUtils;
+import com.hk.domain.user.Address;
+import com.hk.domain.user.User;
+import com.hk.domain.user.UserDetail;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.service.core.AddressService;
+import com.hk.pact.service.user.UserDetailService;
 
 /**
  * Created with IntelliJ IDEA.

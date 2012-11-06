@@ -87,7 +87,7 @@
                         <td>Default Courier (COD)for Air Shipped:</td>
                         <td><s:select name="pincodeDefaultCourier.courier" value="${defaultCourier.courier.id}">
                                 <s:option value="">-Select-</s:option>
-                                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
                             </s:select>
                         </td>
                     </tr>
@@ -97,7 +97,7 @@
                         <td>Default Courier (NON COD)for Air Shipped:</td>
                         <td><s:select name="pincodeDefaultCourier.courier" value="${defaultCourier.courier.id}">
                                 <s:option value="">-Select-</s:option>
-                                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
                             </s:select>
                         </td>
                     </tr>
@@ -107,7 +107,7 @@
                         <td>Default Courier (COD)for Ground Shipped:</td>
                         <td><s:select name="pincodeDefaultCourier.courier" value="${defaultCourier.courier.id}">
                                 <s:option value="">-Select-</s:option>
-                                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
                             </s:select>
                         </td>
                     </tr>
@@ -117,7 +117,7 @@
                         <td>Default Courier (NON COD)for Ground Shipped:</td>
                         <td><s:select name="pincodeDefaultCourier.courier" value="${defaultCourier.courier.id}">
                                 <s:option value="">-Select-</s:option>
-                                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
                             </s:select>
                         </td>
                     </tr>
@@ -155,7 +155,7 @@
                                 <td>Default Courier </td>
                                 <td><s:select name="pincodeDefaultCourier.courier">
                                     <s:option value="">-Select-</s:option>
-                                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
+                                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
                                     </s:select>
                                 </td>
                             </tr>
