@@ -11,7 +11,7 @@
         <s:form beanclass="com.hk.web.action.admin.courier.CourierAWBAction">
           <li><label>Courier AWB numbers to download : </label><s:select name="courier" class="codModeSelect">
             <s:option value="">-All-</s:option>
-            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
+            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
           </s:select></li>
           <li>
 
@@ -31,7 +31,7 @@
         <s:form beanclass="com.hk.web.action.admin.courier.CourierAWBAction">
             <li><label>Select Courier to Upload File: </label><s:select name="courier" class="codModeSelect">
             <s:option value="">-All-</s:option>
-            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
+            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
           </s:select></li>
         <div class="grid_4">
           <li><label>File to Upload</label>

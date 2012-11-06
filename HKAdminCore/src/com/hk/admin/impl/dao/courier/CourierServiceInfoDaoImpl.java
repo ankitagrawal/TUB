@@ -33,8 +33,8 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         return null;
     }
 
-    public List<Courier> searchCouriers(String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
-        List<CourierServiceInfo> servicesList = getCourierServiceInfoList(null, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+    public List<Courier> searchCouriers(String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping ,Boolean disabled) {
+        List<CourierServiceInfo> servicesList = getCourierServiceInfoList(null, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping ,disabled);
         List<Courier> courierList = new ArrayList<Courier>();
         if (servicesList != null && servicesList.size() > 0) {
             for (CourierServiceInfo serviceInfo : servicesList) {
@@ -44,7 +44,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         return courierList;
     }
 
-    public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
+    public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping ,Boolean disabled) {
 
         Criteria courierServiceInfoCriteria = getSession().createCriteria(CourierServiceInfo.class);
         if (forCOD) {
@@ -53,14 +53,21 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         if (forGroundShipping) {
             courierServiceInfoCriteria.add(Restrictions.eq("groundShippingAvailable", forGroundShipping));
         }
+	    else{
+	       courierServiceInfoCriteria.add(Restrictions.eq("groundShippingAvailable", forGroundShipping));  
+        }
         if (forCodAvailableOnGroundShipping) {
             courierServiceInfoCriteria.add(Restrictions.eq("codAvailableOnGroundShipping", forCodAvailableOnGroundShipping));
         }
 
-        if (courierId != null) {
-            Criteria courierCriteria = courierServiceInfoCriteria.createCriteria("courier");
-            courierCriteria.add(Restrictions.eq("id", courierId));
-        }
+	    Criteria courierCriteria = courierServiceInfoCriteria.createCriteria("courier");
+	    if (courierId != null) {
+		    courierCriteria.add(Restrictions.eq("id", courierId));
+	    }
+	    if ( disabled != null) {
+		    courierCriteria.add(Restrictions.eq("disabled", disabled));
+	    }
+
 
         if (pincode != null && StringUtils.isNotBlank(pincode)) {
             Criteria pinCodeCriteria = courierServiceInfoCriteria.createCriteria("pincode");
@@ -71,13 +78,13 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
     }
 
     public CourierServiceInfo searchCourierServiceInfo(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
-        List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+        List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping ,null);
         return courierServiceInfoList != null && courierServiceInfoList.size() > 0 ? courierServiceInfoList.get(0) : null;
 
     }
 
     public boolean isCourierServiceInfoAvailable(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
-        List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+        List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping ,null);
         return courierServiceInfoList != null && courierServiceInfoList.size() > 0 ? true : false;
     }
 
