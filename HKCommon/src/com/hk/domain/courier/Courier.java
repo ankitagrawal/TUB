@@ -33,7 +33,6 @@ public class Courier implements java.io.Serializable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courier")
 	private Set<CourierServiceInfo> courierServiceInfos = new HashSet<CourierServiceInfo>(0);
 
-	@JsonSkip
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "couriers")
 	private List<CourierGroup> courierGroup = new ArrayList<CourierGroup>(0);
 
