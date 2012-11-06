@@ -9,7 +9,7 @@
 	<s:layout-component name="htmlHead">
 		<script type="text/javascript">
 			$(document).ready(function() {
-				$('#courierDropDown').blur(function() {
+				$('#courierDropDown').change(function() {
 					var courieren = $('#courierDropDown').val();
 					if (courieren == "") {
 						return false;
