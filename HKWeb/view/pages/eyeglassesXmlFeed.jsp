@@ -5,12 +5,12 @@
 <%@ page import="com.hk.util.HKImageUtils" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.EyeGlassesFeedAction" var="eyeglassBean"/>
+<c:set var="frontFacingEyeImageTypeId" value="<%=EnumImageType.FrontFacingEye.getId()%>"/>
+<c:set var="sideFacingEyeImageTypeId" value="<%=EnumImageType.SideFacingEye.getId()%>"/>
 <Glasses>
     <Category>
        <c:forEach items="${eyeglassBean.productVariants}" var="productVariant">
         <c:set var="product" value="${productVariant.product}"/>
-        <c:set var="frontFacingEyeImageTypeId" value="<%=EnumImageType.FrontFacingEye.getId()%>"/>
-        <c:set var="sideFacingEyeImageTypeId" value="<%=EnumImageType.SideFacingEye.getId()%>"/>
         <c:if test="${!productVariant.deleted && !productVariant.outOfStock && product.mainImageId != null}">
             <%--COLOR:Black|Size:Small|Material:Plastic|Gender:Kids|Brand:Blue Wine.T|Style:Rectangular--%>
             <%--<Glass type="Large" gender="Male" color="Black" id="1011">--%>
@@ -40,11 +40,6 @@
                     <desc></desc>
                 </Glass>
             </c:if>
-            <c:set var="type" value="null"/>
-            <c:set var="color" value="null"/>
-            <c:set var="gender" value="null"/>
-            <c:set var="frontFacingEyeImageId" value="null"/>
-            <c:set var="sideFacingEyeImageId" value="null"/>
         </c:if>
     </c:forEach>
     </Category>
