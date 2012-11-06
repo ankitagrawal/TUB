@@ -3,8 +3,10 @@ package com.hk.admin.pact.service.courier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
+import com.akube.framework.dao.Page;
 
 import java.util.List;
 
@@ -35,6 +37,8 @@ public interface CourierService {
 	public CourierServiceInfo searchCourierServiceInfo(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping);
 
 	public Courier save(Courier courier);
+
+	public Page getCouriers(String courierName,Boolean disabled, int page, int perPage);
 
 	public List<Courier> getCouriers(List<Long> courierIds ,List<String> courierNames , Boolean disabled);
 

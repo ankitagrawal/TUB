@@ -62,7 +62,7 @@
 		<div>
 			Total Courier in System = ${fn:length(courierBean.courierList)}
 			<fieldset class="right_label">
-				<legend>add New Courier</legend>
+				<legend> Search Or add New Courier</legend>
 
 				<s:form beanclass="com.hk.web.action.admin.courier.AddCourierAction">
 					<ul>

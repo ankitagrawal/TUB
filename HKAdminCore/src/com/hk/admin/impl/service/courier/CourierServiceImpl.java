@@ -11,6 +11,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.akube.framework.dao.Page;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,6 +131,10 @@ public class CourierServiceImpl implements CourierService {
 	}
 	public List<Courier> getCouriers(List<Long> courierIds ,List<String> courierNames , Boolean disabled){
 	return courierDao.getCouriers(courierIds, courierNames ,disabled);
+	}
+
+	public Page getCouriers(String courierName,Boolean disabled,int page, int perPage){
+		return  courierDao.getCouriers(courierName,disabled,page,perPage);
 	}
 
 }

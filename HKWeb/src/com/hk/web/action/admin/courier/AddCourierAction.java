@@ -1,8 +1,10 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.akube.framework.gson.JsonUtils;
+import com.akube.framework.dao.Page;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.catalog.product.Product;
@@ -28,7 +30,7 @@ import org.springframework.stereotype.Component;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class AddCourierAction extends BaseAction {
+public class AddCourierAction extends BasePaginatedAction {
 
 	@Autowired
 	ProductDao productDao;
@@ -53,9 +55,15 @@ public class AddCourierAction extends BaseAction {
 
 	private String courierName;
 
+	Page courierPage;
+	private Integer defaultPerPage = 30;
+
+	private Boolean status;
+
 	@DefaultHandler
 	public Resolution pre() {
-		courierList = courierService.getCouriers(null,null,false);
+		courierPage = courierService.getCouriers(courierName, status, getPageNo(), getPerPage());
+		courierList = courierPage.getList();
 		courierGroupList = courierGroupService.getAllCourierGroup();
 		return new ForwardResolution("/pages/addCourier.jsp");
 	}
@@ -184,5 +192,31 @@ public class AddCourierAction extends BaseAction {
 
 	public void setCourierName(String courierName) {
 		this.courierName = courierName;
+	}
+
+	public int getPerPageDefault() {
+        return defaultPerPage;
+    }
+
+    public int getPageCount() {
+        return courierPage == null ? 0 : courierPage.getTotalPages();
+    }
+
+    public int getResultCount() {
+        return courierPage == null ? 0 : courierPage.getTotalResults();
+    }
+
+	 public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("courierName");
+        return params;
+    }
+
+	public Boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 }

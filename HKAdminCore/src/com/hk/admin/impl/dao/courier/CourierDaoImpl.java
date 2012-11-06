@@ -12,6 +12,7 @@ import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.constants.courier.CourierConstants;
+import com.akube.framework.dao.Page;
 
 @Repository
 public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
@@ -46,4 +47,20 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 	    return (List<Courier>) findByCriteria(courierCriteria);
 
     }
+
+	public DetachedCriteria getCourierCriteria(String courierName, Boolean disabled) {
+		DetachedCriteria courierCriteria = DetachedCriteria.forClass(Courier.class);
+		if (courierName != null) {
+			courierCriteria.add(Restrictions.eq("name", courierName));
+		}
+		if (disabled != null) {
+			courierCriteria.add(Restrictions.eq("disabled", disabled));
+		}
+		return courierCriteria;
+
+	}
+
+	public Page getCouriers(String courierName, Boolean disabled, int page, int perPage) {
+		return list(getCourierCriteria(courierName, disabled), page, perPage);
+	}
 }
