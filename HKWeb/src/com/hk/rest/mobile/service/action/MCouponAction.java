@@ -279,6 +279,7 @@ public class MCouponAction extends MBaseAction {
 				if (offerInstance.equals(selectedOffer)) {
 					order.setOfferInstance(offerInstance);
 					orderService.save(order);
+					break;
 				}
 			}
 		} catch (Exception e) {
