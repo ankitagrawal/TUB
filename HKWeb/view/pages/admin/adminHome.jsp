@@ -66,6 +66,7 @@
 	</shiro:hasRole>
     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction"> Populate Busy Data </s:link></h3>
+        <h3><s:link beanclass="com.hk.web.action.admin.user.PopulateUserDetailAction"> Populate User Detail Data </s:link></h3>
 	</shiro:hasRole>
 		<%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
@@ -214,6 +215,8 @@
 			beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">Change Courier Pricing details</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
+
+	<%--<h3><s:link beanclass="com.hk.web.action.admin.courier.AddCourierAction">Add Courier and Courier Group</s:link></h3>--%>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
 	            event="generateCourierReport">Download Courier Excel

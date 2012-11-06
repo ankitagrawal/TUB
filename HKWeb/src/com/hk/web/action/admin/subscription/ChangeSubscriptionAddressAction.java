@@ -18,7 +18,7 @@ import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.manager.AddressBookManager;
-import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.util.AddressMatchScoreCalculator;
@@ -36,7 +36,7 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
     @Autowired
     AddressBookManager addressBookManager;
     @Autowired
-    AddressDao addressDao;
+    AddressService addressDao;
     @Autowired
     AddressMatchScoreCalculator addressMatchScoreCalculator;
 

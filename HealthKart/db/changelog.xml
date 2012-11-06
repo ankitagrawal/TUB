@@ -9577,6 +9577,9 @@
             <column name="user_id"/>
         </createIndex>
     </changeSet>
+	<changeSet author="Marut (generated)" id="1351173120154-5">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_detail" constraintName="fk_user_detail_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
 
     <changeSet author="Ajeet (generated)" id="1351491739428-1">
         <addColumn tableName="feedback">
@@ -9605,4 +9608,49 @@
 		</sql>
 	</changeSet>
 
+    <changeSet author="Rahul (generated)" id="1351679062102-3">
+        <modifyDataType columnName="template_ftl" newDataType="LONGTEXT" tableName="email_campaign"/>
+    </changeSet>
+
+
+    <changeSet author="Tarun (generated)" id="1351849520135-1">
+        <createTable tableName="replacement_order_reason">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1351849520135-2">
+        <addColumn tableName="replacement_order">
+            <column name="replacement_order_reason_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1351849520135-3">
+        <addForeignKeyConstraint baseColumnNames="replacement_order_reason_id" baseTableName="replacement_order" constraintName="fk_replacement_order_replacement_order_reason1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="replacement_order_reason" referencesUniqueColumn="false"/>
+    </changeSet>
+	<changeSet author="Seema (generated)" id="1349781909753-4">
+		<sql>
+			ALTER TABLE courier MODIFY COLUMN id INT NOT NULL AUTO_INCREMENT;
+			ALTER TABLE courier AUTO_INCREMENT=700;
+			ALTER TABLE courier_group MODIFY COLUMN id INT NOT NULL AUTO_INCREMENT;
+			ALTER TABLE courier_group AUTO_INCREMENT=60;
+		</sql>
+	</changeSet>
+	<changeSet author="Seema (generated)" id="1349781909753-1">
+		<addColumn tableName="courier">
+			<column name="disabled" type="TINYINT"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="Seema (generated)" id="1349781909753-2">
+		<sql>
+			update courier set `disabled` = 1;
+			update courier set `disabled` = 0 where `id` in (10,11,13,12,30,40,41,70,71,180,500,600,610);
+		</sql>
+	</changeSet>
+	<changeSet author="Seema (generated)" id="1349782838900-1">
+		<addNotNullConstraint columnDataType="TINYINT" columnName="disabled" tableName="courier"/>
+	</changeSet>
 </databaseChangeLog>

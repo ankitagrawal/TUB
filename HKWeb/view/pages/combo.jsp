@@ -85,9 +85,10 @@
     </div>
 </shiro:hasPermission>
 <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-  <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction" event="pre" target="_blank" class="popup">&nbsp;&nbsp;Edit Combo
-    <s:param name="combo" value="${productCombo.id}"/>
-  </s:link>
+    <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction" event="pre" target="_blank"
+            class="popup">&nbsp;&nbsp;Edit Combo
+        <s:param name="combo" value="${productCombo.id}"/>
+    </s:link>
 </shiro:hasPermission>
 <h2 class='prod_title'>
         ${productCombo.name}
@@ -220,53 +221,56 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <div class="grid_20 optionsDiv">
+                    <div class="grid_23 optionsDiv">
                         <fieldset>
                             <legend>&nbsp;&nbsp;Available Options</legend>
-                            <c:forEach items="${inStockVariants}" var="variant" varStatus="variantCtr">
-                                <c:if test="${!variant.deleted}">
-                                    <c:set var="globalCtr" value="${globalCtr + 1}"/>
+                            <div class="parentAvail">
+                                <c:forEach items="${inStockVariants}" var="variant" varStatus="variantCtr">
+                                    <c:if test="${!variant.deleted}">
+                                        <c:set var="globalCtr" value="${globalCtr + 1}"/>
 
-                                    <c:choose>
-                                        <c:when test="${fn:length(product.productVariants) == 1}">
-                                            <c:set var="idForImage" value="${product.mainImageId}"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:set var="idForImage" value="${variant.mainImageId}"/>
-                                        </c:otherwise>
-                                    </c:choose>
+                                        <c:choose>
+                                            <c:when test="${fn:length(product.productVariants) == 1}">
+                                                <c:set var="idForImage" value="${product.mainImageId}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:set var="idForImage" value="${variant.mainImageId}"/>
+                                            </c:otherwise>
+                                        </c:choose>
 
-                                    <div class="grid_4 options">
-                                        <div class="imageDiv">
-                                            <c:choose>
-                                                <c:when test="${idForImage != null}">
-                                                    <hk:productImage imageId="${idForImage}"
-                                                                     size="<%=EnumImageSize.SmallSize%>"
-                                                                     alt="${product.name}"/>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <img src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/test/${variant.id}.jpg'
-                                                         alt="${product.name}"/>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </div>
-                                        <div class="productOptions">
-                                            <c:forEach items="${variant.productOptions}" var="option">
-                                                <p class="productOptions">${option.name}:${option.value}</p>
-                                            </c:forEach>
-                                        </div>
-                                        <c:if test="${variant.outOfStock}">
-                                            <div class="soldOut" style="font-style:italic; color:red;">
-                                                Sold Out
+                                        <div class="grid_4 options">
+                                            <div class="imageDiv">
+                                                <c:choose>
+                                                    <c:when test="${idForImage != null}">
+                                                        <hk:productImage imageId="${idForImage}"
+                                                                         size="<%=EnumImageSize.SmallSize%>"
+                                                                         alt="${product.name}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <img src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/test/${variant.id}.jpg'
+                                                             alt="${product.name}"/>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
-                                        </c:if>
-                                        <input type="hidden" class="variantIdValue" idx="${globalCtr}"
-                                               value="${variant.id}"/>
-                                        <input type="hidden" class="selValue" idx="${globalCtr}" value="true"/>
-                                        <input type="hidden" class="qtyValue" idx="${globalCtr}" value="0"/>
-                                    </div>
-                                </c:if>
-                            </c:forEach>
+                                            <div class="productOptions">
+                                                <c:forEach items="${variant.productOptions}" var="option">
+                                                    <p class="productOptions"
+                                                       style="word-wrap:break-word;">${option.name}:${option.value}</p>
+                                                </c:forEach>
+                                            </div>
+                                            <c:if test="${variant.outOfStock}">
+                                                <div class="soldOut" style="font-style:italic; color:red;">
+                                                    Sold Out
+                                                </div>
+                                            </c:if>
+                                            <input type="hidden" class="variantIdValue" idx="${globalCtr}"
+                                                   value="${variant.id}"/>
+                                            <input type="hidden" class="selValue" idx="${globalCtr}" value="true"/>
+                                            <input type="hidden" class="qtyValue" idx="${globalCtr}" value="0"/>
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+                            </div>
                         </fieldset>
 
                         <div style="float:right;">
@@ -275,7 +279,7 @@
                                      style="height:20px; width:25px;"/>
                             </div>
 
-                            <fieldset style="float:right;">
+                            <fieldset style="float:right;margin-right:10px;">
                                 <legend>&nbsp;&nbsp;Selected Option</legend>
                                 <div class="grid_4 result">
                                 </div>
@@ -579,7 +583,7 @@
         //            resultDiv.find('.qtyValue').val("1");
         //        });
 
-        
+
         $('.progressLoader').hide();
 
         $('.comboProduct').css({
@@ -591,7 +595,7 @@
         });
 
         $('.optionsDiv').css({
-            marginLeft:($('.grid_23').width() - $('.optionsDiv').outerWidth()) / 2
+            marginLeft:($('.grid_24').width() - $('.optionsDiv').outerWidth()) / 2
         });
 
         $('.options').click(function() {
@@ -611,13 +615,16 @@
         function _addToCart(res) {
             if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
                 $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
+                $('#productsInCart').html(res.data.itemsInCart);
                 $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
                 $('.progressLoader').hide();
-
+                $('.addToCartButton').remove();
+                $(".right_col").append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
                 show_message();
             } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
                 alert(res.message);
                 $('.progressLoader').hide();
+                location.reload();
             }
         }
 
@@ -746,6 +753,11 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
+        float: none;
+        display: inline-block;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        text-align:center;
     }
 
     div.arrowDiv {
@@ -780,6 +792,11 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
+        float: none;
+        display: inline-block;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        text-align:center;
 
         -webkit-transition-duration: 0.2s;
         -moz-transition-duration: 0.2s;
@@ -866,6 +883,14 @@
         color: #E80000;
         float: left;
         font-size: 1.05em;
+    }
+
+    div.parentAvail {
+        width: 670px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        text-align: left;
     }
 </style>
 </s:layout-component>

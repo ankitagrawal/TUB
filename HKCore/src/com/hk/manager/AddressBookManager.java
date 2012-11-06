@@ -1,5 +1,6 @@
 package com.hk.manager;
 
+import com.hk.pact.service.core.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,8 @@ import com.hk.util.AddressMatchScoreCalculator;
 public class AddressBookManager {
 
     @Autowired
+    private AddressService              addressService;
+	@Autowired
     private AddressDao                  addressDao;
     @Autowired
     private UserService                 userService;
@@ -61,7 +64,7 @@ public class AddressBookManager {
         address.setUser(user);
         boolean isDuplicateAddress = addressMatchScoreCalculator.isDuplicateAddress(address);
         if (!isDuplicateAddress) {
-            address = getAddressDao().save(address);
+            address = getAddressService().save(address);
             user.getAddresses().add(address);
             getUserService().save(user);
             return address;
@@ -75,15 +78,23 @@ public class AddressBookManager {
         getUserService().save(user);
     }
 
-    public AddressDao getAddressDao() {
-        return addressDao;
+    public AddressService getAddressService() {
+        return addressService;
     }
 
-    public void setAddressDao(AddressDao addressDao) {
-        this.addressDao = addressDao;
+    public void setAddressService(AddressService addressService) {
+        this.addressService = addressService;
     }
 
-    public UserService getUserService() {
+	public AddressDao getAddressDao() {
+		return addressDao;
+	}
+
+	public void setAddressDao(AddressDao addressDao) {
+		this.addressDao = addressDao;
+	}
+
+	public UserService getUserService() {
         return userService;
     }
 

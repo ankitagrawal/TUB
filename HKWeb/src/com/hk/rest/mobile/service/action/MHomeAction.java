@@ -47,7 +47,7 @@ public class MHomeAction {
     @Autowired
     CategoryImageDao categoryImageDao;
     @Autowired
-    PrimaryCategoryHeadingDao primaryCategoryHeadingDao;
+   PrimaryCategoryHeadingDao primaryCategoryHeadingDao;
 
     @GET
     @Path("/gohome/")

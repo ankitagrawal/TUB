@@ -3,18 +3,12 @@
  */
 package com.hk.rest.mobile.service.action;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.validation.LocalizableError;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +21,7 @@ import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.core.TempTokenDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.UserService;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.web.HealthkartResponse;
 
@@ -40,7 +35,7 @@ public class MForgotPasswordAction extends MBaseAction{
 
 
     @Autowired
-    UserDao                 userDao;
+    UserService                 userService;
     @Autowired
     TempTokenDao            tempTokenDao;
     @Autowired
@@ -63,7 +58,7 @@ public class MForgotPasswordAction extends MBaseAction{
 		String message = MHKConstants.STATUS_DONE;
 		String status = MHKConstants.STATUS_OK;
 		try{
-		User user = userDao.findByLogin(email);
+		User user = userService.findByLogin(email);
         if (user == null) {
             message = MHKConstants.NO_RESULTS;
             status = MHKConstants.STATUS_ERROR;
@@ -80,7 +75,7 @@ public class MForgotPasswordAction extends MBaseAction{
         }
 
         healthkartResponse = new HealthkartResponse(MHKConstants.STATUS_OK,
-                "Password reset mail has been sent to your email id. Please check your Inbox/Spam/Junk folders.", MHKConstants.STATUS_DONE);
+                MHKConstants.PWD_RESET_MSG, MHKConstants.STATUS_DONE);
 
         noCache(response);
 

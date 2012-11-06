@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -62,7 +63,7 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
   @Autowired
   ManufacturerDao manufacturerDao;
   @Autowired
-  AddressDao addressDao;
+  AddressService addressDao;
   @Autowired
   LocalityMapDao localityMapDao;
   @Autowired
