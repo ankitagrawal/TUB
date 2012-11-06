@@ -30,7 +30,7 @@
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='${pageContext.request.contextPath}'>Go To DeskTop Version</a>
+				<a href='/'>Go To DeskTop Version</a>
 			</td>
 		</tr>
 		<!--
