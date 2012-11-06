@@ -30,7 +30,7 @@
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='/'>Go To DeskTop Version</a>
+				<a href='/Home.action'>Go To DeskTop Version</a>
 			</td>
 		</tr>
 		<!--
