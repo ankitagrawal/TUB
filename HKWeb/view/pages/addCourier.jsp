@@ -69,7 +69,7 @@
 						<li>
 							<label>Enter New Courier Name</label>
 							<s:text name="courierName"></s:text>
-							&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp;
+							&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp; 
 							<label>Enable Courier</label>
 							<s:select  name="courier">
 								<s:option value="">--Select Courier --</s:option>
