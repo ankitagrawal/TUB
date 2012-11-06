@@ -297,10 +297,12 @@ public class OrderServiceImpl implements OrderService {
         boolean shouldUpdate = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-            if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
-                shouldUpdate = false;
-                break;
-            }
+	        if(!getShippingOrderService().shippingOrderHasReplacementOrder(shippingOrder)){
+				if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
+					shouldUpdate = false;
+					break;
+				}
+	        }
         }
 
         if (shouldUpdate) {
