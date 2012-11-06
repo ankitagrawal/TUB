@@ -216,6 +216,8 @@
 
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
 
+	<%--<h3><s:link beanclass="com.hk.web.action.admin.courier.AddCourierAction">Add Courier and Courier Group</s:link></h3>--%>
+
 	<h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
 	            event="generateCourierReport">Download Courier Excel
 		<s:param name="courierDownloadFunctionality" value="false"/>
