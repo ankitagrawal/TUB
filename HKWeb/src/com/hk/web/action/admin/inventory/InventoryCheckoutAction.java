@@ -101,8 +101,8 @@ public class InventoryCheckoutAction extends BaseAction {
 	private SkuGroup skuGroup;
 	private String invoiceNumber;
 	private String gatewayOrderId;
-	private boolean wronglyPickedBox = false;
-	private SkuGroup earlierSkuGroup;
+	//private boolean wronglyPickedBox = false;
+	//private SkuGroup earlierSkuGroup;
 	List<SkuGroup> skuGroups;
 
 	@DefaultHandler
@@ -134,7 +134,7 @@ public class InventoryCheckoutAction extends BaseAction {
 
 	public Resolution findSkuGroups() {
 		SkuGroup skuGroupBarcode;
-		earlierSkuGroup = null;
+		//earlierSkuGroup = null;
 		List<SkuGroup> inStockSkuGroupList;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
@@ -458,19 +458,19 @@ public class InventoryCheckoutAction extends BaseAction {
 		this.productVariantService = productVariantService;
 	}
 
-	public boolean isWronglyPickedBox() {
+	/*public boolean isWronglyPickedBox() {
 		return wronglyPickedBox;
-	}
+	}*/
 
-	public void setWronglyPickedBox(boolean wronglyPickedBox) {
+	/*public void setWronglyPickedBox(boolean wronglyPickedBox) {
 		this.wronglyPickedBox = wronglyPickedBox;
-	}
+	}*/
 
-	public SkuGroup getEarlierSkuGroup() {
+	/*public SkuGroup getEarlierSkuGroup() {
 		return earlierSkuGroup;
 	}
 
 	public void setEarlierSkuGroup(SkuGroup earlierSkuGroup) {
 		this.earlierSkuGroup = earlierSkuGroup;
-	}
+	}*/
 }
