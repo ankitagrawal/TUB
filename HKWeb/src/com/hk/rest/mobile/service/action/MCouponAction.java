@@ -300,7 +300,11 @@ public class MCouponAction extends MBaseAction {
 			couponResponse.setEndDate(endDate);
 			couponResponse.setId(offer.getId().toString());
 			couponResponse.setOfferDescription(offer.getOffer().getDescription());
-			couponResponse.setOfferTerms(offer.getOffer().getTerms());
+			String offerTerms = "";
+			if(offer.getOffer().getTerms() != null){
+				offerTerms = offer.getOffer().getTerms();
+			}
+			couponResponse.setOfferTerms(offerTerms);
 			if(null!=selectedOffer)
 			if(offer.getId().equals(selectedOffer.getId()))
 				couponResponse.setSelectedOffer(true);
