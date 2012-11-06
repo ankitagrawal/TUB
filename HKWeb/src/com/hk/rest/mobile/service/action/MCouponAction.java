@@ -292,8 +292,8 @@ public class MCouponAction extends MBaseAction {
 			couponResponse = new MCouponResponse();
 			couponResponse.setCouponCode(offer.getCoupon().getCode());
 
-			String endDate = offer.getEndDate().toString();
-			if(null!=offer.getEndDate()&&!"".equals(offer.getEndDate()))
+			String endDate = "";
+			if (null != offer.getEndDate() && !"".equals(offer.getEndDate()))
 				endDate = DateFormat.getDateInstance().format(offer.getEndDate());
 			
 			couponResponse.setEndDate(endDate);
