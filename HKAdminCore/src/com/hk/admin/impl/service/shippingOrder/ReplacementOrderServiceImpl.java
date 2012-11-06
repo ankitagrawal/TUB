@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.pact.service.UserService;
@@ -71,6 +72,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         replacementOrder.setRefShippingOrder(shippingOrder);
         replacementOrder = (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
         shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
+	    replacementOrder.getBaseOrder().setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
 
 	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
 	    shippingOrderService.logShippingOrderActivity(replacementOrder, userService.getAdminUser(),
