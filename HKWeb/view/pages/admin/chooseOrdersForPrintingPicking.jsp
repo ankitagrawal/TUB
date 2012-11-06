@@ -98,7 +98,7 @@
 		<label>Courier</label>
             <s:select name="courier">
               <s:option value="">All Couriers</s:option>
-              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
+              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
                                          label="name"/>
             </s:select>
             <s:submit name="searchOrdersForPrinting" value="Search By Courier"

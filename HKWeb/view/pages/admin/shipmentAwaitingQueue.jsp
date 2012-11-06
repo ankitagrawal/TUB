@@ -26,7 +26,7 @@
             <label>Order ID </label> <s:text name="orderId"/>
             <s:select name="courier" class="courierService">
               <s:option value="">All Couriers</s:option>
-              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
+              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
                                          label="name"/>
             </s:select>
             <label>Per Page</label>
@@ -47,7 +47,7 @@
             <label>Courier</label>
             <s:select name="courier" class="courierService">
               <s:option value="">All Couriers</s:option>
-              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
+              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
                                          label="name"/>
             </s:select>
             <s:submit name="generateCourierReport">
