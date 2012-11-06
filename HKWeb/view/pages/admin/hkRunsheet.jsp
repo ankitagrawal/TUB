@@ -203,7 +203,7 @@
             </table>
             <c:if test="${runsheetAction.runsheet.runsheetStatus.id !=  20}" >
                 <s:submit id="save-runsheet" name="saveRunsheet" value="Save runsheet" class="popup-expected-amount"/>
-                <s:submit class="popup-expected-amount closeConfirmationDialogue" name="closeRunsheet popup-expected-amount" value="Close runsheet" />
+                <s:submit class="popup-expected-amount closeConfirmationDialogue" name="closeRunsheet" value="Close runsheet" />
                 <s:submit class="popup-expected-amount markAllConfirmationDialogue" name="markAllDelivered" value="Mark all as delivered"/>
             </c:if>
         </s:form>
