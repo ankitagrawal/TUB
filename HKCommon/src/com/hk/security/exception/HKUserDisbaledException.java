@@ -1,8 +1,8 @@
 package com.hk.security.exception;
 
-public class HKUserDisbaledException extends HKAuthenticationException{
+public class HkUserDisbaledException extends HkAuthenticationException{
 
-    public HKUserDisbaledException(String userName) {
+    public HkUserDisbaledException(String userName) {
         super(userName);
         // TODO Auto-generated constructor stub
     }

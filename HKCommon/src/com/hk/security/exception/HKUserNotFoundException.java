@@ -1,8 +1,8 @@
 package com.hk.security.exception;
 
-public class HKUserNotFoundException extends HKAuthenticationException{
+public class HkUserNotFoundException extends HkAuthenticationException{
 
-    public HKUserNotFoundException(String userName) {
+    public HkUserNotFoundException(String userName) {
         super(userName);
         
     }

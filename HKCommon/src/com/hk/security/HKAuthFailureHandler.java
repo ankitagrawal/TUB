@@ -3,16 +3,16 @@ package com.hk.security;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hk.security.exception.HKAuthenticationException;
+import com.hk.security.exception.HkAuthenticationException;
 
 /**
  * 
  * @author vaibhav.adlakha
  *
  */
-public interface HKAuthFailureHandler {
+public interface HkAuthFailureHandler {
 
-    public void handleAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, HKAuthenticationException failed);
+    public void handleAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, HkAuthenticationException failed);
     
     
     

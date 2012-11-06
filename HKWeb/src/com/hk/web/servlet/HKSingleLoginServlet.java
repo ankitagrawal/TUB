@@ -11,12 +11,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hk.security.HKAuthFailureHandler;
-import com.hk.security.HKAuthService;
-import com.hk.security.HKAuthSuccessHandler;
-import com.hk.security.HKAuthentication;
-import com.hk.security.HKUsernamePasswordAuthenticationToken;
-import com.hk.security.exception.HKAuthenticationException;
+import com.hk.security.HkAuthFailureHandler;
+import com.hk.security.HkAuthService;
+import com.hk.security.HkAuthSuccessHandler;
+import com.hk.security.HkAuthentication;
+import com.hk.security.HkUsernamePasswordAuthenticationToken;
+import com.hk.security.exception.HkAuthenticationException;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.json.JSONResponseBuilder;
 
@@ -35,10 +35,10 @@ public class HKSingleLoginServlet extends HttpServlet {
     private String               passwordParameter = HK_PASSWORD_KEY;
     private String               appIdParameter    = HK_APP_ID_KEY;
 
-    private HKAuthService        hkAuthService;
+    private HkAuthService        hkAuthService;
 
-    private HKAuthFailureHandler failureHandler;
-    private HKAuthSuccessHandler successHandler;
+    private HkAuthFailureHandler failureHandler;
+    private HkAuthSuccessHandler successHandler;
 
     // TODO: change this to post
     @Override
@@ -68,7 +68,7 @@ public class HKSingleLoginServlet extends HttpServlet {
             return;
         }
 
-        HKAuthentication authResult;
+        HkAuthentication authResult;
 
         try {
             authResult = attemptAuthentication(req, resp);
@@ -77,7 +77,7 @@ public class HKSingleLoginServlet extends HttpServlet {
                 return;
             }
 
-        } catch (HKAuthenticationException failed) {
+        } catch (HkAuthenticationException failed) {
             unsuccessfulAuthentication(req, resp, failed);
             return;
         }
@@ -86,15 +86,15 @@ public class HKSingleLoginServlet extends HttpServlet {
 
     }
 
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, HKAuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, HkAuthenticationException failed) throws IOException, ServletException {
         getFailureHandler().handleAuthenticationFailure(request, response, failed);
     }
 
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, HKAuthentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, HkAuthentication authResult) throws IOException, ServletException {
         getSuccessHandler().handleAuthenticationSuccess(request, response, authResult);
     }
 
-    protected HKAuthentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws HKAuthenticationException {
+    protected HkAuthentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws HkAuthenticationException {
 
         String username = obtainUsername(request);
         String password = obtainPassword(request);
@@ -102,7 +102,7 @@ public class HKSingleLoginServlet extends HttpServlet {
 
         username = username.trim();
 
-        HKUsernamePasswordAuthenticationToken authRequest = new HKUsernamePasswordAuthenticationToken(username, password, appId);
+        HkUsernamePasswordAuthenticationToken authRequest = new HkUsernamePasswordAuthenticationToken(username, password, appId);
 
         return getHkAuthService().authenticate(authRequest);
     }
@@ -143,23 +143,23 @@ public class HKSingleLoginServlet extends HttpServlet {
         }
     }
 
-    public HKAuthService getHkAuthService() {
+    public HkAuthService getHkAuthService() {
         if (hkAuthService == null) {
-            hkAuthService = ServiceLocatorFactory.getService(HKAuthService.class);
+            hkAuthService = ServiceLocatorFactory.getService(HkAuthService.class);
         }
         return hkAuthService;
     }
 
-    public HKAuthFailureHandler getFailureHandler() {
+    public HkAuthFailureHandler getFailureHandler() {
         if (failureHandler == null) {
-            failureHandler = ServiceLocatorFactory.getService(HKAuthFailureHandler.class);
+            failureHandler = ServiceLocatorFactory.getService(HkAuthFailureHandler.class);
         }
         return failureHandler;
     }
 
-    public HKAuthSuccessHandler getSuccessHandler() {
+    public HkAuthSuccessHandler getSuccessHandler() {
         if (successHandler == null) {
-            successHandler = ServiceLocatorFactory.getService(HKAuthSuccessHandler.class);
+            successHandler = ServiceLocatorFactory.getService(HkAuthSuccessHandler.class);
         }
         return successHandler;
     }

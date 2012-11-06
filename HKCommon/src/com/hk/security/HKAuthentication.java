@@ -7,7 +7,7 @@ import java.util.Collection;
  * @author vaibhav.adlakha
  *
  */
-public interface HKAuthentication {
+public interface HkAuthentication {
     
     
     public Collection<GrantedOperation> getOperations();

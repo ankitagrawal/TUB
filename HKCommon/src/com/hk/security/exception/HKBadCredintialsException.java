@@ -1,5 +1,5 @@
 package com.hk.security.exception;
 
-public class HKBadCredintialsException {
+public class HkBadCredintialsException {
 
 }

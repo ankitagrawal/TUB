@@ -5,17 +5,27 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hk.security.HKAuthSuccessHandler;
-import com.hk.security.HKAuthentication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class HKAuthSuccessHandlerImpl implements HKAuthSuccessHandler{
+import com.hk.security.HkAuthService;
+import com.hk.security.HkAuthSuccessHandler;
+import com.hk.security.HkAuthentication;
+
+@Service
+public class HkAuthSuccessHandlerImpl implements HkAuthSuccessHandler {
+
+    @Autowired
+    private HkAuthService hkAuthService;
 
     @Override
-    public void handleAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, HKAuthentication authResult) throws IOException {
+    public void handleAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, HkAuthentication authResult) throws IOException {
         String targetUrl = determineTargetUrl(request, response);
+   
         
-        
+
         String redirectUrl = calculateRedirectUrl(request.getContextPath(), targetUrl);
+        redirectUrl= redirectUrl.concat("?").concat(getHkAuthService().generateAuthToken(authResult));
         redirectUrl = response.encodeRedirectURL(redirectUrl);
 
         
@@ -23,7 +33,7 @@ public class HKAuthSuccessHandlerImpl implements HKAuthSuccessHandler{
         response.sendRedirect(redirectUrl);
         
     }
-    
+
     private String calculateRedirectUrl(String contextPath, String url) {
         boolean contextRelative = false;
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
@@ -50,9 +60,14 @@ public class HKAuthSuccessHandlerImpl implements HKAuthSuccessHandler{
 
         return url;
     }
-    
+
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
-      return "http://www.google.com";  
+        return "http://www.google.com";
     }
 
+    public HkAuthService getHkAuthService() {
+        return hkAuthService;
+    }
+
+    
 }

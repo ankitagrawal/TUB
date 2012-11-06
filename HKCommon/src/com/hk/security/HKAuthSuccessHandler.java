@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author vaibhav.adlakha
  *
  */
-public interface HKAuthSuccessHandler {
+public interface HkAuthSuccessHandler {
 
     /**
      * determine target url from appuser or request and redirect to target url with token generated.
@@ -28,5 +28,5 @@ public interface HKAuthSuccessHandler {
      *          get pwd for email generate b 
      * il
      */
-    public void handleAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, HKAuthentication authResult) throws IOException ;
+    public void handleAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, HkAuthentication authResult) throws IOException ;
 }

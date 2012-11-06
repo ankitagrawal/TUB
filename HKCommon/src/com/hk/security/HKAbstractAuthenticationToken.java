@@ -9,13 +9,13 @@ import java.util.Collections;
  * @author vaibhav.adlakha
  *
  */
-public abstract class HKAbstractAuthenticationToken implements HKAuthentication {
+public abstract class HkAbstractAuthenticationToken implements HkAuthentication {
 
     
     private final Collection<GrantedOperation> operations;
     private boolean                            authenticated = false;
 
-    public HKAbstractAuthenticationToken(Collection<GrantedOperation> operations) {
+    public HkAbstractAuthenticationToken(Collection<GrantedOperation> operations) {
         if (operations == null) {
             this.operations = GrantedOperationUtil.NO_OPERATIONS;
             return;
@@ -35,11 +35,11 @@ public abstract class HKAbstractAuthenticationToken implements HKAuthentication 
     // ========================================================================================================
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof HKAbstractAuthenticationToken)) {
+        if (!(obj instanceof HkAbstractAuthenticationToken)) {
             return false;
         }
 
-        HKAbstractAuthenticationToken test = (HKAbstractAuthenticationToken) obj;
+        HkAbstractAuthenticationToken test = (HkAbstractAuthenticationToken) obj;
 
         if (!operations.equals(test.operations)) {
             return false;

@@ -7,14 +7,14 @@ import java.util.Collection;
  * @author vaibhav.adlakha
  *
  */
-public class HKUsernamePasswordAuthenticationToken extends HKAbstractAuthenticationToken{
+public class HkUsernamePasswordAuthenticationToken extends HkAbstractAuthenticationToken{
 
     
     private final Object credentials;
     private final Object principal;
     private final Object appId;
     
-    public HKUsernamePasswordAuthenticationToken(Object principal, Object credentials, Object appId) {
+    public HkUsernamePasswordAuthenticationToken(Object principal, Object credentials, Object appId) {
         super(null);
         this.principal = principal;
         this.credentials = credentials;
@@ -23,7 +23,7 @@ public class HKUsernamePasswordAuthenticationToken extends HKAbstractAuthenticat
     }
     
     
-    public HKUsernamePasswordAuthenticationToken(Object principal, Object credentials, Object appId, Collection<GrantedOperation> operations) {
+    public HkUsernamePasswordAuthenticationToken(Object principal, Object credentials, Object appId, Collection<GrantedOperation> operations) {
         super(operations);
         this.principal = principal;
         this.credentials = credentials;
