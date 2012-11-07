@@ -24,7 +24,7 @@
 	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="compile.classpath" />
 
 	<target name="compile.groovy" description="Compile Java classes for project">
-		<groovyc srcdir="src" destdir="${package.target.dir}" fork="true" listfiles="true">
+		<groovyc srcdir="src" destdir="${package.target.dir}" fork="false" listfiles="true">
 			<classpath refid="compile.classpath" />
 			<javac debug="${compiler.debug}">
 			</javac>

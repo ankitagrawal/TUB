@@ -15,6 +15,7 @@ public enum EnumPurchaseOrderStatus {
 	SentForApproval(20L, "Sent For Approval"),
 	Approved(30L, "Approved"),
 	SentToSupplier(40L, "Sent To Supplier"),
+	Received(50L, "Received"),
 	Closed(100L, "Closed"),
 	Cancelled(1000L, "Cancelled");
 
@@ -49,7 +50,7 @@ public enum EnumPurchaseOrderStatus {
 	public static List<PurchaseOrderStatus> geAllPurchaseOrderStatus() {
 
 		List<PurchaseOrderStatus> PurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentForApproval.getPurchaseOrderStatus(),
-				Approved.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(),
+				Approved.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(), Received.getPurchaseOrderStatus(),
 				Closed.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
 		Collections.sort(PurchaseOrderStatusList);
 		return PurchaseOrderStatusList;
