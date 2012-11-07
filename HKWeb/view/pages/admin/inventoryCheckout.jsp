@@ -10,16 +10,6 @@
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
       $(document).ready(function() {
-	    var boolWronglyPickedBox = "${icBean.wronglyPickedBox}" == 'true';
-        if(boolWronglyPickedBox) {
-           alert("Cannot checkout the item, there is another item with inventory with Batch details: \n" +
-                 "\n batch number - ${icBean.earlierSkuGroup.batchNumber}" +
-                 //hiding the barcode because if this is displayed one would just type that in.
-                 /*"\n barcode - ${icBean.earlierSkuGroup.barcode}" +*/
-                 "\n mrp - ${icBean.earlierSkuGroup.mrp}" +
-                 "\n expiry date - ${icBean.earlierSkuGroup.expiryDate}" +
-                 "\n mfg date - ${icBean.earlierSkuGroup.mfgDate}");
-        }
         $(document).find('#skuGroup').attr("checked", true);
 
         $('.upc').change(function() {
