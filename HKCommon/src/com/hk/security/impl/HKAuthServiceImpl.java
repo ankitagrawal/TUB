@@ -124,7 +124,7 @@ public class HkAuthServiceImpl implements HkAuthService {
         String tokenB = userName.concat(":").concat(password).concat(":").concat(Long.valueOf(expiryTime.getTime()).toString());
 
         String md5 = DigestUtils.md5Hex( tokenB );
-        String baseToken = tokenA.concat(md5);
+        String baseToken = tokenA.concat(":").concat(md5);
 
         byte[] base64encoding = Base64.encodeBase64(baseToken.getBytes());
         System.out.println( base64encoding );
