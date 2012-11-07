@@ -66,6 +66,10 @@
 			float: left;
 		}
 
+        #mycarousel {
+            display:none;
+        }
+
 		.rating_bar {
 			width: 80px;
 			background: url('${pageContext.request.contextPath}/images/img/star-off.png') 0 0 repeat-x;
@@ -136,6 +140,8 @@
 				preloadImages:false,
 				alwaysOn:false
 			});
+
+            $('#mycarousel').css('display', 'block');
 
             jQuery(document).ready(function() {
                 jQuery('#mycarousel').jcarousel();
