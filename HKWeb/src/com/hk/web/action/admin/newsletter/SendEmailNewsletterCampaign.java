@@ -234,7 +234,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     public Resolution sendCampaign() {
 
-        //getAdminEmailManager().populateEmailRecepient(null, maxResultCount);
+        getAdminEmailManager().populateEmailRecepient(null, maxResultCount);
 
         String[] categoryArray = StringUtils.split(categories);
         List<String> finalCategories = new ArrayList<String>();
@@ -263,7 +263,9 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
             } else if (categories.equalsIgnoreCase("all-unverified")) {
                 emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)), maxResultCount);
             }
-
+            if (emailRecepients.isEmpty()){
+                break;
+            }
             List<String> emailRecepientsWithHistory = getAdminEmailService().getEmailRecepientsByEmailIds(emailCampaign, emailRecepients);
             Set<String> historyEmails = new HashSet<String>();
             historyEmails.addAll(emailRecepientsWithHistory);
