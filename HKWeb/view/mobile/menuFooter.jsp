@@ -30,7 +30,7 @@
 		</tr>
 		<tr>
 			<td class='arr-r'>
-				<a href='/Home.action'>Go To DeskTop Version</a>
+				<a href='http://www.healthkart.com/Home.action'>Go To DeskTop Version</a>
 			</td>
 		</tr>
 		<!--
