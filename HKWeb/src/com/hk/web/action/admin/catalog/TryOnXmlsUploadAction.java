@@ -49,20 +49,20 @@ public class TryOnXmlsUploadAction extends BaseAction {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             //saving in adminUploads for backup
-            String excelFilePath = adminUploadsPath + "/xmlFiles/" + sdf.format(new Date()) + "/" + category + "_" + sdf.format(new Date()) + ".xls";
+            String excelFilePath = eyeTryOnXmlsPath + "/xmlFiles/" + sdf.format(new Date()) + "/" + category + "_" + sdf.format(new Date()) + ".xml";
             File excelFile = new File(excelFilePath);
             excelFile.getParentFile().mkdirs();
             fileBean.save(excelFile);
 
             //saving in dist to avoid tomcat restart
-            String xmlFilePath = adminUploadsPath + "/Glasses/" + "/" + category + ".xml";
+            String xmlFilePath = adminUploadsPath + "/Glasses/" + category + ".xml";
             File xmlFile = new File(xmlFilePath);
             xmlFile.getParentFile().mkdirs();
             fileBean.save(xmlFile);
 
         } catch (Exception e) {
 
-            logger.error("Exception " + e.getMessage());
+            logger.error("Exception while uploading excel " + e);
         }
 
         addRedirectAlertMessage(new SimpleMessage("Feed Updated"));
@@ -75,5 +75,13 @@ public class TryOnXmlsUploadAction extends BaseAction {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public FileBean getFileBean() {
+        return fileBean;
+    }
+
+    public void setFileBean(FileBean fileBean) {
+        this.fileBean = fileBean;
     }
 }
