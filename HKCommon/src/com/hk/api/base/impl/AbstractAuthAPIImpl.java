@@ -19,7 +19,7 @@ public abstract class AbstractAuthAPIImpl implements AuthAPI {
         boolean isExpired = false, isValid = true;
 
         try {
-            isValid = getHkAuthService().validateToken(authToken);
+            isValid = getHkAuthService().validateToken(authToken, appId, true);
         } catch (HKAuthTokenExpiredException e) {
             isValid = false;
             isExpired = true;

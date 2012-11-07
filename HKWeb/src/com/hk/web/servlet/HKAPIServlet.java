@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import com.hk.api.AuthAPI;
 import com.hk.api.HkAPI;
+import com.hk.api.user.HkAPIUser;
+import com.hk.security.HkAuthService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.json.JSONResponseBuilder;
 import com.hk.web.servlet.constants.OperationType;
@@ -32,7 +34,7 @@ public class HKAPIServlet extends HkAPIBaseServlet {
         GetUserDetails, ValidateAndRefreshAuthToken
     }
 
-    // private HkAuthService hkAuthService;
+    private HkAuthService                           hkAuthService;
 
     private static Map<Integer, Map<String, HkAPI>> apiRegistry = new HashMap<Integer, Map<String, HkAPI>>();
 
@@ -55,25 +57,24 @@ public class HKAPIServlet extends HkAPIBaseServlet {
         String authToken = req.getParameter("authToken");
         String apiVersion = req.getParameter("apiVersion");
         String appId = req.getParameter("appId");
-        
+
         String operationTypeStr = req.getParameter("type");
-       
+
         String operationStr = req.getParameter("operation");
 
-        if(StringUtils.isBlank(operationStr)){
+        if (StringUtils.isBlank(operationStr)) {
             writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "NO_OPERATION_PASSED").build());
             return;
         }
 
-        
         Operation operation = Operation.valueOf(operationStr);
         // it should never be null
         if (operation == null) {
             writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "REQUEST_NOT_SUPPORTED").build());
             return;
         }
-        
-        if(StringUtils.isBlank(operationTypeStr)){
+
+        if (StringUtils.isBlank(operationTypeStr)) {
             writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "NO_OPERATION_TYPE_PASSED").build());
             return;
         }
@@ -88,6 +89,11 @@ public class HKAPIServlet extends HkAPIBaseServlet {
         if (StringUtils.isEmpty(appId)) {
             writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "NO_APP_ID_PASSED").build());
             return;
+        }
+        
+        if(!HkAPIUser.containsAppId(appId)){
+            writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "INVALID_APP_ID").build());
+            return; 
         }
 
         // check for a not null apiKey
@@ -105,15 +111,13 @@ public class HKAPIServlet extends HkAPIBaseServlet {
         /**
          * validate token and api key in auth service, do all in memory
          */
-
-        /*
-         * // Gets the APIUser from the Cache IxigoApiUser apiUser =
-         * ApiUsersCache.getInstance().getIxigoAPIUserByApiKey(apiKey); // make sure its a valid api key if (apiUser ==
-         * null) { writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code",
-         * "INVALID_API_KEY").build()); return; } // check whether api is enabled if (!apiUser.isEnabled()) {
-         * writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "API_KEY_DISABLED").build());
-         * return; }
-         */
+        try {
+            getHkAuthService().validateToken(authToken, appId, false);
+        } catch (Throwable t) {
+            writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "INVALID_AUTH_TOKEN").build());
+            return;
+        }
+        
 
         switch (operationType) {
             case OperationType.Auth:
@@ -139,4 +143,12 @@ public class HKAPIServlet extends HkAPIBaseServlet {
                 break;
         }
     }
+
+    public HkAuthService getHkAuthService() {
+        if (hkAuthService == null) {
+            hkAuthService = (HkAuthService) ServiceLocatorFactory.getService(HkAuthService.class);
+        }
+        return hkAuthService;
+    }
+
 }
