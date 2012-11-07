@@ -1,6 +1,8 @@
 package com.hk.security;
 
+import com.hk.security.exception.HKAuthTokenExpiredException;
 import com.hk.security.exception.HkAuthenticationException;
+import com.hk.security.exception.HkInvalidAuthTokenException;
 
 /**
  * 
@@ -17,5 +19,8 @@ public interface HkAuthService {
     
     public String generateAuthToken(HkAuthentication authentication);
     
-    public boolean validateToken(String authToken);
+    public boolean validateToken(String authToken) throws HkInvalidAuthTokenException, HKAuthTokenExpiredException;
+    
+    //TODO: add a auth scheme to this method
+    public String refershAuthToken(String authToken , String appId);
 }

@@ -13,7 +13,9 @@ import com.hk.security.GrantedOperationUtil;
 import com.hk.security.HkAuthService;
 import com.hk.security.HkAuthentication;
 import com.hk.security.HkUsernamePasswordAuthenticationToken;
+import com.hk.security.exception.HKAuthTokenExpiredException;
 import com.hk.security.exception.HkAuthenticationException;
+import com.hk.security.exception.HkInvalidAuthTokenException;
 import com.hk.util.HKDateUtil;
 
 /**
@@ -49,9 +51,55 @@ public class HkAuthServiceImpl implements HkAuthService {
     
     
 
+    
+    @Override
+    public String refershAuthToken(String authToken, String appId) {
+        
+        return refershUserNamePasswordAuthToken(authToken, appId);
+    }
+
+
+
+
+    private String refershUserNamePasswordAuthToken(String authToken, String appId) {
+   
+        byte[] base64DecodedArr = Base64.decodeBase64(authToken);
+        String base64Decoded = new String(base64DecodedArr);
+        System.out.println(base64Decoded);
+        
+        String []decodedTokenArr =  base64Decoded.split(":"); 
+        String password = "abc";
+        HkUsernamePasswordAuthenticationToken  authentication = new HkUsernamePasswordAuthenticationToken(decodedTokenArr[0],password, appId);
+        
+        return generateAuthToken(authentication);
+    }
+
+
+
     @Override
     public boolean validateToken(String authToken) {
        boolean valid = true;
+       
+       byte[] base64DecodedArr = Base64.decodeBase64(authToken);
+       String base64Decoded = new String(base64DecodedArr);
+       System.out.println(base64Decoded);
+       
+       String []decodedTokenArr =  base64Decoded.split(":"); 
+       Date expiredOn  = new Date(Long.parseLong(decodedTokenArr[1]));
+       System.out.println(expiredOn);
+       
+       if(expiredOn.compareTo(new Date()) == -1){
+           throw new HKAuthTokenExpiredException();
+       }
+       
+       String password = "abc";
+       
+       String reConstructedToken = decodedTokenArr[0].concat(":").concat(password).concat(":").concat(decodedTokenArr[1]);
+       String reConTokeMd5 = DigestUtils.md5Hex( reConstructedToken );
+       
+       if(!reConTokeMd5.equals(decodedTokenArr[2])){
+           throw new HkInvalidAuthTokenException();
+       }
        
        
        return valid;
@@ -125,8 +173,11 @@ public class HkAuthServiceImpl implements HkAuthService {
         }
         
         String reConstructedToken = decodedTokenArr[0].concat(":").concat(password).concat(":").concat(decodedTokenArr[1]);
+        String reConTokeMd5 = DigestUtils.md5Hex( reConstructedToken );
         
-        
+        if(reConTokeMd5.equals(decodedTokenArr[2])){
+            System.out.println("equal");
+        }
         
         
 
