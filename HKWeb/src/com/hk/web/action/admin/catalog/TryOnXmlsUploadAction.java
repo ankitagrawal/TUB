@@ -49,13 +49,13 @@ public class TryOnXmlsUploadAction extends BaseAction {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             //saving in adminUploads for backup
-            String excelFilePath = eyeTryOnXmlsPath + "/xmlFiles/" + sdf.format(new Date()) + "/" + category + "_" + sdf.format(new Date()) + ".xml";
+            String excelFilePath = adminUploadsPath + "/xmlFiles/" + sdf.format(new Date()) + "/" + category + "_" + sdf.format(new Date()) + ".xml";
             File excelFile = new File(excelFilePath);
             excelFile.getParentFile().mkdirs();
             fileBean.save(excelFile);
 
             //saving in dist to avoid tomcat restart
-            String xmlFilePath = adminUploadsPath + "/Glasses/" + category + ".xml";
+            String xmlFilePath = eyeTryOnXmlsPath + "/Glasses/" + category + ".xml";
             File xmlFile = new File(xmlFilePath);
             xmlFile.getParentFile().mkdirs();
             fileBean.save(xmlFile);
