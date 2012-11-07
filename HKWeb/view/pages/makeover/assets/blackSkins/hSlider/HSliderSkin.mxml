@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009" minHeight="11" alpha.disabled="0.5">
+	
+	<fx:Metadata>
+		<![CDATA[ 
+		/** 
+		* @copy spark.skins.spark.ApplicationSkin#hostComponent
+		*/
+		[HostComponent("spark.components.HSlider")]
+		]]>
+	</fx:Metadata> 
+	
+	<fx:Script fb:purpose="styling">
+		/* Define the skin elements that should not be colorized. 
+		For slider, the skin itself is colorized but the individual parts are not. */
+		static private const exclusions:Array = ["track", "thumb"];
+		
+		/**
+		 * @private
+		 */  
+		override public function get colorizeExclusions():Array {return exclusions;}
+		
+		/**
+		 * @private
+		 */
+		override protected function initializationComplete():void
+		{
+			useChromeColor = true;
+			super.initializationComplete();
+		}		
+		
+		protected function downclickHandler(event:MouseEvent):void
+		{
+			hostComponent.value =hostComponent.value -10;
+			hostComponent.dispatchEvent(new Event(Event.CHANGE))
+		}
+		
+		protected function upclickHandler(event:MouseEvent):void
+		{
+			hostComponent.value =hostComponent.value +10;
+			hostComponent.dispatchEvent(new Event(Event.CHANGE))
+		}
+	</fx:Script>
+	
+	<fx:Script>
+		/**
+		 *  @private
+		 */  
+		override protected function measure() : void
+		{
+			// Temporarily move the thumb to the left of the Slider so measurement
+			// doesn't factor in its x position. This allows resizing the
+			// HSlider to less than 100px in width. 
+			var thumbPos:Number = thumb.getLayoutBoundsX();
+			thumb.setLayoutBoundsPosition(0, thumb.getLayoutBoundsY());
+			super.measure();
+			thumb.setLayoutBoundsPosition(thumbPos, thumb.getLayoutBoundsY());
+		}
+		
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+	</s:states>
+	
+	<fx:Declarations>
+		<!--- The tooltip used in the mx.controls.Slider control. 
+		To customize the DataTip's appearance, create a custom HSliderSkin class.-->
+		<fx:Component id="dataTip">     
+			<s:DataRenderer minHeight="24" minWidth="40" y="-54"/>
+		</fx:Component>
+	</fx:Declarations>
+	
+	<!--- The default skin class is HSliderTrackSkin. 
+	@copy spark.components.supportClasses.TrackBase#track
+	@see spark.skins.spark.HSliderTrackSkin -->
+	<s:Group left="0" bottom="0" click="downclickHandler(event)" buttonMode="true">
+		<s:BitmapImage source="@Embed('assets/blackImg/minus.png')"/>
+	</s:Group>
+	<s:Button id="track" left="11" right="11" height="11" minWidth="33" width="100" 
+			  tabEnabled="false" bottom="0"
+			  skinClass="assets.blackSkins.hSlider.HSliderTrack" />
+	<s:Group  right="0" bottom="0" click="upclickHandler(event)" buttonMode="true">
+		<s:BitmapImage source="@Embed('assets/blackImg/plus.png')"/>   
+	</s:Group>
+	<!--- The default skin class is HSliderThumbSkin.
+	@copy spark.components.supportClasses.TrackBase#thumb 
+	@see spark.skins.spark.HSliderThumbSkin -->
+	<s:Group left="11" right="11" bottom="1">
+		<s:Button id="thumb" width="5" height="9" bottom="0"
+				  tabEnabled="false" useHandCursor="true" buttonMode="true"
+				  skinClass="assets.blackSkins.hSlider.HSliderThumb" />	
+	</s:Group>
+</s:SparkSkin>

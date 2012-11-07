@@ -1,17 +1,15 @@
 package com.hk.web.action.core.catalog;
 
-import java.util.List;
-
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,20 +25,16 @@ public class EyeGlassesFeedAction extends BaseAction {
 	@Autowired
 	private ProductVariantService productVariantService;
 
-	private List<Product> products;
 	private List<ProductVariant> productVariants;
 
 	private String category;
 
+    @DefaultHandler
 	public Resolution pre() {
-//		products = getProductService().getProductByCategory(category);
 		productVariants = getProductVariantService().getAllProductVariantsByCategory(category);
 		return new ForwardResolution("/pages/eyeglassesXmlFeed.jsp");
 	}
 
-	public List<Product> getProducts() {
-		return products;
-	}
 
 	public ProductService getProductService() {
 		return productService;
