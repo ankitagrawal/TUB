@@ -2,13 +2,17 @@ package com.hk.security.exception;
 
 import com.hk.exception.HealthkartRuntimeException;
 
+/**
+ * 
+ * @author vaibhav.adlakha
+ *
+ */
 public class HkAuthenticationException extends HealthkartRuntimeException {
 
     private static final long serialVersionUID = 1L;
     private String            userName;
 
     public HkAuthenticationException(String userName) {
-
         this.userName = userName;
     }
 

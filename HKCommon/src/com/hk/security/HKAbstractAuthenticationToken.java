@@ -61,15 +61,15 @@ public abstract class HkAbstractAuthenticationToken implements HkAuthentication 
             return false;
         }
         
-        if(this.getAppId() !=null && test.getAppId() == null){
+        if(this.getApiKey() !=null && test.getApiKey() == null){
             return false;
         }
         
-        if(this.getAppId() == null && test.getAppId() !=null){
+        if(this.getApiKey() == null && test.getApiKey() !=null){
             return false;
         }
         
-        if(this.getAppId() !=null && !this.getAppId().equals(test.getAppId())){
+        if(this.getApiKey() !=null && !this.getApiKey().equals(test.getApiKey())){
             return false;
         }
 

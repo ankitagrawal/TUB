@@ -8,18 +8,22 @@ import com.hk.security.exception.HKAuthTokenExpiredException;
 import com.hk.security.exception.HkInvalidAuthTokenException;
 import com.hk.util.json.JSONResponseBuilder;
 
-
+/**
+ * 
+ * @author vaibhav.adlakha
+ *
+ */
 public abstract class AbstractAuthAPIImpl implements AuthAPI {
 
     @Autowired
     private HkAuthService hkAuthService;
 
     @Override
-    public String validateAndRefreshAuthToken(String authToken, String appId, String authScheme) {
+    public String validateAndRefreshAuthToken(String authToken, String apiKey, String authScheme) {
         boolean isExpired = false, isValid = true;
 
         try {
-            isValid = getHkAuthService().validateToken(authToken, appId, true);
+            isValid = getHkAuthService().validateToken(authToken, apiKey, true);
         } catch (HKAuthTokenExpiredException e) {
             isValid = false;
             isExpired = true;
@@ -28,7 +32,7 @@ public abstract class AbstractAuthAPIImpl implements AuthAPI {
         }
 
         if (isExpired && isValid) {
-            authToken = getHkAuthService().refershAuthToken(authToken, appId);
+            authToken = getHkAuthService().refershAuthToken(authToken, apiKey, authScheme);
         }
 
         return new JSONResponseBuilder().addField("valid", isValid).addField("expired", isExpired).addField("authToken", authToken).build();

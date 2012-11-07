@@ -56,7 +56,7 @@ public class HKAPIServlet extends HkAPIBaseServlet {
 
         String authToken = req.getParameter("authToken");
         String apiVersion = req.getParameter("apiVersion");
-        String appId = req.getParameter("appId");
+        String apiKey = req.getParameter("apiKey");
 
         String operationTypeStr = req.getParameter("type");
 
@@ -86,14 +86,14 @@ public class HKAPIServlet extends HkAPIBaseServlet {
             return;
         }
 
-        if (StringUtils.isEmpty(appId)) {
+        if (StringUtils.isEmpty(apiKey)) {
             writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "NO_APP_ID_PASSED").build());
             return;
         }
-        
-        if(!HkAPIUser.containsAppId(appId)){
+
+        if (!HkAPIUser.containsApiKey(apiKey)) {
             writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "INVALID_APP_ID").build());
-            return; 
+            return;
         }
 
         // check for a not null apiKey
@@ -112,12 +112,11 @@ public class HKAPIServlet extends HkAPIBaseServlet {
          * validate token and api key in auth service, do all in memory
          */
         try {
-            getHkAuthService().validateToken(authToken, appId, false);
+            getHkAuthService().validateToken(authToken, apiKey, false);
         } catch (Throwable t) {
             writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "INVALID_AUTH_TOKEN").build());
             return;
         }
-        
 
         switch (operationType) {
             case OperationType.Auth:
@@ -137,9 +136,9 @@ public class HKAPIServlet extends HkAPIBaseServlet {
         switch (operation) {
             case ValidateAndRefreshAuthToken:
                 String authToken = req.getParameter("authToken");
-                String appId = req.getParameter("appId");
+                String apiKey = req.getParameter("apiKey");
 
-                writeSuccessResponse(req, resp, authAPI.validateAndRefreshAuthToken(authToken, appId, null));
+                writeSuccessResponse(req, resp, authAPI.validateAndRefreshAuthToken(authToken, apiKey, null));
                 break;
         }
     }

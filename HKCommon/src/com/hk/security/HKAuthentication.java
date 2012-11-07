@@ -27,7 +27,7 @@ public interface HkAuthentication {
     Object getPrincipal();
     
     
-    Object getAppId();
+    Object getApiKey();
     
     boolean isAuthenticated();
     

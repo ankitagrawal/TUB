@@ -12,22 +12,22 @@ public class HkUsernamePasswordAuthenticationToken extends HkAbstractAuthenticat
     
     private final Object credentials;
     private final Object principal;
-    private final Object appId;
+    private final Object apiKey;
     
-    public HkUsernamePasswordAuthenticationToken(Object principal, Object credentials, Object appId) {
+    public HkUsernamePasswordAuthenticationToken(Object principal, Object credentials, Object apiKey) {
         super(null);
         this.principal = principal;
         this.credentials = credentials;
-        this.appId = appId;
+        this.apiKey = apiKey;
         setAuthenticated(false);
     }
     
     
-    public HkUsernamePasswordAuthenticationToken(Object principal, Object credentials, Object appId, Collection<GrantedOperation> operations) {
+    public HkUsernamePasswordAuthenticationToken(Object principal, Object credentials, Object apiKey, Collection<GrantedOperation> operations) {
         super(operations);
         this.principal = principal;
         this.credentials = credentials;
-        this.appId = appId;
+        this.apiKey = apiKey;
         super.setAuthenticated(true); // must use super, as we override
     }
 
@@ -43,8 +43,8 @@ public class HkUsernamePasswordAuthenticationToken extends HkAbstractAuthenticat
     }
     
     @Override
-    public Object getAppId() {
-        return this.appId;
+    public Object getApiKey() {
+        return this.apiKey;
     }
 
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {

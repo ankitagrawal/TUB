@@ -25,11 +25,11 @@ public class HKSingleLoginServlet extends HkAPIBaseServlet {
 
     public static final String   HK_USERNAME_KEY   = "userName";
     public static final String   HK_PASSWORD_KEY   = "password";
-    public static final String   HK_APP_ID_KEY     = "appId";
+    public static final String   HK_API_KEY        = "apiKey";
 
     private String               userNameParameter = HK_USERNAME_KEY;
     private String               passwordParameter = HK_PASSWORD_KEY;
-    private String               appIdParameter    = HK_APP_ID_KEY;
+    private String               apiKeyParameter   = HK_API_KEY;
 
     private HkAuthService        hkAuthService;
 
@@ -45,11 +45,11 @@ public class HKSingleLoginServlet extends HkAPIBaseServlet {
          * supported: " + request.getMethod()); }
          */
 
-        String appId = obtainAppId(req);
+        String apiKey = obtainAppId(req);
         String login = obtainUsername(req);
         String password = obtainPassword(req);
 
-        if (StringUtils.isBlank(appId)) {
+        if (StringUtils.isBlank(apiKey)) {
             writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "NO_APP_ID_PASSED").build());
             return;
         }
@@ -94,11 +94,11 @@ public class HKSingleLoginServlet extends HkAPIBaseServlet {
 
         String username = obtainUsername(request);
         String password = obtainPassword(request);
-        String appId = obtainAppId(request);
+        String apiKey = obtainAppId(request);
 
         username = username.trim();
 
-        HkUsernamePasswordAuthenticationToken authRequest = new HkUsernamePasswordAuthenticationToken(username, password, appId);
+        HkUsernamePasswordAuthenticationToken authRequest = new HkUsernamePasswordAuthenticationToken(username, password, apiKey);
 
         return getHkAuthService().authenticate(authRequest);
     }
@@ -112,7 +112,7 @@ public class HKSingleLoginServlet extends HkAPIBaseServlet {
     }
 
     private String obtainAppId(HttpServletRequest request) {
-        return request.getParameter(appIdParameter);
+        return request.getParameter(apiKeyParameter);
     }
 
     public HkAuthService getHkAuthService() {

@@ -16,10 +16,9 @@ public interface HkAuthService {
 
     public String generateAuthToken(HkAuthentication authentication);
 
-    //public boolean validateToken(String authToken, String appId) throws HkInvalidAuthTokenException, HKAuthTokenExpiredException;
 
-    public boolean validateToken(String authToken, String appId,boolean validatePwd)throws HkInvalidAuthTokenException, HKAuthTokenExpiredException ; 
+    public boolean validateToken(String authToken, String apiKey,boolean validatePwd)throws HkInvalidAuthTokenException, HKAuthTokenExpiredException ; 
     
-    // TODO: add a auth scheme to this method
-    public String refershAuthToken(String authToken, String appId);
+
+    public String refershAuthToken(String authToken, String apiKey, String authScheme);
 }

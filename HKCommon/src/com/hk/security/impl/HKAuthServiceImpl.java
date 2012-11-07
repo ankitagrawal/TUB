@@ -32,9 +32,9 @@ public class HkAuthServiceImpl implements HkAuthService {
 
             String userName = (String) authentication.getPrincipal();
             String password = (String) authentication.getCredentials();
-            String appId = (String) authentication.getAppId();
+            String apiKey = (String) authentication.getApiKey();
 
-            if (userName.equals("abc") && password.equals("abc") && appId.equals("abc")) {
+            if (userName.equals("abc") && password.equals("abc") && apiKey.equals("abc")) {
                 Collection<GrantedOperation> allowedOperations = GrantedOperationUtil.ALL_OPERATIONS;
                 authentication = new HkUsernamePasswordAuthenticationToken(userName, password, allowedOperations);
             } else {
@@ -53,16 +53,16 @@ public class HkAuthServiceImpl implements HkAuthService {
     public String generateAuthToken(HkAuthentication authentication) {
         String userName = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
-        String appId = (String) authentication.getAppId();
+        String apiKey = (String) authentication.getApiKey();
         /**
-         * base64( emailid:expiredon:appId b=token->md5(emailid+passwd+expiration) a :b
+         * base64( emailid:expiredon:apiKey b=token->md5(emailid+passwd+expiration) a :b
          */
 
         Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.HOUR_OF_DAY, DEFAULT_EXPIRY_MIN);
 
         // byte[] data = base64.encode();
 
-        String tokenA = userName.concat(":").concat(Long.valueOf(expiryTime.getTime()).toString()).concat(":").concat(appId);
+        String tokenA = userName.concat(":").concat(Long.valueOf(expiryTime.getTime()).toString()).concat(":").concat(apiKey);
         String tokenB = userName.concat(":").concat(password).concat(":").concat(Long.valueOf(expiryTime.getTime()).toString());
 
         String md5 = DigestUtils.md5Hex(tokenB);
@@ -75,7 +75,7 @@ public class HkAuthServiceImpl implements HkAuthService {
     }
 
     @Override
-    public boolean validateToken(String authToken, String appId, boolean validatePwd) {
+    public boolean validateToken(String authToken, String apiKey, boolean validatePwd) {
         boolean valid = true;
         String[] decodedTokenArr = decodeAuthToken(authToken);
 
@@ -86,9 +86,9 @@ public class HkAuthServiceImpl implements HkAuthService {
             throw new HKAuthTokenExpiredException();
         }
 
-        String appIdInToken = decodedTokenArr[2];
+        String apiKeyInToken = decodedTokenArr[2];
 
-        if (!appIdInToken.equals(appId)) {
+        if (!apiKeyInToken.equals(apiKey)) {
             throw new HkInvalidAuthTokenException();
         }
 
@@ -109,14 +109,15 @@ public class HkAuthServiceImpl implements HkAuthService {
     }
 
     @Override
-    public String refershAuthToken(String authToken, String appId) {
-        return refershUserNamePasswordAuthToken(authToken, appId);
+    public String refershAuthToken(String authToken, String apiKey, String authScheme) {
+        //TODO: handle auth scheme here
+        return refershUserNamePasswordAuthToken(authToken, apiKey);
     }
 
-    private String refershUserNamePasswordAuthToken(String authToken, String appId) {
+    private String refershUserNamePasswordAuthToken(String authToken, String apiKey) {
         String[] decodedTokenArr = decodeAuthToken(authToken);
         String password = "abc";
-        HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(decodedTokenArr[0], password, appId);
+        HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(decodedTokenArr[0], password, apiKey);
         return generateAuthToken(authentication);
     }
 
@@ -133,17 +134,17 @@ public class HkAuthServiceImpl implements HkAuthService {
 
         String password = "abc";
         String userName = "uname";
-        String appId = "appId";
+        String apiKey = "appId";
         
-        HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName,password , appId);
+        HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName,password , apiKey);
         HkAuthServiceImpl authService = new HkAuthServiceImpl();
         String authToken = authService.generateAuthToken(authentication);
         
         System.out.println(authToken);
         
-        System.out.println(authService.validateToken(authToken, appId, true));
+        System.out.println(authService.validateToken(authToken, apiKey, true));
         
-        System.out.println(authService.validateToken(authToken, appId, false));
+        System.out.println(authService.validateToken(authToken, apiKey, false));
         /**
          * base64( emailid:expiredon: b=token->md5(emailid+passwd+expiration) a :b
          */
