@@ -14,7 +14,7 @@ public class HkAuthenticationException extends HealthkartRuntimeException {
 
     @Override
     public String getMessage() {
-        StringBuilder message = new StringBuilder(super.getMessage());
+        StringBuilder message = new StringBuilder(super.getMessage() !=null ? super.getMessage() : "");
         message.append("Could not authenticate " + userName + " with given credentials");
         return message.toString();
     }

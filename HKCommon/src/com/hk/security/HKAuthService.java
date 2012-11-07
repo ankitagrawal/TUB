@@ -9,10 +9,13 @@ import com.hk.security.exception.HkAuthenticationException;
  */
 public interface HkAuthService {
     
-    public static final int DEFAULT_EXPIRY = 3600;
+    public static final int DEFAULT_EXPIRY_MIN = 60;
+    public static final String AUTH_FAILURE_URL = "/nutrition";
 
     
     public HkAuthentication authenticate(HkAuthentication authentication) throws HkAuthenticationException;
     
     public String generateAuthToken(HkAuthentication authentication);
+    
+    public boolean validateToken(String authToken);
 }

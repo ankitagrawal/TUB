@@ -21,14 +21,10 @@ public class HkAuthSuccessHandlerImpl implements HkAuthSuccessHandler {
     @Override
     public void handleAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, HkAuthentication authResult) throws IOException {
         String targetUrl = determineTargetUrl(request, response);
-   
-        
 
         String redirectUrl = calculateRedirectUrl(request.getContextPath(), targetUrl);
         redirectUrl= redirectUrl.concat("?").concat(getHkAuthService().generateAuthToken(authResult));
         redirectUrl = response.encodeRedirectURL(redirectUrl);
-
-        
 
         response.sendRedirect(redirectUrl);
         

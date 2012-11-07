@@ -1,12 +1,9 @@
 package com.hk.security.impl;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
-import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
@@ -39,7 +36,7 @@ public class HkAuthServiceImpl implements HkAuthService {
                 Collection<GrantedOperation> allowedOperations = GrantedOperationUtil.ALL_OPERATIONS;
                 authentication = new HkUsernamePasswordAuthenticationToken(userName, password, allowedOperations);
             } else {
-                // throw some authentication exception
+                throw new HkAuthenticationException((String)authentication.getCredentials());
             }
             return authentication;
         } else {
@@ -49,6 +46,19 @@ public class HkAuthServiceImpl implements HkAuthService {
         return null;
 
     }
+    
+    
+
+    @Override
+    public boolean validateToken(String authToken) {
+       boolean valid = true;
+       
+       
+       return valid;
+        
+    }
+
+
 
     @Override
     public String generateAuthToken(HkAuthentication authentication) {
@@ -58,7 +68,7 @@ public class HkAuthServiceImpl implements HkAuthService {
          * base64( emailid:expiredon: b=token->md5(emailid+passwd+expiration) a :b
          */
 
-        Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.HOUR_OF_DAY, DEFAULT_EXPIRY);
+        Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.HOUR_OF_DAY, DEFAULT_EXPIRY_MIN);
 
         // byte[] data = base64.encode();
 
@@ -83,8 +93,8 @@ public class HkAuthServiceImpl implements HkAuthService {
          * base64( emailid:expiredon: b=token->md5(emailid+passwd+expiration) a :b
          */
 
-        Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.HOUR_OF_DAY, DEFAULT_EXPIRY);
-
+        Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.MINUTE, DEFAULT_EXPIRY_MIN );
+        System.out.println(expiryTime);
         // byte[] data = base64.encode();
 
         String tokenA = userName.concat(":").concat(Long.valueOf(expiryTime.getTime()).toString());
@@ -93,10 +103,32 @@ public class HkAuthServiceImpl implements HkAuthService {
         
         
         String md5 = DigestUtils.md5Hex( tokenB );
-        String baseToken = tokenA.concat(md5);
+        String baseToken = tokenA.concat(":").concat(md5);
 
         byte[] base64encoding = Base64.encodeBase64(baseToken.getBytes());
-        System.out.println( new String(base64encoding) );
+        String authToken = new String(base64encoding);
+        System.out.println( authToken );
+        
+        
+        
+        
+        byte[] base64DecodedArr = Base64.decodeBase64(authToken);
+        String base64Decoded = new String(base64DecodedArr);
+        System.out.println(base64Decoded);
+        
+        String []decodedTokenArr =  base64Decoded.split(":"); 
+        Date expiredOn  = new Date(Long.parseLong(decodedTokenArr[1]));
+        System.out.println(expiredOn);
+        
+        if(expiredOn.compareTo(new Date()) == -1){
+            System.out.println("Expired");
+        }
+        
+        String reConstructedToken = decodedTokenArr[0].concat(":").concat(password).concat(":").concat(decodedTokenArr[1]);
+        
+        
+        
+        
 
 }
 }
