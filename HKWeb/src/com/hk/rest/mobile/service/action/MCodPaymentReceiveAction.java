@@ -132,7 +132,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
         String jsonBuilder = "";
         String message = MHKConstants.STATUS_DONE;
         String status = MHKConstants.STATUS_OK;
-        Map payMap = new HashMap<String,Object>();
+        Map<String,Object> payMap = new HashMap<String,Object>();
         user = getUserService().getUserById(getPrincipal().getId());
         order = orderManager.getOrCreateOrder(user);
 
@@ -245,7 +245,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
             }
 
             adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
-
+/*
             RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
             RewardPoint prepayRewardPoints;
             EnumRewardPointStatus rewardPointStatus;
@@ -299,6 +299,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
             wantedCODCookie.setPath("/");
             wantedCODCookie.setMaxAge(0);
             response.addCookie(wantedCODCookie);
+*/       
         }
 
     }

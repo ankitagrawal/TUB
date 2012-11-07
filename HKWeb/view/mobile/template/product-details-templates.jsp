@@ -18,6 +18,12 @@
 	</td>					
 </script>
 <script type='text/template' id='product-variant-template'>
+{{
+	var urlEval = new URLEval();
+    var x = $.mobile.path.parseUrl(urlEval.getURLFromHash(location.href));
+    var queryString = x.search;
+	var productReferrerId = getURLParameterValue(queryString,'productReferrerId');
+}}
 <table class='variantList' width=100%>
 	<tr>
 		{{ if(productOptions.length>0) { }}
@@ -39,7 +45,7 @@
 					<span class='svPrcnt'>{{print(discountPercent)}}% off</span> 
 				{{ } }}
 			</p>
-			<a class='ad2Crt' href='#' data-url="productVariantId={{print(id)}}&productId={{print(id.substring(0,id.indexOf('-')))}}">
+			<a class='ad2Crt' href='#' data-url="productVariantId={{print(id)}}&productId={{print(id.substring(0,id.indexOf('-')))}}&productReferrerId={{print(productReferrerId)}}">
 				Place Order
 			</a>
 		</td>
