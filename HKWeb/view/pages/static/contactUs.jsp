@@ -61,9 +61,11 @@
 
       <h2>Call Us</h2>
 
-      <p>0124-4551616 (9am - 9pm, 7 days a week)</p>
+      <p style="font-size: 1.2em;">0124-4551616 (24x7)</p>
 
       <br/>
+
+      <p style="color: gray">If you are not satisfied with the response, please write to us at <a href="mailto:ceo@healthkart.com">ceo@healthkart.com</a></p>
 
       <h2>Headquarters</h2>
 
