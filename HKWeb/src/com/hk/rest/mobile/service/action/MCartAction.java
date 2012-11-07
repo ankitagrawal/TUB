@@ -234,8 +234,10 @@ public class MCartAction extends MBaseAction{
         }
 
         freebieBanner = cartFreebieService.getFreebieBanner(order);
-      
-        healthkartResponse = new HealthkartResponse(status, message, cartItemsList);
+        Map<String,Object> cartMap = new HashMap<String,Object>();
+        cartMap.put("cartItemsList", cartItemsList);
+        cartMap.put("pricingDto", pricingDto);
+        healthkartResponse = new HealthkartResponse(status, message, cartMap);
         jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
 
         addHeaderAttributes(response);
