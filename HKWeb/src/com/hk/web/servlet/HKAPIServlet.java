@@ -56,16 +56,29 @@ public class HKAPIServlet extends HkAPIBaseServlet {
         String apiVersion = req.getParameter("apiVersion");
         String appId = req.getParameter("appId");
         
-        int operationType = Integer.parseInt(req.getParameter("type"));
+        String operationTypeStr = req.getParameter("type");
+       
         String operationStr = req.getParameter("operation");
 
+        if(StringUtils.isBlank(operationStr)){
+            writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "NO_OPERATION_PASSED").build());
+            return;
+        }
+
+        
         Operation operation = Operation.valueOf(operationStr);
         // it should never be null
         if (operation == null) {
             writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "REQUEST_NOT_SUPPORTED").build());
             return;
         }
+        
+        if(StringUtils.isBlank(operationTypeStr)){
+            writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "NO_OPERATION_TYPE_PASSED").build());
+            return;
+        }
 
+        int operationType = Integer.parseInt(operationTypeStr);
         // check for a not null apiKey
         if (StringUtils.isEmpty(authToken)) {
             writeExceptionResponse(req, resp, new JSONResponseBuilder().addField("code", "NO_AUTH_TOKEN_PASSED").build());
