@@ -234,7 +234,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     public Resolution sendCampaign() {
 
-        getAdminEmailManager().populateEmailRecepient(null, maxResultCount);
+        //getAdminEmailManager().populateEmailRecepient(null, maxResultCount);
 
         String[] categoryArray = StringUtils.split(categories);
         List<String> finalCategories = new ArrayList<String>();
