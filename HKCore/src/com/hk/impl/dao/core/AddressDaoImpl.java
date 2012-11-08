@@ -15,6 +15,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.order.OrderBillingAddress;
+import com.hk.domain.order.Order;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.core.AddressDao;
 
@@ -107,10 +108,18 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     // }
 
 
-    public OrderBillingAddress getBillingAddress(Long orderid ){
-        String query = " from OrderBillingAddress ob  where ob.order.id = orderid";
-         return (OrderBillingAddress) getSession().createQuery(query).uniqueResult();  
-    }
+    public OrderBillingAddress getBillingAddress(Order order ){
+//        String query = " from OrderBillingAddress ob  where ob.order.id = orderid";
+//         return (OrderBillingAddress) getSession().createQuery(query).uniqueResult();
 
+        DetachedCriteria criteria = DetachedCriteria.forClass(OrderBillingAddress.class);
+        criteria.add(Restrictions.eq("order", order));
+        List<OrderBillingAddress> billingAddressList = findByCriteria(criteria);
+        if (billingAddressList != null && billingAddressList.size() > 0) {
+            return billingAddressList.get(0);
+        }
+        return null;
+
+    }
 
 }   

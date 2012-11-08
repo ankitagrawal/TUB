@@ -74,7 +74,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
 //  todo  Billing address id corresponding to order id  --  address for that id
 
-        OrderBillingAddress orderBillingAddress = addressDao.getBillingAddress(order.getId());
+        OrderBillingAddress orderBillingAddress = addressDao.getBillingAddress(order);
         Address address =  orderBillingAddress.getBillingAddress();
 
 //        Address address = order.getAddress();
