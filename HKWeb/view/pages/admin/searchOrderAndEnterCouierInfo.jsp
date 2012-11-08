@@ -151,7 +151,7 @@
             <label>Tracking ID:</label><s:text class="tracking" name="trackingId"/>
             <label>Courier</label>
 
-	          <s:select name="suggestedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
+	          <s:select name="selectedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
 		          <c:forEach var="courier" items="${courierList}">
 			          <s:option id="options" value="${courier.id}">${courier.name}</s:option>
 		          </c:forEach>
