@@ -4,6 +4,7 @@
 <%@ page import="com.hk.domain.courier.BoxSize" %>
 <%@ page import="com.hk.constants.shipment.EnumPicker" %>
 <%@ page import="com.hk.constants.shipment.EnumPacker" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -12,7 +13,7 @@
   BaseDao baseDao = ServiceLocatorFactory.getService(BaseDao.class);
   MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
   pageContext.setAttribute("boxSizeList", baseDao.getAll(BoxSize.class));
-//  pageContext.setAttribute("courierList", masterDataDao.getCourierList());
+  pageContext.setAttribute("courierList", masterDataDao.getAvailableCouriers());
 //   pageContext.setAttribute("groundShippedCourierList", masterDataDao.getGroundShippedCourierList());
 %>
 
@@ -56,6 +57,31 @@
 
               });
 
+	          $('#show').click(function() {
+		          $.getJSON(
+				          $('#getcourier').attr('href'), function(response) {
+			          if (response.code == '<%=HealthkartResponse.STATUS_OK%>') {
+				          var courierList = response.data;
+				           $('#show').hide();
+				          $('#courier').html('');
+				          $.each(response.data, function() {
+					          var strP = '<option value=' + String(this.id)+'';
+					          if (String(this.name) == $('.suggestedcourier').text())
+					          {
+						          strP = strP + ' selected';
+					          }
+					          strP = strP + ' >' + this.name + '</option>';					         
+					          $('#courier').append(strP);
+				          });
+
+
+
+
+			          }
+		          });
+
+	          });
+
 
           });
       </script>
@@ -63,6 +89,8 @@
   </s:layout-component>
   <s:layout-component name="heading">Enter Tracking Details for Packed Orders</s:layout-component>
   <s:layout-component name="content">
+	  	<div style="display:none">
+			<s:link id="getcourier" beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction"  event="getCourierList"> </s:link> </div>
 	<input type="hidden" id="commentType" value="${shipmentQueueBean.shippingOrder.baseOrder.commentType}">
 	<input type="hidden" id="userComments" value="${shipmentQueueBean.shippingOrder.baseOrder.userComments}">
     <div  class="error" style= "background-color:salmon; width:380px; display:none;">       
@@ -101,6 +129,7 @@
               </div>
             </c:if>
 
+
             <s:hidden name="shippingOrder" value="${shipmentQueueBean.shippingOrder}"/>
 	         <label>Picker:</label><s:select name="shipment.picker">
 		        <c:forEach items="<%=EnumPicker.getAll()%>" var="pType">
@@ -121,13 +150,17 @@
             <label>Box Weight(Kgs):</label><s:text name="shipment.boxWeight" size="5" class="weight"/>
             <label>Tracking ID:</label><s:text class="tracking" name="trackingId"/>
             <label>Courier</label>
-            <s:select name="selectedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
-              <c:forEach var="courier" items="${shipmentQueueBean.availableCouriers}">
-                <s:option value="${courier.id}">${courier.name}</s:option>
-              </c:forEach>
-            </s:select>
+
+		          <s:select name="suggestedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
+			          <c:forEach var="courier" items="${shipmentQueueBean.availableCouriers}">
+				          <s:option id="options" value="${courier.id}">${courier.name}</s:option>
+			          </c:forEach>
+		          </s:select>
+		          <a href="#" id="show"> Show All Courier</a>
+
+
             <c:if test="${shipmentQueueBean.suggestedCourier != null}">
-              <label style="margin-top:5px;margin-bottom:5px;color:green;">Suggested Courier:  <b>${shipmentQueueBean.suggestedCourier.name}</b></label>
+              <label style="margin-top:5px;margin-bottom:5px;color:green;" >Suggested Courier:  <b class="suggestedcourier">${shipmentQueueBean.suggestedCourier.name}</b></label>
             </c:if>
               <label>Approx Weight (By System)</label> ${shipmentQueueBean.approxWeight}
 

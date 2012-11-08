@@ -1,0 +1,12 @@
+<Location>
+	<xmlpath>.\\assets\\xml\\</xmlpath>
+	<facepath>http://demo.1000lookz.com/services/faceservice.asmx?WSDL</facepath>
+	<fbpath>http://demo.1000lookz.com/services/fbservice.asmx?WSDL</fbpath>
+	<lookpath>http://demo.1000lookz.com/services/mpservice.asmx?WSDL</lookpath>
+	<facexml>http://demo.1000lookz.com/</facexml>
+	<localassets>assets/xml/</localassets>
+	<fileSplitter>/</fileSplitter>
+	<contestButtonActive>false</contestButtonActive>
+	<contestButtonName>Enter the Contest</contestButtonName>
+	<contestButtonTooltip>Enter the Contest to Facebook</contestButtonTooltip>
+</Location>
