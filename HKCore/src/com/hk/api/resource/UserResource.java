@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 
 import com.hk.api.APIRegistry;
 import com.hk.api.AuthAPI;
+import com.hk.security.annotation.SecureResource;
 
-@Path("/secure/user")
+@Path("/user")
 @Component
+@SecureResource
 public class UserResource {
 
     @GET
