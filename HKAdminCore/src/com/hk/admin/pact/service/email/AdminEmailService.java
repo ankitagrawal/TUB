@@ -19,6 +19,8 @@ import com.hk.domain.user.User;
 public interface AdminEmailService {
     public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int maxResult);
 
+    public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int pageNo, int maxResult);
+
     public Long getAllMailingListCount(EmailCampaign emailCampaign, List<Role> roles);
 
     public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult);
@@ -33,4 +35,8 @@ public interface AdminEmailService {
 
     @SuppressWarnings("unchecked")
     public void saveOrUpdate(Session session, Collection entities) throws DataAccessException;
+
+    Long getMailingListCountByCampaign(EmailCampaign emailCampaign);
+
+    public List<String> getEmailRecepientsByEmailIds(EmailCampaign emailCampaign, List<EmailRecepient> emailList);
 }

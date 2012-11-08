@@ -102,7 +102,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     @Autowired
     private RoleDao                   roleDao;
-    private final int                 maxResultCount = 5000;
+    private final int                 maxResultCount = 500;
     @Autowired
     private EmailRecepientDao         emailRecepientDao;
     @Autowired
@@ -253,20 +253,38 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
             }
         }
         List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
+        Long emailRecepientCount = getAdminEmailService().getMailingListCountByCampaign(emailCampaign);
+        Long MAX_EMAILS = 200000L; //todo: HACKY-Code to save us from going into infinite loop..Need better implementation here
+        Long usersBrowsed = 0L;
+        int pageCount = 0;
         do {
             if (categories.equalsIgnoreCase("all")) {
-                emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)), maxResultCount);
+                emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)),pageCount, maxResultCount);
             } else if (categories.equalsIgnoreCase("all-unverified")) {
                 emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)), maxResultCount);
             }
 
-            if (emailRecepients.size() > 0) {
-                logger.info(" user list size " + emailRecepients.size());
-                String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
-                getAdminEmailManager().sendCampaignMails(emailRecepients, emailCampaign, xsmtpapi);
+            List<String> emailRecepientsWithHistory = getAdminEmailService().getEmailRecepientsByEmailIds(emailCampaign, emailRecepients);
+            Set<String> historyEmails = new HashSet<String>();
+            historyEmails.addAll(emailRecepientsWithHistory);
+            List<EmailRecepient> validEmailRecepients =  new ArrayList<EmailRecepient>();
+
+            for (EmailRecepient emailRecepient : emailRecepients){
+               //remove if this user is already sent email for this campaign
+               if (!historyEmails.contains(emailRecepient.getEmail())){
+                   validEmailRecepients.add(emailRecepient);
+               }
             }
 
-        } while (emailRecepients.size() > 0);
+            if (validEmailRecepients.size() > 0) {
+                logger.info(" user list size " + validEmailRecepients.size());
+                String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
+                getAdminEmailManager().sendCampaignMails(validEmailRecepients, emailCampaign, xsmtpapi);
+            }
+            pageCount++;
+            usersBrowsed += maxResultCount;
+
+        } while ((usersBrowsed  < emailRecepientCount) && (emailRecepientCount < MAX_EMAILS));
 
         if (!categories.equalsIgnoreCase("all") && !categories.equalsIgnoreCase("all-unverified")) {
             for (String categoryName : categoryArray) {

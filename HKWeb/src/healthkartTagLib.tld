@@ -909,7 +909,7 @@
         </description>
         <name>searchProductImages</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long searchProductImages(com.hk.domain.catalog.product.Product,com.hk.domain.catalog.product.ProductVariant,java.lang.Long,boolean,boolean)</function-signature>
+        <function-signature>java.lang.Long searchProductImages(com.hk.domain.catalog.product.Product,com.hk.domain.catalog.product.ProductVariant,java.lang.Long,boolean,java.lang.Boolean)</function-signature>
         <example>
         ${hk:searchProductImages(${product})}
         </example>

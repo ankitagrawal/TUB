@@ -96,7 +96,7 @@ public class SeoManager {
         seoData.setId(id);
         seoData.setH1(product.getName());
         seoData.setTitle( productName + " | Buy Online " + productName + " in India");
-        seoData.setMetaKeyword("buy " + productName + ", " + productName + " india, buy " + productName + " india, buy " + productName + " online, but " + productName + " online india");
+        seoData.setMetaKeyword(productName + ", buy " + productName + ", buy " + productName + " in india, buy " + productName + " online");
         seoData.setMetaDescription("Buy " + productName + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
         seoData.setDescriptionTitle("About " + productName);
 

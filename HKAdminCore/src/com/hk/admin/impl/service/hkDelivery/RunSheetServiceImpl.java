@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.courier.Shipment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -198,6 +199,10 @@ public class RunSheetServiceImpl implements RunSheetService {
 			for(Consignment consignment : consignmentList){
 				if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
 					ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(consignment.getCnnNumber());
+					Shipment shipment = shippingOrder.getShipment();
+					if(shipment != null){
+						shipment.setDeliveryDate(new Date());
+					}
 					adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
 				}
 			}

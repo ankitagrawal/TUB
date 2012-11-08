@@ -96,8 +96,7 @@
                   href="http://twitter.com/healthkart"><img src="http://img.healthkart.com/email/logos/twitter.png"
                                                             alt="twitter" width="32" height="32" border="0"/></a></td>
           <td align="right" valign="middle" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
-                  href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;| &nbsp;t: +91
-            124 4551616
+                  href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;| &nbsp;t: 0124-4551616
           </td>
         </tr>
       </table>
