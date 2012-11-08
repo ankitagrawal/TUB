@@ -36,7 +36,7 @@ public class SecureResourceInterceptor implements PreProcessInterceptor {
     @Override
     public ServerResponse preProcess(HttpRequest httpRequest, ResourceMethod method) throws Failure, WebApplicationException {
 
-        SecureResource secureResouce = method.getClass().getAnnotation(SecureResource.class);
+        SecureResource secureResouce = method.getResourceClass().getAnnotation(SecureResource.class);
 
         if (secureResouce != null) {
             String authToken = getParameter(httpRequest, "authToken");
