@@ -263,7 +263,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
             } else if (categories.equalsIgnoreCase("all-unverified")) {
                 emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)), maxResultCount);
             }
-            if (emailRecepients.isEmpty()){
+            if ((emailRecepients == null) || emailRecepients.isEmpty()){
                 break;
             }
             List<String> emailRecepientsWithHistory = getAdminEmailService().getEmailRecepientsByEmailIds(emailCampaign, emailRecepients);
