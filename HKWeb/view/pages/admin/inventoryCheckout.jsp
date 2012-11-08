@@ -10,16 +10,6 @@
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
       $(document).ready(function() {
-	    var boolWronglyPickedBox = "${icBean.wronglyPickedBox}" == 'true';
-        if(boolWronglyPickedBox) {
-           alert("Cannot checkout the item, there is another item with inventory with Batch details: \n" +
-                 "\n batch number - ${icBean.earlierSkuGroup.batchNumber}" +
-                 //hiding the barcode because if this is displayed one would just type that in.
-                 /*"\n barcode - ${icBean.earlierSkuGroup.barcode}" +*/
-                 "\n mrp - ${icBean.earlierSkuGroup.mrp}" +
-                 "\n expiry date - ${icBean.earlierSkuGroup.expiryDate}" +
-                 "\n mfg date - ${icBean.earlierSkuGroup.mfgDate}");
-        }
         $(document).find('#skuGroup').attr("checked", true);
 
         $('.upc').change(function() {
@@ -204,6 +194,7 @@
           <th>Item</th>
           <th>ID</th>
           <th>UPC</th>
+          <th>MRP</th>
           <th>Qty</th>
           <th width="50px;">Net Inventory</th>
           <th width="75px;">Checked Out Qty</th>
@@ -238,6 +229,7 @@
               <td>
                 ${productVariant.upc}
               </td>
+              <td>${lineItem.markedPrice}</td>
               <td>${lineItem.qty}</td>
               <td>${hk:netInventory(lineItem.sku)}</td>
               <td><span style="color:green; font-weight:bold;">[${hk:checkedoutItemsCount(lineItem)}]</span></td>
