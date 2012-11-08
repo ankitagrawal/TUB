@@ -133,6 +133,6 @@ public class CourierServiceImpl implements CourierService {
 	}
 
 	public List<Courier>  getCouriers(String pincode ,Boolean isrGroundShipping ,Boolean isCod,Boolean isCodAvailableOnGroundShipping,Boolean disabled){
-		return getCouriers(pincode ,isrGroundShipping ,isCod,isCodAvailableOnGroundShipping, disabled);
+		return getCourierServiceInfoDao().getCouriers(pincode ,isrGroundShipping ,isCod,isCodAvailableOnGroundShipping, disabled);
 	}
 }

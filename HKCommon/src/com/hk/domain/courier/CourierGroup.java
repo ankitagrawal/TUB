@@ -21,8 +21,7 @@ public class CourierGroup implements java.io.Serializable {
 	private String name;
 
 	@JsonSkip
-	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	//@Fetch(value = FetchMode.SELECT)
+	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)	
 	@JoinTable(name = "courier_group_has_courier",
 			joinColumns = @JoinColumn(name = "courier_group_id", updatable = false),
 			inverseJoinColumns = @JoinColumn(name = "courier_id", updatable = false)
