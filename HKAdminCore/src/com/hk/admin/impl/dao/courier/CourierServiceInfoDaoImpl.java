@@ -111,6 +111,6 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
 		return courierServiceInfoCriteria.list();
 	}
 
-}
+
 
 }

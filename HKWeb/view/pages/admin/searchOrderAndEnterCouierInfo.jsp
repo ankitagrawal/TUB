@@ -151,20 +151,14 @@
             <label>Tracking ID:</label><s:text class="tracking" name="trackingId"/>
             <label>Courier</label>
 
-	          <c:when test="${shipmentQueueBean.groundShipped}">
+
 		          <s:select name="selectedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
 			          <c:forEach var="courier" items="${groundShippedCourierList}">
 				          <s:option value="${courier.id}">${courier.name}</s:option>
 			          </c:forEach>
 		          </s:select>
-	          </c:when>
-	          <c:otherwise>
-		          <s:select name="selectedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
-			          <c:forEach var="courier" items="${groundShippedCourierList}">
-				          <s:option id="options" value="${courier.id}">${courier.name}</s:option>
-			          </c:forEach>
-		          </s:select>
-	          </c:otherwise>
+
+
 
 
 	          <c:if test="${shipmentQueueBean.suggestedCourier != null}">

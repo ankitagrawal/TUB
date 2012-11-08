@@ -154,7 +154,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			if (pinCode != null) {
 				boolean isCod = shippingOrder.isCOD();
 				isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-				availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false,false);
+				availableCouriers = courierService.getCouriers(pinCode.getPincode(),isGroundShipped, null, null,false);
 				if (shippingOrder.getShipment() != null) {
 					suggestedCourier = shippingOrder.getShipment().getAwb().getCourier();
 					trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
