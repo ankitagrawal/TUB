@@ -25,7 +25,7 @@
            id: "myId",
            name: "myId"
        };
-       swfobject.embedSWF("Healthkart_05-11-12.swf", "myContent", "100%", "100%", "10.2.0", "expressInstall.swf", flashvars, params, attributes);
+       swfobject.embedSWF("Healthkart_08-11-12.swf", "myContent", "100%", "100%", "10.2.0", "expressInstall.swf", flashvars, params, attributes);
        function addToCart(products) {
            alert(products);
        }
