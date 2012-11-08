@@ -198,8 +198,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 				<td align="right" valign="middle"
 				    style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
 						href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;|
-					&nbsp;t: +91
-					124-4551616
+					&nbsp;t: 0124-4551616
 				</td>
 			</tr>
 		</table>

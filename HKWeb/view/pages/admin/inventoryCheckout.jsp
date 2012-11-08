@@ -194,6 +194,7 @@
           <th>Item</th>
           <th>ID</th>
           <th>UPC</th>
+          <th>MRP</th>
           <th>Qty</th>
           <th width="50px;">Net Inventory</th>
           <th width="75px;">Checked Out Qty</th>
@@ -228,6 +229,7 @@
               <td>
                 ${productVariant.upc}
               </td>
+              <td>${lineItem.markedPrice}</td>
               <td>${lineItem.qty}</td>
               <td>${hk:netInventory(lineItem.sku)}</td>
               <td><span style="color:green; font-weight:bold;">[${hk:checkedoutItemsCount(lineItem)}]</span></td>

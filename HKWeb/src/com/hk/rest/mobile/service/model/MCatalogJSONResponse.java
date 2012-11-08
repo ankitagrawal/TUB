@@ -22,6 +22,7 @@ public class MCatalogJSONResponse {
     private String productUrl="";
     private String productSlug="";
     private String currentCategory;
+    private Long productReferrerId;
 
     public String getCurrentCategory() {
         return currentCategory;
@@ -261,4 +262,12 @@ public class MCatalogJSONResponse {
     public void setHasMore(boolean hasMore) {
         this.hasMore = hasMore;
     }
+
+	public Long getProductReferrerId() {
+		return productReferrerId;
+	}
+
+	public void setProductReferrerId(Long productReferrerId) {
+		this.productReferrerId = productReferrerId;
+	}    
 }
