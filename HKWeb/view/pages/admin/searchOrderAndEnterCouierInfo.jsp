@@ -4,6 +4,7 @@
 <%@ page import="com.hk.domain.courier.BoxSize" %>
 <%@ page import="com.hk.constants.shipment.EnumPicker" %>
 <%@ page import="com.hk.constants.shipment.EnumPacker" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -12,7 +13,7 @@
   BaseDao baseDao = ServiceLocatorFactory.getService(BaseDao.class);
   MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
   pageContext.setAttribute("boxSizeList", baseDao.getAll(BoxSize.class));
-//  pageContext.setAttribute("courierList", masterDataDao.getCourierList());
+  pageContext.setAttribute("courierList", masterDataDao.getAvailableCouriers());
 //   pageContext.setAttribute("groundShippedCourierList", masterDataDao.getGroundShippedCourierList());
 %>
 
@@ -56,6 +57,9 @@
 
               });
 
+	          $('#show').click(function() {
+		          
+	          });
 
           });
       </script>
@@ -101,6 +105,7 @@
               </div>
             </c:if>
 
+
             <s:hidden name="shippingOrder" value="${shipmentQueueBean.shippingOrder}"/>
 	         <label>Picker:</label><s:select name="shipment.picker">
 		        <c:forEach items="<%=EnumPicker.getAll()%>" var="pType">
@@ -121,11 +126,24 @@
             <label>Box Weight(Kgs):</label><s:text name="shipment.boxWeight" size="5" class="weight"/>
             <label>Tracking ID:</label><s:text class="tracking" name="trackingId"/>
             <label>Courier</label>
-            <s:select name="shipment.courier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
-              <c:forEach var="courier" items="${shipmentQueueBean.availableCouriers}">
-                <s:option value="${courier.id}">${courier.name}</s:option>
-              </c:forEach>
-            </s:select>
+
+	          <span id="available">
+		          <s:select name="shipment.courier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
+			          <c:forEach var="courier" items="${shipmentQueueBean.availableCouriers}">
+				          <s:option value="${courier.id}">${courier.name}</s:option>
+			          </c:forEach>
+		          </s:select>
+		          <a href="#" id="show"> Populate All Courier</a>
+	          </span>
+	          <%--<span id="all" style="display:none">--%>
+		          <%--<s:select name="shipment.courier" id="courier">--%>
+			          <%--<c:forEach var="courier" items="${courierList}">--%>
+				          <%--<s:option value="${courier.id}">${courier.name}</s:option>--%>
+			          <%--</c:forEach>--%>
+		          <%--</s:select>--%>
+	          <%--</span>--%>
+
+
             <c:if test="${shipmentQueueBean.suggestedCourier != null}">
               <label style="margin-top:5px;margin-bottom:5px;color:green;">Suggested Courier:  <b>${shipmentQueueBean.suggestedCourier.name}</b></label>
             </c:if>
