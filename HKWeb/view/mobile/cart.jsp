@@ -20,17 +20,38 @@
 				id='cartList'>
 
 			</ul>
+			<div id=cartTotal data-role=none>
+			
+			</div>
+			<%if(session.getAttribute("userName")!=null){%>
+			<table class=hide id='couponContainer' style='margin:0px auto'>
+				<tr>
+					<td>
+						<input type=text id=couponText name=couponText  placeholder='Discount Coupon' />
+					</td>
+					<td>
+						<button id=submitCoupon>Apply</button>
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2 style='text-align:center'>
+						<a href='${httpPath}/coupon-manage.jsp'>(see previously applied offers)</a>
+					</td>
+				</tr>
+			</table>
+			<%} %>
 			<br /> <a
 				href='<%if(session.getAttribute("userName")==null){%>${httpPath}/login-signup.jsp?target=address<% }else{%>${httpPath}/address.jsp<%}%>'
 				id='checkout'
-				style='width: 95%; margin: 0px auto; margin-bottom: 8px; margin-top: 12px'
+				style=' margin: 0px auto; margin-bottom: 8px; '
 				data-role=button id='btnChkOut'>CheckOut</a>
 
 			<%@ include file='menuFooter.jsp'%>
 		</div>
+	<%@ include file='template/cart-templates.jsp'%>
+		<script type="text/javascript" src='${httpPath}/js/cart.js'></script>	
 
-		<%@ include file='template/cart-templates.jsp'%>
-		<script type="text/javascript" src='${httpPath}/js/cart.js'></script>
+		
 	</div>
 
 </body>
