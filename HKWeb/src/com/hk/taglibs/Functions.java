@@ -617,9 +617,10 @@ public class Functions {
         return renderNewCatalogFilter;
     }
 
-    public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, Boolean showHiddenImages) {
+    public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, Object showHiddenImages) {
         ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
-        List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
+        Boolean showHiddenImagesBoolean = (Boolean) showHiddenImages;
+        List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImagesBoolean);
         return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
     }
 
