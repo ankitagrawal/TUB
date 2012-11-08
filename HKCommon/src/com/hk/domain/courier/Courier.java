@@ -30,10 +30,11 @@ public class Courier implements java.io.Serializable {
 	@Column(name = "disabled", nullable = false, length = 10)
 	private Boolean  disabled;
 
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courier")
 	private Set<CourierServiceInfo> courierServiceInfos = new HashSet<CourierServiceInfo>(0);
 
-	
+
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "couriers")
 	private List<CourierGroup> courierGroup = new ArrayList<CourierGroup>(0);
 
