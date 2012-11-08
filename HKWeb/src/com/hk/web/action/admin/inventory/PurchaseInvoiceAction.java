@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.akube.framework.util.DateUtils;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -143,6 +144,16 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/purchaseInvoicePaymentDetails.jsp");
     }
 
+	public Resolution updateStatusAndPaymentDetails(){
+		Resolution checks = performPiSanityChecks("paymentDetails", purchaseInvoice);
+	        if(checks != null){
+		        return checks;
+	        }
+		purchaseInvoiceDao.save(purchaseInvoice);
+		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+        return new RedirectResolution(PurchaseInvoiceAction.class);
+	}
+
     public Resolution save() {
         if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
             logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoiceLineItems.size());
@@ -152,17 +163,11 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
                 return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
             }
 
-	        if(purchaseInvoice.getPaymentDate() != null &&
-			        !(purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId())) ){
-		        addRedirectAlertMessage(new SimpleMessage("Please mark PI status "+EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getName()+" as payment date is mentioned."));
-                return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+	        Resolution checks = performPiSanityChecks("view", purchaseInvoice);
+	        if(checks != null){
+		        return checks;
 	        }
 
-	        if(purchaseInvoice.getPaymentDate() == null &&
-			        (purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId())) ){
-		        addRedirectAlertMessage(new SimpleMessage("Payment date cannot be null when status is "+EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getName()));
-                return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
-	        }
 
             for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceLineItems) {
                 if (purchaseInvoiceLineItem.getQty() != null && purchaseInvoiceLineItem.getQty() == 0 && purchaseInvoiceLineItem.getId() != null) {
@@ -227,6 +232,35 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         noCache();
         return new JsonResolution(healthkartResponse);
     }
+
+	private Resolution performPiSanityChecks(String redirectResolution, PurchaseInvoice purchaseInvoice){
+		if (purchaseInvoice.getPaymentDate() != null &&
+				!(purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId()))) {
+			addRedirectAlertMessage(new SimpleMessage("Please mark PI status " + EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getName() + " as payment date is mentioned."));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+		}
+
+		if (purchaseInvoice.getPaymentDate() == null &&
+				(purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId()))) {
+			addRedirectAlertMessage(new SimpleMessage("Payment date cannot be null when status is " + EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getName()));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+		}
+
+		if(purchaseInvoice.getPaymentDate() != null){
+			if(purchaseInvoice.getPaymentDate().compareTo(DateUtils.getDateMinusDays(8)) < 0){
+				addRedirectAlertMessage(new SimpleMessage("Payment date cannot be less than 7 days ago"));
+				return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+			}
+
+			if(purchaseInvoice.getPaymentDate().compareTo(new Date()) > 0){
+				addRedirectAlertMessage(new SimpleMessage("You cannot add a future date"));
+				return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+			}
+		}
+
+
+		return null;
+	}
 
     public int getPerPageDefault() {
         return defaultPerPage; // To change body of implemented methods use File | Settings | File Templates.

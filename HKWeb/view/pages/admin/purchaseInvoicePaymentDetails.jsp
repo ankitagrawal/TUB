@@ -171,7 +171,7 @@
 
 <br/>
 
-	<s:submit name="save" value="Save" id="save-button"/>
+	<s:submit name="updateStatusAndPaymentDetails" value="Save" id="save-button"/>
 </s:form>
 
 </s:layout-component>
