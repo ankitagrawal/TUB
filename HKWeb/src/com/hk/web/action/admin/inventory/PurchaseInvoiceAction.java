@@ -246,6 +246,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
 		}
 
+		/* Needs to go live once back log is resolved.
+
 		if(purchaseInvoice.getPaymentDate() != null){
 			if(purchaseInvoice.getPaymentDate().compareTo(DateUtils.getDateMinusDays(8)) < 0){
 				addRedirectAlertMessage(new SimpleMessage("Payment date cannot be less than 7 days ago"));
@@ -256,7 +258,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				addRedirectAlertMessage(new SimpleMessage("You cannot add a future date"));
 				return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
 			}
-		}
+		}*/
 
 
 		return null;
