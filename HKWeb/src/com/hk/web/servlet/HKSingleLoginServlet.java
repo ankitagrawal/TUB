@@ -45,7 +45,7 @@ public class HKSingleLoginServlet extends HkAPIBaseServlet {
          * supported: " + request.getMethod()); }
          */
 
-        String apiKey = obtainAppId(req);
+        String apiKey = obtainApiKey(req);
         String login = obtainUsername(req);
         String password = obtainPassword(req);
 
@@ -94,7 +94,7 @@ public class HKSingleLoginServlet extends HkAPIBaseServlet {
 
         String username = obtainUsername(request);
         String password = obtainPassword(request);
-        String apiKey = obtainAppId(request);
+        String apiKey = obtainApiKey(request);
 
         username = username.trim();
 
@@ -111,7 +111,7 @@ public class HKSingleLoginServlet extends HkAPIBaseServlet {
         return request.getParameter(userNameParameter);
     }
 
-    private String obtainAppId(HttpServletRequest request) {
+    private String obtainApiKey(HttpServletRequest request) {
         return request.getParameter(apiKeyParameter);
     }
 

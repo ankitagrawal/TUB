@@ -36,7 +36,7 @@ public class HkAuthServiceImpl implements HkAuthService {
 
             if (userName.equals("abc") && password.equals("abc") && apiKey.equals("abc")) {
                 Collection<GrantedOperation> allowedOperations = GrantedOperationUtil.ALL_OPERATIONS;
-                authentication = new HkUsernamePasswordAuthenticationToken(userName, password, allowedOperations);
+                authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey, allowedOperations);
             } else {
                 throw new HkAuthenticationException((String) authentication.getCredentials());
             }
