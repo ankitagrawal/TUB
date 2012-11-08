@@ -92,7 +92,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         if (StringUtils.isBlank(trackingId) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || shipment.getCourier() == null) {
             getContext().getValidationErrors().add("1", new SimpleError("Tracking Id, Box weight, Box Size, Courier all are mandatory"));
         }
-       else if (shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId()) || shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId())) {
+       if ((shipment.getBoxSize() != null && shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId())) || (shipment.getCourier() != null && shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId()))) {
             getContext().getValidationErrors().add("2", new SimpleError("None of the values can be migrate"));
         }
         Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
@@ -110,7 +110,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 getContext().getValidationErrors().add("4", new SimpleError("No Couriers are applicable on this pincode, Please contact logistics, Order cannot be packed"));
             }
 	        if (suggestedCourier != null) {
-		        if (!(availableCouriers.contains(suggestedCourier))) {
+		        if ((availableCouriers != null && availableCouriers.size() > 0) && !(availableCouriers.contains(suggestedCourier))) {
 			        getContext().getValidationErrors().add("5", new SimpleError(" ERROR :::: The Default suggessted courier " + suggestedCourier.getName() + " " +
 					        "is not present in Servicable Courier (Available List).       Contact Admin(Rajinder) To add " + suggestedCourier.getName() + " in servicable List  for Pincode " + pinCode.getPincode()));
 		        }
@@ -163,7 +163,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     trackingId = shippingOrder.getGatewayOrderId();
                 }
 	            if (suggestedCourier != null) {
-		            if (!(availableCouriers.contains(suggestedCourier))) {
+		            if ((availableCouriers != null && availableCouriers.size() > 0) && (!(availableCouriers.contains(suggestedCourier)))) {
 			            addRedirectAlertMessage(new SimpleMessage("The Default suggessted courier " + suggestedCourier.getName() + " is not present in Servicable Courier (Available List)" +
 					            "       Contact Admin(Rajinder) To add Servicable List for Pincode " + pinCode.getPincode()));
 		            }
