@@ -168,7 +168,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
         String query = "*";
         for (SearchFilter searchFilter : searchFilters){
             if (searchFilter.getValue() != null){
-                solrQuery.addFilterQuery(searchFilter.getName() + ":" + searchFilter.getValue());
+                String filterQuery = String.format("{!field f= %s}%s",searchFilter.getName(), searchFilter.getValue() );
+                //solrQuery.addFilterQuery(searchFilter.getName() + ":" + searchFilter.getValue());
+                solrQuery.addFilterQuery(filterQuery);
             }
         }
         for (SearchFilter categoryFilter : categories){
