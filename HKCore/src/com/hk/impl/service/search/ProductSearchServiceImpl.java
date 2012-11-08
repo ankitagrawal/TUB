@@ -347,13 +347,13 @@ class ProductSearchServiceImpl implements ProductSearchService {
         SolrQuery solrQuery = new SolrQuery(); // &defType=dismax&qf=
         String fq = String.format("{!cache=false}hidden:false");  //Do not cache the results*/
         solrQuery.setParam("fq", fq);
-        String finalfq = "fq = hidden:false";
         for (SearchFilter searchFilter : searchFilters){
-            String fq1 = searchFilter.getName() + ":" + searchFilter.getValue();
-            solrQuery = solrQuery.setParam("fq", fq1);
-            /*String fq1 = "fq = " + searchFilter.getName() + ":" + searchFilter.getValue();
-            finalfq += " & " + fq1;*/
+            if (searchFilter.getValue() != null){
+                String filterQuery = String.format("{!field f= %s}%s",searchFilter.getName(), searchFilter.getValue() );
+                solrQuery.addFilterQuery(filterQuery);
+            }
         }
+
         solrQuery.setParam("q", query);
         //solrQuery.setParam("fq","+" + fq);
         solrQuery.setParam("defType", "dismax");
