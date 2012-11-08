@@ -156,7 +156,7 @@
 				          <s:option id="options" value="${courier.id}">${courier.name}</s:option>
 			          </c:forEach>
 		          </s:select>
-		          <a href="#" id="show"> Populate All Courier</a>
+		          <a href="#" id="show"> Show All Courier</a>
 
 
             <c:if test="${shipmentQueueBean.suggestedCourier != null}">
