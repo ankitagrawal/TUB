@@ -14,7 +14,7 @@
   MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
   pageContext.setAttribute("boxSizeList", baseDao.getAll(BoxSize.class));
   pageContext.setAttribute("courierList", masterDataDao.getAvailableCouriers());
-//   pageContext.setAttribute("groundShippedCourierList", masterDataDao.getGroundShippedCourierList());
+  pageContext.setAttribute("groundShippedCourierList", masterDataDao.getGroundShippedCourierList());
 %>
 
 <c:set var="commentTypeDelivery" value="<%= MasterDataDao.USER_COMMENT_TYPE_DELIVERY_BASE_ORDER %>" />
@@ -151,11 +151,20 @@
             <label>Tracking ID:</label><s:text class="tracking" name="trackingId"/>
             <label>Courier</label>
 
-	          <s:select name="selectedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
-		          <c:forEach var="courier" items="${courierList}">
-			          <s:option id="options" value="${courier.id}">${courier.name}</s:option>
-		          </c:forEach>
-	          </s:select>
+	          <c:when test="${shipmentQueueBean.groundShipped}">
+		          <s:select name="selectedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
+			          <c:forEach var="courier" items="${groundShippedCourierList}">
+				          <s:option value="${courier.id}">${courier.name}</s:option>
+			          </c:forEach>
+		          </s:select>
+	          </c:when>
+	          <c:otherwise>
+		          <s:select name="selectedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
+			          <c:forEach var="courier" items="${groundShippedCourierList}">
+				          <s:option id="options" value="${courier.id}">${courier.name}</s:option>
+			          </c:forEach>
+		          </s:select>
+	          </c:otherwise>
 
 
 	          <c:if test="${shipmentQueueBean.suggestedCourier != null}">

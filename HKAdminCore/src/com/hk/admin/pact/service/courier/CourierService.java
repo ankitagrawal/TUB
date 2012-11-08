@@ -38,4 +38,6 @@ public interface CourierService {
 
 	public List<Courier> getCouriers(List<Long> courierIds ,List<String> courierNames , Boolean disabled);
 
+	public List<Courier>  getCouriers(String pincode ,Boolean isrGroundShipping ,Boolean isCod,Boolean isCodAvailableOnGroundShipping,Boolean disabled);
+
 }

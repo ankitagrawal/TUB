@@ -103,7 +103,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 //  groundShipping logic Starts---
 			isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-			availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false,false);
+			availableCouriers = courierService.getCouriers(pinCode.getPincode(), isGroundShipped, null, null, false);
 //  ground shipping logic ends
 
 			if (availableCouriers == null || availableCouriers.isEmpty()) {

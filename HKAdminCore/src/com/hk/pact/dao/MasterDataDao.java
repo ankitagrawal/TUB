@@ -147,4 +147,6 @@ public interface MasterDataDao
 
 	public List<ReplacementOrderReason> getReplacementOrderReasonForRto();
 
+	public List<Courier> getGroundShippedCourierList();
+
 }

@@ -398,4 +398,10 @@ private CourierGroupService courierGroupService;
 		}
 		return replacementOrderReasonList;
 	}
+
+	public List<Courier> getGroundShippedCourierList() {
+		List<Courier> courierList = courierService.getAvailableCouriers(null, false, true, false, false);
+
+		return courierList;
+	}
 }
