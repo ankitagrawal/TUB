@@ -57,30 +57,30 @@
 
               });
 
-	          $('#show').click(function() {
-		          $.getJSON(
-				          $('#getcourier').attr('href'), function(response) {
-			          if (response.code == '<%=HealthkartResponse.STATUS_OK%>') {
-				          var courierList = response.data;
-				           $('#show').hide();
-				          $('#courier').html('');
-				          $.each(response.data, function() {
-					          var strP = '<option value=' + String(this.id)+'';
-					          if (String(this.name) == $('.suggestedcourier').text())
-					          {
-						          strP = strP + ' selected';
-					          }
-					          strP = strP + ' >' + this.name + '</option>';					         
-					          $('#courier').append(strP);
-				          });
+	          <%--$('#show').click(function() {--%>
+		          <%--$.getJSON(--%>
+				          <%--$('#getcourier').attr('href'), function(response) {--%>
+			          <%--if (response.code == '<%=HealthkartResponse.STATUS_OK%>') {--%>
+				          <%--var courierList = response.data;--%>
+				           <%--$('#show').hide();--%>
+				          <%--$('#courier').html('');--%>
+				          <%--$.each(response.data, function() {--%>
+					          <%--var strP = '<option value=' + String(this.id)+'';--%>
+					          <%--if (String(this.name) == $('.suggestedcourier').text())--%>
+					          <%--{--%>
+						          <%--strP = strP + ' selected';--%>
+					          <%--}--%>
+					          <%--strP = strP + ' >' + this.name + '</option>';					         --%>
+					          <%--$('#courier').append(strP);--%>
+				          <%--});--%>
 
 
 
 
-			          }
-		          });
+			          <%--}--%>
+		          <%--});--%>
 
-	          });
+	          <%--});--%>
 
 
           });
@@ -89,8 +89,8 @@
   </s:layout-component>
   <s:layout-component name="heading">Enter Tracking Details for Packed Orders</s:layout-component>
   <s:layout-component name="content">
-	  	<div style="display:none">
-			<s:link id="getcourier" beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction"  event="getCourierList"> </s:link> </div>
+	  	<%--<div style="display:none">--%>
+			<%--<s:link id="getcourier" beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction"  event="getCourierList"> </s:link> </div>--%>
 	<input type="hidden" id="commentType" value="${shipmentQueueBean.shippingOrder.baseOrder.commentType}">
 	<input type="hidden" id="userComments" value="${shipmentQueueBean.shippingOrder.baseOrder.userComments}">
     <div  class="error" style= "background-color:salmon; width:380px; display:none;">       
@@ -151,15 +151,14 @@
             <label>Tracking ID:</label><s:text class="tracking" name="trackingId"/>
             <label>Courier</label>
 
-		          <s:select name="shipment.courier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
-			          <c:forEach var="courier" items="${shipmentQueueBean.availableCouriers}">
-				          <s:option id="options" value="${courier.id}">${courier.name}</s:option>
-			          </c:forEach>
-		          </s:select>
-		          <a href="#" id="show"> Show All Courier</a>
+	          <s:select name="shipment.courier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
+		          <c:forEach var="courier" items="${courierList}">
+			          <s:option id="options" value="${courier.id}">${courier.name}</s:option>
+		          </c:forEach>
+	          </s:select>
 
 
-            <c:if test="${shipmentQueueBean.suggestedCourier != null}">
+	          <c:if test="${shipmentQueueBean.suggestedCourier != null}">
               <label style="margin-top:5px;margin-bottom:5px;color:green;" >Suggested Courier:  <b class="suggestedcourier">${shipmentQueueBean.suggestedCourier.name}</b></label>
             </c:if>
               <label>Approx Weight (By System)</label> ${shipmentQueueBean.approxWeight}
