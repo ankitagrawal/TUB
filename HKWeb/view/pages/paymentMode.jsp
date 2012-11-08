@@ -117,6 +117,11 @@
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
             <li id="tab6">Counter Cash</li>
         </shiro:hasRole>
+        <li id ="tab7">Billing Address</li>
+          <%--<s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="pre" target="_blank" class="popup">--%>
+				<%--Billing Address--%>
+            <%--<s:param name="order" value="${orderSummary.order}"/>--%>
+	  <%--</s:link>--%>
     </ul>
 </div>
 <div class='right_content'>
@@ -366,7 +371,40 @@
                                                          style="font-size: 1.5em;" /></div>
     </s:form></div>
 
-</div></div>
+</div>
+
+  <div id ="tabs_content7" class="tab_content" style="display: none;">
+        <s:form beanclass="com.hk.web.action.core.user.BillingAddressAction" id="newAddressForm">
+             <s:hidden name="order" value="${orderSummary.order.id}" />
+                 <s:hidden name="billingAddress.id"/>
+                 <span class="aster special">(Fields marked * are required.)</span>
+
+                 <div class='label'>Name<span class="aster">*</span></div>
+                 <s:text name="billingAddress.name"/>
+                 <div class='label'>Address Line 1<span class="aster">*</span></div>
+                 <s:text name="billingAddress.line1"/>
+                 <div class='label'>Address Line 2</div>
+                 <s:text name="billingAddress.line2"/>
+                 <div class='label'>City<span class="aster">*</span></div>
+                 <s:text name="billingAddress.city"/>
+                 <div class='label'>State<span class="aster">*</span></div>
+                 <%--<s:select  name="address.state" style="width:310px;">--%>
+                   <%--<s:option> </s:option>--%>
+                   <%--<c:forEach items="<%=StateList.stateList%>" var="state">--%>
+                     <%--<s:option value="${state}">${state}</s:option>--%>
+                   <%--</c:forEach>--%>
+                 <%--</s:select>--%>
+                   <s:text name="billingAddress.state"/>
+                 <%--<s:text name="address.state"/>--%>
+                 <div class='label'>PIN Code<span class="aster">*</span></div>
+                 <s:text name="billingAddress.pin" class="pincode" maxlength="6"/>
+                 <div class='label'>Phone / Mobile<span class="aster">*</span></div>
+                 <s:text name="billingAddress.phone"/>
+                 <s:submit name="save" value="Save the value and continue"/>
+               </s:form>
+    </div>
+
+</div>
 </shiro:hasAnyRoles> <script type="text/javascript">
     $(document).ready(function() {
         $('.tab_content').hide();

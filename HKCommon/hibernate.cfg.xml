@@ -190,5 +190,7 @@
 	    <mapping class="com.hk.domain.order.OrderPaymentReconciliation" />
 	    <mapping class="com.hk.domain.order.analytics.DemandHistory" />
 	    <mapping class="com.hk.domain.user.UserDetail" />
+        <mapping class="com.hk.domain.order.OrderBillingAddress" />
+        <mapping class="com.hk.domain.user.BillingAddress" />
     </session-factory>
 </hibernate-configuration>

@@ -9,6 +9,7 @@ import com.hk.manager.LinkManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.manager.payment.PayPalPaymentGatewayWrapper;
 import com.hk.pact.dao.payment.PaymentDao;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.web.AppConstants;
 import com.hk.web.action.core.payment.PaymentSuccessAction;
 import com.hk.web.action.core.payment.PaymentFailAction;
@@ -17,6 +18,7 @@ import com.hk.web.filter.WebContext;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.payment.CurrencyConverter;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.OrderBillingAddress;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.util.BaseUtils;
@@ -60,13 +62,23 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
     @Autowired
     EmailManager emailManager;
 
+     @Autowired
+     AddressDao addressDao;
+
 
     protected PayPalPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
 //      PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper(AppConstants.appBasePath);
         Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
         Order order = payment.getOrder();
         User user = order.getUser();
-        Address address = order.getAddress();
+
+//  todo  Billing address id corresponding to order id  --  address for that id
+
+        OrderBillingAddress orderBillingAddress = addressDao.getBillingAddress(order.getId());
+        Address address =  orderBillingAddress.getBillingAddress();
+
+//        Address address = order.getAddress();
+
         String merchantTxnId = data.getGatewayOrderId();
 
 

@@ -79,7 +79,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
             profile.setSubject("");
         }
         catch (Exception e) {
-         logger.error("exception", e);
+         logger.error("exception at creating API signature :", e);
         }
         return profile;
     }
