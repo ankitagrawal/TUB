@@ -7,4 +7,5 @@ package com.hk.api;
  */
 public interface HkAPI {
 
+    public final static String CURRENT_VERSION = "1.0";
 }

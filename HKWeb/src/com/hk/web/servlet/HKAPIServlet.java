@@ -14,11 +14,11 @@ import org.slf4j.LoggerFactory;
 
 import com.hk.api.AuthAPI;
 import com.hk.api.HkAPI;
+import com.hk.api.constants.OperationType;
 import com.hk.api.user.HkAPIUser;
 import com.hk.security.HkAuthService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.json.JSONResponseBuilder;
-import com.hk.web.servlet.constants.OperationType;
 
 /**
  * @author vaibhav.adlakha
