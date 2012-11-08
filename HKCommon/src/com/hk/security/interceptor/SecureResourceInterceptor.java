@@ -1,0 +1,77 @@
+package com.hk.security.interceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.ext.Provider;
+
+import org.apache.commons.lang.StringUtils;
+import org.jboss.resteasy.annotations.interception.ServerInterceptor;
+import org.jboss.resteasy.core.Headers;
+import org.jboss.resteasy.core.ResourceMethod;
+import org.jboss.resteasy.core.ServerResponse;
+import org.jboss.resteasy.spi.Failure;
+import org.jboss.resteasy.spi.HttpRequest;
+import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
+
+import com.hk.api.HkAPI;
+import com.hk.api.user.HkAPIUser;
+import com.hk.security.HkAuthService;
+import com.hk.service.ServiceLocatorFactory;
+import com.hk.web.locale.LocaleContextHolder;
+
+@Provider
+public class SecureResourceInterceptor implements PreProcessInterceptor {
+
+    private HkAuthService hkAuthService;
+
+    private String getParameter(HttpRequest httpRequest, String key) {
+        return httpRequest.getUri().getQueryParameters().get(key).get(0);
+    }
+
+    @Override
+    public ServerResponse preProcess(HttpRequest httpRequest, ResourceMethod resp) throws Failure, WebApplicationException {
+
+        String authToken = getParameter(httpRequest,"authToken");
+        String apiVersion = getParameter(httpRequest,"apiVersion");
+        String apiKey = getParameter(httpRequest,"apiKey");
+
+        // check for a not null authToken
+        if (StringUtils.isEmpty(authToken)) {
+            return new ServerResponse("NO_AUTH_TOKEN_PASSED", 200, new Headers<Object>());
+        }
+
+        // check for a not null apiKey
+        if (StringUtils.isEmpty(apiKey)) {
+            return new ServerResponse("NO_API_KEY_PASSED", 200, new Headers<Object>());
+        }
+
+        if (!HkAPIUser.containsApiKey(apiKey)) {
+            return new ServerResponse("INVALID_APP_KEY", 200, new Headers<Object>());
+        }
+
+        if (StringUtils.isEmpty(apiVersion)) {
+            apiVersion = HkAPI.CURRENT_VERSION;
+        }
+
+        LocaleContextHolder.getLocaleContext().setApiVersion(apiVersion);
+
+        /**
+         * validate token and api key in auth service, do all in memory
+         */
+        try {
+            getHkAuthService().validateToken(authToken, apiKey, false);
+        } catch (Throwable t) {
+            return new ServerResponse("INVALID_AUTH_TOKEN", 200, new Headers<Object>());
+        }
+
+        return null;
+    }
+
+    public HkAuthService getHkAuthService() {
+        if (hkAuthService == null) {
+            hkAuthService = (HkAuthService) ServiceLocatorFactory.getService(HkAuthService.class);
+        }
+        return hkAuthService;
+    }
+
+}
