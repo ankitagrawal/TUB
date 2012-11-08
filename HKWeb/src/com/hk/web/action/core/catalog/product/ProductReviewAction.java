@@ -1,36 +1,41 @@
 package com.hk.web.action.core.catalog.product;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.ValidationMethod;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.LocalizableError;
+import net.sourceforge.stripes.validation.ValidationMethod;
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-import org.apache.commons.lang.StringUtils;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.constants.review.EnumReviewStatus;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.review.EnumReviewStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
 import com.hk.domain.review.UserReview;
 import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.util.SeoManager;
 
 @Component
 public class ProductReviewAction extends BasePaginatedAction {
-	private static Logger logger       = Logger.getLogger(ProductReviewAction.class);
+	
 	private Product product;
 	private Page productReviewPage;
 	private List<UserReview> productReviews = new ArrayList<UserReview>();
@@ -39,8 +44,7 @@ public class ProductReviewAction extends BasePaginatedAction {
 	private UserReview review;
 	private boolean captchaMatch;
 
-	@Autowired
-	private ProductService productService;
+	
 	@Autowired
 	private SeoManager seoManager;
 	@Autowired
@@ -51,7 +55,8 @@ public class ProductReviewAction extends BasePaginatedAction {
 	private ReviewService reviewService;
 
 
-	@DefaultHandler
+	@SuppressWarnings("unchecked")
+    @DefaultHandler
 	public Resolution pre() {
 		productReviewPage = reviewService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), getPageNo(), getPerPage());
 		if (productReviewPage != null) {
@@ -59,9 +64,7 @@ public class ProductReviewAction extends BasePaginatedAction {
 		}
 		if(product != null) {
 			seoData = seoManager.generateSeo(product.getId());
-		} else {
-			logger.error("Null product found for Product Review");
-		}
+		} 
 
 		return new ForwardResolution("/pages/productReviews.jsp");
 	}
@@ -139,9 +142,7 @@ public class ProductReviewAction extends BasePaginatedAction {
 		return params;
 	}
 
-	public void setProductService(ProductService productService) {
-		this.productService = productService;
-	}
+	
 
 	public void setSeoManager(SeoManager seoManager) {
 		this.seoManager = seoManager;
