@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -137,6 +138,11 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/purchaseInvoice.jsp");
     }
 
+	public Resolution paymentDetails() {
+
+        return new ForwardResolution("/pages/admin/purchaseInvoicePaymentDetails.jsp");
+    }
+
     public Resolution save() {
         if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
             logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoiceLineItems.size());
@@ -145,6 +151,18 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
                 addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
                 return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
             }
+
+	        if(purchaseInvoice.getPaymentDate() != null &&
+			        !(purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId())) ){
+		        addRedirectAlertMessage(new SimpleMessage("Please mark PI status "+EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getName()+" as payment date is mentioned."));
+                return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+	        }
+
+	        if(purchaseInvoice.getPaymentDate() == null &&
+			        (purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId())) ){
+		        addRedirectAlertMessage(new SimpleMessage("Payment date cannot be null when status is "+EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getName()));
+                return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+	        }
 
             for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceLineItems) {
                 if (purchaseInvoiceLineItem.getQty() != null && purchaseInvoiceLineItem.getQty() == 0 && purchaseInvoiceLineItem.getId() != null) {
