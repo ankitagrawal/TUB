@@ -53,9 +53,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         if (forGroundShipping) {
             courierServiceInfoCriteria.add(Restrictions.eq("groundShippingAvailable", forGroundShipping));
         }
-	    else{
-	       courierServiceInfoCriteria.add(Restrictions.eq("groundShippingAvailable", forGroundShipping));  
-        }
+
         if (forCodAvailableOnGroundShipping) {
             courierServiceInfoCriteria.add(Restrictions.eq("codAvailableOnGroundShipping", forCodAvailableOnGroundShipping));
         }
