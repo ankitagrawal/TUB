@@ -92,7 +92,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 		if (StringUtils.isBlank(trackingId) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || selectedCourier == null) {
 			getContext().getValidationErrors().add("1", new SimpleError("Tracking Id, Box weight, Box Size, Courier all are mandatory"));
 		}
-		if (( shipment.getBoxSize() != null) && shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId()) ||(selectedCourier != null) &&  selectedCourier.getId().equals(EnumCourier.MIGRATE.getId())) {
+		if ((shipment.getBoxSize() != null && shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId())) || (selectedCourier != null && selectedCourier.getId().equals(EnumCourier.MIGRATE.getId()))) {
 			getContext().getValidationErrors().add("2", new SimpleError("None of the values can be migrate"));
 		}
 		Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
