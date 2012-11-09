@@ -283,7 +283,7 @@ public class ProductServiceImpl implements ProductService {
             for (ProductVariant productVariant : product.getInStockVariants()) {
                 int optionsCounter = 0;
                 for (ProductOption productOption : productVariant.getProductOptions()) {
-                    if (productOption.getName().equalsIgnoreCase("Color") || productOption.getName().equalsIgnoreCase("Gender") || productOption.getName().equalsIgnoreCase("Type")) {
+                    if (productOption.getName().equalsIgnoreCase("Color") || productOption.getName().equalsIgnoreCase("Gender") || productOption.getName().equalsIgnoreCase("Size")) {
                         optionsCounter++;
                     }
                 }
