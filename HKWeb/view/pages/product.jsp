@@ -545,6 +545,13 @@
 		</c:otherwise>
 	</c:choose>
 	<div class="floatfix"></div>
+    <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
+        <div id="tryOnLink" class="content">
+            <c:if test="${pa.validTryOnProductVariant != null}">
+                <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" style="background: red"> TRY IT NOW </a>
+            </c:if>
+        </div>
+    </shiro:hasAnyRoles>
 
 	<shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
 		<div>
@@ -607,14 +614,6 @@
 				</div>
 			</c:if>
 
-        <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
-           <div id="tryOnLink" class="content">
-              <c:if test="${pa.validTryOnProductVariant != null}">
-                 <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" style="background: red"> TRY IT NOW </a>
-              </c:if>
-           </div>
-        </shiro:hasAnyRoles>
-			
 			<div id="sizeGuide"
 		     class="content"
 		     style="background-color:#F2F2F2;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
