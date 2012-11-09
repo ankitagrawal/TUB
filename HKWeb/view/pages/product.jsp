@@ -385,6 +385,13 @@
 				Related Products &darr;
 			</a>
 		</c:if>
+        <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
+            <div id="tryOnLink" class="content">
+                <c:if test="${pa.validTryOnProductVariant != null}">
+                    <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" style="color: red;font-size: 150%"> TRY IT NOW </a>
+                </c:if>
+            </div>
+        </shiro:hasAnyRoles>
 	</div>
 	<c:if test="${!empty subscriptionProduct}">
 		<%--  <s:layout-render name="/layouts/embed/_subscription.jsp" subscriptionProduct="${subscriptionProduct}"/> --%>
@@ -545,13 +552,6 @@
 		</c:otherwise>
 	</c:choose>
 	<div class="floatfix"></div>
-    <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
-        <div id="tryOnLink" class="content">
-            <c:if test="${pa.validTryOnProductVariant != null}">
-                <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" style="background: red"> TRY IT NOW </a>
-            </c:if>
-        </div>
-    </shiro:hasAnyRoles>
 
 	<shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
 		<div>
