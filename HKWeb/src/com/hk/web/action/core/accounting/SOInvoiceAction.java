@@ -158,7 +158,7 @@ public class SOInvoiceAction extends BaseAction {
             }
 			estimatedWeightOfPackage = shipmentService.getEstimatedWeightOfShipment(shippingOrder);	
 
-            freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
+            //freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
 
 
             return new ForwardResolution("/pages/shippingOrderInvoice.jsp");

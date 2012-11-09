@@ -174,7 +174,7 @@ public class CartAction extends BaseAction {
             }
         }
 
-        freebieBanner = cartFreebieService.getFreebieBanner(order);
+        //freebieBanner = cartFreebieService.getFreebieBanner(order);
         return new ForwardResolution("/pages/cart.jsp");
     }
 
