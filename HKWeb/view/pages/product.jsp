@@ -5,6 +5,7 @@
 <%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -605,6 +606,14 @@
 				</table>
 				</div>
 			</c:if>
+
+        <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
+           <div id="tryOnLink" class="content">
+              <c:if test="${pa.validTryOnProductVariant != null}">
+                 <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" style="background: red"> TRY IT NOW </a>
+              </c:if>
+           </div>
+        </shiro:hasAnyRoles>
 			
 			<div id="sizeGuide"
 		     class="content"

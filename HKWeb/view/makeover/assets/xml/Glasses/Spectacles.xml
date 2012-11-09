@@ -183,7 +183,7 @@
                     <name>TH4137 Black/Brown,Touch</name> 
                     <desc></desc> 
                 </Glass> 
-                <Glass type="Medium" gender="Female" color="Burgandy" id="EYE1527-01"> 
+                <Glass type="Medium" gender="Women" color="Burgandy" id="EYE1527-01"> 
                     <imgPath>http://healthkart-prod.s3.amazonaws.com/221/22050_m.jpg</imgPath> 
                     <thumbPath>http://healthkart-prod.s3.amazonaws.com/221/22046_s.jpg</thumbPath> 
                     <price>1100.0</price> 

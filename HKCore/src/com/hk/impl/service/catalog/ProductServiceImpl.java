@@ -1,13 +1,8 @@
 package com.hk.impl.service.catalog;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +54,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductIndexService productIndexService;
+    
+    @Autowired
+    ProductImageService productImageService;
 
     @Autowired
     private SeoDao seoDao;
@@ -275,6 +273,23 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return isOutOfStock;
+    }
+
+    @Override
+    public ProductVariant validTryOnProductVariant(Product product) {
+        List<String> mandatoryVariantOptions = Arrays.asList("Color", "Gender", "Type");
+        for (ProductVariant productVariant : product.getInStockVariants()) {
+            int optionsCounter = 0;
+            for (ProductOption productOption : productVariant.getProductOptions()) {
+                if (mandatoryVariantOptions.contains(productOption.getName())) {
+                    optionsCounter++;
+                }
+            }
+            if (optionsCounter == mandatoryVariantOptions.size()) {
+                return productVariant;
+            }
+        }
+        return null;
     }
 /*
 

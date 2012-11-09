@@ -114,6 +114,7 @@ public class ProductAction extends BaseAction {
     private LinkManager linkManager;
 	@Autowired
 	ProductImageService productImageService;
+    private ProductVariant validTryOnProductVariant;
 
     @DefaultHandler
     @DontValidate
@@ -197,6 +198,8 @@ public class ProductAction extends BaseAction {
         if(product.isSubscribable()){
             subscriptionProduct= subscriptionProductService.findByProduct(product);
         }
+
+        validTryOnProductVariant = productService.validTryOnProductVariant(product);
 
         //User Reviews
         totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
@@ -435,5 +438,13 @@ public class ProductAction extends BaseAction {
 
     public SuperSaverImageService getSuperSaverImageService() {
         return superSaverImageService;
+    }
+
+    public ProductVariant getValidTryOnProductVariant() {
+        return validTryOnProductVariant;
+    }
+
+    public void setValidTryOnProductVariant(ProductVariant validTryOnProductVariant) {
+        this.validTryOnProductVariant = validTryOnProductVariant;
     }
 }
