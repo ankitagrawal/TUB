@@ -33,4 +33,10 @@ public interface AdminEmailDao {
 
     @SuppressWarnings("unchecked")
     public void saveOrUpdate(Session session, Collection entities) throws DataAccessException;
+
+    Long getMailingListCountByCampaign(EmailCampaign emailCampaign);
+
+    List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int page, int maxResult);
+
+    List<String> getEmailRecepientsByEmailIds(EmailCampaign emailCampaign, List<EmailRecepient> emailList);
 }

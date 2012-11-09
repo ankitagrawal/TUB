@@ -208,12 +208,13 @@ public class MOrderSummaryAction extends MBaseAction {
         if(null!=pricingDto.getProductsHkSubTotal())
         	total = priceFormat.format(pricingDto.getProductsHkSubTotal());
         	orderMap.put("total", total);
-        
+
+	    boolean courierAvailable = true;
         availableCourierList = courierService.getAvailableCouriers(order);
         if (availableCourierList != null && availableCourierList.size() == 0) {
-            availableCourierList = null;
+            courierAvailable = false;
         }
-        orderMap.put("availableCourierList",availableCourierList);
+        orderMap.put("courierAvailable", courierAvailable);
 
         }catch(Exception e){
         	status = MHKConstants.STATUS_ERROR;
