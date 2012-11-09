@@ -28,6 +28,7 @@ public class InvoiceLineItemDto {
     private String                        productName;
     private String                        variantName;
     private long                          qty;
+    private double                        markedPrice;
     private double                        hkPrice;
     private double                        lineItemTotal;
     private double                        costPrice;
@@ -55,6 +56,7 @@ public class InvoiceLineItemDto {
 
         qty = productLineItem.getQty();
 
+        markedPrice = productLineItem.getMarkedPrice();
         hkPrice = productLineItem.getHkPrice();
 
         lineItemTotal = hkPrice * qty;
@@ -91,7 +93,11 @@ public class InvoiceLineItemDto {
         return qty;
     }
 
-    public double getHkPrice() {
+	public double getMarkedPrice() {
+		return markedPrice;
+	}
+
+	public double getHkPrice() {
         return hkPrice;
     }
 
