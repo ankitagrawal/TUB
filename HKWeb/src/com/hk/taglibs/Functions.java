@@ -471,12 +471,13 @@ public class Functions {
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
-    public static List<Courier> getAvailableCouriers(Object o) {
+	public static List<Courier> getAvailableCouriers(Object o) {
 
-        ShippingOrder shippingOrder = (ShippingOrder) o;
-        CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
-        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false, false);
-    }
+		ShippingOrder shippingOrder = (ShippingOrder) o;
+		CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
+		return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false, false, false);
+
+	}
 
     public static boolean equalsIgnoreCase(String str1, String str2) {
         return !StringUtils.isBlank(str1) && str1.equalsIgnoreCase(str2);
@@ -616,7 +617,7 @@ public class Functions {
         return renderNewCatalogFilter;
     }
 
-    public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, boolean showHiddenImages) {
+    public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, Boolean showHiddenImages) {
         ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
         List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
         return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;

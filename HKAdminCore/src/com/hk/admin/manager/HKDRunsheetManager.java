@@ -1,33 +1,7 @@
 package com.hk.admin.manager;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Picture;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.util.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import static com.akube.framework.util.BaseUtils.newline;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.courier.CourierConstants;
@@ -37,7 +11,19 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.pact.service.store.StoreService;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.util.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("unchecked")
 @Component
@@ -248,8 +234,8 @@ public class HKDRunsheetManager {
             city = addressObj.getCity();
             pincode = addressObj.getPin();
             paymentAmt = consignment.getAmount();
-            address = "Name:" + name + "\n" + "Address:" + line1 + "," + "\n" + line2 + "," + "\n" + city + "-" + pincode + "\n" + "Phone:" + phone;
-            receivedDetails = "Name:" + "\n" + "Relation:" + "\n" + "Mobile No.:" + "\n" + "Received Date,Time:" + "\n" + "Sign";
+            address = "Name:" + name + newline + "Address:" + line1 + "," + newline + line2 + "," + newline + city + "-" + pincode + newline + "Phone:" + phone;
+            receivedDetails = "Name:" + newline + "Relation:" + newline + "Mobile No.:" + newline + "Received Date,Time:" + newline + "Sign";
 
             //adding barcode image to cell
             barcodePath = barcodeGenerator.getBarcodePath(consignment.getCnnNumber(), 1.0f, 150, false);
