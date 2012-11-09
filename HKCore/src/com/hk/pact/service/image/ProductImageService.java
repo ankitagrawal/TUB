@@ -3,6 +3,7 @@ package com.hk.pact.service.image;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public interface ProductImageService {
 
-	public List<ProductImage> searchProductImages(Long imageTypeId, Product product, ProductVariant productVariant, boolean fetchVariantImages, Boolean fetchHiddenImages);
+	public List<ProductImage> searchProductImages(Long imageTypeId, Product product, ProductVariant productVariant, boolean fetchVariantImages, @Nullable Boolean fetchHiddenImages);
 
 
 }

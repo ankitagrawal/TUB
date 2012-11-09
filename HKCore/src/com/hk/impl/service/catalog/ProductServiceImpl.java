@@ -2,6 +2,8 @@ package com.hk.impl.service.catalog;
 
 import java.util.*;
 
+import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.catalog.image.EnumImageType;
 import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
@@ -277,16 +279,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductVariant validTryOnProductVariant(Product product) {
-        List<String> mandatoryVariantOptions = Arrays.asList("Color", "Gender", "Type");
-        for (ProductVariant productVariant : product.getInStockVariants()) {
-            int optionsCounter = 0;
-            for (ProductOption productOption : productVariant.getProductOptions()) {
-                if (mandatoryVariantOptions.contains(productOption.getName())) {
-                    optionsCounter++;
+        if (product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)) {
+            for (ProductVariant productVariant : product.getInStockVariants()) {
+                int optionsCounter = 0;
+                for (ProductOption productOption : productVariant.getProductOptions()) {
+                    if (productOption.getName().equalsIgnoreCase("Color") || productOption.getName().equalsIgnoreCase("Gender") || productOption.getName().equalsIgnoreCase("Type")) {
+                        optionsCounter++;
+                    }
                 }
-            }
-            if (optionsCounter == mandatoryVariantOptions.size()) {
-                return productVariant;
+                if (optionsCounter != 3) {
+                    return null;
+                }
+                if (productImageService.searchProductImages(EnumImageType.FrontFacingEye.getId(), product, productVariant, false, null) != null && productImageService.searchProductImages(EnumImageType.SideFacingEye.getId(), product, productVariant, false, null) != null) {
+                    return productVariant;
+                }
             }
         }
         return null;
