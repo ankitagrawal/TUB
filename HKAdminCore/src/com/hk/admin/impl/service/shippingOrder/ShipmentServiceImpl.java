@@ -70,23 +70,9 @@ public class ShipmentServiceImpl implements ShipmentService {
         // Ground Shipping logic ends -- suggested courier
         if (suggestedCourier == null) {
             return null;
-        }
+        }       
 
-        Double estimatedWeight = 100D;
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
-                return null;
-            }
-            Double variantWeight = productVariant.getWeight();
-            if (variantWeight == null || variantWeight == 0D) {
-                estimatedWeight += 0D;
-            } else {
-                estimatedWeight += variantWeight;
-            }
-        }
-
-        Double weightInKg = estimatedWeight / 1000;
+        Double weightInKg = getEstimatedWeightOfShipment(shippingOrder);
         Long suggestedCourierId = suggestedCourier.getId();
 
         Awb suggestedAwb;
@@ -110,7 +96,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         suggestedAwb = awbService.save(suggestedAwb);
         shipment.setAwb(suggestedAwb);
         shipment.setShippingOrder(shippingOrder);
-        shipment.setBoxWeight(estimatedWeight / 1000);
+        shipment.setBoxWeight(weightInKg);
         shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
         shippingOrder.setShipment(shipment);
         if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
@@ -179,4 +165,21 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
         return false;
     }
+
+	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder){
+		 Double estimatedWeight = 100D;
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
+            if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
+                return null;
+            }
+            Double variantWeight = productVariant.getWeight();
+            if (variantWeight == null || variantWeight == 0D) {
+                estimatedWeight += 0D;
+            } else {
+                estimatedWeight += variantWeight;
+            }
+        }
+		return estimatedWeight/1000;
+	}
 }

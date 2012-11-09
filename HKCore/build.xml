@@ -18,11 +18,15 @@
 		<fileset file="${lib.root.dir}/thirdParty/google-collect-1.0-rc2.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/lambdaj-2.0-with-dependencies.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
+        <fileset file="${lib.root.dir}/thirdParty/junit-4.10.jar" />
 		<fileset file="${lib.root.dir}/citrus/SFA-1.2.jar" />
 		<fileset file="${lib.root.dir}/icici/sfa.jar" />
 		<fileset file="${lib.root.dir}/citrus/citruspay-merchant-kit-1.0.jar" />
 		<fileset file="${lib.root.dir}/stripes/stripes-1.5.3-patched.jar" />
 		<fileset file="${lib.root.dir}/solr/apache-solr-solrj-3.3.0.jar" />
+        <fileset file="${lib.root.dir}/solr/apache-solr-core-3.3.0.jar" />
+        <fileset file="${lib.root.dir}/solr/apache-solr-test-framework-3.3.0.jar" />
+        <fileset file="${lib.root.dir}/solr/lucene-test-framework-3.3.0.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-annotations-3.4.0.GA.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />
         <fileset file="${lib.root.dir}/rest/resteasy-jaxrs-2.3.0.GA.jar" />
@@ -31,7 +35,7 @@
 		<fileset file="${project.common.dir}/dependencies/javaee.jar" />
 		<fileset file="${project.common.dir}/dependencies/testng-5.8-jdk15.jar" />
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
-        <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>        
+        <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>
 	</path>
 
 
