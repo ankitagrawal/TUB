@@ -290,7 +290,7 @@ public class ProductServiceImpl implements ProductService {
                 if (optionsCounter != 3) {
                     return null;
                 }
-                if (productImageService.searchProductImages(EnumImageType.FrontFacingEye.getId(), product, productVariant, false, null) != null && productImageService.searchProductImages(EnumImageType.SideFacingEye.getId(), product, productVariant, false, null) != null) {
+                if (!productImageService.searchProductImages(EnumImageType.FrontFacingEye.getId(), product, productVariant, false, null).isEmpty() && !productImageService.searchProductImages(EnumImageType.SideFacingEye.getId(), product, productVariant, false, null).isEmpty()) {
                     return productVariant;
                 }
             }
