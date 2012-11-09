@@ -77,6 +77,7 @@ public class SOInvoiceAction extends BaseAction {
     private String freebieItem;
     private boolean groundShipped;
     private Shipment shipment;
+	private Double estimatedWeightOfPackage;
 
     private void generateBarcodesForInvoice(Awb awb) {
         Long courierId = shipment.getCourier().getId();
@@ -155,6 +156,7 @@ public class SOInvoiceAction extends BaseAction {
             if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)) {
                 setGroundShipped(true);
             }
+			estimatedWeightOfPackage = shipmentService.getEstimatedWeightOfShipment(shippingOrder);	
 
             // freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
 
@@ -265,4 +267,12 @@ public class SOInvoiceAction extends BaseAction {
     public void setGroundShipped(boolean groundShipped) {
         this.groundShipped = groundShipped;
     }
+
+	public Double getEstimatedWeightOfPackage() {
+		return estimatedWeightOfPackage;
+	}
+
+	public void setEstimatedWeightOfPackage(Double estimatedWeightOfPackage) {
+		this.estimatedWeightOfPackage = estimatedWeightOfPackage;
+	}
 }
