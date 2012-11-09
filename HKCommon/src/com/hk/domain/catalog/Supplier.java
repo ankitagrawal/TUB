@@ -83,6 +83,8 @@ public class Supplier implements java.io.Serializable {
 	@Column (name = "active", nullable = false)
 	private Boolean active;
 
+	@Column(name = "fill_rate")
+	private Double fillRate;
 
 	public Long getId() {
 		return id;
@@ -283,6 +285,14 @@ public class Supplier implements java.io.Serializable {
 		} else {
 			return false;
 		}
+	}
+
+	public Double getFillRate() {
+		return fillRate;
+	}
+
+	public void setFillRate(Double fillRate) {
+		this.fillRate = fillRate;
 	}
 
 	@Override
