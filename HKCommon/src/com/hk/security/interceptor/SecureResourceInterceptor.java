@@ -14,7 +14,8 @@ import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 
 import com.hk.api.HkAPI;
-import com.hk.api.user.HkAPIUser;
+import com.hk.api.cache.HkApiUserCache;
+import com.hk.domain.api.HkApiUser;
 import com.hk.security.HkAuthService;
 import com.hk.security.annotation.SecureResource;
 import com.hk.service.ServiceLocatorFactory;
@@ -53,9 +54,11 @@ public class SecureResourceInterceptor implements PreProcessInterceptor {
                 return new ServerResponse("NO_API_KEY_PASSED", 200, new Headers<Object>());
             }
 
-            if (!HkAPIUser.containsApiKey(apiKey)) {
+            HkApiUser hkApiUser = HkApiUserCache.getInstance().getHkApiUser(apiKey);
+            if (hkApiUser == null) {
                 return new ServerResponse("INVALID_APP_KEY", 200, new Headers<Object>());
             }
+            
 
             if (StringUtils.isEmpty(apiVersion)) {
                 apiVersion = HkAPI.CURRENT_VERSION;

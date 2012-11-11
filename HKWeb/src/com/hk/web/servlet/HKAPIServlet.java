@@ -8,17 +8,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.hk.api.AuthAPI;
 import com.hk.api.HkAPI;
 import com.hk.api.constants.OperationType;
-import com.hk.api.user.HkAPIUser;
 import com.hk.security.HkAuthService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.util.json.JSONResponseBuilder;
 
 /**
  * @author vaibhav.adlakha
@@ -26,9 +20,10 @@ import com.hk.util.json.JSONResponseBuilder;
 @SuppressWarnings("serial")
 public class HKAPIServlet extends HkAPIBaseServlet {
 
-    private static Logger       logger          = LoggerFactory.getLogger(HKAPIServlet.class);
+    //private static Logger       logger          = LoggerFactory.getLogger(HKAPIServlet.class);
 
-    private final static String CURRENT_VERSION = "1.0";
+    @SuppressWarnings("unused")
+    //private final static String CURRENT_VERSION = "1.0";
 
     public enum Operation {
         GetUserDetails, ValidateAndRefreshAuthToken
@@ -54,7 +49,7 @@ public class HKAPIServlet extends HkAPIBaseServlet {
     @Override
     protected final void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String authToken = req.getParameter("authToken");
+        /*String authToken = req.getParameter("authToken");
         String apiVersion = req.getParameter("apiVersion");
         String apiKey = req.getParameter("apiKey");
 
@@ -108,9 +103,9 @@ public class HKAPIServlet extends HkAPIBaseServlet {
             apiVersion = CURRENT_VERSION;
         }
 
-        /**
+        *//**
          * validate token and api key in auth service, do all in memory
-         */
+         *//*
         try {
             getHkAuthService().validateToken(authToken, apiKey, false);
         } catch (Throwable t) {
@@ -129,9 +124,10 @@ public class HKAPIServlet extends HkAPIBaseServlet {
                 }
                 break;
 
-        }
+        }*/
     }
 
+    @SuppressWarnings("unused")
     private void processAuthRequest(AuthAPI authAPI, HttpServletRequest req, HttpServletResponse resp, Operation operation) {
         switch (operation) {
             case ValidateAndRefreshAuthToken:
