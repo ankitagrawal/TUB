@@ -9694,16 +9694,4 @@
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="vaibhav (generated)" id="1352662210251-4">
-        <dropIndex indexName="awb_no_idx" tableName="awb"/>
-    </changeSet>
-    <changeSet author="vaibhav (generated)" id="1352662210251-5">
-        <dropIndex indexName="key_UNIQUE" tableName="hk_app"/>
-    </changeSet>
-    <changeSet author="vaibhav (generated)" id="1352662210251-6">
-        <dropIndex indexName="name_UNIQUE" tableName="hk_app"/>
-    </changeSet>
-    <changeSet author="vaibhav (generated)" id="1352662210251-7">
-        <dropTable tableName="hk_app"/>
-    </changeSet>
 </databaseChangeLog>
