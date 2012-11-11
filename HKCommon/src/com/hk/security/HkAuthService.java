@@ -14,7 +14,7 @@ public interface HkAuthService {
 
     public HkAuthentication authenticate(HkAuthentication authentication) throws HkAuthenticationException;
 
-    public String generateAuthToken(HkAuthentication authentication);
+    public String generateAuthToken(String userName, String passwordCheckSum, String apiKey);
 
 
     public boolean validateToken(String authToken, String apiKey,boolean validatePwd)throws HkInvalidAuthTokenException, HKAuthTokenExpiredException ; 

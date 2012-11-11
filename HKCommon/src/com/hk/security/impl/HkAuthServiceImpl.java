@@ -9,6 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.akube.framework.util.BaseUtils;
 import com.hk.api.cache.HkApiUserCache;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.user.User;
@@ -52,7 +53,7 @@ public class HkAuthServiceImpl implements HkAuthService {
                 throw new HkUserNotFoundException(userName);
             }
 
-            if (password != null && password.equals(user.getPassword())) {
+            if (password != null && BaseUtils.passwordEncrypt(password).equals(user.getPasswordChecksum())) {
                 Collection<GrantedOperation> allowedOperations = GrantedOperationUtil.ALL_OPERATIONS;
                 authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey, allowedOperations);
             } else {
@@ -77,14 +78,15 @@ public class HkAuthServiceImpl implements HkAuthService {
     }
 
     @Override
-    public String generateAuthToken(HkAuthentication authentication) {
-        String userName = (String) authentication.getPrincipal();
-        String password = (String) authentication.getCredentials();
-        String apiKey = (String) authentication.getApiKey();
+    public String generateAuthToken(String userName, String passwordCheckSum, String apiKey) {
+        //String userName = (String) authentication.getPrincipal();
+        //String password = (String) authentication.getCredentials();
+        //String passwordCheckSum = BaseUtils.passwordEncrypt(password);
+        //String apiKey = (String) authentication.getApiKey();
 
         HkApiUser hkApiUser = checkApiKeyExists(apiKey);
         /**
-         * base64( emailid:expiredon:apiKey b=token->md5(emailid+passwd+expiration) a :b
+         * base64( emailid:expiredon:apiKey b=token->md5(emailid+passwdchkSum+expiration) a :b
          */
 
         int expiryTimeInMin = hkApiUser.getDefaultTokenExpiry();
@@ -94,7 +96,7 @@ public class HkAuthServiceImpl implements HkAuthService {
         Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.HOUR_OF_DAY, expiryTimeInMin);
 
         String tokenA = userName.concat(":").concat(Long.valueOf(expiryTime.getTime()).toString()).concat(":").concat(apiKey);
-        String tokenB = userName.concat(":").concat(password).concat(":").concat(Long.valueOf(expiryTime.getTime()).toString());
+        String tokenB = userName.concat(":").concat(passwordCheckSum).concat(":").concat(Long.valueOf(expiryTime.getTime()).toString());
 
         String md5 = DigestUtils.md5Hex(tokenB);
         String baseToken = tokenA.concat(":").concat(md5);
@@ -131,9 +133,10 @@ public class HkAuthServiceImpl implements HkAuthService {
                 throw new HkUserNotFoundException(userName);
             }
 
-            String password = user.getPassword();
+            
+            String passWordChkSum = user.getPasswordChecksum();
 
-            String reConstructedToken = userName.concat(":").concat(password).concat(":").concat(decodedTokenArr[1]);
+            String reConstructedToken = userName.concat(":").concat(passWordChkSum).concat(":").concat(decodedTokenArr[1]);
             String reConTokeMd5 = DigestUtils.md5Hex(reConstructedToken);
 
             if (!reConTokeMd5.equals(decodedTokenArr[3])) {
@@ -161,9 +164,9 @@ public class HkAuthServiceImpl implements HkAuthService {
             throw new HkUserNotFoundException(userName);
         }
 
-        String password = user.getPassword();
-        HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey);
-        return generateAuthToken(authentication);
+        String passwordchkSum = user.getPasswordChecksum();
+        //HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName, passwordchkSum, apiKey);
+        return generateAuthToken(userName, passwordchkSum, apiKey);
     }
 
     private String[] decodeAuthToken(String authToken) {
@@ -184,9 +187,9 @@ public class HkAuthServiceImpl implements HkAuthService {
         String userName = "uname";
         String apiKey = "appId";
 
-        HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey);
+        //HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey);
         HkAuthServiceImpl authService = new HkAuthServiceImpl();
-        String authToken = authService.generateAuthToken(authentication);
+        String authToken = authService.generateAuthToken(userName, BaseUtils.passwordEncrypt(password), apiKey);
 
         System.out.println(authToken);
 

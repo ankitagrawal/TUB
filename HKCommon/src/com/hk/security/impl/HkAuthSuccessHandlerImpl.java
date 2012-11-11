@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.akube.framework.util.BaseUtils;
 import com.hk.api.cache.HkApiUserCache;
 import com.hk.domain.api.HkApiUser;
 import com.hk.security.HkAuthService;
@@ -16,29 +17,33 @@ import com.hk.security.HkAuthSuccessHandler;
 import com.hk.security.HkAuthentication;
 
 /**
- * 
  * @author vaibhav.adlakha
- *
  */
 @Service
 public class HkAuthSuccessHandlerImpl implements HkAuthSuccessHandler {
 
     private static final String REDIRECT_URL_PARAM = "redirectUrl";
     @Autowired
-    private HkAuthService hkAuthService;
+    private HkAuthService       hkAuthService;
 
     @Override
     public void handleAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, HkAuthentication authResult) throws IOException {
-        HkApiUser hkApiUser = HkApiUserCache.getInstance().getHkApiUser((String)authResult.getApiKey());
-        
+        HkApiUser hkApiUser = HkApiUserCache.getInstance().getHkApiUser((String) authResult.getApiKey());
+
         String targetUrl = determineTargetUrl(request, response, hkApiUser.getLoginSuccessRedirectUrl());
 
         String redirectUrl = calculateRedirectUrl(request.getContextPath(), targetUrl);
-        redirectUrl= redirectUrl.concat("?").concat(getHkAuthService().generateAuthToken(authResult));
+
+        String userName = (String) authResult.getPrincipal();
+        String password = (String) authResult.getCredentials();
+        String passwordCheckSum = BaseUtils.passwordEncrypt(password);
+        String apiKey = (String) authResult.getApiKey();
+
+        redirectUrl = redirectUrl.concat("?").concat(getHkAuthService().generateAuthToken(userName, passwordCheckSum, apiKey));
         redirectUrl = response.encodeRedirectURL(redirectUrl);
 
         response.sendRedirect(redirectUrl);
-        
+
     }
 
     private String calculateRedirectUrl(String contextPath, String url) {
@@ -69,20 +74,18 @@ public class HkAuthSuccessHandlerImpl implements HkAuthSuccessHandler {
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, String loginSuccessRedirectUrl) {
-        
+
         String redirectUrlFromReq = request.getParameter(REDIRECT_URL_PARAM);
-        if(StringUtils.isNotBlank(redirectUrlFromReq)){
+        if (StringUtils.isNotBlank(redirectUrlFromReq)) {
             return redirectUrlFromReq;
-        }
-        else{
+        } else {
             return loginSuccessRedirectUrl;
         }
-        
+
     }
 
     public HkAuthService getHkAuthService() {
         return hkAuthService;
     }
 
-    
 }
