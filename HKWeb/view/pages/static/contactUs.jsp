@@ -65,6 +65,8 @@
 
       <br/>
 
+      <%--<p style="color: gray">If you are not satisfied with the response, please write to us at <a href="mailto:ceo@healthkart.com">ceo@healthkart.com</a></p>--%>
+
       <h2>Headquarters</h2>
 
       <p>

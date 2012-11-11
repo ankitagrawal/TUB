@@ -9,6 +9,7 @@
 <%@ page import="com.hk.admin.util.courier.thirdParty.FedExCourierUtil" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
+<%@ page import="com.hk.admin.pact.service.shippingOrder.ShipmentService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -70,7 +71,7 @@
     </style>
     <link href="<hk:vhostCss/>/css/960.css" rel="stylesheet" type="text/css"/>
     <%
-        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);        
         pageContext.setAttribute("sexualCare", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("sexual-care")));
         pageContext.setAttribute("personalCareWomen", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("women")));
     %>
@@ -84,6 +85,7 @@
 <c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.getId()%>"/>
 <c:set var="groundShipped" value="${orderSummary.groundShipped}"/>
 <c:set var="courierId" value="${orderSummary.shipment.courier.id}"/>
+
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">
@@ -148,7 +150,7 @@
                 <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD && orderSummary.invoiceDto.grandTotal > 0}">
                     COD
                 </c:if>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
+                &nbsp;&nbsp;wt:${orderSummary.estimatedWeightOfPackage}Kg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
             </div>
 
             <div class="clear"></div>
@@ -284,7 +286,8 @@
         <tr>
             <th>Item</th>
             <th>Quantity</th>
-            <th>Unit price</th>
+            <th>MRP</th>
+            <th>Rate</th>
             <th>Total(Rs.)</th>
         </tr>
         <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
@@ -373,6 +376,7 @@
                 </td>
 
                 <td><fmt:formatNumber value="${invoiceLineItem.qty}" maxFractionDigits="0"/></td>
+                <td> ${invoiceLineItem.markedPrice} </td>
                 <td> ${invoiceLineItem.hkPrice} </td>
                 <td class="itemsubTotal">
                     <fmt:formatNumber value="${invoiceLineItem.lineItemTotal}" type="currency"

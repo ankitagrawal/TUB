@@ -34,6 +34,7 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.order.CartFreebieService;
 
 @Component
 public class SOInvoiceAction extends BaseAction {
@@ -50,9 +51,8 @@ public class SOInvoiceAction extends BaseAction {
     private CategoryService categoryService;
     @Autowired
     private CourierService courierService;
-    /*
-     * @Autowired private CartFreebieService cartFreebieService;
-     */
+    @Autowired
+    private CartFreebieService cartFreebieService;
     @Autowired
     private B2bUserDetailsDao b2bUserDetailsDao;
     @Autowired
@@ -77,6 +77,7 @@ public class SOInvoiceAction extends BaseAction {
     private String freebieItem;
     private boolean groundShipped;
     private Shipment shipment;
+	private Double estimatedWeightOfPackage;
 
     private void generateBarcodesForInvoice(Awb awb) {
         Long courierId = shipment.getCourier().getId();
@@ -155,8 +156,9 @@ public class SOInvoiceAction extends BaseAction {
             if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)) {
                 setGroundShipped(true);
             }
+			estimatedWeightOfPackage = shipmentService.getEstimatedWeightOfShipment(shippingOrder);	
 
-            // freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
+            //freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
 
 
             return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
@@ -265,4 +267,12 @@ public class SOInvoiceAction extends BaseAction {
     public void setGroundShipped(boolean groundShipped) {
         this.groundShipped = groundShipped;
     }
+
+	public Double getEstimatedWeightOfPackage() {
+		return estimatedWeightOfPackage;
+	}
+
+	public void setEstimatedWeightOfPackage(Double estimatedWeightOfPackage) {
+		this.estimatedWeightOfPackage = estimatedWeightOfPackage;
+	}
 }
