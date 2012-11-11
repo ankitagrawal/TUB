@@ -55,10 +55,5 @@ public class HkUsernamePasswordAuthenticationToken extends HkAbstractAuthenticat
 
         super.setAuthenticated(false);
     }
-
-
-    
-
-
     
 }
