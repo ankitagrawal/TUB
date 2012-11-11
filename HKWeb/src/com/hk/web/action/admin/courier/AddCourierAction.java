@@ -1,24 +1,29 @@
 package com.hk.web.action.admin.courier;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.stripes.controller.JsonHandler;
-import com.akube.framework.gson.JsonUtils;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierGroup;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.category.Category;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.web.HealthkartResponse;
-import com.hk.pact.dao.catalog.product.ProductDao;
-import com.hk.pact.dao.catalog.category.CategoryDao;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
-
-import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.akube.framework.gson.JsonUtils;
+import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.CourierGroup;
+import com.hk.pact.dao.catalog.category.CategoryDao;
+import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.web.HealthkartResponse;
 
 /**
  * Created by IntelliJ IDEA.

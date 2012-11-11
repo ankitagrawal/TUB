@@ -11,6 +11,7 @@ import com.hk.domain.api.HkApiUser;
 public class HkApiUserCache {
 
     private static HkApiUserCache  _instance         = new HkApiUserCache();
+    private HkApiUserCache         _transient;
 
     private Map<String, HkApiUser> apiKeyToUserCache = new HashMap<String, HkApiUser>();
 
@@ -31,5 +32,13 @@ public class HkApiUserCache {
 
     public void freeze() {
         _instance = this;
+    }
+
+    public void reset() {
+        _transient = new HkApiUserCache();
+    }
+
+    public HkApiUserCache getTransientCache() {
+        return _transient;
     }
 }

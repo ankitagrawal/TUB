@@ -1,6 +1,7 @@
 package com.hk.web.listener;
 
 import java.io.File;
+import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
@@ -12,10 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.api.cache.HkApiUserCache;
+import com.hk.domain.api.HkApiUser;
+import com.hk.pact.dao.BaseDao;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.AppConstants;
 
 public class HKStartupListener implements ServletContextListener {
 
+    @SuppressWarnings("unused")
     private static Logger logger = LoggerFactory.getLogger(HKStartupListener.class);
 
     public static File    hibernateCfgFile;
@@ -28,6 +34,8 @@ public class HKStartupListener implements ServletContextListener {
     public static String  appBasePath;
     public static String  environmentDir;
 
+    private BaseDao       baseDao;
+
     // private BatchProcessManager batchProcessManager;
 
     // Public constructor is required by servlet spec
@@ -39,8 +47,10 @@ public class HKStartupListener implements ServletContextListener {
         AppConstants.contextPath = event.getServletContext().getContextPath();
         AppConstants.appBasePath = event.getServletContext().getRealPath("/");
 
-        /*PropertyConfigurator.configure( AppConstants.appBasePath + "WEB-INF/log4j.properties");
-        logger.info("logger configured");*/
+        /*
+         * PropertyConfigurator.configure( AppConstants.appBasePath + "WEB-INF/log4j.properties"); logger.info("logger
+         * configured");
+         */
 
         /*
          * This method is called when the servlet context is initialized(when the Web application is deployed). You can
@@ -74,6 +84,7 @@ public class HKStartupListener implements ServletContextListener {
         // if (startBackgroundTaskManager) {
         if (true) {
             System.out.println("------------- Starting Batch Process Manager ---------------------");
+            populateHKApiUserCache();
             /*
              * batchProcessManager = ServiceLocatorFactory.getService(BatchProcessManager.class);
              * batchProcessManager.start();
@@ -84,6 +95,20 @@ public class HKStartupListener implements ServletContextListener {
 
     }
 
+    private void populateHKApiUserCache() {
+        HkApiUserCache.getInstance().reset();
+        HkApiUserCache hkApiUserCache = HkApiUserCache.getInstance().getTransientCache();
+
+        List<HkApiUser> apiUsersList = getBaseDao().getAll(HkApiUser.class);
+
+        for (HkApiUser apiUser : apiUsersList) {
+            hkApiUserCache.addHkApiUser(apiUser);
+        }
+        hkApiUserCache.freeze();
+
+    }
+
+    @SuppressWarnings("unused")
     private String getEnvironmentDir(String appBasePath) {
         String propertyLocatorFileLocation = "/WEB-INF/propertyLocator.properties";
         propertyLocatorFileLocation = appBasePath + propertyLocatorFileLocation;
@@ -108,6 +133,7 @@ public class HKStartupListener implements ServletContextListener {
         return environmentDir;
     }
 
+    @SuppressWarnings("unused")
     private void setupLogger(String environmentDir) {
         String loggerPropertiesFileLocation = environmentDir + "/logger-config.properties";
         File log4jFile = new File(loggerPropertiesFileLocation);
@@ -148,6 +174,13 @@ public class HKStartupListener implements ServletContextListener {
         // CacheManager.getInstance().shutdown();
         System.out.println("================  SHUTTING DOWN  ==================");
         // LogManager.shutdown();
+    }
+
+    public BaseDao getBaseDao() {
+        if (baseDao == null) {
+            baseDao = ServiceLocatorFactory.getService(BaseDao.class);
+        }
+        return baseDao;
     }
 
 }
