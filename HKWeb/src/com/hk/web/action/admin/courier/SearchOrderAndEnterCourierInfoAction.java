@@ -109,14 +109,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			if (availableCouriers == null || availableCouriers.isEmpty()) {
 				getContext().getValidationErrors().add("4", new SimpleError("No Couriers are applicable on this pincode, Please contact logistics, Order cannot be packed"));
 			}
-//verify if suggested courier is present in Available
-//	        if (suggestedCourier != null) {
-//		        if ((availableCouriers != null && availableCouriers.size() > 0) && !(availableCouriers.contains(suggestedCourier))) {
-//			        getContext().getValidationErrors().add("5", new SimpleError(" ERROR :::: The Default suggessted courier " + suggestedCourier.getName() + " " +
-//					        "is not present in Servicable Courier (Available List).       Contact Admin(Rajinder) To add " + suggestedCourier.getName() + " in servicable List  for Pincode " + pinCode.getPincode()));
-//		        }
-//	        }
-
 		}
 	}
 
@@ -154,20 +146,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			if (pinCode != null) {
 				boolean isCod = shippingOrder.isCOD();
 				isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-				availableCouriers = courierService.getCouriers(pinCode.getPincode(),isGroundShipped, null, null,false);
+				availableCouriers = courierService.getCouriers(pinCode.getPincode(), isGroundShipped, null, null, false);
 				if (shippingOrder.getShipment() != null) {
 					suggestedCourier = shippingOrder.getShipment().getAwb().getCourier();
 					trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
 				} else {
 					suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
 				}
-				
-//				if (suggestedCourier != null) {
-//		            if ((availableCouriers != null && availableCouriers.size() > 0) && (!(availableCouriers.contains(suggestedCourier)))) {
-//			            addRedirectAlertMessage(new SimpleMessage("The Default suggessted courier " + suggestedCourier.getName() + " is not present in Servicable Courier (Available List)" +
-//					            "       Contact Admin(Rajinder) To add Servicable List for Pincode " + pinCode.getPincode()));
-//		            }
-//	            }
 
 			} else {
 				addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
@@ -194,7 +179,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 		finalAwb = suggestedAwb;
 		if ((suggestedAwb == null) || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
 				(suggestedCourier != null && (!(selectedCourier.equals(suggestedCourier))))) {
-			  //User has not used suggested one and  has enetered  AWB manually
+			//User has not used suggested one and  has enetered  AWB manually
 			if ((suggestedAwb != null) && (suggestedCourier != null) && (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId()))) {
 				// To delete the tracking no. generated previously
 				awbService.deleteAwbForThirdPartyCourier(suggestedCourier, suggestedAwb.getAwbNumber());
@@ -209,30 +194,28 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 				} else {
 					finalAwb = updateAttachStatus(thirdPartyAwb);
 				}
-			}
-			else {
+			} else {
 				// For Non Fedex Couriers
 				Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(selectedCourier, trackingId.trim(), null, null, null);
 				if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
 					//User has eneterd AWB manually which is present in database Already
-					boolean error=false;
+					boolean error = false;
 					AwbStatus awbStatus = awbFromDb.getAwbStatus();
 					if (EnumAwbStatus.getAllStatusExceptUnused().contains(awbStatus)) {
-					error = true;
+						error = true;
+					} else if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
+						error = true;
 					}
-					else if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
-					 error = true;
-					}
-					if(error){
-					addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "       is already Used with other  shipping Order  OR  already Present in another warehouse with same courier"));
+					if (error) {
+						addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "       is already Used with other  shipping Order  OR  already Present in another warehouse with same courier"));
 						return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
 					}
 					finalAwb = updateAttachStatus(awbFromDb);
 
 				} else {
-					//Create New AWb (Authorization_Pending shows it might not  valid one since Admin has added  thr AWb manually.
+					//Create New AWb (Authorization_Pending shows it might not a valid  Awb , since person has added it manually.
 					Awb awb = awbService.createAwb(selectedCourier, trackingId.trim(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
-					awb = (Awb)awbService.save(awb,null);
+					awb = (Awb) awbService.save(awb, null);
 					awbService.save(awb, EnumAwbStatus.Authorization_Pending.getId().intValue());
 					awbService.refresh(awb);
 					finalAwb = awb;
@@ -240,9 +223,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			}
 		} else {
 			//user has used suggested one
-			finalAwb=updateAttachStatus(finalAwb);
+			finalAwb = updateAttachStatus(finalAwb);
 		}
-		shipment.setAwb(finalAwb);                              
+		shipment.setAwb(finalAwb);
 		shipment.setShippingOrder(shippingOrder);
 		shippingOrder.setShipment(shipment);
 		shipmentService.save(shipment);
