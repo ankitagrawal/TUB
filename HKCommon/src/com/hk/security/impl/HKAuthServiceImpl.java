@@ -6,8 +6,12 @@ import java.util.Date;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hk.api.cache.HkApiUserCache;
+import com.hk.domain.api.HkApiUser;
+import com.hk.pact.service.UserService;
 import com.hk.security.GrantedOperation;
 import com.hk.security.GrantedOperationUtil;
 import com.hk.security.HkAuthService;
@@ -15,6 +19,7 @@ import com.hk.security.HkAuthentication;
 import com.hk.security.HkUsernamePasswordAuthenticationToken;
 import com.hk.security.exception.HKAuthTokenExpiredException;
 import com.hk.security.exception.HkAuthenticationException;
+import com.hk.security.exception.HkInvalidApiKeyException;
 import com.hk.security.exception.HkInvalidAuthTokenException;
 import com.hk.util.HKDateUtil;
 
@@ -23,6 +28,9 @@ import com.hk.util.HKDateUtil;
  */
 @Service
 public class HkAuthServiceImpl implements HkAuthService {
+    
+    @Autowired
+    private UserService userService;
 
     @Override
     public HkAuthentication authenticate(HkAuthentication authentication) throws HkAuthenticationException {
@@ -34,7 +42,12 @@ public class HkAuthServiceImpl implements HkAuthService {
             String password = (String) authentication.getCredentials();
             String apiKey = (String) authentication.getApiKey();
 
-            if (userName.equals("abc") && password.equals("abc") && apiKey.equals("abc")) {
+            HkApiUser hkApiUser = HkApiUserCache.getInstance().getHkApiUser(apiKey);
+            if(hkApiUser == null){
+                throw new HkInvalidApiKeyException(apiKey);
+            }
+            
+            if (userName.equals("abc") && password.equals("abc")) {
                 Collection<GrantedOperation> allowedOperations = GrantedOperationUtil.ALL_OPERATIONS;
                 authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey, allowedOperations);
             } else {
@@ -80,7 +93,7 @@ public class HkAuthServiceImpl implements HkAuthService {
         String[] decodedTokenArr = decodeAuthToken(authToken);
 
         Date expiredOn = new Date(Long.parseLong(decodedTokenArr[1]));
-        System.out.println(expiredOn);
+        
 
         if (expiredOn.compareTo(new Date()) == -1) {
             throw new HKAuthTokenExpiredException();
@@ -124,7 +137,7 @@ public class HkAuthServiceImpl implements HkAuthService {
     private String[] decodeAuthToken(String authToken) {
         byte[] base64DecodedArr = Base64.decodeBase64(authToken);
         String base64Decoded = new String(base64DecodedArr);
-        System.out.println(base64Decoded);
+        
 
         String[] decodedTokenArr = base64Decoded.split(":");
         return decodedTokenArr;
