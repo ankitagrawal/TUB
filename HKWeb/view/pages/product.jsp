@@ -8,11 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
-<c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
-<c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
-<c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
-<c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
+ <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
+ <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
+ <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
+ <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
+ <c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
 <%
     CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
     Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
@@ -25,10 +25,10 @@
     Category stethoscope = categoryDao.getCategoryByName("stethoscope");
     pageContext.setAttribute("stethoscope", stethoscope);
 %>
-<c:set var="product" value="${pa.product}"/>
-<c:set var="seoData" value="${pa.seoData}"/>
-<c:set var="subscriptionProduct" value="${pa.subscriptionProduct}"/>
-<s:layout-render name="/layouts/productLayout.jsp" pageTitle="${seoData.title}">
+ <c:set var="product" value="${pa.product}"/>
+ <c:set var="seoData" value="${pa.seoData}"/>
+ <c:set var="subscriptionProduct" value="${pa.subscriptionProduct}"/>
+ <s:layout-render name="/layouts/productLayout.jsp" pageTitle="${seoData.title}">
 <%--<s:layout-render name="/layouts/default.jsp" pageTitle="${seoData.title}">--%>
 
 
@@ -65,6 +65,10 @@
 			text-decoration: none;
 			float: left;
 		}
+
+        #mycarousel {
+            display:none;
+        }
 
 		.rating_bar {
 			width: 80px;
@@ -136,6 +140,8 @@
 				preloadImages:false,
 				alwaysOn:false
 			});
+
+            $('#mycarousel').css('display', 'block');
 
             jQuery(document).ready(function() {
                 jQuery('#mycarousel').jcarousel();
@@ -249,11 +255,11 @@
 		<div class="clear"></div>
 		<div style="padding-top: 15px">
 			<shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
-				<a name="showProductLink" class="linkbutton"
+			 	 <a name="showProductLink" class="linkbutton"
 				   onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();"
 				   style="cursor:pointer">Get
 					Links</a>
-				<a name="showProductLink" class="linkbutton"
+				 <a name="showProductLink" class="linkbutton"
 				   onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();"
 				   style="cursor:pointer">Get
 					Banners</a>
@@ -888,12 +894,12 @@
 	<script type="text/javascript">
 		var validateCheckbox;
 		$(document).ready(function () {
+           
 			var params = {};
 			params.productReferrerId = $('#productReferrerId').val();
 			function _addToCart(res) {
 				if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 					$('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
-					//alert(res.data.itemsInCart);
 					$('#productsInCart').html(res.data.itemsInCart);
 					if(res.data.itemsInCart > 0){
 						$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart.png");
@@ -903,8 +909,13 @@
 					$('.progressLoader').hide();
 
 					show_message();
+                    $('#gulal').show();
 				}
-				$('#gulal').show();
+                else if(res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+                   alert(res.message);
+                    location.reload();
+                }
+
 			}
 
 			function _addToCart2(res) {
@@ -947,10 +958,12 @@
 				params.nameToBeEngraved = $("#engrave").val();
 
 				if (!window.validateCheckbox) {
+
 					$(this).parents().find('.progressLoader').show();
 					$(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
 					$(this).hide();
 					e.stopPropagation();
+
 				} else {
 					var selected = 0;
 					$('.checkbox').each(function () {

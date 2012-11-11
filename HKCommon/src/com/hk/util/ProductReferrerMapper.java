@@ -16,7 +16,7 @@ import com.hk.constants.marketing.ProductReferrerConstants;
  */
 public class ProductReferrerMapper {
 
-  static Map<String,Long> referrerMap = new HashMap();
+  static Map<String,Long> referrerMap = new HashMap<String,Long>();
 
   static{
     referrerMap.put(CategoryConstants.BABY, EnumProductReferrer.parenting.getId());

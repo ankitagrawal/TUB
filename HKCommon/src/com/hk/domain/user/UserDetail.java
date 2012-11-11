@@ -1,9 +1,20 @@
 package com.hk.domain.user;
 
-import com.hk.constants.core.EnumCallPriority;
-import com.hk.domain.catalog.product.combo.Combo;
+import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.akube.framework.gson.JsonSkip;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,6 +41,11 @@ public class UserDetail {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @JsonSkip
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date createDate = new Date();
 
     public Long getId() {
         return id;
@@ -61,5 +77,13 @@ public class UserDetail {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }

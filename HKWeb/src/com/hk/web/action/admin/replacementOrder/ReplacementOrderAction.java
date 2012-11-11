@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.domain.order.ReplacementOrderReason;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,6 @@ import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -24,7 +24,6 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.helper.ReplacementOrderHelper;
@@ -50,6 +49,7 @@ public class ReplacementOrderAction extends BaseAction {
 	private Boolean isRto;
 	private List<LineItem> lineItems = new ArrayList<LineItem>();
 	private List<ReplacementOrder> replacementOrderList;
+	private ReplacementOrderReason replacementOrderReason;
 
 	@Autowired
 	private ShippingOrderService shippingOrderService;
@@ -112,6 +112,11 @@ public class ReplacementOrderAction extends BaseAction {
 			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 
+		if (replacementOrderReason == null) {
+			addRedirectAlertMessage(new SimpleMessage("Please select a reason for creating a replacement order."));
+			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+		}
+
 		int valid_item_flag = 0;
 		for (LineItem lineItem : lineItems) {
 			if (lineItem.getQty() > 0) {
@@ -135,7 +140,7 @@ public class ReplacementOrderAction extends BaseAction {
 			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 
-		replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto);
+		replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto, replacementOrderReason);
 		if (replacementOrder == null) {
 			addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order."));
 			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
@@ -235,5 +240,13 @@ public class ReplacementOrderAction extends BaseAction {
 
 	public void setGatewayOrderId(String gatewayOrderId) {
 		this.gatewayOrderId = gatewayOrderId;
+	}
+
+	public ReplacementOrderReason getReplacementOrderReason() {
+		return replacementOrderReason;
+	}
+
+	public void setReplacementOrderReason(ReplacementOrderReason replacementOrderReason) {
+		this.replacementOrderReason = replacementOrderReason;
 	}
 }

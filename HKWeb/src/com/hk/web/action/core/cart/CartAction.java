@@ -46,6 +46,7 @@ import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
 import com.hk.web.HealthkartResponse;
@@ -87,8 +88,8 @@ public class CartAction extends BaseAction {
     OfferManager                offerManager;
     @Autowired
     private OrderDao            orderDao;
-    /*@Autowired
-    private CartFreebieService  cartFreebieService;*/
+    @Autowired
+    private CartFreebieService cartFreebieService;
 
     boolean                     verifyMessage = false;
 
@@ -107,7 +108,6 @@ public class CartAction extends BaseAction {
         }
         if (user != null) {
             order = orderManager.getOrCreateOrder(user);
-
             Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
             Set<Long> comboInstanceIds = new TreeSet<Long>();
             for (CartLineItem lineItem : cartLineItems) {
@@ -174,7 +174,7 @@ public class CartAction extends BaseAction {
             }
         }
 
-        // freebieBanner = cartFreebieService.getFreebieBanner(order);
+        //freebieBanner = cartFreebieService.getFreebieBanner(order);
         return new ForwardResolution("/pages/cart.jsp");
     }
 
@@ -289,4 +289,8 @@ public class CartAction extends BaseAction {
     public void setSubscriptions(Set<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
     }
+
+  public OrderDao getOrderDao() {
+    return orderDao;
+  }
 }

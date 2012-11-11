@@ -1,6 +1,5 @@
 package com.hk.web.action.admin.address;
 
-import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -19,8 +18,8 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.manager.AddressBookManager;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.service.core.AddressService;
 import com.hk.util.AddressMatchScoreCalculator;
 
 /**
@@ -80,23 +79,14 @@ public class ChangeOrderAddressAction extends BaseAction {
 
     public Resolution save() {
         if (copyToUserAddressBook) {
-            newAddress = addressBookManager.editAddress(order.getUser(), order.getAddress(), this.newAddress); // here
-                                                                                                                // edited
-                                                                                                                // address
-                                                                                                                // is
-                                                                                                                // the
-                                                                                                                // new
-                                                                                                                // address
-                                                                                                                // which
-                                                                                                                // is to
-                                                                                                                // be
-                                                                                                                // saved
+            newAddress = addressBookManager.editAddress(order.getUser(), order.getAddress(), this.newAddress); 
         } else {
             if (address == null) {
                 address = order.getAddress();
             }
             boolean isDuplicateAddress = addressMatchScoreCalculator.isDuplicateAddress(address);
             if (!isDuplicateAddress) {
+	            newAddress.setUser(order.getUser());
                 newAddress = addressDao.save(newAddress);
             }
         }

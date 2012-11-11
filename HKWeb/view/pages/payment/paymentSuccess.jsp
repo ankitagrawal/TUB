@@ -57,86 +57,88 @@
   <%
     if (AnalyticsConstants.analytics) {
   %>
+
   <script type="text/javascript">
-    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-  </script>
-  <script type="text/javascript">
-    var pageTracker = _gat._getTracker("<%=AnalyticsConstants.gaCode%>");
-    pageTracker._trackPageview();
 
-    pageTracker._addTrans(
-        "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
-        "HealthKart.com", <%-- affiliation or store name --%>
-        "${hk:decimal2(actionBean.pricingDto.grandTotal)}", <%-- total - required --%>
-        "0.0", <%-- tax --%>
-        "${hk:decimal2(actionBean.pricingDto.shippingSubTotal - actionBean.pricingDto.shippingDiscount)}", <%-- shipping --%>
-        "${hk:convertToLettersNumbersUnderscore(actionBean.pricingDto.city)}", <%-- city--%>
-        "${hk:convertToLettersNumbersUnderscore(actionBean.pricingDto.state)}", <%-- state or province --%>
-        "India"                                                                                             <%-- country--%>
-        );
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', '<%=AnalyticsConstants.gaCode%>']);
+  _gaq.push(['_trackPageview']);
 
-    <%--Item data--%>
-    <c:forEach items="${actionBean.pricingDto.aggregateProductLineItems}" var="productLineItem">
-    pageTracker._addItem(
-        "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
-        "${productLineItem.productVariant.id}", <%-- SKU/code --%>
-        "${productLineItem.productVariant.product.name}", <%-- product name --%>
-        "<c:forEach items="${productLineItem.productVariant.product.categories}" var="category" varStatus="optionCtr">${category.name}${!optionCtr.last?',':''}</c:forEach>", <%-- category or variation --%>
-        "${hk:decimal2(productLineItem.hkPrice)}", <%-- unit price - required --%>
-        "${productLineItem.qty}"                   <%-- quantity - required --%>
-        );
-    </c:forEach>
+  _gaq.push(['_addTrans',
+    "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
+    "HealthKart.com", <%-- affiliation or store name --%>
+    "${hk:decimal2(actionBean.pricingDto.grandTotal)}", <%-- total - required --%>
+    "0.0", <%-- tax --%>
+    "${hk:decimal2(actionBean.pricingDto.shippingSubTotal - actionBean.pricingDto.shippingDiscount)}", <%-- shipping --%>
+    "${hk:convertToLettersNumbersUnderscore(actionBean.pricingDto.city)}", <%-- city--%>
+    "${hk:convertToLettersNumbersUnderscore(actionBean.pricingDto.state)}", <%-- state or province --%>
+    "India"                                                                                             <%-- country--%>
+  ]);
 
-    <%--COD--%>
-    <c:if test="${actionBean.pricingDto.codSubTotal > 0}">
-    pageTracker._addItem(
-        "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
-        "COD", <%-- SKU/code --%>
-        "COD", <%-- product name --%>
-        "", <%-- category or variation --%>
-        "${actionBean.pricingDto.codSubTotal - actionBean.pricingDto.codDiscount}", <%-- unit price - required --%>
-        "1"                                                                         <%-- quantity - required --%>
-        );
-    </c:if>                                                                         
+  <%--Item data--%>
+  <c:forEach items="${actionBean.pricingDto.aggregateProductLineItems}" var="productLineItem">
+  _gaq.push(['_addItem',
+    "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
+    "${productLineItem.productVariant.id}", <%-- SKU/code --%>
+    "${productLineItem.productVariant.product.name}", <%-- product name --%>
+    "<c:forEach items="${productLineItem.productVariant.product.categories}" var="category" varStatus="optionCtr">${category.name}${!optionCtr.last?',':''}</c:forEach>", <%-- category or variation --%>
+    "${hk:decimal2(productLineItem.hkPrice)}", <%-- unit price - required --%>
+    "${productLineItem.qty}"                   <%-- quantity - required --%>
+  ]);
+  </c:forEach>
 
-    pageTracker._trackTrans();
+  <%--COD--%>
+  <c:if test="${actionBean.pricingDto.codSubTotal > 0}">
+  _gaq.push(['_addItem',
+    "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
+    "COD", <%-- SKU/code --%>
+    "COD", <%-- product name --%>
+    "", <%-- category or variation --%>
+    "${actionBean.pricingDto.codSubTotal - actionBean.pricingDto.codDiscount}", <%-- unit price - required --%>
+    "1"                                                                         <%-- quantity - required --%>
+  ]);
+  </c:if>
 
-    //track order count
-    pageTracker._setCustomVar(
-      <%=AnalyticsConstants.CustomVarSlot.orderCount%>,                   // This custom var is set to slot #5.  order_count.
-      "OrderCount",     // The name acts as a kind of category for the user activity.  Required parameter.
-      "${fn:length(actionBean.order.user.orders)}",               // This value of the custom variable.  Required parameter.
-      <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to session-level. Optional parameter.
-   );
+  _gaq.push(['_trackTrans']); //submits transaction to the Analytics servers
 
-   <c:if test="${fn:length(actionBean.order.user.orders) eq 1}">
-      pageTracker._setCustomVar(
-      <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate%>,                   // This custom var is set to slot #2.  first_order_date
-      "FirstPurchaseDate",     // The name acts as a kind of category for the user activity.  Required parameter.
-      "${actionBean.purchaseDate}",               // This value of the custom variable.  Required parameter.
-      <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to visitor-level. Optional parameter.
-    );
-   </c:if>
+  //track order count
+  _gaq.push(['_setCustomVar',
+    <%=AnalyticsConstants.CustomVarSlot.orderCount%>,                   // This custom var is set to slot #5.  order_count.
+    "OrderCount",     // The name acts as a kind of category for the user activity.  Required parameter.
+    "${fn:length(actionBean.order.user.orders)}",               // This value of the custom variable.  Required parameter.
+    <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to session-level. Optional parameter.
+  ]);
 
-     <c:if test="${actionBean.couponCode !=null}">
-      //track couponcode
-    var couponAmount=${actionBean.couponAmount};
-    couponAmount=Math.round(couponAmount);    //event value needs to be an integer
-    pageTracker._trackEvent('purchase','coupon','${actionBean.couponCode}',couponAmount);
-   </c:if>
+  <c:if test="${fn:length(actionBean.order.user.orders) eq 1}">
+  _gaq.push(['_setCustomVar',
+    <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate%>,                   // This custom var is set to slot #2.  first_order_date
+    "FirstPurchaseDate",     // The name acts as a kind of category for the user activity.  Required parameter.
+    "${actionBean.purchaseDate}",               // This value of the custom variable.  Required parameter.
+    <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to visitor-level. Optional parameter.
+  ]);
+  </c:if>
+  <c:if test="${actionBean.couponCode !=null}">
+     //track couponcode
+   var couponAmount=${actionBean.couponAmount};
+   couponAmount=Math.round(couponAmount);    //event value needs to be an integer
+   _gaq.push(['_trackEvent','purchase','coupon','${actionBean.couponCode}',couponAmount]);
+  </c:if>
 
 
-    //track purchase date
-    pageTracker._trackEvent('purchase','purchaseDate','${actionBean.purchaseDate}');
-    //payment mode tracking
-    var amount=${actionBean.payment.amount};
-    amount=Math.round(amount);            //event value takes only integer input in ga
-    pageTracker._trackEvent('purchase','paymentType','${actionBean.paymentMode.name}',amount);   
-     
+   //track purchase date
+  _gaq.push(['_trackEvent','purchase','purchaseDate','${actionBean.purchaseDate}']);
+   //payment mode tracking
+   var amount=${actionBean.payment.amount};
+   amount=Math.round(amount);            //event value takes only integer input in ga
+  _gaq.push(['_trackEvent','purchase','paymentType','${actionBean.paymentMode.name}',amount]);
 
-  </script>
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
 
+</script>
 
   <%
     }
@@ -149,14 +151,14 @@
 
     <c:choose>
         <c:when test="${actionBean.payment != null}">
-            <c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
+            <%--<c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
                 <div>
                     <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">
                         <s:param name="order" value="${actionBean.order}"/>
                         <img src="${pageContext.request.contextPath}/images/banners/pay_online_banner5.jpg">
                     </s:link>
                 </div>
-            </c:if>
+            </c:if>--%>
             <%--<div class="right" style="float: right;">
                 <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">
                     <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">

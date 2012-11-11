@@ -7,10 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.constants.catalog.SolrSchemaConstants;
-import com.hk.domain.search.SearchFilter;
-import com.hk.dto.search.SearchResult;
-import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -33,12 +29,14 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
 import com.hk.dto.menu.MenuNode;
+import com.hk.dto.search.SearchResult;
 import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 
@@ -87,7 +85,8 @@ public class BrandCatalogAction extends BasePaginatedAction {
 
   SeoData seoData;
 
-  @DefaultHandler
+  @SuppressWarnings({ "deprecation", "unchecked" })
+@DefaultHandler
   public Resolution pre() throws MalformedURLException, SolrServerException {
 	  List<String> categoryNames = new ArrayList<String>();
 	  categoryNames.add(topLevelCategory);

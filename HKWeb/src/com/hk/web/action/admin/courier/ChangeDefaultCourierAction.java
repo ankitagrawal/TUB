@@ -79,7 +79,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
             pincodeDefaultCouriers = getPincodeService().searchPincodeDefaultCourierList(pincode,null, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
 //             pincodeDefaultCourier = getPincodeService().searchPincodeDefaultCourier(pincode,null, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
             if (pincodeDefaultCourier != null) {
-                courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false);
+                courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false,null);
                 return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Pincode does not exist for selected combination"));
@@ -209,7 +209,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
                         existingDefaultCourierObject.setGroundShipping(defaultPincode.isGroundShipping());
                         existingDefaultCourierObject.setEstimatedShippingCost(defaultPincode.getEstimatedShippingCost());
                         pincodeDao.save(existingDefaultCourierObject);
-                        logger.info("updating:" + defaultPincode.getPincode().getPincode());
+//                        logger.info("updating:" + defaultPincode.getPincode().getPincode());
                     }
 
                 }
