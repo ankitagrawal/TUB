@@ -232,7 +232,8 @@ public class APIProductServiceImpl implements APIProductService {
 		}
 	}
 
-	public String getProductsWithLowResolutionImages() {
+	@SuppressWarnings("unchecked")
+    public String getProductsWithLowResolutionImages() {
 		List<Product> nonDeletedProducts = getProductService().getAllNonDeletedProducts();
 		List<Product> productsWithLowResolutionImages = new ArrayList<Product>();
 		StringBuilder productIdsForLowResolutionImages = new StringBuilder("");

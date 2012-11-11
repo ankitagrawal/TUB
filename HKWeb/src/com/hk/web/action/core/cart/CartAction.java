@@ -46,7 +46,6 @@ import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
 import com.hk.web.HealthkartResponse;
@@ -88,8 +87,8 @@ public class CartAction extends BaseAction {
     OfferManager                offerManager;
     @Autowired
     private OrderDao            orderDao;
-    @Autowired
-    private CartFreebieService cartFreebieService;
+    /*@Autowired
+    private CartFreebieService cartFreebieService;*/
 
     boolean                     verifyMessage = false;
 

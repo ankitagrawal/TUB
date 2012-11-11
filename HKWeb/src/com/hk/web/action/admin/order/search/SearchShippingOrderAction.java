@@ -31,37 +31,38 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 @Component
 public class SearchShippingOrderAction extends BasePaginatedAction {
 
-  private static Logger logger = LoggerFactory.getLogger(SearchShippingOrderAction.class);                  
+    @SuppressWarnings("unused")
+    private static Logger       logger            = LoggerFactory.getLogger(SearchShippingOrderAction.class);
 
-  private String shippingOrderGatewayId;
-  private Long shippingOrderId;
-  private String trackingId;
-  private Courier courier=null;
-  private List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+    private String              shippingOrderGatewayId;
+    private Long                shippingOrderId;
+    private String              trackingId;
+    private Courier             courier           = null;
+    private List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
-  @Autowired
-  ShippingOrderService shippingOrderService;
     @Autowired
-    AwbService awbService;
+    ShippingOrderService        shippingOrderService;
+    @Autowired
+    AwbService                  awbService;
 
-  @ValidationMethod(on = "searchShippingOrder")
-  public void validateSearch() {
-    if (StringUtils.isBlank(shippingOrderGatewayId) && StringUtils.isBlank(trackingId) && shippingOrderId == null) {
-      getContext().getValidationErrors().add("1", new SimpleError("Please Enter a Search Parameter"));
+    @ValidationMethod(on = "searchShippingOrder")
+    public void validateSearch() {
+        if (StringUtils.isBlank(shippingOrderGatewayId) && StringUtils.isBlank(trackingId) && shippingOrderId == null) {
+            getContext().getValidationErrors().add("1", new SimpleError("Please Enter a Search Parameter"));
+        }
     }
-  }
 
-  @DefaultHandler
-  @DontValidate
-  public Resolution pre() {
-    return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
-  }
+    @DefaultHandler
+    @DontValidate
+    public Resolution pre() {
+        return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
+    }
 
     public Resolution searchShippingOrder() {
         List<Awb> awbList = new ArrayList<Awb>();
         if (trackingId != null) {
             awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(null, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
-            if(awbList.isEmpty()){
+            if (awbList.isEmpty()) {
                 addRedirectAlertMessage(new SimpleMessage("InValid Tracking ID"));
                 return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
             }
@@ -74,59 +75,56 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
     }
 
-
     public String getShippingOrderGatewayId() {
-    return shippingOrderGatewayId;
-  }
+        return shippingOrderGatewayId;
+    }
 
-  public void setShippingOrderGatewayId(String shippingOrderGatewayId) {
-    this.shippingOrderGatewayId = shippingOrderGatewayId;
-  }
+    public void setShippingOrderGatewayId(String shippingOrderGatewayId) {
+        this.shippingOrderGatewayId = shippingOrderGatewayId;
+    }
 
-  public String getTrackingId() {
-    return trackingId;
-  }
+    public String getTrackingId() {
+        return trackingId;
+    }
 
-  public void setTrackingId(String trackingId) {
-    this.trackingId = trackingId;
-  }
+    public void setTrackingId(String trackingId) {
+        this.trackingId = trackingId;
+    }
 
-  public List<ShippingOrder> getShippingOrderList() {
-    return shippingOrderList;
-  }
+    public List<ShippingOrder> getShippingOrderList() {
+        return shippingOrderList;
+    }
 
-  public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
-    this.shippingOrderList = shippingOrderList;
-  }
+    public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
+        this.shippingOrderList = shippingOrderList;
+    }
 
-  public int getPageCount() {
-    return 0;
-  }
+    public int getPageCount() {
+        return 0;
+    }
 
-  public int getResultCount() {
-    return 0;
-  }
+    public int getResultCount() {
+        return 0;
+    }
 
+    public int getPerPageDefault() {
+        return 20;
+    }
 
-  public int getPerPageDefault() {
-    return 20;
-  }
+    public Set<String> getParamSet() {
+        Set<String> params = new HashSet<String>();
+        params.add("orderStatus");
 
+        return params;
+    }
 
-  public Set<String> getParamSet() {
-    Set<String> params = new HashSet<String>();
-    params.add("orderStatus");
+    public Long getShippingOrderId() {
+        return shippingOrderId;
+    }
 
-    return params;
-  }
-
-  public Long getShippingOrderId() {
-    return shippingOrderId;
-  }
-
-  public void setShippingOrderId(Long shippingOrderId) {
-    this.shippingOrderId = shippingOrderId;
-  }
+    public void setShippingOrderId(Long shippingOrderId) {
+        this.shippingOrderId = shippingOrderId;
+    }
 
     public Courier getCourier() {
         return courier;

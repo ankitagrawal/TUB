@@ -149,7 +149,8 @@ public class ReplacementOrderAction extends BaseAction {
 		return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
 	}
 
-	@JsonHandler
+	@SuppressWarnings("unchecked")
+    @JsonHandler
 	public Resolution checkExistingReplacementOrder() {
 		Map dataMap = new HashMap();
 		if (shippingOrderId != null) {

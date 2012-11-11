@@ -95,11 +95,13 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
     @Column(name = "version", nullable = false)
     private Long                          version                  = new Long(1);
 
+    @SuppressWarnings("unused")
     @JsonSkip
     @OneToOne(fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SELECT)
     @JoinTable(name = "subscription_cart_line_item", joinColumns = @JoinColumn(name = "cart_line_item_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id"))
     private Subscription                  subscription;
+
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_referrer_id", nullable = true)
