@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.hk.api.cache.HkApiUserCache;
 import com.hk.domain.api.HkApiUser;
+import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.security.GrantedOperation;
 import com.hk.security.GrantedOperationUtil;
@@ -21,6 +22,7 @@ import com.hk.security.exception.HKAuthTokenExpiredException;
 import com.hk.security.exception.HkAuthenticationException;
 import com.hk.security.exception.HkInvalidApiKeyException;
 import com.hk.security.exception.HkInvalidAuthTokenException;
+import com.hk.security.exception.HkUserNotFoundException;
 import com.hk.util.HKDateUtil;
 
 /**
@@ -28,7 +30,7 @@ import com.hk.util.HKDateUtil;
  */
 @Service
 public class HkAuthServiceImpl implements HkAuthService {
-    
+
     @Autowired
     private UserService userService;
 
@@ -42,12 +44,15 @@ public class HkAuthServiceImpl implements HkAuthService {
             String password = (String) authentication.getCredentials();
             String apiKey = (String) authentication.getApiKey();
 
-            HkApiUser hkApiUser = HkApiUserCache.getInstance().getHkApiUser(apiKey);
-            if(hkApiUser == null){
-                throw new HkInvalidApiKeyException(apiKey);
+            checkApiKeyExists(apiKey);
+
+            User user = getUserService().findByLogin(userName);
+
+            if (user == null) {
+                throw new HkUserNotFoundException(userName);
             }
-            
-            if (userName.equals("abc") && password.equals("abc")) {
+
+            if (password != null && password.equals(user.getPassword())) {
                 Collection<GrantedOperation> allowedOperations = GrantedOperationUtil.ALL_OPERATIONS;
                 authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey, allowedOperations);
             } else {
@@ -62,18 +67,31 @@ public class HkAuthServiceImpl implements HkAuthService {
 
     }
 
+    private HkApiUser checkApiKeyExists(String apiKey) {
+        HkApiUser hkApiUser = HkApiUserCache.getInstance().getHkApiUser(apiKey);
+        if (hkApiUser == null) {
+            throw new HkInvalidApiKeyException(apiKey);
+        }
+
+        return hkApiUser;
+    }
+
     @Override
     public String generateAuthToken(HkAuthentication authentication) {
         String userName = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
         String apiKey = (String) authentication.getApiKey();
+
+        HkApiUser hkApiUser = checkApiKeyExists(apiKey);
         /**
          * base64( emailid:expiredon:apiKey b=token->md5(emailid+passwd+expiration) a :b
          */
 
-        Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.HOUR_OF_DAY, DEFAULT_EXPIRY_MIN);
-
-        // byte[] data = base64.encode();
+        int expiryTimeInMin = hkApiUser.getDefaultTokenExpiry();
+        if (expiryTimeInMin == 0) {
+            expiryTimeInMin = DEFAULT_EXPIRY_MIN;
+        }
+        Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.HOUR_OF_DAY, expiryTimeInMin);
 
         String tokenA = userName.concat(":").concat(Long.valueOf(expiryTime.getTime()).toString()).concat(":").concat(apiKey);
         String tokenB = userName.concat(":").concat(password).concat(":").concat(Long.valueOf(expiryTime.getTime()).toString());
@@ -82,38 +100,44 @@ public class HkAuthServiceImpl implements HkAuthService {
         String baseToken = tokenA.concat(":").concat(md5);
 
         byte[] base64encoding = Base64.encodeBase64(baseToken.getBytes());
-        
 
         return new String(base64encoding);
     }
 
     @Override
     public boolean validateToken(String authToken, String apiKey, boolean validatePwd) {
+        checkApiKeyExists(apiKey);
         boolean valid = true;
         String[] decodedTokenArr = decodeAuthToken(authToken);
 
         Date expiredOn = new Date(Long.parseLong(decodedTokenArr[1]));
-        
 
         if (expiredOn.compareTo(new Date()) == -1) {
-            throw new HKAuthTokenExpiredException();
+            throw new HKAuthTokenExpiredException(authToken);
         }
 
         String apiKeyInToken = decodedTokenArr[2];
 
         if (!apiKeyInToken.equals(apiKey)) {
-            throw new HkInvalidAuthTokenException();
+            throw new HkInvalidAuthTokenException(authToken);
         }
 
         if (validatePwd) {
 
-            String password = "abc";
+            String userName = decodedTokenArr[0];
+            User user = getUserService().findByLogin(userName);
 
-            String reConstructedToken = decodedTokenArr[0].concat(":").concat(password).concat(":").concat(decodedTokenArr[1]);
+            if (user == null) {
+                throw new HkUserNotFoundException(userName);
+            }
+
+            String password = user.getPassword();
+
+            String reConstructedToken = userName.concat(":").concat(password).concat(":").concat(decodedTokenArr[1]);
             String reConTokeMd5 = DigestUtils.md5Hex(reConstructedToken);
 
             if (!reConTokeMd5.equals(decodedTokenArr[3])) {
-                throw new HkInvalidAuthTokenException();
+                throw new HkInvalidAuthTokenException(authToken);
             }
         }
 
@@ -123,24 +147,35 @@ public class HkAuthServiceImpl implements HkAuthService {
 
     @Override
     public String refershAuthToken(String authToken, String apiKey, String authScheme) {
-        //TODO: handle auth scheme here
+        // TODO: handle auth scheme here
         return refershUserNamePasswordAuthToken(authToken, apiKey);
     }
 
     private String refershUserNamePasswordAuthToken(String authToken, String apiKey) {
         String[] decodedTokenArr = decodeAuthToken(authToken);
-        String password = "abc";
-        HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(decodedTokenArr[0], password, apiKey);
+
+        String userName = decodedTokenArr[0];
+        User user = getUserService().findByLogin(userName);
+
+        if (user == null) {
+            throw new HkUserNotFoundException(userName);
+        }
+
+        String password = user.getPassword();
+        HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey);
         return generateAuthToken(authentication);
     }
 
     private String[] decodeAuthToken(String authToken) {
         byte[] base64DecodedArr = Base64.decodeBase64(authToken);
         String base64Decoded = new String(base64DecodedArr);
-        
 
         String[] decodedTokenArr = base64Decoded.split(":");
         return decodedTokenArr;
+    }
+
+    public UserService getUserService() {
+        return userService;
     }
 
     public static void main(String[] args) {
@@ -148,52 +183,36 @@ public class HkAuthServiceImpl implements HkAuthService {
         String password = "abc";
         String userName = "uname";
         String apiKey = "appId";
-        
-        HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName,password , apiKey);
+
+        HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey);
         HkAuthServiceImpl authService = new HkAuthServiceImpl();
         String authToken = authService.generateAuthToken(authentication);
-        
+
         System.out.println(authToken);
-        
+
         System.out.println(authService.validateToken(authToken, apiKey, true));
-        
+
         System.out.println(authService.validateToken(authToken, apiKey, false));
         /**
          * base64( emailid:expiredon: b=token->md5(emailid+passwd+expiration) a :b
          */
 
-        /*Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.MINUTE, DEFAULT_EXPIRY_MIN);
-        System.out.println(expiryTime);
-        // byte[] data = base64.encode();
-
-        String tokenA = userName.concat(":").concat(Long.valueOf(expiryTime.getTime()).toString());
-        String tokenB = userName.concat(":").concat(password).concat(":").concat(Long.valueOf(expiryTime.getTime()).toString());
-
-        String md5 = DigestUtils.md5Hex(tokenB);
-        String baseToken = tokenA.concat(":").concat(md5);
-
-        byte[] base64encoding = Base64.encodeBase64(baseToken.getBytes());
-        String authToken = new String(base64encoding);
-        System.out.println(authToken);
-
-        byte[] base64DecodedArr = Base64.decodeBase64(authToken);
-        String base64Decoded = new String(base64DecodedArr);
-        System.out.println(base64Decoded);
-
-        String[] decodedTokenArr = base64Decoded.split(":");
-        Date expiredOn = new Date(Long.parseLong(decodedTokenArr[1]));
-        System.out.println(expiredOn);
-
-        if (expiredOn.compareTo(new Date()) == -1) {
-            System.out.println("Expired");
-        }
-
-        String reConstructedToken = decodedTokenArr[0].concat(":").concat(password).concat(":").concat(decodedTokenArr[1]);
-        String reConTokeMd5 = DigestUtils.md5Hex(reConstructedToken);
-
-        if (reConTokeMd5.equals(decodedTokenArr[2])) {
-            System.out.println("equal");
-        }*/
+        /*
+         * Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.MINUTE, DEFAULT_EXPIRY_MIN);
+         * System.out.println(expiryTime); // byte[] data = base64.encode(); String tokenA =
+         * userName.concat(":").concat(Long.valueOf(expiryTime.getTime()).toString()); String tokenB =
+         * userName.concat(":").concat(password).concat(":").concat(Long.valueOf(expiryTime.getTime()).toString());
+         * String md5 = DigestUtils.md5Hex(tokenB); String baseToken = tokenA.concat(":").concat(md5); byte[]
+         * base64encoding = Base64.encodeBase64(baseToken.getBytes()); String authToken = new String(base64encoding);
+         * System.out.println(authToken); byte[] base64DecodedArr = Base64.decodeBase64(authToken); String base64Decoded =
+         * new String(base64DecodedArr); System.out.println(base64Decoded); String[] decodedTokenArr =
+         * base64Decoded.split(":"); Date expiredOn = new Date(Long.parseLong(decodedTokenArr[1]));
+         * System.out.println(expiredOn); if (expiredOn.compareTo(new Date()) == -1) { System.out.println("Expired"); }
+         * String reConstructedToken =
+         * decodedTokenArr[0].concat(":").concat(password).concat(":").concat(decodedTokenArr[1]); String reConTokeMd5 =
+         * DigestUtils.md5Hex(reConstructedToken); if (reConTokeMd5.equals(decodedTokenArr[2])) {
+         * System.out.println("equal"); }
+         */
 
     }
 }

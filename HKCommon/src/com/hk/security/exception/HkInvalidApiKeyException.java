@@ -1,5 +1,10 @@
 package com.hk.security.exception;
 
+/**
+ * 
+ * @author vaibhav.adlakha
+ *
+ */
 public class HkInvalidApiKeyException extends HkAuthenticationException {
 
     private static final long serialVersionUID = 1L;

@@ -5,22 +5,33 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hk.api.cache.HkApiUserCache;
+import com.hk.domain.api.HkApiUser;
 import com.hk.security.HkAuthService;
 import com.hk.security.HkAuthSuccessHandler;
 import com.hk.security.HkAuthentication;
 
+/**
+ * 
+ * @author vaibhav.adlakha
+ *
+ */
 @Service
 public class HkAuthSuccessHandlerImpl implements HkAuthSuccessHandler {
 
+    private static final String REDIRECT_URL_PARAM = "redirectUrl";
     @Autowired
     private HkAuthService hkAuthService;
 
     @Override
     public void handleAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, HkAuthentication authResult) throws IOException {
-        String targetUrl = determineTargetUrl(request, response);
+        HkApiUser hkApiUser = HkApiUserCache.getInstance().getHkApiUser((String)authResult.getApiKey());
+        
+        String targetUrl = determineTargetUrl(request, response, hkApiUser.getLoginSuccessRedirectUrl());
 
         String redirectUrl = calculateRedirectUrl(request.getContextPath(), targetUrl);
         redirectUrl= redirectUrl.concat("?").concat(getHkAuthService().generateAuthToken(authResult));
@@ -57,8 +68,16 @@ public class HkAuthSuccessHandlerImpl implements HkAuthSuccessHandler {
         return url;
     }
 
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
-        return "http://www.google.com";
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, String loginSuccessRedirectUrl) {
+        
+        String redirectUrlFromReq = request.getParameter(REDIRECT_URL_PARAM);
+        if(StringUtils.isNotBlank(redirectUrlFromReq)){
+            return redirectUrlFromReq;
+        }
+        else{
+            return loginSuccessRedirectUrl;
+        }
+        
     }
 
     public HkAuthService getHkAuthService() {
