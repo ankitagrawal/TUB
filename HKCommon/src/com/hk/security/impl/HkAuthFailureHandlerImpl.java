@@ -24,14 +24,20 @@ public class HkAuthFailureHandlerImpl implements HkAuthFailureHandler {
     public void handleAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, HkAuthenticationException failed) {
         request.setAttribute("error", failed.getMessage());
 
-        try {
+        //try {
             System.out.println(request.getAttribute("error"));
-            request.getRequestDispatcher(getFailureUrl()).forward(request, response);
-        } catch (ServletException e) {
+            try {
+                response.sendRedirect(getFailureUrl());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            /request.getRequestDispatcher(getFailureUrl()).forward(request, response);
+        
+        /*} catch (ServletException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
