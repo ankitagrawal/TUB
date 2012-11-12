@@ -91,7 +91,7 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
             if(oPGResponse.getRedirectionUrl() != null) {
                 String strRedirectionURL = oPGResponse.getRedirectionUrl();
                 iciciPaymentGatewayWrapper.setGatewayUrl(strRedirectionURL);
-                logger.info("Icici url being generated is " + linkManager.getIciciPaymentGatewayUrl());
+                logger.info("Icici url being generated is " + gatewayUrl);
             }
             else {
                 logger.info("Error encountered. Error Code : " + oPGResponse.getRespCode() + " . Message " + oPGResponse.getRespMessage());
