@@ -110,7 +110,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
             try {
                 if (productVariantList != null && productVariantList.size() > 0) {
                     for (ProductVariant productVariant : productVariantList) {
-                        if (productVariant != null && productVariant.isSelected() != null && productVariant.isSelected() && productVariant.getQty() > 0) {
+                        if (productVariant != null && productVariant.isSelected() != null && productVariant.isSelected() && productVariant.getQty()!=null && productVariant.getQty() > 0) {
                             selectedProductVariants.add(productVariant);
                             userCartDao.addToCartHistory(productVariant.getProduct(), user);
                             userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
