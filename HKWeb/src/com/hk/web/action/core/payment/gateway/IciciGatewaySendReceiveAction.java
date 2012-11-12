@@ -68,42 +68,26 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
         IciciPaymentGatewayWrapper iciciPaymentGatewayWrapper = new IciciPaymentGatewayWrapper(AppConstants.appBasePath);
         Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
-        User user = payment.getOrder().getUser();
-        Address address= payment.getOrder().getAddress();
 
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/icici.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
-//        BillToAddress oBTA 	= new BillToAddress();
         Merchant oMerchant 	= new Merchant();
         PostLib oPostLib	= null;
-/*
-        oBTA.setAddressDetails(
-                "CID"
-                , address.getName()
-                , address.getLine1()
-                , address.getLine2()
-                , ""
-                , address.getCity()
-                , address.getState()
-                , address.getPin()
-                , "IND"
-                , user.getEmail()
-        );
-*/
         String MerchantId = properties.getProperty("MerchantId");
+        
+        String gatewayUrl = linkManager.getIciciPaymentGatewayUrl() + "?Amount=" + amountStr;
+        
         oMerchant.setMerchantDetails(MerchantId,MerchantId,MerchantId,"127.0.0.1",
                 payment.getGatewayOrderId(),
                 payment.getGatewayOrderId()
-                , linkManager.getIciciPaymentGatewayUrl(),
+                ,gatewayUrl,
                 properties.getProperty("ResponseMethod"), properties.getProperty("CurrCode"), payment.getGatewayOrderId(), "req.Sale",
                 amountStr, "GMT+05:30", "Ext1", "true", "Ext3", "Ext4", "Ext5a");
 
 
-//        PGResponse oPGResponse = oPostLib.postSSL(null,oSTA,oMerchant,oMPI,WebContext.getResponse(),oPGReserveData,oCustomer,oSessionDetail,oAirLineTrans,null);
         try {
             oPostLib = new PostLib();
             PGResponse oPGResponse = oPostLib.postSSL(null,null,oMerchant,null,WebContext.getResponse(),null,null,null,null,null);
-//            PGResponse oPGResponse = oPostLib.postSSL(oBTA,oSTA,oMerchant,oMPI,WebContext.getResponse(),oPGReserveData,oCustomer,oSessionDetail,oAirLineTrans,null);
             if(oPGResponse.getRedirectionUrl() != null) {
                 String strRedirectionURL = oPGResponse.getRedirectionUrl();
                 iciciPaymentGatewayWrapper.setGatewayUrl(strRedirectionURL);
