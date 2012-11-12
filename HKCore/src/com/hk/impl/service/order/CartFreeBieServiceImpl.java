@@ -21,7 +21,7 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
     private String         revitalWatch    =  "/pages/lp/revital/images/banner_watch.jpg";   // 1260
     private String         revitalSunglass =  "/pages/lp/revital/images/banner-sunglass.jpg"; // 2520
     private String         revitalYogaDVD  =  "/pages/lp/revital/images/banner-yoga_dvd.jpg";
-    private String         revitalMovieDVD =  "/pages/lp/revital/images/banner-free_dvd.jpg";
+    private String         revitalMovieDVD =  "/pages/lp/revital/images/banner_free_dvd.jpg";
 
     @Autowired
     private CartFreeBieDao cartFreeBieDao;
