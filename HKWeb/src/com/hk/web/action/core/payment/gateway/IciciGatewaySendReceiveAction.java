@@ -107,7 +107,7 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
     @Override
     @DefaultHandler
     public Resolution callback() {
-//        logger.info("in icici callback -> " + getContext().getRequest().getParameterMap());
+        logger.info("in icici callback -> " + getContext().getRequest().getParameterMap());
 
         String data = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.param_data);
         String responseMethod = getContext().getRequest().getMethod();
