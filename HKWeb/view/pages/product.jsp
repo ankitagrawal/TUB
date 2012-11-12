@@ -388,7 +388,7 @@
         <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
             <div id="tryOnLink" class="content">
                 <c:if test="${pa.validTryOnProductVariant != null}">
-                    <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" style="color: red;font-size: 150%"> TRY IT NOW </a>
+                    <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" style="float:right;color:black;font-size:1.2em;background: #DDD;border:1px solid black;padding:5px;"> TRY IT NOW </a>
                 </c:if>
             </div>
         </shiro:hasAnyRoles>
