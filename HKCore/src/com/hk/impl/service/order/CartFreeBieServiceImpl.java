@@ -46,19 +46,14 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
         String  context         = WebContext.getRequest().getContextPath();
         if (cartValue > 2520.0) {
             imageURL = context + revitalSunglass;
-	        return imageURL;
         } else if (cartValue > 1260) {
             imageURL = context + revitalWatch;
-	        return imageURL;
         } else if (cartValue > 630) {
             imageURL = context + revitalTshirt;
-	        return imageURL;
         } else if (rvWValue >= 250) {
             imageURL = context + revitalYogaDVD;
-	        return imageURL;
         } else if (rv30CpsValue >= 240) {
             imageURL = context + revitalMovieDVD;
-	        return imageURL;
         }
 
         return imageURL;
@@ -88,7 +83,7 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
       freebieItem = "Reebok Watch";
     } else if (cartValue > 630) {
       freebieItem = "T-shirt";
-    } else if (rvWValue >= 210) {
+    } else if (rvWValue >= 250) {
       freebieItem = "Yoga DVD";
     } else if (rv30CpsValue >= 240) {
       freebieItem = "Dabangg & Bodygurad 2in1 DVD";
