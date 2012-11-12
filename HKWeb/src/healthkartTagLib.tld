@@ -872,6 +872,18 @@
     </function>
     <function>
         <description>
+            get TryOnImageURL for a product variant
+        </description>
+        <name>getTryOnImageURL</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getTryOnImageURL(com.hk.domain.catalog.product.ProductVariant))
+        </function-signature>
+        <example>
+            ${hk:getTryOnImageURL(${product})}
+        </example>
+    </function>
+    <function>
+        <description>
             get cod converter url for an order
         </description>
         <name>getCodConverterLink</name>
