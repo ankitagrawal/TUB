@@ -83,7 +83,7 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
       freebieItem = "Reebok Watch";
     } else if (cartValue > 630) {
       freebieItem = "T-shirt";
-    } else if (rvWValue >= 210) {
+    } else if (rvWValue >= 250) {
       freebieItem = "Yoga DVD";
     } else if (rv30CpsValue >= 240) {
       freebieItem = "Dabangg & Bodygurad 2in1 DVD";
