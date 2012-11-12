@@ -107,9 +107,10 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
     @Override
     @DefaultHandler
     public Resolution callback() {
-        logger.info("in icici callback -> " + getContext().getRequest().getParameterMap());
+//        logger.info("in icici callback -> " + getContext().getRequest().getParameterMap());
 
         String data = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.param_data);
+        String amountStr = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.Amount);
         String responseMethod = getContext().getRequest().getMethod();
         String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/icici.live.properties";
 
@@ -129,7 +130,6 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
 
         logger.info("validated date -> " + validatedData);
 //        logger.info("param map->" + paramMap);
-        String amountStr = paramMap.get(CitrusPaymentGatewayWrapper.Amount);
         Double amount = NumberUtils.toDouble(amountStr);
         String authStatus = paramMap.get(CitrusPaymentGatewayWrapper.RespCode);
         String responseMsg = ((String) paramMap.get(CitrusPaymentGatewayWrapper.Message)).replace('+', ' ');
