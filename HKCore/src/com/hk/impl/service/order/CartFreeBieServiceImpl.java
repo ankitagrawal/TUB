@@ -50,10 +50,10 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
             imageURL = context + revitalWatch;
         } else if (cartValue > 630) {
             imageURL = context + revitalTshirt;
-        } else if (rvWValue >= 250) {
-            imageURL = context + revitalYogaDVD;
         } else if (rv30CpsValue >= 240) {
             imageURL = context + revitalMovieDVD;
+        } else if (rvWValue >= 250) {
+            imageURL = context + revitalYogaDVD;
         }
 
         return imageURL;
