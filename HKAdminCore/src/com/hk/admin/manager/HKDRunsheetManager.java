@@ -1,7 +1,33 @@
 package com.hk.admin.manager;
 
-
 import static com.akube.framework.util.BaseUtils.newline;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.courier.CourierConstants;
@@ -11,39 +37,26 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.pact.service.store.StoreService;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.util.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @SuppressWarnings("unchecked")
 @Component
 public class HKDRunsheetManager {
 
-    private SimpleDateFormat sdf;
+    /* private SimpleDateFormat sdf; */
 
-    private String barcodePath;
+    private String             barcodePath;
     @Autowired
-    private BarcodeGenerator barcodeGenerator;
+    private BarcodeGenerator   barcodeGenerator;
     @Autowired
     private ConsignmentService consignmentService;
 
-
-    public File generateWorkSheetXls(String xslFilePath, Set<Consignment> consignments, String assignedTo, Double totalCODAmount, int totalPackets, int totalCODPackets) throws NullPointerException, IOException, ParseException {
+    public File generateWorkSheetXls(String xslFilePath, Set<Consignment> consignments, String assignedTo, Double totalCODAmount, int totalPackets, int totalCODPackets)
+            throws NullPointerException, IOException, ParseException {
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
         Sheet sheet1 = wb.createSheet(CourierConstants.HEALTHKART_DELIVERY + new Date());
-        sdf = new SimpleDateFormat("dd-mm-yyyy");
+        /* SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy"); */
         Row row = null;
         Cell cell = null;
         int rowCounter = 0;
@@ -58,8 +71,8 @@ public class HKDRunsheetManager {
         ClientAnchor anchor = null;
         Picture pict = null;
 
-        //Dynamic data to be displayed in sheet
-        String awbNumber = null;
+        // Dynamic data to be displayed in sheet
+        /* String awbNumber = null; */
         String name = null;
         String line1 = null;
         String line2 = null;
@@ -77,13 +90,12 @@ public class HKDRunsheetManager {
         Payment payment = null;
         Store store = null;
 
-
-        //creating different styles for different elements of excel.
+        // creating different styles for different elements of excel.
         CellStyle style = wb.createCellStyle();
         CellStyle style_header = wb.createCellStyle();
         CellStyle style_data = wb.createCellStyle();
 
-        //setting borders for all cells in sheet.
+        // setting borders for all cells in sheet.
         style.setBorderTop(CellStyle.BORDER_THIN);
         style.setBorderBottom(CellStyle.BORDER_THIN);
         style.setBorderLeft(CellStyle.BORDER_THIN);
@@ -93,10 +105,10 @@ public class HKDRunsheetManager {
         style_data.setBorderBottom(CellStyle.BORDER_THIN);
         style_data.setBorderLeft(CellStyle.BORDER_THIN);
         style_data.setBorderRight(CellStyle.BORDER_THIN);
-        //enabling addition of new lines in cells(using "\n" )
+        // enabling addition of new lines in cells(using "\n" )
         style_data.setWrapText(true);
 
-        //creating different fonts for the excel data.
+        // creating different fonts for the excel data.
 
         Font font = wb.createFont();
         font.setFontHeightInPoints((short) 11);
@@ -110,8 +122,7 @@ public class HKDRunsheetManager {
         style_header.setFont(fontForHeader);
         style_header.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 
-
-        //creating rows for header.
+        // creating rows for header.
 
         row = sheet1.createRow(++rowCounter);
         cell = row.createCell(2);
@@ -135,9 +146,7 @@ public class HKDRunsheetManager {
         cell.setCellStyle(style_header);
         setCellValue(row, 4, CourierConstants.HKD_WORKSHEET_HEADING6);
 
-
         addEmptyLine(row, sheet1, ++rowCounter, cell);
-
 
         row = sheet1.createRow(++rowCounter);
         // style.setFont(font);
@@ -196,8 +205,8 @@ public class HKDRunsheetManager {
         setCellValue(row, 5, CourierConstants.HKD_WORKSHEET_REMARKS);
         addEmptyLine(row, sheet1, ++rowCounter, cell);
 
-        /*for (int index = 0; index < consignmentList.size(); index++) {*/
-            for(Consignment consignment : consignments) {
+        /* for (int index = 0; index < consignmentList.size(); index++) { */
+        for (Consignment consignment : consignments) {
             ++serialCounter;
             rowCounter++;
             row = sheet1.createRow(rowCounter);
@@ -206,12 +215,12 @@ public class HKDRunsheetManager {
                 cell = row.createCell(columnNo);
                 cell.setCellStyle(style_data);
             }
-             shippingOrder = consignmentService.getShippingOrderFromConsignment(consignment);
+            shippingOrder = consignmentService.getShippingOrderFromConsignment(consignment);
             addressObj = shippingOrder.getBaseOrder().getAddress();
             payment = shippingOrder.getBaseOrder().getPayment();
             store = shippingOrder.getBaseOrder().getStore();
 
-            //fetching contact name,contact-number for COD/Non COD
+            // fetching contact name,contact-number for COD/Non COD
             paymentMode = consignment.getPaymentMode();
             if (paymentMode.equalsIgnoreCase("COD")) {
                 if (store.getId().equals(StoreService.MIH_STORE_ID)) {
@@ -237,27 +246,26 @@ public class HKDRunsheetManager {
             address = "Name:" + name + newline + "Address:" + line1 + "," + newline + line2 + "," + newline + city + "-" + pincode + newline + "Phone:" + phone;
             receivedDetails = "Name:" + newline + "Relation:" + newline + "Mobile No.:" + newline + "Received Date,Time:" + newline + "Sign";
 
-            //adding barcode image to cell
+            // adding barcode image to cell
             barcodePath = barcodeGenerator.getBarcodePath(consignment.getCnnNumber(), 1.0f, 150, false);
 
-            //add picture data to this workbook.
+            // add picture data to this workbook.
             is = new FileInputStream(barcodePath);
             bytes = IOUtils.toByteArray(is);
             pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
             is.close();
             helper = wb.getCreationHelper();
 
-            // Create the drawing patriarch.  This is the top level container for all shapes.
+            // Create the drawing patriarch. This is the top level container for all shapes.
 
-            //add a picture shape
+            // add a picture shape
             anchor = helper.createClientAnchor();
             anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
-            //set top-left corner of the picture,
+            // set top-left corner of the picture,
             pict = drawing.createPicture(anchor, pictureIdx);
             pict.resize(8.0);
 
-
-            sNo = serialCounter+ "";
+            sNo = serialCounter + "";
             setCellValue(row, 0, sNo);
             // setCellValue(row, 1, awbNumber);
             anchor.setDx1(10);
@@ -277,7 +285,6 @@ public class HKDRunsheetManager {
             }
             setCellValue(row, 4, receivedDetails);
             setCellValue(row, 5, "");
-
 
         }
         wb.write(out);

@@ -286,7 +286,8 @@
         <tr>
             <th>Item</th>
             <th>Quantity</th>
-            <th>Unit price</th>
+            <th>MRP</th>
+            <th>Rate</th>
             <th>Total(Rs.)</th>
         </tr>
         <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
@@ -375,6 +376,7 @@
                 </td>
 
                 <td><fmt:formatNumber value="${invoiceLineItem.qty}" maxFractionDigits="0"/></td>
+                <td> ${invoiceLineItem.markedPrice} </td>
                 <td> ${invoiceLineItem.hkPrice} </td>
                 <td class="itemsubTotal">
                     <fmt:formatNumber value="${invoiceLineItem.lineItemTotal}" type="currency"
@@ -388,6 +390,7 @@
             <tr>
                 <td>${orderSummary.freebieItem}</td>
                 <td>1</td>
+                <td>0.0</td>
                 <td>0.0</td>
                 <td>0.0</td>
             </tr>

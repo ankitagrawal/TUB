@@ -27,6 +27,7 @@ import com.hk.pact.service.user.UserDetailService;
 @Service
 public class AddressServiceImpl implements AddressService {
 
+    @SuppressWarnings("unused")
     private static Logger logger = LoggerFactory.getLogger(AddressServiceImpl.class);
 
     @Autowired

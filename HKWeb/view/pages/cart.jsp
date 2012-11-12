@@ -33,7 +33,7 @@
               if(responseData.code == '<%=HealthkartResponse.STATUS_OK%>'){
               _updateTotals(responseData);
               _updateLineItem(responseData, lineItemRow);
-              //document.getElementById("freebieBanner").src = responseData.message;
+              document.getElementById("freebieBanner").src = responseData.message;
               $(".freebieBanner").attr("src", responseData.message);
               }else{
                 elm.val(responseData.data);

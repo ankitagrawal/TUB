@@ -151,12 +151,12 @@ public class AccountingInvoicePdfGenerator {
     Paragraph addressParagraph = new Paragraph();
     Paragraph invoiceDetailParagraph = new Paragraph();
     Paragraph customerAddressParagraph = new Paragraph();
-    String tinNumber = null;
+   /* String tinNumber = null; */
     String invoiceNumString = shippingOrder.getAccountingInvoiceNumber() == null ? "" : shippingOrder.getAccountingInvoiceNumber().toString();
     String shipmentDateString = shippingOrder.getShipment().getShipDate() == null ? "" : shippingOrder.getShipment().getShipDate().toString();
-    String warehouseState = invoiceDto.getWarehouseState();
-    Set<InvoiceLineItemDto> invoiceLineItems = new HashSet<InvoiceLineItemDto>();
-    invoiceLineItems = invoiceDto.getInvoiceLineItemDtos();
+   /* String warehouseState = invoiceDto.getWarehouseState();*/
+    /*Set<InvoiceLineItemDto> invoiceLineItems = new HashSet<InvoiceLineItemDto>();
+    invoiceLineItems = invoiceDto.getInvoiceLineItemDtos();*/
     /* if (warehouseState.equalsIgnoreCase("HARYANA")) {
       tinNumber = "TIN# 06101832036";
     }

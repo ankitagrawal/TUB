@@ -186,7 +186,8 @@ public class MAddressAction extends MBaseAction {
 
 	}
 
-	@DefaultHandler
+	@SuppressWarnings("unchecked")
+    @DefaultHandler
 	@GET
 	@Path("/addresses/")
 	@Produces("application/json")

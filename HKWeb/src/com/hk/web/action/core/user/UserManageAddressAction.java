@@ -3,7 +3,6 @@ package com.hk.web.action.core.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -23,9 +22,9 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.AffiliateManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.AddressService;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED, RoleConstants.ADMIN})
 public class UserManageAddressAction extends BaseAction {
