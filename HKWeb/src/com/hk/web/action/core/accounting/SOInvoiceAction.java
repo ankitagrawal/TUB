@@ -31,6 +31,7 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.order.CartFreebieService;
 
 @Component
 public class SOInvoiceAction extends BaseAction {
@@ -47,8 +48,8 @@ public class SOInvoiceAction extends BaseAction {
     private CategoryService categoryService;
     @Autowired
     private CourierService courierService;
-   /* @Autowired
-    private CartFreebieService cartFreebieService;*/
+    @Autowired
+    private CartFreebieService cartFreebieService;
     @Autowired
     private B2bUserDetailsDao b2bUserDetailsDao;
     @Autowired
@@ -154,7 +155,7 @@ public class SOInvoiceAction extends BaseAction {
             }
 			estimatedWeightOfPackage = shipmentService.getEstimatedWeightOfShipment(shippingOrder);	
 
-            //freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
+            freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
 
 
             return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
