@@ -27,10 +27,6 @@ public interface AddressDao extends BaseDao {
     @SuppressWarnings("unchecked")
     public List<Address> getDuplicateAddresses(Address a);
 
-//     public OrderBillingAddress searchBillingAddress(Long orderId );
-
-//     public OrderBillingAddress orderAlreadywithBillingAddress (Long orderId);
-
-     public BillingAddress searchBillingAddress(User user);
+    public BillingAddress searchBillingAddress(User user);
 
 }

@@ -109,28 +109,6 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     // }
 
 
-//     public OrderBillingAddress searchBillingAddress(Long orderId ){
-////        String query = " from OrderBillingAddress ob  where ob.order.id = orderid";
-////         return (OrderBillingAddress) getSession().createQuery(query).uniqueResult();
-//        OrderBillingAddress  orderBillingAddress  = orderAlreadywithBillingAddress(orderId);
-//        return   orderBillingAddress;
-//    }
-
-
-//       @Transactional
-//    public OrderBillingAddress orderAlreadywithBillingAddress (Long orderId) {
-//        Criteria billingAddressCriteria =  getSession().createCriteria(OrderBillingAddress.class);
-//        if (orderId != null){
-//            Criteria orderCriteria =  billingAddressCriteria.createCriteria("order");
-//            orderCriteria.add(Restrictions.eq("id",orderId ));
-//        }
-//           return (OrderBillingAddress)billingAddressCriteria.list().get(0);
-////         List<OrderBillingAddress> orderBillingAddressList = billingAddressCriteria.list();
-////        return orderBillingAddressList == null || orderBillingAddressList.isEmpty() ? null : orderBillingAddressList.get(0);
-//    }
-//
-
-
     public BillingAddress searchBillingAddress(User user) {
          DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BillingAddress.class);
          detachedCriteria.add(Restrictions.eq("user", user));
