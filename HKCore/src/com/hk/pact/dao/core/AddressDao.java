@@ -6,7 +6,7 @@ import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
-import com.hk.domain.order.OrderBillingAddress;
+import com.hk.domain.user.BillingAddress;
 import com.hk.domain.order.Order;
 import com.hk.pact.dao.BaseDao;
 
@@ -27,6 +27,10 @@ public interface AddressDao extends BaseDao {
     @SuppressWarnings("unchecked")
     public List<Address> getDuplicateAddresses(Address a);
 
-     public OrderBillingAddress getBillingAddress(Order order );
+//     public OrderBillingAddress searchBillingAddress(Long orderId );
+
+//     public OrderBillingAddress orderAlreadywithBillingAddress (Long orderId);
+
+     public BillingAddress searchBillingAddress(User user);
 
 }

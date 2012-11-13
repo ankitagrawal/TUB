@@ -21,7 +21,7 @@ import java.util.HashSet;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "billing_address")
-@PrimaryKeyJoinColumn(name="billing_address_id")
+@PrimaryKeyJoinColumn(name = "billing_address_id")
 public class BillingAddress extends Address implements Serializable {
 
     @JsonSkip
@@ -31,14 +31,28 @@ public class BillingAddress extends Address implements Serializable {
             joinColumns = {@JoinColumn(name = "billing_address_id", nullable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name = "base_order_id", nullable = false, updatable = false)}
     )
-    private List<Order> orders       = new ArrayList<Order>();
+    private List<Order> orders = new ArrayList<Order>();
+
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
 
     public List<Order> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<Order> orders) {                          
+    public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
-    
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }

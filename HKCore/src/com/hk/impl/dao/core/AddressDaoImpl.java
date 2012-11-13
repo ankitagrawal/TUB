@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +15,7 @@ import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
-import com.hk.domain.order.OrderBillingAddress;
+import com.hk.domain.user.BillingAddress;
 import com.hk.domain.order.Order;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.core.AddressDao;
@@ -108,18 +109,32 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     // }
 
 
-    public OrderBillingAddress getBillingAddress(Order order ){
-//        String query = " from OrderBillingAddress ob  where ob.order.id = orderid";
-//         return (OrderBillingAddress) getSession().createQuery(query).uniqueResult();
+//     public OrderBillingAddress searchBillingAddress(Long orderId ){
+////        String query = " from OrderBillingAddress ob  where ob.order.id = orderid";
+////         return (OrderBillingAddress) getSession().createQuery(query).uniqueResult();
+//        OrderBillingAddress  orderBillingAddress  = orderAlreadywithBillingAddress(orderId);
+//        return   orderBillingAddress;
+//    }
 
-        DetachedCriteria criteria = DetachedCriteria.forClass(OrderBillingAddress.class);
-        criteria.add(Restrictions.eq("order", order));
-        List<OrderBillingAddress> billingAddressList = findByCriteria(criteria);
-        if (billingAddressList != null && billingAddressList.size() > 0) {
-            return billingAddressList.get(0);
-        }
-        return null;
 
+//       @Transactional
+//    public OrderBillingAddress orderAlreadywithBillingAddress (Long orderId) {
+//        Criteria billingAddressCriteria =  getSession().createCriteria(OrderBillingAddress.class);
+//        if (orderId != null){
+//            Criteria orderCriteria =  billingAddressCriteria.createCriteria("order");
+//            orderCriteria.add(Restrictions.eq("id",orderId ));
+//        }
+//           return (OrderBillingAddress)billingAddressCriteria.list().get(0);
+////         List<OrderBillingAddress> orderBillingAddressList = billingAddressCriteria.list();
+////        return orderBillingAddressList == null || orderBillingAddressList.isEmpty() ? null : orderBillingAddressList.get(0);
+//    }
+//
+
+
+    public BillingAddress searchBillingAddress(User user) {
+         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BillingAddress.class);
+         detachedCriteria.add(Restrictions.eq("user", user));
+         List<BillingAddress> billingAddressList = (List<BillingAddress>) findByCriteria(detachedCriteria);
+        return billingAddressList == null || billingAddressList.isEmpty() ? null : billingAddressList.get(0);
     }
-
 }   

@@ -18,7 +18,6 @@ import com.hk.web.filter.WebContext;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.payment.CurrencyConverter;
 import com.hk.domain.order.Order;
-import com.hk.domain.order.OrderBillingAddress;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.util.BaseUtils;
@@ -27,6 +26,7 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import com.hk.domain.user.User;
 import com.hk.domain.user.Address;
+import com.hk.domain.user.BillingAddress;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.paypal.sdk.services.NVPCallerServices;
 import com.paypal.sdk.core.nvp.NVPEncoder;
@@ -74,12 +74,11 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
 //  todo  Billing address id corresponding to order id  --  address for that id
 
-        OrderBillingAddress orderBillingAddress = addressDao.getBillingAddress(order);
-        Address address =  orderBillingAddress.getBillingAddress();
+//        OrderBillingAddress orderBillingAddress = addressDao.orderAlreadywithBillingAddress(order.getId());
+//        Address address =  orderBillingAddress.getBillingAddress();
 
-//        Address address = order.getAddress();
-
-        String merchantTxnId = data.getGatewayOrderId();
+       BillingAddress address = addressDao.searchBillingAddress(user);
+       String merchantTxnId = data.getGatewayOrderId();
 
 
         //  Reading property files
