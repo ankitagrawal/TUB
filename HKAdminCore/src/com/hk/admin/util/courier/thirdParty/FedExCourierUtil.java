@@ -123,7 +123,7 @@ public class FedExCourierUtil {
             if (StringUtils.isNotBlank(notificationComment)) {
                 noAwbMessage = noAwbMessage + FEDEX_RESPONSE + notificationComment;
             }
-            logger.error("Exception while getting awb number from FedEx:");
+            logger.info("FedEx awb number could not be generated: error response notification");
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, noAwbMessage);
         } catch (Exception e) {
             logger.error("Exception while getting awb number from FedEx: Axis fault");
