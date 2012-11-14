@@ -48,9 +48,8 @@ public class AddCourierAction extends BasePaginatedAction {
 
 	private List<CourierGroup> courierGroupList;
 
-	@Validate(required = true, on = "assignCourierGroup")
 	private Courier courier;
-	@Validate(required = true, on = "addNewCourierGroup assignCourierGroup")
+
 	private CourierGroup courierGroup;
 
 	private String courierName;
@@ -65,10 +64,10 @@ public class AddCourierAction extends BasePaginatedAction {
 		courierPage = courierService.getCouriers(courierName, status, getPageNo(), getPerPage());
 		courierList = courierPage.getList();
 		courierGroupList = courierGroupService.getAllCourierGroup();
-		return new ForwardResolution("/pages/addCourier.jsp");
+		return new ForwardResolution("/pages/searchAndAddCourier.jsp");
 	}
 
-	public Resolution saveCourier() {
+	public Resolution createCourier() {
 		if (courierName != null && courier != null) {
 			addRedirectAlertMessage(new SimpleMessage("Either Enter  New Courier or Enable Courier"));
 		} else {
@@ -87,6 +86,47 @@ public class AddCourierAction extends BasePaginatedAction {
 			courierService.save(courier);
 		}
 		return pre();
+	}
+
+
+	public Resolution save() {
+		if (courier.getId() != null) {
+			try {
+				courier.setName(courier.getName().trim());
+				if (courier.getCourierGroup() != null) {
+					CourierGroup oldCourierGroup = courier.getCourierGroup();
+					oldCourierGroup.getCouriers().remove(courier);
+					courierGroupService.save(oldCourierGroup);
+				}
+				if (courierGroup != null) {
+					courierGroup.getCouriers().add(courier);
+				}
+			courierService.save(courier);
+			} catch (Exception e) {
+				addRedirectAlertMessage(new SimpleMessage("Error In Editing::" + e.getMessage()));
+				return new ForwardResolution("/pages/courier.jsp");
+			}
+			addRedirectAlertMessage(new SimpleMessage("Courier Edited Sucessfully"));
+		} else {
+			if (courierService.getCourierByName(courier.getName().trim()) != null) {
+				addRedirectAlertMessage(new SimpleMessage("Courier " + courierName + "  is Already exist"));
+				return new ForwardResolution("/pages/courier.jsp");
+			}
+				courier.setName(courier.getName().trim());
+				courier.setDisabled(true);
+				if (courierGroup != null) {
+					courierGroup.getCouriers().add(courier);
+				}
+				courierService.save(courier);
+
+
+		}
+		return pre();
+	}
+
+	public Resolution editCourier(){
+	courier = getCourier();
+	return new ForwardResolution("/pages/courier.jsp");
 	}
 
 
