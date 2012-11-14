@@ -14,10 +14,10 @@
     session.removeAttribute(HealthkartConstants.Session.signupDate);
 %>
   _gaq.push(['_setCustomVar',
-    <%=AnalyticsConstants.CustomVarSlot.signUpDate%>, // This custom var is set to slot #3.  sign_up_date
-    "signupDate", // The name acts as a kind of category for the user activity.  Required parameter.
+    <%=AnalyticsConstants.CustomVarSlot.signUpDate.getSlot()%>, // This custom var is set to slot #3.  sign_up_date
+    "<%=AnalyticsConstants.CustomVarSlot.signUpDate.getName()%>", // The name acts as a kind of category for the user activity.  Required parameter.
     "<%=signupDate%>", // This value of the custom variable.  Required parameter.
-    <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                   // Sets the scope to visitor-level. Optional parameter.
+    <%=AnalyticsConstants.CustomVarSlot.signUpDate.getScope().getLevel()%>                   // Sets the scope to visitor-level. Optional parameter.
   ]);
 <%
   }
@@ -28,10 +28,10 @@
     session.removeAttribute(HealthkartConstants.Session.userId);
 %>
   _gaq.push(['_setCustomVar',
-    <%=AnalyticsConstants.CustomVarSlot.userId%>, // This custom var is set to slot #4.  user_id
-    "userId", // The name acts as a kind of category for the user activity.  Required parameter.
+    <%=AnalyticsConstants.CustomVarSlot.userId.getSlot()%>, // This custom var is set to slot #4.  user_id
+    "<%=AnalyticsConstants.CustomVarSlot.userId.getName()%>", // The name acts as a kind of category for the user activity.  Required parameter.
     "<%=userId%>", // This value of the custom variable.  Required parameter.
-    <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to visitor-level. Optional parameter.
+    <%=AnalyticsConstants.CustomVarSlot.userId.getScope().getLevel()%>                    // Sets the scope to visitor-level. Optional parameter.
   ]);
 <%
   }
