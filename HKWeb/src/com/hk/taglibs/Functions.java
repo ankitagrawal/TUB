@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
@@ -469,12 +471,13 @@ public class Functions {
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
-    public static List<Courier> getAvailableCouriers(Object o) {
+	public static List<Courier> getAvailableCouriers(Object o) {
 
-        ShippingOrder shippingOrder = (ShippingOrder) o;
-        CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
-        return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false, false);
-    }
+		ShippingOrder shippingOrder = (ShippingOrder) o;
+		CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
+		return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false, false, false);
+
+	}
 
     public static boolean equalsIgnoreCase(String str1, String str2) {
         return !StringUtils.isBlank(str1) && str1.equalsIgnoreCase(str2);
@@ -591,6 +594,12 @@ public class Functions {
         return linkManager.getProductURL(product, productReferrerId);
     }
 
+    public static String getTryOnImageURL(ProductVariant productVariant) {
+        LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
+
+        return linkManager.getTryOnImageURL(productVariant);
+    }
+
     public static String getCodConverterLink(Order order) {
         LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
 
@@ -614,9 +623,10 @@ public class Functions {
         return renderNewCatalogFilter;
     }
 
-    public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, boolean showHiddenImages) {
+    public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, Object showHiddenImages) {
         ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
-        List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImages);
+        Boolean showHiddenImagesBoolean = (Boolean) showHiddenImages;
+        List<ProductImage> productImages = productImageService.searchProductImages(imageTypeId, product, productVariant, showVariantImages, showHiddenImagesBoolean);
         return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
     }
 
@@ -641,4 +651,15 @@ public class Functions {
         CourierStatusUpdateHelper courierStatusUpdateHelper = new CourierStatusUpdateHelper();
         return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
     }
+
+		public static Long getPoLineItemQty(GrnLineItem grnLineItem) {
+				GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
+				return grnLineItemService.getPoLineItemQty(grnLineItem);
+		}
+
+		public static Long getGrnLineItemQtyAlreadySet(GoodsReceivedNote goodsReceivedNote, Sku sku) {
+				GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
+				return grnLineItemService.getGrnLineItemQtyAlreadySet(goodsReceivedNote, sku);
+		}
+
 }

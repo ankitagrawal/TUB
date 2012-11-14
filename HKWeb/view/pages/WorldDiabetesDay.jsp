@@ -26,9 +26,11 @@
 						 url('${pageContext.request.contextPath}/images/wdd/didothtf-11lightitalic.svg#didothtf-11lightitalic') format('svg');
 				font-weight: normal;
 				font-style: normal;
-		}	
-.down	{ width:100%; clear:both;}
+		}
+        p, form	{ margin:0px; padding:0;}
+  .down	{ width:100%; clear:both;}
 .clr	{ clear:both; height:1px; line-height:1px; font-size:1px;}
+        a img, a, a:hover { border-bottom:none; }
 
 .outer	{ width:960px; clear:both; text-align:left; margin:0 auto; padding-bottom:240px;}
 
@@ -48,24 +50,33 @@ h3		{ font-size:30px; line-height:35px; color:#231f20; font-family:'Esta'; font-
 .ht2	{ height:20px; clear:both;}
 
 .des	{ font-family:'Esta'; font-size:19px; color:#231f20; line-height:24px;}
-.pad1	{ padding:20px 100px 20px 100px;}
+.pad1	{ padding:20px 130px 20px 130px;}
 .pad2	{ padding:20px 200px 20px 200px;}
 
-.proPic	{ width:250px; float:left; padding-top:60px;}
-.prpCopy{ width:680px; float:left; font-family: 'Esta'; color:#231f20; font-size:17px; line-height:20px;}
-.proCopyLeft	{ width:500px; float:left;}
-.proCopyRight	{ width:150px; float:left;}
+.proPic	{ width:240px; float:left; font-family: 'Esta'; color:#231f20; font-size:17px; line-height:20px;}
+.prpCopy{ width:720px; float:left; font-family: 'Esta'; color:#231f20; font-size:17px; line-height:20px;}
+.proCopyLeft	{ width:520px; float:left;}
+.proCopyRight	{ width:auto; float:left; text-align:right;}
 
 .redTxt		{ color:#951c00;}
-.blueTxt	{ color:#0f1c55; font-weight:bold;}
+.redTxt span{ color:#951c00; text-decoration:line-through}
+.blueTxt	{ color:#0f1c55; font-weight:bold; line-height:30px;}
 
-.onetouch	{ width:480px; float:left; padding:0px 0px 0px 0px;}
-.splenda	{ width:420px; float:left;}
+.splOrdrBtn1{ position:absolute; width:200px; height:36px; margin:-5px 0px 0px 500px;}
+.buyNowBtn1	{ position:absolute; width:120px; height:36px; margin:33px 0px 0px 547px;}
+
+
+.onetouch		{ width:480px; float:left; padding:0px 0px 0px 0px;}
+.onetouch img	{ margin-bottom:10px;}
+.splenda		{ width:420px; float:left;}
+.splenda img	{ margin-bottom:10px;}
 
 .otSPTxt	{ font-family:'Esta'; font-size:19px; color:#231f20; line-height:24px;}
 
-ul.bullet1		{ margin:0px; padding:5px 0px 0px 0px; list-style:none;}
-ul.bullet1 li	{ line-height:15px; padding:0px 0px 10px 20px; background:url('${pageContext.request.contextPath}/images/wdd/bullet1.jpg') 0px 7px no-repeat;}
+ul.bullet1			{ margin:0px; padding:0px; list-style:none; font-size:17px;}
+ul.bullet1 li		{ line-height:15px; padding:0px 0px 10px 20px; background:url('${pageContext.request.contextPath}/images/wdd/bullet1.jpg') 0px 7px no-repeat;}
+ul.bullet1 li span	{font-size:13px;}
+
 
         </style>
 
@@ -85,53 +96,42 @@ ul.bullet1 li	{ line-height:15px; padding:0px 0px 10px 20px; background:url('${p
   
 </s:layout-component>
 
-<s:layout-component name="metaDescription">Breast Feeding Week Special Products from HealthKart.</s:layout-component>
+<s:layout-component name="metaDescription">Special Offers on OneTouch and Splenda Products from HealthKart.</s:layout-component>
 <s:layout-component name="metaKeywords"></s:layout-component>
 
 <s:layout-component name="content">
-<div class="outer">
+   <div class="outer">
 	<div class="down">&nbsp;</div>
-    <div class="down bgDiabetesHeader">
-    	<div class="dL"><h3>World Diabetes Day</h3></div>
-        <div class="dM">o</div>
-        <div class="dR"><h3>Nov. 14th</h3></div>
-        <div class="ht1">&nbsp;</div>
-    	<h2 class="h1">JOIN the BLUE circle</h2>
-        <h3>HealthKart Celebrates World Diabetes Day with OneTouch and Splenda</h3>
-      <div class="ht2">&nbsp;</div>
-    </div>
-    <div class="pad1 des" align="center">Bring back the balance in your life by cutting down glucose levels. Find yourself amid a breath of relief with exclusive diabetic combos which aid easy monitoring of blood sugar levels.
+    <div class="down"><a href="http://www.healthkart.com/diabetes" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/header.jpg" alt="World Diabetes Day, Nov.14th, Join the Blue Circle, HealthKart Celebrates World Diabetes Day with OneTouch and Splenda" border="0" /></a></div>
+    <div class="pad1 des" align="center">Bring back the balance in your life by cutting down glucose levels. Find yourself amid a breath of relief with exclusive diabetes combos which aid easy monitoring of blood sugar levels & controlling it effectively.
     </div>
     <div class="clr">&nbsp;</div>
     <div class="line1">&nbsp;</div>
     <div class="down">&nbsp;</div>
     <div class="down">
-   	  <div class="proPic"><a href="http://www.healthkart.com/product/beurer-talking-upper-arm-blood-pressure-monitor-bm-19/CMB-DIA28" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/ultra2.jpg" border="0" /></a></div>
+   	  <div class="proPic">
+      <p><a href="http://www.healthkart.com/product/beurer-talking-upper-arm-blood-pressure-monitor-bm-19/CMB-DIA29" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/ultra2.jpg" border="0" /></a></p>
+      <br />
+      <p class="redTxt">MRP = <span>Rs. 3,400</span></p>
+      <p class="redTxt">HealthKart Price = Rs. 2,545</p>
+      <p class="redTxt"><strong>You Save = Rs. 855 (25%)</strong></p>
+      </div>
       <div class="prpCopy">
-      			<div class="down">
-      				<p>Make a brilliant choice this WORLD DIABETS DAY! Add pride to your life with Johnson & Johnson OneTouch Select Simple Meter with 25 free lancets and enjoy the advantages of a glucometer from the ease of your home. We have combined this glucometer with Johnson & Johnson Onetouch SelectSimple test strips and Splenda Tablet sweetener to let you savor the delicacies this festive season.</p><br />
-                 </div>
-                 <div class="down">
-                 	<div class="proCopyLeft">
-
-                        <p class="redTxt">Rs. 3,400</p>
-                        <p class="redTxt">HealthKart Price = Rs. 2,545</p>
-                        <p class="redTxt">Save= Rs. 855 (25%)</p>
-                        <br />
-                            <p><span class="blueTxt">Contains:</span></p>
-                            <ul class="bullet1">
-                                <li>Johnson &amp; Johnson OneTouch Ultra 2 Meter;</li>
-                                <li>Johnson &amp; Johnson OneTouch UltraSoft 25 Lancets;</li>
-                                <li>Johnson &amp; Johnson OneTouch Ultra 10 Test Strips;</li>
-                                <li>Johnson &amp; Johnson OneTouch Ultra 25 Test Strips; and</li>
-                                <li>Splenda Tablets 1+1 (Short expiry products (March 2013)</li>
-                           </ul>
-                    </div>
-                    <div class="proCopyRight">
-                    	<a href="http://www.healthkart.com/product/beurer-talking-upper-arm-blood-pressure-monitor-bm-19/CMB-DIA28" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/special-offer.jpg" width="137" height="137" alt="special-offer" /></a>
-                    </div>
+      			<div class="down">Invest more in merry-making while you break free from the hassled clinic visits with OneTouch Ultra 2 World Diabetes Day Combo. Bring home the super convenient self-monitoring feature with OneTouch Ultra 2 meter with 25 free lancets and 10 free strips. Also enjoy 25 additional strips in the combo pack. With up to 500 test storage capacity, its unique function lets you assess the effect of your food on your glucose levels. Wear-off the unsweetened spell this festive season with Splenda No Calorie Sweetener combined in this combo.<br /><br />
                  </div>
 
+      			 <div class="down">
+                 	<div class="splOrdrBtn1"><a href="http://www.healthkart.com/product/beurer-talking-upper-arm-blood-pressure-monitor-bm-19/CMB-DIA29" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/special-offer.jpg" border="0"  alt="special Offer" /></a></div>
+                   	<div class="buyNowBtn1"><a href="http://www.healthkart.com/product/beurer-talking-upper-arm-blood-pressure-monitor-bm-19/CMB-DIA29" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/buy-now.jpg" border="0"  alt="Buy Now" /></a></div>
+                 <p><span class="blueTxt">Contains:</span></p>
+                 	<ul class="bullet1">
+                    	<li>Johnson & Johnson OneTouch Ultra 2 Meter</li>
+                    	<li>Johnson & Johnson OneTouch UltraSoft 25 Lancets</li>
+                    	<li>Johnson & Johnson OneTouch Ultra 10 Test Strips <span>(Included with Ultra 2 Meter)</span></li>
+                        <li>Johnson & Johnson OneTouch Ultra 25 Test Strips</li>
+                    	<li>Splenda No Calorie Sweetener 300 + 300<span> (Short Expiry Product - Exp Date: March 2013)</span></li>
+                    </ul>
+                 </div>
 
 
 
@@ -143,30 +143,28 @@ ul.bullet1 li	{ line-height:15px; padding:0px 0px 10px 20px; background:url('${p
     <div class="down">&nbsp;</div>
 
     <div class="down">
-    	<div class="proPic"><a href="http://www.healthkart.com/product/beurer-talking-upper-arm-blood-pressure-monitor-bm-19/CMB-DIA27" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/selectsimple.jpg" border="0" /></a></div>
+    	<div class="proPic">
+        <p><a href="http://www.healthkart.com/product/beurer-talking-upper-arm-blood-pressure-monitor-bm-19/CMB-DIA30" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/selectsimple.jpg" border="0" /></a></p>
+        <p class="redTxt">MRP = <span>Rs. 2,175</span></p>
+        <p class="redTxt">HealthKart Price = Rs. 1,999</p>
+        <p class="redTxt"><strong>You Save = Rs. 176 (8%)</strong></p>
+        </div>
       <div class="prpCopy">
       				<div class="down">
-      				<p>Invest more in merry-making while you break free from the hassled clinic visits with Onetouch Ultra 2 World Diabetes Combo.
-        Welcome home the super convenient self-monitoring feature with Onetouch Ultra 2 meter with 25 free lancets. With up to 500 test storage capacity, its unique function lets you assess the effect of your food on your glucose levels. Wear-off the unsweetened spell this festive season with Splenda Tablet sweeteners combined in this combo.</p><br />
+                    <p>Make a brilliant choice this WORLD DIABETES DAY! Add pride to your life with Johnson & Johnson OneTouch SelectSimple Meter with 25 free lancets  and 10 free strips. Also enjoy 50 additional strips in the combo pack. Enjoy the advantages of a glucometer from the ease of your home. This exciting offer is combined with Splenda No Calorie Sweetener to let you savor the delicacies this festive season.</p>
+      				<br />
                     </div>
                     <div class="down">
-                    	<div class="proCopyLeft">
-      				<p class="redTxt">Rs. 2,175</p>
-                    <p class="redTxt">HealthKart Price = Rs. 1,999</p>
-                    <p class="redTxt">Save=Rs. 176 (8%)</p>
-                    <br />
-					<p><span class="blueTxt">Contains:</span></p>
-                    	<ul class="bullet1">
-                        	<li>Johnson & Johnson OneTouch SelectSimple Meter 1;</li>
-                            <li>Johnson & Johnson OneTouch UltraSoft 25 Lancets;</li>
-                            <li>Johnson & Johnson OneTouch Select Simple 10 Test Strips;</li>
-                            <li>Johnson & Johnson OneTouch Select SimpleTest 50 Strips; and</li>
-                            <li>Splenda Tablets 1+1 (Short expiry products:March 2013)</li>
+                    <div class="splOrdrBtn1"><a href="http://www.healthkart.com/product/beurer-talking-upper-arm-blood-pressure-monitor-bm-19/CMB-DIA30" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/special-offer.jpg" border="0"  alt="special Offer" /></a></div>
+                   	<div class="buyNowBtn1"><a href="http://www.healthkart.com/product/beurer-talking-upper-arm-blood-pressure-monitor-bm-19/CMB-DIA30" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/buy-now.jpg" border="0"  alt="Buy Now" /></a></div>
+                   	<ul class="bullet1">
+                            <p><span class="blueTxt">Contains:</span></p>
+                            <li>Johnson & Johnson OneTouch SelectSimple Meter</li>
+                            <li>Johnson & Johnson OneTouch UltraSoft 25 Lancets</li>
+                             <li>Johnson & Johnson OneTouch Select Simple 10 Test Strips<span> (Included with SelectSimple Meter)</span></li>
+                            <li>Johnson & Johnson OneTouch Select Simple Test 50 Strips</li>
+                        	<li>Splenda No Calorie Sweetener 300 + 300 <span>(Short Expiry Product - Exp Date: March 2013)</span></li>
                         </ul>
-                        </div>
-                        <div class="proCopyRight">
-                        	<a href="http://www.healthkart.com/product/beurer-talking-upper-arm-blood-pressure-monitor-bm-19/CMB-DIA27" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/special-offer.jpg" width="137" height="137" alt="special-offer" /></a>
-                        </div>
                    </div>
 
         </div>
@@ -176,27 +174,38 @@ ul.bullet1 li	{ line-height:15px; padding:0px 0px 10px 20px; background:url('${p
     <div class="down">&nbsp;</div>
     <div class="down">
     	<div class="onetouch" align="center">
-        		<a href="http://www.healthkart.com/brand/diabetes/OneTouch" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/onetouch2.jpg" alt="OneTouch" /></a><br />
-                <span class="otSPTxt">OneTouch offers an expansive range of glucometers,
-                <br />strips and lancets, serving you to combat diabetes effectually.</span>
+        		<p><a href="http://www.healthkart.com/brand/diabetes/OneTouch" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/onetouch2.jpg" alt="OneTouch" border="0" /></a></p>
+                <p><a href="http://www.healthkart.com/brand/diabetes/OneTouch" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/buy-now.jpg" alt="Buy Now" border="0" /></a></p>
+                <span class="otSPTxt">OneTouch offers an expansive range of blood glucose monitors,
+                strips and lancets, serving you to monitor diabetes effectively.</span>
     	</div>
 
       <div class="splenda" align="center">
-			<a href="http://www.healthkart.com/brand/diabetes/Splenda" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/splenda2.jpg" alt="splenda" /></a>
+			<p><a href="http://www.healthkart.com/brand/diabetes/Splenda" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/splenda2.jpg" alt="splenda" border="0" /></a></p>
+            <p><a href="http://www.healthkart.com/brand/diabetes/Splenda" target="_blank"><img src="${pageContext.request.contextPath}/images/wdd/buy-now.jpg" alt="Buy Now" border="0" /></a></p>
            	  <span class="otSPTxt">Splenda, world's trusted range of sweeteners <br />
    	    and diabetic  products which makes every sweet moment yours.</span>
            </div>
     </div>
     <div class="down">&nbsp;</div>
   	<div class="line1">&nbsp;</div>
-    <div class="down">&nbsp;</div>
-    <div class="pad1 des" align="center">Entertain no compromises with your taste buds this World Diabetics Day. Celebrate the joy of being diabetic and happy!</div>
+    <div class="clr">&nbsp;</div>
+    <div class="pad1 des" align="center">Entertain no compromises with your taste buds this World Diabetes Day.</div>
     <div class="down">&nbsp;</div>
 
 </div>
+
          <div class="cl"></div>
     <!-- Container Ends-->
-  
+  <!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_floating_style addthis_counter_style" style="right:10px;top:50px;">
+<a class="addthis_button_facebook_like" fb:like:layout="box_count"></a>
+<a class="addthis_button_tweet" tw:count="vertical"></a>
+<a class="addthis_button_google_plusone" g:plusone:size="tall"></a>
+<a class="addthis_counter"></a>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-509261de45f6e306"></script>
+<!-- AddThis Button END -->
 </s:layout-component>
 
 

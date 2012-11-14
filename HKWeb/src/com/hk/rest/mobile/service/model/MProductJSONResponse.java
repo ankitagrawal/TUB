@@ -1,18 +1,10 @@
 package com.hk.rest.mobile.service.model;
 
-import com.akube.framework.gson.JsonSkip;
-import com.hk.domain.catalog.product.*;
-import com.hk.domain.catalog.Supplier;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.affiliate.AffiliateCategory;
-import com.hk.domain.core.ProductVariantPaymentType;
-import com.hk.domain.core.ProductVariantServiceType;
-import com.hk.rest.mobile.service.utils.MHKConstants;
-
-import javax.persistence.*;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.hk.rest.mobile.service.utils.MHKConstants;
 
 /**
  * Created by IntelliJ IDEA.

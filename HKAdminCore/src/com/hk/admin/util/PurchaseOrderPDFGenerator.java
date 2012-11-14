@@ -1,26 +1,23 @@
 package com.hk.admin.util;
 
-import java.io.FileOutputStream;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-
+import static com.akube.framework.util.BaseUtils.newline;
+import com.hk.admin.dto.inventory.PoLineItemDto;
+import com.hk.admin.dto.inventory.PurchaseOrderDto;
+import static com.hk.constants.core.HealthkartConstants.CompanyName.brightLifeCarePvtLtd;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.dto.TaxComponent;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.dto.inventory.PoLineItemDto;
-import com.hk.admin.dto.inventory.PurchaseOrderDto;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.inventory.po.PurchaseOrder;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-
+import java.io.FileOutputStream;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 /**
  * Created with IntelliJ IDEA.
  * User: Rohit
@@ -41,14 +38,14 @@ public class PurchaseOrderPDFGenerator {
             if(purchaseOrder != null) {
                 Paragraph addressParagraph = new Paragraph();
                 Font font = new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL);
-                addressParagraph.add(new Paragraph("Bright Lifecare Pvt. Ltd.", font));
+                addressParagraph.add(new Paragraph(brightLifeCarePvtLtd, font));
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine1(), font));
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine2(), font));
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getCity() + " -" + purchaseOrder.getWarehouse().getPincode(), font));
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getState(), font));
                 addressParagraph.add(new Paragraph("TIN: " + purchaseOrder.getWarehouse().getTin(), font));
 
-                Paragraph header = new Paragraph("PURCHASE ORDER \n\n", new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD));
+                Paragraph header = new Paragraph("PURCHASE ORDER " + newline + newline , new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD));
                 header.setAlignment(Element.ALIGN_CENTER);
 
                 Image image = Image.getInstance(logoImagePath);
@@ -58,7 +55,7 @@ public class PurchaseOrderPDFGenerator {
                 purchaseOrderDocument.add(image);
                 purchaseOrderDocument.add(header);
                 createSupplierDetailTable(purchaseOrderDocument, purchaseOrder);
-                purchaseOrderDocument.add(new Paragraph("\n"));
+                purchaseOrderDocument.add(new Paragraph(newline));
                 createPODetails(purchaseOrderDocument, purchaseOrderDto);
                 createFooter(purchaseOrderDocument);
             }
@@ -83,15 +80,15 @@ public class PurchaseOrderPDFGenerator {
         if(purchaseOrder.getSupplier().getLine1() != null) {
             supplierAddress.append(purchaseOrder.getSupplier().getLine1());
         }
-        supplierAddress.append("\n");
+        supplierAddress.append(newline);
         if(purchaseOrder.getSupplier().getLine2() != null) {
             supplierAddress.append(purchaseOrder.getSupplier().getLine2());
         }
-        supplierAddress.append("\n");
+        supplierAddress.append(newline);
         if(purchaseOrder.getSupplier().getCity() != null) {
             supplierAddress.append(purchaseOrder.getSupplier().getCity());
         }
-        supplierAddress.append("\n");
+        supplierAddress.append(newline);
         if(purchaseOrder.getSupplier().getState() != null) {
             supplierAddress.append(purchaseOrder.getSupplier().getState());
         }
@@ -132,7 +129,7 @@ public class PurchaseOrderPDFGenerator {
         poDetailTable.addCell(PdfGenerator.createCell("Details", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Qty", font1));
         poDetailTable.addCell(PdfGenerator.createCell("MRP", font1));
-        poDetailTable.addCell(PdfGenerator.createCell("Cost Price\n (Without Tax)", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Cost Price" + newline + " (Without Tax)", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Tax %", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Taxable", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Tax", font1));
@@ -142,14 +139,15 @@ public class PurchaseOrderPDFGenerator {
         int counter = 1;
         for(PoLineItemDto poLineItemDto : poLineItemDtoList) {
             ProductVariant productVariant = poLineItemDto.getPoLineItem().getSku().getProductVariant();
+	        TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(purchaseOrderDto.getPurchaseOrder().getSupplier(), poLineItemDto.getPoLineItem().getSku(), poLineItemDto.getTaxable());
             poDetailTable.addCell(PdfGenerator.createCell("" + counter++, font2));
             poDetailTable.addCell(PdfGenerator.createCell(productVariant.getId(), font2));
             poDetailTable.addCell(PdfGenerator.createCell(productVariant.getUpc(), font2));
-            poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName(), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName() + newline + productVariant.getOptionsCommaSeparated(), font2));
             poDetailTable.addCell(PdfGenerator.createCell("" + poLineItemDto.getPoLineItem().getQty(), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getMrp()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getCostPrice()), font2));
-            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getSku().getTax().getValue() * 100), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(taxComponent.getTaxRate() * 100), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getTaxable()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getTax()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getSurcharge()), font2));
@@ -171,9 +169,9 @@ public class PurchaseOrderPDFGenerator {
 
     private void createFooter(Document document) throws Exception{
         Paragraph footerParagraph = new Paragraph();
-        footerParagraph.add(new Paragraph("1) Please indicate Purchase Order number on all invoice and challan and correspondence.\n", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        footerParagraph.add(new Paragraph("2) The item supplied will be subject to our approval and all rejections will be to your account.\n", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        footerParagraph.add(new Paragraph("3) No excess supply will be accepted, unless agreed in writing by us.\n", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("1) Please indicate Purchase Order number on all invoice and challan and correspondence." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("2) The item supplied will be subject to our approval and all rejections will be to your account." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("3) No excess supply will be accepted, unless agreed in writing by us." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
 
         document.add(footerParagraph);
     }

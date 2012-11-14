@@ -1,6 +1,5 @@
 package com.hk.web.action.admin.subscription;
 
-import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -19,7 +18,7 @@ import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.manager.AddressBookManager;
-import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.util.AddressMatchScoreCalculator;

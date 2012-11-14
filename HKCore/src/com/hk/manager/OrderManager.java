@@ -1,6 +1,10 @@
 package com.hk.manager;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +67,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pricing.PricingEngine;
-import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 import com.hk.web.filter.WebContext;
 
@@ -590,7 +593,9 @@ public class OrderManager {
       }
 			order = getOrderService().save(order);
 		}
-		return order;
+    if(order!=null)
+      getOrderDao().refresh(order);
+    return order;
 	}
 
 	public boolean isStepUpAllowed(CartLineItem cartLineItem) {

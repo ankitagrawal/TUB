@@ -132,6 +132,7 @@ function URLEval() {
 }
 
 URLEval.prototype.getURLFromHash = function (hashURL) {
+	//in some devices when the JS is fired document URL is with #, therefore URL after # is used
     var uH = hashURL.split('#');
     if (uH.length > 1) {
         return uH[1];
@@ -227,6 +228,10 @@ var __hkG = {
 		'payment' : 'mPayment/payment/',
 		'search' : 'mSearch/search',
 		'catalog' : 'mCatalog/catalog',
+		'applyCoupon' : 'mCoupon/applyCoupon',
+		'getOffers' : 'mCoupon/getOffers',
+		'removeOffer' : 'mCoupon/removeOffer',
+		'applyOffer' : 'mCoupon/applyOffer',
 		'addToCart' : 'mAddtoCart/addtoCart',
 		'subCategory' : 'mShop/secondaryCategory',
 		'home' : '/home.jsp',

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.order.EnumOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import com.hk.domain.builder.SubscriptionOrderBuilder;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.pact.service.order.OrderService;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionOrder;
@@ -49,6 +51,8 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
     private SubscriptionService subscriptionService;
     @Autowired
     private SubscriptionLoggingService subscriptionLoggingService;
+    @Autowired
+    private OrderService orderService;
 
     public SubscriptionOrder save(SubscriptionOrder subscriptionOrder){
         return subscriptionOrderDao.save(subscriptionOrder);
@@ -84,8 +88,27 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
         subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderPlaced, "automated order generation");
         //create an entry in subscription_order table
         createSubscriptionOrder(subscription, order);
+        updateParentBOStatus(subscription);
 
         return order;
+    }
+
+    private Order updateParentBOStatus(Subscription subscription){
+      Order bo=subscription.getBaseOrder();
+       boolean parentBOHasProducts=false;
+                if(bo.getOrderStatus().getId().equals(EnumOrderStatus.Placed.getId())){
+                  for(CartLineItem  cartLineItem : bo.getCartLineItems()){
+                    if(cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())){
+                      parentBOHasProducts=true;
+                      break;
+                    }
+                  }
+                  if(!parentBOHasProducts){
+                    bo.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
+                    orderService.save(bo);
+                  }
+                }
+      return bo;
     }
 
     /**
@@ -169,7 +192,9 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
                 List<SubscriptionOrder> subscriptionOrders=this.findSubscriptionOrdersForSubscription(subscription,EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
                 subscription.setQtyDelivered(new Long(subscriptionOrders.size()));
                 subscriptionService.updateSubscriptionAfterOrderDelivery(subscription);
+              if(subscription.getQty()<=subscription.getQtyDelivered()){
 
+              }
             }
         }
     }
@@ -229,4 +254,12 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
     public void setSubscriptionLoggingService(SubscriptionLoggingService subscriptionLoggingService) {
         this.subscriptionLoggingService = subscriptionLoggingService;
     }
+
+  public OrderService getOrderService() {
+    return orderService;
+  }
+
+  public void setOrderService(OrderService orderService) {
+    this.orderService = orderService;
+  }
 }

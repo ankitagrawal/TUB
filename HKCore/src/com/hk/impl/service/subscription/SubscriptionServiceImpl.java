@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.constants.subscription.SubscriptionConstants;
@@ -21,6 +23,7 @@ import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.subscription.SubscriptionDao;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionService;
@@ -44,6 +47,8 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     private SubscriptionStatusService subscriptionStatusService;
     @Autowired
     private EmailManager emailManager;
+    @Autowired
+    private BaseDao baseDao;
 
     @Transactional
     public Subscription save(Subscription subscription){
@@ -192,6 +197,20 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         if(totalQty<=qtyDelivered){
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Expired.asSubscriptionStatus());
             subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.SubscriptionExpired, "Subscription marked as expired");
+          Order order=subscription.getBaseOrder();
+          boolean parentBOHasProducts=false;
+                if(order.getOrderStatus().getId().equals(EnumOrderStatus.InProcess.getId())||order.getOrderStatus().getId().equals(EnumOrderStatus.Placed.getId())){
+                  for(CartLineItem  cartLineItem : order.getCartLineItems()){
+                    if(cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())){
+                      parentBOHasProducts=true;
+                      break;
+                    }
+                  }
+                  if(!parentBOHasProducts){
+                    order.setOrderStatus(EnumOrderStatus.Delivered.asOrderStatus());
+                    baseDao.save(order);
+                  }
+                }
         }else{
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Idle.asSubscriptionStatus());
             Calendar c = Calendar.getInstance();

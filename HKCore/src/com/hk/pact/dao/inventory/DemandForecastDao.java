@@ -19,5 +19,6 @@ public interface DemandForecastDao {
 
     public List<DemandForecast> findDemandforecastByDate (Date minDate);
     
+    @SuppressWarnings("unchecked")
     public void saveOrUpdate(Collection entities) throws DataAccessException;
 }

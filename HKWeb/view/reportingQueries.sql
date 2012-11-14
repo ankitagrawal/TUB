@@ -182,6 +182,22 @@ WHERE
 	)
 
 
+SELECT count(distinct user_id )
+FROM
+(
+SELECT distinct bo.user_id, min(ifnull(p.payment_date, bo.create_dt)) as first_order_date
+FROM base_order bo
+left outer join payment p on p.id = bo.payment_id
+
+
+WHERE bo.order_status_id
+IN ( 20, 30, 40 )
+group by user_id
+) v1
+where date(first_order_date)>= '2012-10-20'
+AND date(first_order_date) <= '2012-10-26';
+
+
 /*
  * groovy program to subtract two email lists
 

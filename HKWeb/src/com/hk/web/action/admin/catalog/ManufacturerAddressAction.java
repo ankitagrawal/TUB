@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -25,9 +24,9 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.user.Address;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.core.ManufacturerDao;
 import com.hk.pact.dao.location.LocalityMapDao;
+import com.hk.pact.service.core.AddressService;
 import com.hk.util.LatLongGenerator;
 
 /**

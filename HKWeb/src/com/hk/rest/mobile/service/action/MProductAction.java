@@ -40,7 +40,6 @@ import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.dto.AddressDistanceDto;
-import com.hk.helper.MenuHelper;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.core.AddressDao;
@@ -54,7 +53,6 @@ import com.hk.rest.mobile.service.model.MProductVariantJSONResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.util.HKImageUtils;
 import com.hk.util.ProductReferrerMapper;
-import com.hk.util.SeoManager;
 import com.hk.web.HealthkartResponse;
 
 /**

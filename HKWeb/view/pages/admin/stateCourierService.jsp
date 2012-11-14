@@ -78,7 +78,7 @@
                       Select Courier :
                     <s:select name="stateCourierService.courier">
                         <s:option value="">-Select-</s:option>
-                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
+                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers"
                                                    value="id" label="name"/>
                     </s:select></td>
                 <td>

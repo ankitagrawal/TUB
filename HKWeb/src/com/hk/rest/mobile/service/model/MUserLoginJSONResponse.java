@@ -1,8 +1,5 @@
 package com.hk.rest.mobile.service.model;
 
-import com.hk.domain.user.Address;
-
-import javax.persistence.Column;
 
 /**
  * Created by IntelliJ IDEA.

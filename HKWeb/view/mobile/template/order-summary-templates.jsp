@@ -32,8 +32,8 @@
 
 		{{ if(data.pricingDto!=null){ }}
 	   		<h2 style='color:#888'>Shipping: Rs.{{print(data.pricingDto.shippingTotal)}}</h2>
-	  		<h3 style='color:#888'>You Saved: Rs.{{print(data.saved)}}</h3>
-	   		<h2 style='color:#F87500'>Total: Rs.{{print(data.total)}}</h2>
+	  		<h3 style='color:#888'>You Saved: Rs.{{print(data.pricingDto.totalPromoDiscount+data.pricingDto.subscriptionDiscount+data.pricingDto.totalHkProductsDiscount + data.pricingDto.totalHkPrepaidServiceDiscount + data.pricingDto.totalHkPostpaidServiceDiscount - data.pricingDto.totalPostpaidAmount)}}</h3>
+	   		<h2 style='color:#F87500'>Total: Rs.{{print(data.pricingDto.grandTotalPayable)}}</h2>
 		{{ } }}
 	</div>
 </div>
