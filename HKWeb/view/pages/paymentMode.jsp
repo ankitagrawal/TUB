@@ -129,9 +129,9 @@
     </p>
 
     <%--sbi ka mastercard--%>
-    <p><label><s:radio name="paymentMode" value="670"/>MasterCard
-        &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">
-    </p>
+    <%--<p><label><s:radio name="paymentMode" value="670"/>MasterCard--%>
+        <%--&nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">--%>
+    <%--</p>--%>
     <%--citrus ka sab kuch--%>
 <%--
     <p><label><s:radio name="paymentMode" value="80" />
