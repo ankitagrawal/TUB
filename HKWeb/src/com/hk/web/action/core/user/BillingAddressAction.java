@@ -35,7 +35,7 @@ public class BillingAddressAction extends BaseAction {
     AddressDao addressDao;
     Long bankId;
 
-    @Validate(required = true)
+//    @Validate(required = true)
     private PaymentMode paymentMode;
 
     Order order;
@@ -44,7 +44,7 @@ public class BillingAddressAction extends BaseAction {
     public Resolution pre() {
         User user = getUserService().getUserById(getPrincipal().getId());
         billingAddress = addressDao.searchBillingAddress(user);
-        return new RedirectResolution(PaymentModeAction.class);
+        return new RedirectResolution("/pages/billingAddress.jsp");
     }
 
 

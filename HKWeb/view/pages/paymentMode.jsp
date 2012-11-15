@@ -1,6 +1,4 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-
-
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
@@ -22,8 +20,7 @@
     Double codMaxAmount = Double.parseDouble((String) ServiceLocatorFactory.getProperty(Keys.Env.codMaxAmount));
     Double codMinAmount = Double.parseDouble((String) ServiceLocatorFactory.getProperty(Keys.Env.codMinAmount));
     Double codCharges = Double.parseDouble((String) ServiceLocatorFactory.getProperty(Keys.Env.codCharges));
-    Long defaultGateway = Long.parseLong((String) ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
-
+    Long defaultGateway = Long.parseLong((String) ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));      
 %>
 <c:set var="codMaxAmount" value="<%=codMaxAmount%>"/>
 <c:set var="codMinAmount" value="<%=codMinAmount%>"/>
@@ -117,12 +114,7 @@
         </shiro:lacksRole>
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
             <li id="tab6">Counter Cash</li>
-        </shiro:hasRole>
-        <li id="tab7">Billing Address</li>
-            <%--<s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="pre" target="_blank" class="popup">--%>
-            <%--Billing Address--%>
-            <%--<s:param name="order" value="${orderSummary.order}"/>--%>
-            <%--</s:link>--%>
+        </shiro:hasRole>       
     </ul>
 </div>
 <div class='right_content'>
@@ -377,40 +369,9 @@
     </s:form></div>
 
 </div>
-
-<div id="tabs_content7" class="tab_content" style="display: none;">
-    <h3>
-        Enter your Billing Address
-    </h3> <br>
-    <s:form beanclass="com.hk.web.action.core.user.BillingAddressAction" id="newAddressForm"
-            onsubmit="return validateForm()" method="post" name="BillingAddressForm">
-        <s:hidden name="order" value="${orderSummary.order.id}"/>
-        <s:hidden name="bankId" value="70"/>
-        <s:hidden name="paymentMode" value="100"/>
-        <s:hidden name="billingAddress.id"/>
-        <span class="aster special">(Fields marked * are required.)</span>
-
-        <div class='label'>Name<span class="aster">*</span></div>
-        <s:text name="billingAddress.name" value="${paymentModeBean.billingAddress.name}"/>
-        <div class='label'>Address Line 1<span class="aster">*</span></div>
-        <s:text name="billingAddress.line1" value="${paymentModeBean.billingAddress.line1}"/>
-        <div class='label'>Address Line 2</div>
-        <s:text name="billingAddress.line2" value="${paymentModeBean.billingAddress.line2}"/>
-        <div class='label'>City<span class="aster">*</span></div>
-        <s:text name="billingAddress.city" value="${paymentModeBean.billingAddress.city}"/>
-        <div class='label'>State<span class="aster">*</span></div>
-        <s:text name="billingAddress.state" value="${paymentModeBean.billingAddress.state}"/>
-        <%--<s:text name="address.state"/>--%>
-        <div class='label'>PIN Code<span class="aster">*</span></div>
-        <s:text name="billingAddress.pin" class="pincode" maxlength="10" value="${paymentModeBean.billingAddress.pin}"/>
-        <div class='label'>Phone / Mobile<span class="aster">*</span></div>
-        <s:text name="billingAddress.phone" value="${paymentModeBean.billingAddress.phone}"/>
-        <s:submit name="save" value="Save the value and continue"/>
-    </s:form>
-</div>
-
 </div>
 </shiro:hasAnyRoles>
+<c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action"/>
 <script type="text/javascript">
     $(document).ready(function() {
         $('.tab_content').hide();
@@ -464,55 +425,15 @@
             $(this).css("display", "none");
         });
 
-        $('#paypal').change(function() {
+        $('#paypal').click(function() {
             if ($(this).is(':checked')) {
-                //        $(this).parent().addClass('green');
-                $('#tabs_content1').hide();
-                $('#tabs_content7').show();
+                location.href = '${url}';
+              $('.makePayment').hide();
             }
         });
 
     });
-
-    function validateForm()
-    {
-        var billingAddressName = document.forms["BillingAddressForm"]["billingAddress.name"].value;
-        var billingAddressLine1 = document.forms["BillingAddressForm"]["billingAddress.line1"].value;
-        var billingAddressCity = document.forms["BillingAddressForm"]["billingAddress.city"].value;
-        var billingAddressState = document.forms["BillingAddressForm"]["billingAddress.state"].value;
-        var billingAddressPin = document.forms["BillingAddressForm"]["billingAddress.pin"].value;
-        var billingAddressPhone = document.forms["BillingAddressForm"]["billingAddress.phone"].value;
-        if (billingAddressName == null || billingAddressName == "")
-        {
-            alert("Name must be filled out");
-            return false;
-        }
-        if (billingAddressLine1 == null || billingAddressLine1 == "")
-        {
-            alert("Address Line 1 must be filled out");
-            return false;
-        }
-        if (billingAddressCity == null || billingAddressCity == "")
-        {
-            alert("City must be filled out");
-            return false;
-        }
-        if (billingAddressState == null || billingAddressState == "")
-        {
-            alert("State must be filled out");
-            return false;
-        }
-        if (billingAddressPin == null || billingAddressPin == "")
-        {
-            alert("Pincode must be filled out");
-            return false;
-        }
-        if (billingAddressPhone == null || billingAddressPhone == "")
-        {
-            alert("Phone/Mobile must be filled out");
-            return false;
-        }
-    }
+    
 </script>
 <div class='floftfix'></div>
 
