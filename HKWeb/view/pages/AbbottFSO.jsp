@@ -17,8 +17,9 @@
 	.productThumb h3  { font-size:15px;  line-height:27px; margin-bottom:10px; font-weight:bold; }
 	.productThumb h3 a { font-size:15px; color:#505050; border:none; }
 	.productThumb h3 a:hover { color:#000; }
-	.productThumb .tDesc { font-size:13px; background:#f0f0f0; border:1px solid #d9d9d9; width:214px; height:85px; float:right; padding:5px; margin-bottom:35px; line-height: 14px; }
-	.productThumb .tPrice { float:right; font-size:16px; color:#2484c6; margin-bottom:10px; clear:right; }
+	.productThumb .tDesc { font-size:13px; background:#f0f0f0; border:1px solid #d9d9d9; width:47%; float:right; padding:5px; margin-bottom:35px; line-height: 14px; text-align:right; padding:10px; padding-bottom:0; }
+	.productThumb .tDesc p { padding-bottom:10px; }
+    .productThumb .tPrice { float:right; font-size:16px; color:#2484c6; margin-bottom:10px; clear:right; }
 	.productThumb .tPrice span { font-size:12px; color:#a1a1a1; text-decoration:line-through; margin-right:15px;  }
 	.productThumb .tBuy { float:right; clear:right; }
 	.productThumb a { border:none; }
@@ -49,7 +50,7 @@
 <s:layout-component name="content">
 <div class="cl"></div>
     <div id="pageContainer">
-    <img src="${pageContext.request.contextPath}/images/abbottFSO/banner.jpg" width="960" height="349" alt="rakhi banner" />
+    <img src="${pageContext.request.contextPath}/images/abbottFSO/banner.jpg" width="960" height="250" alt="rakhi banner" />
     <div class="cl"></div>
 
 
@@ -57,7 +58,8 @@
         <h3><a href="http://www.healthkart.com/product/freestyle-optium-glucometer/DM033">FreeStyle Optium Glucometer</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/abbottFSO/FreeStyle-Optium-Glucometer.jpg" width="340" height="340"  class="tThumb" />
-        <div class="tDesc">Bath &amp; Body Works Body Lotion White Citrus + Victoria's Secret Shimmer Mist - Amber Romance
+        <div class="tDesc"><p>The Abbott FreeStyleOptium Glucometer makes testing an easier and pain-free experience. Less than a drop of blood is required for testing and it gives accurate results in just 5 seconds.</p>
+            <p>Monitor blood glucose effectively with Freestyle Optimum Glucometer. This simple blood glucose testing device comes with a large backlit display which ensures that you have accurate readings. The meter also comes with a large memory so that one can store blood glucose readings for reference.</p>
         </div>
 
         <p class="tPrice">

@@ -18,12 +18,13 @@
 	.productThumb h3  { font-size:15px;  line-height:27px; margin-bottom:10px; font-weight:bold; }
 	.productThumb h3 a { font-size:15px; color:#505050; border:none; }
 	.productThumb h3 a:hover { color:#000; }
-	.productThumb .tDesc { font-size:13px; background:#f0f0f0; border:1px solid #d9d9d9; width:214px; height:85px; float:right; padding:5px; margin-bottom:35px; line-height: 14px; }
+	.productThumb .tDesc { font-size:13px; background:#f0f0f0; border:1px solid #d9d9d9; width:214px; height:100px; float:right; padding:5px; margin-bottom:35px; line-height: 14px; }
 	.productThumb .tPrice { font-size:16px; clear:right;  color:#2484c6; margin-bottom:10px; }
 	.productThumb .tPrice span { font-size:12px; color:#a1a1a1; text-decoration:line-through; margin-right:15px;  }
 	.productThumb .tSave { float:left; font-size:16px; color:#e73721; font-weight:bold; }
 	.productThumb .tBuy { float:right; }
 	.productThumb a { border:none; }
+      h3.txt { font-size:14px; margin:0; padding:0; padding-top:30px; text-align:center; }
 
 
 
@@ -51,7 +52,7 @@
 <s:layout-component name="content">
 <div class="cl"></div>
     <div id="pageContainer">
-    <img src="${pageContext.request.contextPath}/images/abbottFS/banner.jpg" width="960" height="349" alt="rakhi banner" />
+    <img src="${pageContext.request.contextPath}/images/abbottFS/banner.jpg" width="960" height="250" alt="rakhi banner" />
     <div class="cl"></div>
 
 
@@ -59,7 +60,7 @@
         <h3><a href="http://www.healthkart.com/product/freestyle-optium-glucometer/DM033">FreeStyle Optium Glucometer</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/abbottFS/FreeStyle-Optium-Glucometer.jpg" width="170" height="170"  class="tThumb" />
-        <div class="tDesc">Bath &amp; Body Works Body Lotion White Citrus + Victoria's Secret Shimmer Mist - Amber Romance
+        <div class="tDesc">The Abbott FreeStyle Optium Glucometer makes testing an easier and pain-free experience. Less than a drop of blood is required for testing and it gives accurate results in just 5 seconds.
         </div>
 
         <p class="tPrice">
@@ -75,7 +76,7 @@
         <h3><a href="http://www.healthkart.com/product/freestyle-freedom-lite-starter-kit/DM042">FreeStyle Freedom Lite Starter Kit</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/abbottFS/FreeStyle-Freedom-Lite-Starter-Kit.jpg" width="170" height="170"  class="tThumb" />
-        <div class="tDesc">Remington CI19 Tong + Kent LPB1 Large Paddle Brush Floral Design
+        <div class="tDesc">FreeStyle Freedom Lite Starter Kit comes with 10 test strips which help you to manage and monitor your diabetic levels. It helps you to have an insight and accurate results as it is patented with the new Coulometric Technology.
         </div>
 
         <p class="tPrice">
@@ -91,7 +92,7 @@
         <h3><a href="http://www.healthkart.com/product/freestyle-optium-strips/DS038">FreeStyle Optium Strips</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/abbottFS/FreeStyle-Optium-Strips.jpg" width="170" height="170"  class="tThumb" />
-        <div class="tDesc">Saint Pure Sensual Merlot Whipped Face and Body Butter + Saint Pure Strawberries & Cream Luscious Face Soap + Saint Pure Cinnamon Spa Face and Body Sugar Scrub Cubes
+        <div class="tDesc">No more worrying about the spike in your blood glucose level or visiting the doctor for regular check-ups. The Abbott FreeStyle Optium Strips let you test your glucose and ketone level, even while staying at home.
         </div>
 
         <p class="tPrice">
@@ -106,7 +107,7 @@
         <h3><a href="http://www.healthkart.com/product/freestyle-freedom-lite-strips/DS045">FreeStyle Freedom Lite Strips</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/abbottFS/FreeStyle-Freedom-Lite-Strips.jpg" width="170" height="170"  class="tThumb" />
-        <div class="tDesc">With this combo, help your sister maintain her charming youth
+        <div class="tDesc">FreeStyle Freedom Lite Strips saves your time and makes the monitoring of blood glucose level pain-free. 
         </div>
 
         <p class="tPrice">
@@ -118,12 +119,12 @@
 
         <div class="cl"></div>
 
-
+         <h3 class="txt">Abbott Freestyle Combo is a complete diabetic package offering assistance in keeping a track of blood glucose levels. </h3>
         <div class="productThumb fleft">           
         <h3><a href="http://www.healthkart.com/product/freestyle-freedom-lite-value-offer/DM043">FreeStyle Freedom Lite Value Offer</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/abbottFS/FreeStyle-Freedom-Lite-Value-Offer.jpg" width="170" height="170"  class="tThumb" />
-        <div class="tDesc">Maybelline The Colossal Kajal + Maybelline Color Senstational Lip Color + Maybelline Colorama Nail Color + Miners Glitzy Kitz Lipstick Pouch</div>
+        <div class="tDesc">Includes: FreeStyle Freedom Lite Glucometer (One Meter) + FreeStyle Freedom Lite Testing Strips (50 Strips)</div>
         <p class="tPrice">
 
         Rs 2,499
@@ -137,7 +138,7 @@
         <h3><a href="http://www.healthkart.com/product/freestyle-freedom-lite-super-saver-offer/DM044">FreeStyle Freedom Lite Super Saver Offer</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/abbottFS/FreeStyle-Freedom-Lite-Super-Saver-Offer.jpg" width="170" height="170"  class="tThumb" />
-        <div class="tDesc">NYX Mosaic Powder Blush + NYX Brush On Lip Gloss + NYX Lip Lacquer Pot
+        <div class="tDesc">Includes: FreeStyle Freedom Lite Glucometer (One Meter) + FreeStyle Freedom Lite Testing Strips (100 Strips)
         </div>
 
         <p class="tPrice">
