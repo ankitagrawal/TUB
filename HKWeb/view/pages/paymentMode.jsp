@@ -124,10 +124,15 @@
         beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}" />
     <s:hidden name="bankId" value="70"/>
-    <p><label><s:radio name="paymentMode" value="<%=defaultGateway%>" />VISA/MasterCard
+    <p><label><s:radio name="paymentMode" value="<%=defaultGateway%>" />VISA
         &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/visa.jpg" height="30px">
     </p>
 
+    <%--sbi ka mastercard--%>
+    <p><label><s:radio name="paymentMode" value="670"/>MasterCard
+        &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">
+    </p>
+    <%--citrus ka sab kuch--%>
 <%--
     <p><label><s:radio name="paymentMode" value="80" />
         MasterCard &nbsp;</label> <img
