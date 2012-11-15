@@ -44,7 +44,7 @@ public class AddCourierAction extends BasePaginatedAction {
 	@Autowired
 	CourierGroupService courierGroupService;
 
-	private List<Courier> courierList;
+	private List<Courier> courierList ;
 
 	private List<CourierGroup> courierGroupList;
 
@@ -62,66 +62,37 @@ public class AddCourierAction extends BasePaginatedAction {
 	@DefaultHandler
 	public Resolution pre() {
 		courierPage = courierService.getCouriers(courierName, status, getPageNo(), getPerPage());
-		courierList = courierPage.getList();
-		courierGroupList = courierGroupService.getAllCourierGroup();
-		return new ForwardResolution("/pages/searchAndAddCourier.jsp");
-	}
-
-	public Resolution createCourier() {
-		if (courierName != null && courier != null) {
-			addRedirectAlertMessage(new SimpleMessage("Either Enter  New Courier or Enable Courier"));
-		} else {
-			if (courier != null && courier.getId() != null) {
-				addRedirectAlertMessage(new SimpleMessage("Courier " + courier.getName() + "  is made Available"));
-			} else {
-				if(courierService.getCourierByName(courierName.trim()) != null){
-				addRedirectAlertMessage(new SimpleMessage("Courier " + courierName + "  is Already exist"));
-				return pre();
+		List<Courier> courierListDb = courierPage.getList();
+		courierList = courierListDb;
+		if (courierGroup != null) {
+			courierList = new ArrayList<Courier>();
+			for (Courier courier : courierListDb) {
+				if (courier.getCourierGroup() != null && (courier.getCourierGroup().equals(courierGroup))) {
+					courierList.add(courier);
 				}
-				courier = new Courier();
-				courier.setName(courierName.trim());
-				addRedirectAlertMessage(new SimpleMessage("Courier Saved"));
 			}
-			courier.setDisabled(false);
-			courierService.save(courier);
 		}
-		return pre();
+		return new ForwardResolution("/pages/searchAndAddCourier.jsp");
 	}
 
 
 	public Resolution save() {
 		if (courier.getId() != null) {
-			try {
-				courier.setName(courier.getName().trim());
-				if (courier.getCourierGroup() != null) {
-					CourierGroup oldCourierGroup = courier.getCourierGroup();
-					oldCourierGroup.getCouriers().remove(courier);
-					courierGroupService.save(oldCourierGroup);
-				}
-				if (courierGroup != null) {
-					courierGroup.getCouriers().add(courier);
-				}
-			courierService.save(courier);
-			} catch (Exception e) {
-				addRedirectAlertMessage(new SimpleMessage("Error In Editing::" + e.getMessage()));
-				return new ForwardResolution("/pages/courier.jsp");
+			if (courier.getCourierGroup() != null) {
+				CourierGroup oldCourierGroup = courier.getCourierGroup();
+				oldCourierGroup.getCouriers().remove(courier);
+				courierGroupService.save(oldCourierGroup);
 			}
-			addRedirectAlertMessage(new SimpleMessage("Courier Edited Sucessfully"));
-		} else {
-			if (courierService.getCourierByName(courier.getName().trim()) != null) {
-				addRedirectAlertMessage(new SimpleMessage("Courier " + courierName + "  is Already exist"));
-				return new ForwardResolution("/pages/courier.jsp");
-			}
-				courier.setName(courier.getName().trim());
-				courier.setDisabled(true);
-				if (courierGroup != null) {
-					courierGroup.getCouriers().add(courier);
-				}
-				courierService.save(courier);
-
-
 		}
-		return pre();
+		courier.setName(courier.getName().trim());
+		courier.setDisabled(courier.getDisabled());
+		if (courierGroup != null) {
+			courierGroup.getCouriers().add(courier);
+			courierService.save(courier);
+		}
+		courierService.save(courier);
+		addRedirectAlertMessage(new SimpleMessage("Courier Saved sucessfully"));
+		return new RedirectResolution(AddCourierAction.class);
 	}
 
 	public Resolution editCourier(){
@@ -143,23 +114,6 @@ public class AddCourierAction extends BasePaginatedAction {
 	}
 
 
-	public Resolution assignCourierGroup() {
-		if (courier.getCourierGroup() != null) {
-			CourierGroup oldCourierGroup = courier.getCourierGroup();
-			oldCourierGroup.getCouriers().remove(courier);
-			courierGroupService.save(oldCourierGroup);
-		}
-		if(courierGroup != null){
-		courierGroup.getCouriers().add(courier);
-		courierGroup = courierGroupService.save(courierGroup);
-		addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
-			}
-		else{
-		addRedirectAlertMessage(new SimpleMessage("Courier Group of Courier Removed"));
-		}
-		return pre();
-	}
-
 	public Resolution deleteCourier() {
 		courier.setDisabled(true);
 		courierService.save(courier);
@@ -168,21 +122,6 @@ public class AddCourierAction extends BasePaginatedAction {
 	}
 
 
-
-
-	@JsonHandler
-	public Resolution getCourierGroupForCourier() {
-	CourierGroup courierGroupcr = courier.getCourierGroup();
-		HealthkartResponse healthkartResponse = null;
-		if (courierGroupcr != null) {
-			Map<String, Object> data = new HashMap<String, Object>(1);
-			data.put("couriergroup", JsonUtils.hydrateHibernateObject(courierGroupcr.getId()));
-			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", data);
-		} else {
-			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Not assiged to any group");
-		}
-		return new JsonResolution(healthkartResponse);
-	}
 
 
 	public CourierGroup getCourierGroup() {
@@ -249,6 +188,7 @@ public class AddCourierAction extends BasePaginatedAction {
 	 public Set<String> getParamSet() {
         HashSet<String> params = new HashSet<String>();
         params.add("courierName");
+		params.add("courierGroup"); 
         return params;
     }
 

@@ -106,7 +106,7 @@
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
 								                           serviceProperty="courierGroupList" value="id" label="name"/>
 							</s:select>
-								<%--<s:submit name="deleteCourierGroup" value="delete group"/>--%>
+
 							</li>
 						</div>
 						<s:submit class="assignCourierGroup" name="assignCourierGroup" value="assign group"/>
