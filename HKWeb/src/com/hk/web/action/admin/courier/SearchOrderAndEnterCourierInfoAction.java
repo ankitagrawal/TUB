@@ -259,14 +259,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution getCourierList() {
-//		List<Courier> courierList = courierService.getCouriers(null, null, false);
-		Courier courier = new Courier();
-		courier.setName("test");
-		courier.setId(222L);
-		courier.setDisabled(false);
-		List<Courier> courierList = new ArrayList<Courier>();
-		courierList.add(courier);
-		courierList = (List<Courier>) JsonUtils.hydrateHibernateObject(courierList);
+		List<Courier> courierList = courierService.getCouriers(null, null, false);		
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", courierList);
 		return new JsonResolution(healthkartResponse);
 	}
@@ -314,7 +307,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 	public List<Courier> getAvailableCouriers() {
 		return availableCouriers;
-	}
+	}	
 
 	public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
 		this.shippingOrderStatusService = shippingOrderStatusService;
