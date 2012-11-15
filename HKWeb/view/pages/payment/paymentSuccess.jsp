@@ -103,18 +103,18 @@
 
   //track order count
   _gaq.push(['_setCustomVar',
-    <%=AnalyticsConstants.CustomVarSlot.orderCount.getSlot()%>,                   // This custom var is set to slot #5.  order_count.
-    "<%=AnalyticsConstants.CustomVarSlot.orderCount.getName()%>",     // The name acts as a kind of category for the user activity.  Required parameter.
-    "${fn:length(actionBean.order.user.orders)}",               // This value of the custom variable.  Required parameter.
-    <%=AnalyticsConstants.CustomVarSlot.orderCount.getScope().getLevel()%>                    // Sets the scope to session-level. Optional parameter.
+    <%=AnalyticsConstants.CustomVarSlot.orderCount.getSlot()%>,
+    "<%=AnalyticsConstants.CustomVarSlot.orderCount.getName()%>",
+    "${fn:length(actionBean.order.user.orders)}",
+    <%=AnalyticsConstants.CustomVarSlot.orderCount.getScope().getLevel()%>
   ]);
 
   <c:if test="${fn:length(actionBean.order.user.orders) eq 1}">
   _gaq.push(['_setCustomVar',
-    <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate.getSlot()%>,                   // This custom var is set to slot #2.  first_order_date
-    "<%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate.getName()%>",     // The name acts as a kind of category for the user activity.  Required parameter.
-    "${actionBean.purchaseDate}",               // This value of the custom variable.  Required parameter.
-    <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate.getScope().getLevel()%>                    // Sets the scope to visitor-level. Optional parameter.
+    <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate.getSlot()%>,
+    "<%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate.getName()%>",
+    "${actionBean.purchaseDate}",
+    <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate.getScope().getLevel()%>
   ]);
   </c:if>
   <c:if test="${actionBean.couponCode !=null}">

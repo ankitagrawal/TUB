@@ -31,8 +31,11 @@ public class AnalyticsConstants {
 
   }
 
+  /**
+   * SessionOrderCount: this will record the order count of the user for that particular session.
+   */
   public static enum CustomVarSlot {
-    slot1(1, "slot1name", CustomVarScope.pageLevel),
+    sessionOrderCount(1, "SessionOrderCount", CustomVarScope.sessionLevel),
     firstPurchaseDate(2, "FirstPurchaseDate", CustomVarScope.visitorLevel),
     signUpDate(3, "signupDate", CustomVarScope.visitorLevel),
     userId(4, "userId", CustomVarScope.visitorLevel),
