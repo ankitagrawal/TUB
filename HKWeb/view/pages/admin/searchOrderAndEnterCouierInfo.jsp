@@ -61,7 +61,16 @@
 		           var proceed = confirm($('.suggestedcourier').text()+'   Not Selected  In drop down : Click OK to Proceed ');
 					if(!proceed)return  false;
 	              }
+	             var weight = $('.weight').val();
+	              if (!(weight.match(/^([0-9\.]+)$/g))) {
+		              $('.error').html("");
+		              $('.error').append(" Box weight can be number only");
+		              $('.error').show();
+		              return false;
+	              }
               });
+
+
 
 	          $('#show').click(function() {
 		          $.getJSON(
