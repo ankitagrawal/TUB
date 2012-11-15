@@ -259,6 +259,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 	@JsonHandler
 	public Resolution getCourierList() {
 		List<Courier> courierList = courierService.getCouriers(null, null, false);
+		Courier courier = new Courier();
+		courier.setName("test");
+		courier.setId(222L);
+		courier.setDisabled(false);
+		courierList.add(courier);
 		courierList = (List<Courier>) JsonUtils.hydrateHibernateObject(courierList);
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", courierList);
 		return new JsonResolution(healthkartResponse);
