@@ -211,10 +211,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     finalAwb = thirdPartyAwb;
                     finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
                 } else {
-                    Awb manualAwb = awbService.createAwb(shipment.getCourier(), trackingId.trim(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
-                    manualAwb = awbService.save(manualAwb);
-                    finalAwb = manualAwb;
-                    finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());                    
+					addRedirectAlertMessage(new SimpleMessage("FedEx awb could not be generated"));
+					return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
                 }
             } else {
                 Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), null, null, null);

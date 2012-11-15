@@ -75,7 +75,7 @@ public class FedExCourierUtil {
         //
         try {
             // Initialize the service
-            logger.info("inside newFedExShipment WebService call for order: " + shippingOrder.getGatewayOrderId() + " ");
+            logger.debug("inside newFedExShipment WebService call for order: " + shippingOrder.getGatewayOrderId() + " ");
            
             ShipServiceLocator service;
             ShipPortType port;
@@ -124,10 +124,10 @@ public class FedExCourierUtil {
                 noAwbMessage = noAwbMessage + FEDEX_RESPONSE + notificationComment;
             }
             logger.info("FedEx awb number could not be generated: error response notification");
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, noAwbMessage);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, noAwbMessage);
         } catch (Exception e) {
             logger.error("Exception while getting awb number from FedEx: Axis fault");
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, AXIS_FAULT);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, AXIS_FAULT);
         }
         return null;
     }
@@ -239,15 +239,15 @@ public class FedExCourierUtil {
         if (notifications != null && notifications.length != 0) {
             for (int i = 0; i < notifications.length; i++) {
                 Notification notification = notifications[i];
-                logger.info("  FedEx Notification no. " + i + ": ");
+                logger.debug("  FedEx Notification no. " + i + ": ");
                 if (notification == null) {
                     continue;
                 }
                 NotificationSeverityType notificationSeverityType = notification.getSeverity();
 
-                logger.info("    Severity: " + (notificationSeverityType == null ? "null" : notificationSeverityType.getValue()));
-                logger.info("    Code: " + notification.getCode());
-                logger.info("    Message: " + notification.getMessage());
+                logger.debug("    Severity: " + (notificationSeverityType == null ? "null" : notificationSeverityType.getValue()));
+                logger.debug("    Code: " + notification.getCode());
+                logger.debug("    Message: " + notification.getMessage());
                 if (notificationSeverityType != null && notificationSeverityType.equals(NotificationSeverityType.ERROR)) {
                     messages = messages.concat(notification.getMessage() + ". ");
                 }
