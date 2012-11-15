@@ -53,6 +53,24 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         return emailRecepients;
     }
 
+    public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int page, int maxResult) {
+
+        String query = "select er from EmailRecepient er, User u join u.roles r " +
+                " where er.subscribed = true and er.bounce = false and er.invalid = false and er.email = u.email " +
+                " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
+                //" and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
+                " and r in (:roleList) and u.store.id in (:storeIdList)" ;
+
+        List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
+                .setParameter("emailCampaign", emailCampaign)
+                .setParameterList("roleList", roleList)
+                .setParameterList("storeIdList", Arrays.asList(1L, null))
+                .setFirstResult(page*maxResult + 1)
+                .setMaxResults(maxResult).list();
+
+        return emailRecepients;
+    }
+
     public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult) {
         String query = "select er from EmailRecepient er, User u " +
           " where er.subscribed = true and er.bounce = false and er.invalid = false and er.email = u.email " +
@@ -81,6 +99,17 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
           .setParameter("emailCampaign", emailCampaign)
           .setParameter("emailCampaign", emailCampaign)
           .setMaxResults(maxResult).list();
+
+        return emailRecepients;
+    }
+
+    public List<String> getEmailRecepientsByEmailIds(EmailCampaign emailCampaign, List<EmailRecepient> emailList) {
+
+        List<String> emailRecepients = getSession().createQuery(
+                "select eh.emailRecepient.email from EmailerHistory eh where eh.emailCampaign = :emailCampaign and eh.emailRecepient in  (:emailList)")
+                .setParameterList("emailList", emailList)
+                .setParameter("emailCampaign", emailCampaign)
+                .list();
 
         return emailRecepients;
     }
@@ -132,6 +161,24 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
           .setParameterList("storeIdList", Arrays.asList(1L, null))
           .uniqueResult();
                 
+        return userIdsByCategoryCount;
+    }
+
+    public Long getMailingListCountByCampaign(EmailCampaign emailCampaign) {
+
+        String query = "select count(*) from EmailRecepient er, User u join u.roles r " +
+                " where er.subscribed = true and er.bounce = false and er.invalid = false and er.email = u.email " +
+                " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
+                //" and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaignInner ) " +
+                " and r in (:roleList) and u.store.id in (:storeIdList)" ;
+
+
+        Long userIdsByCategoryCount = (Long)getSession().createQuery(query)
+                .setParameterList("roleList",Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)))
+                .setParameter("emailCampaign", emailCampaign)
+                .setParameterList("storeIdList", Arrays.asList(1L, null))
+                .uniqueResult();
+
         return userIdsByCategoryCount;
     }
 

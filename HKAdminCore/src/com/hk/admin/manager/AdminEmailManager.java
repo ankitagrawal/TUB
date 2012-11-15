@@ -161,6 +161,7 @@ public class AdminEmailManager {
     public boolean sendCampaignMails(List<EmailRecepient> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("X-SMTPAPI", xsmtpapi);
+        headerMap.put("X-Mailgun-Variables", xsmtpapi);
 
         String emailCampaignTemplate = emailCampaign.getTemplate();
         String emailCampaignTemplateContents = emailCampaign.getTemplateFtl();
@@ -194,23 +195,27 @@ public class AdminEmailManager {
                 valuesMap.put(EmailMapKeyConstants.name, emailRecepient.getName());
 
                 Map<String, HtmlEmail> email = emailService.createHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getName(), "info@healthkart.com", headerMap);
-                emailList.add(email);
-                // keep a record in history
-                emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
-                emailRecepient.setLastEmailDate(new Date());
-                emailRecepientRecs.add(emailRecepient);
+                if(email != null){
+                    emailList.add(email);
+                    // keep a record in history
+                    emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
+                    emailRecepient.setLastEmailDate(new Date());
+                    emailRecepientRecs.add(emailRecepient);
 
-                EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistoryObject("no-reply@healthkart.com", "HealthKart",
-                        getBaseDao().get(EmailType.class, emailCampaign.getEmailType().getId()), emailRecepient, emailCampaign, "");
-                emailHistoryRecs.add(emailerHistory);
+                    EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistoryObject("no-reply@healthkart.com", "HealthKart",
+                            getBaseDao().get(EmailType.class, emailCampaign.getEmailType().getId()), emailRecepient, emailCampaign, "");
+                    emailHistoryRecs.add(emailerHistory);
 
-                commitCount++;
-                if (commitCount == breakFromLoop) {
-                    getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
-                    getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
-                    commitCount = 0;
-                    emailHistoryRecs.clear();
-                    emailRecepientRecs.clear();
+                    commitCount++;
+                    if (commitCount == breakFromLoop) {
+                        getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
+                        getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
+                        commitCount = 0;
+                        emailHistoryRecs.clear();
+                        emailRecepientRecs.clear();
+                    }
+                }else{
+                    logger.info("Unable to send email to " + emailRecepient.getEmail());
                 }
 
             } catch (Exception e) {
@@ -289,6 +294,7 @@ public class AdminEmailManager {
                                         User notifedByuser) {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("X-SMTPAPI", xsmtpapi);
+        headerMap.put("X-Mailgun-Variables", xsmtpapi);
 
         String emailCampaignTemplate = emailCampaign.getTemplate();
         String emailCampaignTemplateContents = emailCampaign.getTemplateFtl();

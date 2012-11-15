@@ -5,33 +5,45 @@
 <%@ page import="com.hk.util.HKImageUtils" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.EyeGlassesFeedAction" var="eyeglassBean"/>
-<accessories>
-    <c:forEach items="${eyeglassBean.productVariants}" var="productVariant">
+<c:set var="frontFacingEyeImageTypeId" value="<%=EnumImageType.FrontFacingEye.getId()%>"/>
+<c:set var="sideFacingEyeImageTypeId" value="<%=EnumImageType.SideFacingEye.getId()%>"/>
+<Glasses>
+    <Category>
+       <c:forEach items="${eyeglassBean.productVariants}" var="productVariant">
         <c:set var="product" value="${productVariant.product}"/>
-        <c:set var="frontFacingEyeImageTypeId" value="<%=EnumImageType.FrontFacingEye.getId()%>"/>
-        <c:set var="sideFacingEyeImageTypeId" value="<%=EnumImageType.SideFacingEye.getId()%>"/>
         <c:if test="${!productVariant.deleted && !productVariant.outOfStock && product.mainImageId != null}">
+            <%--COLOR:Black|Size:Small|Material:Plastic|Gender:Kids|Brand:Blue Wine.T|Style:Rectangular--%>
+            <%--<Glass type="Large" gender="Male" color="Black" id="1011">--%>
             <c:forEach items="${productVariant.productOptions}" var="productOption">
-                <c:if test="${hk:equalsIgnoreCase(productOption.name,'size')}">
-                    <c:set var="sizeType" value="${productOption.value}"/>
+                <c:if test="${hk:equalsIgnoreCase(productOption.name,'Size')}">
+                    <c:set var="type" value="${productOption.value}"/>
+                </c:if>
+                <c:if test="${hk:equalsIgnoreCase(productOption.name,'Gender')}">
+                    <c:set var="gender" value="${productOption.value}"/>
+                </c:if>
+                <c:if test="${hk:equalsIgnoreCase(productOption.name,'COLOR')}">
+                    <c:set var="color" value="${productOption.value}"/>
                 </c:if>
             </c:forEach>
             <c:set var="frontFacingEyeImageId"
-                   value="${hk:searchProductImages(product,productVariant,frontFacingEyeImageTypeId,false,false)}"/>
+                   value="${hk:searchProductImages(product,productVariant,frontFacingEyeImageTypeId,false,null)}"/>
             <c:set var="sideFacingEyeImageId"
-                   value="${hk:searchProductImages(product,productVariant,sideFacingEyeImageTypeId,false,false)}"/>
-            <%Long frontFacingEyeImageId = (Long) pageContext.getAttribute("frontFacingEyeImageId");%>
-            <%Long sideFacingEyeImageId = (Long) pageContext.getAttribute("sideFacingEyeImageId");%>
-            <c:if test="${frontFacingEyeImageId != null && sideFacingEyeImageId != null && sizeType != null}">
-                <Glasses id="${productVariant.id}" type="${sizeType}" price="${productVariant.hkPrice}"
-                         mrp="${productVariant.markedPrice}" name="${hk:escapeHtml(product.name)}">
-                    desc="">
-                    <imgPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, frontFacingEyeImageId, false)%>
-                    </imgPath>
-                    <thumbPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, sideFacingEyeImageId, false)%>
-                    </thumbPath>
-                </Glasses>
+                   value="${hk:searchProductImages(product,productVariant,sideFacingEyeImageTypeId,false,null)}"/>
+            <c:if test="${frontFacingEyeImageId != null && sideFacingEyeImageId != null && type != '' && gender != '' && color != ''}">
+                <%Long frontFacingEyeImageId = (Long) pageContext.getAttribute("frontFacingEyeImageId");%>
+                <%Long sideFacingEyeImageId = (Long) pageContext.getAttribute("sideFacingEyeImageId");%>
+                <Glass type="${type}" gender="${gender}" color="${color}" id="${productVariant.id}">
+                    <imgPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, frontFacingEyeImageId, false)%></imgPath>
+                    <thumbPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, sideFacingEyeImageId, false)%></thumbPath>
+                    <price>${productVariant.hkPrice}</price>
+                    <name>${hk:escapeHtml(product.name)}</name>
+                    <desc></desc>
+                </Glass>
             </c:if>
+            <c:set var="color" value=""/>
+            <c:set var="type" value=""/>
+            <c:set var="gender" value=""/>
         </c:if>
     </c:forEach>
-</accessories>
+    </Category>
+</Glasses>

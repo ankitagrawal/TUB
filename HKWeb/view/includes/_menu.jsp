@@ -41,12 +41,12 @@
   
     <%
       DateTime dateTime = new DateTime();
-      Date endOfOfferDate = new Date(new DateTime(2012, 10, 31, 23, 59, 59, 59).getMillis());
+      Date endOfOfferDate = new Date(new DateTime(2012, 11, 14, 23, 59, 59, 59).getMillis());
         if (dateTime.isBefore(endOfOfferDate.getTime())) {
     %>
     <div class="siteNotice" style="width:960px; margin-left:auto; margin-right:auto;">
         <div style="height: 48px; padding-top: 6px; font-size: 1em; color: black; background-color: yellow;">
-            Diwali Discount! <strong>15% CashBack Sitewide*</strong> (only on prepaid orders above Rs 1000, TnC apply), Use Coupon Code <strong>HK15DIWALI</strong><br/>
+            Diwali Discount! <strong>12% CashBack Sitewide*</strong> (only on prepaid orders above Rs 1000, TnC apply), Use Coupon Code <strong>DIWALISALE2012</strong><br/>
             <span style="font-size: 1.2em;">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</span>
         </div>
     </div>

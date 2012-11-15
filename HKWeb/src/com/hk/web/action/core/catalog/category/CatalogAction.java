@@ -2,6 +2,7 @@ package com.hk.web.action.core.catalog.category;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -181,7 +182,7 @@ public class CatalogAction extends BasePaginatedAction {
                 if (!filterOptions.isEmpty()) {
                     filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
                 }
-                logger.error("Using filters. SOLR can't return results so hitting DB");
+                //logger.error("Using filters. SOLR can't return results so hitting DB");
                 throw new Exception("Using filters. SOLR can't return results so hitt`ing DB");
             }
             List<SearchFilter> categoryList = new ArrayList<SearchFilter>();
@@ -200,7 +201,7 @@ public class CatalogAction extends BasePaginatedAction {
 
             List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
             if (StringUtils.isNotBlank(brand)){
-                SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
+                SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, URLDecoder.decode(brand));
                 searchFilters.add(brandFilter);
             }
 

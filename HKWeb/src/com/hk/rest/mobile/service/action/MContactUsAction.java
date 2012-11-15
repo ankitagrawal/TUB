@@ -1,24 +1,18 @@
 package com.hk.rest.mobile.service.action;
 
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.ws.rs.Path;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.servlet.http.HttpServletResponse;
-
-import com.hk.dto.menu.MenuNode;
-import com.hk.helper.MenuHelper;
-import com.hk.web.HealthkartResponse;
-import com.hk.rest.mobile.service.utils.MHKConstants;
-import com.akube.framework.gson.JsonUtils;
-
-import java.util.List;
-import java.util.ArrayList;
 
 import net.sourceforge.stripes.action.DefaultHandler;
+
+import org.springframework.stereotype.Component;
+
+import com.akube.framework.gson.JsonUtils;
+import com.hk.rest.mobile.service.utils.MHKConstants;
+import com.hk.web.HealthkartResponse;
 
 /**
  * Created by IntelliJ IDEA.

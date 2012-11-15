@@ -29,6 +29,10 @@ public class ReplacementOrder extends ShippingOrder implements Serializable{
   @JoinColumn(name = "ref_shipping_order_id")
   private ShippingOrder refShippingOrder;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "replacement_order_reason_id")
+	private ReplacementOrderReason replacementOrderReason;
+
 	public boolean isRto() {
     return rto;
   }
@@ -44,4 +48,12 @@ public class ReplacementOrder extends ShippingOrder implements Serializable{
   public void setRefShippingOrder(ShippingOrder refShippingOrder) {
     this.refShippingOrder = refShippingOrder;
   }
+
+	public ReplacementOrderReason getReplacementOrderReason() {
+		return replacementOrderReason;
+	}
+
+	public void setReplacementOrderReason(ReplacementOrderReason replacementOrderReason) {
+		this.replacementOrderReason = replacementOrderReason;
+	}
 }

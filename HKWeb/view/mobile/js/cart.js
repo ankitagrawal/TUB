@@ -1,4 +1,6 @@
+var caPaVi;
 $('#cart').bind('pagebeforeshow', function () {
+
     jQuery.support.cors = true;
     _.templateSettings = {
         evaluate: /\{\{(.+?)\}\}/g
@@ -8,16 +10,67 @@ $('#cart').bind('pagebeforeshow', function () {
     var x = $.mobile.path.parseUrl(location.href);
     var queryString = x.search;
     
-    /*****Variant Backnbone**S**********/
-    var ProductVariantModel = Backbone.Model.extend({
+    /*****Cart total Backbone**S**********/
+    var CartTotalModel = Backbone.Model.extend({
+    	initialize : function() {
+			this.render();
+		},
+		render : function() {
+			var caToVi = new CartTotalView({model:this});
+			$('#cartTotal').html(caToVi.render().el);
+		},
+		unRender : function(){
+			this.destroy();
+		}
+    })
+    
+    var CartTotalCollection = Backbone.Collection.extend({
+    	model : CartTotalModel,
+    	initialize: function () {
+            this.on('reset', this.clearView, this);
+            this.on('add', this.updateUI, this);
+            this.clearView();
+        },
+        clearView: function () {
+            $('#cartTotal').html('');
+        },
+        updateUI: function () {
+            $('#cartTotal').listview();
+            $('#cartTotal').listview('refresh');
+        }
+    })
+    
+    var CartTotalView = Backbone.View.extend({
+    	className : 'cart-total-container',
+    	initialize : function(){
+    		_.bindAll(this,'render','unRender');
+    		  this.on('unRender', this.model.unRender, this);
+    	},
+    	template : _.template($('#cart-total-template').html()),
+    	render : function(){
+    		$(this.el).empty();
+    		$(this.el).html(this.template(this.model.toJSON()));
+    		return this
+    	},
+    	unRender: function () {
+            this.remove();
+        }
+    })
+    
+    var caToCo = new CartTotalCollection();
+    /*****Cart totalBackbone**E**********/
+    
+    
+    /*****Cart Items Backnbone**S**********/
+    var CartModel = Backbone.Model.extend({
         initialize: function () {
             this.render();
         },
         render: function () {
-            var prVaVi = new ProductVariantView({
+            var caVi = new CartView({
                 model: this
             });
-            $('#cartList').append(prVaVi.render().el);
+            $('#cartList').append(caVi.render().el);
         },
         unRender: function () {
 
@@ -25,8 +78,8 @@ $('#cart').bind('pagebeforeshow', function () {
         }
     });
     
-    var ProductVariantCollection = Backbone.Collection.extend({
-        model: ProductVariantModel,
+    var CartCollection = Backbone.Collection.extend({
+        model: CartModel,
         initialize: function () {
             this.on('reset', this.clearView, this);
             this.on('add', this.updateUI, this);
@@ -42,9 +95,9 @@ $('#cart').bind('pagebeforeshow', function () {
         }
     });
     
-    var prVaCo = new ProductVariantCollection();
+    var caCo = new CartCollection();
     
-    var ProductVariantView = Backbone.View.extend({
+    var CartView = Backbone.View.extend({
         tagName: 'li',
         template: _.template($('#cart-template').html()),
         initialize: function () {
@@ -77,16 +130,15 @@ $('#cart').bind('pagebeforeshow', function () {
                     if (hasErr(data)) {
                         popUpMob.show(data.message);
 						loadingPop('h');
-                    } else {
-                    	
-                        if (prVaCo.reset()) {
+                    } else {                    	
+                        if (caCo.reset()&&caToCo.reset()) {
                             if ($(ele).hasClass('pl2Crt')) popUpMob.show(__hkG.msgs.successAdd);
                             else popUpMob.show(__hkG.msgs.successRemove);
 
-                            prVaCo.add(data.data);
+                            caCo.add(data.data.cartItemsList);
+                            caToCo.add(data.data.pricingDto);
 							loadingPop('h');
-                            }
-                        
+                            }                        
                     }
                 }
 				
@@ -94,9 +146,44 @@ $('#cart').bind('pagebeforeshow', function () {
 			
         }
     });
+	
+    var CartParentView = Backbone.View.extend({
+		el : '#cart',
+		initialize: function(){			
+			$('#couponContainer').addClass('hide');
+			
+		},
+		events: {
+			'click #submitCoupon' : 'applyCoupon'
+		},
+		applyCoupon : function(){
+			//var e = ele.currentTarget();
+			loadingPop('s','');			
+			$.ajax({
+				url: wSURL + __hkG.urls.applyCoupon,
+				timeout: __hkG.timeOut.medium,
+				type: 'post',
+				data: 'coupon='+$('#couponText').val(),
+				dataType: 'json',
+				success : function(response){
+					if(hasErr(response))
+					{
+						popUpMob.show(response.message);
+					}
+					else
+					{
+						popUpMob.show(response.message);
+					}
+				},
+				async : false
+			});
+			loadingPop('h');
+		}
+	});
+    /*****Cart Items Backbone**E**********/
     
-    /*****Variant Backnbone**E**********/
-    
+
+    caPaVi = new CartParentView();
     loadingPop('s', '');
 
     $.ajax({
@@ -108,13 +195,14 @@ $('#cart').bind('pagebeforeshow', function () {
                 popUpMob.show(getErr(response.message));
                 $('#btnChkOut').hide();
             } else {
-                if (response.data.length == 0 || response.data == null) {
+                if (response.data.cartItemsList.length == 0 || response.data.cartItemsList == null) {
                     $('#cartList').html('<h3 style="padding-left:20px;padding-top:20px">No Product in Cart</h3>');
                 } else {
-                    if (prVaCo.add(response.data)) {
+                    if (caCo.add(response.data.cartItemsList) && caToCo.add(response.data.pricingDto)) {
                         if ($('#cartList').listview()) {
                             setTimeout(function () {
                                 $('#cartList').css('height', $('#cartList').height());
+								$('#couponContainer').removeClass('hide');
                             }, 400);
                         }
                     }
@@ -129,4 +217,10 @@ $('#cart').bind('pagebeforeshow', function () {
 
     });
 });
-$('#cart').bind('pageshow',function(){loadingPop('s','');});
+$('#cart').bind('pageshow',function(){
+		loadingPop('s','');
+		
+	});
+$('#cart').bind('pagebeforehide',function(){
+	caPaVi.undelegateEvents();
+});

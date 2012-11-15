@@ -243,11 +243,11 @@
                                     value="${orderSummary.order.address.name}"/>
                             <div class="label">Contact Phone</div>
                             <s:text name="codContactPhone"
-                                    value="${orderSummary.order.address.phone}"/>
+                                    value="${orderSummary.order.address.phone}" id="phoneNo"/>
                             <div class="buttons" style="font-size: 1.3em;"><br/>
                                 <br/>
                                 <s:submit name="pre" value="Place Order"
-                                          class="positive makePayment"/></div>
+                                          class="positive phoneValidation"/></div>
                             <br/>
                             <br/>
 
@@ -412,6 +412,18 @@
         $('.makePayment').click(function disablePaymentButton(){
             $(this).css("display", "none");
         });
+
+	    $('.phoneValidation').click(function() {
+		        var phone = $('#phoneNo').val();
+		        var phoneRegEx = /^((\+91)?[0-9]{10,13}?)$/;
+		        if(!phoneRegEx.test(phone)){
+			        alert("Please enter a valid phone number (+91xxxxxxxxxx).");
+			        return false;
+		        }
+		        else{
+			        $(this).css("display", "none");
+		        }
+	        });
     });
 </script>
 <div class='floftfix'></div>

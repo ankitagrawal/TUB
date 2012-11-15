@@ -2,6 +2,7 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.dto.pricing.PricingDto" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="java.util.Set, java.util.HashSet" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%--
 Pass an attribute called pricingDto to render a table with pricing details
@@ -88,7 +89,6 @@ Pass an attribute called pricingDto to render a table with pricing details
             </tr>
           </c:forEach>
           </c:if>
-          </tr>
         </table>
       </div>
 
@@ -105,12 +105,13 @@ Pass an attribute called pricingDto to render a table with pricing details
     </div>
   </c:if>
 </c:forEach>
-<c:set var="firstComboLineItem" value=""/>
+ <c:set var="firstComboLineItem" value=""/>
 <c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">
   <c:if test="${invoiceLineItem.comboInstance != null}">
-    <c:if test="${firstComboLineItem != invoiceLineItem.comboInstance.combo}">
-      <c:set var="firstComboLineItem" value="${invoiceLineItem.comboInstance.combo}"/>
-      <div class='product' style="border-bottom-style: solid;">
+    <c:if test="${!fn:contains(firstComboLineItem,invoiceLineItem.comboInstance.id)}">
+      <%--<c:set var="firstComboLineItem" value="${invoiceLineItem.comboInstance.combo}"/>--%>
+        <c:set var="firstComboLineItem" value="${firstComboLineItem} + ',' + ${invoiceLineItem.comboInstance.id} + ','" />
+        <div class='product' style="border-bottom-style: solid;">
         <div class='img48' style="vertical-align:top;">
           <c:choose>
             <c:when test="${invoiceLineItem.comboInstance.combo.mainImageId != null}">

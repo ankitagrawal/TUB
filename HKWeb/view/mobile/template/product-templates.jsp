@@ -16,7 +16,7 @@
 	</tr>
 </script>
 <script type='text/template' id='product-list-template'>			
-	<a href='${httpPath}/productDetails.jsp?productSlug={{print(productSlug)}}&productId={{print(encodeURIComponent(id))}}'>
+	<a href='${httpPath}/productDetails.jsp?productSlug={{print(productSlug)}}&productId={{print(encodeURIComponent(id))}}&productReferrerId={{print(productReferrerId)}}'>
 		<table width='100%'>
 			<tr>
 			<td class='image-container'>
