@@ -1,20 +1,5 @@
 package com.test;
 
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.params.SolrParams;
-import org.apache.solr.util.AbstractSolrTestCase;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,9 +9,11 @@ import static junit.framework.Assert.assertEquals;
  * To change this template use File | Settings | File Templates.*/
 
 
-public class TestSolr extends AbstractSolrTestCase {
+public class TestSolr 
+//extends AbstractSolrTestCase 
+{
 
-    private SolrServer server;
+    /*private SolrServer server;
     @Override
     public String getSchemaFile() {
         return "solr/conf/schema.xml";
@@ -64,6 +51,6 @@ public class TestSolr extends AbstractSolrTestCase {
         QueryResponse response = server.query(params);
         assertEquals(1L, response.getResults().getNumFound());
         assertEquals("1", response.getResults().get(0).get("id"));
-    }
+    }*/
 
 }

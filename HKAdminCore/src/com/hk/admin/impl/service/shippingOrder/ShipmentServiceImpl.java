@@ -174,4 +174,18 @@ public class ShipmentServiceImpl implements ShipmentService {
 		}
 		return false;
 	}
+
+	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder){
+		 Double estimatedWeight = 100D;
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
+            Double variantWeight = productVariant.getWeight();
+            if (variantWeight == null || variantWeight == 0D) {
+                estimatedWeight += 0D;
+            } else {
+                estimatedWeight += variantWeight;
+            }
+        }
+		return estimatedWeight/1000;
+	}
 }

@@ -1,23 +1,11 @@
 package com.hk.impl.service.search;
 
-import com.hk.constants.catalog.SolrSchemaConstants;
-import com.hk.constants.marketing.ProductReferrerConstants;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.search.*;
-import com.hk.dto.search.SearchResult;
-import com.hk.exception.SearchException;
-import com.hk.manager.LinkManager;
-import com.hk.pact.dao.location.LocalityMapDao;
-import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.service.catalog.CategoryService;
-import com.hk.pact.service.catalog.ProductService;
-import com.hk.pact.service.search.ProductIndexService;
-import com.hk.pact.service.search.ProductSearchService;
-import com.hk.util.ProductReferrerMapper;
-import org.apache.commons.lang.StringUtils;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
@@ -31,7 +19,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import com.hk.constants.catalog.SolrSchemaConstants;
+import com.hk.constants.marketing.ProductReferrerConstants;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.search.PaginationFilter;
+import com.hk.domain.search.RangeFilter;
+import com.hk.domain.search.SearchFilter;
+import com.hk.domain.search.SolrProduct;
+import com.hk.domain.search.SortFilter;
+import com.hk.dto.search.SearchResult;
+import com.hk.exception.SearchException;
+import com.hk.manager.LinkManager;
+import com.hk.pact.dao.location.LocalityMapDao;
+import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.search.ProductIndexService;
+import com.hk.pact.service.search.ProductSearchService;
+import com.hk.util.ProductReferrerMapper;
 
 @Service
 class ProductSearchServiceImpl implements ProductSearchService {

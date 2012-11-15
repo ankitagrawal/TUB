@@ -119,15 +119,17 @@ public class EmailManager {
     private String              sportsAdminEmailsString       = null;
     @Value("#{hkEnvProps['" + Keys.Env.servicesAdminEmails + "']}")
     private String              servicesAdminEmailsString     = null;
-	
-	@Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
-    private String hkNoReplyEmail;
+
+    @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
+    private String              hkNoReplyEmail;
     @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyName + "']}")
-    private String hkNoReplyName;
+    private String              hkNoReplyName;
     @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
-    private String hkContactEmail;
-    @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}")
-    private String hkContactName;
+    private String              hkContactEmail;
+
+    /*
+     * @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}") private String hkContactName;
+     */
 
     @PostConstruct
     public void postConstruction() {
@@ -432,7 +434,8 @@ public class EmailManager {
             if (!sent)
                 success = false;
         }
-        //boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, EmailConstants.getHkContactEmail(), "Admin", email);
+        // boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, EmailConstants.getHkContactEmail(),
+        // "Admin", email);
         boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, hkContactEmail, "HK Info", email);
         if (!sent)
             success = false;
@@ -621,7 +624,7 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getApprovedBy().getEmail(), purchaseOrder.getApprovedBy().getName());
     }
 
-	public boolean sendPOApprovedEmail(PurchaseOrder purchaseOrder) {
+    public boolean sendPOApprovedEmail(PurchaseOrder purchaseOrder) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("purchaseOrder", purchaseOrder);
 
@@ -753,8 +756,8 @@ public class EmailManager {
             emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
             emailRecepient.setLastEmailDate(new Date());
             getEmailRecepientDao().save(emailRecepient);
-            getEmailerHistoryDao().createEmailerHistory(hkNoReplyEmail, hkNoReplyName,
-                    getBaseDao().get(EmailType.class, EnumEmailType.MissYouEmail.getId()), emailRecepient, emailCampaign, "");
+            getEmailerHistoryDao().createEmailerHistory(hkNoReplyEmail, hkNoReplyName, getBaseDao().get(EmailType.class, EnumEmailType.MissYouEmail.getId()), emailRecepient,
+                    emailCampaign, "");
         }
     }
 

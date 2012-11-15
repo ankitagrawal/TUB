@@ -21,7 +21,6 @@ import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
-import com.hk.pact.service.UserService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -36,8 +35,9 @@ public class OrderOnHoldAction extends BaseAction {
      * OrderManager orderManager; OrderStatusDao orderStatusDao; OrderDao orderDao; UserDao userDao;
      * OrderLifecycleActivityDao orderLifecycleActivityDao;
      */
-    @Autowired
-    private UserService               userService;
+    /*
+     * @Autowired private UserService userService;
+     */
     @Autowired
     private AdminOrderService         adminOrderService;
 
@@ -107,9 +107,6 @@ public class OrderOnHoldAction extends BaseAction {
         this.shippingOrder = shippingOrder;
     }
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+   
 
-    
 }

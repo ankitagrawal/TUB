@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -21,7 +19,6 @@ import com.akube.framework.gson.JsonUtils;
 import com.hk.domain.order.Order;
 import com.hk.pact.service.order.OrderService;
 import com.hk.rest.mobile.service.utils.MHKConstants;
-import com.hk.rest.models.order.APIOrder;
 import com.hk.rest.pact.service.APIOrderService;
 import com.hk.web.HealthkartResponse;
 
