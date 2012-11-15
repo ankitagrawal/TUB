@@ -124,24 +124,28 @@
         beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}" />
     <s:hidden name="bankId" value="70"/>
-    <p><label><s:radio name="paymentMode" value="<%=defaultGateway%>" />VISA
+    <p><label><s:radio name="paymentMode" value="<%=defaultGateway%>" />VISA/MasterCard
         &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/visa.jpg" height="30px">
     </p>
 
+<%--
     <p><label><s:radio name="paymentMode" value="80" />
         MasterCard &nbsp;</label> <img
             src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">
     </p>
+--%>
 
     <p><label><s:radio name="paymentMode" value="90" />
         Maestro &nbsp;</label> <img
             src="<hk:vhostImage/>/images/gateway/maestro.gif" height="30px">
     </p>
 
+<%--
     <p><label><s:radio name="paymentMode" value="80" />
         Citrus (Faster Checkout) &nbsp;</label> <img
             src="<hk:vhostImage/>/images/gateway/citrus.png" height="30px">
     </p>
+--%>
 
     <div style="float: right; width: 90%;"><s:submit
             name="proceed" value="Make Payment >" class="button"
