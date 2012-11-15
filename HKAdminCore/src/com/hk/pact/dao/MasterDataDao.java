@@ -27,6 +27,7 @@ import com.hk.domain.core.Tax;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
@@ -53,8 +54,6 @@ public interface MasterDataDao
     public List<OrderStatus> getOrderStatusList();
 
     public List<Courier> getCourierList();
-
-    public List<Courier> getGroundShippedCourierList();
 
     public List<ReconciliationStatus> getReconciliationStatus();
 
@@ -135,6 +134,12 @@ public interface MasterDataDao
     public List<User> getAgentsWithOpenRunsheet();
 
     public List<ConsignmentStatus> getConsignmentStatusList();
+
+	public List<CourierGroup>  getCourierGroupList();
+
+	public List<Courier> getDisableCourier();
+
+	public List<Courier> getAvailableCouriers();
 
 	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover();
 

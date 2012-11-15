@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
+import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
@@ -44,6 +46,7 @@ import com.hk.domain.core.Tax;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
@@ -93,7 +96,11 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private HubService       hubService;
     @Autowired
     private RunSheetService  runsheetService;
+@Autowired
+private CourierGroupService courierGroupService;
 
+	@Autowired
+	private CourierService courierService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -313,13 +320,12 @@ public class MasterDataDaoImpl implements MasterDataDao {
     return cityList;
   }
 
-    public List<Courier> getCourierList() {
-        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
-    }
-
-     public List<Courier> getGroundShippedCourierList() {
-        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableGroundShippedCouriers()));
-    }
+	public List<Courier> getCourierList() {
+		List<Courier> courierList = courierService.getAllCouriers();
+		Courier migrateCourier = EnumCourier.MIGRATE.asCourier();
+		courierList.remove(migrateCourier);
+		return courierList;
+	}
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation(){
         return EnumShippingOrderStatus.getStatusForReconcilationReport();
@@ -350,8 +356,21 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(ConsignmentStatus.class);
     }
 
+
+	public List<CourierGroup>  getCourierGroupList(){
+	return courierGroupService.getAllCourierGroup();	
+	}
+
+	public List<Courier> getDisableCourier(){
+		return courierService.getCouriers(null,null, true);
+	}
+
+	public List<Courier> getAvailableCouriers(){
+		return courierService.getCouriers(null,null, false);
+	}
 	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
 	       return EnumPurchaseOrderStatus.getStatusForNonApprover();
+
 	}
 
 	public List<ReplacementOrderReason> getReplacementOrderReasonForReplacement() {

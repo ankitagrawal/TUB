@@ -16,7 +16,7 @@
                     Select Courier :
                     <s:select name="courier">
                         <s:option value="">-Select-</s:option>
-                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
+                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers"
                                                    value="id" label="name"/>
                     </s:select>
                     <td> Select Region:</td>

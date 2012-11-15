@@ -151,14 +151,14 @@
 
     <c:choose>
         <c:when test="${actionBean.payment != null}">
-            <c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
+            <%--<c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
                 <div>
                     <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">
                         <s:param name="order" value="${actionBean.order}"/>
                         <img src="${pageContext.request.contextPath}/images/banners/pay_online_banner5.jpg">
                     </s:link>
                 </div>
-            </c:if>
+            </c:if>--%>
             <%--<div class="right" style="float: right;">
                 <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">
                     <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">

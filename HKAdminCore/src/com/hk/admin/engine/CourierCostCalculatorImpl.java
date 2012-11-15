@@ -76,7 +76,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
     @SuppressWarnings("unchecked")
     public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight) {
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
-        applicableCourierList = courierServiceInfoDao.searchCouriers(pincode, cod , false , false);
+        applicableCourierList = courierServiceInfoDao.searchCouriers(pincode, cod , false , false, false);
         Double totalCost = 0D;
         List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneDao.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
 
@@ -85,12 +85,13 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
             for (Courier courier : couriers) {
                 CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
 	            if (courierPricingInfo == null) {
-		            return null;
+		            continue;
 	            }
 	            totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
                 logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
                 courierCostingMap.put(courier, totalCost.longValue());
             }
+
         }
 
         MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);

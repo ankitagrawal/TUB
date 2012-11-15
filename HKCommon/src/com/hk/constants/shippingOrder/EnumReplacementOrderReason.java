@@ -10,7 +10,9 @@ public enum EnumReplacementOrderReason {
 	WrongDispatched(20L, "Wrong variant was sent"),
     CustomerUnavailable(30L, "Customer was not present hence shipment was RTO"),
 	WrongAddress(40L, "RTO due to wrong address mentioned"),
-	ServiceUnavailable(50L, "RTO due to service unavailability of the courier.");
+	ServiceUnavailable(50L, "RTO due to service unavailability of the courier."),
+	Expired(60L, "The product is past the expiry date."),
+	Missing(70L, "The product went missing during transit.");
 
 
 	private String name;
@@ -33,11 +35,15 @@ public enum EnumReplacementOrderReason {
 
     public static List<Long> getReasonForReplacementOrder() {
         return Arrays.asList(EnumReplacementOrderReason.Damaged.getId(),
-                EnumReplacementOrderReason.WrongDispatched.getId());
+                EnumReplacementOrderReason.WrongDispatched.getId(),
+		        EnumReplacementOrderReason.Missing.getId(),
+		        EnumReplacementOrderReason.Expired.getId());
     }
 
 	public static List<Long> getReasonForReplacementForRTO() {
         return Arrays.asList(EnumReplacementOrderReason.CustomerUnavailable.getId(),
-                EnumReplacementOrderReason.WrongAddress.getId(), EnumReplacementOrderReason.ServiceUnavailable.getId());
+                EnumReplacementOrderReason.WrongAddress.getId(), 
+		        EnumReplacementOrderReason.ServiceUnavailable.getId(),
+		        EnumReplacementOrderReason.Expired.getId());
     }
 }

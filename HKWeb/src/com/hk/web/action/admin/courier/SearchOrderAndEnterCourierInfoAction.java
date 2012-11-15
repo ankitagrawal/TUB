@@ -2,13 +2,10 @@ package com.hk.web.action.admin.courier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
@@ -20,6 +17,8 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.stripes.controller.JsonHandler;
+import com.akube.framework.gson.JsonUtils;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
@@ -45,6 +44,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.web.HealthkartResponse;
 
 @Component
 public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
@@ -92,7 +92,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         if (StringUtils.isBlank(trackingId) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || shipment.getCourier() == null) {
             getContext().getValidationErrors().add("1", new SimpleError("Tracking Id, Box weight, Box Size, Courier all are mandatory"));
         }
-        if (shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId()) || shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId())) {
+       if ((shipment.getBoxSize() != null && shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId())) || (shipment.getCourier() != null && shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId()))) {
             getContext().getValidationErrors().add("2", new SimpleError("None of the values can be migrate"));
         }
         Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
@@ -103,12 +103,20 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             
 //  groundShipping logic Starts---
         isGroundShipped =  shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-        availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
+        availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false,false);
 //  ground shipping logic ends
 
             if (availableCouriers == null || availableCouriers.isEmpty()) {
                 getContext().getValidationErrors().add("4", new SimpleError("No Couriers are applicable on this pincode, Please contact logistics, Order cannot be packed"));
             }
+	        //verify if suggested courier is present in Available
+//	        if (suggestedCourier != null) {
+//		        if ((availableCouriers != null && availableCouriers.size() > 0) && !(availableCouriers.contains(suggestedCourier))) {
+//			        getContext().getValidationErrors().add("5", new SimpleError(" ERROR :::: The Default suggessted courier " + suggestedCourier.getName() + " " +
+//					        "is not present in Servicable Courier (Available List).       Contact Admin(Rajinder) To add " + suggestedCourier.getName() + " in servicable List  for Pincode " + pinCode.getPincode()));
+//		        }
+//	        }
+
         }
     }
 
@@ -146,7 +154,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
                 isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false);
+                availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod, isGroundShipped, false,false);
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
@@ -155,6 +163,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     //Todo: Seema ."reason=create  shipment with default Awb  " Action: default Tracking id= gateway_order_id: Might remove when we have all the awb in system
                     trackingId = shippingOrder.getGatewayOrderId();
                 }
+//	            if (suggestedCourier != null) {
+//		            if ((availableCouriers != null && availableCouriers.size() > 0) && (!(availableCouriers.contains(suggestedCourier)))) {
+//			            addRedirectAlertMessage(new SimpleMessage("The Default suggessted courier " + suggestedCourier.getName() + " is not present in Servicable Courier (Available List)" +
+//					            "       Contact Admin(Rajinder) To add Servicable List for Pincode " + pinCode.getPincode()));
+//		            }
+//	            }
+
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
             }
@@ -256,6 +271,14 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
         return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
     }
+
+	@JsonHandler
+	public Resolution getCourierList() {
+		List<Courier> courierList = courierService.getCouriers(null, null, false);
+		courierList = (List<Courier>) JsonUtils.hydrateHibernateObject(courierList);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", courierList);
+		return new JsonResolution(healthkartResponse);
+	}
 
     public List<ShippingOrder> getShippingOrderList() {
         return shippingOrderList;

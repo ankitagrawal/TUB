@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<local:SparkSkinForHalo name="CustomHaloButtonSkin"
+						xmlns:fx="http://ns.adobe.com/mxml/2009"
+						xmlns:s="library://ns.adobe.com/flex/spark"
+						xmlns:local="mx.skins.spark.*">
+	<local:states>
+		<s:State name="up" />
+		<s:State name="over" stateGroups="overStates" />
+		<s:State name="down" stateGroups="downStates" />
+		<s:State name="disabled" stateGroups="disabledStates" />
+		<s:State name="selectedUp" stateGroups="selectedStates, selectedUpStates" />
+		<s:State name="selectedOver" stateGroups="overStates, selectedStates" />
+		<s:State name="selectedDown" stateGroups="downStates, selectedStates" />
+		<s:State name="selectedDisabled" stateGroups="selectedUpStates, disabledStates, selectedStates" />
+	</local:states> 
+ <fx:Script>
+	 <![CDATA[
+		 [Bindable]
+		 private var displayColor:uint
+		 [Bindable]private var dynCurve:String;
+		 private var l1:uint;
+		 private var l2:uint;
+		 private var l3:uint;
+		 override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void{
+			 var template:String  = "M 0 0 L #l1 0.0 L #l2 13 L #l3 30 L 0 30 L 0 0"
+			 l1 = unscaledWidth ;
+			 l2 = unscaledWidth ;
+			 l3 = unscaledWidth - 17;
+			 template = template.replace( /(#l1)/, l1 );
+			 template = template.replace( /(#l2)/, l2 );
+			 template = template.replace( /(#l3)/, l3 );
+			 dynCurve = template;
+			 displayColor  = Object(parent).displayColor;		
+			 super.updateDisplayList(unscaledWidth, unscaledHeight);
+		 }
+		 
+	 ]]>
+ </fx:Script>
+	<s:Path data="{dynCurve}">
+		<s:fill>
+			<s:SolidColor color="{displayColor}" alpha.over=".7" alpha.down=".3" />
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="{displayColor}" weight="1"/>
+		</s:stroke>
+	</s:Path>
+</local:SparkSkinForHalo>

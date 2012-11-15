@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class CourierServiceImpl implements CourierService {
@@ -39,11 +40,17 @@ public class CourierServiceImpl implements CourierService {
 
     @Override
     public Courier getCourierByName(String name) {
-        return getCourierDao().getCourierByName(name);
+	    if(name != null){
+	    List<String> nameList = new ArrayList<String>();
+	    nameList.add(name);
+	    List<Courier> courierList = getCourierDao().getCouriers(null, nameList, null);
+	    return courierList.size() > 0 ? courierList.get(0) : null;
+	    }
+	    return null;
     }
 
     public List<Courier> getAllCouriers() {
-        return getCourierDao().getAllCouriers();
+        return getCourierDao().getAll(Courier.class);
     }
 
     public boolean isCodAllowed(String pin) {
@@ -57,11 +64,11 @@ public class CourierServiceImpl implements CourierService {
         } else if (order.getPayment().getPaymentMode().equals(getPaymentService().findPaymentMode(EnumPaymentMode.COD))) {
             isCOD = true;
         }
-        return getCourierServiceInfoDao().searchCouriers(order.getAddress().getPin(), isCOD, false, false);
+        return getCourierServiceInfoDao().searchCouriers(order.getAddress().getPin(), isCOD, false, false , false);
     }
 
-    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping) {
-        return getCourierServiceInfoDao().searchCouriers(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping);
+    public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping , Boolean disabled) {
+        return getCourierServiceInfoDao().searchCouriers(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping , disabled);
     }
 
     public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping) {
@@ -81,8 +88,8 @@ public class CourierServiceImpl implements CourierService {
         return StringUtils.isNotBlank(pin) && getCourierServiceInfoDao().isCourierServiceInfoAvailable(null, pin, false, false, true);
     }
 
-    public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
-        return getCourierServiceInfoDao().getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping);
+    public List<CourierServiceInfo> getCourierServiceInfoList(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping ,Boolean disabled) {
+        return getCourierServiceInfoDao().getCourierServiceInfoList(courierId, pincode, forCOD, forGroundShipping, forCodAvailableOnGroundShipping,null);
     }
 
     public CourierServiceInfo searchCourierServiceInfo(Long courierId, String pincode, boolean forCOD, boolean forGroundShipping, boolean forCodAvailableOnGroundShipping) {
@@ -116,5 +123,13 @@ public class CourierServiceImpl implements CourierService {
     public UserService getUserService() {
         return userService;
     }
+
+	public Courier save(Courier courier){
+	 return(Courier)getCourierDao().save(courier);
+
+	}
+	public List<Courier> getCouriers(List<Long> courierIds ,List<String> courierNames , Boolean disabled){
+	return courierDao.getCouriers(courierIds, courierNames ,disabled);
+	}
 
 }

@@ -26,121 +26,119 @@ import com.hk.web.action.admin.AdminHomeAction;
 @Component
 public class LoginAction extends BaseAction {
 
-  /*private static Logger logger = LoggerFactory.getLogger(LoginAction.class);*/
+    /* private static Logger logger = LoggerFactory.getLogger(LoginAction.class); */
 
-  @Validate(required = true)
-  String email;
+    @Validate(required = true)
+    String                     email;
 
-  @Validate(required = true)
-  String password;
+    @Validate(required = true)
+    String                     password;
 
-  private String redirectUrl;
-  private boolean rememberMe;
-  private String source;
+    private String             redirectUrl;
+    private boolean            rememberMe;
+    private String             source;
 
-  @Session(key = HealthkartConstants.Session.userId)
-  private String userId;
+    @SuppressWarnings("unused")
+    @Session(key = HealthkartConstants.Session.userId)
+    private String             userId;
 
-  public static final String SOURCE_CHECKOUT = "checkout";
+    public static final String SOURCE_CHECKOUT = "checkout";
 
-  @Autowired
-  UserManager userManager;
-  @Autowired
-  RoleDao roleDao;
+    @Autowired
+    UserManager                userManager;
+    @Autowired
+    RoleDao                    roleDao;
 
-  @DefaultHandler
-  @DontValidate
-  public Resolution pre() {
-    return new ForwardResolution("/pages/login.jsp");
-  }
-
-  public Resolution login() {
-    UserLoginDto userLoginDto = null;
-    try {
-      userLoginDto = userManager.login(email, password, true);
-    } catch (HealthkartLoginException e) {
-      // Note: if the login fails, existing subject is still retained
-      addValidationError("e1", new LocalizableError("/Login.action.user.notFound"));
-      return getContext().getSourcePageResolution();
+    @DefaultHandler
+    @DontValidate
+    public Resolution pre() {
+        return new ForwardResolution("/pages/login.jsp");
     }
 
-    // // check if this account is blocked, and show an account blocked page
-    // if
-    // (userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ITV_BLOCKED)))
-    // {
-    // // this is a blocked user.
-    // return new RedirectResolution(BlockedAccountAction.class);
-    // }
+    public Resolution login() {
+        UserLoginDto userLoginDto = null;
+        try {
+            userLoginDto = userManager.login(email, password, true);
+        } catch (HealthkartLoginException e) {
+            // Note: if the login fails, existing subject is still retained
+            addValidationError("e1", new LocalizableError("/Login.action.user.notFound"));
+            return getContext().getSourcePageResolution();
+        }
 
-    // if (userLoginDto.isTransferData()) {
-    // return new RedirectResolution(MergeUsersAction.class)
-    // .addParameter("redirectUrl", redirectUrl)
-    // .addParameter("tempUser", userLoginDto.getTempUser().getId())
-    // .addParameter("tempUserHash",
-    // userLoginDto.getTempUser().getUserHash());
-    // }
+        // // check if this account is blocked, and show an account blocked page
+        // if
+        // (userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ITV_BLOCKED)))
+        // {
+        // // this is a blocked user.
+        // return new RedirectResolution(BlockedAccountAction.class);
+        // }
 
-    // if(userLoginDto.getLoggedUser().getPrinter() != null) {
-    // return new RedirectResolution(PrinterQueueAction.class);
-    // }
-    userId=userLoginDto.getLoggedUser().getId().toString();
+        // if (userLoginDto.isTransferData()) {
+        // return new RedirectResolution(MergeUsersAction.class)
+        // .addParameter("redirectUrl", redirectUrl)
+        // .addParameter("tempUser", userLoginDto.getTempUser().getId())
+        // .addParameter("tempUserHash",
+        // userLoginDto.getTempUser().getUserHash());
+        // }
 
-    if (!StringUtils.isBlank(redirectUrl)) {
-      return new RedirectResolution(redirectUrl, false);
+        // if(userLoginDto.getLoggedUser().getPrinter() != null) {
+        // return new RedirectResolution(PrinterQueueAction.class);
+        // }
+        userId = userLoginDto.getLoggedUser().getId().toString();
+
+        if (!StringUtils.isBlank(redirectUrl)) {
+            return new RedirectResolution(redirectUrl, false);
+        }
+
+        if (userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ADMIN))
+                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.GOD))
+                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CATEGORY_MANAGER))
+                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.OPS_MANAGER))
+                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.WH_MANAGER))
+                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.TICKETADMIN))
+                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CUSTOMER_SUPPORT)))
+            return new RedirectResolution(AdminHomeAction.class);
+        else
+            return new RedirectResolution(HomeAction.class);
     }
 
-    if (
-        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ADMIN)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.GOD)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CATEGORY_MANAGER)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.OPS_MANAGER)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.WH_MANAGER)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.TICKETADMIN)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CUSTOMER_SUPPORT))
-        )
-      return new RedirectResolution(AdminHomeAction.class);
-    else
-      return new RedirectResolution(HomeAction.class);
-  }
-  
+    public String getEmail() {
+        return email;
+    }
 
-  public String getEmail() {
-    return email;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public String getPassword() {
+        return password;
+    }
 
-  public String getPassword() {
-    return password;
-  }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
 
-  public String getRedirectUrl() {
-    return redirectUrl;
-  }
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
 
-  public void setRedirectUrl(String redirectUrl) {
-    this.redirectUrl = redirectUrl;
-  }
+    public boolean isRememberMe() {
+        return rememberMe;
+    }
 
-  public boolean isRememberMe() {
-    return rememberMe;
-  }
+    public void setRememberMe(boolean rememberMe) {
+        this.rememberMe = rememberMe;
+    }
 
-  public void setRememberMe(boolean rememberMe) {
-    this.rememberMe = rememberMe;
-  }
+    public String getSource() {
+        return source;
+    }
 
-  public String getSource() {
-    return source;
-  }
-
-  public void setSource(String source) {
-    this.source = source;
-  }
+    public void setSource(String source) {
+        this.source = source;
+    }
 }
