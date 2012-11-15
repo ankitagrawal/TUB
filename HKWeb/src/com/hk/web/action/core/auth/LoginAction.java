@@ -86,6 +86,8 @@ public class LoginAction extends BaseAction {
         // }
         userId = userLoginDto.getLoggedUser().getId().toString();
 
+        getContext().getRequest().getSession().setAttribute(HealthkartConstants.Session.orderCountSetBoolean, false); // this will force the orderCount var to be re-set for this session
+
         if (!StringUtils.isBlank(redirectUrl)) {
             return new RedirectResolution(redirectUrl, false);
         }

@@ -70,9 +70,24 @@ public class ShipmentServiceImpl implements ShipmentService {
         // Ground Shipping logic ends -- suggested courier
         if (suggestedCourier == null) {
             return null;
-        }       
+        }
 
-        Double weightInKg = getEstimatedWeightOfShipment(shippingOrder);
+		Double estimatedWeight = 100D;
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
+            if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
+                return null;
+            }
+            Double variantWeight = productVariant.getWeight();
+            if (variantWeight == null || variantWeight == 0D) {
+                estimatedWeight += 0D;
+            } else {
+                estimatedWeight += variantWeight;
+            }
+        }
+
+
+        Double weightInKg = estimatedWeight/1000;
         Long suggestedCourierId = suggestedCourier.getId();
 
         Awb suggestedAwb;
@@ -168,10 +183,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder){
 		 Double estimatedWeight = 100D;
         for (LineItem lineItem : shippingOrder.getLineItems()) {
-            ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
-                return null;
-            }
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();           
             Double variantWeight = productVariant.getWeight();
             if (variantWeight == null || variantWeight == 0D) {
                 estimatedWeight += 0D;
