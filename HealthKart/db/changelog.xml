@@ -9695,16 +9695,13 @@
         </createIndex>
     </changeSet>
 
-	<changeSet author="Seema (generated)" id="1349782838900-1">
-		<addNotNullConstraint columnDataType="TINYINT" columnName="disabled" tableName="courier"/>
-	</changeSet>
 	<changeSet author="Seema (generated)" id="1350638740147-3">
-        <dropColumn columnName="used" tableName="awb"/>
-    </changeSet>
-    <changeSet author="Seema (generated)" id="1350891782684-2">
-        <dropForeignKeyConstraint baseTableName="shipment"  constraintName="fk_package_courier1"/>
-    </changeSet>
-    <changeSet author="Seema (generated)" id="1350891782684-6">
-        <dropColumn columnName="courier_id" tableName="shipment"/>
-</changeSet>
+		<dropColumn columnName="used" tableName="awb"/>
+	</changeSet>
+	<changeSet author="Seema (generated)" id="1350891782684-2">
+		<dropForeignKeyConstraint baseTableName="shipment" constraintName="fk_package_courier1"/>
+	</changeSet>
+	<changeSet author="Seema (generated)" id="1350891782684-6">
+		<dropColumn columnName="courier_id" tableName="shipment"/>
+	</changeSet>
 </databaseChangeLog>
