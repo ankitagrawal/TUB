@@ -111,7 +111,7 @@ public class LinkManager {
     public String getResetPasswordLink(TempToken token) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/PasswordReset.action").addParameter("token", token.getToken());
         return getUrlFromResolution(redirectResolution);
-    }                                                                 bu
+    }                                                                
 
     public String getCitrusPaymentNetBankingGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusNetbankingSendReceive.action");
