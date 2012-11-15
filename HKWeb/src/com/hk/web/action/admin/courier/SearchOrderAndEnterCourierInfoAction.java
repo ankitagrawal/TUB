@@ -192,7 +192,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 					addRedirectAlertMessage(new SimpleMessage(" The tracking number could not be generated"));
 					return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
 				} else {
-					finalAwb = updateAttachStatus(thirdPartyAwb);
+					finalAwb = (Awb) awbService.save(thirdPartyAwb, null);
+					awbService.save(finalAwb, EnumAwbStatus.Attach.getId().intValue());
 				}
 			} else {
 				// For Non Fedex Couriers
