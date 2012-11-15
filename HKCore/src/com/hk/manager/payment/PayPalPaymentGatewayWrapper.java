@@ -79,7 +79,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
             profile.setSubject("");
         }
         catch (Exception e) {
-         logger.error("exception at creating API signature :", e);
+            logger.error("exception at creating API signature :", e);
         }
         return profile;
     }
@@ -112,7 +112,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
         encoder.add("PAYMENTREQUEST_0_INVNUM", merchantTxnId);
         encoder.add("L_PAYMENTREQUEST_0_DESC0", "HealthKart");
         encoder.add("L_PAYMENTREQUEST_0_AMT0", amount);
-        encoder.add("CUSTOMERSERVICENUMBER", "011-8887777");
+//        encoder.add("CUSTOMERSERVICENUMBER", "011-8887777");
         encoder.add("BRANDNAME", "HEALTHKART");
 //            encoder.add("ADDROVERRIDE","1");
         encoder.add("PAYMENTREQUEST_0_SHIPTONAME", address.getName());
@@ -127,7 +127,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
         encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPin());
         encoder.add("EMAIL", user.getEmail());
         encoder.add("PAYMENTREQUEST_0_SHIPTOPHONENUM", address.getPhone());
-        
+
         return encoder;
     }
 

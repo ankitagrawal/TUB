@@ -62,8 +62,8 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
     @Autowired
     EmailManager emailManager;
 
-     @Autowired
-     AddressDao addressDao;
+    @Autowired
+    AddressDao addressDao;
 
 
     protected PayPalPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
@@ -72,13 +72,8 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         Order order = payment.getOrder();
         User user = order.getUser();
 
-//  todo  Billing address id corresponding to order id  --  address for that id
-
-//        OrderBillingAddress orderBillingAddress = addressDao.orderAlreadywithBillingAddress(order.getId());
-//        Address address =  orderBillingAddress.getBillingAddress();
-
-       BillingAddress address = addressDao.searchBillingAddress(user);
-       String merchantTxnId = data.getGatewayOrderId();
+        BillingAddress address = addressDao.searchBillingAddress(user);
+        String merchantTxnId = data.getGatewayOrderId();
 
 
         //  Reading property files
@@ -100,7 +95,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         Double coverted_amount = data.getAmount() / coversion_rate;
 
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(coverted_amount);
-       //  appending gateway and amount in return url
+        //  appending gateway and amount in return url
         String return_url = linkManager.getPayPalPaymentGatewayReturnUrl() + "?gateway=" + merchantTxnId + "&amount=" + amountStr;
 
         PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper();
