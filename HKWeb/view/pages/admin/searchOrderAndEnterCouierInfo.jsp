@@ -58,7 +58,7 @@
 	              var suggested = $('#sugcouier').val();
 
 	              if(selected != suggested) {
-		           var proceed = confirm($('.suggestedcourier').text()+'   Not Selected  In drop down : Click OK to Proceed ');
+		           var proceed = confirm('Default Courier is  Not Selected  In drop down  :  Click OK to Proceed ');
 					if(!proceed)return  false;
 	              }
 	             var weight = $('.weight').val();
