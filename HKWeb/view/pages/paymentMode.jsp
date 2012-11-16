@@ -133,24 +133,24 @@
         <%--&nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">--%>
     <%--</p>--%>
     <%--citrus ka sab kuch--%>
-<%--
+
     <p><label><s:radio name="paymentMode" value="80" />
         MasterCard &nbsp;</label> <img
             src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">
     </p>
---%>
+
 
     <p><label><s:radio name="paymentMode" value="90" />
         Maestro &nbsp;</label> <img
             src="<hk:vhostImage/>/images/gateway/maestro.gif" height="30px">
     </p>
 
-<%--
+
     <p><label><s:radio name="paymentMode" value="80" />
         Citrus (Faster Checkout) &nbsp;</label> <img
             src="<hk:vhostImage/>/images/gateway/citrus.png" height="30px">
     </p>
---%>
+
 
     <div style="float: right; width: 90%;"><s:submit
             name="proceed" value="Make Payment >" class="button"
