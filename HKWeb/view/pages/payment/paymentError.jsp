@@ -23,6 +23,8 @@
 
         <p>Suspect cause : ${actionBean.errorMessage}</p>
 
+        <p>Response Message from gateway  : ${actionBean.payment.responseMessage}</p>
+
         <h2>Support</h2>
 
         <p>Please try again. If it still does not work

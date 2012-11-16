@@ -9694,4 +9694,22 @@
             <column name="name"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1353062520466-1">
+        <addColumn tableName="payment">
+            <column name="authid_code" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1353062520466-2">
+        <addColumn tableName="payment">
+            <column name="response_message" type="VARCHAR(200)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1353062520466-3">
+        <addColumn tableName="payment">
+            <column name="rrn" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1353062592335-4">
+        <modifyDataType columnName="error_log" newDataType="VARCHAR(100)" tableName="payment"/>
+    </changeSet>
 </databaseChangeLog>

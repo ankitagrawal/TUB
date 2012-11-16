@@ -3,13 +3,8 @@ package com.hk.web.action.core.payment.gateway;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.util.BaseUtils;
-import com.citruspay.pg.exception.CitruspayException;
-import com.ecs.epg.sfa.java.*;
 import com.hk.constants.payment.EnumCitrusResponseCodes;
-import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
-import com.hk.domain.user.Address;
-import com.hk.domain.user.User;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
@@ -18,17 +13,11 @@ import com.hk.manager.payment.IciciPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
-import com.hk.web.action.core.payment.PaymentFailAction;
 import com.hk.web.action.core.payment.PaymentSuccessAction;
 import com.hk.web.filter.WebContext;
-import com.opus.epg.sfa.java.*;
-import com.opus.epg.sfa.java.BillToAddress;
-import com.opus.epg.sfa.java.MPIData;
 import com.opus.epg.sfa.java.Merchant;
-import com.opus.epg.sfa.java.PGReserveData;
 import com.opus.epg.sfa.java.PGResponse;
 import com.opus.epg.sfa.java.PostLib;
-import com.opus.epg.sfa.java.ShipToAddress;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -38,9 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -71,29 +57,28 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
 
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/icici.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
-        Merchant oMerchant 	= new Merchant();
-        PostLib oPostLib	= null;
+        Merchant oMerchant = new Merchant();
+        PostLib oPostLib = null;
         String MerchantId = properties.getProperty("MerchantId");
-        
+
         String gatewayUrl = linkManager.getIciciPaymentGatewayUrl() + "?Amount=" + amountStr;
-        
-        oMerchant.setMerchantDetails(MerchantId,MerchantId,MerchantId,"127.0.0.1",
+
+        oMerchant.setMerchantDetails(MerchantId, MerchantId, MerchantId, "127.0.0.1",
                 payment.getGatewayOrderId(),
                 payment.getGatewayOrderId()
-                ,gatewayUrl,
+                , gatewayUrl,
                 properties.getProperty("ResponseMethod"), properties.getProperty("CurrCode"), payment.getGatewayOrderId(), "req.Sale",
                 amountStr, "GMT+05:30", "Ext1", "true", "Ext3", "Ext4", "Ext5a");
 
 
         try {
             oPostLib = new PostLib();
-            PGResponse oPGResponse = oPostLib.postSSL(null,null,oMerchant,null,WebContext.getResponse(),null,null,null,null,null);
-            if(oPGResponse.getRedirectionUrl() != null) {
+            PGResponse oPGResponse = oPostLib.postSSL(null, null, oMerchant, null, WebContext.getResponse(), null, null, null, null, null);
+            if (oPGResponse.getRedirectionUrl() != null) {
                 String strRedirectionURL = oPGResponse.getRedirectionUrl();
                 iciciPaymentGatewayWrapper.setGatewayUrl(strRedirectionURL);
                 logger.info("Icici url being generated is " + gatewayUrl);
-            }
-            else {
+            } else {
                 logger.info("Error encountered. Error Code : " + oPGResponse.getRespCode() + " . Message " + oPGResponse.getRespMessage());
                 paymentManager.fail(data.getGatewayOrderId());
             }
@@ -121,40 +106,49 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
             try {
                 validatedData = IciciPaymentGatewayWrapper.validateEncryptedData(data, propertyFilePath);
             } catch (Exception e) {
-                paymentManager.fail("");
                 logger.info("Payment failed while decrypting data in icici backend");
             }
         }
 
         Map<String, String> paramMap = IciciPaymentGatewayWrapper.parseResponse(validatedData, responseMethod);
 
-        logger.info("validated date -> " + validatedData);
-//        logger.info("param map->" + paramMap);
+        logger.info("validated data from icici -> " + validatedData);
+
         Double amount = NumberUtils.toDouble(amountStr);
         String authStatus = paramMap.get(CitrusPaymentGatewayWrapper.RespCode);
         String responseMsg = ((String) paramMap.get(CitrusPaymentGatewayWrapper.Message)).replace('+', ' ');
         String gatewayOrderId = paramMap.get(CitrusPaymentGatewayWrapper.TxnID);
+        String rrn = paramMap.get(CitrusPaymentGatewayWrapper.RRN);
+        String ePGTxnID = paramMap.get(CitrusPaymentGatewayWrapper.ePGTxnID);
+        String authIdCode = paramMap.get(CitrusPaymentGatewayWrapper.AuthIdCode);
+
+/*
+        String encodedTxnDateTime = paramMap.get(CitrusPaymentGatewayWrapper.TxnDateTime);
+        String txnDateTime = "";
+        try {
+            txnDateTime = URLDecoder.decode(encodedTxnDateTime, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+        }
+*/
 
         logger.info("response msg received from citrus is " + responseMsg + "for gateway order id " + gatewayOrderId);
-
         String merchantParam = null;
-
         Resolution resolution = null;
-        try {
 
+        try {
             // our own validations
             paymentManager.verifyPayment(gatewayOrderId, amount, merchantParam);
-
             logger.info("Status returned from Icici Payment Gateway" + authStatus);
 
             // payment callback has been verified. now see if it is successful or failed from the gateway response
             if (authStatus.equals(EnumCitrusResponseCodes.Transaction_Successful.getId())) {
-                paymentManager.success(gatewayOrderId);
+                //success(String gatewayOrderId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode, Date gatewaypaymentDate)
+                paymentManager.success(gatewayOrderId, ePGTxnID, rrn, responseMsg, authIdCode);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+            } else if (EnumCitrusResponseCodes.Rejected_By_Gateway.getId().equals(authStatus)) {
+                throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.REJECTED_BY_GATEWAY);
             } else if (EnumCitrusResponseCodes.Rejected_By_Issuer.getId().equals(authStatus)) {
-                paymentManager.fail(gatewayOrderId);
-                emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
-                resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+                throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.REJECTED_BY_ISSUER);
             } else {
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
             }
@@ -164,20 +158,6 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
             resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
         }
         return resolution;
-    }
-
-    public String getSecureCookie(HttpServletRequest request) {
-        String secureCookie = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cooky : cookies) {
-                if (cooky.getName().equals("vsc")) {
-                    secureCookie = cooky.getValue().trim();
-                    break;
-                }
-            }
-        }
-        return secureCookie;
     }
 
 }

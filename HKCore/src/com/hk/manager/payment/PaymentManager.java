@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -226,6 +227,27 @@ public class PaymentManager {
 	public Order success(String gatewayOrderId) {
 		return success(gatewayOrderId, null);
 	}
+
+    @Transactional
+    public Order success(String gatewayOrderId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode) {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+
+        Order order = null;
+        // if payment type is full, then send order to processing also, else just accept and update payment status
+        if (payment != null) {
+            if (payment.getPaymentDate() == null) {
+                payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            }
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.SUCCESS));
+            payment.setResponseMessage(responseMessage);
+            payment.setAuthIdCode(authIdCode);
+            payment.setRrn(rrn);
+            payment = paymentDao.save(payment);
+            order = getOrderManager().orderPaymentReceieved(payment);
+        }
+        return order;
+    }
 
 	@Transactional
 	public Order success(String gatewayOrderId, String gatewayReferenceId) {

@@ -10,9 +10,12 @@ package com.hk.constants.payment;
 public enum EnumCitrusResponseCodes {
 
   Transaction_Successful("0", "Transaction Successful"),
-  Rejected_By_Issuer("1", "Rejected By Issuer"),
+  Rejected_By_Issuer("1", "Rejected By Issuer/Bank"),
+  Rejected_By_Gateway("2", "Rejected By Gateway"),
   TxStatusSuccess("SUCCESS", "Transaction Successful"),
   TxStatusFAIL("FAIL", "Fail Transaction"),
+  TxStatusCANCELED("CANCELED", "CANCELED Transaction"),
+  TxStatusSESSION_EXPIRED("SESSION_EXPIRED", "SESSION_EXPIRED Transaction"),
   Internal_Processing_Error("PG001", "Internal Processing Error"),
   Required_parameter_missing("WS001", "Required parameter missing"),
   Merchant_is_SSL_type_MOTO_txn_not_allowed("ON006", "Merchant is SSL type. MOTO txn not allowed"),
