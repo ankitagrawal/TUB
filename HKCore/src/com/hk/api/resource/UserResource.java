@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import com.hk.api.APIRegistry;
 import com.hk.api.UserAPI;
 import com.hk.api.dto.user.UserDTO;
+import com.hk.api.request.AddRewardPointRequest;
+import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.util.json.JSONResponseBuilder;
 
 @Path("/user")
@@ -42,8 +44,9 @@ public class UserResource {
     @POST
     @Path("/addRewardPoints")
     @Produces("application/json")
-    public String addHKPlusRewardPointsForUser(String login, double rewardPoints, String apiKey, String comment) {
-        boolean rewardPointsAdded = getUserAPI().addRewardPointsForUser(login, rewardPoints, comment, rewardPointMode);
+    public String addHKPlusRewardPointsForUser(AddRewardPointRequest addRewardPointRequest) {
+        String login = addRewardPointRequest.getLogin();
+        boolean rewardPointsAdded = getUserAPI().addRewardPointsForUser(login, addRewardPointRequest.getRewardPoints(), addRewardPointRequest.getComment(), EnumRewardPointMode.HKPLUS_POINTS);
 
         Double eligibleRewardPoints = getUserAPI().getEligibleRewardPointsForUser(login);
 
