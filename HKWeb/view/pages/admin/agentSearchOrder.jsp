@@ -65,11 +65,11 @@
                                     Status: ${shippingOrder.orderStatus.name} <br/>
                                     <c:if test="${shippingOrder.shipment !=null}">
 
-                                        courierName: "${shippingOrder.shipment.courier.name}"
+                                        courierName: "${shippingOrder.shipment.awb.courier.name}"
                                         awbNumber: "${shippingOrder.shipment.awb.awbNumber}"
                                         <span style="color:crimson;text-decoration:underline">
                                         Track Link: <s:link beanclass="com.hk.web.action.core.order.TrackCourierAction" target="_blank">
-                                        <s:param name="courierId" value="${shippingOrder.shipment.courier.id}"/>
+                                        <s:param name="courierId" value="${shippingOrder.shipment.awb.courier.id}"/>
                                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
                                         <s:param name="trackingId" value="${shippingOrder.shipment.awb.awbNumber}"/>
                                         ${shippingOrder.shipment.awb.awbNumber}

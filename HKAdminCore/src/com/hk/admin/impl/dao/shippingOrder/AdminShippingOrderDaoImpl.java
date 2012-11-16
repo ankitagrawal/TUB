@@ -42,7 +42,7 @@ public class AdminShippingOrderDaoImpl extends BaseDaoImpl implements AdminShipp
         if (endDate == null) {
             endDate = new Date();
         }
-        String query = "select distinct so  " + " from Shipment shipment, ShippingOrder so where " + " so.shipment = shipment" + " and shipment.courier.id in (:courierIdList) "
+        String query = "select distinct so  " + " from Shipment shipment, ShippingOrder so where " + " so.shipment = shipment" + " and shipment.awb.courier.id in (:courierIdList) "
                 + " and shipment.shipDate between :startDate and :endDate " + " and shipment.deliveryDate is null";
         return getSession().createQuery(query).setParameterList("courierIdList", courierIdList).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
      }
