@@ -393,6 +393,19 @@ public class PaymentManager {
 		}
 	}
 
+    @Transactional
+    public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e, String responseMessage) {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+        if (payment != null) {
+            payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setResponseMessage(responseMessage);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ERROR));
+            payment.setErrorLog(e.getError().getMessage());
+            paymentDao.save(payment);
+        }
+    }
+
 	public Payment verifyCodPayment(Payment payment) {
 		payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
 		return paymentDao.save(payment);

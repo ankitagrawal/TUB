@@ -105,7 +105,7 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
 				throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
 			}
 		} catch (HealthkartPaymentGatewayException e) {
-			paymentManager.error(gatewayOrderId, e);
+			paymentManager.error(gatewayOrderId, ePGTxnID, e, "");
 			emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
 			resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
 		}

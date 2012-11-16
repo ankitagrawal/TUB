@@ -4,7 +4,21 @@ package com.hk.domain.courier;
 
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.warehouse.Warehouse;
@@ -38,9 +52,6 @@ public class Awb implements java.io.Serializable {
 
     @Column(name = "awb_bar_code", nullable = false, length = 70)
     private String    awbBarCode;
-
-    @Column(name = "used", nullable = false)
-    private boolean   used;
 
     @Column(name = "cod", nullable = false)
     private boolean   cod;
@@ -105,14 +116,6 @@ public class Awb implements java.io.Serializable {
         this.awbBarCode = awbBarCode;
     }
 
-    public boolean getUsed() {
-        return this.used;
-    }
-
-    public void setUsed(boolean used) {
-        this.used = used;
-    }
-
     public boolean getCod() {
         return this.cod;
     }
@@ -137,17 +140,46 @@ public class Awb implements java.io.Serializable {
         this.returnAwbBarCode = returnAwbBarCode;
     }
 
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Awb)) {
-           return false;
-        }
-        Awb awb = (Awb) obj;
-        if (this.awbNumber.equals(awb.getAwbNumber()) && this.courier.equals(awb.getCourier())) {
-            return true;
-        } else
-            return false;
 
-    }
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Awb)) {
+			return false;
+
+		}
+		Awb awb = (Awb) obj;
+		if (this.id != null && awb.getId() != null) {
+			return this.id.equals(awb.getId());
+		} else {
+		    if(this.awbNumber == null && awb.getAwbNumber() !=null){
+		        return false;
+		    }
+		    if(this.awbNumber != null && awb.getAwbNumber() ==null){
+                return false;
+            }
+		    if(this.courier != null && awb.getCourier() ==null){
+                return false;
+            }
+		    if(this.courier == null && awb.getCourier() !=null){
+                return false;
+            }
+		    
+			
+			EqualsBuilder equalsBuilder = new EqualsBuilder();
+			equalsBuilder.append(this.awbNumber, awb.getAwbNumber());
+			equalsBuilder.append(this.courier, awb.getCourier());
+			return equalsBuilder.isEquals();
+		}
+
+	}
+
+	@Override
+	public int hashCode() {
+	    return new HashCodeBuilder().append(id).toHashCode();
+		
+	}
 
     public Date getCreateDate() {
         return createDate;

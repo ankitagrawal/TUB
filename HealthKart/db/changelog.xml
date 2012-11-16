@@ -9694,6 +9694,7 @@
             <column name="name"/>
         </createIndex>
     </changeSet>
+<<<<<<< HEAD
     <changeSet author="Pratham (generated)" id="1353062520466-1">
         <addColumn tableName="payment">
             <column name="authid_code" type="VARCHAR(45)"/>
@@ -9712,4 +9713,13 @@
     <changeSet author="Pratham (generated)" id="1353062592335-4">
         <modifyDataType columnName="error_log" newDataType="VARCHAR(100)" tableName="payment"/>
     </changeSet>
+	<changeSet author="Seema (generated)" id="1350638740147-3">
+		<dropColumn columnName="used" tableName="awb"/>
+	</changeSet>
+	<changeSet author="Seema (generated)" id="1350891782684-2">
+		<dropForeignKeyConstraint baseTableName="shipment" constraintName="fk_package_courier1"/>
+	</changeSet>
+	<changeSet author="Seema (generated)" id="1350891782684-6">
+		<dropColumn columnName="courier_id" tableName="shipment"/>
+	</changeSet>
 </databaseChangeLog>

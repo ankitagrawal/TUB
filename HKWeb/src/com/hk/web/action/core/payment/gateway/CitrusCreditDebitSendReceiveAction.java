@@ -117,7 +117,7 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             }
         } catch (HealthkartPaymentGatewayException e) {
             emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
-            paymentManager.error(gatewayOrderId, e);
+            paymentManager.error(gatewayOrderId, ePGTxnID, e, responseMsg);
             resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
         }
         return resolution;

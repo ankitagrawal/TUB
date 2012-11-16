@@ -396,7 +396,7 @@ public class ReportManager {
                   setCellValue(row, 17, order.getAmount());
                   paymentMode = ReportConstants.COD;
               }
-              setCellValue(row, 18, shipment.getCourier().getName());
+              setCellValue(row, 18, shipment.getAwb().getCourier().getName());
               setCellValue(row, 19, paymentMode);
               setCellValue(row, 20, shipment.getShipDate());
               if (shipment.getBoxSize() != null) {
@@ -877,7 +877,7 @@ public class ReportManager {
         if (shipment != null && shipment.getAwb() != null) {
             xlsWriter.addCell(rowCounter, shipment.getAwb().getAwbNumber());
         }
-        xlsWriter.addCell(rowCounter, shipment.getCourier().getName());
+        xlsWriter.addCell(rowCounter, shipment.getAwb().getCourier().getName());
       xlsWriter.addCell(rowCounter, shippingOrder.getWarehouse().getName());
       xlsWriter.addCell(rowCounter, shipment.getShipDate().toString());
       xlsWriter.addCell(rowCounter, shipment.getDeliveryDate().toString());

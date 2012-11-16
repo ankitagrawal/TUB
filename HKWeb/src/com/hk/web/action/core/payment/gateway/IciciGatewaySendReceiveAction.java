@@ -154,7 +154,7 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
             }
         } catch (HealthkartPaymentGatewayException e) {
             emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
-            paymentManager.error(gatewayOrderId, e);
+            paymentManager.error(gatewayOrderId, ePGTxnID, e, "");
             resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
         }
         return resolution;
