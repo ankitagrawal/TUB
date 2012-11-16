@@ -7,6 +7,7 @@ import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.exception.InvalidRewardPointsException;
@@ -28,4 +29,8 @@ public interface RewardPointService {
     public void approvePendingRewardPointsForOrder(Order order);
     
     public List<RewardPoint> findByReferredOrder(Order order) ;
+    
+    
+    public Double getTotalRedeemablePointsForUser(String login, Long storeId);
+        
 }
