@@ -16,7 +16,10 @@
 <div id="container" style="margin-top:20px;">
   <div id="content" style="text-align:center; padding:30px;">
     <%
+
       BasePaymentGatewayWrapper paymentGateway = (BasePaymentGatewayWrapper) request.getAttribute("PaymentGatewayWrapper");
+      System.out.println( "payment Gateway :" + paymentGateway);
+      System.out.println( " Gateway url:" + paymentGateway.getGatewayUrl());   
       String gatewayUrl = "";
       if (!paymentGateway.getGatewayUrl().startsWith("http://") && !paymentGateway.getGatewayUrl().startsWith("https://")) {
         gatewayUrl = request.getContextPath()+paymentGateway.getGatewayUrl();
