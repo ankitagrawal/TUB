@@ -13,8 +13,6 @@ import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.user.User;
 import com.hk.exception.InvalidRewardPointsException;
-import com.hk.manager.ReferrerProgramManager;
-import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.RewardPointService;
 
@@ -23,18 +21,12 @@ import com.hk.pact.service.order.RewardPointService;
  */
 public abstract class AbstractUserAPIImpl implements UserAPI {
 
-    private static Logger          logger = LoggerFactory.getLogger(AbstractUserAPIImpl.class);
+    private static Logger      logger = LoggerFactory.getLogger(AbstractUserAPIImpl.class);
 
     @Autowired
-    private UserService            userService;
+    private UserService        userService;
     @Autowired
-    private RewardPointService     rewardPointService;
-
-    // TODO: work on reward point services and make this better
-    @Autowired
-    private RewardPointDao         rewardPointDao;
-    @Autowired
-    private ReferrerProgramManager referrerProgramManager;
+    private RewardPointService rewardPointService;
 
     @Override
     public UserDTO getUserDetails(String login) {
@@ -56,7 +48,8 @@ public abstract class AbstractUserAPIImpl implements UserAPI {
         if (user != null && enumRewardPointMode != null) {
 
             try {
-                rewardPoint = getRewardPointDao().addRewardPoints(user, null, null, rewardPoints, comment, EnumRewardPointStatus.APPROVED, enumRewardPointMode.asRewardPointMode());
+                rewardPoint = getRewardPointService().addRewardPoints(user, null, null, rewardPoints, comment, EnumRewardPointStatus.APPROVED,
+                        enumRewardPointMode.asRewardPointMode());
             } catch (InvalidRewardPointsException e) {
                 logger.error("Reward point cannot be added", e);
                 rewardPointsAdded = false;
@@ -65,7 +58,7 @@ public abstract class AbstractUserAPIImpl implements UserAPI {
             rewardPointsAdded = false;
         }
         if (rewardPointsAdded && rewardPoint != null) {
-            referrerProgramManager.approveRewardPoints(Arrays.asList(rewardPoint), null);
+            getRewardPointService().approveRewardPoints(Arrays.asList(rewardPoint), null);
         }
 
         return rewardPointsAdded;
@@ -77,10 +70,6 @@ public abstract class AbstractUserAPIImpl implements UserAPI {
 
     public RewardPointService getRewardPointService() {
         return rewardPointService;
-    }
-
-    public RewardPointDao getRewardPointDao() {
-        return rewardPointDao;
     }
 
 }

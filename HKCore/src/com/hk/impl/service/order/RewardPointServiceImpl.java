@@ -68,10 +68,12 @@ public class RewardPointServiceImpl implements RewardPointService {
     @Autowired
     private EmailManager        emailManager;
 
+    @Override
     public RewardPointMode getRewardPointMode(EnumRewardPointMode enumRewardPointMode) {
         return getRewardPointDao().get(RewardPointMode.class, enumRewardPointMode.getId());
     }
 
+    @Override
     public Double getEligibleRewardPointsForUser(String login) {
         User user = userService.findByLogin(login);
         Double redeemablePoint = getTotalRedeemablePoints(user);
@@ -79,6 +81,7 @@ public class RewardPointServiceImpl implements RewardPointService {
         return (redeemablePoint - user.getUserAccountInfo().getOverusedRewardPoints());
     }
 
+    @Override
     public Double getTotalRedeemablePoints(User user) {
         Double redeemablePoints = 0D;
         List<RewardPointTxn> rewardPointTxnList = getRewardPointTxnDao().findActiveTxns(user);
@@ -88,15 +91,18 @@ public class RewardPointServiceImpl implements RewardPointService {
         return redeemablePoints;
     }
 
+    @Override
     public RewardPointStatus getRewardPointStatus(EnumRewardPointStatus enumRewardPointStatus) {
         return getRewardPointDao().get(RewardPointStatus.class, enumRewardPointStatus.getId());
     }
 
+    @Override
     public RewardPoint addRewardPoints(User referredBy, User referredUser, Order referredOrder, Double value, String comment, EnumRewardPointStatus rewardPointStatus,
             RewardPointMode rewardPointMode) throws InvalidRewardPointsException {
         return getRewardPointDao().addRewardPoints(referredBy, referredUser, referredOrder, value, comment, rewardPointStatus, rewardPointMode);
     }
 
+    @Override
     // logic for cashback offer
     public void awardRewardPoints(Order order) {
         OfferInstance offerInstance = order.getOfferInstance();
@@ -142,10 +148,12 @@ public class RewardPointServiceImpl implements RewardPointService {
         }
     }
 
+    @Override
     public RewardPoint findByReferredOrderAndRewardMode(Order order, RewardPointMode rewardPointMode) {
         return getRewardPointDao().findByReferredOrderAndRewardMode(order, rewardPointMode);
     }
 
+    @Override
     public void approvePendingRewardPointsForOrder(Order order) {
         List<RewardPoint> rewardPointList = getRewardPointDao().findByReferredOrder(order);
         RewardPointStatus rewardPointPendingStatus = getRewardPointStatus(EnumRewardPointStatus.PENDING);
@@ -205,6 +213,7 @@ public class RewardPointServiceImpl implements RewardPointService {
         }
     }
 
+    @Override
     @Transactional
     public void cancelReferredOrderRewardPoint(RewardPoint rewardPoint) {
 
@@ -256,11 +265,14 @@ public class RewardPointServiceImpl implements RewardPointService {
 
     }
 
+    
     @Transactional
-    public void cancelRewardPoints(User user, Double cancelRewardPoints) {
+    private void cancelRewardPoints(User user, Double cancelRewardPoints) {
         redeemOrCancelRedeemableRewardPoints(EnumRewardPointTxnType.REFERRED_ORDER_CANCELLED, user, cancelRewardPoints, null);
     }
 
+    
+    @Override
     @Transactional
     public void redeemRewardPoints(Order order, Double rewardPointsUsed) {
         redeemOrCancelRedeemableRewardPoints(EnumRewardPointTxnType.REDEEM, order.getUser(), rewardPointsUsed, order);

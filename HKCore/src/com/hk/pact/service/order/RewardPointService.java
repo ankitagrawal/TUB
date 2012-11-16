@@ -40,5 +40,9 @@ public interface RewardPointService {
     public Double getTotalRedeemablePoints(User user);
 
     public void approveRewardPoints(List<RewardPoint> rewardPointList, Date expiryDate);
+    
+    public void cancelReferredOrderRewardPoint(RewardPoint rewardPoint);
+    
+    public void redeemRewardPoints(Order order, Double rewardPointsUsed);
 
 }
