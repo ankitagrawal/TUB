@@ -206,6 +206,15 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String paymentStatus = decoder.get("PAYMENTINFO_0_PAYMENTSTATUS");
         String pendingReason = decoder.get("PAYMENTINFO_0_PENDINGREASON");
 
+
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+        if (payment != null) {
+            /*     comparing the dollar amount           */
+            if (BaseUtils.doubleEquality(NumberUtils.toDouble(amount), (payment.getAmount() / coversion_rate))) {
+                amount_in_rupee = payment.getAmount();
+            }
+        }
+
         try {
             // our own validations
             paymentManager.verifyPayment(gatewayOrderId, amount_in_rupee, merchantParam);

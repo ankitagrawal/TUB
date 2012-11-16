@@ -160,7 +160,7 @@
     </p>
 
     <div style="float: right; width: 90%;"><s:submit
-            name="proceed" value="Make Payment >" class="button"
+            name="proceed" value="Make Payment >" class="button makePayment"
             disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}"/>
     </div>
 </s:form></div>
@@ -449,10 +449,11 @@
 
         $('#paypal').click(function() {
             if ($(this).is(':checked')) {
-                location.href = '${url}';
-                $('.makePayment').hide();
+                 $('.makePayment').hide();
+                location.href = '${url}';                
             }
         });
+
     });
 </script>
 <div class='floftfix'></div>

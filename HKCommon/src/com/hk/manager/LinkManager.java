@@ -145,7 +145,7 @@ public class LinkManager {
 
 
     public String getPayPalPaymentGatewayCancelUrl() {
-          RedirectResolution redirectResolution = new RedirectResolution("/core/cart/Cart.action");
+          RedirectResolution redirectResolution = new RedirectResolution("/core/payment/PaymentMode.action");
           return getUrlFromResolution(redirectResolution);
       }
 

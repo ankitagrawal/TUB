@@ -9740,4 +9740,7 @@
     <changeSet author="Ankit (generated)" id="1352973051747-6">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="billing_address" constraintName="fk_billing_address_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Ankit (generated)" id="1353091292276-4">
+        <modifyDataType columnName="pin" newDataType="VARCHAR(30)" tableName="address"/>
+    </changeSet>
 </databaseChangeLog>

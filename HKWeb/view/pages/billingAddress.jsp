@@ -107,12 +107,12 @@
         <div class='label'>State<span class="aster">*</span></div>
         <s:text name="billingAddress.state" value="${paymentModeBean.billingAddress.state}"/>
         <%--<s:text name="address.state"/>--%>
-        <div class='label'>PIN Code<span class="aster">*</span></div>
-        <s:text name="billingAddress.pin" class="pincode" maxlength="10" value="${paymentModeBean.billingAddress.pin}"/>
+        <div class='label'>PIN Code / ZIP Code<span class="aster">*</span></div>
+        <s:text name="billingAddress.pin" class="pincode" value="${paymentModeBean.billingAddress.pin}"/>
         <div class='label'>Phone / Mobile<span class="aster">*</span></div>
         <s:text name="billingAddress.phone" value="${paymentModeBean.billingAddress.phone}"/>
         <table>  <tr>
-        <td>  <s:submit name="save" value="Save the value and continue"/>  </td>
+        <td>  <s:submit name="save" value="Save the address and continue"/>  </td>
         <td>  <s:link beanclass="com.hk.web.action.core.payment.PaymentModeAction" class="notifyMe button_orange" style="background:green"> Cancel </s:link> </td>
         </tr> </table>
     </s:form>
@@ -136,7 +136,7 @@
 
     function validateForm()
     {
-         var numbers = /^[0-9]+$/;
+//        var numbers = /^[0-9]+$/;
         var billingAddressName = document.forms["BillingAddressForm"]["billingAddress.name"].value;
         var billingAddressLine1 = document.forms["BillingAddressForm"]["billingAddress.line1"].value;
         var billingAddressCity = document.forms["BillingAddressForm"]["billingAddress.city"].value;
@@ -168,11 +168,11 @@
             alert("Pincode must be filled out");
             return false;
         }
-          if (!(billingAddressPin.match(numbers)))
-        {
-            alert("Pincode must be Numeric only");
-            return false;
-        }
+//          if (!(billingAddressPin.match(numbers)))
+//        {
+//            alert("Pincode must be Numeric only");
+//            return false;
+//        }
         if (billingAddressPhone == null || billingAddressPhone == "")
         {
             alert("Phone/Mobile must be filled out");
