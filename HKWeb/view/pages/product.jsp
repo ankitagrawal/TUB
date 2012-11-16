@@ -243,8 +243,7 @@
 		</div>
         <div id="tryOnLink" class="content">
             <c:if test="${pa.validTryOnProductVariant != null}">
-                <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" src="${pageContext.request.contextPath}/images/try-it-now.jpg"
-                     alt="Virtual Try On"/>
+                <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}"><img src="${pageContext.request.contextPath}/images/try-it-now.jpg" alt="Virtual Try On"></a>
             </c:if>
         </div>
 
