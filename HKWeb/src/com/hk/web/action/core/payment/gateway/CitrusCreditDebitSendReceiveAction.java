@@ -87,9 +87,10 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String TxStatus = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxStatus);
         String pgRespCode = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.pgRespCode);
         String amount = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.amount);
-        String ePGTxnID = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.ePGTxnID);
-        String rrn = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.RRN);
-        String authIdCode = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.AuthIdCode);
+        String ePGTxnID = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.pgTxnNo);
+//        String rrn = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.RRN);
+        String rrn = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxRefNo);
+        String authIdCode = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.authIdCode);
         String responseMsg = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxMsg);
 
 

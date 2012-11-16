@@ -12,6 +12,7 @@ public enum EnumCitrusResponseCodes {
   Transaction_Successful("0", "Transaction Successful"),
   Rejected_By_Issuer("1", "Rejected By Issuer/Bank"),
   Rejected_By_Gateway("2", "Rejected By Gateway"),
+  Cancelled_By_User("3", "Cancelled By User"),
   TxStatusSuccess("SUCCESS", "Transaction Successful"),
   TxStatusFAIL("FAIL", "Fail Transaction"),
   TxStatusCANCELED("CANCELED", "CANCELED Transaction"),
