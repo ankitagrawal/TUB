@@ -31,6 +31,8 @@ public interface RewardPointService {
     public List<RewardPoint> findByReferredOrder(Order order) ;
     
     
-    public Double getTotalRedeemablePointsForUser(String login, Long storeId);
+    public Double getEligibleRewardPointsForUser(String login);
+    
+    public Double getTotalRedeemablePoints(User user);
         
 }

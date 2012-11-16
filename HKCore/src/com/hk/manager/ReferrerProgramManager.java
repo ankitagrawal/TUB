@@ -6,7 +6,6 @@ import static ch.lambdaj.Lambda.sum;
 import java.util.Date;
 import java.util.List;
 
-import com.hk.constants.coupon.EnumCouponType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +14,7 @@ import com.akube.framework.util.BaseUtils;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
+import com.hk.constants.coupon.EnumCouponType;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.discount.EnumRewardPointTxnType;
@@ -29,6 +29,7 @@ import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.reward.RewardPointTxnDao;
 import com.hk.pact.dao.user.UserAccountInfoDao;
 import com.hk.pact.service.discount.CouponService;
+import com.hk.pact.service.order.RewardPointService;
 
 /**
  * User: rahul Time: 22 Apr, 2010 3:46:20 PM <p/> A User can earn Reward Points in 2 ways 1.) Adding reward points
@@ -93,6 +94,8 @@ public class ReferrerProgramManager {
     private UserAccountInfoDao userAccountInfoDao;
     @Autowired
     private EmailManager       emailManager;
+    @Autowired
+    private RewardPointService rewardPointService;
 
     public Coupon getOrCreateRefferrerCoupon(User user) {
         Coupon referrerCoupon = user.getReferrerCoupon();
@@ -168,7 +171,7 @@ public class ReferrerProgramManager {
     }
 
     private void redeemOrCancelRedeemableRewardPoints(EnumRewardPointTxnType action, User user, Double rewardPointsUsed, Order order) {
-        Double redeemablePoints = getTotalRedeemablePoints(user);
+        Double redeemablePoints = rewardPointService.getTotalRedeemablePoints(user);
         if (rewardPointsUsed < redeemablePoints) {
             redeemablePoints = rewardPointsUsed;
         }
@@ -216,15 +219,6 @@ public class ReferrerProgramManager {
         }
     }
 
-    public Double getTotalRedeemablePoints(User user) {
-        Double redeemablePoints = 0D;
-        List<RewardPointTxn> rewardPointTxnList = getRewardPointTxnDao().findActiveTxns(user);
-        for (RewardPointTxn rewardPointTxn : rewardPointTxnList) {
-            redeemablePoints += rewardPointTxn.getValue();
-        }
-        return redeemablePoints;
-    }
-
     public void refundRedeemedPoints(Order order) {
         List<RewardPointTxn> rewardPointTxnList = getRewardPointTxnDao().findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
         for (RewardPointTxn rewardPointTxn : rewardPointTxnList) {
@@ -261,7 +255,7 @@ public class ReferrerProgramManager {
                 }
 
                 Double overusedRewardPoints = addedRewardPoints - rewardPointBalance;
-                Double redeemablePoints = getTotalRedeemablePoints(rewardPoint.getUser());
+                Double redeemablePoints = rewardPointService.getTotalRedeemablePoints(rewardPoint.getUser());
                 if (redeemablePoints >= overusedRewardPoints) {
                     // cacel other reward points in lieu of reward points used of cancelled referred order
                     cancelRewardPoints(rewardPoint.getUser(), overusedRewardPoints);

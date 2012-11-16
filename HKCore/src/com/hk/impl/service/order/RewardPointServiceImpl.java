@@ -22,6 +22,7 @@ import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
@@ -29,6 +30,8 @@ import com.hk.exception.InvalidRewardPointsException;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.reward.RewardPointDao;
+import com.hk.pact.dao.reward.RewardPointTxnDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
@@ -47,9 +50,29 @@ public class RewardPointServiceImpl implements RewardPointService {
     private OfferInstanceDao       offerInstanceDao;
     @Autowired
     private OrderLoggingService    orderLoggingService;
+    @Autowired
+    private UserService            userService;
+    @Autowired
+    private RewardPointTxnDao      rewardPointTxnDao;
 
     public RewardPointMode getRewardPointMode(EnumRewardPointMode enumRewardPointMode) {
         return getRewardPointDao().get(RewardPointMode.class, enumRewardPointMode.getId());
+    }
+
+    public Double getEligibleRewardPointsForUser(String login) {
+        User user = userService.findByLogin(login);
+        Double redeemablePoint = getTotalRedeemablePoints(user);
+
+        return (redeemablePoint - user.getUserAccountInfo().getOverusedRewardPoints());
+    }
+
+    public Double getTotalRedeemablePoints(User user) {
+        Double redeemablePoints = 0D;
+        List<RewardPointTxn> rewardPointTxnList = getRewardPointTxnDao().findActiveTxns(user);
+        for (RewardPointTxn rewardPointTxn : rewardPointTxnList) {
+            redeemablePoints += rewardPointTxn.getValue();
+        }
+        return redeemablePoints;
     }
 
     public RewardPointStatus getRewardPointStatus(EnumRewardPointStatus enumRewardPointStatus) {
@@ -167,5 +190,11 @@ public class RewardPointServiceImpl implements RewardPointService {
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
         this.orderLoggingService = orderLoggingService;
     }
+
+    public RewardPointTxnDao getRewardPointTxnDao() {
+        return rewardPointTxnDao;
+    }
+    
+    
 
 }

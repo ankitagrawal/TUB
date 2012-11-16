@@ -14,5 +14,12 @@ public interface UserAPI extends HkAPI{
      * @return
      */
     public String getUserDetails(String login);
+    
+    /**
+     * get eligible reward points for user, these are the reward points which user could redeem.
+     * @param login
+     * @return
+     */
+    public String getEligibleRewardPointsForUser(String login);
 
 }
