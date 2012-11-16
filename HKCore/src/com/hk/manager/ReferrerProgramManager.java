@@ -1,35 +1,21 @@
 package com.hk.manager;
 
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.sum;
-
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
 import com.hk.constants.coupon.EnumCouponType;
-import com.hk.constants.discount.EnumRewardPointMode;
-import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.discount.EnumRewardPointTxnType;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
-import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
-import com.hk.domain.user.UserAccountInfo;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.reward.RewardPointTxnDao;
-import com.hk.pact.dao.user.UserAccountInfoDao;
 import com.hk.pact.service.discount.CouponService;
-import com.hk.pact.service.order.RewardPointService;
 
 /**
  * User: rahul Time: 22 Apr, 2010 3:46:20 PM <p/> A User can earn Reward Points in 2 ways 1.) Adding reward points
@@ -83,19 +69,13 @@ import com.hk.pact.service.order.RewardPointService;
 public class ReferrerProgramManager {
 
     @Autowired
-    private OfferManager       offerManager;
+    private OfferManager      offerManager;
     @Autowired
-    private CouponService      couponService;
+    private CouponService     couponService;
     @Autowired
-    private RewardPointDao     rewardPointDao;
+    private RewardPointDao    rewardPointDao;
     @Autowired
-    private RewardPointTxnDao  rewardPointTxnDao;
-    @Autowired
-    private UserAccountInfoDao userAccountInfoDao;
-    @Autowired
-    private EmailManager       emailManager;
-    @Autowired
-    private RewardPointService rewardPointService;
+    private RewardPointTxnDao rewardPointTxnDao;
 
     public Coupon getOrCreateRefferrerCoupon(User user) {
         Coupon referrerCoupon = user.getReferrerCoupon();
@@ -116,165 +96,11 @@ public class ReferrerProgramManager {
         return nameLength > 10 ? name.substring(0, 10) + BaseUtils.getRandomStringTypable(5) : name + BaseUtils.getRandomStringTypable(15 - nameLength);
     }
 
-    /**
-     * Expiry date is nullable. In case it is null, RewardPointConstants.MAX_ALLOWED_DAYS_TO_REDEEM_REFERRER_POINTS will
-     * be applied automatically.
-     * 
-     * @param rewardPointList
-     * @param expiryDate
-     */
-    @Transactional
-    public void approveRewardPoints(List<RewardPoint> rewardPointList, Date expiryDate) {
-        for (RewardPoint rewardPoint : rewardPointList) {
-            rewardPoint = getRewardPointDao().save(rewardPoint);
-
-            if (rewardPoint.getRewardPointStatus().getId().equals(EnumRewardPointStatus.APPROVED.getId())) {
-                RewardPointTxn addTxn = getRewardPointTxnDao().createRewardPointAddTxn(rewardPoint, expiryDate);
-                UserAccountInfo userAccountInfo = getUserAccountInfoDao().getOrCreateUserAccountInfo(rewardPoint.getUser());
-                if (userAccountInfo.getOverusedRewardPoints() > 0) {
-                    Double cancelRewardPoints = 0D;
-                    Double overusedRewardPoints = 0D;
-                    if (addTxn.getValue() > userAccountInfo.getOverusedRewardPoints()) {
-                        cancelRewardPoints = userAccountInfo.getOverusedRewardPoints();
-                    } else {
-                        cancelRewardPoints = addTxn.getValue();
-                        overusedRewardPoints = userAccountInfo.getOverusedRewardPoints() - addTxn.getValue();
-                    }
-                    cancelRewardPoints(rewardPoint.getUser(), cancelRewardPoints);
-                    userAccountInfo.setOverusedRewardPoints(overusedRewardPoints);
-                    getUserAccountInfoDao().save(userAccountInfo);
-                } else {
-                    // send a reward point credit email to user
-                    if (rewardPoint.getRewardPointMode() != null && rewardPoint.getValue() != null && rewardPoint.getValue() > 10.0) {
-                        if (rewardPoint.getReferredUser() != null && rewardPoint.getRewardPointMode().getId().equals(EnumRewardPointMode.REFERRAL.getId())) {
-                            emailManager.sendReferralRewardPointEmail(rewardPoint, addTxn);
-                        } else if (rewardPoint.getRewardPointMode().getId().equals(EnumRewardPointMode.HK_CASHBACK.getId())) {
-                            emailManager.sendCashBackRewardPointEmail(rewardPoint, addTxn);
-                        } else if (rewardPoint.getRewardPointMode().getId().equals(EnumRewardPointMode.FB_SHARING.getId())) {
-                            emailManager.sendFBShareRewardPointEmail(rewardPoint, addTxn);
-                        }
-                    }
-                }
-            }
-
-        }
-    }
-
-    @Transactional
-    public void redeemRewardPoints(Order order, Double rewardPointsUsed) {
-        redeemOrCancelRedeemableRewardPoints(EnumRewardPointTxnType.REDEEM, order.getUser(), rewardPointsUsed, order);
-    }
-
-    @Transactional
-    public void cancelRewardPoints(User user, Double cancelRewardPoints) {
-        redeemOrCancelRedeemableRewardPoints(EnumRewardPointTxnType.REFERRED_ORDER_CANCELLED, user, cancelRewardPoints, null);
-    }
-
-    private void redeemOrCancelRedeemableRewardPoints(EnumRewardPointTxnType action, User user, Double rewardPointsUsed, Order order) {
-        Double redeemablePoints = rewardPointService.getTotalRedeemablePoints(user);
-        if (rewardPointsUsed < redeemablePoints) {
-            redeemablePoints = rewardPointsUsed;
-        }
-        List<RewardPointTxn> rewardPointTxnList = getRewardPointTxnDao().findActiveTxns(user);
-        Multimap<RewardPoint, RewardPointTxn> txnsGroupByRewardPoint = ArrayListMultimap.create();
-        for (RewardPointTxn rewardPointTxn : rewardPointTxnList) {
-            txnsGroupByRewardPoint.put(rewardPointTxn.getRewardPoint(), rewardPointTxn);
-        }
-
-        TreeMultimap<RewardPoint, RewardPointTxn> txnsGroupByRewardPointAndSorted = TreeMultimap.create(txnsGroupByRewardPoint);
-
-        for (RewardPoint rewardPoint : txnsGroupByRewardPointAndSorted.keySet()) {
-            Double unclaimedPoints = sum(txnsGroupByRewardPointAndSorted.get(rewardPoint), on(RewardPointTxn.class).getValue());
-            if (unclaimedPoints > 0) {
-                Date rewardPointExpiryDate = txnsGroupByRewardPointAndSorted.get(rewardPoint).first().getExpiryDate();
-                if (redeemablePoints > unclaimedPoints) {
-                    redeemablePoints -= unclaimedPoints;
-                    switch (action) {
-                        case REDEEM:
-                            getRewardPointTxnDao().createRewardPointRedeemTxn(rewardPoint, unclaimedPoints, rewardPointExpiryDate, order);
-                            break;
-                        case REFERRED_ORDER_CANCELLED:
-                            getRewardPointTxnDao().createRewardPointCancelTxn(rewardPoint, unclaimedPoints, rewardPointExpiryDate);
-                            break;
-                        default:
-                            throw new RuntimeException("Invalid case");
-                    }
-                } else {
-                    switch (action) {
-                        case REDEEM:
-                            getRewardPointTxnDao().createRewardPointRedeemTxn(rewardPoint, redeemablePoints, rewardPointExpiryDate, order);
-                            break;
-                        case REFERRED_ORDER_CANCELLED:
-                            getRewardPointTxnDao().createRewardPointCancelTxn(rewardPoint, redeemablePoints, rewardPointExpiryDate);
-                            break;
-                        default:
-                            throw new RuntimeException("Invalid case");
-                    }
-                    redeemablePoints = 0D;
-                    break;
-                }
-            } else {
-                // do nothing
-            }
-        }
-    }
-
     public void refundRedeemedPoints(Order order) {
         List<RewardPointTxn> rewardPointTxnList = getRewardPointTxnDao().findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
         for (RewardPointTxn rewardPointTxn : rewardPointTxnList) {
             getRewardPointTxnDao().createRefundTxn(rewardPointTxn);
         }
-    }
-
-    @Transactional
-    public void cancelReferredOrderRewardPoint(RewardPoint rewardPoint) {
-
-        // if reward point status is not approved then there will not be any reward point txn
-        // so no need to add any cancel txn
-
-        if (rewardPoint.getRewardPointStatus().getId().equals(EnumRewardPointStatus.APPROVED.getId())) {
-            List<RewardPointTxn> rewardPointTxnList = getRewardPointTxnDao().findByRewardPoint(rewardPoint);
-
-            Double addedRewardPoints = 0D;
-            Double rewardPointBalance = 0D;
-            for (RewardPointTxn rewardPointTxn : rewardPointTxnList) {
-                rewardPointBalance += rewardPointTxn.getValue();
-                if (rewardPointTxn.isType(EnumRewardPointTxnType.ADD)) {
-                    addedRewardPoints = rewardPointTxn.getValue();
-                }
-            }
-
-            if (addedRewardPoints > 0 && addedRewardPoints.equals(rewardPointBalance)) {
-                // case when none of the reward points are used from the reward points added by the cancelled referred
-                // order.
-                getRewardPointTxnDao().createRewardPointCancelTxn(rewardPoint, addedRewardPoints, rewardPointTxnList.get(0).getExpiryDate());
-            } else {
-
-                if (rewardPointBalance > 0) {
-                    getRewardPointTxnDao().createRewardPointCancelTxn(rewardPoint, rewardPointBalance, rewardPointTxnList.get(0).getExpiryDate());
-                }
-
-                Double overusedRewardPoints = addedRewardPoints - rewardPointBalance;
-                Double redeemablePoints = rewardPointService.getTotalRedeemablePoints(rewardPoint.getUser());
-                if (redeemablePoints >= overusedRewardPoints) {
-                    // cacel other reward points in lieu of reward points used of cancelled referred order
-                    cancelRewardPoints(rewardPoint.getUser(), overusedRewardPoints);
-                } else {
-                    if (redeemablePoints > 0) {
-                        // cacel other reward points in lieu of reward points used of cancelled referred order
-                        cancelRewardPoints(rewardPoint.getUser(), redeemablePoints);
-                        overusedRewardPoints -= redeemablePoints;
-                    }
-                    // store this overused_reward_point info to the user account info
-                    UserAccountInfo userAccountInfo = getUserAccountInfoDao().getOrCreateUserAccountInfo(rewardPoint.getUser());
-                    userAccountInfo.setOverusedRewardPoints(userAccountInfo.getOverusedRewardPoints() + overusedRewardPoints);
-                    getUserAccountInfoDao().save(userAccountInfo);
-                }
-            }
-        }
-
-        getRewardPointDao().cancelRewardPoint(rewardPoint);
-
     }
 
     public CouponService getCouponService() {
@@ -299,14 +125,6 @@ public class ReferrerProgramManager {
 
     public void setRewardPointTxnDao(RewardPointTxnDao rewardPointTxnDao) {
         this.rewardPointTxnDao = rewardPointTxnDao;
-    }
-
-    public UserAccountInfoDao getUserAccountInfoDao() {
-        return userAccountInfoDao;
-    }
-
-    public void setUserAccountInfoDao(UserAccountInfoDao userAccountInfoDao) {
-        this.userAccountInfoDao = userAccountInfoDao;
     }
 
 }
