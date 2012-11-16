@@ -104,6 +104,14 @@ public class PaymentAction extends BaseAction {
 			Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), bankCode);
 
 			RedirectResolution redirectResolution;
+
+            if(gateway != null && !gateway.getId().equals(EnumPaymentMode.CITRUS_CreditDebit.getId())){
+                Integer random = (new Random()).nextInt(100);
+                if (random % 2 == 0) {
+                    gateway = EnumPaymentMode.ICICI;
+                }
+            }
+
 			if (gateway != null) {
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(gateway);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");
