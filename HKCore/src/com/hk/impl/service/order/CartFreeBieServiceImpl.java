@@ -19,9 +19,9 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
 
     private String         revitalTshirt   =  "/pages/lp/revital/images/banner_tshirt.jpg";  // 630
     private String         revitalWatch    =  "/pages/lp/revital/images/banner_watch.jpg";   // 1260
-    private String         revitalSunglass =  "/pages/lp/revital/images/banner-sunglass.jpg"; // 2520
-    private String         revitalYogaDVD  =  "/pages/lp/revital/images/banner-yoga_dvd.jpg";
-    private String         revitalMovieDVD =  "/pages/lp/revital/images/banner-free_dvd.jpg";
+    private String         revitalSunglass =  "/pages/lp/revital/images/banner_sunglass.jpg"; // 2520
+    private String         revitalYogaDVD  =  "/pages/lp/revital/images/banner_yoga_dvd.jpg";
+    private String         revitalMovieDVD =  "/pages/lp/revital/images/banner_free_dvd.jpg";
 
     @Autowired
     private CartFreeBieDao cartFreeBieDao;
@@ -50,7 +50,7 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
             imageURL = context + revitalWatch;
         } else if (cartValue > 630) {
             imageURL = context + revitalTshirt;
-        } else if (rvWValue >= 210) {
+        } else if (rvWValue >= 250) {
             imageURL = context + revitalYogaDVD;
         } else if (rv30CpsValue >= 240) {
             imageURL = context + revitalMovieDVD;
@@ -83,7 +83,7 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
       freebieItem = "Reebok Watch";
     } else if (cartValue > 630) {
       freebieItem = "T-shirt";
-    } else if (rvWValue >= 210) {
+    } else if (rvWValue >= 250) {
       freebieItem = "Yoga DVD";
     } else if (rv30CpsValue >= 240) {
       freebieItem = "Dabangg & Bodygurad 2in1 DVD";

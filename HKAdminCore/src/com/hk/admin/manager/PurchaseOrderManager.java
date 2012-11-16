@@ -145,7 +145,7 @@ public class PurchaseOrderManager {
 		setCellValue(row1, 2, "Contact Name: " + (purchaseOrder.getSupplier().getContactPerson() != null ? purchaseOrder.getSupplier().getContactPerson() : "")
 				+ newline + " Contact Number: " + (purchaseOrder.getSupplier().getContactNumber() != null ? purchaseOrder.getSupplier().getContactNumber() : " "));
 
-		int totalColumnNoInSheet1 = 12;
+		int totalColumnNoInSheet1 = 13;
 
 		Cell cell = null;
 
@@ -166,6 +166,7 @@ public class PurchaseOrderManager {
 		setCellValue(row2, 9, TAX);
 		setCellValue(row2, 10, SURCHARGE);
 		setCellValue(row2, 11, PAYABLE);
+		setCellValue(row2, 12, SUPPLIER_CODE);
 
 		/*
 				* String poDetail = ""; poDetail += ID + purchaseOrder.getId() + " " + CREATED_DATE +
@@ -185,7 +186,7 @@ public class PurchaseOrderManager {
 				cell = row2.createCell(columnNo);
 			}
 			ProductVariant productVariant = poLineItem.getSku().getProductVariant();
-
+			String supplierCode = productVariant.getSupplierCode();
 			setCellValue(row2, 0, productVariant.getId());
 
 			//check for variant name null
@@ -203,7 +204,7 @@ public class PurchaseOrderManager {
 			setCellValue(row2, 9, poLineItem.getTaxAmount() != null ? String.valueOf(poLineItem.getTaxAmount()) : "");
 			setCellValue(row2, 10, poLineItem.getSurchargeAmount() != null ? String.valueOf(poLineItem.getSurchargeAmount()) : "");
 			setCellValue(row2, 11, poLineItem.getPayableAmount() != null ? String.valueOf(poLineItem.getPayableAmount()) : "");
-
+			setCellValue(row2, 12, supplierCode == null ? "" : supplierCode);
 		}
 		addEmptyLine(row2, sheet1, ++rowCounter, cell);
 		row2 = sheet1.createRow(++rowCounter);

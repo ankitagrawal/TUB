@@ -22,7 +22,7 @@ public class FreeMarkerService {
 
   private static Logger logger = LoggerFactory.getLogger(FreeMarkerService.class);
 
-  private Configuration cfg = null;
+  /*private Configuration cfg = null;*/
 
   //TODO: rewrite
   /*@Autowired
@@ -41,7 +41,7 @@ public class FreeMarkerService {
   public Template getCampaignTemplate(String templatePath) {
     Template template = null;
     try {
-      File freemarkerDir = new File(AppConstants.appBasePath + "/freemarker");
+      //File freemarkerDir = new File(AppConstants.appBasePath + "/freemarker");
       File templateFile=new File(AppConstants.appBasePath+"/freemarker"+templatePath);
       Configuration cfg = new Configuration();
       cfg.setDirectoryForTemplateLoading(templateFile.getParentFile());
