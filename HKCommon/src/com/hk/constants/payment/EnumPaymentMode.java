@@ -84,6 +84,7 @@ public enum EnumPaymentMode {
 				EnumPaymentMode.CITRUS_NetBanking_Old,
 				EnumPaymentMode.EBS,
 				EnumPaymentMode.CITRUS_CreditDebit,
+				EnumPaymentMode.ICICI,
                 EnumPaymentMode.SUBSCRIPTION_PAYMENT,
 				EnumPaymentMode.CITRUS_NetBanking_New);
 
@@ -97,6 +98,7 @@ public enum EnumPaymentMode {
 				EnumPaymentMode.CITRUS_CreditDebit.getId(),
 				EnumPaymentMode.CITRUS_NetBanking_New.getId(),
 				EnumPaymentMode.CITRUS_NetBanking_Old.getId(),
+				EnumPaymentMode.ICICI.getId(),
 				EnumPaymentMode.SUBSCRIPTION_PAYMENT.getId());
 
 	}
