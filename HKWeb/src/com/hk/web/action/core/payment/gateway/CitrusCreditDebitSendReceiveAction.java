@@ -83,7 +83,6 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
     @DefaultHandler
     public Resolution callback() {
 //        logger.info("in citrus callback -> " + getContext().getRequest().getParameterMap());
-        String TxMsg = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxMsg);
         String gatewayOrderId = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxId);
         String TxStatus = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxStatus);
         String pgRespCode = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.pgRespCode);
@@ -91,11 +90,10 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String ePGTxnID = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.ePGTxnID);
         String rrn = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.RRN);
         String authIdCode = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.AuthIdCode);
-        String rawResponseMsg = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.Message);
-        String responseMsg = StringUtils.isNotBlank(rawResponseMsg) ? rawResponseMsg.replace('+', ' ') : "";
+        String responseMsg = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxMsg);
 
 
-        logger.info("in citrus callback -> " + TxMsg + "for gateway order id " + gatewayOrderId + "TxStatus " + TxStatus + pgRespCode);
+        logger.info("in citrus callback -> " + responseMsg + "for gateway order id " + gatewayOrderId + "TxStatus " + TxStatus + pgRespCode);
         String merchantParam = null;
         Resolution resolution = null;
         try {
