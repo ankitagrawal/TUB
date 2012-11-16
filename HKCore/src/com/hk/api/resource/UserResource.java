@@ -1,11 +1,13 @@
 package com.hk.api.resource;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.hk.api.APIRegistry;
@@ -45,8 +47,17 @@ public class UserResource {
     @Path("/addRewardPoints")
     @Produces("application/json")
     public String addHKPlusRewardPointsForUser(AddRewardPointRequest addRewardPointRequest) {
+        if (StringUtils.isBlank(addRewardPointRequest.getLogin())) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Login cannot be blank").build();
+        }
+        if (StringUtils.isBlank(addRewardPointRequest.getApiKey())) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "api key cannot be blank").build();
+        }
+        
         String login = addRewardPointRequest.getLogin();
-        boolean rewardPointsAdded = getUserAPI().addRewardPointsForUser(login, addRewardPointRequest.getRewardPoints(), addRewardPointRequest.getComment(), EnumRewardPointMode.HKPLUS_POINTS);
+        //TODO: use api key to get reward point mode
+        boolean rewardPointsAdded = getUserAPI().addRewardPointsForUser(login, addRewardPointRequest.getRewardPoints(), addRewardPointRequest.getComment(),
+                EnumRewardPointMode.HKPLUS_POINTS);
 
         Double eligibleRewardPoints = getUserAPI().getEligibleRewardPointsForUser(login);
 
