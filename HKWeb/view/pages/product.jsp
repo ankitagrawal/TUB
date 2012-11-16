@@ -241,11 +241,14 @@
 				     title="${product.name}">
 			</a>
 		</div>
-        <div>
-            <img itemprop="image" src="${pageContext.request.contextPath}/images/try-it-now.jpg" alt="Virtual Try On"/>
+        <div id="tryOnLink" class="content">
+            <c:if test="${pa.validTryOnProductVariant != null}">
+                <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" src="${pageContext.request.contextPath}/images/try-it-now.jpg"
+                     alt="Virtual Try On"/>
+            </c:if>
         </div>
 
-		<div>
+        <div>
 			<c:if test="${fn:length(pa.productImages) > 1 && !pa.product.productHaveColorOptions}">
 				<%--<ul class="thumblist">--%>
 				<ul id="mycarousel" class="jcarousel-skin-tango">
