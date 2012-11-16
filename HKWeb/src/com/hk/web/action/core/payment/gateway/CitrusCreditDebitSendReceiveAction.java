@@ -20,6 +20,7 @@ import com.hk.web.action.core.payment.PaymentSuccessAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +91,8 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String ePGTxnID = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.ePGTxnID);
         String rrn = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.RRN);
         String authIdCode = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.AuthIdCode);
-        String responseMsg = ((String) getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.Message)).replace('+', ' ');
+        String rawResponseMsg = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.Message);
+        String responseMsg = StringUtils.isNotBlank(rawResponseMsg) ? rawResponseMsg.replace('+', ' ') : "";
 
 
         logger.info("in citrus callback -> " + TxMsg + "for gateway order id " + gatewayOrderId + "TxStatus " + TxStatus + pgRespCode);
