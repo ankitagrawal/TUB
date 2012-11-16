@@ -52,6 +52,11 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
+    public String getPaymentModesUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/PaymentMode.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
     public String getSelectAddressUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/SelectAddress.action");
         return getUrlFromResolution(redirectResolution);
