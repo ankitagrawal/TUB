@@ -17,7 +17,6 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.RewardPointService;
-import com.hk.util.json.JSONResponseBuilder;
 
 /**
  * @author vaibhav.adlakha
@@ -40,16 +39,12 @@ public abstract class AbstractUserAPIImpl implements UserAPI {
     @Override
     public UserDTO getUserDetails(String login) {
         User user = getUserService().findByLogin(login);
-        UserDTO userDTO = new UserDTO(user);
-
-        return new JSONResponseBuilder().addField("login", login).addField("userDetails", userDTO).build();
+        return new UserDTO(user);
     }
 
     @Override
     public Double getEligibleRewardPointsForUser(String login) {
-        Double eligibleRewardPoints = getRewardPointService().getEligibleRewardPointsForUser(login);
-
-        
+        return getRewardPointService().getEligibleRewardPointsForUser(login);
     }
 
     @Override

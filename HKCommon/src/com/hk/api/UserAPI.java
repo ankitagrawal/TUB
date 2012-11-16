@@ -1,5 +1,6 @@
 package com.hk.api;
 
+import com.hk.api.dto.user.UserDTO;
 import com.hk.constants.discount.EnumRewardPointMode;
 
 /**
@@ -8,7 +9,7 @@ import com.hk.constants.discount.EnumRewardPointMode;
 public interface UserAPI extends HkAPI {
 
     /**
-     * Get details for the user idnetified by login.
+     * Get details for the user identified by login.
      * 
      * @param email
      * @return
