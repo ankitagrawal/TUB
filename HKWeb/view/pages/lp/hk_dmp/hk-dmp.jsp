@@ -202,129 +202,29 @@
 </div>
 
 <div class="cl"></div>
-<h2 class="dbm">HealthKart Added Value Packages<span><a
-		href="${pageContext.request.contextPath}/home-devices/blood-pressure/bp-monitor?brand=Omron"></a></span></h2>
 
-<div style="height:100px; clear:boht;"></div>
-<div class="productThumb" style="position: relative; overflow: visible;">
-  <div style="position: absolute; top: -86px; left: 40px;"><a href="${pageContext.request.contextPath}/product/health-essential/HK-DMP-001">
-    <img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/essential.jpg" width="192" height="85" alt=""/></a>
-  </div>
-     <p><strong>4 Therapy Products</strong></p>
-	<p>
-    <ul type="circle" style="list-style-type:disc; margin:0px; padding:0px 0px 10px 15px; line-height:17px; font-family:Arial; font-size:12px; color:#000; ">
-      <li>Metabolic Diagnostic Package</li>
-      <li>2 Diet Counselling Calls</li>
-      <li>25 Glucose Monitoring Strips</li>
-      <li>20% off on Apollo Ophtho/ECG Test*</li>
-    </ul>
-  </p>
-  <p style="line-height:17px;">&nbsp;</p>
-
-	<p class="tPrice" style="font-size:15px; font-weight:bold;">
-		Rs 3,500
-	</p>
-
-
-	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/health-essential/HK-DMP-001"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
-	                                 width="89" height="26" alt=""/></a></p>
-</div>
-
-
-<div class="productThumb"  style="position: relative; overflow: visible;">
-  <div style="position: absolute; top: -86px; left: 40px;"><a href="${pageContext.request.contextPath}/product/health-vital/HK-DMP-002">
-    <img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/vital.jpg" width="192" height="85" alt=""/></a>
-  </div>
-    <p><strong>5 Therapy Products</strong></p>
-	<p>
-      <ul type="circle" style="list-style-type:disc; margin:0px; padding:0px 0px 10px 15px; line-height:17px; font-family:Arial; font-size:12px; color:#000; ">
-      <li>1 Nutritional Supplement</li> 
-      <li>Metabolic Diagnostic Package</li>
-      <li>2 Diet Counselling Calls</li>
-      <li>25 Glucose Monitoring Strips</li>
-      <li>20% off on Apollo Ophtho/ECG Test*</li>
-    </ul>
-
-	</p>
-
-	<p class="tPrice" style="font-size:15px; font-weight:bold;">
-
-		Rs 4,500
-	</p>
-
-	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/health-vital/HK-DMP-002"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
-	                                 width="89" height="26" alt=""/></a></p>
-</div>
-
-<div class="productThumb"  style="position: relative; overflow: visible;">
-  <div style="position: absolute; top: -86px; left: 40px;"><a href="${pageContext.request.contextPath}/product/health-ultima/HK-DMP-003">
-    <img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/ultima.jpg" width="192" height="85" alt=""/></a>
-  </div>
-    <p><strong>7 Therapy Products</strong></p>
-	<p><ul type="circle" style="list-style-type:disc; margin:0px; padding:0px 0px 10px 15px; line-height:17px; font-family:Arial; font-size:12px; color:#000; ">
-      <li/>2 Nutritional Supplement</li>
-      <li>Metabolic Diagnostic Package</li>
-      <li>2 Diet Counselling Calls</li>
-      <li>25 Glucose Monitoring Strips</li>
-      <li>20% off on Apollo Ophtho/ECG Test*</li>
-    </ul></p>
-
-	<p class="tPrice" style="font-size:15px; font-weight:bold;">
-		Rs 5,500
-	</p>
-
-
-	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/health-ultima/HK-DMP-003"><img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif"
-	                                 width="89" height="26" alt=""/></a></p>
-</div>
-
-  <p>*Diabeto/Opthalmologist Consultation, Cadiologist consultation package including ECG and Echo</p>
-<div class="cl"></div>
-<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/strip4.jpg" width="960" height="80" alt="offer1"/>
-
-<div class="cl"></div>
-<h2 class="dbm">Special Offers for Abbott Employees<span><a
-		href="${pageContext.request.contextPath}/home-devices/blood-pressure/bp-monitor?brand=Omron"></a></span></h2>
+<h2 class="dbm">Special Offer for Abbott Employees</h2>
 
 <div class="productThumb">
 	<p class="tThumb">
-		<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/DM033.jpg" width="208" height="170"/></p>
+		<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/DM045.jpg" width="208" height="170"/></p>
 
-	<h3><a href="${pageContext.request.contextPath}/product/freestyle-optium-glucometer/DM033">FreeStyle Optium
-	                                                                                           Glucometer</a></h3>
+	<h3><a href="${pageContext.request.contextPath}/product/hk-dmp-super-saver-offer/DM045">HK DMP Super Saver Offer</a></h3>
 
 
 	<p class="tPrice">
-		Rs 2,199
+		Rs 825
 	</p>
 
 	<p class="tSave">&nbsp;</p>
 
-	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/freestyle-optium-glucometer/DM033"><img
+	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/hk-dmp-super-saver-offer/DM045"><img
 			src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif" width="89" height="26"
 			alt=""/></a></p>
 </div>
 
 
-<div class="productThumb">
-	<p class="tThumb">
-		<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/DS038.jpg" width="201" height="170"/></p>
 
-	<h3><a href="${pageContext.request.contextPath}/product/freestyle-optium-strips/DS038">FreeStyle Optium Strips </a>
-	</h3>
-
-
-	<p class="tPrice">
-
-		Rs 350
-	</p>
-
-	<p class="tSave">&nbsp;</p>
-
-	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/freestyle-optium-strips/DS038"><img
-			src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif" width="89" height="26"
-			alt=""/></a></p>
-</div>
 <div class="cl"></div>
 <img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/strip3.jpg" width="960" height="80" alt="offer2"/>
 
