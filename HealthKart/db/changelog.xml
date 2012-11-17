@@ -9694,7 +9694,6 @@
             <column name="name"/>
         </createIndex>
     </changeSet>
-<<<<<<< HEAD
     <changeSet author="Pratham (generated)" id="1353062520466-1">
         <addColumn tableName="payment">
             <column name="authid_code" type="VARCHAR(45)"/>
