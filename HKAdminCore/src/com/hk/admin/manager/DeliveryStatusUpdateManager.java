@@ -456,7 +456,6 @@ public class DeliveryStatusUpdateManager {
 							if (refNo != null && refNo.equalsIgnoreCase(shippingOrder.getGatewayOrderId())) {
 								Date delivery_date = sdf_date.parse(statusDate);
 								ordersDelivered = updateCourierDeliveryStatus(shippingOrder, shippingOrder.getShipment(), trackingId, delivery_date);
-								shippingOrderList.remove(shippingOrder);
 								break;
 							}
 						}
