@@ -640,7 +640,7 @@ public class FedExCourierUtil {
     private static LabelSpecification addLabelSpecification() {
         LabelSpecification labelSpecification = new LabelSpecification(); // Label specification
         labelSpecification.setImageType(ShippingDocumentImageType.PDF);// Image types PDF, PNG, DPL, ...
-        labelSpecification.setLabelFormatType(LabelFormatType.COMMON2D); // LABEL_DATA_ONLY, COMMON2D
+        labelSpecification.setLabelFormatType(LabelFormatType.LABEL_DATA_ONLY); // LABEL_DATA_ONLY, COMMON2D
         // labelSpecification.setLabelStockType(LabelStockType.value2); // STOCK_4X6.75_LEADING_DOC_TAB
         // labelSpecification.setLabelPrintingOrientation(LabelPrintingOrientationType.TOP_EDGE_OF_TEXT_FIRST);
         return labelSpecification;
