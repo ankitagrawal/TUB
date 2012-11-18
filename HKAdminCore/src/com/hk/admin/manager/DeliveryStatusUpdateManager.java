@@ -293,7 +293,7 @@ public class DeliveryStatusUpdateManager {
 			List<ShippingOrder> shippingOrderSubList;
 			List<Element> elementList = new ArrayList();
 			int listSize = shippingOrderList.size();
-			int batchSize = 7;
+			int batchSize = 8;
 			startIndex = 0;
 			endIndex = 0;
 
@@ -320,7 +320,7 @@ public class DeliveryStatusUpdateManager {
 							trackingId = getAppendedTrackingIdsString(shippingOrderSubList);
 
 							if (trackingId != null) {
-								//getting the JsonResponeArray for batch of trackingIds
+								//getting the response for batch of trackingIds
 								elementList = courierStatusUpdateHelper.bulkUpdateDeliveryStatusBlueDart(trackingId);
 
 							}
@@ -443,22 +443,19 @@ public class DeliveryStatusUpdateManager {
 		//ShippingOrder shippingOrder;
 		SimpleDateFormat sdf_date = new SimpleDateFormat("dd MMMMM yyyy");
 		Iterator elementListIterator = elementList.listIterator();
-		//Iterator shippingOrderListIterator = shippingOrderList.listIterator();
 		while (elementListIterator.hasNext()) {
 			Element ele = (Element) elementListIterator.next();
 			if (ele != null) {
 				String status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
 				String statusDate = ele.getChildText(CourierConstants.BLUEDART_STATUS_DATE);
-				String trackingId = ele.getAttributeValue("WaybillNo");
-				String refNo = ele.getAttributeValue("RefNo");
+				String trackingId = ele.getAttributeValue(CourierConstants.BLUEDART_AWB);
+				String refNo = ele.getAttributeValue(CourierConstants.BLUEDART_REF_NO);
 				try {
 					if (status.equals(CourierConstants.BLUEDART_SHIPMENT_DELIVERED) && statusDate != null) {
 						for (ShippingOrder shippingOrder : shippingOrderList) {
 							if (refNo != null && refNo.equalsIgnoreCase(shippingOrder.getGatewayOrderId())) {
 								Date delivery_date = sdf_date.parse(statusDate);
-								//if (shippingOrder != null) {
-									ordersDelivered = updateCourierDeliveryStatus(shippingOrder, shippingOrder.getShipment(), trackingId, delivery_date);
-								//}
+								ordersDelivered = updateCourierDeliveryStatus(shippingOrder, shippingOrder.getShipment(), trackingId, delivery_date);
 								shippingOrderList.remove(shippingOrder);
 								break;
 							}
