@@ -60,12 +60,16 @@ public class BillingAddressAction extends BaseAction {
             existingBillingAddress.setState(billingAddress.getState());
             existingBillingAddress.setCity(billingAddress.getCity());
             existingBillingAddress.setUser(user);
+         // setDeleted will  make sure that billing Address wont display in shipping Address
+            existingBillingAddress.setDeleted(true);
             existingBillingAddress.getOrders().add(order);
             addressDao.save(existingBillingAddress);
 
         } else {
             billingAddress.getOrders().add(order);
             billingAddress.setUser(user);
+            // setDeleted will  make sure that billing Address wont display in shipping Address      
+            billingAddress.setDeleted(true);
             addressDao.save(billingAddress);
         }
         return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId);
