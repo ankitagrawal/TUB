@@ -7,12 +7,14 @@ import com.hk.admin.manager.GRNManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
+import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumSurcharge;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
+import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -68,6 +70,8 @@ public class GRNAction extends BasePaginatedAction {
 	private SupplierDao supplierDao;
 	@Autowired
 	private SkuService skuService;
+	@Autowired
+	private PoLineItemService poLineItemService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloads;
@@ -196,6 +200,7 @@ public class GRNAction extends BasePaginatedAction {
 					}
 					grnLineItem.setGoodsReceivedNote(grn);
 					grnLineItemDao.save(grnLineItem);
+					getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getQty());
 				}
 				sku = grnLineItem.getSku();
 				skuService.saveSku(sku);
@@ -634,5 +639,13 @@ public class GRNAction extends BasePaginatedAction {
 
 	public void setSkuIsNew(Map<Sku, Boolean> skuIsNew) {
 		this.skuIsNew = skuIsNew;
+	}
+
+	public PoLineItemService getPoLineItemService() {
+		return poLineItemService;
+	}
+
+	public void setPoLineItemService(PoLineItemService poLineItemService) {
+		this.poLineItemService = poLineItemService;
 	}
 }

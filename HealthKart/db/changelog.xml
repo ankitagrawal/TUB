@@ -9694,4 +9694,26 @@
             <column name="name"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1353320715421-1">
+        <createTable tableName="product_variant_supplier_info">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="asked_qty" type="INT"/>
+            <column name="received_qty" type="INT"/>
+            <column name="fill_rate" type="DECIMAL(12,2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1353320715421-2">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="product_variant_supplier_info" constraintName="fk_ProductVariantSupplierInfo_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1353320715421-3">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="product_variant_supplier_info" constraintName="fk_ProductVariantSupplierInfo_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

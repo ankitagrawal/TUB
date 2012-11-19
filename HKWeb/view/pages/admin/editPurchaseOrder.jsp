@@ -393,6 +393,7 @@
 		<th>Current Inventory <br>All Warehouses</th>
 		<th>Last 30 days Sale</th>
 		<th>Qty</th>
+		<th>Fill Rate</th>
 		<th>Cost Price<br/>(Without TAX)</th>
 		<th>MRP</th>
 		<th>Discount<br/>(%)</th>
@@ -461,6 +462,9 @@
 			</td>
 			<td>
 				<s:text name="poLineItems[${ctr.index}].qty" value="${poLineItemDto.poLineItem.qty}" class="quantity valueChange" readonly="${actionBean.purchaseOrder.purchaseOrderStatus.id >= poApproved ? 'readonly' : ''}"/>
+			</td>
+			<td>
+				<s:text name="poLineItems[${ctr.index}].fillRate" value="" />
 			</td>
 			<td>
 				<s:text class="costPrice valueChange" name="poLineItems[${ctr.index}].costPrice"

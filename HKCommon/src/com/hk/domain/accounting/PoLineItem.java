@@ -69,8 +69,8 @@ public class PoLineItem implements java.io.Serializable {
 	@JoinColumn(name = "sku_id", nullable = false)
 	private Sku sku;
 
-	@Column(name = "grn_received_qty")
-	private Double grnReceivedQty;
+	@Column(name = "received_qty")
+	private Long receivedQty;
 
 	@Column(name = "fill_rate")
 	private Double fillRate;
@@ -179,12 +179,12 @@ public class PoLineItem implements java.io.Serializable {
 		this.procurementPrice = procurementPrice;
 	}
 
-	public Double getGrnReceivedQty() {
-		return grnReceivedQty;
+	public Long getReceivedQty() {
+		return receivedQty;
 	}
 
-	public void setGrnReceivedQty(Double grnReceivedQty) {
-		this.grnReceivedQty = grnReceivedQty;
+	public void setReceivedQty(Long receivedQty) {
+		this.receivedQty = receivedQty;
 	}
 
 	public Double getFillRate() {
