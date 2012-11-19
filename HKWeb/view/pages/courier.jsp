@@ -3,13 +3,12 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-
+<s:useActionBean beanclass="com.hk.web.action.admin.courier.AddCourierAction" var="cou"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Search/Add Pincode">
-	<s:useActionBean beanclass="com.hk.web.action.admin.courier.AddCourierAction" event="save" var="cou"/>
 	<s:layout-component name="heading">
 		<div>
 		<c:choose><c:when test="${cou.courier == null}">
-			<h2>Add a New Courier</h2>
+			Add a New Courier
 		</c:when>
 			<c:otherwise>
 				Courier # ${cou.courier.name}
@@ -20,24 +19,26 @@
 	</s:layout-component>
 
 	<s:layout-component name="content">
-
-		<div class="container_12">
-			<s:form action="com.hk.web.action.admin.courier.AddCourierAction">
+	  <div style="margin-top:20px"></div>
+      <div class="error" style="width :200px;background-color:salmon; margin-top: 20px; padding: 5px;"></div>
+		<div >
+			<s:form beanclass="com.hk.web.action.admin.courier.AddCourierAction">
 				<s:hidden name="courierGroup" value="${cou.courierGroup}"/>
+				<s:hidden name="courier" value="${cou.courier}"/>
 				<div class="row">
 					<s:label class="rowLabel" name="Name*"/>
-					<s:text class="rowText" value = "${cou.courier.name}" name="courier.name"/>
+					<s:text id="name" class="rowText" value = "${cou.courier.name}" name="courierName"/>
+				</div>
+				<div class="clear"></div>
+				<div style="margin-top:10px"></div>
+				<div class="row" >
+					<s:label class="rowLabel" name="Status*"/>
+					<s:radio  id="statusActive" name="courier.disabled"  value="false" checked="${cou.courier.disabled}"/>Active
+					<s:radio  id="statusInActive" name="courier.disabled" value="true" checked="${cou.courier.disabled}"/>InActive
 				</div>
 				<div class="clear"></div>
 				<div style="margin-top:10px"></div>
 				<div class="row">
-					<s:label class="rowLabel" name="Status*"/>
-					<s:radio name="courier.disabled"  value="false" checked="${cou.courier.disabled}"/>Active
-					<s:radio name="courier.disabled" value="true" checked="${cou.courier.disabled}"/>InActive
-				</div>
-				<div class="clear"></div>
-				<div style="margin-top:10px"></div>
-				<div class="row">				
 					<s:label class="rowLabel" name="Group*"/>
 					<s:select id="groupDropDown" name="courierGroup" value="${cou.courier.courierGroup}">
 						<s:option value="">-- No Group Assigned -- </s:option>
@@ -45,14 +46,12 @@
 						                           serviceProperty="courierGroupList" value="id" label="name"/>
 					</s:select>
 				</div>
-				<div class="clear"></div>
-				<div style="margin-top:10px"></div>
-				<div class="row">
-				<s:submit name="save" value="Save"/>
-				</div>
-			</s:form>
-		</div>
+			  <div class="clear"></div>
+			<s:submit class="submit" name="save" value="Save"/>
 
+			</s:form>
+
+		</div>
 	</s:layout-component>
 
 
@@ -83,5 +82,44 @@
 		padding-bottom: 0;
 		margin-left: 20px;
 		font: inherit;
+		width : 200px;
 	}
 </style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.error').hide();
+		$('.submit').click(function() {
+			var name = $('#name').val();
+			var status = null;
+			if($('#statusActive').is(':checked')||$('#statusInActive').is(':checked'))
+			{
+				status = '';
+			}
+
+			var group = $('#groupDropDown').val();
+			$('.error').empty();
+			var err = 0;
+			if (name == null || name.trim() == '') {
+				$('.error').append("<br/>Enter Name<br/>");
+				err = 1;
+			}
+			if (status == null) {
+				$('.error').append("<br/>Select Status<br/>");
+				err = 1;
+			}
+			if (err) {
+				$('.error').show();
+				return false;
+			}
+			else if (group == '')
+		{
+			var proceed = confirm('You are removing Group');
+			if (!proceed) return false;
+		}
+
+		});
+
+
+	});
+
+</script>

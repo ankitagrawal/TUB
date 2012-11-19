@@ -44,9 +44,7 @@ public class AddCourierAction extends BasePaginatedAction {
 	@Autowired
 	CourierGroupService courierGroupService;
 
-	private List<Courier> courierList ;
-
-	private List<CourierGroup> courierGroupList;
+	private List<Courier> courierList;
 
 	private Courier courier;
 
@@ -77,51 +75,53 @@ public class AddCourierAction extends BasePaginatedAction {
 
 
 	public Resolution save() {
+
+		Courier courierObj = courierService.getCourierByName(courierName);
+		if (courierObj != null) {
+			if (courier.getName() == null || (courier.getName() != null && (!(courierObj.getName().equalsIgnoreCase(courier.getName()))))) {
+				addRedirectAlertMessage(new SimpleMessage("Courier Name Already exist"));
+				return new ForwardResolution("/pages/searchAndAddCourier.jsp");
+			}
+		}
 		if (courier.getId() != null) {
-			if (courier.getCourierGroup() != null) {
+			if (courier.getCourierGroup() != null && courierGroup != courier.getCourierGroup()) {
 				CourierGroup oldCourierGroup = courier.getCourierGroup();
-				oldCourierGroup.getCouriers().remove(courier);
+				oldCourierGroup.getCouriers().remove(courierObj);
 				courierGroupService.save(oldCourierGroup);
 			}
 		}
-		courier.setName(courier.getName().trim());
-		courier.setDisabled(courier.getDisabled());
+		courier.setName(courierName.trim());
 		if (courierGroup != null) {
 			courierGroup.getCouriers().add(courier);
-			courierService.save(courier);
+			courierGroupService.save(courierGroup);
 		}
 		courierService.save(courier);
 		addRedirectAlertMessage(new SimpleMessage("Courier Saved sucessfully"));
 		return new RedirectResolution(AddCourierAction.class);
 	}
 
-	public Resolution editCourier(){
-	courier = getCourier();
-	return new ForwardResolution("/pages/courier.jsp");
+	public Resolution editCourier() {
+		courier = getCourier();
+		return new ForwardResolution("/pages/courier.jsp");
+	}
+
+	public Resolution editCourierGroup() {
+		courier = getCourier();
+		return new ForwardResolution("/pages/courierGroup.jsp");
 	}
 
 
-	public Resolution addNewCourierGroup() {
-		if (courierGroup != null) {
+	public Resolution saveGroup() {
 			if ((courierGroupService.getByName(courierGroup.getName().trim())) != null) {
 				addRedirectAlertMessage(new SimpleMessage("Courier Group already exist"));
+				return new ForwardResolution("/pages/courierGroup.jsp");
 			} else {
 				courierGroupService.save(courierGroup);
-				addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
+				addRedirectAlertMessage(new SimpleMessage("Courier Group Saved")); 				
 			}
-		}
-		return pre();
+
+	   return new RedirectResolution(AddCourierAction.class);
 	}
-
-
-	public Resolution deleteCourier() {
-		courier.setDisabled(true);
-		courierService.save(courier);
-		addRedirectAlertMessage(new SimpleMessage("Courier Deleted"));
-		return pre();
-	}
-
-
 
 
 	public CourierGroup getCourierGroup() {
@@ -157,14 +157,6 @@ public class AddCourierAction extends BasePaginatedAction {
 		this.courierService = courierService;
 	}
 
-	public List<CourierGroup> getCourierGroupList() {
-		return courierGroupList;
-	}
-
-	public void setCourierGroupList(List<CourierGroup> courierGroupList) {
-		this.courierGroupList = courierGroupList;
-	}
-
 	public String getCourierName() {
 		return courierName;
 	}
@@ -174,23 +166,23 @@ public class AddCourierAction extends BasePaginatedAction {
 	}
 
 	public int getPerPageDefault() {
-        return defaultPerPage;
-    }
+		return defaultPerPage;
+	}
 
-    public int getPageCount() {
-        return courierPage == null ? 0 : courierPage.getTotalPages();
-    }
+	public int getPageCount() {
+		return courierPage == null ? 0 : courierPage.getTotalPages();
+	}
 
-    public int getResultCount() {
-        return courierPage == null ? 0 : courierPage.getTotalResults();
-    }
+	public int getResultCount() {
+		return courierPage == null ? 0 : courierPage.getTotalResults();
+	}
 
-	 public Set<String> getParamSet() {
-        HashSet<String> params = new HashSet<String>();
-        params.add("courierName");
-		params.add("courierGroup"); 
-        return params;
-    }
+	public Set<String> getParamSet() {
+		HashSet<String> params = new HashSet<String>();
+		params.add("courierName");
+		params.add("courierGroup");
+		return params;
+	}
 
 	public Boolean isStatus() {
 		return status;
@@ -199,4 +191,5 @@ public class AddCourierAction extends BasePaginatedAction {
 	public void setStatus(Boolean status) {
 		this.status = status;
 	}
+
 }

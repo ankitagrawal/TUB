@@ -11,9 +11,18 @@
 	</s:layout-component>
 
 	<s:layout-component name="content">
+		<div style="overflow:hidden;">
+		<div style="float:left;">
 		<s:link event="editCourier" beanclass="com.hk.web.action.admin.courier.AddCourierAction">
 			Create New Courier
 		</s:link>
+		</div>
+		<div style="float:right;">
+		<s:link event="editCourierGroup" beanclass="com.hk.web.action.admin.courier.AddCourierAction">
+			Create New Group
+		</s:link>
+		</div>
+		</div>
 		<div>
 			<s:form beanclass="com.hk.web.action.admin.courier.AddCourierAction">
 
@@ -29,7 +38,7 @@
 						                           serviceProperty="courierGroupList" value="id" label="name"/>
 					</s:select>
 					&nbsp; &nbsp;
-					<label>Status:</label><label>Status:</label><s:select name="status">
+					<label>Status:</label><s:select name="status">
 					<s:option value="">-ALL-</s:option>
 					<s:option value="false">Active</s:option>
 					<s:option value="true">Inactive</s:option>
