@@ -10,6 +10,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -57,6 +58,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		Order order = shippingOrder.getBaseOrder();
 		Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
 		if (pincode == null) {
+			shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, CourierConstants.PINCODE_INVALID);
 			return null;
 		}
 
@@ -64,9 +66,14 @@ public class ShipmentServiceImpl implements ShipmentService {
 		boolean isGroundShipped = false;
 		Courier suggestedCourier = null;
 		isGroundShipped = isShippingOrderHasGroundShippedItem(shippingOrder);
-		suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
+		if (shippingOrder.getAmount() == 0) {
+			suggestedCourier = courierService.getDefaultCourier(pincode, false, isGroundShipped, shippingOrder.getWarehouse());
+		} else {
+			suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
+		}
 		// Ground Shipping logic ends -- suggested courier
 		if (suggestedCourier == null) {
+			shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
 			return null;
 		}
 
@@ -99,6 +106,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 
 		// If we dont have AWB , shipment will not be created
 		if (suggestedAwb == null) {
+			shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, CourierConstants.AWB_NOT_ASSIGNED);
 			return null;
 		}
 
@@ -133,7 +141,12 @@ public class ShipmentServiceImpl implements ShipmentService {
 
 	@Transactional
 	private Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
-		Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+		Awb suggestedAwb;
+		if (shippingOrder.getAmount() == 0) {
+			suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), false, EnumAwbStatus.Unused.getAsAwbStatus());
+		} else {
+			suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+		}
 		if (suggestedAwb == null) {
 			return null;
 		}
@@ -178,17 +191,17 @@ public class ShipmentServiceImpl implements ShipmentService {
 		return false;
 	}
 
-	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder){
-		 Double estimatedWeight = 100D;
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            Double variantWeight = productVariant.getWeight();
-            if (variantWeight == null || variantWeight == 0D) {
-                estimatedWeight += 0D;
-            } else {
-                estimatedWeight += variantWeight;
-            }
-        }
-		return estimatedWeight/1000;
+	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder) {
+		Double estimatedWeight = 100D;
+		for (LineItem lineItem : shippingOrder.getLineItems()) {
+			ProductVariant productVariant = lineItem.getSku().getProductVariant();
+			Double variantWeight = productVariant.getWeight();
+			if (variantWeight == null || variantWeight == 0D) {
+				estimatedWeight += 0D;
+			} else {
+				estimatedWeight += variantWeight;
+			}
+		}
+		return estimatedWeight / 1000;
 	}
 }
