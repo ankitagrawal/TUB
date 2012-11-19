@@ -72,7 +72,7 @@ public class Payment implements java.io.Serializable {
     @Column(name = "payment_checksum", length = 45)
     private String        paymentChecksum;
 
-    @Column(name = "error_log", length = 45)
+    @Column(name = "error_log", length = 100)
     private String        errorLog;
 
     @Column(name = "email", length = 80)
@@ -98,6 +98,15 @@ public class Payment implements java.io.Serializable {
 
     @Column(name = "cheque_number", length = 10)
     private String        chequeNumber;
+
+    @Column(name = "rrn", length = 45)
+    private String        rrn;
+
+    @Column(name = "response_message", length = 200)
+    private String        responseMessage;
+
+    @Column(name = "authid_code", length = 45)
+    private String        authIdCode;
 
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
@@ -281,6 +290,30 @@ public class Payment implements java.io.Serializable {
 
     public void setBankCode(String bankCode) {
         this.bankCode = bankCode;
+    }
+
+    public String getRrn() {
+        return rrn;
+    }
+
+    public void setRrn(String rrn) {
+        this.rrn = rrn;
+    }
+
+    public String getResponseMessage() {
+        return responseMessage;
+    }
+
+    public void setResponseMessage(String responseMessage) {
+        this.responseMessage = responseMessage;
+    }
+
+    public String getAuthIdCode() {
+        return authIdCode;
+    }
+
+    public void setAuthIdCode(String authIdCode) {
+        this.authIdCode = authIdCode;
     }
 
     @Transient

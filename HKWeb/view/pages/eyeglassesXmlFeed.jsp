@@ -37,6 +37,7 @@
                     <thumbPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, sideFacingEyeImageId, false)%></thumbPath>
                     <price>${productVariant.hkPrice}</price>
                     <name>${hk:escapeHtml(product.name)}</name>
+                    <producturl>${hk:getProductURL(product,0)}</producturl>
                     <desc></desc>
                 </Glass>
             </c:if>

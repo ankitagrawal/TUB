@@ -62,7 +62,8 @@ public class BusyPopulateRtoData {
                     inner join user u on bo.user_id = u.id
                     inner join address a ON bo.address_id = a.id
                     inner join shipment ship on ship.id = so.shipment_id
-                    inner join courier c on ship.courier_id = c.id
+                    inner join awb aw on ship.awb_id=aw.id
+                    inner join courier c on aw.courier_id = c.id
                     inner join warehouse w on w.id = so.warehouse_id
 
                     where so.shipping_order_status_id = 200

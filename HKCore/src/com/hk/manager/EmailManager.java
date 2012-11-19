@@ -444,7 +444,7 @@ public class EmailManager {
 
     public boolean sendOrderShippedEmail(ShippingOrder shippingOrder, String invoiceLink) {
         Shipment shipment = shippingOrder.getShipment();
-        shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getAwb().getAwbNumber(), shipment.getCourier().getId(), shippingOrder));
+        shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getAwb().getAwbNumber(), shipment.getAwb().getCourier().getId(), shippingOrder));
         HashMap valuesMap = new HashMap();
 
         String templatePath = EmailTemplateConstants.orderShippedEmail;
@@ -484,7 +484,7 @@ public class EmailManager {
 
     public boolean sendSubscriptionOrderShippedEmail(ShippingOrder shippingOrder, Subscription subscription, String invoiceLink) {
         Shipment shipment = shippingOrder.getShipment();
-        shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getAwb().getAwbNumber(), shipment.getCourier().getId(), shippingOrder));
+        shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getAwb().getAwbNumber(), shipment.getAwb().getCourier().getId(), shippingOrder));
         HashMap valuesMap = new HashMap();
         valuesMap.put("subscription", subscription);
         valuesMap.put("order", shippingOrder);

@@ -28,6 +28,8 @@ public class PaymentModeActionFactory {
             return CitrusNetbankingSendReceiveAction.class;
         } else if (EnumPaymentMode.CITRUS_CreditDebit.getId().equals(enumPaymentMode.getId())) {
             return CitrusCreditDebitSendReceiveAction.class;
+        } else if (EnumPaymentMode.ICICI.getId().equals(enumPaymentMode.getId())) {
+            return IciciGatewaySendReceiveAction.class;
         } else if (EnumPaymentMode.EBS.getId().equals(enumPaymentMode.getId())) {
             return EbsSendReceiveAction.class;
         }else if (EnumPaymentMode.PAYPAL_CreditDebit.getId().equals(enumPaymentMode.getId())) {

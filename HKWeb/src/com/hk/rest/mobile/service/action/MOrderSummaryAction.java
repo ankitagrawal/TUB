@@ -35,8 +35,8 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
-import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.payment.PaymentManager;
+import com.hk.pact.service.order.RewardPointService;
 import com.hk.pricing.PricingEngine;
 import com.hk.rest.mobile.service.model.MCartLineItemsJSONResponse;
 import com.hk.rest.mobile.service.model.MUserLoginJSONResponse;
@@ -49,177 +49,179 @@ import com.hk.web.action.core.payment.PaymentModeAction;
 @Component
 public class MOrderSummaryAction extends MBaseAction {
 
-    //private static Logger     logger        = LoggerFactory.getLogger(OrderSummaryAction.class);
+    // private static Logger logger = LoggerFactory.getLogger(OrderSummaryAction.class);
 
     @Autowired
-    private CourierService courierService;
+    private CourierService     courierService;
     @Autowired
-    OrderManager orderManager;
+    OrderManager               orderManager;
     @Autowired
-    PricingEngine pricingEngine;
+    PricingEngine              pricingEngine;
+    /*
+     * @Autowired ReferrerProgramManager referrerProgramManager;
+     */
+
     @Autowired
-    ReferrerProgramManager referrerProgramManager;
+    private RewardPointService rewardPointService;
     @Autowired
-    private AdminOrderService adminOrderService;
+    private AdminOrderService  adminOrderService;
 
     @Session(key = HealthkartConstants.Session.useRewardPoints)
-    private boolean           useRewardPoints;
+    private boolean            useRewardPoints;
 
-    private PricingDto pricingDto;
-    private Order order;
-    private Address billingAddress;
-    private boolean           codAllowed;
-    private Double            redeemableRewardPoints;
-    private List<Courier> availableCourierList;
-    private boolean           groundShippingAllowed;
-    private boolean           groundShippedItemPresent;
-    private boolean           codAllowedOnGroundShipping;
-    private Double            cashbackOnGroundshipped;
-    Map<String, String> codFailureMap = new HashMap<String, String>();
+    private PricingDto         pricingDto;
+    private Order              order;
+    private Address            billingAddress;
+    private boolean            codAllowed;
+    private Double             redeemableRewardPoints;
+    private List<Courier>      availableCourierList;
+    private boolean            groundShippingAllowed;
+    private boolean            groundShippedItemPresent;
+    private boolean            codAllowedOnGroundShipping;
+    private Double             cashbackOnGroundshipped;
+    Map<String, String>        codFailureMap = new HashMap<String, String>();
 
     // COD related changes
     @Autowired
-    PaymentManager paymentManager;
+    PaymentManager             paymentManager;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
-    private Double            codCharges;
+    private Double             codCharges;
 
     @Value("#{hkEnvProps['" + Keys.Env.codFreeAfter + "']}")
-    private Double            codFreeAfter;
+    private Double             codFreeAfter;
 
-   /* @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
-    private Double            codMinAmount;
-
-    // @Named(Keys.Env.codMaxAmount)
-    @Value("#{hkEnvProps['codMaxAmount']}")
-    private Double            codMaxAmount;*/
-
+    /*
+     * @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}") private Double codMinAmount; //
+     * @Named(Keys.Env.codMaxAmount) @Value("#{hkEnvProps['codMaxAmount']}") private Double codMaxAmount;
+     */
 
     @DefaultHandler
     @GET
     @Path("/orderSummary/")
     @Produces("application/json")
-
     public String orderSummary() {
         HealthkartResponse healthkartResponse;
         String jsonBuilder = "";
         String message = "Done";
         String status = HealthkartResponse.STATUS_OK;
-        Map<String,Object> orderMap = new HashMap<String,Object>();
-        try{
-        User user = getUserService().getUserById(getPrincipal().getId());
-        order = orderManager.getOrCreateOrder(user);
-        // Trimming empty line items once again.
-        orderManager.trimEmptyLineItems(order);
-        // OfferInstance offerInstance = order.getOfferInstance();
-        Double rewardPointsUsed = 0D;
-        redeemableRewardPoints = referrerProgramManager.getTotalRedeemablePoints(user);
-        orderMap.put("redeemableRewardPoints",redeemableRewardPoints);
-        if (useRewardPoints)
-            rewardPointsUsed = redeemableRewardPoints;
-        if (order.getAddress() == null) {
-            message = MHKConstants.NO_ADDRESS;
-            status = MHKConstants.STATUS_ERROR;
-            return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,message));
-        }
-
-        pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
-        orderMap.put("pricingDto",pricingDto);
-        order.setRewardPointsUsed(rewardPointsUsed);
-     
-        order = (Order) getBaseDao().save(order);
-        if (order.getAddress() == null) {
-            message = MHKConstants.NO_ADDRESS;
-            status = MHKConstants.STATUS_ERROR;
-            return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,message));
-        } else if (pricingDto.getProductLineCount() == 0) {
-            //addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
-            message = MHKConstants.EMPTY_CART;
-            status = MHKConstants.STATUS_ERROR;
-            return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status,message,message));
-        }
-
-        Address address = order.getAddress();
-        MUserLoginJSONResponse add = new MUserLoginJSONResponse();
-        add.setCity(address.getCity());
-        add.setId(address.getId());
-        add.setLine1(address.getLine1());
-        add.setLine2(address.getLine2());
-        add.setName(address.getName());
-        add.setPhone(address.getPhone());
-        add.setPin(address.getPin());
-        add.setState(address.getState());
-        orderMap.put("addressSelected",add);
-
-        String pin = address != null ? address.getPin() : null;
-
-        codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
-
-        List<MCartLineItemsJSONResponse> cartItemsList = new ArrayList<MCartLineItemsJSONResponse>();
-        MCartLineItemsJSONResponse cartItemResponse;
-        for (CartLineItem lineItem : order.getCartLineItems()) {
-            if (lineItem != null && lineItem.getProductVariant() != null) {
-                ProductVariant productVariant = lineItem.getProductVariant();
-                cartItemResponse = new MCartLineItemsJSONResponse();
-                if(null!=lineItem.getDiscountOnHkPrice())
-                cartItemResponse.setDiscountOnHkPrice(priceFormat.format(lineItem.getDiscountOnHkPrice()));
-                if(null!=lineItem.getHkPrice())
-                cartItemResponse.setHkPrice(priceFormat.format(lineItem.getHkPrice()));
-                cartItemResponse.setId(lineItem.getId());
-                cartItemResponse.setName(productVariant.getProduct().getName());
-                if(null!=productVariant.getProduct())
-                cartItemResponse.setProductId(productVariant.getProduct().getId());
-                if(null!=lineItem.getLineItemType())
-                cartItemResponse.setLineItemType(lineItem.getLineItemType().getName());
-                if(null!=lineItem.getMarkedPrice())
-                cartItemResponse.setMarkedPrice(priceFormat.format(lineItem.getMarkedPrice()));
-                cartItemResponse.setOrder(lineItem.getOrder().getId());
-                cartItemResponse.setQty(lineItem.getQty());
-                cartItemResponse.setCartLineItemId(lineItem.getId().toString());
-                cartItemsList.add(cartItemResponse);
+        Map<String, Object> orderMap = new HashMap<String, Object>();
+        try {
+            User user = getUserService().getUserById(getPrincipal().getId());
+            order = orderManager.getOrCreateOrder(user);
+            // Trimming empty line items once again.
+            orderManager.trimEmptyLineItems(order);
+            // OfferInstance offerInstance = order.getOfferInstance();
+            Double rewardPointsUsed = 0D;
+            redeemableRewardPoints = rewardPointService.getTotalRedeemablePoints(user);
+            orderMap.put("redeemableRewardPoints", redeemableRewardPoints);
+            if (useRewardPoints)
+                rewardPointsUsed = redeemableRewardPoints;
+            if (order.getAddress() == null) {
+                message = MHKConstants.NO_ADDRESS;
+                status = MHKConstants.STATUS_ERROR;
+                return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, message));
             }
-        }
-        orderMap.put("cartItems",cartItemsList);
+
+            pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed),
+                    order.getAddress());
+            orderMap.put("pricingDto", pricingDto);
+            order.setRewardPointsUsed(rewardPointsUsed);
+
+            order = (Order) getBaseDao().save(order);
+            if (order.getAddress() == null) {
+                message = MHKConstants.NO_ADDRESS;
+                status = MHKConstants.STATUS_ERROR;
+                return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, message));
+            } else if (pricingDto.getProductLineCount() == 0) {
+                // addRedirectAlertMessage(new
+                // LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
+                message = MHKConstants.EMPTY_CART;
+                status = MHKConstants.STATUS_ERROR;
+                return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, message));
+            }
+
+            Address address = order.getAddress();
+            MUserLoginJSONResponse add = new MUserLoginJSONResponse();
+            add.setCity(address.getCity());
+            add.setId(address.getId());
+            add.setLine1(address.getLine1());
+            add.setLine2(address.getLine2());
+            add.setName(address.getName());
+            add.setPhone(address.getPhone());
+            add.setPin(address.getPin());
+            add.setState(address.getState());
+            orderMap.put("addressSelected", add);
+
+            String pin = address != null ? address.getPin() : null;
+
+            codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
+
+            List<MCartLineItemsJSONResponse> cartItemsList = new ArrayList<MCartLineItemsJSONResponse>();
+            MCartLineItemsJSONResponse cartItemResponse;
+            for (CartLineItem lineItem : order.getCartLineItems()) {
+                if (lineItem != null && lineItem.getProductVariant() != null) {
+                    ProductVariant productVariant = lineItem.getProductVariant();
+                    cartItemResponse = new MCartLineItemsJSONResponse();
+                    if (null != lineItem.getDiscountOnHkPrice())
+                        cartItemResponse.setDiscountOnHkPrice(priceFormat.format(lineItem.getDiscountOnHkPrice()));
+                    if (null != lineItem.getHkPrice())
+                        cartItemResponse.setHkPrice(priceFormat.format(lineItem.getHkPrice()));
+                    cartItemResponse.setId(lineItem.getId());
+                    cartItemResponse.setName(productVariant.getProduct().getName());
+                    if (null != productVariant.getProduct())
+                        cartItemResponse.setProductId(productVariant.getProduct().getId());
+                    if (null != lineItem.getLineItemType())
+                        cartItemResponse.setLineItemType(lineItem.getLineItemType().getName());
+                    if (null != lineItem.getMarkedPrice())
+                        cartItemResponse.setMarkedPrice(priceFormat.format(lineItem.getMarkedPrice()));
+                    cartItemResponse.setOrder(lineItem.getOrder().getId());
+                    cartItemResponse.setQty(lineItem.getQty());
+                    cartItemResponse.setCartLineItemId(lineItem.getId().toString());
+                    cartItemsList.add(cartItemResponse);
+                }
+            }
+            orderMap.put("cartItems", cartItemsList);
 
             // Ground Shipping logic starts ---
-        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
-        Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
-        if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
-            groundShippedItemPresent = true;
-            groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
-        }
-        orderMap.put("groundShippedItemPresent",groundShippedItemPresent);
-        orderMap.put("groundShippingAllowed",groundShippingAllowed);
-        // Ground Shipping logic ends --
+            CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+            Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
+            if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
+                groundShippedItemPresent = true;
+                groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
+            }
+            orderMap.put("groundShippedItemPresent", groundShippedItemPresent);
+            orderMap.put("groundShippingAllowed", groundShippingAllowed);
+            // Ground Shipping logic ends --
 
-        Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
-        if (netShopping > codFreeAfter) {
-            codCharges = 0.0;
-        }
-        orderMap.put("codCharges",codCharges);
-        Double saved = 0.0;
-        if(null!=pricingDto.getProductsMrpSubTotal()&&null!=pricingDto.getProductsHkSubTotal())
-        	saved = pricingDto.getProductsMrpSubTotal()- pricingDto.getProductsHkSubTotal();
-        	
-        String saveRs = priceFormat.format(saved);
-        orderMap.put("saved",saveRs);
-        
-        String total="0.0";
-        if(null!=pricingDto.getProductsHkSubTotal())
-        	total = priceFormat.format(pricingDto.getProductsHkSubTotal());
-        	orderMap.put("total", total);
+            Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
+            if (netShopping > codFreeAfter) {
+                codCharges = 0.0;
+            }
+            orderMap.put("codCharges", codCharges);
+            Double saved = 0.0;
+            if (null != pricingDto.getProductsMrpSubTotal() && null != pricingDto.getProductsHkSubTotal())
+                saved = pricingDto.getProductsMrpSubTotal() - pricingDto.getProductsHkSubTotal();
 
-	    boolean courierAvailable = true;
-        availableCourierList = courierService.getAvailableCouriers(order);
-        if (availableCourierList != null && availableCourierList.size() == 0) {
-            courierAvailable = false;
-        }
-        orderMap.put("courierAvailable", courierAvailable);
+            String saveRs = priceFormat.format(saved);
+            orderMap.put("saved", saveRs);
 
-        }catch(Exception e){
-        	status = MHKConstants.STATUS_ERROR;
-        	message = MHKConstants.STATUS_ERROR;
-        	return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, orderMap));
+            String total = "0.0";
+            if (null != pricingDto.getProductsHkSubTotal())
+                total = priceFormat.format(pricingDto.getProductsHkSubTotal());
+            orderMap.put("total", total);
+
+            boolean courierAvailable = true;
+            availableCourierList = courierService.getAvailableCouriers(order);
+            if (availableCourierList != null && availableCourierList.size() == 0) {
+                courierAvailable = false;
+            }
+            orderMap.put("courierAvailable", courierAvailable);
+
+        } catch (Exception e) {
+            status = MHKConstants.STATUS_ERROR;
+            message = MHKConstants.STATUS_ERROR;
+            return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, orderMap));
         }
         healthkartResponse = new HealthkartResponse(status, message, orderMap);
         jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);

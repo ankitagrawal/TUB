@@ -11,9 +11,7 @@ public interface ShipmentService {
 
     public Shipment saveShipmentDate(Shipment shipment);
 
-    public Shipment save(Shipment shipment);
-
-    public Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder);
+    public Shipment save(Shipment shipment);   
 
     public Shipment findByAwb(Awb awb);
 
