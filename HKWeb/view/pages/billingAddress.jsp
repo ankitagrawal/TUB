@@ -92,7 +92,7 @@
             onsubmit="return validateForm()" method="post" name="BillingAddressForm">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
         <s:hidden name="bankId" value="70"/>
-        <s:hidden name="paymentMode" value="100"/>
+        <s:hidden name="paymentMode" value="85"/>
         <s:hidden name="billingAddress.id"/>
         <span class="aster special">(Fields marked * are required.)</span>
 

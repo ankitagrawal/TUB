@@ -152,7 +152,7 @@
             src="<hk:vhostImage/>/images/gateway/citrus.png" height="30px">
     </p>
 
-    <p><label><s:radio name="paymentMode" value="100" id="paypal"/>
+    <p><label><s:radio name="paymentMode" value="85" id="paypal"/>
         Paypal </label>
         <img src="<hk:vhostImage/>/images/gateway/paypal.gif" height="30px"><span
                 style="font-size:11px; font-family: Arial, Verdana;">The safer, easier way to pay.</span>
