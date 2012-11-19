@@ -16,6 +16,7 @@ import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 @Repository
 public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao {
 
+    @SuppressWarnings("unused")
     private Logger logger = LoggerFactory.getLogger(CartLineItemDaoImpl.class);
 
     @Transactional
@@ -32,23 +33,19 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
 
     @Transactional
     public CartLineItem save(CartLineItem cartLineItem) {
-	   ProductVariant productVariant = cartLineItem.getProductVariant();
+        ProductVariant productVariant = cartLineItem.getProductVariant();
         if (cartLineItem.getDiscountOnHkPrice() == null) {
             cartLineItem.setDiscountOnHkPrice(0D);
         }
-        /*if (cartLineItem.getHkPrice() == 0) {
-            logger.error("Update cart Line Item hk price in dao:" + cartLineItem.getHkPrice() + ", id : " + cartLineItem.getId() + ", qty :" + cartLineItem.getQty() + ", type :"
-                    + cartLineItem.getLineItemType());
-	        if (productVariant != null) {
-                logger.error("HK price null for variant" + productVariant.getId());
-            }
-            logger.error("HK price null for order " + cartLineItem.getOrder());
-        }else 
-            */
-            if(productVariant != null && cartLineItem.getHkPrice() != null
-		        && cartLineItem.getHkPrice() > productVariant.getHkPrice() && cartLineItem.getCartLineItemConfig() == null ){
-	        //logger.error("HK price of CLI is more than PV. Setting it as PV");
-	        cartLineItem.setHkPrice(productVariant.getHkPrice());
+        /*
+         * if (cartLineItem.getHkPrice() == 0) { logger.error("Update cart Line Item hk price in dao:" +
+         * cartLineItem.getHkPrice() + ", id : " + cartLineItem.getId() + ", qty :" + cartLineItem.getQty() + ", type :" +
+         * cartLineItem.getLineItemType()); if (productVariant != null) { logger.error("HK price null for variant" +
+         * productVariant.getId()); } logger.error("HK price null for order " + cartLineItem.getOrder()); }else
+         */
+        if (productVariant != null && cartLineItem.getHkPrice() != null && cartLineItem.getHkPrice() > productVariant.getHkPrice() && cartLineItem.getCartLineItemConfig() == null) {
+            // logger.error("HK price of CLI is more than PV. Setting it as PV");
+            cartLineItem.setHkPrice(productVariant.getHkPrice());
         }
 
         // logger.error("save cart Line Item hk price in dao:" + cartLineItem.getHkPrice() + "id : " +
@@ -59,7 +56,9 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
     @Transactional
     public void flipProductVariants(ProductVariant srcPV, ProductVariant dstPV, Order order) {
 
-        CartLineItem cli = (CartLineItem) findUniqueByNamedParams(" from CartLineItem cli where cli.order = :order and cli.productVariant = :srcPV ", new String[]{"order","srcPV"}, new Object[]{order,srcPV});
+        CartLineItem cli = (CartLineItem) findUniqueByNamedParams(" from CartLineItem cli where cli.order = :order and cli.productVariant = :srcPV ", new String[] {
+                "order",
+                "srcPV" }, new Object[] { order, srcPV });
         cli.setProductVariant(dstPV);
         update(cli);
         /*
@@ -70,13 +69,15 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
     }
 
     public CartLineItem getLineItem(ProductVariant productVariant, Order order) {
-        //logger.error("getting line items for " + productVariant.getId() + " order" + order.getId());
-        String query = "select cli from CartLineItem cli where cli.productVariant.id = :productVariantId  and cli.order.id = :orderId and cli.lineItemType.id = " + EnumCartLineItemType.Product.getId();
-        /*List<CartLineItem> allItems =  getSession().createQuery(query).setString("productVariantId", productVariant.getId()).setLong("orderId", order.getId()).list();
-        for(CartLineItem item : allItems){
-            logger.error("***ID: " + item.getId());
-        }*/
-        return (CartLineItem)  getSession().createQuery(query).setString("productVariantId", productVariant.getId()).setLong("orderId", order.getId()).uniqueResult();
+        // logger.error("getting line items for " + productVariant.getId() + " order" + order.getId());
+        String query = "select cli from CartLineItem cli where cli.productVariant.id = :productVariantId  and cli.order.id = :orderId and cli.lineItemType.id = "
+                + EnumCartLineItemType.Product.getId();
+        /*
+         * List<CartLineItem> allItems = getSession().createQuery(query).setString("productVariantId",
+         * productVariant.getId()).setLong("orderId", order.getId()).list(); for(CartLineItem item : allItems){
+         * logger.error("***ID: " + item.getId()); }
+         */
+        return (CartLineItem) getSession().createQuery(query).setString("productVariantId", productVariant.getId()).setLong("orderId", order.getId()).uniqueResult();
     }
 
 }

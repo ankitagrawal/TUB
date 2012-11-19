@@ -5,49 +5,49 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Pratham
- * Date: 6/29/12
- * Time: 4:45 PM
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: Pratham Date: 6/29/12 Time: 4:45 PM To change this template use File | Settings |
+ * File Templates.
  */
 public class ShipmentCostDistributor {
-        /*
-        when (view1.weight_of_shipment is null or view1.weight_of_shipment = 0)
-     then lt.qty/view1.total_qty*st.shipment_charge
-    else
-    (lt.qty*pv.weight/view1.weight_of_shipment)*st.shipment_charge end ,2)
-         */
+    /*
+     * when (view1.weight_of_shipment is null or view1.weight_of_shipment = 0) then
+     * lt.qty/view1.total_qty*st.shipment_charge else (lt.qty*pv.weight/view1.weight_of_shipment)*st.shipment_charge end
+     * ,2)
+     */
 
-    public void distributeShipping(ShippingOrder shippingOrder){
+    public void distributeShipping(ShippingOrder shippingOrder) {
 
-       if(shippingOrder != null){
-           Shipment shipment = shippingOrder.getShipment();
-           if(shipment != null){
-               Double totalShipmentCharge = shipment.getEstmShipmentCharge();
-               Double totalReconciliationCharge = shipment.getEstmCollectionCharge();
-               Double totalExtraCost = shipment.getExtraCharge();
-               Double totalQtyOrdered = 0D;
-               for (LineItem lineItem : shippingOrder.getLineItems()) {
-                   totalQtyOrdered += lineItem.getQty();
-               }
+        if (shippingOrder != null) {
+            Shipment shipment = shippingOrder.getShipment();
+            if (shipment != null) {
+                Double totalShipmentCharge = shipment.getEstmShipmentCharge();
+                @SuppressWarnings("unused")
+                Double totalReconciliationCharge = shipment.getEstmCollectionCharge();
+                Double totalExtraCost = shipment.getExtraCharge();
+                Double totalQtyOrdered = 0D;
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    totalQtyOrdered += lineItem.getQty();
+                }
 
-               Double shipmentWeight = shipment.getBoxWeight();
+                Double shipmentWeight = shipment.getBoxWeight();
 
-               for (LineItem lineItem : shippingOrder.getLineItems()) {
-                   Double skuWeight = lineItem.getSku().getProductVariant().getWeight();
-                   skuWeight = skuWeight == null || skuWeight == 0D ? 125D : skuWeight;
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    Double skuWeight = lineItem.getSku().getProductVariant().getWeight();
+                    skuWeight = skuWeight == null || skuWeight == 0D ? 125D : skuWeight;
 
-                   Double estLineItemShipmentCost = ((skuWeight * lineItem.getQty()) / shipmentWeight) * totalShipmentCharge;
+                    @SuppressWarnings("unused")
+                    Double estLineItemShipmentCost = ((skuWeight * lineItem.getQty()) / shipmentWeight) * totalShipmentCharge;
 
-                   Double lineItemOfferPrice = lineItem.getHkPrice() - lineItem.getDiscountOnHkPrice() - lineItem.getRewardPoints() + lineItem.getShippingCharges() + lineItem.getCodCharges();
-                   Double estLIReconCost = (lineItemOfferPrice * lineItem.getQty()) / shippingOrder.getAmount();
+                    Double lineItemOfferPrice = lineItem.getHkPrice() - lineItem.getDiscountOnHkPrice() - lineItem.getRewardPoints() + lineItem.getShippingCharges()
+                            + lineItem.getCodCharges();
+                    @SuppressWarnings("unused")
+                    Double estLIReconCost = (lineItemOfferPrice * lineItem.getQty()) / shippingOrder.getAmount();
+                    @SuppressWarnings("unused")
+                    Double estPackingCost = (lineItem.getQty() / totalQtyOrdered) * totalExtraCost;
 
-                   Double estPackingCost =  (lineItem.getQty() / totalQtyOrdered) * totalExtraCost;
-
-               }
-           }
-       }
+                }
+            }
+        }
 
     }
 

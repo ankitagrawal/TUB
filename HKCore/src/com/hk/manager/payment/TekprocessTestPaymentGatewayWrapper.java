@@ -49,7 +49,8 @@ public class TekprocessTestPaymentGatewayWrapper extends BasePaymentGatewayWrapp
 	public static String authStatus_Fail = "0399";
 	public static String authStatus_PendingApproval = "0000";
 
-	private String url;
+	@SuppressWarnings("unused")
+    private String url;
 
 	/**
 	 * Response Msg :
