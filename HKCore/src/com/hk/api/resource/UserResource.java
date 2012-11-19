@@ -1,6 +1,5 @@
 package com.hk.api.resource;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -15,11 +14,12 @@ import com.hk.api.UserAPI;
 import com.hk.api.dto.user.UserDTO;
 import com.hk.api.request.AddRewardPointRequest;
 import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.security.annotation.SecureResource;
 import com.hk.util.json.JSONResponseBuilder;
 
 @Path("/user")
 @Component
-// @SecureResource
+@SecureResource
 public class UserResource {
 
     private UserAPI userAPI;
