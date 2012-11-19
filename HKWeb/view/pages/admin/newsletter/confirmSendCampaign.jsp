@@ -13,6 +13,8 @@
       <s:hidden name="emailCampaign"/>
       <s:hidden name="categories"/>
       <s:hidden name="testEmails"/>
+      <s:hidden name="senderEmail"/>
+      <s:hidden name="senderName"/>
       <s:submit name="sendCampaign" value="Send Campaign"/>
     </s:form>
   </s:layout-component>

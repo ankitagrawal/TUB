@@ -144,7 +144,11 @@
             <th>Amount</th>
             <th>Status</th>
             <th>Mode</th>
-            <th>tickets</th>
+            <th>Response Msg</th>
+            <th>Error log</th>
+            <th>Gateway Transaction Id</th>
+            <th>RRN</th>
+            <th>AuthId Code</th>
           </tr>
           </thead>
           <c:forEach items="${checkPaymentBean.paymentList}" var="payment" varStatus="ctr">
@@ -165,34 +169,19 @@
               <td><fmt:formatNumber value="${payment.amount}" currencySymbol="Rs. " type="currency"/></td>
               <td>${payment.paymentStatus.name}</td>
               <td>${payment.paymentMode.name}</td>
-              <td>
-                <c:if test="${payment.paymentMode.id != paymentModeCod}">
-                  <span class="xsml">
-                    <s:link beanclass="com.hk.web.action.admin.ticket.CreateTicketAction" event="createPaymentTypeTicket">
-                      Create Ticket to track with TechProcess
-                      <s:param name="order" value="${payment.order.id}"/>
-                      <s:param name="message" value="Track With TechProcess"/>
-                      <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
-                      <s:param name="paymentDate" value="${hk:formatDate(payment.paymentDate)}"/>
-                    </s:link> <br/>
-                    <s:link beanclass="com.hk.web.action.admin.ticket.CreateTicketAction" event="createPaymentTypeTicket">
-                      create Refund Ticket
-                      <s:param name="order" value="${payment.order.id}"/>
-                      <s:param name="message" value="Payment Refund"/>
-                      <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
-                      <s:param name="paymentDate" value="${hk:formatDate(payment.paymentDate)}"/>
-                    </s:link>
-                  </span>
-                </c:if>
-              </td>
-              <td>
-                <%--<c:if test="${payment.paymentStatus.id == paymentStatusRequested && fn:length(checkPaymentBean.order.addresses) > 0}">--%>
-                  <%--<s:link beanclass="com.hk.web.action.admin.BackedUpOrderSummaryAction" event="pre">--%>
-                    <%--View BackedUp Order Summary--%>
-                    <%--<s:param name="payment" value="${payment.id}"/>--%>
-                  <%--</s:link>--%>
-                <%--</c:if>--%>
-              </td>
+                  <td>
+                          ${payment.responseMessage}
+                  </td>
+                      ${payment.errorLog}
+                  <td>
+                          ${payment.gatewayReferenceId}
+                  </td>
+                  <td>
+                          ${payment.rrn}
+                  </td>
+                  <td>
+                          ${payment.authIdCode}
+                  </td>
             </tr>
           </c:forEach>
         </table>
