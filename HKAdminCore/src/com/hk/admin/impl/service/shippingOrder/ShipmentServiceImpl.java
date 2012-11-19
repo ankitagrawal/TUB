@@ -23,6 +23,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,9 +49,10 @@ public class ShipmentServiceImpl implements ShipmentService {
 	ShippingOrderService shippingOrderService;
 	@Autowired
 	ShipmentDao shipmentDao;
-
 	@Autowired
 	CourierServiceInfoDao courierServiceInfoDao;
+	@Autowired
+	UserService userService;
 
 
 	@Transactional
@@ -58,7 +60,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 		Order order = shippingOrder.getBaseOrder();
 		Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
 		if (pincode == null) {
-			shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, CourierConstants.PINCODE_INVALID);
+			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.PINCODE_INVALID);
 			return null;
 		}
 
@@ -73,25 +76,19 @@ public class ShipmentServiceImpl implements ShipmentService {
 		}
 		// Ground Shipping logic ends -- suggested courier
 		if (suggestedCourier == null) {
-			shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
+			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
 			return null;
 		}
 
-		Double estimatedWeight = 100D;
-		for (LineItem lineItem : shippingOrder.getLineItems()) {
-			ProductVariant productVariant = lineItem.getSku().getProductVariant();
+
+		for (LineItem lineItem : shippingOrder.getLineItems()) { 			
 			if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
 				return null;
-			}
-			Double variantWeight = productVariant.getWeight();
-			if (variantWeight == null || variantWeight == 0D) {
-				estimatedWeight += 0D;
-			} else {
-				estimatedWeight += variantWeight;
-			}
+			}			
 		}
 
-		Double weightInKg = estimatedWeight / 1000;
+		Double weightInKg = getEstimatedWeightOfShipment(shippingOrder);
 		Long suggestedCourierId = suggestedCourier.getId();
 
 		Awb suggestedAwb;
@@ -106,7 +103,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 
 		// If we dont have AWB , shipment will not be created
 		if (suggestedAwb == null) {
-			shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, CourierConstants.AWB_NOT_ASSIGNED);
+			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.AWB_NOT_ASSIGNED);
 			return null;
 		}
 
@@ -115,7 +113,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		shipment.setEmailSent(false);
 		shipment.setAwb(suggestedAwb);
 		shipment.setShippingOrder(shippingOrder);
-		shipment.setBoxWeight(estimatedWeight / 1000);
+		shipment.setBoxWeight(weightInKg);
 		shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
 		shippingOrder.setShipment(shipment);
 		if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
@@ -126,7 +124,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 		shippingOrder = shippingOrderService.save(shippingOrder);
 		String trackingId = shipment.getAwb().getAwbNumber();
 		String comment = "Shipment Details: " + shipment.getAwb().getCourier().getName() + "/" + trackingId;
-		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created, comment);
+		shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+				EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(), comment);
 		return shippingOrder.getShipment();
 	}
 
@@ -203,5 +202,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 			}
 		}
 		return estimatedWeight / 1000;
+	}
+
+	public UserService getUserService() {
+		return userService;
 	}
 }

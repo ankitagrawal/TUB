@@ -187,6 +187,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 			if (ThirdPartyAwbService.integratedCouriers.contains(selectedCourier.getId())) {
 				Double weightInKg = shipment.getBoxWeight();
+				if(weightInKg == 0D){
+					weightInKg = 100D;
+				}
 				Awb thirdPartyAwb = awbService.getAwbForThirdPartyCourier(selectedCourier, shippingOrder, weightInKg);
 				if (thirdPartyAwb == null) {
 					addRedirectAlertMessage(new SimpleMessage(" The tracking number could not be generated"));
