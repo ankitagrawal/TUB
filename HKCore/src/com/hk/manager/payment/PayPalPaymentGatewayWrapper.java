@@ -43,6 +43,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
     public static final String baseCurrencyCode = "baseCurrencyCode";
     public static final String foreignCurrencyCode = "foreignCurrencyCode";
     public static final String currencyCode = "currencyCode";
+    public static final String gatewayUrl = "gatewayUrl";
 
 
 //   response parameters

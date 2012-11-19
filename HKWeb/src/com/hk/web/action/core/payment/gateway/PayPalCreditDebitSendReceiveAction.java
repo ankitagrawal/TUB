@@ -75,7 +75,6 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         BillingAddress address = addressDao.searchBillingAddress(user);
         String merchantTxnId = data.getGatewayOrderId();
 
-      logger.info("Reading property files");
         //  Reading property files
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/paypal.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
@@ -90,16 +89,12 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String baseCurrencyCode = properties.getProperty(PayPalPaymentGatewayWrapper.baseCurrencyCode);
         String foreignCurrencyCode = properties.getProperty(PayPalPaymentGatewayWrapper.foreignCurrencyCode);
 
-
-        logger.info("completed property files");
-
         CurrencyConverter currencyconverter = paymentDao.findLatestConversionRate(baseCurrencyCode, foreignCurrencyCode);
         Double coversion_rate = currencyconverter.getConversionRate();
         Double coverted_amount = data.getAmount() / coversion_rate;
 
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(coverted_amount);
         //  appending gateway and amount in return url
-        logger.info("Return url");
         String return_url = linkManager.getPayPalPaymentGatewayReturnUrl() + "?gateway=" + merchantTxnId + "&amount=" + amountStr;
 
         PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper();
@@ -109,7 +104,6 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         try {
             NVPCallerServices caller = new NVPCallerServices();
             APIProfile profile = payPalPaymentGatewayWrapper.createPaypalApiProfile(userid, pwd, signature, environment);
-            logger.info("credentail files");
             caller.setAPIProfile(profile);
             NVPEncoder baseEncoder = payPalPaymentGatewayWrapper.createPayPalBasicEncodedRequest(version, setExpressMethod, paymentAction, currencyCode, amountStr);
             encoder = payPalPaymentGatewayWrapper.encodeRequestForSetExpressCheckout(baseEncoder, return_url, linkManager.getPayPalPaymentGatewayCancelUrl(), user, address, merchantTxnId, amountStr);
@@ -117,7 +111,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             String NVPRequest = encoder.encode();
             String NVPResponse = caller.call(NVPRequest);
             decoder.decode(NVPResponse);
-           logger.info ("decoding response");
+
             String ack = decoder.get("ACK");
             String Token = decoder.get("TOKEN");
             String CORRELATIONID = decoder.get("CORRELATIONID");
@@ -131,15 +125,14 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
                 paymentManager.fail(payment.getGatewayOrderId());
 
             } else {
-//                String gatewayUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + Token;
-                 String gatewayUrl = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + Token;
+//              String gatewayUrl = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + Token;
+                String gatewayUrl = properties.getProperty(PayPalPaymentGatewayWrapper.gatewayUrl) + Token;
                 payPalPaymentGatewayWrapper.setGatewayUrl(gatewayUrl);
                 logger.info("sending to payment gateway paypal for gateway order id " + merchantTxnId + "and amount " + amountStr + "and correlation id" + CORRELATIONID);
             }
 
         } catch (Exception e) {
             logger.info("exception", e);
-            logger.info("checking exception");
             paymentManager.fail(payment.getGatewayOrderId());
         }
         return payPalPaymentGatewayWrapper;
