@@ -29,7 +29,7 @@
 				<fieldset>
 					<legend>Search Courier List</legend>
 
-					<label>Courier Name:</label><s:text name="courierName" style="width:150px"/>
+					<label>Courier Name:</label><s:text id="couriername" name="courierName" style="width:150px"/>
 					&nbsp; &nbsp;
 					<label>Courier Group:</label>
 					<s:select id="groupDropDown" name="courierGroup">
@@ -91,6 +91,13 @@
 		<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${cou}"/>
 		<s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${cou}"/>
 	</s:layout-component>
-
-
 </s:layout-render>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#couriername").autocomplete({
+			url:"${pageContext.request.contextPath}/AddCourierAction.action?populateCourier="
+		});
+
+	});
+
+</script>
