@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,8 +125,14 @@ public class DateUtils {
 	     return formatter.format(calendar.getTime());
 	}
 
+    //todo test this
+    public DateTime convertStringToDateTime(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yy HH:mm");
+        return formatter.parseDateTime(dateString);
+    }
 
-  public static void main(String[] args) {
+
+    public static void main(String[] args) {
     System.out.println(getEndOfDay(BaseUtils.getCurrentTimestamp()));
   }
 
