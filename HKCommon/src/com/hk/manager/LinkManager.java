@@ -203,7 +203,7 @@ public class LinkManager {
         RedirectResolution redirectResolution = new RedirectResolution(tryOnURL);
         if (productVariant != null) {
             redirectResolution.addParameter("productid", productVariant);
-            redirectResolution.addParameter("type", productVariant.getProduct().getSecondaryCategory());
+//            redirectResolution.addParameter("type", productVariant.getProduct().getSecondaryCategory());
         }
 
         return getUrlFromResolution(redirectResolution);
