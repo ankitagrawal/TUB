@@ -75,11 +75,11 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 	    replacementOrder.getBaseOrder().setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
 
 	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
-	    shippingOrderService.logShippingOrderActivity(replacementOrder, userService.getAdminUser(),
+	    shippingOrderService.logShippingOrderActivity(replacementOrder, userService.getLoggedInUser(),
 				        EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
 				        "Replacement order created for shipping order: "+shippingOrder.getGatewayOrderId()+" .Status of old shipping order: "+shippingOrder.getOrderStatus().getName());
 
-	    shippingOrderService.logShippingOrderActivity(shippingOrder, userService.getAdminUser(),
+	    shippingOrderService.logShippingOrderActivity(shippingOrder, userService.getLoggedInUser(),
 			    EnumShippingOrderLifecycleActivity.RO_Created.asShippingOrderLifecycleActivity(),
 			    "Replacement order created. Gateway order Id of replacement order: "+replacementOrder.getGatewayOrderId());
         return replacementOrder;
