@@ -204,6 +204,24 @@
 <div class="cl"></div>
 
 <h2 class="dbm">Special Offer for Abbott Employees</h2>
+<div class="productThumb">
+	<p class="tThumb">
+		<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/SER273.jpg" width="208" height="170"/></p>
+
+	<h3><a href="${pageContext.request.contextPath}/product/apollo-life:-nutrition-counselling-session/SER273">HDMP Enrollment Fee</a></h3>
+
+
+	<p class="tPrice">
+
+		Rs 100
+	</p>
+
+	<p class="tSave">&nbsp;</p>
+
+	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/apollo-life:-nutrition-counselling-session/SER273"><img
+			src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif" width="89" height="26"
+			alt=""/></a></p>
+</div>
 
 <div class="productThumb">
 	<p class="tThumb">
@@ -213,10 +231,11 @@
 
 
 	<p class="tPrice">
+        <span>Rs 3,094</span>
 		Rs 825
 	</p>
 
-	<p class="tSave">&nbsp;</p>
+	<p class="tSave">You Save 73%</p>
 
 	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/hk-dmp-super-saver-offer/DM045"><img
 			src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif" width="89" height="26"
