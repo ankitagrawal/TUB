@@ -61,6 +61,20 @@
 	<div class='catalog_header'>
 
 		<div class="content">
+            <div>
+                <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
+                    <s:link beanclass="com.hk.web.action.core.content.seo.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
+                        <s:param name="seoData" value="${ca.brand}"/>
+                    </s:link>
+                </shiro:hasPermission>
+                <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+                    <s:link beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction" event="pre" target="_blank"
+                            class="popup">Edit All Product Variants
+                        <s:param name="brand" value="${ca.brand}"/>
+                    </s:link>
+                </shiro:hasPermission>
+            </div>
+
 			<h2><strong>${ca.seoData.h1}</strong></h2>
 
 			<p>

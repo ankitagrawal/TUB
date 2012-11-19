@@ -30,7 +30,9 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
@@ -160,8 +162,12 @@ public class MCartLineItemUpdateAction extends MBaseAction {
             }
         }
         order = orderManager.trimEmptyLineItems(order);
-
-        healthkartResponse = new HealthkartResponse(status, message, cartItemsList);
+        Address address = order.getAddress() != null ? order.getAddress() : new Address();
+        PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
+        Map<String,Object> cartMap = new HashMap<String,Object>();
+        cartMap.put("cartItemsList", cartItemsList);
+        cartMap.put("pricingDto", pricingDto);
+        healthkartResponse = new HealthkartResponse(status, message, cartMap);
         jsonBuilder = JsonUtils.getGsonDefault().toJson(healthkartResponse);
 
         addHeaderAttributes(response);

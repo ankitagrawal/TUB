@@ -34,8 +34,20 @@ public class AdminEmailServiceImpl implements AdminEmailService {
         return getAdminEmailDao().getMailingListCountByCategory(emailCampaign, category);
     }
 
+    public Long getMailingListCountByCampaign(EmailCampaign emailCampaign) {
+        return getAdminEmailDao().getMailingListCountByCampaign(emailCampaign);
+    }
+
+    public List<String> getEmailRecepientsByEmailIds(EmailCampaign emailCampaign, List<EmailRecepient> emailList) {
+        return getAdminEmailDao().getEmailRecepientsByEmailIds(emailCampaign, emailList);
+    }
+
     public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int maxResult) {
         return getAdminEmailDao().getAllMailingList(emailCampaign, roleList, maxResult);
+    }
+
+    public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList,int pageNo, int maxResult) {
+        return getAdminEmailDao().getAllMailingList(emailCampaign, roleList,pageNo, maxResult);
     }
 
     public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult) {

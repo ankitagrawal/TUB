@@ -28,7 +28,7 @@
   <div class='topBar'>
     <div class='topBarContent'>
       <div style='float: left; margin-left: 5px; margin-top: 2px; line-height: 18px;' title='Call us on our customer care number for help regarding anything'>
-          <div style="font-size: 12px; float: left;">0124-4551616</div><div style="color: gray; float: left; font-size: 10px;">&nbsp;(9am - 9pm, 7 days a week)</div>
+          <div style="font-size: 12px; float: left;"><a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">14 day return policy</a> | <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us</s:link>: 0124-4551616</div><div style="color: gray; float: left; font-size: 10px;">&nbsp;(24x7)</div>
       </div>
       <div class="message">
         <div class="arrow"></div>

@@ -1,12 +1,9 @@
 package com.hk.rest.mobile.service.action;
 
-import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
@@ -15,11 +12,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
-import net.sourceforge.stripes.util.CryptoUtil;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,23 +25,16 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
-import com.hk.constants.discount.EnumRewardPointMode;
-import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.offer.rewardPoint.RewardPoint;
-import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
@@ -132,7 +120,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
         String jsonBuilder = "";
         String message = MHKConstants.STATUS_DONE;
         String status = MHKConstants.STATUS_OK;
-        Map payMap = new HashMap<String,Object>();
+        Map<String,Object> payMap = new HashMap<String,Object>();
         user = getUserService().getUserById(getPrincipal().getId());
         order = orderManager.getOrCreateOrder(user);
 
@@ -245,7 +233,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
             }
 
             adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
-
+/*
             RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
             RewardPoint prepayRewardPoints;
             EnumRewardPointStatus rewardPointStatus;
@@ -299,6 +287,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
             wantedCODCookie.setPath("/");
             wantedCODCookie.setMaxAge(0);
             response.addCookie(wantedCODCookie);
+*/       
         }
 
     }

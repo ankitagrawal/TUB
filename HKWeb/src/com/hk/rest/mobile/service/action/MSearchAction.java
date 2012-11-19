@@ -188,6 +188,7 @@ public class MSearchAction extends MBaseAction {
 			catalogJSONResponse.setMarkedPrice(priceFormat.format(product.getMinimumMRPProducVariant().getMarkedPrice()));
 		if (null != product.getMinimumMRPProducVariant().getDiscountPercent())
 			catalogJSONResponse.setDiscountPercentage(Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent() * 100)));
+		catalogJSONResponse.setProductReferrerId(ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_SEARCH));
 		return catalogJSONResponse;
 	}
 

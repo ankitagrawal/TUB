@@ -55,7 +55,19 @@ public class MHKConstants {
     public static final String LENSES = "lenses";
     public static final String NO_STEP_UP="Maximum quantity reached";
     public static final String NO_ORDER_EXIST = "No such order exist. Please check again.";
-    
+    public static final String COUPON_CODE_RQD = "Coupon code required";
+    public static final String INVALID_COUPON = "Invalid Coupon code";
+    public static final String USED_OFFER = "This offer has already been used";
+    public static final String APPLIED_COUPON = "This coupon has already been applied";
+    public static final String EXPIRED_COUPON = "This coupon has expired";
+    public static final String OFFER_APPLIED = "Offer applied";
+    public static final String OFFER_REMOVED = "Offer removed";
+    public static final String ERROR_ALREADYUSED="You have already availed the discount using this coupon.";
+    public static final String ERROR_ALREADYAPPLIED= "The offer associated with this coupon has now been selected.";
+    public static final String ERROR_ALREADYREFERRER = "You have already used someone else's referral coupon. You cannot use referral coupons from two different users.";
+    public static final String ERROR_REFERRALNOTALLOWED = "You have already signed up without your friend's referral. Sorry :)";
+    public static final String NO_COUPON_CODE = "No coupon code";
+    public static final String NO_COUPON_OFFER_SELECTED = "No coupon offer";
     
     public static String getStringNullDefault(String data){
     	if(data==null)

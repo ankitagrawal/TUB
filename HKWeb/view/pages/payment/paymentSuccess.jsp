@@ -103,18 +103,18 @@
 
   //track order count
   _gaq.push(['_setCustomVar',
-    <%=AnalyticsConstants.CustomVarSlot.orderCount%>,                   // This custom var is set to slot #5.  order_count.
-    "OrderCount",     // The name acts as a kind of category for the user activity.  Required parameter.
-    "${fn:length(actionBean.order.user.orders)}",               // This value of the custom variable.  Required parameter.
-    <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to session-level. Optional parameter.
+    <%=AnalyticsConstants.CustomVarSlot.orderCount.getSlot()%>,
+    "<%=AnalyticsConstants.CustomVarSlot.orderCount.getName()%>",
+    "${fn:length(actionBean.order.user.orders)}",
+    <%=AnalyticsConstants.CustomVarSlot.orderCount.getScope().getLevel()%>
   ]);
 
   <c:if test="${fn:length(actionBean.order.user.orders) eq 1}">
   _gaq.push(['_setCustomVar',
-    <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate%>,                   // This custom var is set to slot #2.  first_order_date
-    "FirstPurchaseDate",     // The name acts as a kind of category for the user activity.  Required parameter.
-    "${actionBean.purchaseDate}",               // This value of the custom variable.  Required parameter.
-    <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to visitor-level. Optional parameter.
+    <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate.getSlot()%>,
+    "<%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate.getName()%>",
+    "${actionBean.purchaseDate}",
+    <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate.getScope().getLevel()%>
   ]);
   </c:if>
   <c:if test="${actionBean.couponCode !=null}">
@@ -151,14 +151,14 @@
 
     <c:choose>
         <c:when test="${actionBean.payment != null}">
-            <c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
+            <%--<c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
                 <div>
                     <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">
                         <s:param name="order" value="${actionBean.order}"/>
                         <img src="${pageContext.request.contextPath}/images/banners/pay_online_banner5.jpg">
                     </s:link>
                 </div>
-            </c:if>
+            </c:if>--%>
             <%--<div class="right" style="float: right;">
                 <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">
                     <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">

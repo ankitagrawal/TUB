@@ -30,7 +30,7 @@ var wSURL = '${pageContext.request.contextPath}/rest/api/';
 					function() {
 						$.mobile.page.prototype.options.headerTheme = "c"; // Page header only
 						//$.mobile.pushStateEnabled=false;
-						//$.mobile.changePage.defaults.allowSamePageTransition = true;
+						$.mobile.changePage.defaults.allowSamePageTransition = true;
 						$.mobile.defaultPageTransition = "none";
 						$('div[data-role=page]').live('scrollstart',
 								function() {
