@@ -75,6 +75,7 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
 		Map<String, String> paramMap = TekprocessPaymentGatewayWrapper.parseResponse(msg);
 
 		String gatewayOrderId = paramMap.get(TekprocessPaymentGatewayWrapper.key_TxnReferenceNo);
+		String ePGTxnID = paramMap.get(TekprocessPaymentGatewayWrapper.key_TxnReferenceNo);
 		String amountStr = paramMap.get(TekprocessPaymentGatewayWrapper.key_TxnAmount);
 		Double amount = NumberUtils.toDouble(amountStr);
 		String authStatus = paramMap.get(TekprocessPaymentGatewayWrapper.key_AuthStatus);
@@ -90,7 +91,7 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
 
 			// payment callback has been verified. now see if it is successful or failed from the gateway response
 			if (TekprocessPaymentGatewayWrapper.authStatus_Success.equals(authStatus)) {
-				paymentManager.success(gatewayOrderId);
+				paymentManager.success(gatewayOrderId,ePGTxnID);
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else if (TekprocessPaymentGatewayWrapper.authStatus_PendingApproval.equals(authStatus)) {
 				paymentManager.pendingApproval(gatewayOrderId);
@@ -104,7 +105,7 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
 				throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
 			}
 		} catch (HealthkartPaymentGatewayException e) {
-			paymentManager.error(gatewayOrderId, e);
+			paymentManager.error(gatewayOrderId, ePGTxnID, e, "");
 			emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
 			resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
 		}
