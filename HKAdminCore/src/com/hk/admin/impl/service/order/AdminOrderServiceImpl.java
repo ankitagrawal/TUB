@@ -328,7 +328,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
-        if (!shippingOrderExists) {
+        if (shippingOrderExists) {
+            if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+                order.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
+                order = getOrderService().save(order);
+            }
+        } else {
             shippingOrders = getOrderService().createShippingOrders(order);
         }
 
@@ -342,7 +347,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             /**
              * Order lifecycle activity logging - Order split to shipping orders
              */
-            orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+            String comments = "No. of Shipping Orders created  " + shippingOrders.size();
+            orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
 
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
