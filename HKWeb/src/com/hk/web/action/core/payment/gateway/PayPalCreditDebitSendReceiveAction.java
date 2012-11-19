@@ -131,7 +131,8 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
                 paymentManager.fail(payment.getGatewayOrderId());
 
             } else {
-                String gatewayUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + Token;
+//                String gatewayUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + Token;
+                 String gatewayUrl = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + Token;
                 payPalPaymentGatewayWrapper.setGatewayUrl(gatewayUrl);
                 logger.info("sending to payment gateway paypal for gateway order id " + merchantTxnId + "and amount " + amountStr + "and correlation id" + CORRELATIONID);
             }
