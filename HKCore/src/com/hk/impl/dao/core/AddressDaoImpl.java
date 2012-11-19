@@ -38,7 +38,7 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     public List<Address> getVisibleAddresses(User user) {
         List<Address> addresses = new ArrayList<Address>();
         for (Address address : user.getAddresses()) {
-            if (!address.isDeleted())
+            if (!address.isDeleted() && !(address instanceof BillingAddress))
                 addresses.add(address);
         }
         return addresses;
@@ -47,7 +47,7 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     public List<Address> getVisibleAddresses(List<Address> addressList) {
         List<Address> addresses = new ArrayList<Address>();
         for (Address address : addressList) {
-            if (!address.isDeleted())
+            if (!address.isDeleted() && !(address instanceof BillingAddress))
                 addresses.add(address);
         }
         return addresses;
