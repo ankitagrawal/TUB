@@ -334,7 +334,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 order = getOrderService().save(order);
             }
         } else {
-            shippingOrders = getOrderService().createShippingOrders(order);
+	        if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
+		        orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
+		        //DO Nothing for B2B Orders
+	        } else {
+		        shippingOrders = getOrderService().createShippingOrders(order);
+	        }
         }
 
         if (shippingOrders != null && shippingOrders.size() > 0) {
