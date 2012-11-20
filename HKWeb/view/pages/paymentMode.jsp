@@ -153,9 +153,9 @@
     </p>
 
     <p><label><s:radio name="paymentMode" value="85" id="paypal"/>
-        Paypal </label>
-        <img src="<hk:vhostImage/>/images/gateway/paypal.gif" height="30px"><span
-                style="font-size:11px; font-family: Arial, Verdana;">The safer, easier way to pay.</span>
+        Paypal (For International Cards) </label>  &nbsp;
+        <img src="<hk:vhostImage/>/images/gateway/PayPal.gif" height="30px"><span
+                style="font-size:11px; font-family: Arial, Verdana;"> &nbsp;&nbsp;</span>
             <%--<img src="https://www.paypal.com/cgi-bin/webscr?cmd=/i/logo/PayPal_mark_37x23.gif" align="left" style="margin-right:7px;"><span style="font-size:11px; font-family: Arial, Verdana;">The safer, easier way to pay.</span>--%>
     </p>
 
