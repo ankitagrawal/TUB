@@ -52,6 +52,11 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
+    public String getPaymentModesUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/PaymentMode.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
     public String getSelectAddressUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/SelectAddress.action");
         return getUrlFromResolution(redirectResolution);
@@ -120,6 +125,11 @@ public class LinkManager {
 
     public String getCitrusPaymentGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusGatewaySendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
+    public String getIciciPaymentGatewayUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/IciciGatewaySendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
 
@@ -203,7 +213,7 @@ public class LinkManager {
         RedirectResolution redirectResolution = new RedirectResolution(tryOnURL);
         if (productVariant != null) {
             redirectResolution.addParameter("productid", productVariant);
-            redirectResolution.addParameter("type", productVariant.getProduct().getSecondaryCategory());
+//            redirectResolution.addParameter("type", productVariant.getProduct().getSecondaryCategory());
         }
 
         return getUrlFromResolution(redirectResolution);

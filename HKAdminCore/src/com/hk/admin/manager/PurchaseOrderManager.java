@@ -141,7 +141,7 @@ public class PurchaseOrderManager {
 			row1.createCell(columnNo);
 		}
 		setCellValue(row1, 0, "Supplier - " + newline + supplierDetails);
-		setCellValue(row1, 1, "PO#: " + (purchaseOrder.getPoNumber() != null ? purchaseOrder.getPoNumber() : " ") + newline +" PO Date: " + (purchaseOrder.getPoPlaceDate() != null ? purchaseOrder.getPoPlaceDate() : " "));
+		setCellValue(row1, 1, "PO#: " + purchaseOrder.getId() + newline +" PO Date: " +  dateFormat.format(purchaseOrder.getCreateDate()));
 		setCellValue(row1, 2, "Contact Name: " + (purchaseOrder.getSupplier().getContactPerson() != null ? purchaseOrder.getSupplier().getContactPerson() : "")
 				+ newline + " Contact Number: " + (purchaseOrder.getSupplier().getContactNumber() != null ? purchaseOrder.getSupplier().getContactNumber() : " "));
 

@@ -25,6 +25,9 @@ String replyToName, Map<String, String> headerMap, Template template);*/
   public Map<String, HtmlEmail> createHtmlEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail,
                                                 Map<String, String> headerMap);
 
+  public Map<String, HtmlEmail> createHtmlEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+                                                  String replyToName, Map<String, String> headerMap);
+
 
   public void sendBulkHtmlEmail(List<Map<String, HtmlEmail>> htmlEmails, EmailCampaign emailCampaign);
 
