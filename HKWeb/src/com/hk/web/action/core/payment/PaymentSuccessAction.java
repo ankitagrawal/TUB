@@ -1,5 +1,25 @@
 package com.hk.web.action.core.payment;
 
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Set;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.util.CryptoUtil;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
@@ -21,7 +41,6 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.dto.pricing.PricingDto;
-import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.order.OrderLoggingService;
@@ -30,201 +49,180 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.ga.GAUtil;
 import com.hk.web.filter.WebContext;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.util.CryptoUtil;
-import net.sourceforge.stripes.validation.Validate;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Set;
 
 @Component
 public class PaymentSuccessAction extends BaseAction {
 
-	private static Logger logger = LoggerFactory.getLogger(PaymentSuccessAction.class);
+    private static Logger        logger       = LoggerFactory.getLogger(PaymentSuccessAction.class);
 
-	@Validate(required = true, encrypted = true)
-	private String gatewayOrderId;
+    @Validate(required = true, encrypted = true)
+    private String               gatewayOrderId;
 
-	private Payment payment;
-	private Order order;
-	private PricingDto pricingDto;
-	private EnumPaymentMode paymentMode;
-	private String purchaseDate;
-	private String couponCode;
-	private int couponAmount = 0;
+    private Payment              payment;
+    private Order                order;
+    private PricingDto           pricingDto;
+    private EnumPaymentMode      paymentMode;
+    private String               purchaseDate;
+    private String               couponCode;
+    private int                  couponAmount = 0;
 
-	@Autowired
-	private PaymentDao paymentDao;
-	@Autowired
-	UserDao userDao;
-	@Autowired
-	private OrderService orderService;
-	@Autowired
-	private ShippingOrderService shippingOrderService;
-	@Autowired
-	ShipmentService shipmentService;
-	@Autowired
-	RewardPointService rewardPointService;
-	@Autowired
-	ReferrerProgramManager referrerProgramManager;
-	@Value("#{hkEnvProps['" + Keys.Env.cashBackPercentage + "']}")
-	private Double cashBackPercentage;
-	@Autowired
-	AdminOrderService adminOrderService;
-	@Autowired
-	OrderLoggingService orderLoggingService;
+    @Autowired
+    private PaymentDao           paymentDao;
+    @Autowired
+    UserDao                      userDao;
+    @Autowired
+    private OrderService         orderService;
+    @Autowired
+    private ShippingOrderService shippingOrderService;
+    @Autowired
+    ShipmentService              shipmentService;
+    @Autowired
+    RewardPointService           rewardPointService;
+    @Value("#{hkEnvProps['" + Keys.Env.cashBackPercentage + "']}")
+    private Double               cashBackPercentage;
+    @Autowired
+    AdminOrderService            adminOrderService;
+    @Autowired
+    OrderLoggingService          orderLoggingService;
 
+    public Resolution pre() {
+        payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+        if (payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(payment.getPaymentStatus().getId())) {
 
-	public Resolution pre() {
-		payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-		if (payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(payment.getPaymentStatus().getId())) {
+            Long paymentStatusId = payment.getPaymentStatus() != null ? payment.getPaymentStatus().getId() : null;
 
-			Long paymentStatusId = payment.getPaymentStatus() != null ? payment.getPaymentStatus().getId() : null;
+            logger.info("payment success page payment status " + paymentStatusId);
 
-			logger.info("payment success page payment status " + paymentStatusId);
+            order = payment.getOrder();
+            pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
 
-			order = payment.getOrder();
-			pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
+            // for google analytics
+            paymentMode = EnumPaymentMode.getPaymentModeFromId(payment.getPaymentMode().getId());
+            purchaseDate = GAUtil.formatDate(order.getCreateDate());
 
-			//for google analytics
-			paymentMode = EnumPaymentMode.getPaymentModeFromId(payment.getPaymentMode().getId());
-			purchaseDate = GAUtil.formatDate(order.getCreateDate());
+            OfferInstance offerInstance = order.getOfferInstance();
+            if (offerInstance != null) {
+                Coupon coupon = offerInstance.getCoupon();
+                couponCode = coupon.getCode() + "@" + offerInstance.getId();
+                couponAmount = pricingDto.getTotalPromoDiscount().intValue();
+            }
 
-			OfferInstance offerInstance = order.getOfferInstance();
-			if (offerInstance != null) {
-				Coupon coupon = offerInstance.getCoupon();
-				couponCode = coupon.getCode() + "@" + offerInstance.getId();
-				couponAmount = pricingDto.getTotalPromoDiscount().intValue();
-			}
+            adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
 
-			adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+            RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
+            RewardPoint prepayRewardPoints;
+            EnumRewardPointStatus rewardPointStatus;
 
-			RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
-			RewardPoint prepayRewardPoints;
-			EnumRewardPointStatus rewardPointStatus;
+            HttpServletRequest httpRequest = WebContext.getRequest();
+            HttpServletResponse httpResponse = WebContext.getResponse();
+            if (httpRequest.getCookies() != null) {
+                for (Cookie cookie : httpRequest.getCookies()) {
+                    if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.codConverterID)) {
+                        if (cookie.getValue() != null && CryptoUtil.decrypt(cookie.getValue()).equalsIgnoreCase(order.getId().toString())) {
+                            if (rewardPointService.findByReferredOrderAndRewardMode(order, prepayOfferRewardPoint) == null) {
+                                if (EnumPaymentMode.getPrePaidPaymentModes().contains(order.getPayment().getPaymentMode().getId())) {
+                                    rewardPointStatus = EnumRewardPointStatus.APPROVED;
+                                } else {
+                                    rewardPointStatus = EnumRewardPointStatus.PENDING;
+                                }
+                                DecimalFormat df = new DecimalFormat("#.##");
+                                Double cashBack = Double.valueOf(df.format(order.getPayment().getAmount() * cashBackPercentage));
+                                prepayRewardPoints = rewardPointService.addRewardPoints(order.getUser(), null, order, cashBack, "Prepay Offer", rewardPointStatus,
+                                        prepayOfferRewardPoint);
+                                rewardPointService.approveRewardPoints(Arrays.asList(prepayRewardPoints), new DateTime().plusMonths(3).toDate());
+                            }
+                            Set<CartLineItem> codCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.CodCharges).filter();
+                            CartLineItem codCartLineItem = codCartLineItems != null && !codCartLineItems.isEmpty() ? codCartLineItems.iterator().next() : null;
+                            if (codCartLineItems != null && !codCartLineItems.isEmpty() && codCartLineItem != null) {
+                                Double applicableCodCharges = 0D;
+                                applicableCodCharges = codCartLineItem.getHkPrice() - codCartLineItem.getDiscountOnHkPrice();
+                                order.setAmount(order.getAmount() - (applicableCodCharges));
+                                Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+                                if (shippingOrders != null) {
+                                    for (ShippingOrder shippingOrder : shippingOrders) {
+                                        shippingOrderService.nullifyCodCharges(shippingOrder);
+                                        shipmentService.recreateShipment(shippingOrder);
+                                        shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+                                    }
+                                }
+                                Set<CartLineItem> cartLineItems = order.getCartLineItems();
+                                cartLineItems.removeAll(codCartLineItems);
+                                getBaseDao().deleteAll(codCartLineItems);
+                                order.getCartLineItems().addAll(cartLineItems);
+                                order = getOrderService().save(order);
+                                orderLoggingService.logOrderActivity(order, EnumOrderLifecycleActivity.Cod_Conversion);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            // Resetting value and expiring cookie
+            Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, "false");
+            wantedCODCookie.setPath("/");
+            wantedCODCookie.setMaxAge(0);
+            httpResponse.addCookie(wantedCODCookie);
+        }
+        return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
+    }
 
-			HttpServletRequest httpRequest = WebContext.getRequest();
-			HttpServletResponse httpResponse = WebContext.getResponse();
-			if (httpRequest.getCookies() != null) {
-				for (Cookie cookie : httpRequest.getCookies()) {
-					if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.codConverterID)) {
-						if (cookie.getValue() != null && CryptoUtil.decrypt(cookie.getValue()).equalsIgnoreCase(order.getId().toString())) {
-							if (rewardPointService.findByReferredOrderAndRewardMode(order, prepayOfferRewardPoint) == null) {
-								if (EnumPaymentMode.getPrePaidPaymentModes().contains(order.getPayment().getPaymentMode().getId())) {
-									rewardPointStatus = EnumRewardPointStatus.APPROVED;
-								} else {
-									rewardPointStatus = EnumRewardPointStatus.PENDING;
-								}
-								DecimalFormat df = new DecimalFormat("#.##");
-								Double cashBack = Double.valueOf(df.format(order.getPayment().getAmount() * cashBackPercentage));
-								prepayRewardPoints = rewardPointService.addRewardPoints(order.getUser(), null, order, cashBack, "Prepay Offer", rewardPointStatus, prepayOfferRewardPoint);
-								referrerProgramManager.approveRewardPoints(Arrays.asList(prepayRewardPoints), new DateTime().plusMonths(3).toDate());
-							}
-							Set<CartLineItem> codCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.CodCharges).filter();
-							CartLineItem codCartLineItem = codCartLineItems != null && !codCartLineItems.isEmpty() ? codCartLineItems.iterator().next() : null;
-							if (codCartLineItems != null && !codCartLineItems.isEmpty() && codCartLineItem != null) {
-								Double applicableCodCharges = 0D;
-								applicableCodCharges = codCartLineItem.getHkPrice() - codCartLineItem.getDiscountOnHkPrice();
-								order.setAmount(order.getAmount() - (applicableCodCharges));
-								Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-								if (shippingOrders != null) {
-									for (ShippingOrder shippingOrder : shippingOrders) {
-										shippingOrderService.nullifyCodCharges(shippingOrder);
-										shipmentService.recreateShipment(shippingOrder);
-										shippingOrderService.autoEscalateShippingOrder(shippingOrder);
-									}
-								}
-								Set<CartLineItem> cartLineItems = order.getCartLineItems();
-								cartLineItems.removeAll(codCartLineItems);
-								getBaseDao().deleteAll(codCartLineItems);
-								order.getCartLineItems().addAll(cartLineItems);
-								order = getOrderService().save(order);
-								orderLoggingService.logOrderActivity(order, EnumOrderLifecycleActivity.Cod_Conversion);
-							}
-							break;
-						}
-					}
-				}
-			}
-			//Resetting value and expiring cookie
-			Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, "false");
-			wantedCODCookie.setPath("/");
-			wantedCODCookie.setMaxAge(0);
-			httpResponse.addCookie(wantedCODCookie);
-		}
-		return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
-	}
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
 
+    public void setGatewayOrderId(String gatewayOrderId) {
+        this.gatewayOrderId = gatewayOrderId;
+    }
 
-	public String getGatewayOrderId() {
-		return gatewayOrderId;
-	}
+    public Payment getPayment() {
+        return payment;
+    }
 
-	public void setGatewayOrderId(String gatewayOrderId) {
-		this.gatewayOrderId = gatewayOrderId;
-	}
+    public PricingDto getPricingDto() {
+        return pricingDto;
+    }
 
-	public Payment getPayment() {
-		return payment;
-	}
+    public void setPaymentDao(PaymentDao paymentDao) {
+        this.paymentDao = paymentDao;
+    }
 
-	public PricingDto getPricingDto() {
-		return pricingDto;
-	}
+    public OrderService getOrderService() {
+        return orderService;
+    }
 
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
-	public void setPaymentDao(PaymentDao paymentDao) {
-		this.paymentDao = paymentDao;
-	}
+    public Order getOrder() {
+        return order;
+    }
 
-	public OrderService getOrderService() {
-		return orderService;
-	}
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-	public void setOrderService(OrderService orderService) {
-		this.orderService = orderService;
-	}
+    public EnumPaymentMode getPaymentMode() {
+        return paymentMode;
+    }
 
-	public Order getOrder() {
-		return order;
-	}
+    public void setPaymentMode(EnumPaymentMode paymentMode) {
+        this.paymentMode = paymentMode;
+    }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+    public String getPurchaseDate() {
+        return purchaseDate;
+    }
 
-	public EnumPaymentMode getPaymentMode() {
-		return paymentMode;
-	}
+    public void setPurchaseDate(String purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
 
-	public void setPaymentMode(EnumPaymentMode paymentMode) {
-		this.paymentMode = paymentMode;
-	}
+    public String getCouponCode() {
+        return couponCode;
+    }
 
-	public String getPurchaseDate() {
-		return purchaseDate;
-	}
-
-	public void setPurchaseDate(String purchaseDate) {
-		this.purchaseDate = purchaseDate;
-	}
-
-	public String getCouponCode() {
-		return couponCode;
-	}
-
-	public int getCouponAmount() {
-		return couponAmount;
-	}
+    public int getCouponAmount() {
+        return couponAmount;
+    }
 }
