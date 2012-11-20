@@ -2,6 +2,7 @@ package com.hk.manager;
 
 import java.util.Locale;
 
+import com.hk.domain.catalog.product.ProductVariant;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
@@ -48,6 +49,11 @@ public class LinkManager {
 
     public String getCodGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CodGatewaySendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
+    public String getPaymentModesUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/PaymentMode.action");
         return getUrlFromResolution(redirectResolution);
     }
 
@@ -119,6 +125,11 @@ public class LinkManager {
 
     public String getCitrusPaymentGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusGatewaySendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
+    public String getIciciPaymentGatewayUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/IciciGatewaySendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
 
@@ -194,5 +205,18 @@ public class LinkManager {
 		RedirectResolution redirectResolution = new RedirectResolution("/feedback");
 		return getUrlFromResolution(redirectResolution);
 	}
+
+    public String getTryOnImageURL(ProductVariant productVariant) {
+
+        String tryOnURL = "/makeover/tryOn.jsp";
+
+        RedirectResolution redirectResolution = new RedirectResolution(tryOnURL);
+        if (productVariant != null) {
+            redirectResolution.addParameter("productid", productVariant);
+//            redirectResolution.addParameter("type", productVariant.getProduct().getSecondaryCategory());
+        }
+
+        return getUrlFromResolution(redirectResolution);
+    }
 
 }

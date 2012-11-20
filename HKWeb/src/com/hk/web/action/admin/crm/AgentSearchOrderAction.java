@@ -14,8 +14,6 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.util.CryptoUtil;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,7 +28,6 @@ import com.hk.domain.user.UserDetail;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.user.UserDetailService;
-import com.hk.web.action.admin.order.search.SearchOrderAction;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,7 +40,7 @@ import com.hk.web.action.admin.order.search.SearchOrderAction;
 @Component
 @UrlBinding("/agent/order")
 public class AgentSearchOrderAction extends BasePaginatedAction {
-    private static Logger logger    = LoggerFactory.getLogger(SearchOrderAction.class);
+    //private static Logger logger    = LoggerFactory.getLogger(SearchOrderAction.class);
 
     @Value("#{hkEnvProps['" + Keys.Env.hkApiAccessKey + "']}")
     private String API_KEY;

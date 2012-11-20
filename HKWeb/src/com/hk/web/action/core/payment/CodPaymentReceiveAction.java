@@ -60,7 +60,8 @@ public class CodPaymentReceiveAction extends BaseAction {
 	@Validate(required = true)
 	private String codContactPhone;
 
-	private User user;
+	@SuppressWarnings("unused")
+    private User user;
 
 	public Resolution pre() {
 		Resolution resolution = null;

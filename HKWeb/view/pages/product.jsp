@@ -5,6 +5,7 @@
 <%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -240,7 +241,13 @@
 				     title="${product.name}">
 			</a>
 		</div>
-		<div>
+        <div id="tryOnLink" class="content">
+            <c:if test="${pa.validTryOnProductVariant != null}">
+                <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}"><img src="${pageContext.request.contextPath}/images/try-it-now.jpg" alt="Virtual Try On"></a>
+            </c:if>
+        </div>
+
+        <div>
 			<c:if test="${fn:length(pa.productImages) > 1 && !pa.product.productHaveColorOptions}">
 				<%--<ul class="thumblist">--%>
 				<ul id="mycarousel" class="jcarousel-skin-tango">
@@ -384,6 +391,15 @@
 				Related Products &darr;
 			</a>
 		</c:if>
+<%--
+        <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
+            <div id="tryOnLink" class="content">
+                <c:if test="${pa.validTryOnProductVariant != null}">
+                    <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" style="float:right;color:black;font-size:1.2em;background: #DDD;border:1px solid black;padding:5px;"> TRY IT NOW </a>
+                </c:if>
+            </div>
+        </shiro:hasAnyRoles>
+--%>
 	</div>
 	<c:if test="${!empty subscriptionProduct}">
 		<%--  <s:layout-render name="/layouts/embed/_subscription.jsp" subscriptionProduct="${subscriptionProduct}"/> --%>
@@ -605,7 +621,7 @@
 				</table>
 				</div>
 			</c:if>
-			
+
 			<div id="sizeGuide"
 		     class="content"
 		     style="background-color:#F2F2F2;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">

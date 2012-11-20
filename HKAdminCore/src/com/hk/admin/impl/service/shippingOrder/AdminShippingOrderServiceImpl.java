@@ -86,7 +86,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 Awb awbToRemove = shippingOrder.getShipment().getAwb();
                 //shippingOrder.getShipment().setAwb(null);
                 //shipmentService.save(shippingOrder.getShipment());
-                awbService.removeAwbForShipment(shippingOrder.getShipment().getCourier(),awbToRemove);
+                awbService.removeAwbForShipment(shippingOrder.getShipment().getAwb().getCourier(),awbToRemove);
                 Shipment shipmentToDelete = shippingOrder.getShipment();
                 shippingOrder.setShipment(null);
                 shippingOrderService.save(shippingOrder);

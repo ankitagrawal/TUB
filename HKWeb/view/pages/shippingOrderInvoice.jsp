@@ -84,7 +84,7 @@
 <c:set var="fedEx" value="<%=EnumCourier.FedEx.getId()%>"/>
 <c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.getId()%>"/>
 <c:set var="groundShipped" value="${orderSummary.groundShipped}"/>
-<c:set var="courierId" value="${orderSummary.shipment.courier.id}"/>
+<c:set var="courierId" value="${orderSummary.shipment.awb.courier.id}"/>
 
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
@@ -100,7 +100,7 @@
                     </c:when>
                     <c:otherwise>
                         <div class="clear"></div>
-                        <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name}</div>
+                        <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.awb.courier.name}</div>
                         <div class="clear"></div>
                         <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
                              src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
@@ -138,7 +138,7 @@
     <c:when test="${courierId == fedEx || courierId == fedExSurface}">
         <div class="grid_12">
 
-            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;
+            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.awb.courier.name} &nbsp;&nbsp;
                 <c:choose>
                     <c:when test="${groundShipped}">
                         Economy
@@ -286,7 +286,8 @@
         <tr>
             <th>Item</th>
             <th>Quantity</th>
-            <th>Unit price</th>
+            <th>MRP</th>
+            <th>Rate</th>
             <th>Total(Rs.)</th>
         </tr>
         <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
@@ -375,6 +376,7 @@
                 </td>
 
                 <td><fmt:formatNumber value="${invoiceLineItem.qty}" maxFractionDigits="0"/></td>
+                <td> ${invoiceLineItem.markedPrice} </td>
                 <td> ${invoiceLineItem.hkPrice} </td>
                 <td class="itemsubTotal">
                     <fmt:formatNumber value="${invoiceLineItem.lineItemTotal}" type="currency"
@@ -388,6 +390,7 @@
             <tr>
                 <td>${orderSummary.freebieItem}</td>
                 <td>1</td>
+                <td>0.0</td>
                 <td>0.0</td>
                 <td>0.0</td>
             </tr>
