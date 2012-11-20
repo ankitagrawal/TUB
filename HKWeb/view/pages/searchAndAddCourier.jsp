@@ -9,7 +9,16 @@
 	<s:layout-component name="heading">
 		Search and Add Courier
 	</s:layout-component>
+	 <s:layout-component name="htmlHead">
+		 <script type="text/javascript">
+	$(document).ready(function() {
+		$('#couriername').autocomplete({
+			url:"${pageContext.request.contextPath}/admin/courier/AddCourier.action?populateCourier="
+		});
 
+	});
+</script>
+   </s:layout-component>
 	<s:layout-component name="content">
 		<div style="overflow:hidden;">
 		<div style="float:left;">
@@ -29,7 +38,7 @@
 				<fieldset>
 					<legend>Search Courier List</legend>
 
-					<label>Courier Name:</label><s:text id="couriername" name="courierName" style="width:150px"/>
+					<label>Courier Name:</label><s:text id="couriername" name="courierName" style="width:150px"  autocomplete="off"/>
 					&nbsp; &nbsp;
 					<label>Courier Group:</label>
 					<s:select id="groupDropDown" name="courierGroup">
@@ -43,7 +52,7 @@
 					<s:option value="false">Active</s:option>
 					<s:option value="true">Inactive</s:option>
 				</s:select>
-					<s:submit name="pre" value="Search"/>
+					<s:submit id="submit" name="pre" value="Search"/>
 				</fieldset>
 			</s:form>
 		</div>
@@ -92,12 +101,3 @@
 		<s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${cou}"/>
 	</s:layout-component>
 </s:layout-render>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#couriername").autocomplete({
-			url:"${pageContext.request.contextPath}/AddCourierAction.action?populateCourier="
-		});
-
-	});
-
-</script>

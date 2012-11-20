@@ -38,7 +38,6 @@ public class AddCourierAction extends BasePaginatedAction {
 	@Autowired
 	CategoryDao categoryDao;
 
-
 	@Autowired
 	CourierService courierService;
 	@Autowired
@@ -53,9 +52,12 @@ public class AddCourierAction extends BasePaginatedAction {
 	private String courierName;
 
 	Page courierPage;
+
 	private Integer defaultPerPage = 30;
 
 	private Boolean status;
+
+	private String q = "";
 
 
 
@@ -125,17 +127,16 @@ public class AddCourierAction extends BasePaginatedAction {
 	   return new RedirectResolution(AddCourierAction.class);
 	}
 
-   public Resolution populateCourier(){
-	 List<String> courierList = new ArrayList<String>();
-		List<Courier> couriers = courierService.getCouriers(null,null,null);
+	public Resolution populateCourier() {
+		List<String> courierList = new ArrayList<String>();
+		List<Courier> couriers = courierService.getCouriers(null, null, null);
 		for (Courier courier : couriers) {
-			if (courier.getName().startsWith(courierName.trim().toUpperCase()))
+			if (courier.getName().startsWith(q.trim().toUpperCase()))
 				courierList.add(courier.getName());
 		}
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "done", courierList);
 		return new JsonResolution(healthkartResponse);
-
-   }
+	}
 	public CourierGroup getCourierGroup() {
 		return courierGroup;
 	}
@@ -204,4 +205,11 @@ public class AddCourierAction extends BasePaginatedAction {
 		this.status = status;
 	}
 
+	public String getQ() {
+		return q;
+	}
+
+	public void setQ(String q) {
+		this.q = q;
+	}
 }
