@@ -45,7 +45,7 @@ import com.hk.service.ServiceLocatorFactory;
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
 
-	 private Logger logger = LoggerFactory.getLogger(ShippingOrderService.class);
+	 private Logger logger = LoggerFactory.getLogger(AdminShippingOrderServiceImpl.class);
     @Autowired
     private ShippingOrderService shippingOrderService;
     @Autowired
