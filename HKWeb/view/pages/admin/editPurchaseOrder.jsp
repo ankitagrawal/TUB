@@ -63,6 +63,7 @@
 							'  <td>' +
 							'    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity valueChange" />' +
 							'  </td>' +
+							'<td></td>' +
 							'  <td>' +
 							'    <input class="costPrice valueChange" type="text" name="poLineItems[' + nextIndex + '].costPrice" />' +
 							'  </td>' +
@@ -504,12 +505,12 @@
 		<td><s:text readonly="readonly" class="totalPayable" name="purchaseOrderDto.totalPayable" value="${pa.purchaseOrderDto.totalPayable}"/></td>
 	</tr>
 	<tr>
-		<td colspan="18"></td><td>Overall Discount<br/>(In Rupees)</td>
+		<td colspan="19"></td><td>Overall Discount<br/>(In Rupees)</td>
 		<td><s:text class="overallDiscount footerChanges" name="purchaseOrder.discount" value="${pa.purchaseOrder.discount}"/></td>
 	</tr>
 	<tr>
 	<tr>
-		<td colspan="18"></td><td>Final Payable</td>
+		<td colspan="19"></td><td>Final Payable</td>
 		<td><s:text readonly="readonly" class="finalPayable" name="purchaseOrder.finalPayableAmount" value="${pa.purchaseOrder.finalPayableAmount}"/></td>
 	</tr>
 	</tfoot>

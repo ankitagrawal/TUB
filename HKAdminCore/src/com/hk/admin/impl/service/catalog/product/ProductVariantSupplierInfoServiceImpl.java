@@ -33,7 +33,7 @@ public class ProductVariantSupplierInfoServiceImpl implements ProductVariantSupp
 			}
 
 			if(productVariantSupplierInfo.getAskedQty() > 0) {
-				productVariantSupplierInfo.setFillRate((productVariantSupplierInfo.getReceivedQty() / productVariantSupplierInfo.getAskedQty()) * 100.0);
+				productVariantSupplierInfo.setFillRate((productVariantSupplierInfo.getReceivedQty() * 100.0) / productVariantSupplierInfo.getAskedQty() );
 			}
 
 			getProductVariantSupplierInfoDao().save(productVariantSupplierInfo);
@@ -48,7 +48,7 @@ public class ProductVariantSupplierInfoServiceImpl implements ProductVariantSupp
 			productVariantSupplierInfo = new ProductVariantSupplierInfo();
 			productVariantSupplierInfo.setProductVariant(productVariant);
 			productVariantSupplierInfo.setSupplier(supplier);
-			getProductVariantSupplierInfoDao().save(productVariantSupplierInfo);
+			productVariantSupplierInfo = (ProductVariantSupplierInfo)getProductVariantSupplierInfoDao().save(productVariantSupplierInfo);
 		}
 		return productVariantSupplierInfo;
 	}

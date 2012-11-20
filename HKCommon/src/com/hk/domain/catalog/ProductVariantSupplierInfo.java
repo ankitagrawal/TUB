@@ -19,14 +19,14 @@ import java.io.Serializable;
 public class ProductVariantSupplierInfo implements Serializable {
 
 	@Id
-	@GeneratedValue (strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne (fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_variant_id", nullable = false)
 	private ProductVariant productVariant;
 
-	@ManyToOne (fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "supplier_id", nullable = false)
 	private Supplier supplier;
 
@@ -36,7 +36,7 @@ public class ProductVariantSupplierInfo implements Serializable {
 	@Column(name = "received_qty", nullable = false)
 	private Long receivedQty = 0L;
 
-	@Column(name = "fill_rate",  nullable = false)
+	@Column(name = "fill_rate", nullable = false)
 	private Double fillRate = 0.0;
 
 	public Long getId() {
@@ -86,4 +86,28 @@ public class ProductVariantSupplierInfo implements Serializable {
 	public void setFillRate(Double fillRate) {
 		this.fillRate = fillRate;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof ProductVariantSupplierInfo)) {
+			return false;
+		}
+
+		ProductVariantSupplierInfo that = (ProductVariantSupplierInfo) o;
+
+		if (id != null ? !id.equals(that.getId()) : that.getId() != null)
+			return false;
+
+		return true;
+
+	}
+
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
+	}
+
 }

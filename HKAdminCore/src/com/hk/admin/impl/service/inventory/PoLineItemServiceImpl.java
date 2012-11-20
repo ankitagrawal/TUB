@@ -35,7 +35,7 @@ public class PoLineItemServiceImpl implements PoLineItemService {
 			if (grnLineItemQty != null && (totalLineItemQtyInOtherGrns + grnLineItemQty) > 0) {
 				Long totalReceivedQty = totalLineItemQtyInOtherGrns + grnLineItemQty;
 				if(poLineItemQty > 0) {
-					fillRate = (totalReceivedQty / poLineItemQty) * 100.0;
+					fillRate = (100.0 * totalReceivedQty) / poLineItemQty;
 				}
 				poLineItem.setReceivedQty(totalReceivedQty);
 			}

@@ -216,7 +216,7 @@ public class GRNAction extends BasePaginatedAction {
 
 					if (grn.getPurchaseOrder().getGoodsReceivedNotes().size() == 1) {
 						getProductVariantSupplierInfoService().updatePVSupplierInfo(productVariantSupplierInfo, grnLineItemService.getPoLineItemQty(grnLineItem), grnLineItem.getQty());
-					} else if (grn.getPurchaseOrder().getGoodsReceivedNotes().size() == 1) {
+					} else if (grn.getPurchaseOrder().getGoodsReceivedNotes().size() > 1) {
 						getProductVariantSupplierInfoService().updatePVSupplierInfo(productVariantSupplierInfo, null, grnLineItem.getQty());
 					}
 				}

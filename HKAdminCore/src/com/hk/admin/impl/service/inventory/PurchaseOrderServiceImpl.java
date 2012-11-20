@@ -33,7 +33,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		if(totalAskedQty > 0) {
-			fillRate = (totalReceivedQty / totalAskedQty) * 100;
+			fillRate = (totalReceivedQty * 100.0)/ totalAskedQty;
 		}
 		purchaseOrder.setFillRate(fillRate);
 		getPurchaseOrderDao().saveOrUpdate(purchaseOrder);

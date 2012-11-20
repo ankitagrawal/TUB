@@ -9,6 +9,8 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Rohit
@@ -23,6 +25,15 @@ public class ProductVariantSupplierInfoDaoImpl extends BaseDaoImpl implements Pr
 		DetachedCriteria criteria = DetachedCriteria.forClass(ProductVariantSupplierInfo.class);
 		criteria.add(Restrictions.eq("productVariant", productVariant));
 		criteria.add(Restrictions.eq("supplier", supplier));
-		return (ProductVariantSupplierInfo)findByCriteria(criteria).get(0);
+		List<ProductVariantSupplierInfo> productVariantSupplierInfoList = findByCriteria(criteria);
+		if(productVariantSupplierInfoList != null && productVariantSupplierInfoList.size() > 0) {
+			return productVariantSupplierInfoList.get(0);
+		}
+		return null;
+	}
+
+	public double getSupplierAverageFillRate(Supplier supplier) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(ProductVariantSupplierInfo.class);
+		//criteria
 	}
 }
