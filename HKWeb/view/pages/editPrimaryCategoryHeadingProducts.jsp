@@ -3,7 +3,7 @@
 
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" var="ha"/>
 
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Delete Category Heading Products">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Category Heading Products">
 
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
@@ -34,11 +34,13 @@
     <h2>${ha.heading.name}</h2>
     <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
+	      <tr><th>Product</th><th>Availability</th></tr>
         <c:forEach var="product" items="${ha.heading.products}">
           <tr>
             <td>
               <s:checkbox class="checkbox" value="${product.id}" name="products[]"/>${product.id}
             </td>
+	          <td>${product.outOfStock}</td>
           </tr>
         </c:forEach>
         <s:hidden name="heading.id" value="${ha.heading.id}"/>
