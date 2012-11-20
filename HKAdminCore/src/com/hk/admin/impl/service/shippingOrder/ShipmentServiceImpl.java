@@ -74,6 +74,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 		} else {
 			suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
 		}
+
+        //todo neha can you log in shipment auto created comments, whether  courier is AIR or ground shipped
+
 		// Ground Shipping logic ends -- suggested courier
 		if (suggestedCourier == null) {
 			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
@@ -81,10 +84,13 @@ public class ShipmentServiceImpl implements ShipmentService {
 			return null;
 		}
 
+        //todo neha we need to put a check if a pincode default courier is not among available courier, currently put a log, while you create a shipment, later on we wont create such shipments
+
 
 		for (LineItem lineItem : shippingOrder.getLineItems()) { 			
 			if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
 				return null;
+                //todo put a log here
 			}			
 		}
 
@@ -141,6 +147,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 	@Transactional
 	private Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
 		Awb suggestedAwb;
+        //todo neha can this logic be moved to a generic place
 		if (shippingOrder.getAmount() == 0) {
 			suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), false, EnumAwbStatus.Unused.getAsAwbStatus());
 		} else {
