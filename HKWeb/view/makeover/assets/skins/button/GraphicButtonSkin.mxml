@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled="0.5">
+	<fx:Metadata>
+		<![CDATA[ 
+		[HostComponent("spark.components.Button")]
+		]]>
+	</fx:Metadata>
+	
+	<fx:Script fb:purpose="styling">
+		<![CDATA[         
+			static private const exclusions:Array = ["labelDisplay"];
+			override public function get colorizeExclusions():Array {return exclusions;}
+			
+			override protected function initializationComplete():void
+			{
+				hostComponent.buttonMode = true;
+				useChromeColor = false;
+				super.initializationComplete();
+			}  
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void
+			{
+				var cr:Number = getStyle("cornerRadius");
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+			}
+			private var cornerRadius:Number = 2;
+		]]>        
+	</fx:Script>
+	<s:states>
+		<s:State name="up" />
+		<s:State name="over" />
+		<s:State name="down" />
+		<s:State name="disabled" />
+	</s:states>
+	
+	<s:BitmapImage  
+		source.up="{hostComponent.getStyle('upSkin')}"
+		source.over="{hostComponent.getStyle('overSkin')}"
+		source.down="{hostComponent.getStyle('downSkin')}"
+		source.disabled="{hostComponent.getStyle('disabledSkin')}" />
+	<s:Label id="labelDisplay" visible="false"/>
+</s:SparkSkin>

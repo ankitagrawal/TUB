@@ -19,7 +19,8 @@ public class CodPaymentGatewayWrapper extends BasePaymentGatewayWrapper<CodPayme
 	@Autowired
 	private LinkManager linkManager;
 
-	private String url;
+	@SuppressWarnings("unused")
+    private String url;
 
 	private static final String merchantId = "lasjf234092sZFsafdlk";
 	private static final String workingKey = "lasjkd9234092";

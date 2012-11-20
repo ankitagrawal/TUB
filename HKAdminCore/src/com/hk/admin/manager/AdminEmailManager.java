@@ -158,7 +158,8 @@ public class AdminEmailManager {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean sendCampaignMails(List<EmailRecepient> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
+    public boolean sendCampaignMails(List<EmailRecepient> emailersList, EmailCampaign emailCampaign, String senderEMail,
+                                     String senderName, String replyToEmail, String xsmtpapi) {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("X-SMTPAPI", xsmtpapi);
         headerMap.put("X-Mailgun-Variables", xsmtpapi);
@@ -194,7 +195,7 @@ public class AdminEmailManager {
 
                 valuesMap.put(EmailMapKeyConstants.name, emailRecepient.getName());
 
-                Map<String, HtmlEmail> email = emailService.createHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getName(), "info@healthkart.com", headerMap);
+                Map<String, HtmlEmail> email = emailService.createHtmlEmail(freemarkerTemplate, valuesMap, senderEMail, senderName, emailRecepient.getEmail(), emailRecepient.getName(),replyToEmail,"", headerMap);
                 if(email != null){
                     emailList.add(email);
                     // keep a record in history
@@ -202,7 +203,7 @@ public class AdminEmailManager {
                     emailRecepient.setLastEmailDate(new Date());
                     emailRecepientRecs.add(emailRecepient);
 
-                    EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistoryObject("no-reply@healthkart.com", "HealthKart",
+                    EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistoryObject(senderEMail, senderName,
                             getBaseDao().get(EmailType.class, emailCampaign.getEmailType().getId()), emailRecepient, emailCampaign, "");
                     emailHistoryRecs.add(emailerHistory);
 
@@ -230,7 +231,7 @@ public class AdminEmailManager {
     }
 
 
-    public void sendCampaignByUploadingFile(List<Long> userIds, List<String> emailIds, EmailCampaign emailCampaign, int maxResultCount) {
+    public void sendCampaignByUploadingFile(List<Long> userIds, List<String> emailIds, EmailCampaign emailCampaign, int maxResultCount, String senderEmail, String senderName, String replyToEmail) {
         List<String> finalCategories = new ArrayList<String>();
         finalCategories.add("User Ids Excel");
         String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
@@ -249,7 +250,7 @@ public class AdminEmailManager {
 
             if (filteredUsers.size() > 0) {
                 logger.info(" user list size " + filteredUsers.size());
-                sendCampaignMails(filteredUsers, emailCampaign, xsmtpapi);
+                sendCampaignMails(filteredUsers, emailCampaign,senderEmail, senderName,replyToEmail, xsmtpapi);
             }
         } while (filteredUsers.size() > 0);
     }

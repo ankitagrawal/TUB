@@ -19,12 +19,12 @@
 
           var limitIndex = eval(lastIndex + "+1");
 
-            if (limitIndex >= 6)
+            /*if (limitIndex >= 6)
             {
               alert("Product display limit exceeded!!");
               $(".addRowButton").hide();
               return false;
-            }
+            }*/
 
           var newRowHtml =
               '<tr count="' + limitIndex + '" class="lastRow">' +

@@ -54,7 +54,8 @@ public class SuperSaverImageServiceImpl implements SuperSaverImageService {
     return superSaverImages;
   }
 
-  public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, Boolean getDeleted, int page, int perPage) {
+  @SuppressWarnings("unchecked")
+public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, Boolean getDeleted, int page, int perPage) {
     Page superSaverPage;
     List<SuperSaverImage> superSaverImages = superSaverImageDao.getSuperSaverImages(categories, brands, getVisible, getDeleted);
 

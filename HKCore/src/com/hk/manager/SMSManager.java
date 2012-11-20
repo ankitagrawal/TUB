@@ -1,17 +1,16 @@
 package com.hk.manager;
 
+import java.util.HashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
 import com.hk.impl.service.SMSService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA. User: Ajeet Date: May 28, 2011 Time: 11:51:32 AM To change this template use File |
@@ -21,10 +20,10 @@ import java.util.HashMap;
 @SuppressWarnings("unchecked")
 @Component
 public class SMSManager {
-    private static Logger logger = LoggerFactory.getLogger(SMSManager.class);
+    // private static Logger logger = LoggerFactory.getLogger(SMSManager.class);
 
     @Autowired
-    SMSService            smsService;
+    SMSService smsService;
 
     public boolean sendSMS(String message, String mobile) {
         return smsService.sendSMS(message, mobile);
@@ -42,10 +41,10 @@ public class SMSManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", order);
         valuesMap.put("payment", order.getPayment());
-	    if (order.isCOD()) {
-           return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.codOrderPlacedSMS, valuesMap);
+        if (order.isCOD()) {
+            return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.codOrderPlacedSMS, valuesMap);
         } else {
-           return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.orderPlacedSMS, valuesMap);
+            return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.orderPlacedSMS, valuesMap);
         }
     }
 
@@ -54,22 +53,22 @@ public class SMSManager {
         valuesMap.put("shippingOrder", shippingOrder);
         valuesMap.put("shipment", shippingOrder.getShipment());
 
-	    Order order = shippingOrder.getBaseOrder();
-	    Address address = order.getAddress();
-	    if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
-		    if (order.isCOD()) {
-			    return smsService.sendSMSUsingTemplate(address.getPhone(), SMSTemplateConstants.codOrderShippedSMS, valuesMap);
-		    } else {
-			    return smsService.sendSMSUsingTemplate(address.getPhone(), SMSTemplateConstants.orderShippedSMS, valuesMap);
-		    }
-	    } else {
-		    if (order.isCOD()) {
-			    return smsService.sendSMSUsingTemplate(address.getPhone(), SMSTemplateConstants.codOrderPartialShippedSMS, valuesMap);
-		    } else {
+        Order order = shippingOrder.getBaseOrder();
+        Address address = order.getAddress();
+        if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
+            if (order.isCOD()) {
+                return smsService.sendSMSUsingTemplate(address.getPhone(), SMSTemplateConstants.codOrderShippedSMS, valuesMap);
+            } else {
+                return smsService.sendSMSUsingTemplate(address.getPhone(), SMSTemplateConstants.orderShippedSMS, valuesMap);
+            }
+        } else {
+            if (order.isCOD()) {
+                return smsService.sendSMSUsingTemplate(address.getPhone(), SMSTemplateConstants.codOrderPartialShippedSMS, valuesMap);
+            } else {
 
-			    return smsService.sendSMSUsingTemplate(address.getPhone(), SMSTemplateConstants.orderPartialShippedSMS, valuesMap);
-		    }
-	    }
+                return smsService.sendSMSUsingTemplate(address.getPhone(), SMSTemplateConstants.orderPartialShippedSMS, valuesMap);
+            }
+        }
     }
 
     public boolean sendOrderDeliveredSMS(Order order) {
@@ -79,11 +78,11 @@ public class SMSManager {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())) {
             return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.orderDeliveredSMS, valuesMap);
         }
-	    return false;
+        return false;
     }
 
     public static class SMSTemplateConstants {
-	    
+
         public static final String orderPlacedSMS            = "/sms/orderPlacedSms.ftl";
         public static final String codOrderPlacedSMS         = "/sms/codOrderPlacedSms.ftl";
         public static final String orderPartialShippedSMS    = "/sms/orderPartialShippedSms.ftl";

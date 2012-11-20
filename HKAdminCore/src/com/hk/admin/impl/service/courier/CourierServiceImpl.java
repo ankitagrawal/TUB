@@ -133,8 +133,11 @@ public class CourierServiceImpl implements CourierService {
 	return courierDao.getCouriers(courierIds, courierNames ,disabled);
 	}
 
+	public List<Courier>  getCouriers(String pincode ,Boolean isrGroundShipping ,Boolean isCod,Boolean isCodAvailableOnGroundShipping,Boolean disabled){
+		return getCourierServiceInfoDao().getCouriers(pincode ,isrGroundShipping ,isCod,isCodAvailableOnGroundShipping, disabled);
+	}
+
 	public Page getCouriers(String courierName,Boolean disabled,int page, int perPage){
 		return  courierDao.getCouriers(courierName,disabled,page,perPage);
 	}
-
 }

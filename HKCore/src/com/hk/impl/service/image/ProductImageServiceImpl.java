@@ -24,7 +24,7 @@ public class ProductImageServiceImpl implements ProductImageService {
 	ProductImageDao productImageDao;
 
 	@Override
-	public List<ProductImage> searchProductImages(Long imageTypeId, Product product, ProductVariant productVariant, boolean fetchVariantImages, boolean fetchHiddenImages) {
+	public List<ProductImage> searchProductImages(Long imageTypeId, Product product, ProductVariant productVariant, boolean fetchVariantImages, Boolean fetchHiddenImages) {
 		return productImageDao.searchProductImages(imageTypeId, product, productVariant, fetchVariantImages, fetchHiddenImages);
 	}
 }
