@@ -22,7 +22,6 @@ import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
-import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -36,13 +35,12 @@ public class PendingRewardPointQueueAction extends BasePaginatedAction {
     @Autowired
     RewardPointDao             rewardPointDao;
     @Autowired
-    ReferrerProgramManager     referrerProgramManager;
-    @Autowired
     private RewardPointService rewardPointService;
 
     private Integer            defaultPerPage = 30;
     private RewardPointMode    rewardPointMode;
 
+    @SuppressWarnings("unchecked")
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
@@ -61,7 +59,7 @@ public class PendingRewardPointQueueAction extends BasePaginatedAction {
     }
 
     public Resolution save() {
-        referrerProgramManager.approveRewardPoints(rewardPointList, null);
+        rewardPointService.approveRewardPoints(rewardPointList, null);
         return new RedirectResolution(PendingRewardPointQueueAction.class).addParameter("rewardPointMode", rewardPointMode);
     }
 
