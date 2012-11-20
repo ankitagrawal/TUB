@@ -149,7 +149,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             List<RewardPoint> rewardPointList = getRewardPointService().findByReferredOrder(order);
             if (rewardPointList != null && rewardPointList.size() > 0) {
                 for (RewardPoint rewardPoint : rewardPointList) {
-                    referrerProgramManager.cancelReferredOrderRewardPoint(rewardPoint);
+                    rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
             // Send Email Comm. for HK Users Only
