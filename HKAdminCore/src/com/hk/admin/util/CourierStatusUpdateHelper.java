@@ -370,6 +370,58 @@ public class CourierStatusUpdateHelper {
         return responseMap;
     }
 
+	public Element updateDeliveryStatusQuantium (String trackingId) throws HealthkartCheckedException{
+		Element    xmlElement   = null;
+        String inputLine = "";
+        String response = "";
+        courierName="(Quantium)";
+
+        //added for debugging
+        trackingId              = "HKP001218";
+
+        try {
+            url = new URL("http://atquantiumaspac.com/QSDTSAPI/TrackXML.aspx?trackingno="+ trackingId);
+            bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                if (inputLine != null) {
+                    response += inputLine;
+                }
+            }
+
+            Document doc = new SAXBuilder().build(new StringReader(response));
+            XPath xPath = XPath.newInstance("/*/Shipment");
+            xmlElement = (Element) xPath.selectSingleNode(doc);
+
+        } catch (MalformedURLException mue) {
+            logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION +courierName+ trackingId);
+            throw new HealthkartCheckedException(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
+
+        } catch (IOException ioe) {
+            logger.debug(CourierConstants.IO_EXCEPTION +courierName+ trackingId);
+            throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
+
+        } catch (NullPointerException npe) {
+            logger.debug(CourierConstants.NULL_POINTER_EXCEPTION +courierName+ trackingId);
+            throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
+
+        } catch (Exception e) {
+            logger.debug(CourierConstants.EXCEPTION +courierName + trackingId);
+            throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
+
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                logger.debug(CourierConstants.IO_EXCEPTION +courierName+ trackingId);
+                throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
+
+            }
+        }
+        return xmlElement;
+
+	}
+
 	@SuppressWarnings("unchecked")
 	public String getHkDeliveryStatusForUser(String status){
 		Map responseMap = new HashMap<String, String>();

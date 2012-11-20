@@ -360,6 +360,28 @@ public class DeliveryStatusUpdateManager {
 
             }
         }
+		else if (courierName.equalsIgnoreCase(CourierConstants.QUANTIUM)){
+			courierIdList = new ArrayList<Long>();
+            courierIdList.add(EnumCourier.Quantium.getId());
+            shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+            //Map<String, String> responseMap = new HashMap<String, String>();
+			Element responseElement;
+            String courierDeliveryStatus = null;
+            String deliveryDateString = null;
+            if (shippingOrderList != null && shippingOrderList.size() > 0) {
+                for (ShippingOrder shippingOrderInList : shippingOrderList) {
+                    trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
+                    try {
+                        responseElement = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
+                        if (responseElement != null) {
+						}
+					}
+					catch(Exception e){
+
+					}
+				}
+			}
+		}
         return ordersDelivered;
     }
 
