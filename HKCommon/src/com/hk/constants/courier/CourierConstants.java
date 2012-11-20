@@ -18,6 +18,8 @@ public class CourierConstants {
     public static final String HEALTHKART_CHECKED_EXCEPTION = "Sorry,some problem occurred.Please contact the administrator.";
 	public static final String PINCODE_INVALID = "Pincode could not be found in system";
 	public static final String SUGGESTED_COURIER_NOT_FOUND = "Suggested Courier is not found";
+	public static final String COURIER_SERVICE_INFO_NOT_FOUND = "Courier service not available here";
+	public static final String DROP_SHIPPED_ORDER = "No shipment for drop shipped orders";
 	public static final String AWB_NOT_ASSIGNED = "Could not assign Awb";
 
 

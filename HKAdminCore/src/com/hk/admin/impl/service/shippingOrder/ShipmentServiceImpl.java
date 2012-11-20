@@ -69,11 +69,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		boolean isGroundShipped = false;
 		Courier suggestedCourier = null;
 		isGroundShipped = isShippingOrderHasGroundShippedItem(shippingOrder);
-		if (shippingOrder.getAmount() == 0) {
-			suggestedCourier = courierService.getDefaultCourier(pincode, false, isGroundShipped, shippingOrder.getWarehouse());
-		} else {
-			suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
-		}
+		suggestedCourier = getCourierForShipment(shippingOrder,pincode,isGroundShipped);
 
         //todo neha can you log in shipment auto created comments, whether  courier is AIR or ground shipped
 
@@ -83,14 +79,25 @@ public class ShipmentServiceImpl implements ShipmentService {
 					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
 			return null;
 		}
+			else{
+				String pin = pincode.getPincode();
+				Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
+				if (courierServiceInfoDao.isCourierServiceInfoAvailable(suggestedCourier.getId(), pin, shippingOrder.isCOD(),isGroundShipped,isCodAllowedOnGroundShipping) == false){
+					shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+						EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
+					return null;
+				}
+			}
+
 
         //todo neha we need to put a check if a pincode default courier is not among available courier, currently put a log, while you create a shipment, later on we wont create such shipments
 
 
 		for (LineItem lineItem : shippingOrder.getLineItems()) { 			
 			if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
+				shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+						EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.DROP_SHIPPED_ORDER);
 				return null;
-                //todo put a log here
 			}			
 		}
 
@@ -146,13 +153,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 
 	@Transactional
 	private Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
-		Awb suggestedAwb;
-        //todo neha can this logic be moved to a generic place
-		if (shippingOrder.getAmount() == 0) {
-			suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), false, EnumAwbStatus.Unused.getAsAwbStatus());
-		} else {
-			suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
-		}
+
+		Awb suggestedAwb = getAwbForShipment(courier, shippingOrder);
 		if (suggestedAwb == null) {
 			return null;
 		}
@@ -209,6 +211,26 @@ public class ShipmentServiceImpl implements ShipmentService {
 			}
 		}
 		return estimatedWeight / 1000;
+	}
+
+	public Awb getAwbForShipment (Courier courier, ShippingOrder shippingOrder){
+		Awb suggestedAwb;
+		if (shippingOrder.getAmount() == 0) {
+			suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), false, EnumAwbStatus.Unused.getAsAwbStatus());
+		} else {
+			suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+		}
+		return suggestedAwb;
+	}
+
+	public Courier getCourierForShipment (ShippingOrder shippingOrder, Pincode pincode, Boolean isGroundShipped){
+		Courier suggestedCourier;
+		if (shippingOrder.getAmount() == 0) {
+			suggestedCourier = courierService.getDefaultCourier(pincode, false, isGroundShipped, shippingOrder.getWarehouse());
+		} else {
+			suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
+		}
+		return suggestedCourier;
 	}
 
 	public UserService getUserService() {
