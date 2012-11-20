@@ -34,7 +34,7 @@
     <h2>${ha.heading.name}</h2>
     <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
-	      <tr><th>Product</th><th>Availability</th></tr>
+	      <tr><th>Product</th><th>OOS</th></tr>
         <c:forEach var="product" items="${ha.heading.products}">
           <tr>
             <td>
