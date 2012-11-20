@@ -110,7 +110,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
         if (shippingOrder != null) {
             Shipment shipment = shippingOrder.getShipment();
-            if (shipment != null && courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
+            if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                 shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
                 shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                 shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
@@ -169,7 +169,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         if (shippingOrderList != null) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 Shipment shipment = shippingOrder.getShipment();
-                if (shipment != null && courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
+                if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                     if (overrideHistoricalShipmentCost || shipment.getEstmShipmentCharge() == null) {
                         shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
                         shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));

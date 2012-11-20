@@ -43,6 +43,7 @@
 		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/recaptcha4j-0.0.7.jar" />
 		<fileset file="${lib.root.dir}/citrus/SFA-1.2.jar" />
+		<fileset file="${lib.root.dir}/icici/sfa.jar" />
         <fileset file="${lib.root.dir}/citrus/citruspay-merchant-kit-1.0.jar" />
         <fileset file="${project.common.dir}/dependencies/groovy-all-1.5.6.jar" />
 		<fileset file="${project.common.dir}/dependencies/javaee.jar" />

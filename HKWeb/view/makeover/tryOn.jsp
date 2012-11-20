@@ -37,7 +37,7 @@
                 id:"myId",
                 name:"myId"
             };
-            swfobject.embedSWF("Healthkart_08-11-12.swf", "myContent", "100%", "100%", "10.2.0", "expressInstall.swf", flashvars, params, attributes);
+            swfobject.embedSWF("HealthKart_16-11-12.swf", "myContent", "100%", "100%", "10.2.0", "expressInstall.swf", flashvars, params, attributes);
             function addToCart(products) {
                 alert(products);
             }
@@ -46,9 +46,9 @@
     <s:layout-component name="lhsContent">
 
         <div id="wrapper">
-            <table width="990px" border="0" align="center" cellpadding="0" cellspacing="0" id="Table1">
+            <table width="960px" border="0" align="center" cellpadding="0" cellspacing="0" id="Table1">
                 <tr>
-                    <td width="990px" height="560px">
+                    <td width="960px" height="560px">
                         <div id="myContent">
                             <h1>
                                 Alternative content</h1>

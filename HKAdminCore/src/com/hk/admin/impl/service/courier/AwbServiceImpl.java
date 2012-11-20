@@ -47,8 +47,10 @@ public class AwbServiceImpl implements AwbService {
         ThirdPartyAwbDetails thirdPartyAwbDetails = thirdPartyAwbService.getThirdPartyAwbDetails(shippingOrder, weightInKg);
         if (thirdPartyAwbDetails != null) {
             Awb hkAwb = createAwb(courier, thirdPartyAwbDetails.getTrackingNumber(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
+			if (shippingOrder.getAmount() == 0){
+				thirdPartyAwbDetails.setCod(false);
+			}
             hkAwb = thirdPartyAwbService.syncHKAwbWithThirdPartyAwb(hkAwb, thirdPartyAwbDetails);
-
             thirdPartyAwbService.syncHKCourierServiceInfo(courierId, thirdPartyAwbDetails);
 
             return hkAwb;
@@ -71,14 +73,15 @@ public class AwbServiceImpl implements AwbService {
                //awbDao.delete(awb);
         }
         else{
-           awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-           awbDao.save(awb);
+//           awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+//           awbDao.save(awb);
+	     save(awb,EnumAwbStatus.Unused.getId().intValue());
         }
     }
 
-    public Awb save(Awb awb) {
-        return (Awb) awbDao.save(awb);
-    }
+	public Object save(Awb awb, Integer newStatus) {
+	return awbDao.save(awb,newStatus);
+	}
 
     public Awb findByCourierAwbNumber(Courier courier, String awbNumber) {
         return awbDao.findByCourierAwbNumber(courier, awbNumber);
@@ -92,21 +95,25 @@ public class AwbServiceImpl implements AwbService {
         return awbDao.getAlreadyPresentAwb(courier, awbNumberList);
     }
 
-    private Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod) {
+
+  	public  Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod) {
         Awb awb = new Awb();
         awb.setCourier(courier);
         awb.setAwbNumber(trackingNumber);
         awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
         awb.setWarehouse(warehouse);
         awb.setCod(isCod);
-        awb.setAwbBarCode(trackingNumber);
-        awb.setUsed(false);
+        awb.setAwbBarCode(trackingNumber); 
+	    return awb;
 
-        return awb;
     }
 
     public void delete(Awb awb){
         awbDao.delete(awb);
     }
+
+	public void refresh(Awb awb){
+		awbDao.refresh(awb);
+	}
 
 }

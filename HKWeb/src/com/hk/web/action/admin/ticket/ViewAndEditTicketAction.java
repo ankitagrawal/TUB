@@ -69,8 +69,9 @@ public class ViewAndEditTicketAction extends BaseAction {
         if (ticketHistory == null) {
             addRedirectAlertMessage(new LocalizableMessage("/ViewAndEditTicketaction.nothing.to.change"));
         } else {
-            DisplayTicketHistoryDto displayTicketHistoryDto = ticketManager.getLatestChangeDispayHistoryDto(ticketHistory, ticketHistory.getTicket());
-//            getAdminEmailManager().sendEditTicketEmail(ticketHistory.getTicket(), displayTicketHistoryDto);
+            // DisplayTicketHistoryDto displayTicketHistoryDto =
+            ticketManager.getLatestChangeDispayHistoryDto(ticketHistory, ticketHistory.getTicket());
+            // getAdminEmailManager().sendEditTicketEmail(ticketHistory.getTicket(), displayTicketHistoryDto);
             addRedirectAlertMessage(new LocalizableMessage("/ViewAndEditTicketaction.edited"));
         }
         return new RedirectResolution(ViewAndEditTicketAction.class).addParameter("ticket", ticketHistoryDto.getTicket().getId());
@@ -123,6 +124,5 @@ public class ViewAndEditTicketAction extends BaseAction {
     public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
         this.adminEmailManager = adminEmailManager;
     }
-    
-    
+
 }
