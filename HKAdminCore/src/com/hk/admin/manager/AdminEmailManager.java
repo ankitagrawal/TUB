@@ -159,7 +159,8 @@ public class AdminEmailManager {
 
     @SuppressWarnings("unchecked")
     public boolean sendCampaignMails(List<EmailRecepient> emailersList, EmailCampaign emailCampaign, String senderEMail,
-                                     String senderName, String replyToEmail, String xsmtpapi) {
+                                     String senderName, String replyToEmail, String xsmtpapi, SendCampaignResult sendCampaignResult) {
+        boolean isCampaignSentSuccess = true;
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("X-SMTPAPI", xsmtpapi);
         headerMap.put("X-Mailgun-Variables", xsmtpapi);
@@ -186,6 +187,7 @@ public class AdminEmailManager {
         int breakFromLoop = emailersList.size() < COMMIT_COUNT ? emailersList.size() : COMMIT_COUNT;
 
         Session session = baseDao.getHibernateTemplate().getSessionFactory().openSession();
+        List<Map<String, HtmlEmail>> tempEmailList = new ArrayList<Map<String, HtmlEmail>>();
 
         for (EmailRecepient emailRecepient : emailersList) {
             try {
@@ -197,7 +199,7 @@ public class AdminEmailManager {
 
                 Map<String, HtmlEmail> email = emailService.createHtmlEmail(freemarkerTemplate, valuesMap, senderEMail, senderName, emailRecepient.getEmail(), emailRecepient.getName(),replyToEmail,"", headerMap);
                 if(email != null){
-                    emailList.add(email);
+                    tempEmailList.add(email);
                     // keep a record in history
                     emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
                     emailRecepient.setLastEmailDate(new Date());
@@ -209,8 +211,20 @@ public class AdminEmailManager {
 
                     commitCount++;
                     if (commitCount == breakFromLoop) {
-                        getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
-                        getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
+                        boolean emailRecipientsRecorded = getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
+                        boolean emailHistoryRecorded = getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
+
+                        if (emailHistoryRecorded && emailRecipientsRecorded) {
+                            emailList.addAll(tempEmailList);
+                        } else {
+                            sendCampaignResult.setCampaignSentSuccess(false);
+                            for (Map<String, HtmlEmail> map : tempEmailList) {
+                                List<String> emailListInMap = new ArrayList<String>(map.keySet());
+                                sendCampaignResult.addErrorEmaiList(emailListInMap);
+                            }
+                        }
+                        
+                        tempEmailList.clear();
                         commitCount = 0;
                         emailHistoryRecs.clear();
                         emailRecepientRecs.clear();
@@ -227,7 +241,7 @@ public class AdminEmailManager {
 
         emailService.sendBulkHtmlEmail(emailList, emailCampaign);
         session.close();
-        return true;
+        return isCampaignSentSuccess;
     }
 
 
@@ -250,7 +264,11 @@ public class AdminEmailManager {
 
             if (filteredUsers.size() > 0) {
                 logger.info(" user list size " + filteredUsers.size());
-                sendCampaignMails(filteredUsers, emailCampaign,senderEmail, senderName,replyToEmail, xsmtpapi);
+                SendCampaignResult sendCampaignResult = new SendCampaignResult();
+                sendCampaignMails(filteredUsers, emailCampaign, senderEmail, senderName, replyToEmail, xsmtpapi, sendCampaignResult);
+                if (!sendCampaignResult.isCampaignSentSuccess()) {
+                    logger.error("Error in sending file upload campaing to :" + sendCampaignResult.getErrorEmails().toString());
+                }
             }
         } while (filteredUsers.size() > 0);
     }
