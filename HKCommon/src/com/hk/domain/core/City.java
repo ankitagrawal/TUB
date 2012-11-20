@@ -16,6 +16,7 @@ import javax.persistence.Table;
  * Time: 7:15:12 PM
  * To change this template use File | Settings | File Templates.
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "city")
 public class City implements java.io.Serializable,Comparator<City>{

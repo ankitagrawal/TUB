@@ -16,11 +16,6 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	@Column (name = "id", unique = true, nullable = false)
 	private Long id;
 
-    @JsonSkip
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "courier_id")
-    private Courier courier;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "awb_id")
     private Awb awb;
@@ -94,13 +89,6 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 		this.id = id;
 	}
 
-	public Courier getCourier() {
-		return courier;
-	}
-
-	public void setCourier(Courier courier) {
-		this.courier = courier;
-	}
 
 	public BoxSize getBoxSize() {
 		return boxSize;

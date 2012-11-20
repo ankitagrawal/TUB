@@ -108,6 +108,16 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     @Autowired
     private AdminEmailCampaignService adminEmailCampaignService;
 
+    @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
+    String                            senderEmail;
+
+    @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyName + "']}")
+    String                            senderName;
+
+    String                            replyToEmail =  "info@healthkart.com";
+
+    boolean                           sendHeaders = true;
+
     @SuppressWarnings("unchecked")
     @DefaultHandler
     @DontValidate
@@ -179,12 +189,12 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         for (String userId : userIdList) {
             longUserIdList.add(Long.parseLong(userId));
             if (longUserIdList.size() == maxResultCount) {
-                getAdminEmailManager().sendCampaignByUploadingFile(longUserIdList, null, emailCampaign, maxResultCount);
+                getAdminEmailManager().sendCampaignByUploadingFile(longUserIdList, null, emailCampaign, maxResultCount, senderEmail, senderName, replyToEmail);
                 longUserIdList.clear();
             }
         }
         if (longUserIdList.size() > 0) {
-            getAdminEmailManager().sendCampaignByUploadingFile(longUserIdList, null, emailCampaign, maxResultCount);
+            getAdminEmailManager().sendCampaignByUploadingFile(longUserIdList, null, emailCampaign, maxResultCount, senderEmail, senderName,replyToEmail);
         }
 
         addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
@@ -219,13 +229,13 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         for (String emailId : userEmails) {
             userEmailsList.add(emailId);
             if (userEmailsList.size() == maxResultCount) {
-                getAdminEmailManager().sendCampaignByUploadingFile(null, userEmailsList, emailCampaign, maxResultCount);
+                getAdminEmailManager().sendCampaignByUploadingFile(null, userEmailsList, emailCampaign, maxResultCount, senderEmail, senderName, replyToEmail);
                 userEmailsList.clear();
             }
         }
 
         if (userEmailsList.size() > 0) {
-            getAdminEmailManager().sendCampaignByUploadingFile(null, userEmailsList, emailCampaign, maxResultCount);
+            getAdminEmailManager().sendCampaignByUploadingFile(null, userEmailsList, emailCampaign, maxResultCount, senderEmail, senderName, replyToEmail);
         }
 
         addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
@@ -252,6 +262,10 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
                 }
             }
         }
+        String xsmtpapi = "";
+        if (sendHeaders){
+            xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
+        }
         List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
         Long emailRecepientCount = getAdminEmailService().getMailingListCountByCampaign(emailCampaign);
         Long MAX_EMAILS = 200000L; //todo: HACKY-Code to save us from going into infinite loop..Need better implementation here
@@ -263,7 +277,9 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
             } else if (categories.equalsIgnoreCase("all-unverified")) {
                 emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)), maxResultCount);
             }
-
+            if ((emailRecepients == null) || emailRecepients.isEmpty()){
+                break;
+            }
             List<String> emailRecepientsWithHistory = getAdminEmailService().getEmailRecepientsByEmailIds(emailCampaign, emailRecepients);
             Set<String> historyEmails = new HashSet<String>();
             historyEmails.addAll(emailRecepientsWithHistory);
@@ -278,8 +294,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
             if (validEmailRecepients.size() > 0) {
                 logger.info(" user list size " + validEmailRecepients.size());
-                String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
-                getAdminEmailManager().sendCampaignMails(validEmailRecepients, emailCampaign, xsmtpapi);
+                getAdminEmailManager().sendCampaignMails(validEmailRecepients, emailCampaign,senderEmail, senderName,replyToEmail, xsmtpapi);
             }
             pageCount++;
             usersBrowsed += maxResultCount;
@@ -295,8 +310,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
                         emailRecepients = getAdminEmailService().getMailingListByCategory(emailCampaign, category, maxResultCount);
                         if (emailRecepients.size() > 0) {
                             logger.info(" user list size " + emailRecepients.size());
-                            String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
-                            getAdminEmailManager().sendCampaignMails(emailRecepients, emailCampaign, xsmtpapi);
+                            getAdminEmailManager().sendCampaignMails(emailRecepients, emailCampaign,senderEmail, senderName,replyToEmail, xsmtpapi);
                         }
 
                     } while (emailRecepients.size() > 0);
@@ -500,5 +514,37 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     public void setMailGunCampaignId(String mailGunCampaignId) {
         this.mailGunCampaignId = mailGunCampaignId;
+    }
+
+    public String getSenderEmail() {
+        return senderEmail;
+    }
+
+    public void setSenderEmail(String senderEmail) {
+        this.senderEmail = senderEmail;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public boolean isSendHeaders() {
+        return sendHeaders;
+    }
+
+    public void setSendHeaders(boolean sendHeaders) {
+        this.sendHeaders = sendHeaders;
+    }
+
+    public String getReplyToEmail() {
+        return replyToEmail;
+    }
+
+    public void setReplyToEmail(String replyToEmail) {
+        this.replyToEmail = replyToEmail;
     }
 }

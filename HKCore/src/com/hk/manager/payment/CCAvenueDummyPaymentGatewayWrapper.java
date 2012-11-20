@@ -12,7 +12,8 @@ import java.util.zip.Adler32;
  * Date: Jan 14, 2009
  */
 public class CCAvenueDummyPaymentGatewayWrapper extends BasePaymentGatewayWrapper<CCAvenueDummyPaymentGatewayWrapper> implements PaymentGatewayWrapper {
-	private String url;
+	@SuppressWarnings("unused")
+    private String url;
 
 	public String getGatewayUrl() {
 		return "/ccavenueDummyGateway.jsp";

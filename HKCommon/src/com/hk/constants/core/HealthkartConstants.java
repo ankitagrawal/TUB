@@ -13,6 +13,8 @@ public class HealthkartConstants {
     public static final String newSession = "newSession";
     public static final String userId = "userId";
     public static final String signupDate = "signupDate";
+    public static final String orderCount = "orderCount";
+    public static final String orderCountSetBoolean = "orderCountSet";
   }
 
   public static class Cookie {        

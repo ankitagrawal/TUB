@@ -872,6 +872,18 @@
     </function>
     <function>
         <description>
+            get TryOnImageURL for a product variant
+        </description>
+        <name>getTryOnImageURL</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getTryOnImageURL(com.hk.domain.catalog.product.ProductVariant))
+        </function-signature>
+        <example>
+            ${hk:getTryOnImageURL(${product})}
+        </example>
+    </function>
+    <function>
+        <description>
             get cod converter url for an order
         </description>
         <name>getCodConverterLink</name>
@@ -909,7 +921,7 @@
         </description>
         <name>searchProductImages</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long searchProductImages(com.hk.domain.catalog.product.Product,com.hk.domain.catalog.product.ProductVariant,java.lang.Long,boolean,java.lang.Boolean)</function-signature>
+        <function-signature>java.lang.Long searchProductImages(com.hk.domain.catalog.product.Product,com.hk.domain.catalog.product.ProductVariant,java.lang.Long,boolean,java.lang.Object)</function-signature>
         <example>
         ${hk:searchProductImages(${product})}
         </example>
