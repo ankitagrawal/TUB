@@ -87,7 +87,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 	@Autowired
 	private ShippingOrderStatusService shippingOrderStatusService;
 
-    //todo neha what if a shipment wasnt auto created, are you putting the amount check here as well for cod orders?? secondly move this method out for fetching awb, tomorrow there will be more business logic constraints to fetch awb
 
 	@ValidationMethod(on = "saveShipmentDetails")
 	public void verifyShipmentDetails() {
@@ -188,12 +187,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			}
 
 			if (ThirdPartyAwbService.integratedCouriers.contains(selectedCourier.getId())) {
-//				Double weightInKg = shipment.getBoxWeight();
-//                //todo neha wth is this?  are you trying to put 100kg as weight?, btw the method above will never return weight as 0
-//				if(weightInKg == 0D){
-//					weightInKg = 0.1D;
-//				}
-				Double weightInKg = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
+				Double weightInKg = shipment.getBoxWeight();                
+				if(weightInKg == 0D){
+					weightInKg = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
+				}
 				Awb thirdPartyAwb = awbService.getAwbForThirdPartyCourier(selectedCourier, shippingOrder, weightInKg);
 				if (thirdPartyAwb == null) {
 					addRedirectAlertMessage(new SimpleMessage(" The tracking number could not be generated"));

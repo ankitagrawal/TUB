@@ -16,6 +16,9 @@ public class CourierConstants {
     public static final String EXCEPTION = "Sorry.Database updation failed.Exception encountered for Tracking Id :";
     public static final String PARSE_EXCEPTION = "Sorry.Database updation failed.ParseException occurred for Tracking Id :";
     public static final String HEALTHKART_CHECKED_EXCEPTION = "Sorry,some problem occurred.Please contact the administrator.";
+	public static final String SHIPMENT_DETAILS = "Shipment Details: ";
+	public static final String GROUND_SHIPPING = "Ground Shpping: ";
+	public static final String AIR_SHIPPING = "Air Shipping: ";
 	public static final String PINCODE_INVALID = "Pincode could not be found in system";
 	public static final String SUGGESTED_COURIER_NOT_FOUND = "Suggested Courier is not found";
 	public static final String COURIER_SERVICE_INFO_NOT_FOUND = "Courier service not available here";
