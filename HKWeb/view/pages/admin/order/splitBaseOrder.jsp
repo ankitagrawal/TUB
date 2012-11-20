@@ -64,7 +64,13 @@
         </tbody>
       </table>
       <s:hidden name="baseOrder" value="${splitBaseOrderAction.baseOrder}"/>
-      <s:submit name="splitBaseOrder" value="Split Order"/>
+      <s:submit name="splitBaseOrder" value="Split Order" class="splitBaseOrderButton"/>
     </s:form>
+      <script type="text/javascript">
+          $('.splitBaseOrderButton').click(function disableSplitBaseOrderButton(){
+              $(this).css("display", "none");
+          });
+      </script>
+
   </s:layout-component>
 </s:layout-render>

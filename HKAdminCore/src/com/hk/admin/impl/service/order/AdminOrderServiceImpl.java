@@ -149,7 +149,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             List<RewardPoint> rewardPointList = getRewardPointService().findByReferredOrder(order);
             if (rewardPointList != null && rewardPointList.size() > 0) {
                 for (RewardPoint rewardPoint : rewardPointList) {
-                    referrerProgramManager.cancelReferredOrderRewardPoint(rewardPoint);
+                    rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
             // Send Email Comm. for HK Users Only
@@ -330,8 +330,18 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
-        if (!shippingOrderExists) {
-            shippingOrders = getOrderService().createShippingOrders(order);
+        if (shippingOrderExists) {
+            if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+                order.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
+                order = getOrderService().save(order);
+            }
+        } else {
+	        if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
+		        orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
+		        //DO Nothing for B2B Orders
+	        } else {
+		        shippingOrders = getOrderService().createShippingOrders(order);
+	        }
         }
 
         if (shippingOrders != null && shippingOrders.size() > 0) {
@@ -344,7 +354,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             /**
              * Order lifecycle activity logging - Order split to shipping orders
              */
-            orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+            String comments = "No. of Shipping Orders created  " + shippingOrders.size();
+            orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
 
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
