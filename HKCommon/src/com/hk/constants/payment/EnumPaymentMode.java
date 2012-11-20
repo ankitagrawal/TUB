@@ -101,7 +101,8 @@ public enum EnumPaymentMode {
 				EnumPaymentMode.CITRUS_NetBanking_New.getId(),
 				EnumPaymentMode.CITRUS_NetBanking_Old.getId(),
 				EnumPaymentMode.ICICI.getId(),
-				EnumPaymentMode.SUBSCRIPTION_PAYMENT.getId());
+				EnumPaymentMode.SUBSCRIPTION_PAYMENT.getId(),
+                EnumPaymentMode.PAYPAL_CreditDebit.getId());
 
 	}
 

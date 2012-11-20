@@ -29,4 +29,11 @@ public interface AddressDao extends BaseDao {
 
     public BillingAddress searchBillingAddress(User user);
 
+    public List<BillingAddress> getVisibleBillingAddresses(User user);
+
+    public BillingAddress getBillingAddressById(Long billingAddressId);
+
+
+
+
 }
