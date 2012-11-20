@@ -17,6 +17,7 @@
 <c:set var="poCancelled" value="<%=EnumPurchaseOrderStatus.Cancelled.getId()%>"/>
 <c:set var="poApproved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
 <c:set var="poPlaced" value="<%=EnumPurchaseOrderStatus.SentToSupplier.getId()%>"/>
+<c:set var="poReceived" value="<%=EnumPurchaseOrderStatus.Received.getId()%>"/>
 <s:layout-component name="htmlHead">
 <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -175,6 +176,9 @@
 							variantRow.find('.costPrice').val(res.data.variant.costPrice);
 							variantRow.find('.taxCategory').val(res.data.tax);
 							variantRow.find('.last30DaysSales').html(res.data.last30DaysSales);
+							if(res.data.newSku) {
+								variantRow.css('background-color', 'goldenrod');
+							}
 							productVariantDetails.html(
 									res.data.product + '<br/>' +
 											res.data.options
@@ -374,6 +378,13 @@
 		<td></td>
 		<td></td>
 	</tr>
+	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id == poReceived}">
+	<tr>
+		<td colspan="6"><s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" event="closePurchaseOrder" style="color: #0000ff;">
+			<s:param name="purchaseOrder" value="${pa.purchaseOrder.id}" />
+			Close this PO</s:link></td>
+	</tr>
+	</c:if>
 	<tr><td colspan="6" style="text-align:right;"><em class="mandatory">*</em> marked fields are mandatory</td></tr>
 
 </table>
@@ -412,9 +423,16 @@
 		<s:hidden name="poLineItems[${ctr.index}]" value="${poLineItemDto.poLineItem.id}"/>
 		<s:hidden name="poLineItems[${ctr.index}].productVariant" value="${productVariant.id}"/>
 		<%--<s:hidden name="poLineItems[${ctr.index}].sku" value="${sku.id}"/>--%>
+		<c:choose>
+			<c:when test="${hk:collectionContains(pa.newSkuIdList, poLineItemDto.poLineItem.sku.id)}">
+				<tr style="background-color:goldenrod;" count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+			</c:when>
+			<c:otherwise>
+				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+			</c:otherwise>
+		</c:choose>
 
-		<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
-			<td>${ctr.index+1}.</td>
+		<td>${ctr.index+1}.</td>
 			<td>
 				<div class='img48' style="vertical-align:top;">
 					<c:choose>

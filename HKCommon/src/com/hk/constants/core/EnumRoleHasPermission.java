@@ -184,7 +184,6 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
                     EnumPermission.HK_EMPLOYEE,
-                    EnumPermission.CREATE_REPLACEMENT_ORDER,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
             )
     ),
@@ -226,7 +225,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.MODERATE_REWARD_POINTS,
                     EnumPermission.AWARD_REWARD_POINTS,
                     EnumPermission.EDIT_LINEITEM,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+		            EnumPermission.CREATE_REPLACEMENT_ORDER
             )
     ),
 

@@ -13,6 +13,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -218,6 +219,9 @@ public class GRNAction extends BasePaginatedAction {
 
 			grn.setFinalPayableAmount(grn.getPayable() - overallDiscount);
 			goodsReceivedNoteDao.save(grn);
+			grn.getPurchaseOrder().setPurchaseOrderStatus(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus());
+			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
+
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		return new RedirectResolution(GRNAction.class);
