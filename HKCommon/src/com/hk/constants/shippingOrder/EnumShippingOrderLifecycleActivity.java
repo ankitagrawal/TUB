@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 
-
+                                            
 public enum EnumShippingOrderLifecycleActivity {
 
   SO_Created(600L, "SO Created"),
@@ -17,7 +17,7 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_Shipment_Auto_Created(616L, "SO Shipment Auto Created"),
   SO_CouldNotBeAutoEscalatedToProcessingQueue(617L, "SO Could not be Auto-escalated"),
   SO_CouldNotBeManuallyEscalatedToProcessingQueue(618L, "SO Could not be Manually-escalated"),
-  SO_ShipmentNotCreated(619L, "SO Shipment not created"),
+  SO_ShipmentNotCreated(619L, "SO Shipment Not created"),
   SO_EscalatedToProcessingQueue(620L, "SO Manually Escalated To Processing Queue"),
   SO_ChosenForPrinting(625L, "SO  Chosen for Printing and sent to Printing Queue"),
   SO_InPicking(626L, "SO in picking"),
