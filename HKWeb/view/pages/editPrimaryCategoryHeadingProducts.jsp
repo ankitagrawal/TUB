@@ -34,13 +34,14 @@
     <h2>${ha.heading.name}</h2>
     <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
-	      <tr><th>Product</th><th>OOS</th></tr>
+	      <tr><th>Product</th><th>OOS</th><th>Sorting</th></tr>
         <c:forEach var="product" items="${ha.heading.products}">
           <tr>
             <td>
               <s:checkbox class="checkbox" value="${product.id}" name="products[]"/>${product.id}
             </td>
 	          <td>${product.outOfStock}</td>
+	          <td>${product.orderRanking}</td>
           </tr>
         </c:forEach>
         <s:hidden name="heading.id" value="${ha.heading.id}"/>
