@@ -30,14 +30,14 @@ public class ProductVariantSupplierInfo implements Serializable {
 	@JoinColumn(name = "supplier_id", nullable = false)
 	private Supplier supplier;
 
-	@Column(name = "asked_qty")
-	private Long askedQty;
+	@Column(name = "asked_qty", nullable = false)
+	private Long askedQty = 0L;
 
-	@Column(name = "received_qty")
-	private Long receivedQty;
+	@Column(name = "received_qty", nullable = false)
+	private Long receivedQty = 0L;
 
-	@Column(name = "fill_rate")
-	private Double fillRate;
+	@Column(name = "fill_rate",  nullable = false)
+	private Double fillRate = 0.0;
 
 	public Long getId() {
 		return id;

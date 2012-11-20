@@ -464,7 +464,7 @@
 				<s:text name="poLineItems[${ctr.index}].qty" value="${poLineItemDto.poLineItem.qty}" class="quantity valueChange" readonly="${actionBean.purchaseOrder.purchaseOrderStatus.id >= poApproved ? 'readonly' : ''}"/>
 			</td>
 			<td>
-				<s:text name="poLineItems[${ctr.index}].fillRate" value="" />
+				${poLineItemDto.poLineItem.fillRate}
 			</td>
 			<td>
 				<s:text class="costPrice valueChange" name="poLineItems[${ctr.index}].costPrice"
@@ -497,7 +497,7 @@
 	<tfoot>
 	<tr>
 		&nbsp; &nbsp;
-		<td colspan="16">Total</td>
+		<td colspan="17">Total</td>
 		<td><s:text readonly="readonly" class="totalTaxable" name="purchaseOrderDto.totalTaxable" value="${pa.purchaseOrderDto.totalTaxable}" /></td>
 		<td><s:text readonly="readonly" class="totalTax" name="purchaseOrderDto.totalTax" value="${pa.purchaseOrderDto.totalTax}" /></td>
 		<td><s:text readonly="readonly" class="totalSurcharge" name="purchaseOrderDto.totalSurcharge" value="${pa.purchaseOrderDto.totalSurcharge}"/></td>
