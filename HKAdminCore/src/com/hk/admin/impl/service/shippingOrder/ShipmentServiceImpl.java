@@ -114,8 +114,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 
 		// If we dont have AWB , shipment will not be created
 		if (suggestedAwb == null) {
+			String msg = CourierConstants.AWB_NOT_ASSIGNED + suggestedCourier.getName();
 			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
-					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.AWB_NOT_ASSIGNED);
+					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), msg);
 			return null;
 		}
 

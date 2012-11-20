@@ -23,7 +23,7 @@ public class CourierConstants {
 	public static final String SUGGESTED_COURIER_NOT_FOUND = "Suggested Courier is not found";
 	public static final String COURIER_SERVICE_INFO_NOT_FOUND = "Courier service not available here";
 	public static final String DROP_SHIPPED_ORDER = "No shipment for drop shipped orders";
-	public static final String AWB_NOT_ASSIGNED = "Could not assign Awb";
+	public static final String AWB_NOT_ASSIGNED = "Could not assign Awb: ";
 
 
     //Common constants
