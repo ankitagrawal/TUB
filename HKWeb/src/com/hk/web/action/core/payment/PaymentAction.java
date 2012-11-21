@@ -100,10 +100,19 @@ public class PaymentAction extends BaseAction {
 				}
 			}
 
-			// first create a payment row, this will also contain the payment checksum
-			Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), bankCode);
-
 			RedirectResolution redirectResolution;
+
+            if(gateway != null && !gateway.getId().equals(EnumPaymentMode.CITRUS_CreditDebit.getId()) && bank == null){
+                Integer random = (new Random()).nextInt(100);
+                if (random % 2 == 0) {
+                    gateway = EnumPaymentMode.ICICI;
+                }
+                paymentMode = gateway.asPaymenMode();
+            }
+
+            // first create a payment row, this will also contain the payment checksum
+            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), bankCode);
+
 			if (gateway != null) {
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(gateway);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");

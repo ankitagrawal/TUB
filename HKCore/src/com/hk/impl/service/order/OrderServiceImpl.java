@@ -269,12 +269,7 @@ public class OrderServiceImpl implements OrderService {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                if (isShippingOrderExists(order)) {
-                    order.setOrderStatus(getOrderStatus(EnumOrderStatus.InProcess));
-                } else {
-                    shippingOrders = splitOrder(order);
-                }
-
+                shippingOrders = splitOrder(order);
             } else {
                 logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
             }
@@ -283,7 +278,6 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception e) {
             logger.error("Order could not be split due to some exception ", e);
         }
-
         return shippingOrders;
     }
 
@@ -297,10 +291,12 @@ public class OrderServiceImpl implements OrderService {
         boolean shouldUpdate = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-            if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
-                shouldUpdate = false;
-                break;
-            }
+	        if(!getShippingOrderService().shippingOrderHasReplacementOrder(shippingOrder)){
+				if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
+					shouldUpdate = false;
+					break;
+				}
+	        }
         }
 
         if (shouldUpdate) {
@@ -406,12 +402,15 @@ public class OrderServiceImpl implements OrderService {
         // List<Set<CartLineItem>> listOfCartLineItemSet = getMatchCartLineItemOrder(order);
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+
         CartLineItemFilter groundShipLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> groundShippedCartLineItemSet = groundShipLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
+
         CartLineItemFilter serviceCartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> serviceCartLineItems = serviceCartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();
+
         productCartLineItems.removeAll(serviceCartLineItems);
-        productCartLineItems.removeAll(groundShippedCartLineItemSet);
+        productCartLineItems.removeAll(groundShippedCartLineItemSet);    //i.e product cart lineItems without services and ground shipped product
 
         List<Set<CartLineItem>> listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
         if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {

@@ -9694,26 +9694,31 @@
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1353320715421-1">
-        <createTable tableName="product_variant_supplier_info">
-            <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="product_variant_id" type="VARCHAR(20)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="supplier_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="asked_qty" type="INT"/>
-            <column name="received_qty" type="INT"/>
-            <column name="fill_rate" type="DECIMAL(12,2)"/>
-        </createTable>
+    <changeSet author="Pratham (generated)" id="1353062520466-1">
+        <addColumn tableName="payment">
+            <column name="authid_code" type="VARCHAR(45)"/>
+        </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1353320715421-2">
-        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="product_variant_supplier_info" constraintName="fk_ProductVariantSupplierInfo_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    <changeSet author="Pratham (generated)" id="1353062520466-2">
+        <addColumn tableName="payment">
+            <column name="response_message" type="VARCHAR(200)"/>
+        </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1353320715421-3">
-        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="product_variant_supplier_info" constraintName="fk_ProductVariantSupplierInfo_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    <changeSet author="Pratham (generated)" id="1353062520466-3">
+        <addColumn tableName="payment">
+            <column name="rrn" type="VARCHAR(45)"/>
+        </addColumn>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1353062592335-4">
+        <modifyDataType columnName="error_log" newDataType="VARCHAR(100)" tableName="payment"/>
+    </changeSet>
+	<changeSet author="Seema (generated)" id="1350638740147-3">
+		<dropColumn columnName="used" tableName="awb"/>
+	</changeSet>
+	<changeSet author="Seema (generated)" id="1350891782684-2">
+		<dropForeignKeyConstraint baseTableName="shipment" constraintName="fk_package_courier1"/>
+	</changeSet>
+	<changeSet author="Seema (generated)" id="1350891782684-6">
+		<dropColumn columnName="courier_id" tableName="shipment"/>
+	</changeSet>
 </databaseChangeLog>

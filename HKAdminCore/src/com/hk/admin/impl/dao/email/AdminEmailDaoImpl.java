@@ -188,8 +188,9 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     }
 
     @SuppressWarnings("unchecked")
-    public void saveOrUpdate(Session session, Collection entities) throws DataAccessException {
+    public boolean saveOrUpdate(Session session, Collection entities) throws DataAccessException {
 
+        boolean transactionSuccesful = true;
         Transaction transaction = session.beginTransaction();
         try {
             for (Object object : entities) {
@@ -199,8 +200,11 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
             session.clear();
             transaction.commit();
         }catch(Exception ex){
+            transactionSuccesful = false;
+            logger.error("Exception while bulk update of entities . Rolling back the transaction", ex);
             transaction.rollback();
         }
+        return transactionSuccesful;
     }
 
 

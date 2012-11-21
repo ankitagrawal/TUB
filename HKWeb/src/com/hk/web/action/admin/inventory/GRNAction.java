@@ -7,8 +7,6 @@ import com.hk.admin.manager.GRNManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
-import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
-import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.util.TaxUtil;
@@ -17,7 +15,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
-import com.hk.domain.catalog.ProductVariantSupplierInfo;
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -77,10 +75,6 @@ public class GRNAction extends BasePaginatedAction {
 	private PoLineItemService poLineItemService;
 	@Autowired
 	private PurchaseOrderService purchaseOrderService;
-	@Autowired
-	private ProductVariantSupplierInfoService productVariantSupplierInfoService;
-	@Autowired
-	private GrnLineItemService grnLineItemService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloads;
@@ -210,15 +204,6 @@ public class GRNAction extends BasePaginatedAction {
 					grnLineItem.setGoodsReceivedNote(grn);
 					grnLineItemDao.save(grnLineItem);
 					getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getQty());
-
-					/*ProductVariantSupplierInfo productVariantSupplierInfo =
-							getProductVariantSupplierInfoService().getOrCreatePVSupplierInfo(grnLineItem.getSku().getProductVariant(), grn.getPurchaseOrder().getSupplier());
-
-					if (grn.getPurchaseOrder().getGoodsReceivedNotes().size() == 1) {
-						getProductVariantSupplierInfoService().updatePVSupplierInfo(productVariantSupplierInfo, grnLineItemService.getPoLineItemQty(grnLineItem), grnLineItem.getQty());
-					} else if (grn.getPurchaseOrder().getGoodsReceivedNotes().size() > 1) {
-						getProductVariantSupplierInfoService().updatePVSupplierInfo(productVariantSupplierInfo, null, grnLineItem.getQty());
-					}*/
 				}
 				sku = grnLineItem.getSku();
 				skuService.saveSku(sku);
@@ -241,6 +226,8 @@ public class GRNAction extends BasePaginatedAction {
 
 			grn.setFinalPayableAmount(grn.getPayable() - overallDiscount);
 			goodsReceivedNoteDao.save(grn);
+			grn.getPurchaseOrder().setPurchaseOrderStatus(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus());
+			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
 			getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
 
 		}
@@ -675,21 +662,5 @@ public class GRNAction extends BasePaginatedAction {
 
 	public void setPurchaseOrderService(PurchaseOrderService purchaseOrderService) {
 		this.purchaseOrderService = purchaseOrderService;
-	}
-
-	public ProductVariantSupplierInfoService getProductVariantSupplierInfoService() {
-		return productVariantSupplierInfoService;
-	}
-
-	public void setProductVariantSupplierInfoService(ProductVariantSupplierInfoService productVariantSupplierInfoService) {
-		this.productVariantSupplierInfoService = productVariantSupplierInfoService;
-	}
-
-	public GrnLineItemService getGrnLineItemService() {
-		return grnLineItemService;
-	}
-
-	public void setGrnLineItemService(GrnLineItemService grnLineItemService) {
-		this.grnLineItemService = grnLineItemService;
 	}
 }

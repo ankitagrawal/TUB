@@ -18,7 +18,7 @@
 	.productThumb h3  { font-size:15px;  line-height:27px; margin-bottom:10px; font-weight:bold; }
 	.productThumb h3 a { font-size:15px; color:#505050; border:none; }
 	.productThumb h3 a:hover { color:#000; }
-	.productThumb .tDesc { font-size:13px; background:#f0f0f0; border:1px solid #d9d9d9; width:214px; height:100px; float:right; padding:5px; margin-bottom:35px; line-height: 14px; }
+	.productThumb .tDesc { font-size:13px; width:214px; height:auto; float:right; padding:5px; margin-bottom:35px; line-height: 14px; }
 	.productThumb .tPrice { font-size:16px; clear:right;  color:#2484c6; margin-bottom:10px; }
 	.productThumb .tPrice span { font-size:12px; color:#a1a1a1; text-decoration:line-through; margin-right:15px;  }
 	.productThumb .tSave { float:left; font-size:16px; color:#e73721; font-weight:bold; }
@@ -76,7 +76,14 @@
         <h3><a href="http://www.healthkart.com/product/freestyle-freedom-lite-starter-kit/DM042">FreeStyle Freedom Lite Starter Kit</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/abbottFS/FreeStyle-Freedom-Lite-Starter-Kit.jpg" width="170" height="170"  class="tThumb" />
-        <div class="tDesc">FreeStyle Freedom Lite Starter Kit comes with 10 test strips which help you to manage and monitor your diabetic levels. It helps you to have an insight and accurate results as it is patented with the new Coulometric Technology.
+        <div class="tDesc">FreeStyle Freedom Lite Starter Kit comes with 10 test strips which help you manage and monitor your diabetic levels. It helps you to achieve accurate results as it is patented with the new Coulometric Technology. Other additional features are:<br />
+            <ul style="list-style:disc; padding-left:15px;">
+                <li>World’s smallest blood sample size- 0.3 μL</li>
+                <li>Alternate Site Testing</li>
+                <li>4 seconds test time</li>
+                <li>No coding</li>                
+                <li>Patented ZipWik Tabs</li>
+                </ul>
         </div>
 
         <p class="tPrice">
@@ -149,11 +156,7 @@
         </div>
        
    <div class="cl"></div>
-        <p style="padding-top:30px;"><strong>How to Apply Coupon Code?</strong><br/>
-            Click on the "Buy Now" tab to proceed to the product page.<br/>
-Click on "Place Order" tab. Selected item will get added to the cart. <br/>
-Proceed to checkout.                                                       <br/>
-On the checkout page, enter your Coupon Code in the discount bar and click to apply.</p>
+   
     </div>
  
     <div class="cl"></div>
