@@ -81,6 +81,7 @@
         <th>Warehouse</th>
         <th>Status</th>
         <th>Last Update Date</th>
+	      <th>Fill Rate</th>
         <th>Adv Payment</th>
         <th>Payable</th>
         <th>Est Payment Date</th>
@@ -102,6 +103,7 @@
           <td>${purchaseOrder.warehouse.city}</td>
           <td>${purchaseOrder.purchaseOrderStatus.name}</td>
           <td><fmt:formatDate value="${purchaseOrder.updateDate}" type="both" timeStyle="short"/></td>
+	        <td>${purchaseOrder.fillRate}</td>
 	      <td>
             <fmt:formatNumber value="${purchaseOrder.advPayment}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td>
