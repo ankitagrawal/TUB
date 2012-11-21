@@ -6,6 +6,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="approved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
 <c:set var="sentToSupplier" value="<%=EnumPurchaseOrderStatus.SentToSupplier.getId()%>"/>
+<c:set var="received" value="<%=EnumPurchaseOrderStatus.Received.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
  <%
     WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
@@ -135,7 +136,7 @@
 		        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInPdf" target="_blank">PDF
 			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
 		        &nbsp;
-		        <c:if test="${(purchaseOrder.purchaseOrderStatus.id == sentToSupplier)}">
+		        <c:if test="${(purchaseOrder.purchaseOrderStatus.id == sentToSupplier) || (purchaseOrder.purchaseOrderStatus.id == received)}">
 			        <br/>
 			        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
 				        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>

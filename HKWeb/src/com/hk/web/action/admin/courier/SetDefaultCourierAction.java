@@ -3,7 +3,6 @@ package com.hk.web.action.admin.courier;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
@@ -18,50 +17,50 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.user.Address;
-import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.service.core.AddressService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
 @Component
 public class SetDefaultCourierAction extends BaseAction {
     @Autowired
-    AddressService addressDao;
+    AddressService  addressDao;
 
-  @Validate(required = true)
-  private Address address;
+    @Validate(required = true)
+    private Address address;
 
-  @Validate(required = true)
-  private Courier courier;
+    @Validate(required = true)
+    private Courier courier;
 
-  @JsonHandler
-  public Resolution pre() {
-    if(address == null || courier == null) {
-      HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "courier not set");
-      return new JsonResolution(healthkartResponse);
+    @JsonHandler
+    public Resolution pre() {
+        if (address == null || courier == null) {
+            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "courier not set");
+            return new JsonResolution(healthkartResponse);
+        }
+        address.setCourier(courier);
+        addressDao.save(address);
+        Map<String, Object> data = new HashMap<String, Object>(1);
+        data.put("courier", JsonUtils.hydrateHibernateObject(courier));
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "courier set", data);
+        return new JsonResolution(healthkartResponse);
     }
-    address.setCourier(courier);
-    addressDao.save(address);
-    Map<String, Object> data = new HashMap<String, Object>(1);
-    data.put("courier", JsonUtils.hydrateHibernateObject(courier));
-    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "courier set", data);
-    return new JsonResolution(healthkartResponse);
-  }                                                
-  public Address getAddress() {
-    return address;
-  }
 
-  public void setAddress(Address address) {
-    this.address = address;
-  }
+    public Address getAddress() {
+        return address;
+    }
 
-  public Courier getCourier() {
-    return courier;
-  }
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-  public void setCourier(Courier courier) {
-    this.courier = courier;
-  }
+    public Courier getCourier() {
+        return courier;
+    }
 
+    public void setCourier(Courier courier) {
+        this.courier = courier;
+    }
 
 }

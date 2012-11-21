@@ -235,6 +235,20 @@
 
 		updateTotal('.receivedQuantity', '.totalQuantity', 1);
 
+		$('#save-button').click(function(){
+			var reconciled = $('#reconciled').is(':checked');
+			var status = $('#status').val();
+			var paymentDate = $('#payment-date').val();
+			if (paymentDate== "yyyy-mm-dd" ||  paymentDate == null || paymentDate == "") {
+				if (reconciled && status == 10) {
+					var confirm_action = confirm("PI is reconciled but status is Generated. Are you sure you don't want to change the status to Payment Pending?");
+					if (!confirm_action) {
+						event.preventDefault();
+					}
+				}
+			}
+
+		});
 	});
 </script>
 </s:layout-component>
@@ -307,7 +321,7 @@
 		<td><fmt:formatDate value="${pia.purchaseInvoice.estPaymentDate}"/></td>
 		<td>Payment Date</td>
 		<td>
-			<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseInvoice.paymentDate"/></td>
+			<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseInvoice.paymentDate" id="payment-date"/></td>
 		<td>Payment Details<br/><span class="sml gry">(eg. Cheque no.)</span></td>
 		<td><s:textarea name="purchaseInvoice.paymentDetails" style="height:50px;"/></td>
 	</tr>
@@ -316,7 +330,7 @@
 		<td>
 				${pia.purchaseInvoice.createdBy.name}</td>
 		<td>Reconciled</td>
-		<td><s:checkbox name="purchaseInvoice.reconciled"/></td>
+		<td><s:checkbox id="reconciled" name="purchaseInvoice.reconciled"/></td>
 		<td>Reconcilation Date</td>
 		<c:choose>
 			<c:when test="${hk:isNotBlank(pia.purchaseInvoice.reconcilationDate)}">
@@ -340,7 +354,7 @@
 			</s:select>
 		</td>
 		<td>Status</td>
-		<td><s:select name="purchaseInvoice.purchaseInvoiceStatus"
+		<td><s:select name="purchaseInvoice.purchaseInvoiceStatus"  id="status"
 		              value="${pia.purchaseInvoice.purchaseInvoiceStatus.id}">
 			<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="purchaseInvoiceStatusList"
 			                           value="id" label="name"/>
@@ -527,7 +541,7 @@
 <c:if test="${pia.saveEnabled}">
 	<a href="purchaseInvoice.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
-	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+	<s:submit name="save" value="Save" class="requiredFieldValidator" id="save-button"/>
 </c:if>
 <shiro:hasRole name="<%=RoleConstants.FINANCE_ADMIN%>">
 	<s:submit name="delete" value="Delete"/>

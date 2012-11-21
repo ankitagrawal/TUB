@@ -149,7 +149,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             List<RewardPoint> rewardPointList = getRewardPointService().findByReferredOrder(order);
             if (rewardPointList != null && rewardPointList.size() > 0) {
                 for (RewardPoint rewardPoint : rewardPointList) {
-                    referrerProgramManager.cancelReferredOrderRewardPoint(rewardPoint);
+                    rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
             // Send Email Comm. for HK Users Only
@@ -220,10 +220,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         boolean shouldUpdate = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-            if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
-                shouldUpdate = false;
-                break;
-            }
+	        if (!shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
+		        if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
+			        shouldUpdate = false;
+			        break;
+		        }
+	        }
         }
 
         if (shouldUpdate) {
@@ -334,7 +336,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 order = getOrderService().save(order);
             }
         } else {
-            shippingOrders = getOrderService().createShippingOrders(order);
+	        if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
+		        orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
+		        //DO Nothing for B2B Orders
+	        } else {
+		        shippingOrders = getOrderService().createShippingOrders(order);
+	        }
         }
 
         if (shippingOrders != null && shippingOrders.size() > 0) {
