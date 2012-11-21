@@ -58,6 +58,13 @@ public class CourierConstants {
     public static final String BLUEDART_STATUS = "Status";
     public static final String BLUEDART_SHIPMENT_DELIVERED = "Shipment delivered";
 
+	//Constants for QUANTIUM
+	public static final String QUANTIUM_TRACKING_NO = "TrackingNo";
+	public static final String QUANTIUM_REF_NO = "Reference";
+	public static final String QUANTIUM_STATUS = "CurrentStatus";
+	public static final String QUANTIUM_DELIVERED = "DS";
+	public static final String QUANTIUM_DELIVERY_DATE = "LastUpdatedDate";
+
     //Constants for Healthkart Delivery
     public static final String HKDELIVERY_WORKSHEET_FOLDER = "hkDeliveryWorksheet";
     public static final String HKDELIVERY_WORKSHEET = "HKDelivery_worksheet";
