@@ -26,11 +26,7 @@ public class CourierConstants {
 	public static final String COURIER_SERVICE_INFO_NOT_FOUND = "Courier service not available here";
 	public static final String DROP_SHIPPED_ORDER = "No shipment for drop shipped orders";
 	public static final String AWB_NOT_ASSIGNED = "Could not assign Awb: ";
-	public static final String AWB_FINISH_SUBJECT = "Awb exhausted for Courier";
-	public static final String AWB_FINISH_MSG1 = "Please replenish awb's for courier: ";
-	public static final String AWB_FINISH_MSG2 = " in warehouse: ";
-	public static final String AWB_FINISH_MSG3 = " for orders delivered by COD: ";
-	public static final String OPERATIONS_EMAIL = "operations@healthkart.com";
+	
 
 
     //Common constants

@@ -149,7 +149,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			if (pinCode != null) {
 				boolean isCod = shippingOrder.isCOD();
 				isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-                //todo neha asked you to show cod or non cod couriers, dont want all couriers here, while testing iterate this to mayank as well
+
 				String pin = pinCode.getPincode();
 				Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
 				availableCouriers = courierService.getCouriers(pin, isGroundShipped, shippingOrder.isCOD(), isCodAllowedOnGroundShipping, false);
@@ -206,7 +206,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 				}
 			} else {
 				// For Non Fedex Couriers
-                //todo neha same stands here, cod etc
 				Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(selectedCourier, trackingId.trim(), null, null, null);
 				if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
 					//User has eneterd AWB manually which is present in database Already

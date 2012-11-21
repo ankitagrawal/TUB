@@ -9,6 +9,7 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -55,7 +56,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 	@Autowired
 	UserService userService;
 	@Autowired
-	EmailService emailService;
+	AdminEmailManager adminEmailManager;
 
 
 	@Transactional
@@ -118,9 +119,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 			String msg = CourierConstants.AWB_NOT_ASSIGNED + suggestedCourier.getName();
 			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
 					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), msg);
-			String emailMsg = CourierConstants.AWB_FINISH_MSG1 + suggestedCourier.getName() + CourierConstants.AWB_FINISH_MSG2 + shippingOrder.getWarehouse().getName() + 
-					CourierConstants.AWB_FINISH_MSG3 + shippingOrder.isCOD();
-			emailService.sendHtmlEmail(CourierConstants.AWB_FINISH_SUBJECT, emailMsg, CourierConstants.OPERATIONS_EMAIL, CourierConstants.OPERATIONS_EMAIL, null);
+
+			adminEmailManager.sendAwbStatusEmail(suggestedCourier, shippingOrder);			
 			return null;
 		}
 
