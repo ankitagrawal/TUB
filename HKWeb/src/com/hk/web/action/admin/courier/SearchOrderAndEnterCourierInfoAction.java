@@ -104,7 +104,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 //  groundShipping logic Starts---
 			isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-			availableCouriers = courierService.getCouriers(pinCode.getPincode(), isGroundShipped, null, null, false);
+			String pin = pinCode.getPincode();
+			Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
+			availableCouriers = courierService.getCouriers(pin, isGroundShipped, shippingOrder.isCOD(), isCodAllowedOnGroundShipping, false);
 //  ground shipping logic ends
 
 			if (availableCouriers == null || availableCouriers.isEmpty()) {
@@ -148,7 +150,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 				boolean isCod = shippingOrder.isCOD();
 				isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
                 //todo neha asked you to show cod or non cod couriers, dont want all couriers here, while testing iterate this to mayank as well
-				availableCouriers = courierService.getCouriers(pinCode.getPincode(), isGroundShipped, null, null, false);
+				String pin = pinCode.getPincode();
+				Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
+				availableCouriers = courierService.getCouriers(pin, isGroundShipped, shippingOrder.isCOD(), isCodAllowedOnGroundShipping, false);
 				if (shippingOrder.getShipment() != null) {
 					suggestedCourier = shippingOrder.getShipment().getAwb().getCourier();
 					trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();

@@ -24,6 +24,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 	CourierServiceInfoDao courierServiceInfoDao;
 	@Autowired
 	UserService userService;
+	@Autowired
+	EmailService emailService;
 
 
 	@Transactional
@@ -115,6 +118,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 			String msg = CourierConstants.AWB_NOT_ASSIGNED + suggestedCourier.getName();
 			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
 					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), msg);
+			String emailMsg = CourierConstants.AWB_FINISH_MSG1 + suggestedCourier.getName() + CourierConstants.AWB_FINISH_MSG2 + shippingOrder.getWarehouse().getName() + 
+					CourierConstants.AWB_FINISH_MSG3 + shippingOrder.isCOD();
+			emailService.sendHtmlEmail(CourierConstants.AWB_FINISH_SUBJECT, emailMsg, CourierConstants.OPERATIONS_EMAIL, CourierConstants.OPERATIONS_EMAIL, null);
 			return null;
 		}
 
@@ -185,9 +191,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 		}
 		return newShipment;
 	}
+   
 
-
-    //todo neha all looks well, just that i belive ankit has already written this method somewhere, so please reuse that, secondly one thing can you do is to send a mail to operations@healthkart.com when awb are finished for a courier (and tell which warehouse, cod/noncod)
 	@Override
 	public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder) {
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
