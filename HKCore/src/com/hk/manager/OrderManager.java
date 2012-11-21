@@ -556,6 +556,7 @@ public class OrderManager {
                     if (lineItem.getQty() <= 0) {
                         iterator.remove();
                         getCartLineItemDao().delete(lineItem);
+                      logger.debug("Deleting cartLineItem for Product Variant" + lineItem.getProductVariant().getId()+ "because it's quantity is zero");                      
                     } else {
                         ProductVariant productVariant = lineItem.getProductVariant();
                         Product product = productVariant.getProduct();
