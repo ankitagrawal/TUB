@@ -606,7 +606,7 @@ public class OrderManager {
           // Final check to remove the zero quantity cartLineItem
           for(Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();){
             CartLineItem cartLineItem = iterator.next();
-            if(iterator.next().getQty()<=0){
+            if(cartLineItem.getQty()<=0){
               iterator.remove();
               getCartLineItemDao().delete(cartLineItem);
               logger.debug("Deleting cartLineItem for Product Variant" + cartLineItem.getProductVariant().getId()+ "because it's quantity is zero");
