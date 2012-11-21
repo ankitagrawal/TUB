@@ -108,15 +108,7 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     //
     // }
 
-
-    public BillingAddress searchBillingAddress(User user) {
-         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BillingAddress.class);
-         detachedCriteria.add(Restrictions.eq("user", user));
-         List<BillingAddress> billingAddressList = (List<BillingAddress>) findByCriteria(detachedCriteria);
-        return billingAddressList == null || billingAddressList.isEmpty() ? null : billingAddressList.get(0);
-    }
-
-
+  
     public List<BillingAddress> getVisibleBillingAddresses(User user) {
         List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>();
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BillingAddress.class);

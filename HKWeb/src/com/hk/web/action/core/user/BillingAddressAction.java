@@ -65,14 +65,6 @@ public class BillingAddressAction extends BaseAction {
         return new ForwardResolution("/pages/billingAddressBook.jsp");
     }
 
-//    //@ValidationMethod(on = "remove")
-//    public void validateDelete() {
-//        User user = getUserService().getUserById(getPrincipal().getId());
-//        if (!user.getAddresses().contains(deleteAddress)) {
-//            getContext().getValidationErrors().add("invalid address id", new LocalizableError("/EditAddress.action.invalid.address"));
-//        }
-//    }
-
     public Resolution remove() {
         User user = getUserService().getUserById(getPrincipal().getId());
         deleteAddress = addressDao.getBillingAddressById(billingAddressId);
@@ -183,16 +175,16 @@ public class BillingAddressAction extends BaseAction {
         return bankId;
     }
 
+    public void setBankId(Long bankId) {
+        this.bankId = bankId;
+    }
+
     public AddressService getAddressDao() {
         return addressDao;
     }
 
     public void setAddressDao(AddressService addressDao) {
         this.addressDao = addressDao;
-    }
-
-    public void setBankId(Long bankId) {
-        this.bankId = bankId;
     }
 
     public Long getBillingAddressId() {

@@ -105,7 +105,7 @@
             <div class='pin'>${billingAddress.pin}</div>
             <div class='phone'>${billingAddress.phone}</div>
             <br/>
-            <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="remove" class="delete" onclick="return confirm('Are you sure you want to delete this address?')">
+            <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="remove" class="delete">
               <s:param name="billingAddressId" value="${billingAddress.id}"/>
               (delete)
             </s:link>
@@ -121,6 +121,8 @@
         </s:link>
       </c:forEach>
       <script type="text/javascript">
+       $(document).ready(function() {
+        var bool = false;
         $('.edit').click(function() {
           form = $('#newAddressForm');
           addressBlock = $(this).parents('.address');
@@ -144,13 +146,26 @@
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
-        $(document).ready(function() {
-	        $('.address').hover(
+           $('.delete').click(function() {
+               if (confirm('Are you sure you want to delete this address?')) {
+                   bool = true;
+                   return true;
+               } else {
+                   return false;
+               }
+           });
+
+           $('.address').hover(
 			        function() {
 				        $(this).children('.hidden').slideDown(100);
 				        $(this).children('.edit').click(function() {
 					        return false;
 				        });
+                        $(this).children('.delete').click(function() {
+                          if(bool) return true;
+                            else
+                           return false;
+                        });
 			        },
 			        function() {
 				        $(this).children('.hidden').slideUp(50);
