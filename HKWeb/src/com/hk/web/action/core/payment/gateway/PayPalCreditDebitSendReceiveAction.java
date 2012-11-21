@@ -71,9 +71,12 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
         Order order = payment.getOrder();
         User user = order.getUser();
+                   
 
         BillingAddress address = addressDao.searchBillingAddress(user);
+
         String merchantTxnId = data.getGatewayOrderId();
+        
 
         //  Reading property files
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/paypal.live.properties";

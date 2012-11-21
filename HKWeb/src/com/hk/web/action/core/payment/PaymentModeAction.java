@@ -17,7 +17,7 @@ import java.util.List;
 @Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 public class PaymentModeAction extends BaseAction {
 
-    private BillingAddress billingAddress;
+//    private BillingAddress billingAddress;
     @Autowired
     AddressDao addressDao;
 
@@ -25,8 +25,8 @@ public class PaymentModeAction extends BaseAction {
 
 	public Resolution pre() {
 		bankList = getBaseDao().getAll(PreferredBankGateway.class);
-        User user = getUserService().getUserById(getPrincipal().getId());
-        billingAddress =  addressDao.searchBillingAddress(user);
+//        User user = getUserService().getUserById(getPrincipal().getId());
+//        billingAddress =  addressDao.searchBillingAddress(user);
 		return new ForwardResolution("/pages/paymentMode.jsp");
 	}
 
@@ -38,12 +38,12 @@ public class PaymentModeAction extends BaseAction {
 		this.bankList = bankList;
 	}
 
-     public BillingAddress getBillingAddress() {
-        return billingAddress;
-    }
-
-    public void setBillingAddress(BillingAddress billingAddress) {
-        this.billingAddress = billingAddress;
-    }
+//     public BillingAddress getBillingAddress() {
+//        return billingAddress;
+//    }
+//
+//    public void setBillingAddress(BillingAddress billingAddress) {
+//        this.billingAddress = billingAddress;
+//    }
     
 }
