@@ -122,7 +122,9 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
         encoder.add("PAYMENTREQUEST_0_SHIPTONAME2", "HK");
 
         encoder.add("PAYMENTREQUEST_0_SHIPTOSTREET", address.getLine1());
-        encoder.add("PAYMENTREQUEST_0_SHIPTOSTREET2", address.getLine2());
+        if (address.getLine2() != null && !address.getLine2().isEmpty()) {     
+         encoder.add("PAYMENTREQUEST_0_SHIPTOSTREET2", address.getLine2());
+        }
         encoder.add("PAYMENTREQUEST_0_SHIPTOCITY", address.getCity());
         encoder.add("PAYMENTREQUEST_0_SHIPTOSTATE", address.getState());
 //      Countrycode need to be discuss
