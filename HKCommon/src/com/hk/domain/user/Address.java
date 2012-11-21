@@ -65,6 +65,7 @@ public class Address implements java.io.Serializable {
   @Column(name = "create_dt", nullable = false, length = 19)
   private Date createDate = new Date();
 
+
   @Transient
   private boolean selected;
 
@@ -176,8 +177,8 @@ public class Address implements java.io.Serializable {
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
-
-  @Override
+     
+    @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Address)) return false;

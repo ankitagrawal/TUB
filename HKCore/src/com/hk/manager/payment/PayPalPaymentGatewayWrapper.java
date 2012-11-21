@@ -116,6 +116,8 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
 //        encoder.add("CUSTOMERSERVICENUMBER", "011-8887777");
         encoder.add("BRANDNAME", "HEALTHKART");
 //            encoder.add("ADDROVERRIDE","1");
+
+        if (address != null){
         encoder.add("PAYMENTREQUEST_0_SHIPTONAME", address.getName());
         encoder.add("PAYMENTREQUEST_0_SHIPTONAME2", "HK");
 
@@ -128,7 +130,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
         encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPin());
         encoder.add("EMAIL", user.getEmail());
         encoder.add("PAYMENTREQUEST_0_SHIPTOPHONENUM", address.getPhone());
-
+        }
         return encoder;
     }
 

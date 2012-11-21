@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Properties;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.net.URLConnection;
 import java.net.URL;
 import java.net.MalformedURLException;
@@ -71,12 +72,19 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
         Order order = payment.getOrder();
         User user = order.getUser();
-                   
+        BillingAddress address = null;
 
-        BillingAddress address = addressDao.searchBillingAddress(user);
+        List<BillingAddress> billingAddresses = addressDao.getVisibleBillingAddresses(user);
+        for (BillingAddress billingAddress : billingAddresses) {
+            for (Order order1 : billingAddress.getOrders()) {
+                if (order.equals(order1)) {
+                    address = billingAddress;
+                    break;
+                }
+            }
+        }
 
         String merchantTxnId = data.getGatewayOrderId();
-        
 
         //  Reading property files
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/paypal.live.properties";
@@ -144,7 +152,6 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
     @DefaultHandler
     public Resolution callback() {
-
         NVPEncoder encoder;
         NVPDecoder decoder = new NVPDecoder();
         Resolution resolution = null;
