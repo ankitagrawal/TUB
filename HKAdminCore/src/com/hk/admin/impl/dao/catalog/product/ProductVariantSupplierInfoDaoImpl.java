@@ -5,7 +5,10 @@ import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.impl.dao.BaseDaoImpl;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -32,8 +35,4 @@ public class ProductVariantSupplierInfoDaoImpl extends BaseDaoImpl implements Pr
 		return null;
 	}
 
-	public double getSupplierAverageFillRate(Supplier supplier) {
-		DetachedCriteria criteria = DetachedCriteria.forClass(ProductVariantSupplierInfo.class);
-		//criteria
-	}
 }

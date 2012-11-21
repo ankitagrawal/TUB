@@ -243,7 +243,6 @@ public class GRNAction extends BasePaginatedAction {
 			goodsReceivedNoteDao.save(grn);
 			getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
 
-
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		return new RedirectResolution(GRNAction.class);
