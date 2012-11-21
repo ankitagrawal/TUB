@@ -587,7 +587,9 @@
 				Special Offers on ${product.name}
 			</h4>
 			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
+                <c:if test="${!relatedCombo.outOfStock or !relatedCombo.deleted or !relatedCombo.hidden or !relatedCombo.googleAdDisallowed}">
 				<s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="${relatedCombo.id}"/>
+                </c:if>
 			</c:forEach>
 
 			<div class="floatfix"></div>
@@ -773,7 +775,9 @@
 			</h4>
 
 			<c:forEach items="${relatedProducts}" var="relatedProduct">
+                 <c:if test="${!relatedProduct.outOfStock or !relatedProduct.deleted or !relatedProduct.hidden or !relatedProduct.googleAdDisallowed}">
 				<s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${relatedProduct}"/>
+                </c:if>
 			</c:forEach>
 
 			<div class="floatfix"></div>
