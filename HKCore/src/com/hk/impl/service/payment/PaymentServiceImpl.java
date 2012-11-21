@@ -92,6 +92,7 @@ public class PaymentServiceImpl implements PaymentService {
             case EBS:
             case PAYPAL_CreditDebit:
             case TECHPROCESS:
+            case ICICI:
             case CCAVENUE_DUMMY:
             case FREE_CHECKOUT:
                 if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {

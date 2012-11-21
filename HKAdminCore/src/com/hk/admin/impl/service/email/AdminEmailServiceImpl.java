@@ -67,8 +67,8 @@ public class AdminEmailServiceImpl implements AdminEmailService {
     }
 
     @SuppressWarnings("unchecked")
-    public void saveOrUpdate(Session session, Collection entities) throws DataAccessException {
-        getAdminEmailDao().saveOrUpdate(session, entities);
+    public boolean saveOrUpdate(Session session, Collection entities) throws DataAccessException {
+        return getAdminEmailDao().saveOrUpdate(session, entities);
     }
 
     public AdminEmailDao getAdminEmailDao() {

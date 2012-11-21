@@ -662,4 +662,9 @@ public class Functions {
 				return grnLineItemService.getGrnLineItemQtyAlreadySet(goodsReceivedNote, sku);
 		}
 
+    public static ProductVariant validTryOnProductVariant(Product product){
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return  productService.validTryOnProductVariant(product);
+    }
+
 }
