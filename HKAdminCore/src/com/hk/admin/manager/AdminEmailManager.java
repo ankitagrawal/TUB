@@ -274,25 +274,26 @@ public class AdminEmailManager {
 
 
 	public void populateEmailRecepient(List<String> userIdList, int maxResultCount) {
-		List<User> usersNotInEmailRecepient = getAdminEmailService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
-		if (usersNotInEmailRecepient.size() > 0) {
-			List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
-			int counter = 0;
-			for (User user : usersNotInEmailRecepient) {
-				EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
-				emailRecepientRecs.add(emailRecepient);
-				counter++;
-				if (counter % COMMIT_COUNT == 0 || counter == userIdList.size()) {
-					getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-					emailRecepientRecs.clear();
-				}
+		if (userIdList != null) {
+			List<User> usersNotInEmailRecepient = getAdminEmailService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
+			if (usersNotInEmailRecepient.size() > 0) {
+				List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
+				int counter = 0;
+				for (User user : usersNotInEmailRecepient) {
+					EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
+					emailRecepientRecs.add(emailRecepient);
+					counter++;
+					if (counter % COMMIT_COUNT == 0 || counter == userIdList.size()) {
+						getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
+						emailRecepientRecs.clear();
+					}
 
+				}
 			}
 		}
-
 	}
 
-    public boolean sendGRNEmail(GoodsReceivedNote grn) {
+	public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("grn", grn);
 
