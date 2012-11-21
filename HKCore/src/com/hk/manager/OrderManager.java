@@ -591,11 +591,6 @@ public class OrderManager {
            }
         }
       }
-      for(CartLineItem cartLineItem : order.getCartLineItems()){
-        if(cartLineItem.getQty()<=0){
-           getCartLineItemDao().delete(cartLineItem);
-        }
-      }
 			order = getOrderService().save(order);
 		}
     if(order!=null)
