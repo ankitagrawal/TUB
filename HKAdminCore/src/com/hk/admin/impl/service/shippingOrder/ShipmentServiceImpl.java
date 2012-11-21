@@ -122,6 +122,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		return shippingOrder.getShipment();
 	}
 
+
 	public Shipment saveShipmentDate(Shipment shipment) {
 		shipment.setShipDate(new Date());
 		return save(shipment);
@@ -154,7 +155,6 @@ public class ShipmentServiceImpl implements ShipmentService {
 		shipmentDao.delete(shipment);
 	}
 
-
 	@Override
 	public Shipment recreateShipment(ShippingOrder shippingOrder) {
 		Shipment newShipment = null;
@@ -167,6 +167,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		}
 		return newShipment;
 	}
+
 
 	@Override
 	public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder) {

@@ -22,8 +22,8 @@ public class ReferralManagerAction extends BaseAction {
     ReferrerProgramManager     referrerProgramManager;
     @Autowired
     UserManager                userManager;
-
-    private RewardPointService rewardPointService;
+    @Autowired
+    RewardPointService rewardPointService;
 
     private Coupon             coupon;
     private User               user;
