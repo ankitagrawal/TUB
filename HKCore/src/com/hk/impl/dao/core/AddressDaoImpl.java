@@ -124,11 +124,6 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
 
     public BillingAddress getBillingAddressById(Long billingAddressId) {
            return get(BillingAddress.class, billingAddressId);
-       }
-
-     public BillingAddress searchBillingAddress(Long userId) {
-         String query = "from BillingAddress ba where ba.updateDate in ( select max( ba1.updateDate )from BillingAddress  ba1 where  ba1.user.id = :userId )";
-          return (BillingAddress) getSession().createQuery(query).setLong("userId",userId ).uniqueResult();
-    }
+       }  
     
 }   
