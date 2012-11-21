@@ -183,7 +183,7 @@ public class AdminEmailManager {
         List<Map<String, HtmlEmail>> emailList = new ArrayList<Map<String, HtmlEmail>>();
         List<EmailerHistory> emailHistoryRecs = new ArrayList<EmailerHistory>(INITIAL_LIST_SIZE);
         List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
-        int commitCount = 0;
+        int emailCount = 0;
         int breakFromLoop = emailersList.size() < COMMIT_COUNT ? emailersList.size() : COMMIT_COUNT;
 
         Session session = baseDao.getHibernateTemplate().getSessionFactory().openSession();
@@ -209,8 +209,8 @@ public class AdminEmailManager {
                             getBaseDao().get(EmailType.class, emailCampaign.getEmailType().getId()), emailRecepient, emailCampaign, "");
                     emailHistoryRecs.add(emailerHistory);
 
-                    commitCount++;
-                    if (commitCount == breakFromLoop) {
+                    emailCount++;
+	                if (emailCount % breakFromLoop == 0 || emailCount == emailersList.size()) {
                         boolean emailRecipientsRecorded = getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
                         boolean emailHistoryRecorded = getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
 
@@ -225,7 +225,6 @@ public class AdminEmailManager {
                         }
                         
                         tempEmailList.clear();
-                        commitCount = 0;
                         emailHistoryRecs.clear();
                         emailRecepientRecs.clear();
                     }
@@ -274,31 +273,24 @@ public class AdminEmailManager {
     }
 
 
-    public void populateEmailRecepient(List<String> userIdList, int maxResultCount) {
-        List<User> usersNotInEmailRecepient = new ArrayList<User>();
-        do {
-            usersNotInEmailRecepient.clear();
-            usersNotInEmailRecepient = getAdminEmailService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
+	public void populateEmailRecepient(List<String> userIdList, int maxResultCount) {
+		List<User> usersNotInEmailRecepient = getAdminEmailService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
+		if (usersNotInEmailRecepient.size() > 0) {
+			List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
+			int counter = 0;
+			for (User user : usersNotInEmailRecepient) {
+				EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
+				emailRecepientRecs.add(emailRecepient);
+				counter++;
+				if (counter % COMMIT_COUNT == 0 || counter == userIdList.size()) {
+					getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
+					emailRecepientRecs.clear();
+				}
 
+			}
+		}
 
-            List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
-            int counter = 0;
-            for (User user : usersNotInEmailRecepient) {
-                EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
-                emailRecepientRecs.add(emailRecepient);
-                if (counter == COMMIT_COUNT) {
-                    getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-                    counter = 0;
-                    emailRecepientRecs.clear();
-                }
-                counter++;
-            }
-            if (counter > 0) {
-                getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-            }
-        } while (usersNotInEmailRecepient.size() > 0);
-
-    }
+	}
 
     public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();
