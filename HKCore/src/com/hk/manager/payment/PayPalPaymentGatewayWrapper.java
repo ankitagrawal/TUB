@@ -117,21 +117,21 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
         encoder.add("BRANDNAME", "HEALTHKART");
 //            encoder.add("ADDROVERRIDE","1");
 
-        if (address != null){
-        encoder.add("PAYMENTREQUEST_0_SHIPTONAME", address.getName());
-        encoder.add("PAYMENTREQUEST_0_SHIPTONAME2", "HK");
+        if (address != null) {
+            encoder.add("PAYMENTREQUEST_0_SHIPTONAME", address.getName());
+            encoder.add("PAYMENTREQUEST_0_SHIPTONAME2", "HK");
 
-        encoder.add("PAYMENTREQUEST_0_SHIPTOSTREET", address.getLine1());
-        if (address.getLine2() != null && !address.getLine2().isEmpty()) {     
-         encoder.add("PAYMENTREQUEST_0_SHIPTOSTREET2", address.getLine2());
-        }
-        encoder.add("PAYMENTREQUEST_0_SHIPTOCITY", address.getCity());
-        encoder.add("PAYMENTREQUEST_0_SHIPTOSTATE", address.getState());
+            encoder.add("PAYMENTREQUEST_0_SHIPTOSTREET", address.getLine1());
+            if (address.getLine2() != null && !address.getLine2().isEmpty()) {
+                encoder.add("PAYMENTREQUEST_0_SHIPTOSTREET2", address.getLine2());
+            }
+            encoder.add("PAYMENTREQUEST_0_SHIPTOCITY", address.getCity());
+            encoder.add("PAYMENTREQUEST_0_SHIPTOSTATE", address.getState());
 //      Countrycode need to be discuss
-        encoder.add("PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE", "IN");
-        encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPin());
-        encoder.add("EMAIL", user.getEmail());
-        encoder.add("PAYMENTREQUEST_0_SHIPTOPHONENUM", address.getPhone());
+            encoder.add("PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE", "IN");
+            encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPin());
+            encoder.add("EMAIL", user.getEmail());
+            encoder.add("PAYMENTREQUEST_0_SHIPTOPHONENUM", address.getPhone());
         }
         return encoder;
     }

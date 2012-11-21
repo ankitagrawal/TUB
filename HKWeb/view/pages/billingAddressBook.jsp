@@ -203,19 +203,19 @@
         <span class="aster special">(Fields marked * are required.)</span>
 
           <div class='label'>Name<span class="aster">*</span></div>
-          <s:text name="address.name"/>
+          <s:text name="address.name" maxlength = "80"/>
           <div class='label'>Address Line 1<span class="aster">*</span></div>
-          <s:text name="address.line1"/>
+          <s:text name="address.line1" maxlength = "120"/>
           <div class='label'>Address Line 2</div>
-          <s:text name="address.line2"/>
+          <s:text name="address.line2" maxlength = "120"/>
           <div class='label'>City<span class="aster">*</span></div>
-          <s:text name="address.city"/>
+          <s:text name="address.city" maxlength = "60"/>
           <div class='label'>State<span class="aster">*</span></div>
-          <s:text name="address.state"/>
+          <s:text name="address.state" maxlength = "50"/>
           <div class='label'>PIN Code<span class="aster">*</span></div>
           <s:text name="address.pin" class="pincode" maxlength="20"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
-          <s:text name="address.phone" id="phoneNo"/>
+          <s:text name="address.phone" id="phoneNo" maxlength = "25"/>
           <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>
           <div class="special" style="text-align: right;">
             Proceed to Order Confirmation <br/>(This address will be added to your address book so you can use it later)
