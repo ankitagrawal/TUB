@@ -73,16 +73,18 @@ public enum EnumPurchaseOrderStatus {
 	public static List<PurchaseOrderStatus> getAllowedPOStatusToChange(PurchaseOrderStatus purchaseOrderStatus) {
 		List<PurchaseOrderStatus> allowedPurchaseOrderStatusList = new ArrayList<PurchaseOrderStatus>();
 
-		if (purchaseOrderStatus.equals(Generated.getPurchaseOrderStatus())) {
-			allowedPurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentForApproval.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
-		} else if (purchaseOrderStatus.equals(SentForApproval.getPurchaseOrderStatus())) {
-			allowedPurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), Approved.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
-		} else if (purchaseOrderStatus.equals(Approved.getPurchaseOrderStatus())) {
-			allowedPurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
-		} else if (purchaseOrderStatus.equals(SentToSupplier.getPurchaseOrderStatus())) {
-			allowedPurchaseOrderStatusList = Arrays.asList(Received.getPurchaseOrderStatus());
-		} else if (purchaseOrderStatus.equals(Received.getPurchaseOrderStatus())) {
-			allowedPurchaseOrderStatusList = Arrays.asList(Closed.getPurchaseOrderStatus());
+		if (purchaseOrderStatus != null) {
+			if (purchaseOrderStatus.equals(Generated.getPurchaseOrderStatus())) {
+				allowedPurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentForApproval.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
+			} else if (purchaseOrderStatus.equals(SentForApproval.getPurchaseOrderStatus())) {
+				allowedPurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), Approved.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
+			} else if (purchaseOrderStatus.equals(Approved.getPurchaseOrderStatus())) {
+				allowedPurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
+			} else if (purchaseOrderStatus.equals(SentToSupplier.getPurchaseOrderStatus())) {
+				allowedPurchaseOrderStatusList = Arrays.asList(Received.getPurchaseOrderStatus());
+			} else if (purchaseOrderStatus.equals(Received.getPurchaseOrderStatus())) {
+				allowedPurchaseOrderStatusList = Arrays.asList(Closed.getPurchaseOrderStatus());
+			}
 		}
 
 		return allowedPurchaseOrderStatusList;
