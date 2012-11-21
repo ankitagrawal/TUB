@@ -771,6 +771,7 @@
 --/parenting/moms-maternity/nutrition-for-moms
 --/parenting/moms-maternity/maternity-belts
 --/parenting/moms-maternity/maternity-pads
+--/parenting/moms-maternity/post-pregnancy-body-shaping
 -/parenting/diapering
 --/parenting/diapering/diapers
 ---/parenting/diapering/diapers/small
@@ -834,7 +835,9 @@
 -/parenting/health-safety : Health & Safety
 --/parenting/health-safety/thermometers
 --/parenting/health-safety/medical-care
---/parenting/health-safety/eye-care
+--/parenting/health-safety/eye-care : Eye Care
+---/parenting/health-safety/eye-care/eyeglasses
+---/parenting/health-safety/eye-care/sunglasses
 --/parenting/health-safety/child-proofing
 --/parenting/health-safety/disinfectants
 --/parenting/health-safety/repellents
@@ -857,6 +860,7 @@
 ---/parenting/toys-more/school-supplies/school-bags
 ---/parenting/toys-more/school-supplies/lunch-boxes
 ---/parenting/toys-more/school-supplies/water-bottles
+--/parenting/toys-more/furniture
 --/parenting/toys-more/misc
 
 /services
