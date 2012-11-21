@@ -377,7 +377,7 @@ public class CourierStatusUpdateHelper {
         courierName="(Quantium)";
 
         //added for debugging
-        trackingId              = "HKC003045";
+        //trackingId              = "HKC003045";
 
         try {
             url = new URL("http://atquantiumaspac.com/QSDTSAPI/TrackXML.aspx?trackingno="+ trackingId);
@@ -391,7 +391,6 @@ public class CourierStatusUpdateHelper {
 
             Document doc = new SAXBuilder().build(new StringReader(response));
             XPath xPath = XPath.newInstance("/*/StageHeader");
-			//List<Element> list = xPath.selectNodes(doc);
             xmlElement = (Element) xPath.selectSingleNode(doc);
 
         } catch (MalformedURLException mue) {
@@ -420,7 +419,6 @@ public class CourierStatusUpdateHelper {
             }
         }
         return xmlElement;
-
 	}
 
 	@SuppressWarnings("unchecked")
