@@ -5,6 +5,7 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
+import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.admin.util.XslParser;
@@ -13,8 +14,12 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.domain.accounting.PoLineItem;
+import com.hk.domain.catalog.ProductVariantSupplierInfo;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.*;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.User;
@@ -45,71 +50,73 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.INVENTORY_CHECKIN}, authActionBean = AdminPermissionAction.class)
 @Component
 public class InventoryCheckinAction extends BaseAction {
 
-	private static Logger         logger    = Logger.getLogger(InventoryCheckinAction.class);
+	private static Logger logger = Logger.getLogger(InventoryCheckinAction.class);
 	@Autowired
-	private InventoryService      inventoryService;
+	private InventoryService inventoryService;
 	@Autowired
 	private AdminInventoryService adminInventoryService;
 	@Autowired
 	private ProductVariantService productVariantService;
 	@Autowired
-	private SkuService            skuService;
+	private SkuService skuService;
 	@Autowired
-	private UserService           userService;
+	private UserService userService;
 	@Autowired
-	private GrnLineItemDao        grnLineItemDao;
+	private GrnLineItemDao grnLineItemDao;
 	@Autowired
-	private GoodsReceivedNoteDao  goodsReceivedNoteDao;
+	private GoodsReceivedNoteDao goodsReceivedNoteDao;
 	// private LowInventoryDao lowInventoryDao;
 	@Autowired
-	private XslGenerator          xslGenerator;
+	private XslGenerator xslGenerator;
 	@Autowired
-	private XslParser             xslParser;
+	private XslParser xslParser;
 	@Autowired
-	private StockTransferDao      stockTransferDao;
+	private StockTransferDao stockTransferDao;
+	@Autowired
+	private ProductVariantSupplierInfoService productVariantSupplierInfoService;
 
 	// SkuGroupDao skuGroupDao;
 
 	// SkuItemDao skuItemDao;
 
 	@Validate(required = true, on = "save")
-	private String                upc;
+	private String upc;
 	@Validate(required = true, minvalue = 1.0, on = "save")
-	private Long                  qty;
+	private Long qty;
 	@Validate(required = true, on = "save")
-	private Double                costPrice;
-	private Double                mrp;
-	private String                batch;
-	private Date                  mfgDate;
-	private Date                  expiryDate;
-	private GoodsReceivedNote     grn;
-	private String                invoiceNumber;
-	private Date                  invoiceDate;
-	private StockTransfer         stockTransfer;
-	int                           strLength = 20;
-	File                          printBarcode;
+	private Double costPrice;
+	private Double mrp;
+	private String batch;
+	private Date mfgDate;
+	private Date expiryDate;
+	private GoodsReceivedNote grn;
+	private String invoiceNumber;
+	private Date invoiceDate;
+	private StockTransfer stockTransfer;
+	int strLength = 20;
+	File printBarcode;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-	String                        adminUploadsPath;
+	String adminUploadsPath;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-	String                        adminDownloadsPath;
+	String adminDownloadsPath;
 
 	@Value("#{hkEnvProps['" + Keys.Env.barcodeGurgaon + "']}")
-	String                        barcodeGurgaon;
+	String barcodeGurgaon;
 
 	@Value("#{hkEnvProps['" + Keys.Env.barcodeMumbai + "']}")
-	String                        barcodeMumbai;
+	String barcodeMumbai;
 
 	@Validate(required = true, on = "parse")
-	private FileBean              fileBean;
+	private FileBean fileBean;
 
 	private final double TOLERANCE_LEVEL_PERCENTAGE = 10; // Max allowed percentage value for CP, MRP etc to be higher or lower than
-														// the corresponding product variant value.
+	// the corresponding product variant value.
 
 	@DefaultHandler
 	@DontValidate
@@ -118,7 +125,7 @@ public class InventoryCheckinAction extends BaseAction {
 	}
 
 	@SuppressWarnings("unchecked")
-    @JsonHandler
+	@JsonHandler
 	public Resolution validateFields() {
 		Map dataMap = new HashMap();
 		HealthkartResponse healthkartResponse = null;
@@ -128,31 +135,23 @@ public class InventoryCheckinAction extends BaseAction {
 				productVariant = getProductVariantService().getVariantById(upc);
 			}
 			if (productVariant != null) {
-				if(costPrice != null && (costPrice > productVariant.getCostPrice() + TOLERANCE_LEVEL_PERCENTAGE * productVariant.getCostPrice() / 100)) {
+				if (costPrice != null && (costPrice > productVariant.getCostPrice() + TOLERANCE_LEVEL_PERCENTAGE * productVariant.getCostPrice() / 100)) {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
 							/*"Cost price is higher than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE + " %. \n" +*/
 							"Cost price of the variant in the system is Rs. " + productVariant.getCostPrice() + "\n Do you want to continue?", dataMap);
-				}
-
-				else if(costPrice != null && (costPrice < productVariant.getCostPrice() - TOLERANCE_LEVEL_PERCENTAGE * productVariant.getCostPrice() / 100)) {
+				} else if (costPrice != null && (costPrice < productVariant.getCostPrice() - TOLERANCE_LEVEL_PERCENTAGE * productVariant.getCostPrice() / 100)) {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
 							/*"Cost price is lesser than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE + " %. \n" +*/
 							"Cost price of the variant in the system is Rs. " + productVariant.getCostPrice() + "\n Do you want to continue?", dataMap);
-				}
-
-				else if(mrp != null && (mrp > productVariant.getMarkedPrice() + TOLERANCE_LEVEL_PERCENTAGE * productVariant.getMarkedPrice() / 100)) {
+				} else if (mrp != null && (mrp > productVariant.getMarkedPrice() + TOLERANCE_LEVEL_PERCENTAGE * productVariant.getMarkedPrice() / 100)) {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
 							/*"MRP is higher than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE +" %. \n" +*/
 							"MRP of the variant in the system is Rs. " + productVariant.getMarkedPrice() + "\n Do you want to continue?", dataMap);
-				}
-
-				else if(mrp != null && (mrp < productVariant.getMarkedPrice() - TOLERANCE_LEVEL_PERCENTAGE * productVariant.getMarkedPrice() / 100)) {
+				} else if (mrp != null && (mrp < productVariant.getMarkedPrice() - TOLERANCE_LEVEL_PERCENTAGE * productVariant.getMarkedPrice() / 100)) {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
 							/*"MRP is lesser than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE +" %. \n" +*/
 							"MRP of the variant in the system is Rs. " + productVariant.getMarkedPrice() + "\n Do you want to continue?", dataMap);
-				}
-
-				else {
+				} else {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Cost price and MRP are within the permissible limit", dataMap);
 				}
 			} else {
@@ -204,7 +203,7 @@ public class InventoryCheckinAction extends BaseAction {
 						addRedirectAlertMessage(new SimpleMessage("MRP is required. Plz check."));
 						return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 					}
-					SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, grn, null,null, sku);
+					SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
 					getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, qty, null, grnLineItem, null, null,
 							getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
 					getInventoryService().checkInventoryHealth(productVariant);
@@ -216,6 +215,7 @@ public class InventoryCheckinAction extends BaseAction {
 						if (getInventoryService().allInventoryCheckedIn(grn)) {
 							grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.InventoryCheckedIn.getId()));
 							getGoodsReceivedNoteDao().save(grn);
+							editPVFillRate(grn);
 						}
 					}
 					//Barcode File
@@ -245,8 +245,8 @@ public class InventoryCheckinAction extends BaseAction {
 						logger.error("Exception while appending on barcode file", e);
 						;
 					}
-				}else{
-					addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->"+grnLineItem+" or Sku ->"+sku));
+				} else {
+					addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->" + grnLineItem + " or Sku ->" + sku));
 					return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 				}
 			} else {
@@ -263,7 +263,24 @@ public class InventoryCheckinAction extends BaseAction {
 		return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 	}
 
-	@Secure(hasAnyPermissions = { PermissionConstants.GRN_CREATION }, authActionBean = AdminPermissionAction.class)
+	private void editPVFillRate(GoodsReceivedNote grn) {
+		try {
+			if (grn != null) {
+				Supplier supplier = grn.getPurchaseOrder().getSupplier();
+				for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
+					ProductVariantSupplierInfo productVariantSupplierInfo =
+							productVariantSupplierInfoService.getOrCreatePVSupplierInfo(grnLineItem.getSku().getProductVariant(), supplier);
+					productVariantSupplierInfoService.updatePVSupplierInfo(productVariantSupplierInfo, null, grnLineItem.getQty());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("Error while editing product variant fill rate " + e.getMessage());
+		}
+
+	}
+
+	@Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
 	public Resolution saveInventoryAgainstStockTransfer() {
 		User user = null;
 		if (getPrincipal() != null) {
@@ -279,7 +296,7 @@ public class InventoryCheckinAction extends BaseAction {
 			}
 			if (productVariant != null) {
 				Sku sku = skuService.findSKU(productVariant, stockTransfer.getToWarehouse());
-				if(sku == null){
+				if (sku == null) {
 					addRedirectAlertMessage(new SimpleMessage("Sku doesn't exist for product  - " + productVariant.getId() + "Plz contact category manager."));
 					return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
 							"checkinInventoryAgainstStockTransfer", stockTransfer.getId());
@@ -395,7 +412,7 @@ public class InventoryCheckinAction extends BaseAction {
 		return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 	}
 
-	@Secure(hasAnyPermissions = { PermissionConstants.GRN_CREATION }, authActionBean = AdminPermissionAction.class)
+	@Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
 	public Resolution clearPrintBarcodeFile() {
 		User user = null;
 		if (getPrincipal() != null) {
@@ -432,7 +449,7 @@ public class InventoryCheckinAction extends BaseAction {
 		return new RedirectResolution(AdminHomeAction.class);
 	}
 
-	@Secure(hasAnyPermissions = { PermissionConstants.GRN_CREATION }, authActionBean = AdminPermissionAction.class)
+	@Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
 	public Resolution downloadPrintBarcodeFile() {
 		User user = null;
 		if (getPrincipal() != null) {

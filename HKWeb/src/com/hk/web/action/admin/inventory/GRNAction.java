@@ -211,14 +211,14 @@ public class GRNAction extends BasePaginatedAction {
 					grnLineItemDao.save(grnLineItem);
 					getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getQty());
 
-					ProductVariantSupplierInfo productVariantSupplierInfo =
+					/*ProductVariantSupplierInfo productVariantSupplierInfo =
 							getProductVariantSupplierInfoService().getOrCreatePVSupplierInfo(grnLineItem.getSku().getProductVariant(), grn.getPurchaseOrder().getSupplier());
 
 					if (grn.getPurchaseOrder().getGoodsReceivedNotes().size() == 1) {
 						getProductVariantSupplierInfoService().updatePVSupplierInfo(productVariantSupplierInfo, grnLineItemService.getPoLineItemQty(grnLineItem), grnLineItem.getQty());
 					} else if (grn.getPurchaseOrder().getGoodsReceivedNotes().size() > 1) {
 						getProductVariantSupplierInfoService().updatePVSupplierInfo(productVariantSupplierInfo, null, grnLineItem.getQty());
-					}
+					}*/
 				}
 				sku = grnLineItem.getSku();
 				skuService.saveSku(sku);

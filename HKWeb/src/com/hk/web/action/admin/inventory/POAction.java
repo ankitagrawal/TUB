@@ -8,6 +8,7 @@ import com.hk.admin.manager.PurchaseOrderManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
+import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.PurchaseOrderPDFGenerator;
 import com.hk.constants.core.Keys;
@@ -15,6 +16,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.accounting.PoLineItem;
+import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -62,6 +64,8 @@ public class POAction extends BasePaginatedAction {
 	private AdminEmailManager adminEmailManager;
 	@Autowired
 	private PurchaseOrderManager purchaseOrderManager;
+	@Autowired
+	private ProductVariantSupplierInfoService productVariantSupplierInfoService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloads;
@@ -167,11 +171,13 @@ public class POAction extends BasePaginatedAction {
 		}
 
 		grn = (GoodsReceivedNote) getGoodsReceivedNoteDao().save(grn);
+		editPVFillRate(purchaseOrder);
+
 		for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
 			ProductVariant productVariant = poLineItem.getSku().getProductVariant();
 			Sku sku = getSkuService().getSKU(productVariant, warehouse);
 			long existingGrnLineItemQty = grnLineItemService.getGrnLineItemQtyAlreadySet(grn, poLineItem.getSku());
-			if(existingGrnLineItemQty >= poLineItem.getQty().longValue()) {
+			if (existingGrnLineItemQty >= poLineItem.getQty().longValue()) {
 				continue;
 			}
 			GrnLineItem grnLineItem = new GrnLineItem();
@@ -202,6 +208,23 @@ public class POAction extends BasePaginatedAction {
 
 		addRedirectAlertMessage(new SimpleMessage("GRN generated from PO. Please adjust it according to invoice. Also email set to po creator."));
 		return new RedirectResolution(GRNAction.class).addParameter("view").addParameter("grn", grn.getId());
+
+	}
+
+	//For the first GRN, update askedQty in ProductVariantSupplierInfo table
+	private void editPVFillRate(PurchaseOrder purchaseOrder) {
+		try {
+			if (purchaseOrder.getGoodsReceivedNotes() != null && purchaseOrder.getGoodsReceivedNotes().size() == 1) {
+				for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
+					ProductVariantSupplierInfo productVariantSupplierInfo =
+							productVariantSupplierInfoService.getOrCreatePVSupplierInfo(poLineItem.getSku().getProductVariant(), purchaseOrder.getSupplier());
+					productVariantSupplierInfoService.updatePVSupplierInfo(productVariantSupplierInfo, poLineItem.getQty(), null);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("Error while editing product variant fill rate " + e.getMessage());
+		}
 
 	}
 
