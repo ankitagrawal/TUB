@@ -236,12 +236,7 @@ public class ShippingOrder implements java.io.Serializable {
 	 */
     @Transient
     public boolean isCOD() {
-		if(this.amount == 0){
-			return false;
-		}
-		else{
-        	return EnumPaymentMode.COD.getId().equals(getBaseOrder().getPayment().getPaymentMode().getId());
-		}
+        return this.amount != 0 && EnumPaymentMode.COD.getId().equals(getBaseOrder().getPayment().getPaymentMode().getId());
     }
 
     @Transient

@@ -65,7 +65,6 @@ public class ShipmentServiceImpl implements ShipmentService {
 			return null;
 		}
 
-		// Ground Shipping logic starts -- suggested courier
 		boolean isGroundShipped = false;
 		Courier suggestedCourier = null;
 		String shipmentType;
@@ -76,7 +75,6 @@ public class ShipmentServiceImpl implements ShipmentService {
 		} else {
 			shipmentType = CourierConstants.AIR_SHIPPING;
 		}
-		// Ground Shipping logic ends -- suggested courier
 
 		if (suggestedCourier == null) {
 			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
@@ -85,7 +83,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		} else {
 			String pin = pincode.getPincode();
 			Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
-			if (courierServiceInfoDao.isCourierServiceInfoAvailable(suggestedCourier.getId(), pin, shippingOrder.isCOD(), isGroundShipped, isCodAllowedOnGroundShipping) == false) {
+			if (!courierServiceInfoDao.isCourierServiceInfoAvailable(suggestedCourier.getId(), pin, shippingOrder.isCOD(), isGroundShipped, isCodAllowedOnGroundShipping)) {
 				shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
 						EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(), CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
 			}
@@ -121,7 +119,6 @@ public class ShipmentServiceImpl implements ShipmentService {
 		}
 
 		Shipment shipment = new Shipment();
-//		shipment.setCourier(suggestedCourier);
 		shipment.setEmailSent(false);
 		shipment.setAwb(suggestedAwb);
 		shipment.setShippingOrder(shippingOrder);
@@ -190,6 +187,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 	}
 
 
+    //todo neha all looks well, just that i belive ankit has already written this method somewhere, so please reuse that, secondly one thing can you do is to send a mail to operations@healthkart.com when awb are finished for a courier (and tell which warehouse, cod/noncod)
 	@Override
 	public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder) {
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
