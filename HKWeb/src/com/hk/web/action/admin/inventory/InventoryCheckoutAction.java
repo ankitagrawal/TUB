@@ -11,6 +11,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -31,6 +32,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.taglibs.Functions;
 import net.sourceforge.stripes.action.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -215,8 +217,8 @@ public class InventoryCheckoutAction extends BaseAction {
 				}
 				if (lineItem != null) {
 					ProductVariant variant = skuGroup.getSku().getProductVariant();
-					if (skuGroup.getMrp() != null && skuGroup.getMrp() < lineItem.getMarkedPrice()) {
-					  addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
+					if (checkMrpPreCheckOut(variant) && skuGroup.getMrp() != null && skuGroup.getMrp() < lineItem.getMarkedPrice()) {
+						addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
 					} else {
 						Long checkedOutItemCount = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItem);
 						if (checkedOutItemCount == null) {
@@ -262,6 +264,14 @@ public class InventoryCheckoutAction extends BaseAction {
 			return new RedirectResolution(InventoryCheckoutAction.class).addParameter("findSkuGroups").addParameter("shippingOrder", shippingOrder.getId()).addParameter("upc", skuGroup.getSku().getProductVariant().getUpc());
 		}
 		return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+	}
+
+	//Excluding eyeglasses category from mrp check.
+	private boolean checkMrpPreCheckOut(ProductVariant variant){
+		if(Functions.collectionContains(variant.getProduct().getCategories(), CategoryConstants.eyeGlasses)){
+			return false;
+		}
+		return true;
 	}
 
 	public Resolution inventoryCheckoutOfItemThatIsNotInOrderLineItem() { // Written for Combo may be used to adjust

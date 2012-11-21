@@ -884,6 +884,18 @@
     </function>
     <function>
         <description>
+            get validTryOnProductVariant for a Product
+        </description>
+        <name>validTryOnProductVariant</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature> com.hk.domain.catalog.product.ProductVariant validTryOnProductVariant(com.hk.domain.catalog.product.Product)
+        </function-signature>
+        <example>
+            ${hk:getTryOnImageURL(${product})}
+        </example>
+    </function>
+    <function>
+        <description>
             get cod converter url for an order
         </description>
         <name>getCodConverterLink</name>
