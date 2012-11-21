@@ -138,6 +138,8 @@
 		.dbm span a {
 			color: #2484c6;
 		}
+        #managementContainer ul { list-style:circle; margin-left:40px; }
+        #managementContainer ol { margin-left:40px; }
 	</style>
 
 </s:layout-component>
@@ -167,38 +169,20 @@
 <div style="padding:10px;">
 <h2>Who is this Program for?</h2>
 
-<p>The HealthKart Diabetes Management Program is targeted at people who are on medication for diabetes, heart problems, high cholesterol or thyroid disorders. These people are prone to complications related to kidney disease, nerve disorders, foot problems, paralytic strokes if their diabetes or cholesterol are not controlled or monitored adequately. The Program helps them manage their condition in a cost effective manner.</p>
+<p>The HealthKart Diabetes Management Program is targeted at people who are on medication for diabetes, heart problems, high cholesterol or thyroid disorders. These people are prone to complications related to kidney disease, nerve disorders and foot problems, paralytic strokes if their diabetes or cholesterol are not controlled or monitored adequately. This Program helps them manage their condition in a cost effective manner.</p>
 
-<h2>What is this Program?</h2>
 
-<p>Based on your prescription profile, you can choose one of the HealthKart Packages. HealthEssential, HealthVital or HealthUltima. Each package will provide you the required medication, diagnostics and nutritional support required for your condition for 3 months plus a host of other benefits.</p>
-
-<h2>What does the Package include?</h2>
-
-<p>HealthEssential, HeathVital or HealthUltima. Each Package will provide you the required medication and diagnostics required for your condition for 3 months plus a host of other benefits. These have been thoughtfully included to incorporate allied services you might require over the period of three months.</p>
-
-<h2>What does this not include?</h2>
-
-<p>This does not include cost of insulins, DPP IV or injectable cardiovascular medicines</p>
-
-<h2>What is the first time bonus offer?</h2>
-
-<h5><br/>A best in class Glucose monitoring Meter offered for those joining the first time! Is there a cost bebefit?</h5>
-<p><strong>Definitely!</strong> On an average people spend Rs. 1200-1500 per month (Rs. 40/day on an average) on their medication. The cost per day in this package will be Rs. 40/ Rs.50/ Rs. 60 per day. You get a lot more at approximately the same price!</p>
-<ul>
-  <li>- A Blood Glucose meter with strips alone would cost you > Rs. 2500</li>
-  <li>- 20% discounts on doctor consultations at Apollo Clinics</li>
-  <li>- Personalized Diet and Counseling calls</li>
+    <h2>How to Enroll?</h2>
+    <p>Step 1- Pay Rs.100/- only as a Membership Fee to register. Once registered you can avail following benefits:</p>
+    <ul>
+  <li>FreeStyle Optium Glucometer (Rs. 2199/-) + FreeStyle Optium Strips (Rs. 350/-) + Glucerna SP (Rs. 70/-) = Rs. 350/- (You save Rs. 2269/-)</li>
+  <li>Additional 5% off on already subsidized wide range of Diabetes Products</li>
+  <li>15% off on medical bills (Only Diabetes, Cardio and Cholesterol products)</li>
 </ul>
-<p>If your therapy is changed by the doctor, you are saved against the fluctuations in cost.</p>
-
-<h2>Yes! i am interested, What is necessary to join in?</h2>
-
-<ul>
-  <li>1. Prescription of the Doctor</li>
-  <li>2. Registration and Signing of the Consent Form</li>
-  <li>3. Payment</li>
-</ul>
+    <p>Step2- A confirmation e-mail along with the unique coupon code will be sent to your registered ID. Please note that only one coupon code is valid for one offer.</p>
+    <p>Step3- Scan your prescription and mail it to us at <a href="mailto:order@healthkartplus.com">order@healthkartplus.com</a> or call us on: 0124-4551636.
+        <br/>Minimum order should be at least Rs. 350/- or above.</p>
+    <p>*Offer valid for 1 month medication.</p>
 </div>
 
 <div class="cl"></div>
@@ -227,15 +211,15 @@
 	<p class="tThumb">
 		<img src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/DM045.jpg" width="208" height="170"/></p>
 
-	<h3><a href="${pageContext.request.contextPath}/product/hk-dmp-super-saver-offer/DM045">HK DMP Super Saver Offer</a></h3>
+	<h3 style="height:20px; margin-bottom:0;"><a href="${pageContext.request.contextPath}/product/hk-dmp-super-saver-offer/DM045">HK DMP Super Saver Offer</a></h3>
 
-
+    <p>1 FreeStyle Optium Meter + 25 FreeStyle Strips + 1 Glucerna SR Sachet</p>
 	<p class="tPrice">
         <span>Rs 3,094</span>
 		Rs 825
 	</p>
 
-	<p class="tSave">You Save 73%</p>
+	<p class="tSave" style="height:22px;">You Save 73%</p>
 
 	<p class="tBuy"><a href="${pageContext.request.contextPath}/product/hk-dmp-super-saver-offer/DM045"><img
 			src="${pageContext.request.contextPath}/pages/lp/hk_dmp/images/buynow.gif" width="89" height="26"
