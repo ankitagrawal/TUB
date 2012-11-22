@@ -375,9 +375,11 @@ public class DeliveryStatusUpdateManager {
 					try {
 						responseElement = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
 						if (responseElement != null) {
+							//todo neha: neeche waale variables ko use kar lo double sure hone ke liye
 							String trckNo = responseElement.getChildText(CourierConstants.QUANTIUM_TRACKING_NO);
 							String refId = responseElement.getChildText(CourierConstants.QUANTIUM_REF_NO);
 							courierDeliveryStatus = responseElement.getChildText(CourierConstants.QUANTIUM_STATUS);
+							//todo neha: isi bechare ko kyu chhod diya? iska bhi constant bana lo
 							deliveryDateString = responseElement.getChildText("LastUpdatedDate");
 							if (courierDeliveryStatus != null && deliveryDateString != null) {
 								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.QUANTIUM_DELIVERED)) {
@@ -385,6 +387,8 @@ public class DeliveryStatusUpdateManager {
 										Date delivery_date = sdf_date.parse(deliveryDateString);
 										ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
 									} catch (ParseException pe) {
+										//todo neha: aisa mazak kyu kiya -> "Sorry.Database updation failed.ParseException occurred for Tracking Id :" keh ke tracking Id nahi daali
+										//todo neha: yahan pe unmodifiedTrackingIds ki list mein entry kyu nahi hai?
 										logger.debug(CourierConstants.PARSE_EXCEPTION + pe.getMessage());
 									}
 								}
@@ -392,11 +396,11 @@ public class DeliveryStatusUpdateManager {
 						} else {
 							unmodifiedTrackingIds.add(trackingId);
 						}
-					} catch (Exception ex) {
+					} catch (Exception e){
 						unmodifiedTrackingIds.add(trackingId);
+						//todo neha: ye continue kyu hai yahan?
 						continue;
 					}
-
 				}
 			}
 		}
@@ -405,7 +409,7 @@ public class DeliveryStatusUpdateManager {
 
 	public int updateCourierDeliveryStatus(ShippingOrder shippingOrder, Shipment shipment, String trackingId, Date deliveryDate) {
 
-		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
+		if (shipment != null &&  (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId()))) {
 			if (shipment.getShipDate().after(deliveryDate) || deliveryDate.after(new Date())) {
 				Calendar deliveryDateAsShipDatePlusOne = Calendar.getInstance();
 				deliveryDateAsShipDatePlusOne.setTime(shipment.getShipDate());
