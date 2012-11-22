@@ -131,9 +131,11 @@ public class UserManager {
 
 	        //Set UserId in Traffic Tracking
 	        TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
-	        trafficTracking.setUser(user);
-	        trafficTracking.setOrder(getOrderManager().getOrCreateOrder(user));
-	        getBaseDao().save(trafficTracking);
+	        if (trafficTracking != null) {
+		        trafficTracking.setUser(user);
+		        trafficTracking.setOrder(getOrderManager().getOrCreateOrder(user));
+		        getBaseDao().save(trafficTracking);
+	        }
         }
         /**
          * Now to transfer any data created by a temp user.
@@ -188,10 +190,12 @@ public class UserManager {
             }
 	        //Set UserId in Traffic Tracking
 	        TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
-	        trafficTracking.setUser(user);
-	        trafficTracking.setOrder(getOrderManager().getOrCreateOrder(user));
-	        getBaseDao().save(trafficTracking);
-
+	        if (trafficTracking != null) {
+		        trafficTracking.setUser(user);
+		        trafficTracking.setOrder(getOrderManager().getOrCreateOrder(user));
+		        getBaseDao().save(trafficTracking);
+	        }
+	        
         } else {
             user = new User();
         }
