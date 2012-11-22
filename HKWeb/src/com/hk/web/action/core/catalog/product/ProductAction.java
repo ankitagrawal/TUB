@@ -132,19 +132,21 @@ public class ProductAction extends BaseAction {
 
         product = getProductService().getProductById(productId);
 
-        if(product instanceof Combo){
-            combo = (Combo)product;
-        }
-        if (product == null) {
-            WebContext.getResponse().setStatus(310); // redirection
-            return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
-        }
+	    if (product != null) {
+		    if (product instanceof Combo) {
+			    combo = (Combo) product;
+		    }
+		    //Save Browsing
+		    trafficAndUserBrowsingService.saveBrowsingHistory(product, WebContext.getRequest());
+	    } else {
+		    WebContext.getResponse().setStatus(310); // redirection
+		    return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
+	    }
 
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
             if (user != null) {
                 //userProductHistoryDao.addToUserProductHistory(product, user);
-	            trafficAndUserBrowsingService.saveBrowsingHistory(product, WebContext.getRequest());
                 affiliate = affiliateDao.getAffilateByUser(user);
             }
         }
