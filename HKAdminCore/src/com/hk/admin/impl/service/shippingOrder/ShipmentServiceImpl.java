@@ -107,8 +107,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 		Awb suggestedAwb;
 		if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId)) {
 			suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
-			if (suggestedAwb != null) {
+			if (suggestedAwb != null) {				
 				suggestedAwb = (Awb) awbService.save(suggestedAwb, null);
+				awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
 			}
 		} else {
 			suggestedAwb = attachAwbToShipment(suggestedCourier, shippingOrder);
