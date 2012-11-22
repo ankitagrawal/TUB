@@ -1,6 +1,8 @@
 package com.hk.pact.service.analytics;
 
 import com.hk.domain.user.User;
+import com.hk.domain.analytics.TrafficTracking;
+import com.hk.domain.catalog.product.Product;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,5 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TrafficAndUserBrowsingService {
 
-	public void saveTrafficTracking(HttpServletRequest httpRequest, User user);
+	public TrafficTracking saveTrafficTracking(HttpServletRequest httpRequest, User user);
+
+	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest);
 }

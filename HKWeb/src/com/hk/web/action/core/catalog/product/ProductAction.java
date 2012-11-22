@@ -50,6 +50,7 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
+import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
@@ -115,6 +116,9 @@ public class ProductAction extends BaseAction {
 	@Autowired
 	ProductImageService productImageService;
     private ProductVariant validTryOnProductVariant;
+	@Autowired
+	TrafficAndUserBrowsingService trafficAndUserBrowsingService;
+
 
     @DefaultHandler
     @DontValidate
@@ -139,7 +143,8 @@ public class ProductAction extends BaseAction {
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
             if (user != null) {
-                userProductHistoryDao.addToUserProductHistory(product, user);
+                //userProductHistoryDao.addToUserProductHistory(product, user);
+	            trafficAndUserBrowsingService.saveBrowsingHistory(product, WebContext.getRequest());
                 affiliate = affiliateDao.getAffilateByUser(user);
             }
         }

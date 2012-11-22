@@ -85,6 +85,8 @@ public class CampaignTrackingFilter implements Filter {
         }
 
         if (newSession == null || !newSession.equals(true)) {
+	        httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.NEW_SESSION, true);
+
 	        /*String referrer = httpRequest.getHeader(HttpRequestAndSessionConstants.REFERER);
 	        String utm_source = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_SOURCE);
 	        String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
@@ -92,11 +94,9 @@ public class CampaignTrackingFilter implements Filter {
 	        campaignTrackingDao.saveRequest(
 			        referrer != null ? referrer : null, httpRequest.getRequestURL().toString(), utm_source, utm_medium, utm_campaign,
 			        user);*/
-	        trafficAndUserBrowsingService.saveTrafficTracking(httpRequest, user);
-
-
-	        //To track the same user
-            httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.NEW_SESSION, true);
+	        
+	        TrafficTracking trafficTracking = trafficAndUserBrowsingService.saveTrafficTracking(httpRequest, user);
+			httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);
 
 	        //To use is for Order
             httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID, ReferrerIds.get(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID));

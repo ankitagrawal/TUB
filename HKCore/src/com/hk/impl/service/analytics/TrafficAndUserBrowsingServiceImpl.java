@@ -36,7 +36,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 	@Autowired
 	BaseDao baseDao;
 
-	public void saveTrafficTracking(HttpServletRequest httpRequest, User user) {
+	public TrafficTracking saveTrafficTracking(HttpServletRequest httpRequest, User user) {
 		Map<String, String> trafficInfoMap = TrafficSourceFinder.getTrafficDetails(httpRequest);
 		TrafficTracking trafficTracking = new TrafficTracking();
 
@@ -51,12 +51,15 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		String categoryName = trafficInfoMap.get(TrafficSourceFinder.CATEGORY);
 		if (StringUtils.isNotBlank(categoryName))
 			category = getBaseDao().get(Category.class, categoryName);
-		trafficTracking.setCategory(category);
 		Product product = null;
-		String prodductId = trafficInfoMap.get(TrafficSourceFinder.PRODUCT);
-		if (StringUtils.isNotBlank(prodductId))
-			product = getBaseDao().get(Product.class, prodductId);
+		String productId = trafficInfoMap.get(TrafficSourceFinder.PRODUCT);
+		if (StringUtils.isNotBlank(productId)){
+			product = getBaseDao().get(Product.class, productId);
+			if(product != null)
+				category = product.getPrimaryCategory();
+		}
 		trafficTracking.setProduct(product);
+		trafficTracking.setCategory(category);
 		trafficTracking.setUser(user);
 		trafficTracking.setIp(httpRequest.getRemoteAddr());
 		trafficTracking.setSessionId(httpRequest.getSession().getId());
@@ -64,18 +67,25 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		trafficTracking.setUpdateDt(new Date());
 
 		trafficTracking = (TrafficTracking) getBaseDao().save(trafficTracking);
+		
+		return trafficTracking;
+	}
 
+	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest) {
+		TrafficTracking trafficTracking = (TrafficTracking) httpServletRequest.getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 		UserBrowsingHistory userBrowsingHistory = new UserBrowsingHistory();
-		userBrowsingHistory.setCategory(category);
+		userBrowsingHistory.setCategory(product.getPrimaryCategory());
 		userBrowsingHistory.setProduct(product);
-		userBrowsingHistory.setPageUrl(pageUrl);
+		userBrowsingHistory.setPageUrl(httpServletRequest.getRequestURL().toString());
 		userBrowsingHistory.setTrafficTracking(trafficTracking);
 		userBrowsingHistory.setCreateDt(new Date());
 		userBrowsingHistory.setUpdateDt(new Date());
 
-		getBaseDao().save(userBrowsingHistory);
-
-
+		try {
+			getBaseDao().save(userBrowsingHistory);
+		} catch (Exception e) {
+			logger.error("Exception while saving browsing history:" + e.getMessage());
+		}
 	}
 
 	public BaseDao getBaseDao() {

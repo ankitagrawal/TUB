@@ -22,7 +22,9 @@ import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.domain.TempToken;
+import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
@@ -40,6 +42,7 @@ import com.hk.pact.dao.core.TempTokenDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AddressService;
@@ -81,6 +84,8 @@ public class UserManager {
     private AddressService       addressDao;
     @Autowired
     private SubscriptionService subscriptionService;
+	@Autowired
+    private BaseDao baseDao;
 
     //Please do not add @Autowired has been taken care of in getter .
     private OrderManager     orderManager;
@@ -123,6 +128,12 @@ public class UserManager {
 
             // save user to save the last login date and roles change etc if any.
             getUserService().save(user);
+
+	        //Set UserId in Traffic Tracking
+	        TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+	        trafficTracking.setUser(user);
+	        trafficTracking.setOrder(getOrderManager().getOrCreateOrder(user));
+	        getBaseDao().save(trafficTracking);
         }
         /**
          * Now to transfer any data created by a temp user.
@@ -175,6 +186,12 @@ public class UserManager {
             } else {
                 user = new User();
             }
+	        //Set UserId in Traffic Tracking
+	        TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+	        trafficTracking.setUser(user);
+	        trafficTracking.setOrder(getOrderManager().getOrCreateOrder(user));
+	        getBaseDao().save(trafficTracking);
+
         } else {
             user = new User();
         }
@@ -432,4 +449,8 @@ public class UserManager {
     public void setSubscriptionService(SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
     }
+
+	public BaseDao getBaseDao() {
+		return baseDao;
+	}
 }
