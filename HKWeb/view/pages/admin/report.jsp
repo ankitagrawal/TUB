@@ -10,7 +10,6 @@
 <%
     WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
     pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
-	pageContext.setAttribute("whServicable", warehouseService.getServiceableWarehouses());
 	pageContext.setAttribute("soStatusList", EnumShippingOrderStatus.getStatusForPuttingOrderOnHold());
 %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
@@ -460,7 +459,7 @@
     <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
         <s:errors/>
         <fieldset class="right_label">
-            <legend>Shipping Order Report </legend>
+            <legend>Shipping Order Status Report </legend>
             <ul>
 
                 <li>
@@ -469,16 +468,6 @@
                     </label><s:select name="shippingOrderStatus" style="height:30px;font-size:1.2em;padding:1px;">
                         <c:forEach items="${soStatusList}" var="sos">
                             <s:option value="${sos.id}">${sos.name}</s:option>
-                        </c:forEach>
-                    </s:select>
-                </li>
-                <li>
-                    <label>
-                        Warehouse
-                    </label>
-                    <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
-                        <c:forEach items="${whServicable}" var="wh">
-                            <s:option value="${wh.id}">${wh.city}</s:option>
                         </c:forEach>
                     </s:select>
                 </li>

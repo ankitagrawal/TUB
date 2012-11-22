@@ -49,6 +49,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.impl.dao.ReconciliationStatusDaoImpl;
 import com.hk.manager.EmailManager;
 import com.hk.manager.OrderManager;
@@ -914,76 +915,49 @@ public class ReportAction extends BaseAction {
     }
 
 	  public Resolution generateReportBySOStatus() {
-	  if(shippingOrderStatus == null &&  warehouse == null){
+	  if(shippingOrderStatus == null){
 		 addRedirectAlertMessage(new SimpleMessage("Download complete"));
 		  return new ForwardResolution("/pages/admin/report.jsp");
 	  }
 		  ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
 		  List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
 		  shippingOrderStatusList.add(shippingOrderStatus);
-		  shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList);
-		  shippingOrderSearchCriteria.setWarehouseId(warehouse.getId());
+		  shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList);		 
 		  List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, true);
-
+		    prepareXlsForShippingOrder(shippingOrders);
 		  addRedirectAlertMessage(new SimpleMessage("Download complete"));
-
+		 return new HTTPResponseResolution();
 	  }
 
 	  private void prepareXlsForShippingOrder(List<ShippingOrder> shippingOrderList) {
+		  SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         xlsFile = new File(adminDownloads + "/reports/SOreportByStatus.xls");
         HkXlsWriter xlsWriter = new HkXlsWriter();
         int xlsRow = 1;
-        xlsWriter.addHeader("Shipping_Order_Number", "Shipping_Order_Number");
-        xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
-        xlsWriter.addHeader("Base_Order_Number", "Base_Order_Number ");
-        xlsWriter.addHeader("Variant_Id", "Variant_Id");
-        xlsWriter.addHeader("Qty", "Qty");
-        xlsWriter.addHeader("Product_Name", "PO CREATED BY");
-        xlsWriter.addHeader("Amount", "Amount");
-        xlsWriter.addHeader("SUPPLIER", "SUPPLIER");
-        xlsWriter.addHeader("SUPPLIER TIN", "SUPPLIER TIN");
-        xlsWriter.addHeader("PO STATUS", "PO STATUS");
-        xlsWriter.addHeader("GRN QTY", "GRN QTY");
-        xlsWriter.addHeader("CHECKED IN QTY", "CHECKED IN QTY");
-        xlsWriter.addHeader("GRN DATE", "GRN DATE");
-        xlsWriter.addHeader("GRN STATUS", "GRN STATUS");
-        xlsWriter.addHeader("MRP", "MRP");
-        xlsWriter.addHeader("COST PRICE", "COST PRICE");
-        xlsWriter.addHeader("MARGIN(CP vs MRP)", "MARGIN(CP vs MRP)");
+		  xlsWriter.addHeader("SHIPPING ORDER NUMBER", "SHIPPING ORDER NUMBER");
+		  xlsWriter.addHeader("BASE OREDR NUMBER", "BASE OREDR NUMBER");
+		  xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+		  xlsWriter.addHeader("VARIANT ID", "VARIANT ID");
+		  xlsWriter.addHeader("QTY", "QTY");
+		  xlsWriter.addHeader("AMOUNT", "AMOUNT");
+		  xlsWriter.addHeader("ORDER DATE", "ORDER DATE");
+		  xlsWriter.writeData(xlsFile, "SO_StatusReport");
 
-        xlsWriter.writeData(xlsFile, "PurchaseOrder_Report");
-
-        for (GrnLineItem grnLineItem : grnLineItemList) {
-            PurchaseOrder purchaseOrder = grnLineItem.getGoodsReceivedNote().getPurchaseOrder();
-            ProductVariant productVariant = grnLineItem.getSku().getProductVariant();
-
-            xlsWriter.addCell(xlsRow, productVariant.getId());
-            xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
-            xlsWriter.addCell(xlsRow, productVariant.getOptionsCommaSeparated());
-            xlsWriter.addCell(xlsRow, purchaseOrder.getId());
-            xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
-            xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
-            if(purchaseOrder.getApprovedBy() != null) {
-                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy().getName());
-            } else {
-                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy());
-            }
-
-            xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getName());
-            xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getTinNumber());
-            xlsWriter.addCell(xlsRow, purchaseOrder.getPurchaseOrderStatus().getName());
-            xlsWriter.addCell(xlsRow, grnLineItem.getQty());
-            xlsWriter.addCell(xlsRow, grnLineItem.getCheckedInQty());
-            xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnDate());
-            xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnStatus().getName());
-            xlsWriter.addCell(xlsRow, productVariant.getMarkedPrice());
-            xlsWriter.addCell(xlsRow, productVariant.getCostPrice());
-            xlsWriter.addCell(xlsRow, (productVariant.getMarkedPrice() - productVariant.getCostPrice())/productVariant.getCostPrice()*100);
-
-            xlsRow++;
-        }
-        xlsWriter.writeData(xlsFile, "PurchaseOrder_Report");
-
+		  for (ShippingOrder shippingOrder : shippingOrderList) {
+			  for (LineItem lineItem : shippingOrder.getLineItems()) {
+				  ProductVariant productVariant = lineItem.getSku().getProductVariant();
+				  Order order = shippingOrder.getBaseOrder();
+				  xlsWriter.addCell(xlsRow, shippingOrder.getId());
+				  xlsWriter.addCell(xlsRow, order.getId());
+				  xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
+				  xlsWriter.addCell(xlsRow, productVariant.getId());
+				  xlsWriter.addCell(xlsRow, lineItem.getQty());
+				  xlsWriter.addCell(xlsRow, lineItem.getHkPrice());
+				  xlsWriter.addCell(xlsRow, sdf.format(order.getPayment().getPaymentDate()));
+				  xlsRow++;
+			  }
+		  }
+		  xlsWriter.writeData(xlsFile, "ShippingOrder_Status_Report");
     }
 
 
