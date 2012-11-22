@@ -9721,4 +9721,54 @@
 	<changeSet author="Seema (generated)" id="1350891782684-6">
 		<dropColumn columnName="courier_id" tableName="shipment"/>
 	</changeSet>
+    <changeSet author="Ajeet (generated)" id="1353568633487-1">
+        <createTable tableName="traffic_tracking">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="src_url" type="VARCHAR(100)"/>
+            <column name="traffic_src" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="traffic_src_details" type="VARCHAR(45)"/>
+            <column defaultValueNumeric="0" name="traffic_src_paid" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="landing_url" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_category" type="VARCHAR(80)"/>
+            <column name="product_id" type="VARCHAR(20)"/>
+            <column name="user_id" type="INT"/>
+            <column defaultValue="127.0.1.1" name="ip" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="session_id" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="INT"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353568633487-2">
+        <modifyDataType columnName="error_log" newDataType="VARCHAR(45)" tableName="payment"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353568633487-3">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="traffic_tracking" baseTableSchemaName="healthkart_workbench" constraintName="fk_traffic_tracking_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353568633487-4">
+        <addForeignKeyConstraint baseColumnNames="primary_category" baseTableName="traffic_tracking" baseTableSchemaName="healthkart_workbench" constraintName="fk_traffic_tracking_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353568633487-5">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="traffic_tracking" baseTableSchemaName="healthkart_workbench" constraintName="fk_traffic_tracking_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353568633487-6">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="traffic_tracking" baseTableSchemaName="healthkart_workbench" constraintName="fk_traffic_tracking_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+   
 </databaseChangeLog>
