@@ -254,6 +254,12 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
 		}
 
+		if(purchaseInvoice.getReconciled() != null && purchaseInvoice.getReconciled() &&
+				purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getId())){
+			addRedirectAlertMessage(new SimpleMessage("Since PI is reconciled, please change the status from " + EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getName()+" to some other status"));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+		}
+
 		/* Needs to go live once back log is resolved.
 
 		if(purchaseInvoice.getPaymentDate() != null){

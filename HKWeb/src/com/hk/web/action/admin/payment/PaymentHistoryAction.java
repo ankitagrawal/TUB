@@ -112,7 +112,7 @@ public class PaymentHistoryAction extends BaseAction {
          */
         for (PaymentHistory paymentHistory : paymentHistories) {
 	        if(paymentHistory.getPurchaseInvoice() != null){
-                getPaymentHistoryService().save(paymentHistory, purchaseInvoice);
+                getPaymentHistoryService().save(paymentHistory, paymentHistory.getPurchaseInvoice());
 	        }
 	        else{
 		        getPaymentHistoryService().save(paymentHistory);

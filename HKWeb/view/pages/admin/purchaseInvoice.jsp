@@ -235,19 +235,7 @@
 		});
 
 		updateTotal('.receivedQuantity', '.totalQuantity', 1);
-
-		$('#save-button').click(function(){
-			var reconciled = $('#reconciled').is(':checked');
-			var status = $('#status').val();
-			var paymentDate = $('#payment-date').val();
-			if (paymentDate== "yyyy-mm-dd" ||  paymentDate == null || paymentDate == "") {
-				if (reconciled && status == <%=EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getId()%>) {
-					alert("PI is reconciled but status is Generated. Please change the status to Payment pending or Settled");
-					event.preventDefault();
-				}
-			}
-
-		});
+	
 	});
 </script>
 </s:layout-component>
