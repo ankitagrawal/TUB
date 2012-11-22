@@ -119,8 +119,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 			String msg = CourierConstants.AWB_NOT_ASSIGNED + suggestedCourier.getName();
 			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
 					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), msg);
-
-			adminEmailManager.sendAwbStatusEmail(suggestedCourier, shippingOrder);			
+			if (!(ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId))) {
+				adminEmailManager.sendAwbStatusEmail(suggestedCourier, shippingOrder);
+			}
 			return null;
 		}
 

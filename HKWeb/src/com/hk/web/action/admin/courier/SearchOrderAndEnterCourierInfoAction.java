@@ -106,7 +106,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
 			String pin = pinCode.getPincode();
 			Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
-			availableCouriers = courierService.getCouriers(pin, isGroundShipped, shippingOrder.isCOD(), isCodAllowedOnGroundShipping, false);
+			if (shippingOrder.isCOD()) {
+				availableCouriers = courierService.getCouriers(pin, isGroundShipped, shippingOrder.isCOD(), isCodAllowedOnGroundShipping, false);
+			} else {
+				availableCouriers = courierService.getCouriers(pin, isGroundShipped, null, null, false);
+			}
 //  ground shipping logic ends
 
 			if (availableCouriers == null || availableCouriers.isEmpty()) {
@@ -152,7 +156,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 				String pin = pinCode.getPincode();
 				Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
-				availableCouriers = courierService.getCouriers(pin, isGroundShipped, shippingOrder.isCOD(), isCodAllowedOnGroundShipping, false);
+				if (shippingOrder.isCOD()) {
+					availableCouriers = courierService.getCouriers(pin, isGroundShipped, shippingOrder.isCOD(), isCodAllowedOnGroundShipping, false);
+				} else {
+					availableCouriers = courierService.getCouriers(pin, isGroundShipped, null, null, false);
+				}
 				if (shippingOrder.getShipment() != null) {
 					suggestedCourier = shippingOrder.getShipment().getAwb().getCourier();
 					trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
@@ -192,8 +200,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			}
 
 			if (ThirdPartyAwbService.integratedCouriers.contains(selectedCourier.getId())) {
-				Double weightInKg = shipment.getBoxWeight();                
-				if(weightInKg == 0D){
+				Double weightInKg = shipment.getBoxWeight();
+				if (weightInKg == 0D) {
 					weightInKg = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
 				}
 				Awb thirdPartyAwb = awbService.getAwbForThirdPartyCourier(selectedCourier, shippingOrder, weightInKg);
@@ -268,7 +276,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution getCourierList() {
-		List<Courier> courierList = courierService.getCouriers(null, null, false);		
+		List<Courier> courierList = courierService.getCouriers(null, null, false);
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", courierList);
 		return new JsonResolution(healthkartResponse);
 	}
@@ -316,7 +324,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 	public List<Courier> getAvailableCouriers() {
 		return availableCouriers;
-	}	
+	}
 
 	public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
 		this.shippingOrderStatusService = shippingOrderStatusService;
