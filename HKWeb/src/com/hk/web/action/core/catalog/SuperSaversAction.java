@@ -38,8 +38,8 @@ public class SuperSaversAction extends BasePaginatedAction {
     @DefaultHandler
     public Resolution pre() {
       superSaverPage = getSuperSaverImageService().getSuperSaverImages(categories, brands, Boolean.TRUE, Boolean.FALSE, getPageNo(), getPerPage());
-      List<SuperSaverImage> superSaverImages1 = superSaverPage.getList();
-      for(SuperSaverImage superSaverImage : superSaverImages1){
+      List<SuperSaverImage> superSaverImageList = superSaverPage.getList();
+      for(SuperSaverImage superSaverImage : superSaverImageList){
         String productId = superSaverImage.getProduct().getId();
         Product product = getProductService().getProductById(productId);
         if(!product.getHidden() && !product.getDeleted()){
