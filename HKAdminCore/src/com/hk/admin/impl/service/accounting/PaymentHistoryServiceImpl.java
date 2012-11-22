@@ -13,11 +13,13 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.payment.PaymentHistory;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.text.DecimalFormat;
 
 /**
  * User: Rahul Agarwal
@@ -53,12 +55,15 @@ public class PaymentHistoryServiceImpl implements PaymentHistoryService {
 		Double outstandingAmount;
 		if (!paymentHistories.isEmpty()) {
                 Double paidAmount = 0.00;
-                for (PaymentHistory paymentHistoryTemp : paymentHistories) {
-                    paidAmount += paymentHistoryTemp.getAmount();
+                for (PaymentHistory paymentHistory : paymentHistories) {
+	                if (paymentHistory.getAmount() != null) {
+		                paidAmount += paymentHistory.getAmount();
+	                }
                 }
                 outstandingAmount = purchaseInvoice.getFinalPayableAmount() - paidAmount;
-                int outstandingAmountFormatted = (int)(outstandingAmount*100);
-                outstandingAmount = (double)(outstandingAmountFormatted)/100;
+				outstandingAmount = NumberUtil.roundTwoDecimals(outstandingAmount);
+                /*int outstandingAmountFormatted = (int)(outstandingAmount*100);
+                outstandingAmount = (double)(outstandingAmountFormatted)/100;*/
             }
             else{
               outstandingAmount = purchaseInvoice.getFinalPayableAmount();
