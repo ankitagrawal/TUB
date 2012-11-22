@@ -9720,22 +9720,22 @@
 	</changeSet>
 	<changeSet author="Seema (generated)" id="1350891782684-6">
 		<dropColumn columnName="courier_id" tableName="shipment"/>
-	</changeSet>
-       
-    <changeSet author="Ajeet (generated)" id="1353573439675-1">
+	</changeSet>	
+
+    <changeSet author="Ajeet (generated)" id="1353620004573-1">
         <createTable tableName="traffic_tracking">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="src_url" type="VARCHAR(100)"/>
-            <column name="traffic_src" type="VARCHAR(20)">
+            <column name="src_url" type="VARCHAR(500)"/>
+            <column name="traffic_src" type="VARCHAR(45)">
                 <constraints nullable="false"/>
             </column>
-            <column name="traffic_src_details" type="VARCHAR(45)"/>
+            <column name="traffic_src_details" type="VARCHAR(200)"/>
             <column defaultValueNumeric="0" name="traffic_src_paid" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="landing_url" type="VARCHAR(100)">
+            <column defaultValue="healthkart.com" name="landing_url" type="VARCHAR(500)">
                 <constraints nullable="false"/>
             </column>
             <column name="primary_category" type="VARCHAR(80)"/>
@@ -9756,7 +9756,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353573439675-2">
+    <changeSet author="Ajeet (generated)" id="1353620004573-2">
         <createTable tableName="user_browsing_history">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -9764,7 +9764,7 @@
             <column name="traffic_tracking_id" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="page_url" type="VARCHAR(200)">
+            <column defaultValue="healthkart.com" name="page_url" type="VARCHAR(500)">
                 <constraints nullable="false"/>
             </column>
             <column name="primary_category" type="VARCHAR(80)"/>
@@ -9777,44 +9777,31 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353573439675-3">
+    <changeSet author="Ajeet (generated)" id="1353620004573-3">
         <createIndex indexName="unique_page_url" tableName="user_browsing_history" unique="true">
             <column name="traffic_tracking_id"/>
             <column name="page_url"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353573439675-4">
+    <changeSet author="Ajeet (generated)" id="1353620004573-4">
         <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353573439675-5">
+    <changeSet author="Ajeet (generated)" id="1353620004573-5">
         <addForeignKeyConstraint baseColumnNames="primary_category" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353573439675-6">
+    <changeSet author="Ajeet (generated)" id="1353620004573-6">
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353573439675-7">
+    <changeSet author="Ajeet (generated)" id="1353620004573-7">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353573439675-8">
+    <changeSet author="Ajeet (generated)" id="1353620004573-8">
         <addForeignKeyConstraint baseColumnNames="primary_category" baseTableName="user_browsing_history" constraintName="fk_user_browsing_history_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353573439675-9">
+    <changeSet author="Ajeet (generated)" id="1353620004573-9">
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="user_browsing_history" constraintName="fk_user_browsing_history_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353573439675-10">
+    <changeSet author="Ajeet (generated)" id="1353620004573-10">
         <addForeignKeyConstraint baseColumnNames="traffic_tracking_id" baseTableName="user_browsing_history" constraintName="fk_user_browsing_history_traffic_tracking1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="traffic_tracking" referencesUniqueColumn="false"/>
-    </changeSet>
-	
-    <changeSet author="Ajeet (generated)" id="1353616915901-1">
-        <modifyDataType columnName="landing_url" newDataType="VARCHAR(500)" tableName="traffic_tracking"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353616915901-2">
-        <modifyDataType columnName="src_url" newDataType="VARCHAR(500)" tableName="traffic_tracking"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353616915901-3">
-        <modifyDataType columnName="traffic_src" newDataType="VARCHAR(45)" tableName="traffic_tracking"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353616915901-4">
-        <modifyDataType columnName="page_url" newDataType="VARCHAR(500)" tableName="user_browsing_history"/>
     </changeSet>
 </databaseChangeLog>
