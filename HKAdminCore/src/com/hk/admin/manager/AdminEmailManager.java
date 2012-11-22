@@ -89,6 +89,8 @@ public class AdminEmailManager {
     private String hkReportAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
     private String marketingAdminEmailsString = null;
+	@Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}")
+	private String logisticsAdminEmails;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
@@ -858,7 +860,7 @@ public class AdminEmailManager {
 		}
 
 	Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.awbStatusEmail);
-	return emailService.sendHtmlEmail(freemarkerTemplate,valuesMap,EmailTemplateConstants.operationsEmailId,
+	return emailService.sendHtmlEmail(freemarkerTemplate,valuesMap,logisticsAdminEmails,
 	EmailTemplateConstants.operationsTeam);
 	}
 
