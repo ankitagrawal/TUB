@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ReconciliationStatusDao    reconciliationStatusDao;
     @Autowired
     private LineItemDao                lineItemDao;
+	@Autowired
+	private ReplacementOrderDao        replacementOrderDao;
 
     private OrderService               orderService;
 
@@ -323,7 +326,16 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         getShippingOrderDao().save(shippingOrderLifecycle);
     }
 
-    public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
+	@Override
+	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder) {
+		if(getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()) != null
+				&& getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()).size() > 0){
+			return true;
+		};
+		return false;  //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
 
@@ -374,4 +386,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         this.shippingOrderStatusService = shippingOrderStatusService;
     }
 
+	public ReplacementOrderDao getReplacementOrderDao() {
+		return replacementOrderDao;
+	}
 }

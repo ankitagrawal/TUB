@@ -19,9 +19,9 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.EmailManager;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.taglibs.Functions;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
-import com.hk.taglibs.Functions;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.apache.commons.lang.StringUtils;
@@ -36,7 +36,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Secure (hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
 public class EditPurchaseOrderAction extends BaseAction {
 
@@ -58,10 +58,10 @@ public class EditPurchaseOrderAction extends BaseAction {
 	SkuService skuService;
 
 	// @Named(Keys.Env.adminUploads)
-	@Value ("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 
-	@Validate (required = true, on = "parse")
+	@Validate(required = true, on = "parse")
 	private FileBean fileBean;
 
 	private PurchaseOrder purchaseOrder;
@@ -70,15 +70,21 @@ public class EditPurchaseOrderAction extends BaseAction {
 	public String productVariantId;
 	public Warehouse warehouse;
 	private PurchaseOrderStatus previousPurchaseOrderStatus;
+	private List<Long> newSkuIdList = new ArrayList<Long>();
 
 	@DefaultHandler
 	public Resolution pre() {
 		logger.debug("purchaseOrder@Pre: " + purchaseOrder.getId());
 		purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
+		for(PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
+			if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
+				newSkuIdList.add(poLineItem.getSku().getId());
+			}
+		}
 		return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
 	}
 
-	@SuppressWarnings ("unchecked")
+	@SuppressWarnings("unchecked")
 	public Resolution getPVDetails() {
 		Map dataMap = new HashMap();
 		if (StringUtils.isNotBlank(productVariantId)) {
@@ -93,6 +99,11 @@ public class EditPurchaseOrderAction extends BaseAction {
 							dataMap.put("last30DaysSales", Functions.findInventorySoldInGivenNoOfDays(sku, 30));
 							if (sku.getTax() != null) {
 								dataMap.put("tax", sku.getTax().getValue());
+							}
+							if(poLineItemDao.getPoLineItemCountBySku(sku) == 0) {
+								dataMap.put("newSku", true);
+							} else {
+								dataMap.put("newSku", false);
 							}
 						}
 					}
@@ -118,34 +129,18 @@ public class EditPurchaseOrderAction extends BaseAction {
 	public Resolution save() {
 		if (purchaseOrder != null && purchaseOrder.getId() != null) {
 			logger.debug("poLineItems@Save: " + poLineItems.size());
-			boolean errorReturn = false;
+
 			if (purchaseOrder.getPurchaseOrderStatus() == null) {
 				addRedirectAlertMessage(new SimpleMessage("Please Select status"));
-			}
-			long newStatus = purchaseOrder.getPurchaseOrderStatus().getId().longValue();
-			long oldStatus = getPreviousPurchaseOrderStatus().getId().longValue();
-			if (newStatus < oldStatus) {
-				if ((newStatus == EnumPurchaseOrderStatus.Generated.getId().longValue()) && (oldStatus == EnumPurchaseOrderStatus.Cancelled.getId().longValue())) {
-					errorReturn = false;
-				} else {
-					addRedirectAlertMessage(new SimpleMessage("The Selected Status Should Be After  : " + getPreviousPurchaseOrderStatus().getName()));
-					errorReturn = true;
-				}
-			} else if (newStatus > oldStatus) {
-				PurchaseOrderStatus expectPurchaseStatus = EnumPurchaseOrderStatus.getNextPurchaseOrderStatus(previousPurchaseOrderStatus);
-				if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Cancelled.getId())) {
-					errorReturn = false;
-				} else if (!(expectPurchaseStatus.equals(purchaseOrder.getPurchaseOrderStatus()))) {
-					addRedirectAlertMessage(new SimpleMessage("Please Choose Correct Next  Status : " + expectPurchaseStatus.getName()));
-					errorReturn = true;
-				}
-			} else if (newStatus == oldStatus && (oldStatus != EnumPurchaseOrderStatus.Generated.getId().longValue())) {
-				addRedirectAlertMessage(new SimpleMessage("PO is Already : " + purchaseOrder.getPurchaseOrderStatus().getName()));
-				errorReturn = true;
-			}
-			if (errorReturn) {
 				return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
 			}
+
+			List<PurchaseOrderStatus> allowedNewPOStatusList = EnumPurchaseOrderStatus.getAllowedPOStatusToChange(previousPurchaseOrderStatus);
+			if(! allowedNewPOStatusList.contains(purchaseOrder.getPurchaseOrderStatus())) {
+				addRedirectAlertMessage(new SimpleMessage("Invalid Status chosen."));
+				return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+			}
+
 			double discountRatio = 0;
 			if (purchaseOrder.getPayable() != null && purchaseOrder.getPayable() > 0 && purchaseOrder.getDiscount() != null) {
 				discountRatio = purchaseOrder.getDiscount() / purchaseOrder.getPayable();
@@ -188,7 +183,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 
 			if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentForApproval.getId())) {
 				emailManager.sendPOSentForApprovalEmail(purchaseOrder);
-			}else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
+			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
 				emailManager.sendPOApprovedEmail(purchaseOrder);
 			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentToSupplier.getId())) {
 				purchaseOrder.setPoPlaceDate(new Date());
@@ -224,6 +219,18 @@ public class EditPurchaseOrderAction extends BaseAction {
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		return new RedirectResolution(POAction.class);
+	}
+
+	public Resolution closePurchaseOrder() {
+		if (purchaseOrder != null) {
+			purchaseOrder.setPurchaseOrderStatus(EnumPurchaseOrderStatus.Closed.getPurchaseOrderStatus());
+			purchaseOrderDao.save(purchaseOrder);
+			addRedirectAlertMessage(new SimpleMessage("PO closed."));
+		} else {
+			addRedirectAlertMessage(new SimpleMessage("PO not found"));
+		}
+		return new RedirectResolution(POAction.class);
+
 	}
 
 	public Resolution parse() throws Exception {
@@ -313,5 +320,13 @@ public class EditPurchaseOrderAction extends BaseAction {
 
 	public void setPreviousPurchaseOrderStatus(PurchaseOrderStatus previousPurchaseOrderStatus) {
 		this.previousPurchaseOrderStatus = previousPurchaseOrderStatus;
+	}
+
+	public List<Long> getNewSkuIdList() {
+		return newSkuIdList;
+	}
+
+	public void setNewSkuIdList(List<Long> newSkuIdList) {
+		this.newSkuIdList = newSkuIdList;
 	}
 }

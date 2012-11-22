@@ -3,9 +3,10 @@ package com.hk.constants.inventory;
 
 import com.hk.domain.core.PurchaseOrderStatus;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Generated
@@ -15,6 +16,7 @@ public enum EnumPurchaseOrderStatus {
 	SentForApproval(20L, "Sent For Approval"),
 	Approved(30L, "Approved"),
 	SentToSupplier(40L, "Sent To Supplier"),
+	Received(50L, "Received"),
 	Closed(100L, "Closed"),
 	Cancelled(1000L, "Cancelled");
 
@@ -49,7 +51,7 @@ public enum EnumPurchaseOrderStatus {
 	public static List<PurchaseOrderStatus> geAllPurchaseOrderStatus() {
 
 		List<PurchaseOrderStatus> PurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentForApproval.getPurchaseOrderStatus(),
-				Approved.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(),
+				Approved.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(), Received.getPurchaseOrderStatus(),
 				Closed.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
 		Collections.sort(PurchaseOrderStatusList);
 		return PurchaseOrderStatusList;
@@ -66,5 +68,25 @@ public enum EnumPurchaseOrderStatus {
 
 		}
 		return null;
+	}
+
+	public static List<PurchaseOrderStatus> getAllowedPOStatusToChange(PurchaseOrderStatus purchaseOrderStatus) {
+		List<PurchaseOrderStatus> allowedPurchaseOrderStatusList = new ArrayList<PurchaseOrderStatus>();
+
+		if (purchaseOrderStatus != null) {
+			if (purchaseOrderStatus.equals(Generated.getPurchaseOrderStatus())) {
+				allowedPurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentForApproval.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
+			} else if (purchaseOrderStatus.equals(SentForApproval.getPurchaseOrderStatus())) {
+				allowedPurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), Approved.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
+			} else if (purchaseOrderStatus.equals(Approved.getPurchaseOrderStatus())) {
+				allowedPurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
+			} else if (purchaseOrderStatus.equals(SentToSupplier.getPurchaseOrderStatus())) {
+				allowedPurchaseOrderStatusList = Arrays.asList(Received.getPurchaseOrderStatus());
+			} else if (purchaseOrderStatus.equals(Received.getPurchaseOrderStatus())) {
+				allowedPurchaseOrderStatusList = Arrays.asList(Closed.getPurchaseOrderStatus());
+			}
+		}
+
+		return allowedPurchaseOrderStatusList;
 	}
 }
