@@ -9721,7 +9721,8 @@
 	<changeSet author="Seema (generated)" id="1350891782684-6">
 		<dropColumn columnName="courier_id" tableName="shipment"/>
 	</changeSet>
-    <changeSet author="Ajeet (generated)" id="1353568633487-1">
+       
+    <changeSet author="Ajeet (generated)" id="1353573439675-1">
         <createTable tableName="traffic_tracking">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -9755,20 +9756,57 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353568633487-2">
-        <modifyDataType columnName="error_log" newDataType="VARCHAR(45)" tableName="payment"/>
+    <changeSet author="Ajeet (generated)" id="1353573439675-2">
+        <createTable tableName="user_browsing_history">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="traffic_tracking_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="page_url" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_category" type="VARCHAR(80)"/>
+            <column name="product_id" type="VARCHAR(20)"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353568633487-3">
-        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="traffic_tracking" baseTableSchemaName="healthkart_workbench" constraintName="fk_traffic_tracking_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    <changeSet author="Ajeet (generated)" id="1353573439675-3">
+        <createIndex indexName="unique_page_url" tableName="user_browsing_history" unique="true">
+            <column name="traffic_tracking_id"/>
+            <column name="page_url"/>
+        </createIndex>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353568633487-4">
-        <addForeignKeyConstraint baseColumnNames="primary_category" baseTableName="traffic_tracking" baseTableSchemaName="healthkart_workbench" constraintName="fk_traffic_tracking_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    <changeSet author="Ajeet (generated)" id="1353573439675-4">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353568633487-5">
-        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="traffic_tracking" baseTableSchemaName="healthkart_workbench" constraintName="fk_traffic_tracking_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    <changeSet author="Ajeet (generated)" id="1353573439675-5">
+        <addForeignKeyConstraint baseColumnNames="primary_category" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353568633487-6">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="traffic_tracking" baseTableSchemaName="healthkart_workbench" constraintName="fk_traffic_tracking_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    <changeSet author="Ajeet (generated)" id="1353573439675-6">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
     </changeSet>
-   
+    <changeSet author="Ajeet (generated)" id="1353573439675-7">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353573439675-8">
+        <addForeignKeyConstraint baseColumnNames="primary_category" baseTableName="user_browsing_history" constraintName="fk_user_browsing_history_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353573439675-9">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="user_browsing_history" constraintName="fk_user_browsing_history_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353573439675-10">
+        <addForeignKeyConstraint baseColumnNames="traffic_tracking_id" baseTableName="user_browsing_history" constraintName="fk_user_browsing_history_traffic_tracking1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="traffic_tracking" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353586028763-1">
+        <createIndex indexName="UNIQUE_session" tableName="traffic_tracking" unique="true">
+            <column name="session_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

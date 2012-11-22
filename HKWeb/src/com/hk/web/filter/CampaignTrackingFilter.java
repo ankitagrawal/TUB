@@ -19,8 +19,11 @@ import org.slf4j.LoggerFactory;
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.domain.user.User;
+import com.hk.domain.analytics.TrafficTracking;
 import com.hk.pact.dao.marketing.CampaignTrackingDao;
+import com.hk.pact.dao.analytics.TrafficTrackingDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.OrderSourceFinder;
 import com.shiro.PrincipalImpl;
@@ -36,6 +39,7 @@ public class CampaignTrackingFilter implements Filter {
     private static Logger logger = LoggerFactory.getLogger(CampaignTrackingFilter.class);
 
     private CampaignTrackingDao campaignTrackingDao;
+    private TrafficAndUserBrowsingService trafficAndUserBrowsingService;
     private UserService         userService;
 
     // private static org.slf4j.Logger logger = LoggerFactory.getLogger(CampaignTrackingFilter.class);
@@ -44,6 +48,7 @@ public class CampaignTrackingFilter implements Filter {
 
     public void init(FilterConfig filterConfig) throws ServletException {
         campaignTrackingDao = (CampaignTrackingDao) ServiceLocatorFactory.getService(CampaignTrackingDao.class);
+        trafficAndUserBrowsingService = ServiceLocatorFactory.getService(TrafficAndUserBrowsingService.class);
         userService = (UserService) ServiceLocatorFactory.getService(UserService.class);
     }
     
@@ -62,10 +67,8 @@ public class CampaignTrackingFilter implements Filter {
             return ;
         }
         
-        String utm_source = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_SOURCE);
-        String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
-        String utm_medium = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_MEDIUM);
-        Map<String, Long> ReferrerIds = OrderSourceFinder.getOrderReferrer(httpRequest); // if its a new session Object newSession =
+
+        Map<String, Long> ReferrerIds = OrderSourceFinder.getOrderReferrer(httpRequest);
         newSession = (Boolean) httpRequest.getSession().getAttribute(HttpRequestAndSessionConstants.NEW_SESSION);
 
         User user = getPrincipalUser();
@@ -82,12 +85,20 @@ public class CampaignTrackingFilter implements Filter {
         }
 
         if (newSession == null || !newSession.equals(true)) {
-            String referrer = httpRequest.getHeader(HttpRequestAndSessionConstants.REFERER);
-            campaignTrackingDao.saveRequest(referrer != null ? referrer : null, httpRequest.getRequestURL().toString(), utm_source, utm_medium, utm_campaign,
-                    user);
+	        /*String referrer = httpRequest.getHeader(HttpRequestAndSessionConstants.REFERER);
+	        String utm_source = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_SOURCE);
+	        String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
+	        String utm_medium = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_MEDIUM);
+	        campaignTrackingDao.saveRequest(
+			        referrer != null ? referrer : null, httpRequest.getRequestURL().toString(), utm_source, utm_medium, utm_campaign,
+			        user);*/
+	        trafficAndUserBrowsingService.saveTrafficTracking(httpRequest, user);
+
+
+	        //To track the same user
             httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.NEW_SESSION, true);
-            httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.REFERER, referrer);
-            httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN, utm_campaign);
+
+	        //To use is for Order
             httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID, ReferrerIds.get(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID));
             httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID, ReferrerIds.get(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID));
         }
