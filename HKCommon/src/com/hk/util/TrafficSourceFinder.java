@@ -47,7 +47,11 @@ public class TrafficSourceFinder {
 		}
 		String utm_medium = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_MEDIUM);
 		if (StringUtils.isNotBlank(utm_source)) {
-			trafficSrcDetails += "utm_medium=" + utm_medium;
+			trafficSrcDetails += "utm_medium=" + utm_medium + "||";
+		}
+		String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
+		if (StringUtils.isNotBlank(utm_campaign)) {
+			trafficSrcDetails += "utm_campaign=" + utm_campaign;
 		}
 
 		if (utm_source == null) {
@@ -71,7 +75,7 @@ public class TrafficSourceFinder {
 			}
 		} else if (referrer.toLowerCase().contains(FACEBOOK)
 				|| utm_source.toLowerCase().equals(UtmSourceConstants.FACEBOOK.toLowerCase())) {
-			trafficSrc = FACEBOOK; 			
+			trafficSrc = FACEBOOK;
 			if (!utm_source.equals("")) {
 				trafficSrcPaid = "true";
 			}
@@ -92,7 +96,7 @@ public class TrafficSourceFinder {
 		} else if (utm_source.toLowerCase().equals(UtmSourceConstants.OHANA.toLowerCase())) {
 			trafficSrc = UtmSourceConstants.OHANA.toLowerCase();
 			trafficSrcPaid = "true";
-		}  else if (utm_medium.toLowerCase().equals(UtmMediumConstants.EMAIL.toLowerCase())
+		} else if (utm_medium.toLowerCase().equals(UtmMediumConstants.EMAIL.toLowerCase())
 				|| utm_medium.toLowerCase().equals(UtmMediumConstants.EMAILER.toLowerCase())
 				|| utm_source.toLowerCase().equals(UtmSourceConstants.NOTIFYME.toLowerCase())
 				|| utm_source.toLowerCase().equals(UtmSourceConstants.ENEWSLETTER.toLowerCase())) {
@@ -114,7 +118,7 @@ public class TrafficSourceFinder {
 					String productId = urlFragmentArray[3];
 					logger.debug("productId = " + productId);
 					orderReferres.put(PRODUCT, productId);
-				} else if(urlFragmentArray.length > 1){
+				} else if (urlFragmentArray.length > 1) {
 					String category = urlFragmentArray[1];
 					logger.debug("category = " + category);
 					orderReferres.put(CATEGORY, category);

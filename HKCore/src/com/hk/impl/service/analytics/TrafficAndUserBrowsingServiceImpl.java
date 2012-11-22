@@ -17,6 +17,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +37,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 	@Autowired
 	BaseDao baseDao;
 
+	@Transactional
 	public TrafficTracking saveTrafficTracking(HttpServletRequest httpRequest, User user) {
 		Map<String, String> trafficInfoMap = TrafficSourceFinder.getTrafficDetails(httpRequest);
 		TrafficTracking trafficTracking = new TrafficTracking();
@@ -71,6 +73,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		return trafficTracking;
 	}
 
+	@Transactional
 	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest) {
 		TrafficTracking trafficTracking = (TrafficTracking) httpServletRequest.getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 		UserBrowsingHistory userBrowsingHistory = new UserBrowsingHistory();

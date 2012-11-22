@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
  * Time: 3:18:55 PM
  * To change this template use File | Settings | File Templates.
  */
-@Service
 public interface TrafficAndUserBrowsingService {
 
 	public TrafficTracking saveTrafficTracking(HttpServletRequest httpRequest, User user);

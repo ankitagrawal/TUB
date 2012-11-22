@@ -9804,9 +9804,17 @@
     <changeSet author="Ajeet (generated)" id="1353573439675-10">
         <addForeignKeyConstraint baseColumnNames="traffic_tracking_id" baseTableName="user_browsing_history" constraintName="fk_user_browsing_history_traffic_tracking1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="traffic_tracking" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353586028763-1">
-        <createIndex indexName="UNIQUE_session" tableName="traffic_tracking" unique="true">
-            <column name="session_id"/>
-        </createIndex>
+	
+    <changeSet author="Ajeet (generated)" id="1353616915901-1">
+        <modifyDataType columnName="landing_url" newDataType="VARCHAR(500)" tableName="traffic_tracking"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353616915901-2">
+        <modifyDataType columnName="src_url" newDataType="VARCHAR(500)" tableName="traffic_tracking"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353616915901-3">
+        <modifyDataType columnName="traffic_src" newDataType="VARCHAR(45)" tableName="traffic_tracking"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353616915901-4">
+        <modifyDataType columnName="page_url" newDataType="VARCHAR(500)" tableName="user_browsing_history"/>
     </changeSet>
 </databaseChangeLog>
