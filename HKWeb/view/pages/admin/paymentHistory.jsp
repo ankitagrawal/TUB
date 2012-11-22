@@ -68,7 +68,11 @@
                 <td><s:textarea name="purchaseInvoice.paymentDetails" style="height:50px;" >${purchaseInvoice.paymentDetails}</s:textarea></td>
               </tr>
               <tr>
-                <td><s:submit name="editPurchaseInvoice" value="Save PI"/></td>
+                <td>
+	                <c:if test="${paymentHistoryBean.isEditable}" >
+	                    <s:submit name="editPurchaseInvoice" value="Save PI"/>
+	              </c:if>
+	              </td>
               </tr>
               </s:form>
             </c:if>
