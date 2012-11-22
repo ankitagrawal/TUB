@@ -393,7 +393,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_RECONCILIATION_REPORTS,
                     EnumPermission.PURCHASE_INVOICE_MANAGEMENT,
                     EnumPermission.MANAGE_PAYMENT_HISTORY,
-                    EnumPermission.FINANCE_MANAGEMENT
+                    EnumPermission.FINANCE_MANAGEMENT,
+		            EnumPermission.EDIT_PAYMENT_HISTORY
             )
     ),
 

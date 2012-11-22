@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.hk.admin.pact.service.accounting.PaymentHistoryService;
 import com.hk.admin.pact.service.accounting.PurchaseInvoiceService;
+import com.hk.constants.core.EnumPermission;
+import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -36,6 +38,9 @@ public class PaymentHistoryAction extends BaseAction {
 	@Autowired
 	PaymentHistoryService paymentHistoryService;
 
+	@Autowired
+	private UserService userService;
+
     private PaymentHistory       paymentHistory;
     private Long                 purchaseOrderId;
     private Long                 purchaseInvoiceId;
@@ -45,12 +50,13 @@ public class PaymentHistoryAction extends BaseAction {
     private Double               outstandingAmount;
     private Supplier             supplier;
 
+	private boolean              isEditable;
+
     private List<PaymentHistory> paymentHistories   = new ArrayList<PaymentHistory>();
     private List<PaymentHistory> paymentHistoriesPO = new ArrayList<PaymentHistory>();
 
     @DefaultHandler
     public Resolution pre() {
-
         if (purchaseOrderId != null) {
             purchaseOrder = getBaseDao().get(PurchaseOrder.class, purchaseOrderId);
             paymentHistories = getPaymentHistoryService().getByPurchaseOrder(purchaseOrder);
@@ -80,6 +86,18 @@ public class PaymentHistoryAction extends BaseAction {
             paymentHistories = getPaymentHistoryService().getByPurchaseInvoice(purchaseInvoice);
             Collections.reverse(paymentHistories);
             outstandingAmount = getPaymentHistoryService().getOutstandingAmountForPurchaseInvoice(purchaseInvoice);
+
+	        boolean isLoggedInUserHasFinancePermission=userService.getLoggedInUser().hasPermission(EnumPermission.EDIT_PAYMENT_HISTORY);
+
+	        if(outstandingAmount.doubleValue() > 0.00){
+		        isEditable = true;
+	        }
+	        else if(isLoggedInUserHasFinancePermission){
+		        isEditable = true;
+	        }
+	        else{
+		        isEditable = false;
+	        }
         }
 
         return new ForwardResolution("/pages/admin/paymentHistory.jsp");
@@ -273,5 +291,13 @@ public class PaymentHistoryAction extends BaseAction {
 
 	public PurchaseInvoiceService getPurchaseInvoiceService() {
 		return purchaseInvoiceService;
+	}
+
+	public boolean getIsEditable() {
+		return isEditable;
+	}
+
+	public void setIsEditable(boolean isEditable) {
+		isEditable = isEditable;
 	}
 }

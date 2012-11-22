@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.admin.pact.service.accounting.PaymentHistoryService;
 import com.hk.admin.pact.service.accounting.PurchaseInvoiceService;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -73,6 +74,9 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	@Autowired
 	private PurchaseInvoiceService        purchaseInvoiceService;
+
+	@Autowired
+	private PaymentHistoryService         paymentHistoryService;
   
     private static Logger                 logger                    = Logger.getLogger(PurchaseInvoiceAction.class);
 
@@ -257,6 +261,13 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		if(purchaseInvoice.getReconciled() != null && purchaseInvoice.getReconciled() &&
 				purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getId())){
 			addRedirectAlertMessage(new SimpleMessage("Since PI is reconciled, please change the status from " + EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getName()+" to some other status"));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+		}
+
+		Double outstandingAmount = paymentHistoryService.getOutstandingAmountForPurchaseInvoice(purchaseInvoice);
+		if(outstandingAmount.doubleValue() >= 0.00
+				&& purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId())){
+			addRedirectAlertMessage(new SimpleMessage("There is an outstanding amount of " + outstandingAmount+". Please clear the same in PI's payment history before closing it."));
 			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
 		}
 
