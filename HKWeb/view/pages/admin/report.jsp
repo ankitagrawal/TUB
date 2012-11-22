@@ -3,12 +3,15 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.report.ReportAction" var="reportActionBean"/>
 <%
     WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
     pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
+	pageContext.setAttribute("whServicable", warehouseService.getServiceableWarehouses());
+	pageContext.setAttribute("soStatusList", EnumShippingOrderStatus.getStatusForPuttingOrderOnHold());
 %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
 
@@ -440,6 +443,47 @@
                 </li>
                 <li>
                     <s:submit name="generatePOReportByVariant" value="Generate Report"/>
+                </li>
+            </ul>
+        </fieldset>
+    </s:form>
+</div>
+
+
+
+
+
+
+
+
+<div class="reportBox">
+    <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
+        <s:errors/>
+        <fieldset class="right_label">
+            <legend>Shipping Order Report </legend>
+            <ul>
+
+                <li>
+                    <label>
+                       SO Status
+                    </label><s:select name="shippingOrderStatus" style="height:30px;font-size:1.2em;padding:1px;">
+                        <c:forEach items="${soStatusList}" var="sos">
+                            <s:option value="${sos.id}">${sos.name}</s:option>
+                        </c:forEach>
+                    </s:select>
+                </li>
+                <li>
+                    <label>
+                        Warehouse
+                    </label>
+                    <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
+                        <c:forEach items="${whServicable}" var="wh">
+                            <s:option value="${wh.id}">${wh.city}</s:option>
+                        </c:forEach>
+                    </s:select>
+                </li>
+                <li>
+                    <s:submit name="generateReportBySOStatus" value="Generate Report"/>
                 </li>
             </ul>
         </fieldset>

@@ -46,6 +46,8 @@ import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.ReconciliationStatusDaoImpl;
 import com.hk.manager.EmailManager;
@@ -54,6 +56,7 @@ import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.service.OrderStatusService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.report.dto.catalog.CategoryPerformanceDto;
@@ -76,6 +79,7 @@ import com.hk.report.pact.service.shippingOrder.ReportShippingOrderService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.core.search.ShippingOrderSearchCriteria;
 
 @Secure (hasAnyPermissions = {PermissionConstants.REPORT_ADMIN}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -97,8 +101,10 @@ public class ReportAction extends BaseAction {
     private String productIdListCommaSeparated;
     // private InventorySoldDto inventorySold;
     private OrderStatus orderStatus;
-
     private Warehouse warehouse;
+	private ShippingOrderStatus shippingOrderStatus;
+
+
 
     @Value ("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String adminDownloads;
@@ -129,6 +135,8 @@ public class ReportAction extends BaseAction {
     OrderService orderService;
     @Autowired
     OrderStatusService orderStatusService;
+	@Autowired
+	ShippingOrderService shippingOrderService;
 
     private List<CategorySalesDto> categorySalesDtoList = new ArrayList<CategorySalesDto>();
 
@@ -905,6 +913,81 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
+	  public Resolution generateReportBySOStatus() {
+	  if(shippingOrderStatus == null &&  warehouse == null){
+		 addRedirectAlertMessage(new SimpleMessage("Download complete"));
+		  return new ForwardResolution("/pages/admin/report.jsp");
+	  }
+		  ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+		  List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
+		  shippingOrderStatusList.add(shippingOrderStatus);
+		  shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList);
+		  shippingOrderSearchCriteria.setWarehouseId(warehouse.getId());
+		  List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, true);
+
+		  addRedirectAlertMessage(new SimpleMessage("Download complete"));
+
+	  }
+
+	  private void prepareXlsForShippingOrder(List<ShippingOrder> shippingOrderList) {
+        xlsFile = new File(adminDownloads + "/reports/SOreportByStatus.xls");
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+        int xlsRow = 1;
+        xlsWriter.addHeader("Shipping_Order_Number", "Shipping_Order_Number");
+        xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+        xlsWriter.addHeader("Base_Order_Number", "Base_Order_Number ");
+        xlsWriter.addHeader("Variant_Id", "Variant_Id");
+        xlsWriter.addHeader("Qty", "Qty");
+        xlsWriter.addHeader("Product_Name", "PO CREATED BY");
+        xlsWriter.addHeader("Amount", "Amount");
+        xlsWriter.addHeader("SUPPLIER", "SUPPLIER");
+        xlsWriter.addHeader("SUPPLIER TIN", "SUPPLIER TIN");
+        xlsWriter.addHeader("PO STATUS", "PO STATUS");
+        xlsWriter.addHeader("GRN QTY", "GRN QTY");
+        xlsWriter.addHeader("CHECKED IN QTY", "CHECKED IN QTY");
+        xlsWriter.addHeader("GRN DATE", "GRN DATE");
+        xlsWriter.addHeader("GRN STATUS", "GRN STATUS");
+        xlsWriter.addHeader("MRP", "MRP");
+        xlsWriter.addHeader("COST PRICE", "COST PRICE");
+        xlsWriter.addHeader("MARGIN(CP vs MRP)", "MARGIN(CP vs MRP)");
+
+        xlsWriter.writeData(xlsFile, "PurchaseOrder_Report");
+
+        for (GrnLineItem grnLineItem : grnLineItemList) {
+            PurchaseOrder purchaseOrder = grnLineItem.getGoodsReceivedNote().getPurchaseOrder();
+            ProductVariant productVariant = grnLineItem.getSku().getProductVariant();
+
+            xlsWriter.addCell(xlsRow, productVariant.getId());
+            xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
+            xlsWriter.addCell(xlsRow, productVariant.getOptionsCommaSeparated());
+            xlsWriter.addCell(xlsRow, purchaseOrder.getId());
+            xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
+            xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
+            if(purchaseOrder.getApprovedBy() != null) {
+                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy().getName());
+            } else {
+                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy());
+            }
+
+            xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getName());
+            xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getTinNumber());
+            xlsWriter.addCell(xlsRow, purchaseOrder.getPurchaseOrderStatus().getName());
+            xlsWriter.addCell(xlsRow, grnLineItem.getQty());
+            xlsWriter.addCell(xlsRow, grnLineItem.getCheckedInQty());
+            xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnDate());
+            xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnStatus().getName());
+            xlsWriter.addCell(xlsRow, productVariant.getMarkedPrice());
+            xlsWriter.addCell(xlsRow, productVariant.getCostPrice());
+            xlsWriter.addCell(xlsRow, (productVariant.getMarkedPrice() - productVariant.getCostPrice())/productVariant.getCostPrice()*100);
+
+            xlsRow++;
+        }
+        xlsWriter.writeData(xlsFile, "PurchaseOrder_Report");
+
+    }
+
+
+
     public Date getStartDate() {
         return startDate;
     }
@@ -1307,4 +1390,12 @@ public class ReportAction extends BaseAction {
     public void setReportProductVariantService(ReportProductVariantService reportProductVariantService) {
         this.reportProductVariantService = reportProductVariantService;
     }
+
+	public ShippingOrderStatus getShippingOrderStatus() {
+		return shippingOrderStatus;
+	}
+
+	public void setShippingOrderStatus(ShippingOrderStatus shippingOrderStatus) {
+		this.shippingOrderStatus = shippingOrderStatus;
+	}
 }
