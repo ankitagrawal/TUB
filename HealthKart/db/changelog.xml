@@ -9721,4 +9721,53 @@
 	<changeSet author="Seema (generated)" id="1350891782684-6">
 		<dropColumn columnName="courier_id" tableName="shipment"/>
 	</changeSet>
+    <changeSet author="Rohit (generated)" id="1353577108219-1">
+        <createTable tableName="product_variant_supplier_info">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="asked_qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="received_qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="fill_rate" type="DECIMAL(12,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1353577108219-2">
+        <addColumn tableName="po_line_item">
+            <column name="fill_rate" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1353577108219-3">
+        <addColumn tableName="po_line_item">
+            <column name="received_qty" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1353577108219-4">
+        <addColumn tableName="purchase_order">
+            <column name="fill_rate" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1353577108219-5">
+        <createIndex indexName="product_variant_supplier_key" tableName="product_variant_supplier_info" unique="true">
+            <column name="product_variant_id"/>
+            <column name="supplier_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1353577108219-6">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="product_variant_supplier_info" constraintName="fk_product_variant_supplier_info_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1353577108219-7">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="product_variant_supplier_info" constraintName="fk_product_variant_supplier_info_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
