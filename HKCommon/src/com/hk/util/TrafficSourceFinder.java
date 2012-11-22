@@ -23,7 +23,7 @@ public class TrafficSourceFinder {
 
 	public static String GOOGLE = "google";
 	public static String FACEBOOK = "facebook";
-	public static String EMAIL_NEWSLETTR = "email-newsletter";
+	public static String EMAIL_NEWSLETTER = "email-newsletter";
 	public static String VIZURY = "vizury";
 	public static String HEALTHKART = "healthkart";
 	public static String RFERRAL = "referral";
@@ -92,20 +92,14 @@ public class TrafficSourceFinder {
 		} else if (utm_source.toLowerCase().equals(UtmSourceConstants.OHANA.toLowerCase())) {
 			trafficSrc = UtmSourceConstants.OHANA.toLowerCase();
 			trafficSrcPaid = "true";
-		} else if (!utm_medium.equals("")
-				&& (utm_medium == UtmMediumConstants.HOMEBANNER
-				|| utm_medium == UtmMediumConstants.SITE
-				|| referrer == HEALTHKART)
-				) {
-			trafficSrc = HEALTHKART;
-		} else if (utm_medium.toLowerCase().equals(UtmMediumConstants.EMAIL.toLowerCase())
+		}  else if (utm_medium.toLowerCase().equals(UtmMediumConstants.EMAIL.toLowerCase())
 				|| utm_medium.toLowerCase().equals(UtmMediumConstants.EMAILER.toLowerCase())
 				|| utm_source.toLowerCase().equals(UtmSourceConstants.NOTIFYME.toLowerCase())
 				|| utm_source.toLowerCase().equals(UtmSourceConstants.ENEWSLETTER.toLowerCase())) {
-			trafficSrc = EMAIL_NEWSLETTR;
+			trafficSrc = EMAIL_NEWSLETTER;
 		} else {
-			trafficSrc = OTHERS;
-		}  		
+			trafficSrc = HEALTHKART;
+		}
 
 
 		if (httpRequest != null) {
