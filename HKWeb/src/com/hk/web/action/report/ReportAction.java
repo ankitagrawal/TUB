@@ -914,55 +914,54 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
-	  public Resolution generateReportBySOStatus() {
-	  if(shippingOrderStatus == null){
-		 addRedirectAlertMessage(new SimpleMessage("Download complete"));
-		  return new ForwardResolution("/pages/admin/report.jsp");
-	  }
-		  ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-		  List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
-		  shippingOrderStatusList.add(shippingOrderStatus);
-		  shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList);		 
-		  List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, true);
-		    prepareXlsForShippingOrder(shippingOrders);
-		  addRedirectAlertMessage(new SimpleMessage("Download complete"));
-		 return new HTTPResponseResolution();
-	  }
+	public Resolution generateReportBySOStatus() {
+		if (shippingOrderStatus == null) {
+			addRedirectAlertMessage(new SimpleMessage("Download complete"));
+			return new ForwardResolution("/pages/admin/report.jsp");
+		}
+		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+		List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
+		shippingOrderStatusList.add(shippingOrderStatus);
+		shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList);
+		List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, true);
+		prepareXlsForShippingOrder(shippingOrders);
+		addRedirectAlertMessage(new SimpleMessage("Download complete"));
+		return new HTTPResponseResolution();
+	}
 
-	  private void prepareXlsForShippingOrder(List<ShippingOrder> shippingOrderList) {
-		  SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        xlsFile = new File(adminDownloads + "/reports/SOreportByStatus.xls");
-        HkXlsWriter xlsWriter = new HkXlsWriter();
-        int xlsRow = 1;
-		  xlsWriter.addHeader("SHIPPING ORDER NUMBER", "SHIPPING ORDER NUMBER");
-		  xlsWriter.addHeader("BASE OREDR NUMBER", "BASE OREDR NUMBER");
-		  xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
-		  xlsWriter.addHeader("VARIANT ID", "VARIANT ID");
-		  xlsWriter.addHeader("QTY", "QTY");
-		  xlsWriter.addHeader("AMOUNT", "AMOUNT");
-		  xlsWriter.addHeader("ORDER DATE", "ORDER DATE");
-		  xlsWriter.writeData(xlsFile, "SO_StatusReport");
+	private void prepareXlsForShippingOrder(List<ShippingOrder> shippingOrderList) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		xlsFile = new File(adminDownloads + "/reports/SOreportByStatus.xls");
+		HkXlsWriter xlsWriter = new HkXlsWriter();
+		int xlsRow = 1;
+		xlsWriter.addHeader("SHIPPING ORDER NUMBER", "SHIPPING ORDER NUMBER");
+		xlsWriter.addHeader("BASE OREDR NUMBER", "BASE OREDR NUMBER");
+		xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+		xlsWriter.addHeader("VARIANT ID", "VARIANT ID");
+		xlsWriter.addHeader("QTY", "QTY");
+		xlsWriter.addHeader("AMOUNT", "AMOUNT");
+		xlsWriter.addHeader("ORDER DATE", "ORDER DATE");
+		xlsWriter.writeData(xlsFile, "SO_StatusReport");
 
-		  for (ShippingOrder shippingOrder : shippingOrderList) {
-			  for (LineItem lineItem : shippingOrder.getLineItems()) {
-				  ProductVariant productVariant = lineItem.getSku().getProductVariant();
-				  Order order = shippingOrder.getBaseOrder();
-				  xlsWriter.addCell(xlsRow, shippingOrder.getId());
-				  xlsWriter.addCell(xlsRow, order.getId());
-				  xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
-				  xlsWriter.addCell(xlsRow, productVariant.getId());
-				  xlsWriter.addCell(xlsRow, lineItem.getQty());
-				  xlsWriter.addCell(xlsRow, lineItem.getHkPrice());
-				  xlsWriter.addCell(xlsRow, sdf.format(order.getPayment().getPaymentDate()));
-				  xlsRow++;
-			  }
-		  }
-		  xlsWriter.writeData(xlsFile, "ShippingOrder_Status_Report");
-    }
+		for (ShippingOrder shippingOrder : shippingOrderList) {
+			for (LineItem lineItem : shippingOrder.getLineItems()) {
+				ProductVariant productVariant = lineItem.getSku().getProductVariant();
+				Order order = shippingOrder.getBaseOrder();
+				xlsWriter.addCell(xlsRow, shippingOrder.getId());
+				xlsWriter.addCell(xlsRow, order.getId());
+				xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
+				xlsWriter.addCell(xlsRow, productVariant.getId());
+				xlsWriter.addCell(xlsRow, lineItem.getQty());
+				xlsWriter.addCell(xlsRow, lineItem.getHkPrice());
+				xlsWriter.addCell(xlsRow, sdf.format(order.getPayment().getPaymentDate()));
+				xlsRow++;
+			}
+		}
+		xlsWriter.writeData(xlsFile, "ShippingOrder_Status_Report");
+	}
 
 
-
-    public Date getStartDate() {
+	public Date getStartDate() {
         return startDate;
     }
 

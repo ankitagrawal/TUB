@@ -449,34 +449,28 @@
 </div>
 
 
-
-
-
-
-
-
 <div class="reportBox">
-    <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
-        <s:errors/>
-        <fieldset class="right_label">
-            <legend>Shipping Order Status Report </legend>
-            <ul>
+	<s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
+		<s:errors/>
+		<fieldset class="right_label">
+			<legend>Shipping Order Status Report</legend>
+			<ul>
 
-                <li>
-                    <label>
-                       SO Status
-                    </label><s:select name="shippingOrderStatus" style="height:30px;font-size:1.2em;padding:1px;">
-                        <c:forEach items="${soStatusList}" var="sos">
-                            <s:option value="${sos.id}">${sos.name}</s:option>
-                        </c:forEach>
-                    </s:select>
-                </li>
-                <li>
-                    <s:submit name="generateReportBySOStatus" value="Generate Report"/>
-                </li>
-            </ul>
-        </fieldset>
-    </s:form>
+				<li>
+					<label>
+						SO Status
+					</label><s:select name="shippingOrderStatus" style="height:30px;font-size:1.2em;padding:1px;">
+					<c:forEach items="${soStatusList}" var="sos">
+						<s:option value="${sos.id}">${sos.name}</s:option>
+					</c:forEach>
+				</s:select>
+				</li>
+				<li>
+					<s:submit name="generateReportBySOStatus" value="Generate Report"/>
+				</li>
+			</ul>
+		</fieldset>
+	</s:form>
 </div>
 
 </s:layout-component>
