@@ -953,7 +953,9 @@ public class ReportAction extends BaseAction {
 				xlsWriter.addCell(xlsRow, productVariant.getId());
 				xlsWriter.addCell(xlsRow, lineItem.getQty());
 				xlsWriter.addCell(xlsRow, lineItem.getHkPrice());
+				if(order.getPayment() != null && order.getPayment().getPaymentDate() != null){
 				xlsWriter.addCell(xlsRow, sdf.format(order.getPayment().getPaymentDate()));
+				}				
 				xlsRow++;
 			}
 		}
