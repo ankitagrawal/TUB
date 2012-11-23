@@ -12,6 +12,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.admin.util.TaxUtil" %>
+<%@ page import="com.hk.constants.inventory.EnumPurchaseInvoiceStatus" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" var="pia"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Invoice">
 
@@ -234,21 +235,7 @@
 		});
 
 		updateTotal('.receivedQuantity', '.totalQuantity', 1);
-
-		$('#save-button').click(function(){
-			var reconciled = $('#reconciled').is(':checked');
-			var status = $('#status').val();
-			var paymentDate = $('#payment-date').val();
-			if (paymentDate== "yyyy-mm-dd" ||  paymentDate == null || paymentDate == "") {
-				if (reconciled && status == 10) {
-					var confirm_action = confirm("PI is reconciled but status is Generated. Are you sure you don't want to change the status to Payment Pending?");
-					if (!confirm_action) {
-						event.preventDefault();
-					}
-				}
-			}
-
-		});
+	
 	});
 </script>
 </s:layout-component>

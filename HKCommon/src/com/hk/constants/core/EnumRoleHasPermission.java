@@ -97,7 +97,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.SELECT_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-		            EnumPermission.ADD_HUB
+		            EnumPermission.ADD_HUB,
+		            EnumPermission.POPULATE_BUSY_DATA
             )
     ),
 
@@ -393,7 +394,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_RECONCILIATION_REPORTS,
                     EnumPermission.PURCHASE_INVOICE_MANAGEMENT,
                     EnumPermission.MANAGE_PAYMENT_HISTORY,
-                    EnumPermission.FINANCE_MANAGEMENT
+                    EnumPermission.FINANCE_MANAGEMENT,
+		            EnumPermission.EDIT_PAYMENT_HISTORY,
+		            EnumPermission.POPULATE_BUSY_DATA
             )
     ),
 
