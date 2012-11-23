@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:layout-render name="/layouts/default.jsp" pageTitle="Courier Status not found">
+<s:layout-render name="/layouts/default.jsp" pageTitle="Track Shipment">
 	<s:layout-component name="heading">
 		<div style="margin-top: 10px;">
 			<h2 class="red" style="font-size:17px;">Shipped, reaching you soon</h2>
