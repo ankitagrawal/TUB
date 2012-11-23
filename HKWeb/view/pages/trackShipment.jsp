@@ -4,7 +4,7 @@
 <s:layout-render name="/layouts/default.jsp" pageTitle="Courier Status not found">
 	<s:layout-component name="heading">
 		<div style="margin-top: 10px;">
-			<h2 class="red" style="font-size:17px;">Shipping Soon</h2>
+			<h2 class="red" style="font-size:17px;">Shipped, Reaching you soon</h2>
 		</div>
 	</s:layout-component>
 	<s:layout-component name="htmlHead">
@@ -20,7 +20,8 @@
 	</s:layout-component>
 	<s:layout-component name="lhsContent">
 		<div>
-			<p>At Healthkart.com we provide free shipping on almost all our products within India</p>
+			<p><b>Congratulations! Your order is shipped and will reach you soon.</b></p>
+			<%--<p>At Healthkart.com we provide free shipping on almost all our products within India</p>--%>
 			<ul type="disc" style="margin-left:20px; list-style:disc;">
 				<li>Your order status would be updated within 24 hours.</li>
 				<li>We would like to remind you that an order can take upto 3 to 4 days to reach the preferred
