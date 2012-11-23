@@ -110,7 +110,7 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
 				 * to the required page (success, fail, authPending, double payment, etc)
 				 */
 
-		System.out.println("in citrus callback");
+//		System.out.println("in citrus callback");
 		logger.error("in callback -> " + getContext().getRequest().getParameterMap());
 		System.out.println("in callback -> " + getContext().getRequest().getParameterMap());
 		String data = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.param_data);
