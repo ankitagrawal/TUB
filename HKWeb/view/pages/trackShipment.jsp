@@ -4,7 +4,7 @@
 <s:layout-render name="/layouts/default.jsp" pageTitle="Courier Status not found">
 	<s:layout-component name="heading">
 		<div style="margin-top: 10px;">
-			<h2 class="red" style="font-size:17px;">Shipped, Reaching you soon</h2>
+			<h2 class="red" style="font-size:17px;">Shipped, reaching you soon</h2>
 		</div>
 	</s:layout-component>
 	<s:layout-component name="htmlHead">
