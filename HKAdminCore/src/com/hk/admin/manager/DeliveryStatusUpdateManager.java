@@ -380,7 +380,7 @@ public class DeliveryStatusUpdateManager {
 							deliveryDateString = responseElement.getChildText(CourierConstants.QUANTIUM_DELIVERY_DATE);
 							if (courierDeliveryStatus != null && deliveryDateString != null) {
 								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.QUANTIUM_DELIVERED)) {
-									if (refId != null && refId.equalsIgnoreCase(shippingOrder.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
+									if (refId != null && refId.equalsIgnoreCase(shippingOrderInList.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
 										try {
 											Date delivery_date = sdf_date.parse(deliveryDateString);
 											ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);

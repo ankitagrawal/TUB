@@ -379,7 +379,7 @@ public class CourierStatusUpdateHelper {
 		courierName = EnumCourier.Quantium.getName();
 
 		//added for debugging
-		//trackingId = "HKC008244";
+		//trackingId = "HKP006689";
 
 		try {
 			url = new URL("http://atquantiumaspac.com/QSDTSAPI/TrackXML.aspx?trackingno=" + trackingId);
