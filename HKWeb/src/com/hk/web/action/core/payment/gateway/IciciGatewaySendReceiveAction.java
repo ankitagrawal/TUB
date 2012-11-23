@@ -116,7 +116,12 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
 
         Double amount = NumberUtils.toDouble(amountStr);
         String authStatus = paramMap.get(CitrusPaymentGatewayWrapper.RespCode);
-        String responseMsg = ((String) paramMap.get(CitrusPaymentGatewayWrapper.Message)).replace('+', ' ');
+	    String responseMsg = paramMap.get(CitrusPaymentGatewayWrapper.Message);
+	    if (responseMsg != null) {
+		    responseMsg = ((String) responseMsg).replace('+', ' ');
+	    } else {
+		    responseMsg = "";
+	    }
         String gatewayOrderId = paramMap.get(CitrusPaymentGatewayWrapper.TxnID);
         String rrn = paramMap.get(CitrusPaymentGatewayWrapper.RRN);
         String ePGTxnID = paramMap.get(CitrusPaymentGatewayWrapper.ePGTxnID);

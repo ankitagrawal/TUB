@@ -32,6 +32,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
+import com.hk.admin.manager.SendCampaignResult;
 import com.hk.admin.pact.service.email.AdminEmailCampaignService;
 import com.hk.admin.pact.service.email.AdminEmailService;
 import com.hk.constants.core.EnumRole;
@@ -114,9 +115,9 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyName + "']}")
     String                            senderName;
 
-    String                            replyToEmail =  "info@healthkart.com";
+    String                            replyToEmail   = "info@healthkart.com";
 
-    boolean                           sendHeaders = true;
+    boolean                           sendHeaders    = true;
 
     @SuppressWarnings("unchecked")
     @DefaultHandler
@@ -194,7 +195,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
             }
         }
         if (longUserIdList.size() > 0) {
-            getAdminEmailManager().sendCampaignByUploadingFile(longUserIdList, null, emailCampaign, maxResultCount, senderEmail, senderName,replyToEmail);
+            getAdminEmailManager().sendCampaignByUploadingFile(longUserIdList, null, emailCampaign, maxResultCount, senderEmail, senderName, replyToEmail);
         }
 
         addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
@@ -263,54 +264,78 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
             }
         }
         String xsmtpapi = "";
-        if (sendHeaders){
+        if (sendHeaders) {
             xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
         }
         List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
         Long emailRecepientCount = getAdminEmailService().getMailingListCountByCampaign(emailCampaign);
-        Long MAX_EMAILS = 200000L; //todo: HACKY-Code to save us from going into infinite loop..Need better implementation here
+        Long MAX_EMAILS = 200000L; // todo: HACKY-Code to save us from going into infinite loop..Need better
+                                    // implementation here
         Long usersBrowsed = 0L;
         int pageCount = 0;
         do {
             if (categories.equalsIgnoreCase("all")) {
-                emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)),pageCount, maxResultCount);
+                emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)), pageCount, maxResultCount);
             } else if (categories.equalsIgnoreCase("all-unverified")) {
                 emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)), maxResultCount);
             }
-            if ((emailRecepients == null) || emailRecepients.isEmpty()){
+            if ((emailRecepients == null) || emailRecepients.isEmpty()) {
                 break;
             }
             List<String> emailRecepientsWithHistory = getAdminEmailService().getEmailRecepientsByEmailIds(emailCampaign, emailRecepients);
             Set<String> historyEmails = new HashSet<String>();
             historyEmails.addAll(emailRecepientsWithHistory);
-            List<EmailRecepient> validEmailRecepients =  new ArrayList<EmailRecepient>();
+            List<EmailRecepient> validEmailRecepients = new ArrayList<EmailRecepient>();
 
-            for (EmailRecepient emailRecepient : emailRecepients){
-               //remove if this user is already sent email for this campaign
-               if (!historyEmails.contains(emailRecepient.getEmail())){
-                   validEmailRecepients.add(emailRecepient);
-               }
+            SendCampaignResult sendCampaignResult = new SendCampaignResult();
+            for (EmailRecepient emailRecepient : emailRecepients) {
+                // remove if this user is already sent email for this campaign
+                if (!historyEmails.contains(emailRecepient.getEmail()) && !sendCampaignResult.getErrorEmails().contains(emailRecepient.getEmail())) {
+                    validEmailRecepients.add(emailRecepient);
+                }
             }
 
             if (validEmailRecepients.size() > 0) {
                 logger.info(" user list size " + validEmailRecepients.size());
-                getAdminEmailManager().sendCampaignMails(validEmailRecepients, emailCampaign,senderEmail, senderName,replyToEmail, xsmtpapi);
+                getAdminEmailManager().sendCampaignMails(validEmailRecepients, emailCampaign, senderEmail, senderName, replyToEmail, xsmtpapi, sendCampaignResult);
+                if (!sendCampaignResult.isCampaignSentSuccess()) {
+                    logger.error("Error in sending file upload campaing to :" + sendCampaignResult.getErrorEmails().toString());
+                }
             }
             pageCount++;
             usersBrowsed += maxResultCount;
 
-        } while ((usersBrowsed  < emailRecepientCount) && (emailRecepientCount < MAX_EMAILS));
+        } while ((usersBrowsed < emailRecepientCount) && (emailRecepientCount < MAX_EMAILS));
 
         if (!categories.equalsIgnoreCase("all") && !categories.equalsIgnoreCase("all-unverified")) {
             for (String categoryName : categoryArray) {
                 Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
                 if (category != null) {
+                    SendCampaignResult sendCampaignResult = new SendCampaignResult();
                     do {
                         emailRecepients.clear();
                         emailRecepients = getAdminEmailService().getMailingListByCategory(emailCampaign, category, maxResultCount);
                         if (emailRecepients.size() > 0) {
-                            logger.info(" user list size " + emailRecepients.size());
-                            getAdminEmailManager().sendCampaignMails(emailRecepients, emailCampaign,senderEmail, senderName,replyToEmail, xsmtpapi);
+                            List<EmailRecepient> emailRecepientsToSend = new ArrayList<EmailRecepient>();
+
+                            for (EmailRecepient emailRecepient : emailRecepients) {
+                                if (!sendCampaignResult.getErrorEmails().contains(emailRecepient.getEmail())) {
+                                    emailRecepientsToSend.add(emailRecepient);
+                                }
+                            }
+
+                            if (emailRecepientsToSend.size() > 0) {
+                                logger.info(" user list size " + emailRecepients.size());
+                                getAdminEmailManager().sendCampaignMails(emailRecepientsToSend, emailCampaign, senderEmail, senderName, replyToEmail, xsmtpapi, sendCampaignResult);
+                                logger.info(" send campaign Result " + sendCampaignResult.isCampaignSentSuccess() + " error " + sendCampaignResult.getErrorEmails().toString());
+                                if (!sendCampaignResult.isCampaignSentSuccess()) {
+                                    logger.error("Error in sending file upload campaing to :" + sendCampaignResult.getErrorEmails().toString());
+                                }
+                            } else {
+                                logger.info(" no valid email recipents so breaking out");
+                                break;
+                            }
+
                         }
 
                     } while (emailRecepients.size() > 0);
