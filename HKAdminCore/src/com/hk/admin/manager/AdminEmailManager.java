@@ -562,102 +562,111 @@ public class AdminEmailManager {
         List result = new ArrayList();
         result.add(0, sendAlternateTemplate);
         result.add(1, "");
-
+        StringBuilder errorBuilder = new StringBuilder();
+        List<ProductVariant> validProductVariants = new ArrayList<ProductVariant>();
         if (excelMap.containsKey(EmailMapKeyConstants.couponCode)) {
             Coupon coupon = couponService.findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
             excelMap.put(EmailMapKeyConstants.coupon, coupon);
         }
-        Product product = null;
-        if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)) {
-            String pvId = excelMap.get(EmailMapKeyConstants.productVariantId).toString();
-            ProductVariant productVariant = productVariantService.getVariantById(pvId);
-            if (productVariant != null) {
-                excelMap.put(EmailMapKeyConstants.productVariant, productVariant);
-                if (productsMap.containsKey(pvId)){
-                    product =  productsMap.get(pvId);
+        if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)){
+            String[] productVariantIds = excelMap.get(EmailMapKeyConstants.productVariantId).toString().split(",");
+            Product product  = null;
+            for (String pvId : productVariantIds)
+            {
+                ProductVariant productVariant = productVariantService.getVariantById(pvId);
+                if (productVariant != null) {
+
+
+                    if (productsMap.containsKey(pvId)){
+                        product =  productsMap.get(pvId);
+                    }else{
+                        product = productVariant.getProduct();
+                        productsMap.put(pvId, product);
+                    }
                 }else{
-                    product = productVariant.getProduct();
-                    productsMap.put(pvId, product);
+                    errorBuilder.append(String.format("Product Variant %s is wrong", pvId));
+                    continue;
                 }
-            }else{
-                result.set(1, String.format("Product Variant %s is wrong", pvId));
-                return result;
-            }
 
-            if (product == null){
-                result.set(1, String.format("Product for variant %s is wrong", productVariant.getId()));
-                return result;
-            }
+                if (product == null){
+                    errorBuilder.append( String.format("Product for variant %s is wrong", productVariant.getId()));
+                    continue;
+                }
 
-            if (product.isOutOfStock()){
-                result.set(1, String.format("Product %s is out of stock", product.getId()));
-                return result;
-            }
+                if (product.isOutOfStock()){
+                    errorBuilder.append(String.format("Product %s is out of stock", product.getId()));
+                    continue;
+                }
+                //OK..now we have a valid product variant
+                validProductVariants.add(productVariant);
 
-            if (excelMap.containsKey(EmailMapKeyConstants.similarProductId)) {
-                sendAlternateTemplate = Boolean.TRUE;
-                Object similarIds = excelMap.get(EmailMapKeyConstants.similarProductId);
-                List<Product> similarProducts = new ArrayList<Product>();
-                if ( similarProducts != null &&
-                        StringUtils.isNotBlank(similarProducts.toString())){
-                    if (similarIds.toString().trim().equals("auto")){
-                        List<SimilarProduct> similarProductList = product.getSimilarProducts();
-                        //Todo: Check this logic and re-implement
-                        /*for (SimilarProduct similarProduct : similarProductList){
-                            Product simProduct = similarProduct.getSimilarProduct();
-                            if ((simProduct!= null) && !simProduct.isOutOfStock()
-                                    && !productService.isComboInStock(simProduct.getId())){
-                                {
+                if (excelMap.containsKey(EmailMapKeyConstants.similarProductId)) {
+                    sendAlternateTemplate = Boolean.TRUE;
+                    Object similarIds = excelMap.get(EmailMapKeyConstants.similarProductId);
+                    List<Product> similarProducts = new ArrayList<Product>();
+                    if ( similarProducts != null &&
+                            StringUtils.isNotBlank(similarProducts.toString())){
+                        if (similarIds.toString().trim().equals("auto")){
+                            List<SimilarProduct> similarProductList = product.getSimilarProducts();
+                            //Todo: Check this logic and re-implement
+                            /*for (SimilarProduct similarProduct : similarProductList){
+                                Product simProduct = similarProduct.getSimilarProduct();
+                                if ((simProduct!= null) && !simProduct.isOutOfStock()
+                                        && !productService.isComboInStock(simProduct.getId())){
+                                    {
+                                        simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
+                                        similarProducts.add(simProduct);
+                                        sendAlternateTemplate = Boolean.FALSE;
+                                    }
+                                }
+                            };*/
+                        } else{
+                            String[] similarProductIds = similarIds.toString().split(",");
+                            for (String productId : similarProductIds){
+                                Product simProduct = null;
+                                if (productsMap.containsKey(productId)) {
+                                    simProduct = productsMap.get(productId);
+                                }else{
+                                    simProduct = getProductService().getProductById(productId);
+                                    if (simProduct != null){
+                                        productsMap.put(productId, simProduct);
+                                    }
+                                }
+
+                                boolean isProductInStock = !simProduct.getOutOfStock();
+                                isProductInStock = productService.isComboInStock(simProduct);
+
+                                if ((simProduct != null) && isProductInStock){
                                     simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
                                     similarProducts.add(simProduct);
                                     sendAlternateTemplate = Boolean.FALSE;
                                 }
                             }
-                        };*/
-                    } else{
-                        String[] similarProductIds = similarIds.toString().split(",");
-                        for (String productId : similarProductIds){
-                            Product simProduct = null;
-                            if (productsMap.containsKey(productId)) {
-                                simProduct = productsMap.get(productId);
-                            }else{
-                                simProduct = getProductService().getProductById(productId);
-                                if (simProduct != null){
-                                    productsMap.put(productId, simProduct);
-                                }
-                            }
-
-                            boolean isProductInStock = !simProduct.getOutOfStock();
-                            isProductInStock = productService.isComboInStock(simProduct);
-
-                            if ((simProduct != null) && isProductInStock){
-                                simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
-                                similarProducts.add(simProduct);
-                                sendAlternateTemplate = Boolean.FALSE;
-                            }
                         }
+                        result.set(0, sendAlternateTemplate);
                     }
-                    result.set(0, sendAlternateTemplate);
+
+                    excelMap.put(EmailMapKeyConstants.similarProductId, similarProducts);
                 }
-
-                excelMap.put(EmailMapKeyConstants.similarProductId, similarProducts);
             }
-        }
 
-        if ((product != null) && !product.isOutOfStock()) {
-            Long productMainImageId = product.getMainImageId();
-            excelMap.put(EmailMapKeyConstants.product, product);
-            //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-            excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
+            excelMap.put(EmailMapKeyConstants.productVariant, validProductVariants);
 
-            if (productMainImageId != null) {
-                excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
-                excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
-                excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
-            } else {
-                excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-                excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-                excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+            if (product != null) {
+                Long productMainImageId = product.getMainImageId();
+                excelMap.put(EmailMapKeyConstants.product, product);
+                //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+                excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
+
+                if (productMainImageId != null) {
+                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
+                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
+                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
+                } else {
+                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+                }
             }
         }
         return result;
