@@ -384,10 +384,8 @@ public class DeliveryStatusUpdateManager {
 										try {
 											Date delivery_date = sdf_date.parse(deliveryDateString);
 											ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
-										} catch (ParseException pe) {
-											//todo neha: aisa mazak kyu kiya -> "Sorry.Database updation failed.ParseException occurred for Tracking Id :" keh ke tracking Id nahi daali
-											//todo neha: yahan pe unmodifiedTrackingIds ki list mein entry kyu nahi hai?
-											logger.debug(CourierConstants.PARSE_EXCEPTION + pe.getMessage());
+										} catch (ParseException pe) {											
+											logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
 											unmodifiedTrackingIds.add(trackingId);
 										}
 									}
