@@ -184,7 +184,8 @@ public class OrderManager {
 	    //Set Order in Traffic Tracking
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 	    if (trafficTracking != null) {
-		    trafficTracking.setOrder(order);
+		    if (order != null)
+			    trafficTracking.setOrderId(order.getId());
 		    getBaseDao().save(trafficTracking);
 	    }
 	    

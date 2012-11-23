@@ -43,16 +43,16 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		TrafficTracking trafficTracking = new TrafficTracking();
 
 		String srcUrl = httpRequest.getHeader(HttpRequestAndSessionConstants.REFERER);
-		if(StringUtils.isNotBlank(srcUrl) && srcUrl.length() > 190){
-			logger.info("srcUrl="+srcUrl);
-			srcUrl = srcUrl.substring(0,180);
+		if (StringUtils.isNotBlank(srcUrl) && srcUrl.length() > 190) {
+			logger.info("srcUrl=" + srcUrl);
+			srcUrl = srcUrl.substring(0, 180);
 		}
 		trafficTracking.setSrcUrl(srcUrl);
 		trafficTracking.setTrafficSrc(trafficInfoMap.get(TrafficSourceFinder.TRAFFIC_SRC));
 		String trafficSrcDetails = trafficInfoMap.get(TrafficSourceFinder.TRAFFIC_SRC_DETAILS);
-		if(StringUtils.isNotBlank(trafficSrcDetails) && trafficSrcDetails.length() > 190){
-			logger.info("trafficSrcDetails="+trafficSrcDetails);
-			trafficSrcDetails = trafficSrcDetails.substring(0,180);
+		if (StringUtils.isNotBlank(trafficSrcDetails) && trafficSrcDetails.length() > 190) {
+			logger.info("trafficSrcDetails=" + trafficSrcDetails);
+			trafficSrcDetails = trafficSrcDetails.substring(0, 180);
 		}
 		trafficTracking.setTrafficSrcDetails(trafficSrcDetails);
 		trafficTracking.setTrafficSrcPaid(Boolean.getBoolean(trafficInfoMap.get(TrafficSourceFinder.TRAFFIC_SRC_PAID)));
@@ -65,39 +65,51 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 			category = getBaseDao().get(Category.class, categoryName);
 		Product product = null;
 		String productId = trafficInfoMap.get(TrafficSourceFinder.PRODUCT);
-		if (StringUtils.isNotBlank(productId)){
+		if (StringUtils.isNotBlank(productId)) {
 			product = getBaseDao().get(Product.class, productId);
-			if(product != null)
+			if (product != null) {
+				trafficTracking.setProductId(product.getId());
 				category = product.getPrimaryCategory();
+			}
 		}
-		trafficTracking.setProduct(product);
-		trafficTracking.setCategory(category);
-		trafficTracking.setUser(user);
+
+		if (category != null) {
+			trafficTracking.setPrimaryCategory(category.getName());
+		}
+		if (user != null) {
+			trafficTracking.setUserId(user.getId());
+		}
 		trafficTracking.setIp(httpRequest.getRemoteAddr());
 		trafficTracking.setSessionId(httpRequest.getSession().getId());
 		trafficTracking.setCreateDt(new Date());
 		trafficTracking.setUpdateDt(new Date());
 
 		trafficTracking = (TrafficTracking) getBaseDao().save(trafficTracking);
-		
+
 		return trafficTracking;
 	}
 
 	@Transactional
 	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest) {
-		TrafficTracking trafficTracking = (TrafficTracking) httpServletRequest.getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
-		UserBrowsingHistory userBrowsingHistory = new UserBrowsingHistory();
-		userBrowsingHistory.setCategory(product.getPrimaryCategory());
-		userBrowsingHistory.setProduct(product);
-		userBrowsingHistory.setPageUrl(httpServletRequest.getRequestURL().toString());
-		userBrowsingHistory.setTrafficTracking(trafficTracking);
-		userBrowsingHistory.setCreateDt(new Date());
-		userBrowsingHistory.setUpdateDt(new Date());
+		if (product != null) {
+			TrafficTracking trafficTracking = (TrafficTracking) httpServletRequest.getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+			UserBrowsingHistory userBrowsingHistory = new UserBrowsingHistory();
+			if (product.getPrimaryCategory() != null) {
+				userBrowsingHistory.setPrimaryCategory(product.getPrimaryCategory().getName());
+			}
+			userBrowsingHistory.setProductId(product.getId());
+			userBrowsingHistory.setPageUrl(httpServletRequest.getRequestURL().toString());
+			if (trafficTracking != null) {
+				userBrowsingHistory.setTrafficTrackingId(trafficTracking.getId());
+			}
+			userBrowsingHistory.setCreateDt(new Date());
+			userBrowsingHistory.setUpdateDt(new Date());
 
-		try {
-			getBaseDao().save(userBrowsingHistory);
-		} catch (Exception e) {
-			logger.error("Exception while saving browsing history:" + e.getMessage());
+			try {
+				getBaseDao().save(userBrowsingHistory);
+			} catch (Exception e) {
+				logger.error("Exception while saving browsing history:" + e.getMessage());
+			}
 		}
 	}
 

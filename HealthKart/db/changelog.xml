@@ -9721,8 +9721,8 @@
 	<changeSet author="Seema (generated)" id="1350891782684-6">
 		<dropColumn columnName="courier_id" tableName="shipment"/>
 	</changeSet>	
-
-    <changeSet author="Ajeet (generated)" id="1353620004573-1">
+    
+    <changeSet author="Ajeet (generated)" id="1353661874281-1">
         <createTable tableName="traffic_tracking">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -9756,7 +9756,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353620004573-2">
+    <changeSet author="Ajeet (generated)" id="1353661874281-2">
         <createTable tableName="user_browsing_history">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -9777,31 +9777,10 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353620004573-3">
+    <changeSet author="Ajeet (generated)" id="1353661874281-3">
         <createIndex indexName="unique_page_url" tableName="user_browsing_history" unique="true">
             <column name="traffic_tracking_id"/>
             <column name="page_url"/>
         </createIndex>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353620004573-4">
-        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353620004573-5">
-        <addForeignKeyConstraint baseColumnNames="primary_category" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353620004573-6">
-        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353620004573-7">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="traffic_tracking" constraintName="fk_traffic_tracking_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353620004573-8">
-        <addForeignKeyConstraint baseColumnNames="primary_category" baseTableName="user_browsing_history" constraintName="fk_user_browsing_history_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353620004573-9">
-        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="user_browsing_history" constraintName="fk_user_browsing_history_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1353620004573-10">
-        <addForeignKeyConstraint baseColumnNames="traffic_tracking_id" baseTableName="user_browsing_history" constraintName="fk_user_browsing_history_traffic_tracking1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="traffic_tracking" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
