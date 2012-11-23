@@ -374,8 +374,8 @@ public class CourierStatusUpdateHelper {
 		Element    xmlElement   = null;
         String inputLine = "";
         String response = "";
-		//todo neha: isko Enum se utha lo please
-        courierName="(Quantium)";
+		
+        courierName=CourierConstants.QUANTIUM;
 
         //added for debugging
         //trackingId              = "HKC003045";
