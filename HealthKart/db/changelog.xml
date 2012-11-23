@@ -9721,4 +9721,67 @@
 	<changeSet author="Seema (generated)" id="1350891782684-6">
 		<dropColumn columnName="courier_id" tableName="shipment"/>
 	</changeSet>
+    <changeSet author="Pratham (generated)" id="1353488646624-1">
+        <createTable tableName="gateway">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+            <column name="downtime_start_date" type="DATETIME"/>
+            <column name="downtime_end_date" type="DATETIME"/>
+            <column name="active" type="TINYINT"/>
+            <column name="priority" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1353488646624-2">
+        <createTable tableName="gateway_issuer_mapping">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="gateway_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="issuer_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="INT"/>
+            <column name="active" type="INT"/>
+            <column name="downtime_start_date" type="DATETIME"/>
+            <column name="downtime_end_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1353488646624-3">
+        <createTable tableName="issuer">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)"/>
+            <column name="issuer_type" type="VARCHAR(45)"/>
+            <column name="active" type="TINYINT"/>
+            <column name="downtime_start_date" type="DATETIME"/>
+            <column name="downtime_end_date" type="DATETIME"/>
+            <column name="priority" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1353488646624-4">
+        <addForeignKeyConstraint baseColumnNames="gateway_id" baseTableName="gateway_issuer_mapping" constraintName="fk_gateway_issuer_mapping_gateway1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="gateway" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1353488646624-5">
+        <addForeignKeyConstraint baseColumnNames="issuer_id" baseTableName="gateway_issuer_mapping" constraintName="fk_gateway_issuer_mapping_issuer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="issuer" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1353504600961-1">
+        <addColumn tableName="gateway">
+            <column name="image" type="BLOB"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1353504600961-2">
+        <addColumn tableName="gateway_issuer_mapping">
+            <column name="issuer_code" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1353504600961-3">
+        <addColumn tableName="issuer">
+            <column name="image" type="BLOB"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

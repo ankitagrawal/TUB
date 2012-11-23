@@ -2,29 +2,45 @@ package com.hk.web.action.core.payment;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
-import com.hk.domain.payment.PreferredBankGateway;
+import com.hk.constants.payment.EnumIssuerType;
+import com.hk.domain.payment.GatewayIssuerMapping;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import java.util.List;
 
-@Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
+@Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 public class PaymentModeAction extends BaseAction {
 
-	List<PreferredBankGateway> bankList;
+    List<GatewayIssuerMapping> bankIssuers;
+    List<GatewayIssuerMapping> cardIssuers;
 
-	public Resolution pre() {
-		bankList = getBaseDao().getAll(PreferredBankGateway.class);
-		return new ForwardResolution("/pages/paymentMode.jsp");
-	}
+    @Autowired
+    GatewayIssuerMappingService gatewayIssuerMappingService;
 
-	public List<PreferredBankGateway> getBankList() {
-		return bankList;
-	}
+    public Resolution pre() {
+        bankIssuers = gatewayIssuerMappingService.searchGatewayIssuerMapping(null, null, true, true, true, EnumIssuerType.Bank.getId(), "issuer.priority", "asc");
+        cardIssuers = gatewayIssuerMappingService.searchGatewayIssuerMapping(null, null, true, true, true, EnumIssuerType.Card.getId(), "gateway.priority", "asc");
+        return new ForwardResolution("/pages/paymentMode.jsp");
+    }
 
-	public void setBankList(List<PreferredBankGateway> bankList) {
-		this.bankList = bankList;
-	}
+    public List<GatewayIssuerMapping> getBankIssuers() {
+        return bankIssuers;
+    }
+
+    public void setBankIssuers(List<GatewayIssuerMapping> bankIssuers) {
+        this.bankIssuers = bankIssuers;
+    }
+
+    public List<GatewayIssuerMapping> getCardIssuers() {
+        return cardIssuers;
+    }
+
+    public void setCardIssuers(List<GatewayIssuerMapping> cardIssuers) {
+        this.cardIssuers = cardIssuers;
+    }
 }

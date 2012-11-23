@@ -3,20 +3,22 @@ package com.hk.web.action.core.payment;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
-import com.hk.domain.payment.Payment;
-import com.hk.domain.payment.PreferredBankGateway;
+import com.hk.domain.payment.*;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
+import com.hk.pact.dao.payment.GatewayIssuerMappingDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.factory.PaymentModeActionFactory;
@@ -29,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.Random;
+import java.util.*;
 
 /**
  * Author: Kani Date: Dec 29, 2008
@@ -42,24 +44,23 @@ public class PaymentAction extends BaseAction {
 	private PaymentMode paymentMode;
 
 	Long bankId;
+    PreferredBankGateway bank;
+
+    Issuer issuer;
 
 	@Validate(required = true, encrypted = true)
 	private Order order;
 
-	private User user;
-	PreferredBankGateway bank;
 	@Autowired
 	PaymentManager paymentManager;
+
 	@Autowired
 	OrderManager orderManager;
-	@Autowired
-	OfferInstanceDao offerInstanceDao;
-	@Autowired
-	UserDao userDao;
-	@Autowired
-	RoleDao roleDao;
-	@Autowired
-	PaymentModeDao paymentModeDao;
+
+    @Autowired
+    GatewayIssuerMappingService gatewayIssuerMappingService;
+    @Autowired
+    GatewayIssuerMappingDao gatewayIssuerMappingDao;
 
 	@SuppressWarnings("unchecked")
 	public Resolution proceed() {
@@ -72,49 +73,92 @@ public class PaymentAction extends BaseAction {
 				return new RedirectResolution(CartAction.class);
 			}
 
-			if (bankId != null) {
-				bank = getBaseDao().get(PreferredBankGateway.class, bankId);
-			}
-			if (bank != null) {
-				if (bank.getPreferredGatewayId() == null) {
-					Integer random = (new Random()).nextInt(100);
-					if (random % 2 == 0) {
-						paymentMode = getBaseDao().get(PaymentMode.class, EnumPaymentMode.TECHPROCESS.getId());
-					} else {
-						paymentMode = getBaseDao().get(PaymentMode.class, EnumPaymentMode.CITRUS_NetBanking_Old.getId());
-					}
-				} else {
-					paymentMode = getBaseDao().get(PaymentMode.class, bank.getPreferredGatewayId());
-				}
-			}
+            if(issuer != null){
 
-			String bankCode = this.bankId != null ? this.bankId.toString() : null;
-			EnumPaymentMode gateway = EnumPaymentMode.getPaymentModeFromId(paymentMode != null ? paymentMode.getId() : null);
-			if (bank != null && gateway != null) {
-				if (gateway.equals(EnumPaymentMode.TECHPROCESS)) {
-					bankCode = bank.getTpslBankCode();
-				} else if (gateway.equals(EnumPaymentMode.CITRUS_NetBanking_Old)) {
-					bankCode = bank.getCitrusBankCode();
-				} else if (gateway.equals(EnumPaymentMode.CITRUS_CreditDebit)) {
-					bankCode = "999";
-				}
-			}
+                List<GatewayIssuerMapping> gatewayIssuerMappings = new ArrayList<GatewayIssuerMapping>();
+                
+                gatewayIssuerMappings = gatewayIssuerMappingDao.searchGatewayByIssuer(issuer,true,true);
+
+                Long total = 0L;
+
+                Map<Gateway, Long> gatewayPriorityMap = new HashMap<Gateway, Long>();
+                
+                for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
+                    
+                    gatewayPriorityMap.put(gatewayIssuerMapping.getGateway(),gatewayIssuerMapping.getPriority());
+                    
+                    total += gatewayIssuerMapping.getPriority();
+                    
+                }
+
+//             Map<Gateway, Double> gatewayHitRatioMap = gatewayIssuerMappingService.getGatewayHitRatio(issuer,true,true);
+
+                //hacky solution, fetching base total from null
+
+//                Double baseTotal = gatewayHitRatioMap.get(null);
+                
+                int trueCounter = 0;
+                
+                for(int i =0;i<= total;i++){
+
+                if((new Random()).nextBoolean()){
+                  
+                    trueCounter++;
+                    
+                }
+
+
+
+                    MapValueComparator mapValueComparator = new MapValueComparator(gatewayPriorityMap);
+                    TreeMap<Gateway, Long> sortedGatewayPriorityMap = new TreeMap(mapValueComparator);
+                    sortedGatewayPriorityMap.putAll(gatewayPriorityMap);
+
+                    for (Map.Entry<Gateway, Long> gatewayLongEntry : sortedGatewayPriorityMap.entrySet()) {
+                        Long oldValue = gatewayLongEntry.getValue();
+
+
+
+                    }
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             Integer random = (new Random()).nextInt(100);
+
+
+
+            }
 
 			RedirectResolution redirectResolution;
 
-            if(gateway != null && !gateway.getId().equals(EnumPaymentMode.CITRUS_CreditDebit.getId()) && bank == null){
-                Integer random = (new Random()).nextInt(100);
-                if (random % 2 == 0) {
-                    gateway = EnumPaymentMode.ICICI;
-                }
-                paymentMode = gateway.asPaymenMode();
-            }
-
             // first create a payment row, this will also contain the payment checksum
-            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), bankCode);
+            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), issuer.getName());
 
 			if (gateway != null) {
-				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(gateway);
+				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(EnumPaymentMode.ICICI);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");
 				return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
 						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode));
