@@ -96,16 +96,6 @@ public class PaymentAction extends BaseAction {
                 //hacky solution, fetching base total from null
 
 //                Double baseTotal = gatewayHitRatioMap.get(null);
-                
-                int trueCounter = 0;
-                
-                for(int i =0;i<= total;i++){
-
-                if((new Random()).nextBoolean()){
-                  
-                    trueCounter++;
-                    
-                }
 
 
 
@@ -113,9 +103,19 @@ public class PaymentAction extends BaseAction {
                     TreeMap<Gateway, Long> sortedGatewayPriorityMap = new TreeMap(mapValueComparator);
                     sortedGatewayPriorityMap.putAll(gatewayPriorityMap);
 
-                    for (Map.Entry<Gateway, Long> gatewayLongEntry : sortedGatewayPriorityMap.entrySet()) {
-                        Long oldValue = gatewayLongEntry.getValue();
+                    Map<Gateway, Long> gatewayRangeMap = new HashMap<Gateway, Long>();
 
+                Long counter = 0L;
+
+                    for (Map.Entry<Gateway, Long> gatewayLongEntry : sortedGatewayPriorityMap.entrySet()) {
+
+                        while (counter < gatewayLongEntry.getValue()){
+
+                        gatewayRangeMap.put(gatewayLongEntry.getKey(),gatewayLongEntry.getValue());
+
+                        }
+
+                        counter++;
 
 
                     }
