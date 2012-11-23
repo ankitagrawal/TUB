@@ -236,28 +236,29 @@
 
             <div class="productBox">
                 <h2 class="personal" id="personal">Personal Care</h2>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT304'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MOS001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MOS002'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PHL002'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PW007'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='COL001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='IPSA001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='AIR001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PHL004'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='DET002'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PRS001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PP002'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='ERA001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PRS003'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='OH021'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='OH056'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MED001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MED022'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MED020'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="NUT304"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="MOS001"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="MOS002"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="PHL002"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="PW007"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="COL001"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="IPSA001"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="AIR001"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="PHL004"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="DET002"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="PRS001"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="PP002"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="ERA001"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="PRS003"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="OH021"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="OH056"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="MED001"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="MED022"/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="MED020"/>
             </div>
             <div class="cl"></div>
 
+<%--
             <div class="productBox">
                 <h2 class="nutrition" id="nutrition">Nutrition</h2>
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT1367'/>
@@ -272,6 +273,8 @@
             </div>
             <div class="cl"></div>
 
+--%>
+<%--
             <div class="productBox">
                 <h2 class="homedevices" id="home">Home Devices</h2>
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='FCDIA003'/>
@@ -287,7 +290,9 @@
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HR006'/>
             </div>
             <div class="cl"></div>
+--%>
 
+<%--
             <div class="productBox">
                 <h2 class="beauty" id="beauty">Beauty</h2>
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='VLC001'/>
@@ -415,6 +420,7 @@
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='DM002'/>
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='DM018'/>
             </div>
+--%>
             <div class="cl"></div>
         </div>
 
