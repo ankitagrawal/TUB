@@ -488,7 +488,7 @@
 				<s:text class="mrp" name="poLineItems[${ctr.index}].mrp" value="${poLineItemDto.poLineItem.mrp}"/>
 			</td>
 			<td>
-				<s:text class="discountPercentage valueChange" name="poLineItems[${ctr.index}].discountPercent" value="${poLineItemDto.poLineItem.discountPercent}"/>
+				<s:text class="discountPercentage valueChange" name="poLineItems[${ctr.index}].discountPercent" value="${poLineItemDto.poLineItem.discountPercent}" readonly="${actionBean.purchaseOrder.purchaseOrderStatus.id >= poApproved ? 'readonly' : ''}" />
 			</td>
 			<td>
 				<fmt:formatNumber value="${poLineItemDto.marginMrpVsCP}" maxFractionDigits="2"/>
@@ -519,7 +519,7 @@
 	</tr>
 	<tr>
 		<td colspan="18"></td><td>Overall Discount<br/>(In Rupees)</td>
-		<td><s:text class="overallDiscount footerChanges" name="purchaseOrder.discount" value="${pa.purchaseOrder.discount}"/></td>
+		<td><s:text class="overallDiscount footerChanges" name="purchaseOrder.discount" value="${pa.purchaseOrder.discount}" readonly="${actionBean.purchaseOrder.purchaseOrderStatus.id >= poApproved ? 'readonly' : ''}"/></td>
 	</tr>
 	<tr>
 	<tr>
@@ -536,7 +536,7 @@
 		<br/>
 	</c:if>
 
-	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poPlaced}">
+	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id <= poPlaced}">
 			<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 	</c:if>
 </shiro:hasPermission>

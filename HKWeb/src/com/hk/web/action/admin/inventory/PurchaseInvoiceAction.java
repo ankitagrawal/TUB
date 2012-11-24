@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.admin.pact.service.accounting.PaymentHistoryService;
+import com.hk.admin.pact.service.accounting.PurchaseInvoiceService;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -69,6 +71,12 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     private ProductVariantService         productVariantService;
     @Autowired
     private ProcurementService            procurementService;
+
+	@Autowired
+	private PurchaseInvoiceService        purchaseInvoiceService;
+
+	@Autowired
+	private PaymentHistoryService         paymentHistoryService;
   
     private static Logger                 logger                    = Logger.getLogger(PurchaseInvoiceAction.class);
 
@@ -97,9 +105,9 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     public Resolution pre() {
 
         if (productVariant != null) {
-            purchaseInvoiceList = purchaseInvoiceDao.listPurchaseInvoiceWithProductVariant(productVariant);
+            purchaseInvoiceList = getPurchaseInvoiceService().listPurchaseInvoiceWithProductVariant(productVariant);
         } else {
-            purchaseInvoicePage = purchaseInvoiceDao.searchPurchaseInvoice(purchaseInvoice, purchaseInvoiceStatus, createdBy, invoiceNumber, tinNumber, supplierName, getPageNo(),
+            purchaseInvoicePage = getPurchaseInvoiceService().searchPurchaseInvoice(purchaseInvoice, purchaseInvoiceStatus, createdBy, invoiceNumber, tinNumber, supplierName, getPageNo(),
                     getPerPage(), reconciled, warehouse, startDate, endDate);
             purchaseInvoiceList = purchaseInvoicePage.getList();
         }
@@ -148,7 +156,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		if (sourceResolution != null) {
 			return sourceResolution;
 		}
-		purchaseInvoiceDao.save(purchaseInvoice);
+		getPurchaseInvoiceService().save(purchaseInvoice);
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		return new RedirectResolution(PurchaseInvoiceAction.class);
 	}
@@ -190,7 +198,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			    }
 		    }
 
-		    purchaseInvoiceDao.save(purchaseInvoice);
+		    getPurchaseInvoiceService().save(purchaseInvoice);
 	    }
 	    addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 	    return new RedirectResolution(PurchaseInvoiceAction.class);
@@ -247,6 +255,19 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		if (purchaseInvoice.getPaymentDate() == null &&
 				(purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId()))) {
 			addRedirectAlertMessage(new SimpleMessage("Payment date cannot be null when status is " + EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getName()));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+		}
+
+		if(purchaseInvoice.getReconciled() != null && purchaseInvoice.getReconciled() &&
+				purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getId())){
+			addRedirectAlertMessage(new SimpleMessage("Since PI is reconciled, please change the status from " + EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getName()+" to some other status"));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+		}
+
+		Double outstandingAmount = paymentHistoryService.getOutstandingAmountForPurchaseInvoice(purchaseInvoice);
+		if(outstandingAmount.doubleValue() >= 0.00
+				&& purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId())){
+			addRedirectAlertMessage(new SimpleMessage("There is an outstanding amount of " + outstandingAmount+". Please clear the same in PI's payment history before closing it."));
 			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
 		}
 
@@ -431,6 +452,10 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public PurchaseInvoiceService getPurchaseInvoiceService() {
+		return purchaseInvoiceService;
 	}
 
 	@Validate(converter = CustomDateTypeConvertor.class)

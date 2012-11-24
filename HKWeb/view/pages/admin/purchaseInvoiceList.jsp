@@ -103,7 +103,6 @@
 	        <td>
 		        <c:set var="advPayment" value="0"/>
 		        <c:forEach var="grn" items="${purchaseInvoice.goodsReceivedNotes}">
-			        <c:set var="advPayment" value="${grn.purchaseOrder.advPayment + advPayment}"/>
 			        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
 				        <s:param name="grn" value="${grn.id}"/>
 				        ${grn.id}
@@ -111,6 +110,7 @@
 			        - ${grn.invoiceNumber}
 			        <br/>
 		        </c:forEach>
+		        <c:set var="advPayment" value="${purchaseInvoice.goodsReceivedNotes[0].purchaseOrder.advPayment }"/>
 	        </td>
 	        <td><fmt:formatDate value="${purchaseInvoice.goodsReceivedNotes[0].grnDate}" type="both" timeStyle="short"/></td>
 	        <td>${purchaseInvoice.warehouse.city}</td>
