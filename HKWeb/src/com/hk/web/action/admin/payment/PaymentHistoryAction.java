@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.hk.admin.pact.service.accounting.PaymentHistoryService;
+import com.hk.admin.pact.service.accounting.PurchaseInvoiceService;
+import com.hk.constants.core.EnumPermission;
+import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -17,8 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
-import com.hk.admin.pact.dao.payment.PaymentHistoryDao;
 import com.hk.admin.util.StockProcurementHelper;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.Supplier;
@@ -30,11 +32,14 @@ import com.hk.domain.payment.PaymentHistory;
 public class PaymentHistoryAction extends BaseAction {
     private static Logger        logger             = LoggerFactory.getLogger(PaymentHistoryAction.class);
 
-    
     @Autowired
-    private PaymentHistoryDao    paymentHistoryDao;
-    @Autowired
-    private PurchaseInvoiceDao   purchaseInvoiceDao;
+    private PurchaseInvoiceService purchaseInvoiceService;
+
+	@Autowired
+	PaymentHistoryService paymentHistoryService;
+
+	@Autowired
+	private UserService userService;
 
     private PaymentHistory       paymentHistory;
     private Long                 purchaseOrderId;
@@ -45,25 +50,26 @@ public class PaymentHistoryAction extends BaseAction {
     private Double               outstandingAmount;
     private Supplier             supplier;
 
+	private boolean              isEditable;
+
     private List<PaymentHistory> paymentHistories   = new ArrayList<PaymentHistory>();
     private List<PaymentHistory> paymentHistoriesPO = new ArrayList<PaymentHistory>();
 
     @DefaultHandler
     public Resolution pre() {
-
         if (purchaseOrderId != null) {
             purchaseOrder = getBaseDao().get(PurchaseOrder.class, purchaseOrderId);
-            paymentHistories = paymentHistoryDao.getByPurchaseOrder(purchaseOrder);
+            paymentHistories = getPaymentHistoryService().getByPurchaseOrder(purchaseOrder);
             Collections.reverse(paymentHistories);
         } else if (purchaseInvoiceId != null) {
             outstandingAmount = 0.00;
-            purchaseInvoice = getBaseDao().get(PurchaseInvoice.class, purchaseInvoiceId);
+            purchaseInvoice = getPurchaseInvoiceService().getPurchaseInvoiceById(purchaseInvoiceId);
             purchaseOrder = StockProcurementHelper.getPurchaseOrderForPurchaseInvoice(purchaseInvoice);
             //purchaseInvoice = purchaseInvoiceDao.find(purchaseInvoiceId);
             supplier = purchaseInvoice.getSupplier();
-            paymentHistories = paymentHistoryDao.getByPurchaseInvoice(purchaseInvoice);
+            paymentHistories = getPaymentHistoryService().getByPurchaseInvoice(purchaseInvoice);
             if (purchaseOrder != null && paymentHistories.isEmpty()) {
-                paymentHistoriesPO = paymentHistoryDao.getByPurchaseOrder(purchaseOrder);
+                paymentHistoriesPO = getPaymentHistoryService().getByPurchaseOrder(purchaseOrder);
                 Collections.reverse(paymentHistoriesPO);
                 for (PaymentHistory paymentHistoryPO : paymentHistoriesPO) {
                     PaymentHistory paymentHistoryNewPi = new PaymentHistory();
@@ -74,81 +80,29 @@ public class PaymentHistoryAction extends BaseAction {
                     paymentHistoryNewPi.setRemarks(paymentHistoryPO.getRemarks());
                     paymentHistoryNewPi.setScheduledPaymentDate(paymentHistoryPO.getScheduledPaymentDate());
                     paymentHistoryNewPi.setPaymentReference(paymentHistoryPO.getPaymentReference());
-                    paymentHistoryDao.save(paymentHistoryNewPi);
+                    getPaymentHistoryService().save(paymentHistoryNewPi, purchaseInvoice);
                 }
             }
-            paymentHistories = paymentHistoryDao.getByPurchaseInvoice(purchaseInvoice);
+            paymentHistories = getPaymentHistoryService().getByPurchaseInvoice(purchaseInvoice);
             Collections.reverse(paymentHistories);
-            if (!paymentHistories.isEmpty()) {
-                Double paidAmount = 0.00;
-                for (PaymentHistory paymentHistoryTemp : paymentHistories) {
-                    paidAmount += paymentHistoryTemp.getAmount();
-                }
-                outstandingAmount = purchaseInvoice.getFinalPayableAmount() - paidAmount;
-                int outstandingAmountFormatted = (int)(outstandingAmount*100);
-                outstandingAmount = (double)(outstandingAmountFormatted)/100;
-            }
-            else{
-              outstandingAmount = purchaseInvoice.getFinalPayableAmount();
-            }
+            outstandingAmount = getPaymentHistoryService().getOutstandingAmountForPurchaseInvoice(purchaseInvoice);
+
+	        boolean isLoggedInUserHasFinancePermission=userService.getLoggedInUser().hasPermission(EnumPermission.EDIT_PAYMENT_HISTORY);
+
+	        if(outstandingAmount.doubleValue() > 0.00){
+		        isEditable = true;
+	        }
+	        else if(isLoggedInUserHasFinancePermission){
+		        isEditable = true;
+	        }
+	        else{
+		        isEditable = false;
+	        }
         }
 
         return new ForwardResolution("/pages/admin/paymentHistory.jsp");
     }
 
-/*
-  public Resolution search() {
-        try {
-            if (purchaseOrderId == null && purchaseInvoiceId == null) {
-                addRedirectAlertMessage(new SimpleMessage("Please add either purchase invoice id or purchase order id."));
-                return new RedirectResolution(PaymentHistoryAction.class);
-            } else if (purchaseOrderId != null) {
-                purchaseOrder = getBaseDao().get(PurchaseOrder.class, purchaseOrderId);
-                paymentHistories = paymentHistoryDao.getByPurchaseOrder(purchaseOrder);
-                return new RedirectResolution(PaymentHistoryAction.class).addParameter("purchaseOrderId", purchaseOrderId);
-            } else {
-                outstandingAmount = 0.00;
-                purchaseInvoice = getBaseDao().get(PurchaseInvoice.class, purchaseInvoiceId);
-                supplier = purchaseInvoice.getSupplier();
-                //StockProcurementService stopProcurementService = new StockProcurementService();
-                purchaseOrder = StockProcurementHelper.getPurchaseOrderForPurchaseInvoice(purchaseInvoice);
-                paymentHistories = paymentHistoryDao.getByPurchaseInvoice(purchaseInvoice);
-                if (purchaseOrder != null && paymentHistories.isEmpty()) {
-                    paymentHistoriesPO = paymentHistoryDao.getByPurchaseOrder(purchaseOrder);
-                    Collections.reverse(paymentHistoriesPO);
-                    for (PaymentHistory paymentHistoryPO : paymentHistoriesPO) {
-                        PaymentHistory paymentHistoryNewPi = new PaymentHistory();
-                        paymentHistoryNewPi.setPurchaseInvoice(purchaseInvoice);
-                        paymentHistoryNewPi.setActualPaymentDate(paymentHistoryPO.getActualPaymentDate());
-                        paymentHistoryNewPi.setAmount(paymentHistoryPO.getAmount());
-                        paymentHistoryNewPi.setModeOfPayment(paymentHistoryPO.getModeOfPayment());
-                        paymentHistoryNewPi.setRemarks(paymentHistoryPO.getRemarks());
-                        paymentHistoryNewPi.setScheduledPaymentDate(paymentHistoryPO.getScheduledPaymentDate());
-                        paymentHistoryNewPi.setPaymentReference(paymentHistoryPO.getPaymentReference());
-                        paymentHistoryDao.save(paymentHistoryNewPi);
-                    }
-                }
-                paymentHistories = paymentHistoryDao.getByPurchaseInvoice(purchaseInvoice);
-
-                // paymentHistoriesPO = paymentHistoryDao.getByPurchaseOrder(purchaseOrder);
-                // paymentHistories.addAll(paymentHistoriesPO);
-                Collections.reverse(paymentHistories);
-                if (!paymentHistories.isEmpty()) {
-                    Double paidAmount = 0.00;
-                    for (PaymentHistory paymentHistoryTemp : paymentHistories) {
-                        paidAmount += paymentHistoryTemp.getAmount();
-                    }
-                    outstandingAmount = purchaseInvoice.getFinalPayableAmount() - paidAmount;
-                }
-                return new RedirectResolution(PaymentHistoryAction.class).addParameter("purchaseInvoiceId", purchaseInvoiceId);
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
-        }
-        addRedirectAlertMessage(new SimpleMessage("No Payment History found"));
-        return new RedirectResolution(PaymentHistoryAction.class);
-    }
-  */
 
     public Resolution editPurchaseInvoice(){
 /*      PurchaseInvoice purchaseInvoiceTemp = getBaseDao().get(PurchaseInvoice.class, purchaseInvoiceId);
@@ -156,7 +110,7 @@ public class PaymentHistoryAction extends BaseAction {
       purchaseInvoiceTemp.setPaymentDate(purchaseInvoice.getPaymentDate());*/
       if(purchaseInvoice != null){
         try{
-          purchaseInvoiceDao.save(purchaseInvoice);
+          purchaseInvoiceService.save(purchaseInvoice);
           addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
           if (purchaseInvoiceId != null) {
               return new RedirectResolution(PaymentHistoryAction.class).addParameter("purchaseInvoiceId", purchaseInvoiceId);
@@ -175,7 +129,12 @@ public class PaymentHistoryAction extends BaseAction {
          * if(paymentHistory.getActualPaymentDate() == null){ paymentHistory.setActualPaymentDate(null); }
          */
         for (PaymentHistory paymentHistory : paymentHistories) {
-            paymentHistoryDao.save(paymentHistory);
+	        if(paymentHistory.getPurchaseInvoice() != null){
+                getPaymentHistoryService().save(paymentHistory, paymentHistory.getPurchaseInvoice());
+	        }
+	        else{
+		        getPaymentHistoryService().save(paymentHistory);
+	        }
         }
         if (purchaseOrderId != null) {
             return new RedirectResolution(PaymentHistoryAction.class).addParameter("purchaseOrderId", purchaseOrderId);
@@ -189,8 +148,13 @@ public class PaymentHistoryAction extends BaseAction {
 
     public Resolution delete() {
         // pincodeDefaultCourierDao.save(pincodeDefaultCourier);
-        getBaseDao().delete(paymentHistory);
-        addRedirectAlertMessage(new SimpleMessage("Payment History record deleted.."));
+        boolean deleteStatus = getPaymentHistoryService().deletePaymentHistory(paymentHistory);
+	    if(deleteStatus){
+            addRedirectAlertMessage(new SimpleMessage("Payment History record deleted.."));
+	    }
+	    else{
+		    addRedirectAlertMessage(new SimpleMessage("Payment History cannot be deleted as it is associated with a settled Purchase Invoice."));
+	    }
         if (purchaseOrderId != null) {
             return new RedirectResolution(PaymentHistoryAction.class).addParameter("purchaseOrderId", purchaseOrderId);
         }
@@ -213,7 +177,7 @@ public class PaymentHistoryAction extends BaseAction {
             }
             if (purchaseInvoiceId != null) {
 
-                purchaseInvoice = getBaseDao().get(PurchaseInvoice.class, purchaseInvoiceId);
+                purchaseInvoice =getPurchaseInvoiceService().getPurchaseInvoiceById(purchaseInvoiceId);
                 //StockProcurementService stopProcurementService = new StockProcurementService();
                 purchaseOrder = StockProcurementHelper.getPurchaseOrderForPurchaseInvoice(purchaseInvoice);
                 paymentHistoryNew.setPurchaseInvoice(purchaseInvoice);
@@ -236,7 +200,19 @@ public class PaymentHistoryAction extends BaseAction {
             if (paymentHistory.getPaymentReference() != null) {
                 paymentHistoryNew.setPaymentReference(paymentHistory.getPaymentReference());
             }
-            paymentHistoryDao.save(paymentHistoryNew);
+
+	        if(purchaseInvoice != null){
+		        outstandingAmount = getPaymentHistoryService().getOutstandingAmountForPurchaseInvoice(purchaseInvoice);
+		        outstandingAmount -= paymentHistoryNew.getAmount();
+		        if(outstandingAmount <= 0 && paymentHistoryNew.getActualPaymentDate() == null){
+			        addRedirectAlertMessage(new SimpleMessage("Please enter the actual payment date !"));
+			        return new RedirectResolution(PaymentHistoryAction.class).addParameter("purchaseInvoiceId", purchaseInvoiceId);
+		        }
+                getPaymentHistoryService().save(paymentHistoryNew, purchaseInvoice);
+	        }
+	        else{
+		        getPaymentHistoryService().save(paymentHistory);
+	        }
         } catch (Exception e) {
             logger.error("Could not insert new payment detail: ", e); // To change body of catch statement use File |
             // Settings | File Templates.
@@ -308,4 +284,20 @@ public class PaymentHistoryAction extends BaseAction {
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
     }
+
+	public PaymentHistoryService getPaymentHistoryService() {
+		return paymentHistoryService;
+	}
+
+	public PurchaseInvoiceService getPurchaseInvoiceService() {
+		return purchaseInvoiceService;
+	}
+
+	public boolean getIsEditable() {
+		return isEditable;
+	}
+
+	public void setIsEditable(boolean isEditable) {
+		isEditable = isEditable;
+	}
 }

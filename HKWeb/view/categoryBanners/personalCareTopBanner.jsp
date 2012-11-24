@@ -3,5 +3,5 @@
   <%--<a href="${pageContext.request.contextPath}/brand/personal-care/moods">
     <img src="${pageContext.request.contextPath}/images/banners/top/personal_care_strip_banner.jpg" alt="Personal Care Banner">
   </a>--%>
-	<%--<img src="${pageContext.request.contextPath}/images/banners/top/pc_triactive_stripbanner.jpg" alt="Personal Care Promotional Banner">--%>
+	<img src="${pageContext.request.contextPath}/images/banners/top/pc_triactive_stripbanner.jpg" alt="Personal Care Promotional Banner">
 </div>
