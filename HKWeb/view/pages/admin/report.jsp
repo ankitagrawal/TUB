@@ -60,24 +60,6 @@
 
 <s:layout-component name="content">
 <div class="reportBox">
-	<fieldset class="right_label" style="font-size:.7em;">
-		<table><tr><th>Traffic Src</th><th>Paid?</th><th>Traffic</th><th>Orders</th><th>%Cnv.</th></tr>
-			<c:set var="totalTraffic" value="0"/>
-			<c:set var="totalOrders" value="0"/>
-			<c:forEach items="${actionBean.srcPerformanceDtoList}" var="traffic">
-				<c:set var="totalTraffic" value="${totalTraffic + traffic.trafficCount}"/>
-				<c:set var="totalOrders" value="${totalOrders + traffic.orderCount}"/>
-				<tr><td>${traffic.trafficSrc}</td><td>${traffic.trafficSrcPaid}</td><td>${traffic.trafficCount}</td><td>${traffic.orderCount}</td>
-				<td><fmt:formatNumber value="${traffic.orderCount/traffic.trafficCount * 100}" pattern="##.##"/> </td>
-				</tr>
-			</c:forEach>
-			<tr><th colspan="2">Total</th><th>${totalTraffic}</th><th>${totalOrders}</th>
-			<th><fmt:formatNumber value="${totalOrders/totalTraffic * 100}" pattern="##.##"/> </th>
-			</tr>
-		</table>
-	</fieldset>
-</div>
-<div class="reportBox">
     <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
         <s:errors/>
         <fieldset class="right_label">

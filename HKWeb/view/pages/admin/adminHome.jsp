@@ -326,6 +326,8 @@
 
 	<h3><s:link beanclass="com.hk.web.action.report.ReportAction">Report Manager</s:link></h3>
 
+	<h3><s:link beanclass="com.hk.web.action.report.AdvReportAction">Adv. Reports</s:link></h3>
+
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.marketing.GoogleBannedWordAction">Google Banned Words Report</s:link></h3>
 
