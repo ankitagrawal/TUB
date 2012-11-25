@@ -89,7 +89,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		return trafficTracking;
 	}
 
-	@Transactional
+	
 	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest) {
 	    UserBrowsingHistory userBrowsingHistory = new UserBrowsingHistory();
 	    if (product != null) {
