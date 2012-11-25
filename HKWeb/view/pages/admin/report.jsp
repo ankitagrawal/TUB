@@ -60,8 +60,7 @@
 
 <s:layout-component name="content">
 <div class="reportBox">
-	<fieldset class="right_label">
-		<legend>Traffic Report</legend>
+	<fieldset class="right_label" style="font-size:.7em;">
 		<table><tr><th>Traffic Src</th><th>Paid?</th><th>Traffic</th><th>Orders</th><th>%Cnv.</th></tr>
 			<c:set var="totalTraffic" value="0"/>
 			<c:set var="totalOrders" value="0"/>
