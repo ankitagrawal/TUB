@@ -91,7 +91,8 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 
 	@Transactional
 	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest) {
-		if (product != null) {
+	    UserBrowsingHistory userBrowsingHistory = new UserBrowsingHistory();
+	    if (product != null) {
 			TrafficTracking trafficTracking = (TrafficTracking) httpServletRequest.getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 			UserBrowsingHistory userBrowsingHistory = new UserBrowsingHistory();
 			if (product.getPrimaryCategory() != null) {
@@ -108,7 +109,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 			try {
 				getBaseDao().save(userBrowsingHistory);
 			} catch (Exception e) {
-				//logger.error("Exception while saving browsing history - " + e.getMessage());
+				logger.error("Exception while saving browsing history - " + e.getMessage() + "object was: " + userBrowsingHistory);
 			}
 		}
 	}
