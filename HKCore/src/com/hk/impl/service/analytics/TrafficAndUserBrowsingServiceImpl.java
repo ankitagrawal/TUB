@@ -108,7 +108,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 			try {
 				getBaseDao().save(userBrowsingHistory);
 			} catch (Exception e) {
-				logger.error("Exception while saving browsing history:" + e.getMessage());
+				//logger.error("Exception while saving browsing history - " + e.getMessage());
 			}
 		}
 	}
