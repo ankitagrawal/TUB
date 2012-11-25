@@ -44,14 +44,14 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 
 		String srcUrl = httpRequest.getHeader(HttpRequestAndSessionConstants.REFERER);
 		if (StringUtils.isNotBlank(srcUrl) && srcUrl.length() > 190) {
-			logger.info("srcUrl=" + srcUrl);
+			//logger.info("srcUrl=" + srcUrl);
 			srcUrl = srcUrl.substring(0, 180);
 		}
 		trafficTracking.setSrcUrl(srcUrl);
 		trafficTracking.setTrafficSrc(trafficInfoMap.get(TrafficSourceFinder.TRAFFIC_SRC));
 		String trafficSrcDetails = trafficInfoMap.get(TrafficSourceFinder.TRAFFIC_SRC_DETAILS);
 		if (StringUtils.isNotBlank(trafficSrcDetails) && trafficSrcDetails.length() > 190) {
-			logger.info("trafficSrcDetails=" + trafficSrcDetails);
+			//logger.info("trafficSrcDetails=" + trafficSrcDetails);
 			trafficSrcDetails = trafficSrcDetails.substring(0, 180);
 		}
 		trafficTracking.setTrafficSrcDetails(trafficSrcDetails);
