@@ -72,7 +72,7 @@
 				</tr>
 			</c:forEach>
 			<tr><th colspan="2">Total</th><th>${totalTraffic}</th><th>${totalOrders}</th>
-			<td><fmt:formatNumber value="${totalOrders/totalTraffic * 100}" pattern="##.##"/> </td>
+			<th><fmt:formatNumber value="${totalOrders/totalTraffic * 100}" pattern="##.##"/> </th>
 			</tr>
 		</table>
 	</fieldset>
