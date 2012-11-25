@@ -94,7 +94,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 	    UserBrowsingHistory userBrowsingHistory = new UserBrowsingHistory();
 	    if (product != null) {
 			TrafficTracking trafficTracking = (TrafficTracking) httpServletRequest.getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
-			UserBrowsingHistory userBrowsingHistory = new UserBrowsingHistory();
+			 userBrowsingHistory = new UserBrowsingHistory();
 			if (product.getPrimaryCategory() != null) {
 				userBrowsingHistory.setPrimaryCategory(product.getPrimaryCategory().getName());
 			}
