@@ -99,13 +99,11 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 			if (product.getPrimaryCategory() != null) {
 				userBrowsingHistory.setPrimaryCategory(product.getPrimaryCategory().getName());
 			}
-			logger.error("2");
 			userBrowsingHistory.setProductId(product.getId());
 			userBrowsingHistory.setPageUrl(httpServletRequest.getRequestURL().toString());
 			if (trafficTracking != null) {
 				userBrowsingHistory.setTrafficTrackingId(trafficTracking.getId());
 			}
-			logger.error("3");
 			userBrowsingHistory.setCreateDt(new Date());
 			userBrowsingHistory.setUpdateDt(new Date());
 			logger.error("4");
