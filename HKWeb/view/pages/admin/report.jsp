@@ -63,11 +63,18 @@
 	<fieldset class="right_label">
 		<legend>Traffic Report</legend>
 		<table><tr><th>Traffic Src</th><th>Paid?</th><th>Traffic</th><th>Orders</th><th>%Cnv.</th></tr>
+			<c:set var="totalTraffic" value="0"/>
+			<c:set var="totalOrders" value="0"/>
 			<c:forEach items="${actionBean.srcPerformanceDtoList}" var="traffic">
+				<c:set var="totalTraffic" value="${totalTraffic + traffic.trafficCount}"/>
+				<c:set var="totalOrders" value="${totalOrders + traffic.orderCount}"/>
 				<tr><td>${traffic.trafficSrc}</td><td>${traffic.trafficSrcPaid}</td><td>${traffic.trafficCount}</td><td>${traffic.orderCount}</td>
 				<td><fmt:formatNumber value="${traffic.orderCount/traffic.trafficCount * 100}" pattern="##.##"/> </td>
 				</tr>
 			</c:forEach>
+			<tr><th colspan="2">Total</th><th>${totalTraffic}</th><th>${totalOrders}</th>
+			<td><fmt:formatNumber value="${totalOrders/totalTraffic * 100}" pattern="##.##"/> </td>
+			</tr>
 		</table>
 	</fieldset>
 </div>
