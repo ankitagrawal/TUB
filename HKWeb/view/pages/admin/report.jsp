@@ -60,6 +60,16 @@
 
 <s:layout-component name="content">
 <div class="reportBox">
+	<fieldset class="right_label">
+		<legend>Traffic Report</legend>
+		<table><tr><th>Src</th><th>Paid</th><th>Traffic</th><th>Orders</th></tr>
+			<c:forEach items="${actionBean.srcPerformanceDtoList}" var="traffic">
+				<tr><td>${traffic.trafficSrc}</td><td>${traffic.trafficSrcPaid}</td><td>${traffic.trafficCount}</td><td>${traffic.orderCount}</td></tr>
+			</c:forEach>
+		</table>
+	</fieldset>
+</div>
+<div class="reportBox">
     <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
         <s:errors/>
         <fieldset class="right_label">

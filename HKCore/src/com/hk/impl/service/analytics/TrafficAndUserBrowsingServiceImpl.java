@@ -1,17 +1,5 @@
 package com.hk.impl.service.analytics;
 
-import java.util.Date;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.analytics.UserBrowsingHistory;
@@ -20,8 +8,19 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.analytics.UserBrowsingHistoryDao;
 import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.util.TrafficSourceFinder;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,6 +36,9 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 
 	@Autowired
 	BaseDao baseDao;
+
+	@Autowired
+	UserBrowsingHistoryDao userBrowsingHistoryDao;
 
 	@Transactional
 	public TrafficTracking saveTrafficTracking(HttpServletRequest httpRequest, User user) {
@@ -90,31 +92,39 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		return trafficTracking;
 	}
 
-	
+
 	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest) {
-	    UserBrowsingHistory userBrowsingHistory = new UserBrowsingHistory();
-	    if (product != null) {
+		if (product != null) {
 			TrafficTracking trafficTracking = (TrafficTracking) httpServletRequest.getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
-			 userBrowsingHistory = new UserBrowsingHistory();
-			if (product.getPrimaryCategory() != null) {
-				userBrowsingHistory.setPrimaryCategory(product.getPrimaryCategory().getName());
-			}
-			userBrowsingHistory.setProductId(product.getId());
-			userBrowsingHistory.setPageUrl(httpServletRequest.getRequestURL().toString());
 			if (trafficTracking != null) {
-				userBrowsingHistory.setTrafficTrackingId(trafficTracking.getId());
-			}
-			userBrowsingHistory.setCreateDt(new Date());
-			userBrowsingHistory.setUpdateDt(new Date());
-			try {
-				getBaseDao().save(userBrowsingHistory);
-			} catch (Throwable e) {
-				//logger.error("Exception while saving browsing history - " + e.getMessage() + "object was: " + userBrowsingHistory);
+				UserBrowsingHistory userBrowsingHistory = getUserBrowsingHistoryDao().getUserBrowsingHistory(trafficTracking.getId(), product.getId());
+				if (userBrowsingHistory == null) {
+					userBrowsingHistory = new UserBrowsingHistory();
+					if (product.getPrimaryCategory() != null) {
+						userBrowsingHistory.setPrimaryCategory(product.getPrimaryCategory().getName());
+					}
+					userBrowsingHistory.setProductId(product.getId());
+					userBrowsingHistory.setPageUrl(httpServletRequest.getRequestURL().toString());
+					userBrowsingHistory.setTrafficTrackingId(trafficTracking.getId());
+					userBrowsingHistory.setCreateDt(new Date());
+					userBrowsingHistory.setUpdateDt(new Date());
+					try {
+						getBaseDao().save(userBrowsingHistory);
+					} catch (Exception e) {
+						logger.error("Exception while saving browsing history - " + e.getMessage());
+					}
+				} else {
+					logger.error("Entry for the product and trackingId already exists");
+				}
 			}
 		}
 	}
 
 	public BaseDao getBaseDao() {
 		return baseDao;
+	}
+
+	public UserBrowsingHistoryDao getUserBrowsingHistoryDao() {
+		return userBrowsingHistoryDao;
 	}
 }

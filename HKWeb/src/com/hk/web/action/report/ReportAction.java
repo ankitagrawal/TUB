@@ -73,10 +73,12 @@ import com.hk.report.dto.payment.CODConfirmationDto;
 import com.hk.report.dto.sales.CategorySalesDto;
 import com.hk.report.dto.sales.DaySaleDto;
 import com.hk.report.dto.sales.DaySaleShipDateWiseDto;
+import com.hk.report.dto.analytics.TrafficSrcPerformanceDto;
 import com.hk.report.manager.ReportManager;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.report.pact.service.order.ReportOrderService;
 import com.hk.report.pact.service.shippingOrder.ReportShippingOrderService;
+import com.hk.report.pact.service.analytics.ReportTrafficService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -138,6 +140,8 @@ public class ReportAction extends BaseAction {
     OrderStatusService orderStatusService;
 	@Autowired
 	ShippingOrderService shippingOrderService;
+	@Autowired
+	ReportTrafficService reportTrafficService;
 
     private List<CategorySalesDto> categorySalesDtoList = new ArrayList<CategorySalesDto>();
 
@@ -190,6 +194,8 @@ public class ReportAction extends BaseAction {
     private Map<String, Long> targetOrderCountMap;
     private Map<String, Long> targetDailyMrpSalesMap = new HashMap<String, Long>();
 
+	private List<TrafficSrcPerformanceDto> srcPerformanceDtoList;
+
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
@@ -200,6 +206,7 @@ public class ReportAction extends BaseAction {
             sumOfMrp += daySaleDto.getSumOfMrp().intValue();
             sumOfHkPrice += daySaleDto.getSumOfHkPrice().intValue();
         }
+	    srcPerformanceDtoList = reportTrafficService.getTrafficSrcPerformanceDtoList();
         return new ForwardResolution("/pages/admin/report.jsp");
     }
 
@@ -1372,5 +1379,9 @@ public class ReportAction extends BaseAction {
 
 	public void setShippingOrderStatus(ShippingOrderStatus shippingOrderStatus) {
 		this.shippingOrderStatus = shippingOrderStatus;
+	}
+
+	public List<TrafficSrcPerformanceDto> getSrcPerformanceDtoList() {
+		return srcPerformanceDtoList;
 	}
 }

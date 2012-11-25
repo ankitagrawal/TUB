@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Ajeet
@@ -20,4 +22,5 @@ public interface TrafficAndUserBrowsingService {
 	public TrafficTracking saveTrafficTracking(HttpServletRequest httpRequest, User user);
 
 	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest);
+
 }
