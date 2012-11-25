@@ -55,7 +55,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 			trafficSrcDetails = trafficSrcDetails.substring(0, 180);
 		}
 		trafficTracking.setTrafficSrcDetails(trafficSrcDetails);
-		trafficTracking.setTrafficSrcPaid(Boolean.getBoolean(trafficInfoMap.get(TrafficSourceFinder.TRAFFIC_SRC_PAID)));
+		trafficTracking.setTrafficSrcPaid(Boolean.valueOf(trafficInfoMap.get(TrafficSourceFinder.TRAFFIC_SRC_PAID)));
 
 		String pageUrl = httpRequest.getRequestURL().toString();
 		trafficTracking.setLandingUrl(pageUrl);
