@@ -133,9 +133,6 @@ public class UserManager {
 	        TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 	        if (trafficTracking != null) {
 		        trafficTracking.setUserId(user.getId());
-		        Order order = getOrderManager().getOrCreateOrder(user);
-		        if (order != null)
-			        trafficTracking.setOrderId(order.getId());
 		        getBaseDao().save(trafficTracking);
 	        }
         }
@@ -195,9 +192,6 @@ public class UserManager {
 	        TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 	        if (trafficTracking != null) {
 		        trafficTracking.setUserId(user.getId());
-		        Order order = getOrderManager().getOrCreateOrder(user);
-		        if (order != null)
-			        trafficTracking.setOrderId(order.getId());
 		        getBaseDao().save(trafficTracking);
 	        }
 	        

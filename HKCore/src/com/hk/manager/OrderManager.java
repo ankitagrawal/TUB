@@ -180,14 +180,6 @@ public class OrderManager {
         }
 
         order = getOrderService().save(order);
-
-	    //Set Order in Traffic Tracking
-	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
-	    if (trafficTracking != null) {
-		    if (order != null)
-			    trafficTracking.setOrderId(order.getId());
-		    getBaseDao().save(trafficTracking);
-	    }
 	    
         return order;
     }
@@ -435,6 +427,14 @@ public class OrderManager {
             sendReferralProgramEmail(order.getUser());
             getSmsManager().sendOrderPlacedSMS(order);
         }
+
+	    //Set Order in Traffic Tracking
+	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+	    if (trafficTracking != null) {
+		    trafficTracking.setOrderId(order.getId());
+		    getBaseDao().save(trafficTracking);
+	    }
+	    
         return order;
     }
 
