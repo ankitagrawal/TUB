@@ -114,7 +114,8 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 						logger.error("Exception while saving browsing history - " + e.getMessage());
 					}
 				} else {
-					logger.error("Entry for the product and trackingId already exists");
+					//Do nothing					
+					//logger.error("Entry for the product and trackingId already exists");
 				}
 			}
 		}
