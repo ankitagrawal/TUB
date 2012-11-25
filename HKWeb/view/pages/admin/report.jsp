@@ -65,7 +65,7 @@
 		<table><tr><th>Traffic Src</th><th>Paid?</th><th>Traffic</th><th>Orders</th><th>%Cnv.</th></tr>
 			<c:forEach items="${actionBean.srcPerformanceDtoList}" var="traffic">
 				<tr><td>${traffic.trafficSrc}</td><td>${traffic.trafficSrcPaid}</td><td>${traffic.trafficCount}</td><td>${traffic.orderCount}</td>
-				<td><s:format value="${traffic.orderCount/traffic.trafficCount * 100}%" formatPattern="##.##"/> </td>
+				<td><fmt:formatNumber value="${traffic.orderCount/traffic.trafficCount * 100}" pattern="##.##"/> </td>
 				</tr>
 			</c:forEach>
 		</table>
