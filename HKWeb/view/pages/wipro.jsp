@@ -166,6 +166,37 @@
             .special { font-style:normal; font-weight:bold; font-size:13px; }
             .hk .num { color:#0054a6; font-size:14px; }
 
+#table-3 {
+	border: 1px solid #DFDFDF;
+	background-color: #F9F9F9;
+	width: 100%;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	font-family: Arial,"Bitstream Vera Sans",Helvetica,Verdana,sans-serif;
+	color: #333;
+  margin-bottom: 10px;
+}
+#table-3 td, #table-3 th {
+	border-top-color: white;
+	border-bottom: 1px solid #DFDFDF;
+	color: #555;
+}
+#table-3 th {
+	text-shadow: rgba(255, 255, 255, 0.796875) 0px 1px 0px;
+	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+	font-weight: normal;
+	padding: 7px 7px 8px;
+	text-align: left;
+	line-height: 1.3em;
+	font-size: 14px;
+  background-color: yellow;
+}
+#table-3 td {
+	font-size: 12px;
+	padding: 4px 7px 2px;
+	vertical-align: top;
+}
         </style>
 
 
@@ -196,20 +227,48 @@
             <div class="browseCat">
                 <h3>BROWSE BY CATEGORIES</h3>
                 <ul class="cat">
-                    <li><a href="#personal">PERSONAL CARE</a></li>
-                    <li><a href="#nutrition">NUTRITION</a></li>
-                    <li><a href="#home">HOME DEVICES</a></li>
                     <li><a href="#beauty">BEAUTY</a></li>
-                    <li><a href="#eye">Eye</a></li>
-                    <li><a href="#parenting">PARENTING</a></li>
+                    <li><a href="#eye">EYE</a></li>
+                    <li><a href="#nutrition">NUTRITION</a></li>
                     <li><a href="#sports">SPORTS</a></li>
+                    <li><a href="#personal">PERSONAL CARE</a></li>
+                    <li><a href="#home">HOME DEVICES</a></li>
+                    <li><a href="#parenting">PARENTING</a></li>
                     <li class="last"><a href="#diabetes">DIABETES</a></li>
                 </ul>
 
                 <div class="redeem">
+                    <h2>DISCOUNT COUPONS</h2>
+                    <table id="table-3">
+                      <thead>
+                      <tr>
+                        <th>Order Value</th>
+                        <th>Extra Discount %</th>
+                        <th>Coupon Code</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td>Rs. 0 - Rs. 500</td>
+                        <td>5% Extra OFF</td>
+                        <td>HKWIPRO5OFF</td>
+                      </tr>
+                      <tr>
+                        <td>Rs. 501 - Rs. 1000</td>
+                        <td>10% Extra OFF</td>
+                        <td>HKWIPRO10OFF</td>
+                      </tr>
+                      <tr>
+                        <td>Rs. 1001 or more</td>
+                        <td>15% Extra OFF</td>
+                        <td>HKWIPRO15OFF</td>
+                      </tr>
+                      <tr><td colspan="3">Only applicable on the products listed on this page. Subject to stock availability. Offer ends after Dec 2, 2012.<br/>Max Discount : Rs. 500</td></tr>
+                      </tbody>
+                    </table>
                     <h2>HOW ONE REDEEMS DISCOUNT ON HEALTHKART</h2>
                     <ul>
-                        <li><img src="${pageContext.request.contextPath}/images/wipro/one.gif"/>Sign in on healthkart
+                        <li><img src="${pageContext.request.contextPath}/images/wipro/one.gif"/>Sign in / Register on healthkart
                             with your wipro email id
                             <hr/>
                             Discounts won't be valid on any other email id
@@ -231,60 +290,6 @@
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div class="cl"></div>
-
-            <div class="productBox">
-                <h2 class="personal" id="personal">Personal Care</h2>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT304'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MOS001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MOS002'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PHL002'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PW007'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='COL001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='IPSA001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='AIR001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PHL004'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='DET002'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PRS001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PP002'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='ERA001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PRS003'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='OH021'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='OH056'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MED001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MED022'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MED020'/>
-            </div>
-            <div class="cl"></div>
-
-            <div class="productBox">
-                <h2 class="nutrition" id="nutrition">Nutrition</h2>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT1367'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT1368'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT590'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT420'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT722'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT410'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT717'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT978'/>
-            
-            </div>
-            <div class="cl"></div>
-
-            <div class="productBox">
-                <h2 class="homedevices" id="home">Home Devices</h2>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='FCDIA003'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BEU70'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BREMED024'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HP008'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HB004'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HB005'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HB006'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='RD001'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HT003'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HP004'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HR006'/>
             </div>
             <div class="cl"></div>
 
@@ -353,28 +358,16 @@
             <div class="cl"></div>
 
             <div class="productBox">
-                <h2 class="parenting" id="parenting">Parenting</h2>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB326'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB2063'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB2065'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB364'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB2074'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB339'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB2220'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB2215'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB397'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB1967'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB1966'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB1970'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB012'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB112'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB083'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MOR003'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB1908'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB1905'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB925'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB925'/>
-                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB402'/>
+                <h2 class="nutrition" id="nutrition">Nutrition</h2>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT1367'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT1368'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT590'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT420'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT722'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT410'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT717'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='NUT978'/>
+
             </div>
             <div class="cl"></div>
 
@@ -398,6 +391,71 @@
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='SPT539'/>
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='SPT603'/>
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='SPT146'/>
+            </div>
+            <div class="cl"></div>
+
+            <div class="productBox">
+                <h2 class="personal" id="personal">Personal Care</h2>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MOS001'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MOS002'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PHL002'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PW007'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='COL001'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='IPSA001'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='AIR001'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PHL004'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='DET002'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PRS001'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PP002'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='ERA001'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='PRS003'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='OH021'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='OH056'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MED001'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MED022'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MED020'/>
+            </div>
+            <div class="cl"></div>
+
+            <div class="productBox">
+                <h2 class="homedevices" id="home">Home Devices</h2>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='FCDIA003'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BEU70'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BREMED024'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HP008'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HB004'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HB005'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HB006'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='RD001'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HT003'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HP004'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='HR006'/>
+            </div>
+            <div class="cl"></div>
+
+            <div class="productBox">
+                <h2 class="parenting" id="parenting">Parenting</h2>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB326'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB2063'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB2065'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB364'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB2074'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB339'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB2220'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB2215'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB397'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB1967'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB1966'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB1970'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB012'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB112'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB083'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='MOR003'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB1908'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB1905'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB925'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB925'/>
+                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='BAB402'/>
             </div>
             <div class="cl"></div>
 
