@@ -97,14 +97,15 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		if (product != null) {
 			TrafficTracking trafficTracking = (TrafficTracking) httpServletRequest.getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 			if (trafficTracking != null) {
-				UserBrowsingHistory userBrowsingHistory = getUserBrowsingHistoryDao().getUserBrowsingHistory(trafficTracking.getId(), product.getId());
+				String pageUrl = httpServletRequest.getRequestURL().toString();
+				UserBrowsingHistory userBrowsingHistory = getUserBrowsingHistoryDao().getUserBrowsingHistory(trafficTracking.getId(), pageUrl);
 				if (userBrowsingHistory == null) {
 					userBrowsingHistory = new UserBrowsingHistory();
 					if (product.getPrimaryCategory() != null) {
 						userBrowsingHistory.setPrimaryCategory(product.getPrimaryCategory().getName());
 					}
 					userBrowsingHistory.setProductId(product.getId());
-					userBrowsingHistory.setPageUrl(httpServletRequest.getRequestURL().toString());
+					userBrowsingHistory.setPageUrl(pageUrl);
 					userBrowsingHistory.setTrafficTrackingId(trafficTracking.getId());
 					userBrowsingHistory.setCreateDt(new Date());
 					userBrowsingHistory.setUpdateDt(new Date());
@@ -115,7 +116,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 					}
 				} else {
 					//Do nothing					
-					//logger.error("Entry for the product and trackingId already exists");
+					logger.warn("Entry for the pageUrl and trackingId already exists - so skipping entry");
 				}
 			}
 		}

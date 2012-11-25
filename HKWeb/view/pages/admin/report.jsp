@@ -62,9 +62,11 @@
 <div class="reportBox">
 	<fieldset class="right_label">
 		<legend>Traffic Report</legend>
-		<table><tr><th>Src</th><th>Paid</th><th>Traffic</th><th>Orders</th></tr>
+		<table><tr><th>Traffic Src</th><th>Paid?</th><th>Traffic</th><th>Orders</th><th>%Cnv.</th></tr>
 			<c:forEach items="${actionBean.srcPerformanceDtoList}" var="traffic">
-				<tr><td>${traffic.trafficSrc}</td><td>${traffic.trafficSrcPaid}</td><td>${traffic.trafficCount}</td><td>${traffic.orderCount}</td></tr>
+				<tr><td>${traffic.trafficSrc}</td><td>${traffic.trafficSrcPaid}</td><td>${traffic.trafficCount}</td><td>${traffic.orderCount}</td>
+				<td><s:format value="${traffic.orderCount/traffic.trafficCount * 100}%" formatPattern="##.##"/> </td>
+				</tr>
 			</c:forEach>
 		</table>
 	</fieldset>

@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserBrowsingHistoryDaoImpl extends BaseDaoImpl implements UserBrowsingHistoryDao {
 
-	public UserBrowsingHistory getUserBrowsingHistory(Long trafficTrackingId, String productId) {
-		String queryString = "from UserBrowsingHistory ubh where ubh.trafficTrackingId=:trafficTrackingId and ubh.productId=:productId";
-		return (UserBrowsingHistory) findUniqueByNamedParams(queryString, new String[]{"trafficTrackingId", "productId"}, new Object[]{trafficTrackingId, productId});
+	public UserBrowsingHistory getUserBrowsingHistory(Long trafficTrackingId, String pageUrl) {
+		String queryString = "from UserBrowsingHistory ubh where ubh.trafficTrackingId=:trafficTrackingId and ubh.pageUrl=:pageUrl";
+		return (UserBrowsingHistory) findUniqueByNamedParams(queryString, new String[]{"trafficTrackingId", "pageUrl"}, new Object[]{trafficTrackingId, pageUrl});
 	}
 
 }

@@ -5,6 +5,6 @@ import com.hk.pact.dao.BaseDao;
 
 public interface UserBrowsingHistoryDao extends BaseDao {
 
-	public UserBrowsingHistory getUserBrowsingHistory(Long trafficTrackingId, String productId);
+	public UserBrowsingHistory getUserBrowsingHistory(Long trafficTrackingId, String pageUrl);
 
 }
