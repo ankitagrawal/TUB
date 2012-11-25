@@ -298,6 +298,6 @@ public class PaymentHistoryAction extends BaseAction {
 	}
 
 	public void setIsEditable(boolean isEditable) {
-		isEditable = isEditable;
+		this.isEditable = isEditable;
 	}
 }

@@ -6,7 +6,6 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.util.TokenUtils;
 
 /**
  * @author vaibhav.adlakha This will be used to update information on shipping order and will set all values in memory

@@ -1,26 +1,27 @@
 package com.hk.impl.service.analytics;
 
-import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
-import com.hk.pact.dao.BaseDao;
+import java.util.Date;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hk.constants.HttpRequestAndSessionConstants;
-import com.hk.util.TrafficSourceFinder;
 import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.analytics.UserBrowsingHistory;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.apache.commons.lang.StringUtils;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
+import com.hk.util.TrafficSourceFinder;
 
 /**
  * Created by IntelliJ IDEA.
