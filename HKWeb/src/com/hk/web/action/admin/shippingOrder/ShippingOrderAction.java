@@ -7,6 +7,7 @@ import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
@@ -36,6 +37,8 @@ public class ShippingOrderAction extends BaseAction {
 	@Autowired
 	SkuService skuService;
 
+	private ReplacementOrderReason rtoReason;
+
 	public Resolution flipWarehouse() {
 		Warehouse warehouseToUpdate = warehouseService.getWarehoueForFlipping(shippingOrder.getWarehouse());
 
@@ -55,7 +58,7 @@ public class ShippingOrderAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution initiateRTO() {
-		adminShippingOrderService.initiateRTOForShippingOrder(shippingOrder);
+		adminShippingOrderService.initiateRTOForShippingOrder(shippingOrder, rtoReason);
 
 		Map<String, Object> data = new HashMap<String, Object>(1);
 		data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
@@ -138,5 +141,13 @@ public class ShippingOrderAction extends BaseAction {
 
 	public void setShippingOrder(ShippingOrder shippingOrder) {
 		this.shippingOrder = shippingOrder;
+	}
+
+	public ReplacementOrderReason getRtoReason() {
+		return rtoReason;
+	}
+
+	public void setRtoReason(ReplacementOrderReason rtoReason) {
+		this.rtoReason = rtoReason;
 	}
 }

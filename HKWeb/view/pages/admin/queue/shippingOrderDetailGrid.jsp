@@ -8,6 +8,7 @@
 <%@ page import="com.hk.domain.order.ShippingOrder" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.Set" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -205,12 +206,23 @@
                     <br/>
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+	                    <s:label name="Reason for RTO:" style="margin-left:7px;"/>
+	                    <s:select name="rtoReason" id="rto-reason">
+		                    <s:option value="null">-Select Reason-</s:option>
+		                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
+		                                               serviceProperty="replacementOrderReasonForRto" value="id"
+		                                               label="name"/>
+	                    </s:select>
                         <div class="buttons">
                             <s:submit name="initiateRTO" value="Initiate RTO" class="initiateRTOButton"/>
                         </div>
                     </s:form>
                     <script type="text/javascript">
                         $('.initiateRTOButton').click(function() {
+	                        if($('#rto-reason').val()=="null"){
+		                        alert("Please select a reason for RTO !");
+		                        return false;
+	                        }
                             var proceed = confirm('Are you sure?');
                             if (!proceed) return false;
                         });
