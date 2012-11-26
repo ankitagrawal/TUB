@@ -6,8 +6,6 @@ import com.hk.domain.payment.Issuer;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.payment.GatewayIssuerMappingDao;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +13,7 @@ import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
- * User: user
+ * User: Pratham
  * Date: 11/21/12
  * Time: 2:57 PM
  * To change this template use File | Settings | File Templates.
@@ -23,6 +21,7 @@ import java.util.List;
 @Repository
 public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayIssuerMappingDao {
 
+/*
     @Override
     public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Gateway gateway, Issuer issuer, Boolean activeMapping, Boolean activeGateway, Boolean activeIssuer, String issuerType, String orderUpon, String orderBy) {
         DetachedCriteria gatewayIssuerMappingCriteria = DetachedCriteria.forClass(GatewayIssuerMapping.class);
@@ -45,7 +44,7 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
             gatewayIssuerMappingCriteria.add(Restrictions.eq("issuer.issuerType", issuerType));
         }
 
-        gatewayIssuerMappingCriteria.setProjection(Projections.groupProperty("issuer"));
+//        gatewayIssuerMappingCriteria.setProjection(Projections.groupProperty("issuer"));
 
         //crude way, think of a better way --ps
         if (orderBy != null) {
@@ -77,5 +76,39 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
 
         return findByCriteria(gatewayIssuerMappingCriteria);
 
+    }
+*/
+
+    @Override
+    public List<Issuer> getIssuerByType(String issuerType, boolean active) {
+        DetachedCriteria issuerCriteria = DetachedCriteria.forClass(Issuer.class);
+        if (issuerType != null) {
+            issuerCriteria.add(Restrictions.eq("issuerType", issuerType));
+        }
+        issuerCriteria.add(Restrictions.eq("active", active));
+
+        return findByCriteria(issuerCriteria);
+    }
+
+    @Override
+    public List<Gateway> getGateways(boolean active) {
+        DetachedCriteria gatewayCriteria = DetachedCriteria.forClass(Gateway.class);
+        gatewayCriteria.add(Restrictions.eq("active", active));
+
+        return findByCriteria(gatewayCriteria);
+    }
+
+    @Override
+    public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping) {
+        DetachedCriteria gatewayIssuerMappingCriteria = DetachedCriteria.forClass(GatewayIssuerMapping.class);
+        if (issuer != null) {
+            gatewayIssuerMappingCriteria.add(Restrictions.eq("issuer", issuer));
+        }
+        if (gateway != null) {
+            gatewayIssuerMappingCriteria.add(Restrictions.eq("gateway", gateway));
+        }
+        gatewayIssuerMappingCriteria.add(Restrictions.eq("active", activeMapping));
+
+        return findByCriteria(gatewayIssuerMappingCriteria);
     }
 }

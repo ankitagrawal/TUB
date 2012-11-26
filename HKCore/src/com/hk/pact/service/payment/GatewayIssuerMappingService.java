@@ -18,6 +18,8 @@ public interface GatewayIssuerMappingService {
 
     public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Gateway gateway, Issuer issuer, Boolean activeMapping, Boolean activeGateway, Boolean activeIssuer, String issuerType, String orderUpon, String orderBy);
 
+    public List<GatewayIssuerMapping> searchGatewayByIssuer(Issuer issuer, Boolean activeMapping, Boolean activeGateway);
+
     public Map<Gateway, Double> getGatewayHitRatio(Issuer issuer, Boolean activeMapping, Boolean activeGateway);
 
 

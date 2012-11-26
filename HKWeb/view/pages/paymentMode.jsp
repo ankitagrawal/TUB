@@ -125,8 +125,8 @@
     <s:hidden name="order" value="${orderSummary.order.id}" />
 
     <c:forEach items="${paymentModeBean.cardIssuers}" var="cardIssuer">
-        <p><label><s:radio name="issuer" value="${cardIssuer.issuer}"/>${cardIssuer.issuer.name}
-            &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/${cardIssuer.issuer.name}.jpg" height="30px" alt="gateway image">
+        <p><label><s:radio name="issuer" value="${cardIssuer.id}"/>${cardIssuer.name}
+            &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/${cardIssuer.name}.jpg" height="30px" alt="gateway image">
         </p>
     </c:forEach>
 
@@ -149,7 +149,7 @@
                         <c:if test="${idx.index%2 == 0}">
                             <tr>
                         </c:if>
-                        <td class="col"><s:radio name="issuer" value="${bankIssuer.issuerCode}" />${bankIssuer.issuer.name}
+                        <td class="col"><s:radio name="issuer" value="${bankIssuer.id}" />${bankIssuer.name}
                         </td>
                         <c:if test="${idx.index%2 == 1 || idx.last}">
                             </tr>

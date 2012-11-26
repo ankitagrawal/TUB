@@ -5,6 +5,7 @@ import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.pact.dao.payment.GatewayIssuerMappingDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,12 +22,18 @@ import java.util.Map;
 @Service
 public class GatewayIssuerMappingServiceImpl implements GatewayIssuerMappingService {
 
+    @Autowired
     GatewayIssuerMappingDao gatewayIssuerMappingDao;
 
     @Override
     public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Gateway gateway, Issuer issuer, Boolean activeMapping, Boolean activeGateway, Boolean activeIssuer, String issuerType, String orderUpon, String orderBy) {
         return gatewayIssuerMappingDao.searchGatewayIssuerMapping(gateway, issuer, activeMapping, activeGateway, activeIssuer, issuerType, orderUpon, orderBy);
     }
+
+    public List<GatewayIssuerMapping> searchGatewayByIssuer(Issuer issuer, Boolean activeMapping, Boolean activeGateway){
+        return gatewayIssuerMappingDao.searchGatewayByIssuer(issuer,activeMapping,activeGateway);
+    }
+
 
     @Override
     public Map<Gateway, Double> getGatewayHitRatio(Issuer issuer, Boolean activeMapping, Boolean activeGateway) {

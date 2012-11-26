@@ -4,6 +4,8 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.payment.EnumIssuerType;
 import com.hk.domain.payment.GatewayIssuerMapping;
+import com.hk.domain.payment.Issuer;
+import com.hk.pact.dao.payment.GatewayIssuerMappingDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -16,31 +18,41 @@ import java.util.List;
 @Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 public class PaymentModeAction extends BaseAction {
 
-    List<GatewayIssuerMapping> bankIssuers;
-    List<GatewayIssuerMapping> cardIssuers;
+    List<Issuer> bankIssuers;
+    List<Issuer> cardIssuers;
+
+//    @Autowired
+//    GatewayIssuerMappingService gatewayIssuerMappingService;
 
     @Autowired
-    GatewayIssuerMappingService gatewayIssuerMappingService;
+    GatewayIssuerMappingDao gatewayIssuerMappingDao;
 
     public Resolution pre() {
-        bankIssuers = gatewayIssuerMappingService.searchGatewayIssuerMapping(null, null, true, true, true, EnumIssuerType.Bank.getId(), "issuer.priority", "asc");
-        cardIssuers = gatewayIssuerMappingService.searchGatewayIssuerMapping(null, null, true, true, true, EnumIssuerType.Card.getId(), "gateway.priority", "asc");
+
+        bankIssuers = gatewayIssuerMappingDao.getIssuerByType(EnumIssuerType.Bank.getId(),true);
+        cardIssuers = gatewayIssuerMappingDao.getIssuerByType(EnumIssuerType.Card.getId(),true);
+
+
+//        bankIssuers = gatewayIssuerMappingService.searchGatewayIssuerMapping(null, null, true, true, true, EnumIssuerType.Bank.getId(), "issuer.priority", "asc");
+//        bankIssuers = gatewayIssuerMappingService.searchGatewayIssuerMapping(null, null, true, true, true, EnumIssuerType.Bank.getId(), null, null);
+//        bankIssuers = gatewayIssuerMappingService.searchGatewayIssuerMapping(null, null, true, true, true, EnumIssuerType.Card.getId(), null, null);
+//        cardIssuers = gatewayIssuerMappingService.searchGatewayIssuerMapping(null, null, true, true, true, EnumIssuerType.Card.getId(), "gateway.priority", "asc");
         return new ForwardResolution("/pages/paymentMode.jsp");
     }
 
-    public List<GatewayIssuerMapping> getBankIssuers() {
+    public List<Issuer> getBankIssuers() {
         return bankIssuers;
     }
 
-    public void setBankIssuers(List<GatewayIssuerMapping> bankIssuers) {
+    public void setBankIssuers(List<Issuer> bankIssuers) {
         this.bankIssuers = bankIssuers;
     }
 
-    public List<GatewayIssuerMapping> getCardIssuers() {
+    public List<Issuer> getCardIssuers() {
         return cardIssuers;
     }
 
-    public void setCardIssuers(List<GatewayIssuerMapping> cardIssuers) {
+    public void setCardIssuers(List<Issuer> cardIssuers) {
         this.cardIssuers = cardIssuers;
     }
 }

@@ -9,7 +9,10 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
-import com.hk.domain.payment.*;
+import com.hk.domain.payment.Gateway;
+import com.hk.domain.payment.GatewayIssuerMapping;
+import com.hk.domain.payment.Issuer;
+import com.hk.domain.payment.Payment;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.GatewayIssuerMappingDao;
@@ -69,7 +72,7 @@ public class PaymentAction extends BaseAction {
             GatewayIssuerMapping preferredGatewayIssuerMapping = null;
 
             if (issuer != null) {
-                List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingDao.searchGatewayByIssuer(issuer, true, true);
+                List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingDao.searchGatewayIssuerMapping(issuer, preferredGateway, true);
                 Long total = 0L;
 
                 Map<Gateway, Long> gatewayPriorityMap = new HashMap<Gateway, Long>();
@@ -93,7 +96,7 @@ public class PaymentAction extends BaseAction {
                     oldValue = gatewayLongEntry.getValue();
                 }
 
-                List<GatewayIssuerMapping> resultList = gatewayIssuerMappingDao.searchGatewayIssuerMapping(preferredGateway, issuer, null, null, null, null, null, null);
+                List<GatewayIssuerMapping> resultList = gatewayIssuerMappingDao.searchGatewayIssuerMapping(issuer, null, true);
                 preferredGatewayIssuerMapping = resultList != null && !resultList.isEmpty() ? resultList.get(0) : null;
             }
 
