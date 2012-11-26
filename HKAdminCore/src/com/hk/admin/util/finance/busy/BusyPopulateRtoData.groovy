@@ -62,7 +62,8 @@ public class BusyPopulateRtoData {
                     inner join user u on bo.user_id = u.id
                     inner join address a ON bo.address_id = a.id
                     inner join shipment ship on ship.id = so.shipment_id
-                    inner join courier c on ship.courier_id = c.id
+                    inner join awb aw on ship.awb_id=aw.id
+                    inner join courier c on aw.courier_id = c.id
                     inner join warehouse w on w.id = so.warehouse_id
 
                     where so.shipping_order_status_id = 200
@@ -201,7 +202,7 @@ public class BusyPopulateRtoData {
       int s_no = 0;
       sql.eachRow("""
                       select li.id, li.sku_id, li.qty, li.marked_price, li.hk_price, li.discount_on_hk_price, li.reward_point_discount,
-                      t.value as tax_value,li.order_level_discount
+                      t.value as tax_value,li.order_level_discount, li.cost_price
                       from line_item li
                       inner join tax t on li.tax_id = t.id
                       where li.shipping_order_id = ${shipping_order_id}
@@ -221,15 +222,16 @@ public class BusyPopulateRtoData {
       Double rate = invoiceItems.hk_price - discount;
       Double vat = invoiceItems.tax_value;
       Double amount = rate*qty;
+	  Double cost_price = invoiceItems.cost_price
       s_no++;
       try{
         busySql.executeInsert("""
         INSERT INTO transaction_body
           (
-            vch_code, s_no, item_code, qty, unit, mrp, rate, discount, vat, amount, create_date, hk_ref_no
+            vch_code, s_no, item_code, qty, unit, mrp, rate, discount, vat, amount, create_date, hk_ref_no, cost_price
           )
 
-          VALUES (${vch_code}, ${s_no}, ${item_code}, ${qty}, ${unit}, ${mrp}, ${rate}, ${discount}, ${vat}, ${amount}, NOW(), ${lineItemId}
+          VALUES (${vch_code}, ${s_no}, ${item_code}, ${qty}, ${unit}, ${mrp}, ${rate}, ${discount}, ${vat}, ${amount}, NOW(), ${lineItemId}, ${cost_price}
           )
          """)
       }

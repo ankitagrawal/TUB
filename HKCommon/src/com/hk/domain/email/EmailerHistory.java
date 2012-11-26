@@ -1,6 +1,5 @@
 package com.hk.domain.email;
 
-
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
@@ -16,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.user.User;
 
@@ -27,110 +27,123 @@ import com.hk.domain.user.User;
 @Table(name = "emailer_history")
 public class EmailerHistory implements java.io.Serializable {
 
-  @Id @GeneratedValue(strategy = IDENTITY)
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long           id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "email_recepient_id", nullable = false)
-  private EmailRecepient emailRecepient;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "email_recepient_id", nullable = false)
+    private EmailRecepient emailRecepient;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "email_type_id", nullable = false)
-  private EmailType emailType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "email_type_id", nullable = false)
+    private EmailType      emailType;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "sender_user_id")
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_user_id")
+    private User           user;
 
-  @Column(name = "sender_email", nullable = false, length = 100)
-  private String senderEmail;
+    @Column(name = "sender_email", nullable = false, length = 100)
+    private String         senderEmail;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "send_date", nullable = false, length = 19)
-  private Date sendDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "send_date", nullable = false, length = 19)
+    private Date           sendDate;
 
-  @Column(name = "sender_name", length = 45)
-  private String senderName;
+    @Column(name = "sender_name", length = 45)
+    private String         senderName;
 
-  @Column(name = "custom_message", length = 65535)
-  private String customMessage;
+    @Column(name = "custom_message", length = 65535)
+    private String         customMessage;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "email_campaign_id", nullable = true)
-  private EmailCampaign emailCampaign;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "email_campaign_id", nullable = true)
+    private EmailCampaign  emailCampaign;
 
-  public Long getId() {
-    return this.id;
-  }
+    @JsonSkip
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date           createDate = new Date();
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Long getId() {
+        return this.id;
+    }
 
-  public EmailRecepient getEmailRecepient() {
-    return this.emailRecepient;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setEmailRecepient(EmailRecepient emailRecepient) {
-    this.emailRecepient = emailRecepient;
-  }
+    public EmailRecepient getEmailRecepient() {
+        return this.emailRecepient;
+    }
 
-  public EmailType getEmailType() {
-    return this.emailType;
-  }
+    public void setEmailRecepient(EmailRecepient emailRecepient) {
+        this.emailRecepient = emailRecepient;
+    }
 
-  public void setEmailType(EmailType emailType) {
-    this.emailType = emailType;
-  }
+    public EmailType getEmailType() {
+        return this.emailType;
+    }
 
-  public User getUser() {
-    return this.user;
-  }
+    public void setEmailType(EmailType emailType) {
+        this.emailType = emailType;
+    }
 
-  public void setUser(User user) {
-    this.user = user;
-  }
+    public User getUser() {
+        return this.user;
+    }
 
-  public String getSenderEmail() {
-    return this.senderEmail;
-  }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-  public void setSenderEmail(String senderEmail) {
-    this.senderEmail = senderEmail;
-  }
+    public String getSenderEmail() {
+        return this.senderEmail;
+    }
 
-  public Date getSendDate() {
-    return this.sendDate;
-  }
+    public void setSenderEmail(String senderEmail) {
+        this.senderEmail = senderEmail;
+    }
 
-  public void setSendDate(Date sendDate) {
-    this.sendDate = sendDate;
-  }
+    public Date getSendDate() {
+        return this.sendDate;
+    }
 
-  public String getSenderName() {
-    return this.senderName;
-  }
+    public void setSendDate(Date sendDate) {
+        this.sendDate = sendDate;
+    }
 
-  public void setSenderName(String senderName) {
-    this.senderName = senderName;
-  }
+    public String getSenderName() {
+        return this.senderName;
+    }
 
-  public String getCustomMessage() {
-    return this.customMessage;
-  }
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
 
-  public void setCustomMessage(String customMessage) {
-    this.customMessage = customMessage;
-  }
+    public String getCustomMessage() {
+        return this.customMessage;
+    }
 
-  public EmailCampaign getEmailCampaign() {
-    return emailCampaign;
-  }
+    public void setCustomMessage(String customMessage) {
+        this.customMessage = customMessage;
+    }
 
-  public void setEmailCampaign(EmailCampaign emailCampaign) {
-    this.emailCampaign = emailCampaign;
-  }
+    public EmailCampaign getEmailCampaign() {
+        return emailCampaign;
+    }
+
+    public void setEmailCampaign(EmailCampaign emailCampaign) {
+        this.emailCampaign = emailCampaign;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
 }
-
-

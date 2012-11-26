@@ -1,5 +1,9 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="com.hk.domain.catalog.product.ProductVariant" %>
+<%@ page import="com.hk.pact.service.catalog.ProductVariantService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" var="ica"/>
@@ -14,7 +18,7 @@
   <s:layout-component name="content">
     <div style="display:inline;float:left;">
       <h2>Item Checkin against GRN#${ica.grn.id}</h2>
-      <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction">
+      <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="checkinForm">
         <s:hidden name="grn" value="${ica.grn.id}"/>
         <table border="1">
           <tr>
@@ -27,11 +31,11 @@
           </tr>
 		<tr>
 			<td>Cost Price:</td>
-			<td><s:text name="costPrice" value="0.0"/></td>
+			<td><s:text name="costPrice" value="0.0" id="costPrice"/></td>
 		</tr>
 		<tr>
 			<td>MRP:</td>
-			<td><s:text name="mrp" value="0.0"/></td>
+			<td><s:text name="mrp" value="0.0" id="mrp"/></td>
 		</tr>
           <tr>
             <td>Batch Number:</td>
@@ -72,6 +76,11 @@
       <span style="display:inline;float:right;"><h2><s:link beanclass="com.hk.web.action.admin.inventory.GRNAction">&lang;&lang;&lang;
         Back to GRN List</s:link></h2></span>
     </div>
+	  <div style="display: none;">
+	  	<s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="validationLink"
+	  	        event="validateFields"></s:link>
+	  </div>
+
     <div style="display:inline;" align="center">
 
       <table style="font-size: .8em;">
@@ -85,7 +94,7 @@
         </tr>
         <c:forEach items="${ica.grn.grnLineItems}" var="grnLineItem" varStatus="ctr">
           <c:set value="${grnLineItem.sku.productVariant}" var="productVariant"/>
-          <tr>
+          <tr class="chkInInfo">
             <td>${ctr.index+1}</td>
             <td>
                 ${productVariant.product.name}<br/>
@@ -94,9 +103,9 @@
               </c:forEach></em>
             </td>
             <td><a href="#" onclick="$('.variant').val(this.innerHTML);">${productVariant.id}</a></td>
-            <td>${productVariant.upc}</td>
-            <td>${grnLineItem.qty}</td>
-            <td style="color:green; font-weight:bold">${grnLineItem.checkedInQty}</td>
+            <td >${productVariant.upc}</td>
+            <td class="chkInInfoQty">${grnLineItem.qty}</td>
+            <td class="chkInQty" style="color:green; font-weight:bold">${grnLineItem.checkedInQty}</td>
           </tr>
         </c:forEach>
       </table>
@@ -125,11 +134,40 @@
 
     </div>
     <script type="text/javascript">
-      $(document).ready(function() {
-      $('.invCheckin').click(function disableSaveButton(){
-      $(this).css("display", "none");
-    });
-      });
+	    $(document).ready(function() {
+		    $('.chkInInfo').each(function(){
+			     var qty = Number($(this).find('.chkInInfoQty').text());
+			     var upc = Number($(this).find('.chkInQty').text());
+			    if(qty != upc)
+			    {
+				    $(this).css('background-color','#FFA07A');
+			    }
+
+		    });
+		    $('.invCheckin').click(function(event){
+			    //$(this).css("display", "none");
+			    event.preventDefault();
+			    $.getJSON(
+					    $('#validationLink').attr('href'), {upc : $('.variant').val(), costPrice : $('#costPrice').val(), mrp : $('#mrp').val()},
+					    function (res) {
+						    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+							    $('#checkinForm').attr('action', $('#checkinForm').attr('action') + "?save=");
+							    $('#checkinForm').submit();
+							    $(this).css("display", "none");
+						    } else {
+							    var confirmMessage = confirm(res.message);
+							    if(confirmMessage == true) {
+								    $('#checkinForm').attr('action', $('#checkinForm').attr('action') + "?save=");
+								    $('#checkinForm').submit();
+								    $(this).css("display", "none");
+							    } else {
+								    return false;
+							    }
+						    }
+					    }
+			    );
+		    });
+	    });
     </script>
   </s:layout-component>
 </s:layout-render>

@@ -106,7 +106,7 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.amount, amountStr);
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.country, country);
 		return ebsPaymentGatewayWrapper;
-	}
+	}                                                                              
 
 	@DefaultHandler
 	public Resolution callback() {

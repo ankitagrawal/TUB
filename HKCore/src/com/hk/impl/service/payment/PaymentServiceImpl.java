@@ -91,11 +91,11 @@ public class PaymentServiceImpl implements PaymentService {
             case CITRUS_NetBanking_New:
             case EBS:
             case TECHPROCESS:
+            case ICICI:
             case CCAVENUE_DUMMY:
             case FREE_CHECKOUT:
                 if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
                     paymentEmailSent = getEmailManager().sendOrderConfirmEmailToUser(order);
-	                smsManager.sendOrderConfirmedSMS(order);
                     getOrderService().sendEmailToServiceProvidersForOrder(order);
                 } else if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
                     paymentEmailSent = getEmailManager().sendOrderPlacedPaymentPendingEmailToUser(order);

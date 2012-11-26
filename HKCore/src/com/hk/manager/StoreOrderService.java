@@ -31,7 +31,7 @@ public class StoreOrderService {
 
             logger.debug("trying to update orderstatus for store-" + order.getStore().getId() + "-order Id-" + order.getId());
 
-            ClientResponse<String> response = request.post(String.class);
+            ClientResponse<String> response = request.get(String.class);
 
             if (response.getStatus() != 200) {
                 logger.debug("failed to update order status in store-" + order.getStore().getId() + " some error -order Id-" + order.getId());

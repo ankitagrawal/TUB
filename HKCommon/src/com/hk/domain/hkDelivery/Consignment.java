@@ -65,6 +65,10 @@ public class Consignment implements java.io.Serializable, Comparable<Consignment
     @Column(name = "address")
     private String address;
 
+	@Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "delivery_date", length = 19)
+    private Date deliveryDate;
+
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="hkdelivery_payment_reconciliation_id")
     private HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
@@ -157,7 +161,15 @@ public class Consignment implements java.io.Serializable, Comparable<Consignment
         this.address = address;
     }
 
-    @Override
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+
+	@Override
     public String toString() {
         return id == null ? "" : id.toString();
     }

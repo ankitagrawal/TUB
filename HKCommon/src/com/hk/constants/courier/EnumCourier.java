@@ -33,6 +33,8 @@ public enum EnumCourier {
     Smile_Express_DSP(195L,"Smile Express DSP"),
     EarthMoversPune(200L, "Earth Movers Pune"),
     HK_Delivery(500L, "HealthKart Delivery"),
+    FedEx(600L, "FedEx"),
+    FedEx_Surface(610L, "FedEx Surface"),
 
     MIGRATE(-1L, "MIGRATE");
 
@@ -93,7 +95,18 @@ public enum EnumCourier {
                 EnumCourier.BlueDart_COD,
                 EnumCourier.Safexpress,
                 EnumCourier.Quantium,
-                EnumCourier.HK_Delivery
+                EnumCourier.HK_Delivery,
+                EnumCourier.FedEx,
+                EnumCourier.FedEx_Surface
+        );
+    }
+
+
+     public static List<EnumCourier> getCurrentlyApplicableGroundShippedCouriers() {
+        return Arrays.asList(
+                EnumCourier.DTDC_Surface,
+                EnumCourier.Delhivery_Surface,
+                EnumCourier.FedEx_Surface
         );
     }
 

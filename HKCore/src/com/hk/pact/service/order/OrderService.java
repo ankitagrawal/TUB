@@ -10,6 +10,7 @@ import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderStatus;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
@@ -65,6 +66,13 @@ public interface OrderService {
 
     public Order findByGatewayOrderId(String gatewayOrderId);
 
-	public boolean isCODAllowed(Order order);
+    // public boolean isCODAllowed(Order order);
+
+     public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
+
+    public boolean isShippingOrderExists (Order order);
+    
+    public void setTargetDispatchDelDatesOnBO(Order order);
 
 }
+

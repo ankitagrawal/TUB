@@ -42,6 +42,8 @@ public class OrderUtil {
             return new Long[] { DEFAULT_MIN_DEL_DAYS, DEFAULT_MIN_DEL_DAYS };
         }
     }
+    
+    
 
     public static Long[] getDispatchDaysForBO(Order order) {
         if (order != null) {

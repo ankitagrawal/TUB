@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -227,6 +228,27 @@ public class PaymentManager {
 		return success(gatewayOrderId, null);
 	}
 
+    @Transactional
+    public Order success(String gatewayOrderId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode) {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+
+        Order order = null;
+        // if payment type is full, then send order to processing also, else just accept and update payment status
+        if (payment != null) {
+            if (payment.getPaymentDate() == null) {
+                payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            }
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.SUCCESS));
+            payment.setResponseMessage(responseMessage);
+            payment.setAuthIdCode(authIdCode);
+            payment.setRrn(rrn);
+            payment = paymentDao.save(payment);
+            order = getOrderManager().orderPaymentReceieved(payment);
+        }
+        return order;
+    }
+
 	@Transactional
 	public Order success(String gatewayOrderId, String gatewayReferenceId) {
 		Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
@@ -263,7 +285,6 @@ public class PaymentManager {
 			Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
 			if (orderCount != null && orderCount >= 3) {
 				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
-				smsManager.sendOrderConfirmedSMS(payment.getOrder());
 			} else {
 				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
 			}
@@ -371,6 +392,19 @@ public class PaymentManager {
 			paymentDao.save(payment);
 		}
 	}
+
+    @Transactional
+    public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e, String responseMessage) {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+        if (payment != null) {
+            payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setResponseMessage(responseMessage);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ERROR));
+            payment.setErrorLog(e.getError().getMessage());
+            paymentDao.save(payment);
+        }
+    }
 
 	public Payment verifyCodPayment(Payment payment) {
 		payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));

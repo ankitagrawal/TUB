@@ -12,7 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "purchase_order_status")
-public class PurchaseOrderStatus implements java.io.Serializable {
+public class PurchaseOrderStatus implements java.io.Serializable, Comparable<PurchaseOrderStatus>{
 
 
   @Id
@@ -42,6 +42,19 @@ public class PurchaseOrderStatus implements java.io.Serializable {
   public String toString() {
     return id == null ? "" : id.toString();
   }
+
+	public boolean equals(Object obj) {
+		if (!(obj instanceof PurchaseOrderStatus)) {
+			return false;
+		}
+		PurchaseOrderStatus purchaseOrderStatus = (PurchaseOrderStatus) obj;
+		return (this.id.equals((purchaseOrderStatus.getId())));
+	}
+
+	public int compareTo(PurchaseOrderStatus purchaseOrderStatus) {
+		return this.getId().compareTo(purchaseOrderStatus.getId());
+
+	}
 
 }
 

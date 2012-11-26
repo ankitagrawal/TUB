@@ -4,6 +4,7 @@
 <%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
 <%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -18,9 +19,11 @@
 
 		pageContext.setAttribute("product", product_productThumb);
 
-		ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
-		Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
-		pageContext.setAttribute("combo", combo);
+        if (product_productThumb instanceof Combo){
+            ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
+            Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
+            pageContext.setAttribute("combo", combo);
+        }
 	%>
 	<style type="text/css">
 		.opaque {
@@ -37,7 +40,7 @@
 		<c:if test="${!product.googleAdDisallowed && !product.deleted}">
 			<div class='grid_4 product'>
 				<div class='img128 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;margin-top:10px;">
-					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
+					<a href="${product.productURL}" class="prod_link" title="${product.name}">
 						<c:choose>
 							<c:when test="${product.mainImageId != null}">
 								<hk:productImage
@@ -50,13 +53,13 @@
 								     alt="${product.name}"/>
 							</c:otherwise>
 						</c:choose>
-					</s:link>
+					</a>
 				</div>
 				<div>
 					<span style="height:20px;max-width:190px;">
-						<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
+						<a href="${product.productURL}" title="${product.name}" class="prod_link">
 							${product.name}
-						</s:link>
+						</a>
 					</span>
 				</div>
 				<c:choose>

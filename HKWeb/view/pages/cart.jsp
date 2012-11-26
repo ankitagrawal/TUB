@@ -33,7 +33,7 @@
               if(responseData.code == '<%=HealthkartResponse.STATUS_OK%>'){
               _updateTotals(responseData);
               _updateLineItem(responseData, lineItemRow);
-              //document.getElementById("freebieBanner").src = responseData.message;
+              document.getElementById("freebieBanner").src = responseData.message;
               $(".freebieBanner").attr("src", responseData.message);
               }else{
                 elm.val(responseData.data);
@@ -448,6 +448,7 @@
     });
 
 </script>
+
 <c:forEach items="${cartAction.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr1">
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
@@ -520,7 +521,6 @@
     <div class="floatfix"></div>
   </div>
 </c:forEach>
-
 <s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>
 
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">

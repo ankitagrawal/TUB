@@ -1,6 +1,9 @@
 package com.hk.impl.dao.coupon;
 
+import com.hk.domain.affiliate.Affiliate;
+import com.hk.domain.order.Order;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +12,8 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.domain.coupon.Coupon;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.coupon.CouponDao;
+
+import java.util.List;
 
 @Repository
 public class CouponDaoImpl extends BaseDaoImpl implements CouponDao {
@@ -31,5 +36,13 @@ public class CouponDaoImpl extends BaseDaoImpl implements CouponDao {
         criteria.add(Restrictions.eq("code", couponCode));
         return (Coupon) criteria.uniqueResult();
     }
+
+	@Override
+	public List<Coupon> affiliateCoupon(Affiliate affiliate) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Coupon.class);
+		criteria.add(Restrictions.eq("referrerUser", affiliate.getUser()));
+		criteria.add(Restrictions.eq("alreadyUsed", 0L));
+		return findByCriteria(criteria);
+	}
 
 }

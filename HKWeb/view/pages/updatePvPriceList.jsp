@@ -1,4 +1,5 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.catalog.product.EnumUpdatePVPriceStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction" var="uppBean"/>
@@ -20,6 +21,13 @@
 					}
 					return false;
 				});
+				$(".ignorePrice").click(function() {
+					var c = confirm("Do you want to ignore prices?");
+					if (c == true) {
+						return true;
+					}
+					return false;
+				});
 			});
 		</script>
 	</s:layout-component>
@@ -35,8 +43,13 @@
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="topLevelCategoryList"
 					                           value="name" label="displayName"/>
 				</s:select>
-				                             &nbsp; &nbsp;
-				<label>Updated:</label><s:checkbox name="updated" style="width:150px"/>
+				&nbsp; &nbsp;
+				<label>Product Variant:</label><s:text name="productVariant"/>
+				<label>Status:</label><s:select name="status">
+		        <c:forEach items="<%=EnumUpdatePVPriceStatus.getAllStatuses()%>" var="pType">
+			        <s:option value="${pType.id}">${pType.name}</s:option>
+		        </c:forEach>
+	        </s:select>
 				                             &nbsp; &nbsp;
 				<s:submit name="pre" value="Search"/>
 			</fieldset>
@@ -57,8 +70,10 @@
 					<th>New CP</th>
 					<th>Old MRP</th>
 					<th>New MRP</th>
+					<th>Old HKP</th>
+					<th>New HKP</th>
 					<th>Txn Date</th>
-					<th>Updated?</th>
+					<th>Status</th>
 					<th>Update Date</th>
 					<th>Update By</th>
 				</tr>
@@ -88,16 +103,30 @@
 						<td>${pvToBeUpdated.newCostPrice}</td>
 						<td>${pvToBeUpdated.oldMrp}</td>
 						<td>${pvToBeUpdated.newMrp}</td>
+						<td>${pvToBeUpdated.oldHkprice}</td>
+						<td>${pvToBeUpdated.newHkprice}</td>
 						<td><fmt:formatDate value="${pvToBeUpdated.txnDate}" pattern="dd/MM/yyyy HH:mm"/></td>
 						<td>
-								${pvToBeUpdated.updated}
-							<c:if test="${! pvToBeUpdated.updated}">
+							<c:if test="${pvToBeUpdated.status == 10}">
+								Pending <br/>
 								<s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction" class="updatePrice"
 								        event="update" style="background-color:green;color:white;padding:2px;">
 									Update
 									<s:param name="updatePvPrice" value="${pvToBeUpdated.id}"/>
 								</s:link>
+								<s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction" class="ignorePrice"
+								        event="ignore" style="background-color:gray;color:white;padding:2px;">
+									Ignore
+									<s:param name="updatePvPrice" value="${pvToBeUpdated.id}"/>
+								</s:link>
 							</c:if>
+							<c:if test="${pvToBeUpdated.status == 20}">
+								Updated
+							</c:if>
+							<c:if test="${pvToBeUpdated.status == 30}">
+								Ignored
+							</c:if>
+
 						</td>
 						<td><fmt:formatDate value="${pvToBeUpdated.updateDate}" pattern="dd/MM/yyyy HH:mm"/></td>
 						<td>${pvToBeUpdated.updatedBy.login}</td>

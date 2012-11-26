@@ -182,7 +182,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     public Resolution trackConsignment(){
-        Consignment consignment = null;
+
         if(doTracking){
             consignment = consignmentService.getConsignmentByAwbNumber(consignmentNumber);
             if(consignment != null) {

@@ -1,12 +1,15 @@
 package com.hk.impl.service.inventory;
 
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.LowInventory;
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.manager.EmailManager;
@@ -187,7 +190,7 @@ public class InventoryServiceImpl implements InventoryService {
 			    if (leastMRPSkuGroup != null && leastMRPSkuGroup.getMrp() != null
 					    && !productVariant.getMarkedPrice().equals(leastMRPSkuGroup.getMrp())) {
 				    //logger.info("MRP: "+productVariant.getMarkedPrice()+"-->"+leastMRPSkuGroup.getMrp());
-				    UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, false);
+				    UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, EnumUpdatePVPriceStatus.Pending.getId());
 				    if (updatePvPrice == null) {
 					    updatePvPrice = new UpdatePvPrice();
 				    }
@@ -197,8 +200,10 @@ public class InventoryServiceImpl implements InventoryService {
 				    updatePvPrice.setOldMrp(productVariant.getMarkedPrice());
 				    updatePvPrice.setNewMrp(leastMRPSkuGroup.getMrp());
 				    updatePvPrice.setOldHkprice(productVariant.getHkPrice());
-				    updatePvPrice.setNewHkprice(leastMRPSkuGroup.getMrp() * (1 - productVariant.getDiscountPercent()));
+				    Double newHkPrice = leastMRPSkuGroup.getMrp() * (1 - productVariant.getDiscountPercent());
+				    updatePvPrice.setNewHkprice(newHkPrice);
 				    updatePvPrice.setTxnDate(new Date());
+				    updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
 				    baseDao.save(updatePvPrice);
 			    }
 		    }
@@ -244,6 +249,15 @@ public class InventoryServiceImpl implements InventoryService {
 			bookedInventory = bookedInventoryForProductVariant + bookedInventoryForSKUs;
 		}
 		return bookedInventory;
+	}
+
+	public boolean allInventoryCheckedIn(GoodsReceivedNote grn){
+		for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
+			if(!grnLineItem.getQty().equals(grnLineItem.getCheckedInQty())){
+				return false;
+			}
+		}
+		return true;
 	}
     
     @Override

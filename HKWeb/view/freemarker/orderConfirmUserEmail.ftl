@@ -11,7 +11,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
 <p style="margin-bottom:1em">Thanks for placing an order with us.</p>
 
 <p style="margin-bottom:1em">Here are your order details for the order <strong> ${order.gatewayOrderId}</strong> placed
-    on<strong> ${order.payment.createDate} </strong></p>
+    on<strong> ${order.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} </strong></p>
 
 <div>
     <h3>Order Details</h3>

@@ -2,24 +2,14 @@ package com.hk.domain.sku;
 
 // Generated Feb 28, 2012 2:31:32 PM by Hibernate Tools 3.2.4.CR1
 
-import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Tax;
 import com.hk.domain.warehouse.Warehouse;
+
+import javax.persistence.*;
+import java.util.Date;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 @Entity
 @Table(name = "sku")
@@ -125,4 +115,32 @@ public class Sku implements java.io.Serializable {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Sku)) {
+			return false;
+		}
+		Sku sku = (Sku) o;
+
+		if (id != null && sku.id != null && id.equals(sku.id)) {
+			return true;
+		} else {
+			EqualsBuilder equalsBuilder = new EqualsBuilder();
+			if (this.warehouse == null || this.productVariant == null || sku.warehouse == null || sku.productVariant == null) {
+				return false;
+			}
+			equalsBuilder.append(this.warehouse.getId(), sku.warehouse.getId());
+			equalsBuilder.append(this.productVariant.getId(), sku.productVariant.getId());
+			return equalsBuilder.isEquals();
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
+	}
 }

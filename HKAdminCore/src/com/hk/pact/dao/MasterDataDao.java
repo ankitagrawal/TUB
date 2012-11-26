@@ -27,12 +27,14 @@ import com.hk.domain.core.Tax;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
@@ -41,6 +43,9 @@ import com.hk.domain.user.User;
 
 public interface MasterDataDao 
 {
+	public static final int USER_COMMENT_TYPE_PACKING_BASE_ORDER = 1;
+	public static final int USER_COMMENT_TYPE_DELIVERY_BASE_ORDER = 2;
+	public static final int USER_COMMENT_TYPE_OTHERS_BASE_ORDER = 3;
 
     public List<PaymentStatus> getPaymentStatusList();
 
@@ -129,4 +134,18 @@ public interface MasterDataDao
     public List<User> getAgentsWithOpenRunsheet();
 
     public List<ConsignmentStatus> getConsignmentStatusList();
+
+	public List<CourierGroup>  getCourierGroupList();
+
+	public List<Courier> getDisableCourier();
+
+	public List<Courier> getAvailableCouriers();
+
+	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover();
+
+	public List<ReplacementOrderReason> getReplacementOrderReasonForReplacement();
+
+	public List<ReplacementOrderReason> getReplacementOrderReasonForRto();
+
+
 }

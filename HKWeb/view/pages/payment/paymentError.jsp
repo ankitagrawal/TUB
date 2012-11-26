@@ -21,14 +21,18 @@
 
         <p>The transaction id for this transaction is ${actionBean.payment.gatewayOrderId}</p>
 
-        <p>Suspect cause : ${actionBean.errorMessage}</p>
+        <p>Cause : ${actionBean.errorMessage}</p>
+
+        <p>Response Message from gateway  : ${actionBean.payment.responseMessage}</p>
 
         <h2>Support</h2>
 
-        <p>Please try again. If it still does not work
-          <s:link beanclass="com.hk.web.action.pages.ContactAction">write to us</s:link> with the above details.</p>
+            <p><s:link beanclass="com.hk.web.action.core.payment.PaymentModeAction">Please try again.</s:link>
+                If it still does not work
+                <s:link beanclass="com.hk.web.action.pages.ContactAction">write to us</s:link> with the above
+                details.</p>
         </div>
-        
+
       </c:when>
       <c:otherwise>
         <div style="background: #fdd; padding: 20px;">

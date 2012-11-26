@@ -1,17 +1,15 @@
 package com.hk.pact.service.search;
 
-import com.akube.framework.dao.Page;
-
 import java.util.List;
 
-import com.hk.domain.catalog.product.Product;
+import org.springframework.stereotype.Service;
+
 import com.hk.domain.search.PaginationFilter;
 import com.hk.domain.search.RangeFilter;
 import com.hk.domain.search.SearchFilter;
 import com.hk.domain.search.SortFilter;
 import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
-import org.springframework.stereotype.Service;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,7 +28,7 @@ public interface ProductSearchService {
                                    PaginationFilter paginationFilter,
                                    SortFilter sortFilter) throws SearchException;
 
-    SearchResult getSearchResults(String query, int page, int perPage,boolean isRetry) throws SearchException;
+    SearchResult getSearchResults(String query,List<SearchFilter> searchFilters, int page, int perPage,boolean isRetry) throws SearchException;
 
     SearchResult getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException;
 }

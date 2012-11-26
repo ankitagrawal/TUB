@@ -23,18 +23,22 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name="so_ro_id")
 public class ReplacementOrder extends ShippingOrder implements Serializable{
   @Column(name = "is_rto")
-  private Boolean isRto;
+  private boolean rto;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ref_shipping_order_id")
   private ShippingOrder refShippingOrder;
 
-  public Boolean isRto() {
-    return isRto;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "replacement_order_reason_id")
+	private ReplacementOrderReason replacementOrderReason;
+
+	public boolean isRto() {
+    return rto;
   }
 
   public void setRto(Boolean rto) {
-    isRto = rto;
+    this.rto = rto;
   }
 
   public ShippingOrder getRefShippingOrder() {
@@ -44,4 +48,12 @@ public class ReplacementOrder extends ShippingOrder implements Serializable{
   public void setRefShippingOrder(ShippingOrder refShippingOrder) {
     this.refShippingOrder = refShippingOrder;
   }
+
+	public ReplacementOrderReason getReplacementOrderReason() {
+		return replacementOrderReason;
+	}
+
+	public void setReplacementOrderReason(ReplacementOrderReason replacementOrderReason) {
+		this.replacementOrderReason = replacementOrderReason;
+	}
 }

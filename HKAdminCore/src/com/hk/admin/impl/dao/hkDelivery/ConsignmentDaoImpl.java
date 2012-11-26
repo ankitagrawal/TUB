@@ -130,10 +130,10 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
 	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub) {
 		DetachedCriteria consignmentCriteria = DetachedCriteria.forClass(Consignment.class);
 		if (startDate != null) {
-            consignmentCriteria.add(Restrictions.ge("createDate", startDate));
+            consignmentCriteria.add(Restrictions.ge("deliveryDate", startDate));
         }
         if (endDate != null) {
-            consignmentCriteria.add(Restrictions.le("createDate", endDate));
+            consignmentCriteria.add(Restrictions.le("deliveryDate", endDate));
         }
 		if(hub != null){
 			consignmentCriteria.add(Restrictions.eq("hub.id", hub.getId()));

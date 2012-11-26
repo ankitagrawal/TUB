@@ -5,10 +5,8 @@ import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrderStatus;
-import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.order.ShippingOrderStatus;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
@@ -47,7 +45,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
      */
     private List<ShippingOrderStatus> shippingOrderStatusList;
     private Set<String>               shippingOrderCategories;
-    private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;
+    private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;           //addded by someone saying: MAIN HOO DON !!!! please use camel case
 
     public OrderSearchCriteria setLogin(String login) {
         this.login = login;

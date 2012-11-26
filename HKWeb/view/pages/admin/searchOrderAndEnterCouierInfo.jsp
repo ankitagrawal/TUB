@@ -4,16 +4,20 @@
 <%@ page import="com.hk.domain.courier.BoxSize" %>
 <%@ page import="com.hk.constants.shipment.EnumPicker" %>
 <%@ page import="com.hk.constants.shipment.EnumPacker" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction" var="shipmentQueueBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction"  var="shipmentQueueBean"/>
 <%
   BaseDao baseDao = ServiceLocatorFactory.getService(BaseDao.class);
   MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
   pageContext.setAttribute("boxSizeList", baseDao.getAll(BoxSize.class));
-  pageContext.setAttribute("courierList", masterDataDao.getCourierList());
+  pageContext.setAttribute("courierList", masterDataDao.getAvailableCouriers());
+//  pageContext.setAttribute("groundShippedCourierList", masterDataDao.getGroundShippedCourierList());
 %>
+
+<c:set var="commentTypeDelivery" value="<%= MasterDataDao.USER_COMMENT_TYPE_DELIVERY_BASE_ORDER %>" />
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="htmlHead">
@@ -23,6 +27,12 @@
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
       <script type="text/javascript">
           $(document).ready(function() {
+
+	          var commentType = $('#commentType').val();
+	          if(commentType == ${commentTypeDelivery}) {
+		          alert("User Instruction : " + $('#userComments').val());
+	          }
+
               $('.weight').keyup(function() {
                   var weight = $('.weight').val();
                   if (weight > 5) {
@@ -44,9 +54,44 @@
                       $('.error').show();
                       return false;
                   }
+	              var selected = $('#courier').selected().val();
+	              var suggested = $('#sugcouier').val();
 
+	              if(selected != suggested) {
+		           var proceed = confirm('Default Courier is  Not Selected  In drop down  :  Click OK to Proceed ');
+					if(!proceed)return  false;
+	              }
+	             var weight = $('.weight').val();
+	              if (!(weight.match(/^([0-9\.]+)$/g))) {
+		              $('.error').html("");
+		              $('.error').append(" Box weight can be number only");
+		              $('.error').show();
+		              return false;
+	              }
               });
 
+
+
+	          $('#show').click(function() {
+		          $.getJSON(
+				          $('#getcourier').attr('href'), function(response) {
+			          if (response.code == '<%=HealthkartResponse.STATUS_OK%>') {
+				          var courierList = response.data;
+				          $('#show').hide();
+				          $('#courier').html('');
+				          $.each(response.data, function() {
+					          var strP = '<option value=' + String(this.id) + '';
+					          if (String(this.name) == $('.suggestedcourier').text())
+					          {
+						          strP = strP + ' selected';
+					          }
+					          strP = strP + ' >' + this.name + '</option>';
+					          $('#courier').append(strP);
+				          });
+			          }
+		          });
+
+	          });
 
           });
       </script>
@@ -54,6 +99,10 @@
   </s:layout-component>
   <s:layout-component name="heading">Enter Tracking Details for Packed Orders</s:layout-component>
   <s:layout-component name="content">
+	  	<div style="display:none">
+			<s:link id="getcourier" beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction"  event="getCourierList"> </s:link> </div>
+	<input type="hidden" id="commentType" value="${shipmentQueueBean.shippingOrder.baseOrder.commentType}">
+	<input type="hidden" id="userComments" value="${shipmentQueueBean.shippingOrder.baseOrder.userComments}">
     <div  class="error" style= "background-color:salmon; width:380px; display:none;">       
 
     </div>
@@ -81,14 +130,15 @@
         <fieldset class="top_label">
           <s:form  beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">
               <s:hidden name="shipment" value="${shipmentQueueBean.shipment.id}"/>
-                <s:hidden name="suggestedCourier" value="${shipmentQueueBean.suggestedCourier}"/>
+                <s:hidden name="suggestedCourier"  id ="sugcouier" value="${shipmentQueueBean.suggestedCourier}"/>
              <c:if test="${! empty shipmentQueueBean.availableCouriers}">
-              <div style="margin-top:5px;margin-bottom:5px;font-size:.9em"><A></A>vailable Couriers:
+              <div style="margin-top:5px;margin-bottom:5px;font-size:.9em"><A></A>Available Couriers:
               <c:forEach items="${shipmentQueueBean.availableCouriers}" var="courier">
                 ${courier.name},
               </c:forEach>
               </div>
             </c:if>
+
 
             <s:hidden name="shippingOrder" value="${shipmentQueueBean.shippingOrder}"/>
 	         <label>Picker:</label><s:select name="shipment.picker">
@@ -109,23 +159,24 @@
             </s:select>
             <label>Box Weight(Kgs):</label><s:text name="shipment.boxWeight" size="5" class="weight"/>
             <label>Tracking ID:</label><s:text class="tracking" name="trackingId"/>
-            <label>Courier</label>
-            <s:select name="shipment.courier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
-              <c:forEach var="courier" items="${courierList}">
-                <s:option value="${courier.id}">${courier.name}</s:option>
-              </c:forEach>
-            </s:select>
-            <c:if test="${shipmentQueueBean.suggestedCourier != null}">
-              <label style="margin-top:5px;margin-bottom:5px;color:green;">Suggested Courier:  <b>${shipmentQueueBean.suggestedCourier.name}</b></label>
+	          <label>Courier</label>
+	          <s:select name="selectedCourier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
+		          <c:forEach var="courier" items="${shipmentQueueBean.availableCouriers}">
+			          <s:option value="${courier.id}">${courier.name}</s:option>
+		          </c:forEach>
+	          </s:select>
+	           <a href="#" id="show">Show All Courier</a>
+	          <c:if test="${shipmentQueueBean.suggestedCourier != null}">
+              <label style="margin-top:5px;margin-bottom:5px;color:green;" >Suggested Courier:  <b class="suggestedcourier">${shipmentQueueBean.suggestedCourier.name}</b></label>
             </c:if>
               <label>Approx Weight (By System)</label> ${shipmentQueueBean.approxWeight}
 
               <div class="buttons" style="margin-left: 90%;"><s:submit id="shipmentbutton" name="saveShipmentDetails" value="Save"/></div>
 
                <div style="margin:5px;color:red;font-size:18px;">
-              <c:if test="${shipmentQueueBean.shippingOrder.baseOrder.userComments != null}">
-              	User Instructions: ${shipmentQueueBean.shippingOrder.baseOrder.userComments}
-              </c:if>
+                    <c:if test="${shipmentQueueBean.shippingOrder.baseOrder.commentType == commentTypeDelivery}">
+              	        User Instructions: ${shipmentQueueBean.shippingOrder.baseOrder.userComments}
+                    </c:if>
               </div>
           </s:form>
         </fieldset>

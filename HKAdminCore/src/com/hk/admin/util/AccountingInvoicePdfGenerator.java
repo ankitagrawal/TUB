@@ -151,12 +151,12 @@ public class AccountingInvoicePdfGenerator {
     Paragraph addressParagraph = new Paragraph();
     Paragraph invoiceDetailParagraph = new Paragraph();
     Paragraph customerAddressParagraph = new Paragraph();
-    String tinNumber = null;
+   /* String tinNumber = null; */
     String invoiceNumString = shippingOrder.getAccountingInvoiceNumber() == null ? "" : shippingOrder.getAccountingInvoiceNumber().toString();
     String shipmentDateString = shippingOrder.getShipment().getShipDate() == null ? "" : shippingOrder.getShipment().getShipDate().toString();
-    String warehouseState = invoiceDto.getWarehouseState();
-    Set<InvoiceLineItemDto> invoiceLineItems = new HashSet<InvoiceLineItemDto>();
-    invoiceLineItems = invoiceDto.getInvoiceLineItemDtos();
+   /* String warehouseState = invoiceDto.getWarehouseState();*/
+    /*Set<InvoiceLineItemDto> invoiceLineItems = new HashSet<InvoiceLineItemDto>();
+    invoiceLineItems = invoiceDto.getInvoiceLineItemDtos();*/
     /* if (warehouseState.equalsIgnoreCase("HARYANA")) {
       tinNumber = "TIN# 06101832036";
     }
@@ -194,7 +194,7 @@ public class AccountingInvoicePdfGenerator {
         Font.NORMAL)));
     invoiceDetailParagraph.add(new Paragraph("Payment Mode:" + shippingOrder.getBaseOrder().getPayment().getPaymentMode().getName(), new Font(Font.FontFamily.TIMES_ROMAN, 8,
         Font.NORMAL)));
-    invoiceDetailParagraph.add(new Paragraph("Courier:" + shippingOrder.getShipment().getCourier().getName(), new Font(Font.FontFamily.TIMES_ROMAN, 8,
+    invoiceDetailParagraph.add(new Paragraph("Courier:" + shippingOrder.getShipment().getAwb().getCourier().getName(), new Font(Font.FontFamily.TIMES_ROMAN, 8,
         Font.NORMAL)));
     invoiceDetailParagraph.add(new Paragraph("Order#:" + shippingOrder.getGatewayOrderId() + "on" + shippingOrder.getBaseOrder().getPayment().getCreateDate(), new Font(Font.FontFamily.TIMES_ROMAN, 8,
         Font.NORMAL)));

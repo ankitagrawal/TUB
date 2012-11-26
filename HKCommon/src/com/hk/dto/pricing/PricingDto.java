@@ -197,9 +197,12 @@ public class PricingDto {
 			        }
 			        productLineCount++;
 		        } else {
+              Long comboQty = 0L;
 			        ComboInstance comboInstance = cartLineItem.getComboInstance();
 			        if (!comboInstanceSet.contains(comboInstance)) {
-				        Long comboQty = cartLineItem.getQty() / cartLineItem.getComboInstance().getComboInstanceProductVariant(cartLineItem.getProductVariant()).getQty();
+                if(cartLineItem.getComboInstance().getComboInstanceProductVariant(cartLineItem.getProductVariant())!=null){
+				         comboQty = cartLineItem.getQty() / cartLineItem.getComboInstance().getComboInstanceProductVariant(cartLineItem.getProductVariant()).getQty();
+                }
 				        productsMrpSubTotal += cartLineItem.getComboInstance().getCombo().getMarkedPrice() * comboQty;
 				        productsHkSubTotal += cartLineItem.getComboInstance().getCombo().getHkPrice() * comboQty;
 				        productsTotal += cartLineItem.getComboInstance().getCombo().getHkPrice() * comboQty;

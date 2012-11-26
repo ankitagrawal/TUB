@@ -1,7 +1,11 @@
-package com.hk.web.action.core.order;
+	package com.hk.web.action.core.order;
 
+import java.util.List;
 import java.util.Map;
 
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.ConsignmentTracking;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -40,17 +44,24 @@ public class TrackCourierAction extends BaseAction {
     private                   String                      awb;
     private                   String                      paymentType;
     private                   String                      courierName;
+	Consignment consignment;
+	List<ConsignmentTracking> consignmentTrackingList;
 
     @Autowired
     CourierStatusUpdateHelper courierStatusUpdateHelper;
+
+	@Autowired
+	ConsignmentService consignmentService;
 
 
     @SuppressWarnings("unchecked")
     @DefaultHandler
     public Resolution pre() {
         Resolution resolution = null;
-
         EnumCourier enumCourier = EnumCourier.getEnumCourierFromCourierId(courierId);
+	    if(enumCourier == null){
+		 return new RedirectResolution("/pages/trackShipment.jsp");  
+	    }
         switch (enumCourier) {
             case Aramex:
                 resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);
@@ -73,7 +84,7 @@ public class TrackCourierAction extends BaseAction {
                 if (chhotuCourierDelivery != null) {
                     resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
 
@@ -93,7 +104,7 @@ public class TrackCourierAction extends BaseAction {
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
             case BlueDart:
@@ -112,7 +123,7 @@ public class TrackCourierAction extends BaseAction {
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
             case DTDC_COD:
@@ -134,11 +145,27 @@ public class TrackCourierAction extends BaseAction {
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
+
+	        case HK_Delivery:
+		        if (trackingId != null) {
+			        consignment = consignmentService.getConsignmentByAwbNumber(trackingId);
+			        if (consignment != null) {
+				        consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
+				        resolution = new ForwardResolution("/pages/hkDeliveryTracking.jsp");
+			        } else {
+				        resolution = new RedirectResolution("/pages/trackShipment.jsp");
+			        }
+		        }
+		        else{
+			        resolution = new RedirectResolution("/pages/trackShipment.jsp");
+		        }
+	            
+	            break;
             default:
-                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                resolution = new RedirectResolution("/pages/trackShipment.jsp");
 
         }
         return resolution;
@@ -203,4 +230,20 @@ public class TrackCourierAction extends BaseAction {
     public void setCourierName(String courierName) {
         this.courierName = courierName;
     }
+
+	public Consignment getConsignment() {
+		return consignment;
+	}
+
+	public void setConsignment(Consignment consignment) {
+		this.consignment = consignment;
+	}
+
+	public List<ConsignmentTracking> getConsignmentTrackingList() {
+		return consignmentTrackingList;
+	}
+
+	public void setConsignmentTrackingList(List<ConsignmentTracking> consignmentTrackingList) {
+		this.consignmentTrackingList = consignmentTrackingList;
+	}
 }

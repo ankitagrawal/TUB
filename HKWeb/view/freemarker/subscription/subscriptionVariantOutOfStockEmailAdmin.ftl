@@ -11,7 +11,7 @@ Variant for Subscription Id ${subscription.id} is out of stock.
     Please resolve this issue. The subscription Id ${subscription.id} is due in a week and the corresponding product variant is out of stock. Please fulfil this order.
 
 </p>
-<p style="margin-bottom:1em">Here are the subscription details for the subscription <strong> ${subscription.id}</strong> placed on<strong> ${subscription.baseOrder.payment.createDate} </strong></p>
+<p style="margin-bottom:1em">Here are the subscription details for the subscription <strong> ${subscription.id}</strong> placed on<strong> ${subscription.baseOrder.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} </strong></p>
 
 <div>
     <h3>Subscription Details</h3>

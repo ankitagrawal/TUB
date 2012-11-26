@@ -103,7 +103,11 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
     public Resolution getSuperSaversForProduct() {
         if (product != null) {
             if (!product.isDeleted()) {
-                Combo combo = getComboDao().getComboById(product.getId());
+                Combo combo = null;
+                //Always check before getting a combo if it's a combo or not
+                if (productService.isCombo(combo)){
+                   combo = getComboDao().getComboById(product.getId());
+                }
                 if (combo == null) {
                     addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
                     return new ForwardResolution("/pages/manageSuperSaverImages.jsp");

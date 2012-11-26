@@ -26,6 +26,8 @@ public class PurchaseOrderDto {
 
     private Double totalSurcharge = 0.0;
 
+	private Double finalPayable = 0.0;
+
     public List<PoLineItemDto> getPoLineItemDtoList() {
         return poLineItemDtoList;
     }
@@ -74,4 +76,11 @@ public class PurchaseOrderDto {
         this.totalSurcharge = totalSurcharge;
     }
 
+	public Double getFinalPayable() {
+		return finalPayable;
+	}
+
+	public void setFinalPayable(Double finalPayable) {
+		this.finalPayable = finalPayable;
+	}
 }

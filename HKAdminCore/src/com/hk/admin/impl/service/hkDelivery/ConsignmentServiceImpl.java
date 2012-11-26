@@ -1,43 +1,56 @@
 package com.hk.admin.impl.service.hkDelivery;
 
-import com.akube.framework.dao.Page;
-import com.hk.pact.service.UserService;
-import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.akube.framework.dao.Page;
+import com.hk.admin.dto.ConsignmentDto;
+import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.admin.pact.service.courier.AwbService;
-import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
-import com.hk.admin.dto.ConsignmentDto;
-import com.hk.domain.hkDelivery.*;
-import com.hk.domain.user.User;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
-
-import java.util.*;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
+import com.hk.domain.hkDelivery.ConsignmentTracking;
+import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
+import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.Runsheet;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.user.User;
+import com.hk.pact.service.UserService;
 
 @Service
 public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Autowired
-    private ConsignmentDao consignmentDao;
+    private ConsignmentDao  consignmentDao;
 
-    @Autowired
-    private ShipmentService shipmentService;
+    /*
+     * @Autowired private ShipmentService shipmentService;
+     */
 
-    @Autowired
-    private AwbService awbService;
+    /*
+     * @Autowired private AwbService awbService;
+     */
 
     @Autowired
     private RunSheetService runsheetService;
 
-	@Autowired
-	UserService userService;
+    @Autowired
+    UserService             userService;
 
     @Override
-    public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode , String address, Hub hub){
+    public Consignment createConsignment(String awbNumber, String cnnNumber, double amount, String paymentMode, String address, Hub hub) {
         Consignment consignmentObj = new Consignment();
         consignmentObj.setHub(hub);
         consignmentObj.setConsignmentStatus(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentReceivedAtHub.getId()));
@@ -51,28 +64,29 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<ConsignmentTracking> createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, List<Consignment> consignments ,ConsignmentLifecycleStatus consignmentLifecycleStatus) {
-       List<ConsignmentTracking> consignmntTrackingList = new ArrayList<ConsignmentTracking>();
-        for(Consignment consignment: consignments)
-        {
-        ConsignmentTracking consignmntTracking = new ConsignmentTracking();
-        consignmntTracking.setConsignment(consignment);
-        consignmntTracking.setCreateDate(new Date());
-        consignmntTracking.setSourceHub(sourceHub);
-        consignmntTracking.setDestinationHub(destinationHub);
-        consignmntTracking.setUser(user);
+    public List<ConsignmentTracking> createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, List<Consignment> consignments,
+            ConsignmentLifecycleStatus consignmentLifecycleStatus) {
+        List<ConsignmentTracking> consignmntTrackingList = new ArrayList<ConsignmentTracking>();
+        for (Consignment consignment : consignments) {
+            ConsignmentTracking consignmntTracking = new ConsignmentTracking();
+            consignmntTracking.setConsignment(consignment);
+            consignmntTracking.setCreateDate(new Date());
+            consignmntTracking.setSourceHub(sourceHub);
+            consignmntTracking.setDestinationHub(destinationHub);
+            consignmntTracking.setUser(user);
             if (consignmentLifecycleStatus == null) {
-       
+
             } else {
                 consignmntTracking.setConsignmentLifecycleStatus(consignmentLifecycleStatus);
             }
-        consignmntTrackingList.add(consignmntTracking);
+            consignmntTrackingList.add(consignmntTracking);
         }
         return consignmntTrackingList;
     }
 
     @Override
-    public ConsignmentTracking createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment, ConsignmentLifecycleStatus consignmentLifecycleStatus) {
+    public ConsignmentTracking createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment,
+            ConsignmentLifecycleStatus consignmentLifecycleStatus) {
         ConsignmentTracking consignmntTracking = new ConsignmentTracking();
         consignmntTracking.setConsignment(consignment);
         consignmntTracking.setCreateDate(new Date());
@@ -106,7 +120,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public String getConsignmentPaymentMode(ShippingOrder shippingOrder) {
         String paymentModeString = null;
-        if(shippingOrder.isCOD()) {
+        if (shippingOrder.isCOD()) {
             paymentModeString = HKDeliveryConstants.COD;
         } else {
             paymentModeString = HKDeliveryConstants.PREPAID;
@@ -127,26 +141,26 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public List<ShippingOrder> getShippingOrderFromConsignments(List<Consignment> consignments) {
         List<String> cnnNumberList = new ArrayList<String>();
-        for(Consignment consignment:consignments){
+        for (Consignment consignment : consignments) {
             cnnNumberList.add(consignment.getCnnNumber());
         }
         return consignmentDao.getShippingOrderFromConsignments(cnnNumberList);
     }
 
     @Override
-    public Map<Object,Object> getRunsheetCODParams(Set<Consignment> consignments) {
-        Map<Object,Object> runsheetCODParams = new HashMap<Object,Object>();
-        double totalCODAmount = 0.0 ;
-        int totalCODPackets  = 0;
+    public Map<Object, Object> getRunsheetCODParams(Set<Consignment> consignments) {
+        Map<Object, Object> runsheetCODParams = new HashMap<Object, Object>();
+        double totalCODAmount = 0.0;
+        int totalCODPackets = 0;
 
-        for(Consignment consignment : consignments){
-            if(consignment.getPaymentMode().equals(HKDeliveryConstants.COD)){
+        for (Consignment consignment : consignments) {
+            if (consignment.getPaymentMode().equals(HKDeliveryConstants.COD)) {
                 totalCODAmount = totalCODAmount + consignment.getAmount();
-                ++ totalCODPackets;
+                ++totalCODPackets;
             }
         }
-        runsheetCODParams.put(HKDeliveryConstants.TOTAL_COD_AMT ,totalCODAmount);
-        runsheetCODParams.put(HKDeliveryConstants.TOTAL_COD_PKTS ,totalCODPackets);
+        runsheetCODParams.put(HKDeliveryConstants.TOTAL_COD_AMT, totalCODAmount);
+        runsheetCODParams.put(HKDeliveryConstants.TOTAL_COD_PKTS, totalCODPackets);
         return runsheetCODParams;
     }
 
@@ -156,17 +170,18 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public Page searchConsignment(Consignment consignment,  String awbNumber, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, Runsheet runsheet, Boolean reconciled, int pageNo, int perPage) {
+    public Page searchConsignment(Consignment consignment, String awbNumber, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, Runsheet runsheet,
+            Boolean reconciled, int pageNo, int perPage) {
         return consignmentDao.searchConsignment(consignment, awbNumber, startDate, endDate, consignmentStatus, hub, runsheet, reconciled, pageNo, perPage);
     }
 
     @Override
-    public HkdeliveryPaymentReconciliation  createPaymentReconciliationForConsignmentList(List<Consignment> consignmentListForPaymentReconciliation, User user){
+    public HkdeliveryPaymentReconciliation createPaymentReconciliationForConsignmentList(List<Consignment> consignmentListForPaymentReconciliation, User user) {
         HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation = new HkdeliveryPaymentReconciliation();
         Double amount = 0.0;
-        for(Consignment consignment : consignmentListForPaymentReconciliation){
-            if(consignment.getPaymentMode().equals(HKDeliveryConstants.COD)){
-                amount+=consignment.getAmount();
+        for (Consignment consignment : consignmentListForPaymentReconciliation) {
+            if (consignment.getPaymentMode().equals(HKDeliveryConstants.COD)) {
+                amount += consignment.getAmount();
             }
         }
         Set<Consignment> reconciledConsignments = new HashSet<Consignment>(consignmentListForPaymentReconciliation);
@@ -179,21 +194,20 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation, User loggedOnUser){
-	    hkdeliveryPaymentReconciliation.setUpdateDate(new Date());
-	    hkdeliveryPaymentReconciliation.setUser(loggedOnUser);
+    public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation, User loggedOnUser) {
+        hkdeliveryPaymentReconciliation.setUpdateDate(new Date());
+        hkdeliveryPaymentReconciliation.setUser(loggedOnUser);
         consignmentDao.saveOrUpdate(hkdeliveryPaymentReconciliation);
         return hkdeliveryPaymentReconciliation;
     }
 
     @Override
     public boolean isConsignmentValidForRunsheet(Consignment consignment) {
-        if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDamaged.getId()) ||
-        consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId()) ||
-        consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentLost.getId()) ||
-        consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentRTH.getId()) ||
-        consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOutForDelivery.getId()))
-        {
+        if (consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDamaged.getId())
+                || consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())
+                || consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentLost.getId())
+                || consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentRTH.getId())
+                || consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOutForDelivery.getId())) {
             return false;
         }
         return true;
@@ -202,16 +216,16 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public List<Consignment> getConsignmentsFromShippingOrderList(List<ShippingOrder> shippingOrderList) {
         List<String> awbNumbers = new ArrayList<String>();
-        for(ShippingOrder shippingOrder : shippingOrderList){
+        for (ShippingOrder shippingOrder : shippingOrderList) {
             awbNumbers.add(shippingOrder.getShipment().getAwb().getAwbNumber());
         }
         return getConsignmentListByAwbNumbers(awbNumbers);
     }
 
-    public List<ConsignmentStatus> getConsignmentStatusList(){
-        List<ConsignmentStatus> consignmentStatuses =  consignmentDao.getAll(ConsignmentStatus.class);
+    public List<ConsignmentStatus> getConsignmentStatusList() {
+        List<ConsignmentStatus> consignmentStatuses = consignmentDao.getAll(ConsignmentStatus.class);
         consignmentStatuses.remove(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentReceivedAtHub.getId()));
-	    consignmentStatuses.remove(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId()));
+        consignmentStatuses.remove(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId()));
         return consignmentStatuses;
     }
 
@@ -219,8 +233,8 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public List<ConsignmentDto> getConsignmentDtoList(Set<Consignment> consignments) {
         List<ConsignmentDto> consignmentDtos = new ArrayList<ConsignmentDto>();
 
-        for(Consignment consignment : consignments){
-            ConsignmentDto consignmentDto = new  ConsignmentDto();
+        for (Consignment consignment : consignments) {
+            ConsignmentDto consignmentDto = new ConsignmentDto();
             consignmentDto.setAwbNumber(consignment.getAwbNumber());
             consignmentDto.setCnnNumber(consignment.getCnnNumber());
             consignmentDto.setAddress(consignment.getAddress());
@@ -244,19 +258,19 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<Consignment> updateTransferredConsignments(List<ConsignmentDto> consignmentDtoList ,User agent) {
+    public List<Consignment> updateTransferredConsignments(List<ConsignmentDto> consignmentDtoList, User agent) {
         Runsheet runsheet = null;
         Consignment consignment = null;
         List<Consignment> consignmentList = new ArrayList<Consignment>();
-        for(ConsignmentDto consignmentDto : consignmentDtoList) {
-              if(!consignmentDto.getTransferredToAgent().getId().equals(agent.getId())){
-                  runsheet = runsheetService.getOpenRunsheetForAgent(consignmentDto.getTransferredToAgent());
-                  consignment = getConsignmentByAwbNumber(consignmentDto.getAwbNumber());
-                  consignment.setConsignmentStatus(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId()));
-                  runsheet = runsheetService.updateRunsheetParams(runsheet,consignmentDto);
-                  consignment.setRunsheet(runsheet);
-                  consignmentList.add(consignment);
-              }
+        for (ConsignmentDto consignmentDto : consignmentDtoList) {
+            if (!consignmentDto.getTransferredToAgent().getId().equals(agent.getId())) {
+                runsheet = runsheetService.getOpenRunsheetForAgent(consignmentDto.getTransferredToAgent());
+                consignment = getConsignmentByAwbNumber(consignmentDto.getAwbNumber());
+                consignment.setConsignmentStatus(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId()));
+                runsheet = runsheetService.updateRunsheetParams(runsheet, consignmentDto);
+                consignment.setRunsheet(runsheet);
+                consignmentList.add(consignment);
+            }
         }
         saveConsignments(consignmentList);
         return consignmentList;
@@ -268,12 +282,12 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage) {
-        return consignmentDao.getPaymentReconciliationListByDates(startDate ,endDate ,pageNo ,perPage);
+    public Page getPaymentReconciliationListByDates(Date startDate, Date endDate, int pageNo, int perPage) {
+        return consignmentDao.getPaymentReconciliationListByDates(startDate, endDate, pageNo, perPage);
     }
 
-	@Override
-	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate,Hub hub) {
-		return consignmentDao.getConsignmentsForPaymentReconciliation(startDate, endDate, hub);
-	}
+    @Override
+    public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub) {
+        return consignmentDao.getConsignmentsForPaymentReconciliation(startDate, endDate, hub);
+    }
 }

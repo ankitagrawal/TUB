@@ -16,7 +16,7 @@ import com.hk.constants.marketing.ProductReferrerConstants;
  */
 public class ProductReferrerMapper {
 
-  static Map<String,Long> referrerMap = new HashMap();
+  static Map<String,Long> referrerMap = new HashMap<String,Long>();
 
   static{
     referrerMap.put(CategoryConstants.BABY, EnumProductReferrer.parenting.getId());
@@ -32,6 +32,8 @@ public class ProductReferrerMapper {
     referrerMap.put(ProductReferrerConstants.HOME_PAGE, EnumProductReferrer.homePage.getId());
     referrerMap.put(ProductReferrerConstants.RELATED_PRODUCTS_PAGE, EnumProductReferrer.relatedProductsPage.getId());
     referrerMap.put(ProductReferrerConstants.SEARCH_PAGE, EnumProductReferrer.searchPage.getId());
+    referrerMap.put(ProductReferrerConstants.MOBILE_CATALOG, EnumProductReferrer.mobile_catalog.getId());
+    referrerMap.put(ProductReferrerConstants.MOBILE_SEARCH, EnumProductReferrer.mobile_search.getId());
   }
 
   public static Long getProductReferrerid(String referrer){

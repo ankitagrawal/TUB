@@ -22,9 +22,9 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.AffiliateManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.AddressService;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED, RoleConstants.ADMIN})
 public class UserManageAddressAction extends BaseAction {
@@ -51,7 +51,7 @@ public class UserManageAddressAction extends BaseAction {
   @Autowired
   UserDao userDao;
   @Autowired
-  AddressDao addressDao;
+  AddressService addressDao;
   @Autowired
   UserService userService;
 

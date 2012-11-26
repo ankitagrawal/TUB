@@ -72,8 +72,8 @@ public class Address implements java.io.Serializable {
 
   @JsonSkip
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "create_date", nullable = false, length = 19)
-  private Date createDate;
+  @Column(name = "create_dt", nullable = false, length = 19)
+  private Date createDate = new Date();
 
   @Transient
   private boolean selected;

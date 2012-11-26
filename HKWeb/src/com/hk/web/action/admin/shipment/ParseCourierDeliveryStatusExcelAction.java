@@ -23,6 +23,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.DeliveryStatusUpdateManager;
 import com.hk.admin.util.XslParser;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Courier;
@@ -59,6 +60,9 @@ public class ParseCourierDeliveryStatusExcelAction extends BaseAction {
     @Autowired
     private UserService                 userService;
 
+	@Autowired
+	private CourierService   courierService;
+
     @Autowired
     private MasterDataDao               masterDataDao;
 
@@ -89,7 +93,7 @@ public class ParseCourierDeliveryStatusExcelAction extends BaseAction {
     @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution displayCourierIdList(){
         courierList=new ArrayList<Courier>();
-        courierList= masterDataDao.getCourierList();
+        courierList= courierService.getAllCouriers() ;
         return new ForwardResolution("/pages/admin/courierIdList.jsp");
     }
 

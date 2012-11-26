@@ -5,6 +5,7 @@ import com.hk.domain.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,6 +43,10 @@ public class Feedback implements Serializable {
 
 	@Column(name = "comments")
 	private String comments;
+
+	@Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "feedback_date", nullable = false)
+    private Date feedbackDate;
 
 	public Long getId() {
 		return id;
@@ -97,5 +102,13 @@ public class Feedback implements Serializable {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public Date getFeedbackDate() {
+		return feedbackDate;
+	}
+
+	public void setFeedbackDate(Date feedbackDate) {
+		this.feedbackDate = feedbackDate;
 	}
 }

@@ -1,1 +1,0 @@
-Your COD Order No.${order.gatewayOrderId} has been placed and is under process. Check your mail for shipment & delivery details. Thank you for choosing HealthKart.

@@ -8,6 +8,7 @@
 <%@ page import="com.hk.domain.order.ShippingOrder" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.Set" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -51,6 +52,7 @@
 <c:set var="shippingOrderStatusDelivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
 <c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
 <c:set var="shippingOrderStatusRTOInitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
+<c:set var="shippingOrderStatusLost" value="<%=EnumShippingOrderStatus.SO_Lost.getId()%>"/>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 
 
@@ -200,16 +202,27 @@
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_LOGISTICS_ADMIN%>">
                 <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>
                 <c:if
-                        test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusDelivered}">
+                        test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusDelivered || shippingOrderStatusId == shippingOrderStatusLost}">
                     <br/>
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+	                    <s:label name="Reason for RTO:" style="margin-left:7px;"/>
+	                    <s:select name="rtoReason" id="rto-reason">
+		                    <s:option value="null">-Select Reason-</s:option>
+		                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
+		                                               serviceProperty="replacementOrderReasonForRto" value="id"
+		                                               label="name"/>
+	                    </s:select>
                         <div class="buttons">
                             <s:submit name="initiateRTO" value="Initiate RTO" class="initiateRTOButton"/>
                         </div>
                     </s:form>
                     <script type="text/javascript">
                         $('.initiateRTOButton').click(function() {
+	                        if($('#rto-reason').val()=="null"){
+		                        alert("Please select a reason for RTO !");
+		                        return false;
+	                        }
                             var proceed = confirm('Are you sure?');
                             if (!proceed) return false;
                         });
@@ -427,7 +440,7 @@
 <c:if test="${shipment !=null}">
     <td>
         <div class="floatleft">
-            Courier: <strong>${shipment.courier.name}</strong>
+            Courier: <strong>${shipment.awb.courier.name}</strong>
         </div>
         <div class="clear"></div>
         <div class="floatleft">

@@ -2,6 +2,7 @@ package com.hk.web.action.core.catalog.category;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -174,14 +175,15 @@ public class CatalogAction extends BasePaginatedAction {
         } else {
             smallestCategory = rootCategorySlug;
         }
-
+        Boolean includeCombo = true;
+        Boolean onlyCOD = false;
         try {            
             if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
                 if (!filterOptions.isEmpty()) {
                     filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
                 }
-                logger.error("Using filters. SOLR can't return results so hitting DB");
-                throw new Exception("Using filters. SOLR can't return results so hitting DB");
+                //logger.error("Using filters. SOLR can't return results so hitting DB");
+                throw new Exception("Using filters. SOLR can't return results so hitt`ing DB");
             }
             List<SearchFilter> categoryList = new ArrayList<SearchFilter>();
             SearchFilter searchFilter = new SearchFilter(SolrSchemaConstants.category, rootCategorySlug);
@@ -197,9 +199,30 @@ public class CatalogAction extends BasePaginatedAction {
             PaginationFilter paginationFilter = new PaginationFilter(getPageNo(), getPerPage());
             RangeFilter rangeFilter = new RangeFilter(SolrSchemaConstants.hkPrice, getCustomStartRange(), getCustomEndRange());
 
-            SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
             List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
-            searchFilters.add(brandFilter);
+            if (StringUtils.isNotBlank(brand)){
+                SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, URLDecoder.decode(brand));
+                searchFilters.add(brandFilter);
+            }
+
+            if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
+                String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
+                includeCombo = Boolean.parseBoolean( params[0].toString());
+                if (!includeCombo){
+                    SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, includeCombo);
+                    searchFilters.add(comboFilter);
+                }
+            }
+
+            if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")){
+                String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
+                onlyCOD = Boolean.parseBoolean( params[0].toString());
+                if (onlyCOD){
+                    SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed,onlyCOD);
+                    searchFilters.add(codFilter);
+                }
+            }
+
             SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter, paginationFilter, sortFilter);
 
             List<Product> filteredProducts = searchResult.getSolrProducts();
@@ -256,7 +279,8 @@ public class CatalogAction extends BasePaginatedAction {
                     Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
                     groupsCount = groupedFilters.size();
                 }
-                productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice, getPageNo(), getPerPage());
+                productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice,onlyCOD, includeCombo,
+                        getPageNo(), getPerPage());
                 if (productPage != null) {
                     productList = productPage.getList();
                     for (Product product : productList) {
@@ -266,9 +290,9 @@ public class CatalogAction extends BasePaginatedAction {
                 productList = trimListByCategory(productList, secondaryCategory);
             } else {
                 if (StringUtils.isBlank(brand)) {
-                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
+                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, null,onlyCOD, includeCombo, getPageNo(), getPerPage());
                 } else {
-                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, getPageNo(), getPerPage());
+                    productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand,onlyCOD, includeCombo, getPageNo(), getPerPage());
                 }
                 if (productPage != null) {
                     productList = productPage.getList();

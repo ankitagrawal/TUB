@@ -43,6 +43,7 @@
 		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/recaptcha4j-0.0.7.jar" />
 		<fileset file="${lib.root.dir}/citrus/SFA-1.2.jar" />
+		<fileset file="${lib.root.dir}/icici/sfa.jar" />
         <fileset file="${lib.root.dir}/citrus/citruspay-merchant-kit-1.0.jar" />
         <fileset file="${project.common.dir}/dependencies/groovy-all-1.5.6.jar" />
 		<fileset file="${project.common.dir}/dependencies/javaee.jar" />
@@ -54,7 +55,6 @@
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
 		<fileset file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<fileset file="${project.report.dir}/dist/hk-report.jar" />
-        <fileset file="${project.mooga.dir}/dist/hk-mooga.jar" />
         <fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
         <fileset file="${lib.root.dir}/commons/commons-collections-3.1.jar" />
   </path>

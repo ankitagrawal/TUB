@@ -11,13 +11,15 @@ public interface ShipmentService {
 
     public Shipment saveShipmentDate(Shipment shipment);
 
-    public Shipment save(Shipment shipment);
-
-    public Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder);
+    public Shipment save(Shipment shipment);   
 
     public Shipment findByAwb(Awb awb);
 
     public void delete(Shipment shipment);
 
 	public Shipment recreateShipment(ShippingOrder shippingOrder);
+
+    public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder );
+
+	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
 }

@@ -81,7 +81,7 @@
 						<td>Default Courier:</td>
 						<td><s:select name="pincode.defaultCourier" value="${mpaBean.pincode.defaultCourier.id}">
 							<s:option value="">-Select-</s:option>
-              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
+              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
 
 						</s:select></td>
 					</tr>

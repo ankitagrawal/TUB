@@ -16,6 +16,7 @@
 
         <product id="${product.id}">
             <name>${hk:escapeXML(product.name)}</name>
+            <brand>${hk:escapeXML(product.brand)}</brand>
             <url>http://www.healthkart.com/product/${product.slug}/${product.id}</url>
             <priceMin marked="${product.minimumMRPProducVariant.markedPrice}" hk="${product.minimumMRPProducVariant.hkPrice}"/>
             <priceMax marked="${product.maximumMRPProducVariant.markedPrice}" hk="${product.maximumMRPProducVariant.hkPrice}"/>

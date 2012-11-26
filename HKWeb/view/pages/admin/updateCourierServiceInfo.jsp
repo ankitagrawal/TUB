@@ -68,6 +68,24 @@
 							</s:select>
 						</td>
 					</tr>
+                    <tr>
+						<td>Ground Shipping Available</td>
+						<td>
+							<s:select name="courierServiceInfo.groundShippingAvailable" value="">
+								<s:option value="0">N</s:option>
+								<s:option value="1">Y</s:option>
+							</s:select>
+						</td>
+					</tr>
+                    <tr>
+						<td>Cod Available On Ground Shipping</td>
+						<td>
+							<s:select name="courierServiceInfo.codAvailableOnGroundShipping" value="">
+								<s:option value="0">N</s:option>
+								<s:option value="1">Y</s:option>
+							</s:select>
+						</td>
+					</tr>
 				</table>
 				<s:submit name="save" value="Save"></s:submit>
 			</s:form>

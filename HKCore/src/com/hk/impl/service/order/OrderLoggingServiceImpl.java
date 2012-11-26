@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.domain.core.OrderLifecycleActivity;
@@ -38,12 +39,14 @@ public class OrderLoggingServiceImpl implements OrderLoggingService {
         logOrderActivity(order, loggedOnUser, orderLifecycleActivity, null);
     }
 
+    @Transactional
     public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
         User user = getUserService().getAdminUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLifecycleActivity(enumOrderLifecycleActivity);
         logOrderActivity(order, user, orderLifecycleActivity, comments);
     }
 
+    @Transactional
     public void logOrderActivity(Order order, User user, OrderLifecycleActivity orderLifecycleActivity, String comments) {
         OrderLifecycle orderLifecycle = new OrderLifecycle();
         orderLifecycle.setOrder(order);

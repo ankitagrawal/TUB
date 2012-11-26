@@ -57,6 +57,13 @@ public class CourierServiceInfo implements java.io.Serializable {
   @Column(name = "is_deleted", nullable = true)
   private Boolean deleted;
 
+	//todo ankit in phase 0.2 please refactor this     
+  @Column(name = "ground_shipping_available", nullable = false)  
+  private boolean groundShippingAvailable;
+
+  @Column(name = "cod_on_ground_shipping", nullable = false)    
+  private boolean codAvailableOnGroundShipping ;
+
   public Long getId() {
     return this.id;
   }
@@ -120,6 +127,23 @@ public class CourierServiceInfo implements java.io.Serializable {
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
+
+
+    public boolean isGroundShippingAvailable() {
+        return groundShippingAvailable;
+    }
+
+    public void setGroundShippingAvailable(boolean groundShippingAvailable) {
+        this.groundShippingAvailable = groundShippingAvailable;
+    }
+
+    public boolean isCodAvailableOnGroundShipping() {
+        return codAvailableOnGroundShipping;
+    }
+
+    public void setCodAvailableOnGroundShipping(boolean codAvailableOnGroundShipping) {
+        this.codAvailableOnGroundShipping = codAvailableOnGroundShipping;
+    }
 }
 
 

@@ -6,8 +6,6 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +17,7 @@ import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 @Component
 public class ShopByBrandsAction extends BaseAction {
 
-  private static Logger logger = LoggerFactory.getLogger(ShopByBrandsAction.class);
+  //private static Logger logger = LoggerFactory.getLogger(ShopByBrandsAction.class);
   @Autowired
    CategoryDaoImpl categoryDao;
   private List<Category> categories;

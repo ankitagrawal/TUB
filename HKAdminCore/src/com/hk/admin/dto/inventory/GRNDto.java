@@ -1,9 +1,9 @@
 package com.hk.admin.dto.inventory;
 
+import com.hk.domain.inventory.GoodsReceivedNote;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.hk.domain.inventory.GoodsReceivedNote;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,63 +14,73 @@ import com.hk.domain.inventory.GoodsReceivedNote;
  */
 public class GRNDto {
 
-  private GoodsReceivedNote grn;
+	private GoodsReceivedNote grn;
 
-  private List<GrnLineItemDto> grnLineItemDtoList = new ArrayList<GrnLineItemDto>();
+	private List<GrnLineItemDto> grnLineItemDtoList = new ArrayList<GrnLineItemDto>();
 
-  private Double totalTax = 0.0;
+	private Double totalTax = 0.0;
 
-  private Double totalPayable = 0.0;
+	private Double totalPayable = 0.0;
 
-  private Double totalTaxable = 0.0;
+	private Double totalTaxable = 0.0;
 
-  private Double totalSurcharge = 0.0;
+	private Double totalSurcharge = 0.0;
 
-  public Double getTotalTax() {
-    return totalTax;
-  }
+	private Double finalPayable = 0.0;
 
-  public void setTotalTax(Double totalTax) {
-    this.totalTax = totalTax;
-  }
+	public Double getTotalTax() {
+		return totalTax;
+	}
 
-  public Double getTotalPayable() {
-    return totalPayable;
-  }
+	public void setTotalTax(Double totalTax) {
+		this.totalTax = totalTax;
+	}
 
-  public void setTotalPayable(Double totalPayable) {
-    this.totalPayable = totalPayable;
-  }
+	public Double getTotalPayable() {
+		return totalPayable;
+	}
 
-  public Double getTotalTaxable() {
-    return totalTaxable;
-  }
+	public void setTotalPayable(Double totalPayable) {
+		this.totalPayable = totalPayable;
+	}
 
-  public void setTotalTaxable(Double totalTaxable) {
-    this.totalTaxable = totalTaxable;
-  }
+	public Double getTotalTaxable() {
+		return totalTaxable;
+	}
 
-  public GoodsReceivedNote getGrn() {
-    return grn;
-  }
+	public void setTotalTaxable(Double totalTaxable) {
+		this.totalTaxable = totalTaxable;
+	}
 
-  public void setGrn(GoodsReceivedNote grn) {
-    this.grn = grn;
-  }
+	public GoodsReceivedNote getGrn() {
+		return grn;
+	}
 
-  public List<GrnLineItemDto> getGrnLineItemDtoList() {
-    return grnLineItemDtoList;
-  }
+	public void setGrn(GoodsReceivedNote grn) {
+		this.grn = grn;
+	}
 
-  public void setGrnLineItemDtoList(List<GrnLineItemDto> grnLineItemDtoList) {
-    this.grnLineItemDtoList = grnLineItemDtoList;
-  }
+	public List<GrnLineItemDto> getGrnLineItemDtoList() {
+		return grnLineItemDtoList;
+	}
 
-  public Double getTotalSurcharge() {
-    return totalSurcharge;
-  }
+	public void setGrnLineItemDtoList(List<GrnLineItemDto> grnLineItemDtoList) {
+		this.grnLineItemDtoList = grnLineItemDtoList;
+	}
 
-  public void setTotalSurcharge(Double totalSurcharge) {
-    this.totalSurcharge = totalSurcharge;
-  }
+	public Double getTotalSurcharge() {
+		return totalSurcharge;
+	}
+
+	public void setTotalSurcharge(Double totalSurcharge) {
+		this.totalSurcharge = totalSurcharge;
+	}
+
+	public Double getFinalPayable() {
+		return finalPayable;
+	}
+
+	public void setFinalPayable(Double finalPayable) {
+		this.finalPayable = finalPayable;
+	}
 }

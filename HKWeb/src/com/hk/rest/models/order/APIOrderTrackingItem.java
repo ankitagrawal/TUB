@@ -9,38 +9,30 @@ package com.hk.rest.models.order;
  */
 public class APIOrderTrackingItem {
     private String status;
-  private Long qty;
-  private String itemName;
+    private Long qty;
+    private String itemName;
 
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
+    public Long getQty() {
+        return qty;
+    }
 
+    public void setQty(Long qty) {
+        this.qty = qty;
+    }
 
+    public String getItemName() {
+        return itemName;
+    }
 
-
-
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
-  public Long getQty() {
-    return qty;
-  }
-
-  public void setQty(Long qty) {
-    this.qty = qty;
-  }
-
-  public String getItemName() {
-    return itemName;
-  }
-
-  public void setItemName(String itemName) {
-    this.itemName = itemName;
-  }
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
 }

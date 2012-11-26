@@ -109,7 +109,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
             if (order.getAmount() != null && order.getAmount() > 0) {
                 order.setAmount(FormatUtils.getCurrencyPrecision(order.getAmount()));
             }
-            order.setUpdateDate(BaseUtils.getCurrentTimestamp());
+            //order.setUpdateDate(BaseUtils.getCurrentTimestamp());
             if (order.getStore() == null) {
                 order.setStore(storeService.getDefaultStore());
             }

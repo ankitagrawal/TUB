@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,6 +40,18 @@ public class ProductIndexServiceImpl implements ProductIndexService {
             indexProduct(solrProduct);
         } catch (Exception ex) {
             logger.error(String.format("Unable to build Solr index for Product %s", product.getId()), ex);
+        }
+    }
+
+
+    public void indexProduct(List<SolrProduct> products){
+        try{
+            solr.addBeans(products);
+            solr.commit(false, false);
+        }catch(SolrServerException ex){
+            logger.error("Solr error during indexing the product", ex);
+        }catch(IOException ex){
+            logger.error("Solr error during indexing the product", ex);
         }
     }
 

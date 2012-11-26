@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.coupon.CouponType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,7 +71,12 @@ public class CouponServiceImpl implements CouponService {
         return coupons;
     }
 
-    @Override
+	@Override
+	public List<Coupon> getAffiliateUnusedCoupons(Affiliate affiliate) {
+		return couponDao.affiliateCoupon(affiliate);
+	}
+
+	@Override
     @Transactional
     public Coupon save(Coupon coupon) {
         return getCouponDao().save(coupon);

@@ -80,14 +80,11 @@
     <td><b>Address</b></td>
     <td>${orderSummary.grn.purchaseOrder.supplier.line1}<br/>${orderSummary.grn.purchaseOrder.supplier.line2}<br/>${orderSummary.grn.purchaseOrder.supplier.city}<br/>${orderSummary.grn.purchaseOrder.supplier.state}
     </td>
-    <td><b>GRN#</b><br/><b>Invoice#</b><br/><b>GRN#</b></td>
-    <td>${orderSummary.grn.id}<br/>${orderSummary.grn.invoiceNumber}<br/>${orderSummary.grn.purchaseOrder.id}</td>
-  </tr>
-  <tr>
-    <td><b>Contact Name</b></td>
-    <td>${orderSummary.grn.purchaseOrder.supplier.contactPerson}</td>
-    <td><b>Contact Number</b></td>
-    <td>${orderSummary.grn.purchaseOrder.supplier.contactNumber}</td>
+	  <td><b>GRN#</b><br/><b>Invoice#</b><br/><b>Invoice Date</b><br/><b>PO#</b><br/><b>PO Date</b></td>
+	  <td>${orderSummary.grn.id}<br/>${orderSummary.grn.invoiceNumber}<br/><fmt:formatDate
+			  value="${orderSummary.grn.invoiceDate}"
+			  pattern="dd-MMM-yyyy"/><br/>${orderSummary.grn.purchaseOrder.id}<br/><fmt:formatDate
+			  value="${orderSummary.grn.purchaseOrder.poPlaceDate}" pattern="dd-MMM-yyyy"/> </td>
   </tr>
 </table>
 

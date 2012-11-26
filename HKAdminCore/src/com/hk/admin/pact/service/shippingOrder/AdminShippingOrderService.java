@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 
@@ -17,8 +18,13 @@ public interface AdminShippingOrderService {
     public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse);
 
     public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse);
+    
+    
+    
+        
 
-    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
+
+//    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
 
     public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder);
 
@@ -40,7 +46,7 @@ public interface AdminShippingOrderService {
 
     public ShippingOrder markShippingOrderAsLost(ShippingOrder shippingOrder);
 
-    ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder);
+    ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder, ReplacementOrderReason rtoReason);
 
     public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId);
 }

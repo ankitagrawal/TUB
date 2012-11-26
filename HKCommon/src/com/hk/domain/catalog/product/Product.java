@@ -37,7 +37,7 @@ import com.hk.domain.catalog.category.Category;
 @Table(name = "product")
 /* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Product implements java.io.Serializable {
+public class Product  implements java.io.Serializable {
 
     @Id
     @Column(name = "id", unique = true, nullable = false, length = 20)
@@ -111,8 +111,8 @@ public class Product implements java.io.Serializable {
 
 	@JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", length = 19)
-    private Date                 createDate;
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date                 createDate = new Date();
 
     @Column(name = "video_embed_code")
     private String               videoEmbedCode;
@@ -153,6 +153,9 @@ public class Product implements java.io.Serializable {
 
     @Column(name = "drop_shipping")
     private boolean              dropShipping;
+
+    @Column(name = "ground_shipping")
+    private boolean              groundShipping;
 
 	@Column(name = "cod_allowed", nullable = false, scale = 1)
     private Boolean              codAllowed;
@@ -546,6 +549,14 @@ public class Product implements java.io.Serializable {
     }
 
     public String getProductURL() {
+	    /**
+	     * productURL is a Transient Variable should be set in accordance with ProductReferrer from where the product is loaded.
+	     * In some cases products are loaded by productIds where tracking is not being done.
+	     * In case productURL is null returning the relative URL
+	     */
+        if (productURL == null){
+			productURL = "/product/" + getSlug() + "/" + getId();
+		}
         return productURL;
     }
 
@@ -583,6 +594,17 @@ public class Product implements java.io.Serializable {
 
     public void setDropShipping(boolean dropShipping) {
         this.dropShipping = dropShipping;
+    }
+
+     public boolean isGroundShipping() {
+        return groundShipping;
+    }
+    public Boolean getGroundShipping(){
+         return groundShipping;
+    }
+
+    public void setGroundShipping(boolean groundShipping) {
+        this.groundShipping = groundShipping;
     }
 
 	public Boolean isCodAllowed() {
@@ -681,4 +703,6 @@ public class Product implements java.io.Serializable {
     public void setSubscribable(boolean subscribable) {
         isSubscribable = subscribable;
     }
+    
+    
 }

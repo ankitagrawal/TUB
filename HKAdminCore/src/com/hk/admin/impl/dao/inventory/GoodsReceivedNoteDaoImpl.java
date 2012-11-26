@@ -1,5 +1,14 @@
 package com.hk.admin.impl.dao.inventory;
 
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -8,22 +17,12 @@ import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.Query;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
-
-import java.util.Date;
-import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository
 public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceivedNoteDao {
 
-	private static Logger logger = LoggerFactory.getLogger(GoodsReceivedNoteDao.class);
+	/*private static Logger logger = LoggerFactory.getLogger(GoodsReceivedNoteDao.class);*/
 
 	public List<GoodsReceivedNote> getGRNByPO(PurchaseOrder purchaseOrder) {
 		return (List<GoodsReceivedNote>) getSession().createQuery("from GoodsReceivedNote o where o.purchaseOrder = :purchaseOrder").setParameter("purchaseOrder", purchaseOrder).list();

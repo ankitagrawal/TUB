@@ -12,9 +12,8 @@ public class EmailTemplateConstants {
 	public static final String discountCouponEmail = "/discountCouponEmail.ftl";
 	public static final String contactUsEmail = "/contactUsEmail.ftl";
 	public static final String orderShippedEmail = "/orderShippedEmailNew.ftl";
-	public static final String orderShippedEmailOld = "/orderShippedEmail.ftl";
 	public static final String orderShippedInPartsEmail = "/orderShippedInPartsEmail.ftl";
-	public static final String partialOrderShippedEmail = "/partialOrderShippedEmailNew.ftl";
+	public static final String partialOrderShippedEmail = "/partialOrderShippedEmail.ftl";
 	public static final String partialOrderShippedEmailOld = "/partialOrderShippedEmail.ftl";
 	public static final String referralEmail = "/referralEmail.ftl";
 	public static final String referralRewardPointEmail = "/referralRewardPointEmail.ftl";
@@ -39,6 +38,7 @@ public class EmailTemplateConstants {
 	public static final String protocolViolationEmail = "/protocolViolationEmail.ftl";
 	public static final String poPlacedEmail = "/poPlacedEmail.ftl";
 	public static final String poSentForApprovalEmail = "/poSentForApprovalEmail.ftl";
+	public static final String poApprovedEmail = "/poApprovedEmail.ftl";
 	public static final String notifyUserEmail = "/notifyUserEmailProductNew.ftl";
 	public static final String notifyUserEmailOld = "/notifyUserEmailProduct.ftl";
 	public static final String dailyGoogleBannedWordReport = "/dailyGoogleBannedWordReport.ftl";

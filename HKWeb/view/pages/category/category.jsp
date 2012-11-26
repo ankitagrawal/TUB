@@ -147,11 +147,11 @@
     </ul>
   </div>
   <div class='grid_6'>
-    <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
-      <img src="<hk:vhostImage/>/images/banners/refer_earn_new.jpg" alt="refer a friend and earn"
+    <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+      <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
            class="small_banner"/>
-    </s:link>
-    <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="cash on delivery"
+    </a>
+    <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="Free shipping and COD"
          class="small_banner"/>
   </div>
 

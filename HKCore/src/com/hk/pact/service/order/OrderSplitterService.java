@@ -11,6 +11,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pojo.DummyOrder;
 
+
 /**
  * Created with IntelliJ IDEA.
  * User: Pratham
@@ -20,7 +21,9 @@ import com.hk.pojo.DummyOrder;
  */
 public interface OrderSplitterService {
 
-    public List<DummyOrder> listBestDummyOrdersPractically(Order order);
+   public List<DummyOrder> listBestDummyOrdersPractically(Order order);
+
+    public List<DummyOrder> listBestDummyOrdersPractically(Order order, Set<CartLineItem> cartlineitems);
 
     public NavigableMap<List<DummyOrder>, Long> listSortedDummyOrderMapPractically(Order order);
 
@@ -35,5 +38,5 @@ public interface OrderSplitterService {
     public TreeMap<List<DummyOrder>, Long> splitBOIdeally(Order order, Warehouse ggnWarehouse, Warehouse mumWarehouse);
 
     public Map<Warehouse,Set<CartLineItem>> splitBOExcludingShippingTaxConsideration(Order order);
-
+    
 }

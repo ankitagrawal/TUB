@@ -2,15 +2,18 @@ package com.hk.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.hk.domain.order.OrderPaymentReconciliation;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -20,7 +23,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.XslConstants;
 import com.hk.domain.catalog.Manufacturer;
@@ -34,11 +37,12 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
-import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
-import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.order.OrderPaymentReconciliation;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.io.HkXlsWriter;
@@ -64,11 +68,13 @@ public class XslGenerator {
 	public static final String WAREHOUSE             = "WAREHOUSE";
 	public static final String COD_COURIER_ID        = "COD_COURIER_ID";
 	public static final String TECH_PROCESS_COURIER_ID = "TECH_PROCESS_COURIER_ID";
-	public static final String ESTIMATED_SHIPPING_COST_COD = "ESTIMATED_SHIPPING_COST_COD";
-	public static final String ESTIMATED_SHIPPING_COST_TECH = "ESTIMATED_SHIPPING_COST_TECH";
+//	public static final String ESTIMATED_SHIPPING_COST_COD = "ESTIMATED_SHIPPING_COST_COD";
+    public static final String ESTIMATED_SHIPPING_COST     =        "ESTIMATED_SHIPPING_COST";
+    public static final String    GROUND_SHIPPING_AVAILABLE      = "GROUND_SHIPPING_AVAILABLE";
+    public static final String    COD_ON_GROUND_SHIPPING         = "COD_ON_GROUND_SHIPPING";
 
 	@Autowired
-	private CourierDao            courierDao;
+	private CourierService courierService;
 	@Autowired
 	private InventoryService      inventoryService;
 	@Autowired
@@ -95,7 +101,7 @@ public class XslGenerator {
 		Row row = sheet1.createRow(0);
 		row.setHeightInPoints((short) 25);
 
-		int totalColumnNo = 50;
+		int totalColumnNo = 54;
 
 		Set<Manufacturer> manufacturers = new HashSet<Manufacturer>();
 		Cell cell;
@@ -117,6 +123,10 @@ public class XslGenerator {
 		setHeaderCellValue(row, cellCounter++, XslConstants.SUPPLIER_STATE);
 		setHeaderCellValue(row, cellCounter++, XslConstants.MIN_DAYS_TO_PROCESS);
 		setHeaderCellValue(row, cellCounter++, XslConstants.MAX_DAYS_TO_PROCESS);
+    setHeaderCellValue(row, cellCounter++, XslConstants.IS_DELETED);
+    setHeaderCellValue(row, cellCounter++, XslConstants.OUT_OF_STOCK);
+    setHeaderCellValue(row, cellCounter++, XslConstants.GROUND_SHIPPING_AVAILABLE);
+    setHeaderCellValue(row, cellCounter++, XslConstants.IS_HIDDEN);
 		setHeaderCellValue(row, cellCounter++, XslConstants.OVERVIEW);
 		setHeaderCellValue(row, cellCounter++, XslConstants.DESCRIPTION);
 		setHeaderCellValue(row, cellCounter++, XslConstants.RELATED_PRODUCTS);
@@ -194,6 +204,10 @@ public class XslGenerator {
 					}
 					setCellValue(row, this.getColumnIndex(XslConstants.MIN_DAYS_TO_PROCESS), product.getMinDays());
 					setCellValue(row, this.getColumnIndex(XslConstants.MAX_DAYS_TO_PROCESS), product.getMaxDays());
+          setCellValue(row, this.getColumnIndex(XslConstants.IS_DELETED), product.isDeleted() !=null ? product.isDeleted() ? "Y" : "N" : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.OUT_OF_STOCK), product.isOutOfStock()!=null ? product.isOutOfStock() ? "Y": "N" : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.GROUND_SHIPPING_AVAILABLE),product.isGroundShipping() ? "Y" : "N");
+          setCellValue(row, this.getColumnIndex(XslConstants.IS_HIDDEN), product.isHidden()!=null ? product.isHidden() ? "Y" : "N" : null);
 					setCellValue(row, this.getColumnIndex(XslConstants.OVERVIEW), "");
 					setCellValue(row, this.getColumnIndex(XslConstants.DESCRIPTION), "");
 					setCellValue(row, this.getColumnIndex(XslConstants.RELATED_PRODUCTS), getRelatedProducts(product));
@@ -296,88 +310,92 @@ public class XslGenerator {
 	}
 
 	public File generateCouerierServiceInfoXsl(List<CourierServiceInfo> courierServiceInfoList, String xslFilePath) throws Exception {
+        
+		 File file = new File(xslFilePath);
+        file.getParentFile().mkdirs();
+        FileOutputStream out = new FileOutputStream(file);
+        Workbook wb = new HSSFWorkbook();
 
-		File file = new File(xslFilePath);
-		file.getParentFile().mkdirs();
-		FileOutputStream out = new FileOutputStream(file);
-		Workbook wb = new HSSFWorkbook();
+        CellStyle style = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setFontHeightInPoints((short) 12);
+        font.setColor(Font.COLOR_NORMAL);
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        style.setFont(font);
+        Sheet sheet1 = wb.createSheet("CourierServiceInfo");
+        Row row = sheet1.createRow(0);
+        row.setHeightInPoints((short) 25);
 
-		CellStyle style = wb.createCellStyle();
-		Font font = wb.createFont();
-		font.setFontHeightInPoints((short) 12);
-		font.setColor(Font.COLOR_NORMAL);
-		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-		style.setFont(font);
-		Sheet sheet1 = wb.createSheet("CourierServiceInfo");
-		Row row = sheet1.createRow(0);
-		row.setHeightInPoints((short) 25);
+        int totalColumnNo = 10;
 
-		int totalColumnNo = 8;
+        Cell cell;
+        for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+            cell = row.createCell(columnNo);
+            cell.setCellStyle(style);
+        }
+        setCellValue(row, 0, PINCODE);
+        setCellValue(row, 1, COURIER_ID);
+        setCellValue(row, 2, COD_AVAILABLE);
+        setCellValue(row, 3, IS_PREFERRED);
+        setCellValue(row, 4, IS_PREFERRED_COD);
+        setCellValue(row, 5, ROUTING_CODE);
+        setCellValue(row, 6, IS_DELETED);
+        setCellValue(row, 7, GROUND_SHIPPING_AVAILABLE);
+        setCellValue(row, 8, COD_ON_GROUND_SHIPPING);
 
-		Cell cell;
-		for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-			cell = row.createCell(columnNo);
-			cell.setCellStyle(style);
-		}
-		setCellValue(row, 0, PINCODE);
-		setCellValue(row, 1, COURIER_ID);
-		setCellValue(row, 2, COD_AVAILABLE);
-		setCellValue(row, 3, IS_PREFERRED);
-		setCellValue(row, 4, IS_PREFERRED_COD);
-		setCellValue(row, 5, ROUTING_CODE);
-		setCellValue(row, 6, IS_DELETED);
+        int initialRowNo = 1;
+        for (CourierServiceInfo courierServiceInfo : courierServiceInfoList) {
 
-		int initialRowNo = 1;
-		for (CourierServiceInfo courierServiceInfo : courierServiceInfoList) {
+            row = sheet1.createRow(initialRowNo);
+            for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+                row.createCell(columnNo);
+            }
 
-			row = sheet1.createRow(initialRowNo);
-			for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-				row.createCell(columnNo);
-			}
+            Pincode pincode = courierServiceInfo.getPincode();
+            setCellValue(row, 0, pincode.getPincode());
+            setCellValue(row, 1, courierServiceInfo.getCourier().getId());
+            setCellValue(row, 2, courierServiceInfo.isCodAvailable() ? "Y" : "N");
+            setCellValue(row, 3, courierServiceInfo.isPreferred() ? "Y" : "N");
+            setCellValue(row, 4, courierServiceInfo.isPreferredCod() ? "Y" : "N");
+            setCellValue(row, 5, courierServiceInfo.getRoutingCode());
+            setCellValue(row, 6, courierServiceInfo.isDeleted() ? "Y" : "N");
+            setCellValue(row, 7, courierServiceInfo.isGroundShippingAvailable() ? "Y" : "N");
+            setCellValue(row, 8, courierServiceInfo.isCodAvailableOnGroundShipping() ? "Y" : "N");
 
-			Pincode pincode = courierServiceInfo.getPincode();
-			setCellValue(row, 0, pincode.getPincode());
-			setCellValue(row, 1, courierServiceInfo.getCourier().getId());
-			setCellValue(row, 2, courierServiceInfo.isCodAvailable() ? "Y" : "N");
-			setCellValue(row, 3, courierServiceInfo.isPreferred() ? "Y" : "N");
-			setCellValue(row, 4, courierServiceInfo.isPreferredCod() ? "Y" : "N");
-			setCellValue(row, 5, courierServiceInfo.getRoutingCode());
-			setCellValue(row, 6, courierServiceInfo.isDeleted() ? "Y" : "N");
+            initialRowNo++;
 
-			initialRowNo++;
+        }
 
-		}
+        Sheet sheet2 = wb.createSheet("Courier IDs");
+        row = sheet2.createRow(0);
+        row.setHeightInPoints((short) 25);
 
-		Sheet sheet2 = wb.createSheet("Courier IDs");
-		row = sheet2.createRow(0);
-		row.setHeightInPoints((short) 25);
+        int totalColumnNo2 = 2;
 
-		int totalColumnNo2 = 2;
+        for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+            cell = row.createCell(columnNo);
+            cell.setCellStyle(style);
+        }
+        setCellValue(row, 0, "Courier");
+        setCellValue(row, 1, "ID");
 
-		for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-			cell = row.createCell(columnNo);
-			cell.setCellStyle(style);
-		}
-		setCellValue(row, 0, "Courier");
-		setCellValue(row, 1, "ID");
+        int initialRowNo2 = 1;
+        List<Courier> courierList = courierService.getAllCouriers();
+        for (Courier courier : courierList) {
+            row = sheet2.createRow(initialRowNo2);
+            for (int columnNo = 0; columnNo < totalColumnNo2; columnNo++) {
+                row.createCell(columnNo);
+            }
 
-		int initialRowNo2 = 1;
-		List<Courier> courierList = courierDao.getAllCouriers();
-		for (Courier courier : courierList) {
-			row = sheet2.createRow(initialRowNo2);
-			for (int columnNo = 0; columnNo < totalColumnNo2; columnNo++) {
-				row.createCell(columnNo);
-			}
+            setCellValue(row, 0, courier.getName());
+            setCellValue(row, 1, courier.getId());
 
-			setCellValue(row, 0, courier.getName());
-			setCellValue(row, 1, courier.getId());
+            initialRowNo2++;
+        }
 
-			initialRowNo2++;
-		}
-
-		wb.write(out);
-		out.close();
-		return file;
+        wb.write(out);
+        out.close();
+        return file;
 	}
 
 	public File generateGRNXsl(GoodsReceivedNote goodsReceivedNote, String xslFilePath) throws Exception {
@@ -495,67 +513,61 @@ public class XslGenerator {
 	}
 
 	public File generatePincodeDefaultCourierXsl(List<PincodeDefaultCourier> pincodeDefaultCourierList, String xslFilePath) throws Exception {
+       File file = new File(xslFilePath);
+        file.getParentFile().mkdirs();
+        FileOutputStream out = new FileOutputStream(file);
+        Workbook wb = new HSSFWorkbook();
 
-		File file = new File(xslFilePath);
-		file.getParentFile().mkdirs();
-		FileOutputStream out = new FileOutputStream(file);
-		Workbook wb = new HSSFWorkbook();
+        CellStyle style = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setFontHeightInPoints((short) 12);
+        font.setColor(Font.COLOR_NORMAL);
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        style.setFont(font);
+        Sheet sheet1 = wb.createSheet(XslConstants.DEFAULT_COURIER_SHEET);
+        Row row = sheet1.createRow(0);
+        row.setHeightInPoints((short) 25);
 
-		CellStyle style = wb.createCellStyle();
-		Font font = wb.createFont();
-		font.setFontHeightInPoints((short) 12);
-		font.setColor(Font.COLOR_NORMAL);
-		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-		style.setFont(font);
-		Sheet sheet1 = wb.createSheet(XslConstants.DEFAULT_COURIER_SHEET);
-		Row row = sheet1.createRow(0);
-		row.setHeightInPoints((short) 25);
+        int totalColumnNo = 8;
 
-		int totalColumnNo = 8;
+        Cell cell;
+        for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+            cell = row.createCell(columnNo);
+            cell.setCellStyle(style);
+        }
+        setCellValue(row, 0, PINCODE);
+        setCellValue(row, 1, WAREHOUSE);
+        setCellValue(row, 2, COURIER_ID);
+        setCellValue(row, 3, COD_AVAILABLE);
+        setCellValue(row, 4, GROUND_SHIPPING_AVAILABLE);
+        setCellValue(row, 5, ESTIMATED_SHIPPING_COST);
 
-		Cell cell;
-		for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-			cell = row.createCell(columnNo);
-			cell.setCellStyle(style);
-		}
-		setCellValue(row, 0, PINCODE);
-		setCellValue(row, 1, WAREHOUSE);
-		setCellValue(row, 2, COD_COURIER_ID);
-		setCellValue(row, 3, TECH_PROCESS_COURIER_ID);
-		setCellValue(row, 4, ESTIMATED_SHIPPING_COST_COD);
-		setCellValue(row, 5, ESTIMATED_SHIPPING_COST_TECH);
+        int initialRowNo = 1;
+        for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierList) {
 
-		int initialRowNo = 1;
-		for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierList) {
+            row = sheet1.createRow(initialRowNo);
+            for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+                row.createCell(columnNo);
+            }
 
-			row = sheet1.createRow(initialRowNo);
-			for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-				row.createCell(columnNo);
-			}
+            setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
+            setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
+            if(pincodeDefaultCourier.getCourier() != null){
+                setCellValue(row, 2, pincodeDefaultCourier.getCourier().getId());
+            }
+            else{
+                setCellValue(row, 2, -1L);
+            }
+            setCellValue(row, 3, pincodeDefaultCourier.isCod() ? "Y" : "N"  );
+            setCellValue(row, 4, pincodeDefaultCourier.isGroundShipping() ? "Y" : "N" );
+            setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCost());
 
-			setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
-			setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
-			if(pincodeDefaultCourier.getCodCourier() != null){
-				setCellValue(row, 2, pincodeDefaultCourier.getCodCourier().getId());
-			}
-			else{
-				setCellValue(row, 2, -1L);
-			}
-			if(pincodeDefaultCourier.getNonCodCourier() != null){
-				setCellValue(row, 3, pincodeDefaultCourier.getNonCodCourier().getId());
-			}
-			else{
-				setCellValue(row, 3, -1L);
-			}
-			setCellValue(row, 4, pincodeDefaultCourier.getEstimatedShippingCostCod());
-			setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCostNonCod());
+            initialRowNo++;
+        }
 
-			initialRowNo++;
-		}
-
-		wb.write(out);
-		out.close();
-		return file;
+        wb.write(out);
+        out.close();
+        return file;
 	}
 
 	public File generateGRNListExcel(File xlsFile, List<GoodsReceivedNote> grnList) {
@@ -656,7 +668,10 @@ public class XslGenerator {
 		xlsWriter.addHeader(XslConstants.ADDRESS, XslConstants.ADDRESS);
 		xlsWriter.addHeader(XslConstants.CONTACT_PERSON, XslConstants.CONTACT_PERSON);
 		xlsWriter.addHeader(XslConstants.CONTACT_NUMBER, XslConstants.CONTACT_NUMBER);
-		xlsWriter.addHeader(XslConstants.CREDIT_PERIOD, XslConstants.CREDIT_PERIOD);
+		xlsWriter.addHeader(XslConstants.CREDIT_DAYS, XslConstants.CREDIT_DAYS);
+		xlsWriter.addHeader(XslConstants.TARGET_CREDIT_DAYS, XslConstants.TARGET_CREDIT_DAYS);
+		xlsWriter.addHeader(XslConstants.LEAD_TIME, XslConstants.LEAD_TIME);
+		xlsWriter.addHeader(XslConstants.ACTIVE, XslConstants.ACTIVE);
 		xlsWriter.addHeader(XslConstants.MARGIN, XslConstants.MARGIN);
 		xlsWriter.addHeader(XslConstants.BRAND, XslConstants.BRAND);
 		xlsWriter.addHeader(XslConstants.VALIDITY_TERMS_OF_TRADE, XslConstants.VALIDITY_TERMS_OF_TRADE);
@@ -689,7 +704,10 @@ public class XslGenerator {
 			xlsWriter.addCell(xlsRow, supplierAddress.toString());
 			xlsWriter.addCell(xlsRow, supplier.getContactPerson());
 			xlsWriter.addCell(xlsRow, supplier.getContactNumber());
-			xlsWriter.addCell(xlsRow, supplier.getCreditPeriod());
+			xlsWriter.addCell(xlsRow, supplier.getCreditDays());
+			xlsWriter.addCell(xlsRow, supplier.getTargetCreditDays());
+			xlsWriter.addCell(xlsRow, supplier.getLeadTime());
+			xlsWriter.addCell(xlsRow, supplier.getActive());
 			xlsWriter.addCell(xlsRow, supplier.getMargins());
 			xlsWriter.addCell(xlsRow, supplier.getBrandName());
 			xlsWriter.addCell(xlsRow, supplier.getTOT());

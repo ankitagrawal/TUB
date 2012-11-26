@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -30,7 +29,6 @@ import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.SimilarProduct;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.domain.content.SeoData;
@@ -50,7 +48,9 @@ import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
+import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
+import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
@@ -115,6 +115,10 @@ public class ProductAction extends BaseAction {
     private LinkManager linkManager;
 	@Autowired
 	ProductImageService productImageService;
+    private ProductVariant validTryOnProductVariant;
+	@Autowired
+	TrafficAndUserBrowsingService trafficAndUserBrowsingService;
+
 
     @DefaultHandler
     @DontValidate
@@ -125,21 +129,24 @@ public class ProductAction extends BaseAction {
             WebContext.getResponse().setStatus(310); // redirection
             return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
         }
-        try {
-            combo = getBaseDao().get(Combo.class, productId);
-        } catch (Exception e) {
 
-        }
         product = getProductService().getProductById(productId);
-        if (product == null) {
-            WebContext.getResponse().setStatus(310); // redirection
-            return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
-        }
+
+	    if (product != null) {
+		    if (product instanceof Combo) {
+			    combo = (Combo) product;
+		    }
+		    //Save Browsing
+		    trafficAndUserBrowsingService.saveBrowsingHistory(product, WebContext.getRequest());
+	    } else {
+		    WebContext.getResponse().setStatus(310); // redirection
+		    return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
+	    }
 
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
             if (user != null) {
-                userProductHistoryDao.addToUserProductHistory(product, user);
+                //userProductHistoryDao.addToUserProductHistory(product, user);
                 affiliate = affiliateDao.getAffilateByUser(user);
             }
         }
@@ -198,6 +205,8 @@ public class ProductAction extends BaseAction {
         if(product.isSubscribable()){
             subscriptionProduct= subscriptionProductService.findByProduct(product);
         }
+
+        validTryOnProductVariant = productService.validTryOnProductVariant(product);
 
         //User Reviews
         totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
@@ -436,5 +445,13 @@ public class ProductAction extends BaseAction {
 
     public SuperSaverImageService getSuperSaverImageService() {
         return superSaverImageService;
+    }
+
+    public ProductVariant getValidTryOnProductVariant() {
+        return validTryOnProductVariant;
+    }
+
+    public void setValidTryOnProductVariant(ProductVariant validTryOnProductVariant) {
+        this.validTryOnProductVariant = validTryOnProductVariant;
     }
 }
