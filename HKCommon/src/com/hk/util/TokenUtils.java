@@ -2,6 +2,7 @@ package com.hk.util;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 
 public class TokenUtils {
@@ -26,8 +27,11 @@ public class TokenUtils {
     public static String generateShippingOrderGatewayOrderId(ShippingOrder shippingOrder){
       Order order = shippingOrder.getBaseOrder();
       String baseOrderGatewayOrderId[] = order.getGatewayOrderId().split("-");
-
-      return shippingOrder.getId() + "-" + "S" + baseOrderGatewayOrderId[1];
+	  String prefix = "S";
+	  if(shippingOrder instanceof ReplacementOrder){
+		  prefix = "RO";    
+	  }
+      return shippingOrder.getId() + "-" + prefix + baseOrderGatewayOrderId[1];
 
     }
 

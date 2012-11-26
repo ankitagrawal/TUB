@@ -159,7 +159,8 @@ public class AdminEmailManager {
 
     @SuppressWarnings("unchecked")
     public boolean sendCampaignMails(List<EmailRecepient> emailersList, EmailCampaign emailCampaign, String senderEMail,
-                                     String senderName, String replyToEmail, String xsmtpapi) {
+                                     String senderName, String replyToEmail, String xsmtpapi, SendCampaignResult sendCampaignResult) {
+        boolean isCampaignSentSuccess = true;
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("X-SMTPAPI", xsmtpapi);
         headerMap.put("X-Mailgun-Variables", xsmtpapi);
@@ -182,10 +183,11 @@ public class AdminEmailManager {
         List<Map<String, HtmlEmail>> emailList = new ArrayList<Map<String, HtmlEmail>>();
         List<EmailerHistory> emailHistoryRecs = new ArrayList<EmailerHistory>(INITIAL_LIST_SIZE);
         List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
-        int commitCount = 0;
+        int emailCount = 0;
         int breakFromLoop = emailersList.size() < COMMIT_COUNT ? emailersList.size() : COMMIT_COUNT;
 
         Session session = baseDao.getHibernateTemplate().getSessionFactory().openSession();
+        List<Map<String, HtmlEmail>> tempEmailList = new ArrayList<Map<String, HtmlEmail>>();
 
         for (EmailRecepient emailRecepient : emailersList) {
             try {
@@ -197,7 +199,7 @@ public class AdminEmailManager {
 
                 Map<String, HtmlEmail> email = emailService.createHtmlEmail(freemarkerTemplate, valuesMap, senderEMail, senderName, emailRecepient.getEmail(), emailRecepient.getName(),replyToEmail,"", headerMap);
                 if(email != null){
-                    emailList.add(email);
+                    tempEmailList.add(email);
                     // keep a record in history
                     emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
                     emailRecepient.setLastEmailDate(new Date());
@@ -207,11 +209,22 @@ public class AdminEmailManager {
                             getBaseDao().get(EmailType.class, emailCampaign.getEmailType().getId()), emailRecepient, emailCampaign, "");
                     emailHistoryRecs.add(emailerHistory);
 
-                    commitCount++;
-                    if (commitCount == breakFromLoop) {
-                        getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
-                        getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
-                        commitCount = 0;
+                    emailCount++;
+	                if (emailCount % breakFromLoop == 0 || emailCount == emailersList.size()) {
+                        boolean emailRecipientsRecorded = getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
+                        boolean emailHistoryRecorded = getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
+
+                        if (emailHistoryRecorded && emailRecipientsRecorded) {
+                            emailList.addAll(tempEmailList);
+                        } else {
+                            sendCampaignResult.setCampaignSentSuccess(false);
+                            for (Map<String, HtmlEmail> map : tempEmailList) {
+                                List<String> emailListInMap = new ArrayList<String>(map.keySet());
+                                sendCampaignResult.addErrorEmaiList(emailListInMap);
+                            }
+                        }
+                        
+                        tempEmailList.clear();
                         emailHistoryRecs.clear();
                         emailRecepientRecs.clear();
                     }
@@ -227,7 +240,7 @@ public class AdminEmailManager {
 
         emailService.sendBulkHtmlEmail(emailList, emailCampaign);
         session.close();
-        return true;
+        return isCampaignSentSuccess;
     }
 
 
@@ -250,39 +263,37 @@ public class AdminEmailManager {
 
             if (filteredUsers.size() > 0) {
                 logger.info(" user list size " + filteredUsers.size());
-                sendCampaignMails(filteredUsers, emailCampaign,senderEmail, senderName,replyToEmail, xsmtpapi);
+                SendCampaignResult sendCampaignResult = new SendCampaignResult();
+                sendCampaignMails(filteredUsers, emailCampaign, senderEmail, senderName, replyToEmail, xsmtpapi, sendCampaignResult);
+                if (!sendCampaignResult.isCampaignSentSuccess()) {
+                    logger.error("Error in sending file upload campaing to :" + sendCampaignResult.getErrorEmails().toString());
+                }
             }
         } while (filteredUsers.size() > 0);
     }
 
 
-    public void populateEmailRecepient(List<String> userIdList, int maxResultCount) {
-        List<User> usersNotInEmailRecepient = new ArrayList<User>();
-        do {
-            usersNotInEmailRecepient.clear();
-            usersNotInEmailRecepient = getAdminEmailService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
+	public void populateEmailRecepient(List<String> userIdList, int maxResultCount) {
+		if (userIdList != null) {
+			List<User> usersNotInEmailRecepient = getAdminEmailService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
+			if (usersNotInEmailRecepient.size() > 0) {
+				List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
+				int counter = 0;
+				for (User user : usersNotInEmailRecepient) {
+					EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
+					emailRecepientRecs.add(emailRecepient);
+					counter++;
+					if (counter % COMMIT_COUNT == 0 || counter == userIdList.size()) {
+						getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
+						emailRecepientRecs.clear();
+					}
 
+				}
+			}
+		}
+	}
 
-            List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
-            int counter = 0;
-            for (User user : usersNotInEmailRecepient) {
-                EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
-                emailRecepientRecs.add(emailRecepient);
-                if (counter == COMMIT_COUNT) {
-                    getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-                    counter = 0;
-                    emailRecepientRecs.clear();
-                }
-                counter++;
-            }
-            if (counter > 0) {
-                getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-            }
-        } while (usersNotInEmailRecepient.size() > 0);
-
-    }
-
-    public boolean sendGRNEmail(GoodsReceivedNote grn) {
+	public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("grn", grn);
 
@@ -551,102 +562,110 @@ public class AdminEmailManager {
         List result = new ArrayList();
         result.add(0, sendAlternateTemplate);
         result.add(1, "");
-
+        StringBuilder errorBuilder = new StringBuilder();
+        List<ProductVariant> validProductVariants = new ArrayList<ProductVariant>();
         if (excelMap.containsKey(EmailMapKeyConstants.couponCode)) {
             Coupon coupon = couponService.findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
             excelMap.put(EmailMapKeyConstants.coupon, coupon);
         }
-        Product product = null;
-        if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)) {
-            String pvId = excelMap.get(EmailMapKeyConstants.productVariantId).toString();
-            ProductVariant productVariant = productVariantService.getVariantById(pvId);
-            if (productVariant != null) {
-                excelMap.put(EmailMapKeyConstants.productVariant, productVariant);
-                if (productsMap.containsKey(pvId)){
-                    product =  productsMap.get(pvId);
+        if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)){
+            String[] productVariantIds = excelMap.get(EmailMapKeyConstants.productVariantId).toString().split(",");
+            Product product  = null;
+            for (String pvId : productVariantIds)
+            {
+                ProductVariant productVariant = productVariantService.getVariantById(pvId);
+                if (productVariant != null) {
+                    if (productsMap.containsKey(pvId)){
+                        product =  productsMap.get(pvId);
+                    }else{
+                        product = productVariant.getProduct();
+                        productsMap.put(pvId, product);
+                    }
                 }else{
-                    product = productVariant.getProduct();
-                    productsMap.put(pvId, product);
+                    errorBuilder.append(String.format("Product Variant %s is wrong", pvId));
+                    continue;
                 }
-            }else{
-                result.set(1, String.format("Product Variant %s is wrong", pvId));
-                return result;
-            }
 
-            if (product == null){
-                result.set(1, String.format("Product for variant %s is wrong", productVariant.getId()));
-                return result;
-            }
+                if (product == null){
+                    errorBuilder.append( String.format("Product for variant %s is wrong", productVariant.getId()));
+                    continue;
+                }
 
-            if (product.isOutOfStock()){
-                result.set(1, String.format("Product %s is out of stock", product.getId()));
-                return result;
-            }
+                if (product.isOutOfStock()){
+                    errorBuilder.append(String.format("Product %s is out of stock", product.getId()));
+                    continue;
+                }
+                product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
+                //OK..now we have a valid product variant
+                validProductVariants.add(productVariant);
 
-            if (excelMap.containsKey(EmailMapKeyConstants.similarProductId)) {
-                sendAlternateTemplate = Boolean.TRUE;
-                Object similarIds = excelMap.get(EmailMapKeyConstants.similarProductId);
-                List<Product> similarProducts = new ArrayList<Product>();
-                if ( similarProducts != null &&
-                        StringUtils.isNotBlank(similarProducts.toString())){
-                    if (similarIds.toString().trim().equals("auto")){
-                        List<SimilarProduct> similarProductList = product.getSimilarProducts();
-                        //Todo: Check this logic and re-implement
-                        /*for (SimilarProduct similarProduct : similarProductList){
-                            Product simProduct = similarProduct.getSimilarProduct();
-                            if ((simProduct!= null) && !simProduct.isOutOfStock()
-                                    && !productService.isComboInStock(simProduct.getId())){
-                                {
+                if (excelMap.containsKey(EmailMapKeyConstants.similarProductId)) {
+                    sendAlternateTemplate = Boolean.TRUE;
+                    Object similarIds = excelMap.get(EmailMapKeyConstants.similarProductId);
+                    List<Product> similarProducts = new ArrayList<Product>();
+                    if ( similarProducts != null &&
+                            StringUtils.isNotBlank(similarProducts.toString())){
+                        if (similarIds.toString().trim().equals("auto")){
+                            List<SimilarProduct> similarProductList = product.getSimilarProducts();
+                            //Todo: Check this logic and re-implement
+                            /*for (SimilarProduct similarProduct : similarProductList){
+                                Product simProduct = similarProduct.getSimilarProduct();
+                                if ((simProduct!= null) && !simProduct.isOutOfStock()
+                                        && !productService.isComboInStock(simProduct.getId())){
+                                    {
+                                        simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
+                                        similarProducts.add(simProduct);
+                                        sendAlternateTemplate = Boolean.FALSE;
+                                    }
+                                }
+                            };*/
+                        } else{
+                            String[] similarProductIds = similarIds.toString().split(",");
+                            for (String productId : similarProductIds){
+                                Product simProduct = null;
+                                if (productsMap.containsKey(productId)) {
+                                    simProduct = productsMap.get(productId);
+                                }else{
+                                    simProduct = getProductService().getProductById(productId);
+                                    if (simProduct != null){
+                                        productsMap.put(productId, simProduct);
+                                    }
+                                }
+
+                                boolean isProductInStock = !simProduct.getOutOfStock();
+                                isProductInStock = productService.isComboInStock(simProduct);
+
+                                if ((simProduct != null) && isProductInStock){
                                     simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
                                     similarProducts.add(simProduct);
                                     sendAlternateTemplate = Boolean.FALSE;
                                 }
                             }
-                        };*/
-                    } else{
-                        String[] similarProductIds = similarIds.toString().split(",");
-                        for (String productId : similarProductIds){
-                            Product simProduct = null;
-                            if (productsMap.containsKey(productId)) {
-                                simProduct = productsMap.get(productId);
-                            }else{
-                                simProduct = getProductService().getProductById(productId);
-                                if (simProduct != null){
-                                    productsMap.put(productId, simProduct);
-                                }
-                            }
-
-                            boolean isProductInStock = !simProduct.getOutOfStock();
-                            isProductInStock = productService.isComboInStock(simProduct);
-
-                            if ((simProduct != null) && isProductInStock){
-                                simProduct.setProductURL(convertToWww(getProductService().getProductUrl(simProduct,false)));
-                                similarProducts.add(simProduct);
-                                sendAlternateTemplate = Boolean.FALSE;
-                            }
                         }
+                        result.set(0, sendAlternateTemplate);
                     }
-                    result.set(0, sendAlternateTemplate);
+
+                    excelMap.put(EmailMapKeyConstants.similarProductId, similarProducts);
                 }
-
-                excelMap.put(EmailMapKeyConstants.similarProductId, similarProducts);
             }
-        }
 
-        if ((product != null) && !product.isOutOfStock()) {
-            Long productMainImageId = product.getMainImageId();
-            excelMap.put(EmailMapKeyConstants.product, product);
-            //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-            excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
+            excelMap.put(EmailMapKeyConstants.productVariant, validProductVariants);
 
-            if (productMainImageId != null) {
-                excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
-                excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
-                excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
-            } else {
-                excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
-                excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
-                excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+            if (product != null) {
+                Long productMainImageId = product.getMainImageId();
+                excelMap.put(EmailMapKeyConstants.product, product);
+                //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+                excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
+
+                if (productMainImageId != null) {
+                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
+                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId,false));
+                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId,false));
+                } else {
+                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
+                }
             }
         }
         return result;

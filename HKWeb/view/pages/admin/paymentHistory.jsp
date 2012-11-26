@@ -68,7 +68,11 @@
                 <td><s:textarea name="purchaseInvoice.paymentDetails" style="height:50px;" >${purchaseInvoice.paymentDetails}</s:textarea></td>
               </tr>
               <tr>
-                <td><s:submit name="editPurchaseInvoice" value="Save PI"/></td>
+                <td>
+	                <c:if test="${paymentHistoryBean.isEditable}" >
+	                    <s:submit name="editPurchaseInvoice" value="Save PI"/>
+	              </c:if>
+	              </td>
               </tr>
               </s:form>
             </c:if>
@@ -163,7 +167,11 @@
                      <tr>
                        <td><label>Total Payable: ${paymentHistoryBean.purchaseInvoice.finalPayableAmount}</label></td>
                        <td><label>Oustanding Amount: ${paymentHistoryBean.outstandingAmount}</label></td>
-                       <td><s:submit name="save" value="Save"/></td>
+                       <td>
+	                       <c:if test="${paymentHistoryBean.isEditable}" >
+		                       <s:submit name="save" value="Save"/>
+	                       </c:if>
+                       </td>
                      </tr>
                     </s:form>
 
@@ -209,7 +217,11 @@
                         <td><s:text style="width:150px"  class="date_input" formatPattern="yyyy-MM-dd" name="paymentHistory.actualPaymentDate" value=""/></td>
                         <td><s:text name="paymentHistory.remarks" value="${paymentHistory.remarks}"/></td>
                       <td><s:text name="paymentHistory.paymentReference" value="${paymentHistory.paymentReference}"/></td>
-                        <td><s:submit name="add_paymentHistory" value="Add Payment"/></td>
+                        <td>
+	                        <c:if test="${paymentHistoryBean.isEditable}" >
+	                            <s:submit name="add_paymentHistory" value="Add Payment"/>
+	                        </c:if>
+	                    </td>
                   </tr>                
               </table>
             </s:form>

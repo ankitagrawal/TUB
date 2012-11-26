@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.domain.order.ReplacementOrderReason;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.AwbService;
@@ -43,6 +47,7 @@ import com.hk.service.ServiceLocatorFactory;
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
 
+		private static Logger logger = LoggerFactory.getLogger(AdminShippingOrderServiceImpl.class);
     @Autowired
     private ShippingOrderService shippingOrderService;
     @Autowired
@@ -71,6 +76,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
             shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
             shippingOrder = getShippingOrderService().save(shippingOrder);
             getAdminInventoryService().reCheckInInventory(shippingOrder);
@@ -89,8 +95,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 awbService.removeAwbForShipment(shippingOrder.getShipment().getAwb().getCourier(),awbToRemove);
                 Shipment shipmentToDelete = shippingOrder.getShipment();
                 shippingOrder.setShipment(null);
-                shippingOrderService.save(shippingOrder);
-                shipmentService.delete(shipmentToDelete);
+	            shipmentService.delete(shipmentToDelete);
+	            shippingOrderService.save(shippingOrder);
+
             }
         }
     }
@@ -217,10 +224,15 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return shippingOrder;
     }
 
-    public ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder) {
+    public ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder, ReplacementOrderReason rtoReason) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
         getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
+	    if(rtoReason != null){
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated, rtoReason.getName());
+	    }
+	    else{
+		    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
+	    }
         return shippingOrder;
     }
 

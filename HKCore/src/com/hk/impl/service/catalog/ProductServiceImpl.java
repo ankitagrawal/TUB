@@ -280,20 +280,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductVariant validTryOnProductVariant(Product product) {
         if (product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)) {
-            for (ProductVariant productVariant : product.getInStockVariants()) {
-                int optionsCounter = 0;
-                for (ProductOption productOption : productVariant.getProductOptions()) {
-                    if (productOption.getName().equalsIgnoreCase("Color") || productOption.getName().equalsIgnoreCase("Gender") || productOption.getName().equalsIgnoreCase("Size")) {
-                        optionsCounter++;
+//            Category virtualTryOnCategory = new Category("Virtual Try On", "Try It Online");
+//            if (product.getCategories().contains(virtualTryOnCategory)) {
+                for (ProductVariant productVariant : product.getInStockVariants()) {
+                    int optionsCounter = 0;
+                    for (ProductOption productOption : productVariant.getProductOptions()) {
+                        if (productOption.getName().equalsIgnoreCase("Color") || productOption.getName().equalsIgnoreCase("Gender") || productOption.getName().equalsIgnoreCase("Size") || productOption.getName().equalsIgnoreCase("Virtual Try On")) {
+                            optionsCounter++;
+                        }
+                    }
+                    if (optionsCounter != 4) {
+                        return null;
+                    }
+                    if (!productImageService.searchProductImages(EnumImageType.FrontFacingEye.getId(), product, productVariant, false, null).isEmpty() && !productImageService.searchProductImages(EnumImageType.SideFacingEye.getId(), product, productVariant, false, null).isEmpty()) {
+                        return productVariant;
                     }
                 }
-                if (optionsCounter != 3) {
-                    return null;
-                }
-                if (!productImageService.searchProductImages(EnumImageType.FrontFacingEye.getId(), product, productVariant, false, null).isEmpty() && !productImageService.searchProductImages(EnumImageType.SideFacingEye.getId(), product, productVariant, false, null).isEmpty()) {
-                    return productVariant;
-                }
-            }
+//            }
         }
         return null;
     }
