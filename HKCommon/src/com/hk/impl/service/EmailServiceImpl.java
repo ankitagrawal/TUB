@@ -101,7 +101,7 @@ public class EmailServiceImpl implements EmailService {
             logger.debug("Body:");
             logger.debug(renderOutput.getMessage());
         } catch (EmailException ex) {
-            logger.error("EmailException in sendHtmlEmail for template ", ex);
+            logger.error("EmailException in sendHtmlEmail for template "+ ex.getCause() + " message : " + ex.getMessage());
             return null;
         }
         return returnMap;

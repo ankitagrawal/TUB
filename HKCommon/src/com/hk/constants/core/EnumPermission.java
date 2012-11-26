@@ -97,7 +97,9 @@ public enum EnumPermission {
   VIEW_HUB                                       (PermissionConstants.VIEW_HUB),
   ADD_HK_DELIVERY_AGENT                          (PermissionConstants.ADD_HK_DELIVERY_AGENT),
   VIEW_CONSIGNMENT_TRACKING                      (PermissionConstants.VIEW_CONSIGNMENT_TRACKING),
-  ADD_HUB                                        (PermissionConstants.ADD_HUB);
+  ADD_HUB                                        (PermissionConstants.ADD_HUB),
+  EDIT_PAYMENT_HISTORY                           (PermissionConstants.EDIT_PAYMENT_HISTORY),
+  POPULATE_BUSY_DATA                             (PermissionConstants.POPULATE_BUSY_DATA);
 
   String permissionName;
 

@@ -81,7 +81,7 @@ public enum EnumPurchaseOrderStatus {
 			} else if (purchaseOrderStatus.equals(Approved.getPurchaseOrderStatus())) {
 				allowedPurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
 			} else if (purchaseOrderStatus.equals(SentToSupplier.getPurchaseOrderStatus())) {
-				allowedPurchaseOrderStatusList = Arrays.asList(Received.getPurchaseOrderStatus());
+				allowedPurchaseOrderStatusList = Arrays.asList(Received.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
 			} else if (purchaseOrderStatus.equals(Received.getPurchaseOrderStatus())) {
 				allowedPurchaseOrderStatusList = Arrays.asList(Closed.getPurchaseOrderStatus());
 			}
