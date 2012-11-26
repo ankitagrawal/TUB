@@ -18,9 +18,9 @@ public class AuthResource {
     private AuthAPI authAPI;
 
     @GET
-    @Path("/{apiKey}/refreshToken/{authToken}")
+    @Path("/{apiKey}/refreshToken/")
     @Produces("application/json")
-    public String refreshToken(@PathParam("authToken")
+    public String refreshToken(@QueryParam("authToken")
     String authToken, @PathParam("apiKey")
     String apiKey, @QueryParam("authScheme")
     String authScheme) {

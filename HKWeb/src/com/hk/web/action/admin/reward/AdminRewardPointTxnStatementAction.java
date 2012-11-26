@@ -11,7 +11,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
-import com.hk.manager.ReferrerProgramManager;
+import com.hk.pact.service.order.RewardPointService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEARCH_USERS }, authActionBean = AdminPermissionAction.class)
@@ -19,15 +19,15 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class AdminRewardPointTxnStatementAction extends BaseAction {
 
     @Autowired
-    ReferrerProgramManager referrerProgramManager;
+    private RewardPointService rewardPointService;
 
     @Validate(required = true)
-    private User           user;
+    private User               user;
 
-    private Double         redeemablePoint;
+    private Double             redeemablePoint;
 
     public Resolution pre() {
-        redeemablePoint = referrerProgramManager.getTotalRedeemablePoints(user);
+        redeemablePoint = rewardPointService.getTotalRedeemablePoints(user);
         return new ForwardResolution("/pages/admin/rewardPointTxnStatement.jsp");
     }
 

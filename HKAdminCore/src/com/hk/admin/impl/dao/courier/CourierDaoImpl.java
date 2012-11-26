@@ -1,8 +1,6 @@
 package com.hk.admin.impl.dao.courier;
 
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.constants.courier.CourierConstants;
 
 @Repository
 public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{

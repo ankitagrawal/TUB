@@ -48,6 +48,13 @@
 				  <s:option value="true">True</s:option>
 				  <s:option value="false">False</s:option>
 			  </s:select>
+
+			  <label>Status:</label><s:select name="purchaseInvoiceStatus">
+			  <s:option value="">-All-</s:option>
+			  <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="purchaseInvoiceStatusList" value="id"
+			                             label="name"/>
+			   </s:select>
+
 			  <label>Start date</label><s:text class="date_input startDate" style="width:150px"
 			                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
 			                                   name="startDate"/>
@@ -80,7 +87,8 @@
         <th>Est. Payment Date</th>
         <th>Payment Date</th>
         <th>Payment Details</th>
-        <th>Reconciled</th>
+        <th>Recon-<br/>ciled</th>
+	    <th>Status</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -95,7 +103,6 @@
 	        <td>
 		        <c:set var="advPayment" value="0"/>
 		        <c:forEach var="grn" items="${purchaseInvoice.goodsReceivedNotes}">
-			        <c:set var="advPayment" value="${grn.purchaseOrder.advPayment + advPayment}"/>
 			        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
 				        <s:param name="grn" value="${grn.id}"/>
 				        ${grn.id}
@@ -103,10 +110,11 @@
 			        - ${grn.invoiceNumber}
 			        <br/>
 		        </c:forEach>
+		        <c:set var="advPayment" value="${purchaseInvoice.goodsReceivedNotes[0].purchaseOrder.advPayment }"/>
 	        </td>
 	        <td><fmt:formatDate value="${purchaseInvoice.goodsReceivedNotes[0].grnDate}" type="both" timeStyle="short"/></td>
 	        <td>${purchaseInvoice.warehouse.city}</td>
-		        <%--<td>${purchaseInvoice.purchaseInvoiceStatus.name}</td>--%>
+
 	        <td><fmt:formatDate value="${purchaseInvoice.createDate}" type="both" timeStyle="short"/></td>
 	        <td>
 		        <fmt:formatNumber value="${advPayment}" type="currency" currencySymbol=" "
@@ -132,10 +140,16 @@
               </c:otherwise>                                                   
             </c:choose>
           </td>
+	        <td>${purchaseInvoice.purchaseInvoiceStatus.name}</td>
 
           <td>
             <s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="view" target="_blank">Edit/View
-              <s:param name="purchaseInvoice" value="${purchaseInvoice.id}"/></s:link>
+              <s:param name="purchaseInvoice" value="${purchaseInvoice.id}"/>
+            </s:link>
+	          <br/>
+	        <s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="paymentDetails" target="_blank"><br>Update status/payment
+              <s:param name="purchaseInvoice" value="${purchaseInvoice.id}"/>
+            </s:link>
           </td>
         </tr>
       </c:forEach>

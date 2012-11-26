@@ -152,6 +152,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 					trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
 				} else {
 					suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
+					Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), isCod, EnumAwbStatus.Unused.getAsAwbStatus());
+					if (awb != null) {
+						trackingId = awb.getAwbNumber();
+					}
 				}
 
 			} else {

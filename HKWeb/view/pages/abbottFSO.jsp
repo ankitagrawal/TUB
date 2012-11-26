@@ -126,11 +126,11 @@
                    <img src="${pageContext.request.contextPath}/images/abbottFSO/FreeStyle-Optium-Glucometer.jpg"
                      width="340" height="340" class="tThumb"/>
 
-                <div class="tDesc"><p>The Abbott FreeStyleOptium Glucometer makes testing an easier and pain-free
+                <div class="tDesc"><p>The Abbott FreeStyle Optium Glucometer makes testing an easier and pain-free
                     experience. Less than a drop of blood is required for testing and it gives accurate results in just
                     5 seconds.</p>
 
-                    <p>Monitor blood glucose effectively with Freestyle Optimum Glucometer. This simple blood glucose
+                    <p>Monitor blood glucose effectively with Freestyle Optium Glucometer. This simple blood glucose
                         testing device comes with a large backlit display which ensures that you have accurate readings.
                         The meter also comes with a large memory so that one can store blood glucose readings for
                         reference.</p>
