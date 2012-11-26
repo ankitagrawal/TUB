@@ -211,7 +211,7 @@ public class CourierStatusUpdateHelper {
 
         try {
             //added for debugging
-            trackingId ="10410239481";
+            //trackingId ="10410239481";
             url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&waybill=" + trackingId);
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
 

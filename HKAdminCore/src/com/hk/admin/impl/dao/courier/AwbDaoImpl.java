@@ -1,7 +1,6 @@
 package com.hk.admin.impl.dao.courier;
 
 import java.util.List;
-import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
