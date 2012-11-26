@@ -18,16 +18,12 @@ import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository
-public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
+public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {   
 
     public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
-	 return getAvailableAwbForCourierByWarehouseCodStatus(Arrays.asList(courier),awbNumber,warehouse,isCod,awbStatus);
-    }
-
-    public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(List<Courier> couriers, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
-        if (couriers != null) {
-            detachedCriteria.add(Restrictions.in("courier", couriers));
+        if (courier != null) {
+            detachedCriteria.add(Restrictions.eq("courier", courier));
         }
         if (awbNumber != null && StringUtils.isNotBlank(awbNumber)) {
             detachedCriteria.add(Restrictions.eq("awbNumber", awbNumber));
