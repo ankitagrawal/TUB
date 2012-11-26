@@ -9,6 +9,7 @@ package com.hk.constants;
  */
 public class HttpRequestAndSessionConstants {
 
+  public static final String USER_AGENT = "user-agent";
   public static final String UTM_SOURCE = "utm_source";
   public static final String UTM_CAMPAIGN = "utm_campaign";
   public static final String UTM_MEDIUM = "utm_medium";
