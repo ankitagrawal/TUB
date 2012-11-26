@@ -549,6 +549,14 @@ public class Product  implements java.io.Serializable {
     }
 
     public String getProductURL() {
+	    /**
+	     * productURL is a Transient Variable should be set in accordance with ProductReferrer from where the product is loaded.
+	     * In some cases products are loaded by productIds where tracking is not being done.
+	     * In case productURL is null returning the relative URL
+	     */
+        if (productURL == null){
+			productURL = "/product/" + getSlug() + "/" + getId();
+		}
         return productURL;
     }
 

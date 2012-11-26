@@ -194,8 +194,8 @@ WHERE bo.order_status_id
 IN ( 20, 30, 40 )
 group by user_id
 ) v1
-where date(first_order_date)>= '2012-10-20'
-AND date(first_order_date) <= '2012-10-26';
+where date(first_order_date)>= '2012-11-20'
+AND date(first_order_date) <= '2012-11-20';
 
 
 /*
