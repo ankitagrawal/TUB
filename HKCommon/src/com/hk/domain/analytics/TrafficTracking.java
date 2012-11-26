@@ -21,6 +21,9 @@ public class TrafficTracking implements java.io.Serializable {
 	@Column (name = "src_url", length = 500)
 	private String srcUrl;
 
+	@Column (name = "user_agent", length = 200)
+	private String userAgent;
+
 
 	@Column (name = "traffic_src", nullable = false, length = 45)
 	private String trafficSrc;
@@ -83,6 +86,14 @@ public class TrafficTracking implements java.io.Serializable {
 
 	public void setSrcUrl(String srcUrl) {
 		this.srcUrl = srcUrl;
+	}
+
+	public String getUserAgent() {
+		return userAgent;
+	}
+
+	public void setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
 	}
 
 	public String getTrafficSrc() {
