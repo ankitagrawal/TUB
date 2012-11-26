@@ -135,6 +135,13 @@ public class EditPurchaseOrderAction extends BaseAction {
 				return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
 			}
 
+			if(previousPurchaseOrderStatus.equals(EnumPurchaseOrderStatus.SentToSupplier.getPurchaseOrderStatus())
+					&& purchaseOrder.getPurchaseOrderStatus().equals(EnumPurchaseOrderStatus.Cancelled.getPurchaseOrderStatus())
+					&& purchaseOrder.getGoodsReceivedNotes() != null && purchaseOrder.getGoodsReceivedNotes().size() > 0) {
+				addRedirectAlertMessage(new SimpleMessage("GRN has already been created, cannot cancel PO now."));
+				return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+			}
+
 			List<PurchaseOrderStatus> allowedNewPOStatusList = EnumPurchaseOrderStatus.getAllowedPOStatusToChange(previousPurchaseOrderStatus);
 			if(! allowedNewPOStatusList.contains(purchaseOrder.getPurchaseOrderStatus())) {
 				addRedirectAlertMessage(new SimpleMessage("Invalid Status chosen."));

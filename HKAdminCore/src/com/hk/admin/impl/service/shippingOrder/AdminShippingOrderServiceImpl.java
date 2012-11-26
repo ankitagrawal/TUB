@@ -75,7 +75,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-	          logger.info("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
+	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
             shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
             shippingOrder = getShippingOrderService().save(shippingOrder);
             getAdminInventoryService().reCheckInInventory(shippingOrder);
