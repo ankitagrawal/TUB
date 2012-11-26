@@ -1,5 +1,18 @@
 package com.hk.web.action.core.payment.gateway;
 
+import java.util.Date;
+import java.util.Properties;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.apache.commons.lang.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.util.BaseUtils;
@@ -16,19 +29,8 @@ import com.hk.manager.payment.CitrusPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
+import com.hk.web.action.core.payment.PaymentFailAction;
 import com.hk.web.action.core.payment.PaymentSuccessAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.Properties;
 
 @Component
 public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendReceiveAction<CitrusPaymentGatewayWrapper> {
@@ -106,7 +108,8 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
                 paymentManager.success(gatewayOrderId, ePGTxnID, rrn, responseMsg, authIdCode);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if (EnumCitrusResponseCodes.TxStatusSESSION_EXPIRED.getId().equals(TxStatus) || EnumCitrusResponseCodes.TxStatusCANCELED.getId().equals(TxStatus)) {
-                paymentManager.fail(gatewayOrderId);
+                paymentManager.fail(gatewayOrderId,ePGTxnID);
+                resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if (EnumCitrusResponseCodes.TxStatusFAIL.getId().equals(TxStatus)) {
                 if (EnumCitrusResponseCodes.Rejected_By_Gateway.getId().equals(pgRespCode)) {
                     throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.REJECTED_BY_GATEWAY);

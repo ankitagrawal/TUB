@@ -9720,5 +9720,67 @@
 	</changeSet>
 	<changeSet author="Seema (generated)" id="1350891782684-6">
 		<dropColumn columnName="courier_id" tableName="shipment"/>
-	</changeSet>
+	</changeSet>	
+    
+    <changeSet author="Ajeet (generated)" id="1353661874281-1">
+        <createTable tableName="traffic_tracking">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="src_url" type="VARCHAR(500)"/>
+            <column name="traffic_src" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="traffic_src_details" type="VARCHAR(200)"/>
+            <column defaultValueNumeric="0" name="traffic_src_paid" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="healthkart.com" name="landing_url" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_category" type="VARCHAR(80)"/>
+            <column name="product_id" type="VARCHAR(20)"/>
+            <column name="user_id" type="INT"/>
+            <column defaultValue="127.0.1.1" name="ip" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="session_id" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="INT"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353661874281-2">
+        <createTable tableName="user_browsing_history">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="traffic_tracking_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="healthkart.com" name="page_url" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_category" type="VARCHAR(80)"/>
+            <column name="product_id" type="VARCHAR(20)"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353661874281-3">
+        <createIndex indexName="unique_page_url" tableName="user_browsing_history" unique="true">
+            <column name="traffic_tracking_id"/>
+            <column name="page_url"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

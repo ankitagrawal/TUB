@@ -9,7 +9,6 @@ package com.hk.constants;
  */
 public class HttpRequestAndSessionConstants {
 
-  //Categories Specified in Alphabetical Order
   public static final String UTM_SOURCE = "utm_source";
   public static final String UTM_CAMPAIGN = "utm_campaign";
   public static final String UTM_MEDIUM = "utm_medium";
@@ -19,4 +18,5 @@ public class HttpRequestAndSessionConstants {
   public static final String NEW_SESSION = "newSession";
   public static final String GCLID = "gclid";
   public static final String ADWORD = "adword";
+  public static final String TRAFFIC_TRACKING = "trafficTracking";
 }
