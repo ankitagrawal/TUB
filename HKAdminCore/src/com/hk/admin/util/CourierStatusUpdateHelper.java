@@ -395,10 +395,7 @@ public class CourierStatusUpdateHelper {
 				Document doc = new SAXBuilder().build(new StringReader(response));
 				XPath xPath = XPath.newInstance("/*/StageHeader");
 				xmlElement = (Element) xPath.selectSingleNode(doc);
-			}
-			else{
-				xmlElement = null;
-			}
+			} 			
 
 		} catch (MalformedURLException mue) {
 			logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION + courierName + trackingId);
