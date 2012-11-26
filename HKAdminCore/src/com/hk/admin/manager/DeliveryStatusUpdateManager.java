@@ -386,7 +386,7 @@ public class DeliveryStatusUpdateManager {
         String deliveryDate = null;
         Date delivery_date = null;
         ShippingOrder shippingOrdr = null;
-		List<Courier> couriers = null;
+		List<Courier> couriers = new ArrayList<Courier>();
 		for (Long courierId : EnumCourier.getDelhiveryCourierIds()){
 				couriers.add(EnumCourier.getEnumCourierFromCourierId(courierId).asCourier());
 		}
