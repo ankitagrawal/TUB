@@ -28,6 +28,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.exception.HealthkartCheckedException;
 
 /**
@@ -250,8 +251,8 @@ public class CourierStatusUpdateHelper {
     public List<Element> bulkUpdateDeliveryStatusBlueDart(String trackingId) throws HealthkartCheckedException {         
         String inputLine = "";
         String response = "";
-        courierName="(Bluedart)";
-        List xmlElementList= null;
+        courierName = EnumCourier.BlueDart.getName();
+        List xmlElementList = null;
 
         //added for debugging
         //trackingId              = "43925348331,43892306382,43925355342";

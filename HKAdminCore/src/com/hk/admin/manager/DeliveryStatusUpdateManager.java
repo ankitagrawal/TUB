@@ -293,7 +293,7 @@ public class DeliveryStatusUpdateManager {
 			List<ShippingOrder> shippingOrderSubList;
 			List<Element> elementList = new ArrayList();
 			int listSize = shippingOrderList.size();
-			int batchSize = 8;
+			int batchSize = 10;
 			startIndex = 0;
 			endIndex = 0;
 
@@ -325,7 +325,7 @@ public class DeliveryStatusUpdateManager {
 
 							}
 						} catch (Exception ex) {
-							logger.debug(CourierConstants.EXCEPTION + "(BlueDart)" + trackingId);
+							logger.debug(CourierConstants.EXCEPTION + trackingId);
 							unmodifiedTrackingIds.add(trackingId);
 							continue;
 						}
@@ -336,10 +336,16 @@ public class DeliveryStatusUpdateManager {
 					}
 				} else {
 					//Constructing trackingId using all shippingOrders
-					trackingId = getAppendedTrackingIdsString(shippingOrderList);
-					if (trackingId != null) {
-						//getting the response for batch of trackingIds
-						elementList = courierStatusUpdateHelper.bulkUpdateDeliveryStatusBlueDart(trackingId);
+					try {
+						trackingId = getAppendedTrackingIdsString(shippingOrderList);
+						if (trackingId != null) {
+							//getting the response for batch of trackingIds
+							elementList = courierStatusUpdateHelper.bulkUpdateDeliveryStatusBlueDart(trackingId);
+						}
+					}
+					catch (Exception ex) {
+						logger.debug(CourierConstants.EXCEPTION + trackingId);
+						unmodifiedTrackingIds.add(trackingId);
 					}
 					if (elementList != null && elementList.size() > 0) {
 						ordersDelivered = updateBlueDartStatus(elementList, shippingOrderList);
@@ -450,8 +456,9 @@ public class DeliveryStatusUpdateManager {
 				String statusDate = ele.getChildText(CourierConstants.BLUEDART_STATUS_DATE);
 				String trackingId = ele.getAttributeValue(CourierConstants.BLUEDART_AWB);
 				String refNo = ele.getAttributeValue(CourierConstants.BLUEDART_REF_NO);
-				try {
-					if (status.equals(CourierConstants.BLUEDART_SHIPMENT_DELIVERED) && statusDate != null) {
+
+				if (status.equals(CourierConstants.BLUEDART_SHIPMENT_DELIVERED) && statusDate != null) {
+					try {
 						for (ShippingOrder shippingOrder : shippingOrderList) {
 							if (refNo != null && refNo.equalsIgnoreCase(shippingOrder.getGatewayOrderId())) {
 								Date delivery_date = sdf_date.parse(statusDate);
@@ -460,10 +467,12 @@ public class DeliveryStatusUpdateManager {
 							}
 						}
 					}
+					catch (ParseException pe) {
+						logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
+						unmodifiedTrackingIds.add(trackingId);
+					}
 				}
-				catch (ParseException pe) {
-					logger.debug(CourierConstants.PARSE_EXCEPTION + pe.getMessage());
-				}
+
 			}
 		}
 		return ordersDelivered;
