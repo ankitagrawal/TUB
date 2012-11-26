@@ -129,34 +129,25 @@ public class EditPurchaseOrderAction extends BaseAction {
 	public Resolution save() {
 		if (purchaseOrder != null && purchaseOrder.getId() != null) {
 			logger.debug("poLineItems@Save: " + poLineItems.size());
-			boolean errorReturn = false;
+
 			if (purchaseOrder.getPurchaseOrderStatus() == null) {
 				addRedirectAlertMessage(new SimpleMessage("Please Select status"));
-			}
-			long newStatus = purchaseOrder.getPurchaseOrderStatus().getId().longValue();
-			long oldStatus = getPreviousPurchaseOrderStatus().getId().longValue();
-			if (newStatus < oldStatus) {
-				if ((newStatus == EnumPurchaseOrderStatus.Generated.getId().longValue()) && (oldStatus == EnumPurchaseOrderStatus.Cancelled.getId().longValue())) {
-					errorReturn = false;
-				} else {
-					addRedirectAlertMessage(new SimpleMessage("The Selected Status Should Be After  : " + getPreviousPurchaseOrderStatus().getName()));
-					errorReturn = true;
-				}
-			} else if (newStatus > oldStatus) {
-				PurchaseOrderStatus expectPurchaseStatus = EnumPurchaseOrderStatus.getNextPurchaseOrderStatus(previousPurchaseOrderStatus);
-				if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Cancelled.getId())) {
-					errorReturn = false;
-				} else if (!(expectPurchaseStatus.equals(purchaseOrder.getPurchaseOrderStatus()))) {
-					addRedirectAlertMessage(new SimpleMessage("Please Choose Correct Next  Status : " + expectPurchaseStatus.getName()));
-					errorReturn = true;
-				}
-			} else if (newStatus == oldStatus && (oldStatus != EnumPurchaseOrderStatus.Generated.getId().longValue())) {
-				addRedirectAlertMessage(new SimpleMessage("PO is Already : " + purchaseOrder.getPurchaseOrderStatus().getName()));
-				errorReturn = true;
-			}
-			if (errorReturn) {
 				return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
 			}
+
+			if(previousPurchaseOrderStatus.equals(EnumPurchaseOrderStatus.SentToSupplier.getPurchaseOrderStatus())
+					&& purchaseOrder.getPurchaseOrderStatus().equals(EnumPurchaseOrderStatus.Cancelled.getPurchaseOrderStatus())
+					&& purchaseOrder.getGoodsReceivedNotes() != null && purchaseOrder.getGoodsReceivedNotes().size() > 0) {
+				addRedirectAlertMessage(new SimpleMessage("GRN has already been created, cannot cancel PO now."));
+				return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+			}
+
+			List<PurchaseOrderStatus> allowedNewPOStatusList = EnumPurchaseOrderStatus.getAllowedPOStatusToChange(previousPurchaseOrderStatus);
+			if(! allowedNewPOStatusList.contains(purchaseOrder.getPurchaseOrderStatus())) {
+				addRedirectAlertMessage(new SimpleMessage("Invalid Status chosen."));
+				return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+			}
+
 			double discountRatio = 0;
 			if (purchaseOrder.getPayable() != null && purchaseOrder.getPayable() > 0 && purchaseOrder.getDiscount() != null) {
 				discountRatio = purchaseOrder.getDiscount() / purchaseOrder.getPayable();
