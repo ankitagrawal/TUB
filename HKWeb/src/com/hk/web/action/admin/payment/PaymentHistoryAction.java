@@ -61,6 +61,7 @@ public class PaymentHistoryAction extends BaseAction {
             purchaseOrder = getBaseDao().get(PurchaseOrder.class, purchaseOrderId);
             paymentHistories = getPaymentHistoryService().getByPurchaseOrder(purchaseOrder);
             Collections.reverse(paymentHistories);
+	        isEditable = true;
         } else if (purchaseInvoiceId != null) {
             outstandingAmount = 0.00;
             purchaseInvoice = getPurchaseInvoiceService().getPurchaseInvoiceById(purchaseInvoiceId);
