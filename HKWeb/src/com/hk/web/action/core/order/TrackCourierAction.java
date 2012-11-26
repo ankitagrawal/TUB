@@ -21,6 +21,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.JsonObject;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.admin.util.courier.thirdParty.FedexTrackServiceUtil;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.order.ShippingOrder;
@@ -148,6 +149,13 @@ public class TrackCourierAction extends BaseAction {
                     resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
                 }
                 break;
+			case FedEx:
+				//resolution = new RedirectResolution("https://www.fedex.com/Tracking?clienttype=dotcomreg&ascend_header=1&cntry_code=in&language=english&mi=n&", false).addParameter("tracknumbers", trackingId);
+				status = new FedexTrackServiceUtil().TrackFedexShipment(trackingId);
+				if(status != null){
+
+				}
+				break;
 
 	        case HK_Delivery:
 		        if (trackingId != null) {
