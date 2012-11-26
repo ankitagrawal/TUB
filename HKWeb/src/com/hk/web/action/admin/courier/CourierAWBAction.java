@@ -86,7 +86,7 @@ public class CourierAWBAction extends BaseAction {
         String courierName = "All";
         List<CourierServiceInfo> courierServiceInfoList = new ArrayList<CourierServiceInfo>();
         if (courier != null) {
-            courierServiceInfoList = courierService.getCourierServiceInfoList(courier.getId(), null, false, false, false);
+            courierServiceInfoList = courierService.getCourierServiceInfoList(courier.getId(), null, false, false, false,null);
             courierName = courier.getName();
         } else {
             courierServiceInfoList = courierServiceInfoDao.getAll(CourierServiceInfo.class);
@@ -150,7 +150,7 @@ public class CourierAWBAction extends BaseAction {
 
                 }
                 for (Awb awb : awbListFromExcel) {
-                    awbService.save(awb);
+                    awbService.save(awb,null);
 
                 }
                 addRedirectAlertMessage(new SimpleMessage("database updated"));

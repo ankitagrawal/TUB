@@ -23,9 +23,11 @@
 						alert("Please enter correct User Name.");
 						return false;
 					}
-					if(notifyMeMobile.length > 15 || !mobileRegEx.test(notifyMeMobile)){
-						alert("Please enter correct Mobile No.");
-						return false;
+					if(notifyMeMobile != ''){
+						if(notifyMeMobile.length > 15 || !mobileRegEx.test(notifyMeMobile)){
+							alert("Please enter correct Mobile No.");
+							return false;
+						}
 					}
 				} );
 				});
@@ -60,7 +62,7 @@
                         </tr>
                         <tr>
                             <td style="text-align: right;">
-                                Enter your phone / mobile number:<span class='aster' title="this field is required">*</span>
+                                Enter your phone / mobile number:
                             </td>
                             <td>
                                 <s:text class="phoneNo" id="notifyMePhone" name="notifyMe.phone"/> <br/><br/>

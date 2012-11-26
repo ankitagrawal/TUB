@@ -1,11 +1,5 @@
 package com.hk.admin.impl.dao.inventory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
@@ -13,6 +7,11 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -89,16 +88,21 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao{
     return inStockSkuItems;
   }
 
-  public List<SkuItem> getInStockSkuItemsByQty(Sku sku, Integer qty) {
-    List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
-    String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.sku =:sku " + "group by pvi.skuItem.id having sum(pvi.qty) > 0";
-    List<Long> inStockSkuItemIds = (List<Long>) getSession().createQuery(inStockSkuItemIdQuery).setParameter("sku", sku).list();
-    if (inStockSkuItemIds != null && inStockSkuItemIds.size() > 0) {
-      String query = "select si from SkuItem si where si.id in (:inStockSkuItemIds) and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate";
-      inStockSkuItems = (List<SkuItem>) getSession().createQuery(query).setParameterList("inStockSkuItemIds", inStockSkuItemIds).setParameter("sku", sku).setMaxResults(qty).list();
-    }
-    return inStockSkuItems;
-  }
+	public List<SkuItem> getInStockSkuItemsByQty(Sku sku, Integer qty) {
+		List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
+		String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.sku =:sku " + "group by pvi.skuItem.id having sum(pvi.qty) > 0";
+		List<Long> inStockSkuItemIds = (List<Long>) getSession().createQuery(inStockSkuItemIdQuery).setParameter("sku", sku).list();
+
+
+		if (inStockSkuItemIds != null && inStockSkuItemIds.size() > 0) {
+			if(inStockSkuItemIds.size() > qty){
+				inStockSkuItemIds  = inStockSkuItemIds.subList(0, qty);
+			}
+			String query = "select si from SkuItem si where si.id in (:inStockSkuItemIds) and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate";
+			inStockSkuItems = (List<SkuItem>) getSession().createQuery(query).setParameterList("inStockSkuItemIds", inStockSkuItemIds).setParameter("sku", sku).setMaxResults(qty).list();
+		}
+		return inStockSkuItems;
+	}
 
 
   public SkuItem getSkuItemToValidateDayZeroInventory(ProductVariant productVariant, String batchNumber) {

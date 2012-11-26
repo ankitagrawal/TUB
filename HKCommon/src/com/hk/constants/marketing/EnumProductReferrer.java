@@ -14,7 +14,9 @@ public enum EnumProductReferrer {
   services(10L, "services"),
   homePage(11L, "home-page"),
   relatedProductsPage(12L, "related-products-page"),
-  brandPage(13L, "brand-page"),;
+  brandPage(13L, "brand-page"),
+  mobile_catalog(14L, "mobile-catalog"),
+  mobile_search(15L, "mobile-search"),;
 
   private String name;
   private Long id;

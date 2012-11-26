@@ -13,7 +13,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.courier.PincodeDao;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked")                                                                   
 @Repository
 public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
 

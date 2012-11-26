@@ -16,63 +16,70 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.service.ServiceLocatorFactory;
 
-@Path("/product")
+@Path ("/product")
 @Component
 public class ProductResource {
-    
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private APIProductService apiProductService;
-    
-    @GET
-    @Path("/all")
-    @Produces("application/json")
-    public String test() {
 
-        ProductService testService = ServiceLocatorFactory.getService(ProductService.class);
-        Product product = getProductService().getProductById("NUT304");
-        return new String(product.getName() + ":" + product.getBrand());
-    }
+	@Autowired
+	private ProductService productService;
+	@Autowired
+	private APIProductService apiProductService;
 
-    @GET
-    @Path("/{productId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String product(@PathParam("productId") String productId) {
+	@GET
+	@Path ("/all")
+	@Produces ("application/json")
+	public String test() {
 
-        Product product=getProductService().getProductById(productId);
-        product.getProductVariants();
-        Gson gson= JsonUtils.getGsonDefault();
-        return  gson.toJson(product);
-    }
+		ProductService testService = ServiceLocatorFactory.getService(ProductService.class);
+		Product product = getProductService().getProductById("NUT304");
+		return new String(product.getName() + ":" + product.getBrand());
+	}
 
-    @GET
-    @Path("/sync")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String product(){
-       return getApiProductService().syncContentAndDescription();
-    }
+	@GET
+	@Path ("/{productId}")
+	@Produces (MediaType.APPLICATION_JSON)
+	public String product(@PathParam ("productId") String productId) {
 
-    @GET
-    @Path("/sync/images")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String product_images(){
-        return getApiProductService().syncProductImages();
-    }
+		Product product = getProductService().getProductById(productId);
+		product.getProductVariants();
+		Gson gson = JsonUtils.getGsonDefault();
+		return gson.toJson(product);
+	}
 
-    public ProductService getProductService() {
-        return productService;
-    }
+	@GET
+	@Path ("/sync")
+	@Produces (MediaType.APPLICATION_JSON)
+	public String product() {
+		return getApiProductService().syncContentAndDescription();
+	}
 
-    public void setProductService(ProductService productService) {
-        this.productService = productService;
-    }
+	@GET
+	@Path ("/sync/images")
+	@Produces (MediaType.APPLICATION_JSON)
+	public String product_images() {
+		return getApiProductService().syncProductImages();
+	}
 
-    public APIProductService getApiProductService() {
-        return apiProductService;
-    }
+	@GET
+	@Path ("/lowresolutionimage")
+	@Produces (MediaType.APPLICATION_JSON)
+	public String lowResolutionImage() {
+		return getApiProductService().getProductsWithLowResolutionImages();
+	}
 
-    public void setApiProductService(APIProductService apiProductService) {
-        this.apiProductService = apiProductService;
-    }
+	public ProductService getProductService() {
+		return productService;
+	}
+
+	public void setProductService(ProductService productService) {
+		this.productService = productService;
+	}
+
+	public APIProductService getApiProductService() {
+		return apiProductService;
+	}
+
+	public void setApiProductService(APIProductService apiProductService) {
+		this.apiProductService = apiProductService;
+	}
 }

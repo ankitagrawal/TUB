@@ -15,9 +15,10 @@ public enum EnumPurchaseOrderStatus {
 	SentForApproval(20L, "Sent For Approval"),
 	Approved(30L, "Approved"),
 	SentToSupplier(40L, "Sent To Supplier"),
-	Cancelled(100L, "Cancelled"),
-	Deleted(1000L, "Deleted"),;
-  //  for every new status , it has to added in geAllPurchaseOrderStatus() list
+	Received(50L, "Received"),
+	Closed(100L, "Closed"),
+	Cancelled(1000L, "Cancelled");
+
 	private String name;
 	private Long id;
 
@@ -49,8 +50,8 @@ public enum EnumPurchaseOrderStatus {
 	public static List<PurchaseOrderStatus> geAllPurchaseOrderStatus() {
 
 		List<PurchaseOrderStatus> PurchaseOrderStatusList = Arrays.asList(Generated.getPurchaseOrderStatus(), SentForApproval.getPurchaseOrderStatus(),
-				Approved.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(),
-				Cancelled.getPurchaseOrderStatus(), Deleted.getPurchaseOrderStatus());
+				Approved.getPurchaseOrderStatus(), SentToSupplier.getPurchaseOrderStatus(), Received.getPurchaseOrderStatus(),
+				Closed.getPurchaseOrderStatus(), Cancelled.getPurchaseOrderStatus());
 		Collections.sort(PurchaseOrderStatusList);
 		return PurchaseOrderStatusList;
 

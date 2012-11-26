@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -30,7 +29,6 @@ import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.SimilarProduct;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.domain.content.SeoData;
@@ -50,6 +48,7 @@ import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
+import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
@@ -115,6 +114,7 @@ public class ProductAction extends BaseAction {
     private LinkManager linkManager;
 	@Autowired
 	ProductImageService productImageService;
+    private ProductVariant validTryOnProductVariant;
 
     @DefaultHandler
     @DontValidate
@@ -198,6 +198,8 @@ public class ProductAction extends BaseAction {
         if(product.isSubscribable()){
             subscriptionProduct= subscriptionProductService.findByProduct(product);
         }
+
+        validTryOnProductVariant = productService.validTryOnProductVariant(product);
 
         //User Reviews
         totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
@@ -436,5 +438,13 @@ public class ProductAction extends BaseAction {
 
     public SuperSaverImageService getSuperSaverImageService() {
         return superSaverImageService;
+    }
+
+    public ProductVariant getValidTryOnProductVariant() {
+        return validTryOnProductVariant;
+    }
+
+    public void setValidTryOnProductVariant(ProductVariant validTryOnProductVariant) {
+        this.validTryOnProductVariant = validTryOnProductVariant;
     }
 }

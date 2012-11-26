@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class HKDeliveryUtil {
 
-    static Map<String,Long> consignmentStatusMap = new HashMap();
+    static Map<String,Long> consignmentStatusMap = new HashMap<String,Long>();
 
 
 

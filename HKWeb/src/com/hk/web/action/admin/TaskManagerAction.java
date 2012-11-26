@@ -31,7 +31,7 @@ public class TaskManagerAction extends BaseAction {
   public Resolution pre(){
      return new ForwardResolution("/pages/admin/taskManager.jsp");
   }
-  public Resolution db_master() {
+  public Resolution runTask() {
         boolean status = taskService.execute(db_master_service);
         if(status){
           addRedirectAlertMessage(new SimpleMessage("DB Master ran successfully"));

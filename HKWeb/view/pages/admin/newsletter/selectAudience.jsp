@@ -11,6 +11,11 @@
     <h2>Step 2: Select Audience to send to</h2>
     <p>
     <s:form beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign">
+      Sender Email: <s:text name="senderEmail" style="width:200px" value="${emailBean.senderEmail}"/>
+      Sender Name: <s:text name="senderName" style="width: 100px" value="${emailBean.senderName}"/>
+      Reply to email: <s:text name="replyToEmail" style="width: 100px" value="${emailBean.replyToEmail}"/>
+      Send headers: <s:checkbox name="sendHeaders" value="${emailBean.sendHeaders}"/>
+      <br/><br/>
       Enter comma separated emails/categories<br/><br/>
 
       Test User emails (note: these must be valid users in healthkart): <s:text name="testEmails"/><br/>

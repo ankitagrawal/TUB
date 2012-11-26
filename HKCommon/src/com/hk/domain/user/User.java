@@ -86,6 +86,11 @@ public class User {
     /* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
     private Set<Role>             roles              = new HashSet<Role>();
 
+
+    @JsonSkip
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<UserDetail>   userDetails = new HashSet<UserDetail>();
+
     @Column(name = "user_hash", nullable = false, length = 32, unique = true)
     private String                userHash;
 

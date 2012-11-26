@@ -11,6 +11,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -31,6 +32,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.taglibs.Functions;
 import net.sourceforge.stripes.action.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +42,7 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -100,8 +103,8 @@ public class InventoryCheckoutAction extends BaseAction {
 	private SkuGroup skuGroup;
 	private String invoiceNumber;
 	private String gatewayOrderId;
-	private boolean wronglyPickedBox = false;
-	private SkuGroup earlierSkuGroup;
+	//private boolean wronglyPickedBox = false;
+	//private SkuGroup earlierSkuGroup;
 	List<SkuGroup> skuGroups;
 
 	@DefaultHandler
@@ -133,7 +136,7 @@ public class InventoryCheckoutAction extends BaseAction {
 
 	public Resolution findSkuGroups() {
 		SkuGroup skuGroupBarcode;
-		earlierSkuGroup = null;
+		//earlierSkuGroup = null;
 		List<SkuGroup> inStockSkuGroupList;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
@@ -143,8 +146,10 @@ public class InventoryCheckoutAction extends BaseAction {
 			skuGroupBarcode = skuGroupDao.getSkuGroup(upc);
 			if (skuGroupBarcode != null && skuGroupBarcode.getSku() != null) {
 				productVariant = skuGroupBarcode.getSku().getProductVariant();
+				skuGroups = new ArrayList<SkuGroup>();
+				skuGroups.add(skuGroupBarcode);
 
-				inStockSkuGroupList = skuItemDao.getInStockSkuGroups(skuGroupBarcode.getSku());
+				/*inStockSkuGroupList = skuItemDao.getInStockSkuGroups(skuGroupBarcode.getSku());
 				if (inStockSkuGroupList != null && inStockSkuGroupList.size() > 0) {
 					if (inStockSkuGroupList.size() == 1) {
 						if (upc.equalsIgnoreCase(skuGroupBarcode.getBarcode())) {
@@ -163,7 +168,7 @@ public class InventoryCheckoutAction extends BaseAction {
 							upc = null;
 						}
 					}
-				}
+				}*/
 			} else {
 				List<ProductVariant> pvList = productVariantDao.findVariantListFromUPC(upc);
 				if (pvList != null && !pvList.isEmpty()) {
@@ -212,8 +217,8 @@ public class InventoryCheckoutAction extends BaseAction {
 				}
 				if (lineItem != null) {
 					ProductVariant variant = skuGroup.getSku().getProductVariant();
-					if (skuGroup.getMrp() != null && skuGroup.getMrp() < variant.getMarkedPrice()) {
-					  addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
+					if (checkMrpPreCheckOut(variant) && skuGroup.getMrp() != null && skuGroup.getMrp() < lineItem.getMarkedPrice()) {
+						addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
 					} else {
 						Long checkedOutItemCount = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItem);
 						if (checkedOutItemCount == null) {
@@ -259,6 +264,14 @@ public class InventoryCheckoutAction extends BaseAction {
 			return new RedirectResolution(InventoryCheckoutAction.class).addParameter("findSkuGroups").addParameter("shippingOrder", shippingOrder.getId()).addParameter("upc", skuGroup.getSku().getProductVariant().getUpc());
 		}
 		return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+	}
+
+	//Excluding eyeglasses category from mrp check.
+	private boolean checkMrpPreCheckOut(ProductVariant variant){
+		if(Functions.collectionContains(variant.getProduct().getCategories(), CategoryConstants.eyeGlasses)){
+			return false;
+		}
+		return true;
 	}
 
 	public Resolution inventoryCheckoutOfItemThatIsNotInOrderLineItem() { // Written for Combo may be used to adjust
@@ -455,19 +468,19 @@ public class InventoryCheckoutAction extends BaseAction {
 		this.productVariantService = productVariantService;
 	}
 
-	public boolean isWronglyPickedBox() {
+	/*public boolean isWronglyPickedBox() {
 		return wronglyPickedBox;
-	}
+	}*/
 
-	public void setWronglyPickedBox(boolean wronglyPickedBox) {
+	/*public void setWronglyPickedBox(boolean wronglyPickedBox) {
 		this.wronglyPickedBox = wronglyPickedBox;
-	}
+	}*/
 
-	public SkuGroup getEarlierSkuGroup() {
+	/*public SkuGroup getEarlierSkuGroup() {
 		return earlierSkuGroup;
 	}
 
 	public void setEarlierSkuGroup(SkuGroup earlierSkuGroup) {
 		this.earlierSkuGroup = earlierSkuGroup;
-	}
+	}*/
 }

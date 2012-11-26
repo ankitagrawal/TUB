@@ -1,5 +1,6 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
@@ -30,13 +31,53 @@
                     $('#is-replacement').hide();
                     $('#is-rto').slideDown();
                 });
+	            $('.createReplacementOrderButton').click(function(event){
+		            event.preventDefault();
+		            var shippingOrderId= $('#shippingOrderIdText').val();
+		            var formName;
+		            if($(this).hasClass('rto')){
+			            formName =  $('#createReplacementOrderForRtoForm');
+		            }
+		            else{
+			            formName = $('#createReplacementOrderForRepForm');
+		            }
+		            var formUrl = formName.attr('action');
+		            $.getJSON(
+				            $('#checkReplacementOrderLink').attr('href'), {shippingOrderId:shippingOrderId},
+				            function(res) {
+					            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+						            var confirm_action = confirm("A replacement order exists for given shipping order, are you sure you want to create another replacement order?");
+						            if (confirm_action == false) {
+							            event.preventDefault();
+						            }
+						            else{
+							            formName.attr('action', formUrl+"?createReplacementOrder=");
+							            formName.submit();
+						            }
+					            }
+					            else{
+						            formName.attr('action', formUrl+"?createReplacementOrder=");
+									formName.submit();
+					            }
+				            });
+	            });
             })
         </script>
+
+	     <div style="display: none;">
+		    <s:link beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="checkReplacementOrderLink"
+		            event="checkExistingReplacementOrder"></s:link>
+	    </div>                                                      
         <fieldset class="right_label">
             <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
                 <label>Search Shipping Order</label>
                 <br/><br/>
-                <s:text name="shippingOrderId" id="shippingOrderId" style="width:200px;"/>
+                <label>Shipping order id: </label>
+	            <s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/>
+                <br/>
+                <br/>
+	            <label>Gateway order id: </label>
+	            <s:text name="gatewayOrderId" id="shippingOrderIdText" style="width:200px;"/>
                 <br/>
                 <br/>
                 <s:submit name="searchShippingOrder" value="Search"/>
@@ -75,17 +116,18 @@
                         <td>
                             <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusDelivrd
                             || replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusShipped}">
-                                <s:link href="#" id="is-replacement-radio">
+                                <a href="#" id="is-replacement-radio">
                                     <h5>Create RO<br />for replacement</h5>
-                                </s:link>
+                                </a>
                             </c:if>
                         </td>
                         <td>
+	                   
                             <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusRTO_instantiated
                             || replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusSO_returned}">
-                                <s:link href="#" id="is-rto-radio">
+                                <a href="#" id="is-rto-radio">
                                     <h5>Create RO<br />for Returned Goods</h5>
-                                </s:link>
+                                </a>
                             </c:if>
                         </td>
                     </tr>
@@ -94,7 +136,7 @@
 
             <fieldset style="display:none;" id="is-rto">
                 <h4>Returned to origin</h4>
-                <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
+                <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForRtoForm">
                     <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
                     <table border="1">
                         <thead>
@@ -114,7 +156,11 @@
                             <s:hidden name="lineItems[${lineItemCtr.index}].hkPrice" value="${lineItem.hkPrice}"/>
                             <s:hidden name="lineItems[${lineItemCtr.index}].discountOnHkPrice"
                                       value="${lineItem.discountOnHkPrice}"/>
-                            <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
+	                        <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
+                            <s:hidden name="lineItems[${lineItemCtr.index}].rewardPoints" value="${lineItem.rewardPoints}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount" value="${lineItem.orderLevelDiscount}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].codCharges" value="${lineItem.codCharges}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges" value="${lineItem.shippingCharges}"/>
 
                             <tr>
                                 <td>${lineItemCtr.count}</td>
@@ -127,13 +173,20 @@
                             </tr>
                         </c:forEach>
                     </table>
-                    <s:submit name="createReplacementOrder" value="Generate Replacement Order"/>
+					<s:label name="Reason for Replacement:" style="margin-left:7px;"/>
+					<s:select name="replacementOrderReason">
+						<s:option value="-Select Reason-">-Select Reason-</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>"
+												   serviceProperty="replacementOrderReasonForRto" value="id"
+												   label="name"/>
+					</s:select>
+                    <s:submit class="createReplacementOrderButton rto" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
 
             <fieldset style="display:none;" id="is-replacement">
                 <h4>Replacement</h4>
-                <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
+                <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForRepForm">
                     <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
                     <table border="1">
                         <thead>
@@ -154,17 +207,29 @@
                             <s:hidden name="lineItems[${lineItemCtr.index}].discountOnHkPrice"
                                       value="${lineItem.discountOnHkPrice}"/>
                             <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
+	                        <s:hidden name="lineItems[${lineItemCtr.index}].rewardPoints" value="${lineItem.rewardPoints}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount" value="${lineItem.orderLevelDiscount}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].codCharges" value="${lineItem.codCharges}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges" value="${lineItem.shippingCharges}"/>
                             <tr>
                                 <td>${lineItemCtr.count}</td>
                                 <td>
                                         ${lineItem.cartLineItem.productVariant.product.name}
                                 </td>
                                 <td>${lineItem.qty}</td>
-                                <td><s:text name="lineItems[${lineItemCtr.index}].qty" value="0"></s:text></td>
+                                <td><s:text name="lineItems[${lineItemCtr.index}].qty" /></td>
                             </tr>
                         </c:forEach>
                     </table>
-                    <s:submit name="createReplacementOrder" value="Generate Replacement Order"/>
+	                <s:label name="Reason for Replacement:" style="margin-left:7px;"/>
+	                <s:select name="replacementOrderReason">
+		                <s:option value="-Select Reason-">-Select Reason-</s:option>
+		                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+		                                           serviceProperty="replacementOrderReasonForReplacement" value="id"
+		                                           label="name"/>
+	                </s:select>
+					
+                    <s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
 

@@ -12,51 +12,51 @@ import com.hk.rest.models.user.APIUser;
  * To change this template use File | Settings | File Templates.
  */
 public class APIOrder {
-  @JsonProperty("user")
-  private APIUser apiUser;
-  @JsonProperty("order")
-   private APIOrderDetails apiOrderDetails;
-  @JsonProperty("payment")
-  private APIPayment apiPayment;
-  @JsonProperty("address")
-   private APIAddress apiAddress;
+    @JsonProperty("user")
+    private APIUser apiUser;
+    @JsonProperty("order")
+    private APIOrderDetails apiOrderDetails;
+    @JsonProperty("payment")
+    private APIPayment apiPayment;
+    @JsonProperty("address")
+    private APIAddress apiAddress;
 
-  public APIUser getApiUser() {
-    return apiUser;
-  }
-
-
-  public void setApiUser(APIUser apiUser) {
-    this.apiUser = apiUser;
-  }
-
-  public APIOrderDetails getApiOrderDetails() {
-    return apiOrderDetails;
-  }
+    public APIUser getApiUser() {
+        return apiUser;
+    }
 
 
-  public void setApiOrderDetails(APIOrderDetails apiOrderDetails) {
-    this.apiOrderDetails = apiOrderDetails;
-  }
+    public void setApiUser(APIUser apiUser) {
+        this.apiUser = apiUser;
+    }
+
+    public APIOrderDetails getApiOrderDetails() {
+        return apiOrderDetails;
+    }
 
 
-  public APIPayment getApiPayment() {
-    return apiPayment;
-  }
+    public void setApiOrderDetails(APIOrderDetails apiOrderDetails) {
+        this.apiOrderDetails = apiOrderDetails;
+    }
 
 
-  public void setApiPayment(APIPayment apiPayment) {
-    this.apiPayment = apiPayment;
-  }
+    public APIPayment getApiPayment() {
+        return apiPayment;
+    }
 
 
-  public APIAddress getApiAddress() {
-    return apiAddress;
-  }
+    public void setApiPayment(APIPayment apiPayment) {
+        this.apiPayment = apiPayment;
+    }
 
 
-  public void setApiAddress(APIAddress apiAddress) {
-    this.apiAddress = apiAddress;
-  }
+    public APIAddress getApiAddress() {
+        return apiAddress;
+    }
+
+
+    public void setApiAddress(APIAddress apiAddress) {
+        this.apiAddress = apiAddress;
+    }
 
 }

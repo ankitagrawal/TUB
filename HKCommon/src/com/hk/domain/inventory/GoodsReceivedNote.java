@@ -39,12 +39,9 @@ public class GoodsReceivedNote implements java.io.Serializable {
     @Column(name = "payable", precision = 12)
     private Double payable;
 
-    @Column(name = "payment_details", length = 100)
-    private String paymentDetails;
-
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "payment_date", length = 19)
-    private Date paymentDate;
+    @Column(name = "est_payment_date")
+    private Date estPaymentDate;
 
     @Column(name = "invoice_number", length = 100)
     private String invoiceNumber;
@@ -142,23 +139,15 @@ public class GoodsReceivedNote implements java.io.Serializable {
         this.payable = payable;
     }
 
-    public String getPaymentDetails() {
-        return this.paymentDetails;
-    }
+	public Date getEstPaymentDate() {
+		return estPaymentDate;
+	}
 
-    public void setPaymentDetails(String paymentDetails) {
-        this.paymentDetails = paymentDetails;
-    }
+	public void setEstPaymentDate(Date estPaymentDate) {
+		this.estPaymentDate = estPaymentDate;
+	}
 
-    public Date getPaymentDate() {
-        return this.paymentDate;
-    }
-
-    public void setPaymentDate(Date paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public List<GrnLineItem> getGrnLineItems() {
+	public List<GrnLineItem> getGrnLineItems() {
         return this.grnLineItems;
     }
 

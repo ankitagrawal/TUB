@@ -8,6 +8,8 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.LowInventory;
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.manager.EmailManager;
@@ -247,6 +249,15 @@ public class InventoryServiceImpl implements InventoryService {
 			bookedInventory = bookedInventoryForProductVariant + bookedInventoryForSKUs;
 		}
 		return bookedInventory;
+	}
+
+	public boolean allInventoryCheckedIn(GoodsReceivedNote grn){
+		for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
+			if(!grnLineItem.getQty().equals(grnLineItem.getCheckedInQty())){
+				return false;
+			}
+		}
+		return true;
 	}
     
     @Override

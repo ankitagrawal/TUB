@@ -116,6 +116,9 @@ public class Keys {
         public static final String fedExPassword                   = "fedExPassword";
         public static final String fedExMeterNo                    = "fedExMeterNo";
         public static final String fedExAccountNo                  = "fedExAccountNo";
+
+        public static final String hkApiAccessKey                  = "healthkartAPIAccessKey";
+        public static final String eyeTryOnXmls = "eyeTryOnXmls";
     }
 
     /*

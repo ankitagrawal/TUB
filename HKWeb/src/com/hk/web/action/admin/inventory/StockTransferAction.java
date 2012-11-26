@@ -110,7 +110,7 @@ public class StockTransferAction extends BasePaginatedAction {
                     if (stockTransferLineItem.getCheckedoutQty() != null && stockTransferLineItem.getCheckedoutQty() == 0 && stockTransferLineItem.getId() != null) {
                         stockTransferDao.delete(stockTransferLineItem);
                     }
-                    List<SkuItem> instockSkuItems = adminSkuItemDao.getInStockSkuItemsBySku(sku);
+                    List<SkuItem> instockSkuItems = adminSkuItemDao.getInStockSkuItemsByQty(sku, stockTransferLineItem.getCheckedoutQty().intValue());
                     if (!instockSkuItems.isEmpty() && stockTransferLineItem.getCheckedoutQty() <= instockSkuItems.size()) {
                         stockTransferLineItem.setSku(sku);
                         stockTransferLineItem.setStockTransfer(stockTransfer);

@@ -902,7 +902,7 @@ span.error {
 /* line 123, ../sass/main.scss */
 .siteNotice {
     background: white;
-    height: 40px;
+    height: 44px;
     text-align: center;
     font-size: 12px;
 }
@@ -5452,4 +5452,9 @@ td.top {
 .jcarousel-skin-tango .jcarousel-prev-disabled-vertical:active {
     cursor: default;
     background-position: 0 -96px;
+}
+
+.mandatory{
+	color:red;
+	font-weight:bold;
 }

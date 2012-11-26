@@ -28,25 +28,30 @@ import com.hk.util.HKFileUtils;
 public class S3Utils {
     private static Logger logger = LoggerFactory.getLogger(S3Utils.class);
 
-    private static S3Service initializeConnectionParams(String awsAccess, String awsSecret, String bucketName) {
-        try {
-            AWSCredentials awsCredentials = new AWSCredentials(awsAccess, awsSecret);
-            S3Service s3Service = new RestS3Service(awsCredentials);
-            S3Bucket s3Bucket = s3Service.getBucket(bucketName);
-            //if the bucket already exists, we won't set its access control everytime.
-            if (s3Bucket == null) {
-                s3Bucket = s3Service.createBucket(bucketName);
-                AccessControlList bucketAcl = s3Service.getBucketAcl(s3Bucket);
-                bucketAcl.grantPermission(GroupGrantee.ALL_USERS, Permission.PERMISSION_READ);
-                s3Bucket.setAcl(bucketAcl);
-                s3Service.putBucketAcl(s3Bucket);
-            }
-            return s3Service;
-        } catch (ServiceException se) {
-            logger.error("error in uplaoding data on s3: " + se);
-        }
-        return null;
-    }
+	public static S3Service s3Service = null;
+
+	private static S3Service initializeConnectionParams(String awsAccess, String awsSecret, String bucketName) {
+		try {
+			if (s3Service == null) {
+				AWSCredentials awsCredentials = new AWSCredentials(awsAccess, awsSecret);
+				s3Service = new RestS3Service(awsCredentials);
+				S3Bucket s3Bucket = s3Service.getBucket(bucketName);
+				//if the bucket already exists, we won't set its access control everytime.
+				if (s3Bucket == null) {
+					s3Bucket = s3Service.createBucket(bucketName);
+					AccessControlList bucketAcl = s3Service.getBucketAcl(s3Bucket);
+					bucketAcl.grantPermission(GroupGrantee.ALL_USERS, Permission.PERMISSION_READ);
+					s3Bucket.setAcl(bucketAcl);
+					s3Service.putBucketAcl(s3Bucket);
+				}
+			}
+			return s3Service;
+
+		} catch (ServiceException se) {
+			logger.error("error in uplaoding data on s3: " + se);
+		}
+		return null;
+	}
 
     /**
      * The method uploads the data to S3 and gives it public read access
@@ -90,15 +95,22 @@ public class S3Utils {
 
     public static Boolean downloadData(String awsAccess, String awsSecret, String objectKey, String bucketName, File fileToWriteTo){
         S3Service s3Service = initializeConnectionParams(awsAccess, awsSecret, bucketName);
+	    InputStream dataInputStream = null;
+	    FileOutputStream fileOutputStream = null;
         try {
             S3Object s3Object = s3Service.getObject(bucketName, objectKey);
-            IOUtils.copy(s3Object.getDataInputStream(),new FileOutputStream(fileToWriteTo));
+	        dataInputStream = s3Object.getDataInputStream();
+	        fileOutputStream = new FileOutputStream(fileToWriteTo);
+	        IOUtils.copy(dataInputStream, fileOutputStream);
         } catch (ServiceException se) {
             logger.error("error in downloading data from s3: " + se);
         } catch (FileNotFoundException fnfe){
             logger.error("error in downloading data from s3: " + fnfe) ;
         } catch (IOException ioe){
             logger.error("error in downloading data from s3: " + ioe) ;
+        } finally {
+	        if (dataInputStream != null) IOUtils.closeQuietly(dataInputStream);
+	        if (fileOutputStream != null) IOUtils.closeQuietly(fileOutputStream);
         }
         return Boolean.FALSE;
     }

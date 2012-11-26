@@ -24,3 +24,6 @@ Thumbs.db
 .project
 environmentLocator.properties
 rebel.xml
+.swp
+clean.bat
+

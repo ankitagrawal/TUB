@@ -17,6 +17,11 @@ public interface AdminShippingOrderService {
     public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse);
 
     public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse);
+    
+    
+    
+        
+
 
 //    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
 

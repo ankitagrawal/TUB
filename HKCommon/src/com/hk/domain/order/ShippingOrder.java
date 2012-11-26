@@ -35,7 +35,7 @@ public class ShippingOrder implements java.io.Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_dt", nullable = false, length = 19)
-    private Date                        createDate = new Date();
+    private Date                        createDate              = new Date();
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_dt", length = 19)
@@ -101,6 +101,9 @@ public class ShippingOrder implements java.io.Serializable {
     @Column(name = "target_dispatch_date", nullable = true)
     private Date                        targetDispatchDate;
 
+    @Column(name = "target_del_date", nullable = true)
+    private Date                        targetDelDate;
+
     public Long getId() {
         return this.id;
     }
@@ -136,11 +139,10 @@ public class ShippingOrder implements java.io.Serializable {
     public Date getUpdateDate() {
         return updateDate;
     }
+
     /*
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-*/
+     * public void setUpdateDate(Date updateDate) { this.updateDate = updateDate; }
+     */
     public String getGatewayOrderId() {
         return gatewayOrderId;
     }
@@ -282,6 +284,14 @@ public class ShippingOrder implements java.io.Serializable {
 
     public void setTargetDispatchDate(Date targetDelDate) {
         this.targetDispatchDate = targetDelDate;
+    }
+
+    public Date getTargetDelDate() {
+        return targetDelDate;
+    }
+
+    public void setTargetDelDate(Date targetDelDate) {
+        this.targetDelDate = targetDelDate;
     }
 
 }

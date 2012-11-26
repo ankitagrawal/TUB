@@ -128,20 +128,29 @@
         &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/visa.jpg" height="30px">
     </p>
 
+    <%--sbi ka mastercard--%>
+    <%--<p><label><s:radio name="paymentMode" value="670"/>MasterCard--%>
+        <%--&nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">--%>
+    <%--</p>--%>
+    <%--citrus ka sab kuch--%>
+
     <p><label><s:radio name="paymentMode" value="80" />
         MasterCard &nbsp;</label> <img
             src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">
     </p>
+
 
     <p><label><s:radio name="paymentMode" value="90" />
         Maestro &nbsp;</label> <img
             src="<hk:vhostImage/>/images/gateway/maestro.gif" height="30px">
     </p>
 
+
     <p><label><s:radio name="paymentMode" value="80" />
         Citrus (Faster Checkout) &nbsp;</label> <img
             src="<hk:vhostImage/>/images/gateway/citrus.png" height="30px">
     </p>
+
 
     <div style="float: right; width: 90%;"><s:submit
             name="proceed" value="Make Payment >" class="button"
@@ -243,11 +252,11 @@
                                     value="${orderSummary.order.address.name}"/>
                             <div class="label">Contact Phone</div>
                             <s:text name="codContactPhone"
-                                    value="${orderSummary.order.address.phone}"/>
+                                    value="${orderSummary.order.address.phone}" id="phoneNo"/>
                             <div class="buttons" style="font-size: 1.3em;"><br/>
                                 <br/>
                                 <s:submit name="pre" value="Place Order"
-                                          class="positive makePayment"/></div>
+                                          class="positive phoneValidation"/></div>
                             <br/>
                             <br/>
 
@@ -412,6 +421,18 @@
         $('.makePayment').click(function disablePaymentButton(){
             $(this).css("display", "none");
         });
+
+	    $('.phoneValidation').click(function() {
+		        var phone = $('#phoneNo').val();
+		        var phoneRegEx = /^((\+91)?[0-9]{10,13}?)$/;
+		        if(!phoneRegEx.test(phone)){
+			        alert("Please enter a valid phone number (+91xxxxxxxxxx).");
+			        return false;
+		        }
+		        else{
+			        $(this).css("display", "none");
+		        }
+	        });
     });
 </script>
 <div class='floftfix'></div>

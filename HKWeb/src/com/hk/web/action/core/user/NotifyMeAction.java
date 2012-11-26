@@ -73,7 +73,7 @@ public class NotifyMeAction extends BaseAction {
         logger.debug("notifyMe: " + notifyMe);
         Map dataMap = new HashMap();
         HealthkartResponse healthkartResponse = null;
-        if (StringUtils.isBlank(notifyMe.getPhone()) || StringUtils.isBlank(notifyMe.getEmail()) || StringUtils.isBlank(notifyMe.getName())) {
+        if (StringUtils.isBlank(notifyMe.getEmail()) || StringUtils.isBlank(notifyMe.getName())) {
             healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Please enter values in all the mandatory fields.", dataMap);
             noCache();
             return new JsonResolution(healthkartResponse);

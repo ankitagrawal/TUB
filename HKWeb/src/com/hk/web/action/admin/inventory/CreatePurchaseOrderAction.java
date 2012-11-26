@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.inventory;
 
 import java.util.Date;
+import java.util.Calendar;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -50,9 +51,20 @@ public class CreatePurchaseOrderAction extends BaseAction {
         }
         purchaseOrder.setCreateDate(new Date());
         purchaseOrder.setCreatedBy(user);
-        purchaseOrder.setCreatedBy(user);
         purchaseOrder.setUpdateDate(new Date());
         purchaseOrder.setPurchaseOrderStatus(getBaseDao().get(PurchaseOrderStatus.class, EnumPurchaseOrderStatus.Generated.getId()));
+
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(new Date());
+	    calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getLeadTime());
+	    purchaseOrder.setEstDelDate(calendar.getTime());
+	    if (purchaseOrder.getSupplier().getCreditDays() != null && purchaseOrder.getSupplier().getCreditDays() >= 0) {
+		    calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
+		    purchaseOrder.setEstPaymentDate(calendar.getTime());
+	    } else {
+		    purchaseOrder.setEstPaymentDate(new Date());
+	    }
+
         purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
         addRedirectAlertMessage(new SimpleMessage("Changes saved."));

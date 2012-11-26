@@ -58,8 +58,10 @@ public class TrackCourierAction extends BaseAction {
     @DefaultHandler
     public Resolution pre() {
         Resolution resolution = null;
-
         EnumCourier enumCourier = EnumCourier.getEnumCourierFromCourierId(courierId);
+	    if(enumCourier == null){
+		 return new RedirectResolution("/pages/error/courierTrackError.jsp");  
+	    }
         switch (enumCourier) {
             case Aramex:
                 resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);

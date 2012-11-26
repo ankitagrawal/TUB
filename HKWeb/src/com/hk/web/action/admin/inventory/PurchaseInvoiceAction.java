@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -99,7 +100,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
             purchaseInvoiceList = purchaseInvoiceDao.listPurchaseInvoiceWithProductVariant(productVariant);
         } else {
             purchaseInvoicePage = purchaseInvoiceDao.searchPurchaseInvoice(purchaseInvoice, purchaseInvoiceStatus, createdBy, invoiceNumber, tinNumber, supplierName, getPageNo(),
-                    getPerPage(), reconciled, warehouse);
+                    getPerPage(), reconciled, warehouse, startDate, endDate);
             purchaseInvoiceList = purchaseInvoicePage.getList();
         }
         // purchaseInvoiceList = purchaseInvoiceDao.listAll();
@@ -137,42 +138,62 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/purchaseInvoice.jsp");
     }
 
+	public Resolution paymentDetails() {
+
+        return new ForwardResolution("/pages/admin/purchaseInvoicePaymentDetails.jsp");
+    }
+
+	public Resolution updateStatusAndPaymentDetails() {
+		Resolution sourceResolution = performPISanityChecks("paymentDetails", purchaseInvoice);
+		if (sourceResolution != null) {
+			return sourceResolution;
+		}
+		purchaseInvoiceDao.save(purchaseInvoice);
+		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+		return new RedirectResolution(PurchaseInvoiceAction.class);
+	}
+
     public Resolution save() {
-        if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
-            logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoiceLineItems.size());
+	    if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
+		    logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoiceLineItems.size());
 
-            if (StringUtils.isBlank(purchaseInvoice.getInvoiceNumber()) || purchaseInvoice.getInvoiceDate() == null) {
-                addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
-                return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
-            }
+		    if (StringUtils.isBlank(purchaseInvoice.getInvoiceNumber()) || purchaseInvoice.getInvoiceDate() == null) {
+			    addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
+			    return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+		    }
 
-            for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceLineItems) {
-                if (purchaseInvoiceLineItem.getQty() != null && purchaseInvoiceLineItem.getQty() == 0 && purchaseInvoiceLineItem.getId() != null) {
-                    purchaseInvoiceDao.delete(purchaseInvoiceLineItem);
-                } else if (purchaseInvoiceLineItem.getQty() > 0) {
-                    purchaseInvoiceLineItem.setPurchaseInvoice(purchaseInvoice);
-                    Sku sku = purchaseInvoiceLineItem.getSku();
-                    if (sku == null) {
-                        sku = skuService.getSKU(purchaseInvoiceLineItem.getProductVariant(), purchaseInvoice.getWarehouse());
-                        purchaseInvoiceLineItem.setSku(sku);
-                    }
-                    skuService.saveSku(sku);
-                    purchaseInvoiceLineItem = (PurchaseInvoiceLineItem) purchaseInvoiceDao.save(purchaseInvoiceLineItem);
-                }
-                productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
-                productVariant = productVariantDao.save(productVariant);
-            }
-            if(purchaseInvoice.getReconciled() != null){
-            if(purchaseInvoice.getReconciled()&& purchaseInvoice.getReconcilationDate()== null)
-            {
-                purchaseInvoice.setReconcilationDate(new Date());
-            }
-            }
-                                                                                   
-            purchaseInvoiceDao.save(purchaseInvoice);
-        }
-        addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-        return new RedirectResolution(PurchaseInvoiceAction.class);
+		    Resolution sourceResolution = performPISanityChecks("view", purchaseInvoice);
+		    if (sourceResolution != null) {
+			    return sourceResolution;
+		    }
+
+
+		    for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceLineItems) {
+			    if (purchaseInvoiceLineItem.getQty() != null && purchaseInvoiceLineItem.getQty() == 0 && purchaseInvoiceLineItem.getId() != null) {
+				    purchaseInvoiceDao.delete(purchaseInvoiceLineItem);
+			    } else if (purchaseInvoiceLineItem.getQty() > 0) {
+				    purchaseInvoiceLineItem.setPurchaseInvoice(purchaseInvoice);
+				    Sku sku = purchaseInvoiceLineItem.getSku();
+				    if (sku == null) {
+					    sku = skuService.getSKU(purchaseInvoiceLineItem.getProductVariant(), purchaseInvoice.getWarehouse());
+					    purchaseInvoiceLineItem.setSku(sku);
+				    }
+				    skuService.saveSku(sku);
+				    purchaseInvoiceLineItem = (PurchaseInvoiceLineItem) purchaseInvoiceDao.save(purchaseInvoiceLineItem);
+			    }
+			    productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
+			    productVariant = productVariantDao.save(productVariant);
+		    }
+		    if (purchaseInvoice.getReconciled() != null) {
+			    if (purchaseInvoice.getReconciled() && purchaseInvoice.getReconcilationDate() == null) {
+				    purchaseInvoice.setReconcilationDate(new Date());
+			    }
+		    }
+
+		    purchaseInvoiceDao.save(purchaseInvoice);
+	    }
+	    addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+	    return new RedirectResolution(PurchaseInvoiceAction.class);
     }
 
     public Resolution delete() {
@@ -210,6 +231,43 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         return new JsonResolution(healthkartResponse);
     }
 
+	/**
+	 * Returns Null when all the sanity checks pass otherwise returns the resolution with error message.
+	 * @param redirectResolution
+	 * @param purchaseInvoice
+	 * @return
+	 */
+	private Resolution performPISanityChecks(String redirectResolution, PurchaseInvoice purchaseInvoice){
+		if (purchaseInvoice.getPaymentDate() != null &&
+				!(purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId()))) {
+			addRedirectAlertMessage(new SimpleMessage("Please mark PI status " + EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getName() + " as payment date is mentioned."));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+		}
+
+		if (purchaseInvoice.getPaymentDate() == null &&
+				(purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId()))) {
+			addRedirectAlertMessage(new SimpleMessage("Payment date cannot be null when status is " + EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getName()));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+		}
+
+		/* Needs to go live once back log is resolved.
+
+		if(purchaseInvoice.getPaymentDate() != null){
+			if(purchaseInvoice.getPaymentDate().compareTo(DateUtils.getDateMinusDays(8)) < 0){
+				addRedirectAlertMessage(new SimpleMessage("Payment date cannot be less than 7 days ago"));
+				return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+			}
+
+			if(purchaseInvoice.getPaymentDate().compareTo(new Date()) > 0){
+				addRedirectAlertMessage(new SimpleMessage("You cannot add a future date"));
+				return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
+			}
+		}*/
+
+
+		return null;
+	}
+
     public int getPerPageDefault() {
         return defaultPerPage; // To change body of implemented methods use File | Settings | File Templates.
     }
@@ -234,6 +292,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         params.add("purchaseInvoice");
         params.add("warehouse");
         params.add("reconciled");
+        params.add("startDate");
+        params.add("endDate");
         return params;
     }
 
@@ -357,7 +417,23 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         return grnDate;
     }
 
-    @Validate(converter = CustomDateTypeConvertor.class)
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	@Validate(converter = CustomDateTypeConvertor.class)
     public void setGrnDate(Date grnDate) {
         this.grnDate = grnDate;
     }

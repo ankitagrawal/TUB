@@ -36,13 +36,13 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.core.TempTokenDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.TokenUtils;
@@ -78,7 +78,7 @@ public class UserManager {
     @Autowired
     private OfferInstanceDao offerInstanceDao;
     @Autowired
-    private AddressDao       addressDao;
+    private AddressService       addressDao;
     @Autowired
     private SubscriptionService subscriptionService;
 
@@ -417,11 +417,11 @@ public class UserManager {
         this.offerInstanceDao = offerInstanceDao;
     }
 
-    public AddressDao getAddressDao() {
+    public AddressService getAddressDao() {
         return addressDao;
     }
 
-    public void setAddressDao(AddressDao addressDao) {
+    public void setAddressDao(AddressService addressDao) {
         this.addressDao = addressDao;
     }
 

@@ -2,6 +2,7 @@ package com.hk.web.action.core.catalog.category;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -181,8 +182,8 @@ public class CatalogAction extends BasePaginatedAction {
                 if (!filterOptions.isEmpty()) {
                     filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
                 }
-                logger.error("Using filters. SOLR can't return results so hitting DB");
-                throw new Exception("Using filters. SOLR can't return results so hitting DB");
+                //logger.error("Using filters. SOLR can't return results so hitting DB");
+                throw new Exception("Using filters. SOLR can't return results so hitt`ing DB");
             }
             List<SearchFilter> categoryList = new ArrayList<SearchFilter>();
             SearchFilter searchFilter = new SearchFilter(SolrSchemaConstants.category, rootCategorySlug);
@@ -198,15 +199,17 @@ public class CatalogAction extends BasePaginatedAction {
             PaginationFilter paginationFilter = new PaginationFilter(getPageNo(), getPerPage());
             RangeFilter rangeFilter = new RangeFilter(SolrSchemaConstants.hkPrice, getCustomStartRange(), getCustomEndRange());
 
-            SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
             List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
-            searchFilters.add(brandFilter);
+            if (StringUtils.isNotBlank(brand)){
+                SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, URLDecoder.decode(brand));
+                searchFilters.add(brandFilter);
+            }
 
             if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
                 String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
                 includeCombo = Boolean.parseBoolean( params[0].toString());
                 if (!includeCombo){
-                    SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, params[0].toString());
+                    SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, includeCombo);
                     searchFilters.add(comboFilter);
                 }
             }
@@ -215,7 +218,7 @@ public class CatalogAction extends BasePaginatedAction {
                 String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
                 onlyCOD = Boolean.parseBoolean( params[0].toString());
                 if (onlyCOD){
-                    SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, params[0].toString());
+                    SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed,onlyCOD);
                     searchFilters.add(codFilter);
                 }
             }

@@ -57,7 +57,6 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.core.State;
 import com.hk.domain.core.Tax;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -264,6 +263,18 @@ public class XslParser {
                     product.setOrderRanking(sortingOrder);
                     product.setBrand(getCellValue(XslConstants.BRAND, rowMap, headerMap));
                     product.setManufacturer(getManufacturerDetails(getCellValue(XslConstants.MANUFACTURER, rowMap, headerMap), manufacturerSheet));
+                    String isDeleted = getCellValue(XslConstants.IS_DELETED, rowMap, headerMap);
+                    boolean isDeletedBoolean =  StringUtils.isNotBlank(isDeleted) && isDeleted.trim().toLowerCase().equals("y") ? true : false;
+                    product.setDeleted(isDeletedBoolean);
+                    String isOutOfStock = getCellValue(XslConstants.OUT_OF_STOCK, rowMap, headerMap);
+                    boolean isOutOfStockBoolean =  StringUtils.isNotBlank(isOutOfStock) && isOutOfStock.trim().toLowerCase().equals("y") ? true : false;
+                    product.setOutOfStock(isOutOfStockBoolean);
+                    String isHidden = getCellValue(XslConstants.IS_HIDDEN, rowMap, headerMap);
+                    boolean isHiddenBoolean =  StringUtils.isNotBlank(isHidden) && isHidden.trim().toLowerCase().equals("y") ? true : false;
+                    product.setHidden(isHiddenBoolean);
+                    String isGroundShippingAvailable = getCellValue(XslConstants.GROUND_SHIPPING_AVAILABLE, rowMap, headerMap);
+                    boolean isGroundShippingAvailableBoolean = StringUtils.isNotBlank(isGroundShippingAvailable) && isGroundShippingAvailable.trim().toLowerCase().equals("y") ? true : false;
+                    product.setGroundShipping(isGroundShippingAvailableBoolean);
                     product.setOverview(overview);
                     product.setDescription(description);
                     product.setVideoEmbedCode(videoEmbedCode);
@@ -828,7 +839,7 @@ public class XslParser {
                     continue;
                 }
                 if (courier != null) {
-                    if (!(shipment.getCourier().equals(courier))) {
+                    if (!(shipment.getAwb().getCourier().equals(courier))) {
                         messagePostUpdation += "Courier Name in the list and present in our DataBase mismatches at Row " + rowCount + "<br/>";
                         continue;
                     }
@@ -978,7 +989,7 @@ public class XslParser {
                     continue;
                 }
                 if (courier != null) {
-                    if (!(shipment.getCourier().equals(courier))) {
+                    if (!(shipment.getAwb().getCourier().equals(courier))) {
                         messagePostUpdation += "Courier Name in the list and present in our DataBase mismatches at Row " + rowCount + "<br/>";
                         continue;
                     }
@@ -1233,6 +1244,8 @@ public class XslParser {
     }
 
     public static void main(String[] args) {
+
+
         String catString = "Diabetes>Testing Supplies>Meters>GLUCOCARD01| Home Health Devices>Diabetes Meters>Blood Glucose Meters>GLUCOCARD01";
         XslParser xslParser = new XslParser();
         List<Category> categoryList = xslParser.getCategroyListFromCategoryString(catString);

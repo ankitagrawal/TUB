@@ -2,15 +2,18 @@ package com.hk.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.hk.domain.order.OrderPaymentReconciliation;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -20,7 +23,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.XslConstants;
 import com.hk.domain.catalog.Manufacturer;
@@ -34,11 +37,12 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
-import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
-import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.order.OrderPaymentReconciliation;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.io.HkXlsWriter;
@@ -70,7 +74,7 @@ public class XslGenerator {
     public static final String    COD_ON_GROUND_SHIPPING         = "COD_ON_GROUND_SHIPPING";
 
 	@Autowired
-	private CourierDao            courierDao;
+	private CourierService courierService;
 	@Autowired
 	private InventoryService      inventoryService;
 	@Autowired
@@ -376,7 +380,7 @@ public class XslGenerator {
         setCellValue(row, 1, "ID");
 
         int initialRowNo2 = 1;
-        List<Courier> courierList = courierDao.getAllCouriers();
+        List<Courier> courierList = courierService.getAllCouriers();
         for (Courier courier : courierList) {
             row = sheet2.createRow(initialRowNo2);
             for (int columnNo = 0; columnNo < totalColumnNo2; columnNo++) {
@@ -509,7 +513,7 @@ public class XslGenerator {
 	}
 
 	public File generatePincodeDefaultCourierXsl(List<PincodeDefaultCourier> pincodeDefaultCourierList, String xslFilePath) throws Exception {
-File file = new File(xslFilePath);
+       File file = new File(xslFilePath);
         file.getParentFile().mkdirs();
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
@@ -664,7 +668,10 @@ File file = new File(xslFilePath);
 		xlsWriter.addHeader(XslConstants.ADDRESS, XslConstants.ADDRESS);
 		xlsWriter.addHeader(XslConstants.CONTACT_PERSON, XslConstants.CONTACT_PERSON);
 		xlsWriter.addHeader(XslConstants.CONTACT_NUMBER, XslConstants.CONTACT_NUMBER);
-		xlsWriter.addHeader(XslConstants.CREDIT_PERIOD, XslConstants.CREDIT_PERIOD);
+		xlsWriter.addHeader(XslConstants.CREDIT_DAYS, XslConstants.CREDIT_DAYS);
+		xlsWriter.addHeader(XslConstants.TARGET_CREDIT_DAYS, XslConstants.TARGET_CREDIT_DAYS);
+		xlsWriter.addHeader(XslConstants.LEAD_TIME, XslConstants.LEAD_TIME);
+		xlsWriter.addHeader(XslConstants.ACTIVE, XslConstants.ACTIVE);
 		xlsWriter.addHeader(XslConstants.MARGIN, XslConstants.MARGIN);
 		xlsWriter.addHeader(XslConstants.BRAND, XslConstants.BRAND);
 		xlsWriter.addHeader(XslConstants.VALIDITY_TERMS_OF_TRADE, XslConstants.VALIDITY_TERMS_OF_TRADE);
@@ -697,7 +704,10 @@ File file = new File(xslFilePath);
 			xlsWriter.addCell(xlsRow, supplierAddress.toString());
 			xlsWriter.addCell(xlsRow, supplier.getContactPerson());
 			xlsWriter.addCell(xlsRow, supplier.getContactNumber());
-			xlsWriter.addCell(xlsRow, supplier.getCreditPeriod());
+			xlsWriter.addCell(xlsRow, supplier.getCreditDays());
+			xlsWriter.addCell(xlsRow, supplier.getTargetCreditDays());
+			xlsWriter.addCell(xlsRow, supplier.getLeadTime());
+			xlsWriter.addCell(xlsRow, supplier.getActive());
 			xlsWriter.addCell(xlsRow, supplier.getMargins());
 			xlsWriter.addCell(xlsRow, supplier.getBrandName());
 			xlsWriter.addCell(xlsRow, supplier.getTOT());

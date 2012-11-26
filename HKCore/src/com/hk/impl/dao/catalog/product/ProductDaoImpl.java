@@ -158,43 +158,44 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return list(criteria, page, perPage);
     }
 
-    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, Boolean onlyCOD, Boolean includeCombo,int page, int perPage) {
-        if (categoryNames != null && categoryNames.size() > 0) {
-            List<String> productIds =  new ArrayList<String>();
-            if (includeCombo){
-                productIds =  getSession().createQuery(
-                        "select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories",
-                        categoryNames).setInteger("tagCount", categoryNames.size()).list();
+	public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, Boolean onlyCOD, Boolean includeCombo, int page, int perPage) {
+		if (categoryNames != null && categoryNames.size() > 0) {
+			List<String> productIds = new ArrayList<String>();
+			productIds = getSession().createQuery(
+					"select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList(
+					"categories",
+					categoryNames).setInteger("tagCount", categoryNames.size()).list();
+			if (productIds != null && productIds.size() > 0) {
+				if (!includeCombo) {
+					productIds = getSession().createQuery(
+							"select distinct pv.product.id from ProductVariant pv where pv.product.id in (:productIds)").setParameterList(
+							"productIds",
+							productIds).list();
+				}
 
-            }else{
-                productIds = getSession().createQuery(
-                        "select distinct pv.product.id from ProductVariant pv inner join pv.product.categories c where c.name in (:categories) group by pv.product.id having count(*) = :tagCount").setParameterList("categories",
-                        categoryNames).setInteger("tagCount", categoryNames.size()).list();
+				if (productIds != null && productIds.size() > 0) {
 
-            }
+					DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+					if (StringUtils.isNotBlank(brand)) {
+						criteria.add(Restrictions.eq("brand", brand));
+					}
+					criteria.add(Restrictions.in("id", productIds));
+					criteria.add(Restrictions.eq("deleted", false));
+					criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+					criteria.add(Restrictions.eq("hidden", false));
+					if (onlyCOD) {
+						criteria.add(Restrictions.eq("codAllowed", true));
+					}
 
-            if (productIds != null && productIds.size() > 0) {
+					criteria.addOrder(Order.asc("outOfStock"));
+					criteria.addOrder(Order.asc("orderRanking"));
 
-                DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
-                if (StringUtils.isNotBlank(brand)) {
-                    criteria.add(Restrictions.eq("brand", brand));
-                }
-                criteria.add(Restrictions.in("id", productIds));
-                criteria.add(Restrictions.eq("deleted", false));
-                criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
-                criteria.add(Restrictions.eq("hidden", false));
-                if (onlyCOD){
-                    criteria.add(Restrictions.eq("codAllowed", true));
-                }
-
-                criteria.addOrder(Order.asc("outOfStock"));
-                criteria.addOrder(Order.asc("orderRanking"));
-
-                return list(criteria, page, perPage);
-            }
-        }
-        return null;
-    }
+					return list(criteria, page, perPage);
+				}
+			}
+		}
+		return null;
+	}
 
 	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice,
                                                     Boolean onlyCOD, Boolean includeCombo, int page, int perPage) {

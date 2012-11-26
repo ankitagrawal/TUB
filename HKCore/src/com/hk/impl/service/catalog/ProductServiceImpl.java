@@ -1,13 +1,10 @@
 package com.hk.impl.service.catalog;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.catalog.image.EnumImageType;
+import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +56,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductIndexService productIndexService;
+    
+    @Autowired
+    ProductImageService productImageService;
 
     @Autowired
     private SeoDao seoDao;
@@ -275,6 +275,30 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return isOutOfStock;
+    }
+
+    @Override
+    public ProductVariant validTryOnProductVariant(Product product) {
+        if (product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)) {
+//            Category virtualTryOnCategory = new Category("Virtual Try On", "Try It Online");
+//            if (product.getCategories().contains(virtualTryOnCategory)) {
+                for (ProductVariant productVariant : product.getInStockVariants()) {
+                    int optionsCounter = 0;
+                    for (ProductOption productOption : productVariant.getProductOptions()) {
+                        if (productOption.getName().equalsIgnoreCase("Color") || productOption.getName().equalsIgnoreCase("Gender") || productOption.getName().equalsIgnoreCase("Size") || productOption.getName().equalsIgnoreCase("Virtual Try On")) {
+                            optionsCounter++;
+                        }
+                    }
+                    if (optionsCounter != 4) {
+                        return null;
+                    }
+                    if (!productImageService.searchProductImages(EnumImageType.FrontFacingEye.getId(), product, productVariant, false, null).isEmpty() && !productImageService.searchProductImages(EnumImageType.SideFacingEye.getId(), product, productVariant, false, null).isEmpty()) {
+                        return productVariant;
+                    }
+                }
+//            }
+        }
+        return null;
     }
 /*
 

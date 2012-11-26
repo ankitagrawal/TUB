@@ -1,27 +1,18 @@
 package com.hk.web.action.admin.catalog;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.core.Keys;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
+import com.hk.constants.courier.StateList;
+import com.hk.domain.catalog.Supplier;
+import com.hk.pact.dao.core.SupplierDao;
+import com.hk.util.XslGenerator;
+import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +20,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.constants.core.Keys;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.courier.StateList;
-import com.hk.domain.catalog.Supplier;
-import com.hk.pact.dao.core.SupplierDao;
-import com.hk.util.XslGenerator;
-import com.hk.web.action.error.AdminPermissionAction;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
-@Secure(hasAnyPermissions = {PermissionConstants.SUPPLIER_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
 public class SupplierManagementAction extends BasePaginatedAction {
 
@@ -60,6 +50,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
     public static final int LenghtOfTIN = 11;
     private String supplierTin;
     private String supplierName;
+    private Boolean status;
 
     Page supplierPage;
     private Integer defaultPerPage = 30;
@@ -75,7 +66,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
-        supplierPage = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, getPageNo(), getPerPage());
+	    supplierPage = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, status, getPageNo(), getPerPage());
         supplierList = supplierPage.getList();
         return new ForwardResolution("/pages/admin/supplierList.jsp");
     }
@@ -99,7 +90,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
         }
 
         //validation for the margins
-        if(supplier.getMargins() !=null){
+        /*if(supplier.getMargins() !=null){
             //Validating for entering only valid double values
             Pattern pattern;
 
@@ -120,19 +111,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
                         getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
                 }
             }
-        }
-
-        //Validation for the Credit Period
-        if(supplier.getCreditPeriod() != null){
-            Pattern pattern;
-
-            String credit_period = supplier.getCreditPeriod();
-            final String INTEGER_PATTERN = "^[0-9]*$";
-            pattern = Pattern.compile(INTEGER_PATTERN);
-            boolean bool=pattern.matcher(credit_period).matches();
-            if(!bool)
-                getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number"));
-        }
+        }*/
 
         // Validation for the Email Id
         if(supplier.getEmail_id() != null){
@@ -146,6 +125,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
         }
     }
 
+	@Secure(hasAnyRoles = { RoleConstants.PO_APPROVER }, authActionBean = AdminPermissionAction.class)
     public Resolution save() {
         Supplier oldSupplier = supplierDao.findByTIN(supplier.getTinNumber());
         if (oldSupplier == null) {
@@ -172,7 +152,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
     }
 
     public Resolution generateExcelReport() {
-        supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName);
+        supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, status);
 
         xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
 
@@ -238,7 +218,15 @@ public class SupplierManagementAction extends BasePaginatedAction {
         this.supplierTin = supplierTin;
     }
 
-    public int getPerPageDefault() {
+	public Boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public int getPerPageDefault() {
         return defaultPerPage;
     }
 

@@ -103,6 +103,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/bulkProductDetails.jsp");
     }
 
+    @SuppressWarnings("unchecked")
     public Resolution defineOptionsMap() {
         if (getContext().getRequest().getParameter("toBeEditedOptions") != null) {
             String[] options = getContext().getRequest().getParameterValues("toBeEditedOptions");

@@ -158,9 +158,12 @@ public class AdminEmailManager {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean sendCampaignMails(List<EmailRecepient> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
+    public boolean sendCampaignMails(List<EmailRecepient> emailersList, EmailCampaign emailCampaign, String senderEMail,
+                                     String senderName, String replyToEmail, String xsmtpapi, SendCampaignResult sendCampaignResult) {
+        boolean isCampaignSentSuccess = true;
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("X-SMTPAPI", xsmtpapi);
+        headerMap.put("X-Mailgun-Variables", xsmtpapi);
 
         String emailCampaignTemplate = emailCampaign.getTemplate();
         String emailCampaignTemplateContents = emailCampaign.getTemplateFtl();
@@ -180,10 +183,11 @@ public class AdminEmailManager {
         List<Map<String, HtmlEmail>> emailList = new ArrayList<Map<String, HtmlEmail>>();
         List<EmailerHistory> emailHistoryRecs = new ArrayList<EmailerHistory>(INITIAL_LIST_SIZE);
         List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
-        int commitCount = 0;
+        int emailCount = 0;
         int breakFromLoop = emailersList.size() < COMMIT_COUNT ? emailersList.size() : COMMIT_COUNT;
 
         Session session = baseDao.getHibernateTemplate().getSessionFactory().openSession();
+        List<Map<String, HtmlEmail>> tempEmailList = new ArrayList<Map<String, HtmlEmail>>();
 
         for (EmailRecepient emailRecepient : emailersList) {
             try {
@@ -193,24 +197,39 @@ public class AdminEmailManager {
 
                 valuesMap.put(EmailMapKeyConstants.name, emailRecepient.getName());
 
-                Map<String, HtmlEmail> email = emailService.createHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getName(), "info@healthkart.com", headerMap);
-                emailList.add(email);
-                // keep a record in history
-                emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
-                emailRecepient.setLastEmailDate(new Date());
-                emailRecepientRecs.add(emailRecepient);
+                Map<String, HtmlEmail> email = emailService.createHtmlEmail(freemarkerTemplate, valuesMap, senderEMail, senderName, emailRecepient.getEmail(), emailRecepient.getName(),replyToEmail,"", headerMap);
+                if(email != null){
+                    tempEmailList.add(email);
+                    // keep a record in history
+                    emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
+                    emailRecepient.setLastEmailDate(new Date());
+                    emailRecepientRecs.add(emailRecepient);
 
-                EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistoryObject("no-reply@healthkart.com", "HealthKart",
-                        getBaseDao().get(EmailType.class, emailCampaign.getEmailType().getId()), emailRecepient, emailCampaign, "");
-                emailHistoryRecs.add(emailerHistory);
+                    EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistoryObject(senderEMail, senderName,
+                            getBaseDao().get(EmailType.class, emailCampaign.getEmailType().getId()), emailRecepient, emailCampaign, "");
+                    emailHistoryRecs.add(emailerHistory);
 
-                commitCount++;
-                if (commitCount == breakFromLoop) {
-                    getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
-                    getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
-                    commitCount = 0;
-                    emailHistoryRecs.clear();
-                    emailRecepientRecs.clear();
+                    emailCount++;
+	                if (emailCount % breakFromLoop == 0 || emailCount == emailersList.size()) {
+                        boolean emailRecipientsRecorded = getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
+                        boolean emailHistoryRecorded = getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
+
+                        if (emailHistoryRecorded && emailRecipientsRecorded) {
+                            emailList.addAll(tempEmailList);
+                        } else {
+                            sendCampaignResult.setCampaignSentSuccess(false);
+                            for (Map<String, HtmlEmail> map : tempEmailList) {
+                                List<String> emailListInMap = new ArrayList<String>(map.keySet());
+                                sendCampaignResult.addErrorEmaiList(emailListInMap);
+                            }
+                        }
+                        
+                        tempEmailList.clear();
+                        emailHistoryRecs.clear();
+                        emailRecepientRecs.clear();
+                    }
+                }else{
+                    logger.info("Unable to send email to " + emailRecepient.getEmail());
                 }
 
             } catch (Exception e) {
@@ -221,11 +240,11 @@ public class AdminEmailManager {
 
         emailService.sendBulkHtmlEmail(emailList, emailCampaign);
         session.close();
-        return true;
+        return isCampaignSentSuccess;
     }
 
 
-    public void sendCampaignByUploadingFile(List<Long> userIds, List<String> emailIds, EmailCampaign emailCampaign, int maxResultCount) {
+    public void sendCampaignByUploadingFile(List<Long> userIds, List<String> emailIds, EmailCampaign emailCampaign, int maxResultCount, String senderEmail, String senderName, String replyToEmail) {
         List<String> finalCategories = new ArrayList<String>();
         finalCategories.add("User Ids Excel");
         String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
@@ -244,39 +263,37 @@ public class AdminEmailManager {
 
             if (filteredUsers.size() > 0) {
                 logger.info(" user list size " + filteredUsers.size());
-                sendCampaignMails(filteredUsers, emailCampaign, xsmtpapi);
+                SendCampaignResult sendCampaignResult = new SendCampaignResult();
+                sendCampaignMails(filteredUsers, emailCampaign, senderEmail, senderName, replyToEmail, xsmtpapi, sendCampaignResult);
+                if (!sendCampaignResult.isCampaignSentSuccess()) {
+                    logger.error("Error in sending file upload campaing to :" + sendCampaignResult.getErrorEmails().toString());
+                }
             }
         } while (filteredUsers.size() > 0);
     }
 
 
-    public void populateEmailRecepient(List<String> userIdList, int maxResultCount) {
-        List<User> usersNotInEmailRecepient = new ArrayList<User>();
-        do {
-            usersNotInEmailRecepient.clear();
-            usersNotInEmailRecepient = getAdminEmailService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
+	public void populateEmailRecepient(List<String> userIdList, int maxResultCount) {
+		if (userIdList != null) {
+			List<User> usersNotInEmailRecepient = getAdminEmailService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
+			if (usersNotInEmailRecepient.size() > 0) {
+				List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
+				int counter = 0;
+				for (User user : usersNotInEmailRecepient) {
+					EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
+					emailRecepientRecs.add(emailRecepient);
+					counter++;
+					if (counter % COMMIT_COUNT == 0 || counter == userIdList.size()) {
+						getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
+						emailRecepientRecs.clear();
+					}
 
+				}
+			}
+		}
+	}
 
-            List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
-            int counter = 0;
-            for (User user : usersNotInEmailRecepient) {
-                EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
-                emailRecepientRecs.add(emailRecepient);
-                if (counter == COMMIT_COUNT) {
-                    getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-                    counter = 0;
-                    emailRecepientRecs.clear();
-                }
-                counter++;
-            }
-            if (counter > 0) {
-                getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-            }
-        } while (usersNotInEmailRecepient.size() > 0);
-
-    }
-
-    public boolean sendGRNEmail(GoodsReceivedNote grn) {
+	public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("grn", grn);
 
@@ -289,6 +306,7 @@ public class AdminEmailManager {
                                         User notifedByuser) {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("X-SMTPAPI", xsmtpapi);
+        headerMap.put("X-Mailgun-Variables", xsmtpapi);
 
         String emailCampaignTemplate = emailCampaign.getTemplate();
         String emailCampaignTemplateContents = emailCampaign.getTemplateFtl();

@@ -211,6 +211,7 @@
         <url-pattern>/autocomplete-search/*</url-pattern>
         <url-pattern>/admin</url-pattern>
         <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/agent/order</url-pattern>
         <url-pattern>/core</url-pattern>
         <url-pattern>/core/*</url-pattern>
         <url-pattern>/affiliate</url-pattern>
@@ -243,6 +244,17 @@
 	    <url-pattern>/dmp</url-pattern>
 	    <url-pattern>/feedback</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+		<servlet-name>HKSingleLoginServlet</servlet-name>
+		<servlet-class>
+			com.hk.web.servlet.HKSingleLoginServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HKSingleLoginServlet</servlet-name>
+		<url-pattern>/login/auth</url-pattern>
+	</servlet-mapping>
 
 
     <!--  Servlet End -->
@@ -280,6 +292,19 @@
     <filter-mapping>
         <filter-name>ShiroFilter</filter-name>
         <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AnalyticsFilter</filter-name>
+        <filter-class>
+            com.hk.web.filter.AnalyticsFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AnalyticsFilter</filter-name>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>/</url-pattern>
     </filter-mapping>
 
     <filter>

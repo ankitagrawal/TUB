@@ -13,6 +13,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -160,7 +161,7 @@ public class GRNAction extends BasePaginatedAction {
 		if (grn != null && grn.getId() != null) {
 			logger.debug("grnLineItems@Save: " + grnLineItems.size());
 
-			if (StringUtils.isBlank(grn.getInvoiceNumber()) || grn.getInvoiceDate() == null) {
+			if (StringUtils.isBlank(grn.getInvoiceNumber()) || StringUtils.equals(grn.getInvoiceNumber(), "-") || grn.getInvoiceDate() == null) {
 				addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
 				return new RedirectResolution(GRNAction.class).addParameter("view").addParameter("grn", grn.getId());
 			}
@@ -211,8 +212,16 @@ public class GRNAction extends BasePaginatedAction {
 			grnDto = grnManager.generateGRNDto(grn);
 			grn.setPayable(grnDto.getTotalPayable());
 
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(grn.getGrnDate());
+			calendar.add(Calendar.DATE, grn.getPurchaseOrder().getSupplier().getCreditDays());
+			grn.setEstPaymentDate(calendar.getTime());
+
 			grn.setFinalPayableAmount(grn.getPayable() - overallDiscount);
 			goodsReceivedNoteDao.save(grn);
+			grn.getPurchaseOrder().setPurchaseOrderStatus(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus());
+			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
+
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		return new RedirectResolution(GRNAction.class);
@@ -308,6 +317,9 @@ public class GRNAction extends BasePaginatedAction {
 		PurchaseInvoice purchaseInvoice = new PurchaseInvoice();
 		purchaseInvoice.setCreateDate(new Date());
 		purchaseInvoice.setCreatedBy(loggedOnUser);
+		if (grnListForPurchaseInvoice.get(0) != null && grnListForPurchaseInvoice.get(0).getEstPaymentDate() != null) {
+			purchaseInvoice.setEstPaymentDate(grnListForPurchaseInvoice.get(0).getEstPaymentDate());
+		}
 		purchaseInvoice.setPurchaseInvoiceStatus(getPurchaseInvoiceDao().get(PurchaseInvoiceStatus.class, EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getId()));
 		if (supplier != null) {
 			purchaseInvoice.setSupplier(supplier);
