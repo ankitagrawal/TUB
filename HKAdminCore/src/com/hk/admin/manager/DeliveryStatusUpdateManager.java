@@ -386,6 +386,10 @@ public class DeliveryStatusUpdateManager {
         String deliveryDate = null;
         Date delivery_date = null;
         ShippingOrder shippingOrdr = null;
+		List<Courier> couriers = null;
+		for (Long courierId : EnumCourier.getDelhiveryCourierIds()){
+				couriers.add(EnumCourier.getEnumCourierFromCourierId(courierId).asCourier());
+		}
 
 
         //Iterating over the  jsonShipmentDataArray to extract the required values(AWB,Status,DeliveryDate) and putting
@@ -398,7 +402,7 @@ public class DeliveryStatusUpdateManager {
                 delivery_date = getFormattedDeliveryDate(deliveryDate);
                 //if status is delivered then putting values in the map.
                 if (deliveryStatus.equalsIgnoreCase(CourierConstants.DELIVERED)) {
-                      Awb awb= awbService.findByCourierAwbNumber(EnumCourier.Delhivery.asCourier(),trackingId);
+                    Awb awb= awbService.findByCourierAwbNumber(couriers,trackingId);
                     Shipment shipment=shipmentService.findByAwb(awb);
                     shippingOrdr = shipment.getShippingOrder();
                     ordersDelivered=updateCourierDeliveryStatus(shippingOrdr, shippingOrdr.getShipment(), shippingOrdr.getShipment().getAwb().getAwbNumber(), delivery_date);
