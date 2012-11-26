@@ -4,6 +4,8 @@
 <s:layout-render name="/layouts/categoryBlankLanding.jsp"
                  pageTitle="Special Offers for Wipro Employees at HealthKart.com">
 
+    <s:layout-component name="menu"><div style="height:30px;"></div></s:layout-component>
+
     <s:layout-component name="htmlHead">
         <style type="text/css">
             .cl {
