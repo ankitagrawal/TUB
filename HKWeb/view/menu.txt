@@ -700,6 +700,8 @@
 --/beauty/hair-care/styling-products
 --/beauty/hair-care/hair-loss-treatment : Hair Loss & Treatment
 ---/beauty/hair-care/hair-loss-treatment/hair-loss
+---/beauty/hair-care/hair-loss-treatment/hair-supplements
+---/beauty/hair-care/hair-loss-treatment/artificial-hair-fibres
 ---/beauty/hair-care/hair-loss-treatment/anti-dandruff
 --/beauty/hair-care/hair-styling-tools
 ---/beauty/hair-care/hair-styling-tools/dryers
