@@ -575,8 +575,6 @@ public class AdminEmailManager {
             {
                 ProductVariant productVariant = productVariantService.getVariantById(pvId);
                 if (productVariant != null) {
-
-
                     if (productsMap.containsKey(pvId)){
                         product =  productsMap.get(pvId);
                     }else{
@@ -597,6 +595,7 @@ public class AdminEmailManager {
                     errorBuilder.append(String.format("Product %s is out of stock", product.getId()));
                     continue;
                 }
+                product.setProductURL(convertToWww(getProductService().getProductUrl(product,false)));
                 //OK..now we have a valid product variant
                 validProductVariants.add(productVariant);
 
