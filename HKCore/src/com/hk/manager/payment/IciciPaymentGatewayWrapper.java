@@ -1,21 +1,20 @@
 package com.hk.manager.payment;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringTokenizer;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.service.PaymentGatewayWrapper;
 import com.akube.framework.util.BaseUtils;
 import com.opus.epg.sfa.java.EPGCryptLib;
 import com.opus.epg.sfa.java.EPGMerchantEncryptionLib;
 import com.opus.epg.sfa.java.SFAApplicationException;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.

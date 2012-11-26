@@ -34,7 +34,7 @@ public interface AdminEmailService {
     public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult);
 
     @SuppressWarnings("unchecked")
-    public void saveOrUpdate(Session session, Collection entities) throws DataAccessException;
+    public boolean saveOrUpdate(Session session, Collection entities) throws DataAccessException;
 
     Long getMailingListCountByCampaign(EmailCampaign emailCampaign);
 

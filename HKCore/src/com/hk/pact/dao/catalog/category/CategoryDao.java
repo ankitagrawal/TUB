@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.pact.dao.BaseDao;
-import com.hk.dto.ProductOptionDto;
 import com.hk.dto.PriceRangeDto;
+import com.hk.dto.ProductOptionDto;
+import com.hk.pact.dao.BaseDao;
 
 public interface CategoryDao extends BaseDao {
 
