@@ -36,6 +36,7 @@ public class CourierConstants {
     public static final String CHHOTU = "CHHOTU";
     public static final String DTDC = "DTDC";
     public static final String DELHIVERY = "DELHIVERY";
+	public static final String QUANTIUM = "QUANTIUM";
 
 
     //Constants for DTDC
@@ -68,6 +69,14 @@ public class CourierConstants {
     public static final String BLUEDART_STATUS_DATE = "StatusDate";
     public static final String BLUEDART_STATUS = "Status";
     public static final String BLUEDART_SHIPMENT_DELIVERED = "Shipment delivered";
+
+	//Constants for QUANTIUM
+	public static final String QUANTIUM_TRACKING_NO = "TrackingNo";
+	public static final String QUANTIUM_REF_NO = "Reference";
+	public static final String QUANTIUM_STATUS = "CurrentStatus";
+	public static final String QUANTIUM_DELIVERED = "DS";
+	public static final String QUANTIUM_DELIVERY_DATE = "LastUpdatedDate";
+	public static final String QUANTIUM_INVALID_NO = "Invalid Tracking NO";
 
     //Constants for Healthkart Delivery
     public static final String HKDELIVERY_WORKSHEET_FOLDER = "hkDeliveryWorksheet";

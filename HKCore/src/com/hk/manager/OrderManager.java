@@ -44,6 +44,7 @@ import com.hk.domain.order.SecondaryReferrerForOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
+import com.hk.domain.analytics.TrafficTracking;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.pact.dao.BaseDao;
@@ -69,6 +70,8 @@ import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
 import com.hk.web.filter.WebContext;
+
+import javax.servlet.http.HttpSession;
 
 @Component
 public class OrderManager {
@@ -160,22 +163,24 @@ public class OrderManager {
             return existingOrderNow;
         }
 
-        if (WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID) != null) {
-            Long primaryReferrerForOrderId = (Long) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID);
+	    HttpSession session = WebContext.getRequest().getSession();
+	    if (session.getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID) != null) {
+            Long primaryReferrerForOrderId = (Long) session.getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID);
             order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, primaryReferrerForOrderId));
         }
-        if (WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID) != null) {
-            Long secondaryReferrerForOrderId = (Long) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID);
+        if (session.getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID) != null) {
+            Long secondaryReferrerForOrderId = (Long) session.getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID);
             order.setSecondaryReferrerForOrder(getBaseDao().get(SecondaryReferrerForOrder.class, secondaryReferrerForOrderId));
         }
         if (user.getOrders().size() == 0 && user.getReferredBy() != null) {
             order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, EnumPrimaryReferrerForOrder.RFERRAL.getId()));
         }
-        if (WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN) != null) {
-            order.setUtmCampaign((String) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN));
+        if (session.getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN) != null) {
+            order.setUtmCampaign((String) session.getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN));
         }
 
         order = getOrderService().save(order);
+	    
         return order;
     }
 
@@ -422,6 +427,14 @@ public class OrderManager {
             sendReferralProgramEmail(order.getUser());
             getSmsManager().sendOrderPlacedSMS(order);
         }
+
+	    //Set Order in Traffic Tracking
+	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+	    if (trafficTracking != null) {
+		    trafficTracking.setOrderId(order.getId());
+		    getBaseDao().save(trafficTracking);
+	    }
+	    
         return order;
     }
 
@@ -556,6 +569,7 @@ public class OrderManager {
                     if (lineItem.getQty() <= 0) {
                         iterator.remove();
                         getCartLineItemDao().delete(lineItem);
+                      logger.debug("Deleting cartLineItem for Product Variant" + lineItem.getProductVariant().getId()+ "because it's quantity is zero");                      
                     } else {
                         ProductVariant productVariant = lineItem.getProductVariant();
                         Product product = productVariant.getProduct();
@@ -577,7 +591,7 @@ public class OrderManager {
                                     if (lineItem.getComboInstance() != null) {
                                         comboInstanceIds.add(lineItem.getComboInstance().getId());
                                         lineItem.setQty(0L);
-                                        logger.debug("Deleting Combo because unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId()
+                                        logger.debug("Setting CartLineITem Qty equals to Zero because unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId()
                                                 + "is less than combo Product Variant Quantity");
                                     } else {
                                         lineItem.setQty(unbookedInventory);
@@ -591,15 +605,27 @@ public class OrderManager {
                     }
                 }
             }
+          //Setting Zero quantity to other products of the Combo
             for (Long comboInstanceId : comboInstanceIds) {
-                for (CartLineItem cartLineItem : order.getCartLineItems()) {
+                for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
+                  CartLineItem cartLineItem = iterator.next();
                     if (cartLineItem.getComboInstance() != null && cartLineItem.getComboInstance().getId().equals(comboInstanceId)) {
                         cartLineItem.setQty(0L);
                         cartLineItemService.save(cartLineItem);
+                        logger.debug("Setting CartLineITem Qty equals to Zero for Product Variant:" + cartLineItem.getProductVariant().getId()+ "because other product variant in the same combo is set to zero");
                     }
                 }
             }
-            order = getOrderService().save(order);
+          // Final check to remove the zero quantity cartLineItem
+          for(Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();){
+            CartLineItem cartLineItem = iterator.next();
+            if(cartLineItem.getQty()<=0){
+              iterator.remove();
+              getCartLineItemDao().delete(cartLineItem);
+              logger.debug("Deleting cartLineItem for Product Variant" + cartLineItem.getProductVariant().getId()+ "because it's quantity is zero");
+            }
+          }
+          order = getOrderService().save(order);
         }
         if (order != null)
             getOrderDao().refresh(order);

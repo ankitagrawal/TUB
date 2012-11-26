@@ -164,6 +164,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 					trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
 				} else {
 					suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
+					Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), isCod, EnumAwbStatus.Unused.getAsAwbStatus());
+					if (awb != null) {
+						trackingId = awb.getAwbNumber();
+					}
 				}
 
 			} else {
@@ -228,7 +232,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 					}
 					finalAwb = updateAttachStatus(awbFromDb);
 
-				} else {
+				} else {                                                                                                         
 					//Create New AWb (Authorization_Pending shows it might not a valid  Awb , since person has added it manually.
 					Awb awb = awbService.createAwb(selectedCourier, trackingId.trim(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
 					awb = (Awb) awbService.save(awb, null);
