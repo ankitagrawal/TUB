@@ -123,7 +123,6 @@
 <div id="tabs_content1" class="tab_content"><s:form
         beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}" />
-    <s:hidden name="bankId" value="70"/>
 
     <c:forEach items="${paymentModeBean.cardIssuers}" var="cardIssuer">
         <p><label><s:radio name="issuer" value="${cardIssuer.issuer}"/>${cardIssuer.issuer.name}

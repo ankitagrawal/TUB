@@ -3,6 +3,7 @@ package com.hk.domain.payment;
 import com.akube.framework.gson.JsonSkip;
 
 import javax.persistence.*;
+import java.sql.Blob;
 import java.util.Date;
 
 /**
@@ -34,8 +35,8 @@ public class Issuer implements java.io.Serializable {
     @Column(name = "active")
     private Boolean active;
 
-//    @Column(name = "active")
-//    private Binary imageIcon;
+    @Column(name = "image")
+    private byte[] imageIcon;
 
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
@@ -104,5 +105,11 @@ public class Issuer implements java.io.Serializable {
         this.downtimeEndDate = downtimeEndDate;
     }
 
+    public byte[] getImageIcon() {
+        return imageIcon;
+    }
 
+    public void setImageIcon(byte[] imageIcon) {
+        this.imageIcon = imageIcon;
+    }
 }

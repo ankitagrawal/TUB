@@ -31,7 +31,10 @@ public class Gateway implements java.io.Serializable {
     @Column(name = "active")
     private Boolean active;
 
-    @JsonSkip
+    @Column(name = "image")
+    private byte[] imageIcon;
+
+   @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "downtime_start_date", length = 19)
     private Date downtimeStartDate;
@@ -87,5 +90,13 @@ public class Gateway implements java.io.Serializable {
 
     public void setDowntimeEndDate(Date downtimeEndDate) {
         this.downtimeEndDate = downtimeEndDate;
+    }
+
+    public byte[] getImageIcon() {
+        return imageIcon;
+    }
+
+    public void setImageIcon(byte[] imageIcon) {
+        this.imageIcon = imageIcon;
     }
 }

@@ -10,14 +10,9 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.*;
-import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.dao.RoleDao;
-import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.payment.GatewayIssuerMappingDao;
-import com.hk.pact.dao.payment.PaymentModeDao;
-import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.cart.CartAction;
@@ -34,168 +29,125 @@ import org.stripesstuff.plugin.security.Secure;
 import java.util.*;
 
 /**
- * Author: Kani Date: Dec 29, 2008
+ * Author: Pratham
  */
 @Component
-@Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
+@Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 public class PaymentAction extends BaseAction {
 
-	@Validate(required = true)
-	private PaymentMode paymentMode;
-
-	Long bankId;
-    PreferredBankGateway bank;
+    @Validate(required = true)
+    private PaymentMode paymentMode;
 
     Issuer issuer;
 
-	@Validate(required = true, encrypted = true)
-	private Order order;
+    @Validate(required = true, encrypted = true)
+    private Order order;
 
-	@Autowired
-	PaymentManager paymentManager;
+    @Autowired
+    PaymentManager paymentManager;
 
-	@Autowired
-	OrderManager orderManager;
+    @Autowired
+    OrderManager orderManager;
 
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
     @Autowired
     GatewayIssuerMappingDao gatewayIssuerMappingDao;
 
-	@SuppressWarnings("unchecked")
-	public Resolution proceed() {
-		if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
-			// recalculate the pricing before creating a payment.
-			order = orderManager.recalAndUpdateAmount(order);
+    @SuppressWarnings("unchecked")
+    public Resolution proceed() {
+        if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+            // recalculate the pricing before creating a payment.
+            order = orderManager.recalAndUpdateAmount(order);
 
-			if (order.getAmount() == 0) {
-				addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
-				return new RedirectResolution(CartAction.class);
-			}
+            if (order.getAmount() == 0) {
+                addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
+                return new RedirectResolution(CartAction.class);
+            }
 
-            if(issuer != null){
+            Gateway preferredGateway = null;
+            GatewayIssuerMapping preferredGatewayIssuerMapping = null;
 
-                List<GatewayIssuerMapping> gatewayIssuerMappings = new ArrayList<GatewayIssuerMapping>();
-                
-                gatewayIssuerMappings = gatewayIssuerMappingDao.searchGatewayByIssuer(issuer,true,true);
-
+            if (issuer != null) {
+                List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingDao.searchGatewayByIssuer(issuer, true, true);
                 Long total = 0L;
 
                 Map<Gateway, Long> gatewayPriorityMap = new HashMap<Gateway, Long>();
-                
                 for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-                    
-                    gatewayPriorityMap.put(gatewayIssuerMapping.getGateway(),gatewayIssuerMapping.getPriority());
-                    
+                    gatewayPriorityMap.put(gatewayIssuerMapping.getGateway(), gatewayIssuerMapping.getPriority());
                     total += gatewayIssuerMapping.getPriority();
-                    
                 }
 
-//             Map<Gateway, Double> gatewayHitRatioMap = gatewayIssuerMappingService.getGatewayHitRatio(issuer,true,true);
+                MapValueComparator mapValueComparator = new MapValueComparator(gatewayPriorityMap);
+                TreeMap<Gateway, Long> sortedGatewayPriorityMap = new TreeMap(mapValueComparator);
+                sortedGatewayPriorityMap.putAll(gatewayPriorityMap);
 
-                //hacky solution, fetching base total from null
+                Integer random = (new Random()).nextInt(total.intValue());
+                long oldValue = 0L;
 
-//                Double baseTotal = gatewayHitRatioMap.get(null);
-
-
-
-                    MapValueComparator mapValueComparator = new MapValueComparator(gatewayPriorityMap);
-                    TreeMap<Gateway, Long> sortedGatewayPriorityMap = new TreeMap(mapValueComparator);
-                    sortedGatewayPriorityMap.putAll(gatewayPriorityMap);
-
-                    Map<Gateway, Long> gatewayRangeMap = new HashMap<Gateway, Long>();
-
-                Long counter = 0L;
-
-                    for (Map.Entry<Gateway, Long> gatewayLongEntry : sortedGatewayPriorityMap.entrySet()) {
-
-                        while (counter < gatewayLongEntry.getValue()){
-
-                        gatewayRangeMap.put(gatewayLongEntry.getKey(),gatewayLongEntry.getValue());
-
-                        }
-
-                        counter++;
-
-
+                for (Map.Entry<Gateway, Long> gatewayLongEntry : sortedGatewayPriorityMap.entrySet()) {
+                    long gatewayRangeValue = oldValue + gatewayLongEntry.getValue();
+                    if (random <= gatewayRangeValue) {
+                        preferredGateway = gatewayLongEntry.getKey();
                     }
+                    oldValue = gatewayLongEntry.getValue();
                 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-             Integer random = (new Random()).nextInt(100);
-
-
-
+                List<GatewayIssuerMapping> resultList = gatewayIssuerMappingDao.searchGatewayIssuerMapping(preferredGateway, issuer, null, null, null, null, null, null);
+                preferredGatewayIssuerMapping = resultList != null && !resultList.isEmpty() ? resultList.get(0) : null;
             }
 
-			RedirectResolution redirectResolution;
+            /*
+            algorithm to route multiple gateways, first let the customer choose the issuer
+            now based on the issuer, get all the damn gateways that serve it, alongwith the priority assigned by admin
+            then you iterate over your faddu logic, to decide which gateway won
+            then call the action corresponding to that gateway along with the issuer if needed
+             */
 
+            RedirectResolution redirectResolution;
+
+            EnumPaymentMode dummyEnumPaymentMode = EnumPaymentMode.getPaymentModeFromId(preferredGateway != null ? preferredGateway.getId() : null);
+            paymentMode = dummyEnumPaymentMode != null ? dummyEnumPaymentMode.asPaymenMode() : paymentMode;
+            EnumPaymentMode enumPaymentMode = EnumPaymentMode.getPaymentModeFromId(paymentMode != null ? paymentMode.getId() : null);
             // first create a payment row, this will also contain the payment checksum
             Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), issuer.getName());
 
-			if (gateway != null) {
-				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(EnumPaymentMode.ICICI);
-				redirectResolution = new RedirectResolution(actionClass, "proceed");
-				return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode));
-			} else {
-				// ccavneue is the default gateway
-				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(EnumPaymentMode.CCAVENUE_DUMMY);
-				redirectResolution = new RedirectResolution(actionClass, "proceed");
-			}
-			return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-					payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null));
+            if (preferredGatewayIssuerMapping != null) {
+                Class actionClass = PaymentModeActionFactory.getActionClassByGatewayIssuer(preferredGatewayIssuerMapping.getGateway(), preferredGatewayIssuerMapping.getIssuer().getIssuerType());
+                redirectResolution = new RedirectResolution(actionClass, "proceed");
+                return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
+                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), preferredGatewayIssuerMapping.getIssuerCode()));
+            } else if (paymentMode != null) {
+                Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(enumPaymentMode);
+                redirectResolution = new RedirectResolution(actionClass, "proceed");
+                return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
+                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null));
+            } else {
+                // ccavneue is the default gateway
+                Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(EnumPaymentMode.CCAVENUE_DUMMY);
+                redirectResolution = new RedirectResolution(actionClass, "proceed");
+            }
+            return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
+                    payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null));
 
-		}
-		addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
-		return new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
-	}
+        }
+        addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
+        return new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
+    }
 
-	public PaymentMode getPaymentMode() {
-		return paymentMode;
-	}
+    public PaymentMode getPaymentMode() {
+        return paymentMode;
+    }
 
-	public void setPaymentMode(PaymentMode paymentMode) {
-		this.paymentMode = paymentMode;
-	}
+    public void setPaymentMode(PaymentMode paymentMode) {
+        this.paymentMode = paymentMode;
+    }
 
-	public Order getOrder() {
-		return order;
-	}
+    public Order getOrder() {
+        return order;
+    }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
-	public Long getBankId() {
-		return bankId;
-	}
-
-	public void setBankId(Long bankId) {
-		this.bankId = bankId;
-	}
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 }
