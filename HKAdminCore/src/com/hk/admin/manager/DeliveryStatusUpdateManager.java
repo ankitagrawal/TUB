@@ -364,7 +364,6 @@ public class DeliveryStatusUpdateManager {
 			courierIdList = new ArrayList<Long>();
 			courierIdList.add(EnumCourier.Quantium.getId());
 			shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
-			//Map<String, String> responseMap = new HashMap<String, String>();
 			Element responseElement;
 			String courierDeliveryStatus = null;
 			String deliveryDateString = null;
@@ -375,31 +374,28 @@ public class DeliveryStatusUpdateManager {
 					try {
 						responseElement = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
 						if (responseElement != null) {
-							//todo neha: neeche waale variables ko use kar lo double sure hone ke liye
 							String trckNo = responseElement.getChildText(CourierConstants.QUANTIUM_TRACKING_NO);
 							String refId = responseElement.getChildText(CourierConstants.QUANTIUM_REF_NO);
 							courierDeliveryStatus = responseElement.getChildText(CourierConstants.QUANTIUM_STATUS);
-							//todo neha: isi bechare ko kyu chhod diya? iska bhi constant bana lo
-							deliveryDateString = responseElement.getChildText("LastUpdatedDate");
+							deliveryDateString = responseElement.getChildText(CourierConstants.QUANTIUM_DELIVERY_DATE);
 							if (courierDeliveryStatus != null && deliveryDateString != null) {
 								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.QUANTIUM_DELIVERED)) {
-									try {
-										Date delivery_date = sdf_date.parse(deliveryDateString);
-										ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
-									} catch (ParseException pe) {
-										//todo neha: aisa mazak kyu kiya -> "Sorry.Database updation failed.ParseException occurred for Tracking Id :" keh ke tracking Id nahi daali
-										//todo neha: yahan pe unmodifiedTrackingIds ki list mein entry kyu nahi hai?
-										logger.debug(CourierConstants.PARSE_EXCEPTION + pe.getMessage());
+									if (refId != null && refId.equalsIgnoreCase(shippingOrderInList.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
+										try {
+											Date delivery_date = sdf_date.parse(deliveryDateString);
+											ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
+										} catch (ParseException pe) {											
+											logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
+											unmodifiedTrackingIds.add(trackingId);
+										}
 									}
 								}
 							}
 						} else {
 							unmodifiedTrackingIds.add(trackingId);
 						}
-					} catch (Exception e){
+					} catch (Exception e) {
 						unmodifiedTrackingIds.add(trackingId);
-						//todo neha: ye continue kyu hai yahan?
-						continue;
 					}
 				}
 			}
@@ -409,7 +405,7 @@ public class DeliveryStatusUpdateManager {
 
 	public int updateCourierDeliveryStatus(ShippingOrder shippingOrder, Shipment shipment, String trackingId, Date deliveryDate) {
 
-		if (shipment != null &&  (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId()))) {
+		if (shipment != null && (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId()))) {
 			if (shipment.getShipDate().after(deliveryDate) || deliveryDate.after(new Date())) {
 				Calendar deliveryDateAsShipDatePlusOne = Calendar.getInstance();
 				deliveryDateAsShipDatePlusOne.setTime(shipment.getShipDate());
