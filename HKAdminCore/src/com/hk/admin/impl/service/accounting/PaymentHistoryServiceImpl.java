@@ -32,11 +32,19 @@ public class PaymentHistoryServiceImpl implements PaymentHistoryService {
 
 	@Override
 	public PaymentHistory save(PaymentHistory paymentHistory, PurchaseInvoice purchaseInvoice) {
-		getPaymentHistoryDao().save(paymentHistory);		
+		paymentHistory= (PaymentHistory)getPaymentHistoryDao().save(paymentHistory);		
+		String paymentDetails = " ";
 		Double outStandingAmount =  getOutstandingAmountForPurchaseInvoice(purchaseInvoice);
 		if(outStandingAmount <= 0.00){
 			purchaseInvoice.setPurchaseInvoiceStatus(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.asPurchaseInvoiceStatus());
 			purchaseInvoice.setPaymentDate(paymentHistory.getActualPaymentDate());
+			if(purchaseInvoice.getPaymentDetails() != null){
+				paymentDetails += " "+purchaseInvoice.getPaymentDetails();
+			}
+			if(paymentHistory.getPaymentReference() != null){
+				paymentDetails += " "+paymentHistory.getPaymentReference();
+			}
+			purchaseInvoice.setPaymentDetails(paymentDetails);
 			getPurchaseInvoiceDao().save(purchaseInvoice);
 		}
 		return paymentHistory;
