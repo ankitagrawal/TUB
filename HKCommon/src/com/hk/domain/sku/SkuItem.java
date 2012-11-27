@@ -48,6 +48,10 @@ public class SkuItem implements java.io.Serializable {
   @Column(name = "create_date", nullable = false, length = 19)
   private Date createDate;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sku_item_status_id")
+	private SkuItemStatus skuItemStatus;
+
   @JsonSkip
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(
@@ -96,4 +100,12 @@ public class SkuItem implements java.io.Serializable {
   public void setBins(List<Bin> bins) {
     this.bins = bins;
   }
+
+	public SkuItemStatus getSkuItemStatus() {
+		return skuItemStatus;
+	}
+
+	public void setSkuItemStatus(SkuItemStatus skuItemStatus) {
+		this.skuItemStatus = skuItemStatus;
+	}
 }

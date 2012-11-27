@@ -9788,4 +9788,14 @@
             <column name="user_agent" type="VARCHAR(200)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1353930291845-1">
+        <createTable tableName="sku_item_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
