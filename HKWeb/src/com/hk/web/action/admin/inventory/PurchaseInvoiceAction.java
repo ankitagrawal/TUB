@@ -265,7 +265,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		}
 
 		Double outstandingAmount = paymentHistoryService.getOutstandingAmountForPurchaseInvoice(purchaseInvoice);
-		if(outstandingAmount.doubleValue() >= 0.00
+		if(outstandingAmount.doubleValue() > 0.00
 				&& purchaseInvoice.getPurchaseInvoiceStatus().getId().equals(EnumPurchaseInvoiceStatus.PurchaseInvoiceSettled.getId())){
 			addRedirectAlertMessage(new SimpleMessage("There is an outstanding amount of " + outstandingAmount+". Please clear the same in PI's payment history before closing it."));
 			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter(redirectResolution).addParameter("purchaseInvoice", purchaseInvoice.getId());
