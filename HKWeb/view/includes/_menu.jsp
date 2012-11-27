@@ -12,7 +12,7 @@
     <c:set var="topCategoryUrl" value="/${topCategory}"/>
     <c:set var="allCategories" value="${allCategories}"/>
 
-  <div style="cursor:default; width: 960px; margin: 35px auto 7px;">
+  <div id="logoBoxContainer" style="cursor:default; width: 960px; margin: 35px auto 7px;">
 
     <div class='logoBox' style="float:left;">
       <s:link href="/" title='go to healthkart home'>

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.order.*;
 import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +20,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.order.ShippingOrderLifeCycleActivity;
-import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -119,8 +116,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     public ShippingOrder setGatewayIdAndTargetDateOnShippingOrder(ShippingOrder shippingOrder) {
         String shippingOrderGatewayId = TokenUtils.generateShippingOrderGatewayOrderId(shippingOrder);
         shippingOrder.setGatewayOrderId(shippingOrderGatewayId);
-
-        setTargetDispatchDelDatesOnSO(shippingOrder.getBaseOrder().getPayment().getPaymentDate(), shippingOrder);
+		if(shippingOrder instanceof ReplacementOrder){
+		  setTargetDispatchDelDatesOnSO(new Date(), shippingOrder);
+	    }
+		else{
+            setTargetDispatchDelDatesOnSO(shippingOrder.getBaseOrder().getPayment().getPaymentDate(), shippingOrder);
+		}
         return shippingOrder;
     }
 
