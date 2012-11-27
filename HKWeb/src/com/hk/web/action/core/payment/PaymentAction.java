@@ -103,7 +103,7 @@ public class PaymentAction extends BaseAction {
 
                 for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
                     long gatewayRangeValue = oldValue + gatewayIssuerMapping.getPriority();
-                    if (random <= gatewayRangeValue) {
+                    if (random < gatewayRangeValue) {
                         gateway = gatewayIssuerMapping.getGateway();
                         issuerCode = gatewayIssuerMapping.getIssuerCode();
                         break;
