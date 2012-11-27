@@ -1,6 +1,7 @@
 package com.hk.admin.util.courier.thirdParty;
 
 import com.fedex.track.stub.*;
+import org.springframework.stereotype.Component;
 
 /**
  * Demo of using the Track service with Axis
@@ -13,7 +14,8 @@ import com.fedex.track.stub.*;
  *
  * This sample code has been tested with JDK 5 and Apache Axis 1.4
  */
-public class FedexTrackServiceUtil {
+
+public class FedExTrackServiceUtil {
 
 	private String fedExAuthKey;
 
@@ -24,8 +26,17 @@ public class FedexTrackServiceUtil {
     private String fedExPassword;
 
     private String fedExServerUrl;
+
+	public FedExTrackServiceUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl){
+		this.fedExAuthKey = fedExAuthKey;
+        this.fedExAccountNo = fedExAccountNo;
+        this.fedExMeterNo = fedExMeterNo;
+        this.fedExPassword = fedExPassword;
+        this.fedExServerUrl = fedExServerUrl;
+	}
+
 	//
-	public String TrackFedexShipment(String trackingId){
+	public String trackFedExShipment(String trackingId){
 
 		//
 	    com.fedex.track.stub.TrackRequest request = new com.fedex.track.stub.TrackRequest();

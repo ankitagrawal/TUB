@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.ConsignmentTracking;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -21,7 +22,8 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.JsonObject;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
-import com.hk.admin.util.courier.thirdParty.FedexTrackServiceUtil;
+import com.hk.admin.impl.service.courier.FedExAwbServiceImpl;
+import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.order.ShippingOrder;
@@ -53,6 +55,9 @@ public class TrackCourierAction extends BaseAction {
 
 	@Autowired
 	ConsignmentService consignmentService;
+
+	@Autowired
+	ThirdPartyAwbService thirdPartyAwbService;
 
 
     @SuppressWarnings("unchecked")
@@ -151,10 +156,15 @@ public class TrackCourierAction extends BaseAction {
                 break;
 			case FedEx:
 				//resolution = new RedirectResolution("https://www.fedex.com/Tracking?clienttype=dotcomreg&ascend_header=1&cntry_code=in&language=english&mi=n&", false).addParameter("tracknumbers", trackingId);
-				status = new FedexTrackServiceUtil().TrackFedexShipment(trackingId);
+				courierName = CourierConstants.FEDEX;
+        		ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);        
+				status = thirdPartyAwbService.trackFedExShipment(trackingId);
 				if(status != null){
-
+				  resolution = new ForwardResolution("/pages/courierDetails.jsp");
 				}
+				else {
+                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                }
 				break;
 
 	        case HK_Delivery:
