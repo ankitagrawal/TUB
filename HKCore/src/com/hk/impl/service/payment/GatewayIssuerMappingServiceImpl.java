@@ -25,6 +25,7 @@ public class GatewayIssuerMappingServiceImpl implements GatewayIssuerMappingServ
     @Autowired
     GatewayIssuerMappingDao gatewayIssuerMappingDao;
 
+/*
     @Override
     public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Gateway gateway, Issuer issuer, Boolean activeMapping, Boolean activeGateway, Boolean activeIssuer, String issuerType, String orderUpon, String orderBy) {
         return gatewayIssuerMappingDao.searchGatewayIssuerMapping(gateway, issuer, activeMapping, activeGateway, activeIssuer, issuerType, orderUpon, orderBy);
@@ -58,4 +59,5 @@ public class GatewayIssuerMappingServiceImpl implements GatewayIssuerMappingServ
 
         return gatewayHitRatioMap;
     }
+*/
 }
