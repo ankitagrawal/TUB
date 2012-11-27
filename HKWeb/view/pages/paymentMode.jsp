@@ -30,6 +30,7 @@
 <c:set var="codCharges" value="<%=codCharges%>" />
 <c:set var="orderDate" value="<%=new DateTime().toDate()%>" />
 <c:set var="prePaidPaymentType" value="<%=EnumPaymentType.PrePaid.getId()%>" />
+<c:set var="prePaidPaymentMode" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId()%>" />
 
 <s:layout-render name="/layouts/checkoutLayout.jsp"
                  pageTitle="Payment Options">
@@ -123,7 +124,8 @@
 <div id="tabs_content1" class="tab_content"><s:form
         beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}" />
-    <s:hidden name="gateway" value="<%=defaultGateway%>" />
+    <s:hidden name="paymentMode" value="${prePaidPaymentMode}" />
+    <%--<s:hidden name="gateway" value="<%=defaultGateway%>" />--%>
 
     <c:forEach items="${paymentModeBean.cardIssuers}" var="cardIssuer">
         <p><label><s:radio name="issuer" value="${cardIssuer.id}"/>${cardIssuer.name}
@@ -140,7 +142,8 @@
     <s:form beanclass="com.hk.web.action.core.payment.PaymentAction"
             method="post">
         <s:hidden name="order" value="${orderSummary.order.id}" />
-        <s:hidden name="paymentMode" value="<%=defaultGateway%>" />
+        <s:hidden name="paymentMode" value="${prePaidPaymentMode}" />
+        <%--<s:hidden name="gateway" value="<%=defaultGateway%>" />--%>
 
         <div style="float: left; margin-left: 20px; line-height: 21px;">
             <div class="paymentBox">

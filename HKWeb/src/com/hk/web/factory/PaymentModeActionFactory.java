@@ -17,11 +17,13 @@ import com.hk.web.action.core.payment.gateway.test.CCAvenueDummyGatewaySendRecei
 public class PaymentModeActionFactory {
 
     @SuppressWarnings("unchecked")
-    public static Class<? extends BasePaymentGatewaySendReceiveAction> getActionClassForPayment(EnumPaymentMode paymentMode, Gateway gateway, String issuerType) {
+    public static Class<? extends BasePaymentGatewaySendReceiveAction> getActionClassForPayment(Gateway gateway, String issuerType) {
 
-        if (EnumPaymentMode.COD.getId().equals(paymentMode.getId())) {
-            return CodGatewaySendReceiveAction.class;
-        } else if (EnumGateway.CCAVENUE_DUMMY.getId().equals(gateway.getId())) {
+//        if (EnumPaymentMode.COD.getId().equals(paymentMode.getId())) {
+//            return CodGatewaySendReceiveAction.class;
+//        }
+//        else
+        if (EnumGateway.CCAVENUE_DUMMY.getId().equals(gateway.getId())) {
             return CCAvenueDummyGatewaySendReceiveAction.class;
         } else if (EnumGateway.TECHPROCESS.getId().equals(gateway.getId())) {
             return TekprocessGatewaySendReceiveAction.class;

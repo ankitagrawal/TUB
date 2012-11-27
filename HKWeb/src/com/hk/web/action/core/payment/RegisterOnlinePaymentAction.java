@@ -115,13 +115,14 @@ public class RegisterOnlinePaymentAction extends BaseAction {
             }
 
             RedirectResolution redirectResolution;
-            EnumPaymentMode enumPaymentMode = EnumPaymentMode.getPaymentModeFromId(paymentMode != null ? paymentMode.getId() : null);
+
+            paymentMode = EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode();
 
             // first create a payment row, this will also contain the payment checksum
             Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), preferredGateway, issuer);
 
             if (preferredGatewayIssuerMapping != null) {
-                Class actionClass = PaymentModeActionFactory.getActionClassForPayment(enumPaymentMode, preferredGateway, issuer.getIssuerType());
+                Class actionClass = PaymentModeActionFactory.getActionClassForPayment(preferredGateway, issuer.getIssuerType());
                 redirectResolution = new RedirectResolution(actionClass, "proceed");
                 return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
                         payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), preferredGatewayIssuerMapping.getIssuerCode()));

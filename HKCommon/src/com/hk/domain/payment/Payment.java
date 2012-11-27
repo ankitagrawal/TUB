@@ -46,19 +46,16 @@ public class Payment implements java.io.Serializable {
     private Order         order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gateway_id", nullable = false)
+    @JoinColumn(name = "gateway_id")
     private Gateway gateway;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "issuer_id", nullable = false)
+    @JoinColumn(name = "issuer_id")
     private Issuer issuer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_status_id", nullable = false)
     private PaymentStatus paymentStatus;
-
-    @Column(name = "bank_code")
-    private String        bankCode;
 
     @Column(name = "amount", nullable = false, precision = 8)
     private Double        amount;
@@ -290,14 +287,6 @@ public class Payment implements java.io.Serializable {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
-    }
-
-    public String getBankCode() {
-        return bankCode;
-    }
-
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
     }
 
     public String getRrn() {
