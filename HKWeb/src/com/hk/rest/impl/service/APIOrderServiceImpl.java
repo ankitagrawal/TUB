@@ -208,7 +208,6 @@ public class APIOrderServiceImpl implements APIOrderService {
         paymentMode = getPaymentModeDao().getPaymentModeById(new Long(apiPayment.getPaymentmodeId()));
         payment.setPaymentMode(paymentMode);
         // payment.setIp(remoteAddr);
-        payment.setBankCode(apiPayment.getBankId());
         payment = getPaymentManager().createNewPayment(order, paymentMode, "182.12.1.1", null, null);
         PaymentStatus paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.AUTHORIZATION_PENDING.getId());
         if (EnumPaymentMode.getPrePaidPaymentModes().contains(paymentMode.getId())) {
