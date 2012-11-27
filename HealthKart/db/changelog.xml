@@ -9837,4 +9837,9 @@
     <changeSet author="Ankit (generated)" id="1353091292276-4">
         <modifyDataType columnName="pin" newDataType="VARCHAR(30)" tableName="address"/>
     </changeSet>
+     <changeSet author="Ankit" id="20121127-02">
+    <sql>
+      insert into currency_converter values (1,'INR','USD',55.05,'2012-11-02 17:29:13');
+    </sql>
+  </changeSet>
 </databaseChangeLog>
