@@ -172,12 +172,12 @@
             </a>
         </c:if>
         <c:if test="${!empty productBean.relatedCombos}">
-            <a class='top_link' href='#related_combos' style="font-weight:bold;">
+            <a class='top_link' href='#related_combos' id="related_combo_link" style="font-weight:bold;">
                 Special Offers &darr;
             </a>
         </c:if>
         <c:if test="${!empty productCombo.relatedProducts}">
-            <a class='top_link' href='#related_products'>
+            <a class='top_link' id="related_product_link" href='#related_products'>
                 Related Products &darr;
             </a>
         </c:if>
@@ -453,6 +453,7 @@
                  <script type="text/javascript">
                      $(document).ready(function(){
                         $("#related_combos").remove();
+                         $("#related_combo_link").remove();
                      });
                  </script>
         </c:if>
@@ -480,6 +481,7 @@
           <script type="text/javascript">
               $(document).ready(function(){
                  $("#related_products").remove();
+                  $("#related_product_link").remove();
               });
           </script>
         </c:if>
