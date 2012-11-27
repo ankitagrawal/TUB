@@ -1,6 +1,7 @@
 package com.hk.impl.service.analytics;
 
 import com.hk.constants.HttpRequestAndSessionConstants;
+import com.hk.constants.core.HealthkartConstants;
 import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.analytics.UserBrowsingHistory;
 import com.hk.domain.catalog.category.Category;
@@ -11,6 +12,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.analytics.UserBrowsingHistoryDao;
 import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.util.TrafficSourceFinder;
+import com.hk.web.filter.WebContext;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Map;
 
@@ -91,6 +95,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		trafficTracking.setUpdateDt(new Date());
 
 		trafficTracking = (TrafficTracking) getBaseDao().save(trafficTracking);
+		
 
 		return trafficTracking;
 	}
