@@ -14,12 +14,10 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
-import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.*;
-import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.User;
@@ -264,20 +262,14 @@ public class InventoryCheckinAction extends BaseAction {
 	}
 
 	private void editPVFillRate(GoodsReceivedNote grn) {
-		try {
-			if (grn != null) {
-				Supplier supplier = grn.getPurchaseOrder().getSupplier();
-				for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
-					ProductVariantSupplierInfo productVariantSupplierInfo =
-							productVariantSupplierInfoService.getOrCreatePVSupplierInfo(grnLineItem.getSku().getProductVariant(), supplier);
-					productVariantSupplierInfoService.updatePVSupplierInfo(productVariantSupplierInfo, null, grnLineItem.getQty());
-				}
+		if (grn != null) {
+			Supplier supplier = grn.getPurchaseOrder().getSupplier();
+			for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
+				ProductVariantSupplierInfo productVariantSupplierInfo =
+						productVariantSupplierInfoService.getOrCreatePVSupplierInfo(grnLineItem.getSku().getProductVariant(), supplier);
+				productVariantSupplierInfoService.updatePVSupplierInfo(productVariantSupplierInfo, null, grnLineItem.getQty());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug("Error while editing product variant fill rate " + e.getMessage());
 		}
-
 	}
 
 	@Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)

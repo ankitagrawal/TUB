@@ -1,6 +1,7 @@
 package com.hk.domain.catalog;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -88,26 +89,24 @@ public class ProductVariantSupplierInfo implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
+	public boolean equals(Object obj) {
+		if (this == obj) {
 			return true;
 		}
-		if (!(o instanceof ProductVariantSupplierInfo)) {
+		if (!(obj instanceof ProductVariantSupplierInfo)) {
 			return false;
 		}
 
-		ProductVariantSupplierInfo that = (ProductVariantSupplierInfo) o;
-
-		if (id != null ? !id.equals(that.getId()) : that.getId() != null)
-			return false;
-
-		return true;
-
+		ProductVariantSupplierInfo productVariantSupplierInfo = (ProductVariantSupplierInfo) obj;
+		if (this.id != null && productVariantSupplierInfo.getId() != null) {
+			return this.id.equals(productVariantSupplierInfo.getId());
+		}
+		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return id != null ? id.hashCode() : 0;
+		return new HashCodeBuilder().append(id).toHashCode();
 	}
 
 }
