@@ -9788,4 +9788,24 @@
             <column name="user_agent" type="VARCHAR(200)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Shrey (generated)" id="1353937981685-1">
+        <createTable tableName="heading_product">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="heading_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="rank" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1353937981685-2">
+        <addForeignKeyConstraint baseColumnNames="heading_id" baseTableName="heading_product" constraintName="fk_heading_product_primary_category_heading1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="primary_category_heading" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1353937981685-3">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="heading_product" constraintName="fk_heading_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
