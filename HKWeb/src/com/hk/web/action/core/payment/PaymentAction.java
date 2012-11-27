@@ -68,36 +68,33 @@ public class PaymentAction extends BaseAction {
                 return new RedirectResolution(CartAction.class);
             }
 
-            Gateway preferredGateway = null;
             GatewayIssuerMapping preferredGatewayIssuerMapping = null;
 
             if (issuer != null) {
-                List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingDao.searchGatewayIssuerMapping(issuer, preferredGateway, true);
+                List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingDao.searchGatewayIssuerMapping(issuer, null, true);
                 Long total = 0L;
 
-                Map<Gateway, Long> gatewayPriorityMap = new HashMap<Gateway, Long>();
+                Map<GatewayIssuerMapping, Long> gatewayIssuerMappingPriorityMap = new HashMap<GatewayIssuerMapping, Long>();
                 for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-                    gatewayPriorityMap.put(gatewayIssuerMapping.getGateway(), gatewayIssuerMapping.getPriority());
+                    gatewayIssuerMappingPriorityMap.put(gatewayIssuerMapping, gatewayIssuerMapping.getPriority());
                     total += gatewayIssuerMapping.getPriority();
                 }
 
-                MapValueComparator mapValueComparator = new MapValueComparator(gatewayPriorityMap);
-                TreeMap<Gateway, Long> sortedGatewayPriorityMap = new TreeMap(mapValueComparator);
-                sortedGatewayPriorityMap.putAll(gatewayPriorityMap);
+                MapValueComparator mapValueComparator = new MapValueComparator(gatewayIssuerMappingPriorityMap);
+                TreeMap<GatewayIssuerMapping, Long> sortedGatewayPriorityMap = new TreeMap(mapValueComparator);
+                sortedGatewayPriorityMap.putAll(gatewayIssuerMappingPriorityMap);
 
                 Integer random = (new Random()).nextInt(total.intValue());
                 long oldValue = 0L;
 
-                for (Map.Entry<Gateway, Long> gatewayLongEntry : sortedGatewayPriorityMap.entrySet()) {
+                for (Map.Entry<GatewayIssuerMapping, Long> gatewayLongEntry : sortedGatewayPriorityMap.entrySet()) {
                     long gatewayRangeValue = oldValue + gatewayLongEntry.getValue();
                     if (random <= gatewayRangeValue) {
-                        preferredGateway = gatewayLongEntry.getKey();
+                        preferredGatewayIssuerMapping = gatewayLongEntry.getKey();
+                        break;
                     }
                     oldValue = gatewayLongEntry.getValue();
                 }
-
-                List<GatewayIssuerMapping> resultList = gatewayIssuerMappingDao.searchGatewayIssuerMapping(issuer, null, true);
-                preferredGatewayIssuerMapping = resultList != null && !resultList.isEmpty() ? resultList.get(0) : null;
             }
 
             /*
@@ -109,11 +106,11 @@ public class PaymentAction extends BaseAction {
 
             RedirectResolution redirectResolution;
 
-            EnumPaymentMode dummyEnumPaymentMode = EnumPaymentMode.getPaymentModeFromId(preferredGateway != null ? preferredGateway.getId() : null);
+            EnumPaymentMode dummyEnumPaymentMode = EnumPaymentMode.getPaymentModeFromId(preferredGatewayIssuerMapping != null ? preferredGatewayIssuerMapping.getGateway().getId() : null);
             paymentMode = dummyEnumPaymentMode != null ? dummyEnumPaymentMode.asPaymenMode() : paymentMode;
             EnumPaymentMode enumPaymentMode = EnumPaymentMode.getPaymentModeFromId(paymentMode != null ? paymentMode.getId() : null);
             // first create a payment row, this will also contain the payment checksum
-            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), issuer.getName());
+            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), issuer != null ? issuer.getName() : "");
 
             if (preferredGatewayIssuerMapping != null) {
                 Class actionClass = PaymentModeActionFactory.getActionClassByGatewayIssuer(preferredGatewayIssuerMapping.getGateway(), preferredGatewayIssuerMapping.getIssuer().getIssuerType());
@@ -153,4 +150,14 @@ public class PaymentAction extends BaseAction {
     public void setOrder(Order order) {
         this.order = order;
     }
+
+    public Issuer getIssuer() {
+        return issuer;
+    }
+
+    public void setIssuer(Issuer issuer) {
+        this.issuer = issuer;
+    }
+
+
 }

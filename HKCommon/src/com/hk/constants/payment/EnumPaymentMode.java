@@ -8,6 +8,7 @@ import com.hk.domain.core.PaymentMode;
 
 
 public enum EnumPaymentMode {
+    ONLINE_PAYMENT(1000L, "Online Payment",0.02D),
 	CCAVENUE_DUMMY(1L, "CCAvenue Dummy", 0.0D),
 	TECHPROCESS_TEST(10L, "Tekprocess Test", 0.0D),
 	TECHPROCESS(15L, "Techprocess", 0.021D),

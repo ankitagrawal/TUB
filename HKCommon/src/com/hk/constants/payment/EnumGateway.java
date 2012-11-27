@@ -14,12 +14,12 @@ import java.util.List;
  */
 public enum EnumGateway {
 
-    TECHPROCESS(1L, "Techprocess", 0.021D),
-    CITRUS(10L, "Citrus", 0.0215D),
-    ICICI(15L, "Icici", 0.019D),
-    PAYPAL(5L, "Paypal", 0.039D),
-    EBS(30L, "Ebs", 0.02D),
-    CCAVENUE_DUMMY(25L, "CCAvenue Dummy", 0.0D);
+    TECHPROCESS(15L, "Techprocess", 0.021D),
+    CITRUS(80L, "Citrus", 0.0215D),
+    ICICI(100L, "Icici", 0.019D),
+    PAYPAL(95L, "Paypal", 0.039D),
+    EBS(90L, "Ebs", 0.02D),
+    CCAVENUE_DUMMY(1L, "CCAvenue Dummy", 0.0D);
 
     private java.lang.String name;
     private java.lang.Long id;
