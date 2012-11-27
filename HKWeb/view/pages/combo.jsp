@@ -435,8 +435,8 @@
         </div>
     </shiro:hasPermission>
     <c:if test="${!empty productBean.relatedCombos}">
+        <c:set var="check_related_combos" value="0"/>
         <div class='products content' id="related_combos">
-            <c:set var="check_related_combos" value="0"/>
             <h4>
                 Special Offers on ${productCombo.name}
             </h4>
@@ -459,8 +459,8 @@
     </c:if>
     <c:set var="relatedProducts" value="${productCombo.relatedProducts}"/>
     <c:if test="${!empty relatedProducts}">
+        <c:set var="check_related_products" value="0"/>
         <div class='products content' id="related_products">
-            <c:set var="check_related_products" value="0"/>
             <h4>
                 People who bought this also bought these products
             </h4>

@@ -582,8 +582,8 @@
 <s:layout-component name="product_description">
 
 	<c:if test="${!empty pa.relatedCombos}">
+         <c:set var="check_related_combos" value="0"/>
 		<div class='products content' id="related_combos">
-             <c:set var="check_related_combos" value="0"/>
 			<h4>
 				Special Offers on ${product.name}
 			</h4>
