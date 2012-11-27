@@ -226,6 +226,7 @@ private CourierGroupService courierGroupService;
         courierListForDBUpdation.add(CourierConstants.CHHOTU);
         courierListForDBUpdation.add(CourierConstants.DELHIVERY);
         courierListForDBUpdation.add(CourierConstants.DTDC);
+		courierListForDBUpdation.add(CourierConstants.QUANTIUM);
         return courierListForDBUpdation;
     }
 

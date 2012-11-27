@@ -40,7 +40,7 @@
 		<c:if test="${!product.googleAdDisallowed && !product.deleted}">
 			<div class='grid_4 product'>
 				<div class='img128 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;margin-top:10px;">
-					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
+					<a href="${product.productURL}" class="prod_link" title="${product.name}">
 						<c:choose>
 							<c:when test="${product.mainImageId != null}">
 								<hk:productImage
@@ -53,13 +53,13 @@
 								     alt="${product.name}"/>
 							</c:otherwise>
 						</c:choose>
-					</s:link>
+					</a>
 				</div>
 				<div>
 					<span style="height:20px;max-width:190px;">
-						<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
+						<a href="${product.productURL}" title="${product.name}" class="prod_link">
 							${product.name}
-						</s:link>
+						</a>
 					</span>
 				</div>
 				<c:choose>
