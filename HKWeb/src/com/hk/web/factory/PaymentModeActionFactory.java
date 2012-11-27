@@ -19,22 +19,8 @@ public class PaymentModeActionFactory {
 
         if (EnumPaymentMode.CCAVENUE_DUMMY.getId().equals(enumPaymentMode.getId())) {
             return CCAvenueDummyGatewaySendReceiveAction.class;
-        } else if (EnumPaymentMode.TECHPROCESS_TEST.getId().equals(enumPaymentMode.getId())) {
-            return TekprocessTestGatewaySendReceiveAction.class;
-        } else if (EnumPaymentMode.TECHPROCESS.getId().equals(enumPaymentMode.getId())) {
-            return TekprocessGatewaySendReceiveAction.class;
         } else if (EnumPaymentMode.COD.getId().equals(enumPaymentMode.getId())) {
             return CodGatewaySendReceiveAction.class;
-        } else if (EnumPaymentMode.CITRUS_NetBanking_Old.getId().equals(enumPaymentMode.getId())) {
-            return CitrusGatewaySendReceiveAction.class;
-        } else if (EnumPaymentMode.CITRUS_NetBanking_New.getId().equals(enumPaymentMode.getId())) {
-            return CitrusNetbankingSendReceiveAction.class;
-        } else if (EnumPaymentMode.CITRUS_CreditDebit.getId().equals(enumPaymentMode.getId())) {
-            return CitrusCreditDebitSendReceiveAction.class;
-        } else if (EnumPaymentMode.ICICI.getId().equals(enumPaymentMode.getId())) {
-            return IciciGatewaySendReceiveAction.class;
-        } else if (EnumPaymentMode.EBS.getId().equals(enumPaymentMode.getId())) {
-            return EbsSendReceiveAction.class;
         } else {
             return null;
         }

@@ -9850,4 +9850,23 @@
             <column name="image" type="BLOB"/>
         </addColumn>
     </changeSet>
+    <changeSet author="user (generated)" id="1354013373725-3">
+        <addColumn tableName="payment">
+            <column name="gateway_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="user (generated)" id="1354013373725-4">
+        <addColumn tableName="payment">
+            <column name="issuer_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="user (generated)" id="1354013373725-6">
+        <addForeignKeyConstraint baseColumnNames="gateway_id" baseTableName="payment" constraintName="fk_payment_gateway1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="gateway" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1354013373725-7">
+        <addForeignKeyConstraint baseColumnNames="issuer_id" baseTableName="payment" constraintName="fk_payment_issuer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="issuer" referencesUniqueColumn="false"/>
+    </changeSet>
+    <!--<changeSet author="user (generated)" id="1354013373725-8">-->
+        <!--<dropColumn columnName="bank_code" tableName="payment"/>-->
+    <!--</changeSet>-->
 </databaseChangeLog>
