@@ -4,11 +4,16 @@
 }
 .topBar{
     display: block;
-    visibility: hidden;
+    /*visibility: hidden;*/
 }
 ul{
     list-style:  none;
 }
 .lvl2Bar li.lvl2 {
     clear: none;
+}
+#logoBoxContainer{
+	vertical-align:none;
+	margin:0px auto;
+	padding-top:30px
 }
