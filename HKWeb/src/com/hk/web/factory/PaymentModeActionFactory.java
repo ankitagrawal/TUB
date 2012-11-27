@@ -8,28 +8,20 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.payment.Gateway;
 import com.hk.web.action.core.payment.CodGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.TekprocessGatewaySendReceiveAction;
-import com.hk.web.action.core.payment.gateway.*;
+import com.hk.web.action.core.payment.gateway.CitrusCreditDebitSendReceiveAction;
+import com.hk.web.action.core.payment.gateway.CitrusNetbankingSendReceiveAction;
+import com.hk.web.action.core.payment.gateway.EbsSendReceiveAction;
+import com.hk.web.action.core.payment.gateway.IciciGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.gateway.test.CCAvenueDummyGatewaySendReceiveAction;
-import com.hk.web.action.core.payment.gateway.test.TekprocessTestGatewaySendReceiveAction;
 
 public class PaymentModeActionFactory {
 
     @SuppressWarnings("unchecked")
-    public static Class<? extends BasePaymentGatewaySendReceiveAction> getActionClassForPaymentMode(EnumPaymentMode enumPaymentMode) {
+    public static Class<? extends BasePaymentGatewaySendReceiveAction> getActionClassForPayment(EnumPaymentMode paymentMode, Gateway gateway, String issuerType) {
 
-        if (EnumPaymentMode.CCAVENUE_DUMMY.getId().equals(enumPaymentMode.getId())) {
-            return CCAvenueDummyGatewaySendReceiveAction.class;
-        } else if (EnumPaymentMode.COD.getId().equals(enumPaymentMode.getId())) {
+        if (EnumPaymentMode.COD.getId().equals(paymentMode.getId())) {
             return CodGatewaySendReceiveAction.class;
-        } else {
-            return null;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static Class<? extends BasePaymentGatewaySendReceiveAction> getActionClassByGatewayIssuer(Gateway gateway, String issuerType) {
-
-        if (EnumGateway.CCAVENUE_DUMMY.getId().equals(gateway.getId())) {
+        } else if (EnumGateway.CCAVENUE_DUMMY.getId().equals(gateway.getId())) {
             return CCAvenueDummyGatewaySendReceiveAction.class;
         } else if (EnumGateway.TECHPROCESS.getId().equals(gateway.getId())) {
             return TekprocessGatewaySendReceiveAction.class;

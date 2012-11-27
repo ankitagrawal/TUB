@@ -16,11 +16,13 @@ import java.util.Map;
  */
 public interface GatewayIssuerMappingService {
 
-//    public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Gateway gateway, Issuer issuer, Boolean activeMapping, Boolean activeGateway, Boolean activeIssuer, String issuerType, String orderUpon, String orderBy);
-//
-//    public List<GatewayIssuerMapping> searchGatewayByIssuer(Issuer issuer, Boolean activeMapping, Boolean activeGateway);
-//
-//    public Map<Gateway, Double> getGatewayHitRatio(Issuer issuer, Boolean activeMapping, Boolean activeGateway);
+    List<Gateway> getGateways(boolean active);
+
+    List<Issuer> getIssuerByType(String issuerType, boolean active);
+
+    List<GatewayIssuerMapping> searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping);
+
+    GatewayIssuerMapping getGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping);
 
 
 }

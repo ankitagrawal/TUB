@@ -3,16 +3,21 @@ package com.hk.web.action.core.payment;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumIssuerType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
+import com.hk.domain.payment.Gateway;
+import com.hk.domain.payment.GatewayIssuerMapping;
+import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
-import com.hk.domain.payment.PreferredBankGateway;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentModeDao;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.factory.PaymentModeActionFactory;
 import com.hk.web.filter.WebContext;
@@ -25,8 +30,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,140 +40,143 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-@Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
+@Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 public class RegisterOnlinePaymentAction extends BaseAction {
 
-	//	@Validate(required = true)
-	private PaymentMode paymentMode;
-	//	@Validate(required = true)
-	private boolean isCodConversion;
-	@Validate(required = true, encrypted = true)
-	private Order order;
+    private PaymentMode paymentMode;
 
-	@Autowired
-	PaymentManager paymentManager;
-	@Autowired
-	PaymentModeDao paymentModeDao;
+    private boolean isCodConversion;
 
-	List<PreferredBankGateway> bankList;
-	PreferredBankGateway bank;
-	Long bankId;
+    @Validate(required = true, encrypted = true)
+    private Order order;
 
-	@DefaultHandler
-	public Resolution pre() {
-		//currently i can safely assume, that most people whom we give conversion benefit will have 0 cod charges only, no order amount is pretty much their online payment amount
-		//verify if pricing engine will return the right amount or not, i would prefer using the previous payment amount as the base parameter
-		bankList = getBaseDao().getAll(PreferredBankGateway.class);
-		if (order != null && order.isCOD() && !order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
-			HttpServletResponse httpResponse = WebContext.getResponse();
-			Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, CryptoUtil.encrypt(order.getId().toString()));
-			wantedCODCookie.setPath("/");
-			wantedCODCookie.setMaxAge(600);
-			httpResponse.addCookie(wantedCODCookie);
-		}
-		return new ForwardResolution("/pages/prePayment.jsp");
-	}
+    Issuer issuer;
 
-	@SuppressWarnings("unchecked")
-	public Resolution prepay() {
-		if (!order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+    @Autowired
+    PaymentManager paymentManager;
+    @Autowired
+    PaymentModeDao paymentModeDao;
 
-			if (bankId != null) {
-				bank = getBaseDao().get(PreferredBankGateway.class, bankId);
-			}
+    List<Issuer> bankIssuers;
+    List<Issuer> cardIssuers;
 
-			if (bank != null) {
-				if (bank.getPreferredGatewayId() == null) {
-					Integer random = (new Random()).nextInt(100);
-					if (random % 2 == 0) {
-						paymentMode = getBaseDao().get(PaymentMode.class, EnumPaymentMode.TECHPROCESS.getId());
-					} else {
-						paymentMode = getBaseDao().get(PaymentMode.class, EnumPaymentMode.CITRUS_NetBanking_Old.getId());
-					}
-				} else {
-					paymentMode = getBaseDao().get(PaymentMode.class, bank.getPreferredGatewayId());
-				}
-			}
+    @Autowired
+    GatewayIssuerMappingService gatewayIssuerMappingService;
 
-			String bankCode = this.bankId != null ? this.bankId.toString() : null;
-			EnumPaymentMode gateway = EnumPaymentMode.getPaymentModeFromId(paymentMode != null ? paymentMode.getId() : null);
-			if (bank != null && gateway != null) {
-				if (gateway.equals(EnumPaymentMode.TECHPROCESS)) {
-					bankCode = bank.getTpslBankCode();
-				} else if (gateway.equals(EnumPaymentMode.CITRUS_NetBanking_Old)) {
-					bankCode = bank.getCitrusBankCode();
-				} else if (gateway.equals(EnumPaymentMode.CITRUS_CreditDebit)) {
-					bankCode = "999";
-				}
-			}
+    @DefaultHandler
+    public Resolution pre() {
+        //currently i can safely assume, that most people whom we give conversion benefit will have 0 cod charges only, no order amount is pretty much their online payment amount
+        //verify if pricing engine will return the right amount or not, i would prefer using the previous payment amount as the base parameter
+        bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(), true);
+        cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(), true);
+        if (order != null && order.isCOD() && !order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+            HttpServletResponse httpResponse = WebContext.getResponse();
+            Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, CryptoUtil.encrypt(order.getId().toString()));
+            wantedCODCookie.setPath("/");
+            wantedCODCookie.setMaxAge(600);
+            httpResponse.addCookie(wantedCODCookie);
+        }
+        return new ForwardResolution("/pages/prePayment.jsp");
+    }
 
-			// first create a payment row, this will also contain the payment checksum
-			Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), bankCode);
+    @SuppressWarnings("unchecked")
+    public Resolution prepay() {
+        if (!order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
 
-			RedirectResolution redirectResolution;
-			if (gateway != null) {
-				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(gateway);
-				redirectResolution = new RedirectResolution(actionClass, "proceed");
-				return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode));
-			} else {
-				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(EnumPaymentMode.CCAVENUE_DUMMY);
-				redirectResolution = new RedirectResolution(actionClass, "proceed");
-			}
-			return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-					payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null));
+            GatewayIssuerMapping preferredGatewayIssuerMapping = null;
+            Gateway preferredGateway = null;
 
-		}
-		addRedirectAlertMessage(new SimpleMessage("Some Error Occurred, Unable to process your request"));
-		return new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
-	}
+            if (issuer != null) {
+                List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
+                Long total = 0L;
 
-	public PaymentMode getPaymentMode() {
-		return paymentMode;
-	}
+                Map<GatewayIssuerMapping, Long> gatewayIssuerMappingPriorityMap = new HashMap<GatewayIssuerMapping, Long>();
+                for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
+                    gatewayIssuerMappingPriorityMap.put(gatewayIssuerMapping, gatewayIssuerMapping.getPriority());
+                    total += gatewayIssuerMapping.getPriority();
+                }
 
-	public void setPaymentMode(PaymentMode paymentMode) {
-		this.paymentMode = paymentMode;
-	}
+                MapValueComparator mapValueComparator = new MapValueComparator(gatewayIssuerMappingPriorityMap);
+                TreeMap<GatewayIssuerMapping, Long> sortedGatewayPriorityMap = new TreeMap(mapValueComparator);
+                sortedGatewayPriorityMap.putAll(gatewayIssuerMappingPriorityMap);
 
-	public Order getOrder() {
-		return order;
-	}
+                Integer random = (new Random()).nextInt(total.intValue());
+                long oldValue = 0L;
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+                for (Map.Entry<GatewayIssuerMapping, Long> gatewayLongEntry : sortedGatewayPriorityMap.entrySet()) {
+                    long gatewayRangeValue = oldValue + gatewayLongEntry.getValue();
+                    if (random <= gatewayRangeValue) {
+                        preferredGatewayIssuerMapping = gatewayLongEntry.getKey();
+                        preferredGateway = preferredGatewayIssuerMapping.getGateway();
+                        break;
+                    }
+                    oldValue = gatewayLongEntry.getValue();
+                }
+            }
 
-	public Long getBankId() {
-		return bankId;
-	}
+            RedirectResolution redirectResolution;
+            EnumPaymentMode enumPaymentMode = EnumPaymentMode.getPaymentModeFromId(paymentMode != null ? paymentMode.getId() : null);
 
-	public void setBankId(Long bankId) {
-		this.bankId = bankId;
-	}
+            // first create a payment row, this will also contain the payment checksum
+            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), preferredGateway, issuer);
 
-	public List<PreferredBankGateway> getBankList() {
-		return bankList;
-	}
+            if (preferredGatewayIssuerMapping != null) {
+                Class actionClass = PaymentModeActionFactory.getActionClassForPayment(enumPaymentMode, preferredGateway, issuer.getIssuerType());
+                redirectResolution = new RedirectResolution(actionClass, "proceed");
+                return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
+                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), preferredGatewayIssuerMapping.getIssuerCode()));
+            }
+        }
+        addRedirectAlertMessage(new SimpleMessage("Some Error Occurred, Unable to process your request"));
+        return new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
+    }
 
-	public void setBankList(List<PreferredBankGateway> bankList) {
-		this.bankList = bankList;
-	}
+    public PaymentMode getPaymentMode() {
+        return paymentMode;
+    }
 
-	public PreferredBankGateway getBank() {
-		return bank;
-	}
+    public void setPaymentMode(PaymentMode paymentMode) {
+        this.paymentMode = paymentMode;
+    }
 
-	public void setBank(PreferredBankGateway bank) {
-		this.bank = bank;
-	}
+    public Order getOrder() {
+        return order;
+    }
 
-	public boolean isCodConversion() {
-		return isCodConversion;
-	}
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-	public void setCodConversion(boolean codConversion) {
-		isCodConversion = codConversion;
-	}
+    public List<Issuer> getBankIssuers() {
+        return bankIssuers;
+    }
+
+    public void setBankIssuers(List<Issuer> bankIssuers) {
+        this.bankIssuers = bankIssuers;
+    }
+
+    public List<Issuer> getCardIssuers() {
+        return cardIssuers;
+    }
+
+    public void setCardIssuers(List<Issuer> cardIssuers) {
+        this.cardIssuers = cardIssuers;
+    }
+
+    public Issuer getIssuer() {
+        return issuer;
+    }
+
+    public void setIssuer(Issuer issuer) {
+        this.issuer = issuer;
+    }
+
+    public boolean isCodConversion() {
+        return isCodConversion;
+    }
+
+    public void setCodConversion(boolean codConversion) {
+        isCodConversion = codConversion;
+    }
 }
 

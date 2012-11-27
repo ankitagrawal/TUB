@@ -21,15 +21,12 @@ public class PaymentModeAction extends BaseAction {
     List<Issuer> bankIssuers;
     List<Issuer> cardIssuers;
 
-//    @Autowired
-//    GatewayIssuerMappingService gatewayIssuerMappingService;
-
     @Autowired
-    GatewayIssuerMappingDao gatewayIssuerMappingDao;
+    GatewayIssuerMappingService gatewayIssuerMappingService;
 
     public Resolution pre() {
-        bankIssuers = gatewayIssuerMappingDao.getIssuerByType(EnumIssuerType.Bank.getId(),true);
-        cardIssuers = gatewayIssuerMappingDao.getIssuerByType(EnumIssuerType.Card.getId(),true);
+        bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(),true);
+        cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(),true);
         return new ForwardResolution("/pages/paymentMode.jsp");
     }
 

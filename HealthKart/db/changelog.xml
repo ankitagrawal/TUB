@@ -9866,7 +9866,12 @@
     <changeSet author="user (generated)" id="1354013373725-7">
         <addForeignKeyConstraint baseColumnNames="issuer_id" baseTableName="payment" constraintName="fk_payment_issuer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="issuer" referencesUniqueColumn="false"/>
     </changeSet>
-    <!--<changeSet author="user (generated)" id="1354013373725-8">-->
+    <changeSet author="user (generated)" id="1354019828176-3">
+        <addColumn tableName="gateway_issuer_mapping">
+            <column name="reconciliation_charge" type="DECIMAL(9,6)"/>
+        </addColumn>
+    </changeSet>
+    <!--<changeSet author="user (generated)" id="1354019828176-5">-->
         <!--<dropColumn columnName="bank_code" tableName="payment"/>-->
     <!--</changeSet>-->
 </databaseChangeLog>

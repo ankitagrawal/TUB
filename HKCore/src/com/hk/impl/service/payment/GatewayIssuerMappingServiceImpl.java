@@ -8,9 +8,7 @@ import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,39 +23,25 @@ public class GatewayIssuerMappingServiceImpl implements GatewayIssuerMappingServ
     @Autowired
     GatewayIssuerMappingDao gatewayIssuerMappingDao;
 
-/*
-    @Override
-    public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Gateway gateway, Issuer issuer, Boolean activeMapping, Boolean activeGateway, Boolean activeIssuer, String issuerType, String orderUpon, String orderBy) {
-        return gatewayIssuerMappingDao.searchGatewayIssuerMapping(gateway, issuer, activeMapping, activeGateway, activeIssuer, issuerType, orderUpon, orderBy);
-    }
-
-    public List<GatewayIssuerMapping> searchGatewayByIssuer(Issuer issuer, Boolean activeMapping, Boolean activeGateway){
-        return gatewayIssuerMappingDao.searchGatewayByIssuer(issuer,activeMapping,activeGateway);
-    }
-
 
     @Override
-    public Map<Gateway, Double> getGatewayHitRatio(Issuer issuer, Boolean activeMapping, Boolean activeGateway) {
-        List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingDao.searchGatewayByIssuer(issuer, activeMapping, activeGateway);
-
-        Map<Gateway, Double> gatewayHitRatioMap = new HashMap<Gateway, Double>();
-
-        Double baseTotal = 0D;
-
-        for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-            baseTotal += gatewayIssuerMapping.getPriority();
-        }
-
-        if (baseTotal == 0D) return null;
-
-        for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-            gatewayHitRatioMap.put(gatewayIssuerMapping.getGateway(), (gatewayIssuerMapping.getPriority() / baseTotal));
-        }
-
-        gatewayHitRatioMap.put(null,baseTotal);
-
-
-        return gatewayHitRatioMap;
+    public List<Gateway> getGateways(boolean active) {
+        return gatewayIssuerMappingDao.getGateways(active);
     }
-*/
+
+    @Override
+    public List<Issuer> getIssuerByType(String issuerType, boolean active) {
+        return gatewayIssuerMappingDao.getIssuerByType(issuerType, active);
+    }
+
+    @Override
+    public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping) {
+        return gatewayIssuerMappingDao.searchGatewayIssuerMapping(issuer, gateway, activeMapping);
+    }
+
+    @Override
+    public GatewayIssuerMapping getGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping) {
+        List<GatewayIssuerMapping> gatewayIssuerMappings =  searchGatewayIssuerMapping(issuer, gateway, activeMapping);
+        return gatewayIssuerMappings != null && !gatewayIssuerMappings.isEmpty() ? gatewayIssuerMappings.get(0) : null;
+    }
 }

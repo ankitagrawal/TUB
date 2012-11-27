@@ -17,19 +17,10 @@ import java.util.List;
 
 public interface GatewayIssuerMappingDao extends BaseDao {
 
-    // List<Gateway> get all valid gateways (no parameters)  --> select * from gateway where active = 1 order by priority asc;
-    
     List<Gateway> getGateways(boolean active);
-
-    //List<Issuer> get all valid issuers based on issuer type (issuer_type) --> select * from issuer where active = 1 and issuer_type = 'issuer_type' order by priority asc;
 
     List<Issuer> getIssuerByType(String issuerType, boolean active);
 
-    //List<GatewayIssuerMapping> get all gateway issuer mappings by issuer or by gateway if needed (i.e visa ke saare gateways ki saari details, or SBI ke gateway
-
-    List<GatewayIssuerMapping> searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping);
-
-//   public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Gateway gateway, Issuer issuer, Boolean activeMapping, Boolean activeGateway, Boolean activeIssuer, String issuerType, String orderUpon, String orderBy);
-//   public List<GatewayIssuerMapping> searchGatewayByIssuer(Issuer issuer, Boolean activeMapping, Boolean activeGateway);
+    List searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping);
 
 }

@@ -92,7 +92,7 @@ public class FreeCheckoutConfirmAction extends BaseAction {
 
 		// first create a payment row, this will also cotain the payment checksum
 		Payment payment = paymentManager.createNewPayment(order, getBaseDao().get(PaymentMode.class, EnumPaymentMode.FREE_CHECKOUT.getId()),
-				BaseUtils.getRemoteIpAddrForUser(getContext()), null);
+				BaseUtils.getRemoteIpAddrForUser(getContext()), null, null);
 
 		paymentManager.success(payment.getGatewayOrderId());
 		// return new RedirectResolution(FreeCheckoutSuccessAction.class).addParameter("gatewayOrderId",
