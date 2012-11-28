@@ -136,14 +136,15 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     }
 
     public BillingAddress getBillingAddressForOrder(Order order, List<BillingAddress> billingAddresses) {
+        BillingAddress address = null;
         for (BillingAddress billingAddress : billingAddresses) {
             for (Order order1 : billingAddress.getOrders()) {
                 if (order.equals(order1)) {
-                    return billingAddress;
+                    address = billingAddress;
                 }
             }
         }
-        return null;
+        return address;
     }
 
 }
