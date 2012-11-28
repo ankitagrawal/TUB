@@ -29,6 +29,7 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
             issuerCriteria.add(Restrictions.eq("issuerType", issuerType));
         }
         issuerCriteria.add(Restrictions.eq("active", active));
+        issuerCriteria.addOrder(Order.asc("priority"));
 
         return findByCriteria(issuerCriteria);
     }

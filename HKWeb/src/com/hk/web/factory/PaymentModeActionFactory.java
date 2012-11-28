@@ -20,6 +20,8 @@ public class PaymentModeActionFactory {
             return CCAvenueDummyGatewaySendReceiveAction.class;
         } else if (EnumGateway.TECHPROCESS.getId().equals(gateway.getId())) {
             return TekprocessGatewaySendReceiveAction.class;
+        } else if (EnumGateway.PAYPAL.getId().equals(gateway.getId())) {
+            return PayPalCreditDebitSendReceiveAction.class;
         } else if (EnumGateway.EBS.getId().equals(gateway.getId())) {
             return EbsSendReceiveAction.class;
         } else if (EnumGateway.CITRUS.getId().equals(gateway.getId()) && EnumIssuerType.Bank.getId().equals(issuerType)) {

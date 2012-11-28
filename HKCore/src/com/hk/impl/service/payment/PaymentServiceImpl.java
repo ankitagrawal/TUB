@@ -87,6 +87,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         switch (enumPaymentMode) {
             case ONLINE_PAYMENT:
+            case SUBSCRIPTION_PAYMENT:
             case FREE_CHECKOUT:
                 if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
                     paymentEmailSent = getEmailManager().sendOrderConfirmEmailToUser(order);

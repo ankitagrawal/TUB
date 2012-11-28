@@ -11,7 +11,9 @@ public enum EnumIssuer {
 
     VISA("VISA", "VISA"),
     MASTERCARD("MASTERCARD", "MASTERCARD"),
-    MAESTRO("MAESTRO", "MAESTRO");
+    MAESTRO("MAESTRO", "MAESTRO"),
+    CITRUS("CITRUS", "CITRUS"),
+    PAYPAL("PAYPAL", "PAYPAL");
     //THEN put all the names of the banks, they are also issuers only
 
     private java.lang.String name;

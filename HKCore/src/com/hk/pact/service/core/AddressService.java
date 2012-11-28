@@ -3,6 +3,7 @@ package com.hk.pact.service.core;
 import com.akube.framework.dao.Page;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.domain.user.BillingAddress;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,4 +22,10 @@ public interface AddressService {
     List<Address> getVisibleAddresses(User user);
 
     Page getVisibleAddressesForManufacturer(Long manufacturerId, String city, int pageNo, int perPage);
+
+    List <BillingAddress> getVisibleBillingAddress (User user);
+
+    public BillingAddress getBillingAddressById(Long billingAddressId);   
+
+
 }

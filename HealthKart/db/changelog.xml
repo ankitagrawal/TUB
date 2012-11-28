@@ -9787,6 +9787,7 @@
             <column name="user_agent" type="VARCHAR(200)"/>
         </addColumn>
     </changeSet>
+<<<<<<< HEAD
     <changeSet author="Pratham (generated)" id="1353488646624-1">
         <createTable tableName="gateway">
             <column autoIncrement="true" name="id" type="INT">
@@ -9871,7 +9872,61 @@
             <column name="reconciliation_charge" type="DECIMAL(9,6)"/>
         </addColumn>
     </changeSet>
+     <changeSet author="Ankit (generated)" id="1352973051747-1">
+        <createTable tableName="base_order_has_billing_address">
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="billing_address_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-2">
+        <createTable tableName="billing_address">
+            <column name="billing_address_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-3">
+        <createTable tableName="currency_converter">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="base_currency_code" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="foreign_currency_code" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="conversion_rate" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-4">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="base_order_has_billing_address" constraintName="fk_base_order_has_billing_address_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-5">
+        <addForeignKeyConstraint baseColumnNames="billing_address_id" baseTableName="base_order_has_billing_address" constraintName="fk_base_order_has_billing_address_billing_address1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="billing_address_id" referencedTableName="billing_address" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-6">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="billing_address" constraintName="fk_billing_address_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1353091292276-4">
+        <modifyDataType columnName="pin" newDataType="VARCHAR(30)" tableName="address"/>
+    </changeSet>
+     <changeSet author="Ankit" id="20121127-02">
+    <sql>
+      insert into currency_converter values (1,'INR','USD',55.05,'2012-11-02 17:29:13');
+    </sql>
+  </changeSet>
     <!--<changeSet author="user (generated)" id="1354019828176-5">-->
-        <!--<dropColumn columnName="bank_code" tableName="payment"/>-->
+    <!--<dropColumn columnName="bank_code" tableName="payment"/>-->
     <!--</changeSet>-->
 </databaseChangeLog>

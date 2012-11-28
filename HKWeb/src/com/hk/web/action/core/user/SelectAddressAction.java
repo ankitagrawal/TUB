@@ -86,6 +86,7 @@ public class SelectAddressAction extends BaseAction {
         }
 
         return new ForwardResolution("/pages/addressBook.jsp");
+
     }
 
     //@ValidationMethod(on = "remove")

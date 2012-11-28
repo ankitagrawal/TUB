@@ -4,18 +4,7 @@ package com.hk.domain.user;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.akube.framework.gson.JsonSkip;
 import org.hibernate.annotations.SQLDelete;
@@ -28,6 +17,7 @@ import com.hk.domain.courier.Courier;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "address")
+@Inheritance(strategy = InheritanceType.JOINED)
 @SQLDelete(sql = "UPDATE line_item SET deleted = 1  WHERE id = ? ")
 public class Address implements java.io.Serializable {
 
@@ -74,6 +64,7 @@ public class Address implements java.io.Serializable {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_dt", nullable = false, length = 19)
   private Date createDate = new Date();
+
 
   @Transient
   private boolean selected;
@@ -186,8 +177,8 @@ public class Address implements java.io.Serializable {
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
-
-  @Override
+     
+    @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Address)) return false;

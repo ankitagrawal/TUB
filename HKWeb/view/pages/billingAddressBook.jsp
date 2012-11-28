@@ -4,10 +4,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.core.user.SelectAddressAction" event="pre" var="addressBean"/>
-<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.BillingAddressAction" event="pre" var="addressBean"/>
+<%--<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="pre"/>--%>
+<s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
 
-<s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Select a shipping address">
+<s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Select a Billing address">
 
 <s:layout-component name="htmlHead">
   <script type="text/javascript">
@@ -34,9 +35,6 @@
       }
     }
 
-
-
-
   </script>
     <%-- use attribute selectors to apply a specify styles  --%>
     <style type="text/css">
@@ -53,7 +51,7 @@
 
 <s:layout-component name="steps">
   <div class='steps'>
-    <div class='step current_step'>
+    <div class='step'>
       <h2>Step 1</h2>
 
       <div class='small'>
@@ -67,7 +65,7 @@
         Confirm your order
       </div>
     </div>
-    <div class='step'>
+    <div class='step current_step'>
       <h2>Step 3</h2>
 
       <div class='small'>
@@ -85,26 +83,30 @@
 
     <div class='left2'>
       <h3 style="text-align: left;">
-        Use one of your saved addresses &darr;
+        Use one of your saved Billing addresses &darr;
       </h3>
 
-      <c:forEach items="${addressBean.addresses}" var="address" varStatus="addressCount">
-        <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="checkout" title="Click to use this address and proceed">
-          <s:param name="selectedAddress" value="${address.id}"/>
+      <c:forEach items="${addressBean.billingAddresses}" var="billingAddress" varStatus="addressCount">
+        <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="checkout" title="Click to use this address and proceed">
+          <s:param name="billingAddressId" value="${billingAddress.id}"/>
+           <s:param name="bankId" value="70"/>
+          <s:param name="paymentMode" value="85"/>
+          <s:param name="order" value="${orderSummary.order.id}"/>  
+          <%--<s:param name="billingAddress.id"/>  --%>
           <div class="address" style="position: relative;">
-            <h5 class="name">${address.name}</h5>
+            <h5 class="name">${billingAddress.name}</h5>
 
-            <div class='street street1'>${address.line1}</div>
-            <c:if test="${hk:isNotBlank(address.line2)}">
-              <div class="street street2">${address.line2}</div>
+            <div class='street street1'>${billingAddress.line1}</div>
+            <c:if test="${hk:isNotBlank(billingAddress.line2)}">
+              <div class="street street2">${billingAddress.line2}</div>
             </c:if>
-            <div class='city'>${address.city}</div>
-            <div class='state'>${address.state}</div>
-            <div class='pin'>${address.pin}</div>
-            <div class='phone'>${address.phone}</div>
+            <div class='city'>${billingAddress.city}</div>
+            <div class='state'>${billingAddress.state}</div>
+            <div class='pin'>${billingAddress.pin}</div>
+            <div class='phone'>${billingAddress.phone}</div>
             <br/>
-            <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" class="delete">
-              <s:param name="deleteAddress" value="${address.id}"/>
+            <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="remove" class="delete">
+              <s:param name="billingAddressId" value="${billingAddress.id}"/>
               (delete)
             </s:link>
 
@@ -119,9 +121,9 @@
         </s:link>
       </c:forEach>
       <script type="text/javascript">
-          $(document).ready(function() {
-              var bool = false;
-          $('.edit').click(function() {
+       $(document).ready(function() {
+        var bool = false;
+        $('.edit').click(function() {
           form = $('#newAddressForm');
           addressBlock = $(this).parents('.address');
           name = addressBlock.find('.name').text();
@@ -144,16 +146,16 @@
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
-        $('.delete').click(function(){
-            if (confirm('Are you sure you want to delete this address?')) {
-                bool = true;
-                return true;
-                            } else {
-                              return false;
-                            }
-        });
+           $('.delete').click(function() {
+               if (confirm('Are you sure you want to delete this address?')) {
+                   bool = true;
+                   return true;
+               } else {
+                   return false;
+               }
+           });
 
-	        $('.address').hover(
+           $('.address').hover(
 			        function() {
 				        $(this).children('.hidden').slideDown(100);
 				        $(this).children('.edit').click(function() {
@@ -172,22 +174,6 @@
 	        $('.address').click(function() {
 		        var add_url = $(this).children('a').attr('href');
 		        document.location.href = add_url;
-	        });          
-
-	        $('.addressValidation').click(function() {
-                var pincodeRegEx = /^([0-9]{6})$/;
-                var pincode = $('.pincode').val();
-		        var phone = $('#phoneNo').val();
-		        var phoneRegEx = /^((\+91)?[0-9]{10,13}?)$/;
-                var state = $('.stateselect').val();
-                if (!pincodeRegEx.test(pincode)) {
-                    alert("Please enter a valid (6 digit) Pincode.");
-                    return false;
-                }
-		        if(!phoneRegEx.test(phone)){
-			        alert("Please enter a valid phone number (+91xxxxxxxxxx).");
-			        return false;
-		        }
 	        });
         });
 
@@ -200,7 +186,7 @@
     </div>
     <div class='right'>
       <h3>
-        Add a new shipping address
+        Add a new Billing address
       </h3>
 
       <div class="addressContainer shipping_address">
@@ -208,30 +194,28 @@
           <s:errors/>
         </div>
         <div class="newAddress-errors alert messages"><s:messages key="generalMessages"/></div>
-        <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm">
-          <s:hidden name="address.id"/>
-          <span class="aster special">(Fields marked * are required.)</span>
+        <s:form beanclass="com.hk.web.action.core.user.BillingAddressAction" id="newAddressForm"
+                onsubmit="return validateForm()" method="post" name="BillingAddressForm">
+           <s:hidden name="order" value="${orderSummary.order.id}"/>
+        <s:hidden name="bankId" value="70"/>
+        <s:hidden name="paymentMode" value="85"/>
+        <s:hidden name="address.id"/>
+        <span class="aster special">(Fields marked * are required.)</span>
 
           <div class='label'>Name<span class="aster">*</span></div>
-          <s:text name="address.name"/>
+          <s:text name="address.name" maxlength = "80"/>
           <div class='label'>Address Line 1<span class="aster">*</span></div>
-          <s:text name="address.line1"/>
+          <s:text name="address.line1" maxlength = "120"/>
           <div class='label'>Address Line 2</div>
-          <s:text name="address.line2"/>
+          <s:text name="address.line2" maxlength = "120"/>
           <div class='label'>City<span class="aster">*</span></div>
-          <s:text name="address.city"/>
+          <s:text name="address.city" maxlength = "60"/>
           <div class='label'>State<span class="aster">*</span></div>
-          <s:select  name="address.state" style="width:310px;">
-            <s:option> </s:option>
-            <c:forEach items="<%=StateList.stateList%>" var="state">
-              <s:option value="${state}">${state}</s:option>
-            </c:forEach>
-          </s:select>
-          <%--<s:text name="address.state"/>--%>
+          <s:text name="address.state" maxlength = "50"/>
           <div class='label'>PIN Code<span class="aster">*</span></div>
-          <s:text name="address.pin" class="pincode" maxlength="6"/>
+          <s:text name="address.pin" class="pincode" maxlength="20"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
-          <s:text name="address.phone" id="phoneNo"/>
+          <s:text name="address.phone" id="phoneNo" maxlength = "25"/>
           <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>
           <div class="special" style="text-align: right;">
             Proceed to Order Confirmation <br/>(This address will be added to your address book so you can use it later)
@@ -246,17 +230,46 @@
       </div>
 
       <script type="text/javascript">
-        /*$('#newAddressForm').ajaxForm({dataType: 'json', success: _saveAddress});
-
-         function _saveAddress(res) {
-         if (res.code == '<%--<%=HealthkartResponse.STATUS_REDIRECT%>--%>') {
-         $('.addressContainer').hide();
-         $('.addressSuccessContainer').show();
-         window.location.href = res.data.url;
-         } else if (res.code == '<%--<%=HealthkartResponse.STATUS_ERROR%>--%>') {
-         $('.newAddress-errors').html(getErrorHtmlFromJsonResponse(res));
-         }
-         }*/
+           function validateForm()
+    {
+//        var numbers = /^[0-9]+$/;
+        var billingAddressName = document.forms["BillingAddressForm"]["address.name"].value;
+        var billingAddressLine1 = document.forms["BillingAddressForm"]["address.line1"].value;
+        var billingAddressCity = document.forms["BillingAddressForm"]["address.city"].value;
+        var billingAddressState = document.forms["BillingAddressForm"]["address.state"].value;
+        var billingAddressPin = document.forms["BillingAddressForm"]["address.pin"].value;
+        var billingAddressPhone = document.forms["BillingAddressForm"]["address.phone"].value;
+        if (billingAddressName == null || billingAddressName == "")
+        {
+            alert("Name must be filled out");
+            return false;
+        }
+        if (billingAddressLine1 == null || billingAddressLine1 == "")
+        {
+            alert("Address Line 1 must be filled out");
+            return false;
+        }
+        if (billingAddressCity == null || billingAddressCity == "")
+        {
+            alert("City must be filled out");
+            return false;
+        }
+        if (billingAddressState == null || billingAddressState == "")
+        {
+            alert("State must be filled out");
+            return false;
+        }
+        if (billingAddressPin == null || billingAddressPin == "")
+        {
+            alert("Pincode must be filled out");
+            return false;
+        }
+        if (billingAddressPhone == null || billingAddressPhone == "")
+        {
+            alert("Phone/Mobile must be filled out");
+            return false;
+        }
+    }
       </script>
 
 
