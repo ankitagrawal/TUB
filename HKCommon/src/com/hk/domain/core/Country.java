@@ -14,16 +14,16 @@ import javax.persistence.*;
 @Table(name = "country")
 public class Country implements java.io.Serializable {
 
-  @Id
-  @Column(name = "id", unique = true, nullable = false)
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @Column(name = "id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
- @Column(name = "name", nullable = false, length = 45)
-  private String name;
+    @Column(name = "name", nullable = false, length = 45)
+    private String name;
 
- @Column(name = "country_code", nullable = false, length = 6)
- private String countryCode;
+    @Column(name = "country_code", nullable = false, length = 6)
+    private String countryCode;
 
 
     public Long getId() {
@@ -49,5 +49,16 @@ public class Country implements java.io.Serializable {
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
     }
+
+    @Override
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
+
+    public int compareTo(Country country) {
+        return this.getName().compareTo(country.getName());
+
+    }
+
 
 }

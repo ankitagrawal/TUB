@@ -61,8 +61,8 @@ public class Address implements java.io.Serializable {
   @Column(name = "deleted", nullable = false, length = 30)
   private Boolean deleted;
 
-  @Column(name = "country_id",nullable = false,length = 6)
-  private Long countryId;
+  @Column(name = "country_id",nullable = false, length = 6)
+  private Long countryId = 80L;
 
 
   @JsonSkip

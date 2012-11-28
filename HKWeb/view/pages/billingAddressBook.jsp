@@ -112,7 +112,8 @@
             <div class='city'>${billingAddress.city}</div>
             <div class='state'>${billingAddress.state}</div>
 
-           <c:set var="countryId" value="${billingAddress.countryId}"/>
+           <c:set var="countryId" value="${billingAddress.countryId}" />
+              <input type="hidden" value="${countryId}" class="countryId">
            <div class='country'>${hk:getCountry(countryId).name}</div>
 
 
@@ -145,7 +146,8 @@
           street2 = addressBlock.find('.street2').text();
           city = addressBlock.find('.city').text();
           state = addressBlock.find('.state').text();
-          country = addressBlock.find('.country').text();
+//          country = addressBlock.find('.country').text();
+            countryId = addressBlock.find('.countryId').val();
           pin = addressBlock.find('.pin').text();
           phone = addressBlock.find('.phone').text();
           id = addressBlock.find('.address_id').val();
@@ -157,10 +159,11 @@
           form.find("input[type='text'][name='address.city']").val(city);
 //          form.find("input[type='text'][name='address.state']").val(state);
           form.find("[name='address.state']").val(state.toUpperCase());
-          form.find("[name='address.countryId']").val(country.toUpperCase());
+//          form.find("[name='address.countryId']").val(country.toUpperCase());
 
-//           form.find("input[type='text'][name='address.countryId']").val(country.toUpperCase());
-          form.find("input[type='text'][name='address.pin']").val(pin);
+//           form.find("input[type='text'][name='address.countryId']").val();
+            $('select').val(countryId);
+            form.find("input[type='text'][name='address.pin']").val(pin);
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
