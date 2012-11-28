@@ -20,10 +20,12 @@ import com.hk.domain.payment.CurrencyConverter;
 import com.hk.domain.order.Order;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
+import com.akube.framework.service.PaymentGatewayWrapper;
 import com.akube.framework.util.BaseUtils;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.ForwardResolution;
 import com.hk.domain.user.User;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.BillingAddress;
@@ -67,6 +69,18 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
     @Autowired
     AddressDao addressDao;
 
+      @Override
+       public Resolution proceed() {
+
+        String encodedData = getContext().getRequest().getParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM);
+        BasePaymentGatewayWrapper.TransactionData data = BasePaymentGatewayWrapper.decodeTransactionDataParamWithBillingAddress(encodedData);
+        PaymentGatewayWrapper paymentGatewayWrapper = getPaymentGatewayWrapperFromTransactionData(data);
+        getContext().getRequest().setAttribute("PaymentGatewayWrapper", paymentGatewayWrapper);
+
+        return new ForwardResolution("/gatewayProcess.jsp");
+
+
+    }
 
     protected PayPalPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
 //      PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper(AppConstants.appBasePath);
@@ -75,8 +89,9 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         User user = order.getUser();
         BillingAddress address = null;
         Country country = null;
-        List<BillingAddress> billingAddresses = addressDao.getVisibleBillingAddresses(user);
-        address = addressDao.getBillingAddressForOrder(order ,billingAddresses );
+           address = addressDao.getBillingAddressById(data.getBillingAddressId());
+//        List<BillingAddress> billingAddresses = addressDao.getVisibleBillingAddresses(user);
+//        address = addressDao.getBillingAddressForOrder(order ,billingAddresses );
 
          if (address != null) {
             country = addressDao.getCountry(address.getCountryId());

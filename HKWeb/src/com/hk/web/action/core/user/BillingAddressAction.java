@@ -88,7 +88,7 @@ public class BillingAddressAction extends BaseAction {
         selectedAddress.getOrders().add(order);
         selectedAddress.setUser(user);
         addressDao.save(selectedAddress);
-        return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId);
+        return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId",selectedAddress.getId());
     }
 
 
@@ -96,9 +96,8 @@ public class BillingAddressAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         address.getOrders().add(order);
         address.setUser(user);
-//        address.setCountry(country);
-        addressDao.save(address);
-        return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId);
+       address =  addressDao.save(address);
+        return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId",address.getId());
     }
 
 

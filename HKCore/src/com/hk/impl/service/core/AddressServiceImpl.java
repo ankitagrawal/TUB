@@ -73,6 +73,9 @@ public class AddressServiceImpl implements AddressService {
         return addressRec;
     }
 
+     public BillingAddress save(BillingAddress billingAddress){
+         return (BillingAddress) addressDao.save(billingAddress);         
+     }
     public List<Address> getVisibleAddresses(User user) {
         return addressDao.getVisibleAddresses(user);
     }

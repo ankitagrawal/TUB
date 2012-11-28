@@ -19,6 +19,8 @@ import java.util.List;
 public interface AddressService {
     @Transactional
     Address save(Address address);
+    @Transactional
+    BillingAddress save(BillingAddress billingAddress);
 
     List<Address> getVisibleAddresses(User user);
 
