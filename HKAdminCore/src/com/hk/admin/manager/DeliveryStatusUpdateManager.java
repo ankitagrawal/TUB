@@ -422,31 +422,35 @@ public class DeliveryStatusUpdateManager {
 	}
 
 	private int updateDelhiveryStatus(JsonArray jsonShipmentDataArray) {
-		String deliveryStatus = null;
-		String deliveryDate = null;
-		Date delivery_date = null;
-		ShippingOrder shippingOrdr = null;
-
-
-		//Iterating over the  jsonShipmentDataArray to extract the required values(AWB,Status,DeliveryDate) and putting
-		//these into map<String,Object> ,AWB as key and  deliveryDate as value
-		for (JsonElement jsonObj : jsonShipmentDataArray) {
-			trackingId = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_AWB).getAsString();
-			deliveryStatus = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsString();
-			deliveryDate = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
-			if (trackingId != null && deliveryStatus != null && deliveryDate != null) {
-				delivery_date = getFormattedDeliveryDate(deliveryDate);
-				//if status is delivered then putting values in the map.
-				if (deliveryStatus.equalsIgnoreCase(CourierConstants.DELIVERED)) {
-					Awb awb = awbService.findByCourierAwbNumber(EnumCourier.Delhivery.asCourier(), trackingId);
-					Shipment shipment = shipmentService.findByAwb(awb);
-					shippingOrdr = shipment.getShippingOrder();
-					ordersDelivered = updateCourierDeliveryStatus(shippingOrdr, shippingOrdr.getShipment(), shippingOrdr.getShipment().getAwb().getAwbNumber(), delivery_date);
-				}
-			}
+        String deliveryStatus = null;
+        String deliveryDate = null;
+        Date delivery_date = null;
+        ShippingOrder shippingOrdr = null;
+		List<Courier> couriers = new ArrayList<Courier>();
+		for (Long courierId : EnumCourier.getDelhiveryCourierIds()){
+				couriers.add(EnumCourier.getEnumCourierFromCourierId(courierId).asCourier());
 		}
-		return ordersDelivered;
-	}
+
+
+        //Iterating over the  jsonShipmentDataArray to extract the required values(AWB,Status,DeliveryDate) and putting
+        //these into map<String,Object> ,AWB as key and  deliveryDate as value
+        for (JsonElement jsonObj : jsonShipmentDataArray) {
+            trackingId = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_AWB).getAsString();
+            deliveryStatus = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsString();
+            deliveryDate = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
+            if (trackingId != null && deliveryStatus != null && deliveryDate != null) {
+                delivery_date = getFormattedDeliveryDate(deliveryDate);
+                //if status is delivered then putting values in the map.
+                if (deliveryStatus.equalsIgnoreCase(CourierConstants.DELIVERED)) {
+                    Awb awb= awbService.findByCourierAwbNumber(couriers,trackingId);
+                    Shipment shipment=shipmentService.findByAwb(awb);
+                    shippingOrdr = shipment.getShippingOrder();
+                    ordersDelivered=updateCourierDeliveryStatus(shippingOrdr, shippingOrdr.getShipment(), shippingOrdr.getShipment().getAwb().getAwbNumber(), delivery_date);
+                }
+            }
+        }
+        return ordersDelivered;
+    }
 
 	private String getAppendedTrackingIdsString(List<ShippingOrder> shippingOrderSubList) {
 		String appendedTrackingId = "";

@@ -23,6 +23,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.UserService;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import org.apache.axis.AxisFault;
 
@@ -55,6 +56,7 @@ public class FedExCourierUtil {
     private ShipmentService shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
 
     private ShippingOrderService shippingOrderService = ServiceLocatorFactory.getService(ShippingOrderService.class);
+	private UserService userService =  ServiceLocatorFactory.getService(UserService.class);
     
     private static final String FED_EX_AWB_NOT_GENERATED = "FedEx awb not generated: ";
     private static final String FEDEX_RESPONSE = "FedEx #RSP: ";
@@ -124,10 +126,12 @@ public class FedExCourierUtil {
                 noAwbMessage = noAwbMessage + FEDEX_RESPONSE + notificationComment;
             }
             logger.info("FedEx awb number could not be generated: error response notification");
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, noAwbMessage);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, userService.getAdminUser(),
+					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), noAwbMessage);
         } catch (Exception e) {
             logger.error("Exception while getting awb number from FedEx: Axis fault");
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, AXIS_FAULT);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, userService.getAdminUser(),
+					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), AXIS_FAULT);
         }
         return null;
     }
