@@ -90,7 +90,7 @@
 			<value>DB_PASSWD</value>
 		</property>
 	  <property name="maxActive">
-			<value>150</value>
+			<value>200</value>
 		</property>
 		<property name="maxWait">
 			<value>15000</value>

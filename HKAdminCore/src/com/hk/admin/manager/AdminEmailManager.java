@@ -47,7 +47,9 @@ import com.hk.domain.email.OrderEmailExclusion;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
+import com.hk.domain.courier.Courier;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
@@ -87,6 +89,8 @@ public class AdminEmailManager {
     private String hkReportAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
     private String marketingAdminEmailsString = null;
+	@Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}")
+	private String logisticsAdminEmails;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
@@ -852,6 +856,21 @@ public class AdminEmailManager {
         }
         return success;
     }
+
+	public boolean sendAwbStatusEmail(Courier courier, ShippingOrder shippingOrder) {
+		HashMap valuesMap = new HashMap();
+		valuesMap.put("courier", courier);
+		valuesMap.put("shippingOrder", shippingOrder);
+		if (shippingOrder.isCOD()) {
+			valuesMap.put("cod", "Yes");
+		} else {
+			valuesMap.put("cod", "No");
+		}
+
+	Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.awbStatusEmail);
+	return emailService.sendHtmlEmail(freemarkerTemplate,valuesMap,logisticsAdminEmails,
+	EmailTemplateConstants.operationsTeam);
+	}
 
     public boolean sendOrderDeliveredEmail(Order order) {
         List<OrderEmailExclusion> orderEmailExclusionList =
