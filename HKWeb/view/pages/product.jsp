@@ -381,12 +381,12 @@
 			</a>
 		</c:if>
 		<c:if test="${!empty pa.relatedCombos}">
-			<a class='top_link' href='#related_combos' style="font-weight:bold;">
+			<a class='top_link' href='#related_combos' id="related_combo_link" style="font-weight:bold;">
 				Special Offers &darr;
 			</a>
 		</c:if>
 		<c:if test="${!empty product.relatedProducts}">
-			<a class='top_link' href='#related_products'>
+			<a class='top_link' id="related_product_link" href='#related_products'>
 				Related Products &darr;
 			</a>
 		</c:if>
@@ -581,8 +581,8 @@
 <s:layout-component name="product_description">
 
 	<c:if test="${!empty pa.relatedCombos}">
+         <c:set var="check_related_combos" value="0"/>
 		<div class='products content' id="related_combos">
-             <c:set var="check_related_combos" value="0"/>
 			<h4>
 				Special Offers on ${product.name}
 			</h4>
@@ -599,7 +599,8 @@
          <c:if test="${hk:equalsIgnoreCase(check_related_combos,'0')}">
                  <script type="text/javascript">
                      $(document).ready(function(){
-                        $("#related_combos").remove(); 
+                        $("#related_combos").remove();
+                         $("#related_combo_link").remove();
                      });
                  </script>
         </c:if>
@@ -798,6 +799,7 @@
           <script type="text/javascript">
               $(document).ready(function(){
                  $("#related_products").remove();
+                  $("#related_product_link").remove();
               });
           </script>
         </c:if>

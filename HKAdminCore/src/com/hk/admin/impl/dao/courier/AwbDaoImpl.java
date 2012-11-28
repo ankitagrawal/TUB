@@ -1,5 +1,6 @@
 package com.hk.admin.impl.dao.courier;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
@@ -22,12 +23,17 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
 
  	public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
-	 return getAvailableAwbForCourierByWarehouseCodStatus(Arrays.asList(courier),awbNumber,warehouse,isCod,awbStatus);
+	     List couriers= new ArrayList<Courier>();
+		 if(courier != null){
+			 couriers.add(courier);
+		 }
+		 return getAvailableAwbForCourierByWarehouseCodStatus(couriers,awbNumber,warehouse,isCod,awbStatus);
     }
 
     public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(List<Courier> couriers, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
-        if (couriers != null) {
+
+        if (couriers != null && !couriers.isEmpty()) {
             detachedCriteria.add(Restrictions.in("courier", couriers));
         }
         if (awbNumber != null && StringUtils.isNotBlank(awbNumber)) {
