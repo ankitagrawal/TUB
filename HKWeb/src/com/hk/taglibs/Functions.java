@@ -67,6 +67,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.core.Country;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.LinkManager;
@@ -83,6 +84,7 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.core.AddressService;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
@@ -667,4 +669,9 @@ public class Functions {
         return  productService.validTryOnProductVariant(product);
     }
 
+
+    public static Country getCountry(Long countryId) {
+        AddressService addressService = ServiceLocatorFactory.getService(AddressService.class);
+         return addressService.getCountry(countryId);
+    }
 }

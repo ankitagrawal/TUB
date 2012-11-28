@@ -9,6 +9,7 @@ import com.hk.domain.user.BillingAddress;
 import com.hk.domain.user.Role;
 import com.hk.domain.order.Order;
 import com.hk.domain.core.PaymentMode;
+import com.hk.domain.core.Country;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.RoleService;
@@ -56,6 +57,7 @@ public class BillingAddressAction extends BaseAction {
     private BillingAddress selectedAddress;
 
 
+
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
@@ -94,6 +96,7 @@ public class BillingAddressAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         address.getOrders().add(order);
         address.setUser(user);
+//        address.setCountry(country);
         addressDao.save(address);
         return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId);
     }
@@ -194,5 +197,6 @@ public class BillingAddressAction extends BaseAction {
     public void setBillingAddressId(Long billingAddressId) {
         this.billingAddressId = billingAddressId;
     }
+          
 }
 

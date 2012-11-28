@@ -14,6 +14,7 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 import com.hk.domain.user.BillingAddress;
+import com.hk.domain.core.Country;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.user.UserDetailService;
@@ -88,4 +89,11 @@ public class AddressServiceImpl implements AddressService {
            return addressDao.getBillingAddressById(billingAddressId) ;
        }
 
+    public List<Country> getAllCountry() {
+        return addressDao.getAllCountry();
+    }
+
+     public Country getCountry(Long countryId){
+         return  addressDao.getCountry(countryId);
+     }
 }

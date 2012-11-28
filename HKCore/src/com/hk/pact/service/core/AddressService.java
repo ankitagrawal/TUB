@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.BillingAddress;
+import com.hk.domain.core.Country;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -25,7 +26,11 @@ public interface AddressService {
 
     List <BillingAddress> getVisibleBillingAddress (User user);
 
-    public BillingAddress getBillingAddressById(Long billingAddressId);   
+    public BillingAddress getBillingAddressById(Long billingAddressId);
+
+     public List<Country> getAllCountry();
+
+     public Country getCountry(Long countryId);
 
 
 }

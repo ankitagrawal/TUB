@@ -27,6 +27,7 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import com.hk.domain.user.User;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.BillingAddress;
+import com.hk.domain.core.Country;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.paypal.sdk.services.NVPCallerServices;
 import com.paypal.sdk.core.nvp.NVPEncoder;
@@ -73,6 +74,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         Order order = payment.getOrder();
         User user = order.getUser();
         BillingAddress address = null;
+        Country country = null;
 
         List<BillingAddress> billingAddresses = addressDao.getVisibleBillingAddresses(user);
         for (BillingAddress billingAddress : billingAddresses) {
@@ -84,6 +86,10 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             }
         }
 
+        if (address != null){
+       country = addressDao.getCountry(address.getCountryId());
+
+        }
         String merchantTxnId = data.getGatewayOrderId();
 
         //  Reading property files
@@ -117,7 +123,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             APIProfile profile = payPalPaymentGatewayWrapper.createPaypalApiProfile(userid, pwd, signature, environment);
             caller.setAPIProfile(profile);
             NVPEncoder baseEncoder = payPalPaymentGatewayWrapper.createPayPalBasicEncodedRequest(version, setExpressMethod, paymentAction, currencyCode, amountStr);
-            encoder = payPalPaymentGatewayWrapper.encodeRequestForSetExpressCheckout(baseEncoder, return_url, linkManager.getPayPalPaymentGatewayCancelUrl(), user, address, merchantTxnId, amountStr);
+            encoder = payPalPaymentGatewayWrapper.encodeRequestForSetExpressCheckout(baseEncoder, return_url, linkManager.getPayPalPaymentGatewayCancelUrl(), user, address, merchantTxnId, amountStr , country);
             // Execute the API operation and obtain the response.
             String NVPRequest = encoder.encode();
             String NVPResponse = caller.call(NVPRequest);
