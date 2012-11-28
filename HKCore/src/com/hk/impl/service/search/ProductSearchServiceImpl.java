@@ -308,6 +308,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         QueryResponse response = null;
         SearchResult searchResult = new SearchResult();
         try{
+            query = sanitizeQuery(query);
             response = solr.query(getResultsQuery(query,searchFilters, page, perPage));
             List<SolrProduct> productList = getQueryResults(response);
             searchResult = getSearchResult(productList, (int)response.getResults().getNumFound());
@@ -383,5 +384,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
     private SearchException wrapException(String msg, Exception ex){
         logger.error(msg, ex);
         return new SearchException(SEARCH_SERVER, msg,ex);
+    }
+
+    private String sanitizeQuery(String query){
+        return query.replace(':',' ');
     }
 }
