@@ -9841,5 +9841,5 @@
     <sql>
       insert into currency_converter values (1,'INR','USD',55.05,'2012-11-02 17:29:13');
     </sql>
-  </changeSet>
+  </changeSet>   
 </databaseChangeLog>
