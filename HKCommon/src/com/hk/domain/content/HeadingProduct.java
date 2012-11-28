@@ -13,6 +13,10 @@ import com.hk.domain.content.PrimaryCategoryHeading;
  * To change this template use File | Settings | File Templates.
  */
 
+@NamedQueries(
+    @NamedQuery(name = "getHeadingProductsByHeadingId", query = "select hp from HeadingProduct hp where heading = :heading")
+)
+
 @Entity
 @Table(name = "heading_product")
 public class HeadingProduct implements Serializable{

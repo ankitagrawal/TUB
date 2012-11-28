@@ -5,8 +5,10 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.PrimaryCategoryHeading;
+import com.hk.domain.content.HeadingProduct;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.web.action.HomeAction;
 import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -17,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,11 +34,14 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     Category                                       category;
     List<PrimaryCategoryHeading>                   headingList;
     HashMap<PrimaryCategoryHeading, List<Product>> headingHasProducts;
-    Long                                            headingId;
+    Long                                           headingId;
+    List<HeadingProduct>                           headingProducts = new ArrayList<HeadingProduct>(0);
     @Autowired
     PrimaryCategoryHeadingDao                      primaryCategoryHeadingDao;
     @Autowired
     private CategoryService                        categoryService;
+    @Autowired
+    private HeadingProductService headingProductService;
 
     public Resolution create() throws Exception {
         category = heading.getCategory();
@@ -129,7 +135,8 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     }
 
     public Resolution addPrimaryCategoryHeadingProducts() {
-        heading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, heading.getId());
+//        heading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, heading.getId());
+       headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
         logger.debug("adding products for heading id: " + heading.getId() + " name: " + heading.getName());
         return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
     }
@@ -174,13 +181,15 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     }
 
     public Resolution editPrimaryCategoryHeadingProducts() {
-        heading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, heading.getId());
+//        heading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, heading.getId());
+         headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
         logger.debug("deleting products for heading id: " + heading.getId() + " name: " + heading.getName());
         return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
     }
 
     public Resolution deleteSelectedPrimaryCategoryHeadingProducts() {
-        heading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, heading.getId());
+//        heading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, heading.getId());
+           getHeadingProductService().getHeadingProductsByHeadingId(heading);
         List<Product> productsList = heading.getProducts();
         category = heading.getCategory();
         if (products != null) {
@@ -255,4 +264,15 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
         this.categoryService = categoryService;
     }
 
+  public HeadingProductService getHeadingProductService() {
+    return headingProductService;
+  }
+
+  public List<HeadingProduct> getHeadingProducts() {
+    return headingProducts;
+  }
+
+  public void setHeadingProducts(List<HeadingProduct> headingProducts) {
+    this.headingProducts = headingProducts;
+  }
 }
