@@ -46,6 +46,11 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 
 	@Transactional
 	public TrafficTracking saveTrafficTracking(HttpServletRequest httpRequest, User user) {
+		String pageUrl = httpRequest.getRequestURL().toString();
+		if (StringUtils.isNotBlank(pageUrl) && StringUtils.equals(pageUrl, "http:///")) {
+			return null;
+		}
+
 		Map<String, String> trafficInfoMap = TrafficSourceFinder.getTrafficDetails(httpRequest);
 		TrafficTracking trafficTracking = new TrafficTracking();
 
@@ -67,8 +72,8 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		trafficTracking.setTrafficSrcDetails(trafficSrcDetails);
 		trafficTracking.setTrafficSrcPaid(Boolean.valueOf(trafficInfoMap.get(TrafficSourceFinder.TRAFFIC_SRC_PAID)));
 
-		String pageUrl = httpRequest.getRequestURL().toString();
 		trafficTracking.setLandingUrl(pageUrl);
+		
 		Category category = null;
 		String categoryName = trafficInfoMap.get(TrafficSourceFinder.CATEGORY);
 		if (StringUtils.isNotBlank(categoryName))

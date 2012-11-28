@@ -104,7 +104,8 @@ public class CampaignTrackingFilter implements Filter {
 		        String userAgent = httpRequest.getHeader(HttpRequestAndSessionConstants.USER_AGENT);
 		        //Check if it is a crawler or a bot
 		        if (userAgent != null && !userAgent.equals("")
-				        && (!userAgent.toLowerCase().contains("bot") || !userAgent.toLowerCase().contains("spider") || !userAgent.toLowerCase().contains("price"))) {
+				        && !userAgent.toLowerCase().contains("bot") && !userAgent.toLowerCase().contains("spider")
+				        && !userAgent.toLowerCase().contains("price") && !userAgent.toLowerCase().contains("monit/4.10.1") ) {
 			        TrafficTracking trafficTracking = trafficAndUserBrowsingService.saveTrafficTracking(httpRequest, user);
 			        if (trafficTracking != null && trafficTracking.getId() != null) {
 				        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);
