@@ -190,15 +190,7 @@ public class Address implements java.io.Serializable {
     public void setCountryId(Long countryId) {
         this.countryId = countryId;
     }
-
-//    public Country getCountry() {
-//        return country;
-//    }
-//
-//    public void setCountry(Country country) {
-//        this.country = country;
-//    }
-
+    
     @Override
   public boolean equals(Object o) {
     if (this == o) return true;

@@ -75,20 +75,11 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         User user = order.getUser();
         BillingAddress address = null;
         Country country = null;
-
         List<BillingAddress> billingAddresses = addressDao.getVisibleBillingAddresses(user);
-        for (BillingAddress billingAddress : billingAddresses) {
-            for (Order order1 : billingAddress.getOrders()) {
-                if (order.equals(order1)) {
-                    address = billingAddress;
-                    break;
-                }
-            }
-        }
+        address = addressDao.getBillingAddressForOrder(order ,billingAddresses );
 
-        if (address != null){
-       country = addressDao.getCountry(address.getCountryId());
-
+         if (address != null) {
+            country = addressDao.getCountry(address.getCountryId());
         }
         String merchantTxnId = data.getGatewayOrderId();
 
@@ -123,7 +114,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             APIProfile profile = payPalPaymentGatewayWrapper.createPaypalApiProfile(userid, pwd, signature, environment);
             caller.setAPIProfile(profile);
             NVPEncoder baseEncoder = payPalPaymentGatewayWrapper.createPayPalBasicEncodedRequest(version, setExpressMethod, paymentAction, currencyCode, amountStr);
-            encoder = payPalPaymentGatewayWrapper.encodeRequestForSetExpressCheckout(baseEncoder, return_url, linkManager.getPayPalPaymentGatewayCancelUrl(), user, address, merchantTxnId, amountStr , country);
+            encoder = payPalPaymentGatewayWrapper.encodeRequestForSetExpressCheckout(baseEncoder, return_url, linkManager.getPayPalPaymentGatewayCancelUrl(), user, address, merchantTxnId, amountStr, country);
             // Execute the API operation and obtain the response.
             String NVPRequest = encoder.encode();
             String NVPResponse = caller.call(NVPRequest);
