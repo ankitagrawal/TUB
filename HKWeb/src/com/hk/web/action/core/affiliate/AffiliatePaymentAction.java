@@ -57,7 +57,8 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	@ValidateNestedProperties({
 			@Validate(field = "checkNo", required = true, on = "payToAffiliate"),
 			@Validate(field = "issueDate", required = true, on = "payToAffiliate"),
-			@Validate(field = "bankName", required = true, on = "payToAffiliate")})
+			@Validate(field = "bankName", required = true, on = "payToAffiliate"),
+      @Validate(field = "tds", required = true, on="payToAffiliate")})
 	CheckDetails checkDetails;
 	@Validate(required = true, on = "payToAffiliate")
 	Double amountToPay;
