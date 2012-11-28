@@ -9841,5 +9841,25 @@
     <sql>
       insert into currency_converter values (1,'INR','USD',55.05,'2012-11-02 17:29:13');
     </sql>
-  </changeSet>   
+  </changeSet>
+    <changeSet author="Ankit (generated)" id="1354082820156-1">
+        <createTable tableName="country">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country_code" type="VARCHAR(6)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1354082820156-2">
+        <addColumn tableName="address">
+            <column defaultValue="80" name="country_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
