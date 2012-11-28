@@ -206,7 +206,15 @@ public class InventoryCheckinAction extends BaseAction {
 							getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
 					getInventoryService().checkInventoryHealth(productVariant);
 
-					if (grn.getGrnStatus().getId().equals(EnumGrnStatus.GoodsReceived.getId())) {
+					if (getInventoryService().allInventoryCheckedIn(grn)) {
+						grn.setGrnStatus(EnumGrnStatus.InventoryCheckedIn.asGrnStatus());
+						getGoodsReceivedNoteDao().save(grn);
+						editPVFillRate(grn);
+					} else {
+						grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
+						getGoodsReceivedNoteDao().save(grn);
+					}
+					/*if (grn.getGrnStatus().getId().equals(EnumGrnStatus.GoodsReceived.getId())) {
 						grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.InventoryCheckinInProcess.getId()));
 						getGoodsReceivedNoteDao().save(grn);
 					} else if (grn.getGrnStatus().getId().equals(EnumGrnStatus.InventoryCheckinInProcess.getId())) {
@@ -215,7 +223,7 @@ public class InventoryCheckinAction extends BaseAction {
 							getGoodsReceivedNoteDao().save(grn);
 							editPVFillRate(grn);
 						}
-					}
+					}*/
 					//Barcode File
 					try {
 						String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
