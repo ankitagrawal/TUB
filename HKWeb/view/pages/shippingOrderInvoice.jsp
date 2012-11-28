@@ -134,6 +134,7 @@
 </div>
 
 
+
 <c:choose>
     <c:when test="${courierId == fedEx || courierId == fedExSurface}">
         <div class="grid_12">
@@ -147,7 +148,7 @@
                         Standard Overnight
                     </c:otherwise>
                 </c:choose>
-                <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD && orderSummary.invoiceDto.grandTotal > 0}">
+                <c:if test="${orderSummary.shippingOrder.COD}">
                     COD
                 </c:if>
                 &nbsp;&nbsp;wt:${orderSummary.estimatedWeightOfPackage}Kg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
