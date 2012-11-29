@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
+import com.hk.cache.UserCache;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -327,7 +328,9 @@ public class OrderServiceImpl implements OrderService {
         // order = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Ready_For_Process,
         // EnumOrderStatus.ESCALTED, EnumOrderStatus.PARTIAL_ESCALTION);
 
-        User loggedOnUser = getUserService().getLoggedInUser();
+        
+        //User loggedOnUser = getUserService().getLoggedInUser();
+        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if (loggedOnUser == null) {
             loggedOnUser = order.getUser();
         }

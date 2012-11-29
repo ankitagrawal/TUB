@@ -1,6 +1,8 @@
 package com.hk.cache;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -10,9 +12,7 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.service.ServiceLocatorFactory;
 
 /**
- * 
  * @author vaibhav.adlakha
- *
  */
 public class CategoryCache {
 
@@ -47,6 +47,28 @@ public class CategoryCache {
             // User user = getUserService().get
         }
         return categoryVO;
+    }
+
+    public List<String> getBrandsInCategory(String categoryName) {
+        List<String> brandsInCategory = new ArrayList<String>();
+        
+        CategoryVO categoryVO = getCategoryByName(categoryName);
+        if(categoryVO !=null){
+            brandsInCategory.addAll(categoryVO.getBrands());
+        }
+
+        return brandsInCategory;
+    }
+    
+    
+    public List<String> getBrandsByCategory(List<String> categoryNames){
+        List<String> brandsByCategory = new ArrayList<String>();
+        
+        for(String categoryName : categoryNames){
+            brandsByCategory.addAll(getBrandsInCategory(categoryName));
+        }
+        
+        return brandsByCategory;
     }
 
     public void freeze() {
