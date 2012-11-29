@@ -28,6 +28,7 @@ public class TrafficSourceFinder {
 	public static String HEALTHKART = "healthkart";
 	public static String RFERRAL = "referral";
 	public static String AFFILIATE = "affiliate";
+	public static String MICROSITES = "microsites";
 	public static String OTHERS = "others";
 
 	public static Map<String, String> getTrafficDetails(HttpServletRequest httpRequest) {
@@ -110,7 +111,7 @@ public class TrafficSourceFinder {
 				trafficSrc = UtmSourceConstants.OHANA.toLowerCase();
 				trafficSrcPaid = "true";
 			} else if (utm_medium.toLowerCase().equals(UtmMediumConstants.MICROSITES.toLowerCase())) {
-				trafficSrc = AFFILIATE;
+				trafficSrc = MICROSITES;
 			} else if (!aff_id.equals("")) {
 				trafficSrc = AFFILIATE;
 				trafficSrcPaid = "true";
