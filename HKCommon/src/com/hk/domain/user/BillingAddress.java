@@ -31,7 +31,7 @@ public class BillingAddress extends Address implements Serializable {
             joinColumns = {@JoinColumn(name = "billing_address_id", nullable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name = "base_order_id", nullable = false, updatable = false)}
     )
-    private List<Order> orders = new ArrayList<Order>();
+    private Set<Order> orders = new HashSet<Order>();
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,11 +39,11 @@ public class BillingAddress extends Address implements Serializable {
     private User user;
 
 
-    public List<Order> getOrders() {
+    public Set<Order> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<Order> orders) {
+    public void setOrders(Set<Order> orders) {
         this.orders = orders;
     }
 

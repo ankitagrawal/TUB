@@ -8,6 +8,7 @@ import com.paypal.sdk.core.nvp.NVPEncoder;
 import com.paypal.sdk.core.nvp.NVPDecoder;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.domain.core.Country;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +105,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
     }
 
 
-    public NVPEncoder encodeRequestForSetExpressCheckout(NVPEncoder encoder, String return_url, String cancel_url, User user, Address address, String merchantTxnId, String amount) {
+    public NVPEncoder encodeRequestForSetExpressCheckout(NVPEncoder encoder, String return_url, String cancel_url, User user, Address address, String merchantTxnId, String amount , Country country) {
         encoder.add("RETURNURL", return_url);
         encoder.add("CANCELURL", cancel_url);
         encoder.add("NOSHIPPING", "1");
@@ -128,7 +129,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
             encoder.add("PAYMENTREQUEST_0_SHIPTOCITY", address.getCity());
             encoder.add("PAYMENTREQUEST_0_SHIPTOSTATE", address.getState());
 //      Countrycode need to be discuss
-            encoder.add("PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE", "IN");
+            encoder.add("PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE", country.getCountryCode());
             encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPin());
             encoder.add("EMAIL", user.getEmail());
             encoder.add("PAYMENTREQUEST_0_SHIPTOPHONENUM", address.getPhone());

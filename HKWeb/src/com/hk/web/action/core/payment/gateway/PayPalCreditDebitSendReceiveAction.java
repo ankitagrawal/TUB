@@ -20,13 +20,16 @@ import com.hk.domain.payment.CurrencyConverter;
 import com.hk.domain.order.Order;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
+import com.akube.framework.service.PaymentGatewayWrapper;
 import com.akube.framework.util.BaseUtils;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.ForwardResolution;
 import com.hk.domain.user.User;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.BillingAddress;
+import com.hk.domain.core.Country;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.paypal.sdk.services.NVPCallerServices;
 import com.paypal.sdk.core.nvp.NVPEncoder;
@@ -66,6 +69,18 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
     @Autowired
     AddressDao addressDao;
 
+      @Override
+       public Resolution proceed() {
+
+        String encodedData = getContext().getRequest().getParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM);
+        BasePaymentGatewayWrapper.TransactionData data = BasePaymentGatewayWrapper.decodeTransactionDataParamWithBillingAddress(encodedData);
+        PaymentGatewayWrapper paymentGatewayWrapper = getPaymentGatewayWrapperFromTransactionData(data);
+        getContext().getRequest().setAttribute("PaymentGatewayWrapper", paymentGatewayWrapper);
+
+        return new ForwardResolution("/gatewayProcess.jsp");
+
+
+    }
 
     protected PayPalPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
 //      PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper(AppConstants.appBasePath);
@@ -73,17 +88,14 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         Order order = payment.getOrder();
         User user = order.getUser();
         BillingAddress address = null;
+        Country country = null;
+           address = addressDao.getBillingAddressById(data.getBillingAddressId());
+//        List<BillingAddress> billingAddresses = addressDao.getVisibleBillingAddresses(user);
+//        address = addressDao.getBillingAddressForOrder(order ,billingAddresses );
 
-        List<BillingAddress> billingAddresses = addressDao.getVisibleBillingAddresses(user);
-        for (BillingAddress billingAddress : billingAddresses) {
-            for (Order order1 : billingAddress.getOrders()) {
-                if (order.equals(order1)) {
-                    address = billingAddress;
-                    break;
-                }
-            }
+         if (address != null) {
+            country = addressDao.getCountry(address.getCountryId());
         }
-
         String merchantTxnId = data.getGatewayOrderId();
 
         //  Reading property files
@@ -117,7 +129,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             APIProfile profile = payPalPaymentGatewayWrapper.createPaypalApiProfile(userid, pwd, signature, environment);
             caller.setAPIProfile(profile);
             NVPEncoder baseEncoder = payPalPaymentGatewayWrapper.createPayPalBasicEncodedRequest(version, setExpressMethod, paymentAction, currencyCode, amountStr);
-            encoder = payPalPaymentGatewayWrapper.encodeRequestForSetExpressCheckout(baseEncoder, return_url, linkManager.getPayPalPaymentGatewayCancelUrl(), user, address, merchantTxnId, amountStr);
+            encoder = payPalPaymentGatewayWrapper.encodeRequestForSetExpressCheckout(baseEncoder, return_url, linkManager.getPayPalPaymentGatewayCancelUrl(), user, address, merchantTxnId, amountStr, country);
             // Execute the API operation and obtain the response.
             String NVPRequest = encoder.encode();
             String NVPResponse = caller.call(NVPRequest);

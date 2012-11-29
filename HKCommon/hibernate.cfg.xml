@@ -193,9 +193,14 @@
 	    <mapping class="com.hk.domain.analytics.TrafficTracking" />
 	    <mapping class="com.hk.domain.analytics.UserBrowsingHistory" />
         <mapping class="com.hk.domain.user.BillingAddress" />
+<<<<<<< HEAD
         <mapping class="com.hk.domain.payment.CurrencyConverter" />
         <mapping class="com.hk.domain.payment.Gateway" />
         <mapping class="com.hk.domain.payment.Issuer" />
         <mapping class="com.hk.domain.payment.GatewayIssuerMapping" />
+=======
+        <mapping class="com.hk.domain.core.Country" />
+        <mapping class="com.hk.domain.payment.CurrencyConverter" />
+>>>>>>> b6c3c3f80039bce0746602fa16d0d0745f4c0657
     </session-factory>
 </hibernate-configuration>

@@ -1,6 +1,10 @@
 <%@ page import="com.akube.framework.gson.JsonUtils" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.courier.StateList" %>
+<%@ page import="com.hk.pact.service.core.AddressService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.domain.user.BillingAddress" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -81,6 +85,11 @@
       What address should we ship your order to?
     </h3>--%>
 
+   <%
+            AddressService addressService = ServiceLocatorFactory.getService(AddressService.class);
+            pageContext.setAttribute("countryList", addressService.getAllCountry());
+        %>
+
     <div class='left2'>
       <h3 style="text-align: left;">
         Use one of your saved Billing addresses &darr;
@@ -102,6 +111,12 @@
             </c:if>
             <div class='city'>${billingAddress.city}</div>
             <div class='state'>${billingAddress.state}</div>
+
+           <c:set var="countryId" value="${billingAddress.countryId}" />
+              <input type="hidden" value="${countryId}" class="countryId">
+           <div class='country'>${hk:getCountry(countryId).name}</div>
+
+
             <div class='pin'>${billingAddress.pin}</div>
             <div class='phone'>${billingAddress.phone}</div>
             <br/>
@@ -131,6 +146,8 @@
           street2 = addressBlock.find('.street2').text();
           city = addressBlock.find('.city').text();
           state = addressBlock.find('.state').text();
+//          country = addressBlock.find('.country').text();
+            countryId = addressBlock.find('.countryId').val();
           pin = addressBlock.find('.pin').text();
           phone = addressBlock.find('.phone').text();
           id = addressBlock.find('.address_id').val();
@@ -142,7 +159,11 @@
           form.find("input[type='text'][name='address.city']").val(city);
 //          form.find("input[type='text'][name='address.state']").val(state);
           form.find("[name='address.state']").val(state.toUpperCase());
-          form.find("input[type='text'][name='address.pin']").val(pin);
+//          form.find("[name='address.countryId']").val(country.toUpperCase());
+
+//           form.find("input[type='text'][name='address.countryId']").val();
+            $('select').val(countryId);
+            form.find("input[type='text'][name='address.pin']").val(pin);
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
@@ -212,6 +233,19 @@
           <s:text name="address.city" maxlength = "60"/>
           <div class='label'>State<span class="aster">*</span></div>
           <s:text name="address.state" maxlength = "50"/>
+           <div class='label'>Country<span class="aster">*</span></div>
+          <s:select name="address.countryId" style="width:310px;">
+              <s:option value="">-select-</s:option>
+              <c:forEach items="${countryList}" var="country">
+                  <s:option value="${country.id}">${country.name}</s:option>
+           </c:forEach>
+          </s:select>
+
+            <%--<s:select name="country" value="${countr}">--%>
+                <%--<s:option value="">-Select-</s:option>--%>
+                <%--<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allCountry" value="id" label="name"/>--%>
+            <%--</s:select>--%>
+
           <div class='label'>PIN Code<span class="aster">*</span></div>
           <s:text name="address.pin" class="pincode" maxlength="20"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
@@ -239,6 +273,7 @@
         var billingAddressState = document.forms["BillingAddressForm"]["address.state"].value;
         var billingAddressPin = document.forms["BillingAddressForm"]["address.pin"].value;
         var billingAddressPhone = document.forms["BillingAddressForm"]["address.phone"].value;
+        var billingAddressCountry = document.forms["BillingAddressForm"]["address.countryId"].value;
         if (billingAddressName == null || billingAddressName == "")
         {
             alert("Name must be filled out");
@@ -259,6 +294,13 @@
             alert("State must be filled out");
             return false;
         }
+
+         if ( billingAddressCountry == "")
+        {
+            alert("Country must be Selected ");
+            return false;
+        }
+
         if (billingAddressPin == null || billingAddressPin == "")
         {
             alert("Pincode must be filled out");

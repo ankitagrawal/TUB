@@ -17,6 +17,7 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.BillingAddress;
 import com.hk.domain.order.Order;
+import com.hk.domain.core.Country;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.core.AddressDao;
 
@@ -108,7 +109,7 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     //
     // }
 
-  
+
     public List<BillingAddress> getVisibleBillingAddresses(User user) {
         List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>();
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BillingAddress.class);
@@ -123,7 +124,27 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
 
 
     public BillingAddress getBillingAddressById(Long billingAddressId) {
-           return get(BillingAddress.class, billingAddressId);
-       }  
-    
-}   
+        return get(BillingAddress.class, billingAddressId);
+    }
+
+    public List<Country> getAllCountry() {
+        return getAll(Country.class);
+    }
+
+    public Country getCountry(Long countryId) {
+        return get(Country.class, countryId);
+    }
+
+    public BillingAddress getBillingAddressForOrder(Order order, List<BillingAddress> billingAddresses) {
+        BillingAddress address = null;
+        for (BillingAddress billingAddress : billingAddresses) {
+            for (Order order1 : billingAddress.getOrders()) {
+                if (order.equals(order1)) {
+                    address = billingAddress;
+                }
+            }
+        }
+        return address;
+    }
+
+}

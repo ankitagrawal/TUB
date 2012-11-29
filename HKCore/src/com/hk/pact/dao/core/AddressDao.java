@@ -8,6 +8,7 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.BillingAddress;
 import com.hk.domain.order.Order;
+import com.hk.domain.core.Country;
 import com.hk.pact.dao.BaseDao;
 
 public interface AddressDao extends BaseDao {
@@ -31,5 +32,9 @@ public interface AddressDao extends BaseDao {
 
     public BillingAddress getBillingAddressById(Long billingAddressId);
 
+    public List<Country> getAllCountry();
 
+    public Country getCountry(Long countryId);
+
+    public BillingAddress getBillingAddressForOrder (Order order , List <BillingAddress> billingAddresses);
 }
