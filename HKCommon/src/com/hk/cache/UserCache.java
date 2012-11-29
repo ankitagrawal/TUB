@@ -1,0 +1,76 @@
+package com.hk.cache;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.hk.cache.vo.UserVO;
+
+/**
+ * @author vaibhav.adlakha
+ */
+public class UserCache {
+
+    private static UserCache    _instance        = new UserCache();
+    private UserCache           _transient;
+
+    private Map<String, UserVO> loginToUserCache = new HashMap<String, UserVO>();
+    private Map<Long, UserVO>   idToUserCache    = new HashMap<Long, UserVO>();
+
+    @SuppressWarnings("serial")
+    private Map<Long, UserVO>   idToUserLRUCache = Collections.synchronizedMap(new LinkedHashMap<Long, UserVO>(1000, 0.75f, true) {
+                                                     private static final int MAX_ENTRIES = 100;
+
+                                                     protected boolean removeEldestEntry(Map.Entry<Long, UserVO> eldest) {
+                                                         return size() > MAX_ENTRIES;
+                                                     }
+                                                 });
+
+    private UserCache() {
+    }
+
+    public static UserCache getInstance() {
+        return _instance;
+    }
+
+    public void addUser(UserVO userVO) {
+        if (StringUtils.isNotBlank(userVO.getLogin())) {
+            loginToUserCache.put(userVO.getLogin(), userVO);
+        }
+        if (userVO.getId() != null) {
+            idToUserCache.put(userVO.getId(), userVO);
+        }
+    }
+
+    public UserVO getUserById(Long userId) {
+        UserVO userVO = idToUserLRUCache.get(userId);
+        if (userVO == null) {
+            userVO = idToUserCache.get(userId);
+            if (userVO != null) {
+                idToUserLRUCache.put(userId, userVO);
+            }
+        }
+
+        return userVO;
+    }
+
+    public UserVO getUserByLogin(String login) {
+        return loginToUserCache.get(login);
+    }
+
+    public void freeze() {
+        _instance = this;
+    }
+
+    public void reset() {
+        _transient = new UserCache();
+    }
+
+    public UserCache getTransientCache() {
+        return _transient;
+    }
+
+}
