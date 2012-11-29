@@ -10228,6 +10228,12 @@
         and gim.issuer_id = ir.id;
     </sql>
      </changeSet>
+    <changeSet author="Pratham (generated)" id="20121129-4">
+        <sql>
+            update payment pt ,payment_mode pm set pt.gateway_id =pm.gateway where pt.payment_mode_id=pm.id;
+            update gateway_issuer_mapping set active = 1 and priority = 1;
+        </sql>
+    </changeSet>
     <changeSet author="Pratham (generated)" id="20121129-2">
         <sql>
         UPDATE payment SET payment_mode_id  = 1000 WHERE payment_mode_id IN (15,60,70,80,90,100);
