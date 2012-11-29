@@ -4,13 +4,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.commons.lang.StringUtils;
 
 import com.hk.cache.vo.UserVO;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
+import com.shiro.PrincipalImpl;
 
 /**
  * @author vaibhav.adlakha
@@ -33,6 +34,7 @@ public class UserCache {
                                                  });
 
     private UserService         userService;
+    private SecurityManager     securityManager;
 
     private UserCache() {
     }
@@ -86,6 +88,22 @@ public class UserCache {
         return userVO.getUser();
     }
 
+    public User getLoggedInUser() {
+        User loggedOnUser = null;
+        if (getPrincipal() != null) {
+            UserVO userVO = getUserById(getPrincipal().getId());
+            if (userVO != null) {
+                loggedOnUser = userVO.getUser();
+            }
+        }
+
+        return loggedOnUser;
+    }
+
+    private PrincipalImpl getPrincipal() {
+        return (PrincipalImpl) getSecurityManager().getSubject().getPrincipal();
+    }
+
     public void freeze() {
         _instance = this;
     }
@@ -105,4 +123,12 @@ public class UserCache {
         return userService;
     }
 
+    public SecurityManager getSecurityManager() {
+        if (securityManager == null) {
+            securityManager = (SecurityManager) ServiceLocatorFactory.getService("SecurityManager");
+        }
+        return securityManager;
+    }
+
+    
 }

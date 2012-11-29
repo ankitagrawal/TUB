@@ -5,6 +5,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.cache.UserCache;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -200,7 +201,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
-        User user = userService.getAdminUser();
+        User user = UserCache.getInstance().getAdminUser();
+        //User user = userService.getAdminUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
         logOrderActivity(order, user, orderLifecycleActivity, comments);
     }
@@ -337,6 +339,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             }
         } else {
 	        if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
+	            User adminUser = UserCache.getInstance().getAdminUser();
 		        orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
 		        //DO Nothing for B2B Orders
 	        } else {

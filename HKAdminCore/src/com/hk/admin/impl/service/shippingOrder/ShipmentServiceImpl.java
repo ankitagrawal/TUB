@@ -10,6 +10,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.manager.AdminEmailManager;
+import com.hk.cache.UserCache;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -22,6 +23,7 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.user.User;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.UserService;
@@ -141,6 +143,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		shippingOrder = shippingOrderService.save(shippingOrder);
 		String trackingId = shipment.getAwb().getAwbNumber();
 		String comment = shipmentType + CourierConstants.SHIPMENT_DETAILS + shipment.getAwb().getCourier().getName() + "/" + trackingId;
+		User adminUser = UserCache.getInstance().getAdminUser();
 		shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
 				EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(), comment);
 		return shippingOrder.getShipment();
