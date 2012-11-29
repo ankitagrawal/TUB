@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.domain.courier.Shipment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +16,12 @@ import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.HKDeliveryUtil;
+import com.hk.cache.UserCache;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
@@ -34,26 +35,27 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
 @Service
-
 public class RunSheetServiceImpl implements RunSheetService {
 
     @Autowired
-    private RunSheetDao runsheetDao;
+    private RunSheetDao               runsheetDao;
     @Autowired
-    ConsignmentService consignmentService;
+    ConsignmentService                consignmentService;
     @Autowired
-    HubService hubService;
+    HubService                        hubService;
     @Autowired
-    UserService userService;
-	@Autowired
-	ShippingOrderService shippingOrderService;
-	@Autowired
-	private AdminShippingOrderService adminShippingOrderService;
+    UserService                       userService;
+    @Autowired
+    ShippingOrderService              shippingOrderService;
+    @Autowired
+    private AdminShippingOrderService adminShippingOrderService;
 
     @Override
-    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User agent,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
+    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments, RunsheetStatus runsheetStatus, User agent, Long prePaidBoxCount, Long totalCODPackets,
+            Double totalCODAmount) {
         Runsheet runsheetObj = new Runsheet();
-	    User loggedOnUser = userService.getLoggedInUser();
+        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        // User loggedOnUser = userService.getLoggedInUser();
         runsheetObj.setCodBoxCount(totalCODPackets);
         runsheetObj.setCreateDate(new Date());
         runsheetObj.setUpdateDate(new Date());
@@ -63,11 +65,11 @@ public class RunSheetServiceImpl implements RunSheetService {
         runsheetObj.setHub(hub);
         runsheetObj.setConsignments(consignments);
         runsheetObj.setRunsheetStatus(runsheetStatus);
-	    if(loggedOnUser != null){
-		    runsheetObj.setCreatedBy(loggedOnUser);
-	    }
-	    
-       return runsheetObj;
+        if (loggedOnUser != null) {
+            runsheetObj.setCreatedBy(loggedOnUser);
+        }
+
+        return runsheetObj;
     }
 
     @Override
@@ -77,75 +79,75 @@ public class RunSheetServiceImpl implements RunSheetService {
     }
 
     @Override
-    public void saveRunSheet(Runsheet runsheet, List<Consignment> changedConsignmentsList){
-        if(changedConsignmentsList != null){
-            updateConsignmentTrackingForRunsheet(changedConsignmentsList, userService.getLoggedInUser());
+    public void saveRunSheet(Runsheet runsheet, List<Consignment> changedConsignmentsList) {
+        if (changedConsignmentsList != null) {
+            User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+            updateConsignmentTrackingForRunsheet(changedConsignmentsList, loggedOnUser);
         }
         runsheet.setUpdateDate(new Date());
         runsheetDao.saveRunSheet(runsheet);
     }
 
     public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage) {
-        return runsheetDao.searchRunsheet(runsheet,startDate,endDate,runsheetStatus,agent,hub,pageNo,perPage);
+        return runsheetDao.searchRunsheet(runsheet, startDate, endDate, runsheetStatus, agent, hub, pageNo, perPage);
     }
 
     @Override
     public boolean isRunsheetClosable(Runsheet runsheet) {
-        for (Consignment consignment : runsheet.getConsignments()){
-            if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOutForDelivery.getId())
-                    || consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentReceivedAtHub.getId())){
+        for (Consignment consignment : runsheet.getConsignments()) {
+            if (consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOutForDelivery.getId())
+                    || consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentReceivedAtHub.getId())) {
                 return false;
             }
         }
         return true;
     }
 
-    public Runsheet markAllConsignmentsAsDelivered(Runsheet runsheet){
+    public Runsheet markAllConsignmentsAsDelivered(Runsheet runsheet) {
         List<Consignment> consignmentListWithChangedStatuses = new ArrayList<Consignment>();
         Set<Consignment> consignments = runsheet.getConsignments();
-        for (Consignment consignment : consignments){
-            if(!consignment.getConsignmentStatus().getStatus().equals(EnumConsignmentStatus.ShipmentDelivered.getStatus())){
+        for (Consignment consignment : consignments) {
+            if (!consignment.getConsignmentStatus().getStatus().equals(EnumConsignmentStatus.ShipmentDelivered.getStatus())) {
                 consignmentListWithChangedStatuses.add(consignment);
                 consignment.setConsignmentStatus(runsheetDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentDelivered.getId()));
             }
         }
-        updateConsignmentTrackingForRunsheet(consignmentListWithChangedStatuses, userService.getLoggedInUser());
+        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        updateConsignmentTrackingForRunsheet(consignmentListWithChangedStatuses, loggedOnUser);
         runsheet.setConsignments(consignments);
         return runsheet;
     }
 
-    public boolean agentHasOpenRunsheet(User agent){
-        if(searchRunsheet(null,null,null, runsheetDao.get(RunsheetStatus.class, EnumRunsheetStatus.Open.getId()),agent,null,1,10).getList().size() > 0){
+    public boolean agentHasOpenRunsheet(User agent) {
+        if (searchRunsheet(null, null, null, runsheetDao.get(RunsheetStatus.class, EnumRunsheetStatus.Open.getId()), agent, null, 1, 10).getList().size() > 0) {
             return true;
         }
         return false;
     }
 
-    public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user){
+    public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user) {
         Long consignmentLifecycleStatusId;
         Hub sourceHub = null;
         Hub destinationHub = null;
         List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
         for (Consignment consignmentObj : changedConsignmentsList) {
-            if(consignmentObj != null){
+            if (consignmentObj != null) {
                 consignmentLifecycleStatusId = HKDeliveryUtil.getLifcycleStatusIdFromConsignmentStatus(consignmentObj.getConsignmentStatus().getStatus());
                 ConsignmentLifecycleStatus consignmentLifecycleStatus = runsheetDao.get(ConsignmentLifecycleStatus.class, consignmentLifecycleStatusId);
-                if(consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
+                if (consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())) {
                     sourceHub = consignmentObj.getHub();
-                    destinationHub =  hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
-                }
-                else if(consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentRTH.getId())){
+                    destinationHub = hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
+                } else if (consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentRTH.getId())) {
                     sourceHub = consignmentObj.getHub();
-                    destinationHub =  hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
-                }
-                else {
-                    sourceHub =consignmentObj.getHub();
+                    destinationHub = hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
+                } else {
+                    sourceHub = consignmentObj.getHub();
                     destinationHub = consignmentObj.getHub();
                 }
                 consignmentTrackingList.add(consignmentService.createConsignmentTracking(sourceHub, destinationHub, user, consignmentObj, consignmentLifecycleStatus));
             }
-            }
-        if(consignmentTrackingList.size() > 0){
+        }
+        if (consignmentTrackingList.size() > 0) {
             consignmentService.saveConsignmentTracking(consignmentTrackingList);
         }
     }
@@ -153,9 +155,8 @@ public class RunSheetServiceImpl implements RunSheetService {
     @Override
     public Runsheet updateExpectedAmountForClosingRunsheet(Runsheet runsheet) {
         Double expectedCollection = 0.0;
-        for(Consignment consignment : runsheet.getConsignments()){
-            if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId()) &&
-               consignment.getPaymentMode().equals(HKDeliveryConstants.COD)){
+        for (Consignment consignment : runsheet.getConsignments()) {
+            if (consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId()) && consignment.getPaymentMode().equals(HKDeliveryConstants.COD)) {
                 expectedCollection += consignment.getAmount();
             }
         }
@@ -165,9 +166,10 @@ public class RunSheetServiceImpl implements RunSheetService {
 
     @Override
     public List<User> getAgentList(RunsheetStatus runsheetStatus) {
-       User loggedOnUser = userService.getLoggedInUser();
-       Hub hub = hubService.getHubForUser(loggedOnUser);
-       return runsheetDao.getAgentList(runsheetStatus, hub);
+        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        // User loggedOnUser = userService.getLoggedInUser();
+        Hub hub = hubService.getHubForUser(loggedOnUser);
+        return runsheetDao.getAgentList(runsheetStatus, hub);
     }
 
     @Override
@@ -193,33 +195,33 @@ public class RunSheetServiceImpl implements RunSheetService {
         return runsheet;
     }
 
-	@Override
-	public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList){
-		if(consignmentList != null){
-			for(Consignment consignment : consignmentList){
-				if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
-					ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(consignment.getCnnNumber());
-					Shipment shipment = shippingOrder.getShipment();
-					if(shipment != null){
-						shipment.setDeliveryDate(new Date());
-					}
-					adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
-				}
-			}
-		}
-	}
+    @Override
+    public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList) {
+        if (consignmentList != null) {
+            for (Consignment consignment : consignmentList) {
+                if (consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())) {
+                    ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(consignment.getCnnNumber());
+                    Shipment shipment = shippingOrder.getShipment();
+                    if (shipment != null) {
+                        shipment.setDeliveryDate(new Date());
+                    }
+                    adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
+                }
+            }
+        }
+    }
 
-	@Override
-	public Runsheet closeRunsheet(Runsheet runsheet) {
-		Set<Consignment> consignments = runsheet.getConsignments();
-		runsheet = updateExpectedAmountForClosingRunsheet(runsheet);
-		markShippingOrderDeliveredAgainstConsignments(consignments); 		//mark shipments delivered on healthkart side
-		for(Consignment consignment : consignments){
-				if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
-					consignment.setDeliveryDate(new Date());
-				}
-			}
-		runsheet.setRunsheetStatus(runsheetDao.get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
-		return runsheet;
-	}
+    @Override
+    public Runsheet closeRunsheet(Runsheet runsheet) {
+        Set<Consignment> consignments = runsheet.getConsignments();
+        runsheet = updateExpectedAmountForClosingRunsheet(runsheet);
+        markShippingOrderDeliveredAgainstConsignments(consignments); // mark shipments delivered on healthkart side
+        for (Consignment consignment : consignments) {
+            if (consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())) {
+                consignment.setDeliveryDate(new Date());
+            }
+        }
+        runsheet.setRunsheetStatus(runsheetDao.get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
+        return runsheet;
+    }
 }

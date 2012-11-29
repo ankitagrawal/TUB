@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hk.cache.UserCache;
 import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionLifecycle;
@@ -34,7 +35,8 @@ public class SubscriptionLoggingServiceImpl implements SubscriptionLoggingServic
     }
 
     public void logSubscriptionActivity(Subscription subscription, EnumSubscriptionLifecycleActivity enumSubscriptionLifecycleActivity) {
-        User loggedOnUser= userService.getLoggedInUser();
+        //User loggedOnUser= userService.getLoggedInUser();
+        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if(loggedOnUser==null){
             loggedOnUser = subscription.getUser();
         }
@@ -44,7 +46,8 @@ public class SubscriptionLoggingServiceImpl implements SubscriptionLoggingServic
     }
 
     public void logSubscriptionActivity(Subscription subscription, EnumSubscriptionLifecycleActivity enumSubscriptionLifecycleActivity,String comments){
-        User loggedOnUser= userService.getLoggedInUser();
+        //User loggedOnUser= userService.getLoggedInUser();
+        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if(loggedOnUser==null){
             loggedOnUser = subscription.getUser();
         }
@@ -54,9 +57,10 @@ public class SubscriptionLoggingServiceImpl implements SubscriptionLoggingServic
     }
 
     public void logSubscriptionActivityByAdmin(Subscription subscription, EnumSubscriptionLifecycleActivity enumSubscriptionLifecycleActivity, String comments) {
-        User user = userService.getAdminUser();
+        //User user = userService.getAdminUser();
+        User adminUser = UserCache.getInstance().getAdminUser();
         SubscriptionLifecycleActivity subscriptionLifecycleActivity = enumSubscriptionLifecycleActivity.asSubscriptionLifecycleActivity();
-        logSubscriptionActivity(subscription, user, subscriptionLifecycleActivity, comments);
+        logSubscriptionActivity(subscription, adminUser, subscriptionLifecycleActivity, comments);
     }
 
     public void logSubscriptionActivity(Subscription subscription, User user, SubscriptionLifecycleActivity subscriptionLifecycleActivity, String comments) {

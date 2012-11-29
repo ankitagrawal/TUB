@@ -24,6 +24,13 @@ public class RoleVO implements Serializable {
             this.permissions.add(new PermissionVO(permission));
         }
     }
+    
+    public Role getRole(){
+        Role role = new Role();
+        role.setName(this.name);
+        
+        return role;
+    }
 
     public String getName() {
         return name;

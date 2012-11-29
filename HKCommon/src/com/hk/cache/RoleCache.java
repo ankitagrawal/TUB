@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import com.hk.cache.vo.RoleVO;
+import com.hk.constants.core.EnumRole;
 import com.hk.pact.service.RoleService;
 import com.hk.service.ServiceLocatorFactory;
 
@@ -33,6 +34,10 @@ public class RoleCache {
             nameToRoleCache.put(roleVO.getName(), roleVO);
         }
 
+    }
+    
+    public RoleVO getRoleByName(EnumRole enumRole){
+        return getRoleByName(enumRole.getRoleName());
     }
 
     public RoleVO getRoleByName(String roleName) {

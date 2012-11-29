@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.cache.UserCache;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ReplacementOrderReason;
@@ -15,6 +16,7 @@ import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.user.User;
 import com.hk.helper.ReplacementOrderHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.pact.dao.ReconciliationStatusDao;
@@ -45,6 +47,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 
     public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason) {
         Set<LineItem> lineItemSet = new HashSet<LineItem>();
+        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         ReplacementOrder replacementOrder = ReplacementOrderHelper.getReplacementOrderFromShippingOrder(shippingOrder, shippingOrderStatusService, reconciliationStatusDao);
         for (LineItem lineItem : lineItems) {
             if (lineItem.getQty() != 0) {
@@ -75,11 +78,11 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 	    replacementOrder.getBaseOrder().setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
 
 	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
-	    shippingOrderService.logShippingOrderActivity(replacementOrder, userService.getLoggedInUser(),
+	    shippingOrderService.logShippingOrderActivity(replacementOrder, loggedOnUser,
 				        EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
 				        "Replacement order created for shipping order: "+shippingOrder.getGatewayOrderId()+" .Status of old shipping order: "+shippingOrder.getOrderStatus().getName());
 
-	    shippingOrderService.logShippingOrderActivity(shippingOrder, userService.getLoggedInUser(),
+	    shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser,
 			    EnumShippingOrderLifecycleActivity.RO_Created.asShippingOrderLifecycleActivity(),
 			    "Replacement order created. Gateway order Id of replacement order: "+replacementOrder.getGatewayOrderId());
         return replacementOrder;
