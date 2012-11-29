@@ -23,8 +23,10 @@ import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.HomeAction;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.manager.OrderManager;
 import com.akube.framework.stripes.action.BaseAction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
  * Time: 1:31:09 PM
  * To change this template use File | Settings | File Templates.
  */
+@Secure
 public class BillingAddressAction extends BaseAction {
 
     private BillingAddress address;
@@ -57,6 +60,8 @@ public class BillingAddressAction extends BaseAction {
     private OrderService orderService;
     @Autowired
     OrderDao orderDao;
+    @Autowired
+    OrderManager orderManager;
 
     private List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>(1);
 
@@ -112,7 +117,8 @@ public class BillingAddressAction extends BaseAction {
 
     public Resolution remove() {
         User user = getUserService().getUserById(getPrincipal().getId());
-        if(billingAddressId!=null){
+        if(billingAddressId!=null && order!=null){
+         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())){
         deleteAddress = addressDao.getBillingAddressById(billingAddressId);
         deleteAddress.setUser(user);
         deleteAddress.setDeleted(true);
@@ -120,8 +126,13 @@ public class BillingAddressAction extends BaseAction {
         orderValue =  Functions.encryptOrderId(order.getId());
         return new RedirectResolution(BillingAddressAction.class).addParameter("orderValue",orderValue);
         }
+            else{
+              addRedirectAlertMessage(new SimpleMessage("Order has already been placed with this Order"));
+            return new RedirectResolution(PaymentAction.class);
+         }
+        }
         else{
-            addRedirectAlertMessage(new SimpleMessage("You don't have any billing address to delete"));
+            addRedirectAlertMessage(new SimpleMessage("You don't have any billing address to delete or Order has already been placed with this Order"));
             return new RedirectResolution(CartAction.class);           
         }
     }
@@ -135,6 +146,11 @@ public class BillingAddressAction extends BaseAction {
             user = getUserService().save(user);
         }
         if (order != null && billingAddressId !=null) {
+            if(!orderManager.getOrCreateOrder(user).getId().equals(order.getId())){
+                orderValue = Functions.encryptOrderId(orderManager.getOrCreateOrder(user).getId());
+                addRedirectAlertMessage(new SimpleMessage("Don't Mess with our systems"));
+               return new RedirectResolution(BillingAddressAction.class).addParameter("orderValue",orderValue);
+            }
             selectedAddress = addressDao.getBillingAddressById(billingAddressId);
             selectedAddress.getOrders().add(order);
             selectedAddress.setUser(user);
@@ -149,10 +165,21 @@ public class BillingAddressAction extends BaseAction {
     public Resolution create() {
         User user = getUserService().getUserById(getPrincipal().getId());
         if (order != null) {
+             if(!orderManager.getOrCreateOrder(user).getId().equals(order.getId())){
+                orderValue = Functions.encryptOrderId(orderManager.getOrCreateOrder(user).getId());
+                 addRedirectAlertMessage(new SimpleMessage("Don't Mess with our systems"));
+               return new RedirectResolution(BillingAddressAction.class).addParameter("orderValue",orderValue);
+            }
+            if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())){
             address.getOrders().add(order);
             address.setUser(user);
             address = addressDao.save(address);
             return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId", address.getId());
+            }
+            else{
+              addRedirectAlertMessage(new SimpleMessage("Order has already been placed with this Order"));
+            return new RedirectResolution(PaymentAction.class);
+            }
         } else {
             return new RedirectResolution(CartAction.class);
         }

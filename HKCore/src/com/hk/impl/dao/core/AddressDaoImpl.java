@@ -134,17 +134,5 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     public Country getCountry(Long countryId) {
         return get(Country.class, countryId);
     }
-
-    public BillingAddress getBillingAddressForOrder(Order order, List<BillingAddress> billingAddresses) {
-        BillingAddress address = null;
-        for (BillingAddress billingAddress : billingAddresses) {
-            for (Order order1 : billingAddress.getOrders()) {
-                if (order.equals(order1)) {
-                    address = billingAddress;
-                }
-            }
-        }
-        return address;
-    }
-
+          
 }

@@ -10071,5 +10071,5 @@
         insert into country values (200,'WESTERN SAHARA', 'EH');
         insert into country values (201,'ZAMBIA', 'ZM');
     </sql>
-  </changeSet>    
+  </changeSet>
 </databaseChangeLog>
