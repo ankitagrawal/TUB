@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.api.cache.HkApiUserCache;
+import com.hk.cache.HkApiUserCache;
 import com.hk.domain.api.HkApiUser;
 import com.hk.pact.dao.BaseDao;
 import com.hk.service.ServiceLocatorFactory;

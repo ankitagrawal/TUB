@@ -13,15 +13,15 @@ public interface UserService {
 
   public static final Long ADMIN_USER_ID = 1L;
 
-  public User getUserById(Long userId);
+  //public User getUserById(Long userId);
 
-  public User findByLogin(String email);
+  //public User findByLogin(String email);
 
   public List<User> findByEmail(String email);
 
-  public User getAdminUser();
+  //public User getAdminUser();
 
-  public User getLoggedInUser();
+  //public User getLoggedInUser();
 
   public Warehouse getWarehouseForLoggedInUser();
 
@@ -33,7 +33,7 @@ public interface UserService {
 
   public void updateIsProductBought(Order order);
 
-  public User findByUserHash(String userHash);
+  //public User findByUserHash(String userHash);
 
   public User save(User user);
 

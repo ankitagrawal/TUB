@@ -8,6 +8,8 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import com.hk.cache.vo.UserVO;
+import com.hk.pact.service.UserService;
+import com.hk.service.ServiceLocatorFactory;
 
 /**
  * @author vaibhav.adlakha
@@ -28,6 +30,8 @@ public class UserCache {
                                                          return size() > MAX_ENTRIES;
                                                      }
                                                  });
+
+    private UserService         userService;
 
     private UserCache() {
     }
@@ -53,11 +57,26 @@ public class UserCache {
                 idToUserLRUCache.put(userId, userVO);
             }
         }
+        
+        /**
+         * if user is not in cache try and attempt to find from db
+         */
+        if(userVO == null){
+            //User user = getUserService().get
+        }
 
         return userVO;
     }
 
     public UserVO getUserByLogin(String login) {
+        
+        /**
+         * if user is not in cache try and attempt to find from db
+         */
+        /*if(userVO == null){
+            //User user = getUserService().get
+        }*/
+        
         return loginToUserCache.get(login);
     }
 
@@ -71,6 +90,14 @@ public class UserCache {
 
     public UserCache getTransientCache() {
         return _transient;
+    }
+
+    
+    public UserService getUserService() {
+        if (userService == null) {
+              userService = (UserService)ServiceLocatorFactory.getService(UserService.class);
+        }
+        return userService;
     }
 
 }
