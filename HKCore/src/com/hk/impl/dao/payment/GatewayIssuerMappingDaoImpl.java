@@ -6,6 +6,7 @@ import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.payment.GatewayIssuerMappingDao;
+import com.hk.web.AppConstants;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -24,10 +25,6 @@ import java.util.List;
  */
 @Repository
 public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayIssuerMappingDao {
-
-    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-    String               adminDownloadsPath;
-
 
     @Override
     public List<Issuer> getIssuerByType(String issuerType, boolean active) {
@@ -68,12 +65,12 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
 
     public String getImageOfIssuer(byte[] imageByteArray, String imageName) {
         try{
-            String imageIconRelativePath = "/images/issuer/" + imageName + ".jpg";
-            String imageIconAbsolutePath = adminDownloadsPath + imageIconRelativePath;
+            String imageIconRelativePath = "images\\gateway\\" + imageName + ".jpg";
+            String imageIconAbsolutePath = AppConstants.appBasePath + imageIconRelativePath;
             FileOutputStream fos = new FileOutputStream(imageIconAbsolutePath);
             fos.write(imageByteArray);
             fos.close();
-            return imageIconRelativePath;
+            return "\\"+ imageIconRelativePath;
         }catch(Exception e){
             e.printStackTrace();
         }
