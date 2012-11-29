@@ -233,7 +233,9 @@ public class AdminEmailManager {
                         emailRecepientRecs.clear();
                     }
                 }else{
-                    logger.info("Unable to send email to " + emailRecepient.getEmail());
+                    logger.info("Unable to send email to " + emailRecepient.getEmail()+" - unsubscribing the email");
+	                emailRecepient.setSubscribed(false);
+	                getEmailRecepientDao().save(emailRecepient);
                 }
 
             } catch (Exception e) {
