@@ -63,7 +63,7 @@ public class TrafficSourceFinder {
 		String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
 		if (StringUtils.isNotBlank(utm_campaign)) {
 			trafficSrcDetails += "utm_campaign=" + utm_campaign + "||";
-		} 
+		}
 		String aff_id = httpRequest.getParameter(HttpRequestAndSessionConstants.AFF_ID);
 		if (StringUtils.isNotBlank(aff_id)) {
 			trafficSrcDetails += "aff_id=" + aff_id;
@@ -85,7 +85,7 @@ public class TrafficSourceFinder {
 		if (!utm_source.equals("")) {
 			if (utm_source.equals(UtmSourceConstants.ADWORDS) || utm_source.equals(UtmSourceConstants.GOOGLE)) {
 				trafficSrc = GOOGLE;
-			} else if (utm_source.equals(UtmSourceConstants.FACEBOOK) || utm_source.equals(UtmSourceConstants.FB)) {
+			} else if (utm_source.equals(UtmSourceConstants.FACEBOOK) || utm_source.equals(UtmSourceConstants.FB) || utm_source.contains(UtmSourceConstants.FACEBOOK)) {
 				trafficSrc = FACEBOOK;
 			} else if (utm_source.equals(UtmSourceConstants.ENEWSLETTER) || utm_source.equals(UtmSourceConstants.NOTIFYME)) {
 				trafficSrc = EMAIL_NEWSLETTER;
@@ -100,6 +100,11 @@ public class TrafficSourceFinder {
 				trafficSrcPaid = "true";
 			} else if (utm_medium.toLowerCase().equals(UtmMediumConstants.MICROSITES.toLowerCase())) {
 				trafficSrc = AFFILIATE;
+			} else if (!aff_id.equals("")) {
+				trafficSrc = AFFILIATE;
+				trafficSrcPaid = "true";
+			} else {
+				trafficSrc = RFERRAL;
 			}
 			if (utm_medium.equals(UtmMediumConstants.AD) || utm_medium.equals(UtmMediumConstants.CPC)) {
 				trafficSrcPaid = "true";
