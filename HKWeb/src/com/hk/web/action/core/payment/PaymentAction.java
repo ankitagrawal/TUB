@@ -20,6 +20,7 @@ import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.cart.CartAction;
+import com.hk.web.action.core.user.SelectAddressAction;
 import com.hk.web.factory.PaymentModeActionFactory;
 import net.sourceforge.stripes.action.LocalizableMessage;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -66,6 +67,10 @@ public class PaymentAction extends BaseAction {
 	public Resolution proceed() {
 		if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
 			// recalculate the pricing before creating a payment.
+            if(order.getAddress()==null){
+                addRedirectAlertMessage(new SimpleMessage("You have not selected the shipping address"));
+               return new RedirectResolution(SelectAddressAction.class);
+            }
 			order = orderManager.recalAndUpdateAmount(order);
 
 			if (order.getAmount() == 0) {

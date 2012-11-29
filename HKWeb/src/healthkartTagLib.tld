@@ -1008,18 +1008,4 @@
             ${hk:getCountry(${id})}
         </example>
     </function>
-
-     <function>
-        <description>
-            returns a encrypted orderId
-        </description>
-        <name>encryptOrderId</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.String encryptOrderId(java.lang.Long))</function-signature>
-        <example>
-            ${hk:encryptOrderId(${id})}
-        </example>
-    </function>
-
-
 </taglib>

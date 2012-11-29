@@ -63,7 +63,7 @@ public class BillingAddressAction extends BaseAction {
     @Autowired
     OrderManager orderManager;
 
-    private List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>(1);
+    private List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>(0);
 
     BillingAddress deleteAddress;
 
@@ -71,85 +71,44 @@ public class BillingAddressAction extends BaseAction {
 
     private Order order;
 
-    private String orderValue = null;
-
     private BillingAddress selectedAddress;
 
 
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        Long orderId = null;
-        if(getContext().getRequest().getParameter("orderValue") == null){
-            if(orderValue !=null){
-               orderId = Functions.decryptOrderId(orderValue);
-            }
-            else{
-                return new RedirectResolution(HomeAction.class);
-            }
-         }
-        else {
-            orderId = Functions.decryptOrderId(getContext().getRequest().getParameter("orderValue"));
-         }
-             order = getOrderService().find(orderId);
-
-            if (order != null) {
-//            orderDao.refresh(order);
-                if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
-                    if (order.getCartLineItems() != null && order.getCartLineItems().size() > 0) {
-                        User user = getUserService().getUserById(getPrincipal().getId());
-                        email = user.getEmail();
-                        billingAddresses = addressDao.getVisibleBillingAddress(user);
-                        return new ForwardResolution("/pages/billingAddressBook.jsp");
-                    } else {
-                        return new RedirectResolution(CartAction.class);
-                    }
-                } else {
-                    addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
-                    return new RedirectResolution(PaymentSuccessAction.class).addParameter("order", order).addParameter("gatewayOrderId", order.getGatewayOrderId());
-                }
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("There came an Error, please Try Again Later !!!!"));
-                return new RedirectResolution(CartAction.class);
-
-        }
+      User user = getUserService().getUserById(getPrincipal().getId());
+      order = orderManager.getOrCreateOrder(user);
+      if(order.getAddress()==null){
+          addRedirectAlertMessage(new SimpleMessage("You have not selected the shipping address"));
+           return  new RedirectResolution(SelectAddressAction.class);
+      }
+      billingAddresses = addressDao.getVisibleBillingAddress(user);
+      return new ForwardResolution("/pages/billingAddressBook.jsp");
     }
 
     public Resolution remove() {
         User user = getUserService().getUserById(getPrincipal().getId());
-        if(billingAddressId!=null && order!=null){
-         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())){
+        if(billingAddressId!=null){
         deleteAddress = addressDao.getBillingAddressById(billingAddressId);
         deleteAddress.setUser(user);
         deleteAddress.setDeleted(true);
         addressDao.save(deleteAddress);
-        orderValue =  Functions.encryptOrderId(order.getId());
-        return new RedirectResolution(BillingAddressAction.class).addParameter("orderValue",orderValue);
-        }
-            else{
-              addRedirectAlertMessage(new SimpleMessage("Order has already been placed with this Order"));
-            return new RedirectResolution(PaymentAction.class);
-         }
+        return new RedirectResolution(BillingAddressAction.class);
         }
         else{
-            addRedirectAlertMessage(new SimpleMessage("You don't have any billing address to delete or Order has already been placed with this Order"));
-            return new RedirectResolution(CartAction.class);           
+            addRedirectAlertMessage(new SimpleMessage("No Billing Address Exist"));
+            return new RedirectResolution(BillingAddressAction.class);
         }
     }
 
 
     public Resolution checkout() {
-        Role tempUserRole = getRoleService().getRoleByName(RoleConstants.TEMP_USER);
         User user = getUserService().getUserById(getPrincipal().getId());
-        if (user.getRoles().contains(tempUserRole)) {
-            user.setEmail(email);
-            user = getUserService().save(user);
-        }
-        if (order != null && billingAddressId !=null) {
-            if(!orderManager.getOrCreateOrder(user).getId().equals(order.getId())){
-                orderValue = Functions.encryptOrderId(orderManager.getOrCreateOrder(user).getId());
-                addRedirectAlertMessage(new SimpleMessage("Don't Mess with our systems"));
-               return new RedirectResolution(BillingAddressAction.class).addParameter("orderValue",orderValue);
+        if (billingAddressId !=null) {
+            order = orderManager.getOrCreateOrder(user);
+            if(order.getCartLineItems().size()==0){
+                return new RedirectResolution(CartAction.class);
             }
             selectedAddress = addressDao.getBillingAddressById(billingAddressId);
             selectedAddress.getOrders().add(order);
@@ -157,32 +116,22 @@ public class BillingAddressAction extends BaseAction {
             addressDao.save(selectedAddress);
             return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId", selectedAddress.getId());
         } else {
-            return new RedirectResolution(CartAction.class);
+             addRedirectAlertMessage(new SimpleMessage("No Billing Address Exist"));
+            return new RedirectResolution(BillingAddressAction.class);
         }
     }
 
 
     public Resolution create() {
         User user = getUserService().getUserById(getPrincipal().getId());
-        if (order != null) {
-             if(!orderManager.getOrCreateOrder(user).getId().equals(order.getId())){
-                orderValue = Functions.encryptOrderId(orderManager.getOrCreateOrder(user).getId());
-                 addRedirectAlertMessage(new SimpleMessage("Don't Mess with our systems"));
-               return new RedirectResolution(BillingAddressAction.class).addParameter("orderValue",orderValue);
+            order = orderManager.getOrCreateOrder(user);
+            if(order.getCartLineItems().size()==0){
+                return new RedirectResolution(CartAction.class);
             }
-            if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())){
             address.getOrders().add(order);
             address.setUser(user);
             address = addressDao.save(address);
             return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId", address.getId());
-            }
-            else{
-              addRedirectAlertMessage(new SimpleMessage("Order has already been placed with this Order"));
-            return new RedirectResolution(PaymentAction.class);
-            }
-        } else {
-            return new RedirectResolution(CartAction.class);
-        }
     }
 
 
@@ -284,14 +233,6 @@ public class BillingAddressAction extends BaseAction {
 
     public OrderService getOrderService() {
         return orderService;
-    }
-
-    public String getOrderValue() {
-        return orderValue;
-    }
-
-    public void setOrderValue(String orderValue) {
-        this.orderValue = orderValue;
     }
 }
 

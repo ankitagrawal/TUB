@@ -381,7 +381,7 @@
 </div>
 </div>
 </shiro:hasAnyRoles>
-<c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action?orderValue=${hk:encryptOrderId(orderSummary.order.id)} " />
+<c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action" />
 <script type="text/javascript">
     $(document).ready(function() {
         $('.tab_content').hide();

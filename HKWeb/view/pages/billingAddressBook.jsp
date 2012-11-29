@@ -122,7 +122,6 @@
             <br/>
             <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="remove" class="delete">
               <s:param name="billingAddressId" value="${billingAddress.id}"/>
-                <s:param name="order" value="${orderSummary.order.id}"/>
               (delete)
             </s:link>
 
@@ -218,7 +217,6 @@
         <div class="newAddress-errors alert messages"><s:messages key="generalMessages"/></div>
         <s:form beanclass="com.hk.web.action.core.user.BillingAddressAction" id="newAddressForm"
                 onsubmit="return validateForm()" method="post" name="BillingAddressForm">
-           <s:hidden name="order" value="${orderSummary.order.id}"/>
         <s:hidden name="bankId" value="70"/>
         <s:hidden name="paymentMode" value="85"/>
         <s:hidden name="address.id"/>
