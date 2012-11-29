@@ -10150,6 +10150,7 @@
         insert into country values (201,'ZAMBIA', 'ZM');      
     </sql>
   </changeSet>
+<!--
     <changeSet author="Pratham" id="20121129-01">
         <sql>
         INSERT INTO `gateway` (`id`, `name`, `downtime_start_date`, `downtime_end_date`, `active`, `priority`, `image`) VALUES
@@ -10249,4 +10250,5 @@
     <changeSet author="Pratham (generated)" id="1354019828176-5">
     <dropColumn columnName="bank_code" tableName="payment"/>
     </changeSet>
+-->
 </databaseChangeLog>

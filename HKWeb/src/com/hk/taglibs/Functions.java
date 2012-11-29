@@ -2,14 +2,7 @@ package com.hk.taglibs;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
@@ -673,5 +666,38 @@ public class Functions {
     public static Country getCountry(Long countryId) {
         AddressService addressService = ServiceLocatorFactory.getService(AddressService.class);
          return addressService.getCountry(countryId);
+    }
+
+    public static String encryptOrderId(Long orderId){
+        Long encryptOrderId_1 = ( orderId * 99 ) + 10;
+        String encryptOrderId_2 = encryptOrderId_1.toString();
+        String encryptedOrderId = "";
+        Random randomGenerator = new Random();
+        for(int i= 0 ;i<encryptOrderId_2.length();i++){
+            if(i==0){
+              encryptedOrderId +='@';
+            }
+
+                char random =  (char)(randomGenerator.nextInt(26) + 'a');
+                char value = encryptOrderId_2.charAt(i);
+                encryptedOrderId += value;
+                encryptedOrderId +=  random;
+
+        }
+        logger.debug("\n encrypted order id is"+encryptedOrderId + "\n");
+        return encryptedOrderId;
+    }
+    public static Long decryptOrderId(String encryptedOrderId){
+        String decryptOrderId = "";
+        Long orderId = null;
+        for(int i=1;i<encryptedOrderId.length();i = i + 2){
+            decryptOrderId += encryptedOrderId.charAt(i);
+        }
+        logger.debug("\n decrypted order id is"+decryptOrderId + "\n");
+        orderId = Long.parseLong(decryptOrderId);
+        orderId = orderId - 10;
+        orderId = orderId/99;
+        logger.debug("\n decrypted order id is"+ orderId + "\n");
+        return orderId;
     }
 }

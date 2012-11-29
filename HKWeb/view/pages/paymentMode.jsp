@@ -351,6 +351,7 @@
     </s:form></div>
 
 </div></div>
+<c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action?order=${hk:encryptOrderId(orderSummary.order.id)} " />
 </shiro:hasAnyRoles> <script type="text/javascript">
     $(document).ready(function() {
         $('.tab_content').hide();
@@ -415,6 +416,13 @@
 			        $(this).css("display", "none");
 		        }
 	        });
+
+        $('#paypal').click(function() {
+            if ($(this).is(':checked')) {
+                $('.makePayment').hide();
+                location.href = '${url}';
+            }
+        })
     });
 </script>
 <div class='floftfix'></div>
