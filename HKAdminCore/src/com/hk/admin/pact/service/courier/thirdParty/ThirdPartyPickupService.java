@@ -1,6 +1,7 @@
 package com.hk.admin.pact.service.courier.thirdParty;
 
 import com.hk.constants.courier.EnumCourier;
+import com.hk.domain.order.ShippingOrder;
 
 import java.util.List;
 import java.util.Arrays;
@@ -15,5 +16,6 @@ import java.util.Arrays;
 public interface ThirdPartyPickupService {
 	 public List<Long> integratedCouriers = Arrays.asList(new Long[]{EnumCourier.FedEx.getId(),EnumCourier.FedEx_Surface.getId()});
 
+	public void createPickupRequest(ShippingOrder shippingOrder, String date);
 	 
 }

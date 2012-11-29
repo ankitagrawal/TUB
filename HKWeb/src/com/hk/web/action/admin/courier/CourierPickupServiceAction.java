@@ -1,9 +1,13 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
+
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
 import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.sourceforge.stripes.action.Resolution;
@@ -20,15 +24,20 @@ import java.util.Date;
  */
 @Component
 public class CourierPickupServiceAction extends BaseAction {
-	private static Logger logger = LoggerFactory.getLogger(CreateUpdateCourierPricingAction.class);
+	private static Logger logger = LoggerFactory.getLogger(CourierPickupServiceAction.class);
 	private Date pickupDate;
-	private String courierName;
+	private Long courierId;
 	private String shippingOrderId;
+	private ShippingOrder shippingOrder;
+
+	@Autowired
+	ShippingOrderService shippingOrderService;
 
 	Resolution save(){
-		ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
-        thirdPartyAwbService.
-		return new ForwardResolution("");
+		ThirdPartyPickupService thirdPartyPickupService = ThirdPartyAwbServiceFactory.getThirdPartyPickupService(courierId);
+		shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
+        thirdPartyPickupService.createPickupRequest(shippingOrder, pickupDate.toString());
+		return new ForwardResolution("/pages/admin/reversePickupService.jsp");
 	}
 
 	public Date getPickupDate() {

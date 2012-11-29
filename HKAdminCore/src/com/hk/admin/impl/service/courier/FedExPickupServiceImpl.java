@@ -1,9 +1,12 @@
 package com.hk.admin.impl.service.courier;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hk.constants.core.Keys;
 import com.hk.admin.util.courier.thirdParty.FedExPickupServiceUtil;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
+import com.hk.domain.order.ShippingOrder;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,7 +16,7 @@ import com.hk.admin.util.courier.thirdParty.FedExPickupServiceUtil;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-public class FedExPickupServiceImpl {
+public class FedExPickupServiceImpl implements ThirdPartyPickupService {
 
     @Value("#{hkEnvProps['" + Keys.Env.fedExAuthKey + "']}")
     private String                fedExAuthKey;
@@ -30,8 +33,10 @@ public class FedExPickupServiceImpl {
     @Value("#{hkEnvProps['" + Keys.Env.fedExServerUrl + "']}")
     private String                fedExServerUrl;
 
-	public void createPickupRequest(){
+	@Override
+	public void createPickupRequest(ShippingOrder shippingOrder, String date){
 		FedExPickupServiceUtil fedExPickupServiceUtil = new FedExPickupServiceUtil(fedExAuthKey,fedExAccountNo,fedExMeterNo,fedExPassword,fedExServerUrl);
+		fedExPickupServiceUtil.createPickupRequest(shippingOrder, date);
 	}
 
 }

@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fedex.pickup.stub.*;
+import com.hk.domain.order.ShippingOrder;
+import com.akube.framework.util.StringUtils;
 
 /**
  * Sample code to call the FedEx Pickup service with Axis
@@ -21,7 +23,7 @@ import com.fedex.pickup.stub.*;
  */
 public class FedExPickupServiceUtil {
 	//
-	private static Logger logger = LoggerFactory.getLogger(FedExCourierUtil.class);
+	private static Logger logger = LoggerFactory.getLogger(FedExPickupServiceUtil.class);
 
     private String fedExAuthKey;
 
@@ -41,7 +43,7 @@ public class FedExPickupServiceUtil {
         this.fedExServerUrl = fedExServerUrl;
     }
 
-	public void createPickupRequest(){
+	public void createPickupRequest(ShippingOrder shippingOrder, String date){
 		// Build a PickupRequest object
 
 		CreatePickupRequest request = new CreatePickupRequest();
@@ -61,35 +63,44 @@ public class FedExPickupServiceUtil {
 	    ContactAndAddress party = new ContactAndAddress();
 	    //
 	    // Pick up location contact details
+		com.hk.domain.user.Address HKAddress = shippingOrder.getBaseOrder().getAddress();
 	    Contact contact = new Contact();
-	    contact.setPersonName("Contact Name");
-	    contact.setCompanyName("Company Name");
-	    contact.setPhoneNumber("1234567890");
+	    contact.setPersonName(HKAddress.getName());//"Contact Name");
+	    contact.setCompanyName("");//"Company Name");
+	    contact.setPhoneNumber(HKAddress.getPhone());//"1234567890");
 	    party.setContact(contact);
 	    // Pick up location Address
 	    Address address = new Address();
-	    String[] street = new String[1];
-	    street[0] = "Address Line 1";
+	    String[] street = new String[2];
+	    street[0] = HKAddress.getLine1();//"Address Line 1";
+		if (HKAddress.getLine2()!= null){
+			street[1] = HKAddress.getLine2();
+		}
+		else{
+			street[1] = "";
+		}
 	    address.setStreetLines(street);
-	    address.setCity("Foster City");
-	    address.setStateOrProvinceCode("CA");
-	    address.setPostalCode("94404");
-	    address.setCountryCode("US");
+	    address.setCity(HKAddress.getCity());//"Foster City");
+	    address.setStateOrProvinceCode(HKAddress.getState());//"CA");
+	    address.setPostalCode(HKAddress.getPin());//"94404");
+	    address.setCountryCode("IN");//"US");
 	    party.setAddress(address);
 	    PickupOriginDetail.setPickupLocation(party);
 	    PickupOriginDetail.setPackageLocation(PickupBuildingLocationType.FRONT); // Package Location can be NONE, FRONT, REAR, SIDE
 	    PickupOriginDetail.setBuildingPart(BuildingPartCode.SUITE); // BuildingPartCode values are APARTMENT, BUILDING,DEPARTMENT, SUITE, FLOOR, ROOM
 	    PickupOriginDetail.setBuildingPartDescription("3B");
 	    Calendar ready = Calendar.getInstance(); //current date and time
+		int startHour = 6;
 	    ready.add(Calendar.DATE,1);
-	    ready.set(Calendar.HOUR_OF_DAY,6);
+	    ready.set(Calendar.HOUR_OF_DAY,startHour); //6);
 	    ready.set(Calendar.MINUTE,0);
 	    ready.set(Calendar.SECOND,0);
-
         PickupOriginDetail.setReadyTimestamp(ready); // Package Ready Date and Time
+
+		int closeHour = startHour + 2;
 	    Calendar close = Calendar.getInstance(); //current date and time
 	    close.add(Calendar.DATE,1);
-	    close.set(Calendar.HOUR_OF_DAY,13);
+	    close.set(Calendar.HOUR_OF_DAY,closeHour );//13);
 	    close.set(Calendar.MINUTE,0);
 	    close.set(Calendar.SECOND,0);
 
@@ -99,7 +110,7 @@ public class FedExPickupServiceUtil {
 	    // Packages Weight
 	    Weight weight = new Weight();
 	    weight.setValue(new BigDecimal(1.0));
-	    weight.setUnits(WeightUnits.LB);
+	    weight.setUnits(WeightUnits.KG);
 	    request.setTotalWeight(weight);
 	    request.setCarrierCode(CarrierCodeType.FDXE); //CarrierCodeTypes are FDXC(Cargo), FDXE (Express), FDXG (Ground), FDCC (Custom Critical), FXFR (Freight)
 	    //request.setOversizePackageCount(new PositiveInteger("1")); // Set this value if package is over sized
@@ -118,13 +129,13 @@ public class FedExPickupServiceUtil {
 			//
 			if (isResponseOk(reply.getHighestSeverity()))
 			{
-				System.out.println("PickupConfirmationNumber  : " + reply.getPickupConfirmationNumber()); // Pickup Confirmation Number
-				System.out.println("Location :" + reply.getLocation());
+				//System.out.println("PickupConfirmationNumber  : " + reply.getPickupConfirmationNumber()); // Pickup Confirmation Number
+				//System.out.println("Location :" + reply.getLocation());
 				if(reply.getMessageCode()!=null)
 				System.out.println("Message Code: " + reply.getMessageCode() + " Message: " + reply.getMessage() );
 			}
 
-			printNotifications(reply.getNotifications());
+			//printNotifications(reply.getNotifications());
 
 		} catch (Exception e) {
 		    e.printStackTrace();
@@ -144,34 +155,34 @@ public class FedExPickupServiceUtil {
         //if (accountNumber == null) {
         String accountNumber = fedExAccountNo; // Replace "XXX" with clients account number
         //}
-        if (meterNumber == null) {
-        	meterNumber = "XXX"; // Replace "XXX" with clients meter number
-        }
+        //if (meterNumber == null) {
+        String meterNumber = fedExMeterNo; // Replace "XXX" with clients meter number
+        //}
         clientDetail.setAccountNumber(accountNumber);
         clientDetail.setMeterNumber(meterNumber);
         return clientDetail;
 	}
 
-	private static WebAuthenticationDetail createWebAuthenticationDetail() {
+	private WebAuthenticationDetail createWebAuthenticationDetail() {
         WebAuthenticationCredential wac = new WebAuthenticationCredential();
-        String key = System.getProperty("key");
-        String password = System.getProperty("password");
+        //String key = System.getProperty("key");
+        //String password = System.getProperty("password");
 
         //
         // See if the key and password properties are set,
         // if set use those values, otherwise default them to "XXX"
         //
-        if (key == null) {
-        	key = "XXX"; // Replace "XXX" with clients key
-        }
-        if (password == null) {
-        	password = "XXX"; // Replace "XXX" with clients password
-        }
+        //if (key == null) {
+        String key = fedExAuthKey; // Replace "XXX" with clients key
+        //}
+        //if (password == null) {
+        String password = fedExPassword; // Replace "XXX" with clients password
+        //}
         wac.setKey(key);
         wac.setPassword(password);
 		return new WebAuthenticationDetail(wac);
 	}
-
+   /*
 	private static void printNotifications(Notification[] notifications) {
 		System.out.println("Notifications:");
 		if (notifications == null || notifications.length == 0) {
@@ -194,7 +205,7 @@ public class FedExPickupServiceUtil {
 			System.out.println("    Source: " + n.getSource());
 		}
 	}
-
+    */
 	private static boolean isResponseOk(NotificationSeverityType notificationSeverityType) {
 		if (notificationSeverityType == null) {
 			return false;
@@ -207,8 +218,8 @@ public class FedExPickupServiceUtil {
  		return false;
 	}
 
-	private static void updateEndPoint(PickupServiceLocator serviceLocator) {
-		String endPoint = System.getProperty("endPoint");
+	private void updateEndPoint(PickupServiceLocator serviceLocator) {
+		String endPoint = fedExServerUrl; //System.getProperty("endPoint");
 		if (endPoint != null) {
 			serviceLocator.setPickupServicePortEndpointAddress(endPoint);
 		}
