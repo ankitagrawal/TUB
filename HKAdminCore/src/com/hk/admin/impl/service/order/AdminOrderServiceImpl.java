@@ -195,7 +195,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
-        User user = userService.getLoggedInUser();
+        //User user = userService.getLoggedInUser();
+        User user = UserCache.getInstance().getLoggedInUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
         logOrderActivity(order, user, orderLifecycleActivity, null);
     }
@@ -317,9 +318,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     @Transactional
     public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
-
+        User loggedInUser = UserCache.getInstance().getLoggedInUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
-        logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
+        logOrderActivity(order, loggedInUser, orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
 
         return order;
     }
@@ -340,7 +341,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         } else {
 	        if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
 	            User adminUser = UserCache.getInstance().getAdminUser();
-		        orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
+		        orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
 		        //DO Nothing for B2B Orders
 	        } else {
 		        shippingOrders = getOrderService().createShippingOrders(order);
@@ -358,7 +359,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
              * Order lifecycle activity logging - Order split to shipping orders
              */
             String comments = "No. of Shipping Orders created  " + shippingOrders.size();
-            orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
+            User adminUser = UserCache.getInstance().getAdminUser();
+            orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
 
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {

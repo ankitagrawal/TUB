@@ -103,7 +103,7 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService {
 
         order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
         User adminUser = UserCache.getInstance().getAdminUser();
-        getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(),
+        getOrderLoggingService().logOrderActivity(order, adminUser,
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
 
         order = orderService.save(order);
