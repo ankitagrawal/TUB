@@ -15,22 +15,22 @@ import com.hk.pact.dao.RoleDao;
 
 public interface UserDao extends BaseDao {
 
-  public User getUserById(Long userId);
+  //public User getUserById(Long userId);
 
   @Transactional(readOnly = false)
   public User save(User user);
 
   public List<User> findByEmail(String email);
 
-  public User findByLogin(String login);
+  //public User findByLogin(String login);
 
-  public User findByLoginAndStoreId(String login, Long storeId);
+  //public User findByLoginAndStoreId(String login, Long storeId);
 
   public User findByEmailAndPassword(String email, String password);
 
-  public User findByUserHandle(String userHandle);
+  //public User findByUserHandle(String userHandle);
 
-  public User findByUserHash(String userHash);
+  //public User findByUserHash(String userHash);
 
   public List<User> findByRole(Role role);
 
@@ -52,7 +52,7 @@ public interface UserDao extends BaseDao {
 
   public Page getMailingList(Category category, int pageNo, int perPage);
 
-  public RoleDao getRoleDao();
+  //public RoleDao getRoleDao();
 
-  public void setRoleDao(RoleDao roleDao);
+  //public void setRoleDao(RoleDao roleDao);
 }

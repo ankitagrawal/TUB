@@ -9,6 +9,11 @@ import com.hk.cache.vo.CategoryVO;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.service.ServiceLocatorFactory;
 
+/**
+ * 
+ * @author vaibhav.adlakha
+ *
+ */
 public class CategoryCache {
 
     private static CategoryCache    _instance           = new CategoryCache();

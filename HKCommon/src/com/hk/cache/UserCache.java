@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import com.hk.cache.vo.UserVO;
+import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
 
@@ -57,27 +58,32 @@ public class UserCache {
                 idToUserLRUCache.put(userId, userVO);
             }
         }
-        
+
         /**
          * if user is not in cache try and attempt to find from db
          */
-        if(userVO == null){
-            //User user = getUserService().get
+        if (userVO == null) {
+            // User user = getUserService().get
         }
 
         return userVO;
     }
 
     public UserVO getUserByLogin(String login) {
-        
+
         /**
          * if user is not in cache try and attempt to find from db
          */
-        /*if(userVO == null){
-            //User user = getUserService().get
-        }*/
-        
+        /*
+         * if(userVO == null){ //User user = getUserService().get }
+         */
+
         return loginToUserCache.get(login);
+    }
+
+    public User getAdminUser() {
+        UserVO userVO = getUserById(UserService.ADMIN_USER_ID);
+        return userVO.getUser();
     }
 
     public void freeze() {
@@ -92,10 +98,9 @@ public class UserCache {
         return _transient;
     }
 
-    
     public UserService getUserService() {
         if (userService == null) {
-              userService = (UserService)ServiceLocatorFactory.getService(UserService.class);
+            userService = (UserService) ServiceLocatorFactory.getService(UserService.class);
         }
         return userService;
     }

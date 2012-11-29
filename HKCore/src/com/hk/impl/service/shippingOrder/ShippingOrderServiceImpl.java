@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
+import com.hk.cache.UserCache;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -156,7 +157,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 Order order = shippingOrder.getBaseOrder();
                 if (order.isReferredOrder() && order.getPayment().getAmount() < 1000) {
                     String comments = "BO is a referred Order, Please do a manual approval";
-                    logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+                    User adminUser = UserCache.getInstance().getAdminUser();
+                    logShippingOrderActivity(shippingOrder, adminUser,
                             getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
                     return false;
                 }

@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import com.akube.framework.shiro.Principal;
 import com.akube.framework.shiro.manager.UserSecurityManager;
-import com.hk.domain.user.Permission;
-import com.hk.domain.user.Role;
-import com.hk.domain.user.User;
+import com.hk.cache.RoleCache;
+import com.hk.cache.UserCache;
+import com.hk.cache.vo.PermissionVO;
+import com.hk.cache.vo.RoleVO;
+import com.hk.cache.vo.UserVO;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.user.UserDao;
 import com.shiro.PrincipalImpl;
@@ -36,31 +38,50 @@ public class UserSecurityManagerImpl implements UserSecurityManager {
      */
 
     public String getPasswordForUser(String userName) {
-        User user = getUserDao().findByLogin(userName);
-        if (user == null)
+
+        /*
+         * User user = getUserDao().findByLogin(userName); if (user == null) return null; return
+         * user.getPasswordChecksum();
+         */
+
+        UserVO userVO = UserCache.getInstance().getUserByLogin(userName);
+        if (userVO == null)
             return null;
-        return user.getPasswordChecksum();
+        return userVO.getPasswordChecksum();
     }
 
     public Principal getPrincipal(String loginName) {
-        User user = getUserDao().findByLogin(loginName);
-        if (user == null)
+        /*
+         * User user = getUserDao().findByLogin(loginName); if (user == null) return null; return new
+         * PrincipalImpl(user);
+         */
+
+        UserVO userVO = UserCache.getInstance().getUserByLogin(loginName);
+        if (userVO == null)
             return null;
-        return new PrincipalImpl(user);
+        return new PrincipalImpl(userVO.getUser());
     }
 
     public Set<String> getRoleNamesForUser(Principal principal) {
+        /*
+         * Set<String> roleNames = new LinkedHashSet<String>(); User user =
+         * getUserDao().getUserById(principal.getId()); if (user == null) return roleNames; Set<Role> roles =
+         * user.getRoles(); if (roles == null || roles.isEmpty()) return roleNames; for (Role role : roles) {
+         * roleNames.add(role.getName()); } return roleNames;
+         */
+
         Set<String> roleNames = new LinkedHashSet<String>();
-        User user = getUserDao().getUserById(principal.getId());
-        if (user == null)
+        UserVO userVO = UserCache.getInstance().getUserById(principal.getId());
+        // User user = getUserDao().getUserById(principal.getId());
+        if (userVO == null)
             return roleNames;
 
-        Set<Role> roles = user.getRoles();
+        Set<RoleVO> roles = userVO.getRoles();
         if (roles == null || roles.isEmpty())
             return roleNames;
 
-        for (Role role : roles) {
-            roleNames.add(role.getName());
+        for (RoleVO roleVO : roles) {
+            roleNames.add(roleVO.getName());
         }
         return roleNames;
     }
@@ -74,11 +95,18 @@ public class UserSecurityManagerImpl implements UserSecurityManager {
      * @return
      */
     public Set<String> getPermissions(Principal principal, Set<String> roles) {
+        /*
+         * Set<String> permissions = new HashSet<String>(); for (String roleStr : roles) { Role role =
+         * getRoleDao().getRoleByName(roleStr); for (Permission permission : role.getPermissions()) {
+         * permissions.add(permission.getName()); } } return permissions;
+         */
+
         Set<String> permissions = new HashSet<String>();
         for (String roleStr : roles) {
-            Role role = getRoleDao().getRoleByName(roleStr);
-            for (Permission permission : role.getPermissions()) {
-                permissions.add(permission.getName());
+            // Role role = getRoleDao().getRoleByName(roleStr);
+            RoleVO roleVO = RoleCache.getInstance().getRoleByName(roleStr);
+            for (PermissionVO permissionVO : roleVO.getPermissions()) {
+                permissions.add(permissionVO.getName());
             }
         }
         return permissions;

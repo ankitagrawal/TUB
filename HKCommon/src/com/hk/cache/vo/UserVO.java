@@ -2,6 +2,7 @@ package com.hk.cache.vo;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.hk.constants.core.EnumPermission;
@@ -54,6 +55,20 @@ public class UserVO {
         }
     }
 
+    public User getUser() {
+        User user = new User();
+        user.setId(this.id);
+        user.setLogin(this.login);
+        user.setEmail(this.email);
+        user.setPasswordChecksum(this.passwordChecksum);
+        user.setBirthDate(this.birthDate);
+        user.setGender(this.gender);
+        user.setLastLoginDate(this.lastLoginDate);
+        user.setUserHash(this.userHash);
+
+        return user;
+    }
+
     public boolean hasPermission(EnumPermission enumPermission) {
         if (roles == null || roles.isEmpty()) {
             return false;
@@ -66,6 +81,15 @@ public class UserVO {
             }
         }
         return false;
+    }
+
+    public Set<String> getRoleNames() {
+        Set<String> roleNames = new LinkedHashSet<String>();
+
+        for (RoleVO roleVO : roles) {
+            roleNames.add(roleVO.getName());
+        }
+        return roleNames;
     }
 
     public Long getId() {
