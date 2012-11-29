@@ -381,7 +381,7 @@
 </div>
 </div>
 </shiro:hasAnyRoles>
-<c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action"/>
+<c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action?order=${hk:encryptOrderId(orderSummary.order.id)} " />
 <script type="text/javascript">
     $(document).ready(function() {
         $('.tab_content').hide();
@@ -450,7 +450,7 @@
         $('#paypal').click(function() {
             if ($(this).is(':checked')) {
                  $('.makePayment').hide();
-                location.href = '${url}';                
+                location.href = '${url}';
             }
         });
 

@@ -1,6 +1,7 @@
 package com.hk.web.action.core.user;
 
 import net.sourceforge.stripes.action.*;
+import com.hk.taglibs.Functions;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.LocalizableError;
 import com.hk.domain.user.User;
@@ -13,8 +14,14 @@ import com.hk.domain.core.Country;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.RoleService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.pact.dao.order.OrderDao;
 import com.hk.web.action.core.payment.PaymentAction;
+import com.hk.web.action.core.payment.PaymentModeAction;
+import com.hk.web.action.core.payment.PaymentSuccessAction;
+import com.hk.web.action.core.cart.CartAction;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.order.EnumOrderStatus;
 import com.akube.framework.stripes.action.BaseAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,6 +52,10 @@ public class BillingAddressAction extends BaseAction {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    OrderDao orderDao;
 
     private List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>(1);
 
@@ -57,14 +68,33 @@ public class BillingAddressAction extends BaseAction {
     private BillingAddress selectedAddress;
 
 
-
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        User user = getUserService().getUserById(getPrincipal().getId());
-        email = user.getEmail();
-        billingAddresses = addressDao.getVisibleBillingAddress(user);
-        return new ForwardResolution("/pages/billingAddressBook.jsp");
+        Long orderId = Functions.decryptOrderId(getContext().getRequest().getParameter("order"));
+        order = getOrderService().find(orderId);
+
+        if(order!=null){
+            orderDao.refresh(order);
+        if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+             if(order.getCartLineItems()!=null && order.getCartLineItems().size()>0){
+            User user = getUserService().getUserById(getPrincipal().getId());
+            email = user.getEmail();
+            billingAddresses = addressDao.getVisibleBillingAddress(user);
+            return new ForwardResolution("/pages/billingAddressBook.jsp");
+            }
+            else{
+                 return new RedirectResolution(CartAction.class);
+             }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
+            return new RedirectResolution(PaymentSuccessAction.class).addParameter("order", order).addParameter("gatewayOrderId",order.getGatewayOrderId());
+        }
+        }
+        else{
+         addRedirectAlertMessage(new SimpleMessage("There came an Error, please Try Again Later !!!!"));
+            return new RedirectResolution(CartAction.class);
+        }
     }
 
     public Resolution remove() {
@@ -84,20 +114,30 @@ public class BillingAddressAction extends BaseAction {
             user.setEmail(email);
             user = getUserService().save(user);
         }
+        if(order!=null){
         selectedAddress = addressDao.getBillingAddressById(billingAddressId);
         selectedAddress.getOrders().add(order);
         selectedAddress.setUser(user);
         addressDao.save(selectedAddress);
-        return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId",selectedAddress.getId());
+        return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId", selectedAddress.getId());
+        }
+        else{
+            return new RedirectResolution(CartAction.class);
+        }
     }
 
 
     public Resolution create() {
         User user = getUserService().getUserById(getPrincipal().getId());
+        if(order!=null){
         address.getOrders().add(order);
         address.setUser(user);
-       address =  addressDao.save(address);
-        return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId",address.getId());
+        address = addressDao.save(address);
+        return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId", address.getId());
+        }
+        else{
+            return new RedirectResolution(CartAction.class);
+        }
     }
 
 
@@ -196,6 +236,9 @@ public class BillingAddressAction extends BaseAction {
     public void setBillingAddressId(Long billingAddressId) {
         this.billingAddressId = billingAddressId;
     }
-          
+
+    public OrderService getOrderService() {
+        return orderService;
+    }
 }
 
