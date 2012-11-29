@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
+import com.hk.cache.CategoryCache;
 import com.hk.cache.UserCache;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.catalog.category.CategoryConstants;
@@ -49,7 +50,6 @@ import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -94,8 +94,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderStatusService         orderStatusService;
     @Autowired
     private RewardPointService         rewardPointService;
-    @Autowired
-    private CategoryService            categoryService;
+    /*@Autowired
+    private CategoryService            categoryService;*/
     @Autowired
     private OrderLoggingService        orderLoggingService;
     @Autowired
@@ -477,7 +477,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public ProductVariant getTopDealVariant(Order order) {
-        Category personalCareCategory = getCategoryService().getCategoryByName("personal-care");
+        Category personalCareCategory = CategoryCache.getInstance().getCategoryByName(CategoryConstants.PERSONAL_CARE).getCategory();
+        
+        //Category personalCareCategory = getCategoryService().getCategoryByName("personal-care");
         ProductVariant topOrderedVariant = null;
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
@@ -597,13 +599,10 @@ public class OrderServiceImpl implements OrderService {
         this.rewardPointService = rewardPointService;
     }
 
-    public CategoryService getCategoryService() {
-        return categoryService;
-    }
-
-    public void setCategoryService(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    /*
+     * public CategoryService getCategoryService() { return categoryService; } public void
+     * setCategoryService(CategoryService categoryService) { this.categoryService = categoryService; }
+     */
 
     public BaseDao getBaseDao() {
         return baseDao;

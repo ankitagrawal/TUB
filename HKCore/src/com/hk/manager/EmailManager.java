@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.CategoryCache;
+import com.hk.cache.UserCache;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
@@ -217,7 +219,8 @@ public class EmailManager {
         try {
             String basketCat = order.getBasketCategory();
             // basketCategory = getCategoryDao().find(basketCat);
-            basketCategory = getCategoryService().getCategoryByName(basketCat);
+            // basketCategory = getCategoryService().getCategoryByName(basketCat);
+            basketCategory = CategoryCache.getInstance().getCategoryByName(basketCat).getCategory();
         } catch (Exception e) {
             logger.error("Exception thrown while getting basket category", e);
         }
@@ -695,7 +698,9 @@ public class EmailManager {
         valuesMap.put("lineItem", lineItem);
         valuesMap.put("order", lineItem.getOrder());
         valuesMap.put("pricingDto", new PricingDto(order.getCartLineItems(), order.getAddress()));
-        User adminUser = getUserService().getAdminUser();
+        // User adminUser = getUserService().getAdminUser();
+
+        User adminUser = UserCache.getInstance().getAdminUser();
 
         Manufacturer manufacturer = lineItem.getProductVariant().getProduct().getManufacturer();
         String comments = "Email Sent to " + manufacturer.getName() + " at " + manufacturer.getEmail();

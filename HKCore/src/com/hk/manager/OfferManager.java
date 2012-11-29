@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.cache.RoleCache;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.domain.builder.OfferActionBuilder;
@@ -36,7 +37,6 @@ public class OfferManager {
 
     OfferInstanceDao      offerInstanceDaoProvider;
 
-
     @Autowired
     private CouponService couponService;
 
@@ -44,23 +44,23 @@ public class OfferManager {
     private RoleService   roleService;
 
     public boolean isOfferValidForUser(Offer offer, User user) {
-	    if (offer.getOfferEmailDomains().size() > 0) {
-		    for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
-			    if(user.getLogin().toLowerCase().endsWith(offerEmailDomain.getEmailDomain().toLowerCase())){
-				    return true;
-			    }
-		    }
-	    } else {
-		    if (offer.getRoles().size() == 0) {
-			    return true;
-		    }
-		    for (Role role : user.getRoles()) {
-			    if (offer.getRoles().contains(role)) {
-				    return true;
-			    }
-		    }
-	    }
-	    return false;
+        if (offer.getOfferEmailDomains().size() > 0) {
+            for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
+                if (user.getLogin().toLowerCase().endsWith(offerEmailDomain.getEmailDomain().toLowerCase())) {
+                    return true;
+                }
+            }
+        } else {
+            if (offer.getRoles().size() == 0) {
+                return true;
+            }
+            for (Role role : user.getRoles()) {
+                if (offer.getRoles().contains(role)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Transactional
@@ -82,7 +82,9 @@ public class OfferManager {
                     offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
-            roles.add(getRoleService().getRoleByName(RoleConstants.HK_USER));
+            Role hkUserRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_USER).getRole();
+            //roles.add(getRoleService().getRoleByName(RoleConstants.HK_USER));
+            roles.add(hkUserRole);
             offer.setRoles(roles);
 
             offer = (Offer) getOfferDao().save(offer);
@@ -101,8 +103,8 @@ public class OfferManager {
 
             offerTrigger = (OfferTrigger) offerDao.save(offerTrigger);
 
-            OfferAction offerAction = OfferActionBuilder.getInstance().description("Additional 2% off on all Products").discountPercent(0.02).discountOnBasePriceOnly(false).validOnIntlShipping(false).productGroup(
-                    getProductService().findProductGroupByName(OfferConstants.productGroupExcludingServices)).qty(1L).build();
+            OfferAction offerAction = OfferActionBuilder.getInstance().description("Additional 2% off on all Products").discountPercent(0.02).discountOnBasePriceOnly(false).validOnIntlShipping(
+                    false).productGroup(getProductService().findProductGroupByName(OfferConstants.productGroupExcludingServices)).qty(1L).build();
             offerAction = (OfferAction) getOfferDao().save(offerAction);
 
             offer = OfferBuilder.getInstance().description("Additional 2% off on all Products, Affiliate program discount").startDate(new DateTime().toDate()).numberOfTimesAllowed(
@@ -110,7 +112,8 @@ public class OfferManager {
                     offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
-            roles.add((Role) getRoleService().getRoleByName(RoleConstants.HK_USER));
+            Role hkUserRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_USER).getRole();
+            roles.add(hkUserRole);
             offer.setRoles(roles);
 
             offer = (Offer) getOfferDao().save(offer);
@@ -118,7 +121,6 @@ public class OfferManager {
 
         return offer;
     }
-
 
     @Transactional
     public Offer getOfferForIHO() {
@@ -136,7 +138,8 @@ public class OfferManager {
                     false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.IHO_HK_Offer).offerTrigger(offerTrigger).offerAction(offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
-            roles.add((Role) getRoleService().getRoleByName(RoleConstants.HK_IHO_USER));
+            Role hkIHOUserRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_IHO_USER).getRole();
+            roles.add(hkIHOUserRole);
             offer.setRoles(roles);
 
             offer = (Offer) getOfferDao().save(offer);
@@ -145,36 +148,37 @@ public class OfferManager {
         return offer;
     }
 
-	@Transactional
-	public Offer getOfferForReferralAndAffiliateProgram() {
-		Offer offer = getOfferDao().findByIdentifier(OfferConstants.referralAffiliateOffer5percent);
+    @Transactional
+    public Offer getOfferForReferralAndAffiliateProgram() {
+        Offer offer = getOfferDao().findByIdentifier(OfferConstants.referralAffiliateOffer5percent);
 
-		if (offer == null) {
+        if (offer == null) {
 
-			OfferTrigger offerTrigger = OfferTriggerBuilder.getInstance().description("Min purchase amount Rs 500").minAmount(500D).build();
+            OfferTrigger offerTrigger = OfferTriggerBuilder.getInstance().description("Min purchase amount Rs 500").minAmount(500D).build();
 
-			offerTrigger = (OfferTrigger) getOfferDao().save(offerTrigger);
+            offerTrigger = (OfferTrigger) getOfferDao().save(offerTrigger);
 
-			OfferAction offerAction = OfferActionBuilder.getInstance().description("5% Additional Off on all Products").discountAmount(250D).discountPercent(0.05).discountOnBasePriceOnly(false).validOnIntlShipping(false).qty(
-					1L).productGroup(getProductService().findProductGroupByName(OfferConstants.referralAffiliateProductGroup)).build();
-			offerAction = (OfferAction) getOfferDao().save(offerAction);
+            OfferAction offerAction = OfferActionBuilder.getInstance().description("5% Additional Off on all Products").discountAmount(250D).discountPercent(0.05).discountOnBasePriceOnly(
+                    false).validOnIntlShipping(false).qty(1L).productGroup(getProductService().findProductGroupByName(OfferConstants.referralAffiliateProductGroup)).build();
+            offerAction = (OfferAction) getOfferDao().save(offerAction);
 
-			offer = OfferBuilder.getInstance().description("5% Additional Off on all Products, Min Purchase Rs 500/- Max Discount Rs 250/-").startDate(new DateTime().toDate()).numberOfTimesAllowed(
-					1L).carryOverAllowed(false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.referralAffiliateOffer5percent).offerTrigger(offerTrigger).offerAction(
-					offerAction).build();
+            offer = OfferBuilder.getInstance().description("5% Additional Off on all Products, Min Purchase Rs 500/- Max Discount Rs 250/-").startDate(new DateTime().toDate()).numberOfTimesAllowed(
+                    1L).carryOverAllowed(false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.referralAffiliateOffer5percent).offerTrigger(offerTrigger).offerAction(
+                    offerAction).build();
 
-			Set<Role> roles = new HashSet<Role>(1);
-			roles.add(getRoleService().getRoleByName(RoleConstants.HK_USER));
-			offer.setRoles(roles);
+            Set<Role> roles = new HashSet<Role>(1);
+            Role hkUserRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_USER).getRole();
+            //roles.add(getRoleService().getRoleByName(RoleConstants.HK_USER));
+            roles.add(hkUserRole);
+            offer.setRoles(roles);
 
-			offer = (Offer) getOfferDao().save(offer);
-		}
+            offer = (Offer) getOfferDao().save(offer);
+        }
 
-		return offer;
-	}
+        return offer;
+    }
 
-
-	@Transactional
+    @Transactional
     public Offer getOfferForEmployee() {
         Offer offer = getOfferDao().findByIdentifier(OfferConstants.HK_EMPLOYEE_OFFER);
         if (offer == null) {
@@ -191,7 +195,8 @@ public class OfferManager {
                     offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
-            roles.add((Role) getRoleService().getRoleByName(RoleConstants.HK_EMPLOYEE));
+            Role hkEmployeeRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_EMPLOYEE).getRole();
+            roles.add(hkEmployeeRole);
             offer.setRoles(roles);
 
             offer = (Offer) offerDao.save(offer);
