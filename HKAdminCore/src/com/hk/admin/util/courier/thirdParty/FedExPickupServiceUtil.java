@@ -4,6 +4,8 @@ import java.util.*;
 import java.math.*;
 import org.apache.axis.types.Time;
 import org.apache.axis.types.PositiveInteger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fedex.pickup.stub.*;
 
@@ -19,7 +21,27 @@ import com.fedex.pickup.stub.*;
  */
 public class FedExPickupServiceUtil {
 	//
-	public static void main(String[] args) {
+	private static Logger logger = LoggerFactory.getLogger(FedExCourierUtil.class);
+
+    private String fedExAuthKey;
+
+    private String fedExAccountNo;
+
+    private String fedExMeterNo;
+
+    private String fedExPassword;
+
+    private String fedExServerUrl;
+
+	public FedExPickupServiceUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
+        this.fedExAuthKey = fedExAuthKey;
+        this.fedExAccountNo = fedExAccountNo;
+        this.fedExMeterNo = fedExMeterNo;
+        this.fedExPassword = fedExPassword;
+        this.fedExServerUrl = fedExServerUrl;
+    }
+
+	public void createPickupRequest(){
 		// Build a PickupRequest object
 
 		CreatePickupRequest request = new CreatePickupRequest();
@@ -110,18 +132,18 @@ public class FedExPickupServiceUtil {
 
 	}
 
-	private static ClientDetail createClientDetail() {
+	private ClientDetail createClientDetail() {
         ClientDetail clientDetail = new ClientDetail();
-        String accountNumber = System.getProperty("accountNumber");
-        String meterNumber = System.getProperty("meterNumber");
+        //String accountNumber = System.getProperty("accountNumber");
+        //String meterNumber = System.getProperty("meterNumber");
 
         //
         // See if the accountNumber and meterNumber properties are set,
         // if set use those values, otherwise default them to "XXX"
         //
-        if (accountNumber == null) {
-        	accountNumber = "XXX"; // Replace "XXX" with clients account number
-        }
+        //if (accountNumber == null) {
+        String accountNumber = fedExAccountNo; // Replace "XXX" with clients account number
+        //}
         if (meterNumber == null) {
         	meterNumber = "XXX"; // Replace "XXX" with clients meter number
         }
