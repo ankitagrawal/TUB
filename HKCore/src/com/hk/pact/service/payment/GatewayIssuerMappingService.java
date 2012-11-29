@@ -24,5 +24,6 @@ public interface GatewayIssuerMappingService {
 
     GatewayIssuerMapping getGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping);
 
+    String getImageOfIssuer(byte[] imageByteArray, String imageName);
 
 }

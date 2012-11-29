@@ -16,9 +16,7 @@ import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
-import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.factory.PaymentModeActionFactory;
-import net.sourceforge.stripes.action.LocalizableMessage;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -67,50 +65,30 @@ public class PaymentAction extends BaseAction {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
 
-            if (order.getAmount() == 0) {       //todo rethink this
-                addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
-                return new RedirectResolution(CartAction.class);
-            }
-
-            GatewayIssuerMapping preferredGatewayIssuerMapping = null;
             String issuerCode = null;
-
             if (issuer != null) {
                 List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
                 Long total = 0L;
 
-//                Map<GatewayIssuerMapping, Long> gatewayIssuerMappingPriorityMap = new HashMap<GatewayIssuerMapping, Long>();
                 for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-//                    gatewayIssuerMappingPriorityMap.put(gatewayIssuerMapping, gatewayIssuerMapping.getPriority());
                     total += gatewayIssuerMapping.getPriority();
                 }
 
-//                MapValueComparator mapValueComparator = new MapValueComparator(gatewayIssuerMappingPriorityMap);
-//                TreeMap<GatewayIssuerMapping, Long> sortedGatewayPriorityMap = new TreeMap(mapValueComparator);
-//                sortedGatewayPriorityMap.putAll(gatewayIssuerMappingPriorityMap);
-//                for (Map.Entry<GatewayIssuerMapping, Long> gatewayLongEntry : sortedGatewayPriorityMap.entrySet()) {
-//                    long gatewayRangeValue = oldValue + gatewayLongEntry.getValue();
-//                    if (random <= gatewayRangeValue) {
-//                        preferredGatewayIssuerMapping = gatewayLongEntry.getKey();
-//                        preferredGateway = preferredGatewayIssuerMapping.getGateway();
-//                        break;
-//                    }
-//                    oldValue = gatewayLongEntry.getValue();
-//                }
-
                 Integer random = (new Random()).nextInt(total.intValue());
                 long oldValue = 0L;
+                long priority = 0L;
+                long gatewayRangeValue = 0L;
 
                 for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-                    long gatewayRangeValue = oldValue + gatewayIssuerMapping.getPriority();
+                    priority = gatewayIssuerMapping.getPriority();
+                    gatewayRangeValue = oldValue + priority;
                     if (random < gatewayRangeValue) {
                         gateway = gatewayIssuerMapping.getGateway();
                         issuerCode = gatewayIssuerMapping.getIssuerCode();
                         break;
                     }
-                    oldValue = gatewayIssuerMapping.getPriority();
+                    oldValue += priority;
                 }
-
             }
 
             RedirectResolution redirectResolution;

@@ -1020,6 +1020,17 @@
             ${hk:encryptOrderId(${id})}
         </example>
     </function>
+    <function>
+        <description>
+            returns image file path for issuer
+        </description>
+        <name>readIssuerImageIcon</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String readIssuerImageIcon(byte[],java.lang.String))</function-signature>
+        <example>
+            <!--${hk:readIssuerImageIcon(${id})}-->
+        </example>
+    </function>
 
 
 </taglib>

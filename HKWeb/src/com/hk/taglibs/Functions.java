@@ -1,5 +1,6 @@
 package com.hk.taglibs;
 
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -10,6 +11,7 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -700,4 +702,10 @@ public class Functions {
         logger.debug("\n decrypted order id is"+ orderId + "\n");
         return orderId;
     }
+
+    public static String readIssuerImageIcon(byte [] imageByteArray, String filename){
+        GatewayIssuerMappingService gatewayIssuerMappingService = ServiceLocatorFactory.getService(GatewayIssuerMappingService.class);
+        return gatewayIssuerMappingService.getImageOfIssuer(imageByteArray,filename);
+    }
+
 }

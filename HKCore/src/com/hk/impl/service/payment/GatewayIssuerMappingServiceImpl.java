@@ -44,4 +44,9 @@ public class GatewayIssuerMappingServiceImpl implements GatewayIssuerMappingServ
         List<GatewayIssuerMapping> gatewayIssuerMappings =  searchGatewayIssuerMapping(issuer, gateway, activeMapping);
         return gatewayIssuerMappings != null && !gatewayIssuerMappings.isEmpty() ? gatewayIssuerMappings.get(0) : null;
     }
+
+    @Override
+    public String getImageOfIssuer(byte[] imageByteArray, String imageName) {
+         return gatewayIssuerMappingDao.getImageOfIssuer(imageByteArray, imageName);
+    }
 }

@@ -1,5 +1,6 @@
 package com.hk.impl.dao.payment;
 
+import com.hk.constants.core.Keys;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
@@ -8,8 +9,10 @@ import com.hk.pact.dao.payment.GatewayIssuerMappingDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.io.FileOutputStream;
 import java.util.List;
 
 /**
@@ -21,6 +24,10 @@ import java.util.List;
  */
 @Repository
 public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayIssuerMappingDao {
+
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+    String               adminDownloadsPath;
+
 
     @Override
     public List<Issuer> getIssuerByType(String issuerType, boolean active) {
@@ -57,5 +64,19 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
         gatewayIssuerMappingCriteria.addOrder(Order.asc("priority"));
 
         return findByCriteria(gatewayIssuerMappingCriteria);
+    }
+
+    public String getImageOfIssuer(byte[] imageByteArray, String imageName) {
+        try{
+            String imageIconRelativePath = "/images/issuer/" + imageName + ".jpg";
+            String imageIconAbsolutePath = adminDownloadsPath + imageIconRelativePath;
+            FileOutputStream fos = new FileOutputStream(imageIconAbsolutePath);
+            fos.write(imageByteArray);
+            fos.close();
+            return imageIconRelativePath;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

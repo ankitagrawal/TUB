@@ -23,4 +23,5 @@ public interface GatewayIssuerMappingDao extends BaseDao {
 
     List searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping);
 
+    String getImageOfIssuer(byte[] imageByteArray, String imageName);
 }
