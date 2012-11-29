@@ -63,6 +63,7 @@ import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
 import com.hk.domain.subscription.SubscriptionStatus;
+import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.MasterDataDao;
@@ -151,7 +152,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
     public List<User> getTicketAdminList() {
         RoleVO ticketAdminRole = RoleCache.getInstance().getRoleByName(EnumRole.TICKETADMIN);
-        //return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.TICKETADMIN));
+        // return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.TICKETADMIN));
         return getUserService().findByRole(ticketAdminRole.getRole());
     }
 
@@ -197,11 +198,15 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<User> getApproverList() {
-        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.PO_APPROVER));
+        Role poApproverRole = RoleCache.getInstance().getRoleByName(EnumRole.PO_APPROVER).getRole();
+        // return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.PO_APPROVER));
+        return getUserService().findByRole(poApproverRole);
     }
 
     public List<User> getCreatorList() {
-        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.CATEGORY_MANAGER));
+        Role categoryManRole = RoleCache.getInstance().getRoleByName(EnumRole.PO_APPROVER).getRole();
+        // return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.CATEGORY_MANAGER));
+        return getUserService().findByRole(categoryManRole);
     }
 
     public List<DebitNoteStatus> getDebitNoteStatusList() {

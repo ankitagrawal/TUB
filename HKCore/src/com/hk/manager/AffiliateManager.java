@@ -156,7 +156,9 @@ public class AffiliateManager {
         Role unverifiedAffiliateRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED).getRole();
         if (user.getRoles().contains(unverifiedAffiliateRole)) {
             user.getRoles().remove(unverifiedAffiliateRole);
-            Role hkUnVerifiedRole = getRoleService().getRoleByName(RoleConstants.HK_UNVERIFIED);
+            //Role hkUnVerifiedRole = getRoleService().getRoleByName(RoleConstants.HK_UNVERIFIED);
+            
+            Role hkUnVerifiedRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_UNVERIFIED);
             if (user.getRoles().contains(hkUnVerifiedRole)) {
                 user.getRoles().remove(hkUnVerifiedRole);
             }
