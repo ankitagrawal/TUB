@@ -101,14 +101,20 @@ public class CampaignTrackingFilter implements Filter {
 			        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);
 
 	        } else {
-		        TrafficTracking trafficTracking = trafficAndUserBrowsingService.saveTrafficTracking(httpRequest, user);
-		        if (trafficTracking != null && trafficTracking.getId() != null) {
-			        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);
-			        Cookie cookie = new Cookie(HealthkartConstants.Cookie.trackingId, trafficTracking.getId().toString());
-			        cookie.setPath("/");
-			        cookie.setMaxAge(2 * 60 * 60); // 2 hours
-			        HttpServletResponse httpResponse = (HttpServletResponse) response;
-			        httpResponse.addCookie(cookie);
+		        String userAgent = httpRequest.getHeader(HttpRequestAndSessionConstants.USER_AGENT);
+		        //Check if it is a crawler or a bot
+		        if (userAgent != null && !userAgent.equals("")
+				        && !userAgent.toLowerCase().contains("bot") && !userAgent.toLowerCase().contains("spider")
+				        && !userAgent.toLowerCase().contains("price") && !userAgent.toLowerCase().contains("monit/4.10.1") ) {
+			        TrafficTracking trafficTracking = trafficAndUserBrowsingService.saveTrafficTracking(httpRequest, user);
+			        if (trafficTracking != null && trafficTracking.getId() != null) {
+				        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);
+				        Cookie cookie = new Cookie(HealthkartConstants.Cookie.trackingId, trafficTracking.getId().toString());
+				        cookie.setPath("/");
+				        cookie.setMaxAge(6 * 60 * 60); // 6 hours
+				        HttpServletResponse httpResponse = (HttpServletResponse) response;
+				        httpResponse.addCookie(cookie);
+			        }
 		        }
 	        }
 

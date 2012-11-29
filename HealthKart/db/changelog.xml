@@ -9788,7 +9788,12 @@
             <column name="user_agent" type="VARCHAR(200)"/>
         </addColumn>
     </changeSet>
-     <changeSet author="Ankit (generated)" id="1352973051747-1">
+    <changeSet author="Ajeet (generated)" id="1354124147954-1">
+        <addColumn tableName="traffic_tracking">
+            <column name="first_order" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-1">
         <createTable tableName="base_order_has_billing_address">
             <column name="base_order_id" type="INT">
                 <constraints nullable="false"/>
@@ -10064,7 +10069,7 @@
         insert into country values (198,'VIRGIN ISLANDS, U.S.', 'VI');
         insert into country values (199,'WALLIS AND FUTUNA', 'WF');
         insert into country values (200,'WESTERN SAHARA', 'EH');
-        insert into country values (201,'ZAMBIA', 'ZM');      
+        insert into country values (201,'ZAMBIA', 'ZM');
     </sql>
-  </changeSet>
+  </changeSet>    
 </databaseChangeLog>
