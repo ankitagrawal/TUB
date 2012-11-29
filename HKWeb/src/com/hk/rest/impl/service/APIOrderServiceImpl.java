@@ -8,11 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.hk.pact.service.core.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.cache.UserCache;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -33,13 +34,13 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.AutomatedOrderService;
 import com.hk.pact.service.order.CartLineItemService;
@@ -56,7 +57,6 @@ import com.hk.rest.models.order.APIProductDetail;
 import com.hk.rest.pact.service.APIOrderService;
 import com.hk.rest.pact.service.APIUserService;
 import com.hk.util.json.JSONResponseBuilder;
-import com.akube.framework.util.BaseUtils;
 
 /**
  * Created by IntelliJ IDEA. User: Pradeep Date: May 1, 2012 Time: 1:26:17 PM
@@ -165,8 +165,8 @@ public class APIOrderServiceImpl implements APIOrderService {
             /**
              * Order lifecycle activity logging - Order split to shipping orders
              */
-            getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(),
-                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+            User adminUser = UserCache.getInstance().getAdminUser();
+            getOrderLoggingService().logOrderActivity(order, adminUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
@@ -211,11 +211,11 @@ public class APIOrderServiceImpl implements APIOrderService {
         // payment.setIp(remoteAddr);
         payment.setBankCode(apiPayment.getBankId());
         payment = getPaymentManager().createNewPayment(order, paymentMode, "182.12.1.1", apiPayment.getBankId()); // remote
-                                                                                                                    // ip
-                                                                                                                    // adddress
-                                                                                                                    // is
-                                                                                                                    // hard
-                                                                                                                    // coded
+        // ip
+        // adddress
+        // is
+        // hard
+        // coded
         PaymentStatus paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.AUTHORIZATION_PENDING.getId());
         if (EnumPaymentMode.getPrePaidPaymentModes().contains(paymentMode.getId())) {
             paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.SUCCESS.getId());
@@ -311,7 +311,7 @@ public class APIOrderServiceImpl implements APIOrderService {
 
         Order hkOrder = automatedOrderService.createNewOrder(hkUser);
         hkOrder.setUserComments(order.getUserComments());
-	    hkOrder.setScore(0L);
+        hkOrder.setScore(0L);
 
         Set<CartLineItem> cartLineItemSet = order.getCartLineItems();
         Set<CartLineItem> hkCartLineItemSet = new HashSet<CartLineItem>();
@@ -324,16 +324,16 @@ public class APIOrderServiceImpl implements APIOrderService {
 
         Address address = order.getAddress();
         address.setId(null);
-	    address.setUser(hkUser);
+        address.setUser(hkUser);
         address = addressDao.save(address);
 
         Payment payment = order.getPayment();
         payment.setId(null);
         payment.setOrder(hkOrder);
 
-        payment.setGatewayOrderId(hkOrder.getId().toString() +"-"+ order.getGatewayOrderId().split("-")[1]);
-        //payment.setGatewayOrderId(order.getGatewayOrderId());
-	    payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+        payment.setGatewayOrderId(hkOrder.getId().toString() + "-" + order.getGatewayOrderId().split("-")[1]);
+        // payment.setGatewayOrderId(order.getGatewayOrderId());
+        payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
         payment = paymentService.save(payment);
         if (cartLineItemSet.size() > 0) {
             hkOrder = automatedOrderService.placeOrder(hkOrder, hkCartLineItemSet, address, payment, order.getStore(), false);
