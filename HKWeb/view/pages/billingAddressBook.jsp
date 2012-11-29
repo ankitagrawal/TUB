@@ -122,6 +122,7 @@
             <br/>
             <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="remove" class="delete">
               <s:param name="billingAddressId" value="${billingAddress.id}"/>
+                <s:param name="order" value="${orderSummary.order.id}"/>
               (delete)
             </s:link>
 
