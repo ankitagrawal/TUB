@@ -9,19 +9,22 @@ package com.hk.constants.payment;
  */
 public enum EnumIssuer {
 
-    VISA("VISA", "VISA"),
-    MASTERCARD("MASTERCARD", "MASTERCARD"),
-    MAESTRO("MAESTRO", "MAESTRO"),
-    CITRUS("CITRUS", "CITRUS"),
-    PAYPAL("PAYPAL", "PAYPAL");
+    //first would be name, second would be display name
+    VISA("VISA", "VISA", ""),
+    MASTERCARD("MASTERCARD", "MASTERCARD", ""),
+    MAESTRO("MAESTRO", "MAESTRO", ""),
+    CITRUS("CITRUS", "CITRUS", "faster checkout"),
+    PAYPAL("PAYPAL", "PAYPAL", "For International Card Users Only");
     //THEN put all the names of the banks, they are also issuers only
 
     private java.lang.String name;
     private String id;
+    private String tagLine;
 
-    EnumIssuer(String id, java.lang.String name) {
+    EnumIssuer(String id, java.lang.String name, String tagLine) {
         this.name = name;
         this.id = id;
+        this.tagLine = tagLine;
     }
 
     public java.lang.String getName() {
@@ -30,6 +33,10 @@ public enum EnumIssuer {
 
     public String getId() {
         return id;
+    }
+
+    public String getTagLine() {
+        return tagLine;
     }
 
     public static EnumIssuer getIssuerFromId(String id) {

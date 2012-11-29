@@ -1,5 +1,6 @@
 package com.hk.impl.dao.payment;
 
+import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.Keys;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
@@ -65,12 +66,12 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
 
     public String getImageOfIssuer(byte[] imageByteArray, String imageName) {
         try{
-            String imageIconRelativePath = "images\\gateway\\" + imageName + ".jpg";
+            String imageIconRelativePath = "images" + BaseUtils.fileSeparator + "gateway" + BaseUtils.fileSeparator + imageName + ".jpg";
             String imageIconAbsolutePath = AppConstants.appBasePath + imageIconRelativePath;
             FileOutputStream fos = new FileOutputStream(imageIconAbsolutePath);
             fos.write(imageByteArray);
             fos.close();
-            return "\\"+ imageIconRelativePath;
+            return BaseUtils.fileSeparator + imageIconRelativePath;
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -10234,6 +10234,14 @@
             update gateway_issuer_mapping set active = 1 and priority = 1;
         </sql>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="20121129-4">
+        <sql>
+            update gateway_issuer_mapping set reconciliation_charge = 0.021 where gateway_id = 15;
+            update gateway_issuer_mapping set reconciliation_charge = 0.02 where gateway_id = 90;
+            update gateway_issuer_mapping, issuer i set reconciliation_charge = 0.0215 where gateway_id = 15 and i.issuer_type = 'Card';
+            update gateway_issuer_mapping, issuer i set reconciliation_charge = 0.017 where gateway_id = 15 and i.issuer_type = 'Bank';
+        </sql>
+    </changeSet>
     <changeSet author="Pratham (generated)" id="20121129-2">
         <sql>
         UPDATE payment SET payment_mode_id  = 1000 WHERE payment_mode_id IN (15,60,70,80,90,100);
