@@ -37,6 +37,6 @@
 				<th><fmt:formatNumber value="${totalNewOrders/totalOrders * 100}" pattern="##.##"/> </th>
 			</tr>
 		</table>
-		</div>
+		<p><strong>NOTE:</strong>The report is exclusive to healthkart.com traffic/orders and doesn't include traffic/orders from admin, mih, mobile etc.</p>
 	</s:layout-component>
 </s:layout-render>
