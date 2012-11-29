@@ -475,7 +475,8 @@
 </table>
 <div class="variantDetails info"></div>
 <br/>
-<%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
+<%--todo rahul: need to remove this add new row button added for finace team on 29-Nov-2012--%>
+<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 <c:choose>
 	<c:when test="${pa.grn.grnStatus.id < inCheckedIn}">
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
