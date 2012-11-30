@@ -10234,7 +10234,7 @@
             update gateway_issuer_mapping set active = 1 and priority = 1;
         </sql>
     </changeSet>
-    <changeSet author="Pratham (generated)" id="20121129-4">
+    <changeSet author="Pratham (generated)" id="20121129-5">
         <sql>
             update gateway_issuer_mapping set reconciliation_charge = 0.021 where gateway_id = 15;
             update gateway_issuer_mapping set reconciliation_charge = 0.02 where gateway_id = 90;
