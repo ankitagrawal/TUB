@@ -10231,15 +10231,23 @@
     <changeSet author="Pratham (generated)" id="20121129-4">
         <sql>
             update payment pt ,payment_mode pm set pt.gateway_id =pm.gateway where pt.payment_mode_id=pm.id;
-            update gateway_issuer_mapping set active = 1 and priority = 1;
+            update gateway_issuer_mapping set active = 1, priority = 1;
         </sql>
     </changeSet>
     <changeSet author="Pratham (generated)" id="20121129-5">
         <sql>
             update gateway_issuer_mapping set reconciliation_charge = 0.021 where gateway_id = 15;
+            update gateway_issuer_mapping set reconciliation_charge = 0.019 where gateway_id = 100;
             update gateway_issuer_mapping set reconciliation_charge = 0.02 where gateway_id = 90;
-            update gateway_issuer_mapping, issuer i set reconciliation_charge = 0.0215 where gateway_id = 15 and i.issuer_type = 'Card';
-            update gateway_issuer_mapping, issuer i set reconciliation_charge = 0.017 where gateway_id = 15 and i.issuer_type = 'Bank';
+            update gateway_issuer_mapping gim , issuer i set reconciliation_charge = 0.0215 where gim.issuer_id = i.id and gateway_id = 80 and i.issuer_type = 'Card';
+            update gateway_issuer_mapping gim , issuer i set reconciliation_charge = 0.017 where gim.issuer_id = i.id and gateway_id = 80 and i.issuer_type = 'Bank';
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="20121129-6">
+        <sql>
+            update gateway_issuer_mapping gim ,(select gim.id from gateway_issuer_mapping gim,
+            (SELECT issuer_id,count(*) FROM `gateway_issuer_mapping` group by(issuer_id) having(count(*)>1))v1 where gim.issuer_id=v1.issuer_id and gim.gateway_id=15 order by gim.id)v2
+            set gim.priority = 0 where gim.id=v2.id
         </sql>
     </changeSet>
     <changeSet author="Pratham (generated)" id="20121129-2">
@@ -10256,5 +10264,23 @@
     </changeSet>
     <changeSet author="Pratham (generated)" id="1354019828176-5">
     <dropColumn columnName="bank_code" tableName="payment"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1354263430748-1">
+        <addNotNullConstraint columnDataType="TINYINT" columnName="active" tableName="gateway"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1354263430748-2">
+        <addNotNullConstraint columnDataType="INT" columnName="priority" tableName="gateway"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1354263430748-3">
+        <addNotNullConstraint columnDataType="INT" columnName="active" tableName="gateway_issuer_mapping"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1354263430748-4">
+        <addNotNullConstraint columnDataType="INT" columnName="priority" tableName="gateway_issuer_mapping"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1354263430748-5">
+        <addNotNullConstraint columnDataType="TINYINT" columnName="active" tableName="issuer"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1354263430748-6">
+        <addNotNullConstraint columnDataType="INT" columnName="priority" tableName="issuer"/>
     </changeSet>
 </databaseChangeLog>

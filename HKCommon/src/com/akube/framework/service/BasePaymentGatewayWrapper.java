@@ -51,23 +51,13 @@ public abstract class BasePaymentGatewayWrapper<T extends BasePaymentGatewayWrap
         return parameters;
     }
 
-    public static String encodeTransactionDataParamWithBillingAddress(Double amount, String gatewayOrderId, Long orderId, String checksum, String paymentMethod, Long billingAddressId) {
-        return new TransactionData(amount, gatewayOrderId, orderId, checksum, paymentMethod,billingAddressId).getEncodedStringWithBillingAddress();
-    }
-
-    public static String encodeTransactionDataParam(Double amount, String gatewayOrderId, Long orderId, String checksum, String paymentMethod) {
-        return new TransactionData(amount, gatewayOrderId, orderId, checksum, paymentMethod).getEncodedString();
+    public static String encodeTransactionDataParam(Double amount, String gatewayOrderId, Long orderId, String checksum, String paymentMethod, Long billingAddressId) {
+        return new TransactionData(amount, gatewayOrderId, orderId, checksum, paymentMethod, billingAddressId).getEncodedString();
     }
 
     public static TransactionData decodeTransactionDataParam(String encodedString) {
         TransactionData data = new TransactionData();
         data.decode(encodedString);
-        return data;
-    }
-
-    public static TransactionData decodeTransactionDataParamWithBillingAddress(String encodedString) {
-        TransactionData data = new TransactionData();
-        data.decodewithBillingAddress(encodedString);
         return data;
     }
 
@@ -89,14 +79,6 @@ public abstract class BasePaymentGatewayWrapper<T extends BasePaymentGatewayWrap
         }
 
         public TransactionData() {
-        }
-
-        public TransactionData(Double amount, String gatewayOrderId, Long orderId, String checksum, String paymentMethod) {
-            this.amount = amount;
-            this.gatewayOrderId = gatewayOrderId;
-            this.orderId = orderId;
-            this.checksum = checksum;
-            this.paymentMethod = paymentMethod;
         }
 
         public TransactionData(Double amount, String gatewayOrderId, Long orderId, String checksum, String paymentMethod, Long billingAddressId) {
@@ -123,9 +105,7 @@ public abstract class BasePaymentGatewayWrapper<T extends BasePaymentGatewayWrap
         public String getEncodedString() {
             return CryptoUtil.encrypt(decimalFormat.format(amount) + "," + gatewayOrderId + "," + orderId + "," + checksum + "," + paymentMethod);
         }
-         public String getEncodedStringWithBillingAddress(){
-             return CryptoUtil.encrypt(decimalFormat.format(amount) + "," + gatewayOrderId + "," + orderId + "," + checksum + "," + paymentMethod + "," + billingAddressId);
-         }
+
         public String getChecksum() {
             return checksum;
         }
@@ -158,23 +138,10 @@ public abstract class BasePaymentGatewayWrapper<T extends BasePaymentGatewayWrap
             orderId = Long.parseLong(tokenizer.nextToken());
             checksum = tokenizer.nextToken();
             paymentMethod = tokenizer.nextToken();
-        }
-
-public void decodewithBillingAddress(String encodedString) {
-            try {
-                encodedString = URLDecoder.decode(encodedString, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
+            if (billingAddressId != null) {
+                billingAddressId = Long.parseLong(tokenizer.nextToken());
             }
-            encodedString = CryptoUtil.decrypt(encodedString);
-            StringTokenizer tokenizer = new StringTokenizer(encodedString, ",");
-            amount = Double.parseDouble(tokenizer.nextToken());
-            gatewayOrderId = tokenizer.nextToken();
-            orderId = Long.parseLong(tokenizer.nextToken());
-            checksum = tokenizer.nextToken();
-            paymentMethod = tokenizer.nextToken();
-            billingAddressId = Long.parseLong(tokenizer.nextToken());
         }
-
 
     }
 

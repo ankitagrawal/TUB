@@ -5,6 +5,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
@@ -21,6 +22,8 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -53,6 +56,9 @@ public class PaymentAction extends BaseAction {
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
 
+    private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
+
+
     /*
    algorithm to route multiple gateways, first let the customer choose the issuer
    now based on the issuer, get all the damn gateways that serve it, alongwith the priority assigned by admin
@@ -67,27 +73,34 @@ public class PaymentAction extends BaseAction {
 
             String issuerCode = null;
             if (issuer != null) {
-                List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
-                Long total = 0L;
+                try {
+                    List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
+                    Long total = 0L;
 
-                for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-                    total += gatewayIssuerMapping.getPriority();
-                }
-
-                Integer random = (new Random()).nextInt(total.intValue());
-                long oldValue = 0L;
-                long priority = 0L;
-                long gatewayRangeValue = 0L;
-
-                for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-                    priority = gatewayIssuerMapping.getPriority();
-                    gatewayRangeValue = oldValue + priority;
-                    if (random < gatewayRangeValue) {
-                        gateway = gatewayIssuerMapping.getGateway();
-                        issuerCode = gatewayIssuerMapping.getIssuerCode();
-                        break;
+                    for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
+                        total += gatewayIssuerMapping.getPriority();
                     }
-                    oldValue += priority;
+
+                    Integer random = (new Random()).nextInt(total.intValue());
+                    long oldValue = 0L;
+                    long priority = 0L;
+                    long gatewayRangeValue = 0L;
+
+                    for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
+                        priority = gatewayIssuerMapping.getPriority();
+                        gatewayRangeValue = oldValue + priority;
+                        if (random < gatewayRangeValue) {
+                            gateway = gatewayIssuerMapping.getGateway();
+                            issuerCode = gatewayIssuerMapping.getIssuerCode();
+                            break;
+                        }
+                        oldValue += priority;
+                    }
+                } catch (Exception e) {
+                    //todo pratham, remove this piece of code
+                    //this is a very crude away, although this code should not fail, but as a worse case scenario, redirecting customer to icici no matter what since it gives max option
+                    logger.error("Routing Multiple gateways failed due to some exception" + e);
+                    gateway = EnumGateway.ICICI.asGateway();
                 }
             }
 
@@ -101,7 +114,7 @@ public class PaymentAction extends BaseAction {
                 Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());
                 redirectResolution = new RedirectResolution(actionClass, "proceed");
                 return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), issuerCode));
+                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), issuerCode, null));
             }
         }
         addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));

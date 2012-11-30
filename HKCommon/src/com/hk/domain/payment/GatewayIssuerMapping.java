@@ -30,7 +30,7 @@ public class GatewayIssuerMapping implements java.io.Serializable {
     @JoinColumn(name = "issuer_id", nullable = false)
     private Issuer issuer;
 
-    @Column(name = "reconciliation_charge", nullable = false)
+    @Column(name = "reconciliation_charge", nullable = false, scale = 0)
     private Double reconciliationCharge;
 
     @Column(name = "priority", scale = 0)
@@ -39,7 +39,7 @@ public class GatewayIssuerMapping implements java.io.Serializable {
     @Column(name = "issuer_code")
     private String issuerCode;
 
-    @Column(name = "active")
+    @Column(name = "active", scale = 0)
     private Boolean active;
 
     @JsonSkip

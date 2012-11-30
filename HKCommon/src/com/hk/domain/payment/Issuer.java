@@ -32,7 +32,7 @@ public class Issuer implements java.io.Serializable {
     @Column(name = "priority", scale = 0)
     private Long priority;
 
-    @Column(name = "active")
+    @Column(name = "active", scale = 0)
     private Boolean active;
 
     @Column(name = "image")
