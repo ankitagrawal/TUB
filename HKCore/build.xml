@@ -19,6 +19,7 @@
 		<fileset file="${lib.root.dir}/thirdParty/lambdaj-2.0-with-dependencies.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
         <fileset file="${lib.root.dir}/thirdParty/junit-4.10.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/paypal_base.jar" />
 		<fileset file="${lib.root.dir}/citrus/SFA-1.2.jar" />
 		<fileset file="${lib.root.dir}/icici/sfa.jar" />
 		<fileset file="${lib.root.dir}/citrus/citruspay-merchant-kit-1.0.jar" />
@@ -36,7 +37,6 @@
 		<fileset file="${project.common.dir}/dependencies/testng-5.8-jdk15.jar" />
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
         <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>
-        <fileset file="${lib.root.dir}/thirdParty/paypal_base.jar" />
 	</path>
 
 

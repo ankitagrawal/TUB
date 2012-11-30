@@ -9869,7 +9869,7 @@
     </changeSet>
      <changeSet author="Ankit" id="20121128-08">
     <sql>
-        insert into country values (1,'ÅLAND ISLANDS', 'AX');
+        insert into country values (1,'ALAND ISLANDS', 'AX');
         insert into country values (2,'ALBANIA', 'AL');
         insert into country values (3,'ALGERIA ', 'DZ');
         insert into country values (4,'AMERICAN SAMOA', 'AS');
