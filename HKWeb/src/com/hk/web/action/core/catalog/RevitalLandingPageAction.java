@@ -12,6 +12,7 @@ import net.sourceforge.stripes.action.UrlBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.cache.UserCache;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.marketing.ProductReferrer;
 import com.hk.domain.order.Order;
@@ -45,7 +46,8 @@ public class RevitalLandingPageAction extends BaseAction {
     ProductReferrer productReferrer = null;
     User user = null;
     if (getPrincipal() != null) {
-      user = getUserService().getUserById(getPrincipal().getId());
+      //user = getUserService().getUserById(getPrincipal().getId());
+      user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
       if (user == null) {
         user = userManager.createAndLoginAsGuestUser(null, null);
       }

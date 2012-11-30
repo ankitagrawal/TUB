@@ -20,6 +20,7 @@ import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
+import com.hk.cache.UserCache;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -93,7 +94,8 @@ public class OrderSummaryAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        User user = getUserService().getUserById(getPrincipal().getId());
+        //User user = getUserService().getUserById(getPrincipal().getId());
+        User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
         // Trimming empty line items once again.
         orderManager.trimEmptyLineItems(order);

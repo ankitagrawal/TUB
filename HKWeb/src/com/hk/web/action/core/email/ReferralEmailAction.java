@@ -20,6 +20,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.UserCache;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.user.User;
@@ -69,7 +70,8 @@ public class ReferralEmailAction extends BaseAction {
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        User user = getUserService().getUserById(getPrincipal().getId());
+        //User user = getUserService().getUserById(getPrincipal().getId());
+        User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         if (user != null) {
             senderName = user.getFirstName();
             senderEmail = user.getEmail();
@@ -78,7 +80,8 @@ public class ReferralEmailAction extends BaseAction {
     }
 
     public Resolution send() {
-        User user = getUserService().getUserById(getPrincipal().getId());
+        //User user = getUserService().getUserById(getPrincipal().getId());
+        User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         Coupon coupon = referrerProgramManager.getOrCreateRefferrerCoupon(user);
 
         wommEmailManager.sendEmails(user, senderName, senderEmail, coupon, recepientEmailList, EnumEmailType.ReferralEmail, customText, null);

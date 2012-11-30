@@ -23,11 +23,13 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.cache.UserCache;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.review.EnumReviewStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
 import com.hk.domain.review.UserReview;
+import com.hk.domain.user.User;
 import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.review.ReviewService;
@@ -72,7 +74,9 @@ public class ProductReviewAction extends BasePaginatedAction {
 	@Secure
 	public Resolution writeNewReview() {
 		review = new UserReview();
-		review.setPostedBy(userService.getLoggedInUser());
+		//review.setPostedBy(userService.getLoggedInUser());
+		User loggedInUser = UserCache.getInstance().getLoggedInUser();
+		review.setPostedBy(loggedInUser);
 		return new ForwardResolution("/pages/postReview.jsp");
 	}
 

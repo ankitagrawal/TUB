@@ -20,6 +20,7 @@ import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.cache.UserCache;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.constants.review.EnumReviewStatus;
@@ -144,7 +145,8 @@ public class ProductAction extends BaseAction {
 	    }
 
         if (getPrincipal() != null) {
-            user = getUserService().getUserById(getPrincipal().getId());
+            //user = getUserService().getUserById(getPrincipal().getId());
+            user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
             if (user != null) {
                 //userProductHistoryDao.addToUserProductHistory(product, user);
                 affiliate = affiliateDao.getAffilateByUser(user);

@@ -19,6 +19,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hk.cache.UserCache;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfigOption;
 import com.hk.domain.catalog.product.VariantConfigOptionParam;
@@ -89,7 +90,8 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
         ProductReferrer productReferrer = null;
 
         if (getPrincipal() != null) {
-            user = getUserService().getUserById(getPrincipal().getId());
+            //user = getUserService().getUserById(getPrincipal().getId());
+            user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
             if (user == null) {
                 user = userManager.createAndLoginAsGuestUser(null, null);
             }

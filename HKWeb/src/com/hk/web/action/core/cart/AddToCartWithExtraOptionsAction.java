@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.cache.UserCache;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.marketing.ProductReferrer;
 import com.hk.domain.order.CartLineItemExtraOption;
@@ -62,7 +63,8 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
         User user = null;
         ProductReferrer productReferrer = null; 
         if (getPrincipal() != null) {
-            user = getUserService().getUserById(getPrincipal().getId());
+            //user = getUserService().getUserById(getPrincipal().getId());
+            user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
             if (user == null) {
                 user = getUserManager().createAndLoginAsGuestUser(null, null);
             }
