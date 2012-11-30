@@ -1,13 +1,12 @@
 package com.hk.cache;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.hk.cache.vo.CategoryVO;
+import com.hk.domain.catalog.category.Category;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.service.ServiceLocatorFactory;
 
@@ -44,7 +43,8 @@ public class CategoryCache {
          * if category is not in cache try and attempt to find from db
          */
         if (categoryVO == null) {
-            // User user = getUserService().get
+            Category category = getCategoryService().getCategoryByName(categoryName);
+            categoryVO = new CategoryVO(category);
         }
         return categoryVO;
     }
@@ -83,7 +83,7 @@ public class CategoryCache {
         return _transient;
     }
 
-    public CategoryService getUserService() {
+    public CategoryService getCategoryService() {
         if (categoryService == null) {
             categoryService = (CategoryService) ServiceLocatorFactory.getService(CategoryService.class);
         }

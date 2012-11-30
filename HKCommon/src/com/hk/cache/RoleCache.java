@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hk.cache.vo.RoleVO;
 import com.hk.constants.core.EnumRole;
+import com.hk.domain.user.Role;
 import com.hk.pact.service.RoleService;
 import com.hk.service.ServiceLocatorFactory;
 
@@ -47,7 +48,8 @@ public class RoleCache {
          * if role is not in cache try and attempt to find from db
          */
         if (roleVO == null) {
-            // User user = getUserService().get
+            Role role = getRoleService().getRoleByName(roleName);
+            roleVO = new RoleVO(role);
         }
         return roleVO;
     }

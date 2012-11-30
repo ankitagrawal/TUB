@@ -65,7 +65,8 @@ public class UserCache {
          * if user is not in cache try and attempt to find from db
          */
         if (userVO == null) {
-            // User user = getUserService().get
+             User user = getUserService().getUserById(userId);
+             userVO = new UserVO(user);
         }
 
         return userVO;
@@ -80,7 +81,13 @@ public class UserCache {
          * if(userVO == null){ //User user = getUserService().get }
          */
 
-        return loginToUserCache.get(login);
+        UserVO userVO = loginToUserCache.get(login);
+        if(userVO == null){
+            User user = getUserService().findByLogin(login);
+            userVO = new UserVO(user);
+            
+        }
+        return userVO;
     }
 
     public User getAdminUser() {
