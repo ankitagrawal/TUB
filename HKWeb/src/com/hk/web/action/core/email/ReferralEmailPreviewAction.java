@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.cache.UserCache;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.user.User;
@@ -33,8 +32,8 @@ public class ReferralEmailPreviewAction extends BaseAction {
 
     @SuppressWarnings("unchecked")
     public Resolution pre() {
-        //User user = getUserService().getUserById(getPrincipal().getId());
-        User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
+        User user = getUserService().getUserById(getPrincipal().getId());
+        // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         Coupon coupon = referrerProgramManager.getOrCreateRefferrerCoupon(user);
 
         String signupLink = linkManager.getReferralSignupLink(user);

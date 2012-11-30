@@ -14,7 +14,6 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.cache.RoleCache;
-import com.hk.cache.UserCache;
 import com.hk.cache.vo.RoleVO;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
@@ -347,8 +346,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<User> getHKDeliveryAgentList() {
-        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
-        // User loggedOnUser = getUserService().getLoggedInUser();
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
         Hub currentHub = hubService.getHubForUser(loggedOnUser);
         if (currentHub != null) {
             return hubService.getAgentsForHub(currentHub);

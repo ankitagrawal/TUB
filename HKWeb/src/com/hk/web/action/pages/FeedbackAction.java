@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.cache.UserCache;
 import com.hk.domain.feedback.Feedback;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
@@ -46,8 +45,8 @@ public class FeedbackAction extends BaseAction {
             // addRedirectAlertMessage(new SimpleMessage("Thanks for your feedback, your feedback has been captured."));
         } else {
             if (getPrincipal() != null) {
-                // user = getUserService().getUserById(getPrincipal().getId());
-                user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
+                user = getUserService().getUserById(getPrincipal().getId());
+                // user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
                 getFeedbackService().createFeedbackForUser(user, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
                 return new ForwardResolution("/pages/static/feedbackCapture.jsp");
                 // addRedirectAlertMessage(new SimpleMessage("Thanks for your feedback, your feedback has been

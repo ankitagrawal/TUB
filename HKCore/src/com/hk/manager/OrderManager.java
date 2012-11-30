@@ -367,7 +367,8 @@ public class OrderManager {
                 getOrderLoggingService().logOrderActivity(order, order.getUser(),
                         getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
             } else if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.ON_DELIVERY.getId())) {
-                User adminUser = UserCache.getInstance().getAdminUser();
+                //User adminUser = UserCache.getInstance().getAdminUser();
+                User adminUser = getUserService().getAdminUser();
                 getOrderLoggingService().logOrderActivity(order, adminUser,
                         getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), "Auto confirmation as valid user based on history.");
             }

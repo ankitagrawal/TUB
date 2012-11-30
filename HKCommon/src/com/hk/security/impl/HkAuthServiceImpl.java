@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.cache.HkApiUserCache;
-import com.hk.cache.UserCache;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
@@ -48,9 +47,9 @@ public class HkAuthServiceImpl implements HkAuthService {
 
             checkApiKeyExists(apiKey);
 
-            // User user = getUserService().findByLogin(userName);
+            User user = getUserService().findByLogin(userName);
 
-            User user = UserCache.getInstance().getUserByLogin(userName).getUser();
+            // User user = UserCache.getInstance().getUserByLogin(userName).getUser();
 
             if (user == null) {
                 throw new HkUserNotFoundException(userName);
@@ -130,9 +129,9 @@ public class HkAuthServiceImpl implements HkAuthService {
         if (validatePwd) {
 
             String userName = decodedTokenArr[0];
-            //User user = getUserService().findByLogin(userName);
-            
-            User user = UserCache.getInstance().getUserByLogin(userName).getUser();
+            User user = getUserService().findByLogin(userName);
+
+            // User user = UserCache.getInstance().getUserByLogin(userName).getUser();
 
             if (user == null) {
                 throw new HkUserNotFoundException(userName);
@@ -162,9 +161,9 @@ public class HkAuthServiceImpl implements HkAuthService {
         String[] decodedTokenArr = decodeAuthToken(authToken);
 
         String userName = decodedTokenArr[0];
-        //User user = getUserService().findByLogin(userName);
-        
-        User user = UserCache.getInstance().getUserByLogin(userName).getUser();
+        User user = getUserService().findByLogin(userName);
+
+        // User user = UserCache.getInstance().getUserByLogin(userName).getUser();
 
         if (user == null) {
             throw new HkUserNotFoundException(userName);

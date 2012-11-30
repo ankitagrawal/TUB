@@ -19,7 +19,7 @@ public interface UserService {
 
   public List<User> findByEmail(String email);
 
-  //public User getAdminUser();
+  public User getAdminUser();
 
   public User getLoggedInUser();
 

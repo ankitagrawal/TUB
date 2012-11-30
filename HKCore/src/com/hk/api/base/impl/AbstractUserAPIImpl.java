@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hk.api.UserAPI;
 import com.hk.api.dto.user.UserDTO;
-import com.hk.cache.UserCache;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
@@ -31,8 +30,8 @@ public abstract class AbstractUserAPIImpl implements UserAPI {
 
     @Override
     public UserDTO getUserDetails(String login) {
-        // User user = getUserService().findByLogin(login);
-        User user = UserCache.getInstance().getUserByLogin(login).getUser();
+        User user = getUserService().findByLogin(login);
+        // User user = UserCache.getInstance().getUserByLogin(login).getUser();
         return new UserDTO(user);
     }
 
@@ -45,8 +44,8 @@ public abstract class AbstractUserAPIImpl implements UserAPI {
     public boolean addRewardPointsForUser(String login, double rewardPoints, String comment, EnumRewardPointMode enumRewardPointMode) {
         boolean rewardPointsAdded = true;
         RewardPoint rewardPoint = null;
-        //User user = getUserService().findByLogin(login);
-        User user = UserCache.getInstance().getUserByLogin(login).getUser();
+        User user = getUserService().findByLogin(login);
+        // User user = UserCache.getInstance().getUserByLogin(login).getUser();
 
         if (user != null && enumRewardPointMode != null) {
 

@@ -17,8 +17,6 @@ import com.hk.admin.dto.ticket.TicketDto;
 import com.hk.admin.dto.ticket.TicketHistoryDto;
 import com.hk.admin.pact.dao.ticket.TicketDao;
 import com.hk.admin.pact.dao.ticket.TicketHistoryDao;
-import com.hk.cache.UserCache;
-import com.hk.cache.vo.UserVO;
 import com.hk.domain.Ticket;
 import com.hk.domain.TicketHistory;
 import com.hk.domain.TicketStatus;
@@ -33,13 +31,12 @@ public class TicketManager {
 
     @Autowired
     UserService      userService;
-    
+
     @Autowired
     TicketDao        ticketDao;
-    
+
     @Autowired
     TicketHistoryDao ticketHistoryDao;
-    
 
     public Ticket createTicket(TicketDto ticketDto) {
         Assert.assertNotNull(ticketDto.getOwner());
@@ -49,16 +46,15 @@ public class TicketManager {
         Assert.assertNotNull(ticketDto.getTicketType());
 
         if (StringUtils.isNotBlank(ticketDto.getAssociatedEmail())) {
-            UserVO userVO = UserCache.getInstance().getUserByLogin(ticketDto.getAssociatedEmail());
-            //User associatedUser = getUserService().findByLogin(ticketDto.getAssociatedEmail());
-            /*if (associatedUser != null) {
+            // UserVO userVO = UserCache.getInstance().getUserByLogin(ticketDto.getAssociatedEmail());
+            User associatedUser = getUserService().findByLogin(ticketDto.getAssociatedEmail());
+            if (associatedUser != null) {
                 ticketDto.setAssociatedUser(associatedUser);
                 ticketDto.setAssociatedEmail(null);
-            }*/
-            if (userVO != null) {
-                ticketDto.setAssociatedUser(userVO.getUser());
-                ticketDto.setAssociatedEmail(null);
             }
+            /*
+             * if (userVO != null) { ticketDto.setAssociatedUser(userVO.getUser()); ticketDto.setAssociatedEmail(null); }
+             */
         }
 
         if (ticketDto.getAssociatedUser() == null && ticketDto.getAssociatedOrder() != null) {
@@ -85,18 +81,18 @@ public class TicketManager {
         Ticket ticket = ticketHistoryDto.getTicket();
 
         if (StringUtils.isNotBlank(ticketHistoryDto.getAssociatedEmail())) {
-            UserVO userVO = UserCache.getInstance().getUserByLogin(ticketHistoryDto.getAssociatedEmail());
-            //User associatedUser = getUserService().findByLogin(ticketHistoryDto.getAssociatedEmail());
+            //UserVO userVO = UserCache.getInstance().getUserByLogin(ticketHistoryDto.getAssociatedEmail());
+             User associatedUser = getUserService().findByLogin(ticketHistoryDto.getAssociatedEmail());
+
             
-            /*ticketHistoryDto.setAssociatedUser(associatedUser);
-            if (associatedUser != null) {
-                ticketHistoryDto.setAssociatedEmail(null);
-            }*/
-            
-            if (userVO != null) {
-                ticketHistoryDto.setAssociatedUser(userVO.getUser());
-                ticketHistoryDto.setAssociatedEmail(userVO.getEmail());
-            }
+              ticketHistoryDto.setAssociatedUser(associatedUser); if (associatedUser != null) {
+              ticketHistoryDto.setAssociatedEmail(null); }
+             
+
+            /*
+             * if (userVO != null) { ticketHistoryDto.setAssociatedUser(userVO.getUser());
+             * ticketHistoryDto.setAssociatedEmail(userVO.getEmail()); }
+             */
         } else {
             ticketHistoryDto.setAssociatedUser(null);
         }

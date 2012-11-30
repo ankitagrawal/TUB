@@ -105,7 +105,7 @@ public class CustomerScoreAction extends BaseAction {
                 // iterating till the last column
                 while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
                     // user = getUserService().getUserById(new Long(curHkRow.getColumnValue(i)));
-                    user = UserCache.getInstance().getUserById(new Long(curHkRow.getColumnValue(i))).getUser();
+                    user = getUserService().getUserById(new Long(curHkRow.getColumnValue(i)));
                     i++;
                     // iteratiing for 9 categories
                     while (i < 10) {
@@ -188,7 +188,7 @@ public class CustomerScoreAction extends BaseAction {
 
                 int i = 0;
                 while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
-                    User user = UserCache.getInstance().getUserById(new Long(curHkRow.getColumnValue(i))).getUser();
+                    User user = getUserService().getUserById(new Long(curHkRow.getColumnValue(i)));
                     karmaProfile = getKarmaProfileService().findByUser(user);
                     if (karmaProfile == null) {
                         karmaProfile = new KarmaProfile();

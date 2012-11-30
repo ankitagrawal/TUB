@@ -15,7 +15,6 @@ import com.hk.admin.pact.task.TaskService;
 import com.hk.admin.util.ReconciliationVoucherParser;
 import com.hk.admin.util.SkuXslParser;
 import com.hk.admin.util.XslParser;
-import com.hk.cache.UserCache;
 import com.hk.constants.core.Keys;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
@@ -127,10 +126,10 @@ public class DBMasterServiceImpl implements TaskService {
                             if (skuFiles.endsWith(".xls") || skuFiles.endsWith(".XLS")) {
                                 try {
                                     Set<Sku> skuSet = skuXslParser.readSKUCatalog(listOfSkuExcels[i]); // doesnt insert
-                                                                                                        // sku which
-                                                                                                        // already
-                                                                                                        // exists in DB
-                                                                                                        // : fail excel
+                                    // sku which
+                                    // already
+                                    // exists in DB
+                                    // : fail excel
                                     getSkuServiceImpl().insertSKUs(skuSet);
                                 } catch (Exception e) {
                                     logger.error("Exception while reading " + skuFiles + " Sku excel sheet.", e);
@@ -164,7 +163,9 @@ public class DBMasterServiceImpl implements TaskService {
 
                 /* Creating inventory via reconciliation voucher */
                 a = baseDao.findByQuery("select count(*) from ReconciliationVoucher");
-                User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+                // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+                User loggedOnUser = userService.getLoggedInUser();
+
                 if (a.get(0).intValue() == 0) {
                     for (int i = 0; i < listOfRVExcels.length; i++) {
                         String reconciliationVoucherFile = listOfRVExcels[i].getName();

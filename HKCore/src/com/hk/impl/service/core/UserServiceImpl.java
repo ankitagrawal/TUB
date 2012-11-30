@@ -50,9 +50,9 @@ public class UserServiceImpl implements UserService {
         return getUserDao().findByLogin(email);
     }
 
-    /*public User getAdminUser() {
+    public User getAdminUser() {
         return getUserDao().getUserById(ADMIN_USER_ID);
-    }*/
+    }
 
     public User getLoggedInUser() {
         User loggedOnUser = null;

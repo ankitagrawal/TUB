@@ -5,8 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.hk.domain.order.*;
-import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +12,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
-import com.hk.cache.UserCache;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.ReplacementOrder;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderLifeCycleActivity;
+import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.helper.OrderDateUtil;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -58,8 +61,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ReconciliationStatusDao    reconciliationStatusDao;
     @Autowired
     private LineItemDao                lineItemDao;
-	@Autowired
-	private ReplacementOrderDao        replacementOrderDao;
+    @Autowired
+    private ReplacementOrderDao        replacementOrderDao;
 
     private OrderService               orderService;
 
@@ -117,12 +120,11 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     public ShippingOrder setGatewayIdAndTargetDateOnShippingOrder(ShippingOrder shippingOrder) {
         String shippingOrderGatewayId = TokenUtils.generateShippingOrderGatewayOrderId(shippingOrder);
         shippingOrder.setGatewayOrderId(shippingOrderGatewayId);
-		if(shippingOrder instanceof ReplacementOrder){
-		  setTargetDispatchDelDatesOnSO(new Date(), shippingOrder);
-	    }
-		else{
+        if (shippingOrder instanceof ReplacementOrder) {
+            setTargetDispatchDelDatesOnSO(new Date(), shippingOrder);
+        } else {
             setTargetDispatchDelDatesOnSO(shippingOrder.getBaseOrder().getPayment().getPaymentDate(), shippingOrder);
-		}
+        }
         return shippingOrder;
     }
 
@@ -154,10 +156,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         logger.debug("Trying to autoescalate order#" + shippingOrder.getId());
         if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+                User adminUser = getUserService().getAdminUser();
                 Order order = shippingOrder.getBaseOrder();
                 if (order.isReferredOrder() && order.getPayment().getAmount() < 1000) {
                     String comments = "BO is a referred Order, Please do a manual approval";
-                    User adminUser = UserCache.getInstance().getAdminUser();
                     logShippingOrderActivity(shippingOrder, adminUser,
                             getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
                     return false;
@@ -165,7 +167,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
                     Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This
                     // is after including placed order qty
-                    User adminUser = UserCache.getInstance().getAdminUser();
+
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
@@ -179,7 +181,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         return false;
                     } else if (productVariant.getProduct().isDropShipping()) {
                         String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
-                        
+
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
                         return false;
@@ -202,9 +204,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             }
         } else {
             String comments = "Because payment status is auth pending";
-            User adminUser = UserCache.getInstance().getAdminUser();
-            logShippingOrderActivity(shippingOrder, adminUser,
-                    getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
+            User adminUser = getUserService().getAdminUser();
+            logShippingOrderActivity(shippingOrder, adminUser, getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue),
+                    comments);
             return false;
         }
 
@@ -215,11 +217,11 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         logger.debug("Trying to manually escalate order#" + shippingOrder.getId());
         if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+                User adminUser = getUserService().getAdminUser();
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
                     Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
                     // is after including placed order qty
-                    User adminUser = UserCache.getInstance().getAdminUser();
-                    
+
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
@@ -242,7 +244,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             }
         } else {
             String comments = "Because payment status is auth pending";
-            User adminUser = UserCache.getInstance().getAdminUser();
+            User adminUser = getUserService().getAdminUser();
             logShippingOrderActivity(shippingOrder, adminUser,
                     getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
             return false;
@@ -306,8 +308,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity) {
-        //User loggedOnUser = getUserService().getLoggedInUser();
-        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if (loggedOnUser == null) {
             loggedOnUser = shippingOrder.getBaseOrder().getUser();
         }
@@ -317,8 +319,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, String comments) {
-        //User loggedOnUser = getUserService().getLoggedInUser();
-        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if (loggedOnUser == null) {
             loggedOnUser = shippingOrder.getBaseOrder().getUser();
         }
@@ -337,16 +339,17 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         getShippingOrderDao().save(shippingOrderLifecycle);
     }
 
-	@Override
-	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder) {
-		if(getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()) != null
-				&& getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()).size() > 0){
-			return true;
-		};
-		return false;  //To change body of implemented methods use File | Settings | File Templates.
-	}
+    @Override
+    public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder) {
+        if (getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()) != null
+                && getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()).size() > 0) {
+            return true;
+        }
+        ;
+        return false; // To change body of implemented methods use File | Settings | File Templates.
+    }
 
-	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
+    public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
 
@@ -397,7 +400,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         this.shippingOrderStatusService = shippingOrderStatusService;
     }
 
-	public ReplacementOrderDao getReplacementOrderDao() {
-		return replacementOrderDao;
-	}
+    public ReplacementOrderDao getReplacementOrderDao() {
+        return replacementOrderDao;
+    }
 }

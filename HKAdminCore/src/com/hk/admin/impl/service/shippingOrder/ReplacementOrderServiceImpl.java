@@ -47,7 +47,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 
     public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason) {
         Set<LineItem> lineItemSet = new HashSet<LineItem>();
-        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        //User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = userService.getLoggedInUser();
         ReplacementOrder replacementOrder = ReplacementOrderHelper.getReplacementOrderFromShippingOrder(shippingOrder, shippingOrderStatusService, reconciliationStatusDao);
         for (LineItem lineItem : lineItems) {
             if (lineItem.getQty() != 0) {

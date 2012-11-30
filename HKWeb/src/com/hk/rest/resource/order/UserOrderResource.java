@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.hk.cache.UserCache;
 import com.hk.constants.core.Keys;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.order.Order;
@@ -66,8 +65,8 @@ public class UserOrderResource {
     String email, @PathParam("phone")
     long phone) {
         email = email.toLowerCase().trim();
-        // User user = userService.findByLogin(email);
-        User user = UserCache.getInstance().getUserByLogin(email).getUser();
+        User user = userService.findByLogin(email);
+        // User user = UserCache.getInstance().getUserByLogin(email).getUser();
         Response response = null;
         try {
             if (user == null) {

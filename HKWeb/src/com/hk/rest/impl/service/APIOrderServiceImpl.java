@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.cache.UserCache;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -165,7 +164,8 @@ public class APIOrderServiceImpl implements APIOrderService {
             /**
              * Order lifecycle activity logging - Order split to shipping orders
              */
-            User adminUser = UserCache.getInstance().getAdminUser();
+            // User adminUser = UserCache.getInstance().getAdminUser();
+            User adminUser = getUserService().getAdminUser();
             getOrderLoggingService().logOrderActivity(order, adminUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
             // auto escalate shipping orders if possible

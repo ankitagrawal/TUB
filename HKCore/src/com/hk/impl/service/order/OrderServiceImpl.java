@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.cache.CategoryCache;
-import com.hk.cache.UserCache;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -71,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ShippingOrderService       shippingOrderService;
-    
+
     @Autowired
     private BaseDao                    baseDao;
     @Autowired
@@ -94,8 +93,9 @@ public class OrderServiceImpl implements OrderService {
     private OrderStatusService         orderStatusService;
     @Autowired
     private RewardPointService         rewardPointService;
-    /*@Autowired
-    private CategoryService            categoryService;*/
+    /*
+     * @Autowired private CategoryService categoryService;
+     */
     @Autowired
     private OrderLoggingService        orderLoggingService;
     @Autowired
@@ -159,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void setTargetDispatchDelDatesOnBO(Order order) {
         Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
-        Date refDateForBO =  order.getPayment().getPaymentDate();
+        Date refDateForBO = order.getPayment().getPaymentDate();
         Date refDateForSO = null;
 
         if (order.getTargetDispatchDate() == null) {
@@ -169,7 +169,7 @@ public class OrderServiceImpl implements OrderService {
             refDateForSO = order.getPayment().getPaymentDate();
         }
 
-        if (order.getTargetDelDate() == null && order.getTargetDispatchDate() !=null) {
+        if (order.getTargetDelDate() == null && order.getTargetDispatchDate() != null) {
             Long diffInPromisedTimes = (dispatchDays[1] - dispatchDays[0]);
             int daysTakenForDelievery = Integer.valueOf(diffInPromisedTimes.toString());
             Date targetDelDate = HKDateUtil.addToDate(order.getTargetDispatchDate(), Calendar.DAY_OF_MONTH, daysTakenForDelievery);
@@ -183,7 +183,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         /**
-         * if target dispatch date was updated either on payment or on verification of payment, the change needs to reflect to SO.
+         * if target dispatch date was updated either on payment or on verification of payment, the change needs to
+         * reflect to SO.
          */
         if (refDateForSO != null) {
             for (ShippingOrder shippingOrder : order.getShippingOrders()) {
@@ -292,12 +293,12 @@ public class OrderServiceImpl implements OrderService {
         boolean shouldUpdate = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-	        if(!getShippingOrderService().shippingOrderHasReplacementOrder(shippingOrder)){
-				if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
-					shouldUpdate = false;
-					break;
-				}
-	        }
+            if (!getShippingOrderService().shippingOrderHasReplacementOrder(shippingOrder)) {
+                if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
+                    shouldUpdate = false;
+                    break;
+                }
+            }
         }
 
         if (shouldUpdate) {
@@ -328,9 +329,8 @@ public class OrderServiceImpl implements OrderService {
         // order = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Ready_For_Process,
         // EnumOrderStatus.ESCALTED, EnumOrderStatus.PARTIAL_ESCALTION);
 
-        
-        //User loggedOnUser = getUserService().getLoggedInUser();
-        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if (loggedOnUser == null) {
             loggedOnUser = order.getUser();
         }
@@ -413,7 +413,8 @@ public class OrderServiceImpl implements OrderService {
         Set<CartLineItem> serviceCartLineItems = serviceCartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();
 
         productCartLineItems.removeAll(serviceCartLineItems);
-        productCartLineItems.removeAll(groundShippedCartLineItemSet);    //i.e product cart lineItems without services and ground shipped product
+        productCartLineItems.removeAll(groundShippedCartLineItemSet); // i.e product cart lineItems without services
+                                                                        // and ground shipped product
 
         List<Set<CartLineItem>> listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
         if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
@@ -478,8 +479,8 @@ public class OrderServiceImpl implements OrderService {
 
     public ProductVariant getTopDealVariant(Order order) {
         Category personalCareCategory = CategoryCache.getInstance().getCategoryByName(CategoryConstants.PERSONAL_CARE).getCategory();
-        
-        //Category personalCareCategory = getCategoryService().getCategoryByName("personal-care");
+
+        // Category personalCareCategory = getCategoryService().getCategoryByName("personal-care");
         ProductVariant topOrderedVariant = null;
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 

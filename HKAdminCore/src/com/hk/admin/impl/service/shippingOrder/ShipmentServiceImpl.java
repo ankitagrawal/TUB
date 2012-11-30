@@ -65,7 +65,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         Order order = shippingOrder.getBaseOrder();
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
         if (pincode == null) {
-            User adminUser = UserCache.getInstance().getAdminUser();
+            //User adminUser = UserCache.getInstance().getAdminUser();
+            User adminUser = getUserService().getAdminUser();
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
                     CourierConstants.PINCODE_INVALID);
             return null;
@@ -81,7 +82,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         } else {
             shipmentType = CourierConstants.AIR_SHIPPING;
         }
-        User adminUser = UserCache.getInstance().getAdminUser();
+        //User adminUser = UserCache.getInstance().getAdminUser();
+        User adminUser = getUserService().getAdminUser();
 
         if (suggestedCourier == null) {
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),

@@ -19,7 +19,6 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.hk.cache.UserCache;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfigOption;
 import com.hk.domain.catalog.product.VariantConfigOptionParam;
@@ -90,8 +89,8 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
         ProductReferrer productReferrer = null;
 
         if (getPrincipal() != null) {
-            //user = getUserService().getUserById(getPrincipal().getId());
-            user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
+            user = getUserService().getUserById(getPrincipal().getId());
+            // user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
             if (user == null) {
                 user = userManager.createAndLoginAsGuestUser(null, null);
             }
@@ -110,7 +109,7 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
                 VariantConfigValues selectedConfigValue = getBaseDao().get(VariantConfigValues.class, dto.getValueId());
 
                 if (configOption != null && selectedConfigValue != null) {
-                    if(configOption.getAdditionalParam().equalsIgnoreCase(VariantConfigOptionParam.ENGRAVING.param())) {
+                    if (configOption.getAdditionalParam().equalsIgnoreCase(VariantConfigOptionParam.ENGRAVING.param())) {
                         configValue.setValue(getNameToBeEngraved());
                     } else {
                         configValue.setValue(selectedConfigValue.getValue());
@@ -132,8 +131,8 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
                 lineItemConfig.getCartLineItemConfigValues().add(configValue);
             }
             productVariant.setQty(new Long(1));
-            if(productReferrerId != null){
-              productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
+            if (productReferrerId != null) {
+                productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
             }
             isLineItemCreated = orderManager.createLineItems(productVariant, lineItemConfig, order, productReferrer);
             userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
@@ -213,19 +212,20 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
     }
 
     private void getConfigValuesFromJson(String jsonConfigValue) {
-        if(jsonConfigValue != null && !jsonConfigValue.equalsIgnoreCase("")) {
-            Type listType = new TypeToken<List<LineItemConfigValuesDTO>>() {}.getType();
+        if (jsonConfigValue != null && !jsonConfigValue.equalsIgnoreCase("")) {
+            Type listType = new TypeToken<List<LineItemConfigValuesDTO>>() {
+            }.getType();
             Object obj = new Gson().fromJson(jsonConfigValue, listType);
-            List<LineItemConfigValuesDTO> lineItemConfigValuesDTOs = (List<LineItemConfigValuesDTO>)obj;
+            List<LineItemConfigValuesDTO> lineItemConfigValuesDTOs = (List<LineItemConfigValuesDTO>) obj;
             setConfigValues(lineItemConfigValuesDTOs);
         }
     }
 
     public Long getProductReferrerId() {
-      return productReferrerId;
+        return productReferrerId;
     }
 
     public void setProductReferrerId(Long productReferrerId) {
-      this.productReferrerId = productReferrerId;
+        this.productReferrerId = productReferrerId;
     }
 }

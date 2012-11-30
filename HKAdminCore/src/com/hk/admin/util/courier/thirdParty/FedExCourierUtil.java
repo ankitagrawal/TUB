@@ -121,7 +121,8 @@ public class FedExCourierUtil {
         ProcessShipmentRequest request = buildRequest(shippingOrder, weightInKg); // Build a request object
 
         String noAwbMessage = FED_EX_AWB_NOT_GENERATED;
-        User adminUser = UserCache.getInstance().getAdminUser();
+        //User adminUser = UserCache.getInstance().getAdminUser();
+        User adminUser = userService.getAdminUser();
         //
         try {
             // Initialize the service

@@ -13,21 +13,21 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.SecurityUtils;
 
 import com.akube.framework.dao.Page;
-import com.hk.cache.UserCache;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.domain.user.User;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
 import com.shiro.PrincipalImpl;
 
 public class AnalyticsFilter implements Filter {
 
-    /* private UserService userService; */
+    private UserService  userService;
     private OrderService orderService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        /* userService = (UserService) ServiceLocatorFactory.getService(UserService.class); */
+        userService = (UserService) ServiceLocatorFactory.getService(UserService.class);
         orderService = (OrderService) ServiceLocatorFactory.getService(OrderService.class);
     }
 
@@ -69,8 +69,8 @@ public class AnalyticsFilter implements Filter {
     private User getPrincipalUser() {
         if (getPrincipal() == null)
             return null;
-        // return userService.getUserById(getPrincipal().getId());
-        return UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
+        return userService.getUserById(getPrincipal().getId());
+        // return UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
     }
 
 }

@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.cache.UserCache;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
@@ -90,7 +89,7 @@ public class CartAction extends BaseAction {
     @Autowired
     private OrderDao            orderDao;
     @Autowired
-    private CartFreebieService cartFreebieService;
+    private CartFreebieService  cartFreebieService;
 
     boolean                     verifyMessage = false;
 
@@ -100,8 +99,8 @@ public class CartAction extends BaseAction {
 
         User user = null;
         if (getPrincipal() != null) {
-            //user = getUserService().getUserById(getPrincipal().getId());
-            user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
+            user = getUserService().getUserById(getPrincipal().getId());
+            // user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
             if (user == null) {
                 user = userManager.createAndLoginAsGuestUser(null, null);
             }
@@ -184,8 +183,8 @@ public class CartAction extends BaseAction {
     public Resolution getCartItems() {
         User user = null;
         if (getPrincipal() != null) {
-            //user = getUserService().getUserById(getPrincipal().getId());
-            user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
+            user = getUserService().getUserById(getPrincipal().getId());
+            // user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         }
         if (user != null) {
             order = orderDao.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
@@ -293,7 +292,7 @@ public class CartAction extends BaseAction {
         this.subscriptions = subscriptions;
     }
 
-  public OrderDao getOrderDao() {
-    return orderDao;
-  }
+    public OrderDao getOrderDao() {
+        return orderDao;
+    }
 }

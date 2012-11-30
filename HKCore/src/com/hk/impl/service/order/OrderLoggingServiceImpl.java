@@ -30,8 +30,8 @@ public class OrderLoggingServiceImpl implements OrderLoggingService {
     }
 
     public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
-        //User loggedOnUser = getUserService().getLoggedInUser();
-        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
+        //User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if (loggedOnUser == null) {
             loggedOnUser = order.getUser();
         }
@@ -42,8 +42,8 @@ public class OrderLoggingServiceImpl implements OrderLoggingService {
 
     @Transactional
     public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
-        User adminUser = UserCache.getInstance().getAdminUser();
-        //User user = getUserService().getAdminUser();
+        //User adminUser = UserCache.getInstance().getAdminUser();
+        User adminUser = getUserService().getAdminUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLifecycleActivity(enumOrderLifecycleActivity);
         logOrderActivity(order, adminUser, orderLifecycleActivity, comments);
     }

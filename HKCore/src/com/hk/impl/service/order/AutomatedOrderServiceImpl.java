@@ -102,7 +102,8 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService {
         order.setCategories(categories);
 
         order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
-        User adminUser = UserCache.getInstance().getAdminUser();
+        //User adminUser = UserCache.getInstance().getAdminUser();
+        User adminUser = getUserService().getAdminUser();
         getOrderLoggingService().logOrderActivity(order, adminUser,
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
 
@@ -183,7 +184,8 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService {
             /**
              * Order lifecycle activity logging - Order split to shipping orders
              */
-            User adminUser = UserCache.getInstance().getAdminUser();
+            //User adminUser = UserCache.getInstance().getAdminUser();
+            User adminUser = getUserService().getAdminUser();
             orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
             // auto escalate shipping orders if possible

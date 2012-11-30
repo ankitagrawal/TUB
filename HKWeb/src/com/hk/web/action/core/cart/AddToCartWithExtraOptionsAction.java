@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.cache.UserCache;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.marketing.ProductReferrer;
 import com.hk.domain.order.CartLineItemExtraOption;
@@ -40,7 +39,7 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
     private static Logger                    logger = Logger.getLogger(AddToCartWithExtraOptionsAction.class);
 
     List<ProductLineItemWithExtraOptionsDto> productLineItemWithExtraOptionsDtos;
-    private Long productReferrerId;
+    private Long                             productReferrerId;
 
     @Autowired
     private UserService                      userService;
@@ -61,10 +60,10 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
     public Resolution addToCart() {
         // I need to pass product info
         User user = null;
-        ProductReferrer productReferrer = null; 
+        ProductReferrer productReferrer = null;
         if (getPrincipal() != null) {
-            //user = getUserService().getUserById(getPrincipal().getId());
-            user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
+            user = getUserService().getUserById(getPrincipal().getId());
+            // user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
             if (user == null) {
                 user = getUserManager().createAndLoginAsGuestUser(null, null);
             }
@@ -78,8 +77,8 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
                 ProductVariant productVariant = dto.getProductVariant();
                 List<CartLineItemExtraOption> extraOptions = dto.getExtraOptions();
                 if (selected) {
-                    if(productReferrerId != null){
-                      productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
+                    if (productReferrerId != null) {
+                        productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
                     }
                     getOrderManager().createLineItems(productVariant, extraOptions, order, productReferrer);
                     userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
@@ -144,18 +143,18 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
     }
 
     public Long getProductReferrerId() {
-      return productReferrerId;
+        return productReferrerId;
     }
 
     public void setProductReferrerId(Long productReferrerId) {
-      this.productReferrerId = productReferrerId;
+        this.productReferrerId = productReferrerId;
     }
 
     public BaseDao getBaseDao() {
-      return baseDao;
+        return baseDao;
     }
 
     public void setBaseDao(BaseDao baseDao) {
-      this.baseDao = baseDao;
+        this.baseDao = baseDao;
     }
 }

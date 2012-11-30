@@ -698,9 +698,9 @@ public class EmailManager {
         valuesMap.put("lineItem", lineItem);
         valuesMap.put("order", lineItem.getOrder());
         valuesMap.put("pricingDto", new PricingDto(order.getCartLineItems(), order.getAddress()));
-        // User adminUser = getUserService().getAdminUser();
+         User adminUser = getUserService().getAdminUser();
 
-        User adminUser = UserCache.getInstance().getAdminUser();
+        //User adminUser = UserCache.getInstance().getAdminUser();
 
         Manufacturer manufacturer = lineItem.getProductVariant().getProduct().getManufacturer();
         String comments = "Email Sent to " + manufacturer.getName() + " at " + manufacturer.getEmail();
