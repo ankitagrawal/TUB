@@ -17,7 +17,7 @@ public enum EnumGateway {
     TECHPROCESS(15L, "Techprocess", 0.021D),
     CITRUS(80L, "Citrus", 0.0215D),
     ICICI(100L, "Icici", 0.019D),
-    PAYPAL(95L, "Paypal", 0.039D),
+    PAYPAL(110L, "Paypal", 0.039D),
     EBS(90L, "Ebs", 0.02D),
     CCAVENUE_DUMMY(1L, "CCAvenue Dummy", 0.0D);
 
