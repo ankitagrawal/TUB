@@ -434,6 +434,11 @@ public class OrderManager {
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 	    if (trafficTracking != null) {
 		    trafficTracking.setOrderId(order.getId());
+		    if (order.getUser().getOrders().size() > 1) {
+			    trafficTracking.setFirstOrder(0L);
+		    }else{
+				trafficTracking.setFirstOrder(1L);			    
+		    }
 		    getBaseDao().save(trafficTracking);
 	    }
 	    
