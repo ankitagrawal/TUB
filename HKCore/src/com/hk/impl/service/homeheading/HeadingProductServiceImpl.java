@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.HeadingProduct;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,20 @@ public class HeadingProductServiceImpl implements HeadingProductService {
   @SuppressWarnings("unchecked")
   public List<HeadingProduct> getHeadingProductsByHeadingId(PrimaryCategoryHeading heading){
    return (List<HeadingProduct>)getBaseDao().findByNamedQueryAndNamedParam("getHeadingProductsByHeadingId", new String[]{"heading"}, new Object[]{heading}); 
+  }
+
+  public HeadingProduct getHeadingProductByHeadingAndProductId(PrimaryCategoryHeading heading, String productId){
+        return (HeadingProduct)getBaseDao().findUniqueByNamedQueryAndNamedParam("getHeadingProductByHeadingAndProductId", new String[]{"heading","productId"}, new Object[] {heading,productId});
+  }
+
+  @Transactional
+  public void delete(HeadingProduct headingProduct){
+    getBaseDao().delete(headingProduct);
+  }
+
+ @Transactional
+  public HeadingProduct save(HeadingProduct headingProduct){
+      return (HeadingProduct)getBaseDao().save(headingProduct);
   }
 
   public BaseDao getBaseDao() {

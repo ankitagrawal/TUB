@@ -344,18 +344,18 @@ public class ProductServiceImpl implements ProductService {
         return false;
     }
 
-    public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
-        PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
-        Collections.sort(primaryCategoryHeading.getProducts(), new ProductOrderRankingComparator());
-        List<Product> sortedProductsByOrder = new ArrayList<Product>();
-        for (Product product : primaryCategoryHeading.getProducts()) {
-            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
-            if (isProductValid(product)){
-                sortedProductsByOrder.add(product);
-            }
-        }
-        return sortedProductsByOrder;
-    }
+//    public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
+//        PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
+//        Collections.sort(primaryCategoryHeading.getProducts(), new ProductOrderRankingComparator());
+//        List<Product> sortedProductsByOrder = new ArrayList<Product>();
+//        for (Product product : primaryCategoryHeading.getProducts()) {
+//            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
+//            if (isProductValid(product)){
+//                sortedProductsByOrder.add(product);
+//            }
+//        }
+//        return sortedProductsByOrder;
+//    }
 
 	public Map<String, List<Long>> getGroupedFilters(List<Long> filters){
 		Map<String, List<Long>> filterMap = new HashMap<String, List<Long>>();
@@ -552,14 +552,14 @@ public class ProductServiceImpl implements ProductService {
         return solrProduct;
     }
 
-    public List<SolrProduct> getProductsSortedByOrderRanking(PrimaryCategoryHeading primaryCategoryHeading) {
-        List<Product> products = primaryCategoryHeading.getProductSortedByOrderRanking();
-        List<SolrProduct> solrProducts = new ArrayList<SolrProduct>();
-        for (Product product : products){
-            solrProducts.add(createSolrProduct(product));
-        }
-        return solrProducts;
-    }
+//    public List<SolrProduct> getProductsSortedByOrderRanking(PrimaryCategoryHeading primaryCategoryHeading) {
+//        List<Product> products = primaryCategoryHeading.getProductSortedByOrderRanking();
+//        List<SolrProduct> solrProducts = new ArrayList<SolrProduct>();
+//        for (Product product : products){
+//            solrProducts.add(createSolrProduct(product));
+//        }
+//        return solrProducts;
+//    }
 
     public List<Product> getSimilarProducts(Product product) {
         List<Product> inStockSimilarProducts = new ArrayList<Product>();

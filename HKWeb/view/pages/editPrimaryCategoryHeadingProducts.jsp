@@ -42,8 +42,9 @@
             </td>
 	          <td>${headingProducts.product.name}</td>
 	          <td>${headingProducts.product.outOfStock}</td>
-	          <td>${headingProducts.product.orderRanking}</td>
+	          <td>${headingProducts.rank}</td>
           </tr>
+            <s:hidden name="productId" value="${headingProducts.product.id}"/>
         </c:forEach>
         <s:hidden name="heading.id" value="${ha.heading.id}"/>
       </table>

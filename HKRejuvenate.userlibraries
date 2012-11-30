@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="commons">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-beanutils.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-pool-1.2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-collections-3.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-io-1.4.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-httpclient-3.0.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-dbcp-1.4.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-lang-2.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-fileupload-1.2.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-email-1.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-collections-3.2.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/commons/commons-codec-1.4.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/SFA-1.2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/dom4j-1.6.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jdom-1.0.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/jnet.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/jcert.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/jsse.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/cryptix32.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/citruspay-merchant-kit-1.0.jar" />
+  </library>
+  <library name="dependencies">
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/liquibase-2.0.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/javaee.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/metadata-extractor-2.5.0-RC1-src.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/groovy-all-1.5.6.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/junit-4.9b2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/jtidy-r8-20060801.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/modify-column-2.0.0.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/freemarker.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/bsh-2.0b1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/terracotta-hibernate-cache-1.0.0-SNAPSHOT.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/dbunit-2.4.5.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/dependencies/hibernate-tools.patched.jar" />
+  </library>
+  <library name="facebook">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/facebook/restfb-1.6.8.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/facebook/facebook-java-api-schema-3.0.2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/facebook/facebook-java-api-annotation-processor-3.0.2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/facebook/facebook-java-api-3.0.2.jar" />
+  </library>
+  <library name="hibernate">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/hibernate/hibernate-core-3.3.1.GA.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/hibernate/beanlib-hibernate-5.0.2beta.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/hibernate/hibernate-annotations-3.4.0.GA.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/hibernate/scannotation-1.0.3.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/hibernate/hibernate-commons-annotations-3.1.0.GA.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/hibernate/hibernate-validator-4.0.2.GA.jar" />
+  </library>
+  <library name="http">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/http/httpcore-4.0.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/http/httpmime-4.0.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/http/httpclient-4.0.jar" />
+  </library>
+  <library name="json">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/json/json_simple-1.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/json/json-lib-2.3.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/json/json-20070829.jar" />
+  </library>
+  <library name="logger">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/logger/slf4j-log4j12-1.5.10.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/logger/slf4j-api-1.5.10.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/logger/log4j-1.2.13.jar" />
+  </library>
+  <library name="rest">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/rest/resteasy-jaxrs-2.3.0.GA.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/rest/jackson-jaxrs-1.4.2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/rest/jackson-mapper-lgpl-1.4.2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/rest/jaxrs-api-2.3.0.GA.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/rest/resteasy-guice-2.3.0.GA.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/rest/jackson-core-lgpl-1.4.2.jar" />
+  </library>
+  <library name="solr">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/solr/solr-lucene-analyzers-1.3.0.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/solr/lucene-spellchecker-2.4.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/solr/lucene-core-2.4.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/solr/apache-solr-solrj-3.3.0.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/solr/lucene-analyzers-2.4.1.jar" />
+  </library>
+  <library name="spring">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.jdbc-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/jta-1.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.jms-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.instrument.tomcat-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.expression-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.web.servlet-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.aop-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.transaction-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.aspects-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.asm-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.web-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.instrument-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.context-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.orm-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.context.support-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.core-3.0.2.RELEASE.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/aopalliance-1.0.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/spring/org.springframework.beans-3.0.2.RELEASE.jar" />
+  </library>
+  <library name="stripes">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/stripes/stripes-1.5.3-patched.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/stripes/stripes-reload.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/stripes/stripesstuff-0.1.jar" />
+  </library>
+  <library name="thirdParty">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jcommon-1.0.16.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/dom4j-1.6.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/lambdaj-2.0-with-dependencies.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/itextpdf-5.2.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/metadata-extractor-2.5.0-RC1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/testng-5.8-jdk15.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/antisamy-bin.1.3.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/gson-1.4.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jai_codec.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jfreechart-1.0.13.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/shiro-all-1.0-incubating-SNAPSHOT.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/TechProUtil.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/apache-mime4j-0.6.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jstl.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/mlibwrapper_jai.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/cglib-nodep-2.2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/joda-time-1.6.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/mail.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jets3t-0.8.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/standard.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/antlr-2.7.6.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/nekohtml.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/tagsoup-1.2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jaxen-1.1.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/quartz-all-1.6.6.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/beanlib-5.0.2beta.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/clibwrapper_jiio.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/activation.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/core-renderer-R8pre2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/java-xmlbuilder-0.4.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/sanselan-0.97-incubator.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/javassist-3.9.0.GA.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jai_core.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/backport-util-concurrent.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jcl-over-slf4j-1.5.10.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/cos.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/openid4java-0.9.5.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jai_imageio.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jcip-annotations-1.0.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/beanlib-joda-5.0.2beta.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/google-collect-1.0-rc2.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/recaptcha4j-0.0.7.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/poi-3.6-20091214.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/mediautil-1.0.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/thirdParty/jsoup-1.6.1.jar" />
+  </library>
+  <library name="xml">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/xml/xml-apis-ext.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/xml/xercesImpl-2.9.1.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/xml/xml-apis.jar" />
+  </library>
+  <library name="itext">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/itext/itext-1.4.8.jar" />
+  </library>
+  <library name="citrus">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/jnet.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/cryptix32.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/jsse.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/jcert.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/citruspay-merchant-kit-1.0.jar" />
+    <archive path="G:/HKRejuvenate/HKCommon/lib/citrus/SFA-1.2.jar" />
+  </library>
+  <library name="freemarker">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/freemarker/freemarker.jar" />
+  </library>
+  <library name="intellij">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/intellij/intellij-annotations.jar" />
+  </library>
+  <library name="mysql">
+    <archive path="G:/HKRejuvenate/HKCommon/lib/mysql/mysql-connector-java-5.1.10-bin.jar" />
+  </library>
+</eclipse-userlibraries>
+

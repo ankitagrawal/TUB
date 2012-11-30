@@ -31,6 +31,9 @@
               '  <td>' +                                            
               '    <input type="text" name="products[' + nextIndex + ']" />' +
               '  </td>' +
+              '<td>' +
+              '<input type="text" class = "rank" name="ranks['+ nextIndex + ']" />' +
+              '</td>' +
               '</tr>';
 
           $('#featureTable').append(newRowHtml);
@@ -49,11 +52,14 @@
     <h2>${ha.heading.name}</h2>
     <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
-        <c:forEach var="product" items="${ha.heading.products}" varStatus="ctr">
+        <c:forEach var="headingProduct" items="${ha.headingProducts}" varStatus="ctr">
           <tr count="${ctr.index}" class="${ctr.last ? 'lastRow':''}">
             <td>
-                 <label>${product.id}</label>
+                 <label>${headingProduct.product.id}</label>
             </td>
+              <td>
+                  <label>${headingProduct.rank}</label>
+              </td>
           </tr>
         </c:forEach>
         <s:hidden name="heading.id" value="${ha.heading.id}"/>
@@ -65,7 +71,7 @@
       </div>
       <br/><br/>
 
-      <s:submit name="savePrimaryCategoryHeadingProducts" value="ADD"/>
+      <s:submit name="savePrimaryCategoryHeadingProducts" id="add" value="ADD"/>
 
       <c:choose>
         <c:when test="${ha.heading.category.name != 'home'}">
@@ -84,4 +90,29 @@
       </c:choose>
 
     </s:form>
-  </s:layout-component></s:layout-render>
+      <script type="text/javascript">
+          $(document).ready(function(){
+             $("#add").click(function(){
+                 var bool = true;
+                $(".rank").each(function(){
+                    var data = $(this).val();
+                    data = data.trim(data);
+                    if(data.length > 10){
+                        alert("Please Enter the length of rank less than 11");
+                        bool = false;
+                        return false;
+                    }
+                    else if(data<=0){
+                        alert("Rank must be grater than 0");
+                        bool = false;
+                        return false;
+                    }
+                });
+                 if(!bool){
+                     return false;
+                 }
+             });
+          });
+      </script>
+  </s:layout-component>
+</s:layout-render>

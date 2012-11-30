@@ -16,4 +16,10 @@ import java.util.List;
 public interface HeadingProductService {
 
   public List<HeadingProduct> getHeadingProductsByHeadingId(PrimaryCategoryHeading heading);
+
+  public HeadingProduct getHeadingProductByHeadingAndProductId(PrimaryCategoryHeading heading, String productId);
+  
+  public void delete(HeadingProduct headingProduct);
+
+  public HeadingProduct save(HeadingProduct headingProduct);
 }

@@ -13,9 +13,10 @@ import com.hk.domain.content.PrimaryCategoryHeading;
  * To change this template use File | Settings | File Templates.
  */
 
-@NamedQueries(
-    @NamedQuery(name = "getHeadingProductsByHeadingId", query = "select hp from HeadingProduct hp where heading = :heading")
-)
+@NamedQueries({
+    @NamedQuery(name = "getHeadingProductsByHeadingId", query = "select hp from HeadingProduct hp where hp.heading = :heading"),
+    @NamedQuery(name = "getHeadingProductByHeadingAndProductId", query = "select hp from HeadingProduct hp where hp.heading = :heading and hp.product.id = :productId")
+})
 
 @Entity
 @Table(name = "heading_product")
