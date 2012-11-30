@@ -160,7 +160,7 @@ public abstract class BasePaymentGatewayWrapper<T extends BasePaymentGatewayWrap
             paymentMethod = tokenizer.nextToken();
         }
 
-public void decodewithBillingAddress(String encodedString) {
+    public void decodewithBillingAddress(String encodedString) {
             try {
                 encodedString = URLDecoder.decode(encodedString, "UTF-8");
             } catch (UnsupportedEncodingException e) {

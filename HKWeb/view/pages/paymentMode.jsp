@@ -433,6 +433,10 @@
 
         $('.makePayment').click(function disablePaymentButton() {
             $(this).css("display", "none");
+            if($('#paypal').is(':checked')){
+              location.href = '${url}';
+              return false;
+            }
         });
 
         $('.phoneValidation').click(function() {
@@ -447,12 +451,12 @@
             }
         });
 
-        $('#paypal').click(function() {
-            if ($(this).is(':checked')) {
-                 $('.makePayment').hide();
-                location.href = '${url}';
-            }
-        });
+        <%--$('#paypal').click(function() {--%>
+            <%--if ($(this).is(':checked')) {--%>
+                 <%--$('.makePayment').hide();--%>
+                <%--location.href = '${url}';--%>
+            <%--}--%>
+        <%--});--%>
 
     });
 </script>
