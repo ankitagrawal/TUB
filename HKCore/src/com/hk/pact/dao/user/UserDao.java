@@ -24,7 +24,7 @@ public interface UserDao extends BaseDao {
 
   public User findByLogin(String login);
 
-  //public User findByLoginAndStoreId(String login, Long storeId);
+  public User findByLoginAndStoreId(String login, Long storeId);
 
   public User findByEmailAndPassword(String email, String password);
 

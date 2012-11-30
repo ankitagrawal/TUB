@@ -39,10 +39,10 @@ public class CategoryServiceImpl implements CategoryService {
 		return getCategoryDao().getCategoriesByBrand(brand, topLevelCategory);
 	}*/
 
-	/*@Override
+	@Override
 	public Set<Category> getCategoriesFromCategoryNames(String categoryNames) {
 		return getCategoryDao().getCategoriesFromCategoryNames(categoryNames);
-	}*/
+	}
 
 	@Override
 	public Category getCategoryByName(String name) {

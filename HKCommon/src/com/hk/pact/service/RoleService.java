@@ -7,12 +7,12 @@ import com.hk.domain.user.Role;
 
 public interface RoleService {
 
-   // public Role getRoleByName(EnumRole enumRole);
+    public Role getRoleByName(EnumRole enumRole);
 
-    //public Role getRoleByName(String roleName);
+    public Role getRoleByName(String roleName);
 
-    public List<Role> listAllExceptAdmins();
+   /* public List<Role> listAllExceptAdmins();
 
-    public List<Role> listAllBasicRoles();
+    public List<Role> listAllBasicRoles();*/
 
 }
