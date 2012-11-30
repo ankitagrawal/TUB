@@ -25,6 +25,12 @@
     
     <link href="<hk:vhostCss/>/css/960.24.css" rel="stylesheet" type="text/css"/>
     <link href="<hk:vhostCss/>/css/new.dev.css" rel="stylesheet" type="text/css"/>
+    <!--[if IE 8]>
+        <link href="<hk:vhostCss/>/css/ie8.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
+    <!--[if IE 7]>
+        <link href="<hk:vhostCss/>/css/ie7.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.bxSlider.min.js"></script>
