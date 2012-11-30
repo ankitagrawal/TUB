@@ -36,5 +36,4 @@ public interface AddressDao extends BaseDao {
 
     public Country getCountry(Long countryId);
 
-    public BillingAddress getBillingAddressForOrder (Order order , List <BillingAddress> billingAddresses);
 }

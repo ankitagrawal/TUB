@@ -69,18 +69,6 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
     @Autowired
     AddressDao addressDao;
 
-      @Override
-       public Resolution proceed() {
-
-        String encodedData = getContext().getRequest().getParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM);
-        BasePaymentGatewayWrapper.TransactionData data = BasePaymentGatewayWrapper.decodeTransactionDataParamWithBillingAddress(encodedData);
-        PaymentGatewayWrapper paymentGatewayWrapper = getPaymentGatewayWrapperFromTransactionData(data);
-        getContext().getRequest().setAttribute("PaymentGatewayWrapper", paymentGatewayWrapper);
-
-        return new ForwardResolution("/gatewayProcess.jsp");
-
-
-    }
 
     protected PayPalPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
 //      PayPalPaymentGatewayWrapper payPalPaymentGatewayWrapper = new PayPalPaymentGatewayWrapper(AppConstants.appBasePath);
@@ -89,7 +77,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         User user = order.getUser();
         BillingAddress address = null;
         Country country = null;
-           address = addressDao.getBillingAddressById(data.getBillingAddressId());
+        address = addressDao.getBillingAddressById(data.getBillingAddressId());
 //        List<BillingAddress> billingAddresses = addressDao.getVisibleBillingAddresses(user);
 //        address = addressDao.getBillingAddressForOrder(order ,billingAddresses );
 

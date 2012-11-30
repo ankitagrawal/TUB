@@ -3,7 +3,6 @@ package com.hk.web.action.core.payment;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
-import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
@@ -24,13 +23,16 @@ import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.util.CryptoUtil;
 import net.sourceforge.stripes.validation.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,6 +44,9 @@ import java.util.*;
 @Component
 @Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 public class RegisterOnlinePaymentAction extends BaseAction {
+
+    private Gateway gateway;
+    private static Logger logger = LoggerFactory.getLogger(RegisterOnlinePaymentAction.class);
 
     private PaymentMode paymentMode;
 
@@ -83,49 +88,43 @@ public class RegisterOnlinePaymentAction extends BaseAction {
     public Resolution prepay() {
         if (!order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
 
-            GatewayIssuerMapping preferredGatewayIssuerMapping = null;
-            Gateway preferredGateway = null;
-
+            String issuerCode = null;
             if (issuer != null) {
                 List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
                 Long total = 0L;
 
-                Map<GatewayIssuerMapping, Long> gatewayIssuerMappingPriorityMap = new HashMap<GatewayIssuerMapping, Long>();
                 for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-                    gatewayIssuerMappingPriorityMap.put(gatewayIssuerMapping, gatewayIssuerMapping.getPriority());
                     total += gatewayIssuerMapping.getPriority();
                 }
 
-                MapValueComparator mapValueComparator = new MapValueComparator(gatewayIssuerMappingPriorityMap);
-                TreeMap<GatewayIssuerMapping, Long> sortedGatewayPriorityMap = new TreeMap(mapValueComparator);
-                sortedGatewayPriorityMap.putAll(gatewayIssuerMappingPriorityMap);
-
                 Integer random = (new Random()).nextInt(total.intValue());
                 long oldValue = 0L;
+                long priority = 0L;
+                long gatewayRangeValue = 0L;
 
-                for (Map.Entry<GatewayIssuerMapping, Long> gatewayLongEntry : sortedGatewayPriorityMap.entrySet()) {
-                    long gatewayRangeValue = oldValue + gatewayLongEntry.getValue();
-                    if (random <= gatewayRangeValue) {
-                        preferredGatewayIssuerMapping = gatewayLongEntry.getKey();
-                        preferredGateway = preferredGatewayIssuerMapping.getGateway();
+                for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
+                    priority = gatewayIssuerMapping.getPriority();
+                    gatewayRangeValue = oldValue + priority;
+                    if (random < gatewayRangeValue) {
+                        gateway = gatewayIssuerMapping.getGateway();
+                        issuerCode = gatewayIssuerMapping.getIssuerCode();
                         break;
                     }
-                    oldValue = gatewayLongEntry.getValue();
+                    oldValue += priority;
                 }
             }
 
             RedirectResolution redirectResolution;
-
             paymentMode = EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode();
 
             // first create a payment row, this will also contain the payment checksum
-            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), preferredGateway, issuer);
+            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer);
 
-            if (preferredGatewayIssuerMapping != null) {
-                Class actionClass = PaymentModeActionFactory.getActionClassForPayment(preferredGateway, issuer.getIssuerType());
+            if (gateway != null) {
+                Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());
                 redirectResolution = new RedirectResolution(actionClass, "proceed");
                 return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), preferredGatewayIssuerMapping.getIssuerCode(), null));
+                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), issuerCode, null));
             }
         }
         addRedirectAlertMessage(new SimpleMessage("Some Error Occurred, Unable to process your request"));

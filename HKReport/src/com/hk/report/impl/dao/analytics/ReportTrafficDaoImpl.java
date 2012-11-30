@@ -21,7 +21,8 @@ public class ReportTrafficDaoImpl extends BaseDaoImpl implements ReportTrafficDa
 	@Override
 	public List<TrafficSrcPerformanceDto> getTrafficSrcPerformanceDtoList() {
 
-		String hqlQuery = "select tt.trafficSrc as trafficSrc, tt.trafficSrcPaid as trafficSrcPaid, count(tt.id) as trafficCount, count(distinct tt.orderId) as orderCount " +
+		String hqlQuery = "select tt.trafficSrc as trafficSrc, tt.trafficSrcPaid as trafficSrcPaid, count(tt.id) as trafficCount, " +
+				"count(distinct tt.orderId) as orderCount, sum(tt.firstOrder) as firstOrderCount " +
 				"from TrafficTracking tt where date(tt.createDt) = :currentDate " +
 				"group by date(tt.createDt), tt.trafficSrc,  tt.trafficSrcPaid order by tt.trafficSrc,  tt.trafficSrcPaid asc";
 

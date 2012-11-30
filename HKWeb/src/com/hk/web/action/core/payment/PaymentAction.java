@@ -40,6 +40,7 @@ public class PaymentAction extends BaseAction {
 
     private PaymentMode paymentMode;
     private Gateway gateway;
+    private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
 
     @Validate(required = true)
     Issuer issuer;
@@ -56,7 +57,6 @@ public class PaymentAction extends BaseAction {
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
 
-    private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
 
 
     /*

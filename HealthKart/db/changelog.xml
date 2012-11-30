@@ -10283,4 +10283,9 @@
     <changeSet author="Pratham (generated)" id="1354263430748-6">
         <addNotNullConstraint columnDataType="INT" columnName="priority" tableName="issuer"/>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1354124147954-1">
+        <addColumn tableName="traffic_tracking">
+            <column name="first_order" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -13,6 +13,7 @@ public class TrafficSrcPerformanceDto {
 	private Boolean trafficSrcPaid;
 	private Long trafficCount;
 	private Long orderCount;
+	private Long firstOrderCount;
 
 	public String getTrafficSrc() {
 		return trafficSrc;
@@ -44,5 +45,13 @@ public class TrafficSrcPerformanceDto {
 
 	public void setOrderCount(Long orderCount) {
 		this.orderCount = orderCount;
+	}
+
+	public Long getFirstOrderCount() {
+		return firstOrderCount;
+	}
+
+	public void setFirstOrderCount(Long firstOrderCount) {
+		this.firstOrderCount = firstOrderCount;
 	}
 }
