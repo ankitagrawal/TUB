@@ -29,15 +29,15 @@ public class CategoryServiceImpl implements CategoryService {
 		return (Category) getCategoryDao().save(category);
 	}
 
-	/*@Override
+	@Override
 	public List<String> getBrandsByCategory(List<String> categoryNames) {
 		return getCategoryDao().getBrandsByCategory(categoryNames);
-	}*/
+	}
 
-	/*@Override
+	@Override
 	public List<Category> getCategoriesByBrand(String brand, String topLevelCategory) {
 		return getCategoryDao().getCategoriesByBrand(brand, topLevelCategory);
-	}*/
+	}
 
 	@Override
 	public Set<Category> getCategoriesFromCategoryNames(String categoryNames) {

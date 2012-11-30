@@ -12,9 +12,9 @@ public interface CategoryService {
 
     public Category save(Category category);
 
-    // public List<String> getBrandsByCategory(List<String> categoryNames);
+     public List<String> getBrandsByCategory(List<String> categoryNames);
 
-    // public List<Category> getCategoriesByBrand(String brand, String topLevelCategory);
+     public List<Category> getCategoriesByBrand(String brand, String topLevelCategory);
 
      public Set<Category> getCategoriesFromCategoryNames(String categoryNames);
 

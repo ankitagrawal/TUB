@@ -13,15 +13,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.CategoryCache;
 import com.hk.cache.HkApiUserCache;
+import com.hk.cache.RoleCache;
+import com.hk.cache.UserCache;
+import com.hk.cache.vo.CategoryVO;
+import com.hk.cache.vo.RoleVO;
+import com.hk.cache.vo.UserVO;
 import com.hk.domain.api.HkApiUser;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.user.Role;
+import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.AppConstants;
 
 public class HKStartupListener implements ServletContextListener {
 
-    @SuppressWarnings("unused")
     private static Logger logger = LoggerFactory.getLogger(HKStartupListener.class);
 
     public static File    hibernateCfgFile;
@@ -84,7 +92,10 @@ public class HKStartupListener implements ServletContextListener {
         // if (startBackgroundTaskManager) {
         if (true) {
             System.out.println("------------- Starting Batch Process Manager ---------------------");
+
+            logger.info("START POPULATING HK API USER CACHE");
             populateHKApiUserCache();
+            logger.info("END POPULATING HK API USER CACHE");
             /*
              * batchProcessManager = ServiceLocatorFactory.getService(BatchProcessManager.class);
              * batchProcessManager.start();
@@ -105,6 +116,45 @@ public class HKStartupListener implements ServletContextListener {
             hkApiUserCache.addHkApiUser(apiUser);
         }
         hkApiUserCache.freeze();
+
+    }
+
+    private void populaterRoleCache() {
+        RoleCache.getInstance().reset();
+        RoleCache roleCache = RoleCache.getInstance().getTransientCache();
+
+        List<Role> allRoles = getBaseDao().getAll(Role.class);
+
+        for (Role role : allRoles) {
+            roleCache.addRole(new RoleVO(role));
+        }
+        roleCache.freeze();
+
+    }
+
+    private void populateUserCache() {
+        UserCache.getInstance().reset();
+        UserCache userCache = UserCache.getInstance().getTransientCache();
+
+        List<User> users = getBaseDao().findByQuery("select u from User u where u.name not = 'Guest'");
+
+        for (User user : users) {
+            userCache.addUser(new UserVO(user));
+        }
+        userCache.freeze();
+
+    }
+
+    private void populateCategoryCache() {
+        CategoryCache.getInstance().reset();
+        CategoryCache categoryCache = CategoryCache.getInstance().getTransientCache();
+
+        List<Category> allCategories = getBaseDao().getAll(Category.class);
+
+        for (Category category : allCategories) {
+            categoryCache.addCategory(new CategoryVO(category));
+        }
+        categoryCache.freeze();
 
     }
 

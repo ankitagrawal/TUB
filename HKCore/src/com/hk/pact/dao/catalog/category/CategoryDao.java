@@ -10,11 +10,11 @@ import com.hk.pact.dao.BaseDao;
 
 public interface CategoryDao extends BaseDao {
 
-    // public List<String> getBrandsByCategory(List<String> categoryNames);
+     public List<String> getBrandsByCategory(List<String> categoryNames);
 
-    // public List<String> getBrandsByPrimaryCategory(Category pCategory);
+     public List<String> getBrandsByPrimaryCategory(Category pCategory);
 
-    // public List<Category> getCategoriesByBrand(String brand, String topLevelCategory);
+     public List<Category> getCategoriesByBrand(String brand, String topLevelCategory);
 
     public Set<Category> getCategoriesFromCategoryNames(String categoryNames);
 

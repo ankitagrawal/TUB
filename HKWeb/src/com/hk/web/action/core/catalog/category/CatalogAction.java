@@ -326,9 +326,9 @@ public class CatalogAction extends BasePaginatedAction {
         menuNode = menuHelper.getMenuNode(urlFragment);
         topCategoryUrlSlug = menuHelper.getTopCategorySlug(menuNode);
         allCategories = menuHelper.getAllCategoriesString(menuNode);
-        // brandList = categoryDao.getBrandsByCategory(menuHelper.getAllCategoriesList(menuNode));
+         brandList = categoryDao.getBrandsByCategory(menuHelper.getAllCategoriesList(menuNode));
 
-        brandList = CategoryCache.getInstance().getBrandsByCategory(menuHelper.getAllCategoriesList(menuNode));
+        //brandList = CategoryCache.getInstance().getBrandsByCategory(menuHelper.getAllCategoriesList(menuNode));
 
         if (StringUtils.isNotBlank(brand)) {
             String keyForBrandInCat = urlFragment.concat(SeoManager.KEY_BRAND_IN_CAT).concat(brand);

@@ -275,10 +275,10 @@ public class Functions {
 
     public static List<String> brandsInCategory(Object o) {
         Category primaryCategory = (Category) o;
-        //CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-        //return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
+        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+        return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
         
-        return CategoryCache.getInstance().getBrandsInCategory(primaryCategory.getName());
+        //return CategoryCache.getInstance().getBrandsInCategory(primaryCategory.getName());
     }
 
     @SuppressWarnings("deprecation")

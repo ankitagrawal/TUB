@@ -1,8 +1,6 @@
 package com.hk.cache.vo;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.hk.domain.catalog.category.Category;
 
@@ -12,16 +10,16 @@ import com.hk.domain.catalog.category.Category;
 @SuppressWarnings("serial")
 public class CategoryVO implements Serializable {
 
-    private String      name;
+    private String name;
 
-    private String      displayName;
+    private String displayName;
 
-    private Set<String> brands = new HashSet<String>();
+    // private Set<String> brands = new HashSet<String>();
 
-    public CategoryVO(Category category, Set<String> brandsInCategory) {
+    public CategoryVO(Category category) {
         this.name = category.getName();
         this.displayName = category.getDisplayName();
-        this.brands = brandsInCategory;
+        // this.brands = brandsInCategory;
     }
 
     public Category getCategory() {
@@ -47,12 +45,9 @@ public class CategoryVO implements Serializable {
         this.displayName = displayName;
     }
 
-    public Set<String> getBrands() {
-        return brands;
-    }
-
-    public void setBrands(Set<String> brands) {
-        this.brands = brands;
-    }
+    /*
+     * public Set<String> getBrands() { return brands; } public void setBrands(Set<String> brands) { this.brands =
+     * brands; }
+     */
 
 }

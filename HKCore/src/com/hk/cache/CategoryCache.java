@@ -49,7 +49,7 @@ public class CategoryCache {
         return categoryVO;
     }
 
-    public List<String> getBrandsInCategory(String categoryName) {
+    /*public List<String> getBrandsInCategory(String categoryName) {
         List<String> brandsInCategory = new ArrayList<String>();
         
         CategoryVO categoryVO = getCategoryByName(categoryName);
@@ -69,7 +69,7 @@ public class CategoryCache {
         }
         
         return brandsByCategory;
-    }
+    }*/
 
     public void freeze() {
         _instance = this;
