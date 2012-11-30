@@ -40,6 +40,7 @@ public class PaymentAction extends BaseAction {
 
     private PaymentMode paymentMode;
     private Gateway gateway;
+    private Long billingAddressId;
     private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
 
     @Validate(required = true)
@@ -56,14 +57,9 @@ public class PaymentAction extends BaseAction {
 
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
-
-
-
     /*
-   algorithm to route multiple gateways, first let the customer choose the issuer
-   now based on the issuer, get all the damn gateways that serve it, alongwith the priority assigned by admin
-   then you iterate over your faddu logic, to decide which gateway won
-   then call the action corresponding to that gateway along with the issuer if needed
+   algorithm to route multiple gateways, first let the customer choose the issuer now based on the issuer, get all the damn gateways that serve it, alongwith the priority assigned by admin
+   then you iterate over your faddu logic, to decide which gateway won then call the action corresponding to that gateway along with the issuer if needed
     */
     @SuppressWarnings("unchecked")
     public Resolution proceed() {
@@ -114,7 +110,7 @@ public class PaymentAction extends BaseAction {
                 Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());
                 redirectResolution = new RedirectResolution(actionClass, "proceed");
                 return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), issuerCode, null));
+                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), issuerCode, billingAddressId));
             }
         }
         addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
@@ -151,5 +147,13 @@ public class PaymentAction extends BaseAction {
 
     public void setGateway(Gateway gateway) {
         this.gateway = gateway;
+    }
+
+    public Long getBillingAddressId() {
+        return billingAddressId;
+    }
+
+    public void setBillingAddressId(Long billingAddressId) {
+        this.billingAddressId = billingAddressId;
     }
 }

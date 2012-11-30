@@ -1,35 +1,24 @@
 package com.hk.web.action.core.user;
 
-import net.sourceforge.stripes.action.*;
-import com.hk.taglibs.Functions;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.LocalizableError;
-import com.hk.domain.user.User;
-import com.hk.domain.user.Address;
-import com.hk.domain.user.BillingAddress;
-import com.hk.domain.user.Role;
-import com.hk.domain.order.Order;
-import com.hk.domain.core.PaymentMode;
-import com.hk.domain.core.Country;
-import com.hk.pact.service.core.AddressService;
-import com.hk.pact.service.UserService;
-import com.hk.pact.service.RoleService;
-import com.hk.pact.service.order.OrderService;
-import com.hk.pact.dao.order.OrderDao;
-import com.hk.web.action.core.payment.PaymentAction;
-import com.hk.web.action.core.payment.PaymentModeAction;
-import com.hk.web.action.core.payment.PaymentSuccessAction;
-import com.hk.web.action.core.cart.CartAction;
-import com.hk.web.action.HomeAction;
-import com.hk.constants.core.RoleConstants;
-import com.hk.constants.order.EnumOrderStatus;
-import com.hk.manager.OrderManager;
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.domain.order.Order;
+import com.hk.domain.payment.Issuer;
+import com.hk.domain.user.BillingAddress;
+import com.hk.domain.user.User;
+import com.hk.manager.OrderManager;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.AddressService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.web.action.core.cart.CartAction;
+import com.hk.web.action.core.payment.PaymentAction;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,15 +29,6 @@ import java.util.ArrayList;
  */
 @Secure
 public class BillingAddressAction extends BaseAction {
-
-    private BillingAddress address;
-
-    private Long billingAddressId;
-
-    Long bankId;
-
-    private PaymentMode paymentMode;
-
     @Autowired
     AddressService addressDao;
 
@@ -66,37 +46,35 @@ public class BillingAddressAction extends BaseAction {
     private List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>(0);
 
     BillingAddress deleteAddress;
-
     private String email;
-
     private Order order;
-
     private BillingAddress selectedAddress;
-
+    private BillingAddress address;
+    private Long billingAddressId;
+    private Issuer issuer;
 
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-      User user = getUserService().getUserById(getPrincipal().getId());
-      order = orderManager.getOrCreateOrder(user);
-      if(order.getAddress()==null){
-          addRedirectAlertMessage(new SimpleMessage("You have not selected the shipping address"));
-           return  new RedirectResolution(SelectAddressAction.class);
-      }
-      billingAddresses = addressDao.getVisibleBillingAddress(user);
-      return new ForwardResolution("/pages/billingAddressBook.jsp");
+        User user = getUserService().getUserById(getPrincipal().getId());
+        order = orderManager.getOrCreateOrder(user);
+        if (order.getAddress() == null) {
+            addRedirectAlertMessage(new SimpleMessage("You have not selected the shipping address"));
+            return new RedirectResolution(SelectAddressAction.class);
+        }
+        billingAddresses = addressDao.getVisibleBillingAddress(user);
+        return new ForwardResolution("/pages/billingAddressBook.jsp");
     }
 
     public Resolution remove() {
         User user = getUserService().getUserById(getPrincipal().getId());
-        if(billingAddressId!=null){
-        deleteAddress = addressDao.getBillingAddressById(billingAddressId);
-        deleteAddress.setUser(user);
-        deleteAddress.setDeleted(true);
-        addressDao.save(deleteAddress);
-        return new RedirectResolution(BillingAddressAction.class);
-        }
-        else{
+        if (billingAddressId != null) {
+            deleteAddress = addressDao.getBillingAddressById(billingAddressId);
+            deleteAddress.setUser(user);
+            deleteAddress.setDeleted(true);
+            addressDao.save(deleteAddress);
+            return new RedirectResolution(BillingAddressAction.class);
+        } else {
             addRedirectAlertMessage(new SimpleMessage("No Billing Address Exist"));
             return new RedirectResolution(BillingAddressAction.class);
         }
@@ -105,18 +83,18 @@ public class BillingAddressAction extends BaseAction {
 
     public Resolution checkout() {
         User user = getUserService().getUserById(getPrincipal().getId());
-        if (billingAddressId !=null) {
+        if (billingAddressId != null) {
             order = orderManager.getOrCreateOrder(user);
-            if(order.getCartLineItems().size()==0){
+            if (order.getCartLineItems().size() == 0) {
                 return new RedirectResolution(CartAction.class);
             }
             selectedAddress = addressDao.getBillingAddressById(billingAddressId);
             selectedAddress.getOrders().add(order);
             selectedAddress.setUser(user);
             addressDao.save(selectedAddress);
-            return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId", selectedAddress.getId());
+            return new RedirectResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", selectedAddress.getId());
         } else {
-             addRedirectAlertMessage(new SimpleMessage("No Billing Address Exist"));
+            addRedirectAlertMessage(new SimpleMessage("No Billing Address Exist"));
             return new RedirectResolution(BillingAddressAction.class);
         }
     }
@@ -124,14 +102,14 @@ public class BillingAddressAction extends BaseAction {
 
     public Resolution create() {
         User user = getUserService().getUserById(getPrincipal().getId());
-            order = orderManager.getOrCreateOrder(user);
-            if(order.getCartLineItems().size()==0){
-                return new RedirectResolution(CartAction.class);
-            }
-            address.getOrders().add(order);
-            address.setUser(user);
-            address = addressDao.save(address);
-            return new RedirectResolution(PaymentAction.class, "proceed").addParameter("paymentMode", paymentMode).addParameter("order", order).addParameter("bankId", bankId).addParameter("billingAddressId", address.getId());
+        order = orderManager.getOrCreateOrder(user);
+        if (order.getCartLineItems().size() == 0) {
+            return new RedirectResolution(CartAction.class);
+        }
+        address.getOrders().add(order);
+        address.setUser(user);
+        address = addressDao.save(address);
+        return new RedirectResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", address.getId());
     }
 
 
@@ -199,22 +177,6 @@ public class BillingAddressAction extends BaseAction {
         this.address = address;
     }
 
-    public PaymentMode getPaymentMode() {
-        return paymentMode;
-    }
-
-    public void setPaymentMode(PaymentMode paymentMode) {
-        this.paymentMode = paymentMode;
-    }
-
-    public Long getBankId() {
-        return bankId;
-    }
-
-    public void setBankId(Long bankId) {
-        this.bankId = bankId;
-    }
-
     public AddressService getAddressDao() {
         return addressDao;
     }
@@ -233,6 +195,14 @@ public class BillingAddressAction extends BaseAction {
 
     public OrderService getOrderService() {
         return orderService;
+    }
+
+    public Issuer getIssuer() {
+        return issuer;
+    }
+
+    public void setIssuer(Issuer issuer) {
+        this.issuer = issuer;
     }
 }
 
