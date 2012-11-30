@@ -124,7 +124,7 @@
     <s:hidden name="order" value="${orderSummary.order.id}" />
 
     <c:forEach items="${paymentModeBean.cardIssuers}" var="cardIssuer">
-        <p><label><s:radio name="issuer" value="${cardIssuer.id}" id= "${cardIssuer.name}"/>${cardIssuer.name}
+        <p><label><s:radio name="issuer" value="${cardIssuer.id}" id="${cardIssuer.name}"/>${cardIssuer.name}
             &nbsp;</label> <img src="<hk:vhostImage/>${hk:readIssuerImageIcon(cardIssuer.imageIcon, cardIssuer.name)}" height="30px" alt="gateway image">
         </p>
         <%--check for paypal, give it an id so that js can work--%>
@@ -411,7 +411,7 @@
 
         $('.makePayment').click(function disablePaymentButton() {
             $(this).css("display", "none");
-            if($('#paypal').is(':checked')){
+            if($('#Paypal').is(':checked')){
               location.href = '${url}';
               return false;
             }
