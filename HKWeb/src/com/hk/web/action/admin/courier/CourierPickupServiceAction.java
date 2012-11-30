@@ -3,7 +3,7 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
-import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
+import com.hk.admin.factory.courier.thirdParty.ThirdPartyCourierServiceFactory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.springframework.stereotype.Component;
@@ -34,9 +34,10 @@ public class CourierPickupServiceAction extends BaseAction {
 	ShippingOrderService shippingOrderService;
 
 	Resolution save(){
-		ThirdPartyPickupService thirdPartyPickupService = ThirdPartyAwbServiceFactory.getThirdPartyPickupService(courierId);
+		ThirdPartyPickupService thirdPartyPickupService = ThirdPartyCourierServiceFactory.getThirdPartyPickupService(courierId);
 		shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
         thirdPartyPickupService.createPickupRequest(shippingOrder, pickupDate.toString());
+		
 		return new ForwardResolution("/pages/admin/reversePickupService.jsp");
 	}
 

@@ -5,7 +5,7 @@ import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.service.ServiceLocatorFactory;
 
-public class ThirdPartyAwbServiceFactory {
+public class ThirdPartyCourierServiceFactory {
     
     public static ThirdPartyAwbService getThirdPartyAwbService(Long courierId){
         

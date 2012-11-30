@@ -5,7 +5,7 @@
 <c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.getId()%>"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.CourierPickupServiceAction" var="pickupService"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Pickup Service">
 
     <s:layout-component name="htmlHead">
         <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -17,6 +17,8 @@
     <s:layout-component name="heading">Reverse Pickup Service</s:layout-component>
 
     <s:layout-component name="content">
+        <s:form beanclass="com.hk.web.action.admin.courier.CourierPickupServiceAction">
+                            <s:errors/>
         <fieldset>
             <ul>
                 <li>
@@ -37,6 +39,7 @@
             </ul>
         </fieldset>
         <s:submit name="submit" value="Submit"/>
+        </s:form>
     </s:layout-component>
 </s:layout-render>
 

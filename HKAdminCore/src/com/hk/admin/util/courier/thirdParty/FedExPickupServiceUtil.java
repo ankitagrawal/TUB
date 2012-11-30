@@ -133,6 +133,7 @@ public class FedExPickupServiceUtil {
 				//System.out.println("Location :" + reply.getLocation());
 				if(reply.getMessageCode()!=null)
 				System.out.println("Message Code: " + reply.getMessageCode() + " Message: " + reply.getMessage() );
+				//return reply.getPickupConfirmationNumber();
 			}
 
 			//printNotifications(reply.getNotifications());
