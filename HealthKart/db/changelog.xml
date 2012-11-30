@@ -10072,4 +10072,7 @@
         insert into country values (201,'ZAMBIA', 'ZM');
     </sql>
   </changeSet>
+    <changeSet author="Rahul (generated)" id="1354282249890-1">
+        <addNotNullConstraint columnDataType="VARCHAR(30)" columnName="pin" tableName="address"/>
+    </changeSet>
 </databaseChangeLog>
