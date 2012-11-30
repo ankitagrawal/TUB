@@ -131,7 +131,7 @@
     </c:forEach>
 
     <div style="float: right; width: 90%;"><s:submit
-            name="proceed" value="Make Payment >" class="button"
+            name="proceed" value="Make Payment >" class="button makePayment"
             disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
     </div>
 </s:form></div>

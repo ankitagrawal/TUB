@@ -10150,6 +10150,7 @@
         insert into country values (201,'ZAMBIA', 'ZM');      
     </sql>
   </changeSet>
+<!--
     <changeSet author="Pratham" id="20121129-01">
         <sql>
         INSERT INTO `gateway` (`id`, `name`, `downtime_start_date`, `downtime_end_date`, `active`, `priority`, `image`) VALUES
@@ -10293,9 +10294,10 @@
     <changeSet author="Pratham (generated)" id="1354263430748-6">
         <addNotNullConstraint columnDataType="INT" columnName="priority" tableName="issuer"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1354124147954-1">
-        <addColumn tableName="traffic_tracking">
-            <column name="first_order" type="INT"/>
-        </addColumn>
-    </changeSet>
+-->
+    <!--<changeSet author="Ajeet (generated)" id="1354124147954-1">-->
+        <!--<addColumn tableName="traffic_tracking">-->
+            <!--<column name="first_order" type="INT"/>-->
+        <!--</addColumn>-->
+    <!--</changeSet>-->
 </databaseChangeLog>
