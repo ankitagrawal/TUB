@@ -7,7 +7,7 @@
 <s:useActionBean beanclass="com.hk.web.action.core.user.BillingAddressAction" event="pre" var="addressBean"/>
 <s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
 
-<c:set var="issuerPaypal" value="<%=EnumIssuer.PAYPAL.getId()%>"/>
+<c:set var="issuerPaypal" value="5"/>
 
 <s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Select a Billing address">
 
