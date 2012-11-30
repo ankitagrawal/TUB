@@ -16,14 +16,11 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.cache.CategoryCache;
 import com.hk.cache.HkApiUserCache;
 import com.hk.cache.RoleCache;
-import com.hk.cache.UserCache;
 import com.hk.cache.vo.CategoryVO;
 import com.hk.cache.vo.RoleVO;
-import com.hk.cache.vo.UserVO;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.Role;
-import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.AppConstants;
@@ -98,27 +95,25 @@ public class HKStartupListener implements ServletContextListener {
             populateHKApiUserCache();
             logger.info("END POPULATING HK API USER CACHE");
             System.out.println("END POPULATING HK API USER CACHE");
-            
+
             logger.info("START POPULATING ROLE CACHE");
             System.out.println("START POPULATING ROLE CACHE");
             populateRoleCache();
             logger.info("END POPULATING ROLE CACHE");
             System.out.println("END POPULATING ROLE CACHE");
-            
-            
-            logger.info("START POPULATING USER CACHE");
-            System.out.println("START POPULATING USER CACHE");
-            populateUserCache();
-            logger.info("END POPULATING USER CACHE");
-            System.out.println("END POPULATING USER CACHE");
-            
-            
+
+            /*
+             * logger.info("START POPULATING USER CACHE"); System.out.println("START POPULATING USER CACHE");
+             * populateUserCache(); logger.info("END POPULATING USER CACHE"); System.out.println("END POPULATING USER
+             * CACHE");
+             */
+
             logger.info("START POPULATING CATEGORY  CACHE");
             System.out.println("START POPULATING CATEGORY  CACHE");
             populateCategoryCache();
             logger.info("END POPULATING CATEGORY CACHE");
             System.out.println("END POPULATING CATEGORY CACHE");
-            
+
             /*
              * batchProcessManager = ServiceLocatorFactory.getService(BatchProcessManager.class);
              * batchProcessManager.start();
@@ -152,19 +147,6 @@ public class HKStartupListener implements ServletContextListener {
             roleCache.addRole(new RoleVO(role));
         }
         roleCache.freeze();
-
-    }
-
-    private void populateUserCache() {
-        UserCache.getInstance().reset();
-        UserCache userCache = UserCache.getInstance().getTransientCache();
-
-        List<User> users = getBaseDao().findByQuery("select u from User u where u.name  != 'Guest'");
-
-        for (User user : users) {
-            userCache.addUser(new UserVO(user));
-        }
-        userCache.freeze();
 
     }
 

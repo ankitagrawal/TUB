@@ -16,7 +16,6 @@ import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.HKDeliveryUtil;
-import com.hk.cache.UserCache;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
@@ -54,8 +53,8 @@ public class RunSheetServiceImpl implements RunSheetService {
     public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments, RunsheetStatus runsheetStatus, User agent, Long prePaidBoxCount, Long totalCODPackets,
             Double totalCODAmount) {
         Runsheet runsheetObj = new Runsheet();
-        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
-        // User loggedOnUser = userService.getLoggedInUser();
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = userService.getLoggedInUser();
         runsheetObj.setCodBoxCount(totalCODPackets);
         runsheetObj.setCreateDate(new Date());
         runsheetObj.setUpdateDate(new Date());
@@ -81,7 +80,8 @@ public class RunSheetServiceImpl implements RunSheetService {
     @Override
     public void saveRunSheet(Runsheet runsheet, List<Consignment> changedConsignmentsList) {
         if (changedConsignmentsList != null) {
-            User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+            // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+            User loggedOnUser = userService.getLoggedInUser();
             updateConsignmentTrackingForRunsheet(changedConsignmentsList, loggedOnUser);
         }
         runsheet.setUpdateDate(new Date());
@@ -112,7 +112,8 @@ public class RunSheetServiceImpl implements RunSheetService {
                 consignment.setConsignmentStatus(runsheetDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentDelivered.getId()));
             }
         }
-        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = userService.getLoggedInUser();
         updateConsignmentTrackingForRunsheet(consignmentListWithChangedStatuses, loggedOnUser);
         runsheet.setConsignments(consignments);
         return runsheet;
@@ -166,8 +167,8 @@ public class RunSheetServiceImpl implements RunSheetService {
 
     @Override
     public List<User> getAgentList(RunsheetStatus runsheetStatus) {
-        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
-        // User loggedOnUser = userService.getLoggedInUser();
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = userService.getLoggedInUser();
         Hub hub = hubService.getHubForUser(loggedOnUser);
         return runsheetDao.getAgentList(runsheetStatus, hub);
     }

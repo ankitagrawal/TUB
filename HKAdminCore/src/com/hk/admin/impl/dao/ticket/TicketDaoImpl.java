@@ -12,9 +12,8 @@ import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.ticket.TicketFilterDto;
 import com.hk.admin.pact.dao.ticket.TicketDao;
-import com.hk.cache.UserCache;
-import com.hk.cache.vo.UserVO;
 import com.hk.domain.Ticket;
+import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.service.UserService;
 
@@ -60,11 +59,11 @@ public class TicketDaoImpl extends BaseDaoImpl implements TicketDao {
             criteria.add(Restrictions.eq("ticketStatus", ticketFilterDto.getTicketStatus()));
         }
         if (StringUtils.isNotBlank(ticketFilterDto.getAssociatedLogin())) {
-            UserVO userVO = UserCache.getInstance().getUserByLogin(ticketFilterDto.getAssociatedLogin());
-            //User associatedUser = getUserService().findByLogin(ticketFilterDto.getAssociatedLogin());
-            if (userVO != null) {
-                //criteria.add(Restrictions.eq("associatedUser", associatedUser));
-                criteria.add(Restrictions.eq("associatedUser.id", userVO.getId()));
+            //UserVO userVO = UserCache.getInstance().getUserByLogin(ticketFilterDto.getAssociatedLogin());
+            User associatedUser = getUserService().findByLogin(ticketFilterDto.getAssociatedLogin());
+            if (associatedUser != null) {
+                criteria.add(Restrictions.eq("associatedUser", associatedUser));
+                //criteria.add(Restrictions.eq("associatedUser.id", userVO.getId()));
             } else {
                 criteria.add(Restrictions.eq("associatedEmail", ticketFilterDto.getAssociatedLogin()));
             }

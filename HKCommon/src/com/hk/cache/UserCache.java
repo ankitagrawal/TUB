@@ -18,7 +18,7 @@ import com.shiro.PrincipalImpl;
  */
 public class UserCache {
 
-    private static UserCache    _instance        = new UserCache();
+    /*private static UserCache    _instance        = new UserCache();
     private UserCache           _transient;
 
     private Map<String, UserVO> loginToUserCache = new HashMap<String, UserVO>();
@@ -61,9 +61,9 @@ public class UserCache {
             }
         }
 
-        /**
+        *//**
          * if user is not in cache try and attempt to find from db
-         */
+         *//*
         if (userVO == null) {
              User user = getUserService().getUserById(userId);
              userVO = new UserVO(user);
@@ -74,12 +74,12 @@ public class UserCache {
 
     public UserVO getUserByLogin(String login) {
 
-        /**
+        *//**
          * if user is not in cache try and attempt to find from db
-         */
-        /*
+         *//*
+        
          * if(userVO == null){ //User user = getUserService().get }
-         */
+         
 
         UserVO userVO = loginToUserCache.get(login);
         if(userVO == null){
@@ -136,6 +136,6 @@ public class UserCache {
         }
         return securityManager;
     }
-
+*/
     
 }

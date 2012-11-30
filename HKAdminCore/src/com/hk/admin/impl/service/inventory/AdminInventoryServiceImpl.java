@@ -244,7 +244,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
     public void reCheckInInventory(ShippingOrder shippingOrder) {
         // Recheckin InventoInry against checked out qty
-        User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        //User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = userService.getLoggedInUser();
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             List<ProductVariantInventory> checkedOutInventories = getAdminPVIDao().getCheckedOutSkuItems(lineItem.getShippingOrder(), lineItem);
             for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
