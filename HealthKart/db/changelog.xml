@@ -10261,6 +10261,12 @@
         ALTER TABLE payment_mode DROP COLUMN gateway;
         </sql>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="20121129-11">
+        <sql>
+            update gateway set priority = 1, active = 1;
+            update issuer set priority = 1, active = 1;
+        </sql>
+    </changeSet>
     <changeSet author="Pratham (generated)" id="20121129-3">
         <sql>
             drop table preferred_bank_gateway;
