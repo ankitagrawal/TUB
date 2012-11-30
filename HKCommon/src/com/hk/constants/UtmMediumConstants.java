@@ -26,4 +26,6 @@ public class UtmMediumConstants {
   public static final String SITE = "site";
   public static final String MICROSITES = "microsite"; 
   public static final String CPC = "cpc"; 
+  public static final String BUY_ONLINE_TAB = "buy_online_tab"; 
+  public static final String NEWSFEED_ADS = "newsfeed_ads"; 
 }

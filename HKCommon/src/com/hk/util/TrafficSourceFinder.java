@@ -28,6 +28,7 @@ public class TrafficSourceFinder {
 	public static String HEALTHKART = "healthkart";
 	public static String RFERRAL = "referral";
 	public static String AFFILIATE = "affiliate";
+	public static String MICROSITES = "microsites";
 	public static String OTHERS = "others";
 
 	public static Map<String, String> getTrafficDetails(HttpServletRequest httpRequest) {
@@ -73,14 +74,25 @@ public class TrafficSourceFinder {
 
 
 		/** Sample URLs **/
+		// PAID
 		//http://www.healthkart.com/?utm_source=adwords&utm_medium=ad&utm_campaign=hk_brandname&gclid=CNWR4-Pm77MCFYh66wodhhYA1w
 		//http://pediasure.in/pediasure_goo/?utm_source=Google&utm_medium=CPC&utm_campaign=Pediasure
 		//http://www.youtube.com/watch?v=onBUw-LcVt4&feature=relmfu
-		//http://www.healthkart.com/product/musclepharm-assault/NUT420?utm_source=enewsletter&utm_medium=email&utm_campaign=nov23_2012_weekend_offer-2012-11-23
+		//http://googleads.g.doubleclick.net/mads/gma?u_audio=1&hl=en&preqs=1&app_name=1.0.iphone.com.mfeg.ntv5free&prl=3807&u_h=768&cap_bs=1&u_so=l&u_w=1024&ptime=0&js=afma-sdk-i-v4.1.1&ses
+		//http://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-0098238538928727&output=html&h=250&slotname=6694769909&w=300&lmt=1354143520&flash=11.5.31&url=http%3A%2F%2Fwww.160by2.co
+		//http://economictimes.indiatimes.com/google_articleshow_top1.cms
+		//http://www.googleadservices.com/pagead/aclk?sa=L&ai=CcRq5UWK2UMCEK9GZrAfpgIGIB43py9ACjaisgjTI_LrqAQgAEAFQtpbLpvr_____AWDl0uaDvA6gAeOE-eADyAEBqQJYFGYYakdTPqoEI0_QAMUcfrl0aq5ZPljzPWe
+		//http://www.healthkart.com/product/vx-weight-lifting-straps-pair/SPT391?utm_source=facebook&utm_medium=cpc&utm_campaign=hk_fb_sports_b_vx&utm_content=Weight+Lifting+Straps+%282012-1
+
 		//utm_source=adwords||utm_medium=ad||utm_campaign=hk_nutrition
 		//utm_source="facebook"||utm_medium="newsfeed_ads"||
-		//http://www.healthkart.com/product/vx-weight-lifting-straps-pair/SPT391?utm_source=facebook&utm_medium=cpc&utm_campaign=hk_fb_sports_b_vx&utm_content=Weight+Lifting+Straps+%282012-1
+		//utm_source=facebook||utm_medium=buy_online_tab||utm_campaign=nicorette||
+
+		// UNPAID
 		//http://indiapulse.sulekha.com/forums/personal_baby-diapers-in-india-hyderabad-275571
+		//http://www.healthkart.com/product/musclepharm-assault/NUT420?utm_source=enewsletter&utm_medium=email&utm_campaign=nov23_2012_weekend_offer-2012-11-23
+		//http://www.google.co.in/url?sa=t&rct=j&q=ovulation%20kit%20in%20india&source=web&cd=1&cad=rja&sqi=2&ved=0CD0QFjAA&url=http%3A%2F%2Fwww.healthkart.com%2Fpersonal-care%2Fwomen%2Fovul
+
 
 		if (!utm_source.equals("")) {
 			if (utm_source.equals(UtmSourceConstants.ADWORDS) || utm_source.equals(UtmSourceConstants.GOOGLE)) {
@@ -99,19 +111,24 @@ public class TrafficSourceFinder {
 				trafficSrc = UtmSourceConstants.OHANA.toLowerCase();
 				trafficSrcPaid = "true";
 			} else if (utm_medium.toLowerCase().equals(UtmMediumConstants.MICROSITES.toLowerCase())) {
-				trafficSrc = AFFILIATE;
+				trafficSrc = MICROSITES;
 			} else if (!aff_id.equals("")) {
 				trafficSrc = AFFILIATE;
 				trafficSrcPaid = "true";
 			} else {
 				trafficSrc = RFERRAL;
 			}
-			if (utm_medium.equals(UtmMediumConstants.AD) || utm_medium.equals(UtmMediumConstants.CPC)) {
+			if (utm_medium.equals(UtmMediumConstants.AD) || utm_medium.equals(UtmMediumConstants.CPC)
+					|| utm_medium.equals(UtmMediumConstants.BUY_ONLINE_TAB) || utm_medium.contains(UtmMediumConstants.NEWSFEED_ADS)
+					|| utm_medium.equals(UtmMediumConstants.BANNER)) {
 				trafficSrcPaid = "true";
 			}
 		} else if (!referrer.equals("")) {
 			if (referrer.contains(GOOGLE)) {
 				trafficSrc = GOOGLE;
+				if(referrer.contains("googleads.g.doubleclick.net") || referrer.contains("googleadservices.com/pagead/aclk")){
+					trafficSrcPaid = "true";
+				}
 			} else if (referrer.contains(FACEBOOK)) {
 				trafficSrc = FACEBOOK;
 			} else if (!aff_id.equals("")) {
