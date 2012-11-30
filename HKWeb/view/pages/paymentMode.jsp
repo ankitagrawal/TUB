@@ -408,7 +408,15 @@
             $('#' + selected).fadeIn(200);
 
         });
-
+          $("#tab1").click(function(){
+              $("input:radio:checked").attr('checked', false);
+          });
+        $("#tab5").click(function(){
+              $("input:radio:checked").attr('checked', false);
+          });
+        $("#tab3").click(function(){
+              $("input:radio:checked").attr('checked', false);
+          });
         if ($.session("selected-tab")) {
             var sTab = $.session("selected-tab");
             $('.tabs ul li').removeClass('selected');

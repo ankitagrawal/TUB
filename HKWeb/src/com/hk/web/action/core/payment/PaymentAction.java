@@ -123,21 +123,16 @@ public class PaymentAction extends BaseAction {
 //                gateway = EnumPaymentMode.PAYPAL_CreditDebit;
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(gateway);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");
-                if(gateway.equals(EnumPaymentMode.PAYPAL_CreditDebit)){
-                  return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParamWithBillingAddress(order.getAmount(),
-						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode, billingAddressId));
-                }
-                else {
 				return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode));
-                }
+						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode, billingAddressId));
+
 			} else {
 				// ccavneue is the default gateway
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(EnumPaymentMode.CCAVENUE_DUMMY);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");
 			}
 			return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-					payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null));
+					payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null, null));
 
 		}
 		addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
