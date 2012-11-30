@@ -111,13 +111,13 @@ public class RegisterOnlinePaymentAction extends BaseAction {
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(gateway);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");
 				return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode));
+						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode, null));
 			} else {
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(EnumPaymentMode.CCAVENUE_DUMMY);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");
 			}
 			return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-					payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null));
+					payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null, null));
 
 		}
 		addRedirectAlertMessage(new SimpleMessage("Some Error Occurred, Unable to process your request"));
