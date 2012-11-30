@@ -9788,4 +9788,10 @@
             <column name="user_agent" type="VARCHAR(200)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1354124147954-1">
+        <addColumn tableName="traffic_tracking">
+            <column name="first_order" type="INT"/>
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>
