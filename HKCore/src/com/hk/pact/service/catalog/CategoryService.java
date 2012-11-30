@@ -22,7 +22,7 @@ public interface CategoryService {
 
     //public List<Category> getPrimaryCategories();
     
-    //public Category getTopLevelCategory(Product product);
+    public Category getTopLevelCategory(Product product);
 
     public List<ProductOptionDto> getFilterOptions(String primaryCategory, List<String> categoryNames, List<Long> filterOptions, Double minPrice, Double maxPrice);
 

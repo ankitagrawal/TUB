@@ -15,14 +15,14 @@ import com.hk.pact.dao.RoleDao;
 
 public interface UserDao extends BaseDao {
 
-  //public User getUserById(Long userId);
+  public User getUserById(Long userId);
 
   @Transactional(readOnly = false)
   public User save(User user);
 
   public List<User> findByEmail(String email);
 
-  //public User findByLogin(String login);
+  public User findByLogin(String login);
 
   //public User findByLoginAndStoreId(String login, Long storeId);
 
@@ -30,7 +30,7 @@ public interface UserDao extends BaseDao {
 
   //public User findByUserHandle(String userHandle);
 
-  //public User findByUserHash(String userHash);
+  public User findByUserHash(String userHash);
 
   public List<User> findByRole(Role role);
 
