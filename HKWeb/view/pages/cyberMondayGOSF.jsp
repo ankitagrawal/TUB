@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:layout-render name="/layouts/categoryBlankLanding.jsp" pageTitle="Valentinge Gift Ideas by HealthKart.com">
+<s:layout-render name="/layouts/categoryBlankLanding.jsp" pageTitle="Cyber Monday Great Online Shopping Festival">
 
 <s:layout-component name="htmlHead">
   <style type="text/css">
@@ -20,8 +20,9 @@ font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verd
   font-size: 18px;
   text-decoration: none;
 }
+.clear { clear:both; }
 
-body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
+
 </style>
 
 </s:layout-component>
@@ -30,21 +31,24 @@ body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
   <div class='crumb_outer'>
     <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
     &gt;
-    <span class="crumb last" style="font-size: 12px;">Valentine Gifts</span>
+    <span class="crumb last" style="font-size: 12px;">Cyber Monday</span>
 
     <h1 class="title">
-      Buy Valentine Gifts online
+       Cyber Monday Great Online Shopping Festival
     </h1>
   </div>
   
 </s:layout-component>
 
-<s:layout-component name="metaDescription">Valentine gifts from HealthKart.</s:layout-component>
-<s:layout-component name="metaKeywords">valentine's day, valentine gift ideas</s:layout-component>
+<s:layout-component name="metaDescription">Google Cyber Monday</s:layout-component>
+<s:layout-component name="metaKeywords"></s:layout-component>
 
 <s:layout-component name="content">
-<div style="padding-bottom:20px"><img src="${pageContext.request.contextPath}/images/valentine/valentine_banner_website.png" /></div>
+    <div style="padding-bottom:20px;"><img src="${pageContext.request.contextPath}/images/GOSF/banner.jpg" width="960" height="597" /></div>
+    <div class="clear"></div>
     <div class="main_container" style="background-color:#FFFFFF;">
+
+
     <table width="960" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td rowspan="23" width="35">&nbsp;</td>
