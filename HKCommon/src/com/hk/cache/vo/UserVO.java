@@ -58,6 +58,7 @@ public class UserVO {
     public User getUser() {
         User user = new User();
         user.setId(this.id);
+        user.setName(this.name);
         user.setLogin(this.login);
         user.setEmail(this.email);
         user.setPasswordChecksum(this.passwordChecksum);

@@ -94,8 +94,31 @@ public class HKStartupListener implements ServletContextListener {
             System.out.println("------------- Starting Batch Process Manager ---------------------");
 
             logger.info("START POPULATING HK API USER CACHE");
+            System.out.println("START POPULATING HK API USER CACHE");
             populateHKApiUserCache();
             logger.info("END POPULATING HK API USER CACHE");
+            System.out.println("END POPULATING HK API USER CACHE");
+            
+            logger.info("START POPULATING ROLE CACHE");
+            System.out.println("START POPULATING ROLE CACHE");
+            populateRoleCache();
+            logger.info("END POPULATING ROLE CACHE");
+            System.out.println("END POPULATING ROLE CACHE");
+            
+            
+            logger.info("START POPULATING USER CACHE");
+            System.out.println("START POPULATING USER CACHE");
+            populateUserCache();
+            logger.info("END POPULATING USER CACHE");
+            System.out.println("END POPULATING USER CACHE");
+            
+            
+            logger.info("START POPULATING CATEGORY  CACHE");
+            System.out.println("START POPULATING CATEGORY  CACHE");
+            populateCategoryCache();
+            logger.info("END POPULATING CATEGORY CACHE");
+            System.out.println("END POPULATING CATEGORY CACHE");
+            
             /*
              * batchProcessManager = ServiceLocatorFactory.getService(BatchProcessManager.class);
              * batchProcessManager.start();
@@ -119,7 +142,7 @@ public class HKStartupListener implements ServletContextListener {
 
     }
 
-    private void populaterRoleCache() {
+    private void populateRoleCache() {
         RoleCache.getInstance().reset();
         RoleCache roleCache = RoleCache.getInstance().getTransientCache();
 
@@ -136,7 +159,7 @@ public class HKStartupListener implements ServletContextListener {
         UserCache.getInstance().reset();
         UserCache userCache = UserCache.getInstance().getTransientCache();
 
-        List<User> users = getBaseDao().findByQuery("select u from User u where u.name not = 'Guest'");
+        List<User> users = getBaseDao().findByQuery("select u from User u where u.name  != 'Guest'");
 
         for (User user : users) {
             userCache.addUser(new UserVO(user));
