@@ -93,7 +93,7 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		List<Long> applicableTxnTypes = new ArrayList<Long>();
 		applicableTxnTypes.add(EnumAffiliateTxnType.ADD.getId());
 		applicableTxnTypes.add(EnumAffiliateTxnType.PAYMENT_DUE.getId());
-		applicableTxnTypes.add(EnumAffiliateTxnType.PAID.getId());
+//		applicableTxnTypes.add(EnumAffiliateTxnType.PAID.getId());
 		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
 
 		Double amountInAccount = 0D;
