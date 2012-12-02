@@ -37,6 +37,7 @@ import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -276,6 +277,8 @@ public class Functions {
         Category primaryCategory = (Category) o;
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
         return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
+        
+        //return CategoryCache.getInstance().getBrandsInCategory(primaryCategory.getName());
     }
 
     @SuppressWarnings("deprecation")

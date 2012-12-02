@@ -26,7 +26,7 @@ public class KarmaProfileDaoImpl extends BaseDaoImpl implements KarmaProfileDao 
 
    public KarmaProfile findByUser(User user) {
        
-       return (KarmaProfile) findUniqueByNamedParams(" from KarmaProfile kp where kp.user = :user ", new String[]{"user"}, new Object[]{user});
+       return (KarmaProfile) findUniqueByNamedParams(" from KarmaProfile kp where kp.user.id = :userId ", new String[]{"userId"}, new Object[]{user.getId()});
      //return  (KarmaProfile) getSession().createQuery("from KarmaProfile kp where kp.user = :user ").setEntity("user", user).uniqueResult();
   }
 

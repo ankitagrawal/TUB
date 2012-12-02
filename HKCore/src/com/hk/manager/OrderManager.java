@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.cache.UserCache;
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
@@ -23,6 +26,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.referrer.EnumPrimaryReferrerForOrder;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.affiliate.Affiliate;
+import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.Product;
@@ -44,7 +48,6 @@ import com.hk.domain.order.SecondaryReferrerForOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
-import com.hk.domain.analytics.TrafficTracking;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.pact.dao.BaseDao;
@@ -70,8 +73,6 @@ import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
 import com.hk.web.filter.WebContext;
-
-import javax.servlet.http.HttpSession;
 
 @Component
 public class OrderManager {
@@ -366,7 +367,9 @@ public class OrderManager {
                 getOrderLoggingService().logOrderActivity(order, order.getUser(),
                         getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
             } else if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.ON_DELIVERY.getId())) {
-                getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(),
+                //User adminUser = UserCache.getInstance().getAdminUser();
+                User adminUser = getUserService().getAdminUser();
+                getOrderLoggingService().logOrderActivity(order, adminUser,
                         getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), "Auto confirmation as valid user based on history.");
             }
 

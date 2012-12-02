@@ -2,6 +2,7 @@ package com.hk.web.action.core.catalog.category;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.CategoryCache;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.PrimaryCategoryHeading;
@@ -139,7 +140,8 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
         logger.debug("saving products for heading id: " + heading.getId() + " name: " + heading.getName());
         List<Product> productsList = heading.getProducts();
         category = heading.getCategory();
-        category = getCategoryService().getCategoryByName(category.getName());
+        //category = getCategoryService().getCategoryByName(category.getName());
+        category = CategoryCache.getInstance().getCategoryByName(category.getName()).getCategory();
         if (products != null) {
             for (Product product : products) {
                 if (product == null) {
