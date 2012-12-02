@@ -9793,5 +9793,4 @@
             <column name="first_order" type="INT"/>
         </addColumn>
     </changeSet>
-    
 </databaseChangeLog>
