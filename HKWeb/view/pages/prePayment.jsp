@@ -167,10 +167,6 @@
         </div>
     </s:layout-component>
 
-    <s:layout-component name="analytics">
-        <jsp:include page="/includes/_analytics.jsp"/>
-    </s:layout-component>
-
     <s:layout-component name="zopim">
         <jsp:include page="/includes/_zopim.jsp"/>
     </s:layout-component>
