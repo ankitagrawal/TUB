@@ -60,8 +60,8 @@ public class ManufacturerAction extends BasePaginatedAction {
             getContext().getValidationErrors().add("1", new SimpleError("Please Enter Name"));
         }
 
-      if(manufacturer!=null || manufacturer.getEmail()==null || manufacturer.getEmail().trim().equals("") ){
-          getContext().getValidationErrors().add("1", new SimpleError("Please Enter Email Id"));
+      if(manufacturer==null || manufacturer.getEmail()==null || manufacturer.getEmail().trim().equals("") ){
+          getContext().getValidationErrors().add("2", new SimpleError("Please Enter Email Id"));
       }
 
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
@@ -73,7 +73,7 @@ public class ManufacturerAction extends BasePaginatedAction {
            }
           }
         }
-      else if(manufacturer!=null && manufacturer.getEmail()!=null){
+      else{
         if (manufacturer != null && manufacturer.getEmail() != null && !pattern.matcher(manufacturer.getEmail()).matches()) {
             getContext().getValidationErrors().add("3", new SimpleError("Please Enter Email ID in correct format"));
         }
@@ -91,8 +91,8 @@ public class ManufacturerAction extends BasePaginatedAction {
             manufacturerDb = getBaseDao().get(Manufacturer.class, manufacturer.getId());
             manufacturerDb.setName(manufacturer.getName().trim());
             manufacturerDb.setEmail(manufacturer.getEmail().trim());
-            manufacturerDb.setDescription(manufacturer.getDescription().trim());
-            manufacturerDb.setWebsite(manufacturer.getWebsite().trim());
+            manufacturerDb.setDescription(manufacturer.getDescription());
+            manufacturerDb.setWebsite(manufacturer.getWebsite());
             manufacturerDb = (Manufacturer) getBaseDao().save(manufacturerDb);
         }
         addRedirectAlertMessage(new SimpleMessage("Manufacturer is saved!!"));
