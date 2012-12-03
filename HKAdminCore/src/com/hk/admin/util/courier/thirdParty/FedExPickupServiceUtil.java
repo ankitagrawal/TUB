@@ -1,6 +1,7 @@
 package com.hk.admin.util.courier.thirdParty;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
 import java.math.*;
 import org.apache.axis.types.Time;
 import org.apache.axis.types.PositiveInteger;
@@ -43,7 +44,7 @@ public class FedExPickupServiceUtil {
         this.fedExServerUrl = fedExServerUrl;
     }
 
-	public void createPickupRequest(ShippingOrder shippingOrder, String date){
+	public void createPickupRequest(ShippingOrder shippingOrder, Date date){
 		// Build a PickupRequest object
 
 		CreatePickupRequest request = new CreatePickupRequest();
@@ -90,19 +91,23 @@ public class FedExPickupServiceUtil {
 	    PickupOriginDetail.setBuildingPart(BuildingPartCode.SUITE); // BuildingPartCode values are APARTMENT, BUILDING,DEPARTMENT, SUITE, FLOOR, ROOM
 	    PickupOriginDetail.setBuildingPartDescription("3B");
 	    Calendar ready = Calendar.getInstance(); //current date and time
-		int startHour = 6;
+		ready.setTime(date);
+		int startHour = ready.get(Calendar.HOUR_OF_DAY);
+
+		/*
 	    ready.add(Calendar.DATE,1);
 	    ready.set(Calendar.HOUR_OF_DAY,startHour); //6);
 	    ready.set(Calendar.MINUTE,0);
 	    ready.set(Calendar.SECOND,0);
+	    */
         PickupOriginDetail.setReadyTimestamp(ready); // Package Ready Date and Time
 
 		int closeHour = startHour + 2;
 	    Calendar close = Calendar.getInstance(); //current date and time
-	    close.add(Calendar.DATE,1);
-	    close.set(Calendar.HOUR_OF_DAY,closeHour );//13);
-	    close.set(Calendar.MINUTE,0);
-	    close.set(Calendar.SECOND,0);
+	    close.add(Calendar.DATE,ready.get(Calendar.DATE));//1);
+	    close.set(Calendar.HOUR_OF_DAY, closeHour );//13);
+	    close.set(Calendar.MINUTE, ready.get(Calendar.MINUTE));//0);
+	    close.set(Calendar.SECOND, ready.get(Calendar.SECOND));//0);
 
         PickupOriginDetail.setCompanyCloseTime(new Time(close)); // Package Location Closing Time
         request.setOriginDetail(PickupOriginDetail);
@@ -132,14 +137,15 @@ public class FedExPickupServiceUtil {
 				//System.out.println("PickupConfirmationNumber  : " + reply.getPickupConfirmationNumber()); // Pickup Confirmation Number
 				//System.out.println("Location :" + reply.getLocation());
 				if(reply.getMessageCode()!=null)
-				System.out.println("Message Code: " + reply.getMessageCode() + " Message: " + reply.getMessage() );
+				logger.debug("Message Code: " + reply.getMessageCode() + " Message: " + reply.getMessage() );
 				//return reply.getPickupConfirmationNumber();
 			}
 
 			//printNotifications(reply.getNotifications());
 
 		} catch (Exception e) {
-		    e.printStackTrace();
+			//e.printStackTrace();
+		    logger.error("error requesting pickup service for Fedex");
 		}
 
 	}

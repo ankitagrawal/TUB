@@ -5,6 +5,7 @@ import com.hk.domain.order.ShippingOrder;
 
 import java.util.List;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,6 +17,6 @@ import java.util.Arrays;
 public interface ThirdPartyPickupService {
 	 public List<Long> integratedCouriers = Arrays.asList(new Long[]{EnumCourier.FedEx.getId(),EnumCourier.FedEx_Surface.getId()});
 
-	public void createPickupRequest(ShippingOrder shippingOrder, String date);
+	public void createPickupRequest(ShippingOrder shippingOrder, Date date);
 	 
 }
