@@ -12,6 +12,7 @@ import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
+import com.hk.cache.UserCache;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
@@ -243,12 +244,14 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
     public void reCheckInInventory(ShippingOrder shippingOrder) {
         // Recheckin InventoInry against checked out qty
+        //User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = userService.getLoggedInUser();
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             List<ProductVariantInventory> checkedOutInventories = getAdminPVIDao().getCheckedOutSkuItems(lineItem.getShippingOrder(), lineItem);
             for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
                 this.inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(),
                         checkedOutInventory.getGrnLineItem(), checkedOutInventory.getRvLineItem(), checkedOutInventory.getStockTransferLineItem(),
-                        getInventoryService().getInventoryTxnType(EnumInvTxnType.CANCEL_CHECKIN), 1L, userService.getLoggedInUser());
+                        getInventoryService().getInventoryTxnType(EnumInvTxnType.CANCEL_CHECKIN), 1L, loggedOnUser);
                 // Rechecking Inventory Health to mark variants instock/outofstock properly.
                 getInventoryService().checkInventoryHealth(checkedOutInventory.getSku().getProductVariant());
             }

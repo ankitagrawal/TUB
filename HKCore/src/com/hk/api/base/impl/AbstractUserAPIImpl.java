@@ -31,6 +31,7 @@ public abstract class AbstractUserAPIImpl implements UserAPI {
     @Override
     public UserDTO getUserDetails(String login) {
         User user = getUserService().findByLogin(login);
+        // User user = UserCache.getInstance().getUserByLogin(login).getUser();
         return new UserDTO(user);
     }
 
@@ -44,6 +45,7 @@ public abstract class AbstractUserAPIImpl implements UserAPI {
         boolean rewardPointsAdded = true;
         RewardPoint rewardPoint = null;
         User user = getUserService().findByLogin(login);
+        // User user = UserCache.getInstance().getUserByLogin(login).getUser();
 
         if (user != null && enumRewardPointMode != null) {
 

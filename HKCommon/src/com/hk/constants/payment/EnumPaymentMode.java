@@ -22,7 +22,8 @@ public enum EnumPaymentMode {
 	CITRUS_CreditDebit(80L, "Citrus Credit Debit", 0.0215),
 	EBS(90L, "EBS Online Payment", 0.02D),
 	ICICI(100L, "Icici Backend ", 0.02D),
-	SUBSCRIPTION_PAYMENT(95L, "Subscription Payment", 0.0D);
+	SUBSCRIPTION_PAYMENT(95L, "Subscription Payment", 0.0D),
+    PAYPAL_CreditDebit(85L, "Paypal Credit Debit", 0.0D);
 
 	private java.lang.String name;
 	private java.lang.Long id;
@@ -86,7 +87,8 @@ public enum EnumPaymentMode {
 				EnumPaymentMode.CITRUS_CreditDebit,
 				EnumPaymentMode.ICICI,
                 EnumPaymentMode.SUBSCRIPTION_PAYMENT,
-				EnumPaymentMode.CITRUS_NetBanking_New);
+				EnumPaymentMode.CITRUS_NetBanking_New,
+                EnumPaymentMode.PAYPAL_CreditDebit);
 
 	}
 
@@ -99,7 +101,8 @@ public enum EnumPaymentMode {
 				EnumPaymentMode.CITRUS_NetBanking_New.getId(),
 				EnumPaymentMode.CITRUS_NetBanking_Old.getId(),
 				EnumPaymentMode.ICICI.getId(),
-				EnumPaymentMode.SUBSCRIPTION_PAYMENT.getId());
+				EnumPaymentMode.SUBSCRIPTION_PAYMENT.getId(),
+                EnumPaymentMode.PAYPAL_CreditDebit.getId());
 
 	}
 

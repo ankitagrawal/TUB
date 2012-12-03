@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.api.cache.HkApiUserCache;
+import com.hk.cache.HkApiUserCache;
 import com.hk.domain.api.HkApiUser;
 import com.hk.security.HkAuthService;
 import com.hk.security.HkAuthSuccessHandler;

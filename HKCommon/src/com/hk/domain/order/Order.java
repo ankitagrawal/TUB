@@ -17,6 +17,7 @@ import com.hk.domain.store.Store;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.domain.user.BillingAddress;
 
 import javax.persistence.*;
 import java.util.*;
@@ -52,6 +53,7 @@ public class Order implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address                   address;
+
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
@@ -169,6 +171,7 @@ public class Order implements java.io.Serializable {
 
     @Column(name = "comment_type")
     private Long                      commentType;
+
 
     public boolean isPriorityOrder() {
         if (this.score != null) {
@@ -574,7 +577,5 @@ public class Order implements java.io.Serializable {
     public void setTargetDispatchDateOnVerification(Date targetDispatchDateOnVerification) {
         this.targetDispatchDateOnVerification = targetDispatchDateOnVerification;
     }
-    
-    
 
 }
