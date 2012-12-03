@@ -107,7 +107,6 @@
               <input type="hidden" value="${countryId}" class="countryId">
            <div class='country'>${hk:getCountry(countryId).name}</div>
 
-
             <div class='pin'>${billingAddress.pin}</div>
             <div class='phone'>${billingAddress.phone}</div>
             <br/>

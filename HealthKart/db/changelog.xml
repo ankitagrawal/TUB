@@ -9947,7 +9947,7 @@
     </changeSet>
      <changeSet author="Ankit" id="20121128-08">
     <sql>
-        insert into country values (1,'ÅLAND ISLANDS', 'AX');
+        insert into country values (1,'ALAND ISLANDS', 'AX');
         insert into country values (2,'ALBANIA', 'AL');
         insert into country values (3,'ALGERIA ', 'DZ');
         insert into country values (4,'AMERICAN SAMOA', 'AS');
@@ -10150,6 +10150,7 @@
         insert into country values (201,'ZAMBIA', 'ZM');      
     </sql>
   </changeSet>
+<<<<<<< HEAD
     <changeSet author="Pratham" id="20121129-01">
         <sql>
         INSERT INTO `gateway` (`id`, `name`, `downtime_start_date`, `downtime_end_date`, `active`, `priority`, `image`) VALUES
@@ -10297,5 +10298,8 @@
         <addColumn tableName="traffic_tracking">
             <column name="first_order" type="INT"/>
         </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1354282249890-1">
+        <addNotNullConstraint columnDataType="VARCHAR(30)" columnName="pin" tableName="address"/>
     </changeSet>
 </databaseChangeLog>
