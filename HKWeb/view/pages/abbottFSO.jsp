@@ -113,7 +113,7 @@
     <s:layout-component name="content">
         <div class="cl"></div>
         <div id="pageContainer">
-            <img src="${pageContext.request.contextPath}/images/abbottFSO/banner.jpg" width="960" height="250"
+            <img src="${pageContext.request.contextPath}/images/abbottFSO/banner.jpg" width="960" height="281"
                  alt="rakhi banner"/>
 
             <div class="cl"></div>
