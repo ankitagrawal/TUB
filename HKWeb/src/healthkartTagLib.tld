@@ -1008,4 +1008,16 @@
             ${hk:getCountry(${id})}
         </example>
     </function>
+
+     <function>
+        <description>
+            returns Heading Products based on rank
+        </description>
+        <name>getHeadingProductsSortedByRank</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getHeadingProductsSortedByRank(java.lang.Long))</function-signature>
+        <example>
+            ${hk:getHeadingProductsSortedByRank(${id})}
+        </example>
+    </function>
 </taglib>

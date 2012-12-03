@@ -8,6 +8,7 @@ import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.domain.content.HeadingProduct;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.web.action.HomeAction;
 import com.hk.web.filter.WebContext;
@@ -44,7 +45,10 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     @Autowired
     private CategoryService                        categoryService;
     @Autowired
-    private HeadingProductService headingProductService;
+    private HeadingProductService                  headingProductService;
+    @Autowired
+    private ProductService productService;
+
 
     public Resolution create() throws Exception {
         category = heading.getCategory();
@@ -154,6 +158,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
       for (Product product : products) {
         if(product!=null)
         {
+          product = getProductService().getProductById(product.getId());
           HeadingProduct headingProduct = getHeadingProductService().getHeadingProductByHeadingAndProductId(heading,product.getId());
           if(headingProduct!=null){
             logger.debug("product can not be displayed more than once");
@@ -334,5 +339,9 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
 
   public void setRanks(List<Integer> ranks) {
     this.ranks = ranks;
+  }
+
+  public ProductService getProductService() {
+    return productService;
   }
 }
