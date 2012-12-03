@@ -482,7 +482,8 @@
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 	</c:when>
 	<c:otherwise>
-		<shiro:hasRole name="<%=RoleConstants.GOD%>">
+		<%--todo rahul: need to remove this add new row button added for finace team on 29-Nov-2012--%>
+		<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
 			<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 		</shiro:hasRole>
 	</c:otherwise>
