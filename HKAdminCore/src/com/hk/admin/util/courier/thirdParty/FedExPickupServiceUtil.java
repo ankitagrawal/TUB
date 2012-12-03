@@ -2,6 +2,8 @@ package com.hk.admin.util.courier.thirdParty;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import java.math.*;
 import org.apache.axis.types.Time;
 import org.apache.axis.types.PositiveInteger;
@@ -9,7 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fedex.pickup.stub.*;
+
 import com.hk.domain.order.ShippingOrder;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.service.ServiceLocatorFactory;
+import com.hk.constants.courier.CourierConstants;
 import com.akube.framework.util.StringUtils;
 
 /**
@@ -36,6 +42,8 @@ public class FedExPickupServiceUtil {
 
     private String fedExServerUrl;
 
+	private ShipmentService shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
+
 	public FedExPickupServiceUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
         this.fedExAuthKey = fedExAuthKey;
         this.fedExAccountNo = fedExAccountNo;
@@ -44,7 +52,7 @@ public class FedExPickupServiceUtil {
         this.fedExServerUrl = fedExServerUrl;
     }
 
-	public void createPickupRequest(ShippingOrder shippingOrder, Date date){
+	public List<String> createPickupRequest(ShippingOrder shippingOrder, Date date){
 		// Build a PickupRequest object
 
 		CreatePickupRequest request = new CreatePickupRequest();
@@ -114,7 +122,7 @@ public class FedExPickupServiceUtil {
         request.setPackageCount(new PositiveInteger("1")); //Number of Packages to Pickup
 	    // Packages Weight
 	    Weight weight = new Weight();
-	    weight.setValue(new BigDecimal(1.0));
+	    weight.setValue(new BigDecimal(shipmentService.getEstimatedWeightOfShipment(shippingOrder)));//1.0));
 	    weight.setUnits(WeightUnits.KG);
 	    request.setTotalWeight(weight);
 	    request.setCarrierCode(CarrierCodeType.FDXE); //CarrierCodeTypes are FDXC(Cargo), FDXE (Express), FDXG (Ground), FDCC (Custom Critical), FXFR (Freight)
@@ -132,14 +140,21 @@ public class FedExPickupServiceUtil {
 			// This is the call to the web service passing in a PickupRequest and returning a PickupReply
 			CreatePickupReply reply = port.createPickup(request);
 			//
+			List<String> pickupReply = new ArrayList<String>();
 			if (isResponseOk(reply.getHighestSeverity()))
 			{
 				//System.out.println("PickupConfirmationNumber  : " + reply.getPickupConfirmationNumber()); // Pickup Confirmation Number
 				//System.out.println("Location :" + reply.getLocation());
 				if(reply.getMessageCode()!=null)
-				logger.debug("Message Code: " + reply.getMessageCode() + " Message: " + reply.getMessage() );
-				//return reply.getPickupConfirmationNumber();
+					logger.debug("Message Code: " + reply.getMessageCode() + " Message: " + reply.getMessage() );
+				pickupReply.add(CourierConstants.SUCCESS);
+				pickupReply.add(reply.getPickupConfirmationNumber());
+				return pickupReply;
 			}
+
+			pickupReply.add(CourierConstants.ERROR);
+			pickupReply.add(getNotifications(reply.getNotifications()));
+			return pickupReply;			
 
 			//printNotifications(reply.getNotifications());
 
@@ -147,8 +162,31 @@ public class FedExPickupServiceUtil {
 			//e.printStackTrace();
 		    logger.error("error requesting pickup service for Fedex");
 		}
-
+		return null;
 	}
+
+	public String getNotifications(com.fedex.pickup.stub.Notification[] notifications) {
+		   String messages = "";
+		   if (notifications != null && notifications.length != 0) {
+			   for (int i = 0; i < notifications.length; i++) {
+				   Notification notification = notifications[i];
+				   logger.debug("  FedEx Notification no. " + i + ": ");
+				   if (notification == null) {
+					   continue;
+				   }
+				   NotificationSeverityType notificationSeverityType = notification.getSeverity();
+
+				   logger.debug("    Severity: " + (notificationSeverityType == null ? "null" : notificationSeverityType.getValue()));
+				   logger.debug("    Code: " + notification.getCode());
+				   logger.debug("    Message: " + notification.getMessage());
+				   if (notificationSeverityType != null && notificationSeverityType.equals(NotificationSeverityType.ERROR)) {
+					   messages = messages.concat(notification.getMessage() + ". ");
+				   }
+			   }
+		   }
+		   return messages;
+	   }
+
 
 	private ClientDetail createClientDetail() {
         ClientDetail clientDetail = new ClientDetail();

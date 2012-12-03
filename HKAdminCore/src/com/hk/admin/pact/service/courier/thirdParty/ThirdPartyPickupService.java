@@ -17,6 +17,6 @@ import java.util.Date;
 public interface ThirdPartyPickupService {
 	 public List<Long> integratedCouriers = Arrays.asList(new Long[]{EnumCourier.FedEx.getId(),EnumCourier.FedEx_Surface.getId()});
 
-	public void createPickupRequest(ShippingOrder shippingOrder, Date date);
+	public List<String> createPickupRequest(ShippingOrder shippingOrder, Date date);
 	 
 }

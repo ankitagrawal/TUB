@@ -9,6 +9,7 @@ import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
 import com.hk.domain.order.ShippingOrder;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,9 +37,9 @@ public class FedExPickupServiceImpl implements ThirdPartyPickupService {
     private String                fedExServerUrl;
 
 	@Override
-	public void createPickupRequest(ShippingOrder shippingOrder, Date date){
+	public List<String> createPickupRequest(ShippingOrder shippingOrder, Date date){
 		FedExPickupServiceUtil fedExPickupServiceUtil = new FedExPickupServiceUtil(fedExAuthKey,fedExAccountNo,fedExMeterNo,fedExPassword,fedExServerUrl);
-		fedExPickupServiceUtil.createPickupRequest(shippingOrder, date);
+		return fedExPickupServiceUtil.createPickupRequest(shippingOrder, date);
 	}
 
 }

@@ -3,22 +3,24 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
+import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.factory.courier.thirdParty.ThirdPartyCourierServiceFactory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.constants.courier.CourierConstants;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
 import java.util.Date;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,15 +32,21 @@ import java.util.Calendar;
 @Component
 public class CourierPickupServiceAction extends BaseAction {
 	private static Logger logger = LoggerFactory.getLogger(CourierPickupServiceAction.class);
+	private static final int maxPossibleDays = 14;
 	private Date pickupDate;
 	private Long courierId;
 	private String shippingOrderId;
-	private static final int maxPossibleDays = 14;
-	boolean exceededPolicyLimit;
+	private boolean exceededPolicyLimit;
 
 
 	@Autowired
 	ShippingOrderService shippingOrderService;
+	@Autowired
+	CourierService courierService;
+	@Autowired
+	CourierServiceInfoDao courierServiceInfoDao;
+	@Autowired
+	ShipmentService shipmentService;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -55,7 +63,6 @@ public class CourierPickupServiceAction extends BaseAction {
 
 		if (todayCal.get(Calendar.MONTH) == deliveryCal.get(Calendar.MONTH)) {
 			diff = presentDay - deliveryDay;
-			//targetDay = deliveryDay + 14;
 		} else {
 			int interimDays = presentDay - 1;
 			int interimSum = interimDays + (31 - deliveryDay);
@@ -66,16 +73,34 @@ public class CourierPickupServiceAction extends BaseAction {
 			exceededPolicyLimit = false;
 		} else {
 			exceededPolicyLimit = true;
+			//return new ForwardResolution("/pages/admin/queue/shippingOrderDetailGrid.jsp");
 		}
 		return new ForwardResolution("/pages/admin/reversePickupService.jsp");
 	}
 
-	public Resolution save() {
+	public Resolution submit() {
 		if (shippingOrderId != null && pickupDate != null) {
-
-			ThirdPartyPickupService thirdPartyPickupService = ThirdPartyCourierServiceFactory.getThirdPartyPickupService(courierId);
 			ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
-			thirdPartyPickupService.createPickupRequest(shippingOrder, pickupDate);
+			String pin = shippingOrder.getBaseOrder().getAddress().getPin();
+			//Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
+			Boolean isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
+			if (courierServiceInfoDao.isCourierServiceInfoAvailable(courierId, pin, false, isGroundShipped, false)) {
+				ThirdPartyPickupService thirdPartyPickupService = ThirdPartyCourierServiceFactory.getThirdPartyPickupService(courierId);
+				List<String> pickupReply = thirdPartyPickupService.createPickupRequest(shippingOrder, pickupDate);
+				if (pickupReply != null) {
+					if (pickupReply.get(0).equals(CourierConstants.SUCCESS)) {
+						String confirmationNo = pickupReply.get(1);
+						addRedirectAlertMessage(new SimpleMessage("Request sent. Pickup confirmation number: " + confirmationNo));
+						logger.debug("courier pickup service initiated successfully");
+					}else{
+						addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request. " + pickupReply.get(1)));
+					}
+				} else {
+					addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request."));
+				}
+			} else {
+				addRedirectAlertMessage(new SimpleMessage("The selected courier does not service the pincode"));
+			}
 		}
 		return new ForwardResolution("/pages/admin/reversePickupService.jsp");
 	}
