@@ -501,6 +501,8 @@ public class XslParser {
                         pincode.setDefaultCourier(courier);
 
                 }
+	            String zone=getCellValue(XslConstants.ZONE, rowMap, headerMap);
+	            pincode.setZone(zone);
                 pincodeList.add(pincode);
 
                 logger.debug("read row " + rowCount);

@@ -50,6 +50,9 @@ public class Pincode implements java.io.Serializable {
     @Column(name = "locality", length = 25)
     private String locality;
 
+	@Column(name="zone", length=10)
+	private String zone;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "default_courier_id", nullable = true)
     private Courier defaultCourier;
@@ -109,6 +112,14 @@ public class Pincode implements java.io.Serializable {
     public void setRegion(String region) {
         this.region = region;
     }
+
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
 }
 
 

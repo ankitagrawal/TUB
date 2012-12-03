@@ -10075,4 +10075,15 @@
     <changeSet author="Rahul (generated)" id="1354282249890-1">
         <addNotNullConstraint columnDataType="VARCHAR(30)" columnName="pin" tableName="address"/>
     </changeSet>
+
+    <changeSet author="Tarun (generated)" id="1354520250137-2">
+        <addColumn tableName="pincode">
+            <column name="zone" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354540960968-1">
+        <addColumn tableName="shipment">
+            <column name="zone" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
