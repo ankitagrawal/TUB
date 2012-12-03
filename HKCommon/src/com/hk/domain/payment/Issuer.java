@@ -116,5 +116,11 @@ public class Issuer implements java.io.Serializable {
         this.imageIcon = imageIcon;
     }
 
+    public String getTagLine() {
+        return tagLine;
+    }
 
+    public void setTagLine(String tagLine) {
+        this.tagLine = tagLine;
+    }
 }
