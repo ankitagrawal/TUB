@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.api.cache.HkApiUserCache;
+import com.hk.cache.HkApiUserCache;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
@@ -49,6 +49,8 @@ public class HkAuthServiceImpl implements HkAuthService {
 
             User user = getUserService().findByLogin(userName);
 
+            // User user = UserCache.getInstance().getUserByLogin(userName).getUser();
+
             if (user == null) {
                 throw new HkUserNotFoundException(userName);
             }
@@ -79,10 +81,10 @@ public class HkAuthServiceImpl implements HkAuthService {
 
     @Override
     public String generateAuthToken(String userName, String passwordCheckSum, String apiKey) {
-        //String userName = (String) authentication.getPrincipal();
-        //String password = (String) authentication.getCredentials();
-        //String passwordCheckSum = BaseUtils.passwordEncrypt(password);
-        //String apiKey = (String) authentication.getApiKey();
+        // String userName = (String) authentication.getPrincipal();
+        // String password = (String) authentication.getCredentials();
+        // String passwordCheckSum = BaseUtils.passwordEncrypt(password);
+        // String apiKey = (String) authentication.getApiKey();
 
         HkApiUser hkApiUser = checkApiKeyExists(apiKey);
         /**
@@ -129,11 +131,12 @@ public class HkAuthServiceImpl implements HkAuthService {
             String userName = decodedTokenArr[0];
             User user = getUserService().findByLogin(userName);
 
+            // User user = UserCache.getInstance().getUserByLogin(userName).getUser();
+
             if (user == null) {
                 throw new HkUserNotFoundException(userName);
             }
 
-            
             String passWordChkSum = user.getPasswordChecksum();
 
             String reConstructedToken = userName.concat(":").concat(passWordChkSum).concat(":").concat(decodedTokenArr[1]);
@@ -160,12 +163,15 @@ public class HkAuthServiceImpl implements HkAuthService {
         String userName = decodedTokenArr[0];
         User user = getUserService().findByLogin(userName);
 
+        // User user = UserCache.getInstance().getUserByLogin(userName).getUser();
+
         if (user == null) {
             throw new HkUserNotFoundException(userName);
         }
 
         String passwordchkSum = user.getPasswordChecksum();
-        //HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName, passwordchkSum, apiKey);
+        // HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName,
+        // passwordchkSum, apiKey);
         return generateAuthToken(userName, passwordchkSum, apiKey);
     }
 
@@ -187,7 +193,8 @@ public class HkAuthServiceImpl implements HkAuthService {
         String userName = "uname";
         String apiKey = "appId";
 
-        //HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey);
+        // HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName,
+        // password, apiKey);
         HkAuthServiceImpl authService = new HkAuthServiceImpl();
         String authToken = authService.generateAuthToken(userName, BaseUtils.passwordEncrypt(password), apiKey);
 

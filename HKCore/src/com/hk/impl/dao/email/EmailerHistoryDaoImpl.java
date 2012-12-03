@@ -29,7 +29,7 @@ public class EmailerHistoryDaoImpl extends BaseDaoImpl implements EmailerHistory
                 emailerHistory.setSendDate(BaseUtils.getCurrentTimestamp());
             }
         }
-        return (EmailerHistory)super.save(emailerHistory);
+        return (EmailerHistory) super.save(emailerHistory);
     }
 
     public EmailerHistory createEmailerHistory(String senderEmail, String senderName, EmailType emailType, EmailRecepient emailRecepient, EmailCampaign emailCampaign,
@@ -42,7 +42,9 @@ public class EmailerHistoryDaoImpl extends BaseDaoImpl implements EmailerHistory
         emailerHistory.setSenderEmail(senderEmail);
         emailerHistory.setSenderName(senderName);
         emailerHistory.setEmailType(emailType);
+        // User user = UserCache.getInstance().getUserByLogin(senderEmail).getUser();
         emailerHistory.setUser(getUserService().findByLogin(senderEmail));
+        // emailerHistory.setUser(user);
         emailerHistory.setSendDate(calendar.getTime());
         return save(emailerHistory);
     }
@@ -57,7 +59,9 @@ public class EmailerHistoryDaoImpl extends BaseDaoImpl implements EmailerHistory
         emailerHistory.setSenderEmail(senderEmail);
         emailerHistory.setSenderName(senderName);
         emailerHistory.setEmailType(emailType);
+        // User user = UserCache.getInstance().getUserByLogin(senderEmail).getUser();
         emailerHistory.setUser(getUserService().findByLogin(senderEmail));
+        // emailerHistory.setUser(user);
         emailerHistory.setSendDate(calendar.getTime());
         return emailerHistory;
     }
