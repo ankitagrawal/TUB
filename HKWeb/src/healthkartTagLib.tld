@@ -997,4 +997,15 @@
 		</example>
 	</function>
 
+     <function>
+        <description>
+            returns a country based on countryid
+        </description>
+        <name>getCountry</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.core.Country getCountry(java.lang.Long))</function-signature>
+        <example>
+            ${hk:getCountry(${id})}
+        </example>
+    </function>
 </taglib>

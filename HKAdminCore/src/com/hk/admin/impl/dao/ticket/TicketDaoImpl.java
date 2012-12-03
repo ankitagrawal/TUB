@@ -59,9 +59,11 @@ public class TicketDaoImpl extends BaseDaoImpl implements TicketDao {
             criteria.add(Restrictions.eq("ticketStatus", ticketFilterDto.getTicketStatus()));
         }
         if (StringUtils.isNotBlank(ticketFilterDto.getAssociatedLogin())) {
+            //UserVO userVO = UserCache.getInstance().getUserByLogin(ticketFilterDto.getAssociatedLogin());
             User associatedUser = getUserService().findByLogin(ticketFilterDto.getAssociatedLogin());
             if (associatedUser != null) {
                 criteria.add(Restrictions.eq("associatedUser", associatedUser));
+                //criteria.add(Restrictions.eq("associatedUser.id", userVO.getId()));
             } else {
                 criteria.add(Restrictions.eq("associatedEmail", ticketFilterDto.getAssociatedLogin()));
             }

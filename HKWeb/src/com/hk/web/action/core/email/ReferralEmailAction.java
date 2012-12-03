@@ -70,6 +70,7 @@ public class ReferralEmailAction extends BaseAction {
     @DontValidate
     public Resolution pre() {
         User user = getUserService().getUserById(getPrincipal().getId());
+        // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         if (user != null) {
             senderName = user.getFirstName();
             senderEmail = user.getEmail();
@@ -79,6 +80,7 @@ public class ReferralEmailAction extends BaseAction {
 
     public Resolution send() {
         User user = getUserService().getUserById(getPrincipal().getId());
+        // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         Coupon coupon = referrerProgramManager.getOrCreateRefferrerCoupon(user);
 
         wommEmailManager.sendEmails(user, senderName, senderEmail, coupon, recepientEmailList, EnumEmailType.ReferralEmail, customText, null);

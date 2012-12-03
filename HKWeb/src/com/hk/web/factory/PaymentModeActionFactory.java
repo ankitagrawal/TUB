@@ -32,6 +32,8 @@ public class PaymentModeActionFactory {
             return IciciGatewaySendReceiveAction.class;
         } else if (EnumPaymentMode.EBS.getId().equals(enumPaymentMode.getId())) {
             return EbsSendReceiveAction.class;
+        }else if (EnumPaymentMode.PAYPAL_CreditDebit.getId().equals(enumPaymentMode.getId())) {
+            return PayPalCreditDebitSendReceiveAction.class;
         } else {
             return null;
         }

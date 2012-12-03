@@ -33,6 +33,7 @@ public class ReferralEmailPreviewAction extends BaseAction {
     @SuppressWarnings("unchecked")
     public Resolution pre() {
         User user = getUserService().getUserById(getPrincipal().getId());
+        // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         Coupon coupon = referrerProgramManager.getOrCreateRefferrerCoupon(user);
 
         String signupLink = linkManager.getReferralSignupLink(user);
