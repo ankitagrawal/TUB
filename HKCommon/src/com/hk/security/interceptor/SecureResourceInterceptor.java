@@ -14,7 +14,7 @@ import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 
 import com.hk.api.HkAPI;
-import com.hk.api.cache.HkApiUserCache;
+import com.hk.cache.HkApiUserCache;
 import com.hk.domain.api.HkApiUser;
 import com.hk.security.HkAuthService;
 import com.hk.security.annotation.SecureResource;

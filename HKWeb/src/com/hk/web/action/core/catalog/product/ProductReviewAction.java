@@ -35,136 +35,134 @@ import com.hk.util.SeoManager;
 
 @Component
 public class ProductReviewAction extends BasePaginatedAction {
-	
-	private Product product;
-	private Page productReviewPage;
-	private List<UserReview> productReviews = new ArrayList<UserReview>();
-	private Integer defaultPerPage = 10;
-	private SeoData seoData;
-	private UserReview review;
-	private boolean captchaMatch;
 
-	
-	@Autowired
-	private SeoManager seoManager;
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private ReviewDao userReviewDao;
-	@Autowired
-	private ReviewService reviewService;
+    private Product          product;
+    private Page             productReviewPage;
+    private List<UserReview> productReviews = new ArrayList<UserReview>();
+    private Integer          defaultPerPage = 10;
+    private SeoData          seoData;
+    private UserReview       review;
+    private boolean          captchaMatch;
 
+    @Autowired
+    private SeoManager       seoManager;
+    @Autowired
+    private UserService      userService;
+    @Autowired
+    private ReviewDao        userReviewDao;
+    @Autowired
+    private ReviewService    reviewService;
 
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     @DefaultHandler
-	public Resolution pre() {
-		productReviewPage = reviewService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), getPageNo(), getPerPage());
-		if (productReviewPage != null) {
-			productReviews = productReviewPage.getList();
-		}
-		if(product != null) {
-			seoData = seoManager.generateSeo(product.getId());
-		} 
+    public Resolution pre() {
+        productReviewPage = reviewService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), getPageNo(), getPerPage());
+        if (productReviewPage != null) {
+            productReviews = productReviewPage.getList();
+        }
+        if (product != null) {
+            seoData = seoManager.generateSeo(product.getId());
+        }
 
-		return new ForwardResolution("/pages/productReviews.jsp");
-	}
+        return new ForwardResolution("/pages/productReviews.jsp");
+    }
 
-	@Secure
-	public Resolution writeNewReview() {
-		review = new UserReview();
-		review.setPostedBy(userService.getLoggedInUser());
-		return new ForwardResolution("/pages/postReview.jsp");
-	}
+    @Secure
+    public Resolution writeNewReview() {
+        review = new UserReview();
+        review.setPostedBy(userService.getLoggedInUser());
+        // User loggedInUser = UserCache.getInstance().getLoggedInUser();
+        // review.setPostedBy(loggedInUser);
+        return new ForwardResolution("/pages/postReview.jsp");
+    }
 
-	public Resolution postReview() {
-		review.setReviewDate(new Date());
-		review.setReviewStatus(reviewService.getReviewStatus(EnumReviewStatus.Pending.getId()));
-		userReviewDao.save(review);
-		captchaMatch = true;
-		return new ForwardResolution("/pages/postReview.jsp");
+    public Resolution postReview() {
+        review.setReviewDate(new Date());
+        review.setReviewStatus(reviewService.getReviewStatus(EnumReviewStatus.Pending.getId()));
+        userReviewDao.save(review);
+        captchaMatch = true;
+        return new ForwardResolution("/pages/postReview.jsp");
 
-	}
+    }
 
-	@ValidationMethod(on = "postReview")
-	public void captchaValidation() {
-		String challengeField = getContext().getRequest().getParameter("recaptcha_challenge_field");
-		String responseField = getContext().getRequest().getParameter("recaptcha_response_field");
-		if (StringUtils.isBlank(responseField))
-			responseField = "null";
+    @ValidationMethod(on = "postReview")
+    public void captchaValidation() {
+        String challengeField = getContext().getRequest().getParameter("recaptcha_challenge_field");
+        String responseField = getContext().getRequest().getParameter("recaptcha_response_field");
+        if (StringUtils.isBlank(responseField))
+            responseField = "null";
 
-		ReCaptcha captcha = ReCaptchaFactory.newReCaptcha(HealthkartConstants.recaptchaPublicKey, HealthkartConstants.recaptchaPrivateKey, false);
-		ReCaptchaResponse response = captcha.checkAnswer(getContext().getRequest().getRemoteAddr(), challengeField, responseField);
-		if (!response.isValid()) {
-			product = review.getProduct();
-			getContext().getValidationErrors().add("Captcha", new LocalizableError("/Signup.action.captcha.invalid"));
-		}
-	}
+        ReCaptcha captcha = ReCaptchaFactory.newReCaptcha(HealthkartConstants.recaptchaPublicKey, HealthkartConstants.recaptchaPrivateKey, false);
+        ReCaptchaResponse response = captcha.checkAnswer(getContext().getRequest().getRemoteAddr(), challengeField, responseField);
+        if (!response.isValid()) {
+            product = review.getProduct();
+            getContext().getValidationErrors().add("Captcha", new LocalizableError("/Signup.action.captcha.invalid"));
+        }
+    }
 
-	public Product getProduct() {
-		return product;
-	}
+    public Product getProduct() {
+        return product;
+    }
 
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-	public List<UserReview> getProductReviews() {
-		return productReviews;
-	}
+    public List<UserReview> getProductReviews() {
+        return productReviews;
+    }
 
-	public SeoData getSeoData() {
-		return seoData;
-	}
+    public SeoData getSeoData() {
+        return seoData;
+    }
 
-	public UserReview getReview() {
-		return review;
-	}
+    public UserReview getReview() {
+        return review;
+    }
 
-	public void setReview(UserReview review) {
-		this.review = review;
-	}
+    public void setReview(UserReview review) {
+        this.review = review;
+    }
 
-	public int getPerPageDefault() {
-		return defaultPerPage;
-	}
+    public int getPerPageDefault() {
+        return defaultPerPage;
+    }
 
-	public int getPageCount() {
-		return productReviewPage == null ? 0 : productReviewPage.getTotalPages();
-	}
+    public int getPageCount() {
+        return productReviewPage == null ? 0 : productReviewPage.getTotalPages();
+    }
 
-	public int getResultCount() {
-		return productReviewPage == null ? 0 : productReviewPage.getTotalResults();
-	}
+    public int getResultCount() {
+        return productReviewPage == null ? 0 : productReviewPage.getTotalResults();
+    }
 
-	public Set<String> getParamSet() {
-		HashSet<String> params = new HashSet<String>();
-		params.add("product");
-		return params;
-	}
+    public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("product");
+        return params;
+    }
 
-	
+    public void setSeoManager(SeoManager seoManager) {
+        this.seoManager = seoManager;
+    }
 
-	public void setSeoManager(SeoManager seoManager) {
-		this.seoManager = seoManager;
-	}
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
+    public void setUserReviewDao(ReviewDao userReviewDao) {
+        this.userReviewDao = userReviewDao;
+    }
 
-	public void setUserReviewDao(ReviewDao userReviewDao) {
-		this.userReviewDao = userReviewDao;
-	}
+    public void setReviewStatusDao(ReviewService reviewService) {
+        this.reviewService = reviewService;
+    }
 
-	public void setReviewStatusDao(ReviewService reviewService) {
-		this.reviewService = reviewService;
-	}
+    public boolean isCaptchaMatch() {
+        return captchaMatch;
+    }
 
-	public boolean isCaptchaMatch() {
-		return captchaMatch;
-	}
-
-	public void setCaptchaMatch(boolean captchaMatch) {
-		this.captchaMatch = captchaMatch;
-	}
+    public void setCaptchaMatch(boolean captchaMatch) {
+        this.captchaMatch = captchaMatch;
+    }
 }

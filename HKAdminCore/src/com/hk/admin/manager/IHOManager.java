@@ -7,11 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.hk.cache.RoleCache;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
 import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.manager.OfferManager;
 import com.hk.pact.dao.offer.OfferDao;
@@ -64,10 +66,13 @@ public class IHOManager {
 
     public Coupon createIHOCoupon(User user, String code) {
         Coupon ihoCoupon = null;
-        if (isValidIHOCard(code) && !user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_IHO_USER))) {
+        Role hkIHOUSer = RoleCache.getInstance().getRoleByName(RoleConstants.HK_IHO_USER).getRole();
+        //if (isValidIHOCard(code) && !user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_IHO_USER))) {
+        if (isValidIHOCard(code) && !user.getRoles().contains(hkIHOUSer)) {
             Offer offer = getOfferManager().getOfferForIHO();
             ihoCoupon = getCouponService().createCoupon(code, null, null, null, offer, null, true, null);
-            user.getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_IHO_USER));
+            //user.getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_IHO_USER));
+            user.getRoles().add(hkIHOUSer);
             user = getUserService().save(user);
         }
         return ihoCoupon;
@@ -121,5 +126,4 @@ public class IHOManager {
         this.offerInstanceDao = offerInstanceDao;
     }
 
-    
 }

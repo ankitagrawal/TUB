@@ -2,6 +2,8 @@ package com.hk.web.action.core.payment;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.RoleCache;
+import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
@@ -54,7 +56,10 @@ public class FreeCheckoutConfirmAction extends BaseAction {
 
 	@ValidationMethod
 	public void validate() {
-		Role tempUserRole = roleDao.getRoleByName(RoleConstants.TEMP_USER);
+		//Role tempUserRole = roleDao.getRoleByName(RoleConstants.TEMP_USER);
+	    
+	    Role tempUserRole = RoleCache.getInstance().getRoleByName(EnumRole.TEMP_USER).getRole();
+	    
 		user = getUserService().getUserById(getPrincipal().getId());
 		if (user != null && user.getRoles().contains(tempUserRole)) {
 			if (StringUtils.isBlank(email)) {
