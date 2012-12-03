@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.CategoryCache;
 import com.hk.constants.EnumS3UploadStatus;
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.product.Product;
@@ -40,34 +41,34 @@ import com.hk.web.action.core.catalog.SuperSaversAction;
 
 @Component
 public class UploadSuperSaverImageAction extends BasePaginatedAction {
-    FileBean fileBean;
-    List<SuperSaverImage> superSaverImages;
-    List<String> categories;
-    List<String> brands;
-    Product product;
-    private Integer defaultPerPage = 10;
-    Page superSaverPage;
-    private SuperSaverImage unassignedSuperSaver;
+    FileBean                       fileBean;
+    List<SuperSaverImage>          superSaverImages;
+    List<String>                   categories;
+    List<String>                   brands;
+    Product                        product;
+    private Integer                defaultPerPage = 10;
+    Page                           superSaverPage;
+    private SuperSaverImage        unassignedSuperSaver;
 
-    private static Logger logger = Logger.getLogger(SuperSaversAction.class);
+    private static Logger          logger         = Logger.getLogger(SuperSaversAction.class);
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String adminUploadsPath;
+    String                         adminUploadsPath;
 
     @Autowired
-    private ImageManager imageManager;
+    private ImageManager           imageManager;
 
     @Autowired
-    private ProductService productService;
+    private ProductService         productService;
 
     @Autowired
-    private ComboDao comboDao;
+    private ComboDao               comboDao;
 
     @Autowired
     private SuperSaverImageService superSaverImageService;
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryService        categoryService;
 
     @ValidationMethod(on = "getSuperSaversByCategoryAndBrand")
     public void validateCategoryAndBrand() {
@@ -81,7 +82,11 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
 
         for (String category : categories) {
             if (!StringUtils.isBlank(category)) {
-                if (getCategoryService().getCategoryByName(category) == null) {
+                /*
+                 * if (getCategoryService().getCategoryByName(category) == null) {
+                 * getContext().getValidationErrors().add("1", new SimpleError("Category not found: " + category)); }
+                 */
+                if (CategoryCache.getInstance().getCategoryByName(category) == null) {
                     getContext().getValidationErrors().add("1", new SimpleError("Category not found: " + category));
                 }
             }
@@ -93,7 +98,7 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/uploadSuperSaverImage.jsp");
     }
 
-
+    @SuppressWarnings("unchecked")
     public Resolution getSuperSaversForCategoryAndBrand() {
         superSaverPage = getSuperSaverImageService().getSuperSaverImages(categories, brands, Boolean.FALSE, Boolean.TRUE, getPageNo(), getPerPage());
         superSaverImages = superSaverPage.getList();
@@ -104,9 +109,9 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
         if (product != null) {
             if (!product.isDeleted()) {
                 Combo combo = null;
-                //Always check before getting a combo if it's a combo or not
-                if (productService.isCombo(combo)){
-                   combo = getComboDao().getComboById(product.getId());
+                // Always check before getting a combo if it's a combo or not
+                if (productService.isCombo(combo)) {
+                    combo = getComboDao().getComboById(product.getId());
                 }
                 if (combo == null) {
                     addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
@@ -145,7 +150,6 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
             fileBean.save(imageFile);
             EnumS3UploadStatus status;
 
-
             status = getImageManager().uploadSuperSaverFile(imageFile, Boolean.TRUE);
             addRedirectAlertMessage(new SimpleMessage(status.getMessage()));
             return new ForwardResolution(UploadSuperSaverImageAction.class, "getSuperSaversWithNoProductAssigned");
@@ -165,7 +169,7 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
             for (SuperSaverImage superSaverImage : superSaverImages) {
                 Product superSaverProduct = superSaverImage.getProduct();
                 if (superSaverProduct != null) {
-                    //check whether combo exists or not
+                    // check whether combo exists or not
                     superSaverImage.setMainImage(Boolean.TRUE);
                     String altText = superSaverImage.getAltText();
                     String productName = superSaverProduct.getName();
