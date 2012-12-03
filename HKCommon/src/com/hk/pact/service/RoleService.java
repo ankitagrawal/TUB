@@ -11,8 +11,8 @@ public interface RoleService {
 
     public Role getRoleByName(String roleName);
 
-    public List<Role> listAllExceptAdmins();
+   /* public List<Role> listAllExceptAdmins();
 
-    public List<Role> listAllBasicRoles();
+    public List<Role> listAllBasicRoles();*/
 
 }

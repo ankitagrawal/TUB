@@ -16,26 +16,24 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Pradeep
- * Date: 7/16/12
- * Time: 12:41 PM
+ * Created with IntelliJ IDEA. User: Pradeep Date: 7/16/12 Time: 12:41 PM
  */
 @Service
-public class SubscriptionLoggingServiceImpl implements SubscriptionLoggingService{
+public class SubscriptionLoggingServiceImpl implements SubscriptionLoggingService {
 
     @Autowired
-    private UserService userService;
+    private UserService              userService;
     @Autowired
     private SubscriptionLifecycleDao subscriptionLifecycleDao;
 
-    public SubscriptionLifecycle save(SubscriptionLifecycle subscriptionLifecycle){
+    public SubscriptionLifecycle save(SubscriptionLifecycle subscriptionLifecycle) {
         return subscriptionLifecycleDao.save(subscriptionLifecycle);
     }
 
     public void logSubscriptionActivity(Subscription subscription, EnumSubscriptionLifecycleActivity enumSubscriptionLifecycleActivity) {
-        User loggedOnUser= userService.getLoggedInUser();
-        if(loggedOnUser==null){
+        User loggedOnUser = userService.getLoggedInUser();
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        if (loggedOnUser == null) {
             loggedOnUser = subscription.getUser();
         }
 
@@ -43,9 +41,10 @@ public class SubscriptionLoggingServiceImpl implements SubscriptionLoggingServic
         logSubscriptionActivity(subscription, loggedOnUser, subscriptionLifecycleActivity, null);
     }
 
-    public void logSubscriptionActivity(Subscription subscription, EnumSubscriptionLifecycleActivity enumSubscriptionLifecycleActivity,String comments){
-        User loggedOnUser= userService.getLoggedInUser();
-        if(loggedOnUser==null){
+    public void logSubscriptionActivity(Subscription subscription, EnumSubscriptionLifecycleActivity enumSubscriptionLifecycleActivity, String comments) {
+        User loggedOnUser = userService.getLoggedInUser();
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        if (loggedOnUser == null) {
             loggedOnUser = subscription.getUser();
         }
 
@@ -54,9 +53,10 @@ public class SubscriptionLoggingServiceImpl implements SubscriptionLoggingServic
     }
 
     public void logSubscriptionActivityByAdmin(Subscription subscription, EnumSubscriptionLifecycleActivity enumSubscriptionLifecycleActivity, String comments) {
-        User user = userService.getAdminUser();
+        // User adminUser = UserCache.getInstance().getAdminUser();
+        User adminUser = getUserService().getAdminUser();
         SubscriptionLifecycleActivity subscriptionLifecycleActivity = enumSubscriptionLifecycleActivity.asSubscriptionLifecycleActivity();
-        logSubscriptionActivity(subscription, user, subscriptionLifecycleActivity, comments);
+        logSubscriptionActivity(subscription, adminUser, subscriptionLifecycleActivity, comments);
     }
 
     public void logSubscriptionActivity(Subscription subscription, User user, SubscriptionLifecycleActivity subscriptionLifecycleActivity, String comments) {

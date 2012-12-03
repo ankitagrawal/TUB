@@ -139,7 +139,7 @@ public class CourierServiceInfoAction extends BaseAction {
                         courierServiceInfo.getPincode().getPincode().toString(), false, false, false);
 
                  if (tmpObj2 != null) {
-                    if (courierServiceInfo.isDeleted()) {
+                    if (courierServiceInfo.isDeleted()) {             
                         courierServiceInfoDao.delete(tmpObj2);
                     } else {
                        tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());

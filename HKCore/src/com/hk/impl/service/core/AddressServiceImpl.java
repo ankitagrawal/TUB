@@ -13,6 +13,8 @@ import com.akube.framework.util.StringUtils;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
+import com.hk.domain.user.BillingAddress;
+import com.hk.domain.core.Country;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.user.UserDetailService;
@@ -71,6 +73,9 @@ public class AddressServiceImpl implements AddressService {
         return addressRec;
     }
 
+     public BillingAddress save(BillingAddress billingAddress){
+         return (BillingAddress) addressDao.save(billingAddress);         
+     }
     public List<Address> getVisibleAddresses(User user) {
         return addressDao.getVisibleAddresses(user);
     }
@@ -78,4 +83,20 @@ public class AddressServiceImpl implements AddressService {
     public Page getVisibleAddressesForManufacturer(Long manufacturerId, String city, int pageNo, int perPage) {
         return addressDao.getVisibleAddressesForManufacturer(manufacturerId, city, pageNo, perPage);
     }
+
+    public List <BillingAddress> getVisibleBillingAddress (User user){
+        return addressDao.getVisibleBillingAddresses(user);
+    }
+
+       public BillingAddress getBillingAddressById(Long billingAddressId){
+           return addressDao.getBillingAddressById(billingAddressId) ;
+       }
+
+    public List<Country> getAllCountry() {
+        return addressDao.getAllCountry();
+    }
+
+     public Country getCountry(Long countryId){
+         return  addressDao.getCountry(countryId);
+     }
 }

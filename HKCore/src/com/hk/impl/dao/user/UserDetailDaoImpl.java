@@ -31,6 +31,7 @@ public class UserDetailDaoImpl  extends BaseDaoImpl implements UserDetailDao {
        return (UserDetail)super.save(userDetails);
     }
 
+    @SuppressWarnings("unchecked")
     public List<UserDetail>  findByPhone(Long phone) {
         List<UserDetail> userDetailList = new ArrayList<UserDetail>();
         DetachedCriteria criteria = DetachedCriteria.forClass(UserDetail.class);

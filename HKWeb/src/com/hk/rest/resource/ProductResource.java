@@ -30,7 +30,8 @@ public class ProductResource {
 	@Produces ("application/json")
 	public String test() {
 
-		ProductService testService = ServiceLocatorFactory.getService(ProductService.class);
+		@SuppressWarnings("unused")
+        ProductService testService = ServiceLocatorFactory.getService(ProductService.class);
 		Product product = getProductService().getProductById("NUT304");
 		return new String(product.getName() + ":" + product.getBrand());
 	}

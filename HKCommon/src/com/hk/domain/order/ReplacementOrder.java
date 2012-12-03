@@ -1,5 +1,5 @@
 package com.hk.domain.order;
-
+ 
 import java.io.Serializable;
 
 import javax.persistence.Column;

@@ -11,6 +11,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.payment.PreferredBankGateway;
 import com.hk.domain.user.User;
+import com.hk.domain.user.BillingAddress;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.RoleDao;
@@ -19,6 +20,7 @@ import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.cart.CartAction;
+import com.hk.web.action.core.user.SelectAddressAction;
 import com.hk.web.factory.PaymentModeActionFactory;
 import net.sourceforge.stripes.action.LocalizableMessage;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -45,7 +47,7 @@ public class PaymentAction extends BaseAction {
 
 	@Validate(required = true, encrypted = true)
 	private Order order;
-
+    private Long billingAddressId;
 	private User user;
 	PreferredBankGateway bank;
 	@Autowired
@@ -65,6 +67,10 @@ public class PaymentAction extends BaseAction {
 	public Resolution proceed() {
 		if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
 			// recalculate the pricing before creating a payment.
+            if(order.getAddress()==null){
+                addRedirectAlertMessage(new SimpleMessage("You have not selected the shipping address"));
+               return new RedirectResolution(SelectAddressAction.class);
+            }
 			order = orderManager.recalAndUpdateAmount(order);
 
 			if (order.getAmount() == 0) {
@@ -102,7 +108,7 @@ public class PaymentAction extends BaseAction {
 
 			RedirectResolution redirectResolution;
 
-            if(gateway != null && !gateway.getId().equals(EnumPaymentMode.CITRUS_CreditDebit.getId()) && bank == null){
+            if(gateway != null && !gateway.getId().equals(EnumPaymentMode.CITRUS_CreditDebit.getId()) && !gateway.getId().equals(EnumPaymentMode.PAYPAL_CreditDebit.getId()) && bank == null){
                 Integer random = (new Random()).nextInt(100);
                 if (random % 2 == 0) {
                     gateway = EnumPaymentMode.ICICI;
@@ -114,17 +120,19 @@ public class PaymentAction extends BaseAction {
             Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), bankCode);
 
 			if (gateway != null) {
+//                gateway = EnumPaymentMode.PAYPAL_CreditDebit;
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(gateway);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");
 				return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode));
+						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode, billingAddressId));
+
 			} else {
 				// ccavneue is the default gateway
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(EnumPaymentMode.CCAVENUE_DUMMY);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");
 			}
 			return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-					payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null));
+					payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null, null));
 
 		}
 		addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
@@ -154,4 +162,12 @@ public class PaymentAction extends BaseAction {
 	public void setBankId(Long bankId) {
 		this.bankId = bankId;
 	}
+
+    public Long getBillingAddressId() {
+        return billingAddressId;
+    }
+
+    public void setBillingAddressId(Long billingAddressId) {
+        this.billingAddressId = billingAddressId;
+    }
 }

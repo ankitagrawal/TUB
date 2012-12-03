@@ -41,7 +41,8 @@ public class ProductVariantResource {
   private SkuService skuService;
   private StoreService storeService;
 
-  private static Logger logger                    = LoggerFactory.getLogger(ProductVariantResource.class);
+  @SuppressWarnings("unused")
+private static Logger logger                    = LoggerFactory.getLogger(ProductVariantResource.class);
 
 
 
