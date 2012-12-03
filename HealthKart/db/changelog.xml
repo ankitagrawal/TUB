@@ -9068,7 +9068,7 @@
     <changeSet author="Pratham" id="09-18-2012">
         <sql>
             update affiliate set offer_id = 1357;
-            update coupon set offer_id = 1357 where referrer_user_id is not null;
+            <!--update coupon set offer_id = 1357 where referrer_user_id is not null;-->
         </sql>
     </changeSet>
     <changeSet author="vaibhav" id="1347716040168-1">
@@ -9787,25 +9787,5 @@
         <addColumn tableName="traffic_tracking">
             <column name="user_agent" type="VARCHAR(200)"/>
         </addColumn>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1353937981685-1">
-        <createTable tableName="heading_product">
-            <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="product_id" type="VARCHAR(20)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="heading_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueNumeric="0" name="rank" type="INT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1353937981685-2">
-        <addForeignKeyConstraint baseColumnNames="heading_id" baseTableName="heading_product" constraintName="fk_heading_product_primary_category_heading1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="primary_category_heading" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1353937981685-3">
-        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="heading_product" constraintName="fk_heading_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>

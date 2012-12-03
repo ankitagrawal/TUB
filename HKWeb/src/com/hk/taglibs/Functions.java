@@ -15,6 +15,9 @@ import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.content.HeadingProduct;
+import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
 import net.sourceforge.stripes.util.CryptoUtil;
@@ -666,5 +669,10 @@ public class Functions {
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         return  productService.validTryOnProductVariant(product);
     }
+
+  public static List<HeadingProduct> getHeadingProductsSortedByRank(Long headingId){
+    HeadingProductService  headingProductService = ServiceLocatorFactory.getService(HeadingProductService.class);
+    return headingProductService.getHeadingProductsSortedByRank(headingId);
+  }
 
 }

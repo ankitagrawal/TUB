@@ -43,6 +43,11 @@ public class HeadingProductServiceImpl implements HeadingProductService {
       return (HeadingProduct)getBaseDao().save(headingProduct);
   }
 
+  @SuppressWarnings("unchecked")
+  public List<HeadingProduct>  getHeadingProductsSortedByRank(Long headingId){
+    return (List<HeadingProduct>) getBaseDao().findByNamedQueryAndNamedParam("getHeadingProductsSortedByRank", new String[]{"headingId"}, new Object[]{headingId});
+  }
+
   public BaseDao getBaseDao() {
     return baseDao;
   }

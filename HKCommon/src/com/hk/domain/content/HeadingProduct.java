@@ -15,7 +15,8 @@ import com.hk.domain.content.PrimaryCategoryHeading;
 
 @NamedQueries({
     @NamedQuery(name = "getHeadingProductsByHeadingId", query = "select hp from HeadingProduct hp where hp.heading = :heading"),
-    @NamedQuery(name = "getHeadingProductByHeadingAndProductId", query = "select hp from HeadingProduct hp where hp.heading = :heading and hp.product.id = :productId")
+    @NamedQuery(name = "getHeadingProductByHeadingAndProductId", query = "select hp from HeadingProduct hp where hp.heading = :heading and hp.product.id = :productId"),
+    @NamedQuery(name = "getHeadingProductsSortedByRank", query = "select hp from HeadingProduct hp where hp.heading.id = :headingId order By rank desc")
 })
 
 @Entity

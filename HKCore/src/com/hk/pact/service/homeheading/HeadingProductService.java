@@ -18,6 +18,8 @@ public interface HeadingProductService {
   public List<HeadingProduct> getHeadingProductsByHeadingId(PrimaryCategoryHeading heading);
 
   public HeadingProduct getHeadingProductByHeadingAndProductId(PrimaryCategoryHeading heading, String productId);
+
+  public List<HeadingProduct>  getHeadingProductsSortedByRank(Long headingId);
   
   public void delete(HeadingProduct headingProduct);
 
