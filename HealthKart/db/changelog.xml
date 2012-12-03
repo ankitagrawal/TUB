@@ -10150,7 +10150,6 @@
         insert into country values (201,'ZAMBIA', 'ZM');      
     </sql>
   </changeSet>
-<<<<<<< HEAD
     <changeSet author="Pratham" id="20121129-01">
         <sql>
         INSERT INTO `gateway` (`id`, `name`, `downtime_start_date`, `downtime_end_date`, `active`, `priority`, `image`) VALUES
@@ -10227,6 +10226,7 @@
         UPDATE `payment_mode` SET `id` = 80,`name` = 'Citrus Credit Debit',`gateway` = '80' WHERE `payment_mode`.`id` = 80;
         UPDATE `payment_mode` SET `id` = 90,`name` = 'EBS Online Payment',`gateway` = '90' WHERE `payment_mode`.`id` = 90;
         UPDATE `payment_mode` SET `id` = 100,`name` = 'Icici Backend ',`gateway` = '100' WHERE `payment_mode`.`id` = 100;
+        UPDATE `payment_mode` SET `id` = 85,`name` = 'Paypal Credit Debit',`gateway` = '110' WHERE `payment_mode`.`id` = 85;
 
         update payment pt,gateway_issuer_mapping gim,issuer ir set pt.issuer_id=ir.id where pt.bank_code = gim.issuer_code
         and gim.issuer_id = ir.id;
@@ -10301,5 +10301,10 @@
     </changeSet>
     <changeSet author="Rahul (generated)" id="1354282249890-1">
         <addNotNullConstraint columnDataType="VARCHAR(30)" columnName="pin" tableName="address"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1354528997308-1">
+        <addColumn tableName="issuer">
+            <column name="tag_line" type="VARCHAR(100)"/>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>

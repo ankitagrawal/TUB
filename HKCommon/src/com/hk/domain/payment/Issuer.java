@@ -26,6 +26,9 @@ public class Issuer implements java.io.Serializable {
     @Column(name = "name", length = 100)
     private String name;
 
+    @Column(name = "tag_line", length = 100)
+    private String tagLine;
+
     @Column(name = "issuer_type", length = 45)
     private String issuerType;
 
@@ -111,5 +114,13 @@ public class Issuer implements java.io.Serializable {
 
     public void setImageIcon(byte[] imageIcon) {
         this.imageIcon = imageIcon;
+    }
+
+    public String getTagLine() {
+        return tagLine;
+    }
+
+    public void setTagLine(String tagLine) {
+        this.tagLine = tagLine;
     }
 }
