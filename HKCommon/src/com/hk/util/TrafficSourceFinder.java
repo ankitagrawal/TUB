@@ -41,70 +41,88 @@ public class TrafficSourceFinder {
 		Map<String, String> orderReferres = new HashMap<String, String>();
 
 		String referrer = httpRequest.getHeader(HttpRequestAndSessionConstants.REFERER);
-		String utm_source = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_SOURCE);
-		if (StringUtils.isNotBlank(utm_source)) {
-			trafficSrcDetails += "utm_source=" + utm_source + "||";
-		}
-		String utm_medium = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_MEDIUM);
-		if (StringUtils.isNotBlank(utm_source)) {
-			trafficSrcDetails += "utm_medium=" + utm_medium + "||";
-		}
-		String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
-		if (StringUtils.isNotBlank(utm_campaign)) {
-			trafficSrcDetails += "utm_campaign=" + utm_campaign;
-		}
-
-		if (utm_source == null) {
-			utm_source = "";
-		}
-		if (utm_medium == null) {
-			utm_medium = "";
-		}
-
 		if (referrer == null) {
 			referrer = "";
 		}
-		if (referrer.toLowerCase().contains(GOOGLE)
-				|| httpRequest.getParameter(HttpRequestAndSessionConstants.GCLID) != null
-				|| httpRequest.getParameter(HttpRequestAndSessionConstants.ADWORD) != null) {
-			trafficSrc = GOOGLE;
-			if (httpRequest.getParameter(HttpRequestAndSessionConstants.ADWORD) != null
-					|| !utm_source.equals("")
-					|| httpRequest.getParameter(HttpRequestAndSessionConstants.GCLID) != null) {
+		referrer = referrer.toLowerCase();
+
+		String utm_source = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_SOURCE);
+		if (StringUtils.isNotBlank(utm_source)) {
+			utm_source = utm_source.toLowerCase();
+			trafficSrcDetails += "utm_source=" + utm_source + "||";
+		} else {
+			utm_source = "";
+		}
+		String utm_medium = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_MEDIUM);
+		if (StringUtils.isNotBlank(utm_medium)) {
+			utm_medium = utm_medium.toLowerCase();
+			trafficSrcDetails += "utm_medium=" + utm_medium + "||";
+		} else {
+			utm_medium = "";
+		}
+		String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
+		if (StringUtils.isNotBlank(utm_campaign)) {
+			trafficSrcDetails += "utm_campaign=" + utm_campaign + "||";
+		}
+		String aff_id = httpRequest.getParameter(HttpRequestAndSessionConstants.AFF_ID);
+		if (StringUtils.isNotBlank(aff_id)) {
+			trafficSrcDetails += "aff_id=" + aff_id;
+		} else {
+			aff_id = "";
+		}
+
+
+		/** Sample URLs **/
+		//http://www.healthkart.com/?utm_source=adwords&utm_medium=ad&utm_campaign=hk_brandname&gclid=CNWR4-Pm77MCFYh66wodhhYA1w
+		//http://pediasure.in/pediasure_goo/?utm_source=Google&utm_medium=CPC&utm_campaign=Pediasure
+		//http://www.youtube.com/watch?v=onBUw-LcVt4&feature=relmfu
+		//http://www.healthkart.com/product/musclepharm-assault/NUT420?utm_source=enewsletter&utm_medium=email&utm_campaign=nov23_2012_weekend_offer-2012-11-23
+		//utm_source=adwords||utm_medium=ad||utm_campaign=hk_nutrition
+		//utm_source="facebook"||utm_medium="newsfeed_ads"||
+		//http://www.healthkart.com/product/vx-weight-lifting-straps-pair/SPT391?utm_source=facebook&utm_medium=cpc&utm_campaign=hk_fb_sports_b_vx&utm_content=Weight+Lifting+Straps+%282012-1
+		//http://indiapulse.sulekha.com/forums/personal_baby-diapers-in-india-hyderabad-275571
+
+		if (!utm_source.equals("")) {
+			if (utm_source.equals(UtmSourceConstants.ADWORDS) || utm_source.equals(UtmSourceConstants.GOOGLE)) {
+				trafficSrc = GOOGLE;
+			} else if (utm_source.equals(UtmSourceConstants.FACEBOOK) || utm_source.equals(UtmSourceConstants.FB) || utm_source.contains(UtmSourceConstants.FACEBOOK)) {
+				trafficSrc = FACEBOOK;
+			} else if (utm_source.equals(UtmSourceConstants.ENEWSLETTER) || utm_source.equals(UtmSourceConstants.NOTIFYME)) {
+				trafficSrc = EMAIL_NEWSLETTER;
+			} else if (utm_source.contains(UtmSourceConstants.VIZURY)) {
+				trafficSrc = VIZURY;
+				trafficSrcPaid = "true";
+			} else if (utm_source.toLowerCase().equals(UtmSourceConstants.KOMLI.toLowerCase())) {
+				trafficSrc = UtmSourceConstants.KOMLI.toLowerCase();
+				trafficSrcPaid = "true";
+			} else if (utm_source.toLowerCase().equals(UtmSourceConstants.OHANA.toLowerCase())) {
+				trafficSrc = UtmSourceConstants.OHANA.toLowerCase();
+				trafficSrcPaid = "true";
+			} else if (utm_medium.toLowerCase().equals(UtmMediumConstants.MICROSITES.toLowerCase())) {
+				trafficSrc = AFFILIATE;
+			} else if (!aff_id.equals("")) {
+				trafficSrc = AFFILIATE;
+				trafficSrcPaid = "true";
+			} else {
+				trafficSrc = RFERRAL;
+			}
+			if (utm_medium.equals(UtmMediumConstants.AD) || utm_medium.equals(UtmMediumConstants.CPC)) {
 				trafficSrcPaid = "true";
 			}
-		} else if (referrer.toLowerCase().contains(FACEBOOK)
-				|| utm_source.toLowerCase().equals(UtmSourceConstants.FACEBOOK.toLowerCase())) {
-			trafficSrc = FACEBOOK;
-			if (!utm_source.equals("")) {
+		} else if (!referrer.equals("")) {
+			if (referrer.contains(GOOGLE)) {
+				trafficSrc = GOOGLE;
+			} else if (referrer.contains(FACEBOOK)) {
+				trafficSrc = FACEBOOK;
+			} else if (!aff_id.equals("")) {
+				trafficSrc = AFFILIATE;
 				trafficSrcPaid = "true";
+			} else {
+				trafficSrc = RFERRAL;
 			}
-		} else if (httpRequest.getParameter("affid") != null || utm_medium.toLowerCase().equals(UtmMediumConstants.AFFILIATES.toLowerCase())) {
-			trafficSrc = AFFILIATE;
-			if (httpRequest.getParameter("affid") != null) {
-				trafficSrcPaid = "true";
-			}
-		} else if (!utm_source.equals("")
-				&& (utm_source.toLowerCase().contains("VZR".toLowerCase())
-				|| utm_source == UtmSourceConstants.VIZURY)
-				) {
-			trafficSrc = VIZURY;
-			trafficSrcPaid = "true";
-		} else if (utm_source.toLowerCase().equals(UtmSourceConstants.KOMLI.toLowerCase())) {
-			trafficSrc = UtmSourceConstants.KOMLI.toLowerCase();
-			trafficSrcPaid = "true";
-		} else if (utm_source.toLowerCase().equals(UtmSourceConstants.OHANA.toLowerCase())) {
-			trafficSrc = UtmSourceConstants.OHANA.toLowerCase();
-			trafficSrcPaid = "true";
-		} else if (utm_medium.toLowerCase().equals(UtmMediumConstants.EMAIL.toLowerCase())
-				|| utm_medium.toLowerCase().equals(UtmMediumConstants.EMAILER.toLowerCase())
-				|| utm_source.toLowerCase().equals(UtmSourceConstants.NOTIFYME.toLowerCase())
-				|| utm_source.toLowerCase().equals(UtmSourceConstants.ENEWSLETTER.toLowerCase())) {
-			trafficSrc = EMAIL_NEWSLETTER;
 		} else {
 			trafficSrc = HEALTHKART;
 		}
-
 
 		if (httpRequest != null) {
 			String requestPath = httpRequest.getRequestURI();

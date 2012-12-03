@@ -9,7 +9,9 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -22,6 +24,8 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +51,12 @@ public class ShipmentServiceImpl implements ShipmentService {
 	ShippingOrderService shippingOrderService;
 	@Autowired
 	ShipmentDao shipmentDao;
-
 	@Autowired
 	CourierServiceInfoDao courierServiceInfoDao;
+	@Autowired
+	UserService userService;
+	@Autowired
+	AdminEmailManager adminEmailManager;
 
 
 	@Transactional
@@ -57,41 +64,52 @@ public class ShipmentServiceImpl implements ShipmentService {
 		Order order = shippingOrder.getBaseOrder();
 		Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
 		if (pincode == null) {
+			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.PINCODE_INVALID);
 			return null;
 		}
 
-		// Ground Shipping logic starts -- suggested courier
 		boolean isGroundShipped = false;
 		Courier suggestedCourier = null;
+		String shipmentType;
 		isGroundShipped = isShippingOrderHasGroundShippedItem(shippingOrder);
 		suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), isGroundShipped, shippingOrder.getWarehouse());
-		// Ground Shipping logic ends -- suggested courier
-		if (suggestedCourier == null) {
-			return null;
+		if (isGroundShipped) {
+			shipmentType = CourierConstants.GROUND_SHIPPING;
+		} else {
+			shipmentType = CourierConstants.AIR_SHIPPING;
 		}
 
-		Double estimatedWeight = 100D;
+		if (suggestedCourier == null) {
+			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
+			return null;
+		} else {
+			String pin = pincode.getPincode();
+			Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
+			if (!courierServiceInfoDao.isCourierServiceInfoAvailable(suggestedCourier.getId(), pin, shippingOrder.isCOD(), isGroundShipped, isCodAllowedOnGroundShipping)) {
+				shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+						EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(), CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
+			}
+		}
+
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
-			ProductVariant productVariant = lineItem.getSku().getProductVariant();
 			if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
+				shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+						EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.DROP_SHIPPED_ORDER);
 				return null;
 			}
-			Double variantWeight = productVariant.getWeight();
-			if (variantWeight == null || variantWeight == 0D) {
-				estimatedWeight += 0D;
-			} else {
-				estimatedWeight += variantWeight;
-			}
 		}
 
-		Double weightInKg = estimatedWeight / 1000;
+		Double weightInKg = getEstimatedWeightOfShipment(shippingOrder);
 		Long suggestedCourierId = suggestedCourier.getId();
 
 		Awb suggestedAwb;
 		if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId)) {
 			suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
-			if (suggestedAwb != null) {
+			if (suggestedAwb != null) {				
 				suggestedAwb = (Awb) awbService.save(suggestedAwb, null);
+				awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
 			}
 		} else {
 			suggestedAwb = attachAwbToShipment(suggestedCourier, shippingOrder);
@@ -99,15 +117,20 @@ public class ShipmentServiceImpl implements ShipmentService {
 
 		// If we dont have AWB , shipment will not be created
 		if (suggestedAwb == null) {
+			String msg = CourierConstants.AWB_NOT_ASSIGNED + suggestedCourier.getName();
+			shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+					EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), msg);
+			if (!(ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId))) {
+				adminEmailManager.sendAwbStatusEmail(suggestedCourier, shippingOrder);
+			}
 			return null;
 		}
 
 		Shipment shipment = new Shipment();
-//		shipment.setCourier(suggestedCourier);
 		shipment.setEmailSent(false);
 		shipment.setAwb(suggestedAwb);
 		shipment.setShippingOrder(shippingOrder);
-		shipment.setBoxWeight(estimatedWeight / 1000);
+		shipment.setBoxWeight(weightInKg);
 		shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
 		shippingOrder.setShipment(shipment);
 		if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
@@ -117,8 +140,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 		}
 		shippingOrder = shippingOrderService.save(shippingOrder);
 		String trackingId = shipment.getAwb().getAwbNumber();
-		String comment = "Shipment Details: " + shipment.getAwb().getCourier().getName() + "/" + trackingId;
-		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created, comment);
+		String comment = shipmentType + CourierConstants.SHIPMENT_DETAILS + shipment.getAwb().getCourier().getName() + "/" + trackingId;
+		shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getAdminUser(),
+				EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(), comment);
 		return shippingOrder.getShipment();
 	}
 
@@ -134,7 +158,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 
 	@Transactional
 	private Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
-		Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+
+		Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(),
+				shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
 		if (suggestedAwb == null) {
 			return null;
 		}
@@ -167,7 +193,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		}
 		return newShipment;
 	}
-
+   
 
 	@Override
 	public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder) {
@@ -179,17 +205,21 @@ public class ShipmentServiceImpl implements ShipmentService {
 		return false;
 	}
 
-	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder){
-		 Double estimatedWeight = 100D;
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            Double variantWeight = productVariant.getWeight();
-            if (variantWeight == null || variantWeight == 0D) {
-                estimatedWeight += 0D;
-            } else {
-                estimatedWeight += variantWeight;
-            }
-        }
-		return estimatedWeight/1000;
+	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder) {
+		Double estimatedWeight = 100D;
+		for (LineItem lineItem : shippingOrder.getLineItems()) {
+			ProductVariant productVariant = lineItem.getSku().getProductVariant();
+			Double variantWeight = productVariant.getWeight();
+			if (variantWeight == null || variantWeight == 0D) {
+				estimatedWeight += 0D;
+			} else {
+				estimatedWeight += variantWeight;
+			}
+		}
+		return estimatedWeight / 1000;
+	}	
+
+	public UserService getUserService() {
+		return userService;
 	}
 }
