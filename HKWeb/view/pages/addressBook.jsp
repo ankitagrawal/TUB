@@ -103,7 +103,7 @@
             <div class='pin'>${address.pin}</div>
             <div class='phone'>${address.phone}</div>
             <br/>
-            <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" class="delete" onclick="return confirm('Are you sure you want to delete this address?')">
+            <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" class="delete">
               <s:param name="deleteAddress" value="${address.id}"/>
               (delete)
             </s:link>
@@ -119,7 +119,9 @@
         </s:link>
       </c:forEach>
       <script type="text/javascript">
-        $('.edit').click(function() {
+          $(document).ready(function() {
+              var bool = false;
+          $('.edit').click(function() {
           form = $('#newAddressForm');
           addressBlock = $(this).parents('.address');
           name = addressBlock.find('.name').text();
@@ -142,13 +144,26 @@
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
-        $(document).ready(function() {
+        $('.delete').click(function(){
+            if (confirm('Are you sure you want to delete this address?')) {
+                bool = true;
+                return true;
+                            } else {
+                              return false;
+                            }
+        });
+
 	        $('.address').hover(
 			        function() {
 				        $(this).children('.hidden').slideDown(100);
 				        $(this).children('.edit').click(function() {
 					        return false;
 				        });
+                        $(this).children('.delete').click(function() {
+                          if(bool) return true;
+                            else
+                           return false;
+                        });
 			        },
 			        function() {
 				        $(this).children('.hidden').slideUp(50);
@@ -157,7 +172,8 @@
 	        $('.address').click(function() {
 		        var add_url = $(this).children('a').attr('href');
 		        document.location.href = add_url;
-	        });
+	        });          
+
 	        $('.addressValidation').click(function() {
                 var pincodeRegEx = /^([0-9]{6})$/;
                 var pincode = $('.pincode').val();

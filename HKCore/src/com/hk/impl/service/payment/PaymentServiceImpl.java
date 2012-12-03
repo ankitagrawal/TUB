@@ -90,6 +90,7 @@ public class PaymentServiceImpl implements PaymentService {
             case CITRUS_CreditDebit:
             case CITRUS_NetBanking_New:
             case EBS:
+            case PAYPAL_CreditDebit:
             case TECHPROCESS:
             case ICICI:
             case CCAVENUE_DUMMY:

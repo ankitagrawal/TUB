@@ -38,8 +38,8 @@ public class ShippingOrderLifecycleAction extends BaseAction {
   UserService userService;
   @Autowired
   ShippingOrderLifecycleDao shippingOrderLifecycleDao;
-  
-  
+
+
   @Validate(required = true)
   private String comment;
 
@@ -51,8 +51,10 @@ public class ShippingOrderLifecycleAction extends BaseAction {
   }
 
   private void setActivitiesForView() {
-    for (ShippingOrderLifecycle lifecycle : shippingOrder.getShippingOrderLifecycles()) {
-      shippingOrderLifeCycles.add(lifecycle);
+    if (shippingOrder != null) {
+      for (ShippingOrderLifecycle lifecycle : shippingOrder.getShippingOrderLifecycles()) {
+        shippingOrderLifeCycles.add(lifecycle);
+      }
     }
   }
 

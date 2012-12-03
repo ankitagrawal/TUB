@@ -28,7 +28,7 @@ public interface UserDao extends BaseDao {
 
   public User findByEmailAndPassword(String email, String password);
 
-  public User findByUserHandle(String userHandle);
+  //public User findByUserHandle(String userHandle);
 
   public User findByUserHash(String userHash);
 
@@ -52,7 +52,7 @@ public interface UserDao extends BaseDao {
 
   public Page getMailingList(Category category, int pageNo, int perPage);
 
-  public RoleDao getRoleDao();
+  //public RoleDao getRoleDao();
 
-  public void setRoleDao(RoleDao roleDao);
+  //public void setRoleDao(RoleDao roleDao);
 }
