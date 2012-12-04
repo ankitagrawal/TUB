@@ -575,6 +575,12 @@ public class ProductServiceImpl implements ProductService {
         }
         return inStockSimilarProducts;
     }
+
+   public boolean markRelatedCombosOutOfStock(ProductVariant productVariant){
+
+     
+     return true;
+  }
 }
 
 

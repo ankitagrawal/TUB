@@ -600,23 +600,9 @@ public class OrderManager {
                                     if (unbookedInventory < 0) {
                                         unbookedInventory = 0L;
                                     }
-                                  //setting product out of stock
+                                  //setting productVariant and it's related Combos out of stock
                                   if(unbookedInventory == 0L){
-                                    Product productOutOfStock =  getProductService().getProductById(lineItem.getProductVariant().getProduct().getId());
-                                    productOutOfStock.setOutOfStock(true);
-                                    getProductService().save(productOutOfStock);
-                                    //setting combo out of stock which contains this product
-                                    if(lineItem.getComboInstance()!=null){
-                                      List<Combo> relatedProductCombos = getComboDao().getCombos(lineItem.getProductVariant().getProduct());
-                                      for(Combo combo : relatedProductCombos){
-                                        Product productCombo = getProductService().getProductById(combo.getId());
-                                        productCombo.setOutOfStock(true);
-                                        getProductService().save(productCombo);
-                                      }
-                                      Product productCombo = getProductService().getProductById(lineItem.getComboInstance().getCombo().getId());
-                                      productCombo.setOutOfStock(true);
-                                      getProductService().save(productCombo);
-                                    }
+                                   
                                   }
                                     if (lineItem.getComboInstance() != null) {
                                         comboInstanceIds.add(lineItem.getComboInstance().getId());
