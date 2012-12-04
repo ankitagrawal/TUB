@@ -10307,7 +10307,7 @@
             <column name="tag_line" type="VARCHAR(100)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Pratham (generated)" id="20121129-3">
+    <changeSet author="Pratham (generated)" id="20121129-30">
         <sql>
             update issuer set tag_line = " (Faster Checkout)" where id = 4;
             update issuer set tag_line = " (For International Cards Only)" where id = 5;
