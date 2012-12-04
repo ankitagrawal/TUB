@@ -1,20 +1,32 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.akube.framework.dao.Page;
 
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
 import com.hk.admin.pact.service.courier.CourierService;
+
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.factory.courier.thirdParty.ThirdPartyCourierServiceFactory;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.user.User;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.ReversePickup;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.dao.courier.ReversePickupDao;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.inventory.EnumReconciliationStatus;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.web.action.error.AdminPermissionAction;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.stripesstuff.plugin.security.Secure;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
@@ -29,14 +41,19 @@ import java.util.List;
  * Time: 12:58:29 PM
  * To change this template use File | Settings | File Templates.
  */
+@Secure(hasAnyPermissions = {PermissionConstants.HK_EMPLOYEE}, authActionBean = AdminPermissionAction.class)
 @Component
-public class CourierPickupServiceAction extends BaseAction {
+public class CourierPickupServiceAction extends BasePaginatedAction {
 	private static Logger logger = LoggerFactory.getLogger(CourierPickupServiceAction.class);
 	private static final int maxPossibleDays = 14;
 	private Date pickupDate;
 	private Long courierId;
 	private String shippingOrderId;
 	private boolean exceededPolicyLimit;
+	private List<ReversePickup> pickupRequestsList;
+
+	Page PickupRequestsPage;
+    private Integer defaultPerPage = 30;
 
 
 	@Autowired
@@ -47,6 +64,9 @@ public class CourierPickupServiceAction extends BaseAction {
 	CourierServiceInfoDao courierServiceInfoDao;
 	@Autowired
 	ShipmentService shipmentService;
+	@Autowired
+	ReversePickupDao reversePickupDao;
+
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -73,15 +93,17 @@ public class CourierPickupServiceAction extends BaseAction {
 			exceededPolicyLimit = false;
 		} else {
 			exceededPolicyLimit = true;
+			pickupRequestsList = reversePickupDao.getPickupRequestsList();
 			//return new ForwardResolution("/pages/admin/queue/shippingOrderDetailGrid.jsp");
 		}
-		return new ForwardResolution("/pages/admin/reversePickupService.jsp");
+		return new ForwardResolution("/pages/admin/reversePickup.jsp");
 	}
 
 	public Resolution submit() {
 		if (shippingOrderId != null && pickupDate != null) {
 			ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
 			String pin = shippingOrder.getBaseOrder().getAddress().getPin();
+			Courier courier = EnumCourier.getEnumCourierFromCourierId(courierId).asCourier();
 			//Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
 			Boolean isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
 			if (courierServiceInfoDao.isCourierServiceInfoAvailable(courierId, pin, false, isGroundShipped, false)) {
@@ -92,6 +114,9 @@ public class CourierPickupServiceAction extends BaseAction {
 						String confirmationNo = pickupReply.get(1);
 						addRedirectAlertMessage(new SimpleMessage("Request sent. Pickup confirmation number: " + confirmationNo));
 						logger.debug("courier pickup service initiated successfully");
+						User loggedOnUser = getUserService().getLoggedInUser();
+						reversePickupDao.savePickupRequest(shippingOrder, courier, confirmationNo,
+								pickupDate, false, EnumReconciliationStatus.PENDING.asReconciliationStatus(), loggedOnUser);
 					}else{
 						addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request. " + pickupReply.get(1)));
 					}
@@ -102,7 +127,7 @@ public class CourierPickupServiceAction extends BaseAction {
 				addRedirectAlertMessage(new SimpleMessage("The selected courier does not service the pincode"));
 			}
 		}
-		return new ForwardResolution("/pages/admin/reversePickupService.jsp");
+		return new ForwardResolution("/pages/admin/reversePickup.jsp");
 	}
 
 	public Date getPickupDate() {
@@ -136,5 +161,13 @@ public class CourierPickupServiceAction extends BaseAction {
 
 	public void setExceededPolicyLimit(boolean exceededPolicyLimit) {
 		this.exceededPolicyLimit = exceededPolicyLimit;
+	}
+
+	public List<ReversePickup> getPickupRequestsList() {
+		return pickupRequestsList;
+	}
+
+	public void setPickupRequestsList(List<ReversePickup> pickupRequestsList) {
+		this.pickupRequestsList = pickupRequestsList;
 	}
 }

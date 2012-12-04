@@ -1,0 +1,29 @@
+package com.hk.pact.dao.courier;
+
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.ReversePickup;
+import com.hk.domain.inventory.rv.ReconciliationStatus;
+import com.hk.domain.user.User;
+import com.akube.framework.dao.Page;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: Neha
+ * Date: Dec 4, 2012
+ * Time: 5:23:20 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public interface ReversePickupDao {
+	public void savePickupRequest(ShippingOrder shippingOrder, Courier courier, String confirmationNo,
+							   Date pickupDate, boolean pickupStatus, ReconciliationStatus reconciliationStatus, User user);
+
+	public Page getPickupRequestsByStatuses(Boolean pickupStatus, Boolean reconciliationStatus, int page, int perPage);
+
+	public List<ReversePickup> getPickupRequestsByStatuses(Boolean pickupStatus, Boolean reconciliationStatus);
+
+
+}
