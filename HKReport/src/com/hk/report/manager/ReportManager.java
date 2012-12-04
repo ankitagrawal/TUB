@@ -276,7 +276,7 @@ public class ReportManager {
      * The method returns an excel gfile for the courier report
      */
     public File generateCourierReportXsl(String xslFilePath, EnumShippingOrderStatus shippingOrderStatus, List<Courier> courierList, Date startDate, Date endDate,
-            Warehouse warehouse) throws Exception {
+            Warehouse warehouse, String zone) throws Exception {
 
         List<ShippingOrder> shippingOrderList = null;
         File file = new File(xslFilePath);
@@ -323,6 +323,9 @@ public class ReportManager {
         setCellValue(row, 20, ReportConstants.SHIPMENT_DATE);
         setCellValue(row, 21, ReportConstants.BOX_SIZE);
         setCellValue(row, 22, ReportConstants.BOX_WEIGHT);
+	    if(zone != null){
+	        setCellValue(row, 23, ReportConstants.ZONE);
+        }
 
         int rowCounter = 1;
         if (startDate == null && endDate == null) {
@@ -411,6 +414,12 @@ public class ReportManager {
                 if (shipment.getBoxWeight() != null) {
                     setCellValue(row, 22, shipment.getBoxWeight());
                 }
+	            if(zone != null){
+		            String shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
+		            if(shippingOrderZone != null && shippingOrderZone.toLowerCase().equals(zone.toLowerCase())){
+			            setCellValue(row, 23, shippingOrderZone);
+		            }
+	            }
             }
         }
         wb.write(out);

@@ -77,4 +77,6 @@ public interface ShippingOrderService {
 
 	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder);
 
+	public String getZoneForShippingOrder(ShippingOrder shippingOrder);
+
 }

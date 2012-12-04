@@ -370,6 +370,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 		return false;
 	}
 
+	@Override
+	public String getZoneForShippingOrder(ShippingOrder shippingOrder) {
+		Pincode shippingOrderPincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+		return shippingOrderPincode.getZone();
+	}
+
 	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
