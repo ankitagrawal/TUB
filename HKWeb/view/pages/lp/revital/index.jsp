@@ -5,6 +5,7 @@
 <title>Revital</title>
  <%@include file="/includes/_taglibInclude.jsp" %>  
 <link href="${pageContext.request.contextPath}/pages/lp/revital/default.css" rel="stylesheet" type="text/css" />
+  <jsp:include page="/includes/_analytics.jsp"/>
 </head>
 
 <body>
@@ -76,6 +77,5 @@ Email: <a href="mailto:myrevital@ranbaxy.com">myrevital@ranbaxy.com</a></p>
   </a></p>
 </div>
 </div>
-<jsp:include page="/includes/_analytics.jsp"/>
 </body>
 </html>
