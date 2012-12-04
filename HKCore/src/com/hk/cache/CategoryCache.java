@@ -47,9 +47,9 @@ public class CategoryCache {
          * if category is not in cache try and attempt to find from db
          */
         if (categoryVO == null) {
-            logger.warn("Category with name" + categoryName + " not found in cache, so hitting db" );
+            //logger.warn("Category with name" + categoryName + " not found in cache, so hitting db" );
             Category category = getCategoryService().getCategoryByName(categoryName);
-            logger.warn("Category with name" + categoryName + " from db" + category );
+            //logger.warn("Category with name" + categoryName + " from db" + category );
             categoryVO = new CategoryVO(category);
         }
         return categoryVO;
