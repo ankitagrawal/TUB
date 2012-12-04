@@ -343,6 +343,17 @@ public class ReportManager {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         if (shippingOrderList != null) {
             for (ShippingOrder order : shippingOrderList) {
+
+	            if(zone != null){
+		            String shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
+		            if(shippingOrderZone != null && shippingOrderZone.toLowerCase().equals(zone.toLowerCase())){
+			            setCellValue(row, 23, shippingOrderZone);
+		            }
+		            else{
+			            continue;
+		            }
+	            }
+
                 Set<LineItem> lineItems = order.getLineItems();
                 LineItem firstProductLineItem = lineItems.iterator().next();
                 rowCounter++;
@@ -414,12 +425,7 @@ public class ReportManager {
                 if (shipment.getBoxWeight() != null) {
                     setCellValue(row, 22, shipment.getBoxWeight());
                 }
-	            if(zone != null){
-		            String shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
-		            if(shippingOrderZone != null && shippingOrderZone.toLowerCase().equals(zone.toLowerCase())){
-			            setCellValue(row, 23, shippingOrderZone);
-		            }
-	            }
+
             }
         }
         wb.write(out);
