@@ -64,6 +64,9 @@ public class TrafficTracking implements java.io.Serializable {
 	@Column (name = "order_id")
 	private Long orderId;
 
+	@Column (name = "first_order")
+	private Long firstOrder;
+
 	@Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "create_dt", nullable = false, length = 19)
 	private Date createDt;
@@ -174,6 +177,14 @@ public class TrafficTracking implements java.io.Serializable {
 
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
+	}
+
+	public Long getFirstOrder() {
+		return firstOrder;
+	}
+
+	public void setFirstOrder(Long firstOrder) {
+		this.firstOrder = firstOrder;
 	}
 
 	public Date getCreateDt() {

@@ -4,6 +4,7 @@ import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.dto.accounting.InvoiceLineItemDto;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.cache.CategoryCache;
 import com.hk.constants.core.EnumRole;
 import static com.hk.constants.core.HealthkartConstants.CompanyName.brightLifeCarePvtLtd;
 import com.hk.constants.core.Keys;
@@ -266,7 +267,9 @@ public class InvoicePDFGenerator {
         float[] widths = { 50f, 15f, 15f, 15f };
         orderDetailTable.setWidths(widths);
         orderDetailTable.setWidthPercentage(100f);
-        sexualCareCategory = getCategoryService().getCategoryByName("sexual-care");
+        
+        //sexualCareCategory = getCategoryService().getCategoryByName("sexual-care");
+        sexualCareCategory = CategoryCache.getInstance().getCategoryByName("sexual-care").getCategory();
 
         PdfPCell c1 = new PdfPCell(new Phrase("Item", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD)));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);

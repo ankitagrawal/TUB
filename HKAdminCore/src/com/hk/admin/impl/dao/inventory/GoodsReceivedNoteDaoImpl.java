@@ -83,7 +83,7 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
 		}
 
 		if (StringUtils.isNotBlank(invoiceNumber)) {
-			grnCriteria.add(Restrictions.eq("invoiceNumber", invoiceNumber));
+			grnCriteria.add(Restrictions.like("invoiceNumber", "%" +invoiceNumber + "%"));
 		}
 		if (grnStatus != null) {
 			grnCriteria.add(Restrictions.eq("grnStatus", grnStatus));

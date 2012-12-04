@@ -94,6 +94,7 @@ public class OrderSummaryAction extends BaseAction {
     @DefaultHandler
     public Resolution pre() {
         User user = getUserService().getUserById(getPrincipal().getId());
+        // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
         // Trimming empty line items once again.
         orderManager.trimEmptyLineItems(order);

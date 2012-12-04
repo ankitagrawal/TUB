@@ -78,7 +78,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
             shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
-            shippingOrder = getShippingOrderService().save(shippingOrder);
+            //shippingOrder = getShippingOrderService().save(shippingOrder);
             getAdminInventoryService().reCheckInInventory(shippingOrder);
             // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
             // inventory, reward points, shipment, discount
@@ -90,15 +90,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
             if(shippingOrder.getShipment()!= null){
                 Awb awbToRemove = shippingOrder.getShipment().getAwb();
-                //shippingOrder.getShipment().setAwb(null);
-                //shipmentService.save(shippingOrder.getShipment());
                 awbService.removeAwbForShipment(shippingOrder.getShipment().getAwb().getCourier(),awbToRemove);
                 Shipment shipmentToDelete = shippingOrder.getShipment();
                 shippingOrder.setShipment(null);
 	            shipmentService.delete(shipmentToDelete);
-	            shippingOrderService.save(shippingOrder);
-
+	            //shippingOrderService.save(shippingOrder);
             }
+			getShippingOrderService().save(shippingOrder);
         }
     }
 

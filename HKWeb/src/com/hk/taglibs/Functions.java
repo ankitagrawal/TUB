@@ -1,15 +1,9 @@
 package com.hk.taglibs;
 
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
@@ -17,6 +11,7 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -37,6 +32,7 @@ import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -67,6 +63,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.core.Country;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.LinkManager;
@@ -83,6 +80,7 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.core.AddressService;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
@@ -276,6 +274,8 @@ public class Functions {
         Category primaryCategory = (Category) o;
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
         return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
+        
+        //return CategoryCache.getInstance().getBrandsInCategory(primaryCategory.getName());
     }
 
     @SuppressWarnings("deprecation")
@@ -665,6 +665,50 @@ public class Functions {
     public static ProductVariant validTryOnProductVariant(Product product){
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         return  productService.validTryOnProductVariant(product);
+    }
+
+
+    public static Country getCountry(Long countryId) {
+        AddressService addressService = ServiceLocatorFactory.getService(AddressService.class);
+         return addressService.getCountry(countryId);
+    }
+
+    public static String encryptOrderId(Long orderId){
+        Long encryptOrderId_1 = ( orderId * 99 ) + 10;
+        String encryptOrderId_2 = encryptOrderId_1.toString();
+        String encryptedOrderId = "";
+        Random randomGenerator = new Random();
+        for(int i= 0 ;i<encryptOrderId_2.length();i++){
+            if(i==0){
+              encryptedOrderId +='@';
+            }
+
+                char random =  (char)(randomGenerator.nextInt(26) + 'a');
+                char value = encryptOrderId_2.charAt(i);
+                encryptedOrderId += value;
+                encryptedOrderId +=  random;
+
+        }
+        logger.debug("\n encrypted order id is"+encryptedOrderId + "\n");
+        return encryptedOrderId;
+    }
+    public static Long decryptOrderId(String encryptedOrderId){
+        String decryptOrderId = "";
+        Long orderId = null;
+        for(int i=1;i<encryptedOrderId.length();i = i + 2){
+            decryptOrderId += encryptedOrderId.charAt(i);
+        }
+        logger.debug("\n decrypted order id is"+decryptOrderId + "\n");
+        orderId = Long.parseLong(decryptOrderId);
+        orderId = orderId - 10;
+        orderId = orderId/99;
+        logger.debug("\n decrypted order id is"+ orderId + "\n");
+        return orderId;
+    }
+
+    public static String readIssuerImageIcon(byte [] imageByteArray, String filename){
+        GatewayIssuerMappingService gatewayIssuerMappingService = ServiceLocatorFactory.getService(GatewayIssuerMappingService.class);
+        return gatewayIssuerMappingService.getImageOfIssuer(imageByteArray,filename);
     }
 
 }

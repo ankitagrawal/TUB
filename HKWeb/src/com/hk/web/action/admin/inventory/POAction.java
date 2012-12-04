@@ -64,8 +64,6 @@ public class POAction extends BasePaginatedAction {
 	private AdminEmailManager adminEmailManager;
 	@Autowired
 	private PurchaseOrderManager purchaseOrderManager;
-	@Autowired
-	private ProductVariantSupplierInfoService productVariantSupplierInfoService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloads;
@@ -77,6 +75,9 @@ public class POAction extends BasePaginatedAction {
 
 	@Autowired
 	GrnLineItemService grnLineItemService;
+
+	@Autowired
+	private ProductVariantSupplierInfoService productVariantSupplierInfoService;
 
 	private File xlsFile;
 	Page purchaseOrderPage;
@@ -147,7 +148,7 @@ public class POAction extends BasePaginatedAction {
 
 	@Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
 	public Resolution generateGRN() {
-		if (!(purchaseOrder.getPurchaseOrderStatus().equals(EnumPurchaseOrderStatus.SentToSupplier.getPurchaseOrderStatus()))
+		if(!(purchaseOrder.getPurchaseOrderStatus().equals(EnumPurchaseOrderStatus.SentToSupplier.getPurchaseOrderStatus()))
 				&& !(purchaseOrder.getPurchaseOrderStatus().equals(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus()))) {
 			addRedirectAlertMessage(new SimpleMessage("Can't Create GRN, PO is not in Sent To Supplier, or Received state"));
 			return new RedirectResolution(POAction.class);
@@ -183,9 +184,10 @@ public class POAction extends BasePaginatedAction {
 			ProductVariant productVariant = poLineItem.getSku().getProductVariant();
 			Sku sku = getSkuService().getSKU(productVariant, warehouse);
 			long existingGrnLineItemQty = grnLineItemService.getGrnLineItemQtyAlreadySet(grn, poLineItem.getSku());
-			if (existingGrnLineItemQty >= poLineItem.getQty().longValue()) {
+			/*todo rahul: need to remove this add new row button added for finace team on 29-Nov-2012*/
+			/*if(existingGrnLineItemQty >= poLineItem.getQty().longValue()) {
 				continue;
-			}
+			}*/
 			GrnLineItem grnLineItem = new GrnLineItem();
 			grnLineItem.setGoodsReceivedNote(grn);
 			grnLineItem.setProductVariant(productVariant);
@@ -218,15 +220,15 @@ public class POAction extends BasePaginatedAction {
 	}
 
 	//For the first GRN, update askedQty in ProductVariantSupplierInfo table
-	private void editPVFillRate(PurchaseOrder purchaseOrder) {
-		if (purchaseOrder.getGoodsReceivedNotes() != null && purchaseOrder.getGoodsReceivedNotes().size() == 1) {
-			for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
-				ProductVariantSupplierInfo productVariantSupplierInfo =
-						productVariantSupplierInfoService.getOrCreatePVSupplierInfo(poLineItem.getSku().getProductVariant(), purchaseOrder.getSupplier());
-				productVariantSupplierInfoService.updatePVSupplierInfo(productVariantSupplierInfo, poLineItem.getQty(), null);
+		private void editPVFillRate(PurchaseOrder purchaseOrder) {
+			if (purchaseOrder.getGoodsReceivedNotes() != null && purchaseOrder.getGoodsReceivedNotes().size() == 1) {
+				for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
+					ProductVariantSupplierInfo productVariantSupplierInfo =
+							productVariantSupplierInfoService.getOrCreatePVSupplierInfo(poLineItem.getSku().getProductVariant(), purchaseOrder.getSupplier());
+					productVariantSupplierInfoService.updatePVSupplierInfo(productVariantSupplierInfo, poLineItem.getQty(), null);
+				}
 			}
 		}
-	}
 
 	public Resolution delete() {
 		logger.debug("purchaseOrder: " + purchaseOrder);
