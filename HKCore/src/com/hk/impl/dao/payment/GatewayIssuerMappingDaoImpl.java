@@ -84,7 +84,7 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
                 try {
                     fos.close();
                 } catch (final IOException e) {
-                    System.err.println("Unable to write log to file.");
+                    logger.error("Unable to write log to file.");
                 }
             }
         }
