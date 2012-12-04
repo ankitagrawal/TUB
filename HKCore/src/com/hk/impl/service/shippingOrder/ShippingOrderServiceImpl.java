@@ -5,6 +5,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumCourier;
+import com.hk.domain.core.Pincode;
+import com.hk.pact.service.core.PincodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +67,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private LineItemDao                lineItemDao;
     @Autowired
     private ReplacementOrderDao        replacementOrderDao;
+	@Autowired
+	private PincodeService pincodeService;
 
     private OrderService               orderService;
 
@@ -349,7 +355,22 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return false; // To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
+	@Override
+	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder) {
+		if(shippingOrder.getShipment() != null){
+			Pincode shippingOrderPincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			Long courierId = shippingOrder.getShipment().getAwb().getCourier().getId();
+			if(shippingOrderPincode.getZone() != null){
+				if(EnumCourier.getDispatchLotCouriers().contains(courierId)
+						&& shippingOrderPincode.getZone().equals(CourierConstants.SOUTH_ZONE)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
 
