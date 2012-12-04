@@ -20,9 +20,9 @@ public interface GatewayIssuerMappingService {
 
     List<Issuer> getIssuerByType(String issuerType, boolean active);
 
-    List<GatewayIssuerMapping> searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping);
+    List<GatewayIssuerMapping> searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, Boolean activeMapping);
 
-    GatewayIssuerMapping getGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping);
+    GatewayIssuerMapping getGatewayIssuerMapping(Issuer issuer, Gateway gateway, Boolean activeMapping);
 
     String getImageOfIssuer(byte[] imageByteArray, String imageName);
 

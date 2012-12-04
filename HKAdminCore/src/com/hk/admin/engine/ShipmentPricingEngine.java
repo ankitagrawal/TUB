@@ -140,7 +140,7 @@ public class ShipmentPricingEngine {
                 reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount() ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
             }else{
-                GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(),payment.getGateway(),true);
+                GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(),payment.getGateway(),null);
                 reconciliationCharges = amount * gatewayIssuerMapping.getReconciliationCharge();
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
             }

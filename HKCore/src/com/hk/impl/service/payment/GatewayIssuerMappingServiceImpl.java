@@ -35,12 +35,12 @@ public class GatewayIssuerMappingServiceImpl implements GatewayIssuerMappingServ
     }
 
     @Override
-    public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping) {
+    public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, Boolean activeMapping) {
         return gatewayIssuerMappingDao.searchGatewayIssuerMapping(issuer, gateway, activeMapping);
     }
 
     @Override
-    public GatewayIssuerMapping getGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping) {
+    public GatewayIssuerMapping getGatewayIssuerMapping(Issuer issuer, Gateway gateway, Boolean activeMapping) {
         List<GatewayIssuerMapping> gatewayIssuerMappings =  searchGatewayIssuerMapping(issuer, gateway, activeMapping);
         return gatewayIssuerMappings != null && !gatewayIssuerMappings.isEmpty() ? gatewayIssuerMappings.get(0) : null;
     }

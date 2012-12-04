@@ -129,7 +129,7 @@
               <s:link beanclass="com.hk.web.action.admin.payment.NewPaymentAction">
                 <s:param name="order" value="${checkPaymentBean.order}"/>
                 <s:param name="amount" value="${checkPaymentBean.pricingDto.grandTotalPayable}"/>
-                <s:param name="paymentMode" value="<%=EnumPaymentMode.TECHPROCESS_TEST.getId()%>"/>
+                <s:param name="paymentMode" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId()%>"/>
                 <s:param name="paymentStatus" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
                 Create New Payment
               </s:link>

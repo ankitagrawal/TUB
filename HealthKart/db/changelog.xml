@@ -10307,4 +10307,20 @@
             <column name="tag_line" type="VARCHAR(100)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="20121129-30">
+        <sql>
+            update issuer set tag_line = " (Faster Checkout)" where id = 4;
+            update issuer set tag_line = " (For International Cards Only)" where id = 5;
+        </sql>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354520250137-2">
+        <addColumn tableName="pincode">
+            <column name="zone" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354540960968-1">
+        <addColumn tableName="shipment">
+            <column name="zone" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
