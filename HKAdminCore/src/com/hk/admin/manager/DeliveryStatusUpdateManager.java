@@ -352,6 +352,7 @@ public class DeliveryStatusUpdateManager {
 					}
 				}
 			}
+
 		} else if (courierName.equalsIgnoreCase(CourierConstants.DTDC)) {
 			courierIdList = new ArrayList<Long>();
 			courierIdList = EnumCourier.getDTDCCouriers();
@@ -395,14 +396,53 @@ public class DeliveryStatusUpdateManager {
 				}
 
 			}
-		}
+		} else if (courierName.equalsIgnoreCase(CourierConstants.QUANTIUM)) {
+			SimpleDateFormat sdf_date = new SimpleDateFormat("dd/MM/yyyy");
+			courierIdList = new ArrayList<Long>();
+			courierIdList.add(EnumCourier.Quantium.getId());
+			shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+			Element responseElement;
+			String courierDeliveryStatus = null;
+			String deliveryDateString = null;
 
+			if (shippingOrderList != null && shippingOrderList.size() > 0) {
+				for (ShippingOrder shippingOrderInList : shippingOrderList) {
+					trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
+					try {
+						responseElement = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
+						if (responseElement != null) {
+							String trckNo = responseElement.getChildText(CourierConstants.QUANTIUM_TRACKING_NO);
+							String refId = responseElement.getChildText(CourierConstants.QUANTIUM_REF_NO);
+							courierDeliveryStatus = responseElement.getChildText(CourierConstants.QUANTIUM_STATUS);
+							deliveryDateString = responseElement.getChildText(CourierConstants.QUANTIUM_DELIVERY_DATE);
+							if (courierDeliveryStatus != null && deliveryDateString != null) {
+								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.QUANTIUM_DELIVERED)) {
+									if (refId != null && refId.equalsIgnoreCase(shippingOrderInList.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
+										try {
+											Date delivery_date = sdf_date.parse(deliveryDateString);
+											ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
+										} catch (ParseException pe) {											
+											logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
+											unmodifiedTrackingIds.add(trackingId);
+										}
+									}
+								}
+							}
+						} else {
+							unmodifiedTrackingIds.add(trackingId);
+						}
+					} catch (Exception e) {
+						unmodifiedTrackingIds.add(trackingId);
+					}
+				}
+			}
+		}
 		return ordersDelivered;
 	}
 
 	public int updateCourierDeliveryStatus(ShippingOrder shippingOrder, Shipment shipment, String trackingId, Date deliveryDate) {
 
-		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
+		if (shipment != null && (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId()))) {
 			if (shipment.getShipDate().after(deliveryDate) || deliveryDate.after(new Date())) {
 				Calendar deliveryDateAsShipDatePlusOne = Calendar.getInstance();
 				deliveryDateAsShipDatePlusOne.setTime(shipment.getShipDate());
@@ -419,31 +459,35 @@ public class DeliveryStatusUpdateManager {
 	}
 
 	private int updateDelhiveryStatus(JsonArray jsonShipmentDataArray) {
-		String deliveryStatus = null;
-		String deliveryDate = null;
-		Date delivery_date = null;
-		ShippingOrder shippingOrdr = null;
-
-
-		//Iterating over the  jsonShipmentDataArray to extract the required values(AWB,Status,DeliveryDate) and putting
-		//these into map<String,Object> ,AWB as key and  deliveryDate as value
-		for (JsonElement jsonObj : jsonShipmentDataArray) {
-			trackingId = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_AWB).getAsString();
-			deliveryStatus = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsString();
-			deliveryDate = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
-			if (trackingId != null && deliveryStatus != null && deliveryDate != null) {
-				delivery_date = getFormattedDeliveryDate(deliveryDate);
-				//if status is delivered then putting values in the map.
-				if (deliveryStatus.equalsIgnoreCase(CourierConstants.DELIVERED)) {
-					Awb awb = awbService.findByCourierAwbNumber(EnumCourier.Delhivery.asCourier(), trackingId);
-					Shipment shipment = shipmentService.findByAwb(awb);
-					shippingOrdr = shipment.getShippingOrder();
-					ordersDelivered = updateCourierDeliveryStatus(shippingOrdr, shippingOrdr.getShipment(), shippingOrdr.getShipment().getAwb().getAwbNumber(), delivery_date);
-				}
-			}
+        String deliveryStatus = null;
+        String deliveryDate = null;
+        Date delivery_date = null;
+        ShippingOrder shippingOrdr = null;
+		List<Courier> couriers = new ArrayList<Courier>();
+		for (Long courierId : EnumCourier.getDelhiveryCourierIds()){
+				couriers.add(EnumCourier.getEnumCourierFromCourierId(courierId).asCourier());
 		}
-		return ordersDelivered;
-	}
+
+
+        //Iterating over the  jsonShipmentDataArray to extract the required values(AWB,Status,DeliveryDate) and putting
+        //these into map<String,Object> ,AWB as key and  deliveryDate as value
+        for (JsonElement jsonObj : jsonShipmentDataArray) {
+            trackingId = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_AWB).getAsString();
+            deliveryStatus = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsString();
+            deliveryDate = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
+            if (trackingId != null && deliveryStatus != null && deliveryDate != null) {
+                delivery_date = getFormattedDeliveryDate(deliveryDate);
+                //if status is delivered then putting values in the map.
+                if (deliveryStatus.equalsIgnoreCase(CourierConstants.DELIVERED)) {
+                    Awb awb= awbService.findByCourierAwbNumber(couriers,trackingId);
+                    Shipment shipment=shipmentService.findByAwb(awb);
+                    shippingOrdr = shipment.getShippingOrder();
+                    ordersDelivered=updateCourierDeliveryStatus(shippingOrdr, shippingOrdr.getShipment(), shippingOrdr.getShipment().getAwb().getAwbNumber(), delivery_date);
+                }
+            }
+        }
+        return ordersDelivered;
+    }
 
 	private int updateBlueDartStatus(List<Element> elementList, List<ShippingOrder> shippingOrderList) {
 		//ShippingOrder shippingOrder;

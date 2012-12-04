@@ -60,7 +60,7 @@ public class OrderSourceFinder {
       }
     }
 
-    else if(httpRequest.getParameter("affid") != null || utm_medium.toLowerCase().equals(UtmMediumConstants.AFFILIATES.toLowerCase())){
+    else if(httpRequest.getParameter("affid") != null || utm_medium.toLowerCase().equals(UtmMediumConstants.MICROSITES.toLowerCase())){
       primaryReferrerId = EnumPrimaryReferrerForOrder.AFFILIATE.getId();
       if(httpRequest.getParameter("affid") != null){
         secondaryReferrerId = EnumSecondaryReferrerForOrder.AFFILIATE_PAID.getId();

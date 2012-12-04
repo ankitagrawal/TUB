@@ -9720,5 +9720,359 @@
 	</changeSet>
 	<changeSet author="Seema (generated)" id="1350891782684-6">
 		<dropColumn columnName="courier_id" tableName="shipment"/>
-	</changeSet>
+	</changeSet>	
+    
+    <changeSet author="Ajeet (generated)" id="1353661874281-1">
+        <createTable tableName="traffic_tracking">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="src_url" type="VARCHAR(500)"/>
+            <column name="traffic_src" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="traffic_src_details" type="VARCHAR(200)"/>
+            <column defaultValueNumeric="0" name="traffic_src_paid" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="healthkart.com" name="landing_url" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_category" type="VARCHAR(80)"/>
+            <column name="product_id" type="VARCHAR(20)"/>
+            <column name="user_id" type="INT"/>
+            <column defaultValue="127.0.1.1" name="ip" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="session_id" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="INT"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353661874281-2">
+        <createTable tableName="user_browsing_history">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="traffic_tracking_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="healthkart.com" name="page_url" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_category" type="VARCHAR(80)"/>
+            <column name="product_id" type="VARCHAR(20)"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353661874281-3">
+        <createIndex indexName="unique_page_url" tableName="user_browsing_history" unique="true">
+            <column name="traffic_tracking_id"/>
+            <column name="page_url"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1353910530259-1">
+        <addColumn tableName="traffic_tracking">
+            <column name="user_agent" type="VARCHAR(200)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1354124147954-1">
+        <addColumn tableName="traffic_tracking">
+            <column name="first_order" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-1">
+        <createTable tableName="base_order_has_billing_address">
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="billing_address_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-2">
+        <createTable tableName="billing_address">
+            <column name="billing_address_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-3">
+        <createTable tableName="currency_converter">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="base_currency_code" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="foreign_currency_code" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="conversion_rate" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-4">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="base_order_has_billing_address" constraintName="fk_base_order_has_billing_address_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-5">
+        <addForeignKeyConstraint baseColumnNames="billing_address_id" baseTableName="base_order_has_billing_address" constraintName="fk_base_order_has_billing_address_billing_address1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="billing_address_id" referencedTableName="billing_address" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1352973051747-6">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="billing_address" constraintName="fk_billing_address_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1353091292276-4">
+        <modifyDataType columnName="pin" newDataType="VARCHAR(30)" tableName="address"/>
+    </changeSet>
+     <changeSet author="Ankit" id="20121127-02">
+    <sql>
+      insert into currency_converter values (1,'INR','USD',55.05,'2012-11-02 17:29:13');
+    </sql>
+  </changeSet>
+    <changeSet author="Ankit (generated)" id="1354082820156-1">
+        <createTable tableName="country">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country_code" type="VARCHAR(6)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1354082820156-2">
+        <addColumn tableName="address">
+            <column defaultValue="80" name="country_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+     <changeSet author="Ankit" id="20121128-08">
+    <sql>
+        insert into country values (1,'ALAND ISLANDS', 'AX');
+        insert into country values (2,'ALBANIA', 'AL');
+        insert into country values (3,'ALGERIA ', 'DZ');
+        insert into country values (4,'AMERICAN SAMOA', 'AS');
+        insert into country values (5,'ANDORRA', 'AD');
+        insert into country values (6,'ANGUILLA', 'AI');
+        insert into country values (7,'ANTARCTICA', 'AQ');
+        insert into country values (8,'ANTIGUA AND BARBUDA', 'AG');
+        insert into country values (9,'ARGENTINA', 'AR');
+        insert into country values (10,'ARMENIA', 'AM');
+        insert into country values (11,'ARUBA', 'AW');
+        insert into country values (12,'AUSTRALIA', 'AU');
+        insert into country values (13,'AUSTRIA', 'AT');
+        insert into country values (14,'AZERBAIJAN', 'AZ');
+        insert into country values (15,'BAHAMAS', 'BS');
+        insert into country values (16,'BAHRAIN', 'BH');
+        insert into country values (17,'BANGLADESH', 'BD');
+        insert into country values (18,'BARBADOS', 'BB');
+        insert into country values (19,'BELGIUM', 'BE');
+        insert into country values (20,'BELIZE', 'BZ');
+        insert into country values (21,'BENIN', 'BJ');
+        insert into country values (22,'BERMUDA', 'BM');
+        insert into country values (23,'BHUTAN', 'BT');
+        insert into country values (24,'BOSNIA-HERZEGOVINA', 'BA');
+        insert into country values (25,'BOTSWANA', 'BW');
+        insert into country values (26,'BOUVET ISLAND ', 'BV');
+        insert into country values (27,'BRAZIL', 'BR');
+        insert into country values (28,'BRITISH INDIAN OCEAN TERRITORY', 'IO');
+        insert into country values (29,'BRUNEI DARUSSALAM', 'BN');
+        insert into country values (30,'BULGARIA', 'BG');
+        insert into country values (31,'BURKINA FASO', 'BF');
+        insert into country values (32,'CANADA', 'CA');
+        insert into country values (33,'CAPE VERDE', 'CV');
+        insert into country values (34,'CAYMAN ISLANDS', 'KY');
+        insert into country values (35,'CENTRAL AFRICAN REPUBLIC', 'CF');
+        insert into country values (36,'CHILE', 'CL');
+        insert into country values (37,'CHINA', 'CN');
+        insert into country values (38,'CHRISTMAS ISLAND ', 'CX');
+        insert into country values (39,'COCOS (KEELING) ISLANDS', 'CC');
+        insert into country values (40,'COLOMBIA', 'CO');
+        insert into country values (41,'COOK ISLANDS', 'CK');
+        insert into country values (42,'COSTA RICA', 'CR');
+        insert into country values (43,'CYPRUS', 'CY');
+        insert into country values (44,'CZECH REPUBLIC', 'CZ');
+        insert into country values (45,'DENMARK', 'DK');
+        insert into country values (46,'DJIBOUTI', 'DJ');
+        insert into country values (47,'DOMINICA', 'DM');
+        insert into country values (48,'DOMINICAN REPUBLIC', 'DO');
+        insert into country values (49,'ECUADOR', 'EC');
+        insert into country values (50,'EGYPT', 'EG');
+        insert into country values (51,'EL SALVADOR', 'SV');
+        insert into country values (52,'ESTONIA', 'EE');
+        insert into country values (53,'FALKLAND ISLANDS (MALVINAS)', 'FK');
+        insert into country values (54,'FAROE ISLANDS', 'FO');
+        insert into country values (55,'FIJI', 'FJ');
+        insert into country values (56,'FINLAND', 'FI');
+        insert into country values (57,'FRANCE', 'FR');
+        insert into country values (58,'FRENCH GUIANA', 'GF');
+        insert into country values (59,'FRENCH POLYNESIA', 'PF');
+        insert into country values (60,'FRENCH SOUTHERN TERRITORIES', 'TF');
+        insert into country values (61,'GABON', 'GA');
+        insert into country values (62,'GAMBIA', 'GM');
+        insert into country values (63,'GEORGIA', 'GE');
+        insert into country values (64,'GERMANY', 'DE');
+        insert into country values (65,'GHANA', 'GH');
+        insert into country values (66,'GIBRALTAR', 'GI');
+        insert into country values (67,'GREECE', 'GR');
+        insert into country values (68,'GREENLAND', 'GL');
+        insert into country values (69,'GRENADA', 'GD');
+        insert into country values (70,'GUADELOUPE', 'GP');
+        insert into country values (71,'GUAM', 'GU');
+        insert into country values (72,'GUERNSEY', 'GG');
+        insert into country values (73,'GUYANA', 'GY');
+        insert into country values (74,'HEARD ISLAND AND MCDONALD ISLANDS  HM', '');
+        insert into country values (75,'HOLY SEE (VATICAN CITY STATE)', 'VA');
+        insert into country values (76,'HONDURAS', 'HN');
+        insert into country values (77,'HONG KONG', 'HK');
+        insert into country values (78,'HUNGARY', 'HU');
+        insert into country values (79,'ICELAND', 'IS');
+        insert into country values (80,'INDIA', 'IN');
+        insert into country values (81,'INDONESIA', 'ID');
+        insert into country values (82,'IRELAND', 'IE');
+        insert into country values (83,'ISLE OF MAN', 'IM');
+        insert into country values (84,'ISRAEL', 'IL');
+        insert into country values (85,'ITALY', 'IT');
+        insert into country values (86,'JAMAICA', 'JM');
+        insert into country values (87,'JAPAN', 'JP');
+        insert into country values (88,'JERSEY', 'JE');
+        insert into country values (89,'JORDAN', 'JO');
+        insert into country values (90,'KAZAKHSTAN', 'KZ');
+        insert into country values (91,'KIRIBATI', 'KI');
+        insert into country values (92,'KOREA, REPUBLIC OF', 'KR');
+        insert into country values (93,'KUWAIT', 'KW');
+        insert into country values (94,'KYRGYZSTAN', 'KG');
+        insert into country values (95,'LATVIA', 'LV');
+        insert into country values (96,'LESOTHO', 'LS');
+        insert into country values (97,'LIECHTENSTEIN', 'LI');
+        insert into country values (98,'LITHUANIA', 'LT');
+        insert into country values (99,'LUXEMBOURG', 'LU');
+        insert into country values (100,'MACAO', 'MO');
+        insert into country values (101,'MACEDONIA', 'MK');
+        insert into country values (102,'MADAGASCAR', 'MG');
+        insert into country values (103,'MALAWI', 'MW');
+        insert into country values (104,'MALAYSIA', 'MY');
+        insert into country values (105,'MALTA', 'MT');
+        insert into country values (106,'MARSHALL ISLANDS', 'MH');
+        insert into country values (107,'MARTINIQUE', 'MQ');
+        insert into country values (108,'MAURITANIA', 'MR');
+        insert into country values (109,'MAURITIUS', 'MU');
+        insert into country values (110,'MAYOTTE', 'YT');
+        insert into country values (111,'MEXICO', 'MX');
+        insert into country values (112,'MICRONESIA, FEDERATED STATES OF', 'FM');
+        insert into country values (113,'MOLDOVA, REPUBLIC OF', 'MD');
+        insert into country values (114,'MONACO', 'MC');
+        insert into country values (115,'MONGOLIA', 'MN');
+        insert into country values (116,'MONTENEGRO', 'ME');
+        insert into country values (117,'MONTSERRAT', 'MS');
+        insert into country values (118,'MOROCCO', 'MA');
+        insert into country values (119,'MOZAMBIQUE', 'MZ');
+        insert into country values (120,'NAMIBIA', 'NA');
+        insert into country values (121,'NAURU', 'NR');
+        insert into country values (122,'NEPAL ', 'NP');
+        insert into country values (123,'NETHERLANDS', 'NL');
+        insert into country values (124,'NETHERLANDS ANTILLES', 'AN');
+        insert into country values (125,'NEW CALEDONIA', 'NC');
+        insert into country values (126,'NEW ZEALAND', 'NZ');
+        insert into country values (127,'NICARAGUA', 'NI');
+        insert into country values (128,'NIGER', 'NE');
+        insert into country values (129,'NIUE', 'NU');
+        insert into country values (130,'NORFOLK ISLAND', 'NF');
+        insert into country values (131,'NORTHERN MARIANA ISLANDS', 'MP');
+        insert into country values (132,'NORWAY', 'NO');
+        insert into country values (133,'OMAN', 'OM');
+        insert into country values (134,'PALAU', 'PW');
+        insert into country values (135,'PALESTINE', 'PS');
+        insert into country values (136,'PANAMA', 'PA');
+        insert into country values (137,'PARAGUAY', 'PY');
+        insert into country values (138,'PERU', 'PE');
+        insert into country values (139,'PHILIPPINES', 'PH');
+        insert into country values (140,'PITCAIRN', 'PN');
+        insert into country values (141,'POLAND', 'PL');
+        insert into country values (142,'PORTUGAL', 'PT');
+        insert into country values (143,'PUERTO RICO', 'PR');
+        insert into country values (144,'QATAR', 'QA');
+        insert into country values (145,'REUNION', 'RE');
+        insert into country values (146,'ROMANIA', 'RO');
+        insert into country values (147,'RUSSIAN FEDERATION', 'RU');
+        insert into country values (148,'RWANDA', 'RW');
+        insert into country values (149,'SAINT HELENA', 'SH');
+        insert into country values (150,'SAINT KITTS AND NEVIS', 'KN');
+        insert into country values (151,'SAINT LUCIA', 'LC');
+        insert into country values (152,'SAINT PIERRE AND MIQUELON', 'PM');
+        insert into country values (153,'SAINT VINCENT AND THE GRENADINES', 'VC');
+        insert into country values (154,'SAMOA', 'WS');
+        insert into country values (155,'SAN MARINO', 'SM');
+        insert into country values (156,'SAO TOME AND PRINCIPE ', 'ST');
+        insert into country values (157,'SAUDI ARABIA', 'SA');
+        insert into country values (158,'SENEGAL', 'SN');
+        insert into country values (159,'SERBIA', 'RS');
+        insert into country values (160,'SEYCHELLES', 'SC');
+        insert into country values (161,'SINGAPORE', 'SG');
+        insert into country values (162,'SLOVAKIA', 'SK');
+        insert into country values (163,'SLOVENIA', 'SI');
+        insert into country values (164,'SOLOMON ISLANDS', 'SB');
+        insert into country values (165,'SOUTH AFRICA', 'ZA');
+        insert into country values (166,'SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS', 'GS');
+        insert into country values (167,'SPAIN', 'ES');
+        insert into country values (168,'SURINAME', 'SR');
+        insert into country values (169,'SVALBARD AND JAN MAYEN', 'SJ');
+        insert into country values (170,'SWAZILAND', 'SZ');
+        insert into country values (171,'SWEDEN', 'SE');
+        insert into country values (172,'SWITZERLAND', 'CH');
+        insert into country values (173,'TAIWAN, PROVINCE OF CHINA', 'TW');
+        insert into country values (174,'TANZANIA, UNITED REPUBLIC OF', 'TZ');
+        insert into country values (175,'THAILAND', 'TH');
+        insert into country values (176,'TIMOR-LESTE', 'TL');
+        insert into country values (177,'TOGO', 'TG');
+        insert into country values (178,'TOKELAU', 'TK');
+        insert into country values (179,'TONGA', 'TO');
+        insert into country values (180,'TRINIDAD AND TOBAGO', 'TT');
+        insert into country values (181,'TUNISIA', 'TN');
+        insert into country values (182,'TURKEY', 'TR');
+        insert into country values (183,'TURKMENISTAN', 'TM');
+        insert into country values (184,'TURKS AND CAICOS ISLANDS', 'TC');
+        insert into country values (185,'TUVALU', 'TV');
+        insert into country values (186,'UGANDA', 'UG');
+        insert into country values (187,'UKRAINE', 'UA');
+        insert into country values (188,'UNITED ARAB EMIRATES', 'AE');
+        insert into country values (189,'UNITED KINGDOM', 'GB');
+        insert into country values (190,'UNITED STATES', 'US');
+        insert into country values (191,'UNITED STATES MINOR OUTLYING ISLANDS', 'UM');
+        insert into country values (192,'URUGUAY', 'UY');
+        insert into country values (193,'UZBEKISTAN', 'UZ');
+        insert into country values (194,'VANUATU', 'VU');
+        insert into country values (195,'VENEZUELA', 'VE');
+        insert into country values (196,'VIET NAM', 'VN');
+        insert into country values (197,'VIRGIN ISLANDS, BRITISH', 'VG');
+        insert into country values (198,'VIRGIN ISLANDS, U.S.', 'VI');
+        insert into country values (199,'WALLIS AND FUTUNA', 'WF');
+        insert into country values (200,'WESTERN SAHARA', 'EH');
+        insert into country values (201,'ZAMBIA', 'ZM');
+    </sql>
+  </changeSet>
+    <changeSet author="Rahul (generated)" id="1354282249890-1">
+        <addNotNullConstraint columnDataType="VARCHAR(30)" columnName="pin" tableName="address"/>
+    </changeSet>
 </databaseChangeLog>

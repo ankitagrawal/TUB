@@ -1,4 +1,4 @@
-package com.hk.api.cache;
+package com.hk.cache;
 
 import java.util.HashMap;
 import java.util.Map;

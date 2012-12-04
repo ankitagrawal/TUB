@@ -1,6 +1,8 @@
 package com.hk.admin.impl.dao.courier;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
@@ -19,10 +21,20 @@ import com.hk.impl.dao.BaseDaoImpl;
 @Repository
 public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {   
 
-    public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
+
+ 	public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
+	     List couriers= new ArrayList<Courier>();
+		 if(courier != null){
+			 couriers.add(courier);
+		 }
+		 return getAvailableAwbForCourierByWarehouseCodStatus(couriers,awbNumber,warehouse,isCod,awbStatus);
+    }
+
+    public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(List<Courier> couriers, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
-        if (courier != null) {
-            detachedCriteria.add(Restrictions.eq("courier", courier));
+
+        if (couriers != null && !couriers.isEmpty()) {
+            detachedCriteria.add(Restrictions.in("courier", couriers));
         }
         if (awbNumber != null && StringUtils.isNotBlank(awbNumber)) {
             detachedCriteria.add(Restrictions.eq("awbNumber", awbNumber));
@@ -43,6 +55,14 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
      public Awb findByCourierAwbNumber(Courier courier ,String awbNumber){
       List<Awb> awbList= getAvailableAwbForCourierByWarehouseCodStatus(courier,awbNumber,null,null,null);
+       if(awbList != null && awbList.size() > 0){
+           return awbList.get(0);
+       }
+         return null;
+     }
+
+	 public Awb findByCourierAwbNumber(List<Courier> couriers ,String awbNumber){
+      List<Awb> awbList= getAvailableAwbForCourierByWarehouseCodStatus(couriers,awbNumber,null,null,null);
        if(awbList != null && awbList.size() > 0){
            return awbList.get(0);
        }

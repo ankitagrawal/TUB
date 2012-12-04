@@ -87,8 +87,7 @@
 		}
 	</style>
 
-	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
-	<link href="${pageContext.request.contextPath}/css/new.css" rel="stylesheet" type="text/css"/>
+	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>	
 	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
 	<c:if test="${!empty subscriptionProduct}">
 		<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
@@ -382,12 +381,12 @@
 			</a>
 		</c:if>
 		<c:if test="${!empty pa.relatedCombos}">
-			<a class='top_link' href='#related_combos' style="font-weight:bold;">
+			<a class='top_link' href='#related_combos' id="related_combo_link" style="font-weight:bold;">
 				Special Offers &darr;
 			</a>
 		</c:if>
 		<c:if test="${!empty product.relatedProducts}">
-			<a class='top_link' href='#related_products'>
+			<a class='top_link' id="related_product_link" href='#related_products'>
 				Related Products &darr;
 			</a>
 		</c:if>
@@ -582,19 +581,29 @@
 <s:layout-component name="product_description">
 
 	<c:if test="${!empty pa.relatedCombos}">
+         <c:set var="check_related_combos" value="0"/>
 		<div class='products content' id="related_combos">
 			<h4>
 				Special Offers on ${product.name}
 			</h4>
 			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
-                <c:if test="${!relatedCombo.outOfStock or !relatedCombo.deleted or !relatedCombo.hidden or !relatedCombo.googleAdDisallowed}">
+                <c:if test="${!relatedCombo.outOfStock and !relatedCombo.deleted and !relatedCombo.hidden and !relatedCombo.googleAdDisallowed}">
 				<s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="${relatedCombo.id}"/>
+                <c:set var="check_related_combos" value="1"/>
                 </c:if>
 			</c:forEach>
 
 			<div class="floatfix"></div>
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
 		</div>
+         <c:if test="${hk:equalsIgnoreCase(check_related_combos,'0')}">
+                 <script type="text/javascript">
+                     $(document).ready(function(){
+                        $("#related_combos").remove();
+                         $("#related_combo_link").remove();
+                     });
+                 </script>
+        </c:if>
 	</c:if>
 	<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
 
@@ -769,14 +778,16 @@
 
 	<c:set var="relatedProducts" value="${product.relatedProducts}"/>
 	<c:if test="${!empty relatedProducts}">
+        <c:set var="check_related_products" value="0"/>
 		<div class='products content' id="related_products">
 			<h4>
 				People who bought this also bought these products
 			</h4>
 
 			<c:forEach items="${relatedProducts}" var="relatedProduct">
-                 <c:if test="${!relatedProduct.outOfStock or !relatedProduct.deleted or !relatedProduct.hidden or !relatedProduct.googleAdDisallowed}">
+                 <c:if test="${!relatedProduct.outOfStock and !relatedProduct.deleted and !relatedProduct.hidden and !relatedProduct.googleAdDisallowed}">
 				<s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${relatedProduct}"/>
+                     <c:set var="check_related_products" value="1"/>
                 </c:if>
 			</c:forEach>
 
@@ -784,6 +795,14 @@
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
 
 		</div>
+         <c:if test="${hk:equalsIgnoreCase(check_related_products,'0')}">
+          <script type="text/javascript">
+              $(document).ready(function(){
+                 $("#related_products").remove();
+                  $("#related_product_link").remove();
+              });
+          </script>
+        </c:if>
 	</c:if>
 </s:layout-component>
 

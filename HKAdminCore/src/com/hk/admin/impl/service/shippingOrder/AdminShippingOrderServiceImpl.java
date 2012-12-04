@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.domain.order.ReplacementOrderReason;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,9 +76,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-	          logger.info("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
+	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
             shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
-            shippingOrder = getShippingOrderService().save(shippingOrder);
+            //shippingOrder = getShippingOrderService().save(shippingOrder);
             getAdminInventoryService().reCheckInInventory(shippingOrder);
             // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
             // inventory, reward points, shipment, discount
@@ -89,15 +90,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
             if(shippingOrder.getShipment()!= null){
                 Awb awbToRemove = shippingOrder.getShipment().getAwb();
-                //shippingOrder.getShipment().setAwb(null);
-                //shipmentService.save(shippingOrder.getShipment());
                 awbService.removeAwbForShipment(shippingOrder.getShipment().getAwb().getCourier(),awbToRemove);
                 Shipment shipmentToDelete = shippingOrder.getShipment();
                 shippingOrder.setShipment(null);
 	            shipmentService.delete(shipmentToDelete);
-	            shippingOrderService.save(shippingOrder);
-
+	            //shippingOrderService.save(shippingOrder);
             }
+			getShippingOrderService().save(shippingOrder);
         }
     }
 
@@ -223,10 +222,15 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return shippingOrder;
     }
 
-    public ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder) {
+    public ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder, ReplacementOrderReason rtoReason) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
         getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
+	    if(rtoReason != null){
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated, rtoReason.getName());
+	    }
+	    else{
+		    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
+	    }
         return shippingOrder;
     }
 

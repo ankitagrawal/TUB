@@ -12,7 +12,7 @@
   </s:layout-component>
 
   <s:layout-component name="left_col">
-    <p>Please try again.</p>
+    <p><s:link beanclass="com.hk.web.action.core.payment.PaymentModeAction">Please try again.</s:link></p>
     <ul type="disc" style="margin-left:20px; list-style:disc;">
             <li>For any other query read our <a href="/pages/termsAndConditions.jsp">Terms &amp; Conditions</a></li>
             <li>For any other assistance pertaining to your order contact our customer care at 0124-4551616 or at email:  <a href="mailto:info@healthkart.com">info@healthkart.com</a></li>
