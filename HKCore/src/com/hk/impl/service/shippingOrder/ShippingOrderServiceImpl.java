@@ -357,12 +357,14 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
 	@Override
 	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder) {
-		Pincode shippingOrderPincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
-		Long courierId = shippingOrder.getShipment().getAwb().getCourier().getId();
-		if(shippingOrderPincode.getZone() != null){
-			if(EnumCourier.getDispatchLotCouriers().contains(courierId)
-					&& shippingOrderPincode.getZone().equals(CourierConstants.SOUTH_ZONE)){
-				return true;
+		if(shippingOrder.getShipment() != null){
+			Pincode shippingOrderPincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			Long courierId = shippingOrder.getShipment().getAwb().getCourier().getId();
+			if(shippingOrderPincode.getZone() != null){
+				if(EnumCourier.getDispatchLotCouriers().contains(courierId)
+						&& shippingOrderPincode.getZone().equals(CourierConstants.SOUTH_ZONE)){
+					return true;
+				}
 			}
 		}
 		return false;
