@@ -1,0 +1,23 @@
+package com.hk.api.pact.service;
+
+import com.hk.domain.order.Order;
+import com.hk.api.models.order.APIOrder;
+
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: Pradeep
+ * Date: May 4, 2012
+ * Time: 3:19:51 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public interface APIOrderService {
+
+
+    public String createOrderInHK(APIOrder apiOrder);
+
+    public String trackOrder(String orderId);
+
+    public String createOrderInHk(Order order);
+
+}

@@ -1,5 +1,7 @@
 package com.hk.constants.discount;
 
+import com.hk.domain.offer.rewardPoint.RewardPointMode;
+
 /**
  * Generated
  */
@@ -9,7 +11,8 @@ public enum EnumRewardPointMode {
 	HK_ADJUSTMENTS(30L, "HealthKart Adjustments"),
 	REFERRAL(40L, "Referral"),
 	FB_SHARING(50L, "Facebook Sharing"),
-	Prepay_Offer(60L, "Prepay");
+	Prepay_Offer(60L, "Prepay"),
+    HealthkartPlus(70L, "HealthkartPlus");
 
 	private String name;
 	private Long id;
@@ -18,6 +21,13 @@ public enum EnumRewardPointMode {
 		this.name = name;
 		this.id = id;
 	}
+
+    public RewardPointMode asRewardPointMode(){
+        RewardPointMode rewardPointMode=new RewardPointMode();
+        rewardPointMode.setId(this.id);
+        rewardPointMode.setName(this.name);
+        return rewardPointMode;
+    }
 
 	public String getName() {
 		return name;

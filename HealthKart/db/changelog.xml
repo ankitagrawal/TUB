@@ -9721,4 +9721,11 @@
 	<changeSet author="Seema (generated)" id="1350891782684-6">
 		<dropColumn columnName="courier_id" tableName="shipment"/>
 	</changeSet>
+    <changeSet author="pradeep " id="23-11-2012-01">
+        <addColumn tableName="hk_api_user">
+            <column name="secret_key(300)" type="VARCHAR(300)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

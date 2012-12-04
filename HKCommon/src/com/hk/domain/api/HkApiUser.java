@@ -32,6 +32,9 @@ public class HkApiUser {
     @Column(name = "api_key", nullable = false, length = 500)
     private String  apiKey;
 
+    @Column(name = "secret_key", nullable = false, length = 300)
+    private String  secretKey;
+
     @Column(name = "login_success_redirect_url", nullable = false, length = 500)
     private String  loginSuccessRedirectUrl;
 
@@ -111,4 +114,11 @@ public class HkApiUser {
         this.createDate = createDate;
     }
 
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
 }
