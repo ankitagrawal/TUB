@@ -323,7 +323,7 @@ public class ReportManager {
         setCellValue(row, 20, ReportConstants.SHIPMENT_DATE);
         setCellValue(row, 21, ReportConstants.BOX_SIZE);
         setCellValue(row, 22, ReportConstants.BOX_WEIGHT);
-	    if(zone != null){
+	    if(zone != null && !zone.toLowerCase().equals("null")){
 	        setCellValue(row, 23, ReportConstants.ZONE);
         }
 
