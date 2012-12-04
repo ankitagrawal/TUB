@@ -1,7 +1,6 @@
 package com.hk.impl.dao.payment;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.constants.core.Keys;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
@@ -11,10 +10,11 @@ import com.hk.web.AppConstants;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -48,7 +48,7 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
     }
 
     @Override
-    public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, boolean activeMapping) {
+    public List<GatewayIssuerMapping> searchGatewayIssuerMapping(Issuer issuer, Gateway gateway, Boolean activeMapping) {
         DetachedCriteria gatewayIssuerMappingCriteria = DetachedCriteria.forClass(GatewayIssuerMapping.class);
         if (issuer != null) {
             gatewayIssuerMappingCriteria.add(Restrictions.eq("issuer", issuer));
@@ -56,7 +56,9 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
         if (gateway != null) {
             gatewayIssuerMappingCriteria.add(Restrictions.eq("gateway", gateway));
         }
-        gatewayIssuerMappingCriteria.add(Restrictions.eq("active", activeMapping));
+        if (activeMapping != null) {
+            gatewayIssuerMappingCriteria.add(Restrictions.eq("active", activeMapping));
+        }
 
         //remember this order by is pretty important, please be careful if any changes are made to this, since I am using a sorted priority list to find the random number generated
         gatewayIssuerMappingCriteria.addOrder(Order.asc("priority"));
@@ -65,15 +67,26 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
     }
 
     public String getImageOfIssuer(byte[] imageByteArray, String imageName) {
-        try{
+        FileOutputStream fos = null;
+        try {
             String imageIconRelativePath = "images" + BaseUtils.fileSeparator + "gateway" + BaseUtils.fileSeparator + imageName + ".jpg";
-            String imageIconAbsolutePath = AppConstants.appBasePath + imageIconRelativePath;
-            FileOutputStream fos = new FileOutputStream(imageIconAbsolutePath);
-            fos.write(imageByteArray);
-            fos.close();
+            File imageFile = new File(imageIconRelativePath);
+            if (!imageFile.exists()) {
+                String imageIconAbsolutePath = AppConstants.appBasePath + imageIconRelativePath;
+                fos = new FileOutputStream(imageIconAbsolutePath);
+                fos.write(imageByteArray);
+            }
             return BaseUtils.fileSeparator + imageIconRelativePath;
-        }catch(Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("Exception while rendering gateway image");
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (final IOException e) {
+                    System.err.println("Unable to write log to file.");
+                }
+            }
         }
         return null;
     }

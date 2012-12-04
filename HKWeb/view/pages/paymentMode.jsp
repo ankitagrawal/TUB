@@ -123,13 +123,21 @@
         beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}" />
 
-    <c:forEach items="${paymentModeBean.cardIssuers}" var="cardIssuer">
-        <p><label><s:radio name="issuer" value="${cardIssuer.id}" id="${cardIssuer.name}"/>${cardIssuer.name} ${cardIssuer.tagLine}
-            &nbsp;</label> <img src="<hk:vhostImage/>${hk:readIssuerImageIcon(cardIssuer.imageIcon, cardIssuer.name)}" height="30px" alt="gateway image">
-        </p>
+    <table><c:forEach items="${paymentModeBean.cardIssuers}" var="cardIssuer">
+        <tr>
+            <td style="padding: 4px;"><s:radio name="issuer" value="${cardIssuer.id}"
+                         id="${cardIssuer.name}"/></td>
+            <td style="padding: 4px;"><img src="<hk:vhostImage/>${hk:readIssuerImageIcon(cardIssuer.imageIcon, cardIssuer.name)}"
+                                           height="30px" alt="gateway image">
+            </td>
+            <td style="padding: 4px;">${cardIssuer.name}<br/>
+                <label style="font-size: .9em;font-weight: bold;color: #000000;">${cardIssuer.tagLine}</label>
+            </td>
+
+        </tr>
         <%--check for paypal, give it an id so that js can work--%>
     </c:forEach>
-
+    </table>
     <div style="float: right; width: 90%;"><s:submit
             name="proceed" value="Make Payment >" class="button makePayment"
             disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
