@@ -360,7 +360,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 		if(shippingOrder.getShipment() != null){
 			Pincode shippingOrderPincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
 			Long courierId = shippingOrder.getShipment().getAwb().getCourier().getId();
-			if(shippingOrderPincode.getZone() != null){
+			if(shippingOrderPincode != null && shippingOrderPincode.getZone() != null){
 				if(EnumCourier.getDispatchLotCouriers().contains(courierId)
 						&& shippingOrderPincode.getZone().equals(CourierConstants.SOUTH_ZONE)){
 					return true;
@@ -373,7 +373,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 	@Override
 	public String getZoneForShippingOrder(ShippingOrder shippingOrder) {
 		Pincode shippingOrderPincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
-		return shippingOrderPincode.getZone();
+		if(shippingOrderPincode != null){
+			return shippingOrderPincode.getZone();
+		}
+		return null;
 	}
 
 	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
