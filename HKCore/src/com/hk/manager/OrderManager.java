@@ -8,6 +8,8 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpSession;
 
+import com.hk.pact.dao.catalog.combo.ComboDao;
+import com.hk.pact.service.catalog.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +109,8 @@ public class OrderManager {
     private CartLineItemDao                   cartLineItemDao;
     @Autowired
     private LinkManager                       linkManager;
-
+    @Autowired
+    private ComboDao                          comboDao;
     @Autowired
     private SkuService                        skuService;
     @Autowired
@@ -124,7 +127,8 @@ public class OrderManager {
     private SubscriptionService               subscriptionService;
     @Autowired
     private SMSManager                        smsManager;
-
+    @Autowired
+    private ProductService                    productService;
     @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
@@ -596,6 +600,24 @@ public class OrderManager {
                                     if (unbookedInventory < 0) {
                                         unbookedInventory = 0L;
                                     }
+                                  //setting product out of stock
+                                  if(unbookedInventory == 0L){
+                                    Product productOutOfStock =  getProductService().getProductById(lineItem.getProductVariant().getProduct().getId());
+                                    productOutOfStock.setOutOfStock(true);
+                                    getProductService().save(productOutOfStock);
+                                    //setting combo out of stock which contains this product
+                                    if(lineItem.getComboInstance()!=null){
+                                      List<Combo> relatedProductCombos = getComboDao().getCombos(lineItem.getProductVariant().getProduct());
+                                      for(Combo combo : relatedProductCombos){
+                                        Product productCombo = getProductService().getProductById(combo.getId());
+                                        productCombo.setOutOfStock(true);
+                                        getProductService().save(productCombo);
+                                      }
+                                      Product productCombo = getProductService().getProductById(lineItem.getComboInstance().getCombo().getId());
+                                      productCombo.setOutOfStock(true);
+                                      getProductService().save(productCombo);
+                                    }
+                                  }
                                     if (lineItem.getComboInstance() != null) {
                                         comboInstanceIds.add(lineItem.getComboInstance().getId());
                                         lineItem.setQty(0L);
@@ -964,4 +986,12 @@ public class OrderManager {
     public void setSmsManager(SMSManager smsManager) {
         this.smsManager = smsManager;
     }
+
+  public ProductService getProductService() {
+    return productService;
+  }
+
+  public ComboDao getComboDao() {
+    return comboDao;
+  }
 }
