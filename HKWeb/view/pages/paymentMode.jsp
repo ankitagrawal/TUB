@@ -438,6 +438,7 @@
 </div>
 </s:layout-component>
 
+
 <s:layout-component name="analytics">
     <jsp:include page="/includes/_analytics.jsp"/>
 </s:layout-component>

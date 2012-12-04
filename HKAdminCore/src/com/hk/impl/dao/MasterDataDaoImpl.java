@@ -190,7 +190,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<User> getCreatorList() {
-        Role categoryManRole = RoleCache.getInstance().getRoleByName(EnumRole.PO_APPROVER).getRole();
+        Role categoryManRole = RoleCache.getInstance().getRoleByName(EnumRole.CATEGORY_MANAGER).getRole();
         // return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.CATEGORY_MANAGER));
         return getUserService().findByRole(categoryManRole);
     }
