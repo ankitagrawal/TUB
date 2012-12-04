@@ -114,5 +114,5 @@ public interface ProductService {
 
     boolean isComboInStock(Product product);
 
-    public boolean markRelatedCombosOutOfStock(ProductVariant productVariant);
+    public void markRelatedCombosOutOfStock(ProductVariant productVariant);
 }

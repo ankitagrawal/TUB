@@ -4,10 +4,12 @@ import java.util.*;
 
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageType;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
@@ -62,6 +64,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private SeoDao seoDao;
+
+    @Autowired
+    private ProductVariantService productVariantService;
 
     /*private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);*/
 
@@ -225,6 +230,10 @@ public class ProductServiceImpl implements ProductService {
     public void setComboDao(ComboDao comboDao) {
         this.comboDao = comboDao;
     }
+
+  public ProductVariantService getProductVariantService() {
+    return productVariantService;
+  }
 
     public boolean isComboInStock(Combo combo) {
         if (combo.isDeleted() != null && combo.isDeleted()) {
@@ -576,11 +585,47 @@ public class ProductServiceImpl implements ProductService {
         return inStockSimilarProducts;
     }
 
-   public boolean markRelatedCombosOutOfStock(ProductVariant productVariant){
+  @Async
+  public void markRelatedCombosOutOfStock(ProductVariant productVariant){
 
-     
-     return true;
+    //setting all combos in a List just to save from concurrentException
+    List<ComboProduct> comboProducts = new ArrayList<ComboProduct>();
+    for(ComboProduct comboProduct : productVariant.getComboProducts()){
+      comboProducts.add(comboProduct);
+    }
+    //getting all combos in set so that combo value doesn't repeat
+     Set<Combo> combos = new HashSet<Combo>();
+    for(ComboProduct comboProduct : comboProducts){
+      combos.add(comboProduct.getCombo());
+    }
+    for(Combo combo : combos){
+      boolean isComboInStock = true;
+      for(ComboProduct comboProduct1 : combo.getComboProducts()) {
+        List<ProductVariant> productAllowedVariants = comboProduct1.getAllowedProductVariants();
+        boolean isComboOutOfStock = true;
+        //checking allowed variants for outOfStock of a combo product
+        for(ProductVariant productVariant1 : productAllowedVariants){
+            if(!productVariant1.isOutOfStock()){
+              isComboOutOfStock = false;
+            }
+          }
+        //checking if combo product allowed variants is outOfStock then set combo as outOfStock if it's  inStock
+        if(!combo.isOutOfStock() && isComboOutOfStock){
+            Combo combo1 = getComboDao().getComboById(combo.getId());
+            combo1.setOutOfStock(true);
+            getComboDao().save(combo1);
+        }
+        //checking if combo all products and it's variants are according to set combo inStock if combo is outOfStock
+        if(isComboOutOfStock){
+          isComboInStock = false;
+        }
+      }
+      //setting combo in stock if it's outOfStock
+      if(isComboInStock && combo.isOutOfStock()){
+        Combo combo1 = getComboDao().getComboById(combo.getId());
+        combo1.setOutOfStock(false);
+        getComboDao().save(combo1);
+      }
+    }
   }
 }
-
-

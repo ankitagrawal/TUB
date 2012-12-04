@@ -8,7 +8,6 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpSession;
 
-import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.service.catalog.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,7 +109,7 @@ public class OrderManager {
     @Autowired
     private LinkManager                       linkManager;
     @Autowired
-    private ComboDao                          comboDao;
+    private ProductService                    productService;
     @Autowired
     private SkuService                        skuService;
     @Autowired
@@ -127,8 +126,6 @@ public class OrderManager {
     private SubscriptionService               subscriptionService;
     @Autowired
     private SMSManager                        smsManager;
-    @Autowired
-    private ProductService                    productService;
     @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
@@ -601,8 +598,13 @@ public class OrderManager {
                                         unbookedInventory = 0L;
                                     }
                                   //setting productVariant and it's related Combos out of stock
-                                  if(unbookedInventory == 0L){
-                                   
+                                  if(unbookedInventory <= 0L){
+                                    //Firstly setting product variant out of stock
+                                    ProductVariant productVariantOutOfStock = getProductVariantService().getVariantById(lineItem.getProductVariant().getId());
+                                    productVariantOutOfStock.setOutOfStock(true);
+                                    getProductVariantService().save(productVariantOutOfStock);
+                                   //calling Async method to set related combos out of stock
+                                    getProductService().markRelatedCombosOutOfStock(lineItem.getProductVariant());
                                   }
                                     if (lineItem.getComboInstance() != null) {
                                         comboInstanceIds.add(lineItem.getComboInstance().getId());
@@ -975,9 +977,5 @@ public class OrderManager {
 
   public ProductService getProductService() {
     return productService;
-  }
-
-  public ComboDao getComboDao() {
-    return comboDao;
   }
 }

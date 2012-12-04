@@ -56,7 +56,6 @@ public class InventoryServiceImpl implements InventoryService {
     private OrderDao                   orderDao;
     @Autowired
     private ProductService             productService;
-
     @Autowired
     private BaseDao                    baseDao;
 	@Autowired
@@ -148,6 +147,8 @@ public class InventoryServiceImpl implements InventoryService {
             productVariant.setOutOfStock(true);
             //First product variant goes out of stock
             productVariant = getProductVariantService().save(productVariant);
+            //calling Async method to set all out of stock combos to in stock
+            getProductService().markRelatedCombosOutOfStock(productVariant);
             LowInventory lowInventoryInDB = getLowInventoryDao().findLowInventory(productVariant);
             if (lowInventoryInDB == null) {
                 LowInventory lowInventory = new LowInventory();
@@ -165,6 +166,8 @@ public class InventoryServiceImpl implements InventoryService {
         } else if (availableUnbookedInventory > 0 && productVariant.isOutOfStock()) {
             logger.debug("Inventory status is positive now. Setting IN stock.");
             productVariant.setOutOfStock(false);
+          //calling Async method to set all out of stock combos to in stock
+            getProductService().markRelatedCombosOutOfStock(productVariant);
             productVariant = getProductVariantService().save(productVariant);
             product = productVariant.getProduct();
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
@@ -353,4 +356,7 @@ public class InventoryServiceImpl implements InventoryService {
         this.emailManager = emailManager;
     }
 
+  public ProductService getProductService() {
+    return productService;
+  }
 }
