@@ -235,6 +235,10 @@
 		</h3>
 	</shiro:hasRole>
 
+	<h3><s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction">Create New Dispatch Lot
+	</s:link>
+	</h3>
+
 
 </div>
 

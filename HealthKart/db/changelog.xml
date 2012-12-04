@@ -10075,4 +10075,56 @@
     <changeSet author="Rahul (generated)" id="1354282249890-1">
         <addNotNullConstraint columnDataType="VARCHAR(30)" columnName="pin" tableName="address"/>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1354624713600-1">
+        <createTable tableName="dispatch_lot">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="docket_number" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="zone" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="destination" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="no_of_shipments_sent" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="no_of_shipments_received" type="INT"/>
+            <column name="no_of_mother_bags" type="INT"/>
+            <column defaultValueNumeric="0.00" name="total_weight" type="DECIMAL(12,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="delivery date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1354624713600-2">
+        <createTable tableName="dispatch_lot_has_shipment">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="dispatch_lot_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipment_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
