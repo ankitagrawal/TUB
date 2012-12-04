@@ -921,7 +921,7 @@
             returns true if cod is allowed on order
         </description>
         <name>getHubForHkdeliveryUser</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-class>com.hk.taglibs.Functions</function-class>                                ;
         <function-signature>com.hk.domain.hkDelivery.Hub getHubForHkdeliveryUser(com.hk.domain.user.User)</function-signature>
         <example>
             ${hk:getHubForHkdeliveryUser(${user})}
@@ -1008,4 +1008,28 @@
             ${hk:getCountry(${id})}
         </example>
     </function>
+
+     <function>
+        <description>
+            returns a encrypted orderId
+        </description>
+        <name>encryptOrderId</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String encryptOrderId(java.lang.Long))</function-signature>
+        <example>
+            ${hk:encryptOrderId(${id})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns image file path for issuer
+        </description>
+        <name>readIssuerImageIcon</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String readIssuerImageIcon(byte[],java.lang.String))</function-signature>
+        <example>
+            <!--${hk:readIssuerImageIcon(${id})}-->
+        </example>
+    </function>
+
 </taglib>
