@@ -344,7 +344,7 @@ public class ReportManager {
         if (shippingOrderList != null) {
             for (ShippingOrder order : shippingOrderList) {
 
-	            if(zone != null){
+	            if(zone != null && !zone.toLowerCase().equals("null")){
 		            String shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
 		            if(shippingOrderZone != null && shippingOrderZone.toLowerCase().equals(zone.toLowerCase())){
 			            setCellValue(row, 23, shippingOrderZone);
