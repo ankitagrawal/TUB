@@ -73,7 +73,7 @@
             Amount Qualified for
           </th>
           <td>
-            <s:text name="amountToPay" disabled="disabled"/>
+            <s:text name="amountToPay" readonly="readonly"/>
           </td>
         </tr>
           <tr>

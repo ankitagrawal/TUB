@@ -93,7 +93,7 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		List<Long> applicableTxnTypes = new ArrayList<Long>();
 		applicableTxnTypes.add(EnumAffiliateTxnType.ADD.getId());
 		applicableTxnTypes.add(EnumAffiliateTxnType.PAYMENT_DUE.getId());
-		applicableTxnTypes.add(EnumAffiliateTxnType.PAID.getId());
+//		applicableTxnTypes.add(EnumAffiliateTxnType.PAID.getId());
 		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
 
 		Double amountInAccount = 0D;
@@ -176,9 +176,9 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 	}
 
 	@Override
-	public void markDueAffiliateTxnAsPaid(Affiliate affiliate) {
-		String queryString = "from AffiliateTxn aT where aT.affiliate = :affiliate and aT.affiliateTxnType.id =:affiliateTxnTypeId";
-		List<AffiliateTxn> affiliateTxnList = findByNamedParams(queryString, new String[]{"affiliate", "affiliateTxnTypeId", "endDate"}, new Object[]{affiliate, EnumAffiliateTxnType.PAYMENT_DUE.getId()});
+	public void markDueAffiliateTxnAsPaid(Affiliate affiliate, Date endDate) {
+		String queryString = "from AffiliateTxn aT where aT.affiliate = :affiliate and aT.affiliateTxnType.id =:affiliateTxnTypeId and date = :endDate";
+		List<AffiliateTxn> affiliateTxnList = findByNamedParams(queryString, new String[]{"affiliate", "affiliateTxnTypeId", "endDate"}, new Object[]{affiliate, EnumAffiliateTxnType.PAYMENT_DUE.getId(), endDate});
 		for (AffiliateTxn affiliateTxn : affiliateTxnList) {
 			if (affiliateTxn != null) {
 				affiliateTxn.setAffiliateTxnType(EnumAffiliateTxnType.PAID.asAffiliateTxnType());
