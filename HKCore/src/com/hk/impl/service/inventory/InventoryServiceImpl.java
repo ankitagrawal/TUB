@@ -167,8 +167,8 @@ public class InventoryServiceImpl implements InventoryService {
             logger.debug("Inventory status is positive now. Setting IN stock.");
             productVariant.setOutOfStock(false);
           //calling Async method to set all out of stock combos to in stock
-            getProductService().markRelatedCombosOutOfStock(productVariant);
             productVariant = getProductVariantService().save(productVariant);
+            getProductService().markRelatedCombosOutOfStock(productVariant);
             product = productVariant.getProduct();
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
             if (!isJit && !product.isService() && !product.getDropShipping() && !product.getDeleted()) {

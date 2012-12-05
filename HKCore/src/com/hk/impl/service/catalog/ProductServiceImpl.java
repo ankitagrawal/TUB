@@ -607,23 +607,19 @@ public class ProductServiceImpl implements ProductService {
         for(ProductVariant productVariant1 : productAllowedVariants){
             if(!productVariant1.isOutOfStock()){
               isComboOutOfStock = false;
+              break;
             }
           }
         //checking if combo product allowed variants is outOfStock then set combo as outOfStock if it's  inStock
         if(!combo.isOutOfStock() && isComboOutOfStock){
-            Combo combo1 = getComboDao().getComboById(combo.getId());
-            combo1.setOutOfStock(true);
-            getComboDao().save(combo1);
-        }
-        //checking if combo all products and it's variants are according to set combo inStock if combo is outOfStock
-        if(isComboOutOfStock){
           isComboInStock = false;
+          break;
         }
       }
       //setting combo in stock if it's outOfStock
-      if(isComboInStock && combo.isOutOfStock()){
+      if((!combo.isOutOfStock() && !isComboInStock) || (isComboInStock && combo.isOutOfStock())){
         Combo combo1 = getComboDao().getComboById(combo.getId());
-        combo1.setOutOfStock(false);
+        combo1.setOutOfStock(isComboInStock);
         getComboDao().save(combo1);
       }
     }
