@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpSession;
 
-import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.combo.ComboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +85,8 @@ public class OrderManager {
     @Autowired
     private CartLineItemService               cartLineItemService;
     @Autowired
+    private ComboService                      comboService;
+    @Autowired
     private OrderService                      orderService;
     @Autowired
     private PaymentService                    paymentService;
@@ -108,8 +110,6 @@ public class OrderManager {
     private CartLineItemDao                   cartLineItemDao;
     @Autowired
     private LinkManager                       linkManager;
-    @Autowired
-    private ProductService                    productService;
     @Autowired
     private SkuService                        skuService;
     @Autowired
@@ -604,7 +604,7 @@ public class OrderManager {
                                     productVariantOutOfStock.setOutOfStock(true);
                                     getProductVariantService().save(productVariantOutOfStock);
                                    //calling Async method to set related combos out of stock
-                                    getProductService().markRelatedCombosOutOfStock(lineItem.getProductVariant());
+                                    getComboService().markRelatedCombosOutOfStock(lineItem.getProductVariant());
                                   }
                                     if (lineItem.getComboInstance() != null) {
                                         comboInstanceIds.add(lineItem.getComboInstance().getId());
@@ -975,7 +975,7 @@ public class OrderManager {
         this.smsManager = smsManager;
     }
 
-  public ProductService getProductService() {
-    return productService;
+  public ComboService getComboService() {
+    return comboService;
   }
 }
