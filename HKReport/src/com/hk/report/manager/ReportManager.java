@@ -344,15 +344,7 @@ public class ReportManager {
         if (shippingOrderList != null) {
             for (ShippingOrder order : shippingOrderList) {
 
-	            if(zone != null && !zone.toLowerCase().equals("null")){
-		            String shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
-		            if(shippingOrderZone != null && shippingOrderZone.toLowerCase().equals(zone.toLowerCase())){
-			            setCellValue(row, 23, shippingOrderZone);
-		            }
-		            else{
-			            continue;
-		            }
-	            }
+
 
                 Set<LineItem> lineItems = order.getLineItems();
                 LineItem firstProductLineItem = lineItems.iterator().next();
@@ -361,6 +353,17 @@ public class ReportManager {
                 for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
                     cell = row.createCell(columnNo);
                 }
+	            if(zone != null && !zone.toLowerCase().equals("null")){
+		            String shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
+		            if(shippingOrderZone != null && shippingOrderZone.toLowerCase().equals(zone.toLowerCase())){
+			            setCellValue(row, 23, shippingOrderZone);
+		            }
+		            else{
+			            sheet1.removeRow(row);
+						rowCounter--;			            
+			            continue;
+		            }
+	            }
                 Shipment shipment = order.getShipment();
                 Address address = order.getBaseOrder().getAddress();
                 String trackingId = null;
