@@ -3,12 +3,10 @@
 
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
-<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.core.Keys" %>
-<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
-<%@ page import="com.hk.constants.marketing.AnalyticsConstants" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentType" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -123,62 +121,42 @@
 <div class='right_content'>
 <div id="tabs_content1" class="tab_content"><s:form
         beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
-    <s:hidden name="order" value="${orderSummary.order.id}"/>
-    <s:hidden name="bankId" value="70"/>
-    <p><label><s:radio name="paymentMode" value="<%=defaultGateway%>"/>VISA
-        &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/visa.jpg" height="30px">
-    </p>
+    <s:hidden name="order" value="${orderSummary.order.id}" />
 
-    <%--sbi ka mastercard--%>
-    <%--<p><label><s:radio name="paymentMode" value="670"/>MasterCard--%>
-    <%--&nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">--%>
-    <%--</p>--%>
-    <%--citrus ka sab kuch--%>
+    <table><c:forEach items="${paymentModeBean.cardIssuers}" var="cardIssuer">
+        <tr>
+            <td style="padding: 4px;"><s:radio name="issuer" value="${cardIssuer.id}"
+                         id="${cardIssuer.name}"/></td>
+            <td style="padding: 4px;"><img src="<hk:vhostImage/>${hk:readIssuerImageIcon(cardIssuer.imageIcon, cardIssuer.name)}"
+                                           height="30px" alt="gateway image">
+            </td>
+            <td style="padding: 4px;">${cardIssuer.name}<br/>
+                <label style="font-size: .9em;font-weight: bold;color: #000000;">${cardIssuer.tagLine}</label>
+            </td>
 
-    <p><label><s:radio name="paymentMode" value="80"/>
-        MasterCard &nbsp;</label> <img
-            src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">
-    </p>
-
-
-    <p><label><s:radio name="paymentMode" value="90"/>
-        Maestro &nbsp;</label> <img
-            src="<hk:vhostImage/>/images/gateway/maestro.gif" height="30px">
-    </p>
-
-
-    <p><label><s:radio name="paymentMode" value="80"/>
-        Citrus (Faster Checkout) &nbsp;</label> <img
-            src="<hk:vhostImage/>/images/gateway/citrus.png" height="30px">
-    </p>
-
-    <p><label><s:radio name="paymentMode" value="85" id="paypal"/>
-        Paypal (For International Cards) </label>  &nbsp;
-        <img src="<hk:vhostImage/>/images/gateway/PayPal.gif" height="30px"><span
-                style="font-size:11px; font-family: Arial, Verdana;"> &nbsp;&nbsp;</span>
-            <%--<img src="https://www.paypal.com/cgi-bin/webscr?cmd=/i/logo/PayPal_mark_37x23.gif" align="left" style="margin-right:7px;"><span style="font-size:11px; font-family: Arial, Verdana;">The safer, easier way to pay.</span>--%>
-    </p>
-
+        </tr>
+        <%--check for paypal, give it an id so that js can work--%>
+    </c:forEach>
+    </table>
     <div style="float: right; width: 90%;"><s:submit
             name="proceed" value="Make Payment >" class="button makePayment"
-            disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}"/>
+            disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
     </div>
 </s:form></div>
 <div id="tabs_content3" class="tab_content" style="display: none;">
     <s:form beanclass="com.hk.web.action.core.payment.PaymentAction"
             method="post">
-        <s:hidden name="order" value="${orderSummary.order.id}"/>
-        <s:hidden name="paymentMode" value="<%=defaultGateway%>"/>
+        <s:hidden name="order" value="${orderSummary.order.id}" />
 
         <div style="float: left; margin-left: 20px; line-height: 21px;">
             <div class="paymentBox">
                 <table width="100%">
-                    <c:forEach items="${paymentModeBean.bankList}" var="bank"
+                    <c:forEach items="${paymentModeBean.bankIssuers}" var="bankIssuer"
                                varStatus="idx">
                         <c:if test="${idx.index%2 == 0}">
                             <tr>
                         </c:if>
-                        <td class="col"><s:radio name="bankId" value="${bank.id}"/>${bank.bankName}
+                        <td class="col"><s:radio name="issuer" value="${bankIssuer.id}" />${bankIssuer.name}
                         </td>
                         <c:if test="${idx.index%2 == 1 || idx.last}">
                             </tr>
@@ -190,7 +168,7 @@
         </div>
         <div style="float: right; width: 90%;"><s:submit
                 name="proceed" value="Make Payment >" class="button makePayment"
-                disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}"/>
+                disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
         </div>
     </s:form></div>
 <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
@@ -441,7 +419,7 @@
 
         $('.makePayment').click(function disablePaymentButton() {
             $(this).css("display", "none");
-            if($('#paypal').is(':checked')){
+            if($('#Paypal').is(':checked')){
               location.href = '${url}';
               return false;
             }
@@ -458,14 +436,6 @@
                 $(this).css("display", "none");
             }
         });
-
-        <%--$('#paypal').click(function() {--%>
-            <%--if ($(this).is(':checked')) {--%>
-                 <%--$('.makePayment').hide();--%>
-                <%--location.href = '${url}';--%>
-            <%--}--%>
-        <%--});--%>
-
     });
 </script>
 <div class='floftfix'></div>

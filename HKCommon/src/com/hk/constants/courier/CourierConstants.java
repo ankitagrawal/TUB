@@ -113,5 +113,10 @@ public class CourierConstants {
     public static final String HK_WORKSHEET_INFO = "NAME,SIGN & MOB.NO.";
     public static final String HKD_WORKSHEET_REMARKS = "REMARKS";
 
+	public static final String SOUTH_ZONE = "SOUTH" ;
+	public static final String NORTH_ZONE = "NORTH" ;
+	public static final String EAST_ZONE = "EAST" ;
+	public static final String WEST_ZONE = "WEST" ;
+
 
 }

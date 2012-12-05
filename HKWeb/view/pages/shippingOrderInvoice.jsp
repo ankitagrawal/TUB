@@ -240,6 +240,14 @@
 <div style="margin-top: 5px;"></div>
 
 <div class="grid_12">
+    <c:if test="${orderSummary.printZone && orderSummary.zone != null}">
+        <hr/>
+        <p><strong>ZONE:-</strong> ${orderSummary.zone}</p>
+        <hr/>
+    </c:if>
+</div>
+
+<div class="grid_12">
     <c:if test="${baseOrder.userComments != null}">
         <hr/>
         <p><strong>User Instructions:-</strong> ${baseOrder.userComments}</p>
