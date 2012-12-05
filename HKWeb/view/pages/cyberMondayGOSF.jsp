@@ -177,12 +177,15 @@ p, h3, h1, h2, h4 {margin:0; padding:0;}
                 font-family: 'whitney_htf_bookregular';
                 color:#231f20;
             }
+
+
       .product {
 	width:215px;
     text-align:left;
 	float:left;
 	margin:20px 15px 0 10px;
 	position:relative;
+          height:480px;
 	}
 
 .product  .gosf-logo { position:absolute; top:177px; right:0px;	}
@@ -202,7 +205,7 @@ p, h3, h1, h2, h4 {margin:0; padding:0;}
 	color:#333;
     padding:0;
 	}
-  .product h3 { height:23px; }
+  /*.product h3 { height:23px; }*/
 
 .product .description{
 	font-size:12px;
