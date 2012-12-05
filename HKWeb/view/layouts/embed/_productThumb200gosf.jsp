@@ -135,7 +135,7 @@
                         <s:link href="${product.productURL}" class="buynow">BUY NOW</s:link>
 <div class="cl"></div>
                         <img src="${pageContext.request.contextPath}/images/GOSF/product-divider.jpg" />
-                                <p class="bid"  style="${product.maximumDiscountProducVariant.discountPercent >= .33 ? : ''}">
+                                <p class="bid"  style="${product.maximumDiscountProducVariant.discountPercent >= .33 ? '' : ''}">
 										<c:choose>
 											<c:when test="${product.minimumMRPProducVariant.discountPercent > 0}">
 												<fmt:formatNumber
