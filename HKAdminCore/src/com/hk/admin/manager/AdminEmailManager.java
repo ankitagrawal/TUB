@@ -45,6 +45,7 @@ import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.email.EmailerHistory;
 import com.hk.domain.email.OrderEmailExclusion;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -53,6 +54,7 @@ import com.hk.domain.courier.Courier;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.MasterDataDao;
 import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.dao.email.EmailerHistoryDao;
 import com.hk.pact.dao.email.NotifyMeDao;
@@ -121,6 +123,8 @@ public class AdminEmailManager {
     private FreeMarkerService freeMarkerService;
     @Autowired
     private AdminEmailService adminEmailService;
+	@Autowired
+	private MasterDataDao masterDataDao;
 
     private final int COMMIT_COUNT = 100;
     private final int INITIAL_LIST_SIZE = 100;
@@ -897,6 +901,25 @@ public class AdminEmailManager {
     public static String convertToWww(String productUrl) {
         return productUrl.replaceAll("admin\\.healthkart\\.com", "www.healthkart.com");
     }
+
+	public boolean sendPOApprovedEmail(PurchaseOrder purchaseOrder) {
+	    HashMap valuesMap = new HashMap();
+	    valuesMap.put("purchaseOrder", purchaseOrder);
+		//Mail to Ajeet if anyone  approves PO  other than Sachin Hans
+		User user = userService.getLoggedInUser();
+		if (user != null) {
+			if (!(masterDataDao.getApproverList().contains(user))) {
+				HashMap valuesMapAt = new HashMap();
+				valuesMapAt.put("purchaseOrder", purchaseOrder);
+				valuesMapAt.put("user", user);
+				Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedByWrongPerson);
+				String ajeetMail = "ajeet@healthkart.com";
+				emailService.sendHtmlEmail(freemarkerTemplate, valuesMapAt, ajeetMail, "Ajeet");
+			}
+		}
+	    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedEmail);
+	    return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
+	}
 
     static enum Product_Status{
 
