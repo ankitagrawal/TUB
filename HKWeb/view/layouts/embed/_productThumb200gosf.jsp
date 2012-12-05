@@ -131,7 +131,7 @@
 							${product.name}
 						</s:link>
 					</h3>      <p class="description"> ${productDesc} </p>
-                                <p class="bid"  style="${product.maximumDiscountProducVariant.discountPercent >= .33 ? : ''}">
+                                <p class="bid"  style="${product.maximumDiscountProducVariant.discountPercent >= .33 ? '' : ''}">
 										<c:choose>
 											<c:when test="${product.minimumMRPProducVariant.discountPercent > 0}">
 												<fmt:formatNumber
