@@ -74,6 +74,7 @@
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);        
         pageContext.setAttribute("sexualCare", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("sexual-care")));
         pageContext.setAttribute("personalCareWomen", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("women")));
+        pageContext.setAttribute("discretePackaging", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("discrete-packaging")));
     %>
 </head>
 <body>
@@ -116,8 +117,9 @@
 
 <div class="grid_4">
     <div style="text-align: center;">
-        ORDER INVOICE
-    </div>
+ORDER INVOICE <c:choose><c:when
+        test="${orderSummary.printable && hk:isOrderForDiscretePackaging(orderSummary.shippingOrder}"><bold>IN</bold></c:when><c:otherwise><bold>OUT</bold></c:otherwise>
+</div>
 </div>
 <div class="grid_4">
     <div style="float: right;">
@@ -304,7 +306,7 @@
                 <td>
                     <c:choose>
                         <c:when test="${orderSummary.printable && (hk:collectionContainsCollection(invoiceLineItem.productCategories, sexualCare)
-						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen))}">
+						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen) || hk:collectionContainsCollection(invoiceLineItem.productCategories, discretePackaging))}">
                             <p>Personal Care Product</p>
                         </c:when>
                         <c:otherwise>
