@@ -1,7 +1,6 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.domain.catalog.product.Product" %>
 <%@ page import="com.hk.domain.catalog.product.combo.Combo" %>
-<%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
 <%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -10,16 +9,20 @@
 <s:layout-definition>
 	<%
 		Product product_productThumb = (Product) pageContext.getAttribute("product");
+        String product_productDesc = (String) pageContext.getAttribute("productDesc");
 		if (product_productThumb == null) {
 			ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
 			String product_productThumbId = (String) pageContext.getAttribute("productId");
-			product_productThumb = productDao.getProductById(product_productThumbId);
+            product_productThumb = productDao.getProductById(product_productThumbId);
 		}
 
 		pageContext.setAttribute("product", product_productThumb);
+		pageContext.setAttribute("productDesc", product_productDesc);
 
-		ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
-		Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
+		Combo combo = null;
+         if (product_productThumb instanceof Combo) {
+                combo = (Combo) product_productThumb;
+            }
 		pageContext.setAttribute("combo", combo);
 	%>
 	<style type="text/css">
@@ -76,7 +79,8 @@
 							${product.name}
 						</s:link>
 
-				</h3>
+				</h3>      <p class="description"> ${productDesc} </p>
+                        
                         <s:link href="${product.productURL}" class="buynow">BUY NOW</s:link>
 <div class="cl"></div>
                         <img src="${pageContext.request.contextPath}/images/GOSF/product-divider.jpg" />
@@ -126,7 +130,7 @@
 						<s:link href="${product.productURL}" title="${product.name}">
 							${product.name}
 						</s:link>
-					</h3>
+					</h3>      <p class="description"> ${productDesc} </p>
                                 <p class="bid"  style="${product.maximumDiscountProducVariant.discountPercent >= .33 ? : ''}">
 										<c:choose>
 											<c:when test="${product.minimumMRPProducVariant.discountPercent > 0}">
@@ -151,7 +155,7 @@
 							${product.name}
 						</s:link>
 
-				</h3>
+				</h3>          <p class="description"> ${productDesc} </p>
                                     <s:link href="${product.productURL}" class="buynow">BUY NOW</s:link>
 <div class="cl"></div>
                                     <img src="${pageContext.request.contextPath}/images/GOSF/product-divider.jpg" />
