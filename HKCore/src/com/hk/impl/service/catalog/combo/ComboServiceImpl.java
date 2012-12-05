@@ -3,8 +3,9 @@ package com.hk.impl.service.catalog.combo;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
-import com.hk.pact.dao.catalog.combo.ComboDao;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.combo.ComboService;
+import com.hk.domain.catalog.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ import java.util.Set;
 public class ComboServiceImpl implements ComboService{
 
   @Autowired
-  ComboDao comboDao;
+  ProductService productService;
 
     @Async
     public void markRelatedCombosOutOfStock(ProductVariant productVariant){
@@ -58,16 +59,16 @@ public class ComboServiceImpl implements ComboService{
             break;
           }
         }
-        //setting combo in stock if it's outOfStock
+        //setting combo in stock if it's outOfStock or vice-versa
         if((!combo.isOutOfStock() && !isComboInStock) || (isComboInStock && combo.isOutOfStock())){
-          Combo combo1 = getComboDao().getComboById(combo.getId());
-          combo1.setOutOfStock(isComboInStock);
-          getComboDao().save(combo1);
+          Product product = getProductService().getProductById(combo.getId());
+          product.setOutOfStock(isComboInStock);
+          getProductService().save(product);
         }
       }
     }
 
-  public ComboDao getComboDao() {
-    return comboDao;
+  public ProductService getProductService() {
+    return productService;
   }
 }
