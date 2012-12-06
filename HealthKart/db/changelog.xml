@@ -10323,4 +10323,45 @@
             <column name="zone" type="VARCHAR(10)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-1">
+        <createTable tableName="zone">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-2">
+        <addColumn tableName="pincode">
+            <column name="zone_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-3">
+        <addColumn tableName="shipment">
+            <column name="zone_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-4">
+        <addForeignKeyConstraint baseColumnNames="zone_id" baseTableName="pincode" constraintName="fk_pincode_zone1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="zone" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-5">
+        <addForeignKeyConstraint baseColumnNames="zone_id" baseTableName="shipment" constraintName="fk_shipment_zone1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="zone" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-6">
+        <dropColumn columnName="zone" tableName="shipment"/>
+    </changeSet>
+	<changeSet author="Tarun" id="20121205-01">
+		<sql>
+			INSERT INTO zone VALUES (1,'NORTH'),(2,'SOUTH'),(3,'EAST'),(4,'WEST');
+			UPDATE pincode SET zone_id=1 WHERE zone like '%NORTH%';
+			UPDATE pincode SET zone_id=2 WHERE zone like '%SOUTH%';
+			UPDATE pincode SET zone_id=3 WHERE zone like '%EAST%';
+			UPDATE pincode SET zone_id=4 WHERE zone like '%WEST%';
+		</sql>
+	</changeSet>
+    <changeSet author="Tarun (generated)" id="1354696987883-1">
+        <dropColumn columnName="zone" tableName="pincode"/>
+    </changeSet>
 </databaseChangeLog>
