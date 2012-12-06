@@ -7,102 +7,78 @@
 <s:layout-component name="htmlHead">
   <style type="text/css">
 
+  
+.navigation {
+	margin:20px 0;
+	height:25px;
+	width:960px;
+	background-color:#333;}
 
+#nav, #nav ul{
+    font-size:14px;
+margin:0;
+padding:0;
+list-style-type:none;
+list-style-position:outside;
+position:relative;
+line-height:1.5em;
 
-
-/*  tab css   */
-
-#tabs-min {
-	background: transparent;
-	font-family: 'whitney_htf_mediumregular';
-	border: none;
-	margin-top:20px;
 }
 
-#tabs-min ul a, #tabs-min ul a:hover{
-	background: transparent;
-	font-size:16px;
-	font-family: 'whitney_htf_mediumregular';
+#nav a{
+display:block;
+padding:0px 5px;
+border:1px solid #333;
+color:#fff;
+text-decoration:none;
+background-color:#333;
 }
 
-#tabs-min h3 a, #tabs-min h3 a:hover{
-	font-size:13px;
-	font-family: 'whitney_htf_mediumregular';
+#nav a:hover{
+background-color:#fff;
+color:#333;
 }
 
-#tabs-min .ui-widget-header {
-	background: transparent;
-	border: none;
-	border-bottom: 1px solid #c0c0c0;
-	-moz-border-radius: 0px;
-	-webkit-border-radius: 0px;
-	border-radius: 0px;
-}
-#tabs-min .ui-state-default {
-	background: transparent;
-	border: none;
-}
-#tabs-min .ui-state-active {
-	background: transparent url(${pageContext.request.contextPath}/images/GOSF/uiTabsArrow.png) no-repeat bottom center;
-	border: none;
-}
-#tabs-min .ui-state-default a {
-	color:#666666;
-}
-#tabs-min .ui-state-active a {
-	color: #459E00;
+#nav li{
+margin-left:20px;
+float:left;
+position:relative;
 }
 
-.ui-tabs { zoom: 1; }
-.ui-tabs .ui-tabs-nav { list-style: none; position: relative; padding: .2em .2em 0; }
-.ui-tabs .ui-tabs-nav li { position: relative; float: left; border-bottom-width: 0 !important; margin: 0 .2em -1px 0; padding: 0; }
-.ui-tabs .ui-tabs-nav li a { float: left; text-decoration: none; padding: .5em 1em; }
-.ui-tabs .ui-tabs-nav li.ui-tabs-selected { padding-bottom: 1px; border-bottom-width: 0; }
-.ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { cursor: text; }
-.ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a { cursor: pointer; } /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
-.ui-tabs .ui-tabs-panel { display: block; border-width: 0; background: none; }
-.ui-tabs .ui-tabs-hide { display: none !important; }
+#nav ul {
+position:absolute;
+display:none;
+width:12em;
+top:1.5em;
+}
 
 
-      /*
-* jQuery UI CSS Framework
-* Copyright (c) 2009 AUTHORS.txt (http://jqueryui.com/about)
-* Dual licensed under the MIT (MIT-LICENSE.txt) and GPL (GPL-LICENSE.txt) licenses.
-*/
 
-/* Layout helpers
-----------------------------------*/
-.ui-helper-hidden { display: none; }
-.ui-helper-hidden-accessible { position: absolute; left: -99999999px; }
-.ui-helper-reset { margin: 0; padding: 0; border: 0; outline: 0; line-height: 1.3; text-decoration: none; font-size: 100%; list-style: none; }
-.ui-helper-clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-.ui-helper-clearfix { display: inline-block; }
-/* required comment for clearfix to work in Opera \*/
-* html .ui-helper-clearfix { height:1%; }
-.ui-helper-clearfix { display:block; }
-/* end clearfix */
-.ui-helper-zfix { width: 100%; height: 100%; top: 0; left: 0; position: absolute; opacity: 0; filter:Alpha(Opacity=0); }
+#nav li ul a{
+margin-left:-20px;
+width:12em;
+height:auto;
+float:left;
+}
 
+#nav ul ul{
+top:auto;
+}
 
-/* Interaction Cues
-----------------------------------*/
-.ui-state-disabled { cursor: default !important; }
+#nav li ul ul {
+left:12em;
+margin:0px 0 0 10px;
+}
 
-
-/* Icons
-----------------------------------*/
-
-/* states and images */
-.ui-icon { display: block; text-indent: -99999px; overflow: hidden; background-repeat: no-repeat; }
+#nav li:hover ul ul, #nav li:hover ul ul ul, #nav li:hover ul ul ul ul{
+display:none;
+}
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li li li li:hover ul{
+display:block;
+}
 
 
-/* Misc visuals
-----------------------------------*/
 
-/* Overlays */
-.ui-widget-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-/*  tab css close   */
 
             a, a:hover{border-bottom:none;}
       .cl {
@@ -112,11 +88,11 @@ p, h3, h1, h2, h4 {margin:0; padding:0;}
 
  @font-face
             {
-                font-family: 'whitney_htf_bookregular'
+                font-family: 'robotoregular'
             ;
-                src: url('${pageContext.request.contextPath}/css/whitneyhtf-book-webfont.eot')
+                src: url('${pageContext.request.contextPath}/css/roboto-regular-webfont.eot')
             ;
-                src: url('${pageContext.request.contextPath}/css/whitneyhtf-book-webfont.eot?#iefix') format('embedded-opentype'), url('${pageContext.request.contextPath}/css/whitneyhtf-book-webfont.woff') format('woff'), url('${pageContext.request.contextPath}/css/whitneyhtf-book-webfont.ttf') format('truetype'), url('${pageContext.request.contextPath}/css/whitneyhtf-book-webfont.svg#whitney_htf_bookregular') format('svg')
+                src: url('${pageContext.request.contextPath}/css/roboto-regular-webfont.eot?#iefix') format('embedded-opentype'), url('${pageContext.request.contextPath}/css/roboto-regular-webfont.woff') format('woff'), url('${pageContext.request.contextPath}/css/roboto-regular-webfont.ttf') format('truetype'), url('${pageContext.request.contextPath}/css/roboto-regular-webfont.svg#robotoregular') format('svg')
             ;
                 font-weight: normal
             ;
@@ -127,25 +103,11 @@ p, h3, h1, h2, h4 {margin:0; padding:0;}
 
             @font-face
             {
-                font-family: 'whitney_htf_scbold'
+                font-family: 'roboto_ltregular'
             ;
-                src: url('${pageContext.request.contextPath}/css/whitneyhtf-boldsc-webfont.eot')
+                src: url('${pageContext.request.contextPath}/css/roboto-light-webfont.eot')
             ;
-                src: url('${pageContext.request.contextPath}/css/whitneyhtf-boldsc-webfont.eot?#iefix') format('embedded-opentype'), url('${pageContext.request.contextPath}/css/whitneyhtf-boldsc-webfont.woff') format('woff'), url('${pageContext.request.contextPath}/css/whitneyhtf-boldsc-webfont.ttf') format('truetype'), url('${pageContext.request.contextPath}/css/whitneyhtf-boldsc-webfont.svg#whitney_htf_scbold') format('svg')
-            ;
-                font-weight: normal
-            ;
-                font-style: normal
-            ;
-
-            }
-            @font-face
-            {
-                font-family: 'whitney_htf_mediumregular'
-            ;
-                src: url('${pageContext.request.contextPath}/css/whitneyhtf-medium-webfont.eot')
-            ;
-                src: url('${pageContext.request.contextPath}/css/whitneyhtf-medium-webfont.eot?#iefix') format('embedded-opentype'), url('${pageContext.request.contextPath}/css/whitneyhtf-medium-webfont.woff') format('woff'), url('${pageContext.request.contextPath}/css/whitneyhtf-medium-webfont.ttf') format('truetype'), url('${pageContext.request.contextPath}/css/whitneyhtf-medium-webfont.svg#whitney_htf_mediumregular') format('svg')
+                src: url('${pageContext.request.contextPath}/css/roboto-light-webfont.eot?#iefix') format('embedded-opentype'), url('${pageContext.request.contextPath}/css/roboto-light-webfont.woff') format('woff'), url('${pageContext.request.contextPath}/css/roboto-light-webfont.ttf') format('truetype'), url('${pageContext.request.contextPath}/css/roboto-light-webfont.svg#roboto_ltregular') format('svg')
             ;
                 font-weight: normal
             ;
@@ -154,27 +116,13 @@ p, h3, h1, h2, h4 {margin:0; padding:0;}
 
             }
 
-                 @font-face
-            {
-                font-family: 'whitney-book_scregular'
-            ;
-                src: url('${pageContext.request.contextPath}/css/whitney-booksc-webfont.eot')
-            ;
-                src: url('${pageContext.request.contextPath}/css/whitney-booksc-webfont.eot?#iefix') format('embedded-opentype'), url('${pageContext.request.contextPath}/css/whitney-booksc-webfont.woff') format('woff'), url('${pageContext.request.contextPath}/css/whitney-booksc-webfont.ttf') format('truetype'), url('${pageContext.request.contextPath}/css/whitney-booksc-webfont.svg#whitney-book_scregular') format('svg')
-            ;
-                font-weight: normal
-            ;
-                font-style: normal
-            ;
-
-            }
 
  #pageContainer {
                 margin: 15px auto;
                 width: 960px;
                 overflow: auto;
                 padding-bottom: 260px;
-                font-family: 'whitney_htf_bookregular';
+                font-family: 'robotoregular';
                 color:#231f20;
             }
 
@@ -186,7 +134,7 @@ p, h3, h1, h2, h4 {margin:0; padding:0;}
 	float:left;
 	margin:20px 15px 0 10px;
 	position:relative;
-          height:490px;
+          height:520px;
 	}
 
 .product  .gosf-logo { position:absolute; top:177px; right:0px;	}
@@ -229,7 +177,7 @@ font-size:13px;
 
 	}
 
-.product .price {text-align:left; margin:5px 0; font-size:18px; color:#333; line-height:normal; font-family: 'whitney-book_scregular';}
+.product .price {text-align:left; margin:5px 0; font-size:18px; color:#333; line-height:normal; font-family: 'roboto_ltregular';}
 
 .product .price span{font-size:15px; color:#999; text-decoration:line-through; font-style:normal;}
 
@@ -270,14 +218,9 @@ font-size:13px;
 </style>
 
 
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.2.3.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/menu-gosf.js"></script>
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
-<script type="text/javascript">
-$(function() {
-	$('div.tabs').tabs();
-});
-</script>
 
 </s:layout-component>
 
@@ -308,147 +251,60 @@ $(function() {
   <!---- paste all content from here--->
 
  <div id="pageContainer">
-<img src="${pageContext.request.contextPath}/images/GOSF/main-banner.jpg" />
+<img src="${pageContext.request.contextPath}/images/GOSF/banner.jpg" />
 <div class="cl"></div>
 
-<div id="tabs-min" class="tabs">
-	<ul>
-		<li style="margin-left:230px;"><a href="#tabs-min-1" name="tabs-min">Yesterdays Deals Remaining</a></li>
-		<li><a href="#tabs-min-2">Todays Deals</a></li>
-		<li><a href="#tabs-min-3">Upcoming Deals</a></li>
-	</ul>
-	<div id="tabs-min-1">
+<jsp:include page="../includes/_menuGosf.jsp"/>
 
-       <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DS001' productDesc='Self-testing blood glucose strips with accurate results, for Diabetic Patients'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HB005' productDesc='An automatic BP monitor with one-touch operation. It comes with one-year warranty.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DS001' productDesc='Self-testing blood glucose strips with accurate results'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT469' productDesc=' Rich in L-Carnitine, it burns your extra fat, reduces hunger pangs, improves metablosim, and reduces cholestrol.'/>
-
-
-        <div class="cl"></div>
-
-
-</div>
-
-
-	<div id="tabs-min-2">
-
-
-
-       <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='RD001' productDesc='A waist shaper that supports the lumbar spine and corrects posture. Ideal for women who want to look slim and trim.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE007' productDesc='Built using a special material Aergel, these lenses help in curbing spherical aberration'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT893' productDesc='Ideal for fitness enthusiasts working for lean muscle gain, it is a rapid absorption formula that builds strength and stamina.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Keep muchies at bay with Oh Yeah Bars! Get the goodness of healthy fats and low sugar in 1 go; in 5 amazing flavors. '/>
-
-        
-
-        <div class="cl"></div>
-
-
-</div>
-
-
-
-
-	<div id="tabs-min-3">
-
-         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE017' productDesc='It is made using hydraclear technology which prevents dehydration in the eyes and helps you spend long hours in front of the PC or in AC'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HR005' productDesc='A nebulizer that stimulates easy breathing. Ideal for asthmatic patients.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Designed for people who want to gain mass. Packed with 52gm of high quality protein blend and 9gm of added fiber.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE002' productDesc='Used to correct myopia and hypermetropia. Made from polymacon, these are easy to clean and maintain'/>
-
-        <div class="cl"></div>
-
-
-
-</div>
-
-</div>
 <div class="cl"></div>
-<!-- tab close-->
-     <s:layout-render name="/pages/cmGOSF_category_9am.jsp"/>
+
+
+
+
+
     
-    <div class="heading1">Category Based Prime Deal</div>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE1034' productDesc='These unique square shaped sunglasses cover the eyes, completely protecting them from dust and harmful sun rays. They are extremely light weight, durable and scratch resistant'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1151' productDesc='Boost your gym performance with MuscleTech Hydroxystim. Enhance your focus and blaze through your fitness goals. '/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1367' productDesc='Tailored for fitness enthusiasts engaged in heavy workouts, it has 25gm of 100% Whey Protein blend and EAAs per serving.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SWT033' productDesc=' A snack bar that stabilizes sugar levels for up to 9 hours.  Ideal for growing children, diabetic patients, and fitness enthusiasts.'/>
-      <div class="cl"></div>
+    <div class="heading1">PRIME DEALS</div>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DS001' productDesc='Self-testing blood glucose strips with accurate results, for Diabetic Patients'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PW006' productDesc="Test your pregnancy in just 2 minutes with this Instant Ovulation Kit"/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP002' productDesc="Protect yourself with this powerful pepper formula spray."/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PHL002' productDesc="Figure out the best two days you will be most fertile. Grab this I-Sure Ovulation Strip to get pregnant for sure. "/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP001' productDesc="Protect yourself with this powerful pepper formula spray."/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE005' productDesc='These lenses made with a slight tint correct the vision. The presence of Hilaficon B and non-ionic B Lens material comfort the eyes and facilitates smooth lens-lid interaction.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='KNOCK001' productDesc="Protect yourself with this powerful pepper formula spray."/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DS001' productDesc='Self-testing blood glucose strips with accurate results, for Diabetic Patients'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HB005' productDesc='An automatic BP monitor with one-touch operation. It comes with one-year warranty.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NIC001' productDesc="Nicorette reins in your constant urge to smoke. Quit smoking for sure."/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH101' productDesc="Powerful electric toothbrush to clean your teeth faster and better."/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE004' productDesc='These lenses help in vision correction. Also capable of blocking UVA and UVB rays, they also protect the eyes.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DS001' productDesc='Self-testing blood glucose strips with accurate results'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DM024' productDesc='Accurate results in just 5 minutes with auto coding technology. A glucometer with life time warranty.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DM007' productDesc='A simple three-step, self-testing glucometer with storage capacity of up to 500 test results'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT986' productDesc='A supplement that provides Creating for enhancing stamina and building muscles. Ideal for intense workouts.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT469' productDesc=' Rich in L-Carnitine, it burns your extra fat, reduces hunger pangs, improves metablosim, and reduces cholestrol.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT130' productDesc='Provides 11g of Leucine and 13g of additional BCAAs per serving. Ideal for rapid muscle gain and recovery.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1600' productDesc='Suitable for people who want to lose weight, it helps burn fat, maintain stamina and improve metabolism.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1369' productDesc='Build strength and endurance with MuscleBlaze Creatine. It consistently delivers a powerful workout performance.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='RD001' productDesc='A waist shaper that supports the lumbar spine and corrects posture. Ideal for women who want to look slim and trim.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT412' productDesc='A supplement that improves the nutrient absorption power in adults and boosts energy levels. Ideal for senior citizens.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Designed for people who want to gain mass. Packed with 52gm of high quality protein blend and 9gm of added fiber.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc="Put munchies at bay with healthy fats and great taste in 5 amazing flavors. Get 30 gms of protein in every bite!"/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE035' productDesc='Disposable, colored lenses to offer extra depth to the eyes and enhance beauty. They are soft on the eyes and can be worn for an entire month.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MOS001' productDesc="This Super King Size net protects your little one against dengue, malaria and other diseases caused by insects"/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1367' productDesc='Tailored for fitness enthusiasts engaged in heavy workouts, it has 25gm of 100% Whey Protein blend and EAAs per serving.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT905' productDesc='For bodybuilders who want to gain mass. Infused with 1000 calories, 70g proteins and 10g Branched-Chain Amino Acids.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE007' productDesc='Built using a special material Aergel, these lenses help in curbing spherical aberration'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HB014' productDesc='A BP monitor to read blood pressure levels quickly.  It comes with one-year warranty.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1165' productDesc='Ideal for making health drinks on the move, HK Shaker & Blender Bottle makes lump-free drinks anytime, anywhere.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HB006' productDesc='A BP monitor to read blood pressure levels quickly.  It comes with one-year warranty.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT893' productDesc='Ideal for fitness enthusiasts working for lean muscle gain, it is a rapid absorption formula that builds strength and stamina.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE018' productDesc='Ligh blue colored lenses made from Lacreo technology which locks water ingredient in the lens for extra comfort. Blocks upto 97% UVB and 83% UVA.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1367' productDesc='Tailored for fitness enthusiasts engaged in heavy workouts, it has 25gm of 100% Whey Protein blend and EAAs per serving.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='AYUCR4' productDesc="Unleash the vitality within and experience out of the world intimacy with Ayu Care Vaji Tailam"/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Keep muchies at bay with Oh Yeah Bars! Get the goodness of healthy fats and low sugar in 1 go; in 5 amazing flavors. '/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT335' productDesc='A product with a potent combination of essential vitamins and minerals. Improves the strength, immunity and energy levels of the body.'/>
 
-
-
-<div class="heading1">Logical Bundle</div>
-    <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT420' productDesc='You can use Assault as a pre workout or an intra workout supplement. Plateaus will be a thing of the past. '/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SWT033' productDesc='A snack bar that stabilizes sugar levels for up to 9 hours.  Ideal for growing children, diabetic patients, and fitness enthusiasts.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SWT033' productDesc='A snack bar that stabilizes sugar levels for up to 9 hours.  Ideal for growing children, diabetic patients, and fitness enthusiasts.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1384' productDesc='Get enhanced energy for improved workouts and killer metabolic support for amazing results. The best rely on BSN Hypershred!'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1322' productDesc='Boosts energy metabolism, promotes healthy skin, hair and nails.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1227' productDesc='A pre-workout supplement that acts as a Nitric Oxide Pump Amplifier and contains Pycnogenol as its key ingredient.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Designed for people who want to gain mass. Packed with 52gm of high quality protein blend and 9gm of added fiber.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT667' productDesc='100% Veg tablets with synergistic blend of minerals, vitamins & essential nutrients. Makes your hair shiny and smooth.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='RW007' productDesc='A lycra/far infrared wrist wrap that supports injuries.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT531' productDesc='A fabulous product that is rich in Vitamin B. Strengthens your hair cuticles and thereby, strong and smooth hair'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1299' productDesc='Contains Omega-3 fatty acids that treat heart diseases, asthma, depressive illness and promotes eye and brain development'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1132' productDesc='A portable pillbox ideal for travellers, it has five compartments to carry different pills.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT954' productDesc='Enriched with Omega-3 and Omega-6, it promotes overall well being and maintains healthy cardiovascular system.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT693' productDesc='A pre-workout supplement that combats muscle tenderness and fatigue and also builds your stamina.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT592' productDesc='Concentrated Creatine Monohydrate, a pre-workout formula that ensures higher energy output, pump vascularity and enchanced focus'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1172' productDesc='A unique blend for healthy metabolism and muscle gain. Excellent for hard training'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT891' productDesc='An award winning muscle building formula. The 7 stage approach repairs muscles  and optimizes post workout growth.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1129' productDesc='Meant to prevent hair loss, skin problems and unhealthy nails. Ideal for women of all age groups.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT486' productDesc='A unique blend of pure crystalline Ergogenic amino acids which acts as anabolic agent and promotes muscle protein synthesis'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='WA002' productDesc='A sturdy, well-built walking stick. Perfect companion for the elderly.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT906' productDesc='Packed with beta-alanine, L-citrulline, Creatine HCI and Geranium Rovertianum. Excellent strength supplement for strength training'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT131' productDesc='Energy booster that is rich in pure whey protein and no carbohydrates. '/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1121' productDesc='A generic supplement, it improves heart health, enhances immunity and enforces healthy skin.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE015' productDesc='These lenses have a high-tech Contour Intelligent Design for extra comfort. They block upto 88% of UV-A radiation and 99% of UV-B radiation'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1128' productDesc='Easy to swallow capsules with multi vitamins & minerals, designed to promote bone formation & cardiovascular health in women.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE583' productDesc='A fashionable pair of unisex sunglasses which protects the eyes from harmful UV rays and dust.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1110' productDesc='Boosts your vitality for intense workout. Prevents heart diseases, high BP and chest pain.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1113' productDesc='Ideal for improving heart health, it is packed with L-Carnitine to ensure a quicker metabolism of fats in cells.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT664' productDesc='A powerful supplement with folic acid that supports heart health and healthy blood profile. Ideal for women.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT132' productDesc='It promotes increased muscle mass,strength and power. It also helps in faster recovery and is a unisex product.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT957' productDesc='It helps burn down the body fat to get a leaner body and also suppresses ones appetite. It is a unisex product.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1516' productDesc='With the essence of Brahmi, it serves as a brain tonic, treats insomnia and enhances mental abilities'/>
-<div class="cl"></div>
-
-
-
-
-
-
-<div class="heading1">Miscellaneous</div>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Get the best tasting mass gainer on the market with proven results. Did we mention that you get a a shaker worth Rs. 650 free?'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1272' productDesc='Contains glutamine that helps in increasing growth hormone release and helps in enhancing muscle metabolism.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1127' productDesc='Suitable for men with prostrate gland problems, it contains saw-palmetto extracts which improve prostrate health.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT681' productDesc='Useful whey protein isolate that helps break down free GLT and enhance metabolic functions.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1050' productDesc='Promote overall skin and hair health with Vitamin Shoppes Biotin. Get rid of dermatitis and dandruff.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1798' productDesc='Get amplified focus and energy with this formulation of pure creatine. '/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1079' productDesc='Extremely beneficial antioxidants that promotes a healthier digestive system'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT472' productDesc='This 100% Whey-Protein Isolate promotes muscle growth and tones them, improves digestion and overall physical performance '/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1335' productDesc='Great source of essential and branched chain amino acids, that are required for muscle recovery.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT651' productDesc='Packed with essential proteins that strengthens muscles and bones and also keeps you healthy.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT507' productDesc='Produced from natural ingredients, this is a naturally wheat free and gluten free product. This is easy to prepare, 100% vegetable product.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1130' productDesc='Reduces cardiovascular diseases, prevents ostioporosis and promotes bone health'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1382' productDesc='A pre-workout supplement, BSN HyperFX helps in enhancing energy, focus and stamina for extended workouts.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE1093' productDesc='Ultra light smart eye wear for that studios yet stylish looks.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1008' productDesc='The definitive source of Vitmain B5, it reduces stress and fatigue issues and also cures acne and blemishes.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1539' productDesc='An effective blend of pharmaceutically standardized extracts to increases body’s own production of testosterone and GH hormone, enhancing musclebuilding and fatburning abilities'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1054' productDesc='Regenerates blood cells, boosts energy for the anaemic.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1075' productDesc='Ideal for people with sleep disorders, psychological stress and general health maintenance. '/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1001' productDesc='Boost liver function, cardio vascular health & reduce cholesterol with Vitamin Shoppe Lecithin Granules. '/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1750' productDesc='Its creatine that separates the boys and the men. Pick Creapure to change your workouts forever.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HB012' productDesc='A BP monitor to read blood pressure levels quickly.  It comes with one-year warranty.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1005' productDesc='Detoxifies, compliments your diet, and boosts energy levels '/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1112' productDesc='Health supplement that stimulates the immune system against diseases and infections'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1339' productDesc='It helps promote a leaner body with an improved stamina.It is free of sugar and aspartame and is unisex in nature.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1378' productDesc='Preservative-free capsule that controls blood pressure and reduces incidences of heart attacks  '/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1078' productDesc='These herbal capsules help cure night blindness and improve ones vision. It is feasible for both men and women.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EQNX007' productDesc='A digital weighing scale that holds reading upto 5 seconds before it goes off.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT699' productDesc='Pre-workout energy amplifier and muscle toner. Enhances training results and activates muscle growth.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1046' productDesc='It contains Vitamin E that helps promote a healthy heart.It is recommended for both men and women.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1068' productDesc='A traditional herb that provides nutritional support to your body and also stimulates blood circulation.'/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1340' productDesc='Weight loss powder which is a good source of protien and is low in calories.'/>
 
                    <div class="cl"></div>
 
@@ -459,6 +315,7 @@ $(function() {
 
 </s:layout-component>
 
+<s:layout-component name="menu"> </s:layout-component>
 
 </s:layout-render>
 
