@@ -527,6 +527,8 @@ any data added to them will be ignored outright.  -->
         <field name="nameSort" type="string" indexed="true" stored="false"/>
         <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
         <field name="brand" type="text_brand" indexed="true" stored="true" />
+        <!--This does not match exact brand. Useful in search-->
+        <field name="brand_liberal" type="text_general" indexed="true" stored="true" />
         <field name="overview" type="text_en_splitting" indexed="true" stored="true" />
         <field name="description" type="text_en_splitting" indexed="true" stored="true" />
         <field name="isGoogleAdDisallowed" type="boolean" indexed="true" stored="true" />
@@ -667,6 +669,7 @@ via copyField further on in this schema  -->
     <copyField source="name" dest="nameSort"/>
     <copyField source="name" dest="alphaNameSort"/>
     <copyField source="name" dest="title_autocomplete"/>
+    <copyField source="brand" dest="brand_liberal"/>
     <copyField source="variantNames" dest="title_autocomplete"/>
 
     <copyField source="name" dest="spellfind"/>
