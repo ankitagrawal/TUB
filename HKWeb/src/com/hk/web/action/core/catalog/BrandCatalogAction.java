@@ -123,7 +123,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
 				  }
 			  }
 		  }
-		  seoData = seoManager.generateSeo(brand); 		  		  
+		  seoData = seoManager.generateSeo(brand+"||"+topLevelCategory); 		  		  
 	  }
 	  return new ForwardResolution("/pages/brand-catalog.jsp");
   }
