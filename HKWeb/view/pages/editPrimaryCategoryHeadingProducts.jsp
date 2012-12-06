@@ -16,13 +16,25 @@
             }
           });
           if (!check) {
-            alert("Please select the product(s) to be deleted or edit!!");
+            alert("Please select the product(s) to be deleted!!");
             return false;
           }
           else {
             var proceed = confirm('Are you sure that you want to delete the product(s) selected?');
             if (proceed) return true;
             else return false;
+          }
+        });
+           $('.editBtn').click(function() {
+          var check = 0;
+          $('.checkbox').each(function() {
+            if ($(this).attr("checked") == "checked") {
+              check = 1;
+            }
+          });
+          if (!check) {
+            alert("Please select the product(s) to be edited!!");
+            return false;
           }
         });
       });
@@ -34,7 +46,7 @@
     <h2>${ha.heading.name}</h2>
     <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
-	      <tr><<th>Product</th><th>OOS</th><th>Sorting</th></tr>
+	      <tr><th>ID</th></th><th>Product</th><th>OOS</th><th>Sorting</th></tr>
         <c:forEach var="headingProducts" items="${ha.headingProducts}">
           <tr>
             <td>
