@@ -121,6 +121,9 @@
 
       <p>
         Payment Mode : ${orderSummary.order.payment.paymentMode.name}<br/>
+          <c:if test="${orderSummary.order.payment.gateway != null}">
+              <span style="margin-left:30px;">Gateway: ${orderSummary.order.payment.gateway.name}</span>
+          </c:if>
         Payment Status : ${orderSummary.order.payment.paymentStatus.name}
       </p>
     </div>

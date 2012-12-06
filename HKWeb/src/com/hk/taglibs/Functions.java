@@ -710,5 +710,15 @@ public class Functions {
         GatewayIssuerMappingService gatewayIssuerMappingService = ServiceLocatorFactory.getService(GatewayIssuerMappingService.class);
         return gatewayIssuerMappingService.getImageOfIssuer(imageByteArray,filename);
     }
+    
+    public static Boolean isOrderForDiscretePackaging(ShippingOrder shippingOrder){
+        Category discretePackagingCategory = new Category("discrete-packaging", "Discrete Packaging");
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            if(lineItem.getCartLineItem().getProductVariant().getProduct().getCategories().contains(discretePackagingCategory)){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

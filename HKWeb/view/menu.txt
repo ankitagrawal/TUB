@@ -598,6 +598,7 @@
 ---/beauty/what-s-new/women-nutrition/wellness
 ---/beauty/what-s-new/women-nutrition/weight-watch
 --/beauty/what-s-new/spas-salons : Spas & Salons
+--/beauty/what-s-new/breast-cancer-home-test
 -/beauty/face-care
 --/beauty/face-care/cleanser
 ---/beauty/face-care/cleanser/normal

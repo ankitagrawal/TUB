@@ -1031,5 +1031,16 @@
             <!--${hk:readIssuerImageIcon(${id})}-->
         </example>
     </function>
+    <function>
+        <description>
+            returns image file path for issuer
+        </description>
+        <name>isOrderForDiscretePackaging</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Boolean isOrderForDiscretePackaging(com.hk.domain.order.ShippingOrder)</function-signature>
+        <example>
+            <!--${hk:isOrderForDiscretePackaging(${id})}-->
+        </example>
+    </function>
 
 </taglib>
