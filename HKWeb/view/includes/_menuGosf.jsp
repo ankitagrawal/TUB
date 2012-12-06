@@ -5,7 +5,7 @@
                         <li><a href="${pageContext.request.contextPath}/pages/nutri-bars-gosf.jsp">BARS AND FAT BURNERS</a></li>
                         <li><a href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf.jsp">DIETARY SUPPLEMENTS</a></li>
                         <li><a href="${pageContext.request.contextPath}/pages/nutri-workout-gosf.jsp">PRE WORKOUT</a></li>
-                        <li><a href="${pageContext.request.contextPath}/pages/nutri-protein-gosf.jsp">PROTEINS & MASS GAINRES</a></li>
+                        <li><a href="${pageContext.request.contextPath}/pages/nutri-protein-gosf.jsp">PROTEINS & MASS GAINERS</a></li>
       </ul>
     </li>
     <li><a href="${pageContext.request.contextPath}/pages/sports-gosf.jsp">SPORTS & FITNESS</a></li>

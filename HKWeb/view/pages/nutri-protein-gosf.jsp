@@ -292,7 +292,7 @@ p, h3, h1, h2, h4 {
         <div class="cl"></div>
 
 
-        <div class="heading1">PROTEINS & MASS GAINRES</div>
+        <div class="heading1">PROTEINS & MASS GAINERS</div>
         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT486' productDesc='A unique blend of pure crystalline Ergogenic amino acids which acts as anabolic agent and promotes muscle protein synthesis'/>
         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT487' productDesc='Containing BCAA, GLT, Lysine and Arginine, it is effective in building muscle mass and enhances the level of performance'/>
         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1718' productDesc='Get the best Casein available & juggernaut your way to your cherished body. Contains added enzymes to facilitate digestion. '/>
