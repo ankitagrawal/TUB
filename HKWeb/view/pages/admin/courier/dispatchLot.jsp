@@ -27,7 +27,7 @@
 	</s:layout-component>
 	<s:layout-component name="heading">
 		<c:choose>
-			<c:when test="${dispatch.dispatchLot != null}">
+			<c:when test="${dispatch.dispatchLot.id != null}">
 				<h4>Edit Dispatch Lot # ${dispatch.dispatchLot.id}</h4>
 			</c:when>
 			<c:otherwise>
@@ -100,6 +100,35 @@
 				<div class="clear"></div>
 					<s:submit name="save" value="Save"/>
 			</div>
+
+			<c:if test="${dispatch.dispatchLot.id != null}">
+			<div class="reportBox">
+						<s:form beanclass="com.hk.web.action.report.GenerateReconcilationReportAction" >
+							<fieldset class="right_label">
+								<legend>Update Shipment Details In Dispatch Lot</legend>
+								<br>
+								<span class="large">(AWB NUMBER) as excel header</span>
+								<ul>
+									<%--<li>
+										<label>Payment Mode:</label>
+										<s:select name="paymentProcess" class="uploadPaymentMode" style="width: 100">
+											<s:option value="all">-Select-</s:option>
+											<s:option value="cod">COD</s:option>
+											<s:option value="techprocess">Prepaid</s:option>
+										</s:select>
+									</li>--%>
+									<li>
+										<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
+
+									</li>
+									<li>
+										<s:submit name="parse" value="Upload Shipment Details" class="requiredFieldValidator"/>
+									</li>
+								</ul>
+							</fieldset>
+						</s:form>
+					</div>
+			</c:if>
 
 		</s:form>
 	</s:layout-component>

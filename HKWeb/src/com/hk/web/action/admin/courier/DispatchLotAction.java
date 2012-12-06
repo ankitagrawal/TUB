@@ -6,10 +6,7 @@ import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
 import com.restfb.util.StringUtils;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -61,9 +58,10 @@ public class DispatchLotAction extends BasePaginatedAction {
 			return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
 		}
 		dispatchLot.setUpdateDate(new Date());
-		getDispatchLotService().save(dispatchLot);
+		dispatchLot = getDispatchLotService().save(dispatchLot);
 		addRedirectAlertMessage(new SimpleMessage("Changes saved"));
-		return showDispatchLotList();
+
+		return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
 	}
 
 	private boolean doValidations() {
