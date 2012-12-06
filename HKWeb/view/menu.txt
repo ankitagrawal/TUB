@@ -187,6 +187,7 @@
 ---/sports/sports-eqipment/cricket/helmets
 ---/sports/sports-equipment/cricket/pads
 ---/sports/sports-equipment/cricket/accessories
+--/sports/sports-equipment/chess
 --/sports/sports-equipment/swimming
 ---/sports/sports-equipment/swimming/goggles
 ---/sports/sports-equipment/swimming/caps
