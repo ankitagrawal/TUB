@@ -356,7 +356,7 @@ public class ReportManager {
                 }
 	            if(zone != null){
 		            Zone shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
-		            if(shippingOrderZone != null){
+		            if(shippingOrderZone != null && shippingOrderZone.equals(zone)){
 			            setCellValue(row, 23, shippingOrderZone.getName().toUpperCase());
 		            }
 		            else{

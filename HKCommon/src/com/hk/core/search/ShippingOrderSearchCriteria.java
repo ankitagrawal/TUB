@@ -3,6 +3,7 @@ package com.hk.core.search;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
@@ -37,6 +38,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private boolean                                  searchForPrinting = false;
 	private Date                                     lastEscStartDate;
 	private Date                                     lastEscEndDate;
+	private Zone                                     zone;
 
     public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
         this.searchForPrinting = searchForPrinting;
@@ -121,6 +123,11 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
+	public ShippingOrderSearchCriteria setShipmentZone(Zone zone) {
+		this.zone = zone;
+		return this;
+	}
+
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
 
@@ -137,6 +144,13 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 		    shipmentCriteria = criteria.createCriteria("shipment");
 
 		    shipmentCriteria.add(Restrictions.in("awb", awbList));
+	    }
+
+	    if(zone != null){
+		    if(shipmentCriteria == null){
+			     shipmentCriteria = criteria.createCriteria("shipment");
+		    }
+		    shipmentCriteria.add(Restrictions.like("zone", zone));
 	    }
 
 	    DetachedCriteria awbCriteria = null;

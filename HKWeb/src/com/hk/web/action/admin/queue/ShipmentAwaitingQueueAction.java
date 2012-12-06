@@ -122,6 +122,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
     shippingOrderSearchCriteria.setOrderAsc(true);
     shippingOrderSearchCriteria.setCourierList(courierList);
+	shippingOrderSearchCriteria.setShipmentZone(zone);
     shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
     if (shippingOrderPage != null) {
       shippingOrderList = shippingOrderPage.getList();

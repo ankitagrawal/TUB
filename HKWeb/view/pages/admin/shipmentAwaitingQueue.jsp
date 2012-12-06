@@ -29,7 +29,14 @@
               <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
                                          label="name"/>
             </s:select>
-            <label>Per Page</label>
+		    <label>Zone:<label>
+			<s:select name="zone">
+				<s:option value="null">Select</s:option>
+					  <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
+												 value="id"
+												 label="name"/>
+			</s:select>
+			<label>Per Page</label>
             <s:select name="defaultPerPage">
               <s:option value="30">30</s:option>
               <s:option value="60">60</s:option>
@@ -50,15 +57,14 @@
               <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
                                          label="name"/>
             </s:select>
-	          <%--temporary fix, need to populate zones from a database table--%>
 
-	           <label>Zone:<label>  
-			<s:select name="zone" >
-			<s:option value="null">Select</s:option>
-				<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
-										   value="id"
-										   label="name"/>
-			</s:select>
+	          <label>Zone:<label>
+		          <s:select name="zone">
+		          <s:option value="null">Select</s:option>
+			          <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
+			                                     value="id"
+			                                     label="name"/>
+		          </s:select>
             <s:submit name="generateCourierReport">
                 Download Courier Excel
               <s:param name="courierDownloadFunctionality" value="true" />

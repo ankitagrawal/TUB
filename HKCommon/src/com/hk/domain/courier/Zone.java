@@ -54,4 +54,9 @@ public class Zone {
 		}
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		return id == null ? "" : id.toString();
+	}
 }
