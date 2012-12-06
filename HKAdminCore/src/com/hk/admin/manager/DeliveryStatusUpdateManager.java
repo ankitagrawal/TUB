@@ -293,7 +293,7 @@ public class DeliveryStatusUpdateManager {
 			List<ShippingOrder> shippingOrderSubList;
 			List<Element> elementList = new ArrayList();
 			int listSize = shippingOrderList.size();
-			int batchSize = 10;
+			int batchSize = 50;
 			startIndex = 0;
 			endIndex = 0;
 
