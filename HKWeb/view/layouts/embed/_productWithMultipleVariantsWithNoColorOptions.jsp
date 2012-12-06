@@ -62,11 +62,10 @@
                               </c:otherwise>
                           </c:choose>
 
-	                      <c:if test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
-		                      <br/>
+	                      <%--<c:if test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
 		                      <br/>
 		                      ${variant.variantName}
-	                      </c:if>
+	                      </c:if>--%>
                       </c:when>
                       <c:otherwise>
                           <c:choose>
