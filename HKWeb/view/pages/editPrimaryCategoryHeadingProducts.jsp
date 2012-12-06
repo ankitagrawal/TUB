@@ -16,7 +16,7 @@
             }
           });
           if (!check) {
-            alert("Please select the product(s) to be deleted!");
+            alert("Please select the product(s) to be deleted or edit!!");
             return false;
           }
           else {
@@ -34,7 +34,7 @@
     <h2>${ha.heading.name}</h2>
     <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
-	      <tr><th>ID</th><th>Product</th><th>OOS</th><th>Sorting</th></tr>
+	      <tr><<th>Product</th><th>OOS</th><th>Sorting</th></tr>
         <c:forEach var="headingProducts" items="${ha.headingProducts}">
           <tr>
             <td>
@@ -53,6 +53,7 @@
 
       <div align="center">
         <s:submit name="addPrimaryCategoryHeadingProducts" value="Add New" class="addBtn"/>
+        <s:submit name="editSelectedPrimaryCategoryHeadingProducts" value="Edit" class="editBtn"/>
         <s:submit name="deleteSelectedPrimaryCategoryHeadingProducts" value="Delete" class="deleteBtn"/>
       </div>
       <c:choose>

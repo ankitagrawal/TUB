@@ -234,19 +234,17 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
    category = heading.getCategory();
     HeadingProduct headingProduct = null;
-    if(heading!=null || productId!=null){
-      headingProduct = getHeadingProductService().getHeadingProductByHeadingAndProductId(heading,productId);
+    if(heading!=null && products!=null){
+       for(Product product : products){
+      headingProduct = getHeadingProductService().getHeadingProductByHeadingAndProductId(heading,product.getId());
       if(headingProduct!=null){
         getHeadingProductService().delete(headingProduct);
         addRedirectAlertMessage(new SimpleMessage("Changes saved Successfully"));
       }
-      else{
-        headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
-        addRedirectAlertMessage(new SimpleMessage("Couldn't delete, please try again!!!"));
-        return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
-      }
+       }
     }
     else{
+      headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
       addRedirectAlertMessage(new SimpleMessage("There came an Error, please Try again later!!!!"));
       return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
     }
@@ -257,6 +255,45 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     }
   }
 
+  public Resolution editSelectedPrimaryCategoryHeadingProducts(){
+   heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
+    HeadingProduct headingProduct = null;
+     if(products!=null){
+       for(Product product : products){
+       headingProduct = getHeadingProductService().getHeadingProductByHeadingAndProductId(heading,product.getId());
+         headingProducts.add(headingProduct);
+       }
+     }
+   return new ForwardResolution("/pages/editSelectedPrimaryCategoryHeadingProducts.jsp");
+  }
+
+  public Resolution saveSelectedPrimaryCategoryHeadingProducts(){
+    heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
+    category = heading.getCategory();
+    HeadingProduct headingProduct = null;
+      if(products!=null && ranks!=null){
+        int i = 0;
+        for(Product product : products){
+          Product product1 = getProductService().getProductById(product.getId());
+           headingProduct = getHeadingProductService().getHeadingProductByHeadingAndProductId(heading,product.getId());
+           if(headingProduct!=null){
+             headingProduct.setRank(ranks.get(i));
+             getHeadingProductService().save(headingProduct);
+           }
+          i++;
+        }
+      }
+    else{
+        headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);        
+       addRedirectAlertMessage(new SimpleMessage("There came an Error, please Try again later!!!!"));
+       return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
+      }
+      if (!(category.getName().equals("home"))) {
+      return new ForwardResolution(CategoryAction.class, "pre").addParameter("category", category.getName());
+    } else {
+      return new ForwardResolution(HomeAction.class, "pre").addParameter("category", category.getName());
+    }
+  }
     public Category getCategory() {
         return category;
     }

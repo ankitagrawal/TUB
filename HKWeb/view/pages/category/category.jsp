@@ -187,7 +187,7 @@
     </shiro:hasPermission>
 
     <c:forEach var="heading" items="${categoryBean.headingsWithRankingSetSortedByRanking}">
-      <c:if test="${!empty heading.products}">
+      <c:if test="${!empty hk:getHeadingProductsSortedByRank(heading.id)}">
         <div class="grid_24 alpha omega" style="width: 950px;">
           <c:choose>
             <c:when test="${hk:isNotBlank(heading.link)}">
@@ -227,9 +227,9 @@
         </shiro:hasPermission>
 
         <div class="grid_24" style="width: 950px;">
-          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, categoryBean.category.name)}' begin="0" end="5">
+          <c:forEach var="headingProduct" items='${hk:getHeadingProductsSortedByRank(heading.id)}' begin="0" end="5">
             <div class="grid_4 alpha omega">
-              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${product}'/>
+              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${headingProduct.product}'/>
             </div>
           </c:forEach>
         </div>
@@ -238,7 +238,7 @@
       </c:if>
 
       <shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">
-        <c:if test="${empty heading.products}">
+        <c:if test="${empty  hk:getHeadingProductsSortedByRank(heading.id)}">
           <div class="grid_24 alpha omega" style="width: 950px;">
             <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction"
                     event="addPrimaryCategoryHeadingProducts"
