@@ -150,7 +150,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 		    if(shipmentCriteria == null){
 			     shipmentCriteria = criteria.createCriteria("shipment");
 		    }
-		    shipmentCriteria.add(Restrictions.like("zone", zone));
+		    shipmentCriteria.add(Restrictions.eq("zone.id", zone.getId()));
 	    }
 
 	    DetachedCriteria awbCriteria = null;
