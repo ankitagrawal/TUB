@@ -305,6 +305,16 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     @Transactional
+    public Order markOrderAsCompletedWithInstallation(Order order){
+       boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
+        if (isUpdated) {
+            logOrderActivity(order, EnumOrderLifecycleActivity.OrderInstalled);
+        }
+        return order;
+    }
+
+
+    @Transactional
     public Order markOrderAsLost(Order order) {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Lost, EnumOrderStatus.Lost);
         if (isUpdated) {

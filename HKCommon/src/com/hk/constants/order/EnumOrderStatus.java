@@ -15,6 +15,7 @@ public enum EnumOrderStatus {
   OnHold(25L, "On Hold"),
   Shipped(30L, "Shipped"),
   Delivered(40L, "Delivered"),
+  Installed (42L,"Installed"),  
   PartialRTO(45L, "Partially Returned"),
   RTO(50L, "Returned"),
   Lost(60L, "Lost"),

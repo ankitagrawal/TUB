@@ -51,6 +51,8 @@ public interface ShippingOrderService {
 
 	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
 
+    public ShippingOrder escalateShippingOrderFromActionTODropQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
+
 	/**
 	 * Creates a shipping order with basic details
 	 *

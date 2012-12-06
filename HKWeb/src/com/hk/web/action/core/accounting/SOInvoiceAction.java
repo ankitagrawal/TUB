@@ -76,6 +76,7 @@ public class SOInvoiceAction extends BaseAction {
 	private boolean groundShipped;
 	private Shipment shipment;
 	private Double estimatedWeightOfPackage;
+    private boolean installableItemPresent;
 
 	private void generateBarcodesForInvoice(Awb awb) {
 		Long courierId = shipment.getAwb().getCourier().getId();
@@ -155,6 +156,10 @@ public class SOInvoiceAction extends BaseAction {
 			if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)) {
 				setGroundShipped(true);
 			}
+
+            if (shipmentService.isShippingOrderHasInstallableItem(shippingOrder)){
+                     installableItemPresent = true;
+            }
 			estimatedWeightOfPackage = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
 
 			freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
@@ -274,4 +279,12 @@ public class SOInvoiceAction extends BaseAction {
 	public void setEstimatedWeightOfPackage(Double estimatedWeightOfPackage) {
 		this.estimatedWeightOfPackage = estimatedWeightOfPackage;
 	}
+
+    public boolean isInstallableItemPresent() {
+        return installableItemPresent;
+    }
+
+    public void setInstallableItemPresent(boolean installableItemPresent) {
+        this.installableItemPresent = installableItemPresent;
+    }
 }

@@ -100,6 +100,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             }
         }
 
+
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
                 shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser,
@@ -228,5 +229,17 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     public UserService getUserService() {
         return userService;
+    }
+
+
+    public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder) {
+        if (shippingOrder.isDropShipping()) {
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                if (lineItem.getSku().getProductVariant().getProduct().isInstallable()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

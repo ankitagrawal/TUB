@@ -450,6 +450,12 @@
             </td>
         </tr>
     </table>
+
+  <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
+    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care</h6>
+   </c:if>
+
+
 </div>
 
 <div class="clear"></div>

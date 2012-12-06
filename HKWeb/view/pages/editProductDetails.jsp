@@ -40,7 +40,7 @@
             <%--//todo ankit, please add the same in bulk edit, take rimals help      --  need to discuss--%>
            <li><label>Is Ground Shipping</label><s:checkbox name="product.groundShipping"/></li>
           <li><label>Is COD Allowed</label><s:checkbox name="product.codAllowed"/></li>
-
+            <li><label>Is Installable</label><s:checkbox name="product.installable"/></li>
           <li>
 
             <label>Select Manufacturer</label>

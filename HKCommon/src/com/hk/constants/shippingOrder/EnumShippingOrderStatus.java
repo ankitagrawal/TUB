@@ -13,12 +13,14 @@ public enum EnumShippingOrderStatus {
     SO_OnHold(112L, "SO On Hold"),
     SO_EscalatedBack(115L, "SO Escalated Back"),
     SO_ReadyForProcess(120L, "SO Ready for Process"),     //same as escalated to packing queue
+    SO_ReadyForDropShipping (125L, "SO ready for drop shipping"),
     SO_MarkedForPrinting(130L, "SO Gone for Printing"),
     SO_Picking(140L, "SO Picking"),
     SO_CheckedOut(150L, "SO Checked Out"),
     SO_Packed(160L, "SO Packed"),
     SO_Shipped(180L, "SO Shipped"),
     SO_Delivered(190L, "SO Delivered"),
+    SO_Installed(195L, "SO Installed"),
     SO_Returned(200L, "SO Returned"),
     SO_Lost(210L, "SO Lost"),
     SO_Replaced(220L, "SO Replaced"),
@@ -61,6 +63,12 @@ public enum EnumShippingOrderStatus {
     public static List<EnumShippingOrderStatus> getStatusForProcessingQueue() {
         return Arrays.asList(EnumShippingOrderStatus.SO_ReadyForProcess,
                 EnumShippingOrderStatus.SO_MarkedForPrinting, EnumShippingOrderStatus.SO_Picking, EnumShippingOrderStatus.SO_CheckedOut);
+    }
+
+
+     public static List<EnumShippingOrderStatus> getStatusForDropShippingQueue() {
+        return Arrays.asList( EnumShippingOrderStatus.SO_ReadyForDropShipping,
+                EnumShippingOrderStatus.SO_Shipped, EnumShippingOrderStatus.SO_Delivered, EnumShippingOrderStatus.SO_Installed);
     }
 
     public static List<EnumShippingOrderStatus> getStatusForBookedInventory() {
@@ -114,6 +122,11 @@ public enum EnumShippingOrderStatus {
     public static List<EnumShippingOrderStatus> getStatusSearchingInDeliveryQueue() {
         return Arrays.asList(EnumShippingOrderStatus.SO_Shipped, EnumShippingOrderStatus.SO_Returned, EnumShippingOrderStatus.SO_Lost);
     }
+
+
+    public static List<EnumShippingOrderStatus> getStatusSearchingInInstallationQueue() {
+           return Arrays.asList(EnumShippingOrderStatus.SO_Shipped,EnumShippingOrderStatus.SO_Delivered, EnumShippingOrderStatus.SO_Returned, EnumShippingOrderStatus.SO_Lost);
+       }
 
     public static List<EnumShippingOrderStatus> getStatusForCRMReport() {
 
