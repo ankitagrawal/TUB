@@ -31,8 +31,8 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		String queryString = "from AffiliateTxn aT where aT.order =:order";
 		return (AffiliateTxn) findUniqueByNamedParams(queryString, new String[]{"order"}, new Object[]{order});
 	}
-
-	public AffiliateTxn saveTxn(Affiliate affiliate, Double amountToAdd, AffiliateTxnType affiliateTxnType, Order order) {
+ //setting null order
+	public AffiliateTxn saveTxn(Affiliate affiliate, Double amountToAdd, AffiliateTxnType affiliateTxnType, Order order, Date chequeIssueDate) {
 		AffiliateTxn affiliateTxn = new AffiliateTxn();
 		affiliateTxn.setAffiliate(affiliate);
 		if (affiliateTxnType.getId().equals(EnumAffiliateTxnType.PENDING.getId()) || affiliateTxnType.getId().equals(EnumAffiliateTxnType.ADD.getId())) {
@@ -42,7 +42,7 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		}
 		affiliateTxn.setAffiliateTxnType(affiliateTxnType);
 		affiliateTxn.setOrder(order);
-		affiliateTxn.setDate(new Date());
+		affiliateTxn.setDate(chequeIssueDate);
 		return (AffiliateTxn) save(affiliateTxn);
 	}
 
@@ -94,20 +94,20 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		applicableTxnTypes.add(EnumAffiliateTxnType.ADD.getId());
 		applicableTxnTypes.add(EnumAffiliateTxnType.PAYMENT_DUE.getId());
 //		applicableTxnTypes.add(EnumAffiliateTxnType.PAID.getId());
-		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
+//		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
 
 		Double amountInAccount = 0D;
-		if (startDate == null || endDate == null) {
+//		if (startDate == null || endDate == null) {
 			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes)";
 			amountInAccount = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes"}, new Object[]{
 					affiliate,
 					applicableTxnTypes});
-		} else {
-			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes) and at.date >= :startDate and at.date <= :endDate";
-			amountInAccount = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes", "startDate", "endDate"}, new Object[]{
-					affiliate,
-					applicableTxnTypes, startDate, endDate});
-		}
+//		} else {
+//			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes) and at.date >= :startDate and at.date <= :endDate";
+//			amountInAccount = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes", "startDate", "endDate"}, new Object[]{
+//					affiliate,
+//					applicableTxnTypes, startDate, endDate});
+//		}
 		return amountInAccount != null ? amountInAccount : 0D;
 	}
 
@@ -117,19 +117,23 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		applicableTxnTypes.add(EnumAffiliateTxnType.PAYMENT_DUE.getId());
 //		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
 
-		Calendar endCalender = Calendar.getInstance();
-		int day = endCalender.get(Calendar.DAY_OF_MONTH);
-		if (day <= 5) {
-			endCalender.add(Calendar.MONTH, -1);
-		}
-		endCalender.set(Calendar.DAY_OF_MONTH, 5);
-		Date endDate = endCalender.getTime();
+//		Calendar endCalender = Calendar.getInstance();
+//		int day = endCalender.get(Calendar.DAY_OF_MONTH);
+//		if (day <= 5) {
+//			endCalender.add(Calendar.MONTH, -1);
+//		}
+//		endCalender.set(Calendar.DAY_OF_MONTH, 5);
+//		Date endDate = endCalender.getTime();
 
 		Double amountPayable = 0D;
-			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes) and at.date <= :endDate";
-			amountPayable = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes", "endDate"}, new Object[]{
+//			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes) and at.date <= :endDate";
+//			amountPayable = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes", "endDate"}, new Object[]{
+//					affiliate,
+//					applicableTxnTypes, endDate});
+    String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes)";
+			amountPayable = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes"}, new Object[]{
 					affiliate,
-					applicableTxnTypes, endDate});
+					applicableTxnTypes});
 		return amountPayable != null ? amountPayable : 0D;
 	}
 
@@ -177,8 +181,8 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 
 	@Override
 	public void markDueAffiliateTxnAsPaid(Affiliate affiliate, Date endDate) {
-		String queryString = "from AffiliateTxn aT where aT.affiliate = :affiliate and aT.affiliateTxnType.id =:affiliateTxnTypeId and date = :endDate";
-		List<AffiliateTxn> affiliateTxnList = findByNamedParams(queryString, new String[]{"affiliate", "affiliateTxnTypeId", "endDate"}, new Object[]{affiliate, EnumAffiliateTxnType.PAYMENT_DUE.getId(), endDate});
+		String queryString = "from AffiliateTxn aT where aT.affiliate = :affiliate and aT.affiliateTxnType.id =:affiliateTxnTypeId";
+		List<AffiliateTxn> affiliateTxnList = findByNamedParams(queryString, new String[]{"affiliate", "affiliateTxnTypeId"}, new Object[]{affiliate, EnumAffiliateTxnType.PAYMENT_DUE.getId()});
 		for (AffiliateTxn affiliateTxn : affiliateTxnList) {
 			if (affiliateTxn != null) {
 				affiliateTxn.setAffiliateTxnType(EnumAffiliateTxnType.PAID.asAffiliateTxnType());

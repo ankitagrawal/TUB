@@ -146,7 +146,7 @@ public class AffiliateManager {
 
     public void paidToAffiiliate(Affiliate affiliate, Double amountPaid, CheckDetails checkDetails) {
         AffiliateTxnType affiliateTxnType = getAffilateService().getAffiliateTxnType(EnumAffiliateTxnType.SENT.getId());
-	      AffiliateTxn affiliateTxn = getAffiliateTxnDao().saveTxn(affiliate, amountPaid, affiliateTxnType, null);
+	      AffiliateTxn affiliateTxn = getAffiliateTxnDao().saveTxn(affiliate, amountPaid, affiliateTxnType, null, checkDetails.getIssueDate());
 	      getAffiliateTxnDao().markDueAffiliateTxnAsPaid(affiliate, checkDetails.getIssueDate());
         checkDetails.setAffiliateTxn(affiliateTxn);
         checkDetails.setAffiliate(affiliate);

@@ -33,7 +33,7 @@
                     </c:forEach>
                 </s:select>
                 <label>Status</label>
-                <s:select name="affiliateMode">
+                <s:select name="affiliateStatus">
                     <option value="">Select</option>
                     <c:forEach items="<%=EnumAffiliateStatus.getAllAffiliateStatus()%>" var="aStatus">
                         <s:option value="${aStatus.id}">${aStatus.name}</s:option>
@@ -64,7 +64,8 @@
                 Plan
             </th>
             <th> Transaction</th>
-            <th></th>
+            <th>Super Login</th>
+            <th>Status</th>
             <th>CALL</th>
         </tr>
 
@@ -110,6 +111,7 @@
                             [Super login]
                         </s:link>
                     </td>
+                    <td>${affiliateDetails.affiliate.affiliateStatus.name}</td>
                     <td>
                         <c:if test="${fn:length(affiliateDetails.affiliate.user.addresses) > 0}">
                             ${affiliateDetails.affiliate.user.addresses[0].phone}

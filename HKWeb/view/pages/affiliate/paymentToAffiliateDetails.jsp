@@ -85,8 +85,8 @@
               </td>
           </tr>
       </table>
+         <s:hidden name="affiliate" value="${paymentAction.affiliate.id}"/>
       <s:submit name="payToAffiliate" value="Save"/>
-      <s:hidden name="affiliate" value="${paymentAction.affiliate.id}"/>
     </s:form>
   </s:layout-component>
 </s:layout-render>

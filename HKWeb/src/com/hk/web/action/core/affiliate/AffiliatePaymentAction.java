@@ -70,7 +70,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	Long affiliateMode;
 	Long affiliateType;
 	Role role;
-	AffiliateStatus affiliateStatus;
+  Long affiliateStatus;
 
 	Page affiliatePage;
 	List<Affiliate> affiliates = new ArrayList<Affiliate>();
@@ -99,9 +99,9 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	public Resolution search() {
 		List<Long> affiliateStatusIds = new ArrayList<Long>();
 		if(affiliateStatus != null){
-			affiliateStatusIds.add(affiliateStatus.getId());
+			affiliateStatusIds.add(affiliateStatus);
 		}
-		affiliatePage = affiliateDao.searchAffiliates(affiliateStatusIds, name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
+		affiliatePage = affiliateDao.searchAffiliates(affiliateStatusIds, name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(),getPageNo());
 		if (affiliatePage != null) {
 			affiliates = affiliatePage.getList();
 		}
@@ -126,9 +126,11 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 		}
 		affiliate.setOffer(offer);
 		affiliate = (Affiliate) affiliateDao.save(affiliate);
+    if(affiliateCategoryCommissionList!=null){
 		for (AffiliateCategoryCommission categoryCommission : affiliateCategoryCommissionList) {
 			getAffiliateCategoryCommissionDao().save(categoryCommission);
-		}
+		  }
+    }
 		return new ForwardResolution("/pages/affiliate/affiliatePlan.jsp");
 	}
 
@@ -381,15 +383,15 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 		this.role = role;
 	}
 
-	public AffiliateStatus getAffiliateStatus() {
-		return affiliateStatus;
-	}
+  public Long getAffiliateStatus() {
+    return affiliateStatus;
+  }
 
-	public void setAffiliateStatus(AffiliateStatus affiliateStatus) {
-		this.affiliateStatus = affiliateStatus;
-	}
+  public void setAffiliateStatus(Long affiliateStatus) {
+    this.affiliateStatus = affiliateStatus;
+  }
 
-	public Offer getOffer() {
+  public Offer getOffer() {
 		return offer;
 	}
 
