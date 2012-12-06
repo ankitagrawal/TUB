@@ -1,5 +1,7 @@
 package com.hk.admin.impl.service.courier;
 
+import com.akube.framework.dao.Page;
+import com.hk.admin.pact.dao.courier.DispatchLotDao;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
@@ -21,9 +23,9 @@ import java.util.Date;
 public class DispatchLotServiceImpl implements DispatchLotService {
 
 	@Autowired
-	private BaseDao baseDao;
+	private DispatchLotDao dispatchLotDao;
 
-	public DispatchLot saveDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
+	/*public DispatchLot saveDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
 		                                   String destination, Long noOfShipmentsSent, Long noOfShipmentsReceived, Long noOfMotherBags,
 		                                   Double totalWeight, Date deliveryDate) {
 		if(dispatchLot != null) {
@@ -41,16 +43,23 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		}
 		return dispatchLot;
 	}
+	*/
+	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
+		                              String destination, Date deliveryStartDate, Date deliveryEndDate, int pageNo, int perPage) {
+
+		return getDispatchLotDao().searchDispatchLot(dispatchLot, docketNumber, courier, zone, source, destination,
+				deliveryStartDate, deliveryEndDate, pageNo, perPage);
+	}
 
 	public DispatchLot save(DispatchLot dispatchLot) {
-		return (DispatchLot)getBaseDao().save(dispatchLot);
+		return (DispatchLot)getDispatchLotDao().save(dispatchLot);
 	}
 
-	public BaseDao getBaseDao() {
-		return baseDao;
+	public DispatchLotDao getDispatchLotDao() {
+		return dispatchLotDao;
 	}
 
-	public void setBaseDao(BaseDao baseDao) {
-		this.baseDao = baseDao;
+	public void setDispatchLotDao(DispatchLotDao dispatchLotDao) {
+		this.dispatchLotDao = dispatchLotDao;
 	}
 }

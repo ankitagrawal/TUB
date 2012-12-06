@@ -239,6 +239,8 @@
 	</s:link>
 	</h3>
 
+	<h3><s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="showDispatchLotList">
+		Dispatch Lot List</s:link></h3>
 
 </div>
 

@@ -50,12 +50,12 @@ public class DispatchLot implements Serializable {
 	@Column(name = "total_weight", nullable = false)
 	private Double totalWeight = 0D;
 
-/*	@Column(name = "delivery_date")
-	private Date deliveryDate;*/
+	@Column(name = "delivery_date")
+	private Date deliveryDate;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "create_dt")
-	private Date createDate;
+	@Column(name = "create_dt", nullable = false)
+	private Date createDate = new Date();
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "update_dt")
@@ -141,7 +141,6 @@ public class DispatchLot implements Serializable {
 		this.totalWeight = totalWeight;
 	}
 
-/*
 	public Date getDeliveryDate() {
 		return deliveryDate;
 	}
@@ -149,7 +148,6 @@ public class DispatchLot implements Serializable {
 	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
-*/
 
 	public Date getCreateDate() {
 		return createDate;
