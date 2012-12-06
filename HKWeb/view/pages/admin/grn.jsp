@@ -195,8 +195,8 @@
 					alert("Enter values in correct format.");
 					return false;
 				}
-
-				var returnFalse = false;
+				/* todo:rahul enable this check*/
+				/*var returnFalse = false;
 				$.each($('.receivedQuantity'), function(index, value){
 					var valueChangeRow = $(this).parents('.lineItemRow');
 					var eachRow=$(value);
@@ -212,7 +212,7 @@
 				});
 				if(returnFalse) {
 					return false;
-				}
+				}*/
 
 				$(this).css("display", "none");
 			} );
