@@ -195,8 +195,8 @@
 					alert("Enter values in correct format.");
 					return false;
 				}
-
-				var returnFalse = false;
+				/* todo:rahul enable this check*/
+				/*var returnFalse = false;
 				$.each($('.receivedQuantity'), function(index, value){
 					var valueChangeRow = $(this).parents('.lineItemRow');
 					var eachRow=$(value);
@@ -212,7 +212,7 @@
 				});
 				if(returnFalse) {
 					return false;
-				}
+				}*/
 
 				$(this).css("display", "none");
 			} );
@@ -477,17 +477,18 @@
 <br/>
 <%--todo rahul: need to remove this add new row button added for finace team on 29-Nov-2012--%>
 <a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
-<c:choose>
+<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+<%--todo rahul: need to remove this add new row button added for finace team on 29-Nov-2012--%>
+<%--<c:choose>
 	<c:when test="${pa.grn.grnStatus.id < inCheckedIn}">
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 	</c:when>
 	<c:otherwise>
-		<%--todo rahul: need to remove this add new row button added for finace team on 29-Nov-2012--%>
-		<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+		<shiro:hasRole name="<%=RoleConstants.GOD%>">
 			<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 		</shiro:hasRole>
 	</c:otherwise>
-</c:choose>
+</c:choose>--%>
 
 </s:form>
 

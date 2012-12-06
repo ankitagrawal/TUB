@@ -169,5 +169,5 @@ public class ReportConstants {
     public static final String HK_BARCODE = "HK BARCODE";
     public static final String COURIER_ID_STR = "Courier Id";                   
 
-
+	public static final String ZONE = "ZONE";
 }

@@ -129,7 +129,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 					}
 				} else {
 					//Do nothing					
-					logger.warn("Entry for the pageUrl and trackingId already exists - so skipping entry");
+					//logger.warn("Entry for the pageUrl and trackingId already exists - so skipping entry");
 				}
 			}
 		}
