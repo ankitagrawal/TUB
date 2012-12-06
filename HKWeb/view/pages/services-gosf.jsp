@@ -293,29 +293,32 @@ p, h3, h1, h2, h4 {
 
 
         <div class="heading1">SERVICES</div>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB046-01' productDesc="A Breast Pump designed to mimic natural expression of the mothers breast. It ensures even milk flow with minimal effort."/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB047-01' productDesc="This electric breast pump gently massages the breasts first. It then mimics natural expression for more milk at any given time"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB060-01' productDesc="Built with an anti-colic valve, It ensures the baby ingests less air while feeding from the bottle."/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB130-01' productDesc="Preserve your baby's soft and supple skin and natural radiance with this herbal baby lotion"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB144-01' productDesc="Read your child's temperature without ever touching. Get Farlin Instant Infrared Ear Thermometer "/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB1510-01' productDesc="Get a smile on your kid's face with this beautifully imaginative bag that comes with a lunch casement and a bottle case"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB171-01' productDesc="Your child has all the fun eating with Pigeon Bowl and Weaning Spoon set."/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB1891-01' productDesc="Your baby's bottle is warmer for longer with Little's Feeder Cover"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB1976-01' productDesc="This electric breast pump gently massages the breasts first. It then mimics natural expression for more milk at any given time"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB1977-01' productDesc="This specially designed feeding bottle has no BPA. Ideal for warming and storing milk too."/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB2117-01' productDesc="Pregnancy puts a lot of stress on your back and tummy. This maternity belt ensures both comfort and safety"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB2132-01' productDesc="Prevent your child from inserting fingers in the power socket. Protect with Farlin Safety Guard For Socket"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB219-01' productDesc="Mix the right amount of milk powder. Go for Farlin Milk Powder Container"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB256-01' productDesc="Comb your baby's hair without hurting them, by Farlin Comb and Brush Set White"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB270-03' productDesc="Moisturize your baby's soft and delicate skin with Farlin Baby Wet Wipes "/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB293-01' productDesc="For fast, safe, and comfortable temperature readings of your kid, we recommend Farlin's Flexible Tip Digital Thermometer"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB344-01' productDesc="Baby has fun bathing with Gentle Bath Cleanser, it smells great too. "/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB390-01' productDesc="Add extra fun to your kid's bath with these fun filled squirters"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB435-01' productDesc="Clean every nook and crany of the milk bottle and nipple with this cleaner, "/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB454-01' productDesc="Make feeding time more natural and enjoyable with this sipper shaped like a mother's teat"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB455-01' productDesc="Teach your child how to drink without spilling with this No Spill Flip It Sipper"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB456-01' productDesc="Make your toddler learn how to hold and drink slowly without spilling. Get this sipper accompanied with gripper cups"/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB459-01' productDesc="sdfdsafdsaf"/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER208' productDesc="Access from 226 cities. Over 1200 nutritionist counsel you on 4300+ diabetes diet plan."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER233' productDesc="24X 7 confidential medical advice through phone and internet"/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER228' productDesc="CBT, LFT, Lipid Profile, KFT, Thyroid Test, Diabetes Test all in one."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER229' productDesc="Avail the economical  service and keep your well-being under a healthy vigil."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER275' productDesc="Set your boundaries racing for perfection with unmatched service. Reasonable 1 month, 3 month and 6 month subscriptions. "/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER260' productDesc="Test for Vitamin B-12 level, Vitamin D3 level, Magnesium range and Complete Blood Count"/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER262' productDesc="Offers scanned checkup to identify early symptoms of dengue in order to take appropriate actions accordingly."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER254' productDesc="Accurate diagnosis for Total Cholesterol level, TG Serum, HDL & LDL Cholesterol, VLDL Ratio, LDL/HDL Raito and Cholesterol/HDI Ratio."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER245' productDesc="Lose weight fast, the easy way."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER170' productDesc="Why wait to lose weight? Online personalised diet plans for you."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER019' productDesc="Measurable results are visible with  customized diet plans"/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER004' productDesc="Wide range of tests for men to assess your health and provide suitable directions to avert them."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER004' productDesc="Provides overall physical examination and consultation especially for women by best gynecologists "/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER207' productDesc="It is Mumbai's 1st Online Booking Facility for Blood Testing & ECG. It offers convenient and hassle free services."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER155' productDesc="It offers mini check-ups including blood count,uric acid,sugar level etc.It is well organized and gives accurate results."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER148' productDesc="It offers ayurveda treatments like massage therapies,facials and steam bath to provide mental as well as physical relief."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER212' productDesc="It specialises in monitoring the blood sugar levels,offering monthly tests.It provides best services possible."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER211' productDesc="It offers various services like monitoring BP,height,BMI,liver,kidney functioning and many more;providing accurate results."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER077' productDesc="It is an online heart care management program providing diet plans and counselling with monthly follow ups by experts."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER232' productDesc="It provides elderly care,post-hospitalisation services and palliative care along with a regular monitoring from home."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER244' productDesc="This card can offer quality medical services at economical rates.It also guides one about healthcare related issues. "/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER255' productDesc="It is 24/7 online healthcare service provider that offers diet plans and expert nutritional advice,at cost-effective rates."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER210' productDesc="It specialises in diabetes check-ups like managing Type-II and Pre-diabetic conditions offering best services possible."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER250' productDesc="It helps monitor and manage thyroid by it's convenient and speedy services,to give accurate results by best services possible."/>
+        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER259' productDesc="This health service provider has best doctors working towards promoting healthcare and wellness especially for old parents."/>
+
         
 
 
