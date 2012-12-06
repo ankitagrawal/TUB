@@ -19,6 +19,7 @@ import com.hk.pact.dao.courier.ReversePickupDao;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.EnumPickupStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -43,18 +44,15 @@ import java.util.List;
  */
 @Secure(hasAnyPermissions = {PermissionConstants.HK_EMPLOYEE}, authActionBean = AdminPermissionAction.class)
 @Component
-public class CourierPickupServiceAction extends BasePaginatedAction {
+public class CourierPickupServiceAction extends BaseAction {
+
 	private static Logger logger = LoggerFactory.getLogger(CourierPickupServiceAction.class);
+
 	private static final int maxPossibleDays = 14;
 	private Date pickupDate;
 	private Long courierId;
 	private String shippingOrderId;
 	private boolean exceededPolicyLimit;
-	private List<ReversePickup> pickupRequestsList;
-
-	Page PickupRequestsPage;
-    private Integer defaultPerPage = 30;
-
 
 	@Autowired
 	ShippingOrderService shippingOrderService;
@@ -92,8 +90,7 @@ public class CourierPickupServiceAction extends BasePaginatedAction {
 		if (diff <= maxPossibleDays) {
 			exceededPolicyLimit = false;
 		} else {
-			exceededPolicyLimit = true;
-			pickupRequestsList = reversePickupDao.getPickupRequestsList();
+			exceededPolicyLimit = true;			
 			//return new ForwardResolution("/pages/admin/queue/shippingOrderDetailGrid.jsp");
 		}
 		return new ForwardResolution("/pages/admin/reversePickup.jsp");
@@ -115,8 +112,8 @@ public class CourierPickupServiceAction extends BasePaginatedAction {
 						addRedirectAlertMessage(new SimpleMessage("Request sent. Pickup confirmation number: " + confirmationNo));
 						logger.debug("courier pickup service initiated successfully");
 						User loggedOnUser = getUserService().getLoggedInUser();
-						reversePickupDao.savePickupRequest(shippingOrder, courier, confirmationNo,
-								pickupDate, false, EnumReconciliationStatus.PENDING.asReconciliationStatus(), loggedOnUser);
+						reversePickupDao.savePickupRequest(shippingOrder, courier, confirmationNo,pickupDate,
+								EnumPickupStatus.OPEN.asPickupStatus(), EnumReconciliationStatus.PENDING.asReconciliationStatus(), loggedOnUser);
 					}else{
 						addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request. " + pickupReply.get(1)));
 					}
@@ -163,11 +160,4 @@ public class CourierPickupServiceAction extends BasePaginatedAction {
 		this.exceededPolicyLimit = exceededPolicyLimit;
 	}
 
-	public List<ReversePickup> getPickupRequestsList() {
-		return pickupRequestsList;
-	}
-
-	public void setPickupRequestsList(List<ReversePickup> pickupRequestsList) {
-		this.pickupRequestsList = pickupRequestsList;
-	}
 }

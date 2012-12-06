@@ -57,51 +57,8 @@
             </ul>
         </fieldset>
         <s:submit name="submit" value="Submit"/>
-        </s:form>
-        <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${pickupService}"/>
-        <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${pickupService}"/>
+        </s:form>       
 
-        <table class="zebra_vert">
-            <thead>
-            <tr>
-                <th>SO Gateway Order Id</th>
-                <th>Courier</th>
-                <th>Pickup Confirmation No.</th>
-                <th>Pickup Date</th>
-                <th>Pickup Status</th>
-                <th>Reconciliation Status</th>
-                <th>User</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <c:forEach items="${pickupService.pickupRequestsList}" var="pickupRequest">
-                <tr>
-                    <td>${pickupRequest.shippingOrder.gatewayOrderId}</td>
-                    <td>${pickupRequest.courier.name}</td>
-                    <td>${pickupRequest.pickupConfirmationNo}}</td>
-                    <td>${pickupRequest.pickupDate}</td>
-                    <td>${pickupRequest.pickupStatus}</td>
-                    <td>${pickupRequest.reconciliationStatus.name}</td>
-                    <td>${pickupRequest.user.name}</td>
-                    <%--<td>--%>
-                        <%--<s:link beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction" event="createOrEdit">Edit--%>
-                            <%--<s:param name="supplier" value="${supplier.id}"/></s:link>--%>
-	                    <%--<c:if test="${supplier.active}">--%>
-		                    <%--<br/>--%>
-		                    <%--<s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO--%>
-			                    <%--<s:param name="supplier" value="${supplier.id}"/></s:link>--%>
-		                    <%--<br/>--%>
-		                    <%--<s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">--%>
-			                    <%--Raise Debit Note--%>
-			                    <%--<s:param name="supplier" value="${supplier.id}"/></s:link>--%>
-	                    <%--</c:if>--%>
-                    <%--</td>--%>
-                </tr>
-            </c:forEach>
-        </table>
-
-        <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${pickupService}"/>
-        <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${pickupService}"/>
     </s:layout-component>
 </s:layout-render>
 

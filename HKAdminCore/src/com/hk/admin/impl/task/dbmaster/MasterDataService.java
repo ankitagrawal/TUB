@@ -114,6 +114,8 @@ public class MasterDataService {
     AdNetworksSeedData                     adNetworksSeedData;
     @Autowired
     ReconciliationTypeSeedData             reconciliationTypeSeedData;
+	@Autowired
+	PickupStatusSeedData					pickupStatusSeedData;
     @Autowired
     ReviewStatusSeedData                   reviewStatusSeedData;
 	@Autowired
@@ -251,6 +253,9 @@ public class MasterDataService {
 
         logger.debug("inserting reconcillation seed data");
         reconciliationTypeSeedData.invokeInsert();
+
+		logger.debug("inserting pickup seed data");
+		pickupStatusSeedData.invokeInsert();
 
         logger.debug("inserting review status seed data");
         reviewStatusSeedData.invokeInsert();

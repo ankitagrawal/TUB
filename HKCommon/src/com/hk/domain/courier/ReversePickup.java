@@ -38,11 +38,12 @@ public class ReversePickup {
     @Column(name = "pickup_date", nullable = false, length = 19)
     private Date pickupDate;
 
-    @Column(name = "pickup_status", nullable = false)
-	private boolean pickupStatus;
+	@ManyToOne
+    @Column(name = "pickup_status_id", nullable = false)
+	private PickupStatus pickupStatus;
 
 	@ManyToOne
-	@JoinColumn(name = "reconciliation_status_id")
+	@JoinColumn(name = "reconciliation_status_id", nullable = false)
     private ReconciliationStatus reconciliationStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -89,11 +90,11 @@ public class ReversePickup {
 		this.pickupDate = pickupDate;
 	}
 
-	public boolean isPickupStatus() {
+	public PickupStatus getPickupStatus() {
 		return pickupStatus;
 	}
 
-	public void setPickupStatus(boolean pickupStatus) {
+	public void setPickupStatus(PickupStatus pickupStatus) {
 		this.pickupStatus = pickupStatus;
 	}
 

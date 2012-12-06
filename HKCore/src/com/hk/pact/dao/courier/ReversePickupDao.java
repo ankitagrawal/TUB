@@ -3,6 +3,7 @@ package com.hk.pact.dao.courier;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.ReversePickup;
+import com.hk.domain.courier.PickupStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.user.User;
 import com.akube.framework.dao.Page;
@@ -19,11 +20,13 @@ import java.util.List;
  */
 public interface ReversePickupDao {
 	public void savePickupRequest(ShippingOrder shippingOrder, Courier courier, String confirmationNo,
-							   Date pickupDate, boolean pickupStatus, ReconciliationStatus reconciliationStatus, User user);
+							   Date pickupDate, PickupStatus pickupStatus, ReconciliationStatus reconciliationStatus, User user);
 
-	public Page getPickupRequestsByStatuses(Boolean pickupStatus, Boolean reconciliationStatus, int page, int perPage);
+	public void save(ReversePickup reversePickup);
 
-	public List<ReversePickup> getPickupRequestsByStatuses(Boolean pickupStatus, Boolean reconciliationStatus);
+	public Page getPickupRequestsByStatuses(Long shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage);
+
+	//public List<ReversePickup> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus);
 
 
 }
