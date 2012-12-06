@@ -181,11 +181,12 @@ p, h3, h1, h2, h4 {margin:0; padding:0;}
 
       .product {
 	width:215px;
+          border-bottom:none;
     text-align:left;
 	float:left;
 	margin:20px 15px 0 10px;
 	position:relative;
-          height:480px;
+          height:490px;
 	}
 
 .product  .gosf-logo { position:absolute; top:177px; right:0px;	}
@@ -212,7 +213,7 @@ p, h3, h1, h2, h4 {margin:0; padding:0;}
     line-height:normal;
 	font-weight:normal;
 	color:#999;
-	margin-bottom:10px;
+	margin-bottom:20px;
     padding:0;
 	}
 
@@ -325,7 +326,6 @@ $(function() {
 
 
         <div class="cl"></div>
-        <div class="see-more"><a href="#"> See more &raquo;</a></div>
 
 
 </div>
@@ -343,7 +343,6 @@ $(function() {
         
 
         <div class="cl"></div>
-        <div class="see-more"><a href="#"> See more &raquo;</a></div>
 
 
 </div>
@@ -359,7 +358,7 @@ $(function() {
             <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE002' productDesc='Used to correct myopia and hypermetropia. Made from polymacon, these are easy to clean and maintain'/>
 
         <div class="cl"></div>
-        <div class="see-more"><a href="#"> See more &raquo;</a></div>
+
 
 
 </div>
@@ -375,7 +374,7 @@ $(function() {
             <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1367' productDesc='Tailored for fitness enthusiasts engaged in heavy workouts, it has 25gm of 100% Whey Protein blend and EAAs per serving.'/>
             <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SWT033' productDesc=' A snack bar that stabilizes sugar levels for up to 9 hours.  Ideal for growing children, diabetic patients, and fitness enthusiasts.'/>
       <div class="cl"></div>
-    <div class="see-more"><a href="#"> See more &raquo;</a></div>
+
 
 
 <div class="heading1">Logical Bundle</div>
@@ -413,8 +412,7 @@ $(function() {
             <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1516' productDesc='With the essence of Brahmi, it serves as a brain tonic, treats insomnia and enhances mental abilities'/>
 <div class="cl"></div>
 
-                  <div class="cl"></div>
-        <div class="see-more"><a href="#"> See more &raquo;</a></div>
+
 
 
 
@@ -453,7 +451,7 @@ $(function() {
             <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1340' productDesc='Weight loss powder which is a good source of protien and is low in calories.'/>
 
                    <div class="cl"></div>
-        <div class="see-more"><a href="#"> See more &raquo;</a></div>
+
      
 
 
