@@ -482,6 +482,9 @@
                         <div class="floatleft">
                             Date: <fmt:formatDate value="${order.payment.paymentDate}" type="both"/>
                             <span style="margin-left:30px;">Mode: ${order.payment.paymentMode.name}</span>
+                            <c:if test="${order.payment.gateway != null}">
+                                <span style="margin-left:30px;">Gateway: ${order.payment.gateway.name}</span>
+                            </c:if>
                         </div>
                         <div class="clear"></div>
                         <c:if test="${order.payment.paymentMode.id == paymentModeCod}">

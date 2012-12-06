@@ -75,4 +75,8 @@ public interface ShippingOrderService {
 
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
 
+	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder);
+
+	public String getZoneForShippingOrder(ShippingOrder shippingOrder);
+
 }
