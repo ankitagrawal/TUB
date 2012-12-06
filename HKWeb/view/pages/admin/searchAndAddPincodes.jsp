@@ -86,6 +86,18 @@
 						</s:select></td>
 					</tr>
 					<tr>
+						<td>
+							<label>Zone:<label>
+								<s:select name="pincode.zone">
+								<s:option value="null">Select</s:option>
+									<hk:master-data-collection service="<%=MasterDataDao.class%>"
+									                           serviceProperty="allZones"
+									                           value="id"
+									                           label="name"/>
+								</s:select>
+						</td>
+					</tr>
+					<tr>
 						<td><s:submit name="save" value="Save"/></td>
 					</tr>
 				</s:form>
