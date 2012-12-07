@@ -10956,13 +10956,4 @@
             insert into heading_product(heading_id,product_id) values(77,'ZUSKA023');
         </sql>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1354554592954-1">
-        <dropForeignKeyConstraint baseTableName="heading_has_product" constraintName="fk_heading_has_product_heading1"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1354554592954-2">
-        <dropForeignKeyConstraint baseTableName="heading_has_product" constraintName="fk_heading_has_product_product1"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1354554592954-3">
-        <dropTable tableName="heading_has_product"/>
-    </changeSet>
 </databaseChangeLog>
