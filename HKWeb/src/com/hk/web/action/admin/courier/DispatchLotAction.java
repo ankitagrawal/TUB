@@ -3,13 +3,18 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.constants.core.Keys;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
 import com.restfb.util.StringUtils;
 import net.sourceforge.stripes.action.*;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -22,8 +27,13 @@ import java.util.*;
 @Component
 public class DispatchLotAction extends BasePaginatedAction {
 
+	private static Logger logger = Logger.getLogger(DispatchLotAction.class);
+
 	@Autowired
 	private DispatchLotService dispatchLotService;
+
+	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+	String adminUploadsPath;
 
 	private List<DispatchLot> dispatchLotList = new ArrayList<DispatchLot>();
 	private Page dispatchLotPage;
@@ -36,6 +46,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 	private String destination;
 	private Date deliveryStartDate;
 	private Date deliveryEndDate;
+	private FileBean fileBean;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -103,6 +114,24 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 		return valid;
 	}
+
+	public Resolution parse() throws Exception {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			String excelFilePath = adminUploadsPath + "/dispatchLot/DispatchLot_" + sdf.format(new Date()) + ".xls";
+			File excelFile = new File(excelFilePath);
+			excelFile.getParentFile().mkdirs();
+			fileBean.save(excelFile);
+
+			try {
+
+
+				addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+			} catch (Exception e) {
+				logger.error("Exception while reading excel sheet.", e);
+				addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+			}
+			return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+		}
 
 	public int getPerPageDefault() {
 		return defaultPerPage;
@@ -238,5 +267,13 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 	public void setDeliveryEndDate(Date deliveryEndDate) {
 		this.deliveryEndDate = deliveryEndDate;
+	}
+
+	public FileBean getFileBean() {
+		return fileBean;
+	}
+
+	public void setFileBean(FileBean fileBean) {
+		this.fileBean = fileBean;
 	}
 }
