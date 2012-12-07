@@ -42,7 +42,7 @@ import java.util.List;
  * Time: 12:58:29 PM
  * To change this template use File | Settings | File Templates.
  */
-@Secure(hasAnyPermissions = {PermissionConstants.HK_EMPLOYEE}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.HK_EMPLOYEE}, authActionBean = AdminPermissionAction.class)        //change to customer_support_L3
 @Component
 public class CourierPickupServiceAction extends BaseAction {
 
@@ -91,7 +91,7 @@ public class CourierPickupServiceAction extends BaseAction {
 			exceededPolicyLimit = false;
 		} else {
 			exceededPolicyLimit = true;			
-			//return new ForwardResolution("/pages/admin/queue/shippingOrderDetailGrid.jsp");
+
 		}
 		return new ForwardResolution("/pages/admin/reversePickup.jsp");
 	}

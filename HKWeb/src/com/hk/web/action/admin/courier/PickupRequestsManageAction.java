@@ -34,7 +34,7 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
 
 	private Long pickupStatusId;
 	private Long reconciliationStatusId;
-	private Long shippingOrderId;
+	private String shippingOrderId;
 
 	@Autowired
 	ReversePickupDao reversePickupDao;
@@ -51,7 +51,7 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
 			pickupRequest.setPickupStatus(EnumPickupStatus.CLOSE.asPickupStatus());
 			reversePickupDao.save(pickupRequest);
 		}
-		return new RedirectResolution(PickupRequestsManageAction.class);
+		return new RedirectResolution(PickupRequestsManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
 	public Resolution markReconciled(){
@@ -59,7 +59,7 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
 			pickupRequest.setReconciliationStatus(EnumReconciliationStatus.DONE.asReconciliationStatus());
 			reversePickupDao.save(pickupRequest);
 		}
-		return new RedirectResolution(PickupRequestsManageAction.class);
+		return new RedirectResolution(PickupRequestsManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
 	public int getPerPageDefault() {
@@ -76,8 +76,9 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
 
 	 public Set<String> getParamSet() {
         HashSet<String> params = new HashSet<String>();
-        params.add("pickupStatus");
+        params.add("pickupStatusId");
         params.add("reconciliationStatusId");
+		params.add("shippingOrderId");
         return params;
     }
 
@@ -113,11 +114,11 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
 		this.pickupRequest = pickupRequest;
 	}
 
-	public Long getShippingOrderId() {
+	public String getShippingOrderId() {
 		return shippingOrderId;
 	}
 
-	public void setShippingOrderId(Long shippingOrderId) {
+	public void setShippingOrderId(String shippingOrderId) {
 		this.shippingOrderId = shippingOrderId;
 	}
 }

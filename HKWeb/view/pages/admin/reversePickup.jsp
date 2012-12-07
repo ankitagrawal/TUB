@@ -24,7 +24,7 @@
           $(document).ready(function() {
 
 	          if(${pickupNotValid}) {
-		          alert("Pickup cannot be done. Delivery has exceeded ");
+		          alert("Pickup can be done only within 14 days after delivery.This has been exceeded.");
 	          }
           });
     </script>

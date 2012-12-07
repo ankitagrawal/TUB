@@ -49,7 +49,7 @@ public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDa
 		super.save(reversePickup);
 	}
 
-	public Page getPickupRequestsByStatuses(Long shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage){
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage){
         return list(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId), page, perPage);
     }
 
@@ -57,11 +57,11 @@ public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDa
 //        return findByCriteria(getPickupSearchCriteria(pickupStatus, reconciliationStatusId));
 //    }
 
-	private DetachedCriteria getPickupSearchCriteria(Long shippingOrderId, Long pickupStatusId, Long reconciliationStatusId) {
+	private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId) {
         DetachedCriteria pickupCriteria = DetachedCriteria.forClass(ReversePickup.class);
 
 		if(shippingOrderId != null){
-			DetachedCriteria shippingOrderCriteria = DetachedCriteria.forClass(ShippingOrder.class);
+			DetachedCriteria shippingOrderCriteria = pickupCriteria.createCriteria("shippingOrder");
 			shippingOrderCriteria.add(Restrictions.eq("gatewayOrderId", shippingOrderId));
 		}
 

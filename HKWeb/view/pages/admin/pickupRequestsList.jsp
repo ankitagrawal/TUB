@@ -8,18 +8,39 @@
 %>
 <c:set var="reconDone" value="<%=EnumReconciliationStatus.DONE.getId()%>"/>
 <c:set var="reconPending" value="<%=EnumReconciliationStatus.PENDING.getId()%>"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Pickup List">
-    <s:layout-component name="content">
+<c:set var="pickupOpen" value="<%=EnumPickupStatus.OPEN.getId()%>"/>
 
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Pickup List">
+    <s:layout-component name="htmlHead">
+        <script type="text/javascript">
+            
+         $(document).ready(function() {
+            $('.markPicked').click(function() {
+                if(!confirm("Are you sure you want to mark it picked ?")){
+                    return false;
+                }
+            });
+
+            $('.markReconciled').click(function() {
+                if(!confirm("Are you sure you want to mark it reconciled ?")){
+                   return false;
+                }
+            });
+         });
+
+        </script>
+    </s:layout-component>
+
+    <s:layout-component name="content">
         <s:form beanclass="com.hk.web.action.admin.courier.PickupRequestsManageAction">
 
             <fieldset>
                 <legend>Search Reverse Pickup List</legend>
 
-                <label>SO Gateway Order Id:</label><s:text name="shippingOrderId" style="width:150px"/>
+                <label>SO Gateway Order Id:</label><s:text name="shippingOrderId" value="${pickupManage.shippingOrderId} "style="width:150px"/>
                 &nbsp; &nbsp;
                 <label>Pickup Status:</label>
-                <s:select name="pickupStatus">
+                <s:select name="pickupStatusId">
                     <s:option value="" selected="true">-ALL-</s:option>
                     <c:forEach items="${pickupStatusList}" var="pickupStatus">
                         <s:option value="${pickupStatus.id}">${pickupStatus.name}</s:option>
@@ -60,17 +81,26 @@
                     <td>${pickupRequest.courier.name}</td>
                     <td>${pickupRequest.pickupConfirmationNo}</td>
                     <td>${pickupRequest.pickupDate}</td>
-                    <td>${pickupRequest.pickupStatus}</td>
+                    <td>${pickupRequest.pickupStatus.name}</td>
                     <td>${pickupRequest.reconciliationStatus.name}</td>
                     <td>${pickupRequest.user.name}</td>
 
                     <td>
-                        <s:link beanclass="com.hk.web.action.admin.courier.PickupRequestsManageAction" event="markPicked">Mark Picked
-                            <s:param name="pickupRequest" value="${pickupRequest.id}"/></s:link> 	                    
+                        <c:if test="${pickupRequest.pickupStatus.id == pickupOpen}">
+                            <s:link beanclass="com.hk.web.action.admin.courier.PickupRequestsManageAction" event="markPicked" class="markPicked">Mark Picked
+                                <s:param name="pickupRequest" value="${pickupRequest.id}"/>
+                                <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
+                            </s:link>
 		                    <br/>
-		                    <s:link beanclass="com.hk.web.action.admin.courier.PickupRequestsManageAction" event="markReconciled">Mark Reconciled
-			                    <s:param name="pickupRequest" value="${pickupRequest.id}"/></s:link>
-		                    <br/>	                    
+                        </c:if>
+                        <c:if test="${pickupRequest.reconciliationStatus.id == reconPending}">
+		                    <s:link beanclass="com.hk.web.action.admin.courier.PickupRequestsManageAction" event="markReconciled" class="markReconciled">Mark Reconciled
+			                    <s:param name="pickupRequest" value="${pickupRequest.id}"/>
+                                <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
+                            </s:link>
+		                    <br/>
+                        </c:if>
+
                     </td>
                 </tr>
             </c:forEach>

@@ -24,7 +24,7 @@ public interface ReversePickupDao {
 
 	public void save(ReversePickup reversePickup);
 
-	public Page getPickupRequestsByStatuses(Long shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage);
 
 	//public List<ReversePickup> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus);
 

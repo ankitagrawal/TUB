@@ -39,7 +39,7 @@ public class ReversePickup {
     private Date pickupDate;
 
 	@ManyToOne
-    @Column(name = "pickup_status_id", nullable = false)
+    @JoinColumn(name = "pickup_status_id", nullable = false)
 	private PickupStatus pickupStatus;
 
 	@ManyToOne
