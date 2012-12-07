@@ -244,6 +244,8 @@
         <url-pattern>/super-savers</url-pattern>
         <url-pattern>/faq/*</url-pattern>
 	    <url-pattern>/dmp</url-pattern>
+		<url-pattern>/online-shopping-festival/baby</url-pattern>
+		<url-pattern>/online-shopping-festival/beauty</url-pattern>	    
 	    <url-pattern>/online-shopping-festival</url-pattern>
 	    <url-pattern>/feedback</url-pattern>
     </servlet-mapping>

@@ -12,11 +12,11 @@ import net.sourceforge.stripes.action.UrlBinding;
  * Time: 4:01:05 PM
  * To change this template use File | Settings | File Templates.
  */
-@UrlBinding("/online-shopping-festival")
+@UrlBinding("/online-shopping-festival/baby")
 
-public class GOSFAction extends BaseAction {
+public class GOSFParentingAction extends BaseAction {
 
 	public Resolution pre() {
-		return new ForwardResolution("/pages/cyberMondayGOSF.jsp");
+		return new ForwardResolution("/pages/parenting-gosf.jsp");
 	}
 }
