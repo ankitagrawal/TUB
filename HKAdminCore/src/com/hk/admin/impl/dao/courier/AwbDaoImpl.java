@@ -19,7 +19,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository
-public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
+public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {   
 
 
  	public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {

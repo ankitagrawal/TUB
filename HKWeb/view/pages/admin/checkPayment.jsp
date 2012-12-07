@@ -144,6 +144,8 @@
             <th>Amount</th>
             <th>Status</th>
             <th>Mode</th>
+            <th>Gateway</th>
+            <th>Issuer</th>
             <th>Response Msg</th>
             <th>Error log</th>
             <th>Gateway Transaction Id</th>
@@ -169,6 +171,12 @@
               <td><fmt:formatNumber value="${payment.amount}" currencySymbol="Rs. " type="currency"/></td>
               <td>${payment.paymentStatus.name}</td>
               <td>${payment.paymentMode.name}</td>
+                  <c:if test="${payment.gateway != null}">
+                      <td>${payment.gateway.name}</td>
+                  </c:if>
+                  <c:if test="${payment.issuer != null}">
+                      <td>${payment.issuer.name}</td>
+                  </c:if>
                   <td>
                           ${payment.responseMessage}
                   </td>

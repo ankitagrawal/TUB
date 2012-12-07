@@ -12,7 +12,14 @@
       <s:file name="fileBean" size="30"/>
       <s:select name="productVariant" >
        <c:forEach items="${imageBean.productVariant.product.productVariants}" var="variant" varStatus="ctr">
-         <s:option value="${variant}">${variant.id},Color:${variant.colorOptionsValue}</s:option>
+         <s:option value="${variant}">${variant.id} - 
+	         <c:forEach items="${variant.productOptions}"
+	                    var="productOption">
+		         <c:if test="${hk:showOptionOnUI(productOption.name)}">
+			         ${productOption.value};
+		         </c:if>
+	         </c:forEach>
+         </s:option>
        </c:forEach>
       </s:select>
       <s:submit name="uploadProductVariantImage" value="Upload Image"/>

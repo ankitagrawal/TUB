@@ -10323,4 +10323,9 @@
             <column name="zone" type="VARCHAR(10)"/>
         </addColumn>
     </changeSet>
+	<changeSet author="Ajeet (written)" id="20121205-1">
+		<sql>
+			update seo_data sd, product p set sd.id=concat(sd.id,'||', p.primary_category) where sd.id=p.brand;
+		</sql>
+	</changeSet>
 </databaseChangeLog>
