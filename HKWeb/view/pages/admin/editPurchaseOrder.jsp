@@ -405,7 +405,8 @@
 		<th>Current Inventory <br>All Warehouses</th>
 		<th>Last 30 days Sale</th>
 		<th>Qty</th>
-		<th>Fill Rate</th>
+		<th>PO Fill Rate</th>
+		<th>Historical <br>Fill Rate</th>
 		<th>Cost Price<br/>(Without TAX)</th>
 		<th>MRP</th>
 		<th>Discount<br/>(%)</th>
@@ -485,6 +486,9 @@
 			<td>
 				${poLineItemDto.poLineItem.fillRate}
 			</td>
+		  <td>
+			   ${hk:getPVSupplierInfo(pa.purchaseOrder.supplier, productVariant).fillRate}
+		  </td>
 		<td>
 				<s:text class="costPrice valueChange" name="poLineItems[${ctr.index}].costPrice"
 				        value="${poLineItemDto.poLineItem.costPrice}"/>
