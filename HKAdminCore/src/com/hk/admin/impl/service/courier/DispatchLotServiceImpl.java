@@ -8,7 +8,6 @@ import com.hk.constants.XslConstants;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
 import com.hk.exception.ExcelBlankFieldException;
-import com.hk.exception.HealthkartCheckedException;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import com.restfb.util.StringUtils;
@@ -66,7 +65,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				deliveryStartDate, deliveryEndDate, pageNo, perPage);
 	}
 
-	public void parseExcelAndSaveShipmentDetails(String excelFilePath, String sheetName) throws Exception {
+	public void parseExcelAndSaveShipmentDetails(String excelFilePath, String sheetName) throws ExcelBlankFieldException {
 		ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
 		Iterator<HKRow> rowIterator = parser.parse();
 		int rowCount = 1;
@@ -82,6 +81,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				soGatewayOrderIdInExcel.add(soGatewayOrderId);
 				rowCount++;
 			}
+			//Check if any gatewayOrderId does not exist in the system
 			List<String> soGatewayOrderIdInDBList = getAdminShippingOrderDao().getGatewayOrderList(soGatewayOrderIdInExcel);
 			if (soGatewayOrderIdInDBList.size() < soGatewayOrderIdInExcel.size()) {
 				soGatewayOrderIdInExcel.removeAll(soGatewayOrderIdInDBList);
@@ -92,9 +92,12 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				throw new ExcelBlankFieldException("Following gatewayOrderIds are Invalid : " + invalidOrders);
 			}
 
+			//Check if zone is not the Selected Zone of the Dispatch Lot
+
+
 		} catch (ExcelBlankFieldException e) {
-			logger.error("Exception @ Row:" + (rowCount + 1) + e.getMessage());
-			//throw new Exception("Exception @ Row:" + (rowCount + 1) + ": " + e.getMessage(), e);
+			logger.error("Exception @ Row: " + (rowCount + 1) + e.getMessage());
+			throw new ExcelBlankFieldException(e.getMessage());
 		}
 
 	}

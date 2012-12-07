@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -115,23 +116,24 @@ public class DispatchLotAction extends BasePaginatedAction {
 		return valid;
 	}
 
-	public Resolution parse() throws Exception {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			String excelFilePath = adminUploadsPath + "/dispatchLot/DispatchLot_" + sdf.format(new Date()) + ".xls";
-			File excelFile = new File(excelFilePath);
-			excelFile.getParentFile().mkdirs();
-			fileBean.save(excelFile);
+	public Resolution parse() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		String excelFilePath = adminUploadsPath + "/dispatchLot/DispatchLot_" + sdf.format(new Date()) + ".xls";
+		File excelFile = new File(excelFilePath);
+		excelFile.getParentFile().mkdirs();
+		try {
+		fileBean.save(excelFile);
 
-			try {
 
 
-				addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-			} catch (Exception e) {
-				logger.error("Exception while reading excel sheet.", e);
-				addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-			}
-			return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+
+			addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+		} catch (IOException e) {
+			logger.error("Exception while reading excel sheet.", e);
+			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
 		}
+		return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+	}
 
 	public int getPerPageDefault() {
 		return defaultPerPage;
