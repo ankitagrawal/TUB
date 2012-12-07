@@ -10,7 +10,7 @@ import com.hk.domain.courier.DispatchLot;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
-import com.restfb.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
