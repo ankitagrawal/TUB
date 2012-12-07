@@ -893,8 +893,6 @@ public class AdminEmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
     }
 
-
-
      public boolean sendOrderInstalltionEmail(Order order) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", order);
