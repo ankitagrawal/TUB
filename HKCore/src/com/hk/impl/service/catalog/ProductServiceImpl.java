@@ -3,8 +3,10 @@ package com.hk.impl.service.catalog;
 import java.util.*;
 
 import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.catalog.image.EnumImageType;
 import com.hk.pact.service.image.ProductImageService;
+import com.hk.util.HKImageUtils;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -527,6 +529,11 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setCODAllowed(false);
         }
 
+        solrProduct.setProductUrl(convertToWww(getProductUrl(product,false)));
+        if (product.getMainImageId() != null){
+            solrProduct.setSmallImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId(), false));
+        }
+
         Double price = null;
         productVariant = product.getMinimumHKPriceProductVariant();
         if (productVariant.getHkPrice() != null){
@@ -574,6 +581,11 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return inStockSimilarProducts;
+    }
+
+    //todo : isko thik kar do - for now hardcoding logic to convert admin.healthkart.com to www.healthkart.com
+    public static String convertToWww(String productUrl) {
+        return productUrl.replaceAll("admin\\.healthkart\\.com", "www.healthkart.com");
     }
 }
 
