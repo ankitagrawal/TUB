@@ -99,7 +99,7 @@
 			<value>true</value>
 		</property>
 		<property name="removeAbandonedTimeout">
-			<value>30</value>
+			<value>300</value>
 		</property>
 		<property name="validationQuery">
 			<value>SELECT 1</value>
@@ -113,9 +113,9 @@
 		<property name="initialSize">
 			<value>50</value>
 		</property>
-		<property name="poolPreparedStatements" value="true" />
+		<!--<property name="poolPreparedStatements" value="true" />
 		<property name="maxOpenPreparedStatements" value="30" />
-		<property name="timeBetweenEvictionRunsMillis" value="-1" />
+		<property name="timeBetweenEvictionRunsMillis" value="-1" />-->
 		<property name="defaultTransactionIsolation" value="1"/>
 	</bean>
 

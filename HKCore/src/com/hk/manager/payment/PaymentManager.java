@@ -7,6 +7,8 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.payment.Gateway;
+import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
@@ -28,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -122,18 +125,21 @@ public class PaymentManager {
 	}
 
 	/**
-	 * @param order
-	 * @param paymentMode
-	 * @param remoteAddr
-	 * @return
+	 *
+     * @param order
+     * @param paymentMode
+     * @param remoteAddr
+     * @param gateway
+     *@param issuer @return
 	 */
-	public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, String bankCode) {
+	public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, Gateway gateway, Issuer issuer) {
 		Payment payment = new Payment();
 		payment.setAmount(order.getAmount());
 		payment.setOrder(order);
 		payment.setPaymentMode(paymentMode);
 		payment.setIp(remoteAddr);
-		payment.setBankCode(bankCode);
+        payment.setGateway(gateway);
+        payment.setIssuer(issuer);
 
 		// todo can be set if available for user
 		payment.setBillingAddressActual(null);
@@ -226,6 +232,27 @@ public class PaymentManager {
 	public Order success(String gatewayOrderId) {
 		return success(gatewayOrderId, null);
 	}
+
+    @Transactional
+    public Order success(String gatewayOrderId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode) {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+
+        Order order = null;
+        // if payment type is full, then send order to processing also, else just accept and update payment status
+        if (payment != null) {
+            if (payment.getPaymentDate() == null) {
+                payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            }
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.SUCCESS));
+            payment.setResponseMessage(responseMessage);
+            payment.setAuthIdCode(authIdCode);
+            payment.setRrn(rrn);
+            payment = paymentDao.save(payment);
+            order = getOrderManager().orderPaymentReceieved(payment);
+        }
+        return order;
+    }
 
 	@Transactional
 	public Order success(String gatewayOrderId, String gatewayReferenceId) {
@@ -370,6 +397,19 @@ public class PaymentManager {
 			paymentDao.save(payment);
 		}
 	}
+
+    @Transactional
+    public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e, String responseMessage) {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+        if (payment != null) {
+            payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setResponseMessage(responseMessage);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ERROR));
+            payment.setErrorLog(e.getError().getMessage());
+            paymentDao.save(payment);
+        }
+    }
 
 	public Payment verifyCodPayment(Payment payment) {
 		payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));

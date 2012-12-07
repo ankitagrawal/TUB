@@ -29,6 +29,8 @@ public class FedExShipmentDeleteUtil {
 
 	private String fedExServerUrl;
 
+	private static final String AXIS_FAULT = "FedEx Axis Fault";
+
 	public FedExShipmentDeleteUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
 		this.fedExAuthKey = fedExAuthKey;
 		this.fedExAccountNo = fedExAccountNo;
@@ -83,7 +85,7 @@ public class FedExShipmentDeleteUtil {
 			//printNotifications(reply.getNotifications());
 
 		} catch (Exception e) {
-			logger.error("Error deleting the FedEx tracking number:" + e);
+			logger.error("Error deleting the FedEx tracking number:" + AXIS_FAULT);
 		}
 		return false;
 	}

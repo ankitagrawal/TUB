@@ -1,5 +1,7 @@
 package com.hk.constants.catalog.category;
 
+import com.hk.domain.catalog.category.Category;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ public class CategoryConstants {
   public static final String BEAUTY = "beauty";
   public static final String DIABETES = "diabetes";
   public static final String EYE = "eye";
+  public static final String HOME = "home";
   public static final String HOME_DEVICES = "home-devices";
   public static final String NUTRITION = "nutrition";
   public static final String PERSONAL_CARE = "personal-care";
@@ -55,6 +58,8 @@ public class CategoryConstants {
   public static final String START_SIX_HOUR = "startSixHour";
   public static final String END_SIX_HOUR = "endSixHour";
   public static final String TARGET_DAILY_MRP_SALES_MAP = "targetDailyMrpSalesMap";
+
+	public static  Category eyeGlasses = new  Category("eyeglasses", "Eyeglasses");
 
   public static final Map<String, Long> targetMrpSalesMap = new HashMap<String, Long>() {
     {

@@ -1,7 +1,7 @@
 /* this query find all orders placed by users of a certain offer */
 
 select
-  o.id, o.user_id, c.code, of.create_date, o.create_date, os.name
+  o.id, o.user_id, c.code, of.create_date, o.create_dt, os.name
 from
   base_order o
   left join order_status os on o.order_status_id = os.id
@@ -9,7 +9,7 @@ from
   left join coupon c on c.id = of.coupon_id
 where
   o.order_status_id in (30,40) and
-  o.user_id in (select distinct o.user_id from offer_instance o left join coupon c on c.id = o.coupon_id where c.code like 'VSHK15')
+  o.user_id in (select distinct o.user_id from offer_instance o left join coupon c on c.id = o.coupon_id where c.code like 'HKWIPRO%')
 ;
 
 select
@@ -188,14 +188,12 @@ FROM
 SELECT distinct bo.user_id, min(ifnull(p.payment_date, bo.create_dt)) as first_order_date
 FROM base_order bo
 left outer join payment p on p.id = bo.payment_id
-
-
 WHERE bo.order_status_id
 IN ( 20, 30, 40 )
 group by user_id
 ) v1
-where date(first_order_date)>= '2012-10-20'
-AND date(first_order_date) <= '2012-10-26';
+where date(first_order_date)>= '2012-11-01'
+AND date(first_order_date) <= '2012-11-30';
 
 
 /*

@@ -18,7 +18,7 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao {
     public Role getRoleByName(EnumRole enumRole) {
         return getRoleByName(enumRole.getRoleName());
     }
-    
+
     public Role getRoleByName(String roleName) {
         return get(Role.class, roleName);
     }
@@ -45,27 +45,29 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao {
     public List<Role> listAllBasicRoles() {
         List<String> basicRoles = EnumRole.listBasicRoles();
         DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
-        criteria.add(Restrictions.in("name",basicRoles));
+        criteria.add(Restrictions.in("name", basicRoles));
         return findByCriteria(criteria);
     }
 
     public List<Role> listAllCustomerSupportRoles() {
         List<String> customerSupportRoles = EnumRole.listCustomerSupportRoles();
         DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
-        criteria.add(Restrictions.in("name",customerSupportRoles));
+        criteria.add(Restrictions.in("name", customerSupportRoles));
         return findByCriteria(criteria);
     }
+
     public List<Role> listAllOperationsRoles() {
         List<String> opsRoles = EnumRole.listOpsRoles();
         DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
-        criteria.add(Restrictions.in("name",opsRoles));
+        criteria.add(Restrictions.in("name", opsRoles));
         return findByCriteria(criteria);
     }
-	public List<Role> listAllHRRoles() {
-	    List<String> hrRoles = EnumRole.listHRRoles();
-	    DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
-	    criteria.add(Restrictions.in("name",hrRoles));
-	    return findByCriteria(criteria);
-	}
+
+    public List<Role> listAllHRRoles() {
+        List<String> hrRoles = EnumRole.listHRRoles();
+        DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
+        criteria.add(Restrictions.in("name", hrRoles));
+        return findByCriteria(criteria);
+    }
 
 }

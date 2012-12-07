@@ -52,6 +52,11 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
+    public String getPaymentModesUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/PaymentMode.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
     public String getSelectAddressUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/SelectAddress.action");
         return getUrlFromResolution(redirectResolution);
@@ -111,7 +116,7 @@ public class LinkManager {
     public String getResetPasswordLink(TempToken token) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/PasswordReset.action").addParameter("token", token.getToken());
         return getUrlFromResolution(redirectResolution);
-    }
+    }                                                                
 
     public String getCitrusPaymentNetBankingGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusNetbankingSendReceive.action");
@@ -120,6 +125,11 @@ public class LinkManager {
 
     public String getCitrusPaymentGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusGatewaySendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
+    public String getIciciPaymentGatewayUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/IciciGatewaySendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
 
@@ -137,6 +147,18 @@ public class LinkManager {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/RegisterOnlinePayment.action").addParameter("order", order);
         return getUrlFromResolution(redirectResolution);
     }
+
+    public String getPayPalPaymentGatewayReturnUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/PayPalCreditDebitSendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
+
+    public String getPayPalPaymentGatewayCancelUrl() {
+          RedirectResolution redirectResolution = new RedirectResolution("/core/payment/PaymentMode.action");
+          return getUrlFromResolution(redirectResolution);
+      }
+
 
     public String getRelativeProductURL(Product product, Long productReferrerId) {
        /* String productURL = null;
@@ -203,7 +225,7 @@ public class LinkManager {
         RedirectResolution redirectResolution = new RedirectResolution(tryOnURL);
         if (productVariant != null) {
             redirectResolution.addParameter("productid", productVariant);
-            redirectResolution.addParameter("type", productVariant.getProduct().getSecondaryCategory());
+//            redirectResolution.addParameter("type", productVariant.getProduct().getSecondaryCategory());
         }
 
         return getUrlFromResolution(redirectResolution);

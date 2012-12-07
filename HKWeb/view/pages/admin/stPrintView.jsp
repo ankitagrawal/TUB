@@ -81,9 +81,23 @@
 	</tr>
 	<tr>
 		<td><b>From Warehouse:</b></td>
-		<td>${stockTransferBean.stockTransfer.fromWarehouse.name}</td>
+		<td>
+			${stockTransferBean.stockTransfer.fromWarehouse.name} <br/>
+			${stockTransferBean.stockTransfer.fromWarehouse.line1},
+			${stockTransferBean.stockTransfer.fromWarehouse.line2}<br>
+			${stockTransferBean.stockTransfer.fromWarehouse.city},
+			${stockTransferBean.stockTransfer.fromWarehouse.state}<br>
+			Tin: ${stockTransferBean.stockTransfer.fromWarehouse.tin}
+		</td>
 		<td><b>To Warehouse</b></td>
-		<td>${stockTransferBean.stockTransfer.toWarehouse.name}</td>
+		<td>
+			${stockTransferBean.stockTransfer.toWarehouse.name} <br/>
+			${stockTransferBean.stockTransfer.toWarehouse.line1},
+			${stockTransferBean.stockTransfer.toWarehouse.line2}<br>
+			${stockTransferBean.stockTransfer.toWarehouse.city},
+			${stockTransferBean.stockTransfer.toWarehouse.state}<br>
+			Tin: ${stockTransferBean.stockTransfer.toWarehouse.tin}
+		</td>
 	</tr>
 	<tr valign="top">
 		<td><b>Checked out date: </b></td>

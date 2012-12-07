@@ -98,6 +98,8 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   private UserService                userService;
   private Warehouse                  warehouse;
 
+  private String zone;
+
   @DontValidate
   @DefaultHandler
   // @Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean =
@@ -231,10 +233,10 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
           if (courier.equals(courierService.getCourierById(EnumCourier.BlueDart.getId())) || courier.equals(courierService.getCourierById(EnumCourier.BlueDart_COD.getId()))) {
             xlsFile = reportGenerator.generateCourierReportXslForBlueDart(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse);
           } else {
-            xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse);
+            xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse, zone);
           }
         } else {
-          xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse);
+          xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse,zone);
         }
         addRedirectAlertMessage(new SimpleMessage("Courier report successfully generated."));
       } catch (Exception e) {
@@ -390,5 +392,13 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
 
   public void setWarehouse(Warehouse warehouse) {
     this.warehouse = warehouse;
+  }
+
+  public String getZone() {
+ 	return zone;
+  }
+
+  public void setZone(String zone) {
+	this.zone = zone;
   }
 }

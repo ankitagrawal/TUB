@@ -11,8 +11,10 @@ import com.hk.manager.payment.TekprocessPaymentGatewayWrapper;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
 import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,11 +72,17 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
 
 		logger.info("returning from payment gateway TekProcess with the parameter string msg : " + msg);
 
+        if(msg == null || StringUtils.isEmpty(msg)){
+            logger.info("Received Empty response from TekProcess Gateway, redirecting to failure page");
+            return new ForwardResolution("/pages/payment/paymentFail.jsp");
+        }
+
 		String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/tekprocess.live.properties";
 
 		Map<String, String> paramMap = TekprocessPaymentGatewayWrapper.parseResponse(msg);
 
 		String gatewayOrderId = paramMap.get(TekprocessPaymentGatewayWrapper.key_TxnReferenceNo);
+		String ePGTxnID = paramMap.get(TekprocessPaymentGatewayWrapper.key_TxnReferenceNo);
 		String amountStr = paramMap.get(TekprocessPaymentGatewayWrapper.key_TxnAmount);
 		Double amount = NumberUtils.toDouble(amountStr);
 		String authStatus = paramMap.get(TekprocessPaymentGatewayWrapper.key_AuthStatus);
@@ -90,7 +98,7 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
 
 			// payment callback has been verified. now see if it is successful or failed from the gateway response
 			if (TekprocessPaymentGatewayWrapper.authStatus_Success.equals(authStatus)) {
-				paymentManager.success(gatewayOrderId);
+				paymentManager.success(gatewayOrderId,ePGTxnID);
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else if (TekprocessPaymentGatewayWrapper.authStatus_PendingApproval.equals(authStatus)) {
 				paymentManager.pendingApproval(gatewayOrderId);
@@ -104,7 +112,7 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
 				throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
 			}
 		} catch (HealthkartPaymentGatewayException e) {
-			paymentManager.error(gatewayOrderId, e);
+			paymentManager.error(gatewayOrderId, ePGTxnID, e, "");
 			emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
 			resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
 		}

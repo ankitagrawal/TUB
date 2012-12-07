@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
+import com.hk.cache.CategoryCache;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -48,7 +49,6 @@ import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ShippingOrderService       shippingOrderService;
-    
+
     @Autowired
     private BaseDao                    baseDao;
     @Autowired
@@ -93,8 +93,9 @@ public class OrderServiceImpl implements OrderService {
     private OrderStatusService         orderStatusService;
     @Autowired
     private RewardPointService         rewardPointService;
-    @Autowired
-    private CategoryService            categoryService;
+    /*
+     * @Autowired private CategoryService categoryService;
+     */
     @Autowired
     private OrderLoggingService        orderLoggingService;
     @Autowired
@@ -158,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void setTargetDispatchDelDatesOnBO(Order order) {
         Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
-        Date refDateForBO =  order.getPayment().getPaymentDate();
+        Date refDateForBO = order.getPayment().getPaymentDate();
         Date refDateForSO = null;
 
         if (order.getTargetDispatchDate() == null) {
@@ -168,7 +169,7 @@ public class OrderServiceImpl implements OrderService {
             refDateForSO = order.getPayment().getPaymentDate();
         }
 
-        if (order.getTargetDelDate() == null && order.getTargetDispatchDate() !=null) {
+        if (order.getTargetDelDate() == null && order.getTargetDispatchDate() != null) {
             Long diffInPromisedTimes = (dispatchDays[1] - dispatchDays[0]);
             int daysTakenForDelievery = Integer.valueOf(diffInPromisedTimes.toString());
             Date targetDelDate = HKDateUtil.addToDate(order.getTargetDispatchDate(), Calendar.DAY_OF_MONTH, daysTakenForDelievery);
@@ -182,7 +183,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         /**
-         * if target dispatch date was updated either on payment or on verification of payment, the change needs to reflect to SO.
+         * if target dispatch date was updated either on payment or on verification of payment, the change needs to
+         * reflect to SO.
          */
         if (refDateForSO != null) {
             for (ShippingOrder shippingOrder : order.getShippingOrders()) {
@@ -269,12 +271,7 @@ public class OrderServiceImpl implements OrderService {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                if (isShippingOrderExists(order)) {
-                    order.setOrderStatus(getOrderStatus(EnumOrderStatus.InProcess));
-                } else {
-                    shippingOrders = splitOrder(order);
-                }
-
+                shippingOrders = splitOrder(order);
             } else {
                 logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
             }
@@ -283,7 +280,6 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception e) {
             logger.error("Order could not be split due to some exception ", e);
         }
-
         return shippingOrders;
     }
 
@@ -297,9 +293,11 @@ public class OrderServiceImpl implements OrderService {
         boolean shouldUpdate = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-            if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
-                shouldUpdate = false;
-                break;
+            if (!getShippingOrderService().shippingOrderHasReplacementOrder(shippingOrder)) {
+                if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
+                    shouldUpdate = false;
+                    break;
+                }
             }
         }
 
@@ -332,6 +330,7 @@ public class OrderServiceImpl implements OrderService {
         // EnumOrderStatus.ESCALTED, EnumOrderStatus.PARTIAL_ESCALTION);
 
         User loggedOnUser = getUserService().getLoggedInUser();
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if (loggedOnUser == null) {
             loggedOnUser = order.getUser();
         }
@@ -406,12 +405,16 @@ public class OrderServiceImpl implements OrderService {
         // List<Set<CartLineItem>> listOfCartLineItemSet = getMatchCartLineItemOrder(order);
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+
         CartLineItemFilter groundShipLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> groundShippedCartLineItemSet = groundShipLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
+
         CartLineItemFilter serviceCartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> serviceCartLineItems = serviceCartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();
+
         productCartLineItems.removeAll(serviceCartLineItems);
-        productCartLineItems.removeAll(groundShippedCartLineItemSet);
+        productCartLineItems.removeAll(groundShippedCartLineItemSet); // i.e product cart lineItems without services
+                                                                        // and ground shipped product
 
         List<Set<CartLineItem>> listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
         if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
@@ -475,7 +478,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public ProductVariant getTopDealVariant(Order order) {
-        Category personalCareCategory = getCategoryService().getCategoryByName("personal-care");
+        Category personalCareCategory = CategoryCache.getInstance().getCategoryByName(CategoryConstants.PERSONAL_CARE).getCategory();
+
+        // Category personalCareCategory = getCategoryService().getCategoryByName("personal-care");
         ProductVariant topOrderedVariant = null;
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
@@ -595,13 +600,10 @@ public class OrderServiceImpl implements OrderService {
         this.rewardPointService = rewardPointService;
     }
 
-    public CategoryService getCategoryService() {
-        return categoryService;
-    }
-
-    public void setCategoryService(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    /*
+     * public CategoryService getCategoryService() { return categoryService; } public void
+     * setCategoryService(CategoryService categoryService) { this.categoryService = categoryService; }
+     */
 
     public BaseDao getBaseDao() {
         return baseDao;

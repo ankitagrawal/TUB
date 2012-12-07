@@ -87,6 +87,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 	@Autowired
 	private ShippingOrderStatusService shippingOrderStatusService;
 
+
 	@ValidationMethod(on = "saveShipmentDetails")
 	public void verifyShipmentDetails() {
 		if (StringUtils.isBlank(trackingId) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || selectedCourier == null) {
@@ -103,7 +104,12 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 //  groundShipping logic Starts---
 			isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-			availableCouriers = courierService.getCouriers(pinCode.getPincode(), isGroundShipped, null, null, false);
+			String pin = pinCode.getPincode();
+			if (isCod) {
+				availableCouriers = courierService.getCouriers(pin, isGroundShipped, isCod, null, false);
+			} else {
+				availableCouriers = courierService.getCouriers(pin, isGroundShipped, null, null, false);
+			}
 //  ground shipping logic ends
 
 			if (availableCouriers == null || availableCouriers.isEmpty()) {
@@ -146,12 +152,22 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			if (pinCode != null) {
 				boolean isCod = shippingOrder.isCOD();
 				isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-				availableCouriers = courierService.getCouriers(pinCode.getPincode(), isGroundShipped, null, null, false);
+
+				String pin = pinCode.getPincode();
+				if (isCod) {
+					availableCouriers = courierService.getCouriers(pin, isGroundShipped, isCod, null, false);
+				} else {
+					availableCouriers = courierService.getCouriers(pin, isGroundShipped, null, null, false);
+				}
 				if (shippingOrder.getShipment() != null) {
 					suggestedCourier = shippingOrder.getShipment().getAwb().getCourier();
 					trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
 				} else {
 					suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod, isGroundShipped);
+					Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), isCod, EnumAwbStatus.Unused.getAsAwbStatus());
+					if (awb != null) {
+						trackingId = awb.getAwbNumber();
+					}
 				}
 
 			} else {
@@ -187,6 +203,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 			if (ThirdPartyAwbService.integratedCouriers.contains(selectedCourier.getId())) {
 				Double weightInKg = shipment.getBoxWeight();
+				if (weightInKg == 0D) {
+					weightInKg = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
+				}
 				Awb thirdPartyAwb = awbService.getAwbForThirdPartyCourier(selectedCourier, shippingOrder, weightInKg);
 				if (thirdPartyAwb == null) {
 					addRedirectAlertMessage(new SimpleMessage(" The tracking number could not be generated"));
@@ -213,7 +232,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 					}
 					finalAwb = updateAttachStatus(awbFromDb);
 
-				} else {
+				} else {                                                                                                         
 					//Create New AWb (Authorization_Pending shows it might not a valid  Awb , since person has added it manually.
 					Awb awb = awbService.createAwb(selectedCourier, trackingId.trim(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
 					awb = (Awb) awbService.save(awb, null);
@@ -259,7 +278,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution getCourierList() {
-		List<Courier> courierList = courierService.getCouriers(null, null, false);		
+		List<Courier> courierList = courierService.getCouriers(null, null, false);
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", courierList);
 		return new JsonResolution(healthkartResponse);
 	}
@@ -307,7 +326,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 	public List<Courier> getAvailableCouriers() {
 		return availableCouriers;
-	}	
+	}
 
 	public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
 		this.shippingOrderStatusService = shippingOrderStatusService;
