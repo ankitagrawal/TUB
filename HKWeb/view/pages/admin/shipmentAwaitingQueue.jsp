@@ -50,6 +50,15 @@
               <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
                                          label="name"/>
             </s:select>
+	          <%--temporary fix, need to populate zones from a database table--%>
+	        <label>Zone:<label>  
+	        <s:select name="zone">
+		        <s:option value="null">---Select---</s:option>
+		        <s:option value="NORTH">North</s:option>
+		        <s:option value="SOUTH">South</s:option>
+		        <s:option value="EAST">East</s:option>
+		        <s:option value="WEST">West</s:option>
+	        </s:select>
             <s:submit name="generateCourierReport">
                 Download Courier Excel
               <s:param name="courierDownloadFunctionality" value="true" />

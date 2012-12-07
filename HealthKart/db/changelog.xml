@@ -10147,7 +10147,7 @@
         insert into country values (198,'VIRGIN ISLANDS, U.S.', 'VI');
         insert into country values (199,'WALLIS AND FUTUNA', 'WF');
         insert into country values (200,'WESTERN SAHARA', 'EH');
-        insert into country values (201,'ZAMBIA', 'ZM');
+        insert into country values (201,'ZAMBIA', 'ZM');      
     </sql>
   </changeSet>
     <changeSet author="Pratham" id="20121129-01">
@@ -10323,6 +10323,11 @@
             <column name="zone" type="VARCHAR(10)"/>
         </addColumn>
     </changeSet>
+	<changeSet author="Ajeet (written)" id="20121205-1">
+		<sql>
+			update seo_data sd, product p set sd.id=concat(sd.id,'||', p.primary_category) where sd.id=p.brand;
+		</sql>
+	</changeSet>
 	<changeSet author="Rohit (generated)" id="1353577108219-1">
 			<createTable tableName="product_variant_supplier_info">
 				<column autoIncrement="true" name="id" type="INT">

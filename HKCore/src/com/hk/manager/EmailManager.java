@@ -703,12 +703,18 @@ public class EmailManager {
         //User adminUser = UserCache.getInstance().getAdminUser();
 
         Manufacturer manufacturer = lineItem.getProductVariant().getProduct().getManufacturer();
-        String comments = "Email Sent to " + manufacturer.getName() + " at " + manufacturer.getEmail();
-        getOrderLoggingService().logOrderActivity(order, adminUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EmailSentToServiceProvider),
-                comments);
-
+        String comments = "Emails Sent to " + manufacturer.getName() + " at " + manufacturer.getEmail();
+        getOrderLoggingService().logOrderActivity(order, adminUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EmailSentToServiceProvider),comments);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.serviceVoucherMailServiceProvider);
-        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, manufacturer.getEmail(), manufacturer.getName());
+        boolean bool = false, boolFinal = false;
+        String[] emails = manufacturer.getEmail().split(",");
+        if(emails.length>=1){
+          for(String email : emails){
+           bool = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, email , manufacturer.getName());
+            if(bool) boolFinal = true;
+          }
+        }
+      return boolFinal;
     }
 
     public void sendPaymentFailMail(User user, String gatewayOrderId) {

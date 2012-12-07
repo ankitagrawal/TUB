@@ -160,6 +160,7 @@
 --/sports/fitness-equipment/bench-equipments
 --/sports/fitness-equipment/heart-rate-monitors
 ---/sports/fitness-equipment/heart-rate-monitors/accessories
+--/sports/fitness-equipment/trampolines
 --/sports/fitness-equipment/weighing-scales
 --/sports/fitness-equipment/miscellaneous-equipments
 -/sports/sports-equipment
@@ -186,6 +187,7 @@
 ---/sports/sports-eqipment/cricket/helmets
 ---/sports/sports-equipment/cricket/pads
 ---/sports/sports-equipment/cricket/accessories
+--/sports/sports-equipment/chess
 --/sports/sports-equipment/swimming
 ---/sports/sports-equipment/swimming/goggles
 ---/sports/sports-equipment/swimming/caps
@@ -597,6 +599,7 @@
 ---/beauty/what-s-new/women-nutrition/wellness
 ---/beauty/what-s-new/women-nutrition/weight-watch
 --/beauty/what-s-new/spas-salons : Spas & Salons
+--/beauty/what-s-new/breast-cancer-home-test
 -/beauty/face-care
 --/beauty/face-care/cleanser
 ---/beauty/face-care/cleanser/normal
