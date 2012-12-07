@@ -5,6 +5,7 @@ package com.hk.domain.catalog.product;
 import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.core.EnumRole;
 import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
 
@@ -52,6 +53,9 @@ public class ProductVariant implements java.io.Serializable {
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(name = "product_variant_has_product_extra_option", joinColumns = {@JoinColumn(name = "product_variant_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "product_extra_option_id", nullable = false, updatable = false)})
   private List<ProductExtraOption> productExtraOptions = new ArrayList<ProductExtraOption>(0);
+
+  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "allowedProductVariants")
+  private List<ComboProduct> comboProducts = new ArrayList<ComboProduct>();
 
   @Column(name = "shipping_base_qty", nullable = false)
   private Long shippingBaseQty;
@@ -687,4 +691,12 @@ public class ProductVariant implements java.io.Serializable {
 	public void setOtherRemark(String otherRemark) {
 		this.otherRemark = otherRemark;
 	}
+
+  public List<ComboProduct> getComboProducts() {
+    return comboProducts;
+  }
+
+  public void setComboProducts(List<ComboProduct> comboProducts) {
+    this.comboProducts = comboProducts;
+  }
 }
