@@ -40,7 +40,7 @@
 
 							<s:submit name="uploadPincodeExcel" value="Upload"/>
             <br/>
-             (Worksheet Name: PincodeInfo &nbsp&nbsp&nbsp 5 Fields: PINCODE &nbspCITY &nbspSTATE &nbspREGION &nbspLOCALITY &nbspDEFAULT_COURIER_ID)</li>
+             (Worksheet Name: PincodeInfo &nbsp&nbsp&nbsp 6 Fields: PINCODE &nbspCITY &nbspSTATE &nbspREGION &nbspLOCALITY &nbspDEFAULT_COURIER_ID &nbspZONE)</li>
 					</s:form>
 			</ul>
           </fieldset>
@@ -84,6 +84,20 @@
               <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
 
 						</s:select></td>
+					</tr>
+					<tr>
+						<td>
+							<label>Zone:<label>
+								</td>
+						<td>
+								<s:select name="pincode.zone">
+								<s:option value="null">Select</s:option>
+									<hk:master-data-collection service="<%=MasterDataDao.class%>"
+									                           serviceProperty="allZones"
+									                           value="id"
+									                           label="name"/>
+								</s:select>
+						</td>
 					</tr>
 					<tr>
 						<td><s:submit name="save" value="Save"/></td>

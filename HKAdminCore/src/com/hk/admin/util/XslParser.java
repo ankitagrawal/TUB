@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.hk.domain.courier.Zone;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -501,7 +502,9 @@ public class XslParser {
                         pincode.setDefaultCourier(courier);
 
                 }
-	            String zone=getCellValue(XslConstants.ZONE, rowMap, headerMap);
+	            String zoneName=getCellValue(XslConstants.ZONE, rowMap, headerMap);
+	            
+	            Zone zone = getPincodeService().getZoneByName(zoneName);
 	            pincode.setZone(zone);
                 pincodeList.add(pincode);
 
