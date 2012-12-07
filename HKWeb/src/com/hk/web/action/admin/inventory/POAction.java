@@ -177,6 +177,7 @@ public class POAction extends BasePaginatedAction {
 			ProductVariant productVariant = poLineItem.getSku().getProductVariant();
 			Sku sku = getSkuService().getSKU(productVariant, warehouse);
 			long existingGrnLineItemQty = grnLineItemService.getGrnLineItemQtyAlreadySet(grn, poLineItem.getSku());
+
 			if(existingGrnLineItemQty >= poLineItem.getQty().longValue()) {
 				continue;
 			}

@@ -45,6 +45,9 @@
                     <span class="upc lgry sml">Base Order Id</span> <strong><span class="or"> ${order.id}</span></strong><br/>
                     <c:if test="${order.payment != null}">
                         <span class="upc lgry sml">Payment mode</span> <strong><span class="or"> ${order.payment.paymentMode.name}</span></strong><br/>
+                        <c:if test="${order.payment.gateway != null}">
+                            <span class="upc lgry sml">Gateway: </span> <strong><span class="or"> ${order.payment.gateway.name}</span></strong><br/>
+                        </c:if>
                         <span class="upc lgry sml">Payment Date</span> <strong><span class="or"> ${order.payment.paymentDate}</span></strong><br/>
                     </c:if>
                </td>

@@ -41,8 +41,10 @@
 
             <div class="clear"></div>
 
-            <s:label name="email" class="label"> Email<span class="aster">*</span> </s:label>
+            <s:label name="email" class="label autoadjust"> Email <span class="aster">*</span> </s:label> 
             <s:text name="manufacturer.email" class="text"/>
+              <div class="clear"></div>
+              <span class="aster"> Enter Multiple Email Id separated by comma(,) </span>
 
             <div class="clear"></div>
 
