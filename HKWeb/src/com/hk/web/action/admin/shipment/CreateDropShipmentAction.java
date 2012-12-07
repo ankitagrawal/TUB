@@ -117,7 +117,7 @@ public class CreateDropShipmentAction extends BaseAction {
             addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage(" OPERATION FAILED *********You have not entered all the mandatory details"));
             return new RedirectResolution(CreateDropShipmentAction.class);
         }
-        addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipmet created has been created for your order"));
+        addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipmet has been created for your order"));
         return new RedirectResolution(CreateDropShipmentAction.class);
     }
 

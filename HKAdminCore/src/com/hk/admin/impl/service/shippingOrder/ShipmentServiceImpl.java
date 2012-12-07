@@ -235,7 +235,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder) {
         if (shippingOrder.isDropShipping()) {
             for (LineItem lineItem : shippingOrder.getLineItems()) {
-                if (lineItem.getSku().getProductVariant().getProduct().isInstallable()) {
+                if (lineItem.getSku().getProductVariant().getProduct().getInstallable()) {
                     return true;
                 }
             }

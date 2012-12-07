@@ -61,10 +61,11 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
     private Category category;
     private ShippingOrderStatus shippingOrderStatus;
     private Integer                    defaultPerPage    = 30;
+    private Integer                      noOfInstallableItems;
 
     @DontValidate
     @DefaultHandler
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         Long startTime = (new Date()).getTime();
         if (shippingOrderStatus == null) {
@@ -84,6 +85,7 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
                     shippingOrderList.add(shippingOrder);
                   }
             }
+             noOfInstallableItems = shippingOrderList.size();
             logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
         }
         return new ForwardResolution("/pages/admin/installationAwaitingQueue.jsp");
@@ -104,6 +106,7 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
         return new ForwardResolution("/pages/admin/installationAwaitingQueue.jsp");
     }
 
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution markShippingOrderAsInstalled() {
         if (shippingOrderList != null && !shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
@@ -225,4 +228,11 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
     }
 
 
+    public Integer getNoOfInstallableItems() {
+        return noOfInstallableItems;
+    }
+
+    public void setNoOfInstallableItems(Integer noOfInstallableItems) {
+        this.noOfInstallableItems = noOfInstallableItems;
+    }
 }

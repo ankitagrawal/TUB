@@ -452,7 +452,7 @@
     </table>
 
   <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
-    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care</h6>
+    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4551616</h6>
    </c:if>
 
 

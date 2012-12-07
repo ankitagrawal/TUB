@@ -162,6 +162,11 @@ public class EditProductAttributesAction extends BaseAction {
         if (product.getGoogleAdDisallowed() == null) {
             product.setGoogleAdDisallowed(Boolean.FALSE);
         }
+
+        if (product.getInstallable() == null)  {
+            product.setInstallable(Boolean.FALSE);
+        }
+        
         if (brand == null) {
             addRedirectAlertMessage(new SimpleMessage("Brand cannot be null"));
             return new ForwardResolution("/pages/editProductDetails.jsp");

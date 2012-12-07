@@ -575,7 +575,7 @@
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${actionQueueBean}"/>
 
     <div class="buttons" style="margin-left: 80%;"><s:submit name="escalate" id="escalateButton"
-                                                             value="Escalate to packing queue"/></div>
+                                                             value="Escalate to packing / DropShip queue"/></div>
 </s:form>
 <script type="text/javascript">
     $('#escalateButton').click(function() {

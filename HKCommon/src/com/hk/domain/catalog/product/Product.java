@@ -714,4 +714,9 @@ public class Product  implements java.io.Serializable {
     public void setInstallable(Boolean installable) {
         this.installable = installable;
     }
+
+     public Boolean getInstallable() {
+		return installable;
+	}
+
 }

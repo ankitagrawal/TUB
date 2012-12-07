@@ -119,7 +119,7 @@ public class PaymentAction extends BaseAction {
             // first create a payment row, this will also contain the payment checksum
             Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), bankCode);
 
-			if (gateway != null) {
+			if (gateway != null && gateway == EnumPaymentMode.CCAVENUE_DUMMY ) {
 //                gateway = EnumPaymentMode.PAYPAL_CreditDebit;
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(gateway);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");

@@ -893,6 +893,15 @@ public class AdminEmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
     }
 
+
+
+     public boolean sendOrderInstalltionEmail(Order order) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("order", order);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderInstalledEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
+    }
+
     //todo : isko thik kar do - for now hardcoding logic to convert admin.healthkart.com to www.healthkart.com
     public static String convertToWww(String productUrl) {
         return productUrl.replaceAll("admin\\.healthkart\\.com", "www.healthkart.com");

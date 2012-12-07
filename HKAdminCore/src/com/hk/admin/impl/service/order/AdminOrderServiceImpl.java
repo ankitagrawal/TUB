@@ -309,6 +309,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
         if (isUpdated) {
             logOrderActivity(order, EnumOrderLifecycleActivity.OrderInstalled);
+            getAdminEmailManager().sendOrderInstalltionEmail(order);
         }
         return order;
     }
