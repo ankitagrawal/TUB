@@ -42,7 +42,7 @@ import java.util.List;
  * Time: 12:58:29 PM
  * To change this template use File | Settings | File Templates.
  */
-@Secure(hasAnyPermissions = {PermissionConstants.HK_EMPLOYEE}, authActionBean = AdminPermissionAction.class)        //change to customer_support_L3
+@Secure(hasAnyPermissions = {PermissionConstants.CREATE_REVERSE_PICKUP_ORDER}, authActionBean = AdminPermissionAction.class)        
 @Component
 public class CourierPickupServiceAction extends BaseAction {
 

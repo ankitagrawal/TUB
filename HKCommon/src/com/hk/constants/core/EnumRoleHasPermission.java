@@ -212,7 +212,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_OFFER,
                     EnumPermission.VIEW_COUPON,
                     EnumPermission.EDIT_LINEITEM,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+					EnumPermission.CREATE_REVERSE_PICKUP_ORDER
             )
     ),
 
@@ -227,7 +228,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.AWARD_REWARD_POINTS,
                     EnumPermission.EDIT_LINEITEM,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-		            EnumPermission.CREATE_REPLACEMENT_ORDER
+		            EnumPermission.CREATE_REPLACEMENT_ORDER,
+					EnumPermission.CREATE_REVERSE_PICKUP_ORDER
             )
     ),
 

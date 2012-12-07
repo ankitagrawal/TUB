@@ -99,7 +99,8 @@ public enum EnumPermission {
   VIEW_CONSIGNMENT_TRACKING                      (PermissionConstants.VIEW_CONSIGNMENT_TRACKING),
   ADD_HUB                                        (PermissionConstants.ADD_HUB),
   EDIT_PAYMENT_HISTORY                           (PermissionConstants.EDIT_PAYMENT_HISTORY),
-  POPULATE_BUSY_DATA                             (PermissionConstants.POPULATE_BUSY_DATA);
+  POPULATE_BUSY_DATA                             (PermissionConstants.POPULATE_BUSY_DATA),
+  CREATE_REVERSE_PICKUP_ORDER	                 (PermissionConstants.CREATE_REVERSE_PICKUP_ORDER);
 
   String permissionName;
 

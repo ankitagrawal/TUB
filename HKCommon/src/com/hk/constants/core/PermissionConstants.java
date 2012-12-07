@@ -105,4 +105,5 @@ public class PermissionConstants {
 
 	public static final String EDIT_PAYMENT_HISTORY                  ="EDIT_PAYMENT_HISTORY";
 	public static final String POPULATE_BUSY_DATA                    ="POPULATE_BUSY_DATA";
+	public static final String CREATE_REVERSE_PICKUP_ORDER           ="CREATE_REVERSE_PICKUP_ORDER";
 }
