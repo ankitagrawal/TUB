@@ -6,24 +6,221 @@
 
 <s:layout-component name="htmlHead">
   <style type="text/css">
-table tr td {
-font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
-font-size:12px;
-vertical-align:top;
-text-align:left;
+
+  
+.navigation {
+	margin:20px 0;
+	height:25px;
+	width:960px;
+	background-color:#333;}
+
+#nav, #nav ul{
+    font-size:14px;
+margin:0;
+padding:0;
+list-style-type:none;
+list-style-position:outside;
+position:relative;
+line-height:1.5em;
+
 }
 
-a.product_link {
-border:0;
-font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
-  color: #3e3e3e;
-  font-size: 18px;
-  text-decoration: none;
+#nav a{
+display:block;
+padding:0px 5px;
+border:1px solid #333;
+color:#fff;
+text-decoration:none;
+background-color:#333;
 }
-.clear { clear:both; }
+
+#nav a:hover{
+background-color:#fff;
+color:#333;
+}
+
+#nav li{
+margin-left:20px;
+float:left;
+position:relative;
+}
+
+#nav ul {
+position:absolute;
+display:none;
+width:12em;
+top:1.5em;
+}
+
+
+
+#nav li ul a{
+margin-left:-20px;
+width:12em;
+height:auto;
+float:left;
+}
+
+#nav ul ul{
+top:auto;
+}
+
+#nav li ul ul {
+left:12em;
+margin:0px 0 0 10px;
+}
+
+#nav li:hover ul ul, #nav li:hover ul ul ul, #nav li:hover ul ul ul ul{
+display:none;
+}
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li li li li:hover ul{
+display:block;
+}
+
+
+
+
+            a, a:hover{border-bottom:none;}
+      .cl {
+clear:both;}
+
+p, h3, h1, h2, h4 {margin:0; padding:0;}
+
+ @font-face
+            {
+                font-family: 'robotoregular'
+            ;
+                src: url('${pageContext.request.contextPath}/css/roboto-regular-webfont.eot')
+            ;
+                src: url('${pageContext.request.contextPath}/css/roboto-regular-webfont.eot?#iefix') format('embedded-opentype'), url('${pageContext.request.contextPath}/css/roboto-regular-webfont.woff') format('woff'), url('${pageContext.request.contextPath}/css/roboto-regular-webfont.ttf') format('truetype'), url('${pageContext.request.contextPath}/css/roboto-regular-webfont.svg#robotoregular') format('svg')
+            ;
+                font-weight: normal
+            ;
+                font-style: normal
+            ;
+
+            }
+
+            @font-face
+            {
+                font-family: 'roboto_ltregular'
+            ;
+                src: url('${pageContext.request.contextPath}/css/roboto-light-webfont.eot')
+            ;
+                src: url('${pageContext.request.contextPath}/css/roboto-light-webfont.eot?#iefix') format('embedded-opentype'), url('${pageContext.request.contextPath}/css/roboto-light-webfont.woff') format('woff'), url('${pageContext.request.contextPath}/css/roboto-light-webfont.ttf') format('truetype'), url('${pageContext.request.contextPath}/css/roboto-light-webfont.svg#roboto_ltregular') format('svg')
+            ;
+                font-weight: normal
+            ;
+                font-style: normal
+            ;
+
+            }
+
+
+ #pageContainer {
+                margin: 15px auto;
+                width: 960px;
+                overflow: auto;
+                padding-bottom: 260px;
+                font-family: 'robotoregular';
+                color:#231f20;
+            }
+
+
+      .product {
+	width:215px;
+          border-bottom:none;
+    text-align:left;
+	float:left;
+	margin:20px 15px 0 10px;
+	position:relative;
+          height:520px;
+	}
+
+.product  .gosf-logo { position:absolute; top:177px; right:0px;	}
+
+.product .img{
+	border:1px solid #CCC;
+	width:213px;
+	height:256px;
+	}
+
+
+
+
+.product h3, .product h2, .product .bid{
+	font-size:13px;
+	font-weight:normal;
+	color:#333;
+    padding:0;
+	}
+  /*.product h3 { height:23px; }*/
+
+.product .description{
+	font-size:12px;
+    line-height:normal;
+	font-weight:normal;
+	color:#999;
+	margin-bottom:20px;
+    padding:0;
+	}
+
+.product h3 a{
+font-size:13px;
+	color:#333;
+	text-decoration:none;
+	}
+
+	.product h3 a:hover{
+        font-size:13px;
+	color:#333;
+
+	}
+
+.product .price {text-align:left; margin:5px 0; font-size:18px; color:#333; line-height:normal; font-family: 'roboto_ltregular';}
+
+.product .price span{font-size:15px; color:#999; text-decoration:line-through; font-style:normal;}
+
+.product a.buynow {color:#000; display:inline-block; font-size:18px; padding:5px 15px; border:1px #000 solid; text-decoration:none; margin-bottom:10px;}
+.product .buynow a:hover{color:#000; text-decoration:none; }
+.product:hover {border-bottom:none;}
+
+    
+
+.heading1 {
+	border-bottom:1px solid #c0c0c0;
+	width:960px;
+	height:40px;
+	line-height:40px;
+	margin:40px 0 10px 0;
+	text-align:center;
+	font-weight:bold;
+	color:#666; font-size:20px;}
+.product .img180 img { max-height:180px; max-width:180px; }
+
+.see-more {font-size:13px;
+	font-weight:normal;
+	color:#999;
+	margin-top:20px;
+    text-decoration:none;
+  }
+
+.see-more a{
+	color:#999;
+    text-decoration:none;
+  }
+
+  .see-more a:hover{
+	color:#000;
+  }
 
 
 </style>
+
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.2.3.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/menu-gosf.js"></script>
+
 
 </s:layout-component>
 
@@ -43,818 +240,82 @@ font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verd
 <s:layout-component name="metaDescription">Google Cyber Monday</s:layout-component>
 <s:layout-component name="metaKeywords"></s:layout-component>
 
+
+
 <s:layout-component name="content">
-    <div style="padding-bottom:20px;"><img src="${pageContext.request.contextPath}/images/GOSF/banner.jpg" width="960" height="597" /></div>
-    <div class="clear"></div>
-    <div class="main_container" style="background-color:#FFFFFF;">
-
-
-    <table width="960" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td rowspan="23" width="35">&nbsp;</td>
-    <td>&nbsp;</td>
-    <td rowspan="23" width="35">&nbsp;</td>
-  </tr>
-  <tr>
-    <td><img src="${pageContext.request.contextPath}/images/valentine/for_her.jpg" width="206" height="65" /></td>
-    </tr>
-  <tr>
-    <td>&nbsp;</td>
-    </tr>
-  <tr>
-    <td><table width="890" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/absolute-ly-fabulous-v-day/VDAY1" class="product_link">Absolute(ly) Fabulous V-Day</a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a class='product_link' href="${pageContext.request.contextPath}/product/absolute-ly-fabulous-v-day/VDAY1"><img src="${pageContext.request.contextPath}/images/valentine/valen_01.jpg" alt="Absolute(ly) Fabulous V-Day" width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 3,100</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 2,790</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 10%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/absolute-ly-fabulous-v-day/VDAY1"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">She is a progressive woman who has the world in her stride; you are the one who supports her in her venture. Show that support with this handpicked combo this Valentine’s day. A gift box no woman can resist, this contains all the top-notch beauty products from the venerated and popularized brand-Lakme Absolute. She will have no choice but to jump in your arms and profess her love to you! Hurry, we have limited boxes!</td>
-            </tr>
-        </table></td>
-        <td>&nbsp;</td>
-        <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/wine-of-love/VDAY14" class="product_link">Wine of Love </a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/wine-of-love/VDAY14"><img src="${pageContext.request.contextPath}/images/valentine/valen_02.jpg" alt="Wine of Love " width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 2,970</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 2,822</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 5%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/wine-of-love/VDAY14"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">As the Valentine’s Day dawns, surprise your loved one with this perfect customized Manufaktura combo. It contains wine shampoo, conditioner and shower gel which have been devised and formulated keeping in mind how important your skin and hair is! A perfect gift this valentine’s day, there is no other better way to show your loved one that you care. Once they start using these products, they would be able to feel the love and care you have put in every drop. So, what are you waiting for?
-
-
-            </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td colspan="4" height="20" style="border-bottom:solid #ebebeb 1px">&nbsp;</td>
-        </tr>
-
-    </table></td>
-    </tr>
-  <tr>
-    <td>&nbsp;</td>
-    </tr>
-  <tr>
-    <td><table width="890" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/carlsbad-mineral-spring-spa-set/VDAY16" class="product_link">Carlsbad Mineral Spring Spa Set</a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/carlsbad-mineral-spring-spa-set/VDAY16"><img src="${pageContext.request.contextPath}/images/valentine/valen_03.jpg" alt="Carlsbad Mineral Spring Spa Set " width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 2,670 </span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 2536</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 5%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/carlsbad-mineral-spring-spa-set/VDAY16"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">A perfect gift for her on Valentine’s Day, this combo is customized to steal her heart away! This combo containing spa sets and shower gels would be a gift delivered by cupid himself. As you make Valentine’s Day more sensuous, the aroma of the shower gels will awaken your senses, making you marvel in the beautiful world containing you, her and a lot of love!</td>
-            </tr>
-        </table></td>
-        <td>&nbsp;</td>
-        <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/milano-look/BTY791" class="product_link">Milano Look</a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/milano-look/BTY791"><img src="${pageContext.request.contextPath}/images/valentine/valen_04.jpg" alt="Milano Look " width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 2815</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 2393</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 15%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/milano-look/BTY791"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">Gear up for the Festive Season with the complete Milano look.
-From the fashion capital of the world Milan, Deborah Milano has created legacy in the world of Italian Make Up.
-
-The complete gift box includes one unit each of:
-Deborah Milano Ultra Fine Powder With Mineral Oligo Elements (Shade 02)
-Deborah Milano Blush Hi-Tech (Shade 42) (Vogue Beauty Award 2011)
-Deborah Milano Atomic Red Mat (Shade MAT 03)
-Deborah Milano Hi-Tech Trio Eye Shadow (Color:3)
-Deborah Milano 24 Ore perfect Foundation (Shade True Beige)
-
-Enjoy the look and let the world stare!</td>
-            </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td colspan="4" height="20" style="border-bottom:solid #ebebeb 1px">&nbsp;</td>
-        </tr>
-
-    </table></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><table width="890" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/sensuous-v-day/VDAY11" class="product_link">Sensuous V Day </a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/sensuous-v-day/VDAY11"><img src="${pageContext.request.contextPath}/images/valentine/valen_05.jpg" alt="Sensuous V Day " width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 3890</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 3695</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 5%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/sensuous-v-day/VDAY11"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">Your girl is precious to you, as is her skin. This handpicked combo containing Manufaktura shower gels, shower scrubs and massage oil rejuvenate her skin and enhance the softness. As her beautiful skin exfoliates with the wine shower scrub which gently removes all the rough and dry skin, give her skin a treat with the shy touches of wine shower gel which will soften, sizzle and refresh her. Make the day more happening by giving her a sensuous massage with the spa oil which will relieve her from all tension, stress and other fatigues.</td>
-            </tr>
-        </table></td>
-        <td>&nbsp;</td>
-        <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/sea-minerals-for-a-sea-of-love/VDAY12" class="product_link">Sea Minerals for a Sea of Love</a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/sea-minerals-for-a-sea-of-love/VDAY12"><img src="${pageContext.request.contextPath}/images/valentine/valen_06.jpg" alt="Sea minerals for a sea of love" width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs  2,789  </span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 2650</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 5%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/sea-minerals-for-a-sea-of-love/VDAY12"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">We know how important she is for you, and thus we are providing you with this wonderful combo on Valentine’s Day. Containing scrub, soap and body butter that are formulated with the secret ingredients collected from the bed of Dead sea, this combo is so far a perfect way to make her skin enjoy the status it needs to. Give her the best, as we want you to provide her with the best that we have.</td>
-            </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td colspan="4" height="20" style="border-bottom:solid #ebebeb 1px">&nbsp;</td>
-        </tr>
-
-    </table></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><table width="890" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/fuel-of-love-on-your-face/VDAY17" class="product_link">Fuel of Love</a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/fuel-of-love-on-your-face/VDAY17"><img src="${pageContext.request.contextPath}/images/valentine/valen_07.jpg" alt="Fuel of Love" width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 3250</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 3088</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 5%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/fuel-of-love-on-your-face/VDAY17"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">A perfect opening to a perfect V Day, this combo is designed to set a new dimension of love you create in this special day. Containing Beer face mask, face cream and massage oil; this combo is surely a treat of sensuousness for you and your partner. Assure the fact that when you go for a perfectly candlelit dinner for 2, your face should be glowing with the usage of these beer face masks and creams which are customized for perfection.</td>
-            </tr>
-        </table></td>
-        <td>&nbsp;</td>
-        <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/for-you-goddess/VDAY4" class="product_link">For you, Goddess</a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/for-you-goddess/VDAY4"><img src="${pageContext.request.contextPath}/images/valentine/valen_08.jpg" alt="For you, Goddess " width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 1975</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 1580</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 20%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/for-you-goddess/VDAY4"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">NYX brand was named after the greek goddess who ruled the night. Needless to say, this customized combo is surely going to make her one among thousands! An absolute goddess, a fabulous diva! A perfect way to win every ladies heart, this combo containing all the NYX beauty products are sure to get you in her good-books forever!</td>
-            </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td colspan="4" height="20" style="border-bottom:solid #ebebeb 1px">&nbsp;</td>
-        </tr>
-
-    </table></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><table width="890" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/valentine-s-day-special-combo-face/VDAY6" class="product_link">Behold My Beautiful Angel</a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/valentine-s-day-special-combo-face/VDAY6"><img src="${pageContext.request.contextPath}/images/valentine/valen_09.jpg" alt="Behold My Beautiful Angel" width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">&nbsp;</td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 3040</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">&nbsp;</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/valentine-s-day-special-combo-face/VDAY6"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">A perfect customized combination for the special occasion of Valentine’s Day; this contains all the necessary items to keep your beautiful one maintain her angelic face. Right from Foundation brushes to blackhead removers, this combo is bound to be any woman’s favorite. Love and be loved this valentine’s day by gifting this combo to that special someone.</td>
-            </tr>
-        </table></td>
-        <td>&nbsp;</td>
-        <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td><table width="425" border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                <td width="150"><a class='product_link' href="${pageContext.request.contextPath}/product/special-valentine-s-day-combo/EYE389"><img src="${pageContext.request.contextPath}/images/valentine/valen_15.jpg" alt="Special Valentine's Day Combo" width="150" height="150" border="0" /></a></td>
-                <td width="15"></td>
-                <td><table width="260" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/special-valentine-s-day-combo/EYE389" class="product_link">Special Valentine's Day Combo</a></td>
-      </tr>
-      <tr>
-                      <td height="15px"></td>
-                    </tr>
-                    <tr>
-                      <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 3,490</span></td>
-                    </tr>
-                    <tr>
-                      <td height="5"></td>
-                    </tr>
-                    <tr>
-                      <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 2500</span></td>
-                    </tr>
-                    <tr>
-                      <td height="5"></td>
-                    </tr>
-                    <tr>
-                      <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 28%</td>
-                    </tr>
-                    <tr>
-                      <td height="15"></td>
-                    </tr>
-                    <tr>
-                      <td><a class="product_link" href="${pageContext.request.contextPath}/product/special-valentine-s-day-combo/EYE389"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-                    </tr>
-                </table></td>
-              </tr>
-              <tr>
-                <td colspan="3" height="15" style="border-bottom:solid #ebebeb 1px"></td>
-                </tr>
-
-            </table></td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td><table width="425" border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                <td width="150"><a class='product_link' href="${pageContext.request.contextPath}/product/valentine-mobility-combo/NUT880"><img src="${pageContext.request.contextPath}/images/valentine/valen_16.jpg" alt="Valentine Mobility Combo" width="150" height="150" border="0" /></a></td>
-                <td width="15"></td>
-                <td><table width="260" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/valentine-mobility-combo/NUT880" class="product_link">Valentine Mobility Combo</a></td>
-                    </tr>
-                    <tr>
-                      <td height="15px"></td>
-                    </tr>
-                    <tr>
-                      <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 4,294</span></td>
-                    </tr>
-                    <tr>
-                      <td height="5"></td>
-                    </tr>
-                    <tr>
-                      <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 3,435</span></td>
-                    </tr>
-                    <tr>
-                      <td height="5"></td>
-                    </tr>
-                    <tr>
-                      <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 20%</td>
-                    </tr>
-                    <tr>
-                      <td height="15"></td>
-                    </tr>
-                    <tr>
-                      <td><a class="product_link" href="${pageContext.request.contextPath}/product/valentine-mobility-combo/NUT880"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-                    </tr>
-                </table></td>
-              </tr>
-              <tr>
-                <td colspan="3" height="15"></td>
-                </tr>
-
-            </table></td>
-          </tr>
-
-        </table></td>
-      </tr>
-      <tr>
-        <td colspan="4" height="20" style="border-bottom:solid #ebebeb 1px">&nbsp;</td>
-        </tr>
-
-    </table></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><img src="${pageContext.request.contextPath}/images/valentine/for_him.jpg" width="204" height="64" /></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><table width="890" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/love-triangle-combo/VDAY10" class="product_link">Love Triangle Combo</a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/love-triangle-combo/VDAY10"><img src="${pageContext.request.contextPath}/images/valentine/valen_10.jpg" alt="Love Triangle combo " width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 2580</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 2451</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 5%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/love-triangle-combo/VDAY10"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">This Valentine’s day, steal your guy’s heart with our handpicked combo. Containing beer shampoos, conditioner and soap from Manufaktura, these would add body and shine without any harsh chemicals. The shampoo perfectly supports hair growth and calms your scalp, the vitamin B and emollient glycerin contents in the soap keep your skin soft and moisturized, providing a lingering sweet-bitter long lasting aroma. Absolutely enticing, isn’t it?</td>
-            </tr>
-        </table></td>
-        <td>&nbsp;</td>
-        <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/for-him-with-love/VDAY2" class="product_link">For Him, with Love</a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/for-him-with-love/VDAY2"><img src="${pageContext.request.contextPath}/images/valentine/valen_11.jpg" alt="For Him, with Love " width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 3895</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 3310</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 15%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/for-him-with-love/VDAY2"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" alt="For him with love" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">Your man is special. Tell him how he is rocking your world with this combo. It contains a Philips electronic shaver and trimmer, H2O pre shave foam and post shave balm. As your man avails the wonderful shave that this electronic shaver provides, he will soothe his skin and moisturize it perfectly with the daily face-care products. Let him know how much love you have for him, and how without him, every minute of yours seem like an eternity!</td>
-            </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td colspan="4" height="20" style="border-bottom:solid #ebebeb 1px">&nbsp;</td>
-      </tr>
-      <tr>
-        <td colspan="4" height="20">&nbsp;</td>
-        </tr>
-
-    </table></td>
-  </tr>
-  <tr>
-    <td><table width="890" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/valentine-mojito-s-anyone%3F/VDAY15" class="product_link">Valentine Mojito's Anyone</a></td>
-            </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/valentine-mojito-s-anyone%3F/VDAY15"><img src="${pageContext.request.contextPath}/images/valentine/valen_12.jpg" alt="Valentine Mojito's Anyone? " width="250" height="250" border="0" /></a></td>
-            <td><table width="175" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 2100</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 1995</span></td>
-  </tr>
-  <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 5%</td>
-  </tr>
-  <tr>
-    <td height="15"></td>
-  </tr>
-  <tr>
-    <td><a class="product_link" href="${pageContext.request.contextPath}/product/valentine-mojito-s-anyone%3F/VDAY15"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-  </tr>
-</table></td>
-          </tr>
-          <tr>
-            <td colspan="2" height="10"></td>
-          </tr>
-          <tr>
-            <td colspan="2">As you wonder what to gift your special someone this Valentine’s, we already have thought of the best possible options. Handpicked and customized keeping your feelings in mind, this combo contains an assemblage of Mojito shower gels, shampoo and soap which are surely going to help your beautiful skin reach newer dimensions.</td>
-            </tr>
-        </table></td>
-        <td>&nbsp;</td>
-        <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
-        <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td><table width="425" border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                <td width="150"><a class='product_link' href="${pageContext.request.contextPath}/product/valentine-slim-combo/NUT883"><img src="${pageContext.request.contextPath}/images/valentine/valen_13.jpg" alt="Valentine Slim Combo" width="150" height="150" border="0" /></a></td>
-                <td width="15"></td>
-                <td><table width="260" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/valentine-slim-combo/NUT883" class="product_link">Valentine Slim Combo</a></td>
-      </tr>
-      <tr>
-                      <td height="15px"></td>
-                    </tr>
-                    <tr>
-                      <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 1,580</span></td>
-                    </tr>
-                    <tr>
-                      <td height="5"></td>
-                    </tr>
-                    <tr>
-                      <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 1,185</span></td>
-                    </tr>
-                    <tr>
-                      <td height="5"></td>
-                    </tr>
-                    <tr>
-                      <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 25%</td>
-                    </tr>
-                    <tr>
-                      <td height="15"></td>
-                    </tr>
-                    <tr>
-                      <td><a class="product_link" href="${pageContext.request.contextPath}/product/valentine-slim-combo/NUT883"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-                    </tr>
-                </table></td>
-              </tr>
-              <tr>
-                <td colspan="3" height="15" style="border-bottom:solid #ebebeb 1px"></td>
-                </tr>
-
-            </table></td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td><table width="425" border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                <td width="150"><a class='product_link' href="${pageContext.request.contextPath}/product/smart-valentine-combo/NUT882"><img src="${pageContext.request.contextPath}/images/valentine/valen_14.jpg" alt="Smart Valentine Combo" width="150" height="150" border="0" /></a></td>
-                <td width="15"></td>
-                <td><table width="260" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/smart-valentine-combo/NUT882" class="product_link">Smart Valentine Combo</a></td>
-                    </tr>
-                    <tr>
-                      <td height="15px"></td>
-                    </tr>
-                    <tr>
-                      <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 12,998</span></td>
-                    </tr>
-                    <tr>
-                      <td height="5"></td>
-                    </tr>
-                    <tr>
-                      <td style="font-size:14px; color:#FF0000 ">Our Price: <span style="font-size:18px; font-weight:bold">Rs 10,398</span></td>
-                    </tr>
-                    <tr>
-                      <td height="5"></td>
-                    </tr>
-                    <tr>
-                      <td style="font-size:14px; font-weight:bold; color:#0099FF">you save 20%</td>
-                    </tr>
-                    <tr>
-                      <td height="15"></td>
-                    </tr>
-                    <tr>
-                      <td><a class="product_link" href="${pageContext.request.contextPath}/product/smart-valentine-combo/NUT882"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
-                    </tr>
-                </table></td>
-              </tr>
-              <tr>
-                <td colspan="3" height="15"></td>
-                </tr>
-
-            </table></td>
-          </tr>
-
-        </table></td>
-      </tr>
-      <tr>
-        <td colspan="4" height="20">&nbsp;</td>
-        </tr>
-      <tr>
-        <td colspan="4" height="20"><a class="product_link" style="font-size:15px" href="${pageContext.request.contextPath}/beauty/what-s-new/gift-ideas">For more gift options click here >></a></td>
-      </tr>
-      <tr>
-        <td colspan="4" height="20">&nbsp;</td>
-        </tr>
-
-    </table></td>
-  </tr>
-
-</table>
 
 
 
 
 
+  <!---- paste all content from here--->
 
-    </div>
+ <div id="pageContainer">
+<img src="${pageContext.request.contextPath}/images/GOSF/banner.jpg" />
+<div class="cl"></div>
+
+<jsp:include page="../includes/_menuGosf.jsp"/>
+
+<div class="cl"></div>
+
+
+
+
+
+    
+    <div class="heading1">PRIME DEALS</div>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DS001' productDesc='Self-testing blood glucose strips with accurate results, for Diabetic Patients'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PW006' productDesc="Test your pregnancy in just 2 minutes with this Instant Ovulation Kit"/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP002' productDesc="Protect yourself with this powerful pepper formula spray."/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PHL002' productDesc="Figure out the best two days you will be most fertile. Grab this I-Sure Ovulation Strip to get pregnant for sure. "/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP001' productDesc="Protect yourself with this powerful pepper formula spray."/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE005' productDesc='These lenses made with a slight tint correct the vision. The presence of Hilaficon B and non-ionic B Lens material comfort the eyes and facilitates smooth lens-lid interaction.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='KNOCK001' productDesc="Protect yourself with this powerful pepper formula spray."/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DS001' productDesc='Self-testing blood glucose strips with accurate results, for Diabetic Patients'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HB005' productDesc='An automatic BP monitor with one-touch operation. It comes with one-year warranty.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NIC001' productDesc="Nicorette reins in your constant urge to smoke. Quit smoking for sure."/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH101' productDesc="Powerful electric toothbrush to clean your teeth faster and better."/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE004' productDesc='These lenses help in vision correction. Also capable of blocking UVA and UVB rays, they also protect the eyes.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DS001' productDesc='Self-testing blood glucose strips with accurate results'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DM024' productDesc='Accurate results in just 5 minutes with auto coding technology. A glucometer with life time warranty.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DM007' productDesc='A simple three-step, self-testing glucometer with storage capacity of up to 500 test results'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT986' productDesc='A supplement that provides Creating for enhancing stamina and building muscles. Ideal for intense workouts.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT469' productDesc=' Rich in L-Carnitine, it burns your extra fat, reduces hunger pangs, improves metablosim, and reduces cholestrol.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT130' productDesc='Provides 11g of Leucine and 13g of additional BCAAs per serving. Ideal for rapid muscle gain and recovery.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1600' productDesc='Suitable for people who want to lose weight, it helps burn fat, maintain stamina and improve metabolism.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1369' productDesc='Build strength and endurance with MuscleBlaze Creatine. It consistently delivers a powerful workout performance.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='RD001' productDesc='A waist shaper that supports the lumbar spine and corrects posture. Ideal for women who want to look slim and trim.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT412' productDesc='A supplement that improves the nutrient absorption power in adults and boosts energy levels. Ideal for senior citizens.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Designed for people who want to gain mass. Packed with 52gm of high quality protein blend and 9gm of added fiber.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc="Put munchies at bay with healthy fats and great taste in 5 amazing flavors. Get 30 gms of protein in every bite!"/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE035' productDesc='Disposable, colored lenses to offer extra depth to the eyes and enhance beauty. They are soft on the eyes and can be worn for an entire month.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MOS001' productDesc="This Super King Size net protects your little one against dengue, malaria and other diseases caused by insects"/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1367' productDesc='Tailored for fitness enthusiasts engaged in heavy workouts, it has 25gm of 100% Whey Protein blend and EAAs per serving.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT905' productDesc='For bodybuilders who want to gain mass. Infused with 1000 calories, 70g proteins and 10g Branched-Chain Amino Acids.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE007' productDesc='Built using a special material Aergel, these lenses help in curbing spherical aberration'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HB014' productDesc='A BP monitor to read blood pressure levels quickly.  It comes with one-year warranty.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1165' productDesc='Ideal for making health drinks on the move, HK Shaker & Blender Bottle makes lump-free drinks anytime, anywhere.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HB006' productDesc='A BP monitor to read blood pressure levels quickly.  It comes with one-year warranty.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT893' productDesc='Ideal for fitness enthusiasts working for lean muscle gain, it is a rapid absorption formula that builds strength and stamina.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EYE018' productDesc='Ligh blue colored lenses made from Lacreo technology which locks water ingredient in the lens for extra comfort. Blocks upto 97% UVB and 83% UVA.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1367' productDesc='Tailored for fitness enthusiasts engaged in heavy workouts, it has 25gm of 100% Whey Protein blend and EAAs per serving.'/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='AYUCR4' productDesc="Unleash the vitality within and experience out of the world intimacy with Ayu Care Vaji Tailam"/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Keep muchies at bay with Oh Yeah Bars! Get the goodness of healthy fats and low sugar in 1 go; in 5 amazing flavors. '/>
+     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT335' productDesc='A product with a potent combination of essential vitamins and minerals. Improves the strength, immunity and energy levels of the body.'/>
+
+
+                   <div class="cl"></div>
+
+     
+
+
+</div>
 
 </s:layout-component>
 
+<s:layout-component name="menu"> </s:layout-component>
 
 </s:layout-render>
 
