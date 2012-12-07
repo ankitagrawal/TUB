@@ -100,13 +100,13 @@ public interface ProductService {
 
     public Map<String, List<Long>> getGroupedFilters(List<Long> filters);
 
-	public boolean isProductOutOfStock(Product product);
+	  public boolean isProductOutOfStock(Product product);
 
     public ProductVariant validTryOnProductVariant(Product product);
 
     SolrProduct createSolrProduct(Product pr);
 
-	public List<Product> getSimilarProducts(Product product);
+	  public List<Product> getSimilarProducts(Product product);
 
     boolean isCombo(Product product);
 

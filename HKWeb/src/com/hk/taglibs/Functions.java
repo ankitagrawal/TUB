@@ -1,5 +1,6 @@
 package com.hk.taglibs;
 
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -13,6 +14,7 @@ import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -677,4 +679,53 @@ public class Functions {
         AddressService addressService = ServiceLocatorFactory.getService(AddressService.class);
          return addressService.getCountry(countryId);
     }
+
+    public static String encryptOrderId(Long orderId){
+        Long encryptOrderId_1 = ( orderId * 99 ) + 10;
+        String encryptOrderId_2 = encryptOrderId_1.toString();
+        String encryptedOrderId = "";
+        Random randomGenerator = new Random();
+        for(int i= 0 ;i<encryptOrderId_2.length();i++){
+            if(i==0){
+              encryptedOrderId +='@';
+            }
+
+                char random =  (char)(randomGenerator.nextInt(26) + 'a');
+                char value = encryptOrderId_2.charAt(i);
+                encryptedOrderId += value;
+                encryptedOrderId +=  random;
+
+        }
+        logger.debug("\n encrypted order id is"+encryptedOrderId + "\n");
+        return encryptedOrderId;
+    }
+    public static Long decryptOrderId(String encryptedOrderId){
+        String decryptOrderId = "";
+        Long orderId = null;
+        for(int i=1;i<encryptedOrderId.length();i = i + 2){
+            decryptOrderId += encryptedOrderId.charAt(i);
+        }
+        logger.debug("\n decrypted order id is"+decryptOrderId + "\n");
+        orderId = Long.parseLong(decryptOrderId);
+        orderId = orderId - 10;
+        orderId = orderId/99;
+        logger.debug("\n decrypted order id is"+ orderId + "\n");
+        return orderId;
+    }
+
+    public static String readIssuerImageIcon(byte [] imageByteArray, String filename){
+        GatewayIssuerMappingService gatewayIssuerMappingService = ServiceLocatorFactory.getService(GatewayIssuerMappingService.class);
+        return gatewayIssuerMappingService.getImageOfIssuer(imageByteArray,filename);
+    }
+    
+    public static Boolean isOrderForDiscretePackaging(ShippingOrder shippingOrder){
+        Category discretePackagingCategory = new Category("discrete-packaging", "Discrete Packaging");
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            if(lineItem.getCartLineItem().getProductVariant().getProduct().getCategories().contains(discretePackagingCategory)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

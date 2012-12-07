@@ -4,10 +4,12 @@ import java.util.*;
 
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageType;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
@@ -576,5 +578,3 @@ public class ProductServiceImpl implements ProductService {
         return inStockSimilarProducts;
     }
 }
-
-
