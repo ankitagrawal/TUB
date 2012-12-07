@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hk.domain.courier.Zone;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -98,7 +99,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   private UserService                userService;
   private Warehouse                  warehouse;
 
-  private String zone;
+  private Zone zone;
 
   @DontValidate
   @DefaultHandler
@@ -121,6 +122,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
     shippingOrderSearchCriteria.setOrderAsc(true);
     shippingOrderSearchCriteria.setCourierList(courierList);
+	shippingOrderSearchCriteria.setShipmentZone(zone);
     shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
     if (shippingOrderPage != null) {
       shippingOrderList = shippingOrderPage.getList();
@@ -394,11 +396,11 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     this.warehouse = warehouse;
   }
 
-  public String getZone() {
+  public Zone getZone() {
  	return zone;
   }
 
-  public void setZone(String zone) {
+  public void setZone(Zone zone) {
 	this.zone = zone;
   }
 }

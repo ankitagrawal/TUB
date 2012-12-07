@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.courier.*;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
@@ -12,10 +13,6 @@ import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.*;
-import com.hk.domain.courier.BoxSize;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.RegionType;
-import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
@@ -137,5 +134,5 @@ public interface MasterDataDao
 
     public List<Country> getAllCountry();
 
-
+	public List<Zone> getAllZones();
 }
