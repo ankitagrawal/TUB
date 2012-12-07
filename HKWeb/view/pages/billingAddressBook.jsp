@@ -1,16 +1,13 @@
-<%@ page import="com.akube.framework.gson.JsonUtils" %>
-<%@ page import="com.hk.constants.core.RoleConstants" %>
-<%@ page import="com.hk.constants.courier.StateList" %>
 <%@ page import="com.hk.pact.service.core.AddressService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.domain.user.BillingAddress" %>
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.payment.EnumIssuer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.core.user.BillingAddressAction" event="pre" var="addressBean"/>
-<%--<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="pre"/>--%>
 <s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
+
+<c:set var="issuerPaypal" value="5"/>
 
 <s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Select a Billing address">
 
@@ -81,10 +78,6 @@
 <s:layout-component name="steps_content">
   <div class='current_step_content'>
 
-    <%--<h3 style="text-align: center; margin-bottom: 20px; color: #888;">
-      What address should we ship your order to?
-    </h3>--%>
-
    <%
             AddressService addressService = ServiceLocatorFactory.getService(AddressService.class);
             pageContext.setAttribute("countryList", addressService.getAllCountry());
@@ -98,10 +91,8 @@
       <c:forEach items="${addressBean.billingAddresses}" var="billingAddress" varStatus="addressCount">
         <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="checkout" title="Click to use this address and proceed">
           <s:param name="billingAddressId" value="${billingAddress.id}"/>
-           <s:param name="bankId" value="70"/>
-          <s:param name="paymentMode" value="85"/>
-          <s:param name="order" value="${orderSummary.order.id}"/>  
-          <%--<s:param name="billingAddress.id"/>  --%>
+          <s:param name="issuer" value="${issuerPaypal}"/>
+          <s:param name="order" value="${orderSummary.order.id}"/>
           <div class="address" style="position: relative;">
             <h5 class="name">${billingAddress.name}</h5>
 
@@ -216,8 +207,7 @@
         <div class="newAddress-errors alert messages"><s:messages key="generalMessages"/></div>
         <s:form beanclass="com.hk.web.action.core.user.BillingAddressAction" id="newAddressForm"
                 onsubmit="return validateForm()" method="post" name="BillingAddressForm">
-        <s:hidden name="bankId" value="70"/>
-        <s:hidden name="paymentMode" value="85"/>
+        <s:hidden name="issuer" value="${issuerPaypal}"/>
         <s:hidden name="address.id"/>
         <span class="aster special">(Fields marked * are required.)</span>
 

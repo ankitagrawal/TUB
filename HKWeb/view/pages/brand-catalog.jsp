@@ -64,7 +64,7 @@
             <div>
                 <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
                     <s:link beanclass="com.hk.web.action.core.content.seo.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
-                        <s:param name="seoData" value="${ca.brand}"/>
+                        <s:param name="seoData" value="${ca.brand}||${ca.topLevelCategory}"/>
                     </s:link>
                 </shiro:hasPermission>
                 <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">

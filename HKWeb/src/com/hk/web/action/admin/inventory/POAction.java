@@ -177,9 +177,10 @@ public class POAction extends BasePaginatedAction {
 			ProductVariant productVariant = poLineItem.getSku().getProductVariant();
 			Sku sku = getSkuService().getSKU(productVariant, warehouse);
 			long existingGrnLineItemQty = grnLineItemService.getGrnLineItemQtyAlreadySet(grn, poLineItem.getSku());
-			if(existingGrnLineItemQty >= poLineItem.getQty().longValue()) {
+			/*todo rahul: need to remove this add new row button added for finace team on 29-Nov-2012*/
+			/*if(existingGrnLineItemQty >= poLineItem.getQty().longValue()) {
 				continue;
-			}
+			}*/
 			GrnLineItem grnLineItem = new GrnLineItem();
 			grnLineItem.setGoodsReceivedNote(grn);
 			grnLineItem.setProductVariant(productVariant);
