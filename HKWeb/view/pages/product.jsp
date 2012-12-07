@@ -243,7 +243,7 @@
 				<img itemprop="image" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
 				     title="${product.name}">
 				<c:if test="${gosf == 'true'}">
-					<img style="position:absolute;right:0px;bottom:0px;" class="gosf-logo"
+					<img style="position:absolute;right:0px;bottom:0px;z-index:100" class="gosf-logo"
 					     src="${pageContext.request.contextPath}/images/GOSF/gosf-price.jpg"/>
 				</c:if>
 			</a>
