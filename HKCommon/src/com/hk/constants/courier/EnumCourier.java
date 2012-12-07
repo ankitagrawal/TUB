@@ -132,5 +132,11 @@ public enum EnumCourier {
         delhiveryCourierIds.add(EnumCourier.Delhivery_Surface.getId());
         return delhiveryCourierIds;
     }
+
+	public static List<Long> getDispatchLotCouriers(){
+		List<Long> dispatchLotCourierIds = new ArrayList<Long>();
+		dispatchLotCourierIds.add(EnumCourier.HK_Delivery.getId());
+		return dispatchLotCourierIds;
+	}
 }
 

@@ -129,6 +129,7 @@ div.paginationDiv {
 	text-align: center;
 }
 </style>
+    <jsp:include page="/includes/_analytics.jsp" />
 	</s:layout-component>
 
 	<s:layout-component name="content">
@@ -257,6 +258,5 @@ div.paginationDiv {
             });
         });
     </script>
-		<jsp:include page="/includes/_analytics.jsp" />
 	</s:layout-component>
 </s:layout-render>
