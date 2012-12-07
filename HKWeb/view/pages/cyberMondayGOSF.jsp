@@ -243,8 +243,7 @@
 			productDesc='Tailored for fitness enthusiasts engaged in heavy workouts, it has 25gm of 100% Whey Protein blend and EAAs per serving.' />
 		<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp"
 			productId='NUT906'
-			productDesc='Want better focus, higher endurance and power when you work out? Just pick MuscleTech Neurocore and you'
-			ll never look back.'/> <s:layout-render
+			productDesc='Want better focus, higher endurance and power when you work out? Just pick MuscleTech Neurocore and you will never look back.'/> <s:layout-render
 			name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT890'
 			productDesc="Use MusclePharm Shred Matrix to get accelerated fat burn, enhanced focus and muscular endurance. Try now to never look back again!" />
 
