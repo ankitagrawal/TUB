@@ -69,6 +69,9 @@ public class CourierConstants {
     public static final String BLUEDART_STATUS_DATE = "StatusDate";
     public static final String BLUEDART_STATUS = "Status";
     public static final String BLUEDART_SHIPMENT_DELIVERED = "Shipment delivered";
+	public static final String BLUEDART_AWB = "WaybillNo";
+	public static final String BLUEDART_REF_NO = "RefNo";
+	public static final String BLUEDART_ERROR_MSG = "Incorrect Waybill number or No Information";
 
 	//Constants for QUANTIUM
 	public static final String QUANTIUM_TRACKING_NO = "TrackingNo";
