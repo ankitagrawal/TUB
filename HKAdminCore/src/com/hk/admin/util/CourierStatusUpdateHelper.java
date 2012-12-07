@@ -249,6 +249,59 @@ public class CourierStatusUpdateHelper {
 		return shipmentList;
 	}
 
+	public List<Element> bulkUpdateDeliveryStatusBlueDart(String trackingId) throws HealthkartCheckedException {         
+        String inputLine = "";
+        String response = "";
+        courierName = EnumCourier.BlueDart.getName();
+        List xmlElementList = null;
+
+        //added for debugging
+        //trackingId              = "43925348331,43892306382,43925355342";
+
+        try {
+            url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid=" + loginIdForBlueDart + "&awb=awb&numbers=" + trackingId + "&format=xml&lickey=" + licenceKeyForBlueDart + "&verno=1.3&scan=1");
+            bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                if (inputLine != null) {
+                    response += inputLine;
+                }
+            }
+
+            Document doc = new SAXBuilder().build(new StringReader(response));
+            XPath xPath = XPath.newInstance("/*/Shipment");
+            xmlElementList = xPath.selectNodes(doc);
+
+
+        } catch (MalformedURLException mue) {
+            logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION +courierName+ trackingId);
+            throw new HealthkartCheckedException(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
+
+        } catch (IOException ioe) {
+            logger.debug(CourierConstants.IO_EXCEPTION +courierName+ trackingId);
+            throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
+
+        } catch (NullPointerException npe) {
+            logger.debug(CourierConstants.NULL_POINTER_EXCEPTION +courierName+ trackingId);
+            throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
+
+        } catch (Exception e) {
+            logger.debug(CourierConstants.EXCEPTION +courierName + trackingId);
+            throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
+
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                logger.debug(CourierConstants.IO_EXCEPTION +courierName+ trackingId);
+                throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
+
+            }
+        }
+        return xmlElementList;
+        }
+
+
 
 	public Element updateDeliveryStatusBlueDart(String trackingId) throws HealthkartCheckedException {
 		Element xmlElement = null;
