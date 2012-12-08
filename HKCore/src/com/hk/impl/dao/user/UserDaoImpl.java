@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.email.EmailRecepient;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
@@ -220,6 +221,12 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 
         criteria.add(Restrictions.in("id", userIds));
         return list(criteria, pageNo, perPage);
+    }
+
+    public User findByUnsubscribeToken(String unsubscribeToken) {
+        DetachedCriteria criteria1 = DetachedCriteria.forClass(User.class);
+        criteria1.add(Restrictions.eq("unsubscribeToken", unsubscribeToken));
+        return (User)super.findByCriteria(criteria1).get(0);
     }
 
     public RoleDao getRoleDao() {

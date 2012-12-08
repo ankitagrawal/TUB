@@ -1,5 +1,7 @@
 package com.hk.web.action.core.email;
 
+import com.hk.domain.user.User;
+import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -14,19 +16,19 @@ import com.hk.pact.dao.email.EmailRecepientDao;
 
 @Component
 public class UnsubscribeEmailAction extends BaseAction {
-    @Autowired
-   EmailRecepientDao emailRecepientDao;
+  @Autowired
+  UserService userService;
 
   @Validate(required = true)
   private String unsubscribeToken;
 
   public Resolution pre() {
-    EmailRecepient emailRecepient = emailRecepientDao.findByUnsubscribeToken(unsubscribeToken);
+    User emailRecepient = userService.findByUnsubscribeToken(unsubscribeToken);
     if(emailRecepient == null) {
       addRedirectAlertMessage(new SimpleMessage("Invalid email."));
     } else {
       emailRecepient.setSubscribed(false);
-      emailRecepientDao.save(emailRecepient);
+      userService.save(emailRecepient);
       addRedirectAlertMessage(new SimpleMessage("You have been unsubscribed successfully."));
     }
     return new ForwardResolution("/pages/unsubscribeEmail.jsp");

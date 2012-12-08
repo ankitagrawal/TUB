@@ -30,6 +30,10 @@ public class AdminEmailServiceImpl implements AdminEmailService {
         return getAdminEmailDao().getMailingListByCategory(emailCampaign, category, maxResult);
     }
 
+    public List<String> getMailingListByCategory(String category, int storeId) {
+        return getAdminEmailDao().getMailingListByCategory(category, storeId);
+    }
+
     public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category) {
         return getAdminEmailDao().getMailingListCountByCategory(emailCampaign, category);
     }

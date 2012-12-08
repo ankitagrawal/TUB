@@ -55,4 +55,6 @@ public interface UserDao extends BaseDao {
   //public RoleDao getRoleDao();
 
   //public void setRoleDao(RoleDao roleDao);
+
+    User findByUnsubscribeToken(String unsubscribeToken);
 }

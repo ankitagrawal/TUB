@@ -43,6 +43,9 @@ public class User {
     @Column(name = "login", nullable = false, length = 80)
     private String                login;
 
+    @Column(name = "subscribed", nullable = false)
+    private boolean subscribed;
+
     @Column(name = "email", nullable = true, length = 80)
     private String                email;
 
@@ -51,6 +54,9 @@ public class User {
 
     @Column(name = "password_checksum", nullable = false)
     private String                passwordChecksum;
+
+    @Column(name = "unsubscribe_token", length = 45)
+    private String unsubscribeToken;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "birth_date", nullable = true, length = 19)
@@ -63,7 +69,6 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_dt", nullable = false, length = 19)
     private Date                  createDate = new Date();
-
     /*
      * @JsonSkip @Temporal(TemporalType.TIMESTAMP) @Column(name = "update_date", nullable = false, length = 19) private
      * Date updateDate;
@@ -240,6 +245,22 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isSubscribed() {
+        return subscribed;
+    }
+
+    public void setSubscribed(boolean subscribed) {
+        this.subscribed = subscribed;
+    }
+
+    public String getUnsubscribeToken() {
+        return unsubscribeToken;
+    }
+
+    public void setUnsubscribeToken(String unsubscribeToken) {
+        this.unsubscribeToken = unsubscribeToken;
     }
 
     public Date getCreateDate() {
