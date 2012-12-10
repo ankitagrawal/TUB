@@ -167,7 +167,7 @@ public class SOInvoiceAction extends BaseAction {
 			printZone = shippingOrderService.printZoneOnSOInvoice(shippingOrder);
 
 			if(printZone){
-				zone = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin()).getZone();
+				zone = shippingOrder.getShipment().getZone().getName();
 			}
 
 
