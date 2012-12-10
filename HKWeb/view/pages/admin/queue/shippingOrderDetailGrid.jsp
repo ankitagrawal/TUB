@@ -105,6 +105,9 @@
     <c:if test="${isActionQueue == false}">
         <div class="floatleft">
             <span> Mode: <strong>${payment.paymentMode.name}</strong></span>
+            <c:if test="${payment.gateway != null}">
+                <span style="margin-left:30px;">Gateway: ${payment.gateway.name}</span>
+            </c:if>
             <span style="margin-left:10px;"> Status: <strong>${payment.paymentStatus.name}</strong></span>
         </div>
         <div class="clear"></div>
