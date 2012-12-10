@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.cache.CategoryCache;
-import com.hk.cache.UserCache;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
@@ -257,7 +256,7 @@ public class EmailManager {
             categoryAdmins = diabetesAdminEmails;
         } else if (category.getName().equals(CategoryConstants.EYE)) {
             categoryAdmins = eyeAdminEmails;
-        } else if (category.getName().equals(CategoryConstants.HOME_DEVICES)) {
+        } else if (category.getName().equals(CategoryConstants.HEALTH_DEVICES)) {
             categoryAdmins = homeDevicesAdminEmails;
         } else if (category.getName().equals(CategoryConstants.NUTRITION)) {
             categoryAdmins = nutritionAdminEmails;
