@@ -21,7 +21,7 @@ $(document).ready(function () {
 
  <div class="navBox">
 <ul class="navigation">
-    <li><a href="${pageContext.request.contextPath}/pages/cyberMondayGOSF.jsp">HOME</a>
+    <li><a href="${pageContext.request.contextPath}/pages/gosf.jsp">HOME</a>
     <li><a href="${pageContext.request.contextPath}/pages/nutri-gosf.jsp">NUTRITION</a>
       <ul>
                         <li><a href="${pageContext.request.contextPath}/pages/nutri-bars-gosf.jsp">BARS AND FAT BURNERS</a></li>
