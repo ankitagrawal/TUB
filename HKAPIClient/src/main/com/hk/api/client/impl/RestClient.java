@@ -33,17 +33,17 @@ import java.net.URISyntaxException;
 
 class RestClient {
     public static final int HTTP_OK=200;
-    public static final String SERVER_URL = AuthConstants.hkRestUrl;
+    public static final String DEFAULT_SERVER_URL = AuthConstants.hkRestUrl;
 
-    public static String doGet(final String url) {
+    public static String doGet(final String url, String serverUrl) {
         return doGet(url,null);
     }
 
-    public static String doGet(final String url, Header[] headers) {
+    public static String doGet(final String url, Header[] headers, String serverUrl) {
         try{
             final HttpClient httpClient = new DefaultHttpClient();
             HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10000);
-            HttpGet httpget = new HttpGet(SERVER_URL + url);
+            HttpGet httpget = new HttpGet(serverUrl + url);
             if(headers!=null){
                 httpget.setHeaders(headers);
             }
@@ -61,16 +61,16 @@ class RestClient {
         return null;
     }
 
-    public static String doPost(final String url, final String POSTText){
+    public static String doPost(final String url, final String POSTText, String serverUrl){
         return doPost(url,POSTText,null);
     }
 
-    public static String doPost(final String url, final String POSTText, Header[] headers){
+    public static String doPost(final String url, final String POSTText, Header[] headers, String serverUrl){
         try{
             final HttpClient httpClient = new DefaultHttpClient();
             HttpConnectionParams
                     .setConnectionTimeout(httpClient.getParams(), 10000);
-            HttpPost httpPost = new HttpPost(SERVER_URL + url);
+            HttpPost httpPost = new HttpPost(serverUrl + url);
             StringEntity entity = new StringEntity(POSTText, "UTF-8");
             BasicHeader basicHeader = new BasicHeader(HTTP.CONTENT_TYPE,
                     "application/json");
@@ -99,7 +99,7 @@ class RestClient {
         final HttpClient httpClient = new DefaultHttpClient();
         HttpConnectionParams
                 .setConnectionTimeout(httpClient.getParams(), 10000);
-        HttpPut httpPut = new HttpPut(SERVER_URL + url);
+        HttpPut httpPut = new HttpPut(DEFAULT_SERVER_URL + url);
         httpPut.addHeader("Accept", "application/json");
         httpPut.addHeader("Content-Type", "application/json");
         StringEntity entity = new StringEntity(PUTText, "UTF-8");
@@ -119,7 +119,7 @@ class RestClient {
         final HttpClient httpClient = new DefaultHttpClient();
         HttpConnectionParams
                 .setConnectionTimeout(httpClient.getParams(), 10000);
-        HttpDelete httpDelete = new HttpDelete(SERVER_URL + url);
+        HttpDelete httpDelete = new HttpDelete(DEFAULT_SERVER_URL + url);
         httpDelete.addHeader("Accept",
                 "text/html, image/jpeg, *; q=.2, */*; q=.2");
         HttpResponse response = httpClient.execute(httpDelete);
@@ -144,7 +144,7 @@ class RestClient {
 
     private static void checkResponseStatus(HttpResponse response){
         if(response.getStatusLine().getStatusCode()!=HTTP_OK){
-            throw new HKBadHTTPResponseException();
+            throw new HKBadHTTPResponseException(response.getStatusLine().getStatusCode()+response.getStatusLine().getReasonPhrase());
         }
     }
 
@@ -152,7 +152,7 @@ class RestClient {
         //to-do improve logic once we start validating every response from HK
         /*Header[] tokenHeaders=response.getHeaders(HKAPITokenTypes.USER_ACCESS_TOKEN);
         if(tokenHeaders!=null){
-            APIAuthenticationUtils.isValidUserAccessToken(tokenHeaders[0].getValue());
+            HKAPIAuthenticationUtils.isValidUserAccessToken(tokenHeaders[0].getValue());
         }else{
 
         }*/

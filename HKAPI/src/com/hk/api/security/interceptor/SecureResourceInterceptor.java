@@ -70,14 +70,14 @@ public class SecureResourceInterceptor implements PreProcessInterceptor {
                 }
             }
 
-           /* if (StringUtils.isEmpty(apiVersion)) {
+           /*to-do we can store api version and user identity in threadlocal once we get the basics working
+            if (StringUtils.isEmpty(apiVersion)) {
                 apiVersion = HkAPI.CURRENT_VERSION;
             }
 
             LocaleContextHolder.getLocaleContext().setApiVersion(apiVersion);*/
 
         }
-
         return response;
     }
 

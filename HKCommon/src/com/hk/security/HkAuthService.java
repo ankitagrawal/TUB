@@ -12,7 +12,7 @@ import com.hk.security.exception.HkInvalidAuthTokenException;
 public interface HkAuthService {
 
     public static final int    DEFAULT_EXPIRY_MIN = 1;
-    public static final String AUTH_FAILURE_URL   = "/nutrition";
+    public static final String TOKEN_DELIMITER   = ":";
 
     public HkAuthentication authenticate(HkAuthentication authentication) throws HkAuthenticationException;
 

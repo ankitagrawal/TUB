@@ -14,15 +14,15 @@ import java.util.Date;
  * Date: 12/2/12
  * Time: 2:11 PM
  */
-public class APIAuthenticationUtils {
+public class HKAPIAuthenticationUtils {
 
     public static String generateUserAccessToken(String userEmail, String appKey, String appSecret){
         StringBuilder uaToken=new StringBuilder("");
         uaToken.append(appKey);
-        uaToken.append(":"+getExpiryTimeStamp(AuthConstants.TOKEN_EXPIRY_TIME_MIN));
-        uaToken.append(":"+userEmail);
-        String md5Hash=HKAPIBaseUtils.md5Hash(uaToken.toString()+":"+appSecret,AuthConstants.md5Salt,AuthConstants.md5HashIterations);
-        uaToken.append(":"+md5Hash);
+        uaToken.append(AuthConstants.TOKEN_DELIMITER+getExpiryTimeStamp(AuthConstants.TOKEN_EXPIRY_TIME_MIN));
+        uaToken.append(AuthConstants.TOKEN_DELIMITER+userEmail);
+        String md5Hash= HKAPIBaseUtils.md5Hash(uaToken.toString() + AuthConstants.TOKEN_DELIMITER + appSecret, AuthConstants.md5Salt, AuthConstants.md5HashIterations);
+        uaToken.append(AuthConstants.TOKEN_DELIMITER+md5Hash);
 
         byte[] base64encoding = Base64.encodeBase64(uaToken.toString().getBytes());
 
@@ -32,16 +32,16 @@ public class APIAuthenticationUtils {
     public static String generateAppToken(String appKey, String appSecretKey){
         StringBuilder appToken=new StringBuilder("");
         appToken.append(appKey);
-        appToken.append(":"+getExpiryTimeStamp(AuthConstants.TOKEN_EXPIRY_TIME_MIN));
-        String md5Hash=HKAPIBaseUtils.md5Hash(appToken.toString()+":"+appSecretKey,AuthConstants.md5Salt,AuthConstants.md5HashIterations);
-        appToken.append(":"+md5Hash);
+        appToken.append(AuthConstants.TOKEN_DELIMITER+getExpiryTimeStamp(AuthConstants.TOKEN_EXPIRY_TIME_MIN));
+        String md5Hash=HKAPIBaseUtils.md5Hash(appToken.toString()+AuthConstants.TOKEN_DELIMITER+appSecretKey,AuthConstants.md5Salt,AuthConstants.md5HashIterations);
+        appToken.append(AuthConstants.TOKEN_DELIMITER+md5Hash);
 
         byte[] base64encoding = Base64.encodeBase64(appToken.toString().getBytes());
 
         return new String(base64encoding);
     }
 
-    public static boolean isValidUserAccessToken(String userAccessToken){
+    public static boolean isValidUserAccessToken(String userAccessToken, String appSecret){
         String[] decodedTokenArr=decodeToken(userAccessToken);
 
         if(decodedTokenArr.length!=4){
@@ -50,7 +50,7 @@ public class APIAuthenticationUtils {
         String apiKey= decodedTokenArr[0];
         String expiryTimeStamp = decodedTokenArr[1];
         String userEmail = decodedTokenArr[2];
-        if(!HKAPIBaseUtils.md5Hash(apiKey+":"+expiryTimeStamp+":"+userEmail, AuthConstants.md5Salt,AuthConstants.md5HashIterations).equals(decodedTokenArr[2])){
+        if(!HKAPIBaseUtils.md5Hash(apiKey+AuthConstants.TOKEN_DELIMITER+expiryTimeStamp+AuthConstants.TOKEN_DELIMITER+userEmail+AuthConstants.TOKEN_DELIMITER+appSecret, AuthConstants.md5Salt,AuthConstants.md5HashIterations).equals(decodedTokenArr[3])){
             throw new HKInvalidTokenSignatureException(userAccessToken);
         }
         Date expiryDate=new Date(Long.parseLong(expiryTimeStamp));
@@ -65,7 +65,7 @@ public class APIAuthenticationUtils {
         byte[] base64DecodedArr = Base64.decodeBase64(token);
         String base64Decoded = new String(base64DecodedArr);
 
-        String[] decodedTokenArr = base64Decoded.split(":");
+        String[] decodedTokenArr = base64Decoded.split(AuthConstants.TOKEN_DELIMITER);
         return decodedTokenArr;
     }
 

@@ -4,6 +4,8 @@
     <test name="Regression1">
         <classes>
             <class name="TestNGTest"/>
+            <class name="com.hk.api.client.utils.HKAPIBaseUtilsTest"/>
+            <class name="com.hk.api.client.utils.TokenTest"/>
         </classes>
     </test>
 </suite>

@@ -188,7 +188,10 @@ public class HkAuthServiceImpl implements HkAuthService {
         String apiKey= decodedTokenArr[0];
         String expiryTimeStamp = decodedTokenArr[1];
         String userEmail = decodedTokenArr[2];
-        if(!BaseUtils.md5Hash(apiKey+":"+expiryTimeStamp+":"+userEmail+":"+HkApiUserCache.getInstance().getHkApiUser(apiKey).getSecretKey(),salt,md5HashIterations).equals(decodedTokenArr[3])){
+        String md5Hash=BaseUtils.md5Hash(apiKey+TOKEN_DELIMITER+expiryTimeStamp+TOKEN_DELIMITER+
+                userEmail+TOKEN_DELIMITER+HkApiUserCache.getInstance().getHkApiUser(apiKey).getSecretKey(),
+                salt,md5HashIterations);
+        if(!md5Hash.equals(decodedTokenArr[3])){ //checking the sent md5hash with calculated hash
             throw new HkInvalidTokenSignatureException(userAccessToken);
         }
         Date expiryDate=new Date(Long.parseLong(expiryTimeStamp));
@@ -209,11 +212,11 @@ public class HkAuthServiceImpl implements HkAuthService {
         int expiryMin=10;//10 min expiration
         StringBuilder uaToken=new StringBuilder("");
         uaToken.append(appKey);
-        uaToken.append(":"+getExpiryTimeStamp(expiryMin));
+        uaToken.append(TOKEN_DELIMITER+getExpiryTimeStamp(expiryMin));
         String appSecret=HkApiUserCache.getInstance().getHkApiUser(appKey).getSecretKey();
-        uaToken.append(":"+userEmail);
-        String md5Hash=BaseUtils.md5Hash(uaToken.toString()+appSecret,salt,md5HashIterations);
-        uaToken.append(":"+md5Hash);
+        uaToken.append(TOKEN_DELIMITER+userEmail);
+        String md5Hash=BaseUtils.md5Hash(uaToken.toString()+TOKEN_DELIMITER+appSecret,salt,md5HashIterations);
+        uaToken.append(TOKEN_DELIMITER+md5Hash);
 
         byte[] base64encoding = Base64.encodeBase64(uaToken.toString().getBytes());
 
@@ -232,7 +235,7 @@ public class HkAuthServiceImpl implements HkAuthService {
 
     public User getUserFromAccessToken(String userAccessToken){
         String[] decodedTokenArr=decodeToken(userAccessToken);
-        String userName = decodedTokenArr[0];
+        String userName = decodedTokenArr[2];
         User user = getUserService().findByLogin(userName);
 
         if (user == null) {
@@ -260,50 +263,12 @@ public class HkAuthServiceImpl implements HkAuthService {
         byte[] base64DecodedArr = Base64.decodeBase64(token);
         String base64Decoded = new String(base64DecodedArr);
 
-        String[] decodedTokenArr = base64Decoded.split(":");
+        String[] decodedTokenArr = base64Decoded.split(TOKEN_DELIMITER);
         return decodedTokenArr;
     }
 
     public UserService getUserService() {
         return userService;
-    }
-
-    public static void main(String[] args) {
-
-        String password = "abc";
-        String userName = "uname";
-        String apiKey = "appId";
-
-        //HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey);
-        HkAuthServiceImpl authService = new HkAuthServiceImpl();
-        String authToken = authService.generateAuthToken(userName, BaseUtils.passwordEncrypt(password), apiKey);
-
-        System.out.println(authToken);
-
-        System.out.println(authService.validateToken(authToken, apiKey, true));
-
-        System.out.println(authService.validateToken(authToken, apiKey, false));
-        /**
-         * base64( emailid:expiredon: b=token->md5(emailid+passwd+expiration) a :b
-         */
-
-        /*
-         * Date expiryTime = HKDateUtil.addToDate(new Date(), Calendar.MINUTE, DEFAULT_EXPIRY_MIN);
-         * System.out.println(expiryTime); // byte[] data = base64.encode(); String tokenA =
-         * userName.concat(":").concat(Long.valueOf(expiryTime.getTime()).toString()); String tokenB =
-         * userName.concat(":").concat(password).concat(":").concat(Long.valueOf(expiryTime.getTime()).toString());
-         * String md5 = DigestUtils.md5Hex(tokenB); String baseToken = tokenA.concat(":").concat(md5); byte[]
-         * base64encoding = Base64.encodeBase64(baseToken.getBytes()); String authToken = new String(base64encoding);
-         * System.out.println(authToken); byte[] base64DecodedArr = Base64.decodeBase64(authToken); String base64Decoded =
-         * new String(base64DecodedArr); System.out.println(base64Decoded); String[] decodedTokenArr =
-         * base64Decoded.split(":"); Date expiredOn = new Date(Long.parseLong(decodedTokenArr[1]));
-         * System.out.println(expiredOn); if (expiredOn.compareTo(new Date()) == -1) { System.out.println("Expired"); }
-         * String reConstructedToken =
-         * decodedTokenArr[0].concat(":").concat(password).concat(":").concat(decodedTokenArr[1]); String reConTokeMd5 =
-         * DigestUtils.md5Hex(reConstructedToken); if (reConTokeMd5.equals(decodedTokenArr[2])) {
-         * System.out.println("equal"); }
-         */
-
     }
 
     private Long getExpiryTimeStamp(int min){

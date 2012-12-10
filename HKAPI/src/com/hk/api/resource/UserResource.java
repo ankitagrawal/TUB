@@ -29,6 +29,7 @@ public class UserResource {
     @GET
     @Path("/all")
     @Produces("application/json")
+    @SecureResource(hasAllTokens = {})
     public String test() {
 
         AuthAPI authAPI = APIRegistry.getAuthAPI();
