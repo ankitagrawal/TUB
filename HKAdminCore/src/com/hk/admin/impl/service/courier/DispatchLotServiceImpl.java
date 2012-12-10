@@ -6,10 +6,7 @@ import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.constants.XslConstants;
 import com.hk.constants.courier.EnumDispatchLotStatus;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.DispatchLot;
-import com.hk.domain.courier.DispatchLotHasShipment;
-import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.*;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.dao.BaseDao;
@@ -46,30 +43,11 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 	@Autowired
 	private BaseDao baseDao;
 
-	/*public DispatchLot saveDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
-		                                   String destination, Long noOfShipmentsSent, Long noOfShipmentsReceived, Long noOfMotherBags,
-		                                   Double totalWeight, Date deliveryDate) {
-		if(dispatchLot != null) {
-			dispatchLot.setDocketNumber(docketNumber);
-			dispatchLot.setCourier(courier);
-			dispatchLot.setZone(zone);
-			dispatchLot.setSource(source);
-			dispatchLot.setDestination(destination);
-			dispatchLot.setNoOfShipmentsSent(noOfShipmentsSent);
-			dispatchLot.setNoOfShipmentsReceived(noOfShipmentsReceived);
-			dispatchLot.setNoOfMotherBags(noOfMotherBags);
-			dispatchLot.setTotalWeight(totalWeight);
-			dispatchLot.setDeliveryDate(deliveryDate);
-			baseDao.save(dispatchLot);
-		}
-		return dispatchLot;
-	}
-	*/
-	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
-	                              String destination, Date deliveryStartDate, Date deliveryEndDate, int pageNo, int perPage) {
+	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, Zone zone, String source,
+	                              String destination, Date deliveryStartDate, Date deliveryEndDate, DispatchLotStatus dispatchLotStatus, int pageNo, int perPage) {
 
 		return getDispatchLotDao().searchDispatchLot(dispatchLot, docketNumber, courier, zone, source, destination,
-				deliveryStartDate, deliveryEndDate, pageNo, perPage);
+				deliveryStartDate, deliveryEndDate, dispatchLotStatus, pageNo, perPage);
 	}
 
 	public void parseExcelAndSaveShipmentDetails(DispatchLot dispatchLot, String excelFilePath, String sheetName) throws ExcelBlankFieldException {
@@ -141,6 +119,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			//update dispatch Lot
 			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.InTransit.getDispatchLotStatus());
 			dispatchLot.setDispatchDate(new Date());
+			dispatchLot.setNoOfShipmentsSent((long)dispatchLotHasShipmentList.size());
 			getDispatchLotDao().save(dispatchLot);
 
 		} catch (ExcelBlankFieldException e) {

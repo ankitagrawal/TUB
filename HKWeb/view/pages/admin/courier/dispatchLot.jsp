@@ -51,7 +51,7 @@
 
 				<s:label name="courier" class="label">Courier</s:label>
 				<s:select name="dispatchLot.courier" class="text">
-				<s:option value="">-All-</s:option>
+				<s:option value="">-Select-</s:option>
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
 					                           value="id"
 					                           label="name"/>
@@ -62,7 +62,7 @@
 
 				<s:label name="zone" class="label">Zone</s:label>
 				<s:select name="dispatchLot.zone" class="text">
-				<s:option value="null">Select</s:option>
+				<s:option value="">-Select-</s:option>
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
 					                           value="id"
 					                           label="name"/>
@@ -84,11 +84,6 @@
 
 				<div class="clear"></div>
 
-					<%--<s:label name="noOfShipmentsSent" class="label">No. of Shipments Received</s:label>
-										<s:text name="dispatchLot.noOfShipmentsReceived" style="width:200px" class="text"/>
-
-									<div class="clear"></div>--%>
-
 				<s:label name="noOfMotherBags" class="label">No. of Mother Bags</s:label>
 					<s:text name="dispatchLot.noOfMotherBags" style="width:200px" class="text"/>
 
@@ -96,7 +91,6 @@
 
 				<s:label name="totalWeight" class="label">Total Weight</s:label>
 					<s:text name="dispatchLot.totalWeight" style="width:200px" class="text"/>
-				<span class="aster">*</span>
 
 				<div class="clear"></div>
 
@@ -104,12 +98,11 @@
 					<s:text class="date_input text" style="width:150px"
 					        formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="dispatchLot.dispatchDate"
 					        id="deliveryDate"/>
-				<span class="aster">*</span>
 
 				<div class="clear"></div>
 
 				<s:label name="remarks" class="label">Remarks</s:label>
-					<s:textarea name="dispatchLot.remarks" class="text" rows="2"/>
+					<s:textarea name="dispatchLot.remarks" class="text"/>
 
 				<div class="clear"></div>
 				<s:label name="noOfShipmentsSent" class="label">No. of Shipments Sent</s:label>
@@ -126,23 +119,14 @@
 					<fieldset class="right_label">
 						<legend>Update Shipment Details In Dispatch Lot</legend>
 						<br>
-						<span class="large">(AWB NUMBER) as excel header</span>
+						<span class="large">(GATEWAY ORDER ID) as excel header</span>
 						<ul>
-								<%--<li>
-									   <label>Payment Mode:</label>
-									   <s:select name="paymentProcess" class="uploadPaymentMode" style="width: 100">
-										   <s:option value="all">-Select-</s:option>
-										   <s:option value="cod">COD</s:option>
-										   <s:option value="techprocess">Prepaid</s:option>
-									   </s:select>
-								   </li>--%>
 							<li>
 								<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
 
 							</li>
 							<li>
-								<s:submit name="parse" value="Upload Shipment Details"
-								          class="requiredFieldValidator"/>
+								<s:submit name="parse" value="Upload Shipment Details"/>
 							</li>
 						</ul>
 					</fieldset>

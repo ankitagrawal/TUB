@@ -7,6 +7,8 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
+import com.hk.domain.courier.DispatchLotStatus;
+import com.hk.domain.courier.Zone;
 import com.hk.exception.ExcelBlankFieldException;
 import com.restfb.util.StringUtils;
 import net.sourceforge.stripes.action.*;
@@ -44,11 +46,12 @@ public class DispatchLotAction extends BasePaginatedAction {
 	private Integer defaultPerPage = 20;
 	private String docketNumber;
 	private Courier courier;
-	private String zone;
+	private Zone zone;
 	private String source;
 	private String destination;
-	private Date deliveryStartDate;
-	private Date deliveryEndDate;
+	private Date dispatchStartDate;
+	private Date dispatchEndDate;
+	private DispatchLotStatus dispatchLotStatus;
 	private FileBean fileBean;
 
 	@DefaultHandler
@@ -58,7 +61,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 	public Resolution showDispatchLotList() {
 		dispatchLotPage = getDispatchLotService().searchDispatchLot(dispatchLot, docketNumber, courier, zone, source,
-				destination, deliveryStartDate, deliveryEndDate, getPageNo(), getPerPage());
+				destination, dispatchStartDate, dispatchEndDate, dispatchLotStatus, getPageNo(), getPerPage());
 		dispatchLotList = dispatchLotPage.getList();
 		return new ForwardResolution("/pages/admin/courier/dispatchLotList.jsp");
 	}
@@ -119,7 +122,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 		try {
 			fileBean.save(excelFile);
 			getDispatchLotService().parseExcelAndSaveShipmentDetails(dispatchLot, excelFilePath, "Sheet1");
-			addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+			addRedirectAlertMessage(new SimpleMessage("File uploaded successfully."));
 		} catch (IOException e) {
 			logger.error("Exception while reading excel sheet.", e);
 			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
@@ -150,8 +153,9 @@ public class DispatchLotAction extends BasePaginatedAction {
 		params.add("zone");
 		params.add("source");
 		params.add("destination");
-		params.add("deliveryStartDate");
-		params.add("deliveryEndDate");
+		params.add("dispatchStartDate");
+		params.add("dispatchEndDate");
+		params.add("dispatchLotStatus");
 		return params;
 	}
 
@@ -218,14 +222,6 @@ public class DispatchLotAction extends BasePaginatedAction {
 		this.courier = courier;
 	}
 
-	public String getZone() {
-		return zone;
-	}
-
-	public void setZone(String zone) {
-		this.zone = zone;
-	}
-
 	public String getSource() {
 		return source;
 	}
@@ -250,20 +246,36 @@ public class DispatchLotAction extends BasePaginatedAction {
 		this.dispatchLotList = dispatchLotList;
 	}
 
-	public Date getDeliveryStartDate() {
-		return deliveryStartDate;
+	public Date getDispatchStartDate() {
+		return dispatchStartDate;
 	}
 
-	public void setDeliveryStartDate(Date deliveryStartDate) {
-		this.deliveryStartDate = deliveryStartDate;
+	public void setDispatchStartDate(Date dispatchStartDate) {
+		this.dispatchStartDate = dispatchStartDate;
 	}
 
-	public Date getDeliveryEndDate() {
-		return deliveryEndDate;
+	public Date getDispatchEndDate() {
+		return dispatchEndDate;
 	}
 
-	public void setDeliveryEndDate(Date deliveryEndDate) {
-		this.deliveryEndDate = deliveryEndDate;
+	public void setDispatchEndDate(Date dispatchEndDate) {
+		this.dispatchEndDate = dispatchEndDate;
+	}
+
+	public DispatchLotStatus getDispatchLotStatus() {
+		return dispatchLotStatus;
+	}
+
+	public void setDispatchLotStatus(DispatchLotStatus dispatchLotStatus) {
+		this.dispatchLotStatus = dispatchLotStatus;
+	}
+
+	public Zone getZone() {
+		return zone;
+	}
+
+	public void setZone(Zone zone) {
+		this.zone = zone;
 	}
 
 	public FileBean getFileBean() {

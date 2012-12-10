@@ -3,6 +3,8 @@ package com.hk.admin.pact.dao.courier;
 import com.akube.framework.dao.Page;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
+import com.hk.domain.courier.DispatchLotStatus;
+import com.hk.domain.courier.Zone;
 import com.hk.pact.dao.BaseDao;
 
 import java.util.Date;
@@ -16,7 +18,7 @@ import java.util.Date;
  */
 public interface DispatchLotDao extends BaseDao {
 
-	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
-	                              String destination, Date deliveryStartDate, Date deliveryEndDate, int pageNo, int perPage);
+	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, Zone zone, String source,
+	                              String destination, Date deliveryStartDate, Date deliveryEndDate, DispatchLotStatus dispatchLotStatus, int pageNo, int perPage);
 
 }
