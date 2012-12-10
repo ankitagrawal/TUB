@@ -39,17 +39,17 @@ public class DispatchLot implements Serializable {
 	@Column(name = "destination", nullable = false)
 	private String destination;
 
-	@Column(name = "no_of_shipments_sent", nullable = false)
-	private Long noOfShipmentsSent = 0L;
+	@Column(name = "no_of_shipments_sent")
+	private Long noOfShipmentsSent;
 
-	@Column(name = "no_of_shipments_received", nullable = false)
-	private Long noOfShipmentsReceived = 0L;
+	@Column(name = "no_of_shipments_received")
+	private Long noOfShipmentsReceived;
 
-	@Column(name = "no_of_mother_bags", nullable = false)
-	private Long noOfMotherBags = 0L;
+	@Column(name = "no_of_mother_bags")
+	private Long noOfMotherBags;
 
-	@Column(name = "total_weight", nullable = false)
-	private Double totalWeight = 0D;
+	@Column(name = "total_weight")
+	private Double totalWeight;
 
 	@Column(name = "remarks")
 	private String remarks;
@@ -58,8 +58,8 @@ public class DispatchLot implements Serializable {
 	@JoinColumn(name = "dispatch_lot_status_id", nullable = false)
 	private DispatchLotStatus dispatchLotStatus;
 
-	@Column(name = "delivery_date")
-	private Date deliveryDate;
+	@Column(name = "dispatch_date")
+	private Date dispatchDate;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "create_dt", nullable = false)
@@ -149,12 +149,12 @@ public class DispatchLot implements Serializable {
 		this.totalWeight = totalWeight;
 	}
 
-	public Date getDeliveryDate() {
-		return deliveryDate;
+	public Date getDispatchDate() {
+		return dispatchDate;
 	}
 
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
+	public void setDispatchDate(Date dispatchDate) {
+		this.dispatchDate = dispatchDate;
 	}
 
 	public Date getCreateDate() {

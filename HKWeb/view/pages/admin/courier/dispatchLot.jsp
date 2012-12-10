@@ -37,8 +37,9 @@
 	</s:layout-component>
 
 	<s:layout-component name="content">
+		<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
 		<div style="float: left; width:40%">
-			<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
+
 			<s:hidden name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
 			<fieldset class="top_label">
 				<legend> Enter Details</legend>
@@ -101,7 +102,7 @@
 
 				<s:label name="deliveryDate" class="label">Delivery Date</s:label>
 					<s:text class="date_input text" style="width:150px"
-					        formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="dispatchLot.deliveryDate"
+					        formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="dispatchLot.dispatchDate"
 					        id="deliveryDate"/>
 				<span class="aster">*</span>
 
@@ -116,12 +117,12 @@
 
 				<div class="clear"></div>
 					<s:submit name="save" value="Save"/>
-				</s:form>
+
 		</div>
 
 		<c:if test="${dispatch.dispatchLot.id != null}">
 			<div class="reportBox">
-				<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
+				<%--<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">--%>
 					<fieldset class="right_label">
 						<legend>Update Shipment Details In Dispatch Lot</legend>
 						<br>
@@ -145,8 +146,9 @@
 							</li>
 						</ul>
 					</fieldset>
-				</s:form>
+				<%--</s:form>--%>
 			</div>
 		</c:if>
+			</s:form>
 	</s:layout-component>
 </s:layout-render>

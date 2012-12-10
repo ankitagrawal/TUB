@@ -7,6 +7,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
+import com.hk.exception.ExcelBlankFieldException;
 import com.restfb.util.StringUtils;
 import net.sourceforge.stripes.action.*;
 import org.apache.log4j.Logger;
@@ -70,7 +71,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 		if (!doValidations()) {
 			return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
 		}
-		if(dispatchLot.getId() == null) {
+		if (dispatchLot.getId() == null) {
 			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Generated.getDispatchLotStatus());
 		}
 		dispatchLot.setUpdateDate(new Date());
@@ -92,28 +93,18 @@ public class DispatchLotAction extends BasePaginatedAction {
 			valid = false;
 		}
 
-		if (StringUtils.isBlank(dispatchLot.getZone().getName())) {
-			addRedirectAlertMessage(new SimpleMessage("Please Enter the Zone"));
+		if (dispatchLot.getZone() == null) {
+			addRedirectAlertMessage(new SimpleMessage("Please Specify the Zone"));
 			valid = false;
 		}
 
 		if (StringUtils.isBlank(dispatchLot.getSource())) {
-			addRedirectAlertMessage(new SimpleMessage("Please Enter the Source"));
+			addRedirectAlertMessage(new SimpleMessage("Please Specify the Source"));
 			valid = false;
 		}
 
 		if (StringUtils.isBlank(dispatchLot.getDestination())) {
-			addRedirectAlertMessage(new SimpleMessage("Please Enter the Destination"));
-			valid = false;
-		}
-
-		if (dispatchLot.getNoOfShipmentsSent() == null) {
-			addRedirectAlertMessage(new SimpleMessage("Please specify the No. of Shipments Sent"));
-			valid = false;
-		}
-
-		if (dispatchLot.getTotalWeight() == null) {
-			addRedirectAlertMessage(new SimpleMessage("Please specify the Total Weight"));
+			addRedirectAlertMessage(new SimpleMessage("Please Specify the Destination"));
 			valid = false;
 		}
 
@@ -128,9 +119,11 @@ public class DispatchLotAction extends BasePaginatedAction {
 		try {
 			fileBean.save(excelFile);
 			getDispatchLotService().parseExcelAndSaveShipmentDetails(dispatchLot, excelFilePath, "Sheet1");
-
 			addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		} catch (IOException e) {
+			logger.error("Exception while reading excel sheet.", e);
+			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+		} catch (ExcelBlankFieldException e) {
 			logger.error("Exception while reading excel sheet.", e);
 			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
 		}

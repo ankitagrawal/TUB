@@ -10389,21 +10389,16 @@
             <column name="destination" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="no_of_shipments_sent" type="INT">
-                <constraints nullable="false"/>
+            <column name="no_of_shipments_sent" type="INT">
             </column>
-            <column defaultValueNumeric="0" name="no_of_shipments_received" type="INT">
-                <constraints nullable="false"/>
+            <column name="no_of_shipments_received" type="INT">
             </column>
-            <column defaultValueNumeric="0" name="no_of_mother_bags" type="INT">
-                <constraints nullable="false"/>
+            <column name="no_of_mother_bags" type="INT">
             </column>
-            <column defaultValueNumeric="0.00" name="total_weight" type="DECIMAL(12,2)">
-                <constraints nullable="false"/>
+            <column name="total_weight" type="DECIMAL(12,2)">
             </column>
             <column name="remarks" type="TEXT"/>
-            <column name="delivery_date" type="DATETIME">
-                <constraints nullable="false"/>
+            <column name="dispatch_date" type="DATETIME">
             </column>
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>

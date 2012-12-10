@@ -5,6 +5,7 @@ import com.hk.admin.pact.dao.courier.DispatchLotDao;
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.constants.XslConstants;
+import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
 import com.hk.domain.courier.DispatchLotHasShipment;
@@ -87,16 +88,6 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				soGatewayOrderIdInExcel.add(soGatewayOrderId);
 				rowCount++;
 			}
-			//Check if any gatewayOrderId does not exist in the system
-			/*List<String> soGatewayOrderIdInDBList = getAdminShippingOrderDao().getGatewayOrderList(soGatewayOrderIdInExcel);
-			if (soGatewayOrderIdInDBList.size() < soGatewayOrderIdInExcel.size()) {
-				soGatewayOrderIdInExcel.removeAll(soGatewayOrderIdInDBList);
-				String invalidOrders = "";
-				for (String soGatewayOrderId : soGatewayOrderIdInExcel) {
-					invalidOrders += soGatewayOrderId + " ";
-				}
-				throw new ExcelBlankFieldException("Following gatewayOrderIds are Invalid : " + invalidOrders);
-			}*/
 
 			//Check if any gatewayOrderId does not exist in the system
 			List<ShippingOrder> soListInDB = getAdminShippingOrderDao().getShippingOrderByGatewayOrderList(soGatewayOrderIdInExcel);
@@ -146,6 +137,11 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				dispatchLotHasShipmentList.add(dispatchLotHasShipment);
 			}
 			getBaseDao().saveOrUpdate(dispatchLotHasShipmentList);
+
+			//update dispatch Lot
+			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.InTransit.getDispatchLotStatus());
+			dispatchLot.setDispatchDate(new Date());
+			getDispatchLotDao().save(dispatchLot);
 
 		} catch (ExcelBlankFieldException e) {
 			logger.error("Exception @ Row: " + (rowCount + 1) + e.getMessage());
