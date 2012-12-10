@@ -69,7 +69,7 @@
             <th>CALL</th>
         </tr>
 
-        <s:form beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" autocomplete="off">
+        <%--<s:form beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" autocomplete="off">--%>
             <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${paymentAction}"/>
             <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${paymentAction}"/>
             <c:forEach items="${paymentAction.affiliatePaymentDtoList}" var="affiliateDetails" varStatus="ctr">
@@ -121,7 +121,7 @@
             </c:forEach>
             </table>
 
-            <div class="buttons"><s:submit name="save" value="Save"/></div>
-        </s:form>
+            <%--<div class="buttons"><s:submit name="save" value="Save"/></div>--%>
+        <%--</s:form>--%>
     </s:layout-component>
 </s:layout-render>

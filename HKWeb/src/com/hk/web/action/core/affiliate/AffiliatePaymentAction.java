@@ -154,7 +154,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 			checkDeliveryAddress = null;
 		}
 		amountToPay = affiliateManager.getPayableAmount(affiliate);
-		return new ForwardResolution("/pages/affiliate/paymentToAffiliateDetails.jsp");
+			return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
 	}
 
 	public Resolution payToAffiliate() {
