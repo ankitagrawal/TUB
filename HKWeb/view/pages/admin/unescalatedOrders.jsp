@@ -66,6 +66,9 @@
             ${order.id}
           </s:link><br/>
             Payment Mode: ${order.payment.paymentMode.name}<br/>
+              <c:if test="${order.payment.gateway != null}">
+                  <span style="margin-left:30px;">Gateway: ${order.payment.gateway.name}</span>
+              </c:if>
             Name: ${order.user.name}<br/>
             Email: ${order.user.email}<br/>
             <%--<s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">

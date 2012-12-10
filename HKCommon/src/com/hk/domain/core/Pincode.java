@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 /**
@@ -50,6 +51,10 @@ public class Pincode implements java.io.Serializable {
 
     @Column(name = "locality", length = 25)
     private String locality;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "zone_id", nullable = true)
+	private Zone zone;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "default_courier_id", nullable = true)
@@ -110,6 +115,14 @@ public class Pincode implements java.io.Serializable {
     public void setRegion(String region) {
         this.region = region;
     }
+
+	public Zone getZone() {
+		return zone;
+	}
+
+	public void setZone(Zone zone) {
+		this.zone = zone;
+	}
 
 	public boolean equals(Object obj) {
 		if (this == obj) {

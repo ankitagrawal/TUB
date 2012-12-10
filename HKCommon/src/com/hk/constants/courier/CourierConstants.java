@@ -69,6 +69,9 @@ public class CourierConstants {
     public static final String BLUEDART_STATUS_DATE = "StatusDate";
     public static final String BLUEDART_STATUS = "Status";
     public static final String BLUEDART_SHIPMENT_DELIVERED = "Shipment delivered";
+	public static final String BLUEDART_AWB = "WaybillNo";
+	public static final String BLUEDART_REF_NO = "RefNo";
+	public static final String BLUEDART_ERROR_MSG = "Incorrect Waybill number or No Information";
 
 	//Constants for QUANTIUM
 	public static final String QUANTIUM_TRACKING_NO = "TrackingNo";
@@ -112,6 +115,11 @@ public class CourierConstants {
     public static final String HKD_WORKSHEET_AMT = "COD/PRE-PAID AMT";
     public static final String HK_WORKSHEET_INFO = "NAME,SIGN & MOB.NO.";
     public static final String HKD_WORKSHEET_REMARKS = "REMARKS";
+
+	public static final String SOUTH_ZONE = "SOUTH" ;
+	public static final String NORTH_ZONE = "NORTH" ;
+	public static final String EAST_ZONE = "EAST" ;
+	public static final String WEST_ZONE = "WEST" ;
 
 
 }

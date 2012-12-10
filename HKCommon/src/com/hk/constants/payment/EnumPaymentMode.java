@@ -8,31 +8,22 @@ import com.hk.domain.core.PaymentMode;
 
 
 public enum EnumPaymentMode {
-	CCAVENUE_DUMMY(1L, "CCAvenue Dummy", 0.0D),
-	TECHPROCESS_TEST(10L, "Tekprocess Test", 0.0D),
-	TECHPROCESS(15L, "Techprocess", 0.021D),
-	FREE_CHECKOUT(5L, "Free", 0.0D),
-	NEFT(20L, "NEFT", 0.0D),
-	ChequeDeposit(25L, "Cheque Deposit", 0.0D),
-	CashDeposit(30L, "Cash Deposit", 0.0D),
-	COD(40L, "COD", 0.0D),
-	COUNTER_CASH(50L, "Counter Cash", 0.0D),
-	CITRUS_NetBanking_Old(60L, "Citrus NetBanking Old", 0.017D),
-	CITRUS_NetBanking_New(70L, "Citrus NetBanking", 0.017D),
-	CITRUS_CreditDebit(80L, "Citrus Credit Debit", 0.0215),
-	EBS(90L, "EBS Online Payment", 0.02D),
-	ICICI(100L, "Icici Backend ", 0.02D),
-	SUBSCRIPTION_PAYMENT(95L, "Subscription Payment", 0.0D),
-    PAYPAL_CreditDebit(85L, "Paypal Credit Debit", 0.0D);
+    ONLINE_PAYMENT(1000L, "Online Payment"),
+	FREE_CHECKOUT(5L, "Free"),
+	NEFT(20L, "NEFT"),
+	ChequeDeposit(25L, "Cheque Deposit"),
+	CashDeposit(30L, "Cash Deposit"),
+	COD(40L, "COD"),
+	COUNTER_CASH(50L, "Counter Cash"),
+	SUBSCRIPTION_PAYMENT(95L, "Subscription Payment");
 
 	private java.lang.String name;
 	private java.lang.Long id;
 	private Double reconciliationCharges;
 
-	EnumPaymentMode(java.lang.Long id, java.lang.String name, Double reconciliationCharges) {
+	EnumPaymentMode(java.lang.Long id, java.lang.String name) {
 		this.name = name;
 		this.id = id;
-		this.reconciliationCharges = reconciliationCharges;
 	}
 
 	public static EnumPaymentMode getPaymentMode(PaymentMode paymentMode) {
@@ -55,10 +46,6 @@ public enum EnumPaymentMode {
 		return id;
 	}
 
-	public Double getReconciliationCharges() {
-		return reconciliationCharges;
-	}
-
 	public PaymentMode asPaymenMode() {
 		PaymentMode paymentMode = new PaymentMode();
 		paymentMode.setId(id);
@@ -76,34 +63,18 @@ public enum EnumPaymentMode {
 	public static List<EnumPaymentMode> getWorkingPaymentModes() {
 		return Arrays.asList(EnumPaymentMode.CashDeposit,
 				EnumPaymentMode.ChequeDeposit,
-				EnumPaymentMode.CCAVENUE_DUMMY,
+				EnumPaymentMode.ONLINE_PAYMENT,
 				EnumPaymentMode.COD,
 				EnumPaymentMode.COUNTER_CASH,
 				EnumPaymentMode.FREE_CHECKOUT,
 				EnumPaymentMode.NEFT,
-				EnumPaymentMode.TECHPROCESS,
-				EnumPaymentMode.CITRUS_NetBanking_Old,
-				EnumPaymentMode.EBS,
-				EnumPaymentMode.CITRUS_CreditDebit,
-				EnumPaymentMode.ICICI,
-                EnumPaymentMode.SUBSCRIPTION_PAYMENT,
-				EnumPaymentMode.CITRUS_NetBanking_New,
-                EnumPaymentMode.PAYPAL_CreditDebit);
-
+                EnumPaymentMode.SUBSCRIPTION_PAYMENT);
 	}
 
 	public static List<Long> getPrePaidPaymentModes() {
 		return Arrays.asList(
-				EnumPaymentMode.CCAVENUE_DUMMY.getId(),
-				EnumPaymentMode.TECHPROCESS.getId(),
-				EnumPaymentMode.EBS.getId(),
-				EnumPaymentMode.CITRUS_CreditDebit.getId(),
-				EnumPaymentMode.CITRUS_NetBanking_New.getId(),
-				EnumPaymentMode.CITRUS_NetBanking_Old.getId(),
-				EnumPaymentMode.ICICI.getId(),
-				EnumPaymentMode.SUBSCRIPTION_PAYMENT.getId(),
-                EnumPaymentMode.PAYPAL_CreditDebit.getId());
-
+                EnumPaymentMode.SUBSCRIPTION_PAYMENT.getId(),
+                EnumPaymentMode.ONLINE_PAYMENT.getId());
 	}
 
 
