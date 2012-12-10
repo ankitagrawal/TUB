@@ -143,7 +143,11 @@ public class MasterPincodeAction extends BaseAction {
         };
     }
 
-    public Resolution uploadPincodeExcel() throws Exception {
+	public Resolution uploadPincodeExcel() throws Exception {
+		if (fileBean == null) {
+			addRedirectAlertMessage(new SimpleMessage("Choose File to Upload "));
+			return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
+		}
         String excelFilePath = adminUploadsPath + "/pincodeExcelFiles/pincodes" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();

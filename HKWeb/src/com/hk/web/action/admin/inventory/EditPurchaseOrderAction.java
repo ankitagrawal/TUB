@@ -3,6 +3,7 @@ package com.hk.web.action.admin.inventory;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.admin.manager.PurchaseOrderManager;
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.XslParser;
@@ -54,6 +55,8 @@ public class EditPurchaseOrderAction extends BaseAction {
 	XslParser xslParser;
 	@Autowired
 	EmailManager emailManager;
+	@Autowired
+	AdminEmailManager adminEmailManager;
 	@Autowired
 	SkuService skuService;
 
@@ -191,7 +194,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 			if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentForApproval.getId())) {
 				emailManager.sendPOSentForApprovalEmail(purchaseOrder);
 			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
-				emailManager.sendPOApprovedEmail(purchaseOrder);
+				adminEmailManager.sendPOApprovedEmail(purchaseOrder);
 			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentToSupplier.getId())) {
 				purchaseOrder.setPoPlaceDate(new Date());
 				Calendar calendar = Calendar.getInstance();

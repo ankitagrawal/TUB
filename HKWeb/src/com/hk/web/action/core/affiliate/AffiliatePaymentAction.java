@@ -240,7 +240,14 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	}
 
 	public Set<String> getParamSet() {
-		return null;
+		HashSet<String> params = new HashSet<String>();
+		params.add("affiliateType");
+		params.add("affiliateMode");
+		params.add("affiliateStatus");
+		params.add("websiteName");
+		params.add("email");
+		params.add("name");
+		return params;
 	}
 
 	public int getPerPageDefault() {
@@ -376,7 +383,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	}
 
 	public Role getRole() {
-		return role;
+		return role;        
 	}
 
 	public void setRole(Role role) {

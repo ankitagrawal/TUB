@@ -1,4 +1,4 @@
-[${order.store.prefix}] [${basketCategory}] Order ID ${order.gatewayOrderId} [${order.payment.paymentMode.name} - ${pricingDto.grandTotalPayable} - ${order.payment.paymentStatus.name}] [<#if order.offerInstance??><#if order.offerInstance.coupon??>${order.offerInstance.coupon.code}</#if></#if>]
+[${order.store.prefix}] [${basketCategory}] Order ID ${order.gatewayOrderId} [${order.payment.paymentMode.name} <#if order.payment.gateway??>${order.payment.gateway.name}</#if>- <#if order.payment.issuer??>${order.payment.issuer.name}</#if> ${pricingDto.grandTotalPayable} - ${order.payment.paymentStatus.name}] [<#if order.offerInstance??><#if order.offerInstance.coupon??>${order.offerInstance.coupon.code}</#if></#if>]
 <html>
 <head>
     <title>Order Confirmation for Order ID ${order.gatewayOrderId}</title>

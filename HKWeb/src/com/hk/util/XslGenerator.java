@@ -505,8 +505,9 @@ public class XslGenerator {
 			setCellValue(row, 3, pincode.getState().getName());
 			setCellValue(row, 4, pincode.getLocality());
 			setCellValue(row, 5, pincode.getDefaultCourier() != null ? pincode.getDefaultCourier().getId() : null);
-			setCellValue(row, 6, pincode.getZone());
-
+			if(pincode.getZone() != null){
+				setCellValue(row, 6, pincode.getZone().getName());
+			}
 			initialRowNo++;
 		}
 
