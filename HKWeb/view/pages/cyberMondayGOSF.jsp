@@ -7,7 +7,7 @@
   pageContext.setAttribute("isSecure", isSecure);
 %>
 <s:layout-render name="/layouts/categoryBlankLanding.jsp"
-                 pageTitle="Cyber Monday Great Online Shopping Festival">
+                 pageTitle="Great Online Shopping Festival">
 
 <s:layout-component name="htmlHead">
 

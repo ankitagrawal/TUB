@@ -118,6 +118,13 @@
                                     value="${hk:getApplicableOfferPrice(product.minimumMRPProducVariant) + hk:getPostpaidAmount(product.minimumMRPProducVariant)}"
                                     maxFractionDigits="0"/>
                             </p>
+                                <h3>
+                            <s:link href="${product.productURL}" title="${product.name}">
+                                ${product.name}
+                            </s:link>
+
+                        </h3>
+
                                <p class="description"> ${productDesc} </p>
 
                                                             <s:link href="${product.productURL}" class="buynow">BUY NOW</s:link>
@@ -132,6 +139,13 @@
                                     value="${hk:getApplicableOfferPrice(product.minimumMRPProducVariant) + hk:getPostpaidAmount(product.minimumMRPProducVariant)}"
                                     maxFractionDigits="0"/>
                                   </p>
+
+                                <h3>
+                            <s:link href="${product.productURL}" title="${product.name}">
+                                ${product.name}
+                            </s:link>
+
+                        </h3>
                                     <p class="description"> ${productDesc} </p>
 
                                                             <s:link href="${product.productURL}" class="buynow">BUY NOW</s:link>
