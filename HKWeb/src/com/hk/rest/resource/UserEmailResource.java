@@ -1,7 +1,10 @@
 package com.hk.rest.resource;
 
 import com.hk.admin.pact.service.email.AdminEmailService;
+import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
+import com.hk.manager.LinkManager;
+import com.hk.pact.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +34,10 @@ public class UserEmailResource {
 
     @Autowired
     AdminEmailService adminEmailService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    LinkManager linkManager;
 
     @GET
     @Path("/store/{storeId}/category/{category}")
@@ -38,13 +46,49 @@ public class UserEmailResource {
 
         Response response = null;
         try{
-            List<String> emailRecepients = adminEmailService.getMailingListByCategory(category, storeId);
-            final GenericEntity<List<String>> entity = new GenericEntity<List<String>>(emailRecepients){};
+            List<User> emailRecepients = adminEmailService.getMailingListByCategory(category, storeId);
+            List<UserDto> categoryUsers = new ArrayList<UserDto>();
+            for (User user : emailRecepients){
+                UserDto userDto = new UserDto();
+                userDto.email = user.getEmail();
+                userDto.unsubscribeLink = user.getUnsubscribeToken();
+                categoryUsers.add(userDto);
+            }
+            final GenericEntity<List<UserDto>> entity = new GenericEntity<List<UserDto>>(categoryUsers){};
             response = Response.status(Response.Status.OK).entity(entity).build();
         }catch (Exception ex){
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to get User Details ", ex);
         }
         return response;
+    }
+
+    @GET
+    @Path("/store/{storeId}/email/{email}")
+    @Produces("application/json")
+    public Response getUserInfoByEmail(@PathParam("category")String category, @PathParam("storeId")int storeId, @PathParam("email")String email){
+
+        Response response = null;
+        try{
+            User user = null;
+            if (!userService.findByEmail(email).isEmpty()){
+                user = userService.findByEmail(email).get(0);
+            }
+            if (user != null){
+                UserDto userDto= new UserDto();
+                userDto.email = user.getEmail();
+                userDto.unsubscribeLink = linkManager.getEmailUnsubscribeLink(user);
+                response = Response.status(Response.Status.OK).entity(userDto).build();
+            }
+        }catch (Exception ex){
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            logger.error("Unable to get User Details ", ex);
+        }
+        return response;
+    }
+
+    class UserDto{
+        public String email;
+        public String unsubscribeLink;
     }
 }

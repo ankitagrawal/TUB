@@ -108,6 +108,11 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
+    public String getEmailUnsubscribeLink(User user) {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/email/UnsubscribeEmail.action").addParameter("unsubscribeToken", user.getUnsubscribeToken());
+        return getUrlFromResolution(redirectResolution);
+    }
+
     public String getViewTicketUrl(Ticket ticket) {
         RedirectResolution redirectResolution = new RedirectResolution("/admin/ticket/ViewAndEditTicket.action").addParameter("ticket", ticket.getId());
         return getUrlFromResolution(redirectResolution);

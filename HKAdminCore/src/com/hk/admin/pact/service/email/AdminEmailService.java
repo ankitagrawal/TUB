@@ -24,7 +24,7 @@ public interface AdminEmailService {
     public Long getAllMailingListCount(EmailCampaign emailCampaign, List<Role> roles);
 
     public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult);
-    public List<String> getMailingListByCategory(String category, int storeId);
+    public List<User> getMailingListByCategory(String category, int storeId);
 
     public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category);
 

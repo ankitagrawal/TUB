@@ -152,8 +152,8 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         return userIdsByCategory;
     }
 
-    public List<String> getMailingListByCategory(String category, int storeId) {
-        String query = "select distinct u.email from OrderCategory oc join oc.order.user u join u.roles r "
+    public List<User> getMailingListByCategory(String category, int storeId) {
+        String query = "select distinct u from OrderCategory oc join oc.order.user u join u.roles r "
                  + "where u.subscribed = true and oc.category.name = (:category) " + "and r in (:roleList)"
                 + " and u.store.id = (:storeIdList) ";
 
@@ -161,7 +161,7 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_USER).getRole());
         applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_UNVERIFIED).getRole());
 
-        List<String> userIdsByCategory = getSession().createQuery(query)
+        List<User> userIdsByCategory = getSession().createQuery(query)
                 .setParameter("category", category)
                 .setParameterList("roleList",applicableRoleList)
                 .setInteger("storeIdList", storeId).list();
