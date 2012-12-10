@@ -88,7 +88,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 			valid = false;
 		}
 
-		if (StringUtils.isBlank(dispatchLot.getZone())) {
+		if (StringUtils.isBlank(dispatchLot.getZone().getName())) {
 			addRedirectAlertMessage(new SimpleMessage("Please Enter the Zone"));
 			valid = false;
 		}
@@ -117,15 +117,13 @@ public class DispatchLotAction extends BasePaginatedAction {
 	}
 
 	public Resolution parse() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String excelFilePath = adminUploadsPath + "/dispatchLot/DispatchLot_" + sdf.format(new Date()) + ".xls";
 		File excelFile = new File(excelFilePath);
 		excelFile.getParentFile().mkdirs();
 		try {
-		fileBean.save(excelFile);
-
-
-
+			fileBean.save(excelFile);
+			getDispatchLotService().parseExcelAndSaveShipmentDetails(dispatchLot, excelFilePath, "Sheet1");
 
 			addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		} catch (IOException e) {

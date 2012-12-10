@@ -1,7 +1,9 @@
 package com.hk.domain.courier;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -11,6 +13,8 @@ import java.io.Serializable;
  * Time: 5:35 PM
  * To change this template use File | Settings | File Templates.
  */
+@Entity
+@Table(name = "dispatch_lot_status")
 public class DispatchLotStatus implements Serializable {
 
 	@Id

@@ -3,6 +3,7 @@ package com.hk.admin.pact.service.courier;
 import com.akube.framework.dao.Page;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
+import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.dao.BaseDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,5 +26,7 @@ public interface DispatchLotService {
 
 	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
 		                              String destination, Date deliveryStartDate, Date deliveryEndDate, int pageNo, int perPage);
+
+	public void parseExcelAndSaveShipmentDetails(DispatchLot dispatchLot, String excelFilePath, String sheetName);
 
 }

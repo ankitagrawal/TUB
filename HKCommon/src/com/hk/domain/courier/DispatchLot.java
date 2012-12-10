@@ -29,8 +29,9 @@ public class DispatchLot implements Serializable {
 	@JoinColumn(name = "courier_id", nullable = false)
 	private Courier courier;
 
-	@Column(name = "zone", nullable = false)
-	private String zone;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "zone_id", nullable = false)
+	private Zone zone;
 
 	@Column(name = "source", nullable = false)
 	private String source;
@@ -85,11 +86,11 @@ public class DispatchLot implements Serializable {
 		this.courier = courier;
 	}
 
-	public String getZone() {
+	public Zone getZone() {
 		return zone;
 	}
 
-	public void setZone(String zone) {
+	public void setZone(Zone zone) {
 		this.zone = zone;
 	}
 

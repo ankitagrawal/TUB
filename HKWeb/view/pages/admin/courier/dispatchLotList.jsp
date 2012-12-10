@@ -20,7 +20,7 @@
 			<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
 				<label>Dispatch Lot Id:</label><s:text name="dispatchLot"/>
 				<label>Docket Number:</label><s:text name="docketNumber"/>
-				<label>Zone:</label><s:text name="zone"/>
+				<%--<label>Zone:</label><s:text name="zone"/>--%>
 				<label>Source:</label><s:text name="source"/>
 				<label>Destination:</label><s:text name="destination"/>
 				<label>Courier:</label>
@@ -49,7 +49,7 @@
 				<th>Create Date</th>
 				<th>Docket Number</th>
 				<th>Courier</th>
-				<th>Zone</th>
+				<%--<th>Zone</th>--%>
 				<th>Source</th>
 				<th>Destination</th>
 				<th>Delivery Date</th>
@@ -62,7 +62,7 @@
 					<td>${dispatchLot.createDate}</td>
 					<td>${dispatchLot.docketNumber}</td>
 					<td>${dispatchLot.courier.name}</td>
-					<td>${dispatchLot.zone}</td>
+					<%--<td>${dispatchLot.zone}</td>--%>
 					<td>${dispatchLot.source}</td>
 					<td>${dispatchLot.destination}</td>
 					<td>${dispatchLot.deliveryDate}</td>

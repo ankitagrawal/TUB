@@ -45,42 +45,55 @@
 				<s:label name="docketNumber" class="label">Docket Number</s:label>
 					<s:text name="dispatchLot.docketNumber" style="width:200px" class="text"/>
 				<span class="aster">*</span>
+
 				<div class="clear"></div>
 
 				<s:label name="courier" class="label">Courier</s:label>
 				<s:select name="dispatchLot.courier" class="text">
 				<s:option value="">-All-</s:option>
-					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
+					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
+					                           value="id"
 					                           label="name"/>
 				</s:select>
 				<span class="aster">*</span>
+
 				<div class="clear"></div>
 
-				<s:label name="zone" class="label">Zone</s:label>
-					<s:text name="dispatchLot.zone" style="width:200px" class="text"/>
+				<%--<s:label name="zone" class="label">Zone</s:label>
+				<s:select name="dispatchLot.zone">
+				<s:option value="null">Select</s:option>
+					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
+					                           value="id"
+					                           label="name"/>
+				</s:select>
+
 				<span class="aster">*</span>
-				<div class="clear"></div>
 
+				<div class="clear"></div>
+--%>
 				<s:label name="source" class="label">Source</s:label>
 					<s:text name="dispatchLot.source" style="width:200px" class="text"/>
 				<span class="aster">*</span>
+
 				<div class="clear"></div>
 
 
 				<s:label name="destination" class="label">Destination</s:label>
 					<s:text name="dispatchLot.destination" style="width:200px" class="text"/>
 				<span class="aster">*</span>
+
 				<div class="clear"></div>
 
 				<s:label name="noOfShipmentsSent" class="label">No. of Shipments Sent</s:label>
 					<s:text name="dispatchLot.noOfShipmentsSent" style="width:200px" class="text"/>
 				<span class="aster">*</span>
+
 				<div class="clear"></div>
 
-				<%--<s:label name="noOfShipmentsSent" class="label">No. of Shipments Received</s:label>
-					<s:text name="dispatchLot.noOfShipmentsReceived" style="width:200px" class="text"/>
+					<%--<s:label name="noOfShipmentsSent" class="label">No. of Shipments Received</s:label>
+										<s:text name="dispatchLot.noOfShipmentsReceived" style="width:200px" class="text"/>
 
-				<div class="clear"></div>--%>
+									<div class="clear"></div>--%>
 
 				<s:label name="noOfMotherBags" class="label">No. of Mother Bags</s:label>
 					<s:text name="dispatchLot.noOfMotherBags" style="width:200px" class="text"/>
@@ -90,6 +103,7 @@
 				<s:label name="totalWeight" class="label">Total Weight</s:label>
 					<s:text name="dispatchLot.totalWeight" style="width:200px" class="text"/>
 				<span class="aster">*</span>
+
 				<div class="clear"></div>
 
 				<s:label name="deliveryDate" class="label">Delivery Date</s:label>
@@ -99,16 +113,17 @@
 
 				<div class="clear"></div>
 					<s:submit name="save" value="Save"/>
+				</s:form>
 			</div>
 
 			<c:if test="${dispatch.dispatchLot.id != null}">
-			<div class="reportBox">
-						<s:form beanclass="com.hk.web.action.report.GenerateReconcilationReportAction" >
-							<fieldset class="right_label">
-								<legend>Update Shipment Details In Dispatch Lot</legend>
-								<br>
-								<span class="large">(AWB NUMBER) as excel header</span>
-								<ul>
+				<div class="reportBox">
+					<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
+						<fieldset class="right_label">
+							<legend>Update Shipment Details In Dispatch Lot</legend>
+							<br>
+							<span class="large">(AWB NUMBER) as excel header</span>
+							<ul>
 									<%--<li>
 										<label>Payment Mode:</label>
 										<s:select name="paymentProcess" class="uploadPaymentMode" style="width: 100">
@@ -117,19 +132,18 @@
 											<s:option value="techprocess">Prepaid</s:option>
 										</s:select>
 									</li>--%>
-									<li>
-										<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
+								<li>
+									<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
 
-									</li>
-									<li>
-										<s:submit name="parse" value="Upload Shipment Details" class="requiredFieldValidator"/>
-									</li>
-								</ul>
-							</fieldset>
-						</s:form>
-					</div>
+								</li>
+								<li>
+									<s:submit name="parse" value="Upload Shipment Details"
+									          class="requiredFieldValidator"/>
+								</li>
+							</ul>
+						</fieldset>
+					</s:form>
+				</div>
 			</c:if>
-
-		</s:form>
 	</s:layout-component>
 </s:layout-render>

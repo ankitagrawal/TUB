@@ -7,7 +7,11 @@ import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.constants.XslConstants;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
+import com.hk.domain.courier.DispatchLotHasShipment;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.exception.ExcelBlankFieldException;
+import com.hk.pact.dao.BaseDao;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import org.apache.commons.lang.StringUtils;
@@ -38,6 +42,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 	private DispatchLotDao dispatchLotDao;
 	@Autowired
 	private AdminShippingOrderDao adminShippingOrderDao;
+	@Autowired
+	private BaseDao baseDao;
 
 	/*public DispatchLot saveDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
 		                                   String destination, Long noOfShipmentsSent, Long noOfShipmentsReceived, Long noOfMotherBags,
@@ -65,7 +71,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				deliveryStartDate, deliveryEndDate, pageNo, perPage);
 	}
 
-	public void parseExcelAndSaveShipmentDetails(String excelFilePath, String sheetName) throws ExcelBlankFieldException {
+	public void parseExcelAndSaveShipmentDetails(DispatchLot dispatchLot, String excelFilePath, String sheetName) throws ExcelBlankFieldException {
 		ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
 		Iterator<HKRow> rowIterator = parser.parse();
 		int rowCount = 1;
@@ -82,8 +88,23 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				rowCount++;
 			}
 			//Check if any gatewayOrderId does not exist in the system
-			List<String> soGatewayOrderIdInDBList = getAdminShippingOrderDao().getGatewayOrderList(soGatewayOrderIdInExcel);
+			/*List<String> soGatewayOrderIdInDBList = getAdminShippingOrderDao().getGatewayOrderList(soGatewayOrderIdInExcel);
 			if (soGatewayOrderIdInDBList.size() < soGatewayOrderIdInExcel.size()) {
+				soGatewayOrderIdInExcel.removeAll(soGatewayOrderIdInDBList);
+				String invalidOrders = "";
+				for (String soGatewayOrderId : soGatewayOrderIdInExcel) {
+					invalidOrders += soGatewayOrderId + " ";
+				}
+				throw new ExcelBlankFieldException("Following gatewayOrderIds are Invalid : " + invalidOrders);
+			}*/
+
+			//Check if any gatewayOrderId does not exist in the system
+			List<ShippingOrder> soListInDB = getAdminShippingOrderDao().getShippingOrderByGatewayOrderList(soGatewayOrderIdInExcel);
+			if (soListInDB.size() < soGatewayOrderIdInExcel.size()) {
+				List<String> soGatewayOrderIdInDBList = new ArrayList<String>(0);
+				for (ShippingOrder shippingOrder : soListInDB) {
+					soGatewayOrderIdInDBList.add(shippingOrder.getGatewayOrderId());
+				}
 				soGatewayOrderIdInExcel.removeAll(soGatewayOrderIdInDBList);
 				String invalidOrders = "";
 				for (String soGatewayOrderId : soGatewayOrderIdInExcel) {
@@ -93,7 +114,29 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			}
 
 			//Check if zone is not the Selected Zone of the Dispatch Lot
+			List<Shipment> shipmentList = new ArrayList<Shipment>(0);
+			String invalidOrders = "";
+			boolean differentZone = false;
+			for (ShippingOrder shippingOrder : soListInDB) {
+				shipmentList.add(shippingOrder.getShipment());
+				if(!shippingOrder.getShipment().getZone().equals(dispatchLot.getZone())) {
+					differentZone = true;
+					invalidOrders += shippingOrder.getGatewayOrderId() + " ";
+				}
+			}
+			if(differentZone) {
+				throw new ExcelBlankFieldException("Following gatewayOrderIds belong to a different zone : " + invalidOrders);
+			}
 
+			//Now save the shipments in DispatchLotHasShipment Table.(Bulk update)
+			List<DispatchLotHasShipment> dispatchLotHasShipmentList = new ArrayList<DispatchLotHasShipment>(0);
+			for(Shipment shipment : shipmentList) {
+				DispatchLotHasShipment dispatchLotHasShipment = new DispatchLotHasShipment();
+				dispatchLotHasShipment.setDispatchLot(dispatchLot);
+				dispatchLotHasShipment.setShipment(shipment);
+				dispatchLotHasShipmentList.add(dispatchLotHasShipment);
+			}
+			getBaseDao().saveOrUpdate(dispatchLotHasShipmentList);
 
 		} catch (ExcelBlankFieldException e) {
 			logger.error("Exception @ Row: " + (rowCount + 1) + e.getMessage());
@@ -120,5 +163,13 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 
 	public void setAdminShippingOrderDao(AdminShippingOrderDao adminShippingOrderDao) {
 		this.adminShippingOrderDao = adminShippingOrderDao;
+	}
+
+	public BaseDao getBaseDao() {
+		return baseDao;
+	}
+
+	public void setBaseDao(BaseDao baseDao) {
+		this.baseDao = baseDao;
 	}
 }
