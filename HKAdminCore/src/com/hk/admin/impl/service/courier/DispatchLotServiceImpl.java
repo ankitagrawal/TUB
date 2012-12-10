@@ -115,17 +115,26 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 
 			//Check if zone is not the Selected Zone of the Dispatch Lot
 			List<Shipment> shipmentList = new ArrayList<Shipment>(0);
-			String invalidOrders = "";
+			String invalidOrdersByZone = "";
 			boolean differentZone = false;
+			boolean shipmentExists = true;
+			String invalidOrdersByShipment = "";
+
 			for (ShippingOrder shippingOrder : soListInDB) {
-				shipmentList.add(shippingOrder.getShipment());
-				if(!shippingOrder.getShipment().getZone().equals(dispatchLot.getZone())) {
+				if(shippingOrder.getShipment() == null) {
+					shipmentExists = false;
+					invalidOrdersByShipment += shippingOrder.getGatewayOrderId();
+				} else if(!dispatchLot.getZone().equals(shippingOrder.getShipment().getZone())) {
 					differentZone = true;
-					invalidOrders += shippingOrder.getGatewayOrderId() + " ";
+					invalidOrdersByZone += shippingOrder.getGatewayOrderId() + " ";
 				}
+				shipmentList.add(shippingOrder.getShipment());
+			}
+			if(!shipmentExists) {
+				throw new ExcelBlankFieldException("Shipments for the following gatewayOrderIds does not exist: " + invalidOrdersByShipment);
 			}
 			if(differentZone) {
-				throw new ExcelBlankFieldException("Following gatewayOrderIds belong to a different zone : " + invalidOrders);
+				throw new ExcelBlankFieldException("Following gatewayOrderIds belong to a different zone : " + invalidOrdersByZone);
 			}
 
 			//Now save the shipments in DispatchLotHasShipment Table.(Bulk update)

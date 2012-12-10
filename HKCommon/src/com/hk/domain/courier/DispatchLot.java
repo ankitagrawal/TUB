@@ -42,14 +42,21 @@ public class DispatchLot implements Serializable {
 	@Column(name = "no_of_shipments_sent", nullable = false)
 	private Long noOfShipmentsSent = 0L;
 
-	@Column(name = "no_of_shipments_received")
-	private Long noOfShipmentsReceived;
+	@Column(name = "no_of_shipments_received", nullable = false)
+	private Long noOfShipmentsReceived = 0L;
 
-	@Column(name = "no_of_mother_bags")
-	private Long noOfMotherBags;
+	@Column(name = "no_of_mother_bags", nullable = false)
+	private Long noOfMotherBags = 0L;
 
 	@Column(name = "total_weight", nullable = false)
 	private Double totalWeight = 0D;
+
+	@Column(name = "remarks")
+	private String remarks;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dispatch_lot_status_id", nullable = false)
+	private DispatchLotStatus dispatchLotStatus;
 
 	@Column(name = "delivery_date")
 	private Date deliveryDate;
@@ -164,5 +171,21 @@ public class DispatchLot implements Serializable {
 
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public DispatchLotStatus getDispatchLotStatus() {
+		return dispatchLotStatus;
+	}
+
+	public void setDispatchLotStatus(DispatchLotStatus dispatchLotStatus) {
+		this.dispatchLotStatus = dispatchLotStatus;
 	}
 }

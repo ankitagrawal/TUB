@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.constants.core.Keys;
+import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
 import com.restfb.util.StringUtils;
@@ -68,6 +69,9 @@ public class DispatchLotAction extends BasePaginatedAction {
 		}
 		if (!doValidations()) {
 			return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+		}
+		if(dispatchLot.getId() == null) {
+			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Generated.getDispatchLotStatus());
 		}
 		dispatchLot.setUpdateDate(new Date());
 		dispatchLot = getDispatchLotService().save(dispatchLot);

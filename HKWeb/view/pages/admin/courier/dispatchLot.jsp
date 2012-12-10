@@ -38,7 +38,7 @@
 
 	<s:layout-component name="content">
 		<div style="float: left; width:40%">
-		<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
+			<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
 			<s:hidden name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
 			<fieldset class="top_label">
 				<legend> Enter Details</legend>
@@ -59,8 +59,8 @@
 
 				<div class="clear"></div>
 
-				<%--<s:label name="zone" class="label">Zone</s:label>
-				<s:select name="dispatchLot.zone">
+				<s:label name="zone" class="label">Zone</s:label>
+				<s:select name="dispatchLot.zone" class="text">
 				<s:option value="null">Select</s:option>
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
 					                           value="id"
@@ -70,7 +70,6 @@
 				<span class="aster">*</span>
 
 				<div class="clear"></div>
---%>
 				<s:label name="source" class="label">Source</s:label>
 					<s:text name="dispatchLot.source" style="width:200px" class="text"/>
 				<span class="aster">*</span>
@@ -80,12 +79,6 @@
 
 				<s:label name="destination" class="label">Destination</s:label>
 					<s:text name="dispatchLot.destination" style="width:200px" class="text"/>
-				<span class="aster">*</span>
-
-				<div class="clear"></div>
-
-				<s:label name="noOfShipmentsSent" class="label">No. of Shipments Sent</s:label>
-					<s:text name="dispatchLot.noOfShipmentsSent" style="width:200px" class="text"/>
 				<span class="aster">*</span>
 
 				<div class="clear"></div>
@@ -110,40 +103,50 @@
 					<s:text class="date_input text" style="width:150px"
 					        formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="dispatchLot.deliveryDate"
 					        id="deliveryDate"/>
+				<span class="aster">*</span>
+
+				<div class="clear"></div>
+
+				<s:label name="remarks" class="label">Remarks</s:label>
+					<s:textarea name="dispatchLot.remarks" class="text" rows="2"/>
+
+				<div class="clear"></div>
+				<s:label name="noOfShipmentsSent" class="label">No. of Shipments Sent</s:label>
+					<s:text name="dispatchLot.noOfShipmentsSent" style="width:200px" class="text" readonly="readonly"/>
 
 				<div class="clear"></div>
 					<s:submit name="save" value="Save"/>
 				</s:form>
+		</div>
+
+		<c:if test="${dispatch.dispatchLot.id != null}">
+			<div class="reportBox">
+				<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
+					<fieldset class="right_label">
+						<legend>Update Shipment Details In Dispatch Lot</legend>
+						<br>
+						<span class="large">(AWB NUMBER) as excel header</span>
+						<ul>
+								<%--<li>
+									   <label>Payment Mode:</label>
+									   <s:select name="paymentProcess" class="uploadPaymentMode" style="width: 100">
+										   <s:option value="all">-Select-</s:option>
+										   <s:option value="cod">COD</s:option>
+										   <s:option value="techprocess">Prepaid</s:option>
+									   </s:select>
+								   </li>--%>
+							<li>
+								<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
+
+							</li>
+							<li>
+								<s:submit name="parse" value="Upload Shipment Details"
+								          class="requiredFieldValidator"/>
+							</li>
+						</ul>
+					</fieldset>
+				</s:form>
 			</div>
-
-			<c:if test="${dispatch.dispatchLot.id != null}">
-				<div class="reportBox">
-					<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
-						<fieldset class="right_label">
-							<legend>Update Shipment Details In Dispatch Lot</legend>
-							<br>
-							<span class="large">(AWB NUMBER) as excel header</span>
-							<ul>
-									<%--<li>
-										<label>Payment Mode:</label>
-										<s:select name="paymentProcess" class="uploadPaymentMode" style="width: 100">
-											<s:option value="all">-Select-</s:option>
-											<s:option value="cod">COD</s:option>
-											<s:option value="techprocess">Prepaid</s:option>
-										</s:select>
-									</li>--%>
-								<li>
-									<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
-
-								</li>
-								<li>
-									<s:submit name="parse" value="Upload Shipment Details"
-									          class="requiredFieldValidator"/>
-								</li>
-							</ul>
-						</fieldset>
-					</s:form>
-				</div>
-			</c:if>
+		</c:if>
 	</s:layout-component>
 </s:layout-render>
