@@ -116,16 +116,16 @@
           <s:form  beanclass="com.hk.web.action.admin.shipment.CreateDropShipmentAction">
 
             <s:hidden name="shippingOrder" value="${shipmentQueueBean.shippingOrder}"/>
-	         <label>Picker:</label><s:select name="shipment.picker">
-		        <c:forEach items="<%=EnumPicker.getAll()%>" var="pType">
-			        <s:option value="${pType.name}">${pType.name}</s:option>
-		        </c:forEach>
-	        </s:select>
-	          <label>Packer:</label><s:select name="shipment.packer">
-		        <c:forEach items="<%=EnumPacker.getAll()%>" var="pType">
-			        <s:option value="${pType.name}">${pType.name}</s:option>
-		        </c:forEach>
-	        </s:select>
+	         <%--<label>Picker:</label><s:select name="shipment.picker">--%>
+		        <%--<c:forEach items="<%=EnumPicker.getAll()%>" var="pType">--%>
+			        <%--<s:option value="${pType.name}">${pType.name}</s:option>--%>
+		        <%--</c:forEach>--%>
+	        <%--</s:select>--%>
+	          <%--<label>Packer:</label><s:select name="shipment.packer">--%>
+		        <%--<c:forEach items="<%=EnumPacker.getAll()%>" var="pType">--%>
+			        <%--<s:option value="${pType.name}">${pType.name}</s:option>--%>
+		        <%--</c:forEach>--%>
+	        <%--</s:select>--%>
             <label>Box Size:</label>
             <s:select name="shipment.boxSize">
               <c:forEach var="box" items="${boxSizeList}">
@@ -163,7 +163,7 @@
         <%--</c:choose>--%>
 
       <%--</c:if>--%>
-     <%--<s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"--%>
-                     <%--shippingOrders="${shipmentQueueBean.shippingOrderList}"/>--%>
+     <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
+                     shippingOrders="${shipmentQueueBean.shippingOrderList}"/>
 </s:layout-component>
 </s:layout-render>

@@ -12,6 +12,7 @@ import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
@@ -25,6 +26,9 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
+
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -51,15 +55,23 @@ public class CreateDropShipmentAction extends BaseAction {
     ShippingOrderDao shippingOrderDao;
     @Autowired
     ShippingOrderService shippingOrderService;
+    @Autowired
+    AdminShippingOrderService adminShippingOrderService;
 
+   List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
     Double boxWeight;
 
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/createDropShipment.jsp");
+        if(shippingOrder == null){
+          addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("You have not selected the Drop shipped order"));
+           return new RedirectResolution(DropShippingAwaitingQueueAction.class);
+        } else {
+               shippingOrderList.add(shippingOrder);
+               return new ForwardResolution("/pages/admin/createDropShipment.jsp");
+        }
     }
-
 
     public Resolution saveDropShipmentDetails() {
         Shipment shipment = new Shipment();
@@ -117,8 +129,8 @@ public class CreateDropShipmentAction extends BaseAction {
             addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage(" OPERATION FAILED *********You have not entered all the mandatory details"));
             return new RedirectResolution(CreateDropShipmentAction.class);
         }
-        addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipmet has been created for your order"));
-        return new RedirectResolution(CreateDropShipmentAction.class);
+        addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipmet has been created for your order"));         
+            return new RedirectResolution(CreateDropShipmentAction.class);
     }
 
 
@@ -179,5 +191,13 @@ public class CreateDropShipmentAction extends BaseAction {
 
     public void setAwbService(AwbService awbService) {
         this.awbService = awbService;
+    }
+
+    public List<ShippingOrder> getShippingOrderList() {
+        return shippingOrderList;
+    }
+
+    public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
+        this.shippingOrderList = shippingOrderList;
     }
 }

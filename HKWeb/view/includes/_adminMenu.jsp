@@ -18,8 +18,8 @@
       <c:otherwise>
     <li class='lvl1 menuItem' title="">
       <s:link class="invert" beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Queue</s:link></li>
-     <li class='lvl1 menuItem' title="">
-     <s:link class="invert" beanclass="com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction">Drop Shipping Queue</s:link></li>     
+     <%--<li class='lvl1 menuItem' title="">--%>
+     <%--<s:link class="invert" beanclass="com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction">Drop Shipping Queue</s:link></li>     --%>
     <li class='lvl1 menuItem' title="">
       <s:link class="invert" beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction">Print Pick Orders</s:link></li>
     <li class='lvl1 menuItem' title="">
