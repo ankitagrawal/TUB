@@ -6,6 +6,7 @@
   <head>
     <title>${pageTitle} | HealthKart.com</title>
     <link href="<hk:vhostCss/>/css/fb510.css" rel="stylesheet" type="text/css">
+    <s:layout-component name="analytics"><jsp:include page="/includes/_analytics.jsp"/></s:layout-component>
     <script type="text/javascript" src="${pageContext.request.contextPath}/otherScripts/jQuery-1.4.2.js"></script>
     <s:layout-component name="htmlHead"/>
   </head>
@@ -50,7 +51,6 @@
       </s:layout-component>
     </div>
   </div>
-  <s:layout-component name="analytics"><jsp:include page="/includes/_analytics.jsp"/></s:layout-component>
   </body>
   </html>
 </s:layout-definition>

@@ -20,6 +20,9 @@
     </title>
     <link href="<hk:vhostCss/>/css/960.24.css" rel="stylesheet" type="text/css"/>
     <link href="<hk:vhostCss/>/css/new.dev.css" rel="stylesheet" type="text/css"/>
+    <s:layout-component name="analytics">
+      <jsp:include page="/includes/_analytics.jsp"/>
+    </s:layout-component>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/otherScripts/jquery.glow.js"></script>
@@ -70,10 +73,6 @@
 
     <s:layout-render name="/includes/_footer.jsp"/>
   </div>
-
-  <s:layout-component name="analytics">
-    <jsp:include page="/includes/_analytics.jsp"/>
-  </s:layout-component>
 
   <s:layout-render name="/layouts/embed/remarketing.jsp" labels="${allCategories}"/>
 

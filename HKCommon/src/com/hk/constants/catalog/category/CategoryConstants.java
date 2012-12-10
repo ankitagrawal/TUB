@@ -15,6 +15,7 @@ public class CategoryConstants {
   public static final String BEAUTY = "beauty";
   public static final String DIABETES = "diabetes";
   public static final String EYE = "eye";
+  public static final String HOME = "home";
   public static final String HOME_DEVICES = "home-devices";
   public static final String NUTRITION = "nutrition";
   public static final String PERSONAL_CARE = "personal-care";

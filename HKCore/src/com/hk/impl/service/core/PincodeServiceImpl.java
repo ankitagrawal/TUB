@@ -2,6 +2,7 @@ package com.hk.impl.service.core;
 
 import java.util.List;
 
+import com.hk.domain.courier.Zone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,11 @@ public class PincodeServiceImpl implements PincodeService {
           return pincodeDefaultCourier;
       }
 
-    public PincodeDao getPincodeDao() {
+	public Zone getZoneByName(String zoneName) {
+		return getPincodeDao().getZoneByName(zoneName);		
+	}
+
+	public PincodeDao getPincodeDao() {
         return pincodeDao;
     }
 

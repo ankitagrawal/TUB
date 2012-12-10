@@ -78,26 +78,14 @@
                 <div class='right_content'>
                     <div id="tabs_content1" class="tab_content"><s:form
                             beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction" method="post">
-                        <s:hidden name="order" value="${order.id}"/>
-                        <s:hidden name="bankId" value="70"/>
-                        <p><label><s:radio name="paymentMode" value="<%=defaultGateway%>"/>VISA
-                            &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/visa.jpg" height="30px">
-                        </p>
+                        <s:hidden name="order" value="${order.id}" />
+                        <s:hidden name="paymentMode" value="<%=defaultGateway%>" />
 
-                        <p><label><s:radio name="paymentMode" value="80"/>
-                            MasterCard &nbsp;</label> <img
-                                src="<hk:vhostImage/>/images/gateway/mastercard.jpg" height="30px">
-                        </p>
-
-                        <p><label><s:radio name="paymentMode" value="90"/>
-                            Maestro &nbsp;</label> <img
-                                src="<hk:vhostImage/>/images/gateway/maestro.gif" height="30px">
-                        </p>
-
-                        <p><label><s:radio name="paymentMode" value="80"/>
-                            Citrus (Faster Checkout) &nbsp;</label> <img
-                                src="<hk:vhostImage/>/images/gateway/citrus.png" height="30px">
-                        </p>
+                        <c:forEach items="${paymentModeBean.cardIssuers}" var="cardIssuer">
+                            <p><label><s:radio name="issuer" value="${cardIssuer.id}"/>${cardIssuer.name}
+                                &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/${cardIssuer.name}.jpg" height="30px" alt="gateway image">
+                            </p>
+                        </c:forEach>
 
                         <div style="float: right; width: 90%;"><s:submit
                                 name="prepay" value="Make Payment >" class="button"
@@ -108,17 +96,17 @@
                         <s:form beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction"
                                 method="post">
                             <s:hidden name="order" value="${order.id}"/>
-                            <s:hidden name="paymentMode" value="<%=defaultGateway%>"/>
+                            <s:hidden name="paymentMode" value="<%=defaultGateway%>" />
 
                             <div style="float: left; margin-left: 20px; line-height: 21px;">
                                 <div class="paymentBox">
                                     <table width="100%">
-                                        <c:forEach items="${paymentModeBean.bankList}" var="bank"
+                                        <c:forEach items="${paymentModeBean.bankIssuers}" var="bankIssuer"
                                                    varStatus="idx">
                                             <c:if test="${idx.index%2 == 0}">
                                                 <tr>
                                             </c:if>
-                                            <td class="col"><s:radio name="bankId" value="${bank.id}"/>${bank.bankName}
+                                            <td class="col"><s:radio name="issuer" value="${bankIssuer.id}" />${bankIssuer.name}
                                             </td>
                                             <c:if test="${idx.index%2 == 1 || idx.last}">
                                                 </tr>
@@ -165,10 +153,6 @@
                 </div>
             </div>
         </div>
-    </s:layout-component>
-
-    <s:layout-component name="analytics">
-        <jsp:include page="/includes/_analytics.jsp"/>
     </s:layout-component>
 
     <s:layout-component name="zopim">

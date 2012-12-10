@@ -1,7 +1,5 @@
 package com.hk.impl.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +24,13 @@ public class RoleServiceImpl implements RoleService {
         return getRoleDao().getRoleByName(roleName);
     }
 
-    @Override
-    public List<Role> listAllBasicRoles() {
-        return getRoleDao().listAllBasicRoles();
-    }
+    /*
+     * @Override public List<Role> listAllBasicRoles() { return getRoleDao().listAllBasicRoles(); }
+     */
 
-    @Override
-    public List<Role> listAllExceptAdmins() {
-        return getRoleDao().listAllExceptAdmins();
-    }
+    /*
+     * @Override public List<Role> listAllExceptAdmins() { return getRoleDao().listAllExceptAdmins(); }
+     */
 
     public RoleDao getRoleDao() {
         return roleDao;

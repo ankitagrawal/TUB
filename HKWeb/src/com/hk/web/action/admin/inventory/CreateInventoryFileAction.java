@@ -114,15 +114,19 @@ public class CreateInventoryFileAction extends BaseAction {
         String productOptionStringBuffer = productVariant.getOptionsSlashSeparated();
         Double markedPrice = 0D;
 
-        if (dto.getProductVariantInventory().getGrnLineItem() != null && dto.getProductVariantInventory().getGrnLineItem().getMrp() != null){
-          markedPrice = dto.getProductVariantInventory().getGrnLineItem().getMrp();
-        } else if (dto.getProductVariantInventory().getStockTransferLineItem() != null && dto.getProductVariantInventory().getStockTransferLineItem().getMrp() != null ) {
-          markedPrice = dto.getProductVariantInventory().getStockTransferLineItem().getMrp();
-        } else if (dto.getProductVariantInventory().getRvLineItem() != null && dto.getProductVariantInventory().getRvLineItem().getMrp() != null) {
-          markedPrice = dto.getProductVariantInventory().getRvLineItem().getMrp();
-        } else if(productVariant.getMarkedPrice() != null) {
-          markedPrice = productVariant.getMarkedPrice();
-        }
+	      if (dto.getSkuGroup().getMrp() != null) {
+		      markedPrice = dto.getSkuGroup().getMrp();
+	      } else {
+		      if (dto.getProductVariantInventory().getGrnLineItem() != null && dto.getProductVariantInventory().getGrnLineItem().getMrp() != null) {
+			      markedPrice = dto.getProductVariantInventory().getGrnLineItem().getMrp();
+		      } else if (dto.getProductVariantInventory().getStockTransferLineItem() != null && dto.getProductVariantInventory().getStockTransferLineItem().getMrp() != null) {
+			      markedPrice = dto.getProductVariantInventory().getStockTransferLineItem().getMrp();
+		      } else if (dto.getProductVariantInventory().getRvLineItem() != null && dto.getProductVariantInventory().getRvLineItem().getMrp() != null) {
+			      markedPrice = dto.getProductVariantInventory().getRvLineItem().getMrp();
+		      } else if (productVariant.getMarkedPrice() != null) {
+			      markedPrice = productVariant.getMarkedPrice();
+		      }
+	      }
 
         if (expiryDate == null) {
           date = "NA";
@@ -191,15 +195,19 @@ public class CreateInventoryFileAction extends BaseAction {
         String batchNo = dto.getSkuGroup().getBatchNumber();
         Double markedPrice = 0D;
 
-        if (dto.getProductVariantInventory().getGrnLineItem() != null && dto.getProductVariantInventory().getGrnLineItem().getMrp() != null){
-          markedPrice = dto.getProductVariantInventory().getGrnLineItem().getMrp();
-        } else if (dto.getProductVariantInventory().getStockTransferLineItem() != null && dto.getProductVariantInventory().getStockTransferLineItem().getMrp() != null ) {
-          markedPrice = dto.getProductVariantInventory().getStockTransferLineItem().getMrp();
-        } else if (dto.getProductVariantInventory().getRvLineItem() != null && dto.getProductVariantInventory().getRvLineItem().getMrp() != null) {
-          markedPrice = dto.getProductVariantInventory().getRvLineItem().getMrp();
-        } else if(productVariant.getMarkedPrice() != null) {
-          markedPrice = productVariant.getMarkedPrice();
-        }
+	      if (dto.getSkuGroup().getMrp() != null) {
+		      markedPrice = dto.getSkuGroup().getMrp();
+	      } else {
+		      if (dto.getProductVariantInventory().getGrnLineItem() != null && dto.getProductVariantInventory().getGrnLineItem().getMrp() != null) {
+			      markedPrice = dto.getProductVariantInventory().getGrnLineItem().getMrp();
+		      } else if (dto.getProductVariantInventory().getStockTransferLineItem() != null && dto.getProductVariantInventory().getStockTransferLineItem().getMrp() != null) {
+			      markedPrice = dto.getProductVariantInventory().getStockTransferLineItem().getMrp();
+		      } else if (dto.getProductVariantInventory().getRvLineItem() != null && dto.getProductVariantInventory().getRvLineItem().getMrp() != null) {
+			      markedPrice = dto.getProductVariantInventory().getRvLineItem().getMrp();
+		      } else if (productVariant.getMarkedPrice() != null) {
+			      markedPrice = productVariant.getMarkedPrice();
+		      }
+	      }
 
         if (expiryDate == null) {
           date = "NA";
