@@ -73,7 +73,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1750' productDesc='Its creatine that separates the boys and the men. Pick Creapure to change your workouts forever.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT591' productDesc='Enriched with vitmain B9, it acts as an energy booster and improves your stamina before your workout sessions.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1289' productDesc='It provides quick energy for an improved performance. It contains carbohydrates for faster post-workout recovery.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT799' productDesc='The goodness of vegetable nitrate extracts in it bumps up your endurance. The all natural pro biotic mix keeps the stomach healthy. Did we mention it's all natural?'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT799' productDesc='The goodness of vegetable nitrate extracts in it bumps up your endurance. The all natural pro biotic mix keeps the stomach healthy. Did we mention its all natural?'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT699' productDesc='Pre-workout energy amplifier and muscle toner. Enhances training results and activates muscle growth.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1341' productDesc='An adipokine Stimulator that promotes fat mobilization and control hunger.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1364' productDesc='Increases nitric oxide levels for better muscle building pump vasodilation effect.'/>
