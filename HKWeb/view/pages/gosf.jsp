@@ -102,7 +102,10 @@
 
 </div>
 
+
+
 <div class="cl"></div>
+     <div id="pagerTrigger"></div>
 
 </div>
 

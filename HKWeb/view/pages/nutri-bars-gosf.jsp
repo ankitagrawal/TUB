@@ -43,6 +43,15 @@
 
 
         <div class="heading1">BARS AND FAT BURNERS</div>
+
+        <div class="pages">
+        <span class="pages_link">1</span>
+        <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-bars-gosf02.jsp">2</a>
+        <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-bars-gosf02.jsp">Next →</a>
+         </div>
+        
+         <div class="cl"></div>
+
         <div class="prodBoxes">
         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1361'productDesc='copy due'/>
         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT469' productDesc=' Rich in L-Carnitine, it burns your extra fat, reduces hunger pangs, improves metablosim, and reduces cholestrol.'/>
