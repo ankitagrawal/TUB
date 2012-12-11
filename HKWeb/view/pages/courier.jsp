@@ -39,6 +39,7 @@
 				<div class="clear"></div>
 				<div style="margin-top:10px"></div>
 				<div class="row">
+				   <input type="hidden" value="${cou.courier.courierGroup}" id="oldgroup"/>
 					<s:label class="rowLabel" name="Group*"/>
 					<s:select id="groupDropDown" name="courierGroup" value="${cou.courier.courierGroup}">
 						<s:option value="">-- No Group Assigned -- </s:option>
@@ -96,7 +97,8 @@
 				status = '';
 			}
 
-			var group = $('#groupDropDown').val();
+			var newgroup = $('#groupDropDown').val();
+			var oldgroup =  $('#oldgroup').val();
 			$('.error').empty();
 			var err = 0;
 			if (name == null || name.trim() == '') {
@@ -111,8 +113,7 @@
 				$('.error').show();
 				return false;
 			}
-			else if (group == '')
-		{
+			else if (newgroup == '' && ( oldgroup != ''))		{
 			var proceed = confirm('You are removing Group');
 			if (!proceed) return false;
 		}

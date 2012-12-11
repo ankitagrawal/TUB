@@ -57,7 +57,11 @@ public class AddCourierAction extends BasePaginatedAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		courierPage = courierService.getCouriers(courierName, status, getPageNo(), getPerPage());
+		String courierGroupName = null;
+		if(courierGroup != null){
+		courierGroupName = courierGroup.getName();
+		}
+		courierPage = courierService.getCouriers(courierName, status,courierGroupName, getPageNo(), getPerPage());
 		List<Courier> courierListDb = courierPage.getList();
 		courierList = courierListDb;
 		if (courierGroup != null) {
@@ -125,7 +129,7 @@ public class AddCourierAction extends BasePaginatedAction {
 		List<String> courierList = new ArrayList<String>();
 		List<Courier> couriers = courierService.getCouriers(null, null, null);
 		for (Courier courier : couriers) {
-			if (courier.getName().startsWith(q.trim().toUpperCase()))
+			if ((courier.getName().trim().toUpperCase()).startsWith(q.trim().toUpperCase()))
 				courierList.add(courier.getName());
 		}
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "done", courierList);

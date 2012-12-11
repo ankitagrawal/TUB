@@ -6,6 +6,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
@@ -137,7 +138,7 @@ public class CourierServiceImpl implements CourierService {
 		return getCourierServiceInfoDao().getCouriers(pincode ,isrGroundShipping ,isCod,isCodAvailableOnGroundShipping, disabled);
 	}
 
-	public Page getCouriers(String courierName,Boolean disabled,int page, int perPage){
-		return  courierDao.getCouriers(courierName,disabled,page,perPage);
+	public Page getCouriers(String courierName,Boolean disabled, String courierGroup,int page, int perPage){
+		return  courierDao.getCouriers(courierName,disabled,courierGroup,page,perPage);
 	}
 }

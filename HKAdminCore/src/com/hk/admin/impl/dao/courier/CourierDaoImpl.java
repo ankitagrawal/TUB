@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.akube.framework.dao.Page;
 
@@ -45,7 +46,7 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 
     }
 
-	public DetachedCriteria getCourierCriteria(String courierName, Boolean disabled) {
+	public DetachedCriteria getCourierCriteria(String courierName, Boolean disabled, String courierGroup) {
 		DetachedCriteria courierCriteria = DetachedCriteria.forClass(Courier.class);
 		if (courierName != null) {
 			courierCriteria.add(Restrictions.eq("name", courierName));
@@ -53,11 +54,17 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 		if (disabled != null) {
 			courierCriteria.add(Restrictions.eq("disabled", disabled));
 		}
+
+		if (courierGroup != null) {
+			courierCriteria.createCriteria("courierGroup", "group");
+			courierCriteria.add(Restrictions.eq("group.name", courierGroup));
+		}
+		courierCriteria.addOrder(org.hibernate.criterion.Order.asc("name").ignoreCase());
 		return courierCriteria;
 
 	}
 
-	public Page getCouriers(String courierName, Boolean disabled, int page, int perPage) {
-		return list(getCourierCriteria(courierName, disabled), page, perPage);
+	public Page getCouriers(String courierName, Boolean disabled,String courierGroup, int page, int perPage) {
+		return list(getCourierCriteria(courierName, disabled,courierGroup), page, perPage);
 	}
 }

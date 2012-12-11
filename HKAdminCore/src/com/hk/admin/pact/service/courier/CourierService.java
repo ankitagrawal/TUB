@@ -38,7 +38,7 @@ public interface CourierService {
 
 	public Courier save(Courier courier);
 
-	public Page getCouriers(String courierName,Boolean disabled, int page, int perPage);
+	public Page getCouriers(String courierName,Boolean disabled,String courierGroup, int page, int perPage);
 
 	public List<Courier> getCouriers(List<Long> courierIds ,List<String> courierNames , Boolean disabled);
 
