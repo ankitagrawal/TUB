@@ -93,7 +93,12 @@
 
              <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-workout-gosf.jsp">1</a>
 
-            <span class="pages_link">2</span>            
+            <span class="pages_link">2</span>  
+            
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-workout-gosf03.jsp">3</a>
+
+            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-workout-gosf03.jsp">Next →</a>
+                      
          </div>
 
 
