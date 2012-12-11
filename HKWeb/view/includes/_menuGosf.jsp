@@ -21,7 +21,7 @@ $(document).ready(function () {
 
  <div class="navBox">
 <ul class="navigation">
-    <li><a href="${pageContext.request.contextPath}/pages/cyberMondayGOSF.jsp">HOME</a>
+    <li><a href="${pageContext.request.contextPath}/pages/gosf.jsp">HOME</a>
     <li><a href="${pageContext.request.contextPath}/pages/nutri-gosf.jsp">NUTRITION</a>
       <ul>
                         <li><a href="${pageContext.request.contextPath}/pages/nutri-bars-gosf.jsp">BARS AND FAT BURNERS</a></li>
@@ -33,7 +33,7 @@ $(document).ready(function () {
     <li><a href="${pageContext.request.contextPath}/pages/sports-gosf.jsp">SPORTS & FITNESS</a></li>
     <li><a href="${pageContext.request.contextPath}/pages/diabetes-gosf.jsp">DIABETES</a></li>
 
-    <li><a href="${pageContext.request.contextPath}/pages/homedevices-gosf.jsp">HOME DEVICES</a></li>
+    <li><a href="${pageContext.request.contextPath}/pages/homedevices-gosf.jsp">HEALTH DEVICES</a></li>
     <li><a href="${pageContext.request.contextPath}/pages/eye-gosf.jsp">EYE</a></li>
     <li><a href="${pageContext.request.contextPath}/pages/pc-gosf.jsp">PERSONAL CARE</a></li>
     <li><a href="${pageContext.request.contextPath}/pages/beauty-gosf.jsp">BEAUTY</a></li>

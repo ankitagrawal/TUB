@@ -60,21 +60,20 @@
         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1173' productDesc='With blend of  essential amino acids and branched chain amino acids, it acts as a meal supplement which helps in loosing weight.'/>
         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1173' productDesc='With blend of  essential amino acids and branched chain amino acids, it acts as a meal supplement which helps in loosing weight.'/>
         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1789' productDesc='An anabolic mineral support formula which delivers sound sleep to professional athletes, body builders and wrestlers. It promotes increased testosterone levels and complete muscle growth and recovery'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1151' productDesc='Boost your gym performance with MuscleTech Hydroxystim. Enhance your focus and blaze through your fitness goals. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Keep muchies at bay with Oh Yeah Bars! Get the goodness of healthy fats and low sugar in 1 go; in 5 amazing flavors. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT711' productDesc='A mix of rare nuts, seeds, raisins, Gooseberrys and Dark Chocolate. A healthy answer to your 4 O Clock hunger pangs.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT651' productDesc='Contains essential proteins that provide overal health and builds strong bones and muscles.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT651'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT651' productDesc='Packed with essential proteins that strengthens muscles and bones and also keeps you healthy '/>
+        
 
-
-          </div>
+        </div>
 
 
         <div class="cl"></div>
+        
+
+        <div class="pages">
+        <span class="pages_link">1</span>
+        <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-bars-gosf02.jsp">2</a>
+        <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-bars-gosf02.jsp">Next →</a>
+         </div>
+
 
 
     </div>
