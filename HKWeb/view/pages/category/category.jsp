@@ -238,7 +238,7 @@
       </c:if>
 
       <shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">
-        <c:if test="${empty  hk:getHeadingProductsSortedByRank(heading.id)}">
+        <c:if test="${empty hk:getHeadingProductsSortedByRank(heading.id)}">
           <div class="grid_24 alpha omega" style="width: 950px;">
             <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction"
                     event="addPrimaryCategoryHeadingProducts"
