@@ -428,7 +428,7 @@ public class ReportAction extends BaseAction {
 
                 // TODO: please change such queries does not make any sense do it this way
                 /*
-                 * categories.add(categoryService.getCategoryByName(CategoryConstants.HOME_DEVICES));
+                 * categories.add(categoryService.getCategoryByName(CategoryConstants.HEALTH_DEVICES));
                  * categories.add(categoryService.getCategoryByName(CategoryConstants.DIABETES));
                  * categories.add(categoryService.getCategoryByName(CategoryConstants.BABY));
                  * categories.add(categoryService.getCategoryByName(CategoryConstants.NUTRITION));
@@ -437,7 +437,7 @@ public class ReportAction extends BaseAction {
                  * categories.add(categoryService.getCategoryByName(CategoryConstants.BEAUTY));
                  */
 
-                categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.HOME_DEVICES).getCategory());
+                categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.HEALTH_DEVICES).getCategory());
                 categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.DIABETES).getCategory());
                 categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.BABY).getCategory());
                 categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.NUTRITION).getCategory());
@@ -510,7 +510,7 @@ public class ReportAction extends BaseAction {
         targetDailyMrpSalesMap.put(CategoryConstants.BEAUTY, CategoryConstants.BEAUTY_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.DIABETES, CategoryConstants.DIABETES_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.EYE, CategoryConstants.EYE_TARGET_SALES / numberOfDaysInMonth);
-        targetDailyMrpSalesMap.put(CategoryConstants.HOME_DEVICES, CategoryConstants.HOME_DEVICES_TARGET_SALES / numberOfDaysInMonth);
+        targetDailyMrpSalesMap.put(CategoryConstants.HEALTH_DEVICES, CategoryConstants.HEALTH_DEVICES_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.NUTRITION, CategoryConstants.NUTRITION_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.PERSONAL_CARE, CategoryConstants.PERSONAL_CARE_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.SERVICES, CategoryConstants.SERVICES_TARGET_SALES / numberOfDaysInMonth);

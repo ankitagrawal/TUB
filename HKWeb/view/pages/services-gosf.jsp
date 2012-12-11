@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:layout-render name="/layouts/categoryBlankLanding.jsp" pageTitle="Cyber Monday Great Online Shopping Festival">
+<s:layout-render name="/layouts/categoryBlankLanding.jsp" pageTitle="Great Online Shopping Festival">
 
 <s:layout-component name="htmlHead">
 <link href="${pageContext.request.contextPath}/css/gosf.css" rel="stylesheet" type="text/css" />
@@ -18,7 +18,7 @@
         <span class="crumb last" style="font-size: 12px;">Cyber Monday</span>
 
         <h1 class="title">
-            Cyber Monday Great Online Shopping Festival
+            Great Online Shopping Festival
         </h1>
     </div>
 
@@ -45,7 +45,7 @@
 
         <div class="heading1">SERVICES</div>
          <div class="prodBoxes">
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER208' productDesc="Access from 226 cities. Over 1200 nutritionist counsel you on 4300+ diabetes diet plan."/>
+<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER208' productDesc="Access from 226 cities. Over 1200 nutritionist counsel you on 4300+ diabetes diet plan."/>
 <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER233' productDesc="24X 7 confidential medical advice through phone and internet"/>
 <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER228' productDesc="CBT, LFT, Lipid Profile, KFT, Thyroid Test, Diabetes Test all in one."/>
 <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SER229' productDesc="Avail the economical  service and keep your well-being under a healthy vigil."/>
