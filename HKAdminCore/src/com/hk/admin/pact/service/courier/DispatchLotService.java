@@ -3,6 +3,8 @@ package com.hk.admin.pact.service.courier;
 import com.akube.framework.dao.Page;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
+import com.hk.domain.courier.DispatchLotStatus;
+import com.hk.domain.courier.Zone;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.dao.BaseDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +20,10 @@ import java.util.Date;
  */
 public interface DispatchLotService {
 
-	/*public DispatchLot saveDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
-	                                   String destination, Long noOfShipmentsSent, Long noOfShipmentsReceived, Long noOfMotherBags,
-	                                   Double totalWeight, Date deliveryDate);
-*/
 	public DispatchLot save(DispatchLot dispatchLot);
 
-	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
-		                              String destination, Date deliveryStartDate, Date deliveryEndDate, int pageNo, int perPage);
+	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, Zone zone, String source,
+		                              String destination, Date deliveryStartDate, Date deliveryEndDate, DispatchLotStatus dispatchLotStatus, int pageNo, int perPage);
 
 	public void parseExcelAndSaveShipmentDetails(DispatchLot dispatchLot, String excelFilePath, String sheetName);
 

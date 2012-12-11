@@ -4,6 +4,8 @@ import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.DispatchLotDao;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.DispatchLot;
+import com.hk.domain.courier.DispatchLotStatus;
+import com.hk.domain.courier.Zone;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
@@ -22,8 +24,8 @@ import java.util.Date;
 @Repository
 public class DispatchLotDaoImpl extends BaseDaoImpl implements DispatchLotDao {
 
-	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, String zone, String source,
-	                              String destination, Date deliveryStartDate, Date deliveryEndDate, int pageNo, int perPage) {
+	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, Zone zone, String source,
+	                              String destination, Date deliveryStartDate, Date deliveryEndDate, DispatchLotStatus dispatchLotStatus, int pageNo, int perPage) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(DispatchLot.class);
 
 		if(dispatchLot != null) {
@@ -31,10 +33,6 @@ public class DispatchLotDaoImpl extends BaseDaoImpl implements DispatchLotDao {
 		}
 		if (!StringUtils.isBlank(docketNumber)) {
 			criteria.add(Restrictions.eq("docketNumber", docketNumber));
-		}
-
-		if (!StringUtils.isBlank(zone)) {
-			criteria.add(Restrictions.eq("zone", zone));
 		}
 
 		if (!StringUtils.isBlank(source)) {
@@ -46,11 +44,21 @@ public class DispatchLotDaoImpl extends BaseDaoImpl implements DispatchLotDao {
 		}
 
 		if (deliveryStartDate != null) {
-			criteria.add(Restrictions.ge("deliveryDate", deliveryStartDate));
+			criteria.add(Restrictions.ge("dispatchDate", deliveryStartDate));
 		}
 
 		if(deliveryEndDate != null) {
-			criteria.add(Restrictions.le("deliveryDate", deliveryEndDate));
+			criteria.add(Restrictions.le("dispatchDate", deliveryEndDate));
+		}
+
+		if(zone != null) {
+			DetachedCriteria zoneCriteria = criteria.createCriteria("zone");
+			zoneCriteria.add(Restrictions.eq("id", zone.getId()));
+		}
+
+		if(dispatchLotStatus != null) {
+			DetachedCriteria statusCriteria = criteria.createCriteria("dispatchLotStatus");
+			statusCriteria.add(Restrictions.eq("id", dispatchLotStatus.getId()));
 		}
 
 		if (courier != null) {

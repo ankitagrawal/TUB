@@ -18,25 +18,42 @@
 		<fieldset class="right_label">
 			<legend>Search PO</legend>
 			<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
-				<label>Dispatch Lot Id:</label><s:text name="dispatchLot"/>
-				<label>Docket Number:</label><s:text name="docketNumber"/>
-				<%--<label>Zone:</label><s:text name="zone"/>--%>
+			<label>Dispatch Lot Id:</label><s:text name="dispatchLot"/>
+			<label>Docket Number:</label><s:text name="docketNumber"/>
+			<label>Zone<label>
+				<s:select name="zone" class="text">
+				<s:option value="null">-All-</s:option>
+					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
+					                           value="id"
+					                           label="name"/>
+				</s:select>
+
 				<label>Source:</label><s:text name="source"/>
 				<label>Destination:</label><s:text name="destination"/>
 				<label>Courier:</label>
 				<s:select name="courier">
 				<s:option value="">-All-</s:option>
-				<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
-				                           label="name"/>
+					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
+					                           value="id"
+					                           label="name"/>
 				</s:select>
 				<div class="clear"></div>
-				<label>Delivery Start Date:</label><s:text style="width:150px" class="date_input startDate"
-				                                  formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="deliveryStartDate"/>
+				<label>Dispatch Status:</label>
+				<s:select name="dispatchLotStatus">
+				<s:option value="">-All-</s:option>
+					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="dispatchLotStatusList"
+					                           value="id"
+					                           label="name"/>
+				</s:select>
+				<label>Dispatch Start Date:</label><s:text style="width:150px" class="date_input startDate"
+				                                           formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+				                                           name="dispatchStartDate"/>
 				<label>End Date:</label><s:text style="width:150px" class="date_input endDate"
-				                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="deliveryEndDate"/>
+				                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+				                                name="dispatchEndDate"/>
 
-				<s:submit name="showDispatchLotList" value="Search Dispatch Lot"/>
-			</s:form>
+					<s:submit name="showDispatchLotList" value="Search Dispatch Lot"/>
+				</s:form>
 		</fieldset>
 
 		<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${da}"/>
@@ -49,10 +66,11 @@
 				<th>Create Date</th>
 				<th>Docket Number</th>
 				<th>Courier</th>
-				<%--<th>Zone</th>--%>
+				<th>Zone</th>
 				<th>Source</th>
 				<th>Destination</th>
-				<th>Delivery Date</th>
+				<th>Dispatch Lot Status</th>
+				<th>Dispatch Date</th>
 				<th>Actions</th>
 			</tr>
 			</thead>
@@ -62,13 +80,14 @@
 					<td>${dispatchLot.createDate}</td>
 					<td>${dispatchLot.docketNumber}</td>
 					<td>${dispatchLot.courier.name}</td>
-					<%--<td>${dispatchLot.zone}</td>--%>
+					<td>${dispatchLot.zone.name}</td>
 					<td>${dispatchLot.source}</td>
 					<td>${dispatchLot.destination}</td>
-					<td>${dispatchLot.deliveryDate}</td>
+					<td>${dispatchLot.dispatchLotStatus.name}</td>
+					<td>${dispatchLot.dispatchDate}</td>
 					<td>
 						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction">Edit/View
-						<s:param name="dispatchLot" value="${dispatchLot.id}"/>
+							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
 					</td>
 				</tr>
