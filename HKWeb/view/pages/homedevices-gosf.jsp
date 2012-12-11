@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:layout-render name="/layouts/categoryBlankLanding.jsp" pageTitle="Cyber Monday Great Online Shopping Festival">
+<s:layout-render name="/layouts/categoryBlankLanding.jsp" pageTitle="Great Online Shopping Festival">
 
 <s:layout-component name="htmlHead">
     
@@ -18,7 +18,7 @@
     <span class="crumb last" style="font-size: 12px;">Cyber Monday</span>
 
     <h1 class="title">
-       Cyber Monday Great Online Shopping Festival
+       Great Online Shopping Festival
     </h1>
   </div>
   
@@ -50,7 +50,21 @@
 
 
     
-    <div class="heading1">HOME DEVICES</div>
+    <div class="heading1">HEALTH DEVICES</div>
+
+   <div class="pages">
+
+            <span class="pages_link">1</span>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/homedevices-gosf02.jsp">2</a>
+
+            <a class="next"  href="${pageContext.request.contextPath}/pages/homedevices-gosf02.jsp">Next →</a>
+
+         </div>
+
+        <div class="cl"></div>
+
+     
       <div class="prodBoxes">
      <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HB005' productDesc='An automatic BP monitor with one-touch operation. It comes with one-year warranty.'/>
      <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='RD001' productDesc='A waist shaper that supports the lumbar spine and corrects posture. Ideal for women who want to look slim and trim.'/>
@@ -68,22 +82,23 @@
      <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EQNX014' productDesc='An analog weighing scale with an anti-slip rubber top. It can weigh up to 120 kg.'/>
      <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='WRSTS002' productDesc='An elastic wrist wrap that supports injuries. it comes in different sizes.'/>
      <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HICKS013' productDesc='A surgical dressing pad that helps clean blood and other impurities from wounds.'/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HP070' productDesc='A light-weight stethoscope with a robust nylon cuff. '/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HICKS013' productDesc='A surgical dressing pad that helps clean blood and other impurities from wounds.'/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OMRN014' productDesc='A nebulizer that stimulates easy breathing for asthmatic patients.'/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HB006' productDesc='A BP monitor to read blood pressure levels quickly.  It comes with one-year warranty.'/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='METRO001' productDesc='A facial sauna that unclog pores through deep perspiration.'/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HT006' productDesc='A digital thermometer that gives accurate results in just 10 seconds.'/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='FRSTA004' productDesc='A must have first aid kit that contains all that is necessary.'/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OMRN008' productDesc='A digital weighing scale that comes with 4 sensor, accurate weight measurement technology'/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SCARE001' productDesc='A sphygmomanometer for accurate measurement of blood pressure levels.'/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EQNX015' productDesc='A digital weighing scale that comes with an auto on & off function. It has a capacity to hold up to 150 kg.'/>
-     <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='EQNX013' productDesc='An analog weighing scale with an anti-slip rubber top. It can hold up to 130 kg.'/>
+
+     
      
      
       </div>
 
                    <div class="cl"></div>
+
+     <div class="pages">
+
+            <span class="pages_link">1</span>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/homedevices-gosf02.jsp">2</a>
+
+            <a class="next"  href="${pageContext.request.contextPath}/pages/homedevices-gosf02.jsp">Next →</a>
+
+         </div>
 
      
 

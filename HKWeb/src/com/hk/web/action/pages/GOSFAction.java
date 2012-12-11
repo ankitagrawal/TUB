@@ -17,6 +17,6 @@ import net.sourceforge.stripes.action.UrlBinding;
 public class GOSFAction extends BaseAction {
 
 	public Resolution pre() {
-		return new ForwardResolution("/pages/cyberMondayGOSF.jsp");
+		return new ForwardResolution("/pages/gosf.jsp");
 	}
 }
