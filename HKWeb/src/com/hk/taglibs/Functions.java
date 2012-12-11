@@ -641,8 +641,8 @@ public class Functions {
     }
 
     public static boolean showOptionOnUI(String optionType) {
-        List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "NET WEIGHT", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY",
-                "FRAGRANCE");
+        List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "FRAGRANCE", "NET WEIGHT",
+		        "OFFER", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY");
         boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
         return showOptionOnUI;
     }

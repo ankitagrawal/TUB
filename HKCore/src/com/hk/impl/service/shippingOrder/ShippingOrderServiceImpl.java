@@ -8,6 +8,7 @@ import java.util.List;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.Zone;
 import com.hk.pact.service.core.PincodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -371,12 +372,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 	}
 
 	@Override
-	public String getZoneForShippingOrder(ShippingOrder shippingOrder) {
-		Pincode shippingOrderPincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
-		if(shippingOrderPincode != null){
-			return shippingOrderPincode.getZone();
-		}
-		return null;
+	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder) {
+		return shippingOrder.getShipment().getZone();
+
 	}
 
 	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {

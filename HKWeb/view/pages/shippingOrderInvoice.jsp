@@ -119,8 +119,8 @@
     <div style="text-align: center;">
 ORDER INVOICE <c:choose>
 <c:when
-        test="${orderSummary.printable && hk:isOrderForDiscretePackaging(orderSummary.shippingOrder)}"><bold>IN</bold></c:when>
-        <c:otherwise><bold>OUT</bold>
+        test="${orderSummary.printable && hk:isOrderForDiscretePackaging(orderSummary.shippingOrder)}"><b>(OUT)</b></c:when>
+        <c:otherwise><b>(IN)</b>
         </c:otherwise>
         </c:choose>
 </div>
