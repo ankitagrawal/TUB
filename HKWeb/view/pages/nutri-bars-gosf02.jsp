@@ -43,6 +43,15 @@
 
 
         <div class="heading1">BARS AND FAT BURNERS</div>
+
+         <div class="pages">
+        <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-bars-gosf.jsp">← Previous</a>
+        <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-bars-gosf.jsp">1</a>
+        <span class="pages_link">2</span>
+
+         </div>
+           <div class="cl"></div>
+        
         <div class="prodBoxes">
         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1151' productDesc='Boost your gym performance with MuscleTech Hydroxystim. Enhance your focus and blaze through your fitness goals. '/>
         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
