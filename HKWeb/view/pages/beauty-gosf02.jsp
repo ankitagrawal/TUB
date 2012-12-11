@@ -67,7 +67,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY111' productDesc="Light restorative cream to banish dark circles  "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OLY018' productDesc="Moisturize before bed and get firm skin and fight 7 signs of aging."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC07' productDesc="Before- bed cream with Saffron and Kumkumadi to refine, sooth and hydrate skin.   "/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GILI07-01' productDesc='Fine blade edges and lubricating strip that ensures you have a smooth shave with least amount of irritation'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GILI07' productDesc='Fine blade edges and lubricating strip that ensures you have a smooth shave with least amount of irritation'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY120' productDesc="Fight blemished skin with an arsenal of LHA and Bio-Assimilated Ceramide "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DIVO12' productDesc="Perfect hairbrush cleaning accessory, ensures no fluff is left behind on your paddle brush"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PLMCL06' productDesc="Infused with Tea Tree, Lavender, Peppermint & Chamomile. Revitalizes, adds vitality, deep cleans and softens tresses."/>
