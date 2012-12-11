@@ -180,6 +180,10 @@ p, h3, h1, h2, h4 {
     padding: 0;
 }
 
+.product h3 {
+	min-height: 36px;
+}
+
 .product h3 a {
     font-size: 13px;
     color: #333;
