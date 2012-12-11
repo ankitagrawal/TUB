@@ -78,7 +78,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VLCCFRT22' productDesc="Incredibly soothing body lotion for dry &troubled skin"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY19' productDesc="Essence of Grape Seed, Resveratrol, Pine Bark, Saffron & Green Tea, protects and lightens skin."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC21' productDesc="Antiseptic and gentle wash to diminish pigmentation, acne, open pores & oily skin. "/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GAT24' productDesc="No crunch, strong hold, non sticky wax for that hair statement"/>
+			<!-- <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GAT24' productDesc="No crunch, strong hold, non sticky wax for that hair statement"/> -->
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC46' productDesc="Goodness of Bhringraj, Glycerin and Soy oil, conditions and hydrates dead locks. Absolute nourishment for chemically treated hair."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY16' productDesc='Fortified with amino acids that nourishes hair, improves its strength and reduces hairfall'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY679' productDesc="Natural Beewax and Olive oil for delectably soft lips."/>
