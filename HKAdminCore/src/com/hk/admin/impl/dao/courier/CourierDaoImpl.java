@@ -1,6 +1,7 @@
 package com.hk.admin.impl.dao.courier;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -31,40 +32,44 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 
     @SuppressWarnings("unchecked")
     public List<Courier> getCouriers(List<Long> courierIds, List<String> courierNames, Boolean disabled) {
-	    DetachedCriteria courierCriteria = DetachedCriteria.forClass(Courier.class);
-	    if (courierIds != null && courierIds.size() > 0) {
-		    courierCriteria.add(Restrictions.in("id", courierIds));
-	    }
-	    if (courierNames != null && courierNames.size() > 0) {
-		    courierCriteria.add(Restrictions.in("name", courierNames));
-	    }
-
-	    if (disabled != null) {
-		    courierCriteria.add(Restrictions.eq("disabled", disabled));
-	    }
+	    DetachedCriteria courierCriteria = getCourierCriteria(courierIds, courierNames, null, disabled);
 	    return (List<Courier>) findByCriteria(courierCriteria);
 
     }
 
-	public DetachedCriteria getCourierCriteria(String courierName, Boolean disabled, String courierGroup) {
+
+	public DetachedCriteria getCourierCriteria(List<Long> courierIds, List<String> courierNames, List<String> courierGroups, Boolean disabled) {
 		DetachedCriteria courierCriteria = DetachedCriteria.forClass(Courier.class);
-		if (courierName != null) {
-			courierCriteria.add(Restrictions.eq("name", courierName));
+		if (courierIds != null && courierIds.size() > 0) {
+			courierCriteria.add(Restrictions.in("id", courierIds));
 		}
+		if (courierNames != null && courierNames.size() > 0) {
+			courierCriteria.add(Restrictions.in("name", courierNames));
+		}
+
 		if (disabled != null) {
 			courierCriteria.add(Restrictions.eq("disabled", disabled));
 		}
-
-		if (courierGroup != null) {
+		if (courierGroups != null && courierGroups.size() > 0) {
 			courierCriteria.createCriteria("courierGroup", "group");
-			courierCriteria.add(Restrictions.eq("group.name", courierGroup));
+			courierCriteria.add(Restrictions.in("group.name", courierGroups));
 		}
 		courierCriteria.addOrder(org.hibernate.criterion.Order.asc("name").ignoreCase());
 		return courierCriteria;
 
 	}
 
-	public Page getCouriers(String courierName, Boolean disabled,String courierGroup, int page, int perPage) {
-		return list(getCourierCriteria(courierName, disabled,courierGroup), page, perPage);
+	public Page getCouriers(String courierName, Boolean disabled, String courierGroup, int page, int perPage) {
+		List<String> courierNameList = null;
+		if (courierName != null) {
+			courierNameList = new ArrayList<String>();
+			courierNameList.add(courierName);
+		}
+		List<String> courierGroupList = null;
+		if (courierGroup != null) {
+			courierGroupList = new ArrayList<String>();
+			courierGroupList.add(courierGroup);
+		}
+		return list(getCourierCriteria(null, courierNameList, courierGroupList, disabled), page, perPage);
 	}
 }
