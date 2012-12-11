@@ -10,11 +10,8 @@
                  pageTitle="Great Online Shopping Festival">
 
 <s:layout-component name="htmlHead">
-
-
 	<link href="${pageContext.request.contextPath}/css/gosf.css"
 	      rel="stylesheet" type="text/css"/>
-
 </s:layout-component>
 
 <s:layout-component name="breadcrumbs">
