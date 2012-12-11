@@ -36,6 +36,7 @@
     <h2>Keep your wallets ready and your fingers on the mouse!</h2>
     <a class="more" target="_blank" href="http://www.healthkart.com/online-shopping-festival">Browse Our Range >> </a>
 </div>
+<div id="pagerTrigger"></div>
 <!-- remove this after gosf -->
 
   <div class='topBar'>
