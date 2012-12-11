@@ -1667,7 +1667,7 @@ span.error {
 }
 
 .product h3 {
-    height: 36px;
+    min-height: 36px;
 }
 
 h3 a.prod_link {
