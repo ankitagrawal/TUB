@@ -44,6 +44,20 @@
 
 
         <div class="heading1">PARENTING</div>
+
+        <div class="pages">
+
+            <span class="pages_link">1</span>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/parenting-gosf02.jsp">2</a>
+
+            <a class="next"  href="${pageContext.request.contextPath}/pages/parenting-gosf02.jsp">Next →</a>
+
+         </div>
+
+        <div class="cl"></div>
+
+
         <div class="prodBoxes">
 <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB046' productDesc="A Breast Pump designed to mimic natural expression of the mothers breast. It ensures even milk flow with minimal effort."/>
 <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB047' productDesc="This electric breast pump gently massages the breasts first. It then mimics natural expression for more milk at any given time"/>
@@ -61,18 +75,22 @@
 <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB256' productDesc="Comb your baby's hair without hurting them, by Farlin Comb and Brush Set White"/>
 <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB270' productDesc="Moisturize your baby's soft and delicate skin with Farlin Baby Wet Wipes "/>
 <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB293' productDesc="For fast, safe, and comfortable temperature readings of your kid, we recommend Farlin's Flexible Tip Digital Thermometer"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB344' productDesc="Baby has fun bathing with Gentle Bath Cleanser, it smells great too. "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB390' productDesc="Add extra fun to your kid's bath with these fun filled squirters"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB435' productDesc="Clean every nook and crany of the milk bottle and nipple with this cleaner, "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB454' productDesc="Make feeding time more natural and enjoyable with this sipper shaped like a mother's teat"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB455' productDesc="Teach your child how to drink without spilling with this No Spill Flip It Sipper"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB456' productDesc="Make your toddler learn how to hold and drink slowly without spilling. Get this sipper accompanied with gripper cups"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB459' productDesc=""/>
-        
+
+
 
          </div>
 
         <div class="cl"></div>
+
+        <div class="pages">
+
+            <span class="pages_link">1</span>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/parenting-gosf02.jsp">2</a>
+
+            <a class="next"  href="${pageContext.request.contextPath}/pages/parenting-gosf02.jsp">Next →</a>
+
+         </div>
 
 
     </div>

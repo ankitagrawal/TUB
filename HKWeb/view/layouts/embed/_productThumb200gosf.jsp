@@ -25,18 +25,7 @@
         }
         pageContext.setAttribute("combo", combo);
     %>
-    <style type="text/css">
-        .opaque {
-            opacity: 0.4;
-            filter: alpha(opacity = 40);
-
-        }
-
-        .opaque:hover {
-            opacity: 1.0;
-            filter: alpha(opacity = 100);
-        }
-    </style>
+    
     <c:choose>
         <c:when test="${product.googleAdDisallowed || product.deleted}">
         </c:when>
