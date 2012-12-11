@@ -42,8 +42,8 @@
         <div class="cl"></div>
 		<div class="pages">               
 	        <span class="pages_link">1</span>
-			<a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-bars-gosf.jsp">2</a>
-			<a class="next"  href="${pageContext.request.contextPath}/pages/nutri-bars-gosf02.jsp"> Next→</a>
+			<a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-bars-gosf02.jsp">2</a>
+			<a class="next"  href="${pageContext.request.contextPath}/pages/nutri-bars-gosf02.jsp">Next →</a>
          </div>
 
         <div class="heading1">BARS AND FAT BURNERS</div>
