@@ -28,7 +28,6 @@
 
           var newRowHtml =
               '<tr count="' + limitIndex + '" class="lastRow">' +
-              '<td></td>' +
               '  <td>' +                                            
               '    <input type="text" name="products[' + nextIndex + ']" />' +
               '  </td>' +
@@ -53,15 +52,12 @@
     <h2>${ha.heading.name}</h2>
     <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
-          <tr><th>ID</th><th>Product</th><th>Sorting</th></tr>
+          <tr><th>ID</th><th>Sorting</th></tr>
           <c:forEach var="headingProduct" items="${ha.headingProducts}" varStatus="ctr">
 
           <tr count="${ctr.index}" class="${ctr.last ? 'lastRow':''}">
             <td>
                  <label>${headingProduct.product.id}</label>
-            </td>
-              <td>
-                 <label>${headingProduct.product.name}</label>
             </td>
               <td>
                   <label>${headingProduct.rank}</label>
