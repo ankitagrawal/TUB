@@ -255,6 +255,12 @@
 --/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
 --/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food
 --/diabetes/diabetic-food/diabetic-supplements
+-/diabetes/weight-management
+--/diabetes/weight-management/weighing-scales : Weighing Scales
+--/diabetes/weight-management/body-fat-monitor
+--/diabetes/weight-management/treadmills
+--/diabetes/weight-management/step-counter
+--/diabetes/weight-management/low-calorie-diet
 -/diabetes/foot-care
 --/diabetes/foot-care/insoles-and-heelcups : Insoles & Heel Cups
 --/diabetes/foot-care/sock-and-slippers : Socks & Slippers
