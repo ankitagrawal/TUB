@@ -7,6 +7,8 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.payment.Gateway;
+import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
@@ -123,18 +125,21 @@ public class PaymentManager {
 	}
 
 	/**
-	 * @param order
-	 * @param paymentMode
-	 * @param remoteAddr
-	 * @return
+	 *
+     * @param order
+     * @param paymentMode
+     * @param remoteAddr
+     * @param gateway
+     *@param issuer @return
 	 */
-	public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, String bankCode) {
+	public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, Gateway gateway, Issuer issuer) {
 		Payment payment = new Payment();
 		payment.setAmount(order.getAmount());
 		payment.setOrder(order);
 		payment.setPaymentMode(paymentMode);
 		payment.setIp(remoteAddr);
-		payment.setBankCode(bankCode);
+        payment.setGateway(gateway);
+        payment.setIssuer(issuer);
 
 		// todo can be set if available for user
 		payment.setBillingAddressActual(null);

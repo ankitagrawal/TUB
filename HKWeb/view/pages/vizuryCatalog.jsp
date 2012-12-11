@@ -9,7 +9,7 @@
   <c:forEach items="${vizuryBean.products}" var="product">
   <c:if test="${fn:length(product.productVariants) > 0 && product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">
     <product id="${product.id}">
-      <name><![CDATA[${hk:escapeHtml(product.name)}]]></name>
+      <name><![CDATA[${hk:escapeXML(product.name)}]]></name>
       <url>http://www.healthkart.com/product/${product.slug}/${product.id}</url>
       <priceMin marked="${product.minimumMRPProducVariant.markedPrice}" hk="${product.minimumMRPProducVariant.hkPrice}"/>
       <priceMax marked="${product.maximumMRPProducVariant.markedPrice}" hk="${product.maximumMRPProducVariant.hkPrice}"/>
@@ -43,7 +43,7 @@
             <price marked="${variant.markedPrice}" hk="${variant.hkPrice}"/>
             <options>
               <c:forEach items="${variant.productOptions}" var="productOption">
-                <option name="${hk:escapeHtml(productOption.name)}"><![CDATA[${hk:escapeHtml(productOption.value)}]]></option>
+                <option name="${hk:escapeXML(productOption.name)}"><![CDATA[${hk:escapeXML(productOption.value)}]]></option>
               </c:forEach>
             </options>
           </variant>

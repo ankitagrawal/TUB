@@ -17,6 +17,18 @@ public class CourierConstants {
     public static final String PARSE_EXCEPTION = "Sorry.Database updation failed.ParseException occurred for Tracking Id :";
     public static final String HEALTHKART_CHECKED_EXCEPTION = "Sorry,some problem occurred.Please contact the administrator.";
 
+	//Constants for shipment
+	public static final String SHIPMENT_DETAILS = "Shipment Details: ";
+	public static final String GROUND_SHIPPING = "Ground Shpping: ";
+	public static final String AIR_SHIPPING = "Air Shipping: ";
+	public static final String PINCODE_INVALID = "Pincode could not be found in system";
+	public static final String SUGGESTED_COURIER_NOT_FOUND = "Suggested Courier is not found";
+	public static final String COURIER_SERVICE_INFO_NOT_FOUND = "Courier service not available here";
+	public static final String DROP_SHIPPED_ORDER = "No shipment for drop shipped orders";
+	public static final String AWB_NOT_ASSIGNED = "Could not assign Awb: ";
+	
+
+
     //Common constants
     public static final String DELIVERED = "DELIVERED";
     public static final String AFL = "AFL";
@@ -25,6 +37,7 @@ public class CourierConstants {
     public static final String DTDC = "DTDC";
     public static final String DELHIVERY = "DELHIVERY";
 	public static final String FEDEX = "FEDEX";
+	public static final String QUANTIUM = "QUANTIUM";
 
 
     //Constants for DTDC
@@ -57,6 +70,14 @@ public class CourierConstants {
     public static final String BLUEDART_STATUS_DATE = "StatusDate";
     public static final String BLUEDART_STATUS = "Status";
     public static final String BLUEDART_SHIPMENT_DELIVERED = "Shipment delivered";
+
+	//Constants for QUANTIUM
+	public static final String QUANTIUM_TRACKING_NO = "TrackingNo";
+	public static final String QUANTIUM_REF_NO = "Reference";
+	public static final String QUANTIUM_STATUS = "CurrentStatus";
+	public static final String QUANTIUM_DELIVERED = "DS";
+	public static final String QUANTIUM_DELIVERY_DATE = "LastUpdatedDate";
+	public static final String QUANTIUM_INVALID_NO = "Invalid Tracking NO";
 
     //Constants for Healthkart Delivery
     public static final String HKDELIVERY_WORKSHEET_FOLDER = "hkDeliveryWorksheet";
@@ -92,6 +113,11 @@ public class CourierConstants {
     public static final String HKD_WORKSHEET_AMT = "COD/PRE-PAID AMT";
     public static final String HK_WORKSHEET_INFO = "NAME,SIGN & MOB.NO.";
     public static final String HKD_WORKSHEET_REMARKS = "REMARKS";
+
+	public static final String SOUTH_ZONE = "SOUTH" ;
+	public static final String NORTH_ZONE = "NORTH" ;
+	public static final String EAST_ZONE = "EAST" ;
+	public static final String WEST_ZONE = "WEST" ;
 
 
 }

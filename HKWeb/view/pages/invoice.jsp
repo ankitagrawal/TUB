@@ -100,7 +100,7 @@
       <p>placed on: <fmt:formatDate
           value="${orderSummary.order.payment.createDate}" type="both" timeStyle="short"/>
       </p>
-      <c:if test="${orderSummary.pricingDto.codLineCount > 0}">
+      <c:if test="${orderSummary.order.COD}">
         <h2>Cash on Delivery :
           <fmt:formatNumber value="${orderSummary.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "
                             maxFractionDigits="0"/></h2>

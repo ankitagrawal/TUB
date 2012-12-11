@@ -18,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.Keys;
@@ -28,6 +31,7 @@ import com.hk.domain.user.UserDetail;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.user.UserDetailService;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,7 +44,7 @@ import com.hk.pact.service.user.UserDetailService;
 @Component
 @UrlBinding("/agent/order")
 public class AgentSearchOrderAction extends BasePaginatedAction {
-    //private static Logger logger    = LoggerFactory.getLogger(SearchOrderAction.class);
+    private static Logger logger    = LoggerFactory.getLogger(AgentSearchOrderAction.class);
 
     @Value("#{hkEnvProps['" + Keys.Env.hkApiAccessKey + "']}")
     private String API_KEY;
@@ -82,7 +86,11 @@ public class AgentSearchOrderAction extends BasePaginatedAction {
         Long phNo = 0L;
         if (getContext().getRequest().getParameterMap().containsKey("phone")){
             phone = getContext().getRequest().getParameter("phone");
-            phNo = Long.parseLong(phone);
+            try{
+                phNo = Long.parseLong(phone);
+            }catch (NumberFormatException ex){
+                logger.error("Wrong phone number sent from Drishti " + phone);
+            }
         }
         if (getContext().getRequest().getParameterMap().containsKey("email")){
             email = getContext().getRequest().getParameter("email");

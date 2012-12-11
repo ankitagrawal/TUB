@@ -57,10 +57,18 @@
 
 
     	<div class="productThumb fleft">
-        <h3><a href="http://www.healthkart.com/product/freestyle-optium-glucometer/DM033">FreeStyle Optium Glucometer</a></h3>
+        <h3><a href="http://www.healthkart.com/product/freestyle-optium-glucometer/DM033">FreeStyle Optium Blood Glucose Monitoring System</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/abbottFS/FreeStyle-Optium-Glucometer.jpg" width="170" height="170"  class="tThumb" />
-        <div class="tDesc">The Abbott FreeStyle Optium Glucometer makes testing an easier and pain-free experience. Less than a drop of blood is required for testing and it gives accurate results in just 5 seconds.
+        <div class="tDesc">The Abbott FreeStyle Optium Glucometer makes testing an easier and pain-free experience. Less than a drop of blood is required for testing and it gives accurate results in just 5 seconds.<br />
+            <ul style="list-style:disc; padding-left:15px;">
+                <li>Small blood sample size- 0.6 μL</li>
+                <li>Records upto 450 readings</li>
+                <li>Accurate results in 5 sec</li>
+
+                <li>Reapplication of blood on same test strip when first application is inadequate</li>
+
+                </ul>
         </div>
 
         <p class="tPrice">
@@ -73,7 +81,7 @@
 
 
          <div class="productThumb fright">
-        <h3><a href="http://www.healthkart.com/product/freestyle-freedom-lite-starter-kit/DM042">FreeStyle Freedom Lite Starter Kit</a></h3>
+        <h3><a href="http://www.healthkart.com/product/freestyle-freedom-lite-starter-kit/DM042">FreeStyle Freedom Lite Blood Glucose Monitoring System</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/abbottFS/FreeStyle-Freedom-Lite-Starter-Kit.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">FreeStyle Freedom Lite Starter Kit comes with 10 test strips which help you manage and monitor your diabetic levels. It helps you to achieve accurate results as it is patented with the new Coulometric Technology. Other additional features are:<br />
@@ -87,10 +95,10 @@
         </div>
 
         <p class="tPrice">
-
-        Rs 1,699
+         <span>Rs. 1,699</span>
+        Rs 1,399
         </p>
-
+        <p class="tSave">You Save 18%</p>
         <p class="tBuy"><a href="http://www.healthkart.com/product/freestyle-freedom-lite-starter-kit/DM042"><img src="${pageContext.request.contextPath}/images/abbottFS/buynow.gif" width="89" height="26" alt="Buy Now" /></a></p>
         </div>
         <div class="cl"></div>
@@ -133,10 +141,10 @@
         <img src="${pageContext.request.contextPath}/images/abbottFS/FreeStyle-Freedom-Lite-Value-Offer.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Includes: FreeStyle Freedom Lite Glucometer (One Meter) + FreeStyle Freedom Lite Testing Strips (50 Strips)</div>
         <p class="tPrice">
-
-        Rs 2,499
+          <span>Rs 2,499</span>
+        Rs 1,999
         </p>
-
+        <p class="tSave">You Save 20%</p>
         <p class="tBuy"><a href="http://www.healthkart.com/product/freestyle-freedom-lite-value-offer/DM043"><img src="${pageContext.request.contextPath}/images/abbottFS/buynow.gif" width="89" height="26" alt="Buy Now" /></a></p>
         </div>
 
@@ -150,8 +158,10 @@
 
         <p class="tPrice">
 
-        Rs 2,999 
+        <span>Rs 2,999</span>
+            Rs 2,399
         </p>
+            <p class="tSave">You Save 20%</p>
         <p class="tBuy"><a href="http://www.healthkart.com/product/freestyle-freedom-lite-super-saver-offer/DM044"><img src="${pageContext.request.contextPath}/images/abbottFS/buynow.gif" width="89" height="26" alt="Buy Now" /></a></p>
         </div>
        

@@ -18,12 +18,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.cache.CategoryCache;
+import com.hk.cache.UserCache;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.clm.CategoryKarmaProfile;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.user.User;
+import com.hk.exception.HealthkartDefaultWebException;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.util.io.ExcelSheetParser;
@@ -44,7 +47,7 @@ public class CustomerScoreAction extends BaseAction {
     @Autowired
     private KarmaProfileService karmaProfileService;
     @Autowired
-    private CategoryService categoryService;
+    private CategoryService     categoryService;
 
     FileBean                    fileBean;
     FileBean                    categoryFileBean;
@@ -59,7 +62,7 @@ public class CustomerScoreAction extends BaseAction {
 
     public Resolution uploadScoreExcel() throws Exception {
         String excelFilePath = adminUploadsPath + "/clmExcelFiles/customerScore" + System.currentTimeMillis() + ".xls";
-        //String excelFilePath ="E:\\test\\customerscore" + System.currentTimeMillis() + ".xls";
+        // String excelFilePath ="E:\\test\\customerscore" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
@@ -73,7 +76,7 @@ public class CustomerScoreAction extends BaseAction {
 
     public Resolution uploadCategoryScoreExcel() throws Exception {
         String excelFilePath = adminUploadsPath + "/clmExcelFiles/customerCategoryScore" + System.currentTimeMillis() + ".xls";
-        //String excelFilePath ="E:\\test\\customerscorecat" + System.currentTimeMillis() + ".xls";
+        // String excelFilePath ="E:\\test\\customerscorecat" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         categoryFileBean.save(excelFile);
@@ -85,7 +88,7 @@ public class CustomerScoreAction extends BaseAction {
         return new ForwardResolution("/pages/admin/clm/CustomerScoreUpload.jsp");
     }
 
-    private void uploadCategoryScoreInDB(String excelFilePath){
+    private void uploadCategoryScoreInDB(String excelFilePath) {
         try {
             ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, SHEET_NAME_CUSTOMER_SCORE);
             Iterator<HKRow> rowIterator = parser.parse();
@@ -99,23 +102,53 @@ public class CustomerScoreAction extends BaseAction {
 
                 int i = 0;
 
-                //iterating till the last column
+                // iterating till the last column
                 while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
+                    // user = getUserService().getUserById(new Long(curHkRow.getColumnValue(i)));
                     user = getUserService().getUserById(new Long(curHkRow.getColumnValue(i)));
                     i++;
-                    //iteratiing for 9 categories
-                    while(i<10){
-                        switch (i){
-                            case 1: category=getCategoryService().getCategoryByName(CategoryConstants.BABY); break;
-                            case 2: category=getCategoryService().getCategoryByName(CategoryConstants.BEAUTY); break;
-                            case 3: category=getCategoryService().getCategoryByName(CategoryConstants.DIABETES); break;
-                            case 4: category=getCategoryService().getCategoryByName(CategoryConstants.EYE); break;
-                            case 5: category=getCategoryService().getCategoryByName(CategoryConstants.HOME_DEVICES); break;
-                            case 6: category=getCategoryService().getCategoryByName(CategoryConstants.NUTRITION); break;
-                            case 7: category=getCategoryService().getCategoryByName(CategoryConstants.PERSONAL_CARE); break;
-                            case 8: category=getCategoryService().getCategoryByName(CategoryConstants.SERVICES); break;
-                            case 9: category=getCategoryService().getCategoryByName(CategoryConstants.SPORTS); break;
-                            default: category=getCategoryService().getCategoryByName(CategoryConstants.BABY); break;
+                    // iteratiing for 9 categories
+                    while (i < 10) {
+                        switch (i) {
+                            case 1:
+                                // category = getCategoryService().getCategoryByName(CategoryConstants.BABY);
+                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.BABY).getCategory();
+                                break;
+                            case 2:
+                                // category = getCategoryService().getCategoryByName(CategoryConstants.BEAUTY);
+                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.BEAUTY).getCategory();
+                                break;
+                            case 3:
+                                // category = getCategoryService().getCategoryByName(CategoryConstants.DIABETES);
+                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.DIABETES).getCategory();
+                                break;
+                            case 4:
+                                // category = getCategoryService().getCategoryByName(CategoryConstants.EYE);
+                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.EYE).getCategory();
+                                break;
+                            case 5:
+                                // category = getCategoryService().getCategoryByName(CategoryConstants.HOME_DEVICES);
+                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.HOME_DEVICES).getCategory();
+                                break;
+                            case 6:
+                                // category = getCategoryService().getCategoryByName(CategoryConstants.NUTRITION);
+                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.NUTRITION).getCategory();
+                                break;
+                            case 7:
+                                // category = getCategoryService().getCategoryByName(CategoryConstants.PERSONAL_CARE);
+                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.PERSONAL_CARE).getCategory();
+                                break;
+                            case 8:
+                                // category = getCategoryService().getCategoryByName(CategoryConstants.SERVICES);
+                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.SERVICES).getCategory();
+                                break;
+                            case 9:
+                                // category = getCategoryService().getCategoryByName(CategoryConstants.SPORTS);
+                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.SPORTS).getCategory();
+                                break;
+                            default:
+                                throw new HealthkartDefaultWebException("Invalid category");
+
                         }
                         categoryKarmaProfile = getKarmaProfileService().findByUserAndCategory(user, category);
                         if (categoryKarmaProfile == null) {
@@ -134,7 +167,8 @@ public class CustomerScoreAction extends BaseAction {
                 if (categoryKarmaProfile != null) {
                     getKarmaProfileService().save(categoryKarmaProfile);
                 }
-                logger.info("inserting or updating into userid:" + categoryKarmaProfile.getUser().getId() + " score: " + categoryKarmaProfile.getKarmaPoints()+" for category: "+categoryKarmaProfile.getCategory().getDisplayName());
+                logger.info("inserting or updating into userid:" + categoryKarmaProfile.getUser().getId() + " score: " + categoryKarmaProfile.getKarmaPoints() + " for category: "
+                        + categoryKarmaProfile.getCategory().getDisplayName());
             }
         } catch (Exception e) {
             logger.error("Exception while reading excel sheet.", e);
@@ -154,10 +188,11 @@ public class CustomerScoreAction extends BaseAction {
 
                 int i = 0;
                 while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
-                    karmaProfile = getKarmaProfileService().findByUser(getUserService().getUserById(new Long(curHkRow.getColumnValue(i))));
+                    User user = getUserService().getUserById(new Long(curHkRow.getColumnValue(i)));
+                    karmaProfile = getKarmaProfileService().findByUser(user);
                     if (karmaProfile == null) {
                         karmaProfile = new KarmaProfile();
-                        karmaProfile.setUser(getUserService().getUserById(new Long(curHkRow.getColumnValue(i))));
+                        karmaProfile.setUser(user);
                     }
                     i++;
                     karmaProfile.setKarmaPoints(Integer.parseInt(curHkRow.getColumnValue(i)));
