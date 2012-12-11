@@ -63,8 +63,8 @@
         <div class="prodBoxes">
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH067' productDesc="Cleans your teeth and gums, reduces chances of plaque and maintains your oral health."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH078' productDesc="Refreshes your room with fragrance of sandal and jasmine kill all bad odors in your living room"/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VAC001-01' productDesc='Let your child move with care and comfort in this stylish and versatile Chicco Juvenile Stroller.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='TP001-01' productDesc='Made of cotton and rayon, Perfect for those with high mentrual flow and hate changing napkins constantly.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VAC001' productDesc='Let your child move with care and comfort in this stylish and versatile Chicco Juvenile Stroller.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='TP001' productDesc='Made of cotton and rayon, Perfect for those with high mentrual flow and hate changing napkins constantly.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH069' productDesc="Keeps your teeth clean and shiny."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH033' productDesc="Ensure the best possible protection for your teeth with this sonic toothbrush "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH063' productDesc="Ensure your kid's dental health with easier and deep cleansing vibrations. Only with Trisa Sonic Junior"/>

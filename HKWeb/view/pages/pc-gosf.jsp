@@ -76,9 +76,9 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PS020' productDesc="Sensational pleasure for your partner with long lasting dotted condoms "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='COP004' productDesc="This personal safety alert device warns you when someone tries to tamper with things that belong to you"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='COP002' productDesc="Ensure more security to yourself with this advanced Multi-functional Alarm cum Pepper Spray."/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='FER010-01' productDesc='Help your baby sleep in the melodious music and soothing lights of Chicco Sweetheart Bear.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='FER010' productDesc='Help your baby sleep in the melodious music and soothing lights of Chicco Sweetheart Bear.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OPT001' productDesc="Ideal for oral and underarm use"/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HV001-01' productDesc='Ensure your babys health with the Nuby Microwave Steam Sterilizer by keeping his food and water germ free'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='HV001' productDesc='Ensure your babys health with the Nuby Microwave Steam Sterilizer by keeping his food and water germ free'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH044' productDesc="This handy and foldable toothbrush with diamond rounded filaments cleans even the space between your teeth"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MOR002' productDesc="Infused with carbamide peroxide, it cleans your teeth and makes them more white and shiny."/>        	            
         </div>
