@@ -62,15 +62,15 @@
 
 
          <div class="prodBoxes">
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY586-01' productDesc='Ayurvedic formula helps break down fat, strengthens the skin dermis and tones the tummy in 3-6 weeks.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY586' productDesc='Ayurvedic formula helps break down fat, strengthens the skin dermis and tones the tummy in 3-6 weeks.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='AYUCR1' productDesc="Get rid of unwanted fat and regain body shape with enjoyable massages. Ayu Care Lavana Tailam makes fat loss enjoyable!"/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VLC001-01' productDesc='A non greasy oil infused with aromatic herbs. It fights cellulite build-up,  moisturized and firms up the skin'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VLC001' productDesc='A non greasy oil infused with aromatic herbs. It fights cellulite build-up,  moisturized and firms up the skin'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC4' productDesc="Dissolves when in contact with warm skin, Lavender oil decreases melanin & clears stubborn hyper pigmentation spots and acne marks. "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY18' productDesc="Essence of Saw Palmetto, Pumpkin Seed Oil, Stinging Nettle and Ginseng extract, prevents pattern baldness and diffused hair loss."/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BASCAR61-01' productDesc='Soothes exhausted eyes, calms senses and treats sinuses & aches.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BASCAR42-01' productDesc='Perfect travelling companion kit to ensure you sleep well even in flights and waiting lounges'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GLD16-01' productDesc='Your intimates needs a razor with a small head for a close and tender shave. Infused with Aloe and tea tree oil'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY560-01' productDesc='Reduces the effect of UV rays on skin, moisturizes and softens the skin, gives you that radiant look'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BASCAR61' productDesc='Soothes exhausted eyes, calms senses and treats sinuses & aches.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BASCAR42' productDesc='Perfect travelling companion kit to ensure you sleep well even in flights and waiting lounges'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GLD16' productDesc='Your intimates needs a razor with a small head for a close and tender shave. Infused with Aloe and tea tree oil'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY560' productDesc='Reduces the effect of UV rays on skin, moisturizes and softens the skin, gives you that radiant look'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC01' productDesc="Pure extracts of Saffron, Winter cherry & Turmeric diminish age spots, uneven pigmentation and freckles for an even skin tone. "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY723' productDesc="Effective formula controls dandruff and maintains a healthy scalp to provide a complete hair care solution."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI10' productDesc="Exfoliating soap that makes skin soft and smooth. The ground Apricot and Mulberry keeps dry skin at bay. "/>
@@ -80,7 +80,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC21' productDesc="Antiseptic and gentle wash to diminish pigmentation, acne, open pores & oily skin. "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GAT24' productDesc="No crunch, strong hold, non sticky wax for that hair statement"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC46' productDesc="Goodness of Bhringraj, Glycerin and Soy oil, conditions and hydrates dead locks. Absolute nourishment for chemically treated hair."/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY16-01' productDesc='Fortified with amino acids that nourishes hair, improves its strength and reduces hairfall'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY16' productDesc='Fortified with amino acids that nourishes hair, improves its strength and reduces hairfall'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY679' productDesc="Natural Beewax and Olive oil for delectably soft lips."/>
          </div>
         <div class="cl"></div>
