@@ -70,22 +70,20 @@
          <div class="cl"></div>
 
         <div class="prodBoxes">
-
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1103' productDesc='It contains multivitamins,antioxidants and minerals that improves the immune system and maintain a healthy heart.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1101' productDesc='A product that provides a mix of essential vitamins and minerals to the body. Ideal for men over the age of 50.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1128' productDesc='Easy to swallow capsules with multi vitamins & minerals, designed to promote bone formation & cardiovascular health in women.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1100' productDesc='A product that provides a mix of essential vitamins and minerals to the body. Ideal for women over the age of 50.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1025' productDesc='Herbal tonic which increases  nutrition absorption by the body, strengthening the skeletal system.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1075' productDesc='Ideal for people with sleep disorders, psychological stress and general health maintenance. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1034' productDesc='Supports energy production and also helps maintain healthy nerve and red blood cells.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1010' productDesc='Dietary supplement which is essential for healthier red blood cell metabolism, efficient nervous and immune system.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1112' productDesc='Health supplement that stimulates the immune system against diseases and infections'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1109' productDesc='Packed with Vitamin C, it helps improve vascular health, joint health and immunity system.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1017' productDesc='Improves bone-strength, bone metabolism, blood coagulation and vascular biology'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT994' productDesc='Specially formulated to protect, rejuvenate and detoxify the Liver.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT995' productDesc='Formulated with Glucosamine and Natural Antioxidants, it repairs the damaged tissues, relieving from joint and muscle pain'/>
-
-            </div>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1136' productDesc='These Chews are rich in essential nutrients that aids immune and growth factors.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1445' productDesc='Rich source of fiber, this promotes healthy digestion and prevents growth of harmful bacteria in the body besides reducing hunger and leading to weight loss.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1106' productDesc='Rein in your blood pressure fluctuations and boost your immunity. Excellent for those suffering from high blood pressure'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1250' productDesc='An exotic herbal mix that improves memory retention.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1461' productDesc='Found in fishes and some seeds, Omega 3 fatty acids aid in brain development, immunity, heart function & joint support. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1418' productDesc='This facilitates overall joint and bone health. It reduces inflammation and helps the body recover and function optimally.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT2005' productDesc='Rich in Methylsulfonylmethane, it helps maintaining flexible and strong bones and provides with essential nutrients.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1069' productDesc='Supports heart function and helps in circulation and blood flow throughout the body.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1310' productDesc='It is a combination of botanical extracts that reduce the absorption of unwanted fats and maintain healthy levels of hormones.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1309' productDesc='Contains antioxidants that protects the liver and assist in liver management of fats.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT885' productDesc='Maintains cholesterol levels within normal range and supports heart and vascular tissue from the oxidative effects of stress and aging.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1512' productDesc='Stress relieving tea which vitalizes energy levels and reduces weight.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1469' productDesc='Enriched with Gymnema Sylvestre, it fights with the problem of daibetes and arthritis.'/>					
+        </div>
 
         <div class="cl"></div>
 

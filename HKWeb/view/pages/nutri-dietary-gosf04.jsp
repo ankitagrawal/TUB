@@ -70,36 +70,24 @@
          </div>
           <div class="cl"></div>
         <div class="prodBoxes">
-
-
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1107' productDesc='Ideal for diabetics, it is known to maintain blood sugar levels and enforce a healthy lifestyle'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1125' productDesc='Get all the health benefits of Garlic without the smell and the taste. Detoxify, eliminate free radicals and combat aging!'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1084' productDesc='Rich in anti-oxidants, fat soluble product, that protects againt free radicals and migraine attacks.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1131' productDesc='Meant to enhance intestinal and colon health, it is suitable for people suffering from constipation and intestinal troubles.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1051' productDesc='Dietary supplement that fills the deficiency of vitamin B12 in the body.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1078' productDesc='These herbal capsules help cure night blindness and improve ones vision. It is feasible for both men and women.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1050' productDesc='Promote overall skin and hair health with Vitamin Shoppes Biotin. Get rid of dermatitis and dandruff.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1033' productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1012' productDesc='Enhances digestion of proteins and functioning of joints '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1068' productDesc='A traditional herb that provides nutritional support to your body and also stimulates blood circulation.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1130' productDesc='Reduces cardiovascular diseases, prevents ostioporosis and promotes bone health'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1116' productDesc='A dietary supplement with Vitamin D, helps in maintaining healthy bones, improving metabolism and ensuring healthy nails and hair'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1086' productDesc='Fortify yourself against bone loss and tooth decay with VS Calcium Citrate. Calcium also helps protect against fractures.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1119' productDesc='A calcium supplement for keeping bones and joints healthy. Ideal for senior citizens and those with joint troubles.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1047' productDesc='Use VS Carnipure for burning body fat and promoting muscle recovery after intense workouts. Suitable for serious gym goers. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1113' productDesc='Ideal for improving heart health, it is packed with L-Carnitine to ensure a quicker metabolism of fats in cells.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1064' productDesc='It contains Anthraquinones that helps treat constipation naturally. It can be used by both men and women.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1120' productDesc='Ideal for people with high BP, it manages your blood pressure and aids in the digestive process.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1019' productDesc='Meant for general wellness, its a powerful shot of Vitamin A, Vitamin D and Omega-3 fatty acids that enhance heart health.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1046' productDesc='It contains Vitamin E that helps promote a healthy heart.It is recommended for both men and women.'/>
-
-
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1033' productDesc='Get better glucose utilization and promotes healthy skin, hair and nails.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1096' productDesc='It helps build muscles,synthesise proteins and prevent catabolism. It can also be used as a weight reduction supplement.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1139' productDesc='Omega-3 fatty acid improves bone health, overall well being of the body and provides nutrition to the body'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1086' productDesc='Fortify yourself against bone loss and tooth decay with VS Calcium Citrate. Calcium also helps protect against fractures.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1019' productDesc='Meant for general wellness, its a powerful shot of Vitamin A, Vitamin D and Omega-3 fatty acids that enhance heart health.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1054' productDesc='Regenerates blood cells, boosts energy for the anaemic.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1324' productDesc='A rich blend of Resveratrol, Natures Bounty Grape Seed Extract is a potent source of antioxidants.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1109' productDesc='Packed with Vitamin C, it helps improve vascular health, joint health and immunity system.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1075' productDesc='Ideal for people with sleep disorders, psychological stress and general health maintenance. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1090' productDesc='Known to provide Branched Chain Amino Acids, it helps in muscle growth, stamin buildup and strength gain.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1001' productDesc='Boost liver function, cardio vascular health & reduce cholesterol with Vitamin Shoppe Lecithin Granules. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1024' productDesc='Organic vegetarian medicine to add GLA content without any chemical solvent. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1101' productDesc='A product that provides a mix of essential vitamins and minerals to the body. Ideal for men over the age of 50.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1104' productDesc=' health supplement, enriched with It contains natural herbs and milk thistle extracts that helps maintain a healthy liver. The supplement is recommended to be taken with meals.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT830' productDesc='Supplements your diet with Flax Oil that is rich in Omega 3 and 6 fatty acids. Flax Seed Oil help boost energy levels and ensures a healthy heart and cells. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1168' productDesc='This Ephedra-Free formula helps in burning calories and boosts energy '/>
             </div>
-
         <div class="cl"></div>
-
-        
-
         <div class="pages">
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf03.jsp">← Previous</a>
 

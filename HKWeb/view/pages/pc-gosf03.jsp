@@ -60,25 +60,24 @@
         <div class="cl"></div>
 
 
-        <div class="prodBoxes">
-           
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OPT001' productDesc="Ideal for oral and underarm use"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PA004' productDesc="An ideal product for women who face incontinence during and after pregnancy and patients who have been through vaginal surgery"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PF044' productDesc="For maximum foot protection, use this Neat Feat Diabetic Self Moulding Sole "/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PF049' productDesc="Gel heel shields that provide comfort and pain relief for those who constantly have to wear high heels"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PHL002' productDesc="Figure out the best two days you will be most fertile. Grab this I-Sure Ovulation Strip to get pregnant for sure. "/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PHL004' productDesc="keep your hands germ free with this anti-bacterial hand sanitizer "/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP001' productDesc="Protect yourself with this powerful pepper formula spray."/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP002' productDesc="Protect yourself with this powerful pepper formula spray."/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP070' productDesc="For a thorough and gentle cleansing of your skin, use Bel Premium Cotton Balls, with Aloe Vera and Provitamin B5"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP091' productDesc="Switch to Roots Hair Builder for thick and shiny hair instantly"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PPS009' productDesc="Keep your panties dry during summers and when you have vaginal discharge. Try these hygienic panty liners."/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PS020' productDesc="Sensational pleasure for your partner with long lasting dotted condoms "/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PS050' productDesc="Climax for men makes sure the partner is left screaming"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PW006' productDesc="Test your pregnancy in just 2 minutes with this Instant Ovulation Kit"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='TP001' productDesc="Made of cotton and rayon, Perfect for those with high mentrual flow and hate changing napkins constantly."/>
-
-
+        <div class="prodBoxes">        
+        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='JS003' productDesc="Brush better with JSB Electronic Toothbrush,"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NEAT001' productDesc="Neat Feat 3B Action Cream is a perfect pick for curing sweat rash and chafing"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NEAT003' productDesc="Rehydrate and repair the damaged and dried heels of your feet with this foot and heel balm"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH037' productDesc="Ensure healthy and shining white teeth with this premium quality Trisa Clinical white Toothpaste."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH094' productDesc="Care for your gums and teeth and keep your dental health intact with this plaque cleaner "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH095' productDesc="Get an effective cleaning of your teeth with this rechargeable toothbrush which reaches interdental areas of your mouth."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='AIR005' productDesc="Freshen up your room with this air freshener that comes in great fragrances"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NEAT005' productDesc="This foot and leg moisturizer, with a rich moisturizing formula for dry skin and cracked heels"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NEAT006' productDesc="Neat Feat roll on Deodoriser aids in preventing foot odour"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH097' productDesc="With soft bristles for effective cleaning of plaque and bacteria"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DE005' productDesc="Disk Roller Body Massager is the answer to your muscle pain and extra body fat"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MIDAS005' productDesc="Refresh your home and office with the natural and rich fragrance of Lovin Air Freshener "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PF044' productDesc="For maximum foot protection, use this Neat Feat Diabetic Self Moulding Sole "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DE001' productDesc="This face and body massager delivers minute acoustic vibrations, curing muscle and joint pain "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DE002' productDesc="FaceMate's Dual Wave Ultrasonic Face Massager revitalizes your skin using safe ultrasonic technology "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DE003' productDesc="Relax your muscle and energize your body with this multi-purpose warm massager"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DE004' productDesc="Get a wrinkle free, healthy and  a firmer skin and no side effects with this muscle stimulator"/>        	
         </div>
         <div class="cl"></div>
 

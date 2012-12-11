@@ -49,8 +49,8 @@ $(document).ready(function () {
 <div id="slidebox">
     <a class="close"></a>
 
-    <p>Heavy discounts on this page starts at 12am, tomorrow</p>
+    <p>The Great Online Shopping Festival Starts @Midnight. Do Visit Us for Crazy Discounts!</p>
 
     <h2>Keep your wallets ready and your fingers on the mouse!</h2>
-    <a class="more" target="_blank" href="http://www.healthkart.com">Read More >> </a>
+    <a class="more" target="_blank" href="http://www.healthkart.com/online-shopping-festival">Browse Our Range >> </a>
 </div>

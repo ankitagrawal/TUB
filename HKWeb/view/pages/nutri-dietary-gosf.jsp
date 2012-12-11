@@ -69,29 +69,27 @@
         <div class="cl"></div>
 
         <div class="prodBoxes">
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1293'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1309' productDesc='Contains antioxidants that protects the liver and assist in liver management of fats'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1315' productDesc='A comprehensive Vitamin and Mineral formula for rapid growth'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1299' productDesc='Contains Omega-3 fatty acids that treat heart diseases, asthma, depressive illness and promotes eye and brain development'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1302'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1301'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1310' productDesc='It is a combination of botanical extracts that reduce the absorption of unwanted fats and maintain healthy levels of hormones'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1305' productDesc='Contains digestive enzymes that breakdown different , hence improve your digestive system and treat pancreatitis, acid reflux and lactase deficiency.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1313' productDesc='They provide all the essential vitamins,minerals and aminos for a healthier prostate functioning. It is unisex in nature.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1297' productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1096' productDesc='It helps build muscles,synthesise proteins and prevent catabolism. It can also be used as a weight reduction supplement.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1090' productDesc='Known to provide Branched Chain Amino Acids, it helps in muscle growth, stamin buildup and strength gain.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1206' productDesc='Reduce  stress & Cortisol levels, improve physical performance with Viridex. Safe & steroid free, with proven results.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT2005' productDesc='Rich in Methylsulfonylmethane, it helps maintaining flexible and strong bones and provides with essential nutrients'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT555' productDesc='An ideal remedy for people who have stiffness or joint pain and digestive disturbances.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT531' productDesc='A fabulous product that is rich in Vitamin B. Strengthens your hair cuticles and thereby, strong and smooth hair'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT539' productDesc='Maintains body weight, improves immunity, and ensures seamless functioning of body organs.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT558' productDesc='Get all the vital fatty acids that promote heart health, brain function, and immunity. Put age related diseases at bay.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT540' productDesc='Antiseptic Australian Tea Tree Extract. Protects and helps maintain a healthy scalp. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT885' productDesc='Maintains cholesterol levels within normal range and supports heart and vascular tissue from the oxidative effects of stress and aging.'/>
-
-
-            </div>
+        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT986' productDesc='A supplement that provides Creating for enhancing stamina and building muscles. Ideal for intense workouts.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT412' productDesc='A supplement that improves the nutrient absorption power in adults and boosts energy levels. Ideal for senior citizens.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1322' productDesc='Boosts energy metabolism, promotes healthy skin, hair and nails.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1171' productDesc='Reduces muscle breakdown and increases body weight'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT982' productDesc='Weight loss product that also minimizes premature ageing and improves cardiovascular health.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT667' productDesc='100% Veg tablets with synergistic blend of minerals, vitamins & essential nutrients. Makes your hair shiny and smooth.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT558' productDesc='Get all the vital fatty acids that promote heart health, brain function, and immunity. Put age related diseases at bay.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT531' productDesc='A fabulous product that is rich in Vitamin B. Strengthens your hair cuticles and thereby, strong and smooth hair'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1299' productDesc='Contains Omega-3 fatty acids that treat heart diseases, asthma, depressive illness and promotes eye and brain development'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT316' productDesc='Pre-workout or post-workout supplement, highly concentrated for better results.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1132' productDesc='A portable pillbox ideal for travellers, it has five compartments to carry different pills.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1038' productDesc='A versatile product recommended for everyone, it helps in body detoxification, weight loss and general wellness.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT657' productDesc='Improve muscle & heart function and keep osteo arthritis at bay with Calcium 600 with Vitamin D3. Ideal for all. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT954' productDesc='Enriched with Omega-3 and Omega-6, it promotes overall well being and maintains healthy cardiovascular system.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT449' productDesc='Enriched with Vitamin E and soy protein, it improves your cardiovascular system and helps remember things better'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT555' productDesc='An ideal remedy for people who have stiffness or joint pain and digestive disturbances.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT665' productDesc='Combination of Calcium and Vitamin D makes it easy to absorb and improves the health of teeth and bones'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1140' productDesc='It improves the blood circulation in the body and helps promote a healthy heart. This product is unisex.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1124' productDesc='A potent combination of Omega 3,6 and 9 fatty acids, it improves heart health and increases good cholesterol in the body.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1129' productDesc='Meant to prevent hair loss, skin problems and unhealthy nails. Ideal for women of all age groups.'/>		
+        </div>
 
         <div class="cl"></div>
 

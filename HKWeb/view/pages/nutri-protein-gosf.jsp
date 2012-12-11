@@ -44,17 +44,11 @@
 
         <div class="heading1">PROTEINS & MASS GAINERS</div>
 
-                <div class="pages">
+		<div class="pages">
 
             <span class="pages_link">1</span>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf02.jsp">2</a>
-
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf03.jsp">3</a>
-
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf04.jsp">4</a>
-
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf05.jsp">5</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-protein-gosf02.jsp">Next →</a>
 
@@ -64,29 +58,26 @@
 
 
         <div class="prodBoxes">
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT486' productDesc='A unique blend of pure crystalline Ergogenic amino acids which acts as anabolic agent and promotes muscle protein synthesis'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT487' productDesc='Containing BCAA, GLT, Lysine and Arginine, it is effective in building muscle mass and enhances the level of performance'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1718' productDesc='Get the best Casein available & juggernaut your way to your cherished body. Contains added enzymes to facilitate digestion. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1375' productDesc='Formulated with blend of proteins, essential nutrients and minerals, Ideal for growing strong, lean and powerful muscles.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1227' productDesc='A pre-workout supplement that acts as a Nitric Oxide Pump Amplifier and contains Pycnogenol as its key ingredient.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1216' productDesc='This whey is rich in high quality proteins that help build stronger muscles along with promoting strength to the body.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1216' productDesc='Conatins high-qualtiy protien,ideal for your muscle buiding trainings.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1216' productDesc='A fast acting bioactive, sugarless mix of Whey, natural Glutamine and BCAA. It raises glutathione level and improves overall health. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1219' productDesc='A premium protein blend with Creatine Monohydrate. It fuels muscles post workout and L-Glutamine to preserve muscle tissue.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT471' productDesc='The only protein that is useful both during bulking and cutting. Benefit from low carb, low fat & high protein.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT471' productDesc='Contains Whey Protein Isolate which provides nourishment to the body,enhances immune function and helps in weight loss'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT472' productDesc='Ideal for assisting your muscles post workout, it is a whey protein isolate that is 100% instantised and hydrolysed. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT472' productDesc='This 100% Whey-Protein Isolate promotes muscle growth and tones them, improves digestion and overall physical performance '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT474' productDesc='It fulfils need for proteins, vitamins and minerals for an improved performance. This unisex supplement is sugar free.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1532' productDesc='This weight gainer helps one build stonger and heavier muscles. It can be used by both men and women.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1532'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1532'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT475' productDesc='Feed your muscles the best protein. Promote muscle growth and improve your athletic performance with Gaspari IntraPro Pure Whey.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT475' productDesc='One whey protein for all demands – be it weight loss or muscle gain or simply higher protein intake! '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1147' productDesc='Probitic supplement that supports immunity and digestive health,helps with support recovery.'/>
-
-            
-
+        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT130' productDesc='Provides 11g of Leucine and 13g of additional BCAAs per serving. Ideal for rapid muscle gain and recovery.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Designed for people who want to gain mass. Packed with 52gm of high quality protein blend and 9gm of added fiber.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1367' productDesc='Tailored for fitness enthusiasts engaged in heavy workouts, it has 25gm of 100% Whey Protein blend and EAAs per serving.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT905' productDesc='For bodybuilders who want to gain mass. Infused with 1000 calories, 70g proteins and 10g Branched-Chain Amino Acids.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT131' productDesc='Get the purest whey protein money can buy. All this with no carbs whatsoever. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT590' productDesc='Packed with low fat, high protein and the best taste in one package – MuscleTech Premium Whey Protein. Suitable for all gym goers.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT056' productDesc='Get the best carb free, lactose free whey protein known to man. Suitable for bodybuilding & athletic training alike. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT468' productDesc='Increased muscle mass and strength along with improved bones and ligaments'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT911' productDesc='This products not just saturates aching muscles with right kind of amino acids, it also works as a nutritious health supplement'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1162' productDesc='Built with Vitamins A and E and Zinc and Selenium, it offers maximum nutrient utilization and prevents muscle loss '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1227' productDesc='A pre-workout supplement that acts as a Nitric Oxide Pump Amplifier and contains Pycnogenol as its key ingredient.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT912' productDesc='It helps one gain weight and get increased muscle mass by reducing the degradation of muscles.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT350' productDesc='Packed with amino acids, it is a pill-based formulation that helps in muscle growth, repair and maintenance.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1172' productDesc='A unique blend for healthy metabolism and muscle gain. Excellent for hard training'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT891' productDesc='An award winning muscle building formula. The 7 stage approach repairs muscles  and optimizes post workout growth.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT574' productDesc='High performance whey protein blend.  A superior mix, you absorb upto 80% protein instantly.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT486' productDesc='A unique blend of pure crystalline Ergogenic amino acids which acts as anabolic agent and promotes muscle protein synthesis'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT132' productDesc='Get the best Creatine available to mankind and get unbelievable power and muscle gains. Go with CellTech hardcore to beat the pros.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT472' productDesc='Ideal for assisting your muscles post workout, it is a whey protein isolate that is 100% instantised and hydrolysed. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1375' productDesc='Formulated with blend of proteins, essential nutrients and minerals, Ideal for growing strong, lean and powerful muscles.'/>
          </div>
 
 
@@ -98,12 +89,6 @@
             <span class="pages_link">1</span>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf02.jsp">2</a>
-
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf03.jsp">3</a>
-
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf04.jsp">4</a>
-
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf05.jsp">5</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-protein-gosf02.jsp">Next →</a>
 

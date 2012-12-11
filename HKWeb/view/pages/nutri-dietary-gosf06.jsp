@@ -68,30 +68,23 @@
          </div>
         <div class="cl"></div>
         <div class="prodBoxes">
-
-
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1072' productDesc='A trusted and tried method to boost sexual energy for both men and women. Also detoxifies the urinary system naturally?'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1022' productDesc='Herbal tonic for people with rheumatoid arthritis, digestive issues, and acute back pain.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1035' productDesc='Rich in Echinacea extract, a potent booster of immunity'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1067' productDesc='Packed with echinacea herbs that cure cold & flu and improves immunity.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1024' productDesc='Organic vegetarian medicine to add GLA content without any chemical solvent. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1073' productDesc='Keep eye related stress under control with VS Eyebright. Guard yourself against conjunctivitis, glaucoma & cateract. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1079' productDesc='Extremely beneficial antioxidants that promotes a healthier digestive system'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1074' productDesc='Made from feverfew flower extract, it is rich in parthenolides and is an essential addition to your medicine kit  '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1121' productDesc='A generic supplement, it improves heart health, enhances immunity and enforces healthy skin.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1071' productDesc='A general wellness product, it provides 75% more polyphenols per cup and helps in weight management.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1129' productDesc='Meant to prevent hair loss, skin problems and unhealthy nails. Ideal for women of all age groups.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1069' productDesc='Supports heart function and helps in circulation and blood flow throughout the body.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1108' productDesc='Ensures increased vitality and energy in men. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1054' productDesc='Regenerates blood cells, boosts energy for the anaemic.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1059' productDesc='Kelp is the worlds healthiest sea weed, containing iron, iodine, calcium & magnesium. Helpful for thyroid issues & fat loss.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1060' productDesc='Fortify your immune system, regulate your blood pressure and power up for higher muscular activity with VS L-Arginine. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1110' productDesc='Boosts your vitality for intense workout. Prevents heart diseases, high BP and chest pain.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1117' productDesc='Get a major Heart & Liver boost and put an end to cardio, liver and kidney related troubles with Vitamin Shoppe Lecithin.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1023' productDesc='Chinese herbal remedy for several ailments and for general well being. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1011' productDesc='Excellent for maintaining nitrogen balance in body.'/>
-
-     </div>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1000' productDesc='Reduce cardio vascular risk & tissue damage with Vitamin E & Selenium. Free from artificial colors, preservatives & flavors. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1045' productDesc='Get rid of muscle sickness and fatigue. Ensure pristine nerve condition and acid base balance too!'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1064' productDesc='It contains Anthraquinones that helps treat constipation naturally. It can be used by both men and women.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1378' productDesc='Preservative-free capsule that controls blood pressure and reduces incidences of heart attacks  '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1125' productDesc='Get all the health benefits of Garlic without the smell and the taste. Detoxify, eliminate free radicals and combat aging!'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1046' productDesc='It contains Vitamin E that helps promote a healthy heart.It is recommended for both men and women.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1023' productDesc='Chinese herbal remedy for several ailments and for general well being. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1107' productDesc='Ideal for diabetics, it is known to maintain blood sugar levels and enforce a healthy lifestyle'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1068' productDesc='A traditional herb that provides nutritional support to your body and also stimulates blood circulation.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1070' productDesc='Enriched with olive leaf extract, it treats viral infections and also maintains a healthy cadiovascular system'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1089' productDesc='Get protein and vitamin B12 in 1 formulation designed to boost your metabolism and improve hair and skin texture.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1131' productDesc='Meant to enhance intestinal and colon health, it is suitable for people suffering from constipation and intestinal troubles.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1025' productDesc='Herbal tonic which increases  nutrition absorption by the body, strengthening the skeletal system.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1011' productDesc='Excellent for maintaining nitrogen balance in body.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1074' productDesc='Made from feverfew flower extract, it is rich in parthenolides and is an essential addition to your medicine kit  '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT540' productDesc='Antiseptic Australian Tea Tree Extract. Protects and helps maintain a healthy scalp. '/>						
+     	</div>
 
         <div class="cl"></div>
 

@@ -44,7 +44,7 @@
 
         <div class="heading1">PROTEINS & MASS GAINERS</div>
 
-               <div class="pages">
+         <div class="pages">
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-protein-gosf.jsp">← Previous</a>
 
@@ -52,40 +52,29 @@
 
             <span class="pages_link">2</span>
 
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf03.jsp">3</a>
-
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf04.jsp">4</a>
-
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf05.jsp">5</a>
-
-            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-protein-gosf03.jsp">Next →</a>
-
          </div>
-         <div class="cl"></div>
+                       <div class="cl"></div>
 
         <div class="prodBoxes">
-
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1147' productDesc='This helps build muscle mass. It also promotes faster post-workout recovery and can be used by both men and women.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1231'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1539' productDesc='An effective blend of pharmaceutically standardized extracts to increases body’s own production of testosterone and GH hormone, enhancing musclebuilding and fatburning abilities'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1279'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT825' productDesc='A supplement specifically designed for the hard gainer or individual looking for a product to help them gain weight and strength fast'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1414' productDesc='This feeds the muscles with anabolic proteins, carbs and calories needed to fuel insane levels of muscle growth'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT912' productDesc='It helps one gain weight and get increased muscle mass by reducing the degradation of muscles.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT912' productDesc='Rich in glutamine, it enhances your body weight and minimizes muscle fatigue.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT911' productDesc='This products not just saturates aching muscles with right kind of amino acids, it also works as a nutritious health supplement'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT911' productDesc='A blend of Amino acids to accelerate muscle gain. Reach goals faster with Matrix Whey Protein'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT911'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT639'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT639' productDesc='Blend of instant absorbing Whey Protein & BCAA’s, this post workout supplement supports optimum muscle growth while keeping it lean'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT639' productDesc='This product is premium whey that delivers a powerful blend of high-quality protein and a combination of Branched Chain Amino Acids that bodybuilders and athletes would look for'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT639' productDesc='It contains BCAAs that help promote optimized muscle growth along with strength and endurance.It is a unisex product.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Designed for people who want to gain mass. Packed with 52gm of high quality protein blend and 9gm of added fiber.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Designed for people who want to gain mass. Packed with 52gm of high quality protein blend and 9gm of added fiber.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Designed for people who want to gain mass. Packed with 52gm of high quality protein blend and 9gm of added fiber.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Designed for people who want to gain mass. Packed with 52gm of high quality protein blend and 9gm of added fiber.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1368' productDesc='Designed for people who want to gain mass. Packed with 52gm of high quality protein blend and 9gm of added fiber.'/>
-
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1147' productDesc='This helps build muscle mass. It also promotes faster post-workout recovery and can be used by both men and women.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1208' productDesc='Pick Pure Platinum Whey for better mass gains with great taste. Eliminate muscle wasting and benefit from quick absorption. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT475' productDesc='Feed your muscles the best protein. Promote muscle growth and improve your athletic performance with Gaspari IntraPro Pure Whey.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1157' productDesc='This offers Gold Standard protein, that aids in building muscles and stimulating protein synthesis'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1209' productDesc='Cramped with whey protein isolates that help you sculpt lean muscles with confidence'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1332' productDesc='It helps one to gain weight along with an increased muscle mass. It can be used by both men and women.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1335' productDesc='Great source of essential and branched chain amino acids, that are required for muscle recovery.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT487' productDesc='Containing BCAA, GLT, Lysine and Arginine, it is effective in building muscle mass and enhances the level of performance'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1539' productDesc='An effective blend of pharmaceutically standardized extracts to increases body’s own production of testosterone and GH hormone, enhancing musclebuilding and fatburning abilities'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1339' productDesc='It helps promote a leaner body with an improved stamina.It is free of sugar and aspartame and is unisex in nature.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1219' productDesc='A premium protein blend with Creatine Monohydrate. It fuels muscles post workout and L-Glutamine to preserve muscle tissue.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1340' productDesc='Weight loss powder which is a good source of protien and is low in calories.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1216' productDesc='This whey is rich in high quality proteins that help build stronger muscles along with promoting strength to the body.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1414' productDesc='This feeds the muscles with anabolic proteins, carbs and calories needed to fuel insane levels of muscle growth'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT825' productDesc='A supplement specifically designed for the hard gainer or individual looking for a product to help them gain weight and strength fast'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1343' productDesc='Optimizes anabolism, triggers growth, and strengths of muscles.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1359' productDesc='If you want to gain lean muscle with the energy to power your workouts, then grab QNT Metapure Mass+ Today!'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1279' productDesc='Professional support for your physique, with low sugar, ensuring that you pick up only lean muscle mass without the added fat. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1718' productDesc='Get the best Casein available & juggernaut your way to your cherished body. Contains added enzymes to facilitate digestion. '/>			
          </div>
 
         <div class="cl"></div>
@@ -99,16 +88,7 @@
 
             <span class="pages_link">2</span>
 
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf03.jsp">3</a>
-
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf04.jsp">4</a>
-
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-protein-gosf05.jsp">5</a>
-
-            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-protein-gosf03.jsp">Next →</a>
-
          </div>
-
 
     </div>
 
