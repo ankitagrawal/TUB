@@ -262,10 +262,10 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     }
     if (!(category.getName().equals("home"))) {
       noCache();
-      return new ForwardResolution(CategoryAction.class, "pre").addParameter("category", category.getName());
+      return new RedirectResolution(CategoryAction.class, "pre").addParameter("category.name", category.getName());
     } else {
       noCache();
-      return new ForwardResolution(HomeAction.class, "pre").addParameter("category", category.getName());
+      return new RedirectResolution(HomeAction.class, "pre").addParameter("category", category.getName());
     }
   }
 
@@ -304,10 +304,10 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
       }
       if (!(category.getName().equals("home"))) {
         noCache();
-      return new ForwardResolution(CategoryAction.class, "pre").addParameter("category", category.getName());
+      return new RedirectResolution(CategoryAction.class, "pre").addParameter("category.name", category.getName());
     } else {
         noCache();
-      return new ForwardResolution(HomeAction.class, "pre").addParameter("category", category.getName());
+      return new RedirectResolution(HomeAction.class, "pre").addParameter("category.name", category.getName());
     }
   }
     public Category getCategory() {
