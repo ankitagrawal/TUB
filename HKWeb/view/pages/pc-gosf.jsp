@@ -67,11 +67,11 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='KNOCK001' productDesc="Protect yourself with this powerful pepper formula spray."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NIC001' productDesc="Nicorette reins in your constant urge to smoke. Quit smoking for sure."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH101' productDesc=""/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PS041-01' productDesc='Stroll your little one in this buggy inspired Sunbaby Stroller, having cushioned seat and a hood protecting him from sun.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PS041' productDesc='Stroll your little one in this buggy inspired Sunbaby Stroller, having cushioned seat and a hood protecting him from sun.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MOS001' productDesc="This Super King Size net protects your little one against dengue, malaria and other diseases caused by insects"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PHL004' productDesc="keep your hands germ free with this anti-bacterial hand sanitizer "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH006' productDesc="Get a  cleaner tongue with this carefully tested cleaner blister"/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PS052-01' productDesc='Calm down your crying baby with this musical toy having soft and soothing lights, and which activates to the sound of cry. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PS052' productDesc='Calm down your crying baby with this musical toy having soft and soothing lights, and which activates to the sound of cry. '/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP091' productDesc="Switch to Roots Hair Builder for thick and shiny hair instantly"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PS020' productDesc="Sensational pleasure for your partner with long lasting dotted condoms "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='COP004' productDesc="This personal safety alert device warns you when someone tries to tamper with things that belong to you"/>
