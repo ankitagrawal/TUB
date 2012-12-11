@@ -60,13 +60,13 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB046' productDesc="A Breast Pump designed to mimic natural expression of the mothers breast. It ensures even milk flow with minimal effort."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB219' productDesc="Mix the right amount of milk powder. Go for Farlin Milk Powder Container"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB144' productDesc="Read your child's temperature without ever touching. Get Farlin Instant Infrared Ear Thermometer "/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB2117' productDesc="Pregnancy puts a lot of stress on your back and tummy. This maternity belt ensures both comfort and safety"/>
+			<%--<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB2117' productDesc="Pregnancy puts a lot of stress on your back and tummy. This maternity belt ensures both comfort and safety"/>--%>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB270' productDesc="Moisturize your baby's soft and delicate skin with Farlin Baby Wet Wipes "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB459' productDesc='Ensure your babys health with the Nuby Microwave Steam Sterilizer by keeping his food and water germ free'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB171' productDesc="Your child has all the fun eating with Pigeon Bowl and Weaning Spoon set."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB1976' productDesc="This electric breast pump gently massages the breasts first. It then mimics natural expression for more milk at any given time"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB2132' productDesc="Prevent your child from inserting fingers in the power socket. Protect with Farlin Safety Guard For Socket"/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB256' productDesc="Comb your baby's hair without hurting them, by Farlin Comb and Brush Set White"/>
+			<%--<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB256' productDesc="Comb your baby's hair without hurting them, by Farlin Comb and Brush Set White"/>--%>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB456' productDesc="Make your toddler learn how to hold and drink slowly without spilling. Get this sipper accompanied with gripper cups"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB1992' productDesc='Stroll your little one in this buggy inspired Sunbaby Stroller, having cushioned seat and a hood protecting him from sun.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BAB2087' productDesc='Let your child move with care and comfort in this stylish and versatile Chicco Juvenile Stroller.'/>
