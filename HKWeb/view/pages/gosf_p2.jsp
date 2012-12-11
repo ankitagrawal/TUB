@@ -23,7 +23,7 @@
 		&gt; <span class="crumb last" style="font-size: 12px;">Cyber
 		Monday</span>
 
-		<h1 class="title">Cyber Monday Great Online Shopping Festival</h1>
+		<h1 class="title">Great Online Shopping Festival</h1>
 	</div>
 
 </s:layout-component>

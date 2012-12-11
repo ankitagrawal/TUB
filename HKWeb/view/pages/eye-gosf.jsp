@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:layout-render name="/layouts/categoryBlankLanding.jsp" pageTitle="Cyber Monday Great Online Shopping Festival">
+<s:layout-render name="/layouts/categoryBlankLanding.jsp" pageTitle="Great Online Shopping Festival">
 
 <s:layout-component name="htmlHead">
  <link href="${pageContext.request.contextPath}/css/gosf.css" rel="stylesheet" type="text/css" />
@@ -17,7 +17,7 @@
     <span class="crumb last" style="font-size: 12px;">Cyber Monday</span>
 
     <h1 class="title">
-       Cyber Monday Great Online Shopping Festival
+       Great Online Shopping Festival
     </h1>
   </div>
   
