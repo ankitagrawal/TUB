@@ -175,7 +175,7 @@
     <h2>How to Enroll?</h2>
     <p>Step 1- Pay Rs.100/- only as a Membership Fee to register. Once registered you can avail following benefits:</p>
     <ul>
-  <li>FreeStyle Optium Glucometer (Rs. 2199/-) + FreeStyle Optium Strips (Rs. 350/-) + Glucerna SP (Rs. 70/-) = Rs. 350/- (You save Rs. 2269/-)</li>
+  <li>FreeStyle Optium Glucometer (Rs. 2199/-) + FreeStyle Optium Strips (Rs. 350/-) + Glucerna SP (Rs. 70/-) = Rs. 825/- (You save Rs. 2269/-)</li>
   <li>Additional 5% off on already subsidized wide range of Diabetes Products</li>
   <li>15% off on medical bills (Only Diabetes, Cardio and Cholesterol products)</li>
 </ul>
