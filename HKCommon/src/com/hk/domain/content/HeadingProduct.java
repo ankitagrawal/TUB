@@ -14,8 +14,8 @@ import com.hk.domain.content.PrimaryCategoryHeading;
  */
 
 @NamedQueries({
-    @NamedQuery(name = "getHeadingProductsByHeadingId", query = "select hp from HeadingProduct hp where hp.heading = :heading"),
-    @NamedQuery(name = "getHeadingProductByHeadingAndProductId", query = "select hp from HeadingProduct hp where hp.heading = :heading and hp.product.id = :productId"),
+    @NamedQuery(name = "getHeadingProductsByHeadingId", query = "select hp from HeadingProduct hp where hp.heading = :heading order By rank desc"),
+    @NamedQuery(name = "getHeadingProductByHeadingAndProductId", query = "select hp from HeadingProduct hp where hp.heading = :heading and hp.product.id = :productId order By rank desc"),
     @NamedQuery(name = "getHeadingProductsSortedByRank", query = "select hp from HeadingProduct hp where hp.heading.id = :headingId and hp.product.outOfStock = false and hp.product.hidden = false order By rank desc")
 })
 

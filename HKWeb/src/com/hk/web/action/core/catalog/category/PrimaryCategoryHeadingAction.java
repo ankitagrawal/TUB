@@ -143,6 +143,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
   public Resolution addPrimaryCategoryHeadingProducts() {
 //        heading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, heading.getId());
     headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
+    heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());    
     logger.debug("adding products for heading id: " + heading.getId() + " name: " + heading.getName());
     return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
   }
@@ -213,6 +214,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
   public Resolution editPrimaryCategoryHeadingProducts() {
 //        heading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, heading.getId());
     headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
+    heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
     logger.debug("Editing products for heading id: " + heading.getId() + " name: " + heading.getName());
     return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
   }
