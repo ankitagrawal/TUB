@@ -29,19 +29,21 @@
 		<fileset file="${lib.root.dir}/thirdParty/metadata-extractor-2.5.0-RC1.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/core-renderer-R8pre2.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/joda-time-1.6.jar" />
+        <fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
+        <fileset file="${lib.root.dir}/thirdParty/paypal_base.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/jsoup-1.6.1.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/recaptcha4j-0.0.7.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/shiro-all-1.0-incubating-SNAPSHOT.jar" />
 		<fileset file="${lib.root.dir}/rest/jackson-core-asl-1.8.5.jar" />
         <fileset file="${lib.root.dir}/rest/jackson-mapper-asl-1.8.5.jar"/>
         <fileset file="${lib.root.dir}/rest/jackson-jaxrs-1.8.5.jar" />
         <fileset file="${lib.root.dir}/rest/resteasy-jaxrs-2.3.0.GA.jar" />
 		<fileset file="${lib.root.dir}/rest/jaxrs-api-2.3.0.GA.jar" />
         <fileset file="${lib.root.dir}/rest/resteasy-jackson-provider-2.3.0.GA.jar"/>
-		<fileset file="${lib.root.dir}/thirdParty/shiro-all-1.0-incubating-SNAPSHOT.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-annotations-3.4.0.GA.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />
 		<fileset file="${lib.root.dir}/itext/itext-1.4.8.jar" />
-		<fileset file="${lib.root.dir}/thirdParty/jsoup-1.6.1.jar" />
-		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
-		<fileset file="${lib.root.dir}/thirdParty/recaptcha4j-0.0.7.jar" />
 		<fileset file="${lib.root.dir}/citrus/SFA-1.2.jar" />
 		<fileset file="${lib.root.dir}/icici/sfa.jar" />
         <fileset file="${lib.root.dir}/citrus/citruspay-merchant-kit-1.0.jar" />
@@ -55,7 +57,6 @@
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
 		<fileset file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<fileset file="${project.report.dir}/dist/hk-report.jar" />
-        <fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
         <fileset file="${lib.root.dir}/commons/commons-collections-3.1.jar" />
   </path>
 

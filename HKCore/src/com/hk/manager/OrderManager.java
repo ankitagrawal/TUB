@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpSession;
 
+import com.hk.pact.service.combo.ComboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,8 @@ public class OrderManager {
     @Autowired
     private CartLineItemService               cartLineItemService;
     @Autowired
+    private ComboService                      comboService;
+    @Autowired
     private OrderService                      orderService;
     @Autowired
     private PaymentService                    paymentService;
@@ -107,7 +110,6 @@ public class OrderManager {
     private CartLineItemDao                   cartLineItemDao;
     @Autowired
     private LinkManager                       linkManager;
-
     @Autowired
     private SkuService                        skuService;
     @Autowired
@@ -124,7 +126,6 @@ public class OrderManager {
     private SubscriptionService               subscriptionService;
     @Autowired
     private SMSManager                        smsManager;
-
     @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
@@ -596,6 +597,15 @@ public class OrderManager {
                                     if (unbookedInventory < 0) {
                                         unbookedInventory = 0L;
                                     }
+                                  //setting productVariant and it's related Combos out of stock
+                                  if(unbookedInventory <= 0L){
+                                    //Firstly setting product variant out of stock
+                                    ProductVariant productVariantOutOfStock = getProductVariantService().getVariantById(lineItem.getProductVariant().getId());
+                                    productVariantOutOfStock.setOutOfStock(true);
+                                    getProductVariantService().save(productVariantOutOfStock);
+                                   //calling Async method to set related combos out of stock
+                                    getComboService().markRelatedCombosOutOfStock(lineItem.getProductVariant());
+                                  }
                                     if (lineItem.getComboInstance() != null) {
                                         comboInstanceIds.add(lineItem.getComboInstance().getId());
                                         lineItem.setQty(0L);
@@ -964,4 +974,8 @@ public class OrderManager {
     public void setSmsManager(SMSManager smsManager) {
         this.smsManager = smsManager;
     }
+
+  public ComboService getComboService() {
+    return comboService;
+  }
 }

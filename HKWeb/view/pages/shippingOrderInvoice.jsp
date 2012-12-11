@@ -74,6 +74,7 @@
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);        
         pageContext.setAttribute("sexualCare", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("sexual-care")));
         pageContext.setAttribute("personalCareWomen", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("women")));
+        pageContext.setAttribute("discretePackaging", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("discrete-packaging")));
     %>
 </head>
 <body>
@@ -116,8 +117,13 @@
 
 <div class="grid_4">
     <div style="text-align: center;">
-        ORDER INVOICE
-    </div>
+ORDER INVOICE <c:choose>
+<c:when
+        test="${orderSummary.printable && hk:isOrderForDiscretePackaging(orderSummary.shippingOrder)}"><b>(OUT)</b></c:when>
+        <c:otherwise><b>(IN)</b>
+        </c:otherwise>
+        </c:choose>
+</div>
 </div>
 <div class="grid_4">
     <div style="float: right;">
@@ -240,6 +246,14 @@
 <div style="margin-top: 5px;"></div>
 
 <div class="grid_12">
+    <c:if test="${orderSummary.printZone && orderSummary.zone != null}">
+        <hr/>
+        <p><strong>ZONE:-</strong> ${orderSummary.zone}</p>
+        <hr/>
+    </c:if>
+</div>
+
+<div class="grid_12">
     <c:if test="${baseOrder.userComments != null}">
         <hr/>
         <p><strong>User Instructions:-</strong> ${baseOrder.userComments}</p>
@@ -296,7 +310,7 @@
                 <td>
                     <c:choose>
                         <c:when test="${orderSummary.printable && (hk:collectionContainsCollection(invoiceLineItem.productCategories, sexualCare)
-						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen))}">
+						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen) || hk:collectionContainsCollection(invoiceLineItem.productCategories, discretePackaging))}">
                             <p>Personal Care Product</p>
                         </c:when>
                         <c:otherwise>

@@ -24,6 +24,9 @@
 
 
     <jsp:include page="/includes/_style.jsp"/>
+    <s:layout-component name="analytics">
+      <jsp:include page="/includes/_analytics.jsp"/>
+    </s:layout-component>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/scripts/field-validation.js"></script>
@@ -44,10 +47,6 @@
       <div class="floatfix"></div>
     </div>
     <s:layout-render name="/includes/_footer.jsp"/>
-
-    <s:layout-component name="analytics">
-      <jsp:include page="/includes/_analytics.jsp"/>
-    </s:layout-component>
 
     <s:layout-component name="zopim">
       <jsp:include page="/includes/_zopim.jsp"/>

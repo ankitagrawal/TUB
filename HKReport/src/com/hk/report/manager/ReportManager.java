@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -276,7 +277,7 @@ public class ReportManager {
      * The method returns an excel gfile for the courier report
      */
     public File generateCourierReportXsl(String xslFilePath, EnumShippingOrderStatus shippingOrderStatus, List<Courier> courierList, Date startDate, Date endDate,
-            Warehouse warehouse) throws Exception {
+            Warehouse warehouse, Zone zone) throws Exception {
 
         List<ShippingOrder> shippingOrderList = null;
         File file = new File(xslFilePath);
@@ -323,6 +324,9 @@ public class ReportManager {
         setCellValue(row, 20, ReportConstants.SHIPMENT_DATE);
         setCellValue(row, 21, ReportConstants.BOX_SIZE);
         setCellValue(row, 22, ReportConstants.BOX_WEIGHT);
+	    if(zone != null){
+	        setCellValue(row, 23, ReportConstants.ZONE);
+        }
 
         int rowCounter = 1;
         if (startDate == null && endDate == null) {
@@ -340,6 +344,9 @@ public class ReportManager {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         if (shippingOrderList != null) {
             for (ShippingOrder order : shippingOrderList) {
+
+
+
                 Set<LineItem> lineItems = order.getLineItems();
                 LineItem firstProductLineItem = lineItems.iterator().next();
                 rowCounter++;
@@ -347,6 +354,17 @@ public class ReportManager {
                 for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
                     cell = row.createCell(columnNo);
                 }
+	            if(zone != null){
+		            Zone shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
+		            if(shippingOrderZone != null && shippingOrderZone.equals(zone)){
+			            setCellValue(row, 23, shippingOrderZone.getName().toUpperCase());
+		            }
+		            else{
+			            sheet1.removeRow(row);
+						rowCounter--;			            
+			            continue;
+		            }
+	            }
                 Shipment shipment = order.getShipment();
                 Address address = order.getBaseOrder().getAddress();
                 String trackingId = null;
@@ -411,6 +429,7 @@ public class ReportManager {
                 if (shipment.getBoxWeight() != null) {
                     setCellValue(row, 22, shipment.getBoxWeight());
                 }
+
             }
         }
         wb.write(out);

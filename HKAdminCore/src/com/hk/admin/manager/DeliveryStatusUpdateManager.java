@@ -285,33 +285,70 @@ public class DeliveryStatusUpdateManager {
 
 
 		} else if (courierName.equalsIgnoreCase(CourierConstants.BLUEDART)) {
-			SimpleDateFormat sdf_date = new SimpleDateFormat("dd MMMMM yyyy");
+			//SimpleDateFormat sdf_date = new SimpleDateFormat("dd MMMMM yyyy");
 			courierIdList = new ArrayList<Long>();
 			courierIdList = EnumCourier.getBlueDartCouriers();
 			shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
-			if (shippingOrderList != null && shippingOrderList.size() > 0) {
-				for (ShippingOrder shippingOrderInList : shippingOrderList) {
-					trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
-					try {
-						Element ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
-						if (ele != null) {
-							String status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
-							String statusDate = ele.getChildText(CourierConstants.BLUEDART_STATUS_DATE);
-							try {
-								if (status.equals(CourierConstants.BLUEDART_SHIPMENT_DELIVERED) && statusDate != null) {
-									Date delivery_date = sdf_date.parse(statusDate);
-									ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
-								}
-							} catch (ParseException pe) {
-								logger.debug(CourierConstants.PARSE_EXCEPTION + pe.getMessage());
-							}
+
+			List<ShippingOrder> shippingOrderSubList;
+			List<Element> elementList = new ArrayList();
+			int listSize = shippingOrderList.size();
+			int batchSize = 50;
+			startIndex = 0;
+			endIndex = 0;
+
+			if (shippingOrderList != null && listSize > 0) {
+				//Checking if shippingOrderList size is > batchSize then we wud divide it into batches of 10 orders each.
+				if (shippingOrderList.size() > batchSize) {
+					for (int i = 0; i < listSize; i++) {
+						//For the first time it wud be 0 and its value won't increment to 1.Bt later it would increment so need to subtract 1 to get correcr startIndex.
+						if (i == 0) {
+							startIndex = i;
 						} else {
-							unmodifiedTrackingIds.add(trackingId);
+							startIndex = i - 1;
 						}
-					} catch (Exception ex) {
-						logger.debug(CourierConstants.EXCEPTION + "(Bluedart)" + trackingId);
+						//checking if remaining elements are less than batchSize,then adding that count to the index to get correct endIndex.
+						if (listSize - endIndex < batchSize) {
+							endIndex = (startIndex + (listSize - endIndex)) - 1;
+						} else {
+							endIndex = startIndex + batchSize;
+						}
+						//Breaking the original list into batches of batchSize or the remaining size.
+						try {
+							shippingOrderSubList = shippingOrderList.subList(startIndex, endIndex);
+
+							trackingId = getAppendedTrackingIdsString(shippingOrderSubList);
+
+							if (trackingId != null) {
+								//getting the response for batch of trackingIds
+								elementList = courierStatusUpdateHelper.bulkUpdateDeliveryStatusBlueDart(trackingId);
+
+							}
+						} catch (Exception ex) {
+							logger.debug(CourierConstants.EXCEPTION + trackingId);
+							unmodifiedTrackingIds.add(trackingId);
+							continue;
+						}
+						if (elementList != null && elementList.size() > 0) {
+							ordersDelivered = updateBlueDartStatus(elementList, shippingOrderSubList);
+						}
+						i = endIndex;
+					}
+				} else {
+					//Constructing trackingId using all shippingOrders
+					try {
+						trackingId = getAppendedTrackingIdsString(shippingOrderList);
+						if (trackingId != null) {
+							//getting the response for batch of trackingIds
+							elementList = courierStatusUpdateHelper.bulkUpdateDeliveryStatusBlueDart(trackingId);
+						}
+					}
+					catch (Exception ex) {
+						logger.debug(CourierConstants.EXCEPTION + trackingId);
 						unmodifiedTrackingIds.add(trackingId);
-						continue;
+					}
+					if (elementList != null && elementList.size() > 0) {
+						ordersDelivered = updateBlueDartStatus(elementList, shippingOrderList);
 					}
 				}
 			}
@@ -451,6 +488,39 @@ public class DeliveryStatusUpdateManager {
         }
         return ordersDelivered;
     }
+
+	private int updateBlueDartStatus(List<Element> elementList, List<ShippingOrder> shippingOrderList) {
+		//ShippingOrder shippingOrder;
+		SimpleDateFormat sdf_date = new SimpleDateFormat("dd MMMMM yyyy");
+		Iterator elementListIterator = elementList.listIterator();
+		while (elementListIterator.hasNext()) {
+			Element ele = (Element) elementListIterator.next();
+			if (ele != null) {
+				String status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
+				String statusDate = ele.getChildText(CourierConstants.BLUEDART_STATUS_DATE);
+				String trackingId = ele.getAttributeValue(CourierConstants.BLUEDART_AWB);
+				String refNo = ele.getAttributeValue(CourierConstants.BLUEDART_REF_NO);
+
+				if (status.equals(CourierConstants.BLUEDART_SHIPMENT_DELIVERED) && statusDate != null) {
+					try {
+						for (ShippingOrder shippingOrder : shippingOrderList) {
+							if (refNo != null && refNo.equalsIgnoreCase(shippingOrder.getGatewayOrderId())) {
+								Date delivery_date = sdf_date.parse(statusDate);
+								ordersDelivered = updateCourierDeliveryStatus(shippingOrder, shippingOrder.getShipment(), trackingId, delivery_date);
+								break;
+							}
+						}
+					}
+					catch (ParseException pe) {
+						logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
+						unmodifiedTrackingIds.add(trackingId);
+					}
+				}
+
+			}
+		}
+		return ordersDelivered;
+	}
 
 	private String getAppendedTrackingIdsString(List<ShippingOrder> shippingOrderSubList) {
 		String appendedTrackingId = "";

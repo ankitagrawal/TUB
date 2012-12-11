@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.core.referral.ReferralManagerAction" var="couponBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.referral.ReferralManagerAction" var="couponBean"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Referral Program">
 
   <s:layout-component name="htmlHead">

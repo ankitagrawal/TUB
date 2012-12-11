@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.courier.*;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
@@ -11,23 +12,7 @@ import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.core.CancellationType;
-import com.hk.domain.core.CartLineItemType;
-import com.hk.domain.core.City;
-import com.hk.domain.core.OrderStatus;
-import com.hk.domain.core.PaymentMode;
-import com.hk.domain.core.PaymentStatus;
-import com.hk.domain.core.ProductVariantPaymentType;
-import com.hk.domain.core.ProductVariantServiceType;
-import com.hk.domain.core.PurchaseFormType;
-import com.hk.domain.core.PurchaseOrderStatus;
-import com.hk.domain.core.State;
-import com.hk.domain.core.Surcharge;
-import com.hk.domain.core.Tax;
-import com.hk.domain.courier.BoxSize;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.RegionType;
-import com.hk.domain.courier.CourierGroup;
+import com.hk.domain.core.*;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
@@ -147,5 +132,7 @@ public interface MasterDataDao
 
 	public List<ReplacementOrderReason> getReplacementOrderReasonForRto();
 
+    public List<Country> getAllCountry();
 
+	public List<Zone> getAllZones();
 }

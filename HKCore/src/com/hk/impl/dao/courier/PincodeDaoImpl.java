@@ -2,7 +2,9 @@ package com.hk.impl.dao.courier;
 
 import java.util.List;
 
+import com.hk.domain.courier.Zone;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.apache.commons.lang.StringUtils;
@@ -51,4 +53,14 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
         return null;
     }
 
+	public Zone getZoneByName(String zoneName) {
+		zoneName = zoneName.trim();
+		DetachedCriteria zoneCriteria = DetachedCriteria.forClass(Zone.class);
+		zoneCriteria.add(Restrictions.like("name", zoneName));
+		List<Zone> zone = findByCriteria(zoneCriteria);
+		if (zone != null && zone.size() > 0) {
+			return zone.get(0);
+		} else
+			return null;
+	}
 }
