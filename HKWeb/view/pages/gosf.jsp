@@ -45,7 +45,7 @@
 <jsp:include page="../includes/_menuGosf.jsp"/>
 
 <div class="cl"></div>
-
+<div id="pagerTrigger"></div>
 
 <div class="heading1">PRIME DEALS</div>
 <div class="prodBoxes">
@@ -78,7 +78,7 @@
 
 
 <div class="cl"></div>
-     <div id="pagerTrigger"></div>
+     
 
 </div>
 
