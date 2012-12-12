@@ -43,20 +43,31 @@
         <div class="cl"></div>
 
 
-        <div class="heading1">PRE WORKOUT</div>
+        <div class="heading1">DIETARY SUPPLEMENTS</div>
 
         <div class="pages">
+            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">← Previous</a>
 
-            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-workout-gosf02.jsp">← Previous</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf.jsp">1</a>
 
-             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-workout-gosf.jsp">1</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf02.jsp">2</a>
 
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-workout-gosf02.jsp">2</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf03.jsp">3</a>
 
-            <span class="pages_link">3</span>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf04.jsp">4</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf05.jsp">5</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf06.jsp">6</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+
+            <span class="pages_link">9</span>
 
          </div>
-          <div class="cl"></div>
+         <div class="cl"></div>
 
 
         <div class="prodBoxes">
@@ -70,21 +81,31 @@
 	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1283' productDesc='It contains multivitamins that promote improved health in women. Also boosts energy and exercise recovery.'/>
 	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1314' productDesc='A fat burner that helps burn calories and supports increased metabolism before and after exercise.'/>
 	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT658' productDesc='Packed with essential vitamins and minerals that promote a healthy heart, immune system, eye, bone and nervous system.'/>
-	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1252' productDesc='These Vegetarian capsules promote a healthy brain, heart and eyes.'/>
-	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUTCMB121' productDesc='Enriched with essential vitamins and minerals to ensure complete growth of children, both physically and mentally.'/>
+	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1252' productDesc='These Vegetarian capsules promote a healthy brain, heart and eyes.'/>	        
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1253' productDesc='These vegetarian capsules help promote a balanced cholesterol and triglyceride level and have virtually no side effects.'/>			
         </div>
         <div class="cl"></div>
 
          <div class="pages">
-             
-            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-workout-gosf02.jsp">← Previous</a>
+            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">← Previous</a>
 
-             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-workout-gosf.jsp">1</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf.jsp">1</a>
 
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-workout-gosf02.jsp">2</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf02.jsp">2</a>
 
-            <span class="pages_link">3</span>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf03.jsp">3</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf04.jsp">4</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf05.jsp">5</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf06.jsp">6</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+
+            <span class="pages_link">9</span>
 
          </div>
 

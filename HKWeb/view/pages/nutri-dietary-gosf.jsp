@@ -62,6 +62,8 @@
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
 
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
+
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf02.jsp">Next →</a>
 
 
@@ -69,16 +71,14 @@
         <div class="cl"></div>
 
         <div class="prodBoxes">
-        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT986' productDesc='A supplement that provides Creating for enhancing stamina and building muscles. Ideal for intense workouts.'/>
+        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUTCMB121' productDesc='Enriched with essential vitamins and minerals to ensure complete growth of children, both physically and mentally.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT412' productDesc='A supplement that improves the nutrient absorption power in adults and boosts energy levels. Ideal for senior citizens.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1322' productDesc='Boosts energy metabolism, promotes healthy skin, hair and nails.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1171' productDesc='Reduces muscle breakdown and increases body weight'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT982' productDesc='Weight loss product that also minimizes premature ageing and improves cardiovascular health.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT667' productDesc='100% Veg tablets with synergistic blend of minerals, vitamins & essential nutrients. Makes your hair shiny and smooth.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT558' productDesc='Get all the vital fatty acids that promote heart health, brain function, and immunity. Put age related diseases at bay.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1249' productDesc='Now spice up your lovelife and keep your libido peaked with these water soluble herbal extracts.'/>
-			<!-- <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT531' productDesc='A fabulous product that is rich in Vitamin B. Strengthens your hair cuticles and thereby, strong and smooth hair'/> -->
-			
+			<!-- <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT531' productDesc='A fabulous product that is rich in Vitamin B. Strengthens your hair cuticles and thereby, strong and smooth hair'/> -->			
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1299' productDesc='Contains Omega-3 fatty acids that treat heart diseases, asthma, depressive illness and promotes eye and brain development'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT316' productDesc='Pre-workout or post-workout supplement, highly concentrated for better results.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1132' productDesc='A portable pillbox ideal for travellers, it has five compartments to carry different pills.'/>
@@ -88,7 +88,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT449' productDesc='Enriched with Vitamin E and soy protein, it improves your cardiovascular system and helps remember things better'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT555' productDesc='An ideal remedy for people who have stiffness or joint pain and digestive disturbances.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT665' productDesc='Combination of Calcium and Vitamin D makes it easy to absorb and improves the health of teeth and bones'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1140' productDesc='It improves the blood circulation in the body and helps promote a healthy heart. This product is unisex.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1140' productDesc='It improves the blood circulation in the body and helps promote a healthy heart.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1124' productDesc='A potent combination of Omega 3,6 and 9 fatty acids, it improves heart health and increases good cholesterol in the body.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1129' productDesc='Meant to prevent hair loss, skin problems and unhealthy nails. Ideal for women of all age groups.'/>		
         </div>
@@ -114,6 +114,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf02.jsp">Next →</a>
 

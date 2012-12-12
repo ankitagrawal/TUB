@@ -63,6 +63,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf05.jsp">Next →</a>
 
@@ -74,7 +75,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1096' productDesc='It helps build muscles,synthesise proteins and prevent catabolism. It can also be used as a weight reduction supplement.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1139' productDesc='Omega-3 fatty acid improves bone health, overall well being of the body and provides nutrition to the body'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1086' productDesc='Fortify yourself against bone loss and tooth decay with VS Calcium Citrate. Calcium also helps protect against fractures.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1019' productDesc='Meant for general wellness, its a powerful shot of Vitamin A, Vitamin D and Omega-3 fatty acids that enhance heart health.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1019' productDesc='Meant for general wellness, it is a powerful shot of Vitamin A, Vitamin D and Omega-3 fatty acids that enhance heart health.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1054' productDesc='Regenerates blood cells, boosts energy for the anaemic.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1324' productDesc='A rich blend of Resveratrol, Natures Bounty Grape Seed Extract is a potent source of antioxidants.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1109' productDesc='Packed with Vitamin C, it helps improve vascular health, joint health and immunity system.'/>
@@ -83,8 +84,8 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1001' productDesc='Boost liver function, cardio vascular health & reduce cholesterol with Vitamin Shoppe Lecithin Granules. '/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1024' productDesc='Organic vegetarian medicine to add GLA content without any chemical solvent. '/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1101' productDesc='A product that provides a mix of essential vitamins and minerals to the body. Ideal for men over the age of 50.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1104' productDesc=' health supplement, enriched with It contains natural herbs and milk thistle extracts that helps maintain a healthy liver. The supplement is recommended to be taken with meals.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT830' productDesc='Supplements your diet with Flax Oil that is rich in Omega 3 and 6 fatty acids. Flax Seed Oil help boost energy levels and ensures a healthy heart and cells. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1104' productDesc='A supplement that contains natural herbs & milk thistle extracts to maintain a healthy liver. Recommended to be taken with meals.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT830' productDesc='Supplements your diet with Flax Oil that is rich in Omega 3 and 6 fatty acids. Helps boost energy levels, ensures a healthy heart and cells. '/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1168' productDesc='This Ephedra-Free formula helps in burning calories and boosts energy '/>
             </div>
         <div class="cl"></div>
@@ -108,6 +109,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf05.jsp">Next →</a>
 
