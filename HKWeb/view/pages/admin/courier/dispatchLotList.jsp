@@ -89,6 +89,10 @@
 						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction">Edit/View
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="receiveLot">Receive
+							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
+						</s:link>
 					</td>
 				</tr>
 			</c:forEach>

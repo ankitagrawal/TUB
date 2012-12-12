@@ -3,13 +3,13 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumDispatchLotStatus;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.DispatchLot;
-import com.hk.domain.courier.DispatchLotStatus;
-import com.hk.domain.courier.Zone;
+import com.hk.domain.courier.*;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.exception.ExcelBlankFieldException;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.restfb.util.StringUtils;
 import net.sourceforge.stripes.action.*;
 import org.apache.log4j.Logger;
@@ -37,6 +37,12 @@ public class DispatchLotAction extends BasePaginatedAction {
 	@Autowired
 	private DispatchLotService dispatchLotService;
 
+	@Autowired
+	ShipmentService shipmentService;
+
+	@Autowired
+	ShippingOrderService shippingOrderService;
+
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 
@@ -53,6 +59,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 	private Date dispatchEndDate;
 	private DispatchLotStatus dispatchLotStatus;
 	private FileBean fileBean;
+	private List<String> gatewayOrderIdList;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -133,6 +140,26 @@ public class DispatchLotAction extends BasePaginatedAction {
 		return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
 	}
 
+	public Resolution receiveLot(){
+		if(dispatchLot == null){
+			addRedirectAlertMessage(new SimpleMessage("Dispatch lot not found."));
+			return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
+		}
+		return new ForwardResolution("/pages/admin/courier/receiveDispatchLot.jsp").addParameter("dispatchLot", dispatchLot.getId());
+	}
+
+	public Resolution markShipmentsReceived(){
+		if(dispatchLot == null){
+			addRedirectAlertMessage(new SimpleMessage("Dispatch lot not found."));
+			return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
+		}
+
+		String invalidGatewayOrderIds = getDispatchLotService().markShipmentsAsReceived(dispatchLot, gatewayOrderIdList);
+		if(invalidGatewayOrderIds != null){
+			addRedirectAlertMessage(new SimpleMessage("Following Gateway Order Ids are invalid: "+invalidGatewayOrderIds));
+		}
+		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList").addParameter("dispatchLot", dispatchLot.getId());
+	}
 	public int getPerPageDefault() {
 		return defaultPerPage;
 	}
@@ -284,5 +311,21 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 	public void setFileBean(FileBean fileBean) {
 		this.fileBean = fileBean;
+	}
+
+	public List<String> getGatewayOrderIdList() {
+		return gatewayOrderIdList;
+	}
+
+	public void setGatewayOrderIdList(List<String> gatewayOrderIdList) {
+		this.gatewayOrderIdList = gatewayOrderIdList;
+	}
+
+	public ShipmentService getShipmentService() {
+		return shipmentService;
+	}
+
+	public ShippingOrderService getShippingOrderService() {
+		return shippingOrderService;
 	}
 }

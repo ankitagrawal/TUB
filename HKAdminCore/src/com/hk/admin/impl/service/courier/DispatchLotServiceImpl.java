@@ -5,6 +5,7 @@ import com.hk.admin.pact.dao.courier.DispatchLotDao;
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.constants.XslConstants;
+import com.hk.constants.courier.DispatchLotConstants;
 import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.domain.courier.*;
 import com.hk.domain.order.ShippingOrder;
@@ -69,7 +70,12 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 
 			//Check if any gatewayOrderId does not exist in the system
 			List<ShippingOrder> soListInDB = getAdminShippingOrderDao().getShippingOrderByGatewayOrderList(soGatewayOrderIdInExcel);
-			if (soListInDB.size() < soGatewayOrderIdInExcel.size()) {
+			String invalidGatewayOrderIds = validateShippingOrdersForDispatchLot(soGatewayOrderIdInExcel, soListInDB);
+
+			if(invalidGatewayOrderIds != null){
+				throw new ExcelBlankFieldException("Following gatewayOrderIds are Invalid : " + invalidGatewayOrderIds);
+			}
+			/*if (soListInDB.size() < soGatewayOrderIdInExcel.size()) {
 				List<String> soGatewayOrderIdInDBList = new ArrayList<String>(0);
 				for (ShippingOrder shippingOrder : soListInDB) {
 					soGatewayOrderIdInDBList.add(shippingOrder.getGatewayOrderId());
@@ -80,7 +86,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 					invalidOrders += soGatewayOrderId + " ";
 				}
 				throw new ExcelBlankFieldException("Following gatewayOrderIds are Invalid : " + invalidOrders);
-			}
+			}*/
 
 			//Check if zone is not the Selected Zone of the Dispatch Lot
 			List<Shipment> shipmentList = new ArrayList<Shipment>(0);
@@ -112,6 +118,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				DispatchLotHasShipment dispatchLotHasShipment = new DispatchLotHasShipment();
 				dispatchLotHasShipment.setDispatchLot(dispatchLot);
 				dispatchLotHasShipment.setShipment(shipment);
+				dispatchLotHasShipment.setShipmentStatus(DispatchLotConstants.SHIPMENT_DISPATCHED);
 				dispatchLotHasShipmentList.add(dispatchLotHasShipment);
 			}
 			getBaseDao().saveOrUpdate(dispatchLotHasShipmentList);
@@ -127,6 +134,73 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			throw new ExcelBlankFieldException(e.getMessage());
 		}
 
+	}
+
+	public boolean dispatchLotHasShipment(DispatchLot dispatchLot, Shipment shipment) {
+		List<Shipment> shipmentList = getShipmentsForDispatchLot(dispatchLot);
+		if(shipmentList.contains(shipment)){
+			return true;
+		}
+		return false;
+	}
+
+	public List<Shipment> getShipmentsForDispatchLot(DispatchLot dispatchLot) {
+		return getDispatchLotDao().getShipmentsForDispatchLot(dispatchLot);
+	}
+
+	public String markShipmentsAsReceived(DispatchLot dispatchLot, List<String> gatewayOrderIdList) {
+		Shipment shipment = null;
+		List<ShippingOrder> soListInDB = getAdminShippingOrderDao().getShippingOrderByGatewayOrderList(gatewayOrderIdList);
+		String invalidGatewayOrderIds = validateShippingOrdersForDispatchLot(gatewayOrderIdList, soListInDB);
+		List<Shipment> validShipmentList = new ArrayList<Shipment>();
+
+		for (ShippingOrder shippingOrder : soListInDB) {
+			shipment = shippingOrder.getShipment();
+			if (shipment == null) {
+				invalidGatewayOrderIds += "  " + shippingOrder.getGatewayOrderId();
+			} else if (!dispatchLotHasShipment(dispatchLot, shipment)) {
+				invalidGatewayOrderIds += "  " + shippingOrder.getGatewayOrderId();
+			} else {
+				validShipmentList.add(shipment);
+			}
+		}
+
+		DispatchLotHasShipment dispatchLotHasShipment=null;
+		for(Shipment shipmentTemp : validShipmentList){
+			dispatchLotHasShipment = getDispatchLotHasShipment(dispatchLot, shipmentTemp);
+			dispatchLotHasShipment.setShipmentStatus(DispatchLotConstants.SHIPMENT_RECEIVED);
+			getBaseDao().save(dispatchLotHasShipment);
+		}
+		if(validShipmentList.size() == getShipmentsForDispatchLot(dispatchLot).size()){
+			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Received.getDispatchLotStatus());
+		}
+		
+	   return invalidGatewayOrderIds;
+	}
+
+	private String validateShippingOrdersForDispatchLot(List<String> gatewayOrderIdList, List<ShippingOrder> soListInDB) {
+
+		String invalidOrders=null;
+		if (soListInDB.size() < gatewayOrderIdList.size()) {
+			List<String> soGatewayOrderIdInDBList = new ArrayList<String>(0);
+			for (ShippingOrder shippingOrder : soListInDB) {
+				soGatewayOrderIdInDBList.add(shippingOrder.getGatewayOrderId());
+			}
+			gatewayOrderIdList.removeAll(soGatewayOrderIdInDBList);
+			for (String soGatewayOrderId : gatewayOrderIdList) {
+				invalidOrders=" ";
+				invalidOrders += soGatewayOrderId;
+			}
+		}
+		return invalidOrders;
+	}
+
+	public List<DispatchLot> getDispatchLotsForShipment(Shipment shipment) {
+		return getDispatchLotDao().getDispatchLotsForShipment(shipment);
+	}
+
+	public DispatchLotHasShipment getDispatchLotHasShipment(DispatchLot dispatchLot, Shipment shipment){
+		return getDispatchLotDao().getDispatchLotHasShipment(dispatchLot, shipment);
 	}
 
 	public DispatchLot save(DispatchLot dispatchLot) {

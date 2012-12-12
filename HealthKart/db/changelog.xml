@@ -10449,4 +10449,17 @@
     <changeSet author="Rohit (generated)" id="1355124774120-8">
         <addForeignKeyConstraint baseColumnNames="shipment_id" baseTableName="dispatch_lot_has_shipment" constraintName="fk_dispatch_lot_has_shipment_shipment1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipment" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Tarun (generated)" id="1355292899929-1">
+        <addColumn tableName="dispatch_lot_has_shipment">
+            <column name="shipment_status" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1355308989213-1">
+        <createIndex indexName="dispatch_lot_shipment_unique" tableName="dispatch_lot_has_shipment" unique="true">
+            <column name="dispatch_lot_id"/>
+            <column name="shipment_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

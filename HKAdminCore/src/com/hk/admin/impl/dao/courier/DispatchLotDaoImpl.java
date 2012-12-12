@@ -2,10 +2,7 @@ package com.hk.admin.impl.dao.courier;
 
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.DispatchLotDao;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.DispatchLot;
-import com.hk.domain.courier.DispatchLotStatus;
-import com.hk.domain.courier.Zone;
+import com.hk.domain.courier.*;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
@@ -13,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -69,4 +67,18 @@ public class DispatchLotDaoImpl extends BaseDaoImpl implements DispatchLotDao {
 		return list(criteria, pageNo, perPage);
 	}
 
+	public List<Shipment> getShipmentsForDispatchLot(DispatchLot dispatchLot) {
+		String query = "select ds.shipment from DispatchLotHasShipment ds where ds.dispatchLot = :dispatchLot";
+        return (List<Shipment>) findByNamedParams(query, new String[]{"dispatchLot"}, new Object[]{dispatchLot});
+	}
+
+	public List<DispatchLot> getDispatchLotsForShipment(Shipment shipment) {
+		String query = "select ds.dispatchLot from DispatchLotHasShipment ds where ds.shipment = :shipment";
+        return (List<DispatchLot>) findByNamedParams(query, new String[]{"shipment"}, new Object[]{shipment});
+	}
+
+	public DispatchLotHasShipment getDispatchLotHasShipment(DispatchLot dispatchLot, Shipment shipment) {
+		String query = "from DispatchLotHasShipment ds where ds.shipment = :shipment and ds.dispatchLot = :dispatchLot";
+        return  (DispatchLotHasShipment)findUniqueByNamedParams(query, new String[]{"shipment", "dispatchLot"}, new Object[]{shipment, dispatchLot});
+	}
 }

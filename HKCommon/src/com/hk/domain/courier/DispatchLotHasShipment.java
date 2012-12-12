@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 @SuppressWarnings ("serial")
 @Entity
-@Table(name = "dispatch_lot_has_shipment")
+@Table(name = "dispatch_lot_has_shipment", uniqueConstraints = @UniqueConstraint(columnNames = { "dispatch_lot_id", "shipment_id" }))
 public class DispatchLotHasShipment implements Serializable {
 
 	@Id
@@ -28,6 +28,9 @@ public class DispatchLotHasShipment implements Serializable {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "shipment_id", nullable = false)
 	private Shipment shipment;
+
+	@Column(name="shipment_status", nullable = false)
+	private String shipmentStatus;
 
 	public Long getId() {
 		return id;
@@ -51,5 +54,13 @@ public class DispatchLotHasShipment implements Serializable {
 
 	public void setShipment(Shipment shipment) {
 		this.shipment = shipment;
+	}
+
+	public String getShipmentStatus() {
+		return shipmentStatus;
+	}
+
+	public void setShipmentStatus(String shipmentStatus) {
+		this.shipmentStatus = shipmentStatus;
 	}
 }
