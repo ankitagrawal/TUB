@@ -1,12 +1,12 @@
 package com.hk.impl.dao.shippingOrder;
 
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.

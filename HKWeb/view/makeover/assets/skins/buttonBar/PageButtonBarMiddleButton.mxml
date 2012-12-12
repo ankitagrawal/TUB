@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			 xmlns:s="library://ns.adobe.com/flex/spark" 
+			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+			 minWidth="14" minHeight="14" 
+			 alpha.disabledStates="0.5" >
+	<fx:Metadata>
+		<![CDATA[ 
+		[HostComponent("spark.components.ButtonBarButton")]
+		]]>
+	</fx:Metadata>
+	
+	
+	<!-- host component -->
+	<fx:Script fb:purpose="styling">
+        
+		static private const exclusions:Array = ["labelDisplay","slash"];
+		
+		override public function get colorizeExclusions():Array {return exclusions;}
+		
+		override protected function initializationComplete():void
+		{
+			useChromeColor = true;
+			super.initializationComplete();
+		}
+		
+		/**
+		 * @private
+		 */
+		
+		private var cornerRadius:Number = 2;
+	</fx:Script>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="up" />
+		<s:State name="over" stateGroups="overStates" />
+		<s:State name="down" stateGroups="downStates" />
+		<s:State name="disabled" stateGroups="disabledStates" />
+		<s:State name="upAndSelected" stateGroups="selectedStates, selectedUpStates" />
+		<s:State name="overAndSelected" stateGroups="overStates, selectedStates" />
+		<s:State name="downAndSelected" stateGroups="downStates, selectedStates" />
+		<s:State name="disabledAndSelected" stateGroups="selectedUpStates, disabledStates, selectedStates" />
+	</s:states>
+	
+	
+	
+	<!-- layer 8: text -->
+	<!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay -->
+	
+	<s:Label id="labelDisplay" color="#000000" color.selectedStates="#c22026"  fontSize="12"  fontSize.selectedStates ="16" verticalCenter="0" horizontalCenter="0"  />
+	
+	
+</s:SparkSkin>

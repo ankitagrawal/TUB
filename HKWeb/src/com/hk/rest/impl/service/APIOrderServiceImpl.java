@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.pact.service.core.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,6 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -76,7 +76,7 @@ public class APIOrderServiceImpl implements APIOrderService {
     @Autowired
     OrderService          orderService;
     @Autowired
-    AddressDao            addressDao;
+    AddressService        addressDao;
     @Autowired
     PaymentModeDao        paymentModeDao;
     @Autowired
@@ -208,13 +208,7 @@ public class APIOrderServiceImpl implements APIOrderService {
         paymentMode = getPaymentModeDao().getPaymentModeById(new Long(apiPayment.getPaymentmodeId()));
         payment.setPaymentMode(paymentMode);
         // payment.setIp(remoteAddr);
-        payment.setBankCode(apiPayment.getBankId());
-        payment = getPaymentManager().createNewPayment(order, paymentMode, "182.12.1.1", apiPayment.getBankId()); // remote
-                                                                                                                    // ip
-                                                                                                                    // adddress
-                                                                                                                    // is
-                                                                                                                    // hard
-                                                                                                                    // coded
+        payment = getPaymentManager().createNewPayment(order, paymentMode, "182.12.1.1", null, null);
         PaymentStatus paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.AUTHORIZATION_PENDING.getId());
         if (EnumPaymentMode.getPrePaidPaymentModes().contains(paymentMode.getId())) {
             paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.SUCCESS.getId());
@@ -323,6 +317,7 @@ public class APIOrderServiceImpl implements APIOrderService {
 
         Address address = order.getAddress();
         address.setId(null);
+	    address.setUser(hkUser);
         address = addressDao.save(address);
 
         Payment payment = order.getPayment();
@@ -390,11 +385,11 @@ public class APIOrderServiceImpl implements APIOrderService {
         this.orderService = orderService;
     }
 
-    public AddressDao getAddressDao() {
+    public AddressService getAddressDao() {
         return addressDao;
     }
 
-    public void setAddressDao(AddressDao addressDao) {
+    public void setAddressDao(AddressService addressDao) {
         this.addressDao = addressDao;
     }
 

@@ -18,10 +18,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
-import com.hk.constants.email.EmailConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -121,7 +121,17 @@ public class EmailManager {
     @Value("#{hkEnvProps['" + Keys.Env.servicesAdminEmails + "']}")
     private String              servicesAdminEmailsString     = null;
 
-    @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
+    @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
+    private String              hkNoReplyEmail;
+    @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyName + "']}")
+    private String              hkNoReplyName;
+    @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
+    private String              hkContactEmail;
+
+    /*
+     * @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}") private String hkContactName;
+     */
+
     @PostConstruct
     public void postConstruction() {
         this.hkAdminEmails = BaseUtils.split(hkAdminEmailsString, ",");
@@ -208,7 +218,8 @@ public class EmailManager {
         try {
             String basketCat = order.getBasketCategory();
             // basketCategory = getCategoryDao().find(basketCat);
-            basketCategory = getCategoryService().getCategoryByName(basketCat);
+            // basketCategory = getCategoryService().getCategoryByName(basketCat);
+            basketCategory = CategoryCache.getInstance().getCategoryByName(basketCat).getCategory();
         } catch (Exception e) {
             logger.error("Exception thrown while getting basket category", e);
         }
@@ -245,7 +256,7 @@ public class EmailManager {
             categoryAdmins = diabetesAdminEmails;
         } else if (category.getName().equals(CategoryConstants.EYE)) {
             categoryAdmins = eyeAdminEmails;
-        } else if (category.getName().equals(CategoryConstants.HOME_DEVICES)) {
+        } else if (category.getName().equals(CategoryConstants.HEALTH_DEVICES)) {
             categoryAdmins = homeDevicesAdminEmails;
         } else if (category.getName().equals(CategoryConstants.NUTRITION)) {
             categoryAdmins = nutritionAdminEmails;
@@ -425,7 +436,9 @@ public class EmailManager {
             if (!sent)
                 success = false;
         }
-        boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, EmailConstants.getHkContactEmail(), "Admin", email);
+        // boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, EmailConstants.getHkContactEmail(),
+        // "Admin", email);
+        boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, hkContactEmail, "HK Info", email);
         if (!sent)
             success = false;
         return success;
@@ -613,6 +626,14 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getApprovedBy().getEmail(), purchaseOrder.getApprovedBy().getName());
     }
 
+    public boolean sendPOApprovedEmail(PurchaseOrder purchaseOrder) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("purchaseOrder", purchaseOrder);
+
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
+    }
+
     public boolean sendPOPlacedEmail(PurchaseOrder purchaseOrder) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("purchaseOrder", purchaseOrder);
@@ -676,15 +697,23 @@ public class EmailManager {
         valuesMap.put("lineItem", lineItem);
         valuesMap.put("order", lineItem.getOrder());
         valuesMap.put("pricingDto", new PricingDto(order.getCartLineItems(), order.getAddress()));
-        User adminUser = getUserService().getAdminUser();
+         User adminUser = getUserService().getAdminUser();
+
+        //User adminUser = UserCache.getInstance().getAdminUser();
 
         Manufacturer manufacturer = lineItem.getProductVariant().getProduct().getManufacturer();
-        String comments = "Email Sent to " + manufacturer.getName() + " at " + manufacturer.getEmail();
-        getOrderLoggingService().logOrderActivity(order, adminUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EmailSentToServiceProvider),
-                comments);
-
+        String comments = "Emails Sent to " + manufacturer.getName() + " at " + manufacturer.getEmail();
+        getOrderLoggingService().logOrderActivity(order, adminUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EmailSentToServiceProvider),comments);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.serviceVoucherMailServiceProvider);
-        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, manufacturer.getEmail(), manufacturer.getName());
+        boolean bool = false, boolFinal = false;
+        String[] emails = manufacturer.getEmail().split(",");
+        if(emails.length>=1){
+          for(String email : emails){
+           bool = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, email , manufacturer.getName());
+            if(bool) boolFinal = true;
+          }
+        }
+      return boolFinal;
     }
 
     public void sendPaymentFailMail(User user, String gatewayOrderId) {
@@ -695,7 +724,7 @@ public class EmailManager {
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.paymentFailEmail);
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
 
-        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), EmailConstants.getHkContactEmail());
+        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), hkContactEmail);
 
     }
 
@@ -732,13 +761,13 @@ public class EmailManager {
                 valuesMap.put("user", emailRecepient.getUser());
             }
             valuesMap.put("coupon", coupon);
-            emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getEmail(), EmailConstants.getHkContactEmail(), headerMap);
+            emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailRecepient.getEmail(), emailRecepient.getEmail(), hkContactEmail, headerMap);
             // keep a record in history
             emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
             emailRecepient.setLastEmailDate(new Date());
             getEmailRecepientDao().save(emailRecepient);
-            getEmailerHistoryDao().createEmailerHistory(EmailConstants.getHkNoReplyEmail(), EmailConstants.getHkNoReplyName(),
-                    getBaseDao().get(EmailType.class, EnumEmailType.MissYouEmail.getId()), emailRecepient, emailCampaign, "");
+            getEmailerHistoryDao().createEmailerHistory(hkNoReplyEmail, hkNoReplyName, getBaseDao().get(EmailType.class, EnumEmailType.MissYouEmail.getId()), emailRecepient,
+                    emailCampaign, "");
         }
     }
 

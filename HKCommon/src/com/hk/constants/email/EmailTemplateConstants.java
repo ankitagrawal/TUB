@@ -38,10 +38,12 @@ public class EmailTemplateConstants {
 	public static final String protocolViolationEmail = "/protocolViolationEmail.ftl";
 	public static final String poPlacedEmail = "/poPlacedEmail.ftl";
 	public static final String poSentForApprovalEmail = "/poSentForApprovalEmail.ftl";
+	public static final String poApprovedEmail = "/poApprovedEmail.ftl";
 	public static final String notifyUserEmail = "/notifyUserEmailProductNew.ftl";
 	public static final String notifyUserEmailOld = "/notifyUserEmailProduct.ftl";
 	public static final String dailyGoogleBannedWordReport = "/dailyGoogleBannedWordReport.ftl";
 	public static final String grnEmail = "/grnEmail.ftl";
+	public static final String awbStatusEmail = "/awbStatusEmail.ftl";
 	public static final String paymentFailEmail = "/paymentFailEmail.ftl";
 	public static final String codConverterEmail = "/codConverterEmail.ftl";
 	public static final String sixHourlyCategorySalesReport = "/sixHourlyCategorySalesReport.ftl";
@@ -54,5 +56,7 @@ public class EmailTemplateConstants {
 	public static final String subscriptionPlacedEmailAdmin = "/subscription/subscriptionPlacedEmailToAdmin.ftl";
 	public static final String subscriptionVariantOutOfStockEmailAdmin = "/subscription/subscriptionVariantOutOfStockEmailAdmin.ftl";
 	public static final String productStockStatusEmail = "/productStockStatusEmail.ftl";
-	public static final String orderDeliveredEmail     = "/orderDeliveredEmail.ftl";
+	public static final String orderDeliveredEmail     = "/orderDeliveredEmail.ftl";	
+	public static final String operationsTeam = "Operations Team";
+	public static final String poApprovedByWrongPerson = "/poApprovedByWrongPerson.ftl";
 }

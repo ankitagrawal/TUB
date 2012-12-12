@@ -217,6 +217,8 @@
         <url-pattern>/diabetes/*</url-pattern>
         <url-pattern>/home-devices</url-pattern>
         <url-pattern>/home-devices/*</url-pattern>
+	    <url-pattern>/health-devices</url-pattern>
+	    <url-pattern>/health-devices/*</url-pattern>
         <url-pattern>/personal-care</url-pattern>
         <url-pattern>/personal-care/*</url-pattern>
         <url-pattern>/nutrition</url-pattern>
@@ -227,6 +229,7 @@
         <url-pattern>/autocomplete-search/*</url-pattern>
         <url-pattern>/admin</url-pattern>
         <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/agent/order</url-pattern>
         <url-pattern>/core</url-pattern>
         <url-pattern>/core/*</url-pattern>
         <url-pattern>/affiliate</url-pattern>
@@ -257,8 +260,22 @@
         <url-pattern>/super-savers</url-pattern>
         <url-pattern>/faq/*</url-pattern>
 	    <url-pattern>/dmp</url-pattern>
+		<url-pattern>/online-shopping-festival/baby</url-pattern>
+		<url-pattern>/online-shopping-festival/beauty</url-pattern>
+	    <url-pattern>/online-shopping-festival</url-pattern>
 	    <url-pattern>/feedback</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+		<servlet-name>HKSingleLoginServlet</servlet-name>
+		<servlet-class>
+			com.hk.web.servlet.HKSingleLoginServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HKSingleLoginServlet</servlet-name>
+		<url-pattern>/login/auth</url-pattern>
+	</servlet-mapping>
 
 
     <!--  Servlet End -->
@@ -337,7 +354,19 @@
         <url-pattern>/</url-pattern>
     </filter-mapping>
 
-
+  <filter>
+    <filter-name>AnalyticsFilter</filter-name>
+    <filter-class>
+      com.hk.web.filter.AnalyticsFilter
+    </filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AnalyticsFilter</filter-name>
+    <servlet-name>StripesDispatcher</servlet-name>
+    <url-pattern>*.jsp</url-pattern>
+    <url-pattern>/</url-pattern>
+  </filter-mapping>
+    
     <filter>
         <filter-name>ServiceCityFilter</filter-name>
         <filter-class>com.hk.web.filter.ServiceCityFilter</filter-class>

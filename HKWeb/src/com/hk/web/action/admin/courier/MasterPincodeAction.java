@@ -82,7 +82,7 @@ public class MasterPincodeAction extends BaseAction {
         try {
             pincode = pincodeDao.getByPincode(pincodeString);
             if (pincode != null) {
-                courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false);
+                courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false,null);
                 return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
             }
             // return new RedirectResolution(MasterPincodeAction.class).addParameter("pincode", pincode.getId());
@@ -143,7 +143,11 @@ public class MasterPincodeAction extends BaseAction {
         };
     }
 
-    public Resolution uploadPincodeExcel() throws Exception {
+	public Resolution uploadPincodeExcel() throws Exception {
+		if (fileBean == null) {
+			addRedirectAlertMessage(new SimpleMessage("Choose File to Upload "));
+			return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
+		}
         String excelFilePath = adminUploadsPath + "/pincodeExcelFiles/pincodes" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();

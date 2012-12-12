@@ -22,7 +22,9 @@ import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.domain.TempToken;
+import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
@@ -36,13 +38,14 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.core.TempTokenDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.TokenUtils;
@@ -78,9 +81,11 @@ public class UserManager {
     @Autowired
     private OfferInstanceDao offerInstanceDao;
     @Autowired
-    private AddressDao       addressDao;
+    private AddressService       addressDao;
     @Autowired
     private SubscriptionService subscriptionService;
+	@Autowired
+    private BaseDao baseDao;
 
     //Please do not add @Autowired has been taken care of in getter .
     private OrderManager     orderManager;
@@ -123,6 +128,13 @@ public class UserManager {
 
             // save user to save the last login date and roles change etc if any.
             getUserService().save(user);
+
+	        //Set UserId in Traffic Tracking
+	        TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+	        if (trafficTracking != null) {
+		        trafficTracking.setUserId(user.getId());
+		        getBaseDao().save(trafficTracking);
+	        }
         }
         /**
          * Now to transfer any data created by a temp user.
@@ -175,6 +187,14 @@ public class UserManager {
             } else {
                 user = new User();
             }
+
+	        //Set UserId in Traffic Tracking
+	        TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+	        if (trafficTracking != null) {
+		        trafficTracking.setUserId(user.getId());
+		        getBaseDao().save(trafficTracking);
+	        }
+	        
         } else {
             user = new User();
         }
@@ -417,11 +437,11 @@ public class UserManager {
         this.offerInstanceDao = offerInstanceDao;
     }
 
-    public AddressDao getAddressDao() {
+    public AddressService getAddressDao() {
         return addressDao;
     }
 
-    public void setAddressDao(AddressDao addressDao) {
+    public void setAddressDao(AddressService addressDao) {
         this.addressDao = addressDao;
     }
 
@@ -432,4 +452,8 @@ public class UserManager {
     public void setSubscriptionService(SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
     }
+
+	public BaseDao getBaseDao() {
+		return baseDao;
+	}
 }

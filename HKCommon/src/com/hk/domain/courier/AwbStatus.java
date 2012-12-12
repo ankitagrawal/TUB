@@ -42,8 +42,9 @@ public class AwbStatus {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
+		}
 		if (obj instanceof AwbStatus) {
 			AwbStatus awbStatus = (AwbStatus) obj;
 			if (this.id != null && awbStatus.getId() != null) {

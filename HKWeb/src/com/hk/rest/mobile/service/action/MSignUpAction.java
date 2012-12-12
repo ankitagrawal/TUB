@@ -7,40 +7,34 @@ package com.hk.rest.mobile.service.action;
  * Time: 7:27:50 PM
  * To change this template use File | Settings | File Templates.
  */
-import com.akube.framework.stripes.action.BaseAction;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.util.CryptoUtil;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.session.Session;
+
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.domain.user.User;
-import com.hk.domain.user.Address;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.service.UserService;
-import com.hk.util.ga.GAUtil;
-import com.hk.web.action.HomeAction;
-import com.hk.web.action.core.auth.LoginAction;
-import com.hk.web.action.core.user.SelectAddressAction;
+import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.web.HealthkartResponse;
-import com.hk.rest.mobile.service.model.MUserLoginJSONResponse;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.util.CryptoUtil;
-import net.sourceforge.stripes.validation.LocalizableError;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.stripesstuff.plugin.session.Session;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.HashMap;
 
 @Path("/mSignup")
 @Component
@@ -111,8 +105,8 @@ public class MSignUpAction extends MBaseAction {
 		User referredBy = null;
 		HealthkartResponse healthkartResponse;
 		String jsonBuilder = "";
-		String message = "Done";
-		String status = HealthkartResponse.STATUS_OK;
+		String message = MHKConstants.STATUS_DONE;
+		String status = MHKConstants.STATUS_OK;
 		Cookie referredByCookie = BaseUtils.getCookie(request,
 				HealthkartConstants.Cookie.referred_by);
 		if (referredByCookie != null) {
@@ -122,11 +116,11 @@ public class MSignUpAction extends MBaseAction {
 		try {
 			userManager.signup(email, name, password, referredBy);
 		} catch (HealthkartSignupException e) {
-			message = "email id already exists";
-			status = HealthkartResponse.STATUS_ERROR;
+			message = MHKConstants.EMAIL_ID_ALRDY_EXIST;
+			status = MHKConstants.STATUS_ERROR;
 		}
 
-		Map map = new HashMap<String, String>();
+		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("email", email);
 		map.put("name", name);
 

@@ -112,7 +112,6 @@
         <mapping class="com.hk.domain.RetailLineItem"/>
         <mapping class="com.hk.domain.courier.StateCourierService"/>
         <mapping class="com.hk.domain.DoomDay"/>
-        <mapping class="com.hk.domain.payment.PreferredBankGateway"/>
         <mapping class="com.hk.domain.content.PrimaryCategoryHeading"/>
         <mapping class="com.hk.domain.catalog.category.CategoryImage"/>
         <mapping class="com.hk.domain.ItemDetail"/>
@@ -189,5 +188,14 @@
 	    <mapping class="com.hk.domain.catalog.product.UpdatePvPrice" />
 	    <mapping class="com.hk.domain.order.OrderPaymentReconciliation" />
 	    <mapping class="com.hk.domain.order.analytics.DemandHistory" />
+	    <mapping class="com.hk.domain.user.UserDetail" />
+	    <mapping class="com.hk.domain.analytics.TrafficTracking" />
+	    <mapping class="com.hk.domain.analytics.UserBrowsingHistory" />
+        <mapping class="com.hk.domain.user.BillingAddress" />
+        <mapping class="com.hk.domain.payment.Gateway" />
+        <mapping class="com.hk.domain.payment.Issuer" />
+        <mapping class="com.hk.domain.payment.GatewayIssuerMapping" />
+        <mapping class="com.hk.domain.core.Country" />
+        <mapping class="com.hk.domain.payment.CurrencyConverter" />
     </session-factory>
 </hibernate-configuration>

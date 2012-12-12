@@ -482,6 +482,9 @@
                         <div class="floatleft">
                             Date: <fmt:formatDate value="${order.payment.paymentDate}" type="both"/>
                             <span style="margin-left:30px;">Mode: ${order.payment.paymentMode.name}</span>
+                            <c:if test="${order.payment.gateway != null}">
+                                <span style="margin-left:30px;">Gateway: ${order.payment.gateway.name}</span>
+                            </c:if>
                         </div>
                         <div class="clear"></div>
                         <c:if test="${order.payment.paymentMode.id == paymentModeCod}">
@@ -559,7 +562,7 @@
                         <td width="60%" style="border:1px solid red; padding:3px;">
                             Need to split order manually could not be split automatically
                             <br/><br/><strong>
-                            (<s:link beanclass="com.hk.web.action.admin.order.split.SplitBaseOrderAction"><s:param
+                            (<s:link beanclass="com.hk.web.action.admin.order.split.SplitBaseOrderAction" class="splitBOLinkManually"><s:param
                                 name="baseOrder" value="${order}"/>Split order</s:link>)
                         </strong>
                         </td>
@@ -587,6 +590,10 @@
             }
         });
         return true;
+    });
+
+    $('.splitBOLink').click(function disableSplitBOLink(){
+        $(this).css("display", "none");
     });
 
     /*$('.lineItemCheckBox').click(function() {

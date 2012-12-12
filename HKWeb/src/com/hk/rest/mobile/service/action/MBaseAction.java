@@ -1,21 +1,15 @@
 package com.hk.rest.mobile.service.action;
 
-import com.hk.domain.user.User;
-import com.hk.pact.service.UserService;
-import com.hk.rest.mobile.service.utils.MHKConstants;
-import com.hk.service.ServiceLocatorFactory;
-import com.hk.constants.core.Keys;
-import com.shiro.PrincipalImpl;
-import com.akube.framework.stripes.action.BaseAction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.number.CurrencyFormatter;
-import org.apache.shiro.mgt.*;
-import org.apache.shiro.mgt.SecurityManager;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.Keys;
+import com.hk.rest.mobile.service.utils.MHKConstants;
+import com.hk.service.ServiceLocatorFactory;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,8 +20,8 @@ import java.text.NumberFormat;
  */
 public class MBaseAction extends BaseAction {
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
-    NumberFormat formatter = NumberFormat.getCurrencyInstance();
     DecimalFormat priceFormat = new DecimalFormat("###,###,###.##");
+    
     public void noCache(@Context HttpServletResponse response) {
         response.addHeader("Pragma", "no-cache");
         response.addHeader("Cache-Control", "no-cache");
@@ -65,6 +59,5 @@ public class MBaseAction extends BaseAction {
 
             }
      return imageUrl+MHKConstants.IMAGEURL;
-     //return "http://img.healthkart.com
     }
 }

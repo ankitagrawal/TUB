@@ -9,6 +9,7 @@
 <%@ page import="com.hk.admin.util.courier.thirdParty.FedExCourierUtil" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
+<%@ page import="com.hk.admin.pact.service.shippingOrder.ShipmentService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -70,9 +71,10 @@
     </style>
     <link href="<hk:vhostCss/>/css/960.css" rel="stylesheet" type="text/css"/>
     <%
-        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);        
         pageContext.setAttribute("sexualCare", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("sexual-care")));
         pageContext.setAttribute("personalCareWomen", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("women")));
+        pageContext.setAttribute("discretePackaging", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("discrete-packaging")));
     %>
 </head>
 <body>
@@ -84,6 +86,7 @@
 <c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.getId()%>"/>
 <c:set var="groundShipped" value="${orderSummary.groundShipped}"/>
 <c:set var="courierId" value="${orderSummary.shipment.awb.courier.id}"/>
+
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">
@@ -114,8 +117,13 @@
 
 <div class="grid_4">
     <div style="text-align: center;">
-        ORDER INVOICE
-    </div>
+ORDER INVOICE <c:choose>
+<c:when
+        test="${orderSummary.printable && hk:isOrderForDiscretePackaging(orderSummary.shippingOrder)}"><b>(OUT)</b></c:when>
+        <c:otherwise><b>(IN)</b>
+        </c:otherwise>
+        </c:choose>
+</div>
 </div>
 <div class="grid_4">
     <div style="float: right;">
@@ -132,6 +140,7 @@
 </div>
 
 
+
 <c:choose>
     <c:when test="${courierId == fedEx || courierId == fedExSurface}">
         <div class="grid_12">
@@ -145,10 +154,10 @@
                         Standard Overnight
                     </c:otherwise>
                 </c:choose>
-                <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD && orderSummary.invoiceDto.grandTotal > 0}">
+                <c:if test="${orderSummary.shippingOrder.COD}">
                     COD
                 </c:if>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
+                &nbsp;&nbsp;wt:${orderSummary.estimatedWeightOfPackage}Kg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
             </div>
 
             <div class="clear"></div>
@@ -237,6 +246,14 @@
 <div style="margin-top: 5px;"></div>
 
 <div class="grid_12">
+    <c:if test="${orderSummary.printZone && orderSummary.zone != null}">
+        <hr/>
+        <p><strong>ZONE:-</strong> ${orderSummary.zone}</p>
+        <hr/>
+    </c:if>
+</div>
+
+<div class="grid_12">
     <c:if test="${baseOrder.userComments != null}">
         <hr/>
         <p><strong>User Instructions:-</strong> ${baseOrder.userComments}</p>
@@ -284,7 +301,8 @@
         <tr>
             <th>Item</th>
             <th>Quantity</th>
-            <th>Unit price</th>
+            <th>MRP</th>
+            <th>Rate</th>
             <th>Total(Rs.)</th>
         </tr>
         <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
@@ -292,7 +310,7 @@
                 <td>
                     <c:choose>
                         <c:when test="${orderSummary.printable && (hk:collectionContainsCollection(invoiceLineItem.productCategories, sexualCare)
-						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen))}">
+						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen) || hk:collectionContainsCollection(invoiceLineItem.productCategories, discretePackaging))}">
                             <p>Personal Care Product</p>
                         </c:when>
                         <c:otherwise>
@@ -373,6 +391,7 @@
                 </td>
 
                 <td><fmt:formatNumber value="${invoiceLineItem.qty}" maxFractionDigits="0"/></td>
+                <td> ${invoiceLineItem.markedPrice} </td>
                 <td> ${invoiceLineItem.hkPrice} </td>
                 <td class="itemsubTotal">
                     <fmt:formatNumber value="${invoiceLineItem.lineItemTotal}" type="currency"
@@ -386,6 +405,7 @@
             <tr>
                 <td>${orderSummary.freebieItem}</td>
                 <td>1</td>
+                <td>0.0</td>
                 <td>0.0</td>
                 <td>0.0</td>
             </tr>

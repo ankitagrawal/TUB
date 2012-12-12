@@ -5,14 +5,15 @@
 <%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
-<c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
-<c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
-<c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
-<c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
+ <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
+ <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
+ <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
+ <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
+ <c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
 <%
     CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
     Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
@@ -24,11 +25,14 @@
     pageContext.setAttribute("isSecure", isSecure);
     Category stethoscope = categoryDao.getCategoryByName("stethoscope");
     pageContext.setAttribute("stethoscope", stethoscope);
+
+	String gosf = request.getParameter("gosf");
+	pageContext.setAttribute("gosf", gosf);
 %>
-<c:set var="product" value="${pa.product}"/>
-<c:set var="seoData" value="${pa.seoData}"/>
-<c:set var="subscriptionProduct" value="${pa.subscriptionProduct}"/>
-<s:layout-render name="/layouts/productLayout.jsp" pageTitle="${seoData.title}">
+ <c:set var="product" value="${pa.product}"/>
+ <c:set var="seoData" value="${pa.seoData}"/>
+ <c:set var="subscriptionProduct" value="${pa.subscriptionProduct}"/>
+ <s:layout-render name="/layouts/productLayout.jsp" pageTitle="${seoData.title}">
 <%--<s:layout-render name="/layouts/default.jsp" pageTitle="${seoData.title}">--%>
 
 
@@ -66,6 +70,10 @@
 			float: left;
 		}
 
+        #mycarousel {
+            display:none;
+        }
+
 		.rating_bar {
 			width: 80px;
 			background: url('${pageContext.request.contextPath}/images/img/star-off.png') 0 0 repeat-x;
@@ -82,8 +90,7 @@
 		}
 	</style>
 
-	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
-	<link href="${pageContext.request.contextPath}/css/new.css" rel="stylesheet" type="text/css"/>
+	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>	
 	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
 	<c:if test="${!empty subscriptionProduct}">
 		<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
@@ -136,6 +143,8 @@
 				preloadImages:false,
 				alwaysOn:false
 			});
+
+            $('#mycarousel').css('display', 'block');
 
             jQuery(document).ready(function() {
                 jQuery('#mycarousel').jcarousel();
@@ -227,14 +236,25 @@
 
 <s:layout-component name="prod_slideshow">
 	<div class='product_slideshow'>
-		<div class="img320">
+
+		<div class="img320" style="position:relative;">
 			<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
 			   title="${product.name}">
 				<img itemprop="image" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
 				     title="${product.name}">
+				<c:if test="${gosf == 'true'}">
+					<img style="position:absolute;right:0px;bottom:0px;z-index:100" class="gosf-logo"
+					     src="${pageContext.request.contextPath}/images/GOSF/gosf-price.jpg"/>
+				</c:if>
 			</a>
 		</div>
-		<div>
+        <div id="tryOnLink" class="content">
+            <c:if test="${pa.validTryOnProductVariant != null}">
+                <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}"><img src="${pageContext.request.contextPath}/images/try-it-now.jpg" alt="Virtual Try On"></a>
+            </c:if>
+        </div>
+
+        <div>
 			<c:if test="${fn:length(pa.productImages) > 1 && !pa.product.productHaveColorOptions}">
 				<%--<ul class="thumblist">--%>
 				<ul id="mycarousel" class="jcarousel-skin-tango">
@@ -249,11 +269,11 @@
 		<div class="clear"></div>
 		<div style="padding-top: 15px">
 			<shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
-				<a name="showProductLink" class="linkbutton"
+			 	 <a name="showProductLink" class="linkbutton"
 				   onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();"
 				   style="cursor:pointer">Get
 					Links</a>
-				<a name="showProductLink" class="linkbutton"
+				 <a name="showProductLink" class="linkbutton"
 				   onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();"
 				   style="cursor:pointer">Get
 					Banners</a>
@@ -369,15 +389,24 @@
 			</a>
 		</c:if>
 		<c:if test="${!empty pa.relatedCombos}">
-			<a class='top_link' href='#related_combos' style="font-weight:bold;">
+			<a class='top_link' href='#related_combos' id="related_combo_link" style="font-weight:bold;">
 				Special Offers &darr;
 			</a>
 		</c:if>
 		<c:if test="${!empty product.relatedProducts}">
-			<a class='top_link' href='#related_products'>
+			<a class='top_link' id="related_product_link" href='#related_products'>
 				Related Products &darr;
 			</a>
 		</c:if>
+<%--
+        <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
+            <div id="tryOnLink" class="content">
+                <c:if test="${pa.validTryOnProductVariant != null}">
+                    <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" style="float:right;color:black;font-size:1.2em;background: #DDD;border:1px solid black;padding:5px;"> TRY IT NOW </a>
+                </c:if>
+            </div>
+        </shiro:hasAnyRoles>
+--%>
 	</div>
 	<c:if test="${!empty subscriptionProduct}">
 		<%--  <s:layout-render name="/layouts/embed/_subscription.jsp" subscriptionProduct="${subscriptionProduct}"/> --%>
@@ -560,17 +589,29 @@
 <s:layout-component name="product_description">
 
 	<c:if test="${!empty pa.relatedCombos}">
+         <c:set var="check_related_combos" value="0"/>
 		<div class='products content' id="related_combos">
 			<h4>
 				Special Offers on ${product.name}
 			</h4>
 			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
+                <c:if test="${!relatedCombo.outOfStock and !relatedCombo.deleted and !relatedCombo.hidden and !relatedCombo.googleAdDisallowed}">
 				<s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="${relatedCombo.id}"/>
+                <c:set var="check_related_combos" value="1"/>
+                </c:if>
 			</c:forEach>
 
 			<div class="floatfix"></div>
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
 		</div>
+         <c:if test="${hk:equalsIgnoreCase(check_related_combos,'0')}">
+                 <script type="text/javascript">
+                     $(document).ready(function(){
+                        $("#related_combos").remove();
+                         $("#related_combo_link").remove();
+                     });
+                 </script>
+        </c:if>
 	</c:if>
 	<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
 
@@ -599,7 +640,7 @@
 				</table>
 				</div>
 			</c:if>
-			
+
 			<div id="sizeGuide"
 		     class="content"
 		     style="background-color:#F2F2F2;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
@@ -745,19 +786,31 @@
 
 	<c:set var="relatedProducts" value="${product.relatedProducts}"/>
 	<c:if test="${!empty relatedProducts}">
+        <c:set var="check_related_products" value="0"/>
 		<div class='products content' id="related_products">
 			<h4>
 				People who bought this also bought these products
 			</h4>
 
 			<c:forEach items="${relatedProducts}" var="relatedProduct">
+                 <c:if test="${!relatedProduct.outOfStock and !relatedProduct.deleted and !relatedProduct.hidden and !relatedProduct.googleAdDisallowed}">
 				<s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${relatedProduct}"/>
+                     <c:set var="check_related_products" value="1"/>
+                </c:if>
 			</c:forEach>
 
 			<div class="floatfix"></div>
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
 
 		</div>
+         <c:if test="${hk:equalsIgnoreCase(check_related_products,'0')}">
+          <script type="text/javascript">
+              $(document).ready(function(){
+                 $("#related_products").remove();
+                  $("#related_product_link").remove();
+              });
+          </script>
+        </c:if>
 	</c:if>
 </s:layout-component>
 
@@ -888,12 +941,12 @@
 	<script type="text/javascript">
 		var validateCheckbox;
 		$(document).ready(function () {
+           
 			var params = {};
 			params.productReferrerId = $('#productReferrerId').val();
 			function _addToCart(res) {
 				if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 					$('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
-					//alert(res.data.itemsInCart);
 					$('#productsInCart').html(res.data.itemsInCart);
 					if(res.data.itemsInCart > 0){
 						$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart.png");
@@ -903,8 +956,13 @@
 					$('.progressLoader').hide();
 
 					show_message();
+                    $('#gulal').show();
 				}
-				$('#gulal').show();
+                else if(res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+                   alert(res.message);
+                    location.reload();
+                }
+
 			}
 
 			function _addToCart2(res) {
@@ -947,10 +1005,12 @@
 				params.nameToBeEngraved = $("#engrave").val();
 
 				if (!window.validateCheckbox) {
+
 					$(this).parents().find('.progressLoader').show();
 					$(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
 					$(this).hide();
 					e.stopPropagation();
+
 				} else {
 					var selected = 0;
 					$('.checkbox').each(function () {

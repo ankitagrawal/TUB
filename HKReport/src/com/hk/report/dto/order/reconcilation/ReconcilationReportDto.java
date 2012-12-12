@@ -18,7 +18,8 @@ public class ReconcilationReportDto {
     String awb;
     Date shipmentDate;
     Date deliveryDate;
-    String reconciled;
+    //String reconciled;
+    boolean reconciled;
     String orderStatus;
     Double boxWeight;
     String boxSize;
@@ -113,15 +114,24 @@ public class ReconcilationReportDto {
         this.deliveryDate = deliveryDate;
     }
 
-    public String getReconciled() {
+    /*public String getReconciled() {
         return reconciled;
     }
 
     public void setReconciled(String reconciled) {
         this.reconciled = reconciled;
     }
+*/
 
-    public String getOrderStatus() {
+	public boolean isReconciled() {
+		return reconciled;
+	}
+
+	public void setReconciled(boolean reconciled) {
+		this.reconciled = reconciled;
+	}
+
+	public String getOrderStatus() {
         return orderStatus;
     }
 

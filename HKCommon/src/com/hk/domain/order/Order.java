@@ -17,6 +17,7 @@ import com.hk.domain.store.Store;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.domain.user.BillingAddress;
 
 import javax.persistence.*;
 import java.util.*;
@@ -52,6 +53,7 @@ public class Order implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address                   address;
+
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
@@ -169,6 +171,7 @@ public class Order implements java.io.Serializable {
 
     @Column(name = "comment_type")
     private Long                      commentType;
+
 
     public boolean isPriorityOrder() {
         if (this.score != null) {
@@ -324,14 +327,14 @@ public class Order implements java.io.Serializable {
     }
 
     @Deprecated
-    public List<CartLineItem> getExclusivelyComboCartLineItems() {
-        List<CartLineItem> cartLineItemList = new ArrayList<CartLineItem>();
-        Long oldComboInstanceId = null;
+    public Set<CartLineItem> getExclusivelyComboCartLineItems() {
+        Set<CartLineItem> cartLineItemList = new HashSet<CartLineItem>(0);
+        Set<Long> comboInstanceIds = new HashSet<Long>(0);
         for (CartLineItem cartLineItem : this.getProductCartLineItems()) {
             if (cartLineItem.getComboInstance() != null) {
-                if (oldComboInstanceId == null || oldComboInstanceId != cartLineItem.getComboInstance().getId()) {
+                if (cartLineItemList.size()==0 || (!comboInstanceIds.contains(cartLineItem.getComboInstance().getId()))) {
                     cartLineItemList.add(cartLineItem);
-                    oldComboInstanceId = cartLineItem.getComboInstance().getId();
+                     comboInstanceIds.add(cartLineItem.getComboInstance().getId());
                 }
             }
         }
@@ -574,7 +577,5 @@ public class Order implements java.io.Serializable {
     public void setTargetDispatchDateOnVerification(Date targetDispatchDateOnVerification) {
         this.targetDispatchDateOnVerification = targetDispatchDateOnVerification;
     }
-    
-    
 
 }

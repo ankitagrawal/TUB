@@ -2,15 +2,18 @@ package com.hk.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.hk.domain.order.OrderPaymentReconciliation;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -20,7 +23,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.XslConstants;
 import com.hk.domain.catalog.Manufacturer;
@@ -35,11 +38,12 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
-import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
-import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.order.OrderPaymentReconciliation;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.io.HkXlsWriter;
@@ -61,6 +65,7 @@ public class XslGenerator {
 	public static final String    STATE              = "STATE";
 	public static final String    LOCALITY           = "LOCALITY";
 	public static final String    DEFAULT_COURIER_ID = "DEFAULT_COURIER_ID";
+	public static final String    ZONE               = "ZONE";
 
 	public static final String WAREHOUSE             = "WAREHOUSE";
 	public static final String COD_COURIER_ID        = "COD_COURIER_ID";
@@ -71,7 +76,7 @@ public class XslGenerator {
     public static final String    COD_ON_GROUND_SHIPPING         = "COD_ON_GROUND_SHIPPING";
 
 	@Autowired
-	private CourierDao            courierDao;
+	private CourierService courierService;
 	@Autowired
 	private InventoryService      inventoryService;
 	@Autowired
@@ -377,7 +382,7 @@ public class XslGenerator {
         setCellValue(row, 1, "ID");
 
         int initialRowNo2 = 1;
-        List<Courier> courierList = courierDao.getAllCouriers();
+        List<Courier> courierList = courierService.getAllCouriers();
         for (Courier courier : courierList) {
             row = sheet2.createRow(initialRowNo2);
             for (int columnNo = 0; columnNo < totalColumnNo2; columnNo++) {
@@ -485,6 +490,7 @@ public class XslGenerator {
 		setCellValue(row, 3, STATE);
 		setCellValue(row, 4, LOCALITY);
 		setCellValue(row, 5, DEFAULT_COURIER_ID);
+		setCellValue(row, 6, ZONE);
 
 		int initialRowNo = 1;
 		for (Pincode pincode : pincodeList) {
@@ -500,7 +506,9 @@ public class XslGenerator {
 			setCellValue(row, 3, pincode.getState().getName());
 			setCellValue(row, 4, pincode.getLocality());
 			setCellValue(row, 5, pincode.getDefaultCourier() != null ? pincode.getDefaultCourier().getId() : null);
-
+			if(pincode.getZone() != null){
+				setCellValue(row, 6, pincode.getZone().getName());
+			}
 			initialRowNo++;
 		}
 
@@ -510,7 +518,7 @@ public class XslGenerator {
 	}
 
 	public File generatePincodeDefaultCourierXsl(List<PincodeDefaultCourier> pincodeDefaultCourierList, String xslFilePath) throws Exception {
-File file = new File(xslFilePath);
+       File file = new File(xslFilePath);
         file.getParentFile().mkdirs();
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();

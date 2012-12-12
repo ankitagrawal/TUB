@@ -8,19 +8,19 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.user.User;
-import com.hk.manager.ReferrerProgramManager;
+import com.hk.pact.service.order.RewardPointService;
 
 @Component
 public class RewardPointTxnStatementAction extends BaseAction {
 
     @Autowired
-    ReferrerProgramManager referrerProgramManager;
-    private User user;
-    private Double redeemablePoint;
+    private RewardPointService rewardPointService;
+    private User               user;
+    private Double             redeemablePoint;
 
     public Resolution pre() {
         user = getPrincipalUser();
-        redeemablePoint = referrerProgramManager.getTotalRedeemablePoints(user);
+        redeemablePoint = rewardPointService.getTotalRedeemablePoints(user);
         return new ForwardResolution("/pages/rewardPointTxnStatement.jsp");
     }
 

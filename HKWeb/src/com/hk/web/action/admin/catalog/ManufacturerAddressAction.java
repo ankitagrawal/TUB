@@ -24,9 +24,9 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.user.Address;
-import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.core.ManufacturerDao;
 import com.hk.pact.dao.location.LocalityMapDao;
+import com.hk.pact.service.core.AddressService;
 import com.hk.util.LatLongGenerator;
 
 /**
@@ -62,7 +62,7 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
   @Autowired
   ManufacturerDao manufacturerDao;
   @Autowired
-  AddressDao addressDao;
+  AddressService addressDao;
   @Autowired
   LocalityMapDao localityMapDao;
   @Autowired

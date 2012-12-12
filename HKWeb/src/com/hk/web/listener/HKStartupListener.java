@@ -1,6 +1,7 @@
 package com.hk.web.listener;
 
 import java.io.File;
+import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
@@ -12,6 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.CategoryCache;
+import com.hk.cache.HkApiUserCache;
+import com.hk.cache.RoleCache;
+import com.hk.cache.vo.CategoryVO;
+import com.hk.cache.vo.RoleVO;
+import com.hk.domain.api.HkApiUser;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.user.Role;
+import com.hk.pact.dao.BaseDao;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.AppConstants;
 
 public class HKStartupListener implements ServletContextListener {
@@ -28,6 +39,8 @@ public class HKStartupListener implements ServletContextListener {
     public static String  appBasePath;
     public static String  environmentDir;
 
+    private BaseDao       baseDao;
+
     // private BatchProcessManager batchProcessManager;
 
     // Public constructor is required by servlet spec
@@ -39,8 +52,10 @@ public class HKStartupListener implements ServletContextListener {
         AppConstants.contextPath = event.getServletContext().getContextPath();
         AppConstants.appBasePath = event.getServletContext().getRealPath("/");
 
-        /*PropertyConfigurator.configure( AppConstants.appBasePath + "WEB-INF/log4j.properties");
-        logger.info("logger configured");*/
+        /*
+         * PropertyConfigurator.configure( AppConstants.appBasePath + "WEB-INF/log4j.properties"); logger.info("logger
+         * configured");
+         */
 
         /*
          * This method is called when the servlet context is initialized(when the Web application is deployed). You can
@@ -74,6 +89,31 @@ public class HKStartupListener implements ServletContextListener {
         // if (startBackgroundTaskManager) {
         if (true) {
             System.out.println("------------- Starting Batch Process Manager ---------------------");
+
+            logger.info("START POPULATING HK API USER CACHE");
+            System.out.println("START POPULATING HK API USER CACHE");
+            populateHKApiUserCache();
+            logger.info("END POPULATING HK API USER CACHE");
+            System.out.println("END POPULATING HK API USER CACHE");
+
+            logger.info("START POPULATING ROLE CACHE");
+            System.out.println("START POPULATING ROLE CACHE");
+            populateRoleCache();
+            logger.info("END POPULATING ROLE CACHE");
+            System.out.println("END POPULATING ROLE CACHE");
+
+            /*
+             * logger.info("START POPULATING USER CACHE"); System.out.println("START POPULATING USER CACHE");
+             * populateUserCache(); logger.info("END POPULATING USER CACHE"); System.out.println("END POPULATING USER
+             * CACHE");
+             */
+
+            logger.info("START POPULATING CATEGORY  CACHE");
+            System.out.println("START POPULATING CATEGORY  CACHE");
+            populateCategoryCache();
+            logger.info("END POPULATING CATEGORY CACHE");
+            System.out.println("END POPULATING CATEGORY CACHE");
+
             /*
              * batchProcessManager = ServiceLocatorFactory.getService(BatchProcessManager.class);
              * batchProcessManager.start();
@@ -84,6 +124,46 @@ public class HKStartupListener implements ServletContextListener {
 
     }
 
+    private void populateHKApiUserCache() {
+        HkApiUserCache.getInstance().reset();
+        HkApiUserCache hkApiUserCache = HkApiUserCache.getInstance().getTransientCache();
+
+        List<HkApiUser> apiUsersList = getBaseDao().getAll(HkApiUser.class);
+
+        for (HkApiUser apiUser : apiUsersList) {
+            hkApiUserCache.addHkApiUser(apiUser);
+        }
+        hkApiUserCache.freeze();
+
+    }
+
+    private void populateRoleCache() {
+        RoleCache.getInstance().reset();
+        RoleCache roleCache = RoleCache.getInstance().getTransientCache();
+
+        List<Role> allRoles = getBaseDao().getAll(Role.class);
+
+        for (Role role : allRoles) {
+            roleCache.addRole(new RoleVO(role));
+        }
+        roleCache.freeze();
+
+    }
+
+    private void populateCategoryCache() {
+        CategoryCache.getInstance().reset();
+        CategoryCache categoryCache = CategoryCache.getInstance().getTransientCache();
+
+        List<Category> allCategories = getBaseDao().getAll(Category.class);
+
+        for (Category category : allCategories) {
+            categoryCache.addCategory(new CategoryVO(category));
+        }
+        categoryCache.freeze();
+
+    }
+
+    @SuppressWarnings("unused")
     private String getEnvironmentDir(String appBasePath) {
         String propertyLocatorFileLocation = "/WEB-INF/propertyLocator.properties";
         propertyLocatorFileLocation = appBasePath + propertyLocatorFileLocation;
@@ -108,6 +188,7 @@ public class HKStartupListener implements ServletContextListener {
         return environmentDir;
     }
 
+    @SuppressWarnings("unused")
     private void setupLogger(String environmentDir) {
         String loggerPropertiesFileLocation = environmentDir + "/logger-config.properties";
         File log4jFile = new File(loggerPropertiesFileLocation);
@@ -148,6 +229,13 @@ public class HKStartupListener implements ServletContextListener {
         // CacheManager.getInstance().shutdown();
         System.out.println("================  SHUTTING DOWN  ==================");
         // LogManager.shutdown();
+    }
+
+    public BaseDao getBaseDao() {
+        if (baseDao == null) {
+            baseDao = ServiceLocatorFactory.getService(BaseDao.class);
+        }
+        return baseDao;
     }
 
 }

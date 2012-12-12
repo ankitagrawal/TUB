@@ -16,13 +16,13 @@ import com.hk.constants.marketing.ProductReferrerConstants;
  */
 public class ProductReferrerMapper {
 
-  static Map<String,Long> referrerMap = new HashMap();
+  static Map<String,Long> referrerMap = new HashMap<String,Long>();
 
   static{
     referrerMap.put(CategoryConstants.BABY, EnumProductReferrer.parenting.getId());
     referrerMap.put(CategoryConstants.BEAUTY, EnumProductReferrer.beauty.getId());
     referrerMap.put(CategoryConstants.EYE, EnumProductReferrer.eye.getId());
-    referrerMap.put(CategoryConstants.HOME_DEVICES, EnumProductReferrer.homeDevices.getId());
+    referrerMap.put(CategoryConstants.HEALTH_DEVICES, EnumProductReferrer.healthDevices.getId());
     referrerMap.put(CategoryConstants.NUTRITION, EnumProductReferrer.nutrition.getId());
     referrerMap.put(CategoryConstants.PERSONAL_CARE, EnumProductReferrer.personalCare.getId());
     referrerMap.put(CategoryConstants.SERVICES, EnumProductReferrer.services.getId());

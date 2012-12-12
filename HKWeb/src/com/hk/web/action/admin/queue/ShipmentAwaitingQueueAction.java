@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hk.domain.courier.Zone;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -98,6 +99,8 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   private UserService                userService;
   private Warehouse                  warehouse;
 
+  private Zone zone;
+
   @DontValidate
   @DefaultHandler
   // @Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean =
@@ -119,6 +122,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
     shippingOrderSearchCriteria.setOrderAsc(true);
     shippingOrderSearchCriteria.setCourierList(courierList);
+	shippingOrderSearchCriteria.setShipmentZone(zone);
     shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
     if (shippingOrderPage != null) {
       shippingOrderList = shippingOrderPage.getList();
@@ -231,10 +235,10 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
           if (courier.equals(courierService.getCourierById(EnumCourier.BlueDart.getId())) || courier.equals(courierService.getCourierById(EnumCourier.BlueDart_COD.getId()))) {
             xlsFile = reportGenerator.generateCourierReportXslForBlueDart(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse);
           } else {
-            xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse);
+            xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse, zone);
           }
         } else {
-          xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse);
+          xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse,zone);
         }
         addRedirectAlertMessage(new SimpleMessage("Courier report successfully generated."));
       } catch (Exception e) {
@@ -390,5 +394,13 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
 
   public void setWarehouse(Warehouse warehouse) {
     this.warehouse = warehouse;
+  }
+
+  public Zone getZone() {
+ 	return zone;
+  }
+
+  public void setZone(Zone zone) {
+	this.zone = zone;
   }
 }

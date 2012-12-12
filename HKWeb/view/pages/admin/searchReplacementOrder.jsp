@@ -8,7 +8,7 @@
 <c:set var="shippingOrderStatusRTO_instantiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
 <c:set var="shippingOrderStatusSO_returned" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
 
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create Replacement Order">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Search Replacement Order">
 	<s:useActionBean beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction"
 	                 var="replacementOrderBean"/>
 	<s:layout-component name="heading">

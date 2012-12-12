@@ -58,8 +58,10 @@ public class TrackCourierAction extends BaseAction {
     @DefaultHandler
     public Resolution pre() {
         Resolution resolution = null;
-
         EnumCourier enumCourier = EnumCourier.getEnumCourierFromCourierId(courierId);
+	    if(enumCourier == null){
+		 return new RedirectResolution("/pages/trackShipment.jsp");  
+	    }
         switch (enumCourier) {
             case Aramex:
                 resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);
@@ -82,7 +84,7 @@ public class TrackCourierAction extends BaseAction {
                 if (chhotuCourierDelivery != null) {
                     resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
 
@@ -102,7 +104,7 @@ public class TrackCourierAction extends BaseAction {
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
             case BlueDart:
@@ -115,13 +117,13 @@ public class TrackCourierAction extends BaseAction {
                     logger.debug("Exception occurred in TrackCourierAction");
                 }
                 if (ele != null) {
-                    String responseStatus = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
-                    if (!responseStatus.equals(CourierConstants.DELHIVERY_ERROR_MSG)) {
-                        status = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
+                    String responseStatus = ele.getChildText(CourierConstants.BLUEDART_STATUS);
+                    if (!responseStatus.equals(CourierConstants.BLUEDART_ERROR_MSG)) {
+                        status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
             case DTDC_COD:
@@ -143,7 +145,7 @@ public class TrackCourierAction extends BaseAction {
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
 
@@ -154,16 +156,16 @@ public class TrackCourierAction extends BaseAction {
 				        consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
 				        resolution = new ForwardResolution("/pages/hkDeliveryTracking.jsp");
 			        } else {
-				        resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+				        resolution = new RedirectResolution("/pages/trackShipment.jsp");
 			        }
 		        }
 		        else{
-			        resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+			        resolution = new RedirectResolution("/pages/trackShipment.jsp");
 		        }
 	            
 	            break;
             default:
-                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                resolution = new RedirectResolution("/pages/trackShipment.jsp");
 
         }
         return resolution;

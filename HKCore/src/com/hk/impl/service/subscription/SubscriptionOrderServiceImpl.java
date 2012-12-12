@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.constants.subscription.EnumSubscriptionOrderStatus;
@@ -25,77 +26,98 @@ import com.hk.domain.subscription.SubscriptionOrderStatus;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.subscription.SubscriptionOrderDao;
 import com.hk.pact.service.order.AutomatedOrderService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.pact.service.subscription.SubscriptionService;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Pradeep
- * Date: 7/13/12
- * Time: 6:56 PM
+ * Created with IntelliJ IDEA. User: Pradeep Date: 7/13/12 Time: 6:56 PM
  */
 @Service
 public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
 
     @Autowired
-    private AutomatedOrderService automatedOrderService;
+    private AutomatedOrderService      automatedOrderService;
     @Autowired
-    private StoreService storeService;
+    private StoreService               storeService;
     @Autowired
-    private SubscriptionOrderDao subscriptionOrderDao;
+    private SubscriptionOrderDao       subscriptionOrderDao;
     @Autowired
-    private SubscriptionService subscriptionService;
+    private SubscriptionService        subscriptionService;
     @Autowired
     private SubscriptionLoggingService subscriptionLoggingService;
+    @Autowired
+    private OrderService               orderService;
 
-    public SubscriptionOrder save(SubscriptionOrder subscriptionOrder){
+    public SubscriptionOrder save(SubscriptionOrder subscriptionOrder) {
         return subscriptionOrderDao.save(subscriptionOrder);
     }
 
-    public SubscriptionOrder findSubscriptionOrderByBaseOrder(Order order){
+    public SubscriptionOrder findSubscriptionOrderByBaseOrder(Order order) {
         return subscriptionOrderDao.findSubscriptionOrderByBaseOrder(order);
     }
 
-    public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription){
+    public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription) {
         return subscriptionOrderDao.findSubscriptionOrdersForSubscription(subscription);
     }
 
-    public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription, SubscriptionOrderStatus subscriptionOrderStatus){
-        return subscriptionOrderDao.findSubscriptionOrdersForSubscription(subscription,subscriptionOrderStatus);
+    public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription, SubscriptionOrderStatus subscriptionOrderStatus) {
+        return subscriptionOrderDao.findSubscriptionOrdersForSubscription(subscription, subscriptionOrderStatus);
     }
 
     /**
      * create base order for subscription and an entry in subscription_order
+     * 
      * @param subscription
      * @return
      */
-    public Order createOrderForSubscription(Subscription subscription){
-        User user=subscription.getUser();
-        Order order= automatedOrderService.createNewOrder(user);
-        Set<CartLineItem> cartLineItemSet=createSubscriptionOrderCartLineItems(subscription, order);
-        Payment payment=createSubscriptionPayment(order, cartLineItemSet);
+    public Order createOrderForSubscription(Subscription subscription) {
+        User user = subscription.getUser();
+        Order order = automatedOrderService.createNewOrder(user);
+        Set<CartLineItem> cartLineItemSet = createSubscriptionOrderCartLineItems(subscription, order);
+        Payment payment = createSubscriptionPayment(order, cartLineItemSet);
 
-        order=  automatedOrderService.placeOrder(order,cartLineItemSet,subscription.getAddress(),payment,storeService.getDefaultStore(),true);
+        order = automatedOrderService.placeOrder(order, cartLineItemSet, subscription.getAddress(), payment, storeService.getDefaultStore(), true);
 
         subscription.setSubscriptionStatus(EnumSubscriptionStatus.InProcess.asSubscriptionStatus());
         subscriptionService.save(subscription);
         subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderPlaced, "automated order generation");
-        //create an entry in subscription_order table
+        // create an entry in subscription_order table
         createSubscriptionOrder(subscription, order);
+        updateParentBOStatus(subscription);
 
         return order;
     }
 
+    private Order updateParentBOStatus(Subscription subscription) {
+        Order bo = subscription.getBaseOrder();
+        boolean parentBOHasProducts = false;
+        if (bo.getOrderStatus().getId().equals(EnumOrderStatus.Placed.getId())) {
+            for (CartLineItem cartLineItem : bo.getCartLineItems()) {
+                if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
+                    parentBOHasProducts = true;
+                    break;
+                }
+            }
+            if (!parentBOHasProducts) {
+                bo.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
+                orderService.save(bo);
+            }
+        }
+        return bo;
+    }
+
     /**
      * create base orders for a list of base orders
+     * 
      * @param subscriptions
      * @return
      */
-    public List<Order> createOrdersForSubscriptions(List<Subscription> subscriptions){
-        List<Order> orderList=new ArrayList<Order>();
-        for(Subscription subscription: subscriptions){
+    public List<Order> createOrdersForSubscriptions(List<Subscription> subscriptions) {
+        List<Order> orderList = new ArrayList<Order>();
+        for (Subscription subscription : subscriptions) {
             orderList.add(this.createOrderForSubscription(subscription));
         }
         return orderList;
@@ -103,36 +125,41 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
 
     /**
      * used to create an entry in subscription_order table
+     * 
      * @param subscription
      * @param order
      * @return
      */
-    public SubscriptionOrder createSubscriptionOrder(Subscription subscription,Order order){
-        SubscriptionOrderBuilder subscriptionOrderBuilder=new SubscriptionOrderBuilder();
+    public SubscriptionOrder createSubscriptionOrder(Subscription subscription, Order order) {
+        SubscriptionOrderBuilder subscriptionOrderBuilder = new SubscriptionOrderBuilder();
         subscriptionOrderBuilder.forSubscription(subscription).withStatus(EnumSubscriptionOrderStatus.Placed).setBaseOrder(order);
-        SubscriptionOrder subscriptionOrder=subscriptionOrderBuilder.build();
+        SubscriptionOrder subscriptionOrder = subscriptionOrderBuilder.build();
         return this.save(subscriptionOrder);
     }
 
-
     /**
-     * creates cartLineItems for subscription based on what is best for customer - current price or price at subscription
+     * creates cartLineItems for subscription based on what is best for customer - current price or price at
+     * subscription
+     * 
      * @param subscription
      * @return
      */
-    private Set<CartLineItem> createSubscriptionOrderCartLineItems(Subscription subscription,Order order){
+    private Set<CartLineItem> createSubscriptionOrderCartLineItems(Subscription subscription, Order order) {
 
-        Set<CartLineItem> cartLineItemSet=new HashSet<CartLineItem>();
-        ProductVariant productVariant=subscription.getProductVariant();
-        Double subscriptionPrice=subscription.getSubscriptionPrice();
-        Double currentPrice=productVariant.getHkPrice();
+        Set<CartLineItem> cartLineItemSet = new HashSet<CartLineItem>();
+        ProductVariant productVariant = subscription.getProductVariant();
+        /*
+         * Double subscriptionPrice = subscription.getSubscriptionPrice(); Double currentPrice =
+         * productVariant.getHkPrice();
+         */
 
-        Double subscriptionOrderPrice = (currentPrice > subscriptionPrice)? subscriptionPrice : currentPrice;
+        // Double subscriptionOrderPrice = (currentPrice > subscriptionPrice)? subscriptionPrice : currentPrice;
 
-        CartLineItemBuilder cartLineItemBuilder=new CartLineItemBuilder();
+        CartLineItemBuilder cartLineItemBuilder = new CartLineItemBuilder();
         cartLineItemBuilder.ofType(EnumCartLineItemType.Product);
-        cartLineItemBuilder.forVariantQty(productVariant,subscription.getQtyPerDelivery()).hkPrice(subscription.getHkPriceAtSubscription()).markedPrice(productVariant.getMarkedPrice()).discountOnHkPrice(subscription.getHkPriceAtSubscription()-subscription.getSubscriptionPrice());
-        CartLineItem cartLineItem=cartLineItemBuilder.build();
+        cartLineItemBuilder.forVariantQty(productVariant, subscription.getQtyPerDelivery()).hkPrice(subscription.getHkPriceAtSubscription()).markedPrice(
+                productVariant.getMarkedPrice()).discountOnHkPrice(subscription.getHkPriceAtSubscription() - subscription.getSubscriptionPrice());
+        CartLineItem cartLineItem = cartLineItemBuilder.build();
         cartLineItem.setOrder(order);
 
         cartLineItemSet.add(cartLineItem);
@@ -142,48 +169,51 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
     }
 
     /**
-     *
      * @param order
      * @param cartLineItems
      * @return
      */
-    private Payment createSubscriptionPayment(Order order, Set<CartLineItem> cartLineItems){
+    private Payment createSubscriptionPayment(Order order, Set<CartLineItem> cartLineItems) {
 
-        Double amount=0.0D;
-        for(CartLineItem cartLineItem: cartLineItems){
-            amount+=cartLineItem.getHkPrice();
+        Double amount = 0.0D;
+        for (CartLineItem cartLineItem : cartLineItems) {
+            amount += cartLineItem.getHkPrice();
         }
 
-        return automatedOrderService.createNewPayment(order,amount, EnumPaymentMode.SUBSCRIPTION_PAYMENT.asPaymenMode());
+        return automatedOrderService.createNewPayment(order, amount, EnumPaymentMode.SUBSCRIPTION_PAYMENT.asPaymenMode());
 
     }
 
-    public void markSubscriptionOrderAsDelivered(Order order){
-        if(order.isSubscriptionOrder()){
-            SubscriptionOrder subscriptionOrder= this.findSubscriptionOrderByBaseOrder(order);
-            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Delivered.getId().longValue())){
+    public void markSubscriptionOrderAsDelivered(Order order) {
+        if (order.isSubscriptionOrder()) {
+            SubscriptionOrder subscriptionOrder = this.findSubscriptionOrderByBaseOrder(order);
+            if (!(subscriptionOrder.getSubscriptionOrderStatus().getId().longValue() == EnumSubscriptionOrderStatus.Delivered.getId().longValue())) {
                 subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
-                subscriptionOrder=this.save(subscriptionOrder);
+                subscriptionOrder = this.save(subscriptionOrder);
 
-                Subscription subscription=subscriptionOrder.getSubscription();
-                List<SubscriptionOrder> subscriptionOrders=this.findSubscriptionOrdersForSubscription(subscription,EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
+                Subscription subscription = subscriptionOrder.getSubscription();
+                List<SubscriptionOrder> subscriptionOrders = this.findSubscriptionOrdersForSubscription(subscription,
+                        EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
                 subscription.setQtyDelivered(new Long(subscriptionOrders.size()));
                 subscriptionService.updateSubscriptionAfterOrderDelivery(subscription);
+                if (subscription.getQty() <= subscription.getQtyDelivered()) {
 
+                }
             }
         }
     }
 
-    public void markSubscriptionOrderAsShipped(Order order){
-        if(order.isSubscriptionOrder()){
+    public void markSubscriptionOrderAsShipped(Order order) {
+        if (order.isSubscriptionOrder()) {
 
-            SubscriptionOrder subscriptionOrder= this.findSubscriptionOrderByBaseOrder(order);
-            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Shipped.getId().longValue() )){
+            SubscriptionOrder subscriptionOrder = this.findSubscriptionOrderByBaseOrder(order);
+            if (!(subscriptionOrder.getSubscriptionOrderStatus().getId().longValue() == EnumSubscriptionOrderStatus.Shipped.getId().longValue())) {
                 subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Shipped.asSubscriptionOrderStatus());
-                subscriptionOrder=this.save(subscriptionOrder);
+                subscriptionOrder = this.save(subscriptionOrder);
 
-                Subscription subscription=subscriptionOrder.getSubscription();
-                List<SubscriptionOrder> subscriptionOrders=this.findSubscriptionOrdersForSubscription(subscription,EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
+                Subscription subscription = subscriptionOrder.getSubscription();
+                List<SubscriptionOrder> subscriptionOrders = this.findSubscriptionOrdersForSubscription(subscription,
+                        EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
                 subscription.setQtyDelivered(new Long(subscriptionOrders.size()));
                 subscriptionService.save(subscription);
             }
@@ -228,5 +258,13 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
 
     public void setSubscriptionLoggingService(SubscriptionLoggingService subscriptionLoggingService) {
         this.subscriptionLoggingService = subscriptionLoggingService;
+    }
+
+    public OrderService getOrderService() {
+        return orderService;
+    }
+
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
     }
 }

@@ -1,40 +1,17 @@
 package com.hk.rest.mobile.service.action;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.Keys;
-import com.hk.web.action.core.search.SearchAction;
-import com.hk.web.HealthkartResponse;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
-import org.apache.solr.client.solrj.response.TermsResponse;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.net.MalformedURLException;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Satish
- * Date: Oct 13, 2012
- * Time: 6:47:26 PM
- * To change this template use File | Settings | File Templates.
- */
-
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.UrlBinding;
-import net.sourceforge.stripes.action.*;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+
+import net.sourceforge.stripes.action.DefaultHandler;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -47,13 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.Keys;
+import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.web.HealthkartResponse;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.servlet.http.HttpServletResponse;
+import com.hk.web.action.core.search.SearchAction;
 
 @Path("/mAutocomplete")
 @Component
@@ -67,7 +41,6 @@ public class MAutoCompleteAction extends MBaseAction {
 
     @SuppressWarnings("unused")
     private static Logger logger = LoggerFactory.getLogger(SearchAction.class);
-//    String                q      = "";
     String                limit  = "10";
 
     @DefaultHandler
@@ -76,7 +49,7 @@ public class MAutoCompleteAction extends MBaseAction {
     @Produces("application/json")
     public String autoSearch(@Context HttpServletResponse response,@QueryParam("q") String q) throws Exception {
         List<String> terms = query(q, Integer.parseInt(limit));
-        return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Done", terms));
+        return com.akube.framework.gson.JsonUtils.getGsonDefault().toJson(new HealthkartResponse(MHKConstants.STATUS_OK, MHKConstants.STATUS_DONE, terms));
     }
 
     private List<String> query(String q, int limit) throws MalformedURLException {
@@ -112,14 +85,6 @@ public class MAutoCompleteAction extends MBaseAction {
         return suggestedStrings;
     }
 
-  /*  public String getQ() {
-        return q;
-    }
-
-    public void setQ(String q) {
-        this.q = q;
-    }
-*/
     public String getLimit() {
         return limit;
     }

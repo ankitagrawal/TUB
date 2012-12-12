@@ -67,7 +67,7 @@
 	     <div style="display: none;">
 		    <s:link beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="checkReplacementOrderLink"
 		            event="checkExistingReplacementOrder"></s:link>
-	    </div>
+	    </div>                                                      
         <fieldset class="right_label">
             <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
                 <label>Search Shipping Order</label>
@@ -156,7 +156,11 @@
                             <s:hidden name="lineItems[${lineItemCtr.index}].hkPrice" value="${lineItem.hkPrice}"/>
                             <s:hidden name="lineItems[${lineItemCtr.index}].discountOnHkPrice"
                                       value="${lineItem.discountOnHkPrice}"/>
-                            <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
+	                        <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
+                            <s:hidden name="lineItems[${lineItemCtr.index}].rewardPoints" value="${lineItem.rewardPoints}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount" value="${lineItem.orderLevelDiscount}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].codCharges" value="${lineItem.codCharges}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges" value="${lineItem.shippingCharges}"/>
 
                             <tr>
                                 <td>${lineItemCtr.count}</td>
@@ -169,6 +173,13 @@
                             </tr>
                         </c:forEach>
                     </table>
+					<s:label name="Reason for Replacement:" style="margin-left:7px;"/>
+					<s:select name="replacementOrderReason">
+						<s:option value="-Select Reason-">-Select Reason-</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>"
+												   serviceProperty="replacementOrderReasonForRto" value="id"
+												   label="name"/>
+					</s:select>
                     <s:submit class="createReplacementOrderButton rto" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
@@ -196,6 +207,10 @@
                             <s:hidden name="lineItems[${lineItemCtr.index}].discountOnHkPrice"
                                       value="${lineItem.discountOnHkPrice}"/>
                             <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
+	                        <s:hidden name="lineItems[${lineItemCtr.index}].rewardPoints" value="${lineItem.rewardPoints}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount" value="${lineItem.orderLevelDiscount}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].codCharges" value="${lineItem.codCharges}"/>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges" value="${lineItem.shippingCharges}"/>
                             <tr>
                                 <td>${lineItemCtr.count}</td>
                                 <td>
@@ -206,6 +221,14 @@
                             </tr>
                         </c:forEach>
                     </table>
+	                <s:label name="Reason for Replacement:" style="margin-left:7px;"/>
+	                <s:select name="replacementOrderReason">
+		                <s:option value="-Select Reason-">-Select Reason-</s:option>
+		                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+		                                           serviceProperty="replacementOrderReasonForReplacement" value="id"
+		                                           label="name"/>
+	                </s:select>
+					
                     <s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>

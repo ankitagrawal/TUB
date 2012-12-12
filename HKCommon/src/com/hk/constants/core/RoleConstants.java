@@ -8,6 +8,7 @@ public class RoleConstants {
     public static final String HK_USER                       = "HK_USER";
     public static final String COUPON_BLOCKED                = "COUPON_BLOCKED";
     public static final String B2B_USER                      = "B2B_USER";
+    public static final String FITNESSPRO_USER               = "FITNESSPRO_USER";
     public static final String PO_APPROVER                   = "PO_APPROVER";
 
     public static final String TEMP_USER                     = "TEMP_USER";
@@ -31,7 +32,7 @@ public class RoleConstants {
     public static final String CATEGORY_MANAGER              = "CATEGORY_MANAGER";
     public static final String SUPPLIER                      = "SUPPLIER";
     public static final String FINANCE                       = "FINANCE";
-    public static final String HR                       = "HR";
+    public static final String HR                            = "HR";
     public static final String MARKETING                     = "MARKETING";
     public static final String TICKETADMIN                   = "TICKETADMIN";
     public static final String SITE_CONTENT_MANAGER          = "SITE_CONTENT_MANAGER";
@@ -65,8 +66,8 @@ public class RoleConstants {
     public static final String HK_EMPLOYEE                   = "HK_EMPLOYEE";
     public static final String ROLE_GROUP_ACCOUNTING_INVOICE = GOD + ", " + ADMIN + ", " + FINANCE + ", " + ROLE_GROUP_LOGISTICS_ADMIN;
 
-    public static final String  HK_AFFILIATE_MANAGER         = "HK_AFFILIATE_MANAGER";
+    public static final String HK_AFFILIATE_MANAGER          = "HK_AFFILIATE_MANAGER";
     public static final String FINANCE_ADMIN                 ="FINANCE_ADMIN";
-	public static final String REWARD_POINT_MANAGER_L1 = "REWARD_POINT_MANAGER_L1";
-	public static final String REWARD_POINT_MANAGER_L2 = "REWARD_POINT_MANAGER_L2";
+	public static final String REWARD_POINT_MANAGER_L1       = "REWARD_POINT_MANAGER_L1";
+	public static final String REWARD_POINT_MANAGER_L2       = "REWARD_POINT_MANAGER_L2";
 }

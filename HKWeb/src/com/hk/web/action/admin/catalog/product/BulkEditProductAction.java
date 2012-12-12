@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.pact.service.catalog.ProductService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -38,7 +39,6 @@ import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
-import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -65,7 +65,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     Page productPage;
 
     @Autowired
-    ProductDao productDao;
+    ProductService productService;
 
     @Autowired
     private ProductVariantService productVariantService;
@@ -85,7 +85,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     @ValidationMethod(on = "bulkEdit")
     public void validateCategoryAndBrand() {
         if (!StringUtils.isBlank(brand)) {
-            if (!productDao.doesBrandExist(brand)) {
+            if (!productService.doesBrandExist(brand)) {
                 getContext().getValidationErrors().add("1", new SimpleError("Brand not found"));
             }
         }
@@ -103,6 +103,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/bulkProductDetails.jsp");
     }
 
+    @SuppressWarnings("unchecked")
     public Resolution defineOptionsMap() {
         if (getContext().getRequest().getParameter("toBeEditedOptions") != null) {
             String[] options = getContext().getRequest().getParameterValues("toBeEditedOptions");
@@ -117,7 +118,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     @SuppressWarnings("unchecked")
     public Resolution bulkEdit() {
         if (products.isEmpty()) {
-            productPage = productDao.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
+            productPage = productService.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
             if (productPage != null)
                 products.addAll(productPage.getList());
         }
@@ -194,7 +195,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
                     product.setSupplier(supplier);
                 }
 
-                product = productDao.save(product);
+                product = productService.save(product);
                 ctr++;
             }
         }

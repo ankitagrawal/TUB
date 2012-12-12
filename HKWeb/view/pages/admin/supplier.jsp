@@ -74,8 +74,7 @@
 					<td><s:text name="supplier.leadTime" maxlength="3"/></td>
 				</tr>
 				<tr>
-					<td>Margins in Percentage<br/><font color="red">(Please Enter in numbers like(70 or 85.57 or 0.56),
-					                                                please don't enter the % sign)</font></td>
+					<td>Margins <br/></td>
 					<td><s:text name="supplier.margins" maxlength="20"/></td>
 				</tr>
 				<tr>
