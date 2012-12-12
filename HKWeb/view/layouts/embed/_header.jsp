@@ -25,6 +25,20 @@
 //    System.out.println("aattachRedirectParam="+attachRedirectParamStr);
     boolean attachRedirectParam = attachRedirectParamStr == null ? true : Boolean.getBoolean(attachRedirectParamStr);
   %>
+  <!-- remove this after gosf -->
+  <script type="text/javascript" src="${pageContext.request.contextPath}/js/gosf.js"></script>
+  <script>$(document).ready(function () {initSliderPaginator();});</script>
+  <div id="slidebox">
+    <a class="close"></a>
+
+    <p>The Great Online Shopping Festival Has Begun. <br/>Do Visit Us for <span class="gosfDisc">Discounts up to <span style="font-size:1.2em;">80%</span>!</span></p>
+	
+    <h2><a target="_blank" style="color:#E28409;" href="http://www.healthkart.com/online-shopping-festival?src=hk">Keep your wallets ready and your fingers on the mouse!</a></h2>
+    <a class="more" target="_blank" href="http://www.healthkart.com/online-shopping-festival?src=hk">Browse Our Range >> </a>
+</div>
+<div id="pagerTrigger"></div>
+<!-- remove this after gosf -->
+
   <div class='topBar'>
     <div class='topBarContent'>
       <div style='float: left; margin-left: 5px; margin-top: 2px; line-height: 18px;' title='Call us on our customer care number for help regarding anything'>

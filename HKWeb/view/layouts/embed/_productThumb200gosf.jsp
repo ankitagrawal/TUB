@@ -25,18 +25,7 @@
         }
         pageContext.setAttribute("combo", combo);
     %>
-    <style type="text/css">
-        .opaque {
-            opacity: 0.4;
-            filter: alpha(opacity = 40);
-
-        }
-
-        .opaque:hover {
-            opacity: 1.0;
-            filter: alpha(opacity = 100);
-        }
-    </style>
+    
     <c:choose>
         <c:when test="${product.googleAdDisallowed || product.deleted}">
         </c:when>
@@ -118,6 +107,13 @@
                                     value="${hk:getApplicableOfferPrice(product.minimumMRPProducVariant) + hk:getPostpaidAmount(product.minimumMRPProducVariant)}"
                                     maxFractionDigits="0"/>
                             </p>
+                                <h3>
+                            <s:link href="${product.productURL}" title="${product.name}">
+                                ${product.name}
+                            </s:link>
+
+                        </h3>
+
                                <p class="description"> ${productDesc} </p>
 
                                                             <s:link href="${product.productURL}" class="buynow">BUY NOW</s:link>
@@ -132,6 +128,13 @@
                                     value="${hk:getApplicableOfferPrice(product.minimumMRPProducVariant) + hk:getPostpaidAmount(product.minimumMRPProducVariant)}"
                                     maxFractionDigits="0"/>
                                   </p>
+
+                                <h3>
+                            <s:link href="${product.productURL}" title="${product.name}">
+                                ${product.name}
+                            </s:link>
+
+                        </h3>
                                     <p class="description"> ${productDesc} </p>
 
                                                             <s:link href="${product.productURL}" class="buynow">BUY NOW</s:link>

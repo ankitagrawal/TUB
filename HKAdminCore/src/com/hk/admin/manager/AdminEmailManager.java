@@ -56,7 +56,6 @@ import com.hk.domain.courier.Courier;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.MasterDataDao;
 import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.dao.email.EmailerHistoryDao;
 import com.hk.pact.dao.email.NotifyMeDao;
@@ -763,7 +762,7 @@ public class AdminEmailManager {
         targetDailyMrpSalesMap.put(CategoryConstants.BEAUTY, CategoryConstants.BEAUTY_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.DIABETES, CategoryConstants.DIABETES_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.EYE, CategoryConstants.EYE_TARGET_SALES / numberOfDaysInMonth);
-        targetDailyMrpSalesMap.put(CategoryConstants.HOME_DEVICES, CategoryConstants.HOME_DEVICES_TARGET_SALES / numberOfDaysInMonth);
+        targetDailyMrpSalesMap.put(CategoryConstants.HEALTH_DEVICES, CategoryConstants.HEALTH_DEVICES_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.NUTRITION, CategoryConstants.NUTRITION_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.PERSONAL_CARE, CategoryConstants.PERSONAL_CARE_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.SERVICES, CategoryConstants.SERVICES_TARGET_SALES / numberOfDaysInMonth);
