@@ -83,6 +83,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1397' productDesc='Benefit from the goodness of recently discovered SAAs. Let science do the heavy lifting for you, while you gain mass!'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1342' productDesc='Contains natural ingredients that boost Testosterone, helps in fat loss and gaining muscle size and strength'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1391' productDesc='This herbal tea, free from Caffeine eases tension and stress and is beneficial for the nervous system'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1342' productDesc='Contains natural ingredients that boost Testosterone, helps in fat loss and gaining muscle size and strength'/>			
 	    </div>
 
         <div class="cl"></div>
