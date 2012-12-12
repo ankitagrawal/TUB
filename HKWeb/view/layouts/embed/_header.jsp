@@ -31,10 +31,10 @@
   <div id="slidebox">
     <a class="close"></a>
 
-    <p>The Great Online Shopping Festival Has Begun. Do Visit Us for <span class="gosfDisc">Discounts Up to 91%!</span></p>
-
-    <h2><a target="_blank" style="color:#E28409;" href="http://www.healthkart.com/online-shopping-festival">Keep your wallets ready and your fingers on the mouse!</a></h2>
-    <a class="more" target="_blank" href="http://www.healthkart.com/online-shopping-festival">Browse Our Range >> </a>
+    <p>The Great Online Shopping Festival Has Begun. <br/>Do Visit Us for <span class="gosfDisc">Discounts up to <span style="font-size:1.2em;">80%</span>!</span></p>
+	
+    <h2><a target="_blank" style="color:#E28409;" href="http://www.healthkart.com/online-shopping-festival?src=hk">Keep your wallets ready and your fingers on the mouse!</a></h2>
+    <a class="more" target="_blank" href="http://www.healthkart.com/online-shopping-festival?src=hk">Browse Our Range >> </a>
 </div>
 <div id="pagerTrigger"></div>
 <!-- remove this after gosf -->
