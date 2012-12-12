@@ -97,7 +97,8 @@
                   </c:if>
                   <s:layout-render name="/layouts/embed/preOrderMessage.jsp"
 							                 product="${product}" />
-                  <s:submit name="addToCart" value="Place Order" class="addToCartButton cta button_green"/>
+							                 
+                  
               </c:otherwise>
             </c:choose>
 
