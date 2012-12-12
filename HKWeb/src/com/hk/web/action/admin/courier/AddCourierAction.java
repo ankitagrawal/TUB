@@ -7,6 +7,7 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.web.HealthkartResponse;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
@@ -34,6 +35,7 @@ public class AddCourierAction extends BasePaginatedAction {
 
 	@Autowired
 	CourierService courierService;
+
 	@Autowired
 	CourierGroupService courierGroupService;
 
@@ -89,15 +91,19 @@ public class AddCourierAction extends BasePaginatedAction {
 			if (courier.getCourierGroup() != null && courierGroup != courier.getCourierGroup()) {
 				CourierGroup oldCourierGroup = courier.getCourierGroup();
 				oldCourierGroup.getCouriers().remove(courierObj);
-				courierGroupService.save(oldCourierGroup);
+				courierGroupService.saveOrUpdate(oldCourierGroup);
 			}
 		}
 		courier.setName(courierName.trim());
 		if (courierGroup != null) {
+			courier.setCourierGroup(Arrays.asList(courierGroup));
+			courierService.saveOrUpdate(courier);
 			courierGroup.getCouriers().add(courier);
-			courierGroupService.save(courierGroup);
+			courierGroupService.saveOrUpdate(courierGroup);
+		} else {
+			courierService.saveOrUpdate(courier);
 		}
-		courierService.save(courier);
+
 		addRedirectAlertMessage(new SimpleMessage("Courier Saved sucessfully"));
 		return new RedirectResolution(AddCourierAction.class);
 	}

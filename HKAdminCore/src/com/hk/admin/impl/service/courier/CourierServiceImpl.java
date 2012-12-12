@@ -141,4 +141,8 @@ public class CourierServiceImpl implements CourierService {
 	public Page getCouriers(String courierName,Boolean disabled, String courierGroup,int page, int perPage){
 		return  courierDao.getCouriers(courierName,disabled,courierGroup,page,perPage);
 	}
+
+	public void saveOrUpdate(Courier courier) {
+		courierDao.saveOrUpdate(courier);
+	}
 }
