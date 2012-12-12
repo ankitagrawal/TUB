@@ -278,7 +278,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
          headingProducts.add(headingProduct);
        }
      }
-   return new ForwardResolution("/pages/editSelectedPrimaryCategoryHeadingProducts.jsp?heading=" + heading.getId());
+   return new ForwardResolution("/pages/editSelectedPrimaryCategoryHeadingProducts.jsp");
   }
 
   public Resolution saveSelectedPrimaryCategoryHeadingProducts(){
