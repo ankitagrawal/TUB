@@ -10369,4 +10369,57 @@
     <changeSet author="Tarun (generated)" id="1354696987883-1">
         <dropColumn columnName="zone" tableName="pincode"/>
     </changeSet>
+    <changeSet author="Neha (generated)" id="1355314570243-1">
+        <createTable tableName="pickup_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1355314570243-2">
+        <createTable tableName="reverse_pickup">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="pickup_confirmation_no" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pickup_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipping_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pickup_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reconciliation_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1355314570243-3">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="reverse_pickup" constraintName="fk_reverse_pickup_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1355314570243-4">
+        <addForeignKeyConstraint baseColumnNames="pickup_status_id" baseTableName="reverse_pickup" constraintName="fk_reverse_pickup_pickup_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pickup_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1355314570243-5">
+        <addForeignKeyConstraint baseColumnNames="reconciliation_status_id" baseTableName="reverse_pickup" constraintName="fk_reverse_pickup_reconciliation_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1355314570243-6">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="reverse_pickup" constraintName="fk_reverse_pickup_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1355314570243-7">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="reverse_pickup" baseTableSchemaName="healthkart_workbench" constraintName="fk_reverse_pickup_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
