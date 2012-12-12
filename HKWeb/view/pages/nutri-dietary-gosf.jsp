@@ -76,7 +76,9 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT982' productDesc='Weight loss product that also minimizes premature ageing and improves cardiovascular health.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT667' productDesc='100% Veg tablets with synergistic blend of minerals, vitamins & essential nutrients. Makes your hair shiny and smooth.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT558' productDesc='Get all the vital fatty acids that promote heart health, brain function, and immunity. Put age related diseases at bay.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT531' productDesc='A fabulous product that is rich in Vitamin B. Strengthens your hair cuticles and thereby, strong and smooth hair'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1249' productDesc='Now spice up your lovelife and keep your libido peaked with these water soluble herbal extracts.'/>
+			<!-- <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT531' productDesc='A fabulous product that is rich in Vitamin B. Strengthens your hair cuticles and thereby, strong and smooth hair'/> -->
+			
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1299' productDesc='Contains Omega-3 fatty acids that treat heart diseases, asthma, depressive illness and promotes eye and brain development'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT316' productDesc='Pre-workout or post-workout supplement, highly concentrated for better results.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1132' productDesc='A portable pillbox ideal for travellers, it has five compartments to carry different pills.'/>
