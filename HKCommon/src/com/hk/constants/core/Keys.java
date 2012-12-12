@@ -119,6 +119,8 @@ public class Keys {
 
         public static final String hkApiAccessKey                  = "healthkartAPIAccessKey";
         public static final String eyeTryOnXmls = "eyeTryOnXmls";
+
+        public static final String hkEmailApiUrl = "hkEmailApiUrl";
     }
 
     /*
