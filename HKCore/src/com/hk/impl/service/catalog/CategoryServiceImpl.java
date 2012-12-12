@@ -61,7 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
 		if (product.getPrimaryCategory() != null) {
 			topLevelCategory = product.getPrimaryCategory();
 		} else {
-			Category homeHealthDevices = getCategoryByName("home-devices");
+			Category homeHealthDevices = getCategoryByName("health-devices");
 			Category diabetes = getCategoryByName("diabetes");
 			Category nutrition = getCategoryByName("nutrition");
 			Category beauty = getCategoryByName("beauty");

@@ -8,6 +8,7 @@
 	pageContext.setAttribute("isSecure", isSecure);
 	if (AnalyticsConstants.analytics) {
 %>
+
 <%--HealthKart Main--%>
 <script type="text/javascript">
   /* <![CDATA[ */
@@ -301,7 +302,7 @@
 	  <c:choose>
 		  <c:when test="${isSecure}">
 			  <img height="1" width="1" style="border-style:none;" alt=""
-			       src="http://www.googleadservices.com/pagead/conversion/1001538852/?value=${conversion_value}&amp;label=CbkyCIysjAMQpIrJ3QM&amp;guid=ON&amp;script=0"/>
+			       src="https://www.googleadservices.com/pagead/conversion/1001538852/?value=${conversion_value}&amp;label=CbkyCIysjAMQpIrJ3QM&amp;guid=ON&amp;script=0"/>
 		  </c:when>
 		  <c:otherwise>
 			  <img height="1" width="1" style="border-style:none;" alt=""
@@ -335,7 +336,7 @@
 	  <c:choose>
 		  <c:when test="${isSecure}">
 			  <img height="1" width="1" style="border-style:none;" alt=""
-			       src="http://www.googleadservices.com/pagead/conversion/1018305592/?value=${conversion_value}&amp;label=jPm5CLja1wIQuLjI5QM&amp;guid=ON&amp;script=0"/>
+			       src="https://www.googleadservices.com/pagead/conversion/1018305592/?value=${conversion_value}&amp;label=jPm5CLja1wIQuLjI5QM&amp;guid=ON&amp;script=0"/>
 		  </c:when>
 		  <c:otherwise>
 			  <img height="1" width="1" style="border-style:none;" alt=""
@@ -344,6 +345,26 @@
 	  </c:choose>
   </div>
 </noscript>
+
+<%--Facebook Conversion Tracking Codes--%>
+
+<script type="text/javascript">
+var fb_param = {};
+fb_param.pixel_id = 6005827178099;
+fb_param.value = 0.00;
+if (${conversion_value}) {
+	fb_param.value = ${conversion_value};
+}
+(function(){
+  var fpw = document.createElement('script');
+  fpw.type = 'text/javascript'; fpw.async = 'true';
+  fpw.src = '//connect.facebook.net/en_US/fp.js';
+  var ref = document.getElementsByTagName('script')[0];
+  ref.parentNode.insertBefore(fpw, ref);
+})();
+</script>
+<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/offsite_event.php?id=6005827178099&amp;value=${conversion_value}" /></noscript>
+
 
 <%
   }

@@ -54,8 +54,9 @@ public class ProductVariant implements java.io.Serializable {
   @JoinTable(name = "product_variant_has_product_extra_option", joinColumns = {@JoinColumn(name = "product_variant_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "product_extra_option_id", nullable = false, updatable = false)})
   private List<ProductExtraOption> productExtraOptions = new ArrayList<ProductExtraOption>(0);
 
-  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "allowedProductVariants")
-  private List<ComboProduct> comboProducts = new ArrayList<ComboProduct>();
+	@JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "allowedProductVariants")
+	private List<ComboProduct> comboProducts = new ArrayList<ComboProduct>();
 
   @Column(name = "shipping_base_qty", nullable = false)
   private Long shippingBaseQty;
