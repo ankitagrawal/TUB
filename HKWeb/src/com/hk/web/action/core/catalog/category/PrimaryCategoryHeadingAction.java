@@ -145,7 +145,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
     heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());    
     logger.debug("adding products for heading id: " + heading.getId() + " name: " + heading.getName());
-    return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
+    return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
   }
 
   public Resolution savePrimaryCategoryHeadingProducts() {
@@ -166,29 +166,29 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
             headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
             heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
             addRedirectAlertMessage(new SimpleMessage(product.getId() + " is added more than once in the list!"));
-            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
+            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
           }else if (product.isHidden()) {
             headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
             heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
             addRedirectAlertMessage(new SimpleMessage(product.getId() + " has isHidden property set to true!"));
-            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
+            return new RedirectResolution(PrimaryCategoryHeadingAction.class, "addPrimaryCategoryHeadingProducts").addParameter("heading",heading.getId());
           } else if (product.isOutOfStock()) {
             headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
             heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
             addRedirectAlertMessage(new SimpleMessage(product.getId() + " has isOutOfStock property set to true!"));
-            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
+            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
           } else if (product.isDeleted()) {
             logger.debug("product to be added has isDeleted property set to true");
             headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
             heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
             addRedirectAlertMessage(new SimpleMessage(product.getId() + " has isDeleted property set to true!"));
-            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
+            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
           } else if (Boolean.TRUE.equals(product.isGoogleAdDisallowed())) {
             logger.debug("product to be added has isGoogleAdDisallowed property set to true");
             headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
             heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
             addRedirectAlertMessage(new SimpleMessage(product.getId() + " has isGoogleAdDisallowed set to true!"));
-            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
+            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
           } else {
             HeadingProduct headingProduct1 = new HeadingProduct();
             headingProduct1.setProduct(product);
@@ -226,7 +226,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
     heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
     logger.debug("Editing products for heading id: " + heading.getId() + " name: " + heading.getName());
-    return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
+    return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
   }
 
   public Resolution deleteSelectedPrimaryCategoryHeadingProducts() {
@@ -258,7 +258,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     else{
       headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
       addRedirectAlertMessage(new SimpleMessage("There came an Error, please Try again later!!!!"));
-      return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
+      return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
     }
     if (!(category.getName().equals("home"))) {
       noCache();
@@ -278,7 +278,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
          headingProducts.add(headingProduct);
        }
      }
-   return new ForwardResolution("/pages/editSelectedPrimaryCategoryHeadingProducts.jsp");
+   return new ForwardResolution("/pages/editSelectedPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
   }
 
   public Resolution saveSelectedPrimaryCategoryHeadingProducts(){
@@ -300,7 +300,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     else{
         headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);        
        addRedirectAlertMessage(new SimpleMessage("There came an Error, please Try again later!!!!"));
-       return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
+       return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
       }
       if (!(category.getName().equals("home"))) {
         noCache();
