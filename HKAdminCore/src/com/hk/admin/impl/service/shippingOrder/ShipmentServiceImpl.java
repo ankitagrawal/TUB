@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import java.util.Date;
 
+import com.hk.domain.courier.Zone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +64,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Transactional
     public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
+	    Zone zone=null;
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
         if (pincode == null) {
             //User adminUser = UserCache.getInstance().getAdminUser();
@@ -72,6 +74,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             return null;
         }
 
+	    zone=pincode.getZone();
         boolean isGroundShipped = false;
         Courier suggestedCourier = null;
         String shipmentType;
@@ -135,6 +138,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             return null;
         }
 
+
         Shipment shipment = new Shipment();
         shipment.setEmailSent(false);
         shipment.setAwb(suggestedAwb);
@@ -142,6 +146,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setBoxWeight(weightInKg);
         shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
         shippingOrder.setShipment(shipment);
+	    shipment.setZone(zone);
         if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
             shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
             shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));

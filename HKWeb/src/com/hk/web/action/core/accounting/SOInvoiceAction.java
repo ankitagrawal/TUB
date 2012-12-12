@@ -1,5 +1,6 @@
 package com.hk.web.action.core.accounting;
 
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -61,6 +62,8 @@ public class SOInvoiceAction extends BaseAction {
 	AwbService awbService;
 	@Autowired
 	ShipmentService shipmentService;
+	@Autowired
+	ShippingOrderService shippingOrderService;
 
 
 	@Value("#{hkEnvProps['" + Keys.Env.barcodeDir + "']}")
@@ -76,6 +79,8 @@ public class SOInvoiceAction extends BaseAction {
 	private boolean groundShipped;
 	private Shipment shipment;
 	private Double estimatedWeightOfPackage;
+	String  zone;
+	boolean printZone;
     private boolean installableItemPresent;
 
 	private void generateBarcodesForInvoice(Awb awb) {
@@ -156,13 +161,18 @@ public class SOInvoiceAction extends BaseAction {
 			if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)) {
 				setGroundShipped(true);
 			}
-
-            if (shipmentService.isShippingOrderHasInstallableItem(shippingOrder)){
+             if (shipmentService.isShippingOrderHasInstallableItem(shippingOrder)){
                      installableItemPresent = true;
             }
 			estimatedWeightOfPackage = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
 
 			freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
+
+			printZone = shippingOrderService.printZoneOnSOInvoice(shippingOrder);
+
+			if(printZone){
+				zone = shippingOrder.getShipment().getZone().getName();
+			}
 
 
 			return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
@@ -278,6 +288,22 @@ public class SOInvoiceAction extends BaseAction {
 
 	public void setEstimatedWeightOfPackage(Double estimatedWeightOfPackage) {
 		this.estimatedWeightOfPackage = estimatedWeightOfPackage;
+	}
+
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
+
+	public boolean getPrintZone() {
+		return printZone;
+	}
+
+	public void setPrintZone(boolean printZone) {
+		this.printZone = printZone;
 	}
 
     public boolean isInstallableItemPresent() {

@@ -64,6 +64,7 @@ public class XslGenerator {
 	public static final String    STATE              = "STATE";
 	public static final String    LOCALITY           = "LOCALITY";
 	public static final String    DEFAULT_COURIER_ID = "DEFAULT_COURIER_ID";
+	public static final String    ZONE               = "ZONE";
 
 	public static final String WAREHOUSE             = "WAREHOUSE";
 	public static final String COD_COURIER_ID        = "COD_COURIER_ID";
@@ -488,6 +489,7 @@ public class XslGenerator {
 		setCellValue(row, 3, STATE);
 		setCellValue(row, 4, LOCALITY);
 		setCellValue(row, 5, DEFAULT_COURIER_ID);
+		setCellValue(row, 6, ZONE);
 
 		int initialRowNo = 1;
 		for (Pincode pincode : pincodeList) {
@@ -503,7 +505,9 @@ public class XslGenerator {
 			setCellValue(row, 3, pincode.getState().getName());
 			setCellValue(row, 4, pincode.getLocality());
 			setCellValue(row, 5, pincode.getDefaultCourier() != null ? pincode.getDefaultCourier().getId() : null);
-
+			if(pincode.getZone() != null){
+				setCellValue(row, 6, pincode.getZone().getName());
+			}
 			initialRowNo++;
 		}
 

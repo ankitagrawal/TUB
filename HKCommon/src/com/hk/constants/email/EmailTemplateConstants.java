@@ -59,4 +59,5 @@ public class EmailTemplateConstants {
 	public static final String orderDeliveredEmail     = "/orderDeliveredEmail.ftl";
     public static final String orderInstalledEmail     = "/orderInstalledEmail.ftl";	
 	public static final String operationsTeam = "Operations Team";
+	public static final String poApprovedByWrongPerson = "/poApprovedByWrongPerson.ftl";
 }

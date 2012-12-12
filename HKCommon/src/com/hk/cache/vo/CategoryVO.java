@@ -10,6 +10,7 @@ import com.hk.domain.catalog.category.Category;
 @SuppressWarnings("serial")
 public class CategoryVO implements Serializable {
 
+
     private String name;
 
     private String displayName;

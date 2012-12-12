@@ -33,6 +33,7 @@ import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.EnumRole;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.domain.catalog.product.Product;
@@ -45,10 +46,12 @@ import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.email.EmailerHistory;
 import com.hk.domain.email.OrderEmailExclusion;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
+import com.hk.domain.user.Role;
 import com.hk.domain.courier.Courier;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
@@ -68,6 +71,7 @@ import com.hk.util.SendGridUtil;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKFileWriter;
 import com.hk.util.io.HKRow;
+import com.hk.cache.RoleCache;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Template;
@@ -121,6 +125,7 @@ public class AdminEmailManager {
     private FreeMarkerService freeMarkerService;
     @Autowired
     private AdminEmailService adminEmailService;
+
 
     private final int COMMIT_COUNT = 100;
     private final int INITIAL_LIST_SIZE = 100;
@@ -757,7 +762,7 @@ public class AdminEmailManager {
         targetDailyMrpSalesMap.put(CategoryConstants.BEAUTY, CategoryConstants.BEAUTY_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.DIABETES, CategoryConstants.DIABETES_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.EYE, CategoryConstants.EYE_TARGET_SALES / numberOfDaysInMonth);
-        targetDailyMrpSalesMap.put(CategoryConstants.HOME_DEVICES, CategoryConstants.HOME_DEVICES_TARGET_SALES / numberOfDaysInMonth);
+        targetDailyMrpSalesMap.put(CategoryConstants.HEALTH_DEVICES, CategoryConstants.HEALTH_DEVICES_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.NUTRITION, CategoryConstants.NUTRITION_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.PERSONAL_CARE, CategoryConstants.PERSONAL_CARE_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.SERVICES, CategoryConstants.SERVICES_TARGET_SALES / numberOfDaysInMonth);
@@ -904,6 +909,27 @@ public class AdminEmailManager {
     public static String convertToWww(String productUrl) {
         return productUrl.replaceAll("admin\\.healthkart\\.com", "www.healthkart.com");
     }
+
+	public boolean sendPOApprovedEmail(PurchaseOrder purchaseOrder) {
+		HashMap valuesMap = new HashMap();
+		valuesMap.put("purchaseOrder", purchaseOrder);
+		//Mail to Ajeet if anyone  approves PO  other than Sachin Hans
+		User user = userService.getLoggedInUser();
+		Role poApproverRole = RoleCache.getInstance().getRoleByName(EnumRole.PO_APPROVER).getRole();
+		List<User> approverUserList = userService.findByRole(poApproverRole);
+		if (user != null) {
+			if (!(approverUserList.contains(user))) {
+				HashMap valuesMapAt = new HashMap();
+				valuesMapAt.put("purchaseOrder", purchaseOrder);
+				valuesMapAt.put("user", user);
+				Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedByWrongPerson);
+				String ajeetMail = "ajeet@healthkart.com";
+				emailService.sendHtmlEmail(freemarkerTemplate, valuesMapAt, ajeetMail, "Ajeet");
+			}
+		}
+		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedEmail);
+		return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
+	}
 
     static enum Product_Status{
 

@@ -23,7 +23,7 @@ public class MarketingServiceImpl implements MarketingService {
     public List<Category> marketExpenseCategoriesList() {
         List<Category> marketExpenseList = new ArrayList<Category>();
         String categoryNames = CategoryConstants.HK_BRAND + "," + CategoryConstants.DIABETES + "," + CategoryConstants.BEAUTY + "," + CategoryConstants.EYE + ","
-                + CategoryConstants.HOME_DEVICES + "," + CategoryConstants.NUTRITION + "," + CategoryConstants.BABY + "," + CategoryConstants.PERSONAL_CARE + ","
+                + CategoryConstants.HEALTH_DEVICES + "," + CategoryConstants.NUTRITION + "," + CategoryConstants.BABY + "," + CategoryConstants.PERSONAL_CARE + ","
                 + CategoryConstants.SERVICES + "," + CategoryConstants.SPORTS;
 
         Set<Category> categorySet = new HashSet<Category>();
