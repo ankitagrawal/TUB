@@ -164,7 +164,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 		}
 		affiliateManager.paidToAffiiliate(affiliate, amountToPay, checkDetails);
 		addRedirectAlertMessage(new SimpleMessage("Entry made."));
-		return new RedirectResolution("/pages/admin/adminHome.jsp");
+		return new RedirectResolution("/pages/affiliate/payToAffiliates.jsp");
 	}
 
 	@SuppressWarnings("unchecked")
