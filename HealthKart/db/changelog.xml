@@ -10369,4 +10369,14 @@
     <changeSet author="Tarun (generated)" id="1354696987883-1">
         <dropColumn columnName="zone" tableName="pincode"/>
     </changeSet>
+    <changeSet author="Ankit (generated)" id="1355308128790-1">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="is_installable" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1355308128790-2">
+        <addColumn tableName="shipping_order">
+            <column defaultValue="0" name="drop_shipping" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

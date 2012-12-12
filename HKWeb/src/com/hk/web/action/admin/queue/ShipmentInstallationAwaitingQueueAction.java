@@ -59,9 +59,9 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
     private Date startDate;
     private Date                       endDate;
     private Category category;
-    private ShippingOrderStatus shippingOrderStatus;
+    private ShippingOrderStatus        shippingOrderStatus;
     private Integer                    defaultPerPage    = 30;
-    private Integer                      noOfInstallableItems;
+    private Integer                    noOfInstallableItems;
 
     @DontValidate
     @DefaultHandler
@@ -96,7 +96,7 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
          shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInInstallationQueue()));
 //        shippingOrderStatus = shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered);
-        shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
+//        shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {
@@ -142,13 +142,8 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
 
     public Set<String> getParamSet() {
         HashSet<String> params = new HashSet<String>();
-//        params.add("startDate");
-//        params.add("endDate");
-//        params.add("shippingOrderId");
         params.add("orderId");
-        // params.add("gatewayOrderId");
         params.add("gatewayOrderId");
-//        params.add("shippingOrderStatus");
         return params;
     }
 
@@ -234,5 +229,13 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
 
     public void setNoOfInstallableItems(Integer noOfInstallableItems) {
         this.noOfInstallableItems = noOfInstallableItems;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 }

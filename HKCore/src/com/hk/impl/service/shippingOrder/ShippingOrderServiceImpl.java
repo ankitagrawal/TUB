@@ -234,7 +234,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
-//  drop ship product now manually esclated  -- by aa                 
+//  drop ship product now manually escalable
 //                    if (productVariant.getProduct().isDropShipping()) {
 //                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
 //                        logShippingOrderActivity(shippingOrder, adminUser,
