@@ -37,6 +37,7 @@ import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.AwbStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.DuplicateAwbexception;
 import com.hk.util.XslGenerator;
@@ -69,6 +70,8 @@ public class CourierAWBAction extends BaseAction {
 
 	private Courier courier;
 
+	private AwbStatus awbStatus;
+
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 	@Autowired
@@ -93,10 +96,10 @@ public class CourierAWBAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Select Courier"));
 			return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
 		}
-		String unusedAwb = "unusedAwb";
+		String selectedStatus = awbStatus.getStatus();
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-		List<Awb> unusedAwbListFromDb = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, warehouse, null, EnumAwbStatus.Unused.getAsAwbStatus());
-		String excelFilePath = adminDownloadsPath + "/courierExcelFiles/Courier_" + unusedAwb + ".xls";
+		List<Awb> unusedAwbListFromDb = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, warehouse, null, awbStatus);
+		String excelFilePath = adminDownloadsPath + "/courierExcelFiles/Courier_" + selectedStatus + ".xls";
 		final File excelFile = new File(excelFilePath);
 		xslGenerator.generateAwbExcel(unusedAwbListFromDb, excelFile);
 		addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
@@ -174,15 +177,15 @@ public class CourierAWBAction extends BaseAction {
 
 		}
 		catch (DuplicateAwbexception dup) {
-			addRedirectAlertMessage(new SimpleMessage(dup.getMessage() + " AWB_Number  : " + dup.getAwbNumber() + "  is present in Excel twice for Courier ::   " + dup.getCourier().getId()));
+			addRedirectAlertMessage(new SimpleMessage("ERROR IN UPLOADING ::::::::  "+dup.getMessage() + " AWB_Number  : " + dup.getAwbNumber() + "  is present in Excel twice for Courier ::   " + dup.getCourier().getId()));
 			return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
 		}
 		catch (Exception ex) {
 			if (awbListFromExcel == null) {
-				addRedirectAlertMessage(new SimpleMessage(ex.getMessage()));
+				addRedirectAlertMessage(new SimpleMessage("ERROR IN UPLOADING"+ex.getMessage()));
 
 			}
-			addRedirectAlertMessage(new SimpleMessage("Error in uploading file"));
+			addRedirectAlertMessage(new SimpleMessage("ERROR IN UPLOADING file"));
 			return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
 
 
@@ -269,5 +272,9 @@ public class CourierAWBAction extends BaseAction {
 
 	public void setCourier(Courier courier) {
 		this.courier = courier;
+	}
+
+	public void setAwbStatus(AwbStatus awbStatus) {
+		this.awbStatus = awbStatus;
 	}
 }

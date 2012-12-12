@@ -135,4 +135,6 @@ public interface MasterDataDao
     public List<Country> getAllCountry();
 
 	public List<Zone> getAllZones();
+
+	public List<AwbStatus> getAllAwbStatus();
 }

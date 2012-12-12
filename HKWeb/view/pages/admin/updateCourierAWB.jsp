@@ -14,7 +14,12 @@
             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
           </s:select></li>
           <li>
-
+	        <li><label>AWB Status : </label>
+	         <s:select name="awbStatus">
+		        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allAwbStatus"
+		                                   value="id" label="status"/>
+	        </s:select></li>
+	        <li>
             <div class="buttons">
               <s:submit name="generateCourierAWBExcel" value="Download"/>
             </div>
