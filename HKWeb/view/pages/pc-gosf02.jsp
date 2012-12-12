@@ -63,7 +63,7 @@
         <div class="prodBoxes">
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SENS-CMB-01' productDesc="Clean, bright and shiny teeth for that dazzling smile."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PA012' productDesc="Non-woven, pure cotton adult diapers to fight incontinence effectively."/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MOB01' productDesc="A mobile phone crafted for elderly with large keypad, enhanced sound, wire-free FM and a prominent SOS button."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MOB001' productDesc="A mobile phone crafted for elderly with large keypad, enhanced sound, wire-free FM and a prominent SOS button."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='FER004' productDesc="A supplement that boosts motility in men  for enhanced sperm count."/>			
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH067' productDesc="Cleans your teeth and gums, reduces chances of plaque and maintains your oral health."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH078' productDesc="Refreshes your room with fragrance of sandal and jasmine kill all bad odors in your living room"/>

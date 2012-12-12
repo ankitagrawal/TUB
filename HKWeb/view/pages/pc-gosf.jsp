@@ -61,9 +61,9 @@
 
         <div class="prodBoxes">
         	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PW006' productDesc="Test your pregnancy in just 2 minutes with this Instant Ovulation Kit"/>
-        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OHO082' productDesc="Freshen up your house with floral fragrances."/>
+        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH082' productDesc="Freshen up your house with floral fragrances."/>
         	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DET002' productDesc="Automatically senses hands and dispenses just the right amount of liquid soap."/>
-        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OHO063' productDesc="A battery operated toothbrush that cleans your toddlers teeth gently and effectively."/>			
+        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH063' productDesc="A battery operated toothbrush that cleans your toddlers teeth gently and effectively."/>			
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PHL002' productDesc="Figure out the best two days you will be most fertile. Grab this I-Sure Ovulation Strip to get pregnant for sure. "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP001' productDesc="You can neutralize up to 10 people (not kidding). Comes with step lock mechanism for safe & easy carrying."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='KNOCK001' productDesc="A Pepper Spray that fits into a keychain! Small, portable & extremely effective!"/>

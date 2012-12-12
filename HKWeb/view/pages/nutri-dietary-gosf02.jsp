@@ -90,7 +90,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1363' productDesc='Enriched with pure L-Glutamine, it prevents from Ammonia in the brain and enhances immune function'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1278' productDesc='Containing HICA (alpha-hydroxy-isocaproic-acid), this aids muscle growth, helps in rapid recovery from workouts and reduces DOMS'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1115' productDesc='Fine tune your metabolism and end gastro intestinal problems. Clinically proven to enhance vitality & productivity. '/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT957' productDesc='It helps burn down the body fat to get a leaner body and also suppresses ones appetite. It is a unisex product.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT957' productDesc='It helps burn down the body fat to get a leaner body and also suppresses ones appetite.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1175' productDesc='Easy to swallow soft gels enriched with Tonalin CLA. It helps reduce body fat and increases muscle tone.  '/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT641' productDesc='Gain muscle mass and improve muscle stamina. Can be consumed by those with food allergies.'/>									
         </div>
