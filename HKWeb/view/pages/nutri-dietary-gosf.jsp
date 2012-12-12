@@ -62,6 +62,8 @@
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
 
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
+
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf02.jsp">Next →</a>
 
 
@@ -114,6 +116,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf02.jsp">Next →</a>
 

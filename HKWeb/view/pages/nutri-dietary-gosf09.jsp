@@ -43,20 +43,31 @@
         <div class="cl"></div>
 
 
-        <div class="heading1">PRE WORKOUT</div>
+        <div class="heading1">DIETARY SUPPLEMENTS</div>
 
         <div class="pages">
+            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">← Previous</a>
 
-            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-workout-gosf02.jsp">← Previous</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf.jsp">1</a>
 
-             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-workout-gosf.jsp">1</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf02.jsp">2</a>
 
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-workout-gosf02.jsp">2</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf03.jsp">3</a>
 
-            <span class="pages_link">3</span>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf04.jsp">4</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf05.jsp">5</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf06.jsp">6</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+
+            <span class="pages_link">9</span>
 
          </div>
-          <div class="cl"></div>
+         <div class="cl"></div>
 
 
         <div class="prodBoxes">
@@ -77,14 +88,25 @@
         <div class="cl"></div>
 
          <div class="pages">
-             
-            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-workout-gosf02.jsp">← Previous</a>
+            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">← Previous</a>
 
-             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-workout-gosf.jsp">1</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf.jsp">1</a>
 
-            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-workout-gosf02.jsp">2</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf02.jsp">2</a>
 
-            <span class="pages_link">3</span>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf03.jsp">3</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf04.jsp">4</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf05.jsp">5</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf06.jsp">6</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
+
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+
+            <span class="pages_link">9</span>
 
          </div>
 
