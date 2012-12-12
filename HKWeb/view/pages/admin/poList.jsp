@@ -82,12 +82,12 @@
         <th>Warehouse</th>
         <th>Status</th>
         <th>Last Update Date</th>
-	      <th>Fill Rate</th>
         <th>Adv Payment</th>
         <th>Payable</th>
         <th>Est Payment Date</th>
         <th>Payment Details</th>
         <th>GRNs</th>
+	    <th>Fill Rate</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -104,7 +104,6 @@
           <td>${purchaseOrder.warehouse.city}</td>
           <td>${purchaseOrder.purchaseOrderStatus.name}</td>
           <td><fmt:formatDate value="${purchaseOrder.updateDate}" type="both" timeStyle="short"/></td>
-	        <td>${purchaseOrder.fillRate}</td>
 	      <td>
             <fmt:formatNumber value="${purchaseOrder.advPayment}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td>
@@ -126,6 +125,7 @@
               &nbsp;
             </c:forEach>
           </td>
+	        <td>${purchaseOrder.fillRate}</td>
 	        <td>
 		        <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">Edit/View
 			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>

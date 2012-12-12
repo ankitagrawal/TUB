@@ -10,6 +10,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.accounting.PoLineItem;
+import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -105,6 +106,12 @@ public class EditPurchaseOrderAction extends BaseAction {
 							} else {
 								dataMap.put("newSku", false);
 							}
+						}
+					}
+					if(purchaseOrder != null) {
+						ProductVariantSupplierInfo productVariantSupplierInfo = Functions.getPVSupplierInfo(purchaseOrder.getSupplier(), pv);
+						if(productVariantSupplierInfo != null) {
+							dataMap.put("historicalFillRate", productVariantSupplierInfo.getFillRate());
 						}
 					}
 					dataMap.put("product", pv.getProduct().getName());

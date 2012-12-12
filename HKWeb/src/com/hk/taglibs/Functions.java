@@ -725,8 +725,12 @@ public class Functions {
     }
 
 	public static ProductVariantSupplierInfo getPVSupplierInfo(Supplier supplier, ProductVariant productVariant) {
-		ProductVariantSupplierInfoService productVariantSupplierInfoService = ServiceLocatorFactory.getService(ProductVariantSupplierInfoService.class);
-		return productVariantSupplierInfoService.getOrCreatePVSupplierInfo(productVariant, supplier);
+		if (supplier != null && productVariant != null) {
+			ProductVariantSupplierInfoService productVariantSupplierInfoService = ServiceLocatorFactory.getService(ProductVariantSupplierInfoService.class);
+			return productVariantSupplierInfoService.getOrCreatePVSupplierInfo(productVariant, supplier);
+		} else {
+			return null;
+		}
 	}
 
 }
