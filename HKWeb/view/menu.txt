@@ -643,6 +643,7 @@
 ---/beauty/face-care/facial/kit
 --/beauty/face-care/mask-pack : Mask & Pack
 --/beauty/face-care/eye-care
+--/beauty/face-care/steamers-massagers : Steamers & Massagers
 -/beauty/bath-body : Bath & Body
 --/beauty/bath-body/soap-body-wash : Soap & Body Wash
 ---/beauty/bath-body/soap-body-wash/soap
