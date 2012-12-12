@@ -45,9 +45,9 @@
         if (dateTime.isBefore(endOfOfferDate.getTime())) {
     %>
     <div class="siteNotice" style="width:960px; margin-left:auto; margin-right:auto;">
-        <div style="height: 48px; padding-top: 6px; font-size: 1em; color: black; background-color: yellow;">
-            21 Top Selling Products at <strong>10% cashback! *</strong>, <strong><a href="http://healthkart-prod.s3.amazonaws.com/emailContentFiles/nov23_2012_weekend_offer-2012-11-23/HTML-final/emailer.html">Click Here for the Product List</a></strong><br/>
-            <span style="font-size: 1.2em;">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</span>
+        <div style="height: 44px; padding-top: 6px; font-size: 1em; color: black; background-color: white; border: solid 4px #4484c4;">
+            <strong>Great Online Shopping Festival</strong>! Over 500 products, upto <strong>80% off! *</strong>, <strong><a href="http://www.healthkart.com/online-shopping-festival?src=hk2">Click here to start Shopping!</a></strong><br/>
+            <span style="font-size: 1.2em; color: #e62580">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</span>
         </div>
     </div>
     <%
