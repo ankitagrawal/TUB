@@ -81,6 +81,7 @@ public class SplitShippingOrderAction extends BaseAction {
             for (LineItem remainingLineItem : originalShippingItems) {
                 if ((remainingLineItem.getSku().getProductVariant().getProduct().isDropShipping())) {
                     dropShipItemPresentInRemainingItems = true;
+                    break;
                 }
             }
 

@@ -10147,7 +10147,7 @@
         insert into country values (198,'VIRGIN ISLANDS, U.S.', 'VI');
         insert into country values (199,'WALLIS AND FUTUNA', 'WF');
         insert into country values (200,'WESTERN SAHARA', 'EH');
-        insert into country values (201,'ZAMBIA', 'ZM');      
+        insert into country values (201,'ZAMBIA', 'ZM');
     </sql>
   </changeSet>
     <changeSet author="Pratham" id="20121129-01">

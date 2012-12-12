@@ -80,7 +80,7 @@ public class CreateDropShipmentAction extends BaseAction {
         Awb finalAwb = null;
         if (trackingId == null) {
 		 addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("You have not entered the tracking id"));
-           return new RedirectResolution(CreateDropShipmentAction.class);
+           return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder",shippingOrder);
         }
         if (shippingOrder == null){
            addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("You have not selected the Drop shipped order"));
@@ -101,7 +101,7 @@ public class CreateDropShipmentAction extends BaseAction {
                 }
                 if (error) {
                     addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "       is already Used with other  shipping Order  OR  already Present in another warehouse with same courier"));
-                    return new RedirectResolution(CreateDropShipmentAction.class);
+                    return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder",shippingOrder);
                 }
                 finalAwb = updateAttachStatus(awbFromDb);
             } else {
@@ -127,10 +127,10 @@ public class CreateDropShipmentAction extends BaseAction {
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped, comment);
         } else {
             addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage(" OPERATION FAILED *********You have not entered all the mandatory details"));
-            return new RedirectResolution(CreateDropShipmentAction.class);
+            return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder",shippingOrder);
         }
         addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipmet has been created for your order"));         
-            return new RedirectResolution(CreateDropShipmentAction.class);
+            return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder",shippingOrder);
     }
 
 
