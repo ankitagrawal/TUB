@@ -166,29 +166,29 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
             headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
             heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
             addRedirectAlertMessage(new SimpleMessage(product.getId() + " is added more than once in the list!"));
-            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
+            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
           }else if (product.isHidden()) {
             headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
             heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
             addRedirectAlertMessage(new SimpleMessage(product.getId() + " has isHidden property set to true!"));
-            return new RedirectResolution(PrimaryCategoryHeadingAction.class, "addPrimaryCategoryHeadingProducts").addParameter("heading",heading.getId());
+            return new RedirectResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
           } else if (product.isOutOfStock()) {
             headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
             heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
             addRedirectAlertMessage(new SimpleMessage(product.getId() + " has isOutOfStock property set to true!"));
-            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
+            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
           } else if (product.isDeleted()) {
             logger.debug("product to be added has isDeleted property set to true");
             headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
             heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
             addRedirectAlertMessage(new SimpleMessage(product.getId() + " has isDeleted property set to true!"));
-            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
+            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
           } else if (Boolean.TRUE.equals(product.isGoogleAdDisallowed())) {
             logger.debug("product to be added has isGoogleAdDisallowed property set to true");
             headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
             heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
             addRedirectAlertMessage(new SimpleMessage(product.getId() + " has isGoogleAdDisallowed set to true!"));
-            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
+            return new ForwardResolution("/pages/addPrimaryCategoryHeadingProducts.jsp");
           } else {
             HeadingProduct headingProduct1 = new HeadingProduct();
             headingProduct1.setProduct(product);

@@ -64,14 +64,14 @@
       <br/><br/>
 
       <div align="center">
-          <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" event="addPrimaryCategoryHeadingProducts" class="addBtn">
-              <s:param name="${ha.heading.id}"/>
-          </s:link>
+          <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" event="addPrimaryCategoryHeadingProducts" class="button_orange">
+              <s:param name="heading.id" value="${ha.heading.id}"/>
+          </s:link>Add
         <%--<s:submit name="addPrimaryCategoryHeadingProducts" value="Add New" class="addBtn"/>--%>
         <%--<s:submit name="editSelectedPrimaryCategoryHeadingProducts" value="Edit" class="editBtn"/>--%>
-           <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" event="editSelectedPrimaryCategoryHeadingProducts" class="editBtn">
-              <s:param name="${ha.heading.id}"/>
-          </s:link>
+           <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" event="editSelectedPrimaryCategoryHeadingProducts" class="button_orange">
+              <s:param name="heading.id" value="${ha.heading.id}"/>
+          </s:link>Edit
           <s:submit name="deleteSelectedPrimaryCategoryHeadingProducts" value="Delete" class="deleteBtn"/>
       </div>
       <c:choose>
