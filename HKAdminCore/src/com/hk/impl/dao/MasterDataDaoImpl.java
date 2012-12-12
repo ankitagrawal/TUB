@@ -20,6 +20,7 @@ import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
@@ -405,6 +406,6 @@ public class MasterDataDaoImpl implements MasterDataDao {
 	}
 
 	public List<AwbStatus> getAllAwbStatus() {
-		return getBaseDao().getAll(AwbStatus.class);
+		return EnumAwbStatus.getAllStatusExceptUsed();
 	}
 }
