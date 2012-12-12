@@ -30,7 +30,7 @@
   %>
   <%
     DateTime dateTime = new DateTime();
-    Date endOfOfferDate = new Date(new DateTime(2012, 12, 12, 23, 59, 59, 59).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2012, 12, 13, 23, 59, 59, 59).getMillis());
       if (dateTime.isBefore(endOfOfferDate.getTime())) {
   %>
   <!-- remove this after gosf -->
@@ -39,8 +39,8 @@
   <div id="slidebox">
     <a class="close"></a>
 
-    <p>The Great Online Shopping Festival Has Begun. <br/>Do Visit Us for <span class="gosfDisc">Discounts up to <span style="font-size:1.2em;">80%</span>!</span></p>
-    <div style="color: white; background-color: #4484c4; padding: 2px; text-align: center;">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</div>
+    <p>On popular demand, The Shopping Festival continues!! <br/><span class="gosfDisc">Over 500 products with Discounts up to <span style="font-size:1.2em;">80%</span>!</span></p>
+    <div style="color: white; background-color: #4484c4; padding: 2px; text-align: center;">Another <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</div>
     <strong><a target="_blank" style="color:#e62580;" href="http://www.healthkart.com/online-shopping-festival?src=hk">Keep your wallets ready and your fingers on the mouse!</a></strong>
     <a class="more" target="_blank" href="http://www.healthkart.com/online-shopping-festival?src=hk">Browse Our Range >> </a>
 </div>
