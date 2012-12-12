@@ -5,6 +5,9 @@
 <%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.marketing.AnalyticsConstants" %>
+<%@ page import="org.joda.time.DateTime" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="com.hk.taglibs.Functions" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="getCartItems"/>
 <s:useActionBean beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
@@ -25,6 +28,11 @@
 //    System.out.println("aattachRedirectParam="+attachRedirectParamStr);
     boolean attachRedirectParam = attachRedirectParamStr == null ? true : Boolean.getBoolean(attachRedirectParamStr);
   %>
+  <%
+    DateTime dateTime = new DateTime();
+    Date endOfOfferDate = new Date(new DateTime(2012, 12, 12, 23, 59, 59, 59).getMillis());
+      if (dateTime.isBefore(endOfOfferDate.getTime())) {
+  %>
   <!-- remove this after gosf -->
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/gosf.js"></script>
   <script>$(document).ready(function () {initSliderPaginator();});</script>
@@ -32,12 +40,15 @@
     <a class="close"></a>
 
     <p>The Great Online Shopping Festival Has Begun. <br/>Do Visit Us for <span class="gosfDisc">Discounts up to <span style="font-size:1.2em;">80%</span>!</span></p>
-	
-    <h2><a target="_blank" style="color:#E28409;" href="http://www.healthkart.com/online-shopping-festival?src=hk">Keep your wallets ready and your fingers on the mouse!</a></h2>
+    <div style="color: white; background-color: #4484c4; padding: 2px; text-align: center;">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</div>
+    <strong><a target="_blank" style="color:#e62580;" href="http://www.healthkart.com/online-shopping-festival?src=hk">Keep your wallets ready and your fingers on the mouse!</a></strong>
     <a class="more" target="_blank" href="http://www.healthkart.com/online-shopping-festival?src=hk">Browse Our Range >> </a>
 </div>
 <div id="pagerTrigger"></div>
 <!-- remove this after gosf -->
+  <%
+      }
+  %>
 
   <div class='topBar'>
     <div class='topBarContent'>
