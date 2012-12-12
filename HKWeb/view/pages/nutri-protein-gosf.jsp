@@ -67,6 +67,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT056' productDesc='Get the best carb free, lactose free whey protein known to man. Suitable for bodybuilding & athletic training alike. '/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT468' productDesc='Increased muscle mass and strength along with improved bones and ligaments'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT911' productDesc='This products not just saturates aching muscles with right kind of amino acids, it also works as a nutritious health supplement'/>
+        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT912' productDesc='Packed with carbohydrates, vitamins and proteins that ensure quick results. It also minimizes muscular degradation.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1162' productDesc='Built with Vitamins A and E and Zinc and Selenium, it offers maximum nutrient utilization and prevents muscle loss '/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1227' productDesc='A pre-workout supplement that acts as a Nitric Oxide Pump Amplifier and contains Pycnogenol as its key ingredient.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT912' productDesc='It helps one gain weight and get increased muscle mass by reducing the degradation of muscles.'/>
@@ -76,8 +77,11 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT574' productDesc='High performance whey protein blend.  A superior mix, you absorb upto 80% protein instantly.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT486' productDesc='A unique blend of pure crystalline Ergogenic amino acids which acts as anabolic agent and promotes muscle protein synthesis'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT132' productDesc='Get the best Creatine available to mankind and get unbelievable power and muscle gains. Go with CellTech hardcore to beat the pros.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT472' productDesc='Ideal for assisting your muscles post workout, it is a whey protein isolate that is 100% instantised and hydrolysed. '/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1375' productDesc='Formulated with blend of proteins, essential nutrients and minerals, Ideal for growing strong, lean and powerful muscles.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT472' productDesc='Ideal for assisting your muscles post workout, it is a whey protein isolate that is 100% instantised and hydrolysed. '/>			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1339' productDesc='Packed with whey protein that increases stamina for an improved workout and leaner muscles.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT825' productDesc='This weight gainer is a perfect blend of all the vital proteins and vitamins. Get ready for that chiseled physique.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1332' productDesc='A high calorie weight gainer with amino acids that helps increase muscle size and strength.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT125' productDesc='Quickly build well-toned muscles.This supplement supports muscle growth and peaks performance.'/>															
          </div>
 
 

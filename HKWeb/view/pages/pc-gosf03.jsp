@@ -60,7 +60,8 @@
         <div class="cl"></div>
 
 
-        <div class="prodBoxes">        
+        <div class="prodBoxes">
+        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP002' productDesc="With this pepper spray, you get a range of 7 feet. Knock them all out!"/>        
         	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='JS003' productDesc="Brush better with JSB Electronic Toothbrush,"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NEAT001' productDesc="Neat Feat 3B Action Cream is a perfect pick for curing sweat rash and chafing"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NEAT003' productDesc="Rehydrate and repair the damaged and dried heels of your feet with this foot and heel balm"/>
@@ -77,7 +78,9 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DE001' productDesc="This face and body massager delivers minute acoustic vibrations, curing muscle and joint pain "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DE002' productDesc="FaceMate's Dual Wave Ultrasonic Face Massager revitalizes your skin using safe ultrasonic technology "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DE003' productDesc="Relax your muscle and energize your body with this multi-purpose warm massager"/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DE004' productDesc="Get a wrinkle free, healthy and  a firmer skin and no side effects with this muscle stimulator"/>        	
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DE004' productDesc="Get a wrinkle free, healthy and  a firmer skin and no side effects with this muscle stimulator"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH069' productDesc="Keeps your teeth clean and shiny."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH033' productDesc="Ensure the best possible protection for your teeth with this sonic toothbrush "/>			        
         </div>
         <div class="cl"></div>
 
