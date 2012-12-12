@@ -71,9 +71,9 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT914' productDesc="It is an extremely light in weight racket with perfect dimension that offers maximum durabilty,power and balance."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT951' productDesc="It is a convenient way of exercising that enables one to perform around 21 exercises,within the comforts of home."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT960' productDesc="It is a specially designed, light-weight bench that is ideal for getting toned stomach muscles. "/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT2297-01' productDesc='This program offers a 60 day workout session by best trainers along with training and nutrition DVDs. It helps reduce weight and maximize muscle activation.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT2259-01' productDesc='It offers a powerful strike and balanced hitting. This bat is made up of high quality materials that give a good pick-up.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT1800-01' productDesc='It is a compact, stationary home-fitness system that promotes overall strength training with 100 possible exercises'/>	
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT2297' productDesc='This program offers a 60 day workout session by best trainers along with training and nutrition DVDs. It helps reduce weight and maximize muscle activation.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT2259' productDesc='It offers a powerful strike and balanced hitting. This bat is made up of high quality materials that give a good pick-up.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT1800' productDesc='It is a compact, stationary home-fitness system that promotes overall strength training with 100 possible exercises'/>	
 		</div>
 
         <div class="cl"></div>
