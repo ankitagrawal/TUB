@@ -64,9 +64,15 @@
       <br/><br/>
 
       <div align="center">
-        <s:submit name="addPrimaryCategoryHeadingProducts" value="Add New" class="addBtn"/>
-        <s:submit name="editSelectedPrimaryCategoryHeadingProducts" value="Edit" class="editBtn"/>
-        <s:submit name="deleteSelectedPrimaryCategoryHeadingProducts" value="Delete" class="deleteBtn"/>
+          <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" event="addPrimaryCategoryHeadingProducts" class="addBtn">
+              <s:param name="${ha.heading.id}"/>
+          </s:link>
+        <%--<s:submit name="addPrimaryCategoryHeadingProducts" value="Add New" class="addBtn"/>--%>
+        <%--<s:submit name="editSelectedPrimaryCategoryHeadingProducts" value="Edit" class="editBtn"/>--%>
+           <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" event="editSelectedPrimaryCategoryHeadingProducts" class="editBtn">
+              <s:param name="${ha.heading.id}"/>
+          </s:link>
+          <s:submit name="deleteSelectedPrimaryCategoryHeadingProducts" value="Delete" class="deleteBtn"/>
       </div>
       <c:choose>
         <c:when test="${ha.heading.category.name != 'home'}">

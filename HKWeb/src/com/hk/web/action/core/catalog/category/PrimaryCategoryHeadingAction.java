@@ -226,7 +226,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
     heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
     logger.debug("Editing products for heading id: " + heading.getId() + " name: " + heading.getName());
-    return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
+    return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
   }
 
   public Resolution deleteSelectedPrimaryCategoryHeadingProducts() {
@@ -258,7 +258,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     else{
       headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);
       addRedirectAlertMessage(new SimpleMessage("There came an Error, please Try again later!!!!"));
-      return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
+      return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
     }
     if (!(category.getName().equals("home"))) {
       noCache();
@@ -278,7 +278,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
          headingProducts.add(headingProduct);
        }
      }
-   return new ForwardResolution("/pages/editSelectedPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
+   return new ForwardResolution("/pages/editSelectedPrimaryCategoryHeadingProducts.jsp");
   }
 
   public Resolution saveSelectedPrimaryCategoryHeadingProducts(){
@@ -300,7 +300,7 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     else{
         headingProducts = getHeadingProductService().getHeadingProductsByHeadingId(heading);        
        addRedirectAlertMessage(new SimpleMessage("There came an Error, please Try again later!!!!"));
-       return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp").addParameter("heading",heading.getId());
+       return new ForwardResolution("/pages/editPrimaryCategoryHeadingProducts.jsp");
       }
       if (!(category.getName().equals("home"))) {
         noCache();
