@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.cache.CategoryCache;
-import com.hk.cache.UserCache;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
@@ -127,8 +126,8 @@ public class CustomerScoreAction extends BaseAction {
                                 category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.EYE).getCategory();
                                 break;
                             case 5:
-                                // category = getCategoryService().getCategoryByName(CategoryConstants.HOME_DEVICES);
-                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.HOME_DEVICES).getCategory();
+                                // category = getCategoryService().getCategoryByName(CategoryConstants.HEALTH_DEVICES);
+                                category = CategoryCache.getInstance().getCategoryByName(CategoryConstants.HEALTH_DEVICES).getCategory();
                                 break;
                             case 6:
                                 // category = getCategoryService().getCategoryByName(CategoryConstants.NUTRITION);

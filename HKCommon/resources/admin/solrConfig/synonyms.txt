@@ -31,3 +31,6 @@ pixima => pixma
 bcca  => bcaa
 bca => bcaa
 superpump => super pump
+running => jogging
+moisturiser => moisturizer
+loreal =>l'oreal

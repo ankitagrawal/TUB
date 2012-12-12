@@ -22,7 +22,7 @@ public class ProductReferrerMapper {
     referrerMap.put(CategoryConstants.BABY, EnumProductReferrer.parenting.getId());
     referrerMap.put(CategoryConstants.BEAUTY, EnumProductReferrer.beauty.getId());
     referrerMap.put(CategoryConstants.EYE, EnumProductReferrer.eye.getId());
-    referrerMap.put(CategoryConstants.HOME_DEVICES, EnumProductReferrer.homeDevices.getId());
+    referrerMap.put(CategoryConstants.HEALTH_DEVICES, EnumProductReferrer.healthDevices.getId());
     referrerMap.put(CategoryConstants.NUTRITION, EnumProductReferrer.nutrition.getId());
     referrerMap.put(CategoryConstants.PERSONAL_CARE, EnumProductReferrer.personalCare.getId());
     referrerMap.put(CategoryConstants.SERVICES, EnumProductReferrer.services.getId());

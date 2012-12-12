@@ -25,6 +25,9 @@
     pageContext.setAttribute("isSecure", isSecure);
     Category stethoscope = categoryDao.getCategoryByName("stethoscope");
     pageContext.setAttribute("stethoscope", stethoscope);
+
+	String gosf = request.getParameter("gosf");
+	pageContext.setAttribute("gosf", gosf);
 %>
  <c:set var="product" value="${pa.product}"/>
  <c:set var="seoData" value="${pa.seoData}"/>
@@ -233,11 +236,16 @@
 
 <s:layout-component name="prod_slideshow">
 	<div class='product_slideshow'>
-		<div class="img320">
+
+		<div class="img320" style="position:relative;">
 			<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
 			   title="${product.name}">
 				<img itemprop="image" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
 				     title="${product.name}">
+				<c:if test="${gosf == 'true'}">
+					<img style="position:absolute;right:0px;bottom:0px;z-index:100" class="gosf-logo"
+					     src="${pageContext.request.contextPath}/images/GOSF/gosf-price.jpg"/>
+				</c:if>
 			</a>
 		</div>
         <div id="tryOnLink" class="content">

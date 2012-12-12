@@ -6,7 +6,7 @@ public enum EnumProductReferrer {
   nutrition(2L, "nutrition"),
   sports(3L, "sports"),
   diabetes(4L, "diabetes"),
-  homeDevices(5L, "home-devices"),
+  healthDevices(5L, "health-devices"),
   eye(6L, "eye"),
   personalCare(7L, "personal-care"),
   beauty(8L, "beauty"),
@@ -16,7 +16,7 @@ public enum EnumProductReferrer {
   relatedProductsPage(12L, "related-products-page"),
   brandPage(13L, "brand-page"),
   mobile_catalog(14L, "mobile-catalog"),
-  mobile_search(15L, "mobile-search"),;
+  mobile_search(15L, "mobile-search");
 
   private String name;
   private Long id;
