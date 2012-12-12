@@ -216,9 +216,9 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     heading = primaryCategoryHeadingDao.getHeadingById(heading.getId());
     category = heading.getCategory();
     if (!(category.getName().equals("home"))) {
-      return new ForwardResolution(CategoryAction.class, "pre").addParameter("category", category.getName());
+      return new RedirectResolution(CategoryAction.class, "pre").addParameter("category", category.getName());
     } else {
-      return new ForwardResolution(HomeAction.class, "pre").addParameter("category", category.getName());
+      return new RedirectResolution(HomeAction.class, "pre").addParameter("category", category.getName());
     }
   }
 

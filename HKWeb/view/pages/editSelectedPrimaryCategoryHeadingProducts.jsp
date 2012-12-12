@@ -29,6 +29,22 @@
 
       <s:submit name="saveSelectedPrimaryCategoryHeadingProducts" id="save" value="Save"/>
 
+         <c:choose>
+        <c:when test="${ha.heading.category.name != 'home'}">
+          <s:link beanclass="com.hk.web.action.core.catalog.category.CategoryAction" event="pre">
+            <div align="right" style="font-weight:bold; font-size:150%">BACK</div>
+            <s:param name="category.name" value="${ha.heading.category.name}"/>
+          </s:link>
+        </c:when>
+
+        <c:otherwise>
+          <s:link beanclass="com.hk.web.action.HomeAction" event="pre">
+            <div align="right" style="font-weight:bold; font-size:150%">BACK</div>
+            <s:param name="category.name" value="${ha.heading.category.name}"/>
+          </s:link>
+        </c:otherwise>
+      </c:choose>
+
     </s:form>
       <script type="text/javascript">
           $(document).ready(function(){
