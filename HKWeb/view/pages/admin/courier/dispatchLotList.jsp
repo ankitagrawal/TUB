@@ -86,11 +86,15 @@
 					<td>${dispatchLot.dispatchLotStatus.name}</td>
 					<td>${dispatchLot.dispatchDate}</td>
 					<td>
-						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction">Edit/View
+						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="receiveLot">Receive
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="receiveLot">Receive
+						&nbsp;&nbsp;
+						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="viewLot">View
+							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
+						</s:link>
+						&nbsp;&nbsp;&nbsp;
+						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction">Edit/View
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
 					</td>

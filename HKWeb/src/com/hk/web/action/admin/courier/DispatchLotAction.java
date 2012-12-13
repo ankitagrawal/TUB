@@ -60,6 +60,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 	private DispatchLotStatus dispatchLotStatus;
 	private FileBean fileBean;
 	private List<String> gatewayOrderIdList;
+	private List<Shipment> dispatchLotShipments;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -145,6 +146,15 @@ public class DispatchLotAction extends BasePaginatedAction {
 			return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
 		}
 		return new ForwardResolution("/pages/admin/courier/receiveDispatchLot.jsp").addParameter("dispatchLot", dispatchLot.getId());
+	}
+
+	public Resolution viewLot(){
+		if(dispatchLot == null){
+			addRedirectAlertMessage(new SimpleMessage("Dispatch lot not found."));
+			return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
+		}
+		dispatchLotShipments = getDispatchLotService().getShipmentsForDispatchLot(dispatchLot);
+		return new ForwardResolution("/pages/admin/courier/viewDispatchLotWithShipments.jsp").addParameter("dispatchLot", dispatchLot.getId());
 	}
 
 	public Resolution markShipmentsReceived(){
@@ -326,5 +336,13 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 	public ShippingOrderService getShippingOrderService() {
 		return shippingOrderService;
+	}
+
+	public List<Shipment> getDispatchLotShipments() {
+		return dispatchLotShipments;
+	}
+
+	public void setDispatchLotShipments(List<Shipment> dispatchLotShipments) {
+		this.dispatchLotShipments = dispatchLotShipments;
 	}
 }
