@@ -46,7 +46,9 @@
     <h2>${ha.heading.name}</h2>
     <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
-	      <tr><th>ID</th></th><th>Product</th><th>OOS</th><th>Sorting</th></tr>
+	      <tr>
+		      <th>ID</th></th><th>Product</th><th>OOS</th><th>Deleted</th><th>Hidden</th><th>Sorting</th>
+	      </tr>
         <c:forEach var="headingProducts" items="${ha.headingProducts}">
           <tr>
             <td>
@@ -54,6 +56,8 @@
             </td>
 	          <td>${headingProducts.product.name}</td>
 	          <td>${headingProducts.product.outOfStock}</td>
+	          <td>${headingProducts.product.deleted}</td>
+	          <td>${headingProducts.product.hidden}</td>
 	          <td>${headingProducts.rank}</td>
           </tr>
             <s:hidden name="productId" value="${headingProducts.product.id}"/>
