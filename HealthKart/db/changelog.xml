@@ -11282,4 +11282,7 @@
             (77, 'ZUSKA023');
         </sql>
     </changeSet>
+    <changeSet author="Shrey (generated)" id="1355393813767-2">
+        <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="pincode"/>
+    </changeSet>
 </databaseChangeLog>
