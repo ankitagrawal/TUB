@@ -57,7 +57,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1151' productDesc='Boost your gym performance with MuscleTech Hydroxystim. Enhance your focus and blaze through your fitness goals. '/>			
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT890' productDesc='An advanced and safe supplement for fat loss. Enhance  energy and keep your appetite in check.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1384' productDesc='Powerful fatburner that helps manage weight, improve your physical performance and get a toned body.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1341' productDesc='An advanced and safe supplement for fat loss. Enhance  energy and keep your appetite in check.'/>			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1341' productDesc='An adipokine stimulator that promotes fat mobilization and helps in hunger control. '/>			
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT2019' productDesc='An advanced and safe supplement for fat loss. Enhance  energy and keep your sugar in check.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1151' productDesc='An energy booster that stimulates ones mental focus,help lose excess flab to get a well-toned body.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT910' productDesc='This fatburner is a lipotropic and metabolic complex that includes essential nutrients and helps one lose weight naturally'/>

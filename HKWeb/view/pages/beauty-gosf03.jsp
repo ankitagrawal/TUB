@@ -74,11 +74,23 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VNCP31' productDesc="Infused with Sweet Almond and Avocado oil,  relieves stress, improves blood circulation and reduces muscle pains."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC03' productDesc="Enriched with Brahmi, Neelibrigandi and Seaweed extract, stimulates hair growth, nourishes cuticles and prevents hair loss."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='H2O009' productDesc="Infused with herbal Mint essence, Wakame and Sea Fennel hydrates. Prevents chapping, feathering and smoothens fine lines"/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='LOREAL39' productDesc="Non-greasy, non-sticky moisturizer that is quickly absorbed, sooths, recharges and hydrates skin after shaving"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='LOREAL38' productDesc="Finally, an after shave blam that protects from drying effects and soothes your skin!"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='LYD1' productDesc="Goodness of Bhringraj, Amalaki, Neem & Gunja, this controls hair fall, removes dandruff, revitalizes and darkens hair."/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='KHADI37' productDesc="Exfoliating and moisturizing scrub with rose essence, sloughs dry skin cells "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='LOREAL34' productDesc="A Shaving Mousse for men with sensitive skin. No more irritation - just comfy and smooth shave!"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI01' productDesc="Silky emulsion lightens spots, scars & fine lines and moisturizes skin. Can be used all over the body"/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI02' productDesc="Highly potent whitening agents to lighten dark patches and complexion without irritation.. "/>         </div>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI02' productDesc="Highly potent whitening agents to lighten dark patches and complexion without irritation.. "/>         
+			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DLICMB04' productDesc="2-in1 set for those intense and smouldering eyes. Smudge-proof and stays for up to 6 hours."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MYBLN38' productDesc="Unique flexible wand lifts, separates and provides extra 300% fuller lashes. Contact lens safe and Ophthalmologically tested."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MYBLN37' productDesc="Must have in any girls vanity kit.  Hydrates lips for up to 8 hours."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='STVKC09' productDesc="Pamper your skin with the epitome in premium luxury. Boosts, protects, and re-balances anti-oxidants."/>
+
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC10' productDesc="Rose oil, Saffron & Natural micro particles of Rosehip seeds nourishes, polishes and removes impurities gently."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BBW7' productDesc="Seductive floral scents for a fragrant lather. Enriched with Shea Butter, Vitamin E and Aloe Vera for softer, cleaner skin."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BWCH26' productDesc="No need to wrestle anymore to fit into a dress. Hide your flabs and flaunt your curves, get Bwitch Shapewear."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARMTR17' productDesc="Relaxing and reviving, nutrient-rich package to cleanse and beautify all skins types."/>
+				
+		</div>
         <div class="cl"></div>
         
          <div class="pages">
