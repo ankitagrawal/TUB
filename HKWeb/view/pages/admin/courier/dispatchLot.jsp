@@ -94,10 +94,9 @@
 
 				<div class="clear"></div>
 
-				<s:label name="deliveryDate" class="label">Delivery Date</s:label>
+				<s:label name="dispatchDate" class="label">Dispatch Date</s:label>
 					<s:text class="date_input text" style="width:150px"
-					        formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="dispatchLot.dispatchDate"
-					        id="deliveryDate"/>
+					        formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="dispatchLot.dispatchDate"/>
 
 				<div class="clear"></div>
 
@@ -115,7 +114,6 @@
 
 		<c:if test="${dispatch.dispatchLot.id != null}">
 			<div class="reportBox">
-				<%--<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">--%>
 					<fieldset class="right_label">
 						<legend>Update Shipment Details In Dispatch Lot</legend>
 						<br>
@@ -131,7 +129,6 @@
 							</li>
 						</ul>
 					</fieldset>
-				<%--</s:form>--%>
 			</div>
 		</c:if>
 			</s:form>

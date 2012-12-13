@@ -7,6 +7,7 @@ import com.hk.domain.courier.*;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -64,6 +65,7 @@ public class DispatchLotDaoImpl extends BaseDaoImpl implements DispatchLotDao {
 			DetachedCriteria courierCriteria = criteria.createCriteria("courier");
 			courierCriteria.add(Restrictions.eq("id", courier.getId()));
 		}
+		criteria.addOrder(Order.desc("id"));
 
 		return list(criteria, pageNo, perPage);
 	}
@@ -87,6 +89,12 @@ public class DispatchLotDaoImpl extends BaseDaoImpl implements DispatchLotDao {
 		String query = "select ds.shipment from DispatchLotHasShipment ds join ds.dispatchLot d where ds.shipment in (:shipmentList) " +
 				" and ds.dispatchLot != :dispatchLot and d.dispatchLotStatus.id != " + EnumDispatchLotStatus.Cancelled.getId();
 		return (List<Shipment>) findByNamedParams(query, new String[]{"shipmentList", "dispatchLot"}, new Object[]{shipmentList, dispatchLot});
+	}
+
+	public List<DispatchLotHasShipment> getDispatchLotHasShipmentListByDispatchLot(DispatchLot dispatchLot) {
+		String query = "from DispatchLotHasShipment ds where ds.dispatchLot = :dispatchLot";
+		return  (List<DispatchLotHasShipment>)findByNamedParams(query, new String[]{"dispatchLot"}, new Object[]{dispatchLot});
+
 	}
 
 }

@@ -35,4 +35,6 @@ public interface DispatchLotService {
 
 	public DispatchLotHasShipment getDispatchLotHasShipment(DispatchLot dispatchLot, Shipment shipment);
 
+	public List<DispatchLotHasShipment> getDispatchLotHasShipmentListByDispatchLot(DispatchLot dispatchLot);
+
 }

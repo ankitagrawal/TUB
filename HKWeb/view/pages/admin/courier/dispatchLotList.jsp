@@ -90,7 +90,7 @@
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
 						&nbsp;&nbsp;
-						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="viewLot">View
+						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="viewLot">View Shipments
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
 						&nbsp;&nbsp;&nbsp;

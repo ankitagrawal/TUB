@@ -72,18 +72,6 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			if(invalidGatewayOrderIds != null){
 				throw new ExcelBlankFieldException("Following gatewayOrderIds are Invalid : " + invalidGatewayOrderIds);
 			}
-			/*if (soListInDB.size() < soGatewayOrderIdInExcel.size()) {
-				List<String> soGatewayOrderIdInDBList = new ArrayList<String>(0);
-				for (ShippingOrder shippingOrder : soListInDB) {
-					soGatewayOrderIdInDBList.add(shippingOrder.getGatewayOrderId());
-				}
-				soGatewayOrderIdInExcel.removeAll(soGatewayOrderIdInDBList);
-				String invalidOrders = "";
-				for (String soGatewayOrderId : soGatewayOrderIdInExcel) {
-					invalidOrders += soGatewayOrderId + " ";
-				}
-				throw new ExcelBlankFieldException("Following gatewayOrderIds are Invalid : " + invalidOrders);
-			}*/
 
 			//Check if zone is not the Selected Zone of the Dispatch Lot
 			List<Shipment> shipmentList = new ArrayList<Shipment>(0);
@@ -109,6 +97,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				throw new ExcelBlankFieldException("Following gatewayOrderIds belong to a different zone : " + invalidOrdersByZone);
 			}
 
+
+			//check if any shipment exists in other active dispatch lot
 			String gatewayOrdersInOtherDispatchLot = checkIfShipmentExistsInOtherDispatchLot(dispatchLot, shipmentList);
 			if (gatewayOrdersInOtherDispatchLot != null) {
 				throw new ExcelBlankFieldException("Following gatewayOrderIds already exist in other Active Dispatch Lots : " + gatewayOrdersInOtherDispatchLot);
@@ -147,9 +137,12 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		String gatewayOrderInOtherDispatchLot = null;
 		if(shipmentList != null && shipmentList.size() > 0) {
 			List<Shipment> existingShipmentInOtherDispatchLots = getDispatchLotDao().getShipmentListExistingInOtherActiveDispatchLot(dispatchLot, shipmentList);
+
 			for(Shipment existingShipment : existingShipmentInOtherDispatchLots) {
-				gatewayOrderInOtherDispatchLot = " ";
-				gatewayOrderInOtherDispatchLot += existingShipment.getShippingOrder().getGatewayOrderId();
+				if(gatewayOrderInOtherDispatchLot == null) {
+					gatewayOrderInOtherDispatchLot = "";
+				}
+				gatewayOrderInOtherDispatchLot += existingShipment.getShippingOrder().getGatewayOrderId() + " ";
 			}
 		}
 		return gatewayOrderInOtherDispatchLot;
@@ -211,8 +204,10 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			}
 			gatewayOrderIdList.removeAll(soGatewayOrderIdInDBList);
 			for (String soGatewayOrderId : gatewayOrderIdList) {
-				invalidOrders=" ";
-				invalidOrders += soGatewayOrderId;
+				if(invalidOrders == null) {
+					invalidOrders = "";
+				}
+				invalidOrders += soGatewayOrderId + " ";
 			}
 		}
 		return invalidOrders;
@@ -224,6 +219,10 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 
 	public DispatchLotHasShipment getDispatchLotHasShipment(DispatchLot dispatchLot, Shipment shipment){
 		return getDispatchLotDao().getDispatchLotHasShipment(dispatchLot, shipment);
+	}
+
+	public List<DispatchLotHasShipment> getDispatchLotHasShipmentListByDispatchLot(DispatchLot dispatchLot) {
+		return getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot);
 	}
 
 	public DispatchLot save(DispatchLot dispatchLot) {
