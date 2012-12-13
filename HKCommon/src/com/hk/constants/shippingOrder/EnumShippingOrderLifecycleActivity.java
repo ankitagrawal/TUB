@@ -30,6 +30,7 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_EscalatedToShipmentQueue(635L, "SO Escalated To Shipment Queue"),
   SO_EscalatedBackToActionQueue(640L, "SO Escalated Back To Action Queue"),
   SO_Packed(650L, "SO Packed"),
+  SO_ShipmentDetailSaved(652L, "Shipment Details saved"),  
   SO_Shipped(655L, "SO Shipped"),
   SO_ShippedEmailFired(658L, "SO Shipped Email Fired"),
   SO_Delivered(660L, "SO Delivered"),

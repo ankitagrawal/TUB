@@ -13,6 +13,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -50,6 +51,7 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private ShipmentService shipmentService;
+   
 
     private Long                       shippingOrderId;
     private Long                       orderId;

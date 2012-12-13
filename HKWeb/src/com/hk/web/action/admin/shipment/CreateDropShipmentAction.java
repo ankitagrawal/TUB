@@ -2,30 +2,29 @@ package com.hk.web.action.admin.shipment;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.AwbStatus;
+import com.hk.domain.courier.*;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction;
+import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.helper.InvoiceNumHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
+import org.stripesstuff.plugin.security.Secure;
+import net.sourceforge.stripes.action.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -57,34 +56,42 @@ public class CreateDropShipmentAction extends BaseAction {
     ShippingOrderService shippingOrderService;
     @Autowired
     AdminShippingOrderService adminShippingOrderService;
+    @Autowired
+    private SeekInvoiceNumService seekInvoiceNumService;
 
-   List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
+    List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
     Double boxWeight;
 
+    private BoxSize  boxSize;
 
+
+    @DontValidate
     @DefaultHandler
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
-        if(shippingOrder == null){
-          addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("You have not selected the Drop shipped order"));
-           return new RedirectResolution(DropShippingAwaitingQueueAction.class);
+        if (shippingOrder == null) {
+            addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("You have not selected the Drop shipped order"));
+            return new RedirectResolution(DropShippingAwaitingQueueAction.class);
         } else {
-               shippingOrderList.add(shippingOrder);
-               return new ForwardResolution("/pages/admin/createDropShipment.jsp");
+            shippingOrderList.add(shippingOrder);
+            return new ForwardResolution("/pages/admin/createDropShipment.jsp");
         }
     }
 
+     @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution saveDropShipmentDetails() {
         Shipment shipment = new Shipment();
         shipment.setEmailSent(false);
         Double weightInKg = boxWeight;
+
         Awb finalAwb = null;
         if (trackingId == null) {
-		 addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("You have not entered the tracking id"));
-           return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder",shippingOrder);
+            addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("You have not entered the tracking id"));
+            return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
         }
-        if (shippingOrder == null){
-           addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("You have not selected the Drop shipped order"));
-           return new RedirectResolution(DropShippingAwaitingQueueAction.class);
+        if (shippingOrder == null) {
+            addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("You have not selected the Drop shipped order"));
+            return new RedirectResolution(DropShippingAwaitingQueueAction.class);
         }
         Awb awb = awbService.createAwb(selectedCourier, trackingId.trim(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
         if (awb != null) {
@@ -101,7 +108,7 @@ public class CreateDropShipmentAction extends BaseAction {
                 }
                 if (error) {
                     addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "       is already Used with other  shipping Order  OR  already Present in another warehouse with same courier"));
-                    return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder",shippingOrder);
+                    return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
                 }
                 finalAwb = updateAttachStatus(awbFromDb);
             } else {
@@ -113,24 +120,41 @@ public class CreateDropShipmentAction extends BaseAction {
             shipment.setAwb(finalAwb);
             shipment.setShippingOrder(shippingOrder);
             shipment.setBoxWeight(weightInKg);
-            shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
+//          shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
+            shipment.setBoxSize(boxSize);
             shippingOrder.setShipment(shipment);
             shipment.setShippingOrder(shippingOrder);
             shipmentService.save(shipment);
-            shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Shipped));
+            shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
             shippingOrderDao.save(shippingOrder);
             String comment = "";
             if (shipment != null) {
                 String trackingId = shipment.getAwb().getAwbNumber();
-                comment = "Shipment Details: " + shipment.getAwb().getCourier().getName() + "/" + trackingId;
+                comment = "Shipment Details has been saved: " + shipment.getAwb().getCourier().getName() + "/" + trackingId;
             }
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped, comment);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentDetailSaved, comment);
         } else {
             addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage(" OPERATION FAILED *********You have not entered all the mandatory details"));
-            return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder",shippingOrder);
+            return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
         }
-        addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipmet has been created for your order"));         
-            return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder",shippingOrder);
+        addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipmet has been created for your order"));
+        return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
+    }
+
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
+    public Resolution markShippingOrdersAsShipped() {
+        logger.info("Drop shipment Item mark as shipped");
+        if (shippingOrder != null ) {
+                // shippingOrder.setAccountingInvoiceNumber();
+                String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
+                shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
+                adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
+
+            addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Orders have been marked as shipped"));
+        } else {
+            addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Please select order to be marked as shipped"));
+        }
+        return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
     }
 
 
@@ -199,5 +223,21 @@ public class CreateDropShipmentAction extends BaseAction {
 
     public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
         this.shippingOrderList = shippingOrderList;
+    }
+
+    public ShipmentService getShipmentService() {
+        return shipmentService;
+    }
+
+    public void setShipmentService(ShipmentService shipmentService) {
+        this.shipmentService = shipmentService;
+    }
+
+    public BoxSize getBoxSize() {
+        return boxSize;
+    }
+
+    public void setBoxSize(BoxSize boxSize) {
+        this.boxSize = boxSize;
     }
 }

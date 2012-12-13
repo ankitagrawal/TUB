@@ -77,6 +77,7 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/dropShipAwaitingQueue.jsp");
     }
 
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution searchOrders() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(gatewayOrderId);

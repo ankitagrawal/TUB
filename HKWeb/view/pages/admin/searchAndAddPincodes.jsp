@@ -87,8 +87,8 @@
 					</tr>
 					<tr>
 						<td>
-							<label>Zone:<label>
-								</td>
+							<label>Zone:</label>
+							</td>
 						<td>
 								<s:select name="pincode.zone">
 								<s:option value="null">Select</s:option>

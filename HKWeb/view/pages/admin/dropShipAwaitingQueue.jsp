@@ -9,7 +9,7 @@
 
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction" var="shipmentQueueBean"/>
 <c:set var="lineItemTypeId_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
-
+ <c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Drop Ship Awaiting Queue">
 <s:layout-component name="htmlHead">
@@ -130,9 +130,13 @@
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
   </div>
   <div style="display:inline;float:left;">
+      <c:if test="${shipmentQueueBean.shippingOrderStatus.id == shippingOrderStatusDropShippingAwaiting}">
     <s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
     <s:submit name="reAssignToPackingQueue" id="reAssignToPackingQueue" class="shippingOrderActionBtn"
               value="Re-Assign for process" style="display:none;"/>
+      </c:if>
+      <br>
+      <br>
   </div>
   <%--<c:if test="${applicableLineItemStatus == lineItemStatusId_PrePrinting}">--%>
   <%--<div style="display:inline;float:right;"><s:submit name="doBatchPrintingPrintJobCart" value="Do Batch Printing, Print Job Cart"/></div>--%>
