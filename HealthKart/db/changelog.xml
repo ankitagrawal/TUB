@@ -10403,7 +10403,7 @@
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
-            <column name="update_dt" type="DATETIME">
+            <column name="delivery_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
             <column name="dispatch_lot_status_id" type="INT">

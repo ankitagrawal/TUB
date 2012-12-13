@@ -127,6 +127,7 @@
 							</li>
 							<li>
 								<s:submit name="parse" value="Upload Shipment Details"/>
+								<s:param name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
 							</li>
 						</ul>
 					</fieldset>

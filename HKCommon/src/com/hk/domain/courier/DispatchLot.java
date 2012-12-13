@@ -66,8 +66,8 @@ public class DispatchLot implements Serializable {
 	private Date createDate = new Date();
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "update_dt")
-	private Date updateDate;
+	@Column(name = "delivery_dt")
+	private Date deliveryDate;
 
 	public Long getId() {
 		return id;
@@ -165,12 +165,12 @@ public class DispatchLot implements Serializable {
 		this.createDate = createDate;
 	}
 
-	public Date getUpdateDate() {
-		return updateDate;
+	public Date getDeliveryDate() {
+		return deliveryDate;
 	}
 
-	public void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
 
 	public String getRemarks() {

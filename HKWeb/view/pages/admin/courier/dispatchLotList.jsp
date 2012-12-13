@@ -21,7 +21,7 @@
 			<label>Dispatch Lot Id:</label><s:text name="dispatchLot"/>
 			<label>Docket Number:</label><s:text name="docketNumber"/>
 			<label>Zone<label>
-				<s:select name="zone" class="text">
+				<s:select name="zone">
 				<s:option value="null">-All-</s:option>
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
 					                           value="id"

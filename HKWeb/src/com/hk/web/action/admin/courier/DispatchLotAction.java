@@ -49,7 +49,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 	private List<DispatchLot> dispatchLotList = new ArrayList<DispatchLot>();
 	private Page dispatchLotPage;
 	private DispatchLot dispatchLot;
-	private Integer defaultPerPage = 20;
+	private Integer defaultPerPage = 5;
 	private String docketNumber;
 	private Courier courier;
 	private Zone zone;
@@ -84,7 +84,6 @@ public class DispatchLotAction extends BasePaginatedAction {
 		if (dispatchLot.getId() == null) {
 			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Generated.getDispatchLotStatus());
 		}
-		dispatchLot.setUpdateDate(new Date());
 		dispatchLot = getDispatchLotService().save(dispatchLot);
 		addRedirectAlertMessage(new SimpleMessage("Changes saved"));
 

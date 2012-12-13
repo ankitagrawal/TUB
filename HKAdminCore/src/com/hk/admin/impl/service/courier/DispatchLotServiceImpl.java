@@ -19,10 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -112,10 +109,20 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				throw new ExcelBlankFieldException("Following gatewayOrderIds belong to a different zone : " + invalidOrdersByZone);
 			}
 
+			String gatewayOrdersInOtherDispatchLot = checkIfShipmentExistsInOtherDispatchLot(dispatchLot, shipmentList);
+			if (gatewayOrdersInOtherDispatchLot != null) {
+				throw new ExcelBlankFieldException("Following gatewayOrderIds already exist in other Active Dispatch Lots : " + gatewayOrdersInOtherDispatchLot);
+			}
+
 			//Now save the shipments in DispatchLotHasShipment Table.(Bulk update)
 			List<DispatchLotHasShipment> dispatchLotHasShipmentList = new ArrayList<DispatchLotHasShipment>(0);
+
 			for(Shipment shipment : shipmentList) {
-				DispatchLotHasShipment dispatchLotHasShipment = new DispatchLotHasShipment();
+				DispatchLotHasShipment dispatchLotHasShipment = getDispatchLotHasShipment(dispatchLot, shipment);
+
+				if(dispatchLotHasShipment == null) {
+					dispatchLotHasShipment = new DispatchLotHasShipment();
+				}
 				dispatchLotHasShipment.setDispatchLot(dispatchLot);
 				dispatchLotHasShipment.setShipment(shipment);
 				dispatchLotHasShipment.setShipmentStatus(DispatchLotConstants.SHIPMENT_DISPATCHED);
@@ -134,6 +141,18 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			throw new ExcelBlankFieldException(e.getMessage());
 		}
 
+	}
+
+	private String checkIfShipmentExistsInOtherDispatchLot(DispatchLot dispatchLot, List<Shipment> shipmentList) {
+		String gatewayOrderInOtherDispatchLot = null;
+		if(shipmentList != null && shipmentList.size() > 0) {
+			List<Shipment> existingShipmentInOtherDispatchLots = getDispatchLotDao().getShipmentListExistingInOtherActiveDispatchLot(dispatchLot, shipmentList);
+			for(Shipment existingShipment : existingShipmentInOtherDispatchLots) {
+				gatewayOrderInOtherDispatchLot = " ";
+				gatewayOrderInOtherDispatchLot += existingShipment.getShippingOrder().getGatewayOrderId();
+			}
+		}
+		return gatewayOrderInOtherDispatchLot;
 	}
 
 	public boolean dispatchLotHasShipment(DispatchLot dispatchLot, Shipment shipment) {

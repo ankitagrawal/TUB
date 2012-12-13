@@ -25,4 +25,6 @@ public interface DispatchLotDao extends BaseDao {
 
 	public DispatchLotHasShipment getDispatchLotHasShipment(DispatchLot dispatchLot, Shipment shipment);
 
+	public List<Shipment> getShipmentListExistingInOtherActiveDispatchLot(DispatchLot dispatchLot, List<Shipment> shipmentList);
+
 }
