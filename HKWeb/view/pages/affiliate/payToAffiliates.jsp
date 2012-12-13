@@ -82,9 +82,9 @@
                     </td>
                     <td width="100px">
                             ${affiliateDetails.affiliate.websiteName}
-                    <%--</td>--%>
+                    </td>
                     <%--&lt;%&ndash;<s:hidden name="affiliatePaymentDtoList[${ctr.index}].affiliate" value="${affiliateDetails.affiliate}"/>&ndash;%&gt;--%>
-                    <%--<td>--%>
+                    <td>
                         <fmt:formatNumber value=" ${affiliateDetails.amount}"
                                           pattern="<%=FormatUtils.currencyFormatPattern%>"/>
                     </td>
