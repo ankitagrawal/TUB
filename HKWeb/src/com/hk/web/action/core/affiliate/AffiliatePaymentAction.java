@@ -109,7 +109,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 			AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
 			affiliatePaymentDto.setAffiliate(affiliate);
 			affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate, null, null));
-			affiliatePaymentDto.setPayableAmount(getAffiliateManager().getAmountInAccount(affiliate, startDate, endDate));
+			affiliatePaymentDto.setPayableAmount(getAffiliateManager().getPayableAmount(affiliate));
 			affiliatePaymentDtoList.add(affiliatePaymentDto);
 		}
 		return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
