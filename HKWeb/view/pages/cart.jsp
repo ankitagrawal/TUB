@@ -33,8 +33,8 @@
               if(responseData.code == '<%=HealthkartResponse.STATUS_OK%>'){
               _updateTotals(responseData);
               _updateLineItem(responseData, lineItemRow);
-              document.getElementById("freebieBanner").src = responseData.message;
-              $(".freebieBanner").attr("src", responseData.message);
+              //document.getElementById("freebieBanner").src = responseData.message;
+              //$(".freebieBanner").attr("src", responseData.message);
               }else{
                 elm.val(responseData.data);
               }
@@ -94,11 +94,11 @@
           $('#numProdTitle').html(count - 1);
           $('.cartButton').glow('#f99', 500, 10);
           _updateTotals(responseData);
-          if(responseData.message){
+          /*if(responseData.message){
              $(".freebieBanner").attr("src", responseData.message);
           }else{
              $(".freebieBanner").attr("src", "");
-          }
+          }*/
         });
         return false;
       });
@@ -521,7 +521,7 @@
     <div class="floatfix"></div>
   </div>
 </c:forEach>
-<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>
+<%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
 
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
   <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
