@@ -80,7 +80,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1100' productDesc='A product that provides a mix of essential vitamins and minerals to the body. Ideal for women over the age of 50.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1015' productDesc='Natural sugar destroyer, helps balance blood sugar and supports glucose metabolism.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1315' productDesc='A comprehensive Vitamin and Mineral formula for rapid growth'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1072' productDesc='A trusted and tried method to boost sexual energy for both men and women. Also detoxifies the urinary system naturally?'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1072' productDesc='A trusted and tried method to boost sexual energy for both men and women. Also detoxifies the urinary system naturally.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1138' productDesc='These capsules contain calcium,magnessium,zinc and vitamin D3 that makes it ideal for getting stronger bones.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1056' productDesc='No Flush Niacin helps in many bio-chemical functions, metabolism of fats and gives a glowing and healthy skin'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1313' productDesc='They provide all the essential vitamins,minerals and aminos for a healthier prostate functioning. It is unisex in nature.'/>

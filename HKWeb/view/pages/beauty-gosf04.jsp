@@ -87,6 +87,7 @@ x<%@ page import="com.hk.constants.core.PermissionConstants" %>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='KENT24' productDesc='9 rowed cushion paddle brush with ball tip quills. Best for combing your toddlers hair without hurting them.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VLCCFRT79' productDesc='For that beatific groomed look.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VLCCFRT77' productDesc='A kit of soothing treats for hair and body.'/>			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NYAH4' productDesc='Refines pores, improves skin, reduces blemishes, evens tone and accelerates collagen production.'/>
         </div>
         <div class="cl"></div>
                                        
