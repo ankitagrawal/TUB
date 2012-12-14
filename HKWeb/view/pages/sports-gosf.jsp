@@ -61,6 +61,9 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT1430' productDesc="This pull-up bar helps build an impressive upper body musculature.It makes exercising even more worthwhile. "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT954' productDesc="It is a light-weight exercising bike that helps reduce weight.It has an LCD screen showing calories burnt and pulse rate."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT059' productDesc="It is a high quality mat that is non-slippery and has a soft finish.It helps perform effective exercises for best results."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT2281' productDesc="Wear your Mantra and inspire everyone in the gym. Nuff said."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT2102' productDesc="The crazy ones are the only ones who get anywhere. Flaunt your insanity today!"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT2280' productDesc="To be where you are, you need to move as fast as possible. Let others know."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT026' productDesc="It is a light weight device that lets one exercise even while travelling. It improves the overall strength of the muscles. "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT959' productDesc="It helps strengthen the back,tone side abs and torso.It is ideal for toning the belly and is easily portable."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT1523' productDesc="It tabs average and maximum heart rate,calories burnt and offers target-based zone with bpm reading."/>
@@ -70,11 +73,9 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT422' productDesc="It is a professional 15-rung ladder with a non-slippery surface that helps one practice foot work.It is firm and durable."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT1521' productDesc="It measures heartbeats,calories burnt and has the facility of reminders."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT1522' productDesc="It has an alarm that measures heartbeat,calories burnt in accordance to weight,height and age."/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT1563' productDesc=" It is an organized way of storing the dumbbells.It can lift and lower them at an optimal height as per one's convenience."/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT1718' productDesc="It is a durable,light-weight tool that adds intensity to jump training drill.It is ideal for foot speed training."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT1563' productDesc=" It is an organized way of storing the dumbbells.It can lift and lower them at an optimal height as per one's convenience."/>			
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT1725' productDesc="It has adjustable bands that leads to 40 pounds of resistance while jumping.This strengthens the lower body muscles."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT493' productDesc="This fine quality racket offers great grip and support.It is convenient and ideal for an improved performance."/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SPT958' productDesc="It offers a complete body workout especially biceps toning.It is made of quality materials with enough padding."/>
         </div>
         <div class="cl"></div>
 

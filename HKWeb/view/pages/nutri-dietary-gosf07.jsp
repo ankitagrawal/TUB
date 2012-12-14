@@ -83,7 +83,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1511' productDesc='Fortifies your immune system and protects against cold, cough, asthma and viral infections.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1067' productDesc='Packed with echinacea herbs that cure cold & flu and improves immunity.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1028' productDesc='An organic mix of Maitake, Reishi and Shiitake mushrooms that boosts immunity, promotes vitality, aids digestion, and regulates blood sugar level.  '/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1302' productDesc='Worry no more about Colitis and Arthritis. With Curcumin Plus you get the best anti inflammatory with enhanced absorption.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1302' productDesc='Worry no more about Colitis and Arthritis. With Curcumin Plus, you get the best anti inflammatory with enhanced absorption.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1301' productDesc='Detoxification and immune support in 1 package! Suitable for Alzheimers and Cardiovascular conditions. Suitable for Diabetics too. '/>
         </div>
 

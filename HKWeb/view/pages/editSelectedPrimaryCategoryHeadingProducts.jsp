@@ -3,64 +3,23 @@
 
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" var="ha"/>
 
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add Category Heading Products">
-
-  <s:layout-component name="htmlHead">
-    <script type="text/javascript">
-      var nextIndex = 0;
-      $(document).ready(function() {
-        $('.addRowButton').click(function() {
-
-          var lastIndex = $('.lastRow').attr('count');
-          if (!lastIndex) {
-            lastIndex = -1;
-          }
-          $('.lastRow').removeClass('lastRow');
-
-          var limitIndex = eval(lastIndex + "+1");
-
-            /*if (limitIndex >= 6)
-            {
-              alert("Product display limit exceeded!!");
-              $(".addRowButton").hide();
-              return false;
-            }*/
-
-          var newRowHtml =
-              '<tr count="' + limitIndex + '" class="lastRow">' +
-              '  <td>' +                                            
-              '    <input type="text" name="products[' + nextIndex + ']" />' +
-              '  </td>' +
-              '<td>' +
-              '<input type="text" class = "rank" name="ranks['+ nextIndex + ']" />' +
-              '</td>' +
-              '</tr>';
-
-          $('#featureTable').append(newRowHtml);
-
-          nextIndex = eval(nextIndex + "+1");
-
-          return false;
-        });
-      });
-    </script>
-
-
-  </s:layout-component>
-
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit Selected Category Heading Products">
   <s:layout-component name="content">
     <h2>${ha.heading.name}</h2>
     <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
-          <tr><th>ID</th><th>Sorting</th></tr>
-          <c:forEach var="headingProduct" items="${ha.headingProducts}" varStatus="ctr">
-
+          <tr><th>ID</th><th>Product</th><th>Sorting</th></tr>       
+        <c:forEach var="headingProduct" items="${ha.headingProducts}" varStatus="ctr">
           <tr count="${ctr.index}" class="${ctr.last ? 'lastRow':''}">
-            <td>
-                 <label>${headingProduct.product.id}</label>
+              <s:hidden name="products[${ctr.index}]" value="${headingProduct.product.id}"/>
+              <td>
+                 ${headingProduct.product.id}
             </td>
               <td>
-                  <label>${headingProduct.rank}</label>
+                 <label>${headingProduct.product.name}</label>
+            </td>
+              <td>
+                  <input type="text" class="rank" name="ranks[${ctr.index}]" value="${headingProduct.rank}"/>
               </td>
           </tr>
         </c:forEach>
@@ -68,14 +27,9 @@
       </table>
       <br/>
 
-      <div style="font-weight:bold; font-size:150%">
-        <a href="#" class="addRowButton">Add new product</a>
-      </div>
-      <br/><br/>
+      <s:submit name="saveSelectedPrimaryCategoryHeadingProducts" id="save" value="Save"/>
 
-      <s:submit name="savePrimaryCategoryHeadingProducts" id="add" value="ADD"/>
-
-      <c:choose>
+         <c:choose>
         <c:when test="${ha.heading.category.name != 'home'}">
           <s:link beanclass="com.hk.web.action.core.catalog.category.CategoryAction" event="pre">
             <div align="right" style="font-weight:bold; font-size:150%">BACK</div>
@@ -94,7 +48,7 @@
     </s:form>
       <script type="text/javascript">
           $(document).ready(function(){
-             $("#add").click(function(){
+             $("#save").click(function(){
                  var bool = true;
                 $(".rank").each(function(){
                     var data = $(this).val();

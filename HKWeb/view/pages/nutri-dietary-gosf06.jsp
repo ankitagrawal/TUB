@@ -83,8 +83,8 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1131' productDesc='Meant to enhance intestinal and colon health, it is suitable for people suffering from constipation and intestinal troubles.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1025' productDesc='Herbal tonic which increases  nutrition absorption by the body, strengthening the skeletal system.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1011' productDesc='Excellent for maintaining nitrogen balance in body.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1074' productDesc='Made from feverfew flower extract, it is rich in parthenolides and is an essential addition to your medicine kit  '/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT540' productDesc='Antiseptic Australian Tea Tree Extract. Protects and helps maintain a healthy scalp. '/>						
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1074' productDesc='Made from feverfew flower extract, it is rich in parthenolides and is an essential addition to your medicine kit'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT540' productDesc='Antiseptic Australian Tea Tree Extract. Protects and helps maintain a healthy scalp.'/>						
      	</div>
 
         <div class="cl"></div>

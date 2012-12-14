@@ -81,8 +81,7 @@
 	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1283' productDesc='It contains multivitamins that promote improved health in women. Also boosts energy and exercise recovery.'/>
 	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1314' productDesc='A fat burner that helps burn calories and supports increased metabolism before and after exercise.'/>
 	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT658' productDesc='Packed with essential vitamins and minerals that promote a healthy heart, immune system, eye, bone and nervous system.'/>
-	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1252' productDesc='These Vegetarian capsules promote a healthy brain, heart and eyes.'/>
-	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUTCMB121' productDesc='Enriched with essential vitamins and minerals to ensure complete growth of children, both physically and mentally.'/>
+	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1252' productDesc='These Vegetarian capsules promote a healthy brain, heart and eyes.'/>	        
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1253' productDesc='These vegetarian capsules help promote a balanced cholesterol and triglyceride level and have virtually no side effects.'/>			
         </div>
         <div class="cl"></div>
