@@ -55,6 +55,34 @@
     <jsp:include page="/categoryBanners/eyeCallback.jsp"/>
   </c:if>
 
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'treadmills')}">
+   <jsp:include page="/categoryBanners/treadmillsCallback.jsp"/>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'crosstrainers')}">
+   <jsp:include page="/categoryBanners/crosstrainersCallback.jsp"/>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'exercise-bike')}">
+   <jsp:include page="/categoryBanners/exerciseBikeCallback.jsp"/>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'rowers')}">
+   <jsp:include page="/categoryBanners/rowersCallback.jsp"/>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'home-gym')}">
+   <jsp:include page="/categoryBanners/homeGymCallback.jsp"/>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'bench-equipments')}">
+   <jsp:include page="/categoryBanners/benchEquipmentsCallback.jsp"/>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'heart-rate-monitors')}">
+   <jsp:include page="/categoryBanners/heartRateMonitorsCallback.jsp"/>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'miscellaneous-equipments')}">
+   <jsp:include page="/categoryBanners/miscellaneousEquipmentsCallback.jsp"/>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'tt-tables')}">
+   <jsp:include page="/categoryBanners/ttTablesCallback.jsp"/>
+  </c:if>
+
  <%--  <c:if test="${hk:collectionContains(topCategoryNameList, 'nutrition')}">
     <jsp:include page="/categoryBanners/nutriTenDiscount.jsp"/>
     <jsp:include page="/categoryBanners/nutriCallback.jsp"/>
