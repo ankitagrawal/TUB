@@ -26,6 +26,7 @@
     </s:form>
 
     <div class="offerAndBrands">
+      <div style="float:left"><s:link href='/resources'>HealthMag&nbsp;</s:link></div><div style="float:left; margin-right: 15px;"><s:link href='/resources'><img src="<hk:vhostImage/>/images/resources_16.png"></s:link></div>
       <div style="float:left"><s:link href='/brands'>Brands&nbsp;</s:link></div><div style="float:left; margin-right: 15px;"><s:link href='/brands'><img src="<hk:vhostImage/>/images/brand_16.png"></s:link></div>
       <div style="float:left"><s:link href='/super-savers' style="color: #990000;">Offers&nbsp;</s:link></div><div style="float:left"><s:link href='/super-savers'><img src="<hk:vhostImage/>/images/offer_16.png"></s:link></div>
     </div>
