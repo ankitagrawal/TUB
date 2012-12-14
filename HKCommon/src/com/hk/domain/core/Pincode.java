@@ -53,7 +53,7 @@ public class Pincode implements java.io.Serializable {
     private String locality;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "zone_id", nullable = true)
+	@JoinColumn(name = "zone_id", nullable = false)
 	private Zone zone;
 
     @ManyToOne(fetch = FetchType.LAZY)
