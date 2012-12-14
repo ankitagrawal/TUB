@@ -106,6 +106,9 @@ public class CreateEditComboAction extends BaseAction {
                 if (comboProductAndAllowedVariantsDto.getQty() == null) {
                     addValidationError("Combo product qty cannot be empty", new SimpleError("Combo product qty cannot be empty"));
                 }
+              if(comboProductAndAllowedVariantsDto.getAllowedVariants()==null || comboProductAndAllowedVariantsDto.getAllowedVariants().trim().length()==0){
+                addValidationError("Combo product allowed variants can't be empty, please enter atleast one allowed variant", new SimpleError("Combo product allowed variants can't be empty, please enter atleast one allowed variant"));
+              }
             }
         }
     }

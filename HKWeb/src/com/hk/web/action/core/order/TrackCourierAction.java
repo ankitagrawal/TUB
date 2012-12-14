@@ -123,9 +123,9 @@ public class TrackCourierAction extends BaseAction {
                     logger.debug("Exception occurred in TrackCourierAction");
                 }
                 if (ele != null) {
-                    String responseStatus = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
-                    if (!responseStatus.equals(CourierConstants.DELHIVERY_ERROR_MSG)) {
-                        status = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
+                    String responseStatus = ele.getChildText(CourierConstants.BLUEDART_STATUS);
+                    if (!responseStatus.equals(CourierConstants.BLUEDART_ERROR_MSG)) {
+                        status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {

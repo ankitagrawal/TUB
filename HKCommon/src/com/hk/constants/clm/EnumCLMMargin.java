@@ -13,7 +13,7 @@ public enum EnumCLMMargin {
     Diabetes(CategoryConstants.DIABETES,7.36),
     Beauty(CategoryConstants.BEAUTY,1.99),
     Parenting(CategoryConstants.BABY,1.99),
-    HomeDevices(CategoryConstants.HOME_DEVICES,1.23),
+    HomeDevices(CategoryConstants.HEALTH_DEVICES,1.23),
     Sports(CategoryConstants.SPORTS,0.93),
     Eye(CategoryConstants.EYE,1.00),
     PersonalCare(CategoryConstants.PERSONAL_CARE,3.36 ),
