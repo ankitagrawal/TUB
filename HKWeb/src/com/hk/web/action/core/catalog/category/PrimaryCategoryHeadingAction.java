@@ -1,29 +1,30 @@
 package com.hk.web.action.core.catalog.category;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.controller.StripesFilter;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
-import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.domain.content.HeadingProduct;
+import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.web.action.HomeAction;
 import com.hk.web.filter.WebContext;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.controller.StripesFilter;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 @Component
 public class PrimaryCategoryHeadingAction extends BaseAction {
