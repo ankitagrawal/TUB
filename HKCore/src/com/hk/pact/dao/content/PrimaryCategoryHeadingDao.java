@@ -16,4 +16,6 @@ public interface PrimaryCategoryHeadingDao extends BaseDao {
 
     public List<PrimaryCategoryHeading> getHeadingsOrderedByRankingByCategory(Category category);
 
+    public PrimaryCategoryHeading getHeadingById(Long headingId);
+
 }
