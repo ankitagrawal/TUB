@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -31,9 +32,13 @@ public class UnsubscribeEmailAction extends BaseAction {
   public Resolution pre() {
       boolean success = false;
       try{
-          ClientRequest cr = new ClientRequest("hkEmailApiUrl" + "/unsubscribe/");
-          String result = cr.get(String.class).getEntity();
-          success = Boolean.parseBoolean(result);
+          ClientRequest cr = new ClientRequest(hkEmailApiUrl + "/unsubscribe?unsubscribeToken=" + getContext().getRequest().getParameter("unsubscribeToken"));
+          ClientResponse clientResponse = cr.post();
+          if(clientResponse.getStatus() != 200){
+              success = false;
+          }else{
+              success = true;
+          }
       }catch (Exception ex){
           success = false;
       }
