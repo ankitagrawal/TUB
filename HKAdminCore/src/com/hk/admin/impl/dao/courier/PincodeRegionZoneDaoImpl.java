@@ -66,12 +66,36 @@ public class PincodeRegionZoneDaoImpl extends BaseDaoImpl implements PincodeRegi
 
     }
 
-    public PincodeRegionZone getPincodeRegionZone(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse) {
-        Criteria pincodeRegionZoneCriteria = getSession().createCriteria(PincodeRegionZone.class);
-        pincodeRegionZoneCriteria.add(Restrictions.eq("pincode", pincode));
-        pincodeRegionZoneCriteria.add(Restrictions.eq("courierGroup", courierGroup));
-        pincodeRegionZoneCriteria.add(Restrictions.eq("warehouse", warehouse));
-        return (PincodeRegionZone) pincodeRegionZoneCriteria.uniqueResult();
-    }
+	public PincodeRegionZone getPincodeRegionZone(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse) {
+		Criteria pincodeRegionZoneCriteria = getPincodeRegionZoneCriteria(courierGroup, pincode, warehouse);
+		return (PincodeRegionZone) pincodeRegionZoneCriteria.uniqueResult();
+	}
+
+	public Criteria getPincodeRegionZoneCriteria(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse) {
+		Criteria pincodeRegionZoneCriteria = getSession().createCriteria(PincodeRegionZone.class);
+		if (pincode != null) {
+			pincodeRegionZoneCriteria.add(Restrictions.eq("pincode", pincode));
+		}
+		if (courierGroup != null) {
+			pincodeRegionZoneCriteria.add(Restrictions.eq("courierGroup", courierGroup));
+		}
+		if (warehouse != null) {
+			pincodeRegionZoneCriteria.add(Restrictions.eq("warehouse", warehouse));
+		}
+		return pincodeRegionZoneCriteria;
+	}
+
+	public List<PincodeRegionZone> getPincodeRegionZoneList(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse) {
+		Criteria pincodeRegionZoneCriteria = getPincodeRegionZoneCriteria(courierGroup, pincode, warehouse);
+		return (List<PincodeRegionZone>) pincodeRegionZoneCriteria.list();
+	}
+
+	public List<PincodeRegionZone> getPincodeNotInPincodeRegionZone() {
+		Criteria pincodeCriteria = getSession().createCriteria(Pincode.class);
+		List<Pincode> pincodeList = pincodeCriteria.list();
+		Criteria pincodeRegionZoneCriteria = getSession().createCriteria(PincodeRegionZone.class);
+		pincodeRegionZoneCriteria.add(Restrictions.not(Restrictions.in("pincode",pincodeList)));
+
+	}
 
 }

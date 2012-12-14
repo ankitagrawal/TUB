@@ -44,6 +44,7 @@
 					</s:form>
 			</ul>
           </fieldset>
+		<div style="display:inline-block;">
        <fieldset style="float:left;">
          <legend>Add Pincode Or Edit Picode Details</legend>
 			<table>
@@ -87,7 +88,7 @@
 					</tr>
 					<tr>
 						<td>
-							<label>Zone:<label>
+							<label>Zone:</label>
 								</td>
 						<td>
 								<s:select name="pincode.zone">
@@ -124,7 +125,15 @@
 				</c:forEach>
 			</table>
           </fieldset>
-
-
+		</div>
+		<div>
+			<fieldset style="display:inline-block;width:250px; padding:7px;">
+			<legend>Click Link To Add PRZ</legend>
+			 <span style="font:bold;color:darkolivegreen;"><s:link
+					 beanclass="com.hk.web.action.admin.courier.MasterPincodeAction" event="directToPincodeRegion">
+				 Add Pincode Region Zone
+			 </s:link></span>
+			</fieldset>
+		</div>
 	</s:layout-component>
 </s:layout-render>

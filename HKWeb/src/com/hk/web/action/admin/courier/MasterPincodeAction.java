@@ -29,185 +29,258 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.RegionType;
+import com.hk.domain.courier.CourierGroup;
+import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.util.XslGenerator;
 
-@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS })
+@Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
 @Component
 public class MasterPincodeAction extends BaseAction {
-    @Autowired
-    PincodeDao                       pincodeDao;
-    @Autowired
-    CourierServiceInfoDao            courierServiceInfoDao;
-    @Autowired
-    CourierService                   courierService;
-    @Autowired
-    XslGenerator                     xslGenerator;
+	@Autowired
+	PincodeDao pincodeDao;
+	@Autowired
+	CourierServiceInfoDao courierServiceInfoDao;
+	@Autowired
+	CourierService courierService;
+	@Autowired
+	XslGenerator xslGenerator;
+	@Autowired
+	PincodeRegionZoneDao pincodeRegionZoneDao;
+	@Autowired
+	PincodeService pincodeService;
 
-    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String                           adminDownloadsPath;
+	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+	String adminDownloadsPath;
 
-    // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String                           adminUploadsPath;
+	// @Named(Keys.Env.adminUploads)
+	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+	String adminUploadsPath;
 
-    @Autowired
-    XslParser                        xslParser;
+	@Autowired
+	XslParser xslParser;
 
-    FileBean                         fileBean;
+	FileBean fileBean;
 
-    private static Logger            logger             = LoggerFactory.getLogger(MasterPincodeAction.class);
-    private Long                     pincodesInSystem   = 0L;
-    private String                   pincodeString;
-    private Pincode                  pincode;
-    private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
+	private static Logger logger = LoggerFactory.getLogger(MasterPincodeAction.class);
+	private Long pincodesInSystem = 0L;
+	private String pincodeString;
+	private Pincode pincode;
+	private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
+	private PincodeRegionZone pincodeRegionZone;
+	private List<PincodeRegionZone> pincodeRegionZoneList = null;
 
-    @DefaultHandler
-    public Resolution pre() {
-        try {
-            pincodesInSystem = Long.valueOf(pincodeDao.getAll(Pincode.class).size());
-        } catch (Exception e) {
-            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
-        }
-        return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
-    }
 
-    public Resolution search() {
-        try {
-            pincode = pincodeDao.getByPincode(pincodeString);
-            if (pincode != null) {
-                courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false,null);
-                return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
-            }
-            // return new RedirectResolution(MasterPincodeAction.class).addParameter("pincode", pincode.getId());
-        } catch (Exception e) {
-            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
-        }
-        addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
-        return new RedirectResolution(MasterPincodeAction.class);
-    }
+	@DefaultHandler
+	public Resolution pre() {
+		try {
+			pincodesInSystem = Long.valueOf(pincodeDao.getAll(Pincode.class).size());
+		} catch (Exception e) {
+			e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+		}
+		return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
+	}
 
-    public Resolution save() {
-        if (pincode == null || StringUtils.isBlank(pincode.getPincode()) || pincode.getCity() == null ||pincode.getState() == null
-                || pincode.getPincode().length() < 6 || (!StringUtils.isNumeric(pincode.getPincode()))) {
-            addRedirectAlertMessage(new SimpleMessage("Enter values correctly."));
-            return new RedirectResolution(MasterPincodeAction.class);
-        }
-        Pincode pincodeByCode = pincodeDao.getByPincode(pincode.getPincode());
-        if (pincodeByCode != null && pincode.getId() == null) {
-            pincodeByCode.setLocality(pincode.getLocality());
-            pincodeByCode.setCity(pincode.getCity());
-            pincodeByCode.setState(pincode.getState());
-            pincodeByCode.setRegion(pincode.getRegion());
-            pincodeByCode.setDefaultCourier(pincode.getDefaultCourier());
-            pincodeDao.save(pincodeByCode);
-        } else {
-            pincodeDao.save(pincode);
-        }
-        addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
-        return new RedirectResolution(CourierServiceInfoAction.class).addParameter("pincode", pincode.getPincode());
-    }
+	public Resolution search() {
+		try {
+			pincode = pincodeDao.getByPincode(pincodeString);
+			if (pincode != null) {
+				courierServiceList = courierService.getCourierServiceInfoList(null, pincodeString, false, false, false, null);
+				return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
+			}
+			// return new RedirectResolution(MasterPincodeAction.class).addParameter("pincode", pincode.getId());
+		} catch (Exception e) {
+			e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+		}
+		addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
+		return new RedirectResolution(MasterPincodeAction.class);
+	}
 
-    public Resolution generatePincodeExcel() throws Exception {
-        List<Pincode> pincodeList = new ArrayList<Pincode>();
+	public Resolution save() {
+		if (pincode == null || StringUtils.isBlank(pincode.getPincode()) || pincode.getCity() == null || pincode.getState() == null
+				|| pincode.getPincode().length() < 6 || (!StringUtils.isNumeric(pincode.getPincode()))) {
+			addRedirectAlertMessage(new SimpleMessage("Enter values correctly."));
+			return new RedirectResolution(MasterPincodeAction.class);
+		}
+		Pincode pincodeByCode = pincodeDao.getByPincode(pincode.getPincode());
+		if (pincodeByCode != null && pincode.getId() == null) {
+			pincodeByCode.setLocality(pincode.getLocality());
+			pincodeByCode.setCity(pincode.getCity());
+			pincodeByCode.setState(pincode.getState());
+			pincodeByCode.setRegion(pincode.getRegion());
+			pincodeByCode.setDefaultCourier(pincode.getDefaultCourier());
+			pincodeDao.save(pincodeByCode);
+		} else {
+			pincodeDao.save(pincode);
+		}
+		addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
+		return new RedirectResolution(CourierServiceInfoAction.class).addParameter("pincode", pincode.getPincode());
+	}
 
-        pincodeList = pincodeDao.getAll(Pincode.class);
+	public Resolution generatePincodeExcel() throws Exception {
+		List<Pincode> pincodeList = new ArrayList<Pincode>();
 
-        String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodes" + System.currentTimeMillis() + ".xls";
-        final File excelFile = new File(excelFilePath);
+		pincodeList = pincodeDao.getAll(Pincode.class);
 
-        xslGenerator.generatePincodeXsl(pincodeList, excelFilePath);
-        addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
-        return new Resolution() {
+		String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodes" + System.currentTimeMillis() + ".xls";
+		final File excelFile = new File(excelFilePath);
 
-            public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-                OutputStream out = null;
-                InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
-                res.setContentLength((int) excelFile.length());
-                res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
-                out = res.getOutputStream();
+		xslGenerator.generatePincodeXsl(pincodeList, excelFilePath);
+		addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
+		return new Resolution() {
 
-                // Copy the contents of the file to the output stream
-                byte[] buf = new byte[4096];
-                int count = 0;
-                while ((count = in.read(buf)) >= 0) {
-                    out.write(buf, 0, count);
-                }
-            }
-        };
-    }
+			public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+				OutputStream out = null;
+				InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
+				res.setContentLength((int) excelFile.length());
+				res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
+				out = res.getOutputStream();
+
+				// Copy the contents of the file to the output stream
+				byte[] buf = new byte[4096];
+				int count = 0;
+				while ((count = in.read(buf)) >= 0) {
+					out.write(buf, 0, count);
+				}
+			}
+		};
+	}
 
 	public Resolution uploadPincodeExcel() throws Exception {
 		if (fileBean == null) {
 			addRedirectAlertMessage(new SimpleMessage("Choose File to Upload "));
 			return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
 		}
-        String excelFilePath = adminUploadsPath + "/pincodeExcelFiles/pincodes" + System.currentTimeMillis() + ".xls";
-        File excelFile = new File(excelFilePath);
-        excelFile.getParentFile().mkdirs();
-        fileBean.save(excelFile);
+		String excelFilePath = adminUploadsPath + "/pincodeExcelFiles/pincodes" + System.currentTimeMillis() + ".xls";
+		File excelFile = new File(excelFilePath);
+		excelFile.getParentFile().mkdirs();
+		fileBean.save(excelFile);
 
-        try {
-            Set<Pincode> pincodeSet = xslParser.readPincodeList(excelFile);
-            for (Pincode pincode : pincodeSet) {
-                if (pincode != null)
-                    pincodeDao.save(pincode);
-                logger.info("inserting or updating:" + pincode.getPincode());
-            }
-        } catch (Exception e) {
-            logger.error("Exception while reading excel sheet.", e);
-            addRedirectAlertMessage(new SimpleMessage("Upload failed " + e.getMessage()));
-            return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
-        }
+		try {
+			Set<Pincode> pincodeSet = xslParser.readPincodeList(excelFile);
+			for (Pincode pincode : pincodeSet) {
+				if (pincode != null)
+					pincodeDao.save(pincode);
+				logger.info("inserting or updating:" + pincode.getPincode());
+			}
+		} catch (Exception e) {
+			logger.error("Exception while reading excel sheet.", e);
+			addRedirectAlertMessage(new SimpleMessage("Upload failed " + e.getMessage()));
+			return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
+		}
 
-        excelFile.delete();
-        addRedirectAlertMessage(new SimpleMessage("Database Updated"));
-        return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
-    }
+		excelFile.delete();
+		addRedirectAlertMessage(new SimpleMessage("Database Updated"));
+		return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
+	}
 
-    public Long getPincodesInSystem() {
-        return pincodesInSystem;
-    }
+	public Resolution directToPincodeRegion() {
+		return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
+	}
 
-    public String getPincodeString() {
-        return pincodeString;
-    }
+	public Resolution savePincodeRegion() {
+		Pincode pincodeObj = pincodeService.getByPincode(pincodeRegionZone.getPincode().getPincode());
+		if (pincodeObj == null) {
+			addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
+		} else {
+			try {
+				PincodeRegionZone pincodeRegionZoneDb = pincodeRegionZoneDao.getPincodeRegionZone(pincodeRegionZone.getCourierGroup(),pincodeObj, pincodeRegionZone.getWarehouse());
+				if (pincodeRegionZoneDb != null) {
+					pincodeRegionZoneDb.setRegionType(pincodeRegionZone.getRegionType());
+				} else {
+					pincodeRegionZone.setPincode(pincodeObj);
+					pincodeRegionZoneDb = pincodeRegionZone;
+				}
+				pincodeRegionZoneDao.save(pincodeRegionZoneDb);
+			} catch (Exception ex) {
+				addRedirectAlertMessage(new SimpleMessage("EXCEPTION IN SAVING" + ex.getMessage()));
+				return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+			}
+			addRedirectAlertMessage(new SimpleMessage("Pincode region saved"));
+		}
+		return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
+	}
 
-    public void setPincodeString(String pincodeString) {
-        this.pincodeString = pincodeString;
-    }
+	public Resolution searchPincodeRegion() {
+		Pincode pincode = pincodeService.getByPincode(pincodeRegionZone.getPincode().getPincode());
+		if (pincode == null) {
+			addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
+		} else {
+			pincodeRegionZoneList = pincodeRegionZoneDao.getPincodeRegionZoneList(pincodeRegionZone.getCourierGroup(), pincode, pincodeRegionZone.getWarehouse());
+			if (pincodeRegionZoneList == null) {
+				addRedirectAlertMessage(new SimpleMessage("Pincode Region zone does not exist for Pincode"));
+			}
+		}
+		return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+	}
 
-    public Pincode getPincode() {
-        return pincode;
-    }
+	public Resolution showRemainingPrz(){
 
-    public void setPincode(Pincode pincode) {
-        this.pincode = pincode;
-    }
 
-    public List<CourierServiceInfo> getCourierServiceList() {
-        return courierServiceList;
-    }
+	}
 
-    public FileBean getFileBean() {
-        return fileBean;
-    }
+	public Long getPincodesInSystem() {
+		return pincodesInSystem;
+	}
 
-    public void setFileBean(FileBean fileBean) {
-        this.fileBean = fileBean;
-    }
+	public String getPincodeString() {
+		return pincodeString;
+	}
 
-    public CourierService getCourierService() {
-        return courierService;
-    }
+	public void setPincodeString(String pincodeString) {
+		this.pincodeString = pincodeString;
+	}
 
-    public void setCourierService(CourierService courierService) {
-        this.courierService = courierService;
-    }
+	public Pincode getPincode() {
+		return pincode;
+	}
+
+	public void setPincode(Pincode pincode) {
+		this.pincode = pincode;
+	}
+
+	public List<CourierServiceInfo> getCourierServiceList() {
+		return courierServiceList;
+	}
+
+	public FileBean getFileBean() {
+		return fileBean;
+	}
+
+	public void setFileBean(FileBean fileBean) {
+		this.fileBean = fileBean;
+	}
+
+	public CourierService getCourierService() {
+		return courierService;
+	}
+
+	public void setCourierService(CourierService courierService) {
+		this.courierService = courierService;
+	}
+
+	public PincodeRegionZone getPincodeRegionZone() {
+		return pincodeRegionZone;
+	}
+
+	public void setPincodeRegionZone(PincodeRegionZone pincodeRegionZone) {
+		this.pincodeRegionZone = pincodeRegionZone;
+	}
+
+	public List<PincodeRegionZone> getPincodeRegionZoneList() {
+		return pincodeRegionZoneList;
+	}
+
+	public void setPincodeRegionZoneList(List<PincodeRegionZone> pincodeRegionZoneList) {
+		this.pincodeRegionZoneList = pincodeRegionZoneList;
+	}
 }
