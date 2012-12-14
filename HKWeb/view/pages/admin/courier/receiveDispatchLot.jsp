@@ -104,16 +104,51 @@
     <s:layout-component name="content">
         <div class="hkDeliveryBox">
             <s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
+	            <fieldset class="top_label">
+	            			<legend>Details</legend>
+	            			<table>
+	            				<tr>
+						            <td><label><strong>Dispatch Lot # </strong></label></td>
+						            <td>${dispatchLotBean.dispatchLot.id}</td>
+	            					<td><label><strong>Docket Number</strong></label></td>
+	            					<td>${dispatchLotBean.dispatchLot.docketNumber}</td>
+
+	            					<td><label><strong>Courier</strong></label></td>
+	            					<td>${dispatchLotBean.dispatchLot.courier.name}</td>
+
+	            					<td><label><strong>Zone</strong></label></td>
+	            					<td>${dispatchLotBean.dispatchLot.zone.name}</td>
+
+	            					<td><label><strong>No. Of Shipments Sent</strong></label></td>
+	            					<td>${dispatchLotBean.dispatchLot.noOfShipmentsSent}</td>
+	            				</tr>
+
+	            				<tr>
+	            					<td><label><strong>Source</strong></label></td>
+	            					<td>${dispatchLotBean.dispatchLot.source}</td>
+
+	            					<td><label><strong>Destination</strong></label></td>
+	            					<td>${dispatchLotBean.dispatchLot.destination}</td>
+
+	            					<td><label><strong>No. of mother bags</strong></label></td>
+	            					<td>${dispatchLotBean.dispatchLot.noOfMotherBags}</td>
+
+	            					<td><label><strong>No. Of Shipments Received</strong></label></td>
+	            					<td>${dispatchLotBean.dispatchLot.noOfShipmentsReceived}</td>
+	            				</tr>
+	            			</table>
+	            		</fieldset>
+
                 <fieldset class="right_label">
                     <legend>Receive Shipments: </legend>
                     <ul>
-
-                        <li>
+	                    <s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}" />
+                        <%--<li>
                             <label style="font-size:medium;">Dispatch Lot Id :</label>
                             ${dispatchLotBean.dispatchLot.id}
 	                        <s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}" />
                         </li>
-                        <br>
+                        <br>--%>
                         <li>
                             <table border="1">
                                 <thead>
