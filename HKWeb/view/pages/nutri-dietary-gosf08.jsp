@@ -64,6 +64,8 @@
 
 
             <span class="pages_link">8</span>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
+            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">Next →</a>
 
 
          </div>
@@ -109,6 +111,8 @@
 
 
             <span class="pages_link">8</span>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
+            <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">Next →</a>
 
 
          </div>
