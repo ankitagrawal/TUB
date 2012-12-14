@@ -1,6 +1,7 @@
 package com.hk.impl.dao.courier;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.hk.domain.courier.Zone;
 import org.hibernate.Criteria;
@@ -11,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.PincodeDefaultCourier;
+import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.courier.PincodeDao;
@@ -62,5 +64,16 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
 			return zone.get(0);
 		} else
 			return null;
+	}
+
+	public List<Pincode> getPincodeNotInPincodeRegionZone() {
+		String hqlQuery = "from Pincode p  where p not in (select pincode from PincodeRegionZone ) ";
+		List<Pincode> pincodeList = getSession().createQuery(hqlQuery).list();
+		Integer totalGroupCount = getSession().createQuery("from CourierGroup ").list().size();
+		String query = "select distinct(prz.pincode) from PincodeRegionZone prz join prz.courierGroup cg group by prz.warehouse " +
+				" , prz.pincode having count(prz.courierGroup) < :totalGroupCount";
+		List<Pincode> incompletePincodeList = getSession().createQuery(query).setParameter("totalGroupCount", totalGroupCount.longValue()).list();
+		pincodeList.addAll(incompletePincodeList);
+		return pincodeList;
 	}
 }

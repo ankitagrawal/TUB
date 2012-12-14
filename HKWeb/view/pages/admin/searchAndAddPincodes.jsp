@@ -130,7 +130,7 @@
 			<fieldset style="display:inline-block;width:250px; padding:7px;">
 			<legend>Click Link To Add PRZ</legend>
 			 <span style="font:bold;color:darkolivegreen;"><s:link
-					 beanclass="com.hk.web.action.admin.courier.MasterPincodeAction" event="directToPincodeRegion">
+					 beanclass="com.hk.web.action.admin.courier.MasterPincodeAction" event="directToPincodeRegionZone">
 				 Add Pincode Region Zone
 			 </s:link></span>
 			</fieldset>

@@ -78,6 +78,7 @@ public class MasterPincodeAction extends BaseAction {
 	private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
 	private PincodeRegionZone pincodeRegionZone;
 	private List<PincodeRegionZone> pincodeRegionZoneList = null;
+	private List<Pincode> pincodeList ;
 
 
 	@DefaultHandler
@@ -183,7 +184,7 @@ public class MasterPincodeAction extends BaseAction {
 		return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
 	}
 
-	public Resolution directToPincodeRegion() {
+	public Resolution directToPincodeRegionZone() {
 		return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
 	}
 
@@ -223,9 +224,9 @@ public class MasterPincodeAction extends BaseAction {
 		return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
 	}
 
-	public Resolution showRemainingPrz(){
-
-
+	public Resolution showRemainingPrz() {
+		pincodeList = pincodeService.getPincodeNotInPincodeRegionZone();
+		return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
 	}
 
 	public Long getPincodesInSystem() {
@@ -282,5 +283,9 @@ public class MasterPincodeAction extends BaseAction {
 
 	public void setPincodeRegionZoneList(List<PincodeRegionZone> pincodeRegionZoneList) {
 		this.pincodeRegionZoneList = pincodeRegionZoneList;
+	}
+
+	public List<Pincode> getPincodeList() {
+		return pincodeList;
 	}
 }

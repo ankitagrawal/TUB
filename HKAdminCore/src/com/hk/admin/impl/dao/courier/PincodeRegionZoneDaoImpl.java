@@ -90,12 +90,6 @@ public class PincodeRegionZoneDaoImpl extends BaseDaoImpl implements PincodeRegi
 		return (List<PincodeRegionZone>) pincodeRegionZoneCriteria.list();
 	}
 
-	public List<PincodeRegionZone> getPincodeNotInPincodeRegionZone() {
-		Criteria pincodeCriteria = getSession().createCriteria(Pincode.class);
-		List<Pincode> pincodeList = pincodeCriteria.list();
-		Criteria pincodeRegionZoneCriteria = getSession().createCriteria(PincodeRegionZone.class);
-		pincodeRegionZoneCriteria.add(Restrictions.not(Restrictions.in("pincode",pincodeList)));
-
-	}
+	
 
 }

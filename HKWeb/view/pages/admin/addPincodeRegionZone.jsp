@@ -35,9 +35,8 @@
 			<div style=" float:left;display:inline-block; %">
 				<fieldset>
 					<legend>Add Pincode Region</legend>
-					<s:form id="regionform" beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
-						<s:hidden name="pincodeRegionZone" value="${mpa.pincodeRegionZone.id}"/>						
-						<table align="center" >
+					<s:form id="regionform" beanclass="com.hk.web.action.admin.courier.MasterPincodeAction"> 						
+						<table align="center">
 							<tr>
 								<td><label>Pincode</label></td>
 								<td><s:text name="pincodeRegionZone.pincode.pincode" id="pin"/></td>
@@ -75,9 +74,9 @@
 							</tr>
 
 						</table>
-						   <div>
-								<s:submit id="submit" name="savePincodeRegion" value="Save"/>
-						     </div>
+						<div>
+							<s:submit id="submit" name="savePincodeRegion" value="Save"/>
+						</div>
 					</s:form>
 				</fieldset>
 			</div>
@@ -104,12 +103,25 @@
 				</table>
 
 			</div>
-		 <div style="display:inline-block;">
-			 <s:link beanclass="com.hk.web.action.admin.courier.MasterPincodeAction" event="showRemainingPrz">
-				Remaining Pincode Region
-			 </s:link>
-
-		 </div >
+			<div style=""></div>
+			<div style="display:inline-block; float:right;padding-right:40px;">
+				<span style="font:bold;color:darkolivegreen;"><s:link
+						beanclass="com.hk.web.action.admin.courier.MasterPincodeAction" event="showRemainingPrz">
+					Remaining Pincode Region
+				</s:link> </span>
+				<c:forEach items="${mpa.pincodeList}" var="pinc" varStatus="ctr">
+				<table align="center" class="cont">
+					<thead>
+					<tr>
+						<th>Pincode</th>
+					</tr>
+					</thead>
+					<tr>
+						<td>${pinc.pincode}</td>
+					</tr>
+					</c:forEach>
+				</table>
+			</div>
 
 		</div>
 	</s:layout-component>
