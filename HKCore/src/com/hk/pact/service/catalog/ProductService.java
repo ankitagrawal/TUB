@@ -86,8 +86,6 @@ public interface ProductService {
 
     public ProductOption findProductOptionByNameAndValue(String name, String value);
 
-    public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer);
-
     public boolean isComboInStock(Combo combo);
 
     public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage);

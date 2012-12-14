@@ -16,7 +16,7 @@ public interface AffiliateTxnDao extends BaseDao {
 
     public AffiliateTxn getTxnByOrder(Order order);
 
-    public AffiliateTxn saveTxn(Affiliate affiliate, Double amountToAdd, AffiliateTxnType affiliateTxnType, Order order);
+    public AffiliateTxn saveTxn(Affiliate affiliate, Double amountToAdd, AffiliateTxnType affiliateTxnType, Order order, Date chequeIssueDate);
 
     @SuppressWarnings("unchecked")
     public Page getReferredOrderListByAffiliate(Affiliate affiliate, Date startDate, Date endDate, int pageNo, int perPage);
@@ -29,7 +29,7 @@ public interface AffiliateTxnDao extends BaseDao {
 
 	void markAffiliateTxnAsDue(Affiliate affiliate);
 
-	void markDueAffiliateTxnAsPaid(Affiliate affiliate);
+	void markDueAffiliateTxnAsPaid(Affiliate affiliate, Date endDate);
 
 	Double getPayableAmount(Affiliate affiliate);
 }
