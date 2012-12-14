@@ -214,6 +214,14 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		return invalidOrders;
 	}
 
+	public DispatchLot cancelDispatchLot(DispatchLot dispatchLot) {
+		if(dispatchLot != null) {
+			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Cancelled.getDispatchLotStatus());
+			dispatchLot = (DispatchLot)getDispatchLotDao().save(dispatchLot);
+		}
+		return dispatchLot;
+	}
+
 	public List<DispatchLot> getDispatchLotsForShipment(Shipment shipment) {
 		return getDispatchLotDao().getDispatchLotsForShipment(shipment);
 	}

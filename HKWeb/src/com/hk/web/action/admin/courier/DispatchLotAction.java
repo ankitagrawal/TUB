@@ -169,6 +169,17 @@ public class DispatchLotAction extends BasePaginatedAction {
 		}
 		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList").addParameter("dispatchLot", dispatchLot.getId());
 	}
+
+	public Resolution cancelDispatchLot() {
+		if(dispatchLot != null) {
+			getDispatchLotService().cancelDispatchLot(dispatchLot);
+			addRedirectAlertMessage(new SimpleMessage("Dispatch Lot cancelled"));
+		} else {
+			addRedirectAlertMessage(new SimpleMessage("Incorrect Dispatch Lot"));
+		}
+		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
+	}
+
 	public int getPerPageDefault() {
 		return defaultPerPage;
 	}

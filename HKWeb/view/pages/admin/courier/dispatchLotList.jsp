@@ -9,6 +9,17 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 
 		<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#cancelDispatchId').click(function () {
+					if(!confirm("Are you sure, you want to cancel the Dispatch Lot")) {
+						return false;
+					}
+
+				});
+
+			});
+		</script>
 	</s:layout-component>
 	<s:layout-component name="heading">
 		Dispatch Lot List
@@ -20,7 +31,7 @@
 			<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
 			<label>Dispatch Lot Id:</label><s:text name="dispatchLot"/>
 			<label>Docket Number:</label><s:text name="docketNumber"/>
-			<label>Zone<label>
+			<label>Zone</label>
 				<s:select name="zone">
 				<s:option value="null">-All-</s:option>
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
@@ -97,6 +108,11 @@
 						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction">Edit/View
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
+						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="cancelDispatchLot"
+						        id="cancelDispatchId">Cancel Dispatch Lot
+							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
+						</s:link>
+
 					</td>
 				</tr>
 			</c:forEach>

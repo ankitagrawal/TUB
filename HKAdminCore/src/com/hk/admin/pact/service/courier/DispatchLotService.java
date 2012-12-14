@@ -37,4 +37,6 @@ public interface DispatchLotService {
 
 	public List<DispatchLotHasShipment> getDispatchLotHasShipmentListByDispatchLot(DispatchLot dispatchLot);
 
+	public DispatchLot cancelDispatchLot(DispatchLot dispatchLot);
+
 }
