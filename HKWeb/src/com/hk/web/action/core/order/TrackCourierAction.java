@@ -163,7 +163,7 @@ public class TrackCourierAction extends BaseAction {
 				  resolution = new ForwardResolution("/pages/courierDetails.jsp");
 				}
 				else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
 				break;
 
