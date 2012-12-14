@@ -7,7 +7,7 @@
 --/nutrition/sports-nutrition/post-workout : Post Workout
 --/nutrition/sports-nutrition/weight-gainer : Mass Gainer
 --/nutrition/sports-nutrition/glutamine
---/nutrition/sports-nutrition/protein-bars  : Protein Bars
+--/nutrition/sports-nutrition/Bars-Energy-Drinks  : Bars & Energy Drinks
 --/nutrition/sports-nutrition/fat-burner
 --/nutrition/sports-nutrition/more...   : Other Supplements
 --/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
