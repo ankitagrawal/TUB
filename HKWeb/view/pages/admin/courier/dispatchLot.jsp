@@ -1,8 +1,10 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.courier.EnumDispatchLotStatus" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add/Edit Dispatch Lot">
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.DispatchLotAction" var="dispatch"/>
+	<c:set var="dispatchLotGenerated" value="<%=EnumDispatchLotStatus.Generated.getId()%>"/>
 	<s:layout-component name="htmlHead">
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -108,11 +110,13 @@
 					<s:text name="dispatchLot.noOfShipmentsSent" style="width:200px" class="text" readonly="readonly"/>
 
 				<div class="clear"></div>
+				<c:if test="${dispatch.dispatchLot.id == null || dispatch.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated}">
 					<s:submit name="save" value="Save"/>
+				</c:if>
 
 		</div>
 
-		<c:if test="${dispatch.dispatchLot.id != null}">
+		<c:if test="${dispatch.dispatchLot.id != null && dispatch.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated}">
 			<div class="reportBox">
 					<fieldset class="right_label">
 						<legend>Update Shipment Details In Dispatch Lot</legend>

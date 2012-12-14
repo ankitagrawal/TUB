@@ -108,11 +108,12 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			List<DispatchLotHasShipment> dispatchLotHasShipmentList = new ArrayList<DispatchLotHasShipment>(0);
 
 			for(Shipment shipment : shipmentList) {
-				DispatchLotHasShipment dispatchLotHasShipment = getDispatchLotHasShipment(dispatchLot, shipment);
+				/*DispatchLotHasShipment dispatchLotHasShipment = getDispatchLotHasShipment(dispatchLot, shipment);
 
 				if(dispatchLotHasShipment == null) {
 					dispatchLotHasShipment = new DispatchLotHasShipment();
-				}
+				}*/
+				DispatchLotHasShipment dispatchLotHasShipment = new DispatchLotHasShipment();
 				dispatchLotHasShipment.setDispatchLot(dispatchLot);
 				dispatchLotHasShipment.setShipment(shipment);
 				dispatchLotHasShipment.setShipmentStatus(DispatchLotConstants.SHIPMENT_DISPATCHED);
