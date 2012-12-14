@@ -38,7 +38,7 @@
                     <fmt:formatNumber value="${checkDetails.affiliateTxn.amount}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>
                   </td>
                   <td>
-                    <fmt:formatNumber value="${checkDetails.affiliateTxn.amount - checkDetails.tds}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>
+                    <fmt:formatNumber value="${checkDetails.affiliateTxn.amount + checkDetails.tds}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>
                   </td>
                 </tr>
               </c:forEach>
