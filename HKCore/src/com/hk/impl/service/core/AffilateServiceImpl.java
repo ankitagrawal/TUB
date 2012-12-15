@@ -113,7 +113,7 @@ public class AffilateServiceImpl implements AffilateService {
 	    }else{
 		    affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.PENDING.getId());
 	    }
-        getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order, null);
+        getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
     }
 
     private void addAmountInAccountforLatterTransaction(User affiliateUser, Order order) {
@@ -135,7 +135,7 @@ public class AffilateServiceImpl implements AffilateService {
 	    }else{
 		    affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.PENDING.getId());
 	    }
-	    getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order, null);
+	    getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
     }
 
 	public void associateBrandToAffiliateCategory(AffiliateCategory affiliateCategory, String brand) {
