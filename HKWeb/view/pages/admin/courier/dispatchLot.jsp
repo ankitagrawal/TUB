@@ -1,6 +1,5 @@
-<%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.courier.EnumDispatchLotStatus" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add/Edit Dispatch Lot">
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.DispatchLotAction" var="dispatch"/>
@@ -40,101 +39,116 @@
 
 	<s:layout-component name="content">
 		<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
-		<div style="float: left; width:40%">
+			<div style="float: left; width: 70%">
 
-			<s:hidden name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
-			<fieldset class="top_label">
-				<legend> Enter Details</legend>
-				<s:label name="docketNumber" class="label">Docket Number</s:label>
-					<s:text name="dispatchLot.docketNumber" style="width:200px" class="text"/>
-				<span class="aster">*</span>
+				<s:hidden name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
+				<fieldset class="top_label">
+					<legend> Enter Details</legend>
+					<s:label name="docketNumber" class="label">Docket Number</s:label>
+						<s:text name="dispatchLot.docketNumber" style="width:200px" class="text"/>
+					<span class="aster">*</span>
 
-				<div class="clear"></div>
+					<div class="clear"></div>
 
-				<s:label name="courier" class="label">Courier</s:label>
-				<s:select name="dispatchLot.courier" class="text">
-				<s:option value="">-Select-</s:option>
-					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
-					                           value="id"
-					                           label="name"/>
-				</s:select>
-				<span class="aster">*</span>
+					<s:label name="courier" class="label">Courier</s:label>
+					<s:select name="dispatchLot.courier" class="text">
+					<s:option value="">-Select-</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
+						                           value="id"
+						                           label="name"/>
+					</s:select>
+					<span class="aster">*</span>
 
-				<div class="clear"></div>
+					<div class="clear"></div>
 
-				<s:label name="zone" class="label">Zone</s:label>
-				<s:select name="dispatchLot.zone" class="text">
-				<s:option value="">-Select-</s:option>
-					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
-					                           value="id"
-					                           label="name"/>
-				</s:select>
+					<s:label name="zone" class="label">Zone</s:label>
+					<s:select name="dispatchLot.zone" class="text">
+					<s:option value="">-Select-</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
+						                           value="id"
+						                           label="name"/>
+					</s:select>
 
-				<span class="aster">*</span>
+					<span class="aster">*</span>
 
-				<div class="clear"></div>
-				<s:label name="source" class="label">Source</s:label>
-					<s:text name="dispatchLot.source" style="width:200px" class="text"/>
-				<span class="aster">*</span>
+					<div class="clear"></div>
+					<s:label name="source" class="label">Source</s:label>
+					<s:select name="dispatchLot.source" class="text">
+					<s:option value="">-Select-</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>"
+						                           serviceProperty="sourceAndDestinationListForDispatchLot"
+								/>
+					</s:select>
+					<span class="aster">*</span>
 
-				<div class="clear"></div>
+					<div class="clear"></div>
 
 
-				<s:label name="destination" class="label">Destination</s:label>
-					<s:text name="dispatchLot.destination" style="width:200px" class="text"/>
-				<span class="aster">*</span>
+					<s:label name="destination" class="label">Destination</s:label>
+					<s:select name="dispatchLot.destination" class="text">
+					<s:option value="">-Select-</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>"
+						                           serviceProperty="sourceAndDestinationListForDispatchLot"
+								/>
+					</s:select>
+						<%--<s:text name="dispatchLot.destination" style="width:200px" class="text"/>--%>
+					<span class="aster">*</span>
 
-				<div class="clear"></div>
+					<div class="clear"></div>
 
-				<s:label name="noOfMotherBags" class="label">No. of Mother Bags</s:label>
-					<s:text name="dispatchLot.noOfMotherBags" style="width:200px" class="text"/>
+					<s:label name="noOfMotherBags" class="label">No. of Mother Bags</s:label>
+						<s:text name="dispatchLot.noOfMotherBags" style="width:200px" class="text"/>
 
-				<div class="clear"></div>
+					<div class="clear"></div>
 
-				<s:label name="totalWeight" class="label">Total Weight</s:label>
-					<s:text name="dispatchLot.totalWeight" style="width:200px" class="text"/>
+					<s:label name="totalWeight" class="label">Total Weight</s:label>
+						<s:text name="dispatchLot.totalWeight" style="width:200px" class="text"/>
 
-				<div class="clear"></div>
+					<div class="clear"></div>
 
-				<s:label name="dispatchDate" class="label">Dispatch Date</s:label>
-					<s:text class="date_input text" style="width:150px"
-					        formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="dispatchLot.dispatchDate"/>
+						<%--<s:label name="dispatchDate" class="label">Dispatch Date</s:label>
+																		<s:text class="date_input text" style="width:150px"
+																				formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="dispatchLot.dispatchDate"/>
 
-				<div class="clear"></div>
+																	<div class="clear"></div>--%>
 
-				<s:label name="remarks" class="label">Remarks</s:label>
-					<s:textarea name="dispatchLot.remarks" class="text"/>
+					<s:label name="remarks" class="label">Remarks</s:label>
+						<s:textarea name="dispatchLot.remarks" class="text"/>
 
-				<div class="clear"></div>
-				<s:label name="noOfShipmentsSent" class="label">No. of Shipments Sent</s:label>
-					<s:text name="dispatchLot.noOfShipmentsSent" style="width:200px" class="text" readonly="readonly"/>
+					<div class="clear"></div>
+						<%--<s:label name="noOfShipmentsSent" class="label">No. of Shipments Sent</s:label>
+							<s:text name="dispatchLot.noOfShipmentsSent" style="width:200px" class="text"
+							        readonly="readonly"/>
 
-				<div class="clear"></div>
-				<c:if test="${dispatch.dispatchLot.id == null || dispatch.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated}">
-					<s:submit name="save" value="Save"/>
-				</c:if>
+						<div class="clear"></div>--%>
+					<c:if test="${dispatch.dispatchLot.id == null || dispatch.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated}">
+						<s:submit name="save" value="Save"/>
+					</c:if>
 
-		</div>
 
-		<c:if test="${dispatch.dispatchLot.id != null && dispatch.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated}">
-			<div class="reportBox">
-					<fieldset class="right_label">
-						<legend>Update Shipment Details In Dispatch Lot</legend>
-						<br>
-						<span class="large">(GATEWAY ORDER ID) as excel header</span>
-						<ul>
-							<li>
-								<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
-
-							</li>
-							<li>
-								<s:submit name="parse" value="Upload Shipment Details"/>
-								<s:param name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
-							</li>
-						</ul>
-					</fieldset>
 			</div>
-		</c:if>
-			</s:form>
+			<div style="float: right; width: 30%">
+				<c:if test="${dispatch.dispatchLot.id != null && dispatch.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated}">
+					<div class="reportBox">
+						<fieldset class="right_label">
+							<legend>Update Shipment Details In Dispatch Lot</legend>
+							<br>
+							<span class="large">(GATEWAY ORDER ID) as excel header</span>
+							<ul>
+								<li>
+									<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
+
+								</li>
+								<li>
+									<s:submit name="parse" value="Upload Shipment Details"/>
+									<s:param name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
+								</li>
+							</ul>
+						</fieldset>
+					</div>
+				</c:if>
+			</div>
+
+		</s:form>
 	</s:layout-component>
 </s:layout-render>

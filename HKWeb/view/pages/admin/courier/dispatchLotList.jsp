@@ -12,7 +12,7 @@
 		<script type="text/javascript">
 			$(document).ready(function () {
 				$('#cancelDispatchId').click(function () {
-					if(!confirm("Are you sure, you want to cancel the Dispatch Lot")) {
+					if (!confirm("Are you sure, you want to cancel the Dispatch Lot")) {
 						return false;
 					}
 
@@ -29,21 +29,33 @@
 		<fieldset class="right_label">
 			<legend>Search PO</legend>
 			<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
-			<label>Dispatch Lot Id:</label><s:text name="dispatchLot"/>
-			<label>Docket Number:</label><s:text name="docketNumber"/>
-			<label>Zone</label>
+				<label>Dispatch Lot Id:</label><s:text name="dispatchLot"/>
+				<label>Docket Number:</label><s:text name="docketNumber"/>
+				<label>Zone</label>
 				<s:select name="zone">
-				<s:option value="null">-All-</s:option>
+					<s:option value="null">-All-</s:option>
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
 					                           value="id"
 					                           label="name"/>
 				</s:select>
 
-				<label>Source:</label><s:text name="source"/>
-				<label>Destination:</label><s:text name="destination"/>
+				<label>Source:</label>
+				<s:select name="source" class="text">
+					<s:option value="">-Select-</s:option>
+					<hk:master-data-collection service="<%=MasterDataDao.class%>"
+					                           serviceProperty="sourceAndDestinationListForDispatchLot"
+							/>
+				</s:select>
+				<label>Destination:</label>
+				<s:select name="destination" class="text">
+					<s:option value="">-Select-</s:option>
+					<hk:master-data-collection service="<%=MasterDataDao.class%>"
+					                           serviceProperty="sourceAndDestinationListForDispatchLot"
+							/>
+				</s:select>
 				<label>Courier:</label>
 				<s:select name="courier">
-				<s:option value="">-All-</s:option>
+					<s:option value="">-All-</s:option>
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
 					                           value="id"
 					                           label="name"/>
@@ -51,8 +63,9 @@
 				<div class="clear"></div>
 				<label>Dispatch Status:</label>
 				<s:select name="dispatchLotStatus">
-				<s:option value="">-All-</s:option>
-					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="dispatchLotStatusList"
+					<s:option value="">-All-</s:option>
+					<hk:master-data-collection service="<%=MasterDataDao.class%>"
+					                           serviceProperty="dispatchLotStatusList"
 					                           value="id"
 					                           label="name"/>
 				</s:select>
@@ -63,8 +76,8 @@
 				                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
 				                                name="dispatchEndDate"/>
 
-					<s:submit name="showDispatchLotList" value="Search Dispatch Lot"/>
-				</s:form>
+				<s:submit name="showDispatchLotList" value="Search Dispatch Lot"/>
+			</s:form>
 		</fieldset>
 
 		<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${da}"/>
@@ -101,7 +114,8 @@
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
 						&nbsp;&nbsp;
-						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="viewLot">View Shipments
+						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction"
+						        event="viewLot">View Shipments
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
 						&nbsp;&nbsp;&nbsp;

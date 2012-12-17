@@ -10,8 +10,10 @@ import com.hk.domain.courier.*;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.util.CustomDateTypeConvertor;
 import com.restfb.util.StringUtils;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +51,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 	private List<DispatchLot> dispatchLotList = new ArrayList<DispatchLot>();
 	private Page dispatchLotPage;
 	private DispatchLot dispatchLot;
-	private Integer defaultPerPage = 5;
+	private Integer defaultPerPage = 20;
 	private String docketNumber;
 	private Courier courier;
 	private Zone zone;
@@ -87,8 +89,8 @@ public class DispatchLotAction extends BasePaginatedAction {
 		}
 		dispatchLot = getDispatchLotService().save(dispatchLot);
 		addRedirectAlertMessage(new SimpleMessage("Changes saved"));
-
-		return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList").addParameter("dispatchLot", dispatchLot.getId());
+		//return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
 	}
 
 	private boolean doValidations() {
@@ -137,7 +139,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 			logger.error("Exception while reading excel sheet.", e);
 			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
 		}
-		return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList").addParameter("dispatchLot", dispatchLot.getId());
 	}
 
 	public Resolution receiveLot(){
@@ -282,6 +284,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 		return dispatchStartDate;
 	}
 
+	@Validate(converter = CustomDateTypeConvertor.class)
 	public void setDispatchStartDate(Date dispatchStartDate) {
 		this.dispatchStartDate = dispatchStartDate;
 	}
@@ -290,6 +293,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 		return dispatchEndDate;
 	}
 
+	@Validate(converter = CustomDateTypeConvertor.class)
 	public void setDispatchEndDate(Date dispatchEndDate) {
 		this.dispatchEndDate = dispatchEndDate;
 	}
