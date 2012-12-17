@@ -10404,7 +10404,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="delivery_dt" type="DATETIME">
-                <constraints nullable="false"/>
             </column>
             <column name="dispatch_lot_status_id" type="INT">
                 <constraints nullable="false"/>
