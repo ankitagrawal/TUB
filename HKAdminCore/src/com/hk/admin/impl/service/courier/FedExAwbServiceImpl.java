@@ -93,7 +93,8 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
 
 	@Override
 	public String trackFedExShipment(String trackingId){
-		FedExTrackServiceUtil fedExTrack = new FedExTrackServiceUtil(fedExAuthKey, fedExAccountNo, fedExMeterNo, fedExPassword, fedExServerUrl);
+		// Tracking can only be done for real fedex shipments 
+		FedExTrackServiceUtil fedExTrack = new FedExTrackServiceUtil();
 		return fedExTrack.trackFedExShipment(trackingId);
 	}
 

@@ -2,6 +2,8 @@ package com.hk.admin.util.courier.thirdParty;
 
 import com.fedex.track.stub.*;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Demo of using the Track service with Axis
@@ -17,33 +19,33 @@ import org.springframework.stereotype.Component;
 
 public class FedExTrackServiceUtil {
 
-	private String fedExAuthKey;
+	private static Logger logger             = LoggerFactory.getLogger(FedExTrackServiceUtil.class);
 
-    private String fedExAccountNo;
+	private static final String fedExAuthKey = "VCcNQkG9SDeL3KWz";
 
-    private String fedExMeterNo;
+    private static final String fedExAccountNo = "340279735";
 
-    private String fedExPassword;
+    private static final String fedExMeterNo = "104430746";
 
-    private String fedExServerUrl;
+    private static final String fedExPassword= "4Cl8pjvtQOlkY6nkSlHsK3Tco";
 
-	public FedExTrackServiceUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl){
-		this.fedExAuthKey = fedExAuthKey;
-        this.fedExAccountNo = fedExAccountNo;
-        this.fedExMeterNo = fedExMeterNo;
-        this.fedExPassword = fedExPassword;
-        this.fedExServerUrl = fedExServerUrl;
+    private static final String fedExServerUrl = "https://ws.fedex.com:443/web-services";
+
+	/*
+	Fedex Tracking credentials point to the production server of Fedex.
+	No tracking is possible using Fedex testing server credentials.
+    */
+	public FedExTrackServiceUtil(){
 	}
 
-	//
+
 	public String trackFedExShipment(String trackingId){
 
-		//
 	    com.fedex.track.stub.TrackRequest request = new com.fedex.track.stub.TrackRequest();
 
         request.setClientDetail(createClientDetail());
         request.setWebAuthenticationDetail(createWebAuthenticationDetail());
-        //
+
         com.fedex.track.stub.TransactionDetail transactionDetail = new com.fedex.track.stub.TransactionDetail();
         transactionDetail.setCustomerTransactionId("java sample - Tracking Request"); //This is a reference field for the customer.  Any value can be used and will be provided in the response.
         request.setTransactionDetail(transactionDetail);
@@ -72,9 +74,6 @@ public class FedExTrackServiceUtil {
 			//
 			if (isResponseOk(reply.getHighestSeverity())) // check if the call was successful
 			{
-				/*
-				System.out.println("Tracking detail\n");
-				*/
 				com.fedex.track.stub.TrackDetail td[] = reply.getTrackDetails();
 				for (int i=0; i< td.length; i++) { // package detail information
 				    /*
@@ -128,13 +127,10 @@ public class FedExTrackServiceUtil {
 
 			}
 			return status;
-
-
 			//printNotifications(reply.getNotifications());
 
-
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("Error while making tracking call to Fedex");
 		}
 		return null;
 	}
@@ -162,10 +158,10 @@ public class FedExTrackServiceUtil {
         // if set use those values, otherwise default them to "XXX"
         //
         //if (accountNumber == null) {
-        String accountNumber = "340279735"; // Replace "XXX" with clients account number
+        String accountNumber = fedExAccountNo; // Replace "XXX" with clients account number
         //}
         //if (meterNumber == null) {
-        String meterNumber = "104430746"; // Replace "XXX" with clients meter number
+        String meterNumber = fedExMeterNo; // Replace "XXX" with clients meter number
         //}
         clientDetail.setAccountNumber(accountNumber);
         clientDetail.setMeterNumber(meterNumber);
@@ -182,10 +178,10 @@ public class FedExTrackServiceUtil {
         // if set use those values, otherwise default them to "XXX"
         //
         //if (key == null) {
-        String key = "VCcNQkG9SDeL3KWz"; // Replace "XXX" with clients key
+        String key = fedExAuthKey; // Replace "XXX" with clients key
         //}
         //if (password == null) {
-        String password = "4Cl8pjvtQOlkY6nkSlHsK3Tco"; // Replace "XXX" with clients password
+        String password = fedExPassword; // Replace "XXX" with clients password
         //}
         wac.setKey(key);
         wac.setPassword(password);
@@ -216,7 +212,7 @@ public class FedExTrackServiceUtil {
 	}
     */
 	private static void updateEndPoint(com.fedex.track.stub.TrackServiceLocator serviceLocator) {
-		String endPoint = "https://ws.fedex.com:443/web-services"; //System.getProperty("endPoint");
+		String endPoint = fedExServerUrl; //System.getProperty("endPoint");
 		if (endPoint != null) {
 			serviceLocator.setTrackServicePortEndpointAddress(endPoint);
 		}
