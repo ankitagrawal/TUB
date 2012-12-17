@@ -63,7 +63,7 @@ public class SplitShippingOrderAction extends BaseAction {
         if (shippingOrder != null && EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {
 
             Set<LineItem> selectedLineItems = new HashSet<LineItem>();
-            LineItem testLineItem = null;
+           
             for (LineItem lineItem : lineItems) {
                 if (lineItem != null) {
                     logger.debug("lineItem: " + lineItem.getSku().getProductVariant());
