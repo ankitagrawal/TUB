@@ -39,4 +39,6 @@ public interface DispatchLotService {
 
 	public DispatchLot cancelDispatchLot(DispatchLot dispatchLot);
 
+	public List<String> getSourceAndDestinationListForDispatchLot();
+
 }

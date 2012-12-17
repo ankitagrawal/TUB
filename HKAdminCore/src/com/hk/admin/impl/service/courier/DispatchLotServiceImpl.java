@@ -4,13 +4,17 @@ import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.DispatchLotDao;
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.constants.XslConstants;
 import com.hk.constants.courier.DispatchLotConstants;
 import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.domain.courier.*;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import org.apache.commons.lang.StringUtils;
@@ -40,6 +44,10 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 	private AdminShippingOrderDao adminShippingOrderDao;
 	@Autowired
 	private BaseDao baseDao;
+	@Autowired
+	HubService hubService;
+	@Autowired
+	WarehouseService warehouseService;
 
 	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, Zone zone, String source,
 	                              String destination, Date deliveryStartDate, Date deliveryEndDate, DispatchLotStatus dispatchLotStatus, int pageNo, int perPage) {
@@ -212,6 +220,24 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			}
 		}
 		return invalidOrders;
+	}
+
+	public List<String> getSourceAndDestinationListForDispatchLot() {
+		List <String> validSourceAndDestinations = new ArrayList<String>();
+		List<Hub> hubList = hubService.getAllHubs();
+		List<Warehouse> warehouseList = warehouseService.getServiceableWarehouses();
+		for (Warehouse warehouse : warehouseList){
+			if(warehouse != null && warehouse.getName() != null){
+				validSourceAndDestinations.add(warehouse.getName());
+			}
+		}
+
+		for(Hub hub : hubList){
+			if(hub != null && hub.getName() != null){
+				validSourceAndDestinations.add(hub.getName());
+			}
+		}
+		return validSourceAndDestinations; 
 	}
 
 	public DispatchLot cancelDispatchLot(DispatchLot dispatchLot) {
