@@ -147,6 +147,10 @@ public class DispatchLotAction extends BasePaginatedAction {
 			addRedirectAlertMessage(new SimpleMessage("Dispatch lot not found."));
 			return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
 		}
+		if(dispatchLot.getDispatchLotStatus().equals(EnumDispatchLotStatus.Cancelled.getDispatchLotStatus())) {
+			addRedirectAlertMessage(new SimpleMessage("Dispatch lot is in CANCELLED state."));
+			return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
+		}
 		return new ForwardResolution("/pages/admin/courier/receiveDispatchLot.jsp").addParameter("dispatchLot", dispatchLot.getId());
 	}
 
@@ -163,6 +167,11 @@ public class DispatchLotAction extends BasePaginatedAction {
 		if(dispatchLot == null){
 			addRedirectAlertMessage(new SimpleMessage("Dispatch lot not found."));
 			return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
+		}
+
+		if(gatewayOrderIdList == null) {
+			addRedirectAlertMessage(new SimpleMessage("Please scan the AWB Number"));
+			return new ForwardResolution("/pages/admin/courier/receiveDispatchLot.jsp").addParameter("dispatchLot", dispatchLot.getId());
 		}
 
 		String invalidGatewayOrderIds = getDispatchLotService().markShipmentsAsReceived(dispatchLot, gatewayOrderIdList);

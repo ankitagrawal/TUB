@@ -1,8 +1,10 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.courier.EnumDispatchLotStatus" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Dispatch Lot List">
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.DispatchLotAction" var="da"/>
+	<c:set var="cancelledDispachLot" value="<%=EnumDispatchLotStatus.Cancelled.getId()%>"/>
 	<s:layout-component name="htmlHead">
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -110,10 +112,6 @@
 					<td>${dispatchLot.dispatchLotStatus.name}</td>
 					<td>${dispatchLot.dispatchDate}</td>
 					<td>
-						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="receiveLot">Receive
-							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
-						</s:link>
-						&nbsp;&nbsp;
 						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction"
 						        event="viewLot">View Shipments
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
@@ -126,7 +124,12 @@
 						        id="cancelDispatchId">Cancel Dispatch Lot
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
-
+						<c:if test="${dispatchLot.dispatchLotStatus.id != cancelledDispachLot}">
+							<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="receiveLot">Receive
+								<s:param name="dispatchLot" value="${dispatchLot.id}"/>
+							</s:link>
+							&nbsp;&nbsp;
+						</c:if>
 					</td>
 				</tr>
 			</c:forEach>

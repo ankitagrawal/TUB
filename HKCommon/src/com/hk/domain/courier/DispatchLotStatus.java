@@ -39,4 +39,13 @@ public class DispatchLotStatus implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public boolean equals(Object obj) {
+		if (!(obj instanceof DispatchLotStatus)) {
+			return false;
+		}
+		DispatchLotStatus dispatchLotStatus = (DispatchLotStatus) obj;
+		return (this.id.equals((dispatchLotStatus.getId())));
+	}
+
 }

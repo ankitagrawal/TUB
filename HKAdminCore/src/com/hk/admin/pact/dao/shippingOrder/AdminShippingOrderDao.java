@@ -14,6 +14,4 @@ public interface AdminShippingOrderDao {
 
 	public List<ShippingOrder> getShippingOrderByGatewayOrderList(List<String> gatewayOrderIdList);
 
-	public List<String> getGatewayOrderList(List<String> gatewayOrderIdList);
-
 }

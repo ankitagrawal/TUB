@@ -47,18 +47,13 @@ public class AdminShippingOrderDaoImpl extends BaseDaoImpl implements AdminShipp
 	}
 
 	public List<ShippingOrder> getShippingOrderByGatewayOrderList(List<String> gatewayOrderIdList) {
-		DetachedCriteria criteria = DetachedCriteria.forClass(ShippingOrder.class);
-		criteria.add(Restrictions.in("gatewayOrderId", gatewayOrderIdList));
-		return findByCriteria(criteria);
-	}
-
-	public List<String> getGatewayOrderList(List<String> gatewayOrderIdList) {
-		List<String> gatewayOrderIds = new ArrayList<String>(0);
-		if (gatewayOrderIdList != null && gatewayOrderIdList.size() > 0) {
-			String query = "select so.gatewayOrderId from ShippingOrder so where so.gatewayOrderId in (:gatewayOrderIdList)";
-			gatewayOrderIds = getSession().createQuery(query).setParameterList("gatewayOrderIdList", gatewayOrderIdList).list();
+		List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
+		if(gatewayOrderIdList != null && gatewayOrderIdList.size() > 0) {
+			DetachedCriteria criteria = DetachedCriteria.forClass(ShippingOrder.class);
+					criteria.add(Restrictions.in("gatewayOrderId", gatewayOrderIdList));
+					shippingOrderList = findByCriteria(criteria);
 		}
-		return gatewayOrderIds;
+		return shippingOrderList;
 	}
 
 }

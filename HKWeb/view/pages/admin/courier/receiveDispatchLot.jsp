@@ -96,6 +96,9 @@
 		</style>
 
 	</s:layout-component>
+	<s:layout-component name="heading">
+		<h4>Receive Dispatch Lot: ${dispatchLotBean.dispatchLot.id}</h4>
+	</s:layout-component>
 
 	<s:layout-component name="content">
 		<div class="hkDeliveryBox">
@@ -104,8 +107,6 @@
 					<legend>Details</legend>
 					<table>
 						<tr>
-							<td><label><strong>Dispatch Lot # </strong></label></td>
-							<td>${dispatchLotBean.dispatchLot.id}</td>
 							<td><label><strong>Docket Number</strong></label></td>
 							<td>${dispatchLotBean.dispatchLot.docketNumber}</td>
 
@@ -116,7 +117,16 @@
 							<td>${dispatchLotBean.dispatchLot.zone.name}</td>
 
 							<td><label><strong>No. Of Shipments Sent</strong></label></td>
-							<td>${dispatchLotBean.dispatchLot.noOfShipmentsSent}</td>
+							<td>
+								<c:choose>
+									<c:when test="${dispatchLotBean.dispatchLot.noOfShipmentsSent == null}">
+										0
+									</c:when>
+									<c:otherwise>
+										${dispatchLotBean.dispatchLot.noOfShipmentsSent}
+									</c:otherwise>
+								</c:choose>
+							</td>
 						</tr>
 
 						<tr>
@@ -127,10 +137,27 @@
 							<td>${dispatchLotBean.dispatchLot.destination}</td>
 
 							<td><label><strong>No. of mother bags</strong></label></td>
-							<td>${dispatchLotBean.dispatchLot.noOfMotherBags}</td>
-
+							<td>
+								<c:choose>
+									<c:when test="${dispatchLotBean.dispatchLot.noOfMotherBags == null}">
+										0
+									</c:when>
+									<c:otherwise>
+										${dispatchLotBean.dispatchLot.noOfMotherBags}
+									</c:otherwise>
+								</c:choose>
+							</td>
 							<td><label><strong>No. Of Shipments Received</strong></label></td>
-							<td>${dispatchLotBean.dispatchLot.noOfShipmentsReceived}</td>
+							<td>
+								<c:choose>
+									<c:when test="${dispatchLotBean.dispatchLot.noOfShipmentsReceived == null}">
+										0
+									</c:when>
+									<c:otherwise>
+										${dispatchLotBean.dispatchLot.noOfShipmentsReceived}
+									</c:otherwise>
+								</c:choose>
+							</td>
 						</tr>
 					</table>
 				</fieldset>
