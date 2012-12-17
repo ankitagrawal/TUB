@@ -169,7 +169,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 						trackingId = awb.getAwbNumber();
 					}
 				}
-				if ((availableCouriers != null && availableCouriers.size() > 0)&& suggestedCourier != null) {
+				if (availableCouriers == null || availableCouriers.isEmpty()) {
+					trackingId = null;
+				} else if (availableCouriers != null && suggestedCourier != null) {
 					if (!(availableCouriers.contains(suggestedCourier))) {
 						trackingId = null;
 					}
