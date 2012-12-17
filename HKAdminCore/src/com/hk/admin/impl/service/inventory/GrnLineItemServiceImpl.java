@@ -21,10 +21,12 @@ import java.util.List;
 public class GrnLineItemServiceImpl implements GrnLineItemService {
 
 	public Long getPoLineItemQty(GrnLineItem grnLineItem) {
-		List<PoLineItem> poLineItemList = grnLineItem.getGoodsReceivedNote().getPurchaseOrder().getPoLineItems();
-		for (PoLineItem poLineItem : poLineItemList) {
-			if (grnLineItem.getSku().getId().equals(poLineItem.getSku().getId())) {
-				return poLineItem.getQty();
+		if (grnLineItem != null) {
+			List<PoLineItem> poLineItemList = grnLineItem.getGoodsReceivedNote().getPurchaseOrder().getPoLineItems();
+			for (PoLineItem poLineItem : poLineItemList) {
+				if (grnLineItem.getSku().getId().equals(poLineItem.getSku().getId())) {
+					return poLineItem.getQty();
+				}
 			}
 		}
 		return 0L;
@@ -32,12 +34,14 @@ public class GrnLineItemServiceImpl implements GrnLineItemService {
 
 	public Long getGrnLineItemQtyAlreadySet(GoodsReceivedNote grn, Sku sku) {
 		long grnLineItemQtyAlreadySet = 0;
-		List<GoodsReceivedNote> allGrnForThisPO = grn.getPurchaseOrder().getGoodsReceivedNotes();
-		for (GoodsReceivedNote goodsReceivedNote : allGrnForThisPO) {
-			if (!goodsReceivedNote.getId().equals(grn.getId())) {
-				for (GrnLineItem grnLineItemForOtherGrn : goodsReceivedNote.getGrnLineItems()) {
-					if (sku.getId().equals(grnLineItemForOtherGrn.getSku().getId())) {
-						grnLineItemQtyAlreadySet += grnLineItemForOtherGrn.getQty().longValue();
+		if (grn != null && sku != null) {
+			List<GoodsReceivedNote> allGrnForThisPO = grn.getPurchaseOrder().getGoodsReceivedNotes();
+			for (GoodsReceivedNote goodsReceivedNote : allGrnForThisPO) {
+				if (!goodsReceivedNote.getId().equals(grn.getId())) {
+					for (GrnLineItem grnLineItemForOtherGrn : goodsReceivedNote.getGrnLineItems()) {
+						if (sku.getId().equals(grnLineItemForOtherGrn.getSku().getId())) {
+							grnLineItemQtyAlreadySet += grnLineItemForOtherGrn.getQty().longValue();
+						}
 					}
 				}
 			}

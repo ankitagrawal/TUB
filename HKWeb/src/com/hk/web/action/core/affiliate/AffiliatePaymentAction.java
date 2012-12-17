@@ -57,7 +57,8 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	@ValidateNestedProperties({
 			@Validate(field = "checkNo", required = true, on = "payToAffiliate"),
 			@Validate(field = "issueDate", required = true, on = "payToAffiliate"),
-			@Validate(field = "bankName", required = true, on = "payToAffiliate")})
+			@Validate(field = "bankName", required = true, on = "payToAffiliate"),
+      @Validate(field = "tds", required = true, on="payToAffiliate")})
 	CheckDetails checkDetails;
 	@Validate(required = true, on = "payToAffiliate")
 	Double amountToPay;
@@ -69,7 +70,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	Long affiliateMode;
 	Long affiliateType;
 	Role role;
-	AffiliateStatus affiliateStatus;
+  Long affiliateStatus;
 
 	Page affiliatePage;
 	List<Affiliate> affiliates = new ArrayList<Affiliate>();
@@ -98,9 +99,9 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	public Resolution search() {
 		List<Long> affiliateStatusIds = new ArrayList<Long>();
 		if(affiliateStatus != null){
-			affiliateStatusIds.add(affiliateStatus.getId());
+			affiliateStatusIds.add(affiliateStatus);
 		}
-		affiliatePage = affiliateDao.searchAffiliates(affiliateStatusIds, name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
+		affiliatePage = affiliateDao.searchAffiliates(affiliateStatusIds, name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(),getPageNo());
 		if (affiliatePage != null) {
 			affiliates = affiliatePage.getList();
 		}
@@ -108,7 +109,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 			AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
 			affiliatePaymentDto.setAffiliate(affiliate);
 			affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate, null, null));
-			affiliatePaymentDto.setPayableAmount(getAffiliateManager().getAmountInAccount(affiliate, startDate, endDate));
+			affiliatePaymentDto.setPayableAmount(getAffiliateManager().getPayableAmount(affiliate));
 			affiliatePaymentDtoList.add(affiliatePaymentDto);
 		}
 		return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
@@ -125,9 +126,11 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 		}
 		affiliate.setOffer(offer);
 		affiliate = (Affiliate) affiliateDao.save(affiliate);
+    if(affiliateCategoryCommissionList!=null){
 		for (AffiliateCategoryCommission categoryCommission : affiliateCategoryCommissionList) {
 			getAffiliateCategoryCommissionDao().save(categoryCommission);
-		}
+		  }
+    }
 		return new ForwardResolution("/pages/affiliate/affiliatePlan.jsp");
 	}
 
@@ -151,7 +154,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 			checkDeliveryAddress = null;
 		}
 		amountToPay = affiliateManager.getPayableAmount(affiliate);
-		return new ForwardResolution("/pages/affiliate/paymentToAffiliateDetails.jsp");
+			return new ForwardResolution("/pages/affiliate/paymentToAffiliateDetails.jsp");
 	}
 
 	public Resolution payToAffiliate() {
@@ -161,7 +164,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 		}
 		affiliateManager.paidToAffiiliate(affiliate, amountToPay, checkDetails);
 		addRedirectAlertMessage(new SimpleMessage("Entry made."));
-		return new RedirectResolution("/pages/admin/adminHome.jsp");
+		return new RedirectResolution(AffiliatePaymentAction.class, "pre");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -380,22 +383,22 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	}
 
 	public Role getRole() {
-		return role;        
-	}
+		return role;
+  }
 
 	public void setRole(Role role) {
 		this.role = role;
 	}
 
-	public AffiliateStatus getAffiliateStatus() {
-		return affiliateStatus;
-	}
+  public Long getAffiliateStatus() {
+    return affiliateStatus;
+  }
 
-	public void setAffiliateStatus(AffiliateStatus affiliateStatus) {
-		this.affiliateStatus = affiliateStatus;
-	}
+  public void setAffiliateStatus(Long affiliateStatus) {
+    this.affiliateStatus = affiliateStatus;
+  }
 
-	public Offer getOffer() {
+  public Offer getOffer() {
 		return offer;
 	}
 

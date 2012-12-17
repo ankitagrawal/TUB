@@ -68,7 +68,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT318' productDesc='A product meant for building strength and endurance, it supplies a unique blend of Creatine, Glutamine and Taurine'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT420' productDesc='Custom made for serious body builders, build and maintain your muscles with confidence'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT906' productDesc='Want better focus, higher endurance and power when you work out? Just pick MuscleTech Neurocore and youll never look back.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1135' productDesc='Ideal for overall body, stamina and strength growth, it helps improve protein synthesis and assists in muscle mass development.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1135' productDesc='Ideal for stamina & strength gains. It helps improve protein synthesis and assists in muscle mass development.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT320' productDesc='Replenish your energy after intense workouts and fuel muscle building with the goodness of Nitric Oxide!'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT693' productDesc='Get high focus and skin bursting pumps with the worlds most coveted pre workout formulation'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT984' productDesc='Energy booster for inter-workout sessions that burns fat, helps in tissue recovery'/>

@@ -12,7 +12,6 @@ import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
-import com.hk.cache.UserCache;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;

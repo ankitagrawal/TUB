@@ -70,6 +70,11 @@ public class InventoryServiceImpl implements InventoryService {
         List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
             checkInventoryHealth(skuList, productVariant);
+        }else{
+            //all variants without sku marked out of stock
+            //todo check for product oos as well
+            productVariant.setOutOfStock(true);
+            productVariantService.save(productVariant);
         }
     }
 

@@ -49,4 +49,8 @@ public class PrimaryCategoryHeadingDaoImpl extends BaseDaoImpl implements Primar
         return headings;
     }
 
+  public PrimaryCategoryHeading getHeadingById(Long headingId){
+       return (PrimaryCategoryHeading)getSession().createQuery("select h from PrimaryCategoryHeading h where h.id = :headingId").setParameter("headingId",headingId).list().get(0);
+  }
+
 }
