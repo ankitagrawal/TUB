@@ -16,6 +16,9 @@
 		<script type="text/javascript">
 			$(document).ready(function () {
 				$('.cancelDispatchId').click(function () {
+					var dispatchLotRow = $(this).parents('.dispatchLotRow');
+					var dispatchLotId = dispatchLotRow.find('.dispatchLotClass').val();
+					alert(dispatchLotId);
 					if (!confirm("Are you sure, you want to cancel the Dispatch Lot")) {
 						return false;
 					}
@@ -103,8 +106,8 @@
 			</tr>
 			</thead>
 			<c:forEach items="${da.dispatchLotList}" var="dispatchLot" varStatus="ctr">
-				<tr>
-					<td>${dispatchLot.id}</td>
+				<tr class="dispatchLotRow">
+					<td class="dispatchLotClass">${dispatchLot.id}</td>
 					<td>${dispatchLot.createDate}</td>
 					<td>${dispatchLot.docketNumber}</td>
 					<td>${dispatchLot.courier.name}</td>
