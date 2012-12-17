@@ -2,7 +2,7 @@
 <s:layout-definition>
 
 	<c:choose>
-		<c:when test="${product.id == 'NUT1600'}">
+		<c:when test="${product.id == 'NUT1600222222'}">
 			<span style="font-size: 11px;"> Product is Out of Stock<br>
 			Expected to arrive back in stock by Dec 17, 2012 </span>
 			<s:submit name="addToCart" value="Pre Order"
