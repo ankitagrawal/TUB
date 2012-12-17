@@ -89,7 +89,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 		}
 		dispatchLot = getDispatchLotService().save(dispatchLot);
 		addRedirectAlertMessage(new SimpleMessage("Changes saved"));
-		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList").addParameter("dispatchLot", dispatchLot.getId());
+		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
 		//return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
 	}
 
@@ -170,7 +170,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 		}
 
 		if(gatewayOrderIdList == null) {
-			addRedirectAlertMessage(new SimpleMessage("Please scan the AWB Number"));
+			addRedirectAlertMessage(new SimpleMessage("Please scan the Gateway Order Id"));
 			return new ForwardResolution("/pages/admin/courier/receiveDispatchLot.jsp").addParameter("dispatchLot", dispatchLot.getId());
 		}
 
@@ -183,6 +183,10 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 	public Resolution cancelDispatchLot() {
 		if(dispatchLot != null) {
+			if(dispatchLot.getDispatchLotStatus().equals(EnumDispatchLotStatus.Received.getDispatchLotStatus())) {
+				addRedirectAlertMessage(new SimpleMessage("Cannot cancel the Received Dispatch Lot"));
+				return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList").addParameter("dispatchLot", dispatchLot.getId());
+			}
 			getDispatchLotService().cancelDispatchLot(dispatchLot);
 			addRedirectAlertMessage(new SimpleMessage("Dispatch Lot cancelled"));
 		} else {

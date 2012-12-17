@@ -4,7 +4,9 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Dispatch Lot List">
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.DispatchLotAction" var="da"/>
-	<c:set var="cancelledDispachLot" value="<%=EnumDispatchLotStatus.Cancelled.getId()%>"/>
+	<c:set var="inTransitDispatchLot" value="<%=EnumDispatchLotStatus.InTransit.getId()%>"/>
+	<c:set var="generatedDispatchLot" value="<%=EnumDispatchLotStatus.Generated.getId()%>"/>
+	<c:set var="receivedDispatchLot" value="<%=EnumDispatchLotStatus.Received.getId()%>"/>
 	<s:layout-component name="htmlHead">
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -13,7 +15,7 @@
 		<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 		<script type="text/javascript">
 			$(document).ready(function () {
-				$('#cancelDispatchId').click(function () {
+				$('.cancelDispatchId').click(function () {
 					if (!confirm("Are you sure, you want to cancel the Dispatch Lot")) {
 						return false;
 					}
@@ -120,11 +122,14 @@
 						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction">Edit/View
 							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 						</s:link>
-						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="cancelDispatchLot"
-						        id="cancelDispatchId">Cancel Dispatch Lot
-							<s:param name="dispatchLot" value="${dispatchLot.id}"/>
-						</s:link>
-						<c:if test="${dispatchLot.dispatchLotStatus.id != cancelledDispachLot}">
+						<c:if test="${dispatchLot.dispatchLotStatus.id == inTransitDispatchLot || dispatchLot.dispatchLotStatus.id == generatedDispatchLot}">
+							<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction"
+							        event="cancelDispatchLot"
+							        class="cancelDispatchId">Cancel Dispatch Lot
+								<s:param name="dispatchLot" value="${dispatchLot.id}"/>
+							</s:link>
+						</c:if>
+						<c:if test="${dispatchLot.dispatchLotStatus.id == inTransitDispatchLot || dispatchLot.dispatchLotStatus.id == receivedDispatchLot}">
 							<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="receiveLot">Receive
 								<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 							</s:link>

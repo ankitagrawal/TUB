@@ -176,7 +176,7 @@
 							<table border="1">
 								<thead>
 								<tr>
-									<th style="width:200px;font-size:medium;">&nbsp;&nbsp;&nbsp;&nbsp;AWB Number</th>
+									<th style="width:200px;font-size:medium;">&nbsp;&nbsp;&nbsp;&nbsp;GATEWAY ORDER ID</th>
 								</tr>
 								</thead>
 
