@@ -48,6 +48,7 @@
                       $('.error').show();
                       return false;
                   }
+
                   if (tracking.length > 20) {
                       $('.error').html("");
                       $('.error').append(" Tracking Id length can not be greater than 20");
@@ -56,9 +57,15 @@
                   }
 	              var selected = $('#courier').selected().val();
 	              var suggested = $('#sugcouier').val();
-
+	              if (selected == '') {
+		              $('.error').html("");
+		              $('.error').append("Select Courier in drop Down");
+		              $('.error').show();
+		              return false;
+	              }
+	              
 	              if(selected != suggested) {
-		           var proceed = confirm('Default Courier is  Not Selected  In drop down  :  Click OK to Proceed ');
+		           var proceed = confirm('Default Courier is not selected in drop down, select Cancel to change the courier name / AWB details, select OK to proceed');
 					if(!proceed)return  false;
 	              }
 	             var weight = $('.weight').val();
