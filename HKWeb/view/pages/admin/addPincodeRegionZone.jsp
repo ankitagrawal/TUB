@@ -35,7 +35,7 @@
 			<div style=" float:left;display:inline-block; %">
 				<fieldset>
 					<legend>Add Pincode Region</legend>
-					<s:form id="regionform" beanclass="com.hk.web.action.admin.courier.MasterPincodeAction"> 						
+					<s:form id="regionform" beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
 						<table align="center">
 							<tr>
 								<td><label>Pincode</label></td>
@@ -82,45 +82,77 @@
 			</div>
 
 			<div style="display:inline-block;">
-				<table align="center" class="cont"> Available Pincode Region :
-					<thead>
-					<tr>
-						<th>Pincode</th>
-						<th>Warehouse</th>
-						<th>Region Type</th>
-						<th>Courier Group</th>
-					</tr>
-					</thead>
-					<c:forEach items="${mpa.pincodeRegionZoneList}" var="prz" varStatus="ctr">
+				<s:form beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
+					<table align="center" class="cont"> Available Pincode Region :
+						<thead>
 						<tr>
-							<td>${prz.pincode.pincode}</td>
-							<td>${prz.warehouse.name}</td>
-							<td>${prz.regionType.name}</td>
-							<td>${prz.courierGroup.name}</td>
-
+							<th>Pincode</th>
+							<th>Warehouse</th>
+							<th>Region Type</th>
+							<th>Courier Group</th>
 						</tr>
-					</c:forEach>
-				</table>
+						</thead>
 
+						<c:forEach items="${mpa.pincodeRegionZoneList}" var="prz" varStatus="ctr">
+							<s:hidden name="pincodeRegionZoneList[${ctr.index}].id" value="${prz.id}"/>
+							<input type="hidden" name="pincodeRegionZoneList[${ctr.index}].pincode"
+							       value="${prz.pincode.id}"/>
+							<tr>
+								<td>${prz.pincode.pincode}</td>
+
+								<td><s:select name="pincodeRegionZoneList[${ctr.index}].warehouse" id="warehouse"
+								              value="${prz.warehouse.id}">
+									<s:option value="">--Select Warehouse--</s:option>
+									<s:options-collection collection="${warehouseList}" value="id" label="name"/>
+								</s:select></td>
+
+								<td>
+									<s:select name="pincodeRegionZoneList[${ctr.index}].regionType" id="region"
+									          value="${prz.regionType.id}">
+										<s:option value="">--Select Region--</s:option>
+										<hk:master-data-collection service="<%=MasterDataDao.class%>"
+										                           serviceProperty="regionTypeList" value="id"
+										                           label="name"/>
+									</s:select></td>
+								<td><s:select name="pincodeRegionZoneList[${ctr.index}].courierGroup" id="group"
+								              value="${prz.courierGroup.id}">
+									<s:option value="">--Select Group--</s:option>
+									<hk:master-data-collection service="<%=MasterDataDao.class%>"
+									                           serviceProperty="courierGroupList" value="id"
+									                           label="name"/>
+								</s:select></td>
+
+							</tr>
+
+						</c:forEach>
+					</table>
+					<div>
+						<s:submit name="savePincodeRegionList" value="saveAll"/>
+					</div>
+				</s:form>
 			</div>
-			<div style=""></div>
+
+
 			<div style="display:inline-block; float:right;padding-right:40px;">
 				<span style="font:bold;color:darkolivegreen;"><s:link
 						beanclass="com.hk.web.action.admin.courier.MasterPincodeAction" event="showRemainingPrz">
 					Remaining Pincode Region
 				</s:link> </span>
-				<c:forEach items="${mpa.pincodeList}" var="pinc" varStatus="ctr">
-				<table align="center" class="cont">
-					<thead>
-					<tr>
-						<th>Pincode</th>
-					</tr>
-					</thead>
-					<tr>
-						<td>${pinc.pincode}</td>
-					</tr>
-					</c:forEach>
-				</table>
+
+				<c:if test="${(mpa.pincodeList  != null )&& (fn:length(mpa.pincodeList) > 0)}">
+					<table align="center" class="cont">
+						<thead>
+						<tr>
+							<th>Pincode</th>
+						</tr>
+						</thead>
+						<c:forEach items="${mpa.pincodeList}" var="pinc" varStatus="ctr">
+							<tr>
+								<td>${pinc.pincode}</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</c:if>
 			</div>
 
 		</div>

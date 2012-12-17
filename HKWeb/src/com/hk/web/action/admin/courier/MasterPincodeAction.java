@@ -78,7 +78,7 @@ public class MasterPincodeAction extends BaseAction {
 	private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
 	private PincodeRegionZone pincodeRegionZone;
 	private List<PincodeRegionZone> pincodeRegionZoneList = null;
-	private List<Pincode> pincodeList ;
+	private List<Pincode> pincodeList;
 
 
 	@DefaultHandler
@@ -123,6 +123,7 @@ public class MasterPincodeAction extends BaseAction {
 		} else {
 			pincodeDao.save(pincode);
 		}
+		pincodeService.assignPincodeRegionToPincode(pincode);
 		addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
 		return new RedirectResolution(CourierServiceInfoAction.class).addParameter("pincode", pincode.getPincode());
 	}
@@ -188,13 +189,22 @@ public class MasterPincodeAction extends BaseAction {
 		return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
 	}
 
+	public Resolution savePincodeRegionList() {
+		for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
+			pincodeRegionZoneDao.saveOrUpdate(pincodeRegionZone);
+		}
+		addRedirectAlertMessage(new SimpleMessage("Pincode Region saved"));
+		return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
+
+	}
+
 	public Resolution savePincodeRegion() {
 		Pincode pincodeObj = pincodeService.getByPincode(pincodeRegionZone.getPincode().getPincode());
 		if (pincodeObj == null) {
 			addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
 		} else {
 			try {
-				PincodeRegionZone pincodeRegionZoneDb = pincodeRegionZoneDao.getPincodeRegionZone(pincodeRegionZone.getCourierGroup(),pincodeObj, pincodeRegionZone.getWarehouse());
+				PincodeRegionZone pincodeRegionZoneDb = pincodeRegionZoneDao.getPincodeRegionZone(pincodeRegionZone.getCourierGroup(), pincodeObj, pincodeRegionZone.getWarehouse());
 				if (pincodeRegionZoneDb != null) {
 					pincodeRegionZoneDb.setRegionType(pincodeRegionZone.getRegionType());
 				} else {
@@ -208,7 +218,7 @@ public class MasterPincodeAction extends BaseAction {
 			}
 			addRedirectAlertMessage(new SimpleMessage("Pincode region saved"));
 		}
-		return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
+		return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
 	}
 
 	public Resolution searchPincodeRegion() {

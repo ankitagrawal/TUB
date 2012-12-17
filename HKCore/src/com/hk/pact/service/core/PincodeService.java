@@ -23,5 +23,7 @@ public interface PincodeService {
 
 	 public List<Pincode> getPincodeNotInPincodeRegionZone();
 
+	public void assignPincodeRegionToPincode(Pincode pincode);
+
 
 }

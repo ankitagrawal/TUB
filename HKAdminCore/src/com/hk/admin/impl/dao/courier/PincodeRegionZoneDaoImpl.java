@@ -90,6 +90,11 @@ public class PincodeRegionZoneDaoImpl extends BaseDaoImpl implements PincodeRegi
 		return (List<PincodeRegionZone>) pincodeRegionZoneCriteria.list();
 	}
 
+	public List<PincodeRegionZone> getMatchingPincodeRegionZone(Pincode pincode){
+		String hqlQuery = "from Pincode p   where p not in (select pincode from PincodeRegionZone ) ";
+
+
+	}
 	
 
 }

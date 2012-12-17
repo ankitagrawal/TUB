@@ -15,12 +15,15 @@ import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.PincodeService;
+import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 
 @Service
 public class PincodeServiceImpl implements PincodeService {
     
     @Autowired
     private PincodeDao pincodeDao;
+	@Autowired
+	PincodeRegionZoneDao pincodeRegionZoneDao;
 
     @Override
     public Pincode getByPincode(String pincode) {
@@ -62,6 +65,10 @@ public class PincodeServiceImpl implements PincodeService {
 
 	public List<Pincode> getPincodeNotInPincodeRegionZone() {
 		return pincodeDao.getPincodeNotInPincodeRegionZone();
+	}
+
+	public void assignPincodeRegionToPincode(Pincode pincode){
+		pincodeRegionZoneDao.
 	}
   
     
