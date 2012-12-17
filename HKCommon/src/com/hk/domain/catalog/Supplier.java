@@ -83,7 +83,6 @@ public class Supplier implements java.io.Serializable {
 	@Column (name = "active", nullable = false)
 	private Boolean active;
 
-
 	public Long getId() {
 		return id;
 	}
