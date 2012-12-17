@@ -117,6 +117,10 @@
                     </c:forEach>
                 </s:select>
 
+                <s:link class="com.hk.web.action.admin.shipment.CreateDropShipmentAction" event="getAwbForHkCourier"> Get HK Couriers </s:link>
+
+
+
                 <div class="buttons" style="margin-left: 90%;"><s:submit id="shipmentbutton"
                                                                          name="saveDropShipmentDetails"
                                                                          value="Save"/></div>

@@ -9,6 +9,7 @@ import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
@@ -78,6 +79,7 @@ public class CreateDropShipmentAction extends BaseAction {
         }
     }
 
+    
      @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution saveDropShipmentDetails() {
         Shipment shipment = new Shipment();
@@ -157,6 +159,26 @@ public class CreateDropShipmentAction extends BaseAction {
         return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
     }
 
+
+    private Resolution getAwbForHkCourier (){
+        
+          if (ThirdPartyAwbService.integratedCouriers.contains(selectedCourier.getId())) {
+				Double weightInKg = shipment.getBoxWeight();
+				if (weightInKg == 0D) {
+					weightInKg = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
+				}
+				Awb thirdPartyAwb = awbService.getAwbForThirdPartyCourier(selectedCourier, shippingOrder, weightInKg);
+				if (thirdPartyAwb == null) {
+					addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage(" The tracking number could not be generated"));
+					return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+				} else {
+					finalAwb = (Awb) awbService.save(thirdPartyAwb, null);
+					awbService.save(finalAwb, EnumAwbStatus.Attach.getId().intValue());
+				}
+			}
+
+         return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
+    }
 
     private Awb updateAttachStatus(Awb finalAwb) {
         int rowsUpdate = (Integer) awbService.save(finalAwb, EnumAwbStatus.Attach.getId().intValue());
