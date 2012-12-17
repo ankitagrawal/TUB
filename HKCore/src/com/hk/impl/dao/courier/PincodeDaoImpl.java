@@ -1,8 +1,6 @@
 package com.hk.impl.dao.courier;
 
 import java.util.List;
-import java.util.ArrayList;
-
 import com.hk.domain.courier.Zone;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
@@ -11,11 +9,12 @@ import org.springframework.stereotype.Repository;
 import org.apache.commons.lang.StringUtils;
 
 import com.hk.domain.core.Pincode;
+import com.hk.domain.core.City;
 import com.hk.domain.courier.PincodeDefaultCourier;
-import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.courier.PincodeDao;
+
 
 @SuppressWarnings("unchecked")                                                                   
 @Repository
@@ -76,4 +75,13 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
 		pincodeList.addAll(incompletePincodeList);
 		return pincodeList;
 	}
+
+
+	public List<Pincode> getPincodes(City city) {
+		DetachedCriteria pincodeCriteria = DetachedCriteria.forClass(Pincode.class);
+		pincodeCriteria.add(Restrictions.eq("city", city));
+		return (List<Pincode>) findByCriteria(pincodeCriteria);
+
+	}
 }
+

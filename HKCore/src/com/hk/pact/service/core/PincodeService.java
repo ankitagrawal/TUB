@@ -3,6 +3,7 @@ package com.hk.pact.service.core;
 import java.util.List;
 
 import com.hk.domain.core.Pincode;
+import com.hk.domain.core.City;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Zone;
@@ -21,9 +22,9 @@ public interface PincodeService {
 
 	public Zone getZoneByName(String zoneName);
 
-	 public List<Pincode> getPincodeNotInPincodeRegionZone();
+	 public List<Pincode> getPincodeNotInPincodeRegionZone();	
 
-	public void assignPincodeRegionToPincode(Pincode pincode);
+	public List<Pincode> getPincodes(City city);
 
 
 }

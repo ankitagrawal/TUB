@@ -24,8 +24,8 @@ public interface PincodeRegionZoneDao extends BaseDao {
 
     public PincodeRegionZone getPincodeRegionZone(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse);
 
-	 public List<PincodeRegionZone> getPincodeRegionZoneList(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse);
+     public List<PincodeRegionZone> getPincodeRegionZoneList(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse);
 
-	public List<PincodeRegionZone> getMatchingPincodeRegionZone(Pincode pincode);
+	public Integer assignPincodeRegionZoneToPincode(Pincode pincode);
 
     }

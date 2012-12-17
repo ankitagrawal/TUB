@@ -113,18 +113,19 @@ public class MasterPincodeAction extends BaseAction {
 			return new RedirectResolution(MasterPincodeAction.class);
 		}
 		Pincode pincodeByCode = pincodeDao.getByPincode(pincode.getPincode());
+		Pincode pincodeDb = null;
 		if (pincodeByCode != null && pincode.getId() == null) {
 			pincodeByCode.setLocality(pincode.getLocality());
 			pincodeByCode.setCity(pincode.getCity());
 			pincodeByCode.setState(pincode.getState());
 			pincodeByCode.setRegion(pincode.getRegion());
 			pincodeByCode.setDefaultCourier(pincode.getDefaultCourier());
-			pincodeDao.save(pincodeByCode);
+			pincodeDb =(Pincode)pincodeDao.save(pincodeByCode);
 		} else {
-			pincodeDao.save(pincode);
+			pincodeDb = (Pincode)pincodeDao.save(pincode);
 		}
-		pincodeService.assignPincodeRegionToPincode(pincode);
-		addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
+		Integer PrzSaved = pincodeRegionZoneDao.assignPincodeRegionZoneToPincode(pincodeDb);
+		addRedirectAlertMessage(new SimpleMessage(" Total :::  " + PrzSaved + "Pincode Region Zone saved :: " + pincode.getPincode()));
 		return new RedirectResolution(CourierServiceInfoAction.class).addParameter("pincode", pincode.getPincode());
 	}
 

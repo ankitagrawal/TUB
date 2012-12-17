@@ -1,12 +1,14 @@
 package com.hk.admin.impl.dao.courier;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.domain.core.Pincode;
@@ -15,6 +17,7 @@ import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.courier.PincodeDao;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,7 +31,8 @@ import com.hk.impl.dao.BaseDaoImpl;
 public class PincodeRegionZoneDaoImpl extends BaseDaoImpl implements PincodeRegionZoneDao {
 
     private static Logger logger = LoggerFactory.getLogger(PincodeRegionZoneDaoImpl.class);
-
+	 @Autowired
+	PincodeDao pincodeDao;
 
     public List<PincodeRegionZone> getSortedRegionList(List<Courier> courierList, Pincode pincode, Warehouse warehouse) {
 
@@ -90,11 +94,39 @@ public class PincodeRegionZoneDaoImpl extends BaseDaoImpl implements PincodeRegi
 		return (List<PincodeRegionZone>) pincodeRegionZoneCriteria.list();
 	}
 
-	public List<PincodeRegionZone> getMatchingPincodeRegionZone(Pincode pincode){
-		String hqlQuery = "from Pincode p   where p not in (select pincode from PincodeRegionZone ) ";
+	//get NearbyPincode(Pincodes of same city) , save Pincode Region Zones of new pincode/edited pincode same as NearByPincode
+	public Integer assignPincodeRegionZoneToPincode(Pincode pincode) {
+		int recordsSaved = 0;
+		List<Pincode> nearByPincodes = pincodeDao.getPincodes(pincode.getCity());
+		List<PincodeRegionZone> pincodeRegionZoneList = new ArrayList();
 
+		if (nearByPincodes != null && nearByPincodes.size() > 0) {
+			for (Pincode pincodeO : nearByPincodes) {
+				if (pincodeO.equals(pincode)) {
+					continue;
+				}
+				List<PincodeRegionZone> pincodeRegionZoneListDb = getPincodeRegionZoneList(null, pincodeO, null);
+				if (pincodeRegionZoneListDb != null && pincodeRegionZoneListDb.size() > 0) {
+					pincodeRegionZoneList = pincodeRegionZoneListDb;
+					break;
+				}
+			}
+			List<PincodeRegionZone> alreadyExistingPrzForPincode = getPincodeRegionZoneList(null, pincode, null);
+			for (PincodeRegionZone pincodeRegionZone : alreadyExistingPrzForPincode) {
+				delete(pincodeRegionZone);
+			}
+			for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
+				PincodeRegionZone newPincodeRegionZone = new PincodeRegionZone();
+				newPincodeRegionZone.setRegionType(pincodeRegionZone.getRegionType());
+				newPincodeRegionZone.setCourierGroup(pincodeRegionZone.getCourierGroup());
+				newPincodeRegionZone.setWarehouse(pincodeRegionZone.getWarehouse());
+				newPincodeRegionZone.setPincode(pincode);
+				save(newPincodeRegionZone);
+				recordsSaved++;
+			}
+		}
 
+		return recordsSaved;
 	}
-	
 
 }
