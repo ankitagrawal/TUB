@@ -46,6 +46,20 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		return (AffiliateTxn) save(affiliateTxn);
 	}
 
+    public AffiliateTxn saveTxn(Affiliate affiliate, Double amountToAdd, AffiliateTxnType affiliateTxnType, Order order) {
+        AffiliateTxn affiliateTxn = new AffiliateTxn();
+        affiliateTxn.setAffiliate(affiliate);
+        if (affiliateTxnType.getId().equals(EnumAffiliateTxnType.PENDING.getId()) || affiliateTxnType.getId().equals(EnumAffiliateTxnType.ADD.getId())) {
+            affiliateTxn.setAmount(amountToAdd);
+        } else if (affiliateTxnType.getId().equals(EnumAffiliateTxnType.SENT.getId())) {
+            affiliateTxn.setAmount(amountToAdd * -1);
+        }
+        affiliateTxn.setAffiliateTxnType(affiliateTxnType);
+        affiliateTxn.setOrder(order);
+        affiliateTxn.setDate(new Date());
+        return (AffiliateTxn) save(affiliateTxn);
+    }
+
 	@SuppressWarnings("unchecked")
 	public Page getReferredOrderListByAffiliate(Affiliate affiliate, Date startDate, Date endDate, int pageNo, int perPage) {
 

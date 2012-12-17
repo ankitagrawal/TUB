@@ -1053,4 +1053,15 @@
             <!--${hk:isOrderForDiscretePackaging(${id})}-->
         </example>
     </function>
+	<function>
+		<description>
+			returns ProductVariantSupplierInfo
+		</description>
+		<name>getPVSupplierInfo</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>com.hk.domain.catalog.ProductVariantSupplierInfo getPVSupplierInfo(com.hk.domain.catalog.Supplier,com.hk.domain.catalog.product.ProductVariant)</function-signature>
+		<example>
+			${hk:getPVSupplierInfo(${supplier, productVariant})}
+		</example>
+	</function>
 </taglib>
