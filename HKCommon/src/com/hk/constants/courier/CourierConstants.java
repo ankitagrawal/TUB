@@ -97,6 +97,7 @@ public class CourierConstants {
     public static final String HKD_WORKSHEET_NAME = "NAME";
     public static final String HKD_WORKSHEET_MOBILE = "MOBILE NO:";
     public static final String HKD_WORKSHEET_DATE = "DATE:";
+	public static final String HKD_HUB = "HUB:";
     public static final String HKD_WORKSHEET_TOTALPKTS = "TOTAL PKTs:";
     public static final String HKD_WORKSHEET_TOTAL_PREPAID_BOX = "TOTAL PRE-PAID BOX:";
     public static final String HKD_WORKSHEET_TOTAL_COD_BOX = "TOTAL COD BOX:";
