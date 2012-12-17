@@ -62,24 +62,30 @@
 
 
          <div class="prodBoxes">
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC01' productDesc="Pure extracts of Saffron, Winter cherry & Turmeric diminish age spots, uneven pigmentation and freckles for an even skin tone. "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC03' productDesc="Enriched with Brahmi, Neelibrigandi and Seaweed extract, stimulates hair growth, nourishes cuticles and prevents hair loss."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC07' productDesc="Before- bed cream with Saffron and Kumkumadi to refine, sooth and hydrate skin.   "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC08' productDesc="Turmeric blended with Sandal and Jojoba, it removes age spots, hyper pigmentation, uneven tone & sun discoloration. "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC15' productDesc="Saffron and Sandal essence work together to keep skin hydrated, refreshed and free from spots.  "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC27' productDesc="Protects and prevents further hair damage, gives life to damaged hair"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='AYUCR1' productDesc="Get rid of unwanted fat and regain body shape with enjoyable massages. Ayu Care Lavana Tailam makes fat loss enjoyable!"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BRUT03' productDesc="This eau de toilette for men has a warm and spicy heart and woody base notes"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY111' productDesc="Light restorative cream to banish dark circles  "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY120' productDesc="Fight blemished skin with an arsenal of LHA and Bio-Assimilated Ceramide "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY138' productDesc="A potent combination of Peptide and Vitamin C to boost collagen production. It firms and regenerates skin"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY679' productDesc="Natural Beewax and Olive oil for delectably soft lips."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY723' productDesc="Effective formula controls dandruff and maintains a healthy scalp to provide a complete hair care solution."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY760' productDesc="Rose Geranium essential oil for ever-so-smooth skin"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY764' productDesc="Ground Walnut and Apricot exfoliates & rehydrates skin. Soothing Almond, Rosemary and Lemon oil detoxifies & rejuvenates dull skin.   "/>
-
-                
-
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY586' productDesc='Ayurvedic formula helps break down fat, strengthens the skin dermis and tones the tummy in 3-6 weeks.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='AYUCR1' productDesc="Get rid of unwanted fat and regain body shape with enjoyable massages. Ayu Care Lavana Tailam makes fat loss enjoyable!"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VLC001' productDesc='A non greasy oil infused with aromatic herbs. It fights cellulite build-up,  moisturized and firms up the skin'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC4' productDesc="Dissolves when in contact with warm skin, Lavender oil decreases melanin & clears stubborn hyper pigmentation spots and acne marks. "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY18' productDesc="Essence of Saw Palmetto, Pumpkin Seed Oil, Stinging Nettle and Ginseng extract, prevents pattern baldness and diffused hair loss."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BASCAR61' productDesc='Soothes exhausted eyes, calms senses and treats sinuses & aches.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BASCAR42' productDesc='Perfect travelling companion kit to ensure you sleep well even in flights and waiting lounges'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GLD16' productDesc='Your intimates needs a razor with a small head for a close and tender shave. Infused with Aloe and tea tree oil'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY560' productDesc='Reduces the effect of UV rays on skin, moisturizes and softens the skin, gives you that radiant look'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC01' productDesc="Pure extracts of Saffron, Winter cherry & Turmeric diminish age spots, uneven pigmentation and freckles for an even skin tone. "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY723' productDesc="Effective formula controls dandruff and maintains a healthy scalp to provide a complete hair care solution."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI10' productDesc="Exfoliating soap that makes skin soft and smooth. The ground Apricot and Mulberry keeps dry skin at bay. "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VAADI36' productDesc="Prevents premature ageing, wrinkling of skin, relaxes muscles, makes skin smooth and gives deeper sleep."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VLCCFRT22' productDesc="Incredibly soothing body lotion for dry &troubled skin"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY19' productDesc="Essence of Grape Seed, Resveratrol, Pine Bark, Saffron & Green Tea, protects and lightens skin."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC21' productDesc="Antiseptic and gentle wash to diminish pigmentation, acne, open pores & oily skin. "/>
+			<!-- <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GAT24' productDesc="No crunch, strong hold, non sticky wax for that hair statement"/> -->
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC46' productDesc="Goodness of Bhringraj, Glycerin and Soy oil, conditions and hydrates dead locks. Absolute nourishment for chemically treated hair."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY16' productDesc='Fortified with amino acids that nourishes hair, improves its strength and reduces hairfall'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY679' productDesc="Natural Beewax and Olive oil for delectably soft lips."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MNFCR23' productDesc="Give yourself the gift of soft, smooth radiant skin with this Spa set!"/>
+			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARMTR18' productDesc="An invigorating experience crafted to suit all skin types, this skin-whitening facial kit leaves you absolutely fabulous."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARMTR4' productDesc="Bid good bye to acne, zits, soreness and inflammation caused after waxing or threading. Multipurpose non-sticky gel for all skin types."/>
          </div>
         <div class="cl"></div>
         

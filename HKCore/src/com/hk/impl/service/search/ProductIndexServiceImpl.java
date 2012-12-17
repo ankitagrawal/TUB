@@ -36,8 +36,12 @@ public class ProductIndexServiceImpl implements ProductIndexService {
     public void indexProduct(Product product){
         try{
             SolrProduct solrProduct = productService.createSolrProduct(product);
-            updateExtraProperties(product, solrProduct);
-            indexProduct(solrProduct);
+            if(!product.isDeleted()){
+                updateExtraProperties(product, solrProduct);
+                indexProduct(solrProduct);
+            }else{
+                deleteProduct(product);
+            }
         } catch (Exception ex) {
             logger.error(String.format("Unable to build Solr index for Product %s", product.getId()), ex);
         }
@@ -70,6 +74,16 @@ public class ProductIndexServiceImpl implements ProductIndexService {
     private void indexProduct(SolrProduct product){
         try{
             solr.addBean(product);
+        }catch(SolrServerException ex){
+            logger.error("Solr error during indexing the product", ex);
+        }catch(IOException ex){
+            logger.error("Solr error during indexing the product", ex);
+        }
+    }
+
+    private void deleteProduct(Product product){
+        try{
+            solr.deleteById(product.getId());
         }catch(SolrServerException ex){
             logger.error("Solr error during indexing the product", ex);
         }catch(IOException ex){

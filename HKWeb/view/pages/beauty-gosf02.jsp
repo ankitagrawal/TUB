@@ -63,28 +63,32 @@
 
 
          <div class="prodBoxes">
-
-
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DENMAN9' productDesc="Large, barrel shaped, anti-static, heat retaining rollers for quicker, long-lasting curls"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DIVO12' productDesc="Perfect hairbrush cleaning accessory, ensures no fluff is left behind on your paddle brush"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='FABIN47' productDesc="Goodness of Papaya and Fuller’s Earth, deep cleanses and detoxifies the skin, leaving it firm and radiant."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='FESTGLAM1' productDesc="Super glossy and super fruity, It gives you a wet look gloss, hydrates lips and stays on for long."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GAT24' productDesc="No crunch, strong hold, non sticky wax for that hair statement"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GLD12' productDesc="Triple Blades with pivoting head, glides smoothly over skin. Aloe lubricating strip with Vitamin E reduces irritation and hydrates."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='H2O007' productDesc="Oil free gel offers deep hydration to minimize fine lines and replenish dry skin. "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='H2O009' productDesc="Infused with herbal Mint essence, Wakame and Sea Fennel hydrates. Prevents chapping, feathering and smoothens fine lines"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='H2O012' productDesc="Enriched with Watercress, Iceland moss and Pro-vitamin B, it conditions the skin, improves elasticity, hydrates & lightly scents."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='H2O021' productDesc="Enriched with Vitamin B & E,nourishes, hydrates and rejuvenates skin."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='JSTHB23' productDesc="Night cream with natural ingredients, minimizes dark circles, stimulates blood circulation and nurtures skin effectively."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='KHADI37' productDesc="Exfoliating and moisturizing scrub with rose essence, sloughs dry skin cells "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='LOREAL39' productDesc="Non-greasy, non-sticky moisturizer that is quickly absorbed, sooths, recharges and hydrates skin after shaving"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='LYD1' productDesc="Goodness of Bhringraj, Amalaki, Neem & Gunja, this controls hair fall, removes dandruff, revitalizes and darkens hair."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI01' productDesc="Silky emulsion lightens spots, scars & fine lines and moisturizes skin. Can be used all over the body"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI02' productDesc="Highly potent whitening agents to lighten dark patches and complexion without irritation.. "/>
-
-                
-
-         </div>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VNCP18' productDesc="Exfoliating scrub with a mystical blend of Licorice, Neem & Tulsi "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY111' productDesc="Light restorative cream to banish dark circles  "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OLY018' productDesc="Moisturize before bed and get firm skin and fight 7 signs of aging."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC07' productDesc="Before- bed cream with Saffron and Kumkumadi to refine, sooth and hydrate skin.   "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GILI07' productDesc='Fine blade edges and lubricating strip that ensures you have a smooth shave with least amount of irritation'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY120' productDesc="Fight blemished skin with an arsenal of LHA and Bio-Assimilated Ceramide "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DIVO12' productDesc="Perfect hairbrush cleaning accessory, ensures no fluff is left behind on your paddle brush"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PLMCL06' productDesc="Infused with Tea Tree, Lavender, Peppermint & Chamomile. Revitalizes, adds vitality, deep cleans and softens tresses."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC2' productDesc="Lush moisturizer to rehydrate and sooth the thirstiest of skins"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='STVKC04' productDesc="Effective herbal treatment for acne-prone skin"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC38' productDesc="Enriched with Lactic Acid, get rid of tanned skin, enhance fairness and achieve even skin tone"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI07' productDesc="Caviar extracts for skin so soft, smooth and radiant, it glows from within."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SHNZ06' productDesc="Extracts of Vetiver and Dates with Diamond and Tankana, purifies skin and improves cell regeneration"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC15' productDesc="Saffron and Sandal essence work together to keep skin hydrated, refreshed and free from spots.  "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VICHY4' productDesc="Effective weapon to fight against UV rays. Non sticky, ultra-protective emulsion with micro-sized filtering particles."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY764' productDesc="Ground Walnut and Apricot exfoliates & rehydrates skin. Soothing Almond, Rosemary and Lemon oil detoxifies & rejuvenates dull skin.   "/>
+			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='STVKC05' productDesc="Comprehensive solution for problematic skin, reduces excess oil, pacifies sebum formation and regulates hormonal imbalance."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='STVKC18' productDesc="Anti-frizz conditioner that gently smoothes cuticles, reduces friction and helps fortify hair."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PNOG14' productDesc="Discover youthful radiance in 5 easy steps. Essential oils and herbal extract, balances and replenishes dull, dehydrated skin."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PNOG15' productDesc="Skin-beneficial nutrients offer dollops of moisture, nourishes, balances and restores sun-damaged skin."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PNOG34' productDesc="Brown sugar gently scrubs rough surface cells while nourishing Cocoa and Shea butter conditions deeply."/>			                
+			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MYBLN31' productDesc="Smudge-proof, creamy gel comes in two distinct shades that can be used separately for either an intense line or dramatic shine."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='REV19' productDesc="A buttery balm that easily glides on your lips. Hydrates, nourishes, tints to give you luscious, healthy glowing lips."/>
+        </div>
         <div class="cl"></div>
 
         <div class="pages">

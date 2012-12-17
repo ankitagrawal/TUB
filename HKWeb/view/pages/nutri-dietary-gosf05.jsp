@@ -62,6 +62,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf06.jsp">Next →</a>
 
@@ -70,31 +71,23 @@
           <div class="cl"></div>
         
         <div class="prodBoxes">
-
-
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1107' productDesc='Ideal for diabetics, it is known to maintain blood sugar levels and enforce a healthy lifestyle'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1125' productDesc='Get all the health benefits of Garlic without the smell and the taste. Detoxify, eliminate free radicals and combat aging!'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1084' productDesc='Rich in anti-oxidants, fat soluble product, that protects againt free radicals and migraine attacks.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1131' productDesc='Meant to enhance intestinal and colon health, it is suitable for people suffering from constipation and intestinal troubles.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1051' productDesc='Dietary supplement that fills the deficiency of vitamin B12 in the body.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1078' productDesc='These herbal capsules help cure night blindness and improve ones vision. It is feasible for both men and women.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1050' productDesc='Promote overall skin and hair health with Vitamin Shoppes Biotin. Get rid of dermatitis and dandruff.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1033' productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1012' productDesc='Enhances digestion of proteins and functioning of joints '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1068' productDesc='A traditional herb that provides nutritional support to your body and also stimulates blood circulation.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1130' productDesc='Reduces cardiovascular diseases, prevents ostioporosis and promotes bone health'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1116' productDesc='A dietary supplement with Vitamin D, helps in maintaining healthy bones, improving metabolism and ensuring healthy nails and hair'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1086' productDesc='Fortify yourself against bone loss and tooth decay with VS Calcium Citrate. Calcium also helps protect against fractures.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1119' productDesc='A calcium supplement for keeping bones and joints healthy. Ideal for senior citizens and those with joint troubles.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1047' productDesc='Use VS Carnipure for burning body fat and promoting muscle recovery after intense workouts. Suitable for serious gym goers. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1113' productDesc='Ideal for improving heart health, it is packed with L-Carnitine to ensure a quicker metabolism of fats in cells.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1064' productDesc='It contains Anthraquinones that helps treat constipation naturally. It can be used by both men and women.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1120' productDesc='Ideal for people with high BP, it manages your blood pressure and aids in the digestive process.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1019' productDesc='Meant for general wellness, its a powerful shot of Vitamin A, Vitamin D and Omega-3 fatty acids that enhance heart health.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1046' productDesc='It contains Vitamin E that helps promote a healthy heart.It is recommended for both men and women.'/>
-
-
-            </div>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT994' productDesc='Specially formulated to protect, rejuvenate and detoxify the Liver.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1005' productDesc='Detoxifies, compliments your diet, and boosts energy levels '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1012' productDesc='Enhances digestion of proteins and functioning of joints '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT822' productDesc='Formulated with natural extarcts, it energizes, rejuvenates your body and also strengthens your immune sytem.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1034' productDesc='Supports energy production and also helps maintain healthy nerve and red blood cells.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1112' productDesc='Health supplement that stimulates the immune system against diseases and infections'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1100' productDesc='A product that provides a mix of essential vitamins and minerals to the body. Ideal for women over the age of 50.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1015' productDesc='Natural sugar destroyer, helps balance blood sugar and supports glucose metabolism.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1315' productDesc='A comprehensive Vitamin and Mineral formula for rapid growth'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1072' productDesc='A trusted and tried method to boost sexual energy for both men and women. Also detoxifies the urinary system naturally.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1138' productDesc='These capsules contain calcium,magnessium,zinc and vitamin D3 that makes it ideal for getting stronger bones.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1056' productDesc='No Flush Niacin helps in many bio-chemical functions, metabolism of fats and gives a glowing and healthy skin'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1313' productDesc='They provide all the essential vitamins,minerals and aminos for a healthier prostate functioning. It is unisex in nature.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1017' productDesc='Improves bone-strength, bone metabolism, blood coagulation and vascular biology'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1010' productDesc='Dietary supplement which is essential for healthier red blood cell metabolism, efficient nervous and immune system.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1078' productDesc='These herbal capsules help cure night blindness and improve ones vision. It is feasible for both men and women.'/>
+		</div>
 
         <div class="cl"></div>
 
@@ -118,6 +111,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf06.jsp">Next →</a>
 

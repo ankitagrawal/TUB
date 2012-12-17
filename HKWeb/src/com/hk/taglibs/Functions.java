@@ -5,10 +5,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 
+import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.domain.catalog.ProductVariantSupplierInfo;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.content.HeadingProduct;
+import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
@@ -505,10 +511,10 @@ public class Functions {
         return skuDao.filterProductVariantsByWarehouse(sku.getProductVariant().getProduct().getProductVariants(), sku.getWarehouse());
     }
 
-    public static List<Product> getCategoryHeadingProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
-        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-        return productService.productsSortedByOrder(primaryCategoryHeadingId, productReferrer);
-    }
+//    public static List<Product> getCategoryHeadingProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
+//        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+//        return productService.productsSortedByOrder(primaryCategoryHeadingId, productReferrer);
+//    }
 
     public static boolean isComboInStock(Object o) {
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
@@ -667,6 +673,10 @@ public class Functions {
         return  productService.validTryOnProductVariant(product);
     }
 
+  public static List<HeadingProduct> getHeadingProductsSortedByRank(Long headingId){
+    HeadingProductService  headingProductService = ServiceLocatorFactory.getService(HeadingProductService.class);
+    return headingProductService.getHeadingProductsSortedByRank(headingId);
+  }
 
     public static Country getCountry(Long countryId) {
         AddressService addressService = ServiceLocatorFactory.getService(AddressService.class);
@@ -720,5 +730,14 @@ public class Functions {
         }
         return false;
     }
+
+	public static ProductVariantSupplierInfo getPVSupplierInfo(Supplier supplier, ProductVariant productVariant) {
+		if (supplier != null && productVariant != null) {
+			ProductVariantSupplierInfoService productVariantSupplierInfoService = ServiceLocatorFactory.getService(ProductVariantSupplierInfoService.class);
+			return productVariantSupplierInfoService.getOrCreatePVSupplierInfo(productVariant, supplier);
+		} else {
+			return null;
+		}
+	}
 
 }
