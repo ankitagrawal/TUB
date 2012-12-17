@@ -49,7 +49,7 @@
          <legend>Add Pincode Or Edit Picode Details</legend>
 			<table>
 				<s:form beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
-					<s:hidden name="pincode.id" value="${mpaBean.pincode.id}"/>
+					<s:hidden name="pincode.id" value="${mpaBean.pincode.id}"/> 					
 					<tr>
 						<td>Pincode:</td>
 						<td><s:text name="pincode.pincode" value="${mpaBean.pincode.pincode}"/></td>

@@ -35,6 +35,7 @@ import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
+import com.hk.domain.core.City;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.RegionType;
 import com.hk.domain.courier.CourierGroup;
@@ -81,6 +82,7 @@ public class MasterPincodeAction extends BaseAction {
 	private List<Pincode> pincodeList;
 
 
+
 	@DefaultHandler
 	public Resolution pre() {
 		try {
@@ -107,6 +109,7 @@ public class MasterPincodeAction extends BaseAction {
 	}
 
 	public Resolution save() {
+		Integer PrzSaved  = 0;
 		if (pincode == null || StringUtils.isBlank(pincode.getPincode()) || pincode.getCity() == null || pincode.getState() == null
 				|| pincode.getPincode().length() < 6 || (!StringUtils.isNumeric(pincode.getPincode()))) {
 			addRedirectAlertMessage(new SimpleMessage("Enter values correctly."));
@@ -115,18 +118,28 @@ public class MasterPincodeAction extends BaseAction {
 		Pincode pincodeByCode = pincodeDao.getByPincode(pincode.getPincode());
 		Pincode pincodeDb = null;
 		if (pincodeByCode != null && pincode.getId() == null) {
+			City previousCity = pincodeByCode.getCity();
 			pincodeByCode.setLocality(pincode.getLocality());
 			pincodeByCode.setCity(pincode.getCity());
 			pincodeByCode.setState(pincode.getState());
 			pincodeByCode.setRegion(pincode.getRegion());
 			pincodeByCode.setDefaultCourier(pincode.getDefaultCourier());
-			pincodeDb =(Pincode)pincodeDao.save(pincodeByCode);
+			pincodeDb = (Pincode) pincodeDao.save(pincodeByCode);
+			if (!(previousCity.equals(pincode.getCity()))) {
+				PrzSaved = pincodeRegionZoneDao.assignPincodeRegionZoneToPincode(pincodeDb);
+			}
 		} else {
-			pincodeDb = (Pincode)pincodeDao.save(pincode);
+			pincodeDb = (Pincode) pincodeDao.save(pincode);
+			PrzSaved = pincodeRegionZoneDao.assignPincodeRegionZoneToPincode(pincodeDb);
 		}
-		Integer PrzSaved = pincodeRegionZoneDao.assignPincodeRegionZoneToPincode(pincodeDb);
-		addRedirectAlertMessage(new SimpleMessage(" Total :::  " + PrzSaved + "Pincode Region Zone saved :: " + pincode.getPincode()));
+		if(PrzSaved > 0){
+		addRedirectAlertMessage(new SimpleMessage(" Pincode Saved and  Total ::::::::  " + PrzSaved + "    ------- New Pincode Region Zone also saved For Pincode :: " + pincodeDb.getPincode()));
+		return new RedirectResolution(MasterPincodeAction.class, "searchPincodeRegion").addParameter("pincodeRegionZone.pincode.pincode", pincodeDb.getPincode());
+		}
+		else {
+		addRedirectAlertMessage(new SimpleMessage("Pincode changes saved and PRZs are not changed"));	
 		return new RedirectResolution(CourierServiceInfoAction.class).addParameter("pincode", pincode.getPincode());
+		}
 	}
 
 	public Resolution generatePincodeExcel() throws Exception {
@@ -299,4 +312,5 @@ public class MasterPincodeAction extends BaseAction {
 	public List<Pincode> getPincodeList() {
 		return pincodeList;
 	}
+
 }
