@@ -73,7 +73,7 @@
                             ${checkDetails.bankName}
                     </td>
                     <td>
-                            ${checkDetails.affiliateTxn.amount - checkDetails.tds}
+                            ${checkDetails.affiliateTxn.amount + checkDetails.tds}
                     </td>
                     <td>
                             ${checkDetails.tds}

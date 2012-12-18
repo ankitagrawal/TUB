@@ -10369,96 +10369,73 @@
     <changeSet author="Tarun (generated)" id="1354696987883-1">
         <dropColumn columnName="zone" tableName="pincode"/>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1355124774120-1">
-        <createTable tableName="dispatch_lot">
+    <changeSet author="Shrey (generated)" id="1355137007231-1">
+        <createTable tableName="heading_product">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="docket_number" type="VARCHAR(45)">
+            <column name="heading_id" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="courier_id" type="INT">
+            <column name="product_id" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="zone_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="source" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="destination" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="no_of_shipments_sent" type="INT">
-            </column>
-            <column name="no_of_shipments_received" type="INT">
-            </column>
-            <column name="no_of_mother_bags" type="INT">
-            </column>
-            <column name="total_weight" type="DECIMAL(12,2)">
-            </column>
-            <column name="remarks" type="TEXT"/>
-            <column name="dispatch_date" type="DATETIME">
-            </column>
-            <column name="create_dt" type="DATETIME">
-                <constraints nullable="false"/>
-            </column>
-            <column name="delivery_dt" type="DATETIME">
-            </column>
-            <column name="dispatch_lot_status_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
+            <column defaultValueNumeric="0" name="rank" type="INT"/>
         </createTable>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1355124774120-2">
-        <createTable tableName="dispatch_lot_has_shipment">
+    <changeSet author="Shrey (generated)" id="1355137007231-12">
+        <addForeignKeyConstraint baseColumnNames="heading_id" baseTableName="heading_product" constraintName="fk_heading_product_primary_category_heading1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="primary_category_heading" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1355137007231-13">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="heading_product" constraintName="fk_heading_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-1">
+        <createTable tableName="product_variant_supplier_info">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="dispatch_lot_id" type="INT">
+            <column name="product_variant_id" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="shipment_id" type="INT">
+            <column name="supplier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="asked_qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="received_qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="fill_rate" type="DECIMAL(12,2)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1355124774120-3">
-        <createTable tableName="dispatch_lot_status">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="name" type="VARCHAR(45)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1355124774120-4">
-        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="dispatch_lot" constraintName="fk_dispatch_lot_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1355124774120-5">
-        <addForeignKeyConstraint baseColumnNames="dispatch_lot_status_id" baseTableName="dispatch_lot" constraintName="fk_dispatch_lot_dispatch_lot_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="dispatch_lot_status" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1355124774120-6">
-        <addForeignKeyConstraint baseColumnNames="zone_id" baseTableName="dispatch_lot" constraintName="fk_dispatch_lot_zone1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="zone" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1355124774120-7">
-        <addForeignKeyConstraint baseColumnNames="dispatch_lot_id" baseTableName="dispatch_lot_has_shipment" constraintName="fk_dispatch_lot_has_shipment_dispatch_lot1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="dispatch_lot" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1355124774120-8">
-        <addForeignKeyConstraint baseColumnNames="shipment_id" baseTableName="dispatch_lot_has_shipment" constraintName="fk_dispatch_lot_has_shipment_shipment1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipment" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Tarun (generated)" id="1355292899929-1">
-        <addColumn tableName="dispatch_lot_has_shipment">
-            <column name="shipment_status" type="VARCHAR(45)">
-                <constraints nullable="false"/>
-            </column>
+    <changeSet author="Rohit (generated)" id="1355468432445-2">
+        <addColumn tableName="po_line_item">
+            <column name="fill_rate" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1355308989213-1">
-        <createIndex indexName="dispatch_lot_shipment_unique" tableName="dispatch_lot_has_shipment" unique="true">
-            <column name="dispatch_lot_id"/>
-            <column name="shipment_id"/>
+    <changeSet author="Rohit (generated)" id="1355468432445-3">
+        <addColumn tableName="po_line_item">
+            <column name="received_qty" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-4">
+        <addColumn tableName="purchase_order">
+            <column name="fill_rate" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-5">
+        <createIndex indexName="product_variant_supplier_key" tableName="product_variant_supplier_info" unique="true">
+            <column name="product_variant_id"/>
+            <column name="supplier_id"/>
         </createIndex>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-6">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="product_variant_supplier_info" constraintName="fk_product_variant_supplier_info_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-7">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="product_variant_supplier_info" constraintName="fk_product_variant_supplier_info_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>

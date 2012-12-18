@@ -16,13 +16,25 @@
             }
           });
           if (!check) {
-            alert("Please select the product(s) to be deleted!");
+            alert("Please select the product(s) to be deleted!!");
             return false;
           }
           else {
             var proceed = confirm('Are you sure that you want to delete the product(s) selected?');
             if (proceed) return true;
             else return false;
+          }
+        });
+           $('.editBtn').click(function() {
+          var check = 0;
+          $('.checkbox').each(function() {
+            if ($(this).attr("checked") == "checked") {
+              check = 1;
+            }
+          });
+          if (!check) {
+            alert("Please select the product(s) to be edited!!");
+            return false;
           }
         });
       });
@@ -34,16 +46,21 @@
     <h2>${ha.heading.name}</h2>
     <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
-	      <tr><th>ID</th><th>Product</th><th>OOS</th><th>Sorting</th></tr>
-        <c:forEach var="product" items="${ha.heading.products}">
+	      <tr>
+		      <th>ID</th></th><th>Product</th><th>OOS</th><th>Deleted</th><th>Hidden</th><th>Sorting</th>
+	      </tr>
+        <c:forEach var="headingProducts" items="${ha.headingProducts}">
           <tr>
             <td>
-              <s:checkbox class="checkbox" value="${product.id}" name="products[]"/>${product.id}
+              <s:checkbox class="checkbox" value="${headingProducts.product.id}" name="products[]"/>${headingProducts.product.id}
             </td>
-	          <td>${product.name}</td>
-	          <td>${product.outOfStock}</td>
-	          <td>${product.orderRanking}</td>
+	          <td>${headingProducts.product.name}</td>
+	          <td>${headingProducts.product.outOfStock}</td>
+	          <td>${headingProducts.product.deleted}</td>
+	          <td>${headingProducts.product.hidden}</td>
+	          <td>${headingProducts.rank}</td>
           </tr>
+            <s:hidden name="productId" value="${headingProducts.product.id}"/>
         </c:forEach>
         <s:hidden name="heading.id" value="${ha.heading.id}"/>
       </table>
@@ -51,8 +68,15 @@
       <br/><br/>
 
       <div align="center">
-        <s:submit name="addPrimaryCategoryHeadingProducts" value="Add New" class="addBtn"/>
-        <s:submit name="deleteSelectedPrimaryCategoryHeadingProducts" value="Delete" class="deleteBtn"/>
+          <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" event="addPrimaryCategoryHeadingProducts" class="addBtn button_orange">Add
+              <s:param name="heading.id" value="${ha.heading.id}"/>
+          </s:link>
+        <%--<s:submit name="addPrimaryCategoryHeadingProducts" value="Add New" class="addBtn"/>--%>
+        <s:submit name="editSelectedPrimaryCategoryHeadingProducts" value="Edit" class="editBtn"/>
+           <%--<s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" event="editSelectedPrimaryCategoryHeadingProducts" class="editBtn button_orange">Edit--%>
+              <%--<s:param name="heading.id" value="${ha.heading.id}"/>--%>
+          <%--</s:link>--%>
+          <s:submit name="deleteSelectedPrimaryCategoryHeadingProducts" value="Delete" class="deleteBtn"/>
       </div>
       <c:choose>
         <c:when test="${ha.heading.category.name != 'home'}">

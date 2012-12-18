@@ -389,12 +389,12 @@ public class ReportManager {
 
                 String contains = "General Goods";
                 /*
-                 * Category homeHealthDevices = getCategoryService().getCategoryByName(CategoryConstants.HOME_DEVICES);
+                 * Category homeHealthDevices = getCategoryService().getCategoryByName(CategoryConstants.HEALTH_DEVICES);
                  * Category diabetes = getCategoryService().getCategoryByName(CategoryConstants.DIABETES); Category eye =
                  * getCategoryService().getCategoryByName(CategoryConstants.EYE);
                  */
 
-                Category homeHealthDevices = CategoryCache.getInstance().getCategoryByName(CategoryConstants.HOME_DEVICES).getCategory();
+                Category homeHealthDevices = CategoryCache.getInstance().getCategoryByName(CategoryConstants.HEALTH_DEVICES).getCategory();
                 Category diabetes = CategoryCache.getInstance().getCategoryByName(CategoryConstants.DIABETES).getCategory();
                 Category eye = CategoryCache.getInstance().getCategoryByName(CategoryConstants.EYE).getCategory();
 
@@ -524,12 +524,12 @@ public class ReportManager {
 
             String contains = "General Goods";
             /*
-             * Category homeHealthDevices = getCategoryService().getCategoryByName(CategoryConstants.HOME_DEVICES);
+             * Category homeHealthDevices = getCategoryService().getCategoryByName(CategoryConstants.HEALTH_DEVICES);
              * Category diabetes = getCategoryService().getCategoryByName(CategoryConstants.DIABETES); Category eye =
              * getCategoryService().getCategoryByName(CategoryConstants.EYE);
              */
 
-            Category homeHealthDevices = CategoryCache.getInstance().getCategoryByName(CategoryConstants.HOME_DEVICES).getCategory();
+            Category homeHealthDevices = CategoryCache.getInstance().getCategoryByName(CategoryConstants.HEALTH_DEVICES).getCategory();
             Category diabetes = CategoryCache.getInstance().getCategoryByName(CategoryConstants.DIABETES).getCategory();
             Category eye = CategoryCache.getInstance().getCategoryByName(CategoryConstants.EYE).getCategory();
 
@@ -974,7 +974,7 @@ public class ReportManager {
                 put(CategoryConstants.BEAUTY, CategoryConstants.BEAUTY_TARGET_SALES / numberOfDaysInMonth);
                 put(CategoryConstants.DIABETES, CategoryConstants.DIABETES_TARGET_SALES / numberOfDaysInMonth);
                 put(CategoryConstants.EYE, CategoryConstants.EYE_TARGET_SALES / numberOfDaysInMonth);
-                put(CategoryConstants.HOME_DEVICES, CategoryConstants.HOME_DEVICES_TARGET_SALES / numberOfDaysInMonth);
+                put(CategoryConstants.HEALTH_DEVICES, CategoryConstants.HEALTH_DEVICES_TARGET_SALES / numberOfDaysInMonth);
                 put(CategoryConstants.NUTRITION, CategoryConstants.NUTRITION_TARGET_SALES / numberOfDaysInMonth);
                 put(CategoryConstants.PERSONAL_CARE, CategoryConstants.PERSONAL_CARE_TARGET_SALES / numberOfDaysInMonth);
                 put(CategoryConstants.SERVICES, CategoryConstants.SERVICES_TARGET_SALES / numberOfDaysInMonth);

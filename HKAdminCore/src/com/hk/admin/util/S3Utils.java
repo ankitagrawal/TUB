@@ -80,7 +80,7 @@ public class S3Utils {
             s3Object.setKey(key);
             s3Object.setAcl(s3Service.getBucketAcl(s3Bucket));
             s3Object.setContentType(contentType);
-
+            s3Object.addMetadata("Expires", "Thu, 15 Apr 2040 20:00:00");
             s3Service.putObject(s3Bucket, s3Object);
             return Boolean.TRUE;
         } catch (ServiceException se) {
