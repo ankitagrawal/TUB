@@ -9,21 +9,39 @@ package com.hk.web.action.core.email;
  */
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.Keys;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.core.Response;
 
 @Component
 public class HKUnsubscribeEmailAction extends BaseAction {
 
+    @Value("#{hkEnvProps['" + Keys.Env.hkEmailApiUrl + "']}")
+    private String hkEmailApiUrl = null;
+
+    @Validate(required = true)
+    private String unsubscribeToken;
+
     public Resolution pre() {
 
-        Boolean success = Boolean.parseBoolean(getContext().getRequest().getParameter("success"));
-        if (success){
-            addRedirectAlertMessage(new SimpleMessage("You have been unsubscribed successfully."));
-        }else{
-            addRedirectAlertMessage(new SimpleMessage("Error unsubscribing from HealthKart. Please try again"));
+        try{
+            ClientRequest cr = new ClientRequest(hkEmailApiUrl + "?unsubscribeToken=" + unsubscribeToken );
+            ClientResponse clientResponse = cr.post();
+            if (clientResponse.getStatus() == ClientResponse.Status.OK.getStatusCode()){
+                addRedirectAlertMessage(new SimpleMessage("You have been unsubscribed successfully."));
+            }else{
+                addRedirectAlertMessage(new SimpleMessage("Error unsubscribing from HealthKart. Please try again"));
+            }
+        }catch (Exception ex){
+
         }
         return new ForwardResolution("/pages/unsubscribeEmail.jsp");
     }
