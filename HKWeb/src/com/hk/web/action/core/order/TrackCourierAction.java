@@ -156,6 +156,7 @@ public class TrackCourierAction extends BaseAction {
                 }
                 break;
 			case FedEx:
+			case FedEx_Surface:	
 				//resolution = new RedirectResolution("https://www.fedex.com/Tracking?clienttype=dotcomreg&ascend_header=1&cntry_code=in&language=english&mi=n&", false).addParameter("tracknumbers", trackingId);
 				courierName = CourierConstants.FEDEX;
         		ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);        
