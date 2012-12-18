@@ -1,4 +1,4 @@
-	package com.hk.web.action.core.order;
+package com.hk.web.action.core.order;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +17,7 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.JsonObject;
@@ -32,6 +33,7 @@ import com.hk.exception.HealthkartCheckedException;
  * User: rahul
  * Time: 15 Feb, 2010 5:38:57 PM
  */
+@Component
 public class TrackCourierAction extends BaseAction {
 
     private static            Logger                      logger                 = LoggerFactory.getLogger(TrackCourierAction.class);
