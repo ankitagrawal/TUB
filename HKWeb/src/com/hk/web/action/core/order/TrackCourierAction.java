@@ -89,6 +89,7 @@ public class TrackCourierAction extends BaseAction {
                 break;
 
             case Delhivery:
+			case Delhivery_Surface:
                 courierName = CourierConstants.DELHIVERY;
                 JsonObject jsonObject = null;
                 try {
@@ -164,6 +165,26 @@ public class TrackCourierAction extends BaseAction {
 		        }
 	            
 	            break;
+
+			case Quantium:
+				courierName = CourierConstants.QUANTIUM;
+				ele = null;
+                try {
+                    ele = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
+                } catch (HealthkartCheckedException hce) {
+                    logger.debug("Exception occurred in TrackCourierAction");
+                }
+                if (ele != null) {
+                    String courierDeliveryStatus = ele.getChildText(CourierConstants.QUANTIUM_STATUS);
+                    if (courierDeliveryStatus != null) {
+                        status = courierDeliveryStatus;
+                    }
+                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+                } else {
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
+                }
+
+				break;
             default:
                 resolution = new RedirectResolution("/pages/trackShipment.jsp");
 
