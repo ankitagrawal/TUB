@@ -87,6 +87,7 @@
         <th>Est Payment Date</th>
         <th>Payment Details</th>
         <th>GRNs</th>
+	    <th>Fill Rate</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -124,6 +125,7 @@
               &nbsp;
             </c:forEach>
           </td>
+	        <td>${purchaseOrder.fillRate}</td>
 	        <td>
 		        <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">Edit/View
 			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>

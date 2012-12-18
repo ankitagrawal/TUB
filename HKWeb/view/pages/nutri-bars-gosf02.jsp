@@ -52,17 +52,17 @@
          </div>
            <div class="cl"></div>
         
-        <div class="prodBoxes">
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1151' productDesc='Boost your gym performance with MuscleTech Hydroxystim. Enhance your focus and blaze through your fitness goals. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Keep muchies at bay with Oh Yeah Bars! Get the goodness of healthy fats and low sugar in 1 go; in 5 amazing flavors. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT711' productDesc='A mix of rare nuts, seeds, raisins, Gooseberrys and Dark Chocolate. A healthy answer to your 4 O Clock hunger pangs.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT651' productDesc='Contains essential proteins that provide overal health and builds strong bones and muscles.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT651'productDesc='copy due'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT651' productDesc='Packed with essential proteins that strengthens muscles and bones and also keeps you healthy '/>
-
+        <div class="prodBoxes">        
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1561' productDesc='Contains powerful blend of Acetyl-L-Carnitine and CoQ10 which helps in fat loss and optimizes metabolism.'/>       
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1287' productDesc='Pre-workout multi dimensional formula for improved metabolism.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1226' productDesc='A supplement that boosts energy levels and fortifies your metabolism.'/>			
+	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1151' productDesc='Boost your gym performance with MuscleTech Hydroxystim. Enhance your focus and blaze through your fitness goals. '/>
+	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Fighting all those cravings just got easier. Feed yourself 30gms of Protein, with healthy fats and low sugar with Oh Yeah Bars!'/>
+	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT640' productDesc='A high-quality protein blend that is free of hydrogenated fats and aspartame'/>        
+	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT716' productDesc='Keep muchies at bay with Oh Yeah Bars! Get the goodness of healthy fats and low sugar in 1 go; in 5 amazing flavors. '/>	        		        
+	<!--         <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT711' productDesc='A mix of rare nuts, seeds, raisins, Gooseberrys and Dark Chocolate. A healthy answer to your 4 O Clock hunger pangs.'/> -->        
+	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT651' productDesc='Contains essential proteins that provide overal health and builds strong bones and muscles.'/>	        
+	        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT651' productDesc='Packed with essential proteins that strengthens muscles and bones and also keeps you healthy '/>
         </div>
 
 

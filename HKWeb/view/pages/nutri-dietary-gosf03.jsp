@@ -61,6 +61,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf04.jsp">Next →</a>
 
@@ -68,31 +69,23 @@
          </div>
         <div class="cl"></div>
         <div class="prodBoxes">
-
-
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT946' productDesc='Enriched with Vitamin B, say hello to healthy hair and nails! This supplement also improves active blood circulation and metabolism.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT664' productDesc='A powerful supplement with folic acid that supports heart health and healthy blood profile. Ideal for women.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1323' productDesc='Regenerates blood cells, boosts energy for the anaemic.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1324' productDesc='A rich blend of Resveratrol, Natures Bounty Grape Seed Extract is a potent source of antioxidants.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1239' productDesc='Suitable for vegetarians and 100% natural, L-Arginine supports nitric oxide synthesis and after effects of strenuous exercise.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT669' productDesc='Especially designed for women, it provides 15 vital minerals and vitamins to the body for meeting the daily requirements.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1168' productDesc='This Ephedra-Free formula helps in burning calories and boosts energy '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1322' productDesc='Boosts energy metabolism, promotes healthy skin, hair and nails.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT667' productDesc='100% Veg tablets with synergistic blend of minerals, vitamins & essential nutrients. Makes your hair shiny and smooth.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT899' productDesc='Provides essential nutrients and vitamins to your body and maintains overall well being.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT659' productDesc='It is a multivitamin and multimineral supplement that promotes better immunity and stronger bones and teeth.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT900' productDesc='Combat aging with Vitamin D and extracts from 12 fruits and vegetables. Promotes physical well being and enhances vitality. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1138' productDesc='These capsules contain calcium,magnessium,zinc and vitamin D3 that makes it ideal for getting stronger bones.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1136' productDesc='These Chews are rich in essential nutrients that aids immune and growth factors. '/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1137' productDesc='It contains glucosamine that helps reduce arthritic pain and builds cartilage in joints. It is ideal for both men and women.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1140' productDesc='It improves the blood circulation in the body and helps promote a healthy heart. This product is unisex.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1139' productDesc='Omega-3 fatty acid improves bone health, overall well being of the body and provides nutrition to the body'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT316'  productDesc='Pre-workout or post-workout supplement, highly concentrated for better results.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT822'  productDesc='Formulated with natural extarcts, it energizes, rejuvenates your body and also strengthens your immune sytem.'/>
-        <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT656'  productDesc='Fortified with Glucosamine, it eases joint pains and strengthens the bones'/>
-
-
-            </div>
+        	<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1052' productDesc='Anti-Oxidant dietary supplement that prevents free radicals'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1091' productDesc='It promotes proper functioning of the nervous system with healthy bones and teeth formation. It is ideal for all.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1105' productDesc='Get sound sleep every night with the safe goodness of Passion flower and theanine. Free from synthetic additives. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1117' productDesc='Get a major Heart & Liver boost and put an end to cardio, liver and kidney related troubles with Vitamin Shoppe Lecithin.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1057' productDesc='Strengthens the immune system and supports joints and connecting tissues.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1051' productDesc='Dietary supplement that fills the deficiency of vitamin B12 in the body.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT669' productDesc='Especially designed for women, it provides 15 vital minerals and vitamins to the body for meeting the daily requirements.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1120' productDesc='Ideal for people with high BP, it manages your blood pressure and aids in the digestive process.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT946' productDesc='Enriched with Vitamin B, say hello to healthy hair and nails! This supplement also improves active blood circulation and metabolism.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1293' productDesc='Get all round nutrition support with Biocare Adult Vitamins & Minerals - designed keeping the modern lifestyle in mind.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1305' productDesc='Contains digestive enzymes that improve your digestive system and treat pancreatitis, acid reflux & lactase deficiency.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1137' productDesc='It contains glucosamine that helps reduce arthritic pain and builds cartilage in joints. It is ideal for both men and women.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT995' productDesc='Formulated with Glucosamine and Natural Antioxidants, it repairs the damaged tissues, relieving from joint and muscle pain'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1130' productDesc='Reduces cardiovascular diseases, prevents ostioporosis and promotes bone health'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT662' productDesc='These capsules contain essential vitamins and minerals including lutein and lycopene that helps promote a healthy heart.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1008' productDesc='The definitive source of Vitmain B5, it reduces stress and fatigue issues and also cures acne and blemishes.'/>
+        </div>
 
         <div class="cl"></div>
 
@@ -116,6 +109,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf04.jsp">Next →</a>
 

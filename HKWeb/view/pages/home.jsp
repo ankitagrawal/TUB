@@ -120,9 +120,6 @@
       </div>
 
 
-      <%--<div class="clear"></div>--%>
-
-
       <div class="grid_24 alpha omega">
         <s:link beanclass="com.hk.web.action.core.catalog.category.CategoryAction" event="editPrimaryCategoryHeadings"
                 class="popup" style="font-size:larger; background-color:#003399; color:white;" target="_blank">
@@ -137,7 +134,7 @@
 
 
     <c:forEach var="heading" items="${homeBean.headingsWithRankingSetSortedByRanking}">
-      <c:if test="${!empty heading.products}">
+      <c:if test="${!empty hk:getHeadingProductsSortedByRank(heading.id)}">
         <div class="grid_24 alpha omega" style="width: 950px;">
           <c:choose>
             <c:when test="${hk:isNotBlank(heading.link)}">
@@ -187,9 +184,9 @@
 
 
         <div class="grid_24" style="width: 950px;">
-          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, "home-page")}' begin="0" end="5">
+          <c:forEach var="headingProduct" items='${hk:getHeadingProductsSortedByRank(heading.id)}' begin="0" end="5">
             <div class="grid_4 alpha omega">
-              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${product}'/>
+              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${headingProduct.product}'/>
             </div>
           </c:forEach>
         </div>
@@ -198,7 +195,7 @@
 
 
       <shiro:hasRole name="<%=RoleConstants.GOD%>">
-        <c:if test="${empty heading.products}">
+        <c:if test="${empty hk:getHeadingProductsSortedByRank(heading.id)}">
           <div class="grid_24 alpha omega" style="width: 950px;">
             <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction"
                     event="addPrimaryCategoryHeadingProducts"

@@ -61,29 +61,28 @@
 
 
         <div class="prodBoxes">
-
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NEAT006' productDesc="Neat Feat roll on Deodoriser aids in preventing foot odour"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NEAT010' productDesc="Give comfort and softness to your tired and worn out feet with Neat Feat Foot Soap Scrub "/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NIC001' productDesc="Nicorette reins in your constant urge to smoke. Quit smoking for sure."/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH006' productDesc="Get a  cleaner tongue with this carefully tested cleaner blister"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH033' productDesc="Ensure the best possible protection for your teeth with this sonic toothbrush "/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH037' productDesc="text due"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH044' productDesc="This handy and foldable toothbrush with diamond rounded filaments cleans even the space between your teeth"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH047' productDesc="For a gentle and efficient cleansing of teeth, get this Trisa toothbrush with flexible heads that absorb excess pressure"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH052' productDesc="A fun toothbrush for you little one, Trisa Junior Toothbrush"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH054' productDesc="text due"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH063' productDesc="Ensure your kid's dental health with easier and deep cleansing vibrations. Only with Trisa Sonic Junior"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH067' productDesc="Cleans your teeth and gums, reduces chances of plaque and maintains your oral health."/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH068' productDesc="Maintains your oral hygiene and makes your smile more beautiful."/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH069' productDesc="Keeps your teeth clean and shiny."/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH078' productDesc="Refreshes your room with fragrance of sandal and jasmine kill all bad odors in your living room"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH092' productDesc="Wipe out all the plaque problems with this 2-in-1 toothbrush, that cleans and massages your teeth and gums"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH094' productDesc="Care for your gums and teeth and keep your dental health intact with this plaque cleaner "/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH095' productDesc="text due"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH097' productDesc="With soft bristles for effective cleaning of plaque and bacteria"/>
-            <s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH101' productDesc="text due"/>
-
-
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SENS-CMB-01' productDesc="Clean, bright and shiny teeth for that dazzling smile."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PA012' productDesc="Non-woven, pure cotton adult diapers to fight incontinence effectively."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MOB001' productDesc="A mobile phone crafted for elderly with large keypad, enhanced sound, wire-free FM and a prominent SOS button."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='FER004' productDesc="A supplement that boosts motility in men  for enhanced sperm count."/>			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH067' productDesc="Cleans your teeth and gums, reduces chances of plaque and maintains your oral health."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH078' productDesc="Refreshes your room with fragrance of sandal and jasmine kill all bad odors in your living room"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VAC001' productDesc='The definitive product for treating erectile dysfunction. Safe & effective.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='TP001' productDesc='Made of cotton and rayon, Perfect for those with high mentrual flow and hate changing napkins constantly.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH063' productDesc="Ensure your kid's dental health with easier and deep cleansing vibrations. Only with Trisa Sonic Junior"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PP070' productDesc="For a thorough and gentle cleansing of your skin, use Bel Premium Cotton Balls, with Aloe Vera and Provitamin B5"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PS050' productDesc="Climax for men makes sure the partner is left screaming"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='AT002' productDesc="Designed with high absorbent mechanism, it is easy,comfortable and hygienic to wear."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH068' productDesc="Maintains your oral hygiene and makes your smile more beautiful."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='LIF003' productDesc="Easy to use refill pack for your hand wash dispenser"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH092' productDesc="Wipe out all the plaque problems with this 2-in-1 toothbrush, that cleans and massages your teeth and gums"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH052' productDesc="A fun toothbrush for you little one, Trisa Junior Toothbrush"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PF049' productDesc="Gel heel shields that provide comfort and pain relief for those who constantly have to wear high heels"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MOB002' productDesc="Gift your elders, their old age companion in form of Arpan phone, having enhanced sound and large and talking keypad."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH047' productDesc="For a gentle and efficient cleansing of teeth, get this Trisa toothbrush with flexible heads that absorb excess pressure"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OH054' productDesc="Refill your Trisa Sonic Power Toothbrush with these heads, having vibrating filaments as smooth as silk."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='AT003' productDesc="Attends Slip Regular, with an in-built odour system checks unpleasant smell,ensures comfort, hygiene, and security"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OPT001' productDesc="Ideal for oral and underarm use"/>			
         </div>
         <div class="cl"></div>
 

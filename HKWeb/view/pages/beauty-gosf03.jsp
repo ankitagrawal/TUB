@@ -63,28 +63,34 @@
 
 
          <div class="prodBoxes">
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY769' productDesc="Comfrey and Echinanea extracts, adds luster, cleanses, strengthens and builds hair volume. "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='FABIN47' productDesc="Goodness of Papaya and Fuller’s Earth, deep cleanses and detoxifies the skin, leaving it firm and radiant."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='GLD12' productDesc="Triple Blades with pivoting head, glides smoothly over skin. Aloe lubricating strip with Vitamin E reduces irritation and hydrates."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC27' productDesc="Protects and prevents further hair damage, gives life to damaged hair"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BRUT03' productDesc="This eau de toilette for men has a warm and spicy heart and woody base notes"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC12' productDesc="Saffron extracts evens the skin color, hydrates, offers suppleness and protects against UV rays."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC08' productDesc="Turmeric blended with Sandal and Jojoba, it removes age spots, hyper pigmentation, uneven tone & sun discoloration. "/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='FESTGLAM1' productDesc="Super glossy and super fruity, It gives you a wet look gloss, hydrates lips and stays on for long."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VNCP31' productDesc="Infused with Sweet Almond and Avocado oil,  relieves stress, improves blood circulation and reduces muscle pains."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC03' productDesc="Enriched with Brahmi, Neelibrigandi and Seaweed extract, stimulates hair growth, nourishes cuticles and prevents hair loss."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='H2O009' productDesc="Infused with herbal Mint essence, Wakame and Sea Fennel hydrates. Prevents chapping, feathering and smoothens fine lines"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='LOREAL38' productDesc="Finally, an after shave blam that protects from drying effects and soothes your skin!"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='LYD1' productDesc="Goodness of Bhringraj, Amalaki, Neem & Gunja, this controls hair fall, removes dandruff, revitalizes and darkens hair."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='LOREAL34' productDesc="A Shaving Mousse for men with sensitive skin. No more irritation - just comfy and smooth shave!"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI01' productDesc="Silky emulsion lightens spots, scars & fine lines and moisturizes skin. Can be used all over the body"/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI02' productDesc="Highly potent whitening agents to lighten dark patches and complexion without irritation.. "/>         
+			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='DLICMB04' productDesc="2-in1 set for those intense and smouldering eyes. Smudge-proof and stays for up to 6 hours."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MYBLN38' productDesc="Unique flexible wand lifts, separates and provides extra 300% fuller lashes. Contact lens safe and Ophthalmologically tested."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MYBLN37' productDesc="Must have in any girls vanity kit.  Hydrates lips for up to 8 hours."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='STVKC09' productDesc="Pamper your skin with the epitome in premium luxury. Boosts, protects, and re-balances anti-oxidants."/>
 
-
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI07' productDesc="Caviar extracts for skin so soft, smooth and radiant, it glows from within."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MKRI10' productDesc="Exfoliating soap that makes skin soft and smooth. The ground Apricot and Mulberry keeps dry skin at bay. "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OLY018' productDesc="Moisturize before bed and get firm skin and fight 7 signs of aging."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='OLY019' productDesc="Anti-ageing cream that minimizes wrinkles & eye bags,moisturizes delicate under eye skin and diminishes spots"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY18' productDesc="Essence of Saw Palmetto, Pumpkin Seed Oil, Stinging Nettle and Ginseng extract, prevents pattern baldness and diffused hair loss."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY19' productDesc="Essence of Grape Seed, Resveratrol, Pine Bark, Saffron & Green Tea, protects and lightens skin."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PLMCL06' productDesc="Infused with Tea Tree, Lavender, Peppermint & Chamomile. Revitalizes, adds vitality, deep cleans and softens tresses."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PUCL3' productDesc="Long-lasting fusion of fruity and floral notes.Handbag-friendly size."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SENRA4' productDesc="Cover cleavage effectively, an easy snap on for your bra. It is comfortable and washable."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SHNZ06' productDesc="Extracts of Vetiver and Dates with Diamond and Tankana, purifies skin and improves cell regeneration"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='STVKC04' productDesc="Effective herbal treatment for acne-prone skin"/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='TPIC01' productDesc="Natural Keratin fibers intertwine seamlessly for thicker and fuller hair, endures rain, wind & perspiration. "/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VAADI36' productDesc="Prevents premature ageing, wrinkling of skin, relaxes muscles, makes skin smooth and gives deeper sleep."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC12' productDesc="Saffron extracts evens the skin color, hydrates, offers suppleness and protects against UV rays."/>
-<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC2' productDesc="Lush moisturizer to rehydrate and sooth the thirstiest of skins"/>
-
-
-                
-
-         </div>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC10' productDesc="Rose oil, Saffron & Natural micro particles of Rosehip seeds nourishes, polishes and removes impurities gently."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BBW7' productDesc="Seductive floral scents for a fragrant lather. Enriched with Shea Butter, Vitamin E and Aloe Vera for softer, cleaner skin."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BWCH26' productDesc="No need to wrestle anymore to fit into a dress. Hide your flabs and flaunt your curves, get Bwitch Shapewear."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARMTR17' productDesc="Relaxing and reviving, nutrient-rich package to cleanse and beautify all skins types."/>
+				
+		</div>
         <div class="cl"></div>
         
          <div class="pages">
