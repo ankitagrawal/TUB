@@ -214,7 +214,7 @@
 
                         <p><strong><u>Order Total</u></strong> <fmt:formatNumber
                                 value="${orderSummary.pricingDto.grandTotalPayable}"
-                                currencySymbol="Rs. " type="currency"/><br/>
+                                currencySymbol="Rs. " type="currency"/><strong><u>(Inclusive of Shipping)</u></strong> <br/>
                             <u>COD Charges</u> <fmt:formatNumber
                                     value="${orderSummary.codCharges}" currencySymbol="Rs. "
                                     type="currency"/> <br/>
