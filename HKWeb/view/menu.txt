@@ -128,6 +128,9 @@
 ---/sports/fitness-accessories/strength-training/medicine-balls
 ---/sports/fitness-accessories/strength-training/dumbbells
 ---/sports/fitness-accessories/strength-training/kettlebells
+---/sports/fitness-accessories/strength-training/gym-rods
+---/sports/fitness-accessories/strength-training/weight-plates
+---/sports/fitness-accessories/strength-training/dumbbell-and-plate-rack
 --/sports/fitness-accessories/aerobics-general-fitness : Aerobics & General Fitness
 ---/sports/fitness-accessories/aerobics-general-fitness/aerobic-steppers
 ---/sports/fitness-accessories/aerobics-general-fitness/hand-grips

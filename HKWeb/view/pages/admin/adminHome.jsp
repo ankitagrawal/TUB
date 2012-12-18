@@ -226,7 +226,7 @@
 		<s:param name="courierDownloadFunctionality" value="false"/>
 	</s:link></h3>
 
-	<shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
+	<!--<shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
 					event="generateCourierReport">Add/Edit Hub
@@ -236,7 +236,7 @@
 	</shiro:hasRole>
 
 
-</div>
+--></div>
 
 <div class="cl"></div>
 
