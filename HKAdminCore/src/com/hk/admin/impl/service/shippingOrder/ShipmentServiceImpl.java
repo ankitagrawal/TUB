@@ -91,15 +91,16 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (suggestedCourier == null) {
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
                     CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
+			adminEmailManager.sendNoShipmentEmail(CourierConstants.SUGGESTED_COURIER_NOT_FOUND, shippingOrder);
             return null;
         } else {
             String pin = pincode.getPincode();
             Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
 
             if (!courierServiceInfoDao.isCourierServiceInfoAvailable(suggestedCourier.getId(), pin, shippingOrder.isCOD(), isGroundShipped, isCodAllowedOnGroundShipping)) {
-
                 shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(),
                         CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
+				adminEmailManager.sendNoShipmentEmail(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND, shippingOrder);
             }
         }
 
