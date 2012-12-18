@@ -3,6 +3,7 @@ package com.hk.domain.inventory.po;
 
 
 import com.hk.domain.accounting.PoLineItem;
+import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -111,6 +112,9 @@ public class PurchaseOrder implements java.io.Serializable {
 	@Column(name = "fill_rate")
 	private Double fillRate;
 
+  @ManyToOne (fetch = FetchType.LAZY)
+  @JoinColumn (name = "extra_inventory_id")
+  private ExtraInventory extraInventory;
 
 	@Transient
 	private int noOfSku;

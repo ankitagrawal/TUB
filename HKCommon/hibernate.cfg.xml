@@ -198,5 +198,7 @@
         <mapping class="com.hk.domain.payment.GatewayIssuerMapping" />
         <mapping class="com.hk.domain.core.Country" />
         <mapping class="com.hk.domain.payment.CurrencyConverter" />
+        <mapping class="com.hk.domain.inventory.rtv.ExtraInventory"/>
+        <mapping class="com.hk.domain.inventory.rtv.ExtraInventoryLineItem"/>      
     </session-factory>
 </hibernate-configuration>
