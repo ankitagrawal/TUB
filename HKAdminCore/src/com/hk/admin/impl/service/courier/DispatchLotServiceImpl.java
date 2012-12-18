@@ -62,6 +62,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		Iterator<HKRow> rowIterator = parser.parse();
 		int rowCount = 1;
 		List<String> soGatewayOrderIdInExcel = new ArrayList<String>();
+
 		try {
 			while (rowIterator.hasNext()) {
 				HKRow row = rowIterator.next();
@@ -69,7 +70,12 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				if (StringUtils.isBlank(soGatewayOrderId)) {
 					throw new ExcelBlankFieldException("SO Gateway Order Id Cannot be blank", rowCount);
 				}
-
+				//leaving the first row, as it would be empty from the Shipment Awaiting Queue excel
+				if(rowCount == 1) {
+					if(rowIterator.hasNext()) {
+						rowIterator.next();
+					}
+				}
 				soGatewayOrderIdInExcel.add(soGatewayOrderId);
 				rowCount++;
 			}
