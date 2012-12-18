@@ -8,6 +8,7 @@ import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.constants.XslConstants;
 import com.hk.constants.courier.DispatchLotConstants;
 import com.hk.constants.courier.EnumDispatchLotStatus;
+import com.hk.constants.report.ReportConstants;
 import com.hk.domain.courier.*;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.order.ShippingOrder;
@@ -64,7 +65,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		try {
 			while (rowIterator.hasNext()) {
 				HKRow row = rowIterator.next();
-				String soGatewayOrderId = row.getColumnValue(XslConstants.GATEWAY_ORDER_ID);
+				String soGatewayOrderId = row.getColumnValue(ReportConstants.SHIPPERS_REFERENCE_NUMBER);
 				if (StringUtils.isBlank(soGatewayOrderId)) {
 					throw new ExcelBlankFieldException("SO Gateway Order Id Cannot be blank", rowCount);
 				}

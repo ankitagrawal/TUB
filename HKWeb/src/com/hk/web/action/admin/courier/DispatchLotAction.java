@@ -139,7 +139,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 		excelFile.getParentFile().mkdirs();
 		try {
 			fileBean.save(excelFile);
-			getDispatchLotService().parseExcelAndSaveShipmentDetails(dispatchLot, excelFilePath, "Sheet1");
+			getDispatchLotService().parseExcelAndSaveShipmentDetails(dispatchLot, excelFilePath, "Courier");
 			addRedirectAlertMessage(new SimpleMessage("File uploaded successfully."));
 		} catch (IOException e) {
 			logger.error("Exception while reading excel sheet.", e);
