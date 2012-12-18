@@ -8,6 +8,7 @@ import java.util.List;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Zone;
 import com.hk.pact.service.core.PincodeService;
 import org.slf4j.Logger;
@@ -358,12 +359,13 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
 	@Override
 	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder) {
-		if(shippingOrder.getShipment() != null){
-			Pincode shippingOrderPincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
-			Long courierId = shippingOrder.getShipment().getAwb().getCourier().getId();
-			if(shippingOrderPincode != null && shippingOrderPincode.getZone() != null){
-				if(EnumCourier.getDispatchLotCouriers().contains(courierId)
-						&& shippingOrderPincode.getZone().equals(CourierConstants.SOUTH_ZONE)){
+		Zone zone=null;
+		Shipment shipment=shippingOrder.getShipment();
+		if(shipment != null && shipment.getZone() !=null){
+			Long courierId = shipment.getAwb().getCourier().getId();
+			zone=shipment.getZone();
+			if(zone != null){
+				if(EnumCourier.getDispatchLotCouriers().contains(courierId)){
 					return true;
 				}
 			}
