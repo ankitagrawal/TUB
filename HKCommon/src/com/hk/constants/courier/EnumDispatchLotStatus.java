@@ -12,8 +12,9 @@ import com.hk.domain.courier.DispatchLotStatus;
 public enum EnumDispatchLotStatus {
 	Generated(10L, "Generated"),
 	InTransit(20L, "In Transit"),
-	Received(30L, "Received"),
-	Cancelled(40L, "Cancelled");
+	PartiallyReceived(30L, "Partially Received"),
+	Received(40L, "Received"),
+	Cancelled(50L, "Cancelled");
 
 	private Long id;
 	private String name;

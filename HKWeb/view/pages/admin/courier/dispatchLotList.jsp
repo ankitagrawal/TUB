@@ -95,6 +95,7 @@
 			<tr>
 				<th>ID</th>
 				<th>Create Date</th>
+				<th>Created By</th>
 				<th>Docket Number</th>
 				<th>Courier</th>
 				<th>Zone</th>
@@ -102,6 +103,8 @@
 				<th>Destination</th>
 				<th>Dispatch Lot Status</th>
 				<th>Dispatch Date</th>
+				<th>Receiving Date</th>
+				<th>Received By</th>
 				<th>Actions</th>
 			</tr>
 			</thead>
@@ -109,6 +112,7 @@
 				<tr class="dispatchLotRow">
 					<td class="dispatchLotClass">${dispatchLot.id}</td>
 					<td>${dispatchLot.createDate}</td>
+					<td>${dispatchLot.createdBy.name}</td>
 					<td>${dispatchLot.docketNumber}</td>
 					<td>${dispatchLot.courier.name}</td>
 					<td>${dispatchLot.zone.name}</td>
@@ -116,6 +120,8 @@
 					<td>${dispatchLot.destination}</td>
 					<td>${dispatchLot.dispatchLotStatus.name}</td>
 					<td>${dispatchLot.dispatchDate}</td>
+					<td>${dispatchLot.receivingDate}</td>
+					<td>${dispatchLot.receivedBy.name}</td>
 					<td>
 						<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction"
 						        event="viewLot">View Shipments

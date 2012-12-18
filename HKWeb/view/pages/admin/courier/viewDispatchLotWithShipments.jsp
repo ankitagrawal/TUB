@@ -35,11 +35,20 @@
 					<td><label><strong>Docket Number</strong></label></td>
 					<td>${dispatchLotBean.dispatchLot.docketNumber}</td>
 
-					<td><label><strong>Courier</strong></label></td>
-					<td>${dispatchLotBean.dispatchLot.courier.name}</td>
+					<td><label><strong>Create Date</strong></label></td>
+					<td><fmt:formatDate value="${dispatchLotBean.dispatchLot.createDate}" pattern="dd-MM-yyyy"/></td>
 
-					<td><label><strong>Zone</strong></label></td>
-					<td>${dispatchLotBean.dispatchLot.zone.name}</td>
+					<td><label><strong>Created By</strong></label></td>
+					<td>${dispatchLotBean.dispatchLot.createdBy.name}</td>
+
+					<td><label><strong>Dispatch Date</strong></label></td>
+					<td><fmt:formatDate value="${dispatchLotBean.dispatchLot.dispatchDate}" pattern="dd-MM-yyyy"/></td>
+
+					<td><label><strong>Receiving Date</strong></label></td>
+					<td><fmt:formatDate value="${dispatchLotBean.dispatchLot.receivingDate}" pattern="dd-MM-yyyy"/></td>
+
+					<td><label><strong>Received By</strong></label></td>
+					<td>${dispatchLotBean.dispatchLot.receivedBy.name}</td>
 
 					<td><label><strong>No. Of Shipments Sent</strong></label></td>
 					<td>
@@ -55,6 +64,12 @@
 				</tr>
 
 				<tr>
+					<td><label><strong>Courier</strong></label></td>
+					<td>${dispatchLotBean.dispatchLot.courier.name}</td>
+
+					<td><label><strong>Receiving Zone</strong></label></td>
+					<td>${dispatchLotBean.dispatchLot.zone.name}</td>
+
 					<td><label><strong>Source</strong></label></td>
 					<td>${dispatchLotBean.dispatchLot.source}</td>
 
@@ -83,7 +98,6 @@
 							</c:otherwise>
 						</c:choose>
 					</td>
-					<%--<td>${dispatchLotBean.dispatchLot.noOfShipmentsReceived}</td>--%>
 				</tr>
 			</table>
 		</fieldset>

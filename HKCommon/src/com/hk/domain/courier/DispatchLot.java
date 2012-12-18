@@ -1,5 +1,7 @@
 package com.hk.domain.courier;
 
+import com.hk.domain.user.User;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -65,9 +67,16 @@ public class DispatchLot implements Serializable {
 	@Column(name = "create_dt", nullable = false)
 	private Date createDate = new Date();
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "delivery_dt")
-	private Date deliveryDate;
+	@Column(name = "receiving_dt")
+	private Date receivingDate;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable = false)
+	private User createdBy;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "received_by")
+	private User receivedBy;
 
 	public Long getId() {
 		return id;
@@ -165,12 +174,12 @@ public class DispatchLot implements Serializable {
 		this.createDate = createDate;
 	}
 
-	public Date getDeliveryDate() {
-		return deliveryDate;
+	public Date getReceivingDate() {
+		return receivingDate;
 	}
 
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
+	public void setReceivingDate(Date receivingDate) {
+		this.receivingDate = receivingDate;
 	}
 
 	public String getRemarks() {
@@ -187,5 +196,21 @@ public class DispatchLot implements Serializable {
 
 	public void setDispatchLotStatus(DispatchLotStatus dispatchLotStatus) {
 		this.dispatchLotStatus = dispatchLotStatus;
+	}
+
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public User getReceivedBy() {
+		return receivedBy;
+	}
+
+	public void setReceivedBy(User receivedBy) {
+		this.receivedBy = receivedBy;
 	}
 }

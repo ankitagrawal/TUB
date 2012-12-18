@@ -8,6 +8,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.domain.courier.*;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.user.User;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.CustomDateTypeConvertor;
@@ -84,13 +85,21 @@ public class DispatchLotAction extends BasePaginatedAction {
 		if (!doValidations()) {
 			return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
 		}
+
+		//If dispatch Lot is being created for the first time
 		if (dispatchLot.getId() == null) {
 			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Generated.getDispatchLotStatus());
+
+			User user = null;
+			if (getPrincipal() != null) {
+				user = getUserService().getUserById(getPrincipal().getId());
+			}
+			dispatchLot.setCreatedBy(user);
 		}
+
 		dispatchLot = getDispatchLotService().save(dispatchLot);
 		addRedirectAlertMessage(new SimpleMessage("Changes saved"));
-		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
-		//return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+		return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
 	}
 
 	private boolean doValidations() {

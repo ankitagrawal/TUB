@@ -198,6 +198,9 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Received.getDispatchLotStatus());
 		}
 		dispatchLot.setNoOfShipmentsReceived(noOfShipmentsReceived);
+		if(dispatchLot.getReceivingDate() == null) {
+			dispatchLot.setReceivingDate(new Date());
+		}
 		getBaseDao().save(dispatchLot);
 		
 	   return invalidGatewayOrderIds;
