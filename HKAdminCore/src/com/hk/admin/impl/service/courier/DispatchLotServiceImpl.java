@@ -204,12 +204,12 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			getBaseDao().save(dispatchLotHasShipment);
 		}
 		long noOfShipmentsReceived = (long)getShipmentsForDispatchLot(dispatchLot).size();
-		User loggedInUser = userService.getLoggedInUser();
-		if(validShipmentList.size() == getShipmentsForDispatchLot(dispatchLot).size()){
-			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Received.getDispatchLotStatus());
-			dispatchLot.setReceivingDate(new Date());
-			dispatchLot.setReceivedBy(loggedInUser);
+		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.PartiallyReceived.getDispatchLotStatus());
+
+		if(noOfShipmentsReceived == validShipmentList.size()){
+			markDispatchLotReceived(dispatchLot);
 		}
+
 		dispatchLot.setNoOfShipmentsReceived(noOfShipmentsReceived);
 
 		getBaseDao().save(dispatchLot);
@@ -220,12 +220,17 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 	private boolean markDispatchLotReceived(DispatchLot dispatchLot){
 		List<DispatchLotHasShipment> dispatchLotHasShipmentList;
 		dispatchLotHasShipmentList = getDispatchLotHasShipmentListByDispatchLot(dispatchLot);
+		User loggedInUser = userService.getLoggedInUser();
 		for(DispatchLotHasShipment dispatchLotHasShipment : dispatchLotHasShipmentList){
 			if(dispatchLotHasShipment.getShipmentStatus().equals(DispatchLotConstants.SHIPMENT_DISPATCHED)){
 				return false;
 			}
 		}
-		return false;
+		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Received.getDispatchLotStatus());
+		dispatchLot.setReceivingDate(new Date());
+		dispatchLot.setReceivedBy(loggedInUser);
+		getBaseDao().save(dispatchLot);
+		return true;
 	}
 
 	private String validateShippingOrdersForDispatchLot(List<String> gatewayOrderIdList, List<ShippingOrder> soListInDB) {

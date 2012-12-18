@@ -12,4 +12,5 @@ public class DispatchLotConstants {
     //Constants for exception
     public static final String SHIPMENT_DISPATCHED = "SHIPMENT DISPATCHED";
 	public static final String SHIPMENT_RECEIVED = "SHIPMENT RECEIVED";
+	public static final String SHIPMENT_LOST = "SHIPMENT LOST";
 }
