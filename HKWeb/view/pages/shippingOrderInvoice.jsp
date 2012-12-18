@@ -119,8 +119,8 @@
     <div style="text-align: center;">
 ORDER INVOICE <c:choose>
 <c:when
-        test="${orderSummary.printable && hk:isOrderForDiscretePackaging(orderSummary.shippingOrder)}"><bold>IN</bold></c:when>
-        <c:otherwise><bold>OUT</bold>
+        test="${orderSummary.printable && hk:isOrderForDiscretePackaging(orderSummary.shippingOrder)}"><b>(OUT)</b></c:when>
+        <c:otherwise><b>(IN)</b>
         </c:otherwise>
         </c:choose>
 </div>
@@ -401,7 +401,7 @@ ORDER INVOICE <c:choose>
             <%-- </c:if>--%>
         </c:forEach>
 
-        <c:if test="${orderSummary.freebieItem != null && orderSummary.freebieItem != ''}">
+        <%--<c:if test="${orderSummary.freebieItem != null && orderSummary.freebieItem != ''}">
             <tr>
                 <td>${orderSummary.freebieItem}</td>
                 <td>1</td>
@@ -409,7 +409,7 @@ ORDER INVOICE <c:choose>
                 <td>0.0</td>
                 <td>0.0</td>
             </tr>
-        </c:if>
+        </c:if>--%>
 
     </table>
 

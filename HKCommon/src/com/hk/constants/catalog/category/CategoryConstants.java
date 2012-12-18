@@ -16,7 +16,7 @@ public class CategoryConstants {
   public static final String DIABETES = "diabetes";
   public static final String EYE = "eye";
   public static final String HOME = "home";
-  public static final String HOME_DEVICES = "home-devices";
+  public static final String HEALTH_DEVICES = "health-devices";
   public static final String NUTRITION = "nutrition";
   public static final String PERSONAL_CARE = "personal-care";
   public static final String SERVICES = "services";
@@ -28,7 +28,7 @@ public class CategoryConstants {
   public static final Long BEAUTY_TARGET_SALES = 1471747L;
   public static final Long DIABETES_TARGET_SALES = 1795070L;
   public static final Long EYE_TARGET_SALES = 716364L;
-  public static final Long HOME_DEVICES_TARGET_SALES = 1619206L;
+  public static final Long HEALTH_DEVICES_TARGET_SALES = 1619206L;
   public static final Long NUTRITION_TARGET_SALES = 13040424L;
   public static final Long PERSONAL_CARE_TARGET_SALES = 764110L;
   public static final Long SERVICES_TARGET_SALES = 49348L;
@@ -39,7 +39,7 @@ public class CategoryConstants {
   public static final Long BEAUTY_TARGET_ORDER_COUNT = 88L;
   public static final Long DIABETES_TARGET_ORDER_COUNT = 50L;
   public static final Long EYE_TARGET_ORDER_COUNT = 32L;
-  public static final Long HOME_DEVICES_TARGET_ORDER_COUNT = 38L;
+  public static final Long HEALTH_DEVICES_TARGET_ORDER_COUNT = 38L;
   public static final Long NUTRITION_TARGET_ORDER_COUNT = 204L;
   public static final Long PERSONAL_CARE_TARGET_ORDER_COUNT = 62L;
   public static final Long SERVICES_TARGET_ORDER_COUNT = 2L;
@@ -67,7 +67,7 @@ public class CategoryConstants {
       put(CategoryConstants.BEAUTY, CategoryConstants.BEAUTY_TARGET_SALES);
       put(CategoryConstants.DIABETES, CategoryConstants.DIABETES_TARGET_SALES);
       put(CategoryConstants.EYE, CategoryConstants.EYE_TARGET_SALES);
-      put(CategoryConstants.HOME_DEVICES, CategoryConstants.HOME_DEVICES_TARGET_SALES);
+      put(CategoryConstants.HEALTH_DEVICES, CategoryConstants.HEALTH_DEVICES_TARGET_SALES);
       put(CategoryConstants.NUTRITION, CategoryConstants.NUTRITION_TARGET_SALES);
       put(CategoryConstants.PERSONAL_CARE, CategoryConstants.PERSONAL_CARE_TARGET_SALES);
       put(CategoryConstants.SERVICES, CategoryConstants.SERVICES_TARGET_SALES);
@@ -81,12 +81,12 @@ public class CategoryConstants {
       put(CategoryConstants.BEAUTY, CategoryConstants.BEAUTY_TARGET_ORDER_COUNT);
       put(CategoryConstants.DIABETES, CategoryConstants.DIABETES_TARGET_ORDER_COUNT);
       put(CategoryConstants.EYE, CategoryConstants.EYE_TARGET_ORDER_COUNT);
-      put(CategoryConstants.HOME_DEVICES, CategoryConstants.HOME_DEVICES_TARGET_ORDER_COUNT);
+      put(CategoryConstants.HEALTH_DEVICES, CategoryConstants.HEALTH_DEVICES_TARGET_ORDER_COUNT);
       put(CategoryConstants.NUTRITION, CategoryConstants.NUTRITION_TARGET_ORDER_COUNT);
       put(CategoryConstants.PERSONAL_CARE, CategoryConstants.PERSONAL_CARE_TARGET_ORDER_COUNT);
       put(CategoryConstants.SERVICES, CategoryConstants.SERVICES_TARGET_ORDER_COUNT);
       put(CategoryConstants.SPORTS, CategoryConstants.SPORTS_TARGET_ORDER_COUNT);
     }
   };
-  
+
 }

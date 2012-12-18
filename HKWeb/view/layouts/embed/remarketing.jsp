@@ -124,9 +124,23 @@
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="YgUqCMW73wIQ44T54AM" id="1008616035"/>
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'table-tennis') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="LG4mCMXw9AMQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'rackets') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="ZT4FCLWn9AMQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'gym-gloves') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="ZhUfCP3D3wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
 
-
-
+<c:if test="${hk:collectionContains(remarketingLabelList, 'football') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="IR1KCM263wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
 
 <c:if test="${hk:collectionContains(remarketingLabelList, 'fitness-accessories') && !codeSet}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="8V4PCIXyzAIQ44T54AM" id="1008616035"/>
@@ -141,6 +155,22 @@
 <c:if test="${hk:equalsIgnoreCase('prince', brandLabel)}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="UobECKWY2gMQ44T54AM" id="1008616035"/>
 </c:if>
+<c:if test="${hk:equalsIgnoreCase('spalding', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="sSGRCJX29AMQ44T54AM" id="1008616035"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('wilson', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="i-6xCJ319AMQ44T54AM" id="1008616035"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('ss', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="0XzJCM3v9AMQ44T54AM" id="1008616035"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('cosco', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="-2Y0CNXu9AMQ44T54AM" id="1008616035"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('rollerblade', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="zSQJCJWa2gMQ44T54AM" id="1008616035"/>
+</c:if>
+
 
 <%-- DIABETES --%>
 <c:if test="${hk:collectionContains(remarketingLabelList, 'testing-supplies') && !codeSet}">
@@ -384,6 +414,45 @@
 <c:if test="${hk:equalsIgnoreCase('maybelline', brandLabel)}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="UMOACLmo5wMQ_4XqxAM" id="949650175"/>
 </c:if>
+
+<c:if test="${hk:equalsIgnoreCase('jordana', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="UkKWCMHh8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+
+<c:if test="${hk:equalsIgnoreCase('paul+mitchell', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="89YPCMng8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('herbal+essenses', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="IYAjCNHf8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('victoria', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="zAY3CNne8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('konad', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="aNH4COHd8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('vedic+line', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="k-ViCOnc8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('faces', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="zjIACPHb8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('schwarzkopf+bonacure', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="3nZgCPna8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('schwarzkopf+essensity', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="cpjfCLni8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('schwarzkopf+oasis', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="WiLhCLHj8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('veet', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="Sf7_CLmm8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+<c:if test="${hk:equalsIgnoreCase('himalaya', brandLabel)}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="Hg2uCMGl8gQQ_4XqxAM" id="949650175"/>
+</c:if>
+
 <%-- EYE --%>
 <c:if test="${hk:equalsIgnoreCase('bausch+&+lomb', brandLabel) || hk:equalsIgnoreCase('bausch & lomb', brandLabel)}">
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="pA4ECKnE7AIQn_iQ4gM" id="1011104799"/>

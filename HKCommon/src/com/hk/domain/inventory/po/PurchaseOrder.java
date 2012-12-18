@@ -108,6 +108,10 @@ public class PurchaseOrder implements java.io.Serializable {
 	@Column (name = "final_payable_amount")
 	private Double finalPayableAmount;
 
+	@Column(name = "fill_rate")
+	private Double fillRate;
+
+
 	@Transient
 	private int noOfSku;
 
@@ -309,6 +313,14 @@ public class PurchaseOrder implements java.io.Serializable {
 
 	public void setFinalPayableAmount(Double finalPayableAmount) {
 		this.finalPayableAmount = finalPayableAmount;
+	}
+
+	public Double getFillRate() {
+		return fillRate;
+	}
+
+	public void setFillRate(Double fillRate) {
+		this.fillRate = fillRate;
 	}
 }
 

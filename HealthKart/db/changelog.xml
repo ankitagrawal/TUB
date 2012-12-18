@@ -10328,4 +10328,114 @@
 			update seo_data sd, product p set sd.id=concat(sd.id,'||', p.primary_category) where sd.id=p.brand;
 		</sql>
 	</changeSet>
+	<changeSet author="Tarun (generated)" id="1354692722721-1">
+        <createTable tableName="zone">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-2">
+        <addColumn tableName="pincode">
+            <column name="zone_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-3">
+        <addColumn tableName="shipment">
+            <column name="zone_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-4">
+        <addForeignKeyConstraint baseColumnNames="zone_id" baseTableName="pincode" constraintName="fk_pincode_zone1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="zone" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-5">
+        <addForeignKeyConstraint baseColumnNames="zone_id" baseTableName="shipment" constraintName="fk_shipment_zone1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="zone" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1354692722721-6">
+        <dropColumn columnName="zone" tableName="shipment"/>
+    </changeSet>
+	<changeSet author="Tarun" id="20121205-01">
+		<sql>
+			INSERT INTO zone VALUES (1,'NORTH'),(2,'SOUTH'),(3,'EAST'),(4,'WEST');
+			UPDATE pincode SET zone_id=1 WHERE zone like '%NORTH%';
+			UPDATE pincode SET zone_id=2 WHERE zone like '%SOUTH%';
+			UPDATE pincode SET zone_id=3 WHERE zone like '%EAST%';
+			UPDATE pincode SET zone_id=4 WHERE zone like '%WEST%';
+		</sql>
+	</changeSet>
+    <changeSet author="Tarun (generated)" id="1354696987883-1">
+        <dropColumn columnName="zone" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1355137007231-1">
+        <createTable tableName="heading_product">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="heading_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="rank" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1355137007231-12">
+        <addForeignKeyConstraint baseColumnNames="heading_id" baseTableName="heading_product" constraintName="fk_heading_product_primary_category_heading1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="primary_category_heading" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1355137007231-13">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="heading_product" constraintName="fk_heading_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-1">
+        <createTable tableName="product_variant_supplier_info">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="asked_qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="received_qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="fill_rate" type="DECIMAL(12,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-2">
+        <addColumn tableName="po_line_item">
+            <column name="fill_rate" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-3">
+        <addColumn tableName="po_line_item">
+            <column name="received_qty" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-4">
+        <addColumn tableName="purchase_order">
+            <column name="fill_rate" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-5">
+        <createIndex indexName="product_variant_supplier_key" tableName="product_variant_supplier_info" unique="true">
+            <column name="product_variant_id"/>
+            <column name="supplier_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-6">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="product_variant_supplier_info" constraintName="fk_product_variant_supplier_info_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355468432445-7">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="product_variant_supplier_info" constraintName="fk_product_variant_supplier_info_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

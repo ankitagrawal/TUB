@@ -45,14 +45,14 @@ public class PrimaryCategoryHeading implements java.io.Serializable {
   @Column(name = "ranking", nullable = true)
   private Integer ranking;
 
-  @JsonSkip
-  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "heading_has_product",
-      joinColumns = {@JoinColumn(name = "heading_id", nullable = false, updatable = false)},
-      inverseJoinColumns = {@JoinColumn(name = "product_id", nullable = false, updatable = false)}
-  )
-  private List<Product> products = new ArrayList<Product>(0);
+//  @JsonSkip
+//  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//  @JoinTable(
+//      name = "heading_has_product",
+//      joinColumns = {@JoinColumn(name = "heading_id", nullable = false, updatable = false)},
+//      inverseJoinColumns = {@JoinColumn(name = "product_id", nullable = false, updatable = false)}
+//  )
+//  private List<Product> products = new ArrayList<Product>(0);
 
 
   public Long getId() {
@@ -71,28 +71,28 @@ public class PrimaryCategoryHeading implements java.io.Serializable {
     this.category = category;
   }
 
-  public void setProducts(List<Product> products) {
-    this.products = products;
-  }
+//  public void setProducts(List<Product> products) {
+//    this.products = products;
+//  }
+//
+//  public List<Product> getProducts() {
+//    return products;
+//  }
+//
+//
+//  public List<Product> getProductSortedByOrderRanking() {
+//    Collections.sort(products, new ProductComparator());
+//    return products;
+//  }
 
-  public List<Product> getProducts() {
-    return products;
-  }
-
-
-  public List<Product> getProductSortedByOrderRanking() {
-    Collections.sort(products, new ProductComparator());
-    return products;
-  }
-
-  public class ProductComparator implements Comparator<Product> {
-    public int compare(Product o1, Product o2) {
-      if (o1.getOrderRanking() != null && o2.getOrderRanking() != null) {
-        return o1.getOrderRanking().compareTo(o2.getOrderRanking());
-      }
-      return -1;
-    }
-  }
+//  public class ProductComparator implements Comparator<Product> {
+//    public int compare(Product o1, Product o2) {
+//      if (o1.getOrderRanking() != null && o2.getOrderRanking() != null) {
+//        return o1.getOrderRanking().compareTo(o2.getOrderRanking());
+//      }
+//      return -1;
+//    }
+//  }
 
 
   public String getName() {

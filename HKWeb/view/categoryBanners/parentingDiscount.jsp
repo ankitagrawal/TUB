@@ -9,11 +9,11 @@
 <%
   if (dateTime.isBefore(endOfOfferDate.getTime())) {
 %>
-
+<%--
 <div style="margin-left: auto; margin-right: auto; width:960px;">
   <img src="${pageContext.request.contextPath}/images/banners/top/parenting_deewalil-banner.jpg" alt="Get Flat 5% off on Baby Diapers. Offer Expires on 21st Nov, 2012.">
 </div>
-
+--%>
 <%
   }
 %>

@@ -86,8 +86,6 @@ public interface ProductService {
 
     public ProductOption findProductOptionByNameAndValue(String name, String value);
 
-    public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer);
-
     public boolean isComboInStock(Combo combo);
 
     public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage);
@@ -102,14 +100,15 @@ public interface ProductService {
 
     public Map<String, List<Long>> getGroupedFilters(List<Long> filters);
 
-	public boolean isProductOutOfStock(Product product);
+	  public boolean isProductOutOfStock(Product product);
 
     public ProductVariant validTryOnProductVariant(Product product);
 
     SolrProduct createSolrProduct(Product pr);
 
-	public List<Product> getSimilarProducts(Product product);
+	  public List<Product> getSimilarProducts(Product product);
 
     boolean isCombo(Product product);
+
     boolean isComboInStock(Product product);
 }
