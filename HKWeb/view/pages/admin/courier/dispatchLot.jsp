@@ -133,7 +133,7 @@
 						<fieldset class="right_label">
 							<legend>Update Shipment Details In Dispatch Lot</legend>
 							<br>
-							<span class="large">(GATEWAY ORDER ID) as excel header</span>
+							<span class="large">(SHIPPERS REFERENCE NUMBER) as excel header</span>
 							<ul>
 								<li>
 									<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
