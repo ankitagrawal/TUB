@@ -64,17 +64,16 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		List<String> soGatewayOrderIdInExcel = new ArrayList<String>();
 
 		try {
+			//leaving the first row, as it would be empty from the Shipment Awaiting Queue excel
+			if(rowIterator.hasNext()) {
+				rowIterator.next();
+			}
+
 			while (rowIterator.hasNext()) {
 				HKRow row = rowIterator.next();
 				String soGatewayOrderId = row.getColumnValue(ReportConstants.SHIPPERS_REFERENCE_NUMBER);
 				if (StringUtils.isBlank(soGatewayOrderId)) {
 					throw new ExcelBlankFieldException("SO Gateway Order Id Cannot be blank", rowCount);
-				}
-				//leaving the first row, as it would be empty from the Shipment Awaiting Queue excel
-				if(rowCount == 1) {
-					if(rowIterator.hasNext()) {
-						rowIterator.next();
-					}
 				}
 				soGatewayOrderIdInExcel.add(soGatewayOrderId);
 				rowCount++;
