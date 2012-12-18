@@ -11,9 +11,11 @@ import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.domain.courier.*;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
@@ -48,6 +50,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 	HubService hubService;
 	@Autowired
 	WarehouseService warehouseService;
+	@Autowired
+	UserService userService;
 
 	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, Zone zone, String source,
 	                              String destination, Date deliveryStartDate, Date deliveryEndDate, DispatchLotStatus dispatchLotStatus, int pageNo, int perPage) {
@@ -193,17 +197,28 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			getBaseDao().save(dispatchLotHasShipment);
 		}
 		long noOfShipmentsReceived = (long)getShipmentsForDispatchLot(dispatchLot).size();
-
+		User loggedInUser = userService.getLoggedInUser();
 		if(validShipmentList.size() == getShipmentsForDispatchLot(dispatchLot).size()){
 			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Received.getDispatchLotStatus());
+			dispatchLot.setReceivingDate(new Date());
+			dispatchLot.setReceivedBy(loggedInUser);
 		}
 		dispatchLot.setNoOfShipmentsReceived(noOfShipmentsReceived);
-		if(dispatchLot.getReceivingDate() == null) {
-			dispatchLot.setReceivingDate(new Date());
-		}
+
 		getBaseDao().save(dispatchLot);
 		
 	   return invalidGatewayOrderIds;
+	}
+
+	private boolean markDispatchLotReceived(DispatchLot dispatchLot){
+		List<DispatchLotHasShipment> dispatchLotHasShipmentList;
+		dispatchLotHasShipmentList = getDispatchLotHasShipmentListByDispatchLot(dispatchLot);
+		for(DispatchLotHasShipment dispatchLotHasShipment : dispatchLotHasShipmentList){
+			if(dispatchLotHasShipment.getShipmentStatus().equals(DispatchLotConstants.SHIPMENT_DISPATCHED)){
+				return false;
+			}
+		}
+		return false;
 	}
 
 	private String validateShippingOrdersForDispatchLot(List<String> gatewayOrderIdList, List<ShippingOrder> soListInDB) {
