@@ -100,8 +100,14 @@
 						</c:choose>
 					</td>
 				</tr>
+			</table>
+			<table>
 				<tr>
-					<td>
+					<td><label><strong>Remarks</strong></label></td>
+					<td>${dispatchLotBean.dispatchLot.remarks}</td>
+				</tr>
+				<tr>
+					<td colspan="2">
 						<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
 							<s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}"/>
 							<s:submit name="markDispatchLotReceived" value="Mark Lot As Received"/>

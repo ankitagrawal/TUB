@@ -175,6 +175,12 @@
 							</td>
 						</tr>
 					</table>
+					<table>
+						<tr>
+							<td><label><strong>Remarks</strong></label></td>
+							<td>${dispatchLotBean.dispatchLot.remarks}</td>
+						</tr>
+					</table>
 				</fieldset>
 
 				<fieldset class="right_label">
