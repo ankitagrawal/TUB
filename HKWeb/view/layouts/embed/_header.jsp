@@ -26,7 +26,7 @@
     boolean attachRedirectParam = attachRedirectParamStr == null ? true : Boolean.getBoolean(attachRedirectParamStr);
   %>
   <!-- remove this after gosf -->
-  <script type="text/javascript" src="${pageContext.request.contextPath}/js/gosf.js"></script>
+  <%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/gosf.js"></script>--%>
   <script>$(document).ready(function () {initSliderPaginator();});</script>
   <div id="slidebox">
     <a class="close"></a>

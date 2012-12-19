@@ -82,4 +82,6 @@ public interface ShippingOrderService {
 
 	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);
 
+    public boolean splitDropShippingOrder (ShippingOrder shippingOrder);
+
 }

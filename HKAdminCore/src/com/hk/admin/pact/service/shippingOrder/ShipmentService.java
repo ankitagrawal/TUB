@@ -24,4 +24,6 @@ public interface ShipmentService {
      public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder );
 
 	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
+
+    public boolean splitDropShippingOrder(ShippingOrder shippingOrder) ;
 }

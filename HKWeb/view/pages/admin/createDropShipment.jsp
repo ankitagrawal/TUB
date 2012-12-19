@@ -98,6 +98,7 @@
             <s:form beanclass="com.hk.web.action.admin.shipment.CreateDropShipmentAction"
                     onsubmit="return validateForm()" method="post" name="ShipmentForm">
                 <s:hidden name="shippingOrder" value="${shipmentQueueBean.shippingOrder}"/>
+                 <s:hidden name="suggestedCourier"  id ="sugcouier" value="${shipmentQueueBean.suggestedCourier}"/>
                 <label>Box Size:</label>
                 <s:select name="boxSize" value="${shipmentQueueBean.shippingOrder.shipment.boxSize}">
                     <c:forEach var="box" items="${boxSizeList}">
@@ -117,9 +118,7 @@
                     </c:forEach>
                 </s:select>
 
-                <s:link class="com.hk.web.action.admin.shipment.CreateDropShipmentAction" event="getAwbForHkCourier"> Get HK Couriers </s:link>
-
-
+                <%--<s:link class="com.hk.web.action.admin.shipment.CreateDropShipmentAction" event="getAwbForHkCourier"> Get HK Couriers </s:link>--%>
 
                 <div class="buttons" style="margin-left: 90%;"><s:submit id="shipmentbutton"
                                                                          name="saveDropShipmentDetails"

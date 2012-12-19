@@ -222,8 +222,9 @@ ORDER INVOICE <c:choose>
         <div class="clear"></div>
         <div style="margin-top:5px;"></div>
         <img src="${pageContext.request.contextPath}/barcodes/${orderSummary.shippingOrder.gatewayOrderId}.png"/>
-
+        <c:if test="${!orderSummary.shippingOrder.dropShipping}">  
         <p>Fulfillment Centre: ${orderSummary.shippingOrder.warehouse.name}</p>
+       </c:if>
         <c:if test="${orderSummary.shippingOrder.warehouse.id == 1}">
             <p>Return Location: <b>DEL/ITG/111117</b></p>
         </c:if>
@@ -273,7 +274,13 @@ ORDER INVOICE <c:choose>
     </div>
     <hr/>
     <c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
+     <c:set var="supplier" value="${orderSummary.supplier}"/>
     <c:choose>
+        <c:when test="${orderSummary.shippingOrder.dropShipping}">
+         <p style="font-size: .8em;"> ${supplier.name} | ${supplier.line1}, ${supplier.line2} |
+            ${supplier.city}, ${supplier.state}- ${supplier.pincode} | TIN: 
+             ${supplier.tinNumber}  </p>
+        </c:when>
         <c:when test="${hk:collectionContains(baseOrder.user.roleStrings, b2bUser)}">
             <p style="font-size: .8em;">Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur,
                 Badshahpur |

@@ -1,6 +1,6 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.Date;
+import java.util.*;
 
 import com.hk.domain.courier.Zone;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,10 @@ import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
@@ -32,8 +35,12 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.helper.ShippingOrderHelper;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
@@ -60,6 +67,15 @@ public class ShipmentServiceImpl implements ShipmentService {
     UserService           userService;
     @Autowired
     AdminEmailManager     adminEmailManager;
+    @Autowired
+    ShippingOrderStatusService shippingOrderStatusService ;
+
+     @Autowired
+    private LineItemDao lineItemDao;
+
+    @Autowired
+    private ShippingOrderDao shippingOrderDao;
+
 
     @Transactional
     public Shipment createShipment(ShippingOrder shippingOrder) {
@@ -247,4 +263,133 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
         return false;
     }
+
+
+
+
+
+    public boolean splitDropShippingOrder(ShippingOrder shippingOrder) {
+          if (shippingOrder.getLineItems().size() > 1) {
+              Set<LineItem> dropShippedLineItems = new HashSet<LineItem>();
+              Set<LineItem> currentLineItems = shippingOrder.getLineItems();
+              dropShippedLineItems.addAll(currentLineItems);
+              for (LineItem lineItem : currentLineItems) {
+                  if (lineItem != null) {
+                      ProductVariant productVariant = lineItem.getSku().getProductVariant();
+                      if (productVariant != null) {
+                          Product product = productVariant.getProduct();
+                          if (product != null && !product.isDropShipping()) {
+                              dropShippedLineItems.remove(lineItem);
+                          }
+                      }
+                  }
+              }
+
+//           Splitting on supplier level--
+              Map<Long, Set<LineItem>> supplierDropShipMap = new HashMap<Long, Set<LineItem>>();
+              for (LineItem lineItem1 : dropShippedLineItems) {
+                  if (lineItem1 != null) {
+                      ProductVariant productVariant = lineItem1.getSku().getProductVariant();
+                      if (productVariant != null) {
+                          Product product = productVariant.getProduct();
+                          if (product != null && product.getSupplier() != null) {
+                              Long supplierid = product.getSupplier().getId();
+                              if (supplierDropShipMap.containsKey(supplierid)) {
+                                  supplierDropShipMap.get(supplierid).add(lineItem1) ;
+                              }else{
+                                  Set<LineItem> itemSet = new HashSet<LineItem>();
+                                  itemSet.add(lineItem1);
+                                  supplierDropShipMap.put(supplierid,itemSet);
+                              }
+                          }
+                      }
+                  }
+              }
+
+              Set <Long> keys = supplierDropShipMap.keySet();
+              for (Long key1 : keys){
+                  ShippingOrder newShippingOrder = shippingOrderService.createSOWithBasicDetails(shippingOrder.getBaseOrder(), shippingOrder.getWarehouse());
+                  newShippingOrder.setBaseOrder(shippingOrder.getBaseOrder());
+                  newShippingOrder.setServiceOrder(false);
+                  newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
+                  newShippingOrder.setBasketCategory(shippingOrder.getBasketCategory());
+                  newShippingOrder = shippingOrderService.save(newShippingOrder);
+                  for (LineItem selectedLineItem : supplierDropShipMap.get(key1)) {
+                      selectedLineItem.setShippingOrder(newShippingOrder);
+                      lineItemDao.save(selectedLineItem);
+                  }
+                  shippingOrderDao.refresh(newShippingOrder);
+                  ShippingOrderHelper.updateAccountingOnSOLineItems(newShippingOrder, newShippingOrder.getBaseOrder());
+                  newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
+                  newShippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
+                  newShippingOrder.setDropShipping(true);
+                  newShippingOrder = shippingOrderService.save(newShippingOrder);
+
+              }
+                  ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, shippingOrder.getBaseOrder());
+                  shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+                  shippingOrder.setDropShipping(false);
+                  shippingOrder = shippingOrderService.save(shippingOrder);
+//
+
+              //
+       
+        /*
+              if (currentLineItems.size() != dropShippedLineItems.size()) {
+                  currentLineItems.removeAll(dropShippedLineItems);
+
+                  ShippingOrder newShippingOrder = shippingOrderService.createSOWithBasicDetails(shippingOrder.getBaseOrder(), shippingOrder.getWarehouse());
+                  newShippingOrder.setBaseOrder(shippingOrder.getBaseOrder());
+                  newShippingOrder.setServiceOrder(false);
+                  newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
+                  newShippingOrder.setBasketCategory(shippingOrder.getBasketCategory());
+                  newShippingOrder = shippingOrderService.save(newShippingOrder);
+                  for (LineItem selectedLineItem : dropShippedLineItems) {
+                      selectedLineItem.setShippingOrder(newShippingOrder);
+                      lineItemDao.save(selectedLineItem);
+                  }
+                  shippingOrderDao.refresh(newShippingOrder);
+                  ShippingOrderHelper.updateAccountingOnSOLineItems(newShippingOrder, newShippingOrder.getBaseOrder());
+                  newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
+                  newShippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
+                  newShippingOrder.setDropShipping(true);
+                  newShippingOrder = shippingOrderService.save(newShippingOrder);
+
+            //  No need to create shipment for drop ship order
+            //    createShipment(newShippingOrder);
+                  shippingOrderDao.refresh(shippingOrder);
+                  //shippingOrder = shippingOrderService.find(shippingOrder.getId());
+                  ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, shippingOrder.getBaseOrder());
+                  shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+                  shippingOrder.setDropShipping(false);
+                  shippingOrder = shippingOrderService.save(shippingOrder);
+//                  logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
+              }
+
+
+          */
+              return true;
+          }
+         return false;
+      }
+
+
+
+
+        public Supplier getFirstElementSupplier( Set <LineItem> dropShippedLineItems){
+              for (LineItem lineItem : dropShippedLineItems) {
+                  if (lineItem != null) {
+                      ProductVariant productVariant = lineItem.getSku().getProductVariant();
+                      if (productVariant != null) {
+                          Product product = productVariant.getProduct();
+                          if (product != null ) {
+                             return product.getSupplier();
+                          }
+                      }
+                  }
+              }
+            return null;
+        }
+
+
 }
