@@ -4,12 +4,19 @@ import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.DispatchLotDao;
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.constants.XslConstants;
 import com.hk.constants.courier.DispatchLotConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.EnumDispatchLotStatus;
+import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.report.ReportConstants;
 import com.hk.domain.courier.*;
+import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
+import com.hk.domain.hkDelivery.ConsignmentTracking;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
@@ -53,6 +60,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 	WarehouseService warehouseService;
 	@Autowired
 	UserService userService;
+	@Autowired
+	ConsignmentService consignmentService;
 
 	public Page searchDispatchLot(DispatchLot dispatchLot, String docketNumber, Courier courier, Zone zone, String source,
 	                              String destination, Date deliveryStartDate, Date deliveryEndDate, DispatchLotStatus dispatchLotStatus, int pageNo, int perPage) {
@@ -198,10 +207,41 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		}
 
 		DispatchLotHasShipment dispatchLotHasShipment=null;
+		//Parameters need to create consignment for hkdelivery
+		List<Consignment> consignmentList = new ArrayList<Consignment>();
+		List<String> awbNumbers = new ArrayList<String>();          // Needed to update consignment tracking once consinmgnment list is saved, need to optimize code
+		Consignment consignment = null;
+		Hub healthkartHub=null;
+		Hub hub=null;
+		User loggedInUser = userService.getLoggedInUser();
+		ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.ReceivedAtHub.getId());
+
 		for(Shipment shipmentTemp : validShipmentList){
 			dispatchLotHasShipment = getDispatchLotHasShipment(dispatchLot, shipmentTemp);
 			dispatchLotHasShipment.setShipmentStatus(DispatchLotConstants.SHIPMENT_RECEIVED);
 			getBaseDao().save(dispatchLotHasShipment);
+			if(shipmentTemp.getAwb().getCourier().getId().equals(EnumCourier.HK_Delivery.getId())){
+				hub = hubService.findHubByName(dispatchLot.getDestination());
+				healthkartHub = hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
+				//if destination is a hub and shipment is of hkdelivery, create consignment for the same
+				if(hub != null){
+					ShippingOrder shippingOrder = shipmentTemp.getShippingOrder();
+					String paymentMode = consignmentService.getConsignmentPaymentMode(shippingOrder);
+					String address = shipmentTemp.getShippingOrder().getBaseOrder().getAddress().getLine1()+","+shipmentTemp.getShippingOrder().getBaseOrder().getAddress().getLine2()+","+
+                        shipmentTemp.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentTemp.getShippingOrder().getBaseOrder().getAddress().getPin();
+					consignment = consignmentService.createConsignment(shipmentTemp.getAwb().getAwbNumber(), shippingOrder.getGatewayOrderId(), shippingOrder.getAmount(), paymentMode,
+					address, hub);
+					consignmentList.add(consignment);
+					awbNumbers.add(consignment.getAwbNumber());
+				}
+			}
+		}
+		//saving consingnment list and adding tracking entries for the same
+		if(consignmentList.size() > 0 && !consignmentList.contains(null)){
+			consignmentService.saveConsignments(consignmentList);
+			consignmentList = consignmentService.getConsignmentListByAwbNumbers(awbNumbers);
+			List<ConsignmentTracking> consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedInUser,consignmentList ,consignmentLifecycleStatus);
+			consignmentService.saveConsignmentTracking(consignmentTrackingList);
 		}
 		long noOfShipmentsReceived = (long)getShipmentsForDispatchLot(dispatchLot).size();
 		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.PartiallyReceived.getDispatchLotStatus());
@@ -217,20 +257,33 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 	   return invalidGatewayOrderIds;
 	}
 
-	private boolean markDispatchLotReceived(DispatchLot dispatchLot){
+	public boolean markDispatchLotReceived(DispatchLot dispatchLot){
 		List<DispatchLotHasShipment> dispatchLotHasShipmentList;
-		dispatchLotHasShipmentList = getDispatchLotHasShipmentListByDispatchLot(dispatchLot);
+		dispatchLotHasShipmentList = getDispatchLotHasShipmentListByDispatchLot(dispatchLot, null);
 		User loggedInUser = userService.getLoggedInUser();
+		List<DispatchLotHasShipment> lostShipments = new ArrayList<DispatchLotHasShipment>();
 		for(DispatchLotHasShipment dispatchLotHasShipment : dispatchLotHasShipmentList){
 			if(dispatchLotHasShipment.getShipmentStatus().equals(DispatchLotConstants.SHIPMENT_DISPATCHED)){
-				return false;
+				dispatchLotHasShipment.setShipmentStatus(DispatchLotConstants.SHIPMENT_LOST);
+				lostShipments.add(dispatchLotHasShipment);
 			}
 		}
 		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Received.getDispatchLotStatus());
 		dispatchLot.setReceivingDate(new Date());
 		dispatchLot.setReceivedBy(loggedInUser);
+		if(lostShipments.size()>0){
+			getBaseDao().saveOrUpdate(lostShipments);
+		}
 		getBaseDao().save(dispatchLot);
 		return true;
+	}
+
+	public List<String> getShipmentStatusForDispatchLot() {
+		List<String> shipmentStatusList = new ArrayList<String>();
+		shipmentStatusList.add(DispatchLotConstants.SHIPMENT_DISPATCHED);
+		shipmentStatusList.add(DispatchLotConstants.SHIPMENT_LOST);
+		shipmentStatusList.add(DispatchLotConstants.SHIPMENT_RECEIVED);
+		return shipmentStatusList;
 	}
 
 	private String validateShippingOrdersForDispatchLot(List<String> gatewayOrderIdList, List<ShippingOrder> soListInDB) {
@@ -286,8 +339,18 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		return getDispatchLotDao().getDispatchLotHasShipment(dispatchLot, shipment);
 	}
 
-	public List<DispatchLotHasShipment> getDispatchLotHasShipmentListByDispatchLot(DispatchLot dispatchLot) {
-		return getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot);
+	public List<DispatchLotHasShipment> getDispatchLotHasShipmentListByDispatchLot(DispatchLot dispatchLot, String shipmentStatus) {
+		List<DispatchLotHasShipment> dispatchLotHasShipmentList = getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot);
+		List<DispatchLotHasShipment> filteredDispatchLotHasShipmentList = new ArrayList<DispatchLotHasShipment>();
+		if(shipmentStatus != null && !shipmentStatus.equals("")){
+			for(DispatchLotHasShipment dispatchLotHasShipment : dispatchLotHasShipmentList){
+				if(dispatchLotHasShipment.getShipmentStatus().equals(shipmentStatus)){
+					filteredDispatchLotHasShipmentList.add(dispatchLotHasShipment);
+				}
+			}
+			return filteredDispatchLotHasShipmentList;
+		}
+		return dispatchLotHasShipmentList;
 	}
 
 	public DispatchLot save(DispatchLot dispatchLot) {

@@ -64,6 +64,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 	private FileBean fileBean;
 	private List<String> gatewayOrderIdList;
 	private List<DispatchLotHasShipment> dispatchLotShipments;
+	private String shipmentStatusFilter;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -168,7 +169,8 @@ public class DispatchLotAction extends BasePaginatedAction {
 			addRedirectAlertMessage(new SimpleMessage("Dispatch lot not found."));
 			return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
 		}
-		dispatchLotShipments = getDispatchLotService().getDispatchLotHasShipmentListByDispatchLot(dispatchLot);
+
+		dispatchLotShipments = getDispatchLotService().getDispatchLotHasShipmentListByDispatchLot(dispatchLot, shipmentStatusFilter);
 		return new ForwardResolution("/pages/admin/courier/viewDispatchLotWithShipments.jsp").addParameter("dispatchLot", dispatchLot.getId());
 	}
 
@@ -366,5 +368,13 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 	public void setDispatchLotShipments(List<DispatchLotHasShipment> dispatchLotShipments) {
 		this.dispatchLotShipments = dispatchLotShipments;
+	}
+
+	public String getShipmentStatusFilter() {
+		return shipmentStatusFilter;
+	}
+
+	public void setShipmentStatusFilter(String shipmentStatusFilter) {
+		this.shipmentStatusFilter = shipmentStatusFilter;
 	}
 }

@@ -35,10 +35,14 @@ public interface DispatchLotService {
 
 	public DispatchLotHasShipment getDispatchLotHasShipment(DispatchLot dispatchLot, Shipment shipment);
 
-	public List<DispatchLotHasShipment> getDispatchLotHasShipmentListByDispatchLot(DispatchLot dispatchLot);
+	public List<DispatchLotHasShipment> getDispatchLotHasShipmentListByDispatchLot(DispatchLot dispatchLot, String shipmentStatus);
 
 	public DispatchLot cancelDispatchLot(DispatchLot dispatchLot);
 
 	public List<String> getSourceAndDestinationListForDispatchLot();
+
+	public boolean markDispatchLotReceived(DispatchLot dispatchLot);
+
+	public List<String> getShipmentStatusForDispatchLot();
 
 }

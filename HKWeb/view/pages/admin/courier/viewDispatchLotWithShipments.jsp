@@ -1,4 +1,5 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="View Dispatch Lot">
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.DispatchLotAction" var="dispatchLotBean"/>
 	<s:layout-component name="htmlHead">
@@ -100,6 +101,20 @@
 					</td>
 				</tr>
 			</table>
+		</fieldset>
+
+		<fieldset class="top_label">
+			<legend>Details</legend>
+			<s:form action="com.hk.web.action.admin.courier.DispatchLotAction">
+				<label><strong>Filter shipments</strong></label>
+				<s:select name="shipmentStatusFilter">
+					<s:option value="">-All-</s:option>
+					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="shipmentStatusForDispatchLot"
+					                           />
+				</s:select>
+				<s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}"/>
+				<s:submit name="viewLot" />
+			</s:form>
 		</fieldset>
 
 		<h4>Shipment Details for Dispatch Lot: ${dispatchLotBean.dispatchLot.id}</h4>
