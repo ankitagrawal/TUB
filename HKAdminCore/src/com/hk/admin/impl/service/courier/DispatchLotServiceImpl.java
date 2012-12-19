@@ -247,12 +247,15 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		long noOfShipmentsReceived = (long)getShipmentsForDispatchLot(dispatchLot).size();
 		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.PartiallyReceived.getDispatchLotStatus());
 
+
 		if(noOfShipmentsReceived == validShipmentList.size()){
 			markDispatchLotReceived(dispatchLot);
 		}
 
 		dispatchLot.setNoOfShipmentsReceived((long)validShipmentList.size());
-
+		if(getDispatchLotHasShipmentListByDispatchLot(dispatchLot, DispatchLotConstants.SHIPMENT_RECEIVED).size() == getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot).size()) {
+			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Received.getDispatchLotStatus());
+		}
 		getBaseDao().save(dispatchLot);
 		
 	   return invalidGatewayOrderIds;
