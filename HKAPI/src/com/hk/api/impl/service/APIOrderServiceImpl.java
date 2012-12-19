@@ -1,28 +1,22 @@
 package com.hk.api.impl.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.api.dto.order.*;
+import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.pact.service.core.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.order.EnumOrderLifecycleActivity;
-import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PaymentMode;
-import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -32,26 +26,16 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
-import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
-import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.AutomatedOrderService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.api.models.order.APIAddress;
-import com.hk.api.models.order.APIOrder;
-import com.hk.api.models.order.APIOrderDetails;
-import com.hk.api.models.order.APIOrderTrackingItem;
-import com.hk.api.models.order.APIPayment;
-import com.hk.api.models.order.APIProductDetail;
 import com.hk.api.pact.service.APIOrderService;
 import com.hk.api.pact.service.APIUserService;
 import com.hk.util.json.JSONResponseBuilder;
@@ -65,8 +49,6 @@ public class APIOrderServiceImpl implements APIOrderService {
 
     @Autowired
     ProductVariantService productVariantService;
-    @Autowired
-    PaymentManager        paymentManager;
     @Autowired
     CartLineItemService   cartLineItemService;
     @Autowired
@@ -84,157 +66,72 @@ public class APIOrderServiceImpl implements APIOrderService {
     @Autowired
     PaymentService        paymentService;
     @Autowired
-    LineItemDao           lineItemDao;
-    @Autowired
     OrderStatusService    orderStatusService;
     @Autowired
     OrderLoggingService   orderLoggingService;
     @Autowired
-    ShippingOrderService  shippingOrderService;
-    @Autowired
-    InventoryService      inventoryService;
-    @Autowired
     UserService           userService;
-    @Autowired
-    ShipmentService       shipmentService;
     @Autowired
     AutomatedOrderService automatedOrderService;
 
     @Deprecated
-    public String createOrderInHK(APIOrder apiOrder) {
+    public String createOrderInHK(HKAPIOrderDTO hkapiOrderDTO) {
         Set<CartLineItem> cartLineItems = new HashSet<CartLineItem>();
         // get hkuser object if he already exists or create a new hkuser
-        User hkUser = getApiUserService().getHKUser(apiOrder.getApiUser());
+        User hkUser = getApiUserService().getHKUser(hkapiOrderDTO.getHkapiUserDTO());
 
-        // first place a base order or find one if it already exists
-        Order order = getOrderManager().getOrCreateOrder(hkUser);
-        order.setCartLineItems(cartLineItems);
-        order = getOrderService().save(order);
-        // add items in the cart
-        cartLineItems = addCartLineItems(apiOrder.getApiOrderDetails(), order);
+        Order order = automatedOrderService.createNewOrder(hkUser);
 
-        order.setCartLineItems(cartLineItems);
-        order = getOrderService().save(order);
+        //create cart line items
+        cartLineItems = addCartLineItems(hkapiOrderDTO.getHkapiOrderDetailsDTO(), order);
 
         // how to check if address always exists or create a new address everytime?
-        Address address = createAddress(apiOrder.getApiAddress(), hkUser);
-        // save address in the base_order
-        order.setAddress(address);
-        // set store in base order
-        order.setStore(hkUser.getStore());
-        order = getOrderService().save(order);
-        // update amount to be paid for the order... sequence is important here address need to be created priorhand!!
-        getOrderManager().recalAndUpdateAmount(order);
+        Address address = createAddress(hkapiOrderDTO.getHkapiAddressDTO(), hkUser);
 
-        // create a payment
-        Payment payment = createPayment(order, apiOrder.getApiPayment());
+       // create a payment
+        Payment payment = createPayment(order,cartLineItems, hkapiOrderDTO.getHkapiPaymentDTO());
 
-        // update order payment status and order status in general
-        getOrderManager().orderPaymentReceieved(payment);
+        if (cartLineItems.size() > 0) {
+            order = automatedOrderService.placeOrder(order,cartLineItems, address, payment,hkUser.getStore(), false);
 
-        // finalize order -- create shipping order and update inventory
-        finalizeOrder(order);
-        return new JSONResponseBuilder().addField("hkOrderId", order.getId()).build();
+            return new JSONResponseBuilder().addField("hkOrderId", order.getId()).build();
+        } else {
+            return null;
+        }
     }
 
-    public void finalizeOrder(Order order) {
-
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-
-        boolean shippingOrderExists = false;
-
-        // Check Inventory health of order lineitems
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            if (lineItemDao.getLineItem(cartLineItem) != null) {
-                shippingOrderExists = true;
-            }
-        }
-
-        Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
-
-        if (!shippingOrderExists) {
-            shippingOrders = getOrderService().createShippingOrders(order);
-        }
-
-        if (shippingOrders != null && shippingOrders.size() > 0) {
-            // save order with InProcess status since shipping orders have been created
-            order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
-            order.setShippingOrders(shippingOrders);
-            order = getOrderService().save(order);
-
-            /**
-             * Order lifecycle activity logging - Order split to shipping orders
-             */
-            getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(),
-                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
-
-            // auto escalate shipping orders if possible
-            if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
-                for (ShippingOrder shippingOrder : shippingOrders) {
-                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
-                }
-            }
-
-            for (ShippingOrder shippingOrder : shippingOrders) {
-                shipmentService.createShipment(shippingOrder);
-            }
-
-        }
-
-        // Check Inventory health of order lineitems
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-        }
-
-    }
-
-    public Address createAddress(APIAddress apiAddress, User hkUser) {
+    public Address createAddress(HKAPIAddressDTO hkapiAddressDTO, User hkUser) {
         Address address = new Address();
-        address.setLine1(apiAddress.getLine1());
-        address.setLine2(apiAddress.getLine2());
-        address.setState(apiAddress.getState());
-        address.setPin(apiAddress.getPin());
-        address.setName(apiAddress.getName());
-        address.setPhone(apiAddress.getPhone());
-        address.setCity(apiAddress.getCity());
+        address.setLine1(hkapiAddressDTO.getLine1());
+        address.setLine2(hkapiAddressDTO.getLine2());
+        address.setState(hkapiAddressDTO.getState());
+        address.setPin(hkapiAddressDTO.getPin());
+        address.setName(hkapiAddressDTO.getName());
+        address.setPhone(hkapiAddressDTO.getPhone());
+        address.setCity(hkapiAddressDTO.getCity());
         address.setUser(hkUser);
         return getAddressDao().save(address);
     }
 
-    public Payment createPayment(Order order, APIPayment apiPayment) {
-        Payment payment = new Payment();
-        // dont set payment amount it will be taken from the order
-        payment.setOrder(order);
-        PaymentMode paymentMode;
-        paymentMode = getPaymentModeDao().getPaymentModeById(new Long(apiPayment.getPaymentmodeId()));
-        payment.setPaymentMode(paymentMode);
-        // payment.setIp(remoteAddr);
-        payment.setBankCode(apiPayment.getBankId());
-        payment = getPaymentManager().createNewPayment(order, paymentMode, "182.12.1.1", apiPayment.getBankId()); // remote
-                                                                                                                    // ip
-                                                                                                                    // adddress
-                                                                                                                    // is
-                                                                                                                    // hard
-                                                                                                                    // coded
-        PaymentStatus paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.AUTHORIZATION_PENDING.getId());
-        if (EnumPaymentMode.getPrePaidPaymentModes().contains(paymentMode.getId())) {
-            paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.SUCCESS.getId());
+    public Payment createPayment(Order order, Set<CartLineItem> cartLineItems, HKAPIPaymentDTO hkapiPaymentDTO) {
+        double orderAmount=0.0;
+        for(CartLineItem cartLineItem:cartLineItems){
+            orderAmount=orderAmount+cartLineItem.getHkPrice()-cartLineItem.getDiscountOnHkPrice();
         }
-        payment.setPaymentStatus(paymentStatus);
-        payment.setCreateDate(new Date());
-        payment.setPaymentDate(new Date());
-        return getPaymentService().save(payment);
+        PaymentMode paymentMode = getPaymentModeDao().getPaymentModeById(new Long(hkapiPaymentDTO.getPaymentmodeId()));
+        return automatedOrderService.createNewPayment(order,orderAmount, paymentMode);
     }
 
-    public Set<CartLineItem> addCartLineItems(APIOrderDetails apiOrderDetails, Order order) {
+    public Set<CartLineItem> addCartLineItems(HKAPIOrderDetailsDTO HKAPIOrderDetailsDTO, Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
-        for (APIProductDetail detail : apiOrderDetails.getApiProductDetails()) {
+        for (HKAPICartLineItemDTO detail : HKAPIOrderDetailsDTO.getHkapiCartLineItemDTOs()) {
             ProductVariant productVariant = getProductVariantService().getVariantById(detail.getProductId().trim());
             if (productVariant != null) {
-                productVariant.setQty(new Long(detail.getQty()));
-                productVariant.setHkPrice(detail.getStorePrice());
-                CartLineItem cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
-                cartLineItem = getCartLineItemService().save(cartLineItem);
+                CartLineItemBuilder cartLineItemBuilder=new CartLineItemBuilder();
+                cartLineItemBuilder.ofType(EnumCartLineItemType.Product);
+                cartLineItemBuilder.forVariantQty(productVariant,detail.getQty()).hkPrice(detail.getStorePrice()).markedPrice(detail.getStoreMrp()).discountOnHkPrice(detail.getDiscountOnStorePrice());
+                CartLineItem cartLineItem=cartLineItemBuilder.build();
+                cartLineItem.setOrder(order);
                 cartLineItems.add(cartLineItem);
             }
         }
@@ -369,14 +266,6 @@ public class APIOrderServiceImpl implements APIOrderService {
         this.orderManager = orderManager;
     }
 
-    public PaymentManager getPaymentManager() {
-        return paymentManager;
-    }
-
-    public void setPaymentManager(PaymentManager paymentManager) {
-        this.paymentManager = paymentManager;
-    }
-
     public APIUserService getApiUserService() {
         return apiUserService;
     }
@@ -425,14 +314,6 @@ public class APIOrderServiceImpl implements APIOrderService {
         this.paymentService = paymentService;
     }
 
-    public LineItemDao getLineItemDao() {
-        return lineItemDao;
-    }
-
-    public void setLineItemDao(LineItemDao lineItemDao) {
-        this.lineItemDao = lineItemDao;
-    }
-
     public OrderStatusService getOrderStatusService() {
         return orderStatusService;
     }
@@ -447,22 +328,6 @@ public class APIOrderServiceImpl implements APIOrderService {
 
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
         this.orderLoggingService = orderLoggingService;
-    }
-
-    public ShippingOrderService getShippingOrderService() {
-        return shippingOrderService;
-    }
-
-    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
-        this.shippingOrderService = shippingOrderService;
-    }
-
-    public InventoryService getInventoryService() {
-        return inventoryService;
-    }
-
-    public void setInventoryService(InventoryService inventoryService) {
-        this.inventoryService = inventoryService;
     }
 
     public UserService getUserService() {

@@ -5,7 +5,6 @@ import javax.ws.rs.*;
 import com.hk.api.constants.APITokenTypes;
 import com.hk.api.dto.HkAPIBaseDto;
 import com.hk.api.dto.UserDetailDto;
-import com.hk.api.models.user.APIUser;
 import com.hk.api.pact.service.APIUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

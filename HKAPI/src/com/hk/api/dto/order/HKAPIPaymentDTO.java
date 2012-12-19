@@ -1,15 +1,12 @@
-package com.hk.api.models.order;
+package com.hk.api.dto.order;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Pradeep
- * Date: May 2, 2012
- * Time: 4:52:55 PM
- * To change this template use File | Settings | File Templates.
  */
-@Deprecated
-public class APIPayment {
+public class HKAPIPaymentDTO {
    private String paymentmodeId;
+   //bankId is not used right now
    private String bankId;
    private String status;
 

@@ -47,8 +47,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 public class AutomatedOrderServiceImpl implements AutomatedOrderService{
 
     @Autowired
-    private OrderManager orderManager;
-    @Autowired
     private OrderService orderService;
     @Autowired
     private InventoryService inventoryService;
@@ -93,8 +91,6 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         //update amount to be paid for the order... sequence is important here address need to be created priorhand!!
         order=recalAndUpdateAmount(order);
 
-        //update order payment status and order status in general
-        //orderManager.orderPaymentReceieved(payment);
         order.setGatewayOrderId(payment.getGatewayOrderId());
         order.setPayment(payment);
         // save order with placed status since amount has been applied
@@ -195,14 +191,6 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
-    }
-
-    public OrderManager getOrderManager() {
-        return orderManager;
-    }
-
-    public void setOrderManager(OrderManager orderManager) {
-        this.orderManager = orderManager;
     }
 
     public OrderService getOrderService() {

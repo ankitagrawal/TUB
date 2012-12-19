@@ -5,7 +5,6 @@ package com.hk.api.models.user;
  * User: Marut
  * Date: 10/15/12
  * Time: 6:20 PM
- * To change this template use File | Settings | File Templates.
  */
 public class APIUserDetail {
 

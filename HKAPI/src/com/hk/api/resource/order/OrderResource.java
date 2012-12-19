@@ -8,6 +8,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.hk.api.constants.APITokenTypes;
+import com.hk.api.dto.order.HKAPIOrderDTO;
+import com.hk.api.security.annotation.SecureResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +21,6 @@ import com.hk.manager.StoreOrderService;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.store.StoreService;
-import com.hk.api.models.order.APIOrder;
 import com.hk.api.pact.service.APIOrderService;
 
 /**
@@ -51,9 +53,10 @@ public class OrderResource {
     @Path ("/create")
     @Consumes ("application/json")
     @Produces ("application/json")
-    public String createOrderInHK(APIOrder apiOrder) {
-        if (apiOrder != null) {
-            String response = getApiOrderService().createOrderInHK(apiOrder);
+    @SecureResource(hasAllTokens = {APITokenTypes.APP_TOKEN})
+    public String createOrderInHK(HKAPIOrderDTO hkapiOrderDTO) {
+        if (hkapiOrderDTO != null) {
+            String response = getApiOrderService().createOrderInHK(hkapiOrderDTO);
             return response;
         } else {
             return "invalid json";

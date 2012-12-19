@@ -1,4 +1,4 @@
-package com.hk.api.models.order;
+package com.hk.api.dto.order;
 
 /**
  * Created by IntelliJ IDEA.

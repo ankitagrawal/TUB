@@ -1,13 +1,12 @@
-package com.hk.api.models.user;
+package com.hk.api.dto.user;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Pradeep
  * Date: May 2, 2012
  * Time: 4:52:22 PM
- * To change this template use File | Settings | File Templates.
  */
-public class APIUser {
+public class HKAPIUserDTO {
   private String name;
   private String email;
   private String password;

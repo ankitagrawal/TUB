@@ -7,7 +7,6 @@ import com.hk.api.dto.UserDetailDto;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.api.HkApiUser;
-import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.UserManager;
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Service;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.store.StoreService;
-import com.hk.api.models.user.APIUser;
+import com.hk.api.dto.user.HKAPIUserDTO;
 import com.hk.api.pact.service.APIUserService;
 
 
@@ -48,16 +47,16 @@ public class APIUserServiceImpl implements APIUserService {
     UserManager userManager;
 
 
-    public User getHKUser(APIUser apiUser) {
-        if (userExists(apiUser)) {
-            User user=getUser(apiUser);
+    public User getHKUser(HKAPIUserDTO HKAPIUserDTO) {
+        if (userExists(HKAPIUserDTO)) {
+            User user=getUser(HKAPIUserDTO);
             if(StringUtils.isBlank(user.getName())){
-                user.setName(apiUser.getName());
+                user.setName(HKAPIUserDTO.getName());
             }
             user=userService.save(user);
             return user;
         } else {
-            return createNewHKUser(apiUser);
+            return createNewHKUser(HKAPIUserDTO);
         }
     }
 
@@ -119,19 +118,19 @@ public class APIUserServiceImpl implements APIUserService {
 
     }
 
-    private User createNewHKUser(APIUser apiUser) {
+    private User createNewHKUser(HKAPIUserDTO HKAPIUserDTO) {
         User user = new User();
-        user.setName(apiUser.getName());
-        user.setEmail(apiUser.getEmail());
-        user.setPasswordChecksum(apiUser.getPassword());
-        user.setLogin(apiUser.getEmail()+"||"+apiUser.getStoreId());
-        user.setStore(storeService.getStoreById(apiUser.getStoreId()));
+        user.setName(HKAPIUserDTO.getName());
+        user.setEmail(HKAPIUserDTO.getEmail());
+        user.setPasswordChecksum(HKAPIUserDTO.getPassword());
+        user.setLogin(HKAPIUserDTO.getEmail()+"||"+ HKAPIUserDTO.getStoreId());
+        user.setStore(storeService.getStoreById(HKAPIUserDTO.getStoreId()));
         return userService.save(user);
     }
 
-    private boolean userExists(APIUser apiUser) {
-        if (apiUser != null) {
-            if (userService.findByLoginAndStoreId(apiUser.getEmail(), apiUser.getStoreId()) != null) {
+    private boolean userExists(HKAPIUserDTO HKAPIUserDTO) {
+        if (HKAPIUserDTO != null) {
+            if (userService.findByLoginAndStoreId(HKAPIUserDTO.getEmail(), HKAPIUserDTO.getStoreId()) != null) {
                 return true;
             } else {
                 return false;
@@ -153,8 +152,8 @@ public class APIUserServiceImpl implements APIUserService {
         }
     }
 
-    private User getUser(APIUser apiUser) {
-        return userService.findByLoginAndStoreId(apiUser.getEmail(), apiUser.getStoreId());
+    private User getUser(HKAPIUserDTO HKAPIUserDTO) {
+        return userService.findByLoginAndStoreId(HKAPIUserDTO.getEmail(), HKAPIUserDTO.getStoreId());
     }
 
     private User getUser(User user) {

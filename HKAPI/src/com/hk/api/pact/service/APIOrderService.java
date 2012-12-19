@@ -1,7 +1,7 @@
 package com.hk.api.pact.service;
 
+import com.hk.api.dto.order.HKAPIOrderDTO;
 import com.hk.domain.order.Order;
-import com.hk.api.models.order.APIOrder;
 
 
 /**
@@ -9,13 +9,13 @@ import com.hk.api.models.order.APIOrder;
  * User: Pradeep
  * Date: May 4, 2012
  * Time: 3:19:51 PM
- * To change this template use File | Settings | File Templates.
  */
 public interface APIOrderService {
 
 
-    public String createOrderInHK(APIOrder apiOrder);
+    public String createOrderInHK(HKAPIOrderDTO HKAPIOrderDTO);
 
+    @Deprecated
     public String trackOrder(String orderId);
 
     public String createOrderInHk(Order order);

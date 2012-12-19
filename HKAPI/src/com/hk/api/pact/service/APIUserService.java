@@ -3,7 +3,7 @@ package com.hk.api.pact.service;
 import com.hk.api.dto.HkAPIBaseDto;
 import com.hk.api.dto.UserDetailDto;
 import com.hk.domain.user.User;
-import com.hk.api.models.user.APIUser;
+import com.hk.api.dto.user.HKAPIUserDTO;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,7 +13,7 @@ import com.hk.api.models.user.APIUser;
  */
 public interface APIUserService {
 
-    public User getHKUser(APIUser apiUser);
+    public User getHKUser(HKAPIUserDTO HKAPIUserDTO);
 
     public User getHKUser(User user);
 

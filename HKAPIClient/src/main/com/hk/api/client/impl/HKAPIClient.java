@@ -3,6 +3,7 @@ package com.hk.api.client.impl;
 import com.hk.api.client.constants.HKAPITokenTypes;
 import com.hk.api.client.dto.HKAPIBaseDto;
 import com.hk.api.client.dto.HKUserDetailDto;
+import com.hk.api.client.dto.order.HKAPIOrderDTO;
 import com.hk.api.client.exception.HKEmptyCredentialException;
 import com.hk.api.client.pact.IHKAPIClient;
 import com.hk.api.client.utils.HKAPIAuthenticationUtils;
@@ -65,6 +66,15 @@ public class HKAPIClient extends RestClient implements IHKAPIClient {
         return baseDto;
     }
 
+    public HKAPIBaseDto placeOrderInHK(HKAPIOrderDTO hkapiOrderDTO){
+        checkForEmptyCredentials();
+        String uaToken= HKAPIAuthenticationUtils.generateUserAccessToken(hkapiOrderDTO.getHkapiUserDTO().getEmail(), appKey, appSecretKey);
+        String hkResponse=doPost("/order/create",HKAPIBaseUtils.toJSON(hkapiOrderDTO),getAppTokenHeaders(), healthkartRestUrl);
+        HKAPIBaseDto responseDto= HKAPIBaseUtils.fromJSON(HKUserDetailDto.class, hkResponse);
+        HKAPIBaseUtils.checkForErrors(responseDto);
+        return responseDto;
+    }
+
     private void checkForEmptyCredentials(){
         if(HKAPIBaseUtils.isEmpty(appKey)){
             throw new HKEmptyCredentialException("HK app key is empty - please set it");
@@ -88,6 +98,13 @@ public class HKAPIClient extends RestClient implements IHKAPIClient {
         BasicHeader header=new BasicHeader(HKAPITokenTypes.APP_TOKEN,appToken);
         BasicHeader[] headers={header};
         return headers;
+    }
+
+    private Header[] getAppAndUserAccessTokenHeaders(String userEmail){
+        BasicHeader userAccessHeader=(BasicHeader)getUserAccessTokenHeaders(userEmail)[0];
+        BasicHeader appTokenHeader=(BasicHeader)getAppTokenHeaders()[0];
+        BasicHeader[] combinedHeaders={userAccessHeader,appTokenHeader};
+        return combinedHeaders;
     }
 
     public  String getAppKey() {

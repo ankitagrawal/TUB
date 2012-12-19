@@ -2,6 +2,7 @@ package com.hk.api.client.pact;
 
 import com.hk.api.client.dto.HKAPIBaseDto;
 import com.hk.api.client.dto.HKUserDetailDto;
+import com.hk.api.client.dto.order.HKAPIOrderDTO;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,5 +21,7 @@ public interface IHKAPIClient {
     public Double getRewardPoints(String userEmail);
 
     public HKAPIBaseDto awardRewardPoints(String userEmail, Double rewardPoints);
+
+    public HKAPIBaseDto placeOrderInHK(HKAPIOrderDTO hkapiOrderDTO);
 
 }

@@ -1,14 +1,12 @@
-package com.hk.api.models.order;
+package com.hk.api.dto.order;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Pradeep
  * Date: May 4, 2012
  * Time: 1:42:47 AM
- * To change this template use File | Settings | File Templates.
  */
-@Deprecated
-public class APIAddress {
+public class HKAPIAddressDTO {
   private String name;
   private String line1;
   private String line2;
