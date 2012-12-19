@@ -251,7 +251,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			markDispatchLotReceived(dispatchLot);
 		}
 
-		dispatchLot.setNoOfShipmentsReceived(noOfShipmentsReceived);
+		dispatchLot.setNoOfShipmentsReceived((long)validShipmentList.size());
 
 		getBaseDao().save(dispatchLot);
 		

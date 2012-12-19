@@ -7,6 +7,8 @@
 	<c:set var="inTransitDispatchLot" value="<%=EnumDispatchLotStatus.InTransit.getId()%>"/>
 	<c:set var="generatedDispatchLot" value="<%=EnumDispatchLotStatus.Generated.getId()%>"/>
 	<c:set var="receivedDispatchLot" value="<%=EnumDispatchLotStatus.Received.getId()%>"/>
+	<c:set var="partialReceivedDispatchLot" value="<%=EnumDispatchLotStatus.PartiallyReceived.getId()%>"/>
+
 	<s:layout-component name="htmlHead">
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -135,7 +137,7 @@
 								<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 							</s:link>
 						</c:if>
-						<c:if test="${dispatchLot.dispatchLotStatus.id == inTransitDispatchLot || dispatchLot.dispatchLotStatus.id == receivedDispatchLot}">
+						<c:if test="${dispatchLot.dispatchLotStatus.id == inTransitDispatchLot || dispatchLot.dispatchLotStatus.id == partialReceivedDispatchLot}">
 							<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="receiveLot">Receive
 								<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 							</s:link>
