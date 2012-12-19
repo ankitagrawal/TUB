@@ -623,7 +623,7 @@ public class Functions {
     }
 
     public static boolean renderNewCatalogFilter(String child, String secondChild) {
-        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer");
+        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer", "dietary-supplements");
         boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter,
                 secondChild));
         return renderNewCatalogFilter;
