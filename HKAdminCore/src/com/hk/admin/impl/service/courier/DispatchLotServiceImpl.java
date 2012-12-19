@@ -8,7 +8,9 @@ import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.constants.XslConstants;
 import com.hk.constants.courier.DispatchLotConstants;
 import com.hk.constants.courier.EnumDispatchLotStatus;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.report.ReportConstants;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.*;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.order.ShippingOrder;
@@ -64,7 +66,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		List<String> soGatewayOrderIdInExcel = new ArrayList<String>();
 
 		try {
-			//leaving the first row, as it would be empty from the Shipment Awaiting Queue excel
+			//skipping the first row, as it would be empty in the excel being used (Shipment Awaiting Queue excel)
 			if(rowIterator.hasNext()) {
 				rowIterator.next();
 			}
@@ -95,7 +97,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			String invalidOrdersByShipment = "";
 
 			for (ShippingOrder shippingOrder : soListInDB) {
-				if(shippingOrder.getShipment() == null) {
+
+				if(shippingOrder.getShipment() == null || shippingOrder.getOrderStatus().getId() < EnumShippingOrderStatus.SO_Shipped.getId()) {
 					shipmentExists = false;
 					invalidOrdersByShipment += shippingOrder.getGatewayOrderId();
 				} else if(!dispatchLot.getZone().equals(shippingOrder.getShipment().getZone())) {
@@ -105,7 +108,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				shipmentList.add(shippingOrder.getShipment());
 			}
 			if(!shipmentExists) {
-				throw new ExcelBlankFieldException("Shipments for the following gatewayOrderIds does not exist: " + invalidOrdersByShipment);
+				throw new ExcelBlankFieldException("Either Shipments for the following gatewayOrderIds does not exist, or shipping order status is less than Shipped: "
+						+ invalidOrdersByShipment);
 			}
 			if(differentZone) {
 				throw new ExcelBlankFieldException("Following gatewayOrderIds belong to a different zone : " + invalidOrdersByZone);
