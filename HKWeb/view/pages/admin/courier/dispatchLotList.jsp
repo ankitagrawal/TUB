@@ -16,9 +16,6 @@
 		<script type="text/javascript">
 			$(document).ready(function () {
 				$('.cancelDispatchId').click(function () {
-					var dispatchLotRow = $(this).parents('.dispatchLotRow');
-					var dispatchLotId = dispatchLotRow.find('.dispatchLotClass').val();
-					alert(dispatchLotId);
 					if (!confirm("Are you sure, you want to cancel the Dispatch Lot")) {
 						return false;
 					}
@@ -34,7 +31,7 @@
 
 	<s:layout-component name="content">
 		<fieldset class="right_label">
-			<legend>Search PO</legend>
+			<legend>Search Dispatch Lot</legend>
 			<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
 				<label>Dispatch Lot Id:</label><s:text name="dispatchLot"/>
 				<label>Docket Number:</label><s:text name="docketNumber"/>
@@ -109,8 +106,8 @@
 			</tr>
 			</thead>
 			<c:forEach items="${da.dispatchLotList}" var="dispatchLot" varStatus="ctr">
-				<tr class="dispatchLotRow">
-					<td class="dispatchLotClass">${dispatchLot.id}</td>
+				<tr>
+					<td>${dispatchLot.id}</td>
 					<td>${dispatchLot.createDate}</td>
 					<td>${dispatchLot.createdBy.name}</td>
 					<td>${dispatchLot.docketNumber}</td>

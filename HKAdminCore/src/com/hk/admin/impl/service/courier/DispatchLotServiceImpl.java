@@ -6,13 +6,13 @@ import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
-import com.hk.constants.XslConstants;
 import com.hk.constants.courier.DispatchLotConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.report.ReportConstants;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.*;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
@@ -77,17 +77,16 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		List<String> soGatewayOrderIdInExcel = new ArrayList<String>();
 
 		try {
+			//skipping the first row, as it would be empty in the excel being used (Shipment Awaiting Queue excel)
+			if(rowIterator.hasNext()) {
+				rowIterator.next();
+			}
+
 			while (rowIterator.hasNext()) {
 				HKRow row = rowIterator.next();
 				String soGatewayOrderId = row.getColumnValue(ReportConstants.SHIPPERS_REFERENCE_NUMBER);
 				if (StringUtils.isBlank(soGatewayOrderId)) {
 					throw new ExcelBlankFieldException("SO Gateway Order Id Cannot be blank", rowCount);
-				}
-				//leaving the first row, as it would be empty from the Shipment Awaiting Queue excel
-				if(rowCount == 1) {
-					if(rowIterator.hasNext()) {
-						rowIterator.next();
-					}
 				}
 				soGatewayOrderIdInExcel.add(soGatewayOrderId);
 				rowCount++;
@@ -109,7 +108,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			String invalidOrdersByShipment = "";
 
 			for (ShippingOrder shippingOrder : soListInDB) {
-				if(shippingOrder.getShipment() == null) {
+
+				if(shippingOrder.getShipment() == null || shippingOrder.getOrderStatus().getId() < EnumShippingOrderStatus.SO_Shipped.getId()) {
 					shipmentExists = false;
 					invalidOrdersByShipment += shippingOrder.getGatewayOrderId();
 				} else if(!dispatchLot.getZone().equals(shippingOrder.getShipment().getZone())) {
@@ -119,7 +119,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				shipmentList.add(shippingOrder.getShipment());
 			}
 			if(!shipmentExists) {
-				throw new ExcelBlankFieldException("Shipments for the following gatewayOrderIds does not exist: " + invalidOrdersByShipment);
+				throw new ExcelBlankFieldException("Either Shipments for the following gatewayOrderIds does not exist, or shipping order status is less than Shipped: "
+						+ invalidOrdersByShipment);
 			}
 			if(differentZone) {
 				throw new ExcelBlankFieldException("Following gatewayOrderIds belong to a different zone : " + invalidOrdersByZone);
