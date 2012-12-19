@@ -124,10 +124,6 @@ public class UserServiceImpl implements UserService {
         return getUserDao().findByLoginAndStoreId(login, storeId);
     }
 
-    public User findByUnsubscribeToken(String unsubscribeToken){
-        return getUserDao().findByUnsubscribeToken(unsubscribeToken);
-    }
-
     // TODO: move such methods and methods getOrdersForUserSortedByDate to a user profile service
     /*
      * private Set<ProductVariant> getRecentlyOrderedProductVariantsForUser(User user) { Map<String, ProductVariant>

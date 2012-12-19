@@ -51,7 +51,6 @@ public class UserEmailResource {
             for (User user : emailRecepients){
                 UserDto userDto = new UserDto();
                 userDto.email = user.getEmail();
-                userDto.unsubscribeLink = user.getUnsubscribeToken();
                 categoryUsers.add(userDto);
             }
             final GenericEntity<List<UserDto>> entity = new GenericEntity<List<UserDto>>(categoryUsers){};
@@ -77,7 +76,7 @@ public class UserEmailResource {
             if (user != null){
                 UserDto userDto= new UserDto();
                 userDto.email = user.getEmail();
-                userDto.unsubscribeLink = linkManager.getEmailUnsubscribeLink(user);
+                userDto.name = user.getName();
                 response = Response.status(Response.Status.OK).entity(userDto).build();
             }
         }catch (Exception ex){
@@ -89,6 +88,6 @@ public class UserEmailResource {
 
     class UserDto{
         public String email;
-        public String unsubscribeLink;
+        public String name;
     }
 }

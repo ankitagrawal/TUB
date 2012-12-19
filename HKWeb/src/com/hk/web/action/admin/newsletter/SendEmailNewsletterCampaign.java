@@ -261,15 +261,9 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         List<String> finalCategories = new ArrayList<String>();
 
         if (categories.equalsIgnoreCase("all")) {
-            List<Category> category = getCategoryService().getPrimaryCategories();
-            for (Category cat : category){
-                finalCategories.add(cat.getName());
-            }
+            finalCategories.add("all_categories");
         } else if (categories.equalsIgnoreCase("all-unverified")) {
-            List<Category> category = getCategoryService().getPrimaryCategories();
-            for (Category cat : category){
-                finalCategories.add(cat.getName());
-            }
+            finalCategories.add("all_categories");
             finalCategories.add("unverified");
         } else {
             for (String categoryName : categoryArray) {
@@ -290,7 +284,6 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         // implementation here
         Long usersBrowsed = 0L;
         int pageCount = 0;
-/*
         do {
             if (categories.equalsIgnoreCase("all")) {
                 // emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign,
@@ -328,10 +321,8 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
             usersBrowsed += maxResultCount;
 
         } while ((usersBrowsed < emailRecepientCount) && (emailRecepientCount < MAX_EMAILS));
-*/
 
-        //if (!categories.equalsIgnoreCase("all") && !categories.equalsIgnoreCase("all-unverified"))
-        {
+        if (!categories.equalsIgnoreCase("all") && !categories.equalsIgnoreCase("all-unverified")) {
             for (String categoryName : categoryArray) {
                 // Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
                 Category category = CategoryCache.getInstance().getCategoryByName(StringUtils.trim(categoryName)).getCategory();
