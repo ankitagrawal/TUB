@@ -105,6 +105,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 		dispatchLot = getDispatchLotService().save(dispatchLot);
 		addRedirectAlertMessage(new SimpleMessage("Changes saved"));
 		return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+
 	}
 
 	private boolean doValidations() {
