@@ -111,7 +111,7 @@ public class CampaignTrackingFilter implements Filter {
 				        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);
 				        Cookie cookie = new Cookie(HealthkartConstants.Cookie.trackingId, trafficTracking.getId().toString());
 				        cookie.setPath("/");
-				        cookie.setMaxAge(6 * 60 * 60); // 6 hours
+				        cookie.setMaxAge(24 * 60 * 60); // 24 hours
 				        HttpServletResponse httpResponse = (HttpServletResponse) response;
 				        httpResponse.addCookie(cookie);
 			        }
