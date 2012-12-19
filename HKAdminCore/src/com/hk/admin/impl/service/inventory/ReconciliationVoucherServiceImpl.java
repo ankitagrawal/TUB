@@ -179,4 +179,9 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
     public BaseDao getBaseDao() {
         return baseDao;
     }
+
+	public ReconciliationVoucher save(ReconciliationVoucher reconciliationVoucher){
+		return (ReconciliationVoucher)baseDao.save(reconciliationVoucher);
+
+	}
 }

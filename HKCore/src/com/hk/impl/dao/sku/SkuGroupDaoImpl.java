@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -38,6 +40,12 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
            setParameter("barcode", barcode).
            list();
        return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
+     }
+
+	 public List<SkuGroup> getSkuGroupByBatch(String batch) {
+		 DetachedCriteria skuGroupDetachedCriteria = DetachedCriteria.forClass(SkuGroup.class);
+		 skuGroupDetachedCriteria.add(Restrictions.eq("batchNumber",batch));
+		return (List<SkuGroup>) findByCriteria(skuGroupDetachedCriteria);
      }
 
    /* public void resetInventory(ProductVariant productVariant) {

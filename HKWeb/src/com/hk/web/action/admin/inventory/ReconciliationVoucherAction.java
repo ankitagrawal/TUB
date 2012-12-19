@@ -2,18 +2,9 @@ package com.hk.web.action.admin.inventory;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.FileBean;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.log4j.Logger;
@@ -36,12 +27,14 @@ import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.sku.SkuGroup;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.web.HealthkartResponse;
 
 @Secure(hasAnyPermissions = {PermissionConstants.RECON_VOUCHER_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -61,8 +54,6 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     @Autowired
     UserDao userDao;
     @Autowired
-    SkuGroupDao skuGroupDao;
-    @Autowired
     AdminSkuItemDao adminSkuItemDao;
     @Autowired
     AdminInventoryService adminInventoryService;
@@ -74,6 +65,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     SkuService skuService;
     @Autowired
     private ProductVariantService productVariantService;
+	@Autowired
+	SkuGroupDao skuGroupDao;
 
     private ReconciliationVoucher reconciliationVoucher;
     private List<ReconciliationVoucher> reconciliationVouchers = new ArrayList<ReconciliationVoucher>();
@@ -84,6 +77,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     private Date createDate;
     private String userLogin;
     private Warehouse warehouse;
+	private Integer listIndex;
+	private String batchNumber;
 
     @Validate(required = true, on = "parse")
     private FileBean fileBean;
@@ -102,11 +97,25 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/reconciliationVoucherList.jsp");
     }
 
+
+	public Resolution create() {
+		User loggedOnUser = null;
+		if (getPrincipal() != null) {
+			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+		}
+		if (reconciliationVoucher == null || reconciliationVoucher.getId() == null) {
+			reconciliationVoucher.setCreateDate(new Date());
+			reconciliationVoucher.setCreatedBy(loggedOnUser);
+		}
+		reconciliationVoucher = reconciliationVoucherService.save(reconciliationVoucher);
+		return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+	}
+
     public Resolution view() {
         if (reconciliationVoucher != null) {
             logger.debug("reconciliationVoucher@Pre: " + reconciliationVoucher.getId());
         }
-        return new ForwardResolution("/pages/admin/reconciliationVoucher.jsp");
+        return new ForwardResolution("/pages/admin/createReconciliationVoucher.jsp");
     }
 
     public Resolution save() {
@@ -137,6 +146,45 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         }
         return new RedirectResolution(ReconciliationVoucherAction.class);
     }
+
+	public Resolution getBatchDetails() {
+		SkuGroup skuGroup = null;
+		List<SkuGroup> skuGroupList = null;
+		String msg = null;
+		HealthkartResponse healthkartResponse = null;
+		Map dataMap = new HashMap();
+		boolean error = false;
+		try{
+			skuGroup = skuGroupDao.getSkuGroup(batchNumber.trim());
+			if (skuGroup == null) {
+				skuGroupList = skuGroupDao.getSkuGroupByBatch(batchNumber.trim());
+				if (skuGroupList == null || skuGroupList.isEmpty()) {
+					error = true;
+				}
+			}
+			if (!error) {
+				if (skuGroupList == null || skuGroupList.isEmpty()) {
+					skuGroupList = new ArrayList<SkuGroup>();
+					skuGroupList.add(skuGroup);
+					dataMap.put("skuGroupList", skuGroupList);
+
+				} else {
+					dataMap.put("skuGroupList", skuGroupList);
+
+				}
+				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, " ", dataMap);
+			} else {
+				msg = "Eneterd Batch is not correct for row"+listIndex;
+				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, msg, dataMap);
+			}
+			return new JsonResolution(healthkartResponse);
+
+		} catch (Exception e) {
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), dataMap);
+			return new JsonResolution(healthkartResponse);
+		}
+
+	}
 
     public ReconciliationVoucher getReconciliationVoucher() {
         return reconciliationVoucher;
@@ -230,4 +278,19 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         return params;
     }
 
+	public Integer getListIndex() {
+		return listIndex;
+	}
+
+	public void setListIndex(Integer listIndex) {
+		this.listIndex = listIndex;
+	}
+
+	public String getBatchNumber() {
+		return batchNumber;
+	}
+
+	public void setBatchNumber(String batchNumber) {
+		this.batchNumber = batchNumber;
+	}
 }

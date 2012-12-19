@@ -16,4 +16,6 @@ import java.util.List;
 public interface ReconciliationVoucherService {
 
     public void save(User loggedOnUser, List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
+
+	public ReconciliationVoucher save(ReconciliationVoucher reconciliationVoucher);
 }

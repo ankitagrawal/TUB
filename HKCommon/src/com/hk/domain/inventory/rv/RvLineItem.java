@@ -68,7 +68,10 @@ public class RvLineItem implements java.io.Serializable {
   private ReconciliationType reconciliationType;
 
   @Column(name = "remarks")
-  private String remarks;	
+  private String remarks;
+
+	@Column(name ="reconcilied_qty")
+	private String reconciliedQty;
 
   public Long getId() {
     return this.id;
@@ -165,4 +168,12 @@ public class RvLineItem implements java.io.Serializable {
   public void setRemarks(String remarks) {
     this.remarks = remarks;
   }
+
+	public String getReconciliedQty() {
+		return reconciliedQty;
+	}
+
+	public void setReconciliedQty(String reconciliedQty) {
+		this.reconciliedQty = reconciliedQty;
+	}
 }
