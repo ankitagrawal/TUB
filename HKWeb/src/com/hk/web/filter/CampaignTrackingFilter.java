@@ -78,19 +78,20 @@ public class CampaignTrackingFilter implements Filter {
         User user = getPrincipalUser();
 	    String trackingId = null;
         //Get temp user from cookie
-        if (httpRequest.getCookies() != null) {
-          for (Cookie cookie : httpRequest.getCookies()) {
-            if (user == null && cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.tempHealthKartUser)) {
-              String userHash = cookie.getValue();
-              user = userService.findByUserHash(userHash);
-              logger.debug("Getting Temp User from Cookie and Setting as Principal User="+user.getUserHash());
-              new PrincipalImpl(user);
-            }
-	        else if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.trackingId)) {
-              trackingId = cookie.getValue();
-            }
-          }
-        }
+	    if (httpRequest.getCookies() != null) {
+		    for (Cookie cookie : httpRequest.getCookies()) {
+			    if (user == null && cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.tempHealthKartUser)) {
+				    String userHash = cookie.getValue();
+				    user = userService.findByUserHash(userHash);
+				    if (user != null) {
+					    logger.debug("Getting Temp User from Cookie and Setting as Principal User=" + userHash);
+					    new PrincipalImpl(user);
+				    }
+			    } else if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.trackingId)) {
+				    trackingId = cookie.getValue();
+			    }
+		    }
+	    }
 
         if (newSession == null || !newSession.equals(true)) {
 	        httpSession.setAttribute(HttpRequestAndSessionConstants.NEW_SESSION, true);
