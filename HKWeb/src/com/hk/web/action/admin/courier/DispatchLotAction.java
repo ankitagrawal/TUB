@@ -5,6 +5,7 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.domain.courier.*;
 import com.hk.domain.order.ShippingOrder;
@@ -12,6 +13,7 @@ import com.hk.domain.user.User;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.web.action.error.AdminPermissionAction;
 import com.restfb.util.StringUtils;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -19,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +35,7 @@ import java.util.*;
  * Time: 7:16 PM
  * To change this template use File | Settings | File Templates.
  */
+@Secure(hasAnyPermissions = {PermissionConstants.DISPATCH_LOT_OPERATIONS}, authActionBean = AdminPermissionAction.class)
 @Component
 public class DispatchLotAction extends BasePaginatedAction {
 
@@ -203,6 +207,17 @@ public class DispatchLotAction extends BasePaginatedAction {
 		} else {
 			addRedirectAlertMessage(new SimpleMessage("Incorrect Dispatch Lot"));
 		}
+		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
+	}
+
+	public Resolution markDispatchLotReceived(){
+		if (dispatchLot == null) {
+			addRedirectAlertMessage(new SimpleMessage("Dispatch lot not found."));
+			return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
+		}
+
+		getDispatchLotService().markDispatchLotReceived(dispatchLot);
+		addRedirectAlertMessage(new SimpleMessage("Dispatch Lot marked as Received"));
 		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
 	}
 

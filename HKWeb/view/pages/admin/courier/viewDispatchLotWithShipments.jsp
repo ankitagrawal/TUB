@@ -100,12 +100,20 @@
 						</c:choose>
 					</td>
 				</tr>
+				<tr>
+					<td>
+						<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
+							<s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}"/>
+							<s:submit name="markDispatchLotReceived" value="Mark Lot As Received"/>
+						</s:form>
+					</td>
+				</tr>
 			</table>
 		</fieldset>
 
 		<fieldset class="top_label">
-			<legend>Details</legend>
-			<s:form action="com.hk.web.action.admin.courier.DispatchLotAction">
+			<legend>Filters</legend>
+			<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
 				<label><strong>Filter shipments</strong></label>
 				<s:select name="shipmentStatusFilter">
 					<s:option value="">-All-</s:option>
@@ -113,7 +121,7 @@
 					                           />
 				</s:select>
 				<s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}"/>
-				<s:submit name="viewLot" />
+				<s:submit name="viewLot" value="Filter" />
 			</s:form>
 		</fieldset>
 

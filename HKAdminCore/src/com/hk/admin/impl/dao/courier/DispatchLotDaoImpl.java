@@ -2,6 +2,7 @@ package com.hk.admin.impl.dao.courier;
 
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.DispatchLotDao;
+import com.hk.constants.courier.DispatchLotConstants;
 import com.hk.constants.courier.EnumDispatchLotStatus;
 import com.hk.domain.courier.*;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -87,7 +88,8 @@ public class DispatchLotDaoImpl extends BaseDaoImpl implements DispatchLotDao {
 
 	public List<Shipment> getShipmentListExistingInOtherActiveDispatchLot(DispatchLot dispatchLot, List<Shipment> shipmentList) {
 		String query = "select ds.shipment from DispatchLotHasShipment ds join ds.dispatchLot d where ds.shipment in (:shipmentList) " +
-				" and ds.dispatchLot != :dispatchLot and d.dispatchLotStatus.id != " + EnumDispatchLotStatus.Cancelled.getId();
+				" and ds.dispatchLot != :dispatchLot and d.dispatchLotStatus.id != " + EnumDispatchLotStatus.Cancelled.getId() +
+				" and ds.shipmentStatus != " + DispatchLotConstants.SHIPMENT_LOST;
 		return (List<Shipment>) findByNamedParams(query, new String[]{"shipmentList", "dispatchLot"}, new Object[]{shipmentList, dispatchLot});
 	}
 
