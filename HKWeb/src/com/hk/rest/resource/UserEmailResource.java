@@ -45,7 +45,7 @@ public class UserEmailResource {
     CategoryService categoryService;
 
     @GET
-    @Path("/store/{storeId}/category/{category}")
+    @Path("/store/{storeId}/category/{category}/role/{role}")
     @Produces("application/json")
     public Response getEmailsByCategory(@PathParam("category")String category, @PathParam("storeId")int storeId,
                                         @PathParam("role")String role){
