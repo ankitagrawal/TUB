@@ -1,10 +1,14 @@
 package com.hk.impl.service.shippingOrder;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Zone;
 import com.hk.pact.service.core.PincodeService;
 import org.slf4j.Logger;
@@ -20,7 +24,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
@@ -30,7 +33,6 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.helper.OrderDateUtil;
-import com.hk.helper.ShippingOrderHelper;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
@@ -51,27 +53,26 @@ import com.hk.util.TokenUtils;
 @Service
 public class ShippingOrderServiceImpl implements ShippingOrderService {
 
-    private Logger logger = LoggerFactory.getLogger(ShippingOrderService.class);
+    private Logger                     logger = LoggerFactory.getLogger(ShippingOrderService.class);
 
     @Autowired
-    private UserService userService;
+    private UserService                userService;
     @Autowired
-    private InventoryService inventoryService;
+    private InventoryService           inventoryService;
     @Autowired
-    private ShippingOrderDao shippingOrderDao;
+    private ShippingOrderDao           shippingOrderDao;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    private ReconciliationStatusDao reconciliationStatusDao;
+    private ReconciliationStatusDao    reconciliationStatusDao;
     @Autowired
-    private LineItemDao lineItemDao;
+    private LineItemDao                lineItemDao;
     @Autowired
-    private ReplacementOrderDao replacementOrderDao;
-    @Autowired
-    private PincodeService pincodeService;
+    private ReplacementOrderDao        replacementOrderDao;
+	@Autowired
+	private PincodeService pincodeService;
 
-
-    private OrderService orderService;
+    private OrderService               orderService;
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
@@ -154,7 +155,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     /**
      * Auto-escalation logic for all successful transactions This method will check inventory availability and escalate
      * orders from action queue to processing queue accordingly.
-     *
+     * 
      * @param shippingOrder
      * @return true if it passes all the use cases i.e jit or availableUnbookedInventory Ajeet - 15-Feb-2012
      * @description shipping order
@@ -188,7 +189,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         return false;
                     } else if (productVariant.getProduct().isDropShipping()) {
                         String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
-//                       by -aa
+                 //      setting shipping order Drop shipped                 
                         shippingOrder.setDropShipping(true);
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
@@ -234,14 +235,13 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
 
-                //  dropship Shipping order now manually escalable
-             /*
-                    if (productVariant.getProduct().isDropShipping()) {
+                //  dropship Shipping order now manually escalable         
+             /*         if (productVariant.getProduct().isDropShipping()) {
                         String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
                         return false;
-                    } else   */
+                    } else        */
 
                     if (availableUnbookedInv <= 0) {
                         String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
@@ -289,22 +289,22 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
 
     public ShippingOrder escalateShippingOrderFromActionTODropQueue(ShippingOrder shippingOrder, boolean isAutoEsc) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
-        shippingOrder.setLastEscDate(HKDateUtil.getNow());
-        shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
-        if (isAutoEsc) {
-            logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToDropShippingQueue);
-        } else {
-            logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
-        }
-        getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
-        return shippingOrder;
-    }
-
+         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
+         shippingOrder.setLastEscDate(HKDateUtil.getNow());
+         shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
+         if (isAutoEsc) {
+             logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToDropShippingQueue);
+         } else {
+             logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
+         }
+         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
+         return shippingOrder;
+     }
+    
 
     /**
      * Creates a shipping order with basic details
-     *
+     * 
      * @param baseOrder
      * @param warehouse
      * @return
@@ -377,29 +377,29 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return false; // To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder) {
-        if (shippingOrder.getShipment() != null) {
-            Pincode shippingOrderPincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
-            Long courierId = shippingOrder.getShipment().getAwb().getCourier().getId();
-            if (shippingOrderPincode != null && shippingOrderPincode.getZone() != null) {
-                if (EnumCourier.getDispatchLotCouriers().contains(courierId)
-                        && shippingOrderPincode.getZone().equals(CourierConstants.SOUTH_ZONE)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder) {
+		Zone zone=null;
+		Shipment shipment=shippingOrder.getShipment();
+		if(shipment != null && shipment.getZone() !=null){
+			Long courierId = shipment.getAwb().getCourier().getId();
+			zone=shipment.getZone();
+			if(zone != null){
+				if(EnumCourier.getDispatchLotCouriers().contains(courierId)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public Zone getZoneForShippingOrder(ShippingOrder shippingOrder) {
-        return shippingOrder.getShipment().getZone();
+	@Override
+	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder) {
+		return shippingOrder.getShipment().getZone();
 
-    }
+	}
 
-
-    public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
+	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
 

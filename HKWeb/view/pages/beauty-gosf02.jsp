@@ -78,7 +78,16 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='SHNZ06' productDesc="Extracts of Vetiver and Dates with Diamond and Tankana, purifies skin and improves cell regeneration"/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARVDC15' productDesc="Saffron and Sandal essence work together to keep skin hydrated, refreshed and free from spots.  "/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VICHY4' productDesc="Effective weapon to fight against UV rays. Non sticky, ultra-protective emulsion with micro-sized filtering particles."/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY764' productDesc="Ground Walnut and Apricot exfoliates & rehydrates skin. Soothing Almond, Rosemary and Lemon oil detoxifies & rejuvenates dull skin.   "/>			                
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY764' productDesc="Ground Walnut and Apricot exfoliates & rehydrates skin. Soothing Almond, Rosemary and Lemon oil detoxifies & rejuvenates dull skin.   "/>
+			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='STVKC05' productDesc="Comprehensive solution for problematic skin, reduces excess oil, pacifies sebum formation and regulates hormonal imbalance."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='STVKC18' productDesc="Anti-frizz conditioner that gently smoothes cuticles, reduces friction and helps fortify hair."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PNOG14' productDesc="Discover youthful radiance in 5 easy steps. Essential oils and herbal extract, balances and replenishes dull, dehydrated skin."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PNOG15' productDesc="Skin-beneficial nutrients offer dollops of moisture, nourishes, balances and restores sun-damaged skin."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='PNOG34' productDesc="Brown sugar gently scrubs rough surface cells while nourishing Cocoa and Shea butter conditions deeply."/>			                
+			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MYBLN31' productDesc="Smudge-proof, creamy gel comes in two distinct shades that can be used separately for either an intense line or dramatic shine."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='REV19' productDesc="A buttery balm that easily glides on your lips. Hydrates, nourishes, tints to give you luscious, healthy glowing lips."/>
         </div>
         <div class="cl"></div>
 

@@ -408,7 +408,7 @@ ORDER INVOICE <c:choose>
             <%-- </c:if>--%>
         </c:forEach>
 
-        <c:if test="${orderSummary.freebieItem != null && orderSummary.freebieItem != ''}">
+        <%--<c:if test="${orderSummary.freebieItem != null && orderSummary.freebieItem != ''}">
             <tr>
                 <td>${orderSummary.freebieItem}</td>
                 <td>1</td>
@@ -416,7 +416,7 @@ ORDER INVOICE <c:choose>
                 <td>0.0</td>
                 <td>0.0</td>
             </tr>
-        </c:if>
+        </c:if>--%>
 
     </table>
 

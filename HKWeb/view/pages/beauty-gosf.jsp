@@ -82,6 +82,10 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='VEDIC46' productDesc="Goodness of Bhringraj, Glycerin and Soy oil, conditions and hydrates dead locks. Absolute nourishment for chemically treated hair."/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ORIY16' productDesc='Fortified with amino acids that nourishes hair, improves its strength and reduces hairfall'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='BTY679' productDesc="Natural Beewax and Olive oil for delectably soft lips."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='MNFCR23' productDesc="Give yourself the gift of soft, smooth radiant skin with this Spa set!"/>
+			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARMTR18' productDesc="An invigorating experience crafted to suit all skin types, this skin-whitening facial kit leaves you absolutely fabulous."/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='ARMTR4' productDesc="Bid good bye to acne, zits, soreness and inflammation caused after waxing or threading. Multipurpose non-sticky gel for all skin types."/>
          </div>
         <div class="cl"></div>
         

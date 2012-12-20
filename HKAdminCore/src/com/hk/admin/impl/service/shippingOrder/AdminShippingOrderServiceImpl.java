@@ -82,9 +82,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getAdminInventoryService().reCheckInInventory(shippingOrder);
             // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
             // inventory, reward points, shipment, discount
-            for (LineItem lineItem : shippingOrder.getLineItems()) {
-                getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
-            }
             getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
@@ -97,6 +94,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	            //shippingOrderService.save(shippingOrder);
             }
 			getShippingOrderService().save(shippingOrder);
+        }
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
         }
     }
 

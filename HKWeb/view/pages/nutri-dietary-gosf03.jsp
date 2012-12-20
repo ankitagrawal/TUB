@@ -61,6 +61,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf04.jsp">Next →</a>
 
@@ -78,7 +79,7 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1120' productDesc='Ideal for people with high BP, it manages your blood pressure and aids in the digestive process.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT946' productDesc='Enriched with Vitamin B, say hello to healthy hair and nails! This supplement also improves active blood circulation and metabolism.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1293' productDesc='Get all round nutrition support with Biocare Adult Vitamins & Minerals - designed keeping the modern lifestyle in mind.'/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1305' productDesc='Contains digestive enzymes that breakdown different , hence improve your digestive system and treat pancreatitis, acid reflux and lactase deficiency.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1305' productDesc='Contains digestive enzymes that improve your digestive system and treat pancreatitis, acid reflux & lactase deficiency.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1137' productDesc='It contains glucosamine that helps reduce arthritic pain and builds cartilage in joints. It is ideal for both men and women.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT995' productDesc='Formulated with Glucosamine and Natural Antioxidants, it repairs the damaged tissues, relieving from joint and muscle pain'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1130' productDesc='Reduces cardiovascular diseases, prevents ostioporosis and promotes bone health'/>
@@ -108,6 +109,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf07.jsp">7</a>
 
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf08.jsp">8</a>
+            <a class="pages_link" href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf09.jsp">9</a>
 
             <a class="next"  href="${pageContext.request.contextPath}/pages/nutri-dietary-gosf04.jsp">Next →</a>
 
