@@ -194,8 +194,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		Shipment shipment = null;
 		List<ShippingOrder> soListInDB = getAdminShippingOrderDao().getShippingOrderByGatewayOrderList(gatewayOrderIdList);
 		String invalidGatewayOrderIds = validateShippingOrdersForDispatchLot(gatewayOrderIdList, soListInDB);
-		List<Shipment> validShipmentList = new ArrayList<Shipment>();
-
+		Set<Shipment> validShipmentSet = new HashSet<Shipment>(0);
 		for (ShippingOrder shippingOrder : soListInDB) {
 			shipment = shippingOrder.getShipment();
 			if (shipment == null) {
@@ -203,8 +202,12 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			} else if (!dispatchLotHasShipment(dispatchLot, shipment)) {
 				invalidGatewayOrderIds += "  " + shippingOrder.getGatewayOrderId();
 			} else {
-				validShipmentList.add(shipment);
+				validShipmentSet.add(shipment);
 			}
+		}
+
+		if(validShipmentSet.size() == 0){
+			return invalidGatewayOrderIds;
 		}
 
 		DispatchLotHasShipment dispatchLotHasShipment=null;
@@ -217,7 +220,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		User loggedInUser = userService.getLoggedInUser();
 		ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.ReceivedAtHub.getId());
 
-		for(Shipment shipmentTemp : validShipmentList){
+		for(Shipment shipmentTemp : validShipmentSet){
 			dispatchLotHasShipment = getDispatchLotHasShipment(dispatchLot, shipmentTemp);
 			dispatchLotHasShipment.setShipmentStatus(DispatchLotConstants.SHIPMENT_RECEIVED);
 			getBaseDao().save(dispatchLotHasShipment);
@@ -248,14 +251,14 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.PartiallyReceived.getDispatchLotStatus());
 
 
-		if(noOfShipmentsReceived == validShipmentList.size()){
+		if(noOfShipmentsReceived == validShipmentSet.size()){
 			markDispatchLotReceived(dispatchLot);
 		}
 
 		if(dispatchLot.getNoOfShipmentsReceived() == null) {
-			dispatchLot.setNoOfShipmentsReceived((long)validShipmentList.size());
+			dispatchLot.setNoOfShipmentsReceived((long) validShipmentSet.size());
 		} else {
-			dispatchLot.setNoOfShipmentsReceived(dispatchLot.getNoOfShipmentsReceived() + (long)validShipmentList.size());
+			dispatchLot.setNoOfShipmentsReceived(dispatchLot.getNoOfShipmentsReceived() + (long)validShipmentSet.size());
 		}
 
 		if(getDispatchLotHasShipmentListByDispatchLot(dispatchLot, DispatchLotConstants.SHIPMENT_RECEIVED).size() == getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot).size()) {
@@ -349,7 +352,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 	}
 
 	public List<DispatchLotHasShipment> getDispatchLotHasShipmentListByDispatchLot(DispatchLot dispatchLot, String shipmentStatus) {
-		List<DispatchLotHasShipment> dispatchLotHasShipmentList = getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot);
+		List<DispatchLotHasShipment> dispatchLotHasShipmentList = new ArrayList<DispatchLotHasShipment>(0);
+		dispatchLotHasShipmentList = getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot);
 		List<DispatchLotHasShipment> filteredDispatchLotHasShipmentList = new ArrayList<DispatchLotHasShipment>();
 		if(shipmentStatus != null && !shipmentStatus.equals("")){
 			for(DispatchLotHasShipment dispatchLotHasShipment : dispatchLotHasShipmentList){
