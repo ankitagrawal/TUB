@@ -43,9 +43,13 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
                 <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
                 ${productLineItem.qty}
             </td>
-            <td><span
-                    style="text-decoration: line-through;">${productLineItem.markedPrice}</span> ${productLineItem.hkPrice}
-            </td>
+            <td>
+				<#if productLineItem.markedPrice &gt; productLineItem.hkPrice>
+				<span
+					style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
+				</#if>
+				${productLineItem.hkPrice}
+			</td>
             <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
         </tr>
         </#list>
