@@ -7,9 +7,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.api.constants.EnumHKAPIErrorCode;
+import com.hk.api.constants.HKAPIOperationStatus;
+import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.api.dto.order.*;
+import com.hk.api.pact.service.HKAPIOrderService;
+import com.hk.domain.api.HkApiUser;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.pact.service.core.AddressService;
+import com.hk.pact.service.store.StoreService;
+import com.hk.security.HkAuthService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -36,8 +45,7 @@ import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.api.pact.service.APIOrderService;
-import com.hk.api.pact.service.APIUserService;
+import com.hk.api.pact.service.HKAPIUserService;
 import com.hk.util.json.JSONResponseBuilder;
 import com.akube.framework.util.BaseUtils;
 
@@ -45,14 +53,18 @@ import com.akube.framework.util.BaseUtils;
  * Created by IntelliJ IDEA. User: Pradeep Date: May 1, 2012 Time: 1:26:17 PM
  */
 @Service
-public class APIOrderServiceImpl implements APIOrderService {
+public class HKAPIOrderServiceImpl implements HKAPIOrderService {
+    private static Logger logger = LoggerFactory.getLogger(HKAPIOrderService.class);
+
+    @Autowired
+    HkAuthService hkAuthService;
 
     @Autowired
     ProductVariantService productVariantService;
     @Autowired
     CartLineItemService   cartLineItemService;
     @Autowired
-    APIUserService        apiUserService;
+    HKAPIUserService hkapiUserService;
     @Autowired
     OrderManager          orderManager;
     @Autowired
@@ -73,14 +85,30 @@ public class APIOrderServiceImpl implements APIOrderService {
     UserService           userService;
     @Autowired
     AutomatedOrderService automatedOrderService;
+    @Autowired
+    StoreService storeService;
 
     @Deprecated
-    public String createOrderInHK(HKAPIOrderDTO hkapiOrderDTO) {
+    public HKAPIBaseDTO createOrderInHK(String appToken, HKAPIOrderDTO hkapiOrderDTO) {
+        HKAPIBaseDTO hkapiBaseDTO=new HKAPIBaseDTO();
+        if(hkapiOrderDTO==null){
+           hkapiBaseDTO.setStatus(HKAPIOperationStatus.ERROR);
+           return hkapiBaseDTO;
+        }
+        if(!validateAppForOrderPlacement(appToken)){
+            hkapiBaseDTO.setStatus(HKAPIOperationStatus.ERROR);
+            hkapiBaseDTO.setErrorCode(EnumHKAPIErrorCode.UnauthorizedToPlaceOrder.getId());
+            hkapiBaseDTO.setMessage(EnumHKAPIErrorCode.UnauthorizedToPlaceOrder.getMessage());
+            return hkapiBaseDTO;
+        }
         Set<CartLineItem> cartLineItems = new HashSet<CartLineItem>();
         // get hkuser object if he already exists or create a new hkuser
-        User hkUser = getApiUserService().getHKUser(hkapiOrderDTO.getHkapiUserDTO());
+        User hkUser = getHkapiUserService().getHKUser(hkapiOrderDTO.getHkapiUserDTO(), hkapiOrderDTO.getStoreId());
 
         Order order = automatedOrderService.createNewOrder(hkUser);
+        order.setUserComments(hkapiOrderDTO.getHkapiOrderDetailsDTO().getUserComments());
+        order.setScore(0L);
+        order.setStore(storeService.getStoreById(hkapiOrderDTO.getStoreId()));
 
         //create cart line items
         cartLineItems = addCartLineItems(hkapiOrderDTO.getHkapiOrderDetailsDTO(), order);
@@ -93,13 +121,21 @@ public class APIOrderServiceImpl implements APIOrderService {
 
         if (cartLineItems.size() > 0) {
             order = automatedOrderService.placeOrder(order,cartLineItems, address, payment,hkUser.getStore(), false);
-
-            return new JSONResponseBuilder().addField("hkOrderId", order.getId()).build();
+            logger.info("order placed from store "+order.getStore().getId()+" with hk order id "+order.getId());
+            String hkOrderId=order.getId().toString();
+            hkapiBaseDTO.setData(hkOrderId);
         } else {
-            return null;
+            hkapiBaseDTO.setStatus(HKAPIOperationStatus.ERROR);
+            hkapiBaseDTO.setErrorCode(EnumHKAPIErrorCode.EmptyCart.getId());
+            hkapiBaseDTO.setMessage(EnumHKAPIErrorCode.EmptyCart.getMessage());
         }
+        return hkapiBaseDTO;
     }
 
+    protected boolean validateAppForOrderPlacement(String appToken){
+        HkApiUser apiUser=hkAuthService.getApiUserFromAppToken(appToken);
+        return apiUser.isOrderPlacementEnabled();
+    }
     public Address createAddress(HKAPIAddressDTO hkapiAddressDTO, User hkUser) {
         Address address = new Address();
         address.setLine1(hkapiAddressDTO.getLine1());
@@ -205,7 +241,7 @@ public class APIOrderServiceImpl implements APIOrderService {
 
         order.getUser().setStore(order.getStore());
         order.getUser().setId(null);
-        User hkUser = getApiUserService().getHKUser(order.getUser());
+        User hkUser = getHkapiUserService().getHKUser(order.getUser());
 
         Order hkOrder = automatedOrderService.createNewOrder(hkUser);
         hkOrder.setUserComments(order.getUserComments());
@@ -266,12 +302,12 @@ public class APIOrderServiceImpl implements APIOrderService {
         this.orderManager = orderManager;
     }
 
-    public APIUserService getApiUserService() {
-        return apiUserService;
+    public HKAPIUserService getHkapiUserService() {
+        return hkapiUserService;
     }
 
-    public void setApiUserService(APIUserService apiUserService) {
-        this.apiUserService = apiUserService;
+    public void setHkapiUserService(HKAPIUserService hkapiUserService) {
+        this.hkapiUserService = hkapiUserService;
     }
 
     public OrderService getOrderService() {

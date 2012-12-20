@@ -1,9 +1,8 @@
 package com.hk.api.impl.service;
 
-import com.hk.api.constants.APIOperationStatus;
-import com.hk.api.constants.EnumAPIErrorCode;
-import com.hk.api.dto.HkAPIBaseDto;
-import com.hk.api.dto.UserDetailDto;
+import com.hk.api.constants.EnumHKAPIErrorCode;
+import com.hk.api.constants.HKAPIOperationStatus;
+import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.api.HkApiUser;
@@ -20,7 +19,7 @@ import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.api.dto.user.HKAPIUserDTO;
-import com.hk.api.pact.service.APIUserService;
+import com.hk.api.pact.service.HKAPIUserService;
 
 
 /**
@@ -31,7 +30,7 @@ import com.hk.api.pact.service.APIUserService;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-public class APIUserServiceImpl implements APIUserService {
+public class HKAPIUserServiceImpl implements HKAPIUserService {
 
     @Autowired
     UserService userService;
@@ -47,16 +46,16 @@ public class APIUserServiceImpl implements APIUserService {
     UserManager userManager;
 
 
-    public User getHKUser(HKAPIUserDTO HKAPIUserDTO) {
-        if (userExists(HKAPIUserDTO)) {
-            User user=getUser(HKAPIUserDTO);
+    public User getHKUser(HKAPIUserDTO HKAPIUserDTO, Long storeId) {
+        if (userExists(HKAPIUserDTO, storeId)) {
+            User user=getUser(HKAPIUserDTO, storeId);
             if(StringUtils.isBlank(user.getName())){
                 user.setName(HKAPIUserDTO.getName());
             }
             user=userService.save(user);
             return user;
         } else {
-            return createNewHKUser(HKAPIUserDTO);
+            return createNewHKUser(HKAPIUserDTO, storeId);
         }
     }
 
@@ -75,62 +74,67 @@ public class APIUserServiceImpl implements APIUserService {
         }
     }
 
-    public UserDetailDto getUserDetails(String userAccessToken){
+    public HKAPIBaseDTO getUserDetails(String userAccessToken){
+        HKAPIBaseDTO baseDTO=new HKAPIBaseDTO();
         User user=hkAuthService.getUserFromAccessToken(userAccessToken);
         HkApiUser apiUser=hkAuthService.getApiUserFromUserAccessToken(userAccessToken);
-        UserDetailDto userDetailDto=new UserDetailDto();
-        userDetailDto.setEmail(user.getEmail());
-        userDetailDto.setName(user.getName());
-        return userDetailDto;
+        HKAPIUserDTO userDto=new HKAPIUserDTO();
+        userDto.setEmail(user.getEmail());
+        userDto.setName(user.getName());
+        baseDTO.setData(userDto);
+        return baseDTO;
     }
 
-    public HkAPIBaseDto awardRewardPoints(String userAccessToken, Double rewardPoints){
+    public HKAPIBaseDTO awardRewardPoints(String userAccessToken, Double rewardPoints){
         User user=hkAuthService.getUserFromAccessToken(userAccessToken);
         HkApiUser hkApiUser=hkAuthService.getApiUserFromUserAccessToken(userAccessToken);
         //TODO allow this only for hkplus - but there is no way out here right now other than hardcoding the logic for "HealthkartPlus"
         // as name of HkApiUser - which I am not sure as of now
          rewardPointService.addRewardPoints(null,null,null,rewardPoints,hkApiUser.getName(), EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HealthkartPlus.asRewardPointMode());
 
-        HkAPIBaseDto hkAPIBaseDto=new HkAPIBaseDto();
-        return hkAPIBaseDto;
+        HKAPIBaseDTO hkapiBaseDTO =new HKAPIBaseDTO();
+        return hkapiBaseDTO;
     }
 
-    public UserDetailDto getUserRewardPointDetails(String userAccessToken){
+    public HKAPIBaseDTO getUserRewardPointDetails(String userAccessToken){
+        HKAPIBaseDTO hkapiBaseDTO=new HKAPIBaseDTO();
         User user=hkAuthService.getUserFromAccessToken(userAccessToken);
-        UserDetailDto userDetailDto=this.getUserDetails(userAccessToken);
-        userDetailDto.setRewardPoints(referrerProgramManager.getTotalRedeemablePoints(user));
-        return userDetailDto;
+        double rewardPoints=referrerProgramManager.getTotalRedeemablePoints(user);
+        hkapiBaseDTO.setData(rewardPoints);
+        return hkapiBaseDTO;
     }
 
-    public UserDetailDto createSSOUser(UserDetailDto userDetail){
-        UserDetailDto userDetailDto=new UserDetailDto();
-        userDetailDto.setEmail(userDetail.getEmail());
-        userDetailDto.setName(userDetail.getName());
+    public HKAPIBaseDTO createSSOUser(HKAPIUserDTO userDetail){
+        HKAPIBaseDTO baseDTO =new HKAPIBaseDTO();
+        HKAPIUserDTO userDto=new HKAPIUserDTO();
+        userDto.setEmail(userDetail.getEmail());
+        userDto.setName(userDetail.getName());
+        baseDTO.setData(userDto);
         User user=null;
         try{
             user=userManager.signup(userDetail.getEmail(),userDetail.getName(), userDetail.getPassword(), null);
         } catch (HealthkartSignupException e){
-             userDetailDto.setErrorCode(EnumAPIErrorCode.UserAlreadyExists.getId());
-             userDetailDto.setMessage(EnumAPIErrorCode.UserAlreadyExists.getMessage());
-            userDetailDto.setStatus(APIOperationStatus.ERROR);
+             baseDTO.setErrorCode(EnumHKAPIErrorCode.UserAlreadyExists.getId());
+             baseDTO.setMessage(EnumHKAPIErrorCode.UserAlreadyExists.getMessage());
+            baseDTO.setStatus(HKAPIOperationStatus.ERROR);
         }
-        return userDetailDto;
+        return baseDTO;
 
     }
 
-    private User createNewHKUser(HKAPIUserDTO HKAPIUserDTO) {
+    private User createNewHKUser(HKAPIUserDTO HKAPIUserDTO, Long storeId) {
         User user = new User();
         user.setName(HKAPIUserDTO.getName());
         user.setEmail(HKAPIUserDTO.getEmail());
         user.setPasswordChecksum(HKAPIUserDTO.getPassword());
-        user.setLogin(HKAPIUserDTO.getEmail()+"||"+ HKAPIUserDTO.getStoreId());
-        user.setStore(storeService.getStoreById(HKAPIUserDTO.getStoreId()));
+        user.setLogin(HKAPIUserDTO.getEmail()+"||"+ storeId);
+        user.setStore(storeService.getStoreById(storeId));
         return userService.save(user);
     }
 
-    private boolean userExists(HKAPIUserDTO HKAPIUserDTO) {
+    private boolean userExists(HKAPIUserDTO HKAPIUserDTO, Long storeId) {
         if (HKAPIUserDTO != null) {
-            if (userService.findByLoginAndStoreId(HKAPIUserDTO.getEmail(), HKAPIUserDTO.getStoreId()) != null) {
+            if (userService.findByLoginAndStoreId(HKAPIUserDTO.getEmail(), storeId) != null) {
                 return true;
             } else {
                 return false;
@@ -152,8 +156,8 @@ public class APIUserServiceImpl implements APIUserService {
         }
     }
 
-    private User getUser(HKAPIUserDTO HKAPIUserDTO) {
-        return userService.findByLoginAndStoreId(HKAPIUserDTO.getEmail(), HKAPIUserDTO.getStoreId());
+    private User getUser(HKAPIUserDTO HKAPIUserDTO, Long storeId) {
+        return userService.findByLoginAndStoreId(HKAPIUserDTO.getEmail(), storeId);
     }
 
     private User getUser(User user) {

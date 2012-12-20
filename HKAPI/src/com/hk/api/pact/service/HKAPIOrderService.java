@@ -1,5 +1,6 @@
 package com.hk.api.pact.service;
 
+import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.api.dto.order.HKAPIOrderDTO;
 import com.hk.domain.order.Order;
 
@@ -10,10 +11,10 @@ import com.hk.domain.order.Order;
  * Date: May 4, 2012
  * Time: 3:19:51 PM
  */
-public interface APIOrderService {
+public interface HKAPIOrderService {
 
 
-    public String createOrderInHK(HKAPIOrderDTO HKAPIOrderDTO);
+    public HKAPIBaseDTO createOrderInHK(String appToken, HKAPIOrderDTO HKAPIOrderDTO);
 
     @Deprecated
     public String trackOrder(String orderId);

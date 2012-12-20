@@ -6,5 +6,5 @@ package com.hk.api.constants;
  * Date: 11/25/12
  * Time: 3:27 PM
  */
-public enum EnumAPIOperationType {
+public enum EnumHKAPIOperationType {
 }

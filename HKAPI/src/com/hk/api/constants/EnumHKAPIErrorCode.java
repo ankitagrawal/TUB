@@ -6,7 +6,7 @@ package com.hk.api.constants;
  * Date: 11/25/12
  * Time: 3:23 PM
  */
-public enum EnumAPIErrorCode {
+public enum EnumHKAPIErrorCode {
     //TODO we can segregate operation type specific error codes once we scale up the api
 
     UserDoesNotExist(10,"user does not exist"),
@@ -16,13 +16,17 @@ public enum EnumAPIErrorCode {
     TokenExpired(50, "Token Expired"),
     InvalidTokenSignature(60, "Invalid Token Signature"),
     UserAlreadyExists(70,"User already exists"),
+    ProductDoesNotExist(80, "Product does not exist"),
+    Unauthorized(90,"You are unauthorized to do this operation"),
+    EmptyCart(100,"Empty cart"),
+    UnauthorizedToPlaceOrder(110,"Unauthorized to place order"),
     InternalError(9999, "Internal Error");
 
     private java.lang.String message;
 
     private int id;
 
-    EnumAPIErrorCode(int id, java.lang.String message) {
+    EnumHKAPIErrorCode(int id, java.lang.String message) {
         this.message = message;
         this.id = id;
     }

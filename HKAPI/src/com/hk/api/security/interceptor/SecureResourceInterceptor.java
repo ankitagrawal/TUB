@@ -5,13 +5,11 @@ import java.util.List;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.ext.Provider;
 
-import com.hk.api.constants.APITokenTypes;
-import com.hk.api.constants.EnumAPIErrorCode;
-import com.hk.api.dto.HkAPIBaseDto;
-import com.hk.api.locale.LocaleContextHolder;
+import com.hk.api.constants.EnumHKAPIErrorCode;
+import com.hk.api.constants.HKAPITokenTypes;
+import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.security.exception.*;
 import org.apache.commons.lang.StringUtils;
-import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.core.Headers;
 import org.jboss.resteasy.core.ResourceMethod;
 import org.jboss.resteasy.core.ServerResponse;
@@ -19,7 +17,6 @@ import org.jboss.resteasy.spi.Failure;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 
-import com.hk.api.HkAPI;
 import com.hk.security.HkAuthService;
 import com.hk.api.security.annotation.SecureResource;
 import com.hk.service.ServiceLocatorFactory;
@@ -50,18 +47,18 @@ public class SecureResourceInterceptor implements PreProcessInterceptor {
         }
 
         if (secureResource != null) {
-            String authToken = getParameter(httpRequest, APITokenTypes.AUTH_TOKEN);
+            String authToken = getParameter(httpRequest, HKAPITokenTypes.AUTH_TOKEN);
             String apiVersion = getParameter(httpRequest, "apiVersion");
             String apiKey = getParameter(httpRequest, "apiKey");
-            String appToken = getHeaderParam(httpRequest, APITokenTypes.APP_TOKEN);
-            String userAccessToken = getHeaderParam(httpRequest, APITokenTypes.USER_ACCESS_TOKEN);
+            String appToken = getHeaderParam(httpRequest, HKAPITokenTypes.APP_TOKEN);
+            String userAccessToken = getHeaderParam(httpRequest, HKAPITokenTypes.USER_ACCESS_TOKEN);
             if(secureResource.hasAllTokens() != null){
                 for(String tokenType:secureResource.hasAllTokens()){
-                    if(tokenType.equals(APITokenTypes.AUTH_TOKEN)){
+                    if(tokenType.equals(HKAPITokenTypes.AUTH_TOKEN)){
                       response= validateAuthToken(authToken,apiKey);
-                    }else if(tokenType.equals(APITokenTypes.APP_TOKEN)){
+                    }else if(tokenType.equals(HKAPITokenTypes.APP_TOKEN)){
                       response = validateAppToken(appToken);
-                    }else if(tokenType.equals(APITokenTypes.USER_ACCESS_TOKEN)){
+                    }else if(tokenType.equals(HKAPITokenTypes.USER_ACCESS_TOKEN)){
                       response =  validateUserAccessToken(userAccessToken);
                     }
                     if(response!=null){
@@ -84,17 +81,17 @@ public class SecureResourceInterceptor implements PreProcessInterceptor {
     public ServerResponse validateAppToken(String appToken){
         try{
             if(StringUtils.isEmpty(appToken)){
-                return new ServerResponse(new HkAPIBaseDto(EnumAPIErrorCode.InvalidAppToken),200,getJsonHeaders());
+                return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidAppToken),200,getJsonHeaders());
             }
             getHkAuthService().isValidAppToken(appToken);
         }catch (HkInvalidAppTokenException ex){
-            return new ServerResponse(new HkAPIBaseDto(EnumAPIErrorCode.InvalidAppToken),200,getJsonHeaders());
+            return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidAppToken),200,getJsonHeaders());
         }catch (HkInvalidTokenSignatureException ex){
-            return new ServerResponse(new HkAPIBaseDto(EnumAPIErrorCode.InvalidTokenSignature),200,getJsonHeaders());
+            return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidTokenSignature),200,getJsonHeaders());
         }catch (HkTokenExpiredException ex){
-            return new ServerResponse(new HkAPIBaseDto(EnumAPIErrorCode.TokenExpired),200,getJsonHeaders());
+            return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.TokenExpired),200,getJsonHeaders());
         }catch (HkInvalidApiKeyException ex){
-            return new ServerResponse(new HkAPIBaseDto(EnumAPIErrorCode.InvalidAppKey),200,getJsonHeaders());
+            return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidAppKey),200,getJsonHeaders());
         }
         return null;
     }
@@ -102,17 +99,17 @@ public class SecureResourceInterceptor implements PreProcessInterceptor {
     public ServerResponse validateUserAccessToken(String userAccessToken){
         try{
             if(StringUtils.isEmpty(userAccessToken)){
-                return new ServerResponse(new HkAPIBaseDto(EnumAPIErrorCode.InvalidUserAccessToken),200,getJsonHeaders());
+                return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidUserAccessToken),200,getJsonHeaders());
             }
             getHkAuthService().isValidUserAccessToken(userAccessToken);
         }catch (HkInvalidUserAccessTokenException ex){
-            return new ServerResponse(new HkAPIBaseDto(EnumAPIErrorCode.InvalidUserAccessToken),200,getJsonHeaders());
+            return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidUserAccessToken),200,getJsonHeaders());
         }catch (HkInvalidTokenSignatureException ex){
-            return new ServerResponse(new HkAPIBaseDto(EnumAPIErrorCode.InvalidTokenSignature),200,getJsonHeaders());
+            return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidTokenSignature),200,getJsonHeaders());
         }catch (HkTokenExpiredException ex){
-            return new ServerResponse(new HkAPIBaseDto(EnumAPIErrorCode.TokenExpired),200,getJsonHeaders());
+            return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.TokenExpired),200,getJsonHeaders());
         }catch (HkInvalidApiKeyException ex){
-            return new ServerResponse(new HkAPIBaseDto(EnumAPIErrorCode.InvalidAppKey),200,getJsonHeaders());
+            return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidAppKey),200,getJsonHeaders());
         }
         //to-do use shiro to store this user in security context - this can be use  to sign any message that is sent back
         return null;

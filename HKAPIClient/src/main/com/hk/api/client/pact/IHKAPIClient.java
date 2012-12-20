@@ -24,4 +24,6 @@ public interface IHKAPIClient {
 
     public HKAPIBaseDto placeOrderInHK(HKAPIOrderDTO hkapiOrderDTO);
 
+    public HKAPIBaseDto getHKProductDetails(String productID);
+
 }

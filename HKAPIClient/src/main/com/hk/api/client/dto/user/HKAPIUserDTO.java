@@ -3,12 +3,13 @@ package com.hk.api.client.dto.user;
 /**
  * Created by IntelliJ IDEA.
  * User: Pradeep
+ * Date: May 2, 2012
+ * Time: 4:52:22 PM
  */
 public class HKAPIUserDTO {
     private String name;
     private String email;
     private String password;
-    private Long storeId;
 
     public String getName() {
         return name;
@@ -32,13 +33,5 @@ public class HKAPIUserDTO {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
     }
 }

@@ -31,7 +31,6 @@ public class HKAPIClient extends RestClient implements IHKAPIClient {
 
     public HKUserDetailDto getUserDetails(String userEmail){
         checkForEmptyCredentials();
-        String uaToken= HKAPIAuthenticationUtils.generateUserAccessToken(userEmail, appKey, appSecretKey);
         String hkResponse=doGet("/user/details", getUserAccessTokenHeaders(userEmail), healthkartRestUrl);
         HKUserDetailDto userDetailDto= HKAPIBaseUtils.fromJSON(HKUserDetailDto.class, hkResponse);
         HKAPIBaseUtils.checkForErrors(userDetailDto);
@@ -40,7 +39,6 @@ public class HKAPIClient extends RestClient implements IHKAPIClient {
 
     public HKUserDetailDto createUserInHK(HKUserDetailDto userDetails){
         checkForEmptyCredentials();
-        String uaToken= HKAPIAuthenticationUtils.generateUserAccessToken(userDetails.getEmail(), appKey, appSecretKey);
         String hkResponse=doPost("/user/sso/create",HKAPIBaseUtils.toJSON(userDetails), getAppTokenHeaders(), healthkartRestUrl);
         HKUserDetailDto userDetailDto= HKAPIBaseUtils.fromJSON(HKUserDetailDto.class, hkResponse);
         HKAPIBaseUtils.checkForErrors(userDetailDto);
@@ -49,7 +47,6 @@ public class HKAPIClient extends RestClient implements IHKAPIClient {
 
     public Double getRewardPoints(String userEmail){
         checkForEmptyCredentials();
-        String uaToken= HKAPIAuthenticationUtils.generateUserAccessToken(userEmail, appKey, appSecretKey);
         String hkResponse=doGet("/user/rewardpoints", getUserAccessTokenHeaders(userEmail), healthkartRestUrl);
         HKUserDetailDto userDetailDto= HKAPIBaseUtils.fromJSON(HKUserDetailDto.class, hkResponse);
         HKAPIBaseUtils.checkForErrors(userDetailDto);
@@ -58,7 +55,6 @@ public class HKAPIClient extends RestClient implements IHKAPIClient {
 
     public HKAPIBaseDto awardRewardPoints(String userEmail, Double rewardPoints){
         checkForEmptyCredentials();
-        String uaToken= HKAPIAuthenticationUtils.generateUserAccessToken(userEmail, appKey, appSecretKey);
         String url="/user/reward/"+rewardPoints.toString();
         String hkResponse=doPost(url, null, getUserAccessTokenHeaders(userEmail), healthkartRestUrl);
         HKAPIBaseDto baseDto= HKAPIBaseUtils.fromJSON(HKAPIBaseDto.class, hkResponse);
@@ -68,8 +64,15 @@ public class HKAPIClient extends RestClient implements IHKAPIClient {
 
     public HKAPIBaseDto placeOrderInHK(HKAPIOrderDTO hkapiOrderDTO){
         checkForEmptyCredentials();
-        String uaToken= HKAPIAuthenticationUtils.generateUserAccessToken(hkapiOrderDTO.getHkapiUserDTO().getEmail(), appKey, appSecretKey);
         String hkResponse=doPost("/order/create",HKAPIBaseUtils.toJSON(hkapiOrderDTO),getAppTokenHeaders(), healthkartRestUrl);
+        HKAPIBaseDto responseDto= HKAPIBaseUtils.fromJSON(HKUserDetailDto.class, hkResponse);
+        HKAPIBaseUtils.checkForErrors(responseDto);
+        return responseDto;
+    }
+
+    public HKAPIBaseDto getHKProductDetails(String productID){
+        checkForEmptyCredentials();
+        String hkResponse=doGet("/product/"+productID,getAppTokenHeaders(), healthkartRestUrl);
         HKAPIBaseDto responseDto= HKAPIBaseUtils.fromJSON(HKUserDetailDto.class, hkResponse);
         HKAPIBaseUtils.checkForErrors(responseDto);
         return responseDto;

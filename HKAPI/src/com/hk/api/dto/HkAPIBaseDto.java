@@ -1,33 +1,33 @@
 package com.hk.api.dto;
 
-import com.hk.api.constants.APIOperationStatus;
-import com.hk.api.constants.EnumAPIErrorCode;
+import com.hk.api.constants.EnumHKAPIErrorCode;
+import com.hk.api.constants.HKAPIOperationStatus;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Pradeep
  * Date: 11/23/12
  */
-public class HkAPIBaseDto {
+public class HKAPIBaseDTO {
     private Object data;
     private String operationType;
-    private String status = APIOperationStatus.OK;
+    private String status = HKAPIOperationStatus.OK;
     private int errorCode;
     private String message;
 
-    public HkAPIBaseDto() {
+    public HKAPIBaseDTO() {
         super();
     }
 
-    public HkAPIBaseDto(String status, int errorCode) {
+    public HKAPIBaseDTO(String status, int errorCode) {
         this.status = status;
         this.errorCode = errorCode;
     }
 
-    public HkAPIBaseDto(EnumAPIErrorCode enumErrorCode){
+    public HKAPIBaseDTO(EnumHKAPIErrorCode enumErrorCode){
         this.errorCode=enumErrorCode.getId();
         this.message=enumErrorCode.getMessage();
-        this.status=APIOperationStatus.ERROR;
+        this.status= HKAPIOperationStatus.ERROR;
     }
 
     public String getOperationType() {

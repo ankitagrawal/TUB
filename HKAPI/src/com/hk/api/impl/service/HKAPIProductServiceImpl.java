@@ -16,6 +16,12 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.ws.rs.core.MediaType;
 
+import com.hk.api.constants.EnumHKAPIErrorCode;
+import com.hk.api.constants.HKAPIOperationStatus;
+import com.hk.api.dto.HKAPIBaseDTO;
+import com.hk.api.dto.product.HKAPIProductDTO;
+import com.hk.api.dto.product.HKAPIProductVariantDTO;
+import com.hk.domain.catalog.product.ProductVariant;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
@@ -36,19 +42,19 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.service.catalog.ProductService;
-import com.hk.api.pact.service.APIProductService;
+import com.hk.api.pact.service.HKAPIProductService;
 import com.hk.util.HKImageUtils;
 
 /**
  * Created with IntelliJ IDEA. User: Pradeep Date: 8/28/12 Time: 3:47 PM
  */
 @Service
-public class APIProductServiceImpl implements APIProductService {
+public class HKAPIProductServiceImpl implements HKAPIProductService {
 
 	@Value ("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
 	private String healthkartRestUrl;
 
-	private static Logger logger = LoggerFactory.getLogger(APIProductServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(HKAPIProductServiceImpl.class);
 
 	@Autowired
 	ProductDao productDao;
@@ -72,6 +78,35 @@ public class APIProductServiceImpl implements APIProductService {
 	private static final String mihAwsBucket = "mih-prod";
 
 	private static final Integer pixelSize = 1024;
+
+    public HKAPIBaseDTO getProductDetails(String productId){
+         Product product=productService.getProductById(productId);
+        HKAPIBaseDTO hkAPIBaseDto=new HKAPIBaseDTO();
+        if(product!=null){
+            HKAPIProductDTO productDTO=new HKAPIProductDTO();
+            productDTO.setDeleted(product.isDeleted());
+            productDTO.setOutOfStock(product.getOutOfStock());
+            productDTO.setProductID(product.getId());
+            List<ProductVariant> productVariantList=product.getProductVariants();
+            HKAPIProductVariantDTO[] productVariantDTOs=new HKAPIProductVariantDTO[productVariantList.size()];
+            int i=0;
+            for(ProductVariant variant:productVariantList){
+                productVariantDTOs[i].setProductVariantID(variant.getId());
+                productVariantDTOs[i].setHkDiscountPercent(variant.getDiscountPercent());
+                productVariantDTOs[i].setHkPrice(variant.getHkPrice());
+                productVariantDTOs[i].setMrp(variant.getMarkedPrice());
+                productVariantDTOs[i].setDeleted(variant.isDeleted());
+                productVariantDTOs[i].setOutOfStock(variant.isOutOfStock());
+            }
+            productDTO.setProductVariantDTOs(productVariantDTOs);
+            hkAPIBaseDto.setData(productDTO);
+        }else {
+            hkAPIBaseDto.setStatus(HKAPIOperationStatus.ERROR);
+            hkAPIBaseDto.setErrorCode(EnumHKAPIErrorCode.ProductDoesNotExist.getId());
+            hkAPIBaseDto.setMessage(EnumHKAPIErrorCode.ProductDoesNotExist.getMessage());
+        }
+        return hkAPIBaseDto;
+    }
 
 	public Product getProductById(String productId) {
 		try {

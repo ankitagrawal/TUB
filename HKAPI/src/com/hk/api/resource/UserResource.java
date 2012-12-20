@@ -2,10 +2,10 @@ package com.hk.api.resource;
 
 import javax.ws.rs.*;
 
-import com.hk.api.constants.APITokenTypes;
-import com.hk.api.dto.HkAPIBaseDto;
-import com.hk.api.dto.UserDetailDto;
-import com.hk.api.pact.service.APIUserService;
+import com.hk.api.constants.HKAPITokenTypes;
+import com.hk.api.dto.HKAPIBaseDTO;
+import com.hk.api.dto.user.HKAPIUserDTO;
+import com.hk.api.pact.service.HKAPIUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +17,13 @@ import com.hk.api.security.annotation.SecureResource;
 
 @Path("/user")
 @Component
-@SecureResource(hasAllTokens = {APITokenTypes.USER_ACCESS_TOKEN})
+@SecureResource(hasAllTokens = {HKAPITokenTypes.USER_ACCESS_TOKEN})
 public class UserResource {
 
     private static Logger logger = LoggerFactory.getLogger(UserResource.class);
 
     @Autowired
-    APIUserService apiUserService;
+    HKAPIUserService hkapiUserService;
 
     @GET
     @Path("/all")
@@ -38,31 +38,31 @@ public class UserResource {
     @GET
     @Path("/details")
     @Produces("application/json")
-    public HkAPIBaseDto getUserDetails(@HeaderParam(APITokenTypes.USER_ACCESS_TOKEN) String userAccessToken){
-        return apiUserService.getUserDetails(userAccessToken);
+    public HKAPIBaseDTO getUserDetails(@HeaderParam(HKAPITokenTypes.USER_ACCESS_TOKEN) String userAccessToken){
+        return hkapiUserService.getUserDetails(userAccessToken);
     }
 
     @POST
     @Path("/reward/{points}")
     @Produces("application/json")
-    public HkAPIBaseDto awardRewardPoints(@HeaderParam(APITokenTypes.USER_ACCESS_TOKEN) String userAccessToken,
+    public HKAPIBaseDTO awardRewardPoints(@HeaderParam(HKAPITokenTypes.USER_ACCESS_TOKEN) String userAccessToken,
                                          @PathParam("points") Double rewardPoints){
-        return apiUserService.awardRewardPoints(userAccessToken,rewardPoints);
+        return hkapiUserService.awardRewardPoints(userAccessToken,rewardPoints);
     }
 
     @GET
     @Path("/rewardpoints")
     @Produces("application/json")
-    public HkAPIBaseDto getUserRewardPoints(@HeaderParam(APITokenTypes.USER_ACCESS_TOKEN) String userAccessToken){
-        return apiUserService.getUserRewardPointDetails(userAccessToken);
+    public HKAPIBaseDTO getUserRewardPoints(@HeaderParam(HKAPITokenTypes.USER_ACCESS_TOKEN) String userAccessToken){
+        return hkapiUserService.getUserRewardPointDetails(userAccessToken);
     }
 
     @POST
     @Path("/sso/create")
     @Produces("application/json")
-    @SecureResource(hasAllTokens = {APITokenTypes.APP_TOKEN})
-    public HkAPIBaseDto createUserInHK(UserDetailDto userDetailDto){
-       return apiUserService.createSSOUser(userDetailDto);
+    @SecureResource(hasAllTokens = {HKAPITokenTypes.APP_TOKEN})
+    public HKAPIBaseDTO createUserInHK(HKAPIUserDTO userDetailDto){
+       return hkapiUserService.createSSOUser(userDetailDto);
     }
 
 }

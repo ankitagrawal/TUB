@@ -50,6 +50,9 @@ public class HkApiUser {
     @Column(name = "create_dt", nullable = false, length = 500)
     private Date    createDate;
 
+    @Column(name = "order_placement_enabled", nullable = false)
+    private boolean orderPlacementEnabled;
+
     public Long getId() {
         return id;
     }
@@ -120,5 +123,13 @@ public class HkApiUser {
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
+    }
+
+    public boolean isOrderPlacementEnabled() {
+        return orderPlacementEnabled;
+    }
+
+    public void setOrderPlacementEnabled(boolean orderPlacementEnabled) {
+        this.orderPlacementEnabled = orderPlacementEnabled;
     }
 }

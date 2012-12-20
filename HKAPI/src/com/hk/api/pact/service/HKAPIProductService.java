@@ -1,5 +1,6 @@
 package com.hk.api.pact.service;
 
+import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.domain.catalog.product.Product;
 
 /**
@@ -8,7 +9,9 @@ import com.hk.domain.catalog.product.Product;
  * Date: 8/28/12
  * Time: 3:46 PM
  */
-public interface APIProductService {
+public interface HKAPIProductService {
+
+    public HKAPIBaseDTO getProductDetails(String productId);
 
     public Product getProductById(String ProductId);
 

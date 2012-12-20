@@ -8,7 +8,8 @@ import javax.ws.rs.core.MediaType;
 
 import com.akube.framework.gson.JsonUtils;
 import com.google.gson.Gson;
-import com.hk.api.pact.service.APIProductService;
+import com.hk.api.dto.HKAPIBaseDTO;
+import com.hk.api.pact.service.HKAPIProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ public class ProductResource {
 	@Autowired
 	private ProductService productService;
 	@Autowired
-	private APIProductService apiProductService;
+	private HKAPIProductService hkapiProductService;
 
 	@GET
 	@Path ("/all")
@@ -46,25 +47,33 @@ public class ProductResource {
 		return gson.toJson(product);
 	}
 
+    @GET
+    @Path ("/{productId}/info")
+    @Produces (MediaType.APPLICATION_JSON)
+    public HKAPIBaseDTO productiinfo(@PathParam ("productId") String productId) {
+
+        return hkapiProductService.getProductDetails(productId);
+    }
+
 	@GET
 	@Path ("/sync")
 	@Produces (MediaType.APPLICATION_JSON)
 	public String product() {
-		return getApiProductService().syncContentAndDescription();
+		return getHkapiProductService().syncContentAndDescription();
 	}
 
 	@GET
 	@Path ("/sync/images")
 	@Produces (MediaType.APPLICATION_JSON)
 	public String product_images() {
-		return getApiProductService().syncProductImages();
+		return getHkapiProductService().syncProductImages();
 	}
 
 	@GET
 	@Path ("/lowresolutionimage")
 	@Produces (MediaType.APPLICATION_JSON)
 	public String lowResolutionImage() {
-		return getApiProductService().getProductsWithLowResolutionImages();
+		return getHkapiProductService().getProductsWithLowResolutionImages();
 	}
 
 	public ProductService getProductService() {
@@ -75,11 +84,11 @@ public class ProductResource {
 		this.productService = productService;
 	}
 
-	public APIProductService getApiProductService() {
-		return apiProductService;
+	public HKAPIProductService getHkapiProductService() {
+		return hkapiProductService;
 	}
 
-	public void setApiProductService(APIProductService apiProductService) {
-		this.apiProductService = apiProductService;
+	public void setHkapiProductService(HKAPIProductService hkapiProductService) {
+		this.hkapiProductService = hkapiProductService;
 	}
 }

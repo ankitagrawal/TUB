@@ -1,7 +1,5 @@
 package com.hk.api.client.dto.order;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
 import com.hk.api.client.dto.user.HKAPIUserDTO;
 
 /**
@@ -13,6 +11,7 @@ public class HKAPIOrderDTO {
     private HKAPIOrderDetailsDTO hkapiOrderDetailsDTO;
     private HKAPIPaymentDTO hkapiPaymentDTO;
     private HKAPIAddressDTO hkapiAddressDTO;
+    private Long storeId;
 
     public HKAPIUserDTO getHkapiUserDTO() {
         return hkapiUserDTO;
@@ -52,4 +51,11 @@ public class HKAPIOrderDTO {
         this.hkapiAddressDTO = hkapiAddressDTO;
     }
 
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
 }

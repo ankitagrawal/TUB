@@ -1,5 +1,7 @@
 package com.hk.api.dto.user;
 
+import com.hk.api.dto.HKAPIBaseDTO;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Pradeep
@@ -10,7 +12,6 @@ public class HKAPIUserDTO {
   private String name;
   private String email;
   private String password;
-  private Long storeId;
 
   public String getName() {
     return name;
@@ -34,13 +35,5 @@ public class HKAPIUserDTO {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public Long getStoreId() {
-    return storeId;
-  }
-
-  public void setStoreId(Long storeId) {
-    this.storeId = storeId;
   }
 }
