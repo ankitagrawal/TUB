@@ -220,10 +220,13 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		User loggedInUser = userService.getLoggedInUser();
 		ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.ReceivedAtHub.getId());
 
+		List<DispatchLotHasShipment> dispatchLotHasShipmentList = new ArrayList<DispatchLotHasShipment>();
+
+
 		for(Shipment shipmentTemp : validShipmentSet){
 			dispatchLotHasShipment = getDispatchLotHasShipment(dispatchLot, shipmentTemp);
 			dispatchLotHasShipment.setShipmentStatus(DispatchLotConstants.SHIPMENT_RECEIVED);
-			getBaseDao().save(dispatchLotHasShipment);
+			dispatchLotHasShipmentList.add(dispatchLotHasShipment);
 			if(shipmentTemp.getAwb().getCourier().getId().equals(EnumCourier.HK_Delivery.getId())){
 				hub = hubService.findHubByName(dispatchLot.getDestination());
 				healthkartHub = hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
@@ -240,6 +243,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				}
 			}
 		}
+
+		getBaseDao().saveOrUpdate(dispatchLotHasShipmentList);
 		//saving consingnment list and adding tracking entries for the same
 		if(consignmentList.size() > 0 && !consignmentList.contains(null)){
 			consignmentService.saveConsignments(consignmentList);
@@ -247,25 +252,18 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			List<ConsignmentTracking> consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedInUser,consignmentList ,consignmentLifecycleStatus);
 			consignmentService.saveConsignmentTracking(consignmentTrackingList);
 		}
-		long noOfShipmentsReceived = (long)getShipmentsForDispatchLot(dispatchLot).size();
+		long dispatchLotSize = (long)getShipmentsForDispatchLot(dispatchLot).size();
 		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.PartiallyReceived.getDispatchLotStatus());
 
+		long currentReceivedShipmentSize = getDispatchLotHasShipmentListByDispatchLot(dispatchLot, DispatchLotConstants.SHIPMENT_RECEIVED).size();
 
-		if(noOfShipmentsReceived == validShipmentSet.size()){
+		dispatchLot.setNoOfShipmentsReceived(currentReceivedShipmentSize);
+		if(currentReceivedShipmentSize == getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot).size()) {
 			markDispatchLotReceived(dispatchLot);
+			return invalidGatewayOrderIds;
 		}
 
-		if(dispatchLot.getNoOfShipmentsReceived() == null) {
-			dispatchLot.setNoOfShipmentsReceived((long) validShipmentSet.size());
-		} else {
-			dispatchLot.setNoOfShipmentsReceived(dispatchLot.getNoOfShipmentsReceived() + (long)validShipmentSet.size());
-		}
-
-		if(getDispatchLotHasShipmentListByDispatchLot(dispatchLot, DispatchLotConstants.SHIPMENT_RECEIVED).size() == getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot).size()) {
-			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Received.getDispatchLotStatus());
-		}
-		getBaseDao().save(dispatchLot);
-		
+	   getBaseDao().save(dispatchLot);
 	   return invalidGatewayOrderIds;
 	}
 
