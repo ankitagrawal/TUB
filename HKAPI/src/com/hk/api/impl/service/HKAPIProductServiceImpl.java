@@ -101,9 +101,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
             productDTO.setProductVariantDTOs(productVariantDTOs);
             hkAPIBaseDto.setData(productDTO);
         }else {
-            hkAPIBaseDto.setStatus(HKAPIOperationStatus.ERROR);
-            hkAPIBaseDto.setErrorCode(EnumHKAPIErrorCode.ProductDoesNotExist.getId());
-            hkAPIBaseDto.setMessage(EnumHKAPIErrorCode.ProductDoesNotExist.getMessage());
+            return new HKAPIBaseDTO(EnumHKAPIErrorCode.ProductDoesNotExist);
         }
         return hkAPIBaseDto;
     }
