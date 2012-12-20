@@ -190,7 +190,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
 //                       by -aa
                         shippingOrder.setDropShipping(true);
-//
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
                         return false;
@@ -234,13 +233,16 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
-//  drop ship product now manually escalable
-//                    if (productVariant.getProduct().isDropShipping()) {
-//                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
-//                        logShippingOrderActivity(shippingOrder, adminUser,
-//                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
-//                        return false;
-//                    } else
+
+                //  dropship Shipping order now manually escalable
+             /*
+                    if (productVariant.getProduct().isDropShipping()) {
+                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
+                        logShippingOrderActivity(shippingOrder, adminUser,
+                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
+                        return false;
+                    } else   */
+
                     if (availableUnbookedInv <= 0) {
                         String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
                                 + availableUnbookedInv;
@@ -394,57 +396,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     public Zone getZoneForShippingOrder(ShippingOrder shippingOrder) {
         return shippingOrder.getShipment().getZone();
 
-    }
-
-
-    public boolean splitDropShippingOrder(ShippingOrder shippingOrder) {
-        if (shippingOrder.getLineItems().size() > 1) {
-            Set<LineItem> dropShippedLineItems = new HashSet<LineItem>();
-            Set<LineItem> currentLineItems = shippingOrder.getLineItems();
-            dropShippedLineItems.addAll(currentLineItems);
-            for (LineItem lineItem : currentLineItems) {
-                if (lineItem != null) {
-                    ProductVariant productVariant = lineItem.getSku().getProductVariant();
-                    if (productVariant != null) {
-                        Product product = productVariant.getProduct();
-                        if (product != null && !product.isDropShipping()) {
-                            dropShippedLineItems.remove(lineItem);
-                        }
-                    }
-                }
-            }
-
-            if (currentLineItems.size() != dropShippedLineItems.size()) {
-                currentLineItems.removeAll(dropShippedLineItems);
-
-                ShippingOrder newShippingOrder = createSOWithBasicDetails(shippingOrder.getBaseOrder(), shippingOrder.getWarehouse());
-                newShippingOrder.setBaseOrder(shippingOrder.getBaseOrder());
-                newShippingOrder.setServiceOrder(false);
-                newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
-                newShippingOrder.setBasketCategory(shippingOrder.getBasketCategory());
-                newShippingOrder = save(newShippingOrder);
-                for (LineItem selectedLineItem : dropShippedLineItems) {
-                    selectedLineItem.setShippingOrder(newShippingOrder);
-                    lineItemDao.save(selectedLineItem);
-                }
-
-                ShippingOrderHelper.updateAccountingOnSOLineItems(newShippingOrder, newShippingOrder.getBaseOrder());
-                newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
-                newShippingOrder = setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
-                newShippingOrder.setDropShipping(true);
-                newShippingOrder = save(newShippingOrder);
-//            shipmentService.createShipment(newShippingOrder);
-                shippingOrderDao.refresh(shippingOrder);
-                //shippingOrder = shippingOrderService.find(shippingOrder.getId());
-                ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, shippingOrder.getBaseOrder());
-                shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-                shippingOrder = save(shippingOrder);
-                logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
-
-            }
-            return true;
-        }
-        return false;
     }
 
 

@@ -5,6 +5,7 @@
 <%@ page import="com.hk.constants.shipment.EnumPicker" %>
 <%@ page import="com.hk.constants.shipment.EnumPacker" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -66,13 +67,23 @@
                     }
                 });
 
+                var grncheck = false;
                 $('.shipped').click(function() {
                     var con = confirm("Verify that you are saving correct information ");
                     if (con == true) {
-                        return true;
+                        grncheck = true;
                     } else {
                         return false;
                     }
+                    if (grncheck) {
+                        var bool = confirm("Verify that you have already created GRN ");
+                        if (bool == true) {
+                            return true
+                        } else {
+                            return false;
+                        }
+                    }
+
                 });
 
             });
@@ -93,12 +104,13 @@
         <script language=javascript type=text/javascript>
             $('#gatewayOrderId').focus();
         </script>
-
+        <c:set var="shippingOrderStatusSoShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
         <fieldset class="top_label">
+
             <s:form beanclass="com.hk.web.action.admin.shipment.CreateDropShipmentAction"
                     onsubmit="return validateForm()" method="post" name="ShipmentForm">
                 <s:hidden name="shippingOrder" value="${shipmentQueueBean.shippingOrder}"/>
-                 <s:hidden name="suggestedCourier"  id ="sugcouier" value="${shipmentQueueBean.suggestedCourier}"/>
+                <s:hidden name="suggestedCourier" id="sugcouier" value="${shipmentQueueBean.suggestedCourier}"/>
                 <label>Box Size:</label>
                 <s:select name="boxSize" value="${shipmentQueueBean.shippingOrder.shipment.boxSize}">
                     <c:forEach var="box" items="${boxSizeList}">
@@ -119,10 +131,11 @@
                 </s:select>
 
                 <%--<s:link class="com.hk.web.action.admin.shipment.CreateDropShipmentAction" event="getAwbForHkCourier"> Get HK Couriers </s:link>--%>
-
-                <div class="buttons" style="margin-left: 90%;"><s:submit id="shipmentbutton"
-                                                                         name="saveDropShipmentDetails"
-                                                                         value="Save"/></div>
+                <c:if test="${!(shippingOrderStatusSoShipped ==shipmentQueueBean.shippingOrder.orderStatus.id)}">
+                    <div class="buttons" style="margin-left: 90%;"><s:submit id="shipmentbutton"
+                                                                             name="saveDropShipmentDetails"
+                                                                             value="Save"/></div>
+                </c:if>
 
                 <%--<s:submit name="markShippingOrdersAsShipped"    value="Mark Order as shipped"/>--%>
             </s:form>
@@ -135,10 +148,12 @@
         <br> <br> <br>
 
         <div style="display:inline;float:right;">
-            <s:link beanclass="com.hk.web.action.admin.shipment.CreateDropShipmentAction"
-                    event="markShippingOrdersAsShipped"
-                    class="button_orange shipped">Mark Order as shipped
-                <s:param name="shippingOrder" value="${shipmentQueueBean.shippingOrder}"/> </s:link>
+            <c:if test="${!(shippingOrderStatusSoShipped ==shipmentQueueBean.shippingOrder.orderStatus.id)}">
+                <s:link beanclass="com.hk.web.action.admin.shipment.CreateDropShipmentAction"
+                        event="markShippingOrdersAsShipped"
+                        class="button_orange shipped">Mark Order as shipped
+                    <s:param name="shippingOrder" value="${shipmentQueueBean.shippingOrder}"/> </s:link>
+            </c:if>
         </div>
 
     </s:layout-component>

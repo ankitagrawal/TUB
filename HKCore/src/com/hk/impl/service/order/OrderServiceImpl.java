@@ -1,12 +1,6 @@
 package com.hk.impl.service.order;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +21,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
@@ -412,9 +407,17 @@ public class OrderServiceImpl implements OrderService {
         CartLineItemFilter serviceCartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> serviceCartLineItems = serviceCartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();
 
+//   putting the logic of drop ship
+        CartLineItemFilter dropShipLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+        Set<CartLineItem> dropShippedCartLineItemSet = dropShipLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyDropShippedItems(true).filter();
+
+
         productCartLineItems.removeAll(serviceCartLineItems);
         productCartLineItems.removeAll(groundShippedCartLineItemSet); // i.e product cart lineItems without services
                                                                         // and ground shipped product
+        productCartLineItems.removeAll(dropShippedCartLineItemSet);
+
+        Map<Long, Set<CartLineItem>> supplierDropShipMap = filterDropShippedItemOnSupplier(dropShippedCartLineItemSet);
 
         List<Set<CartLineItem>> listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
         if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
@@ -423,6 +426,12 @@ public class OrderServiceImpl implements OrderService {
         if (productCartLineItems != null && productCartLineItems.size() > 0) {
             listOfCartLineItemSet.add(productCartLineItems);
         }
+         if (!supplierDropShipMap.isEmpty()) {
+             Set <Long> keys = supplierDropShipMap.keySet();
+             for (Long key : keys) {
+                 listOfCartLineItemSet.add(supplierDropShipMap.get(key));
+             }
+         }
 
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
@@ -681,5 +690,30 @@ public class OrderServiceImpl implements OrderService {
     public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
         this.shippingOrderStatusService = shippingOrderStatusService;
     }
+
+
+    public  Map<Long, Set<CartLineItem>>  filterDropShippedItemOnSupplier (Set<CartLineItem> dropShippedCartLineItemSet){
+        Map<Long, Set<CartLineItem>> supplierDropShipMap = new HashMap<Long, Set<CartLineItem>>();
+                     for (CartLineItem cartlineItem1 : dropShippedCartLineItemSet) {
+                         if (cartlineItem1 != null) {
+                             ProductVariant productVariant = cartlineItem1.getProductVariant();
+                             if (productVariant != null) {
+                                 Product product = productVariant.getProduct();
+                                 if (product != null && product.getSupplier() != null) {
+                                     Long supplierid = product.getSupplier().getId();
+                                     if (supplierDropShipMap.containsKey(supplierid)) {
+                                         supplierDropShipMap.get(supplierid).add(cartlineItem1) ;
+                                     }else{
+                                         Set<CartLineItem> itemSet = new HashSet<CartLineItem>();
+                                         itemSet.add(cartlineItem1);
+                                         supplierDropShipMap.put(supplierid,itemSet);
+                                     }
+                                 }
+                             }
+                    }
+            }
+            return supplierDropShipMap;
+    }
+
 
 }

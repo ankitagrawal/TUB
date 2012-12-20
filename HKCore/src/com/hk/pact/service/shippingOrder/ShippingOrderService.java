@@ -80,8 +80,6 @@ public interface ShippingOrderService {
 
 	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder);
 
-	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);
-
-    public boolean splitDropShippingOrder (ShippingOrder shippingOrder);
+	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);   
 
 }

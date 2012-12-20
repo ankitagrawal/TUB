@@ -7,9 +7,18 @@
   <s:layout-component name="menu"> </s:layout-component>
 
   <s:layout-component name="htmlHead">
-    <script type="text/javascript">
+      <script type="text/javascript">
+              $(document).ready(function() {
+              $('.save').click(function() {
+                  if (($('.dropShip').is(':checked')) && ($('.groundship').is(':checked'))) {
+                      alert(" Product cannot be marked dropship and groundship at the same time");
+                      return false;
+                  }
+              }
+                 );
+          });
 
-    </script>
+      </script>
   </s:layout-component>
 
   <s:layout-component name="content">
@@ -36,9 +45,9 @@
           <li><label>Is Amazon Product</label><s:checkbox name="product.amazonProduct"/></li>
           <li><label>Is Hidden</label><s:checkbox name="product.hidden"/></li>
           <li><label>Is JIT</label><s:checkbox name="product.jit"/></li>
-          <li><label>Is Drop Shipping</label><s:checkbox name="product.dropShipping"/></li>  
+          <li><label>Is Drop Shipping</label><s:checkbox class="dropShip" name="product.dropShipping"/></li>
             <%--//todo ankit, please add the same in bulk edit, take rimals help      --  need to discuss--%>
-           <li><label>Is Ground Shipping</label><s:checkbox name="product.groundShipping"/></li>
+           <li ><label>Is Ground Shipping</label><s:checkbox class="groundship" name="product.groundShipping"/></li>
           <li><label>Is COD Allowed</label><s:checkbox name="product.codAllowed"/></li>
             <li><label>Is Installable</label><s:checkbox name="product.installable"/></li>
           <li>
@@ -66,7 +75,7 @@
       </fieldset>
 
       <div class="buttons">
-        <s:submit name="saveProductDetails" value="Save"/>
+        <s:submit  class="save" name="saveProductDetails" value="Save"/>
       </div>
     </s:form>
   </s:layout-component>

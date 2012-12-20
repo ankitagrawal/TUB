@@ -381,23 +381,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
                     shippingOrderService.autoEscalateShippingOrder(shippingOrder);
-                    if (shippingOrder.isDropShipping()){
-                       if( shipmentService.splitDropShippingOrder(shippingOrder)){
-                          orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), "Drop shipped Item auto split");
-                          shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
-                       } else {
-                            orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), "No need to auto split Drop shipped shipping Order");
-                       }
-                    }
                 }
             }
-
-
-//            shippingOrders = order.getShippingOrders();
+            
             for (ShippingOrder shippingOrder : shippingOrders) {
                 shipmentService.createShipment(shippingOrder);
             }
-
+            
         }
         // Check Inventory health of order lineitems
         for (CartLineItem cartLineItem : productCartLineItems) {
