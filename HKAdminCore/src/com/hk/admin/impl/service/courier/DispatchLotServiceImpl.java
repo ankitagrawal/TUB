@@ -252,7 +252,12 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			markDispatchLotReceived(dispatchLot);
 		}
 
-		dispatchLot.setNoOfShipmentsReceived((long)validShipmentList.size());
+		if(dispatchLot.getNoOfShipmentsReceived() == null) {
+			dispatchLot.setNoOfShipmentsReceived((long)validShipmentList.size());
+		} else {
+			dispatchLot.setNoOfShipmentsReceived(dispatchLot.getNoOfShipmentsReceived() + (long)validShipmentList.size());
+		}
+
 		if(getDispatchLotHasShipmentListByDispatchLot(dispatchLot, DispatchLotConstants.SHIPMENT_RECEIVED).size() == getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot).size()) {
 			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Received.getDispatchLotStatus());
 		}
