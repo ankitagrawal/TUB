@@ -1,10 +1,12 @@
 package com.hk.rest.resource;
 
 import com.hk.admin.pact.service.email.AdminEmailService;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 import com.hk.manager.LinkManager;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +41,18 @@ public class UserEmailResource {
     @Autowired
     LinkManager linkManager;
 
+    @Autowired
+    CategoryService categoryService;
+
     @GET
     @Path("/store/{storeId}/category/{category}")
     @Produces("application/json")
-    public Response getEmailsByCategory(@PathParam("category")String category, @PathParam("storeId")int storeId){
+    public Response getEmailsByCategory(@PathParam("category")String category, @PathParam("storeId")int storeId,
+                                        @PathParam("role")String role){
 
         Response response = null;
         try{
-            List<User> emailRecepients = adminEmailService.getMailingListByCategory(category, storeId);
+            List<User> emailRecepients = adminEmailService.getMailingListByCategory(category, storeId,role);
             List<UserDto> categoryUsers = new ArrayList<UserDto>();
             for (User user : emailRecepients){
                 UserDto userDto = new UserDto();
@@ -58,6 +64,27 @@ public class UserEmailResource {
         }catch (Exception ex){
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to get User Details ", ex);
+        }
+        return response;
+    }
+
+    @GET
+    @Path("/categories")
+    @Produces("application/json")
+    public Response getCategories(){
+
+        Response response = null;
+        try{
+            List<Category> primaryCategories = categoryService.getPrimaryCategories();
+            List<String> categoryList = new ArrayList<String>();
+            for (Category category : primaryCategories){
+                categoryList.add(category.getName());
+            }
+            final GenericEntity<List<String>> entity = new GenericEntity<List<String>>(categoryList){};
+            response = Response.status(Response.Status.OK).entity(entity).build();
+        }catch (Exception ex){
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            logger.error("Unable to get Category Details ", ex);
         }
         return response;
     }

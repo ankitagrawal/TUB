@@ -40,5 +40,5 @@ public interface AdminEmailDao {
 
     List<String> getEmailRecepientsByEmailIds(EmailCampaign emailCampaign, List<EmailRecepient> emailList);
 
-    List<User> getMailingListByCategory(String category, int store);
+    List<User> getMailingListByCategory(String category, int store,String role);
 }
