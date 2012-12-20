@@ -94,7 +94,6 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
     }
 
     public Resolution searchOrders() {
-
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
          shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInInstallationQueue()));
 //        shippingOrderStatus = shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered);
@@ -104,7 +103,6 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
         if (shippingOrderPage != null) {
             shippingOrderList = shippingOrderPage.getList();
         }
-
         return new ForwardResolution("/pages/admin/installationAwaitingQueue.jsp");
     }
 

@@ -189,7 +189,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
                     EnumPermission.HK_EMPLOYEE,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+                    EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
+                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE
             )
     ),
 
