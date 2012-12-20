@@ -154,7 +154,7 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
 
     public List<User> getMailingListByCategory(String category, int storeId,String role) {
         String query = "select distinct u from OrderCategory oc join oc.order.user u join u.roles r "
-                 + "where u.subscribed = true and oc.category.name = (:category) " + "and r in (:roleList)"
+                 + "where oc.category.name = (:category) " + "and r in (:roleList)"
                 + " and u.store.id = (:storeIdList) ";
 
         List<Role> applicableRoleList = new ArrayList<Role>();
