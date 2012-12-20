@@ -158,9 +158,15 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
                 + " and u.store.id = (:storeIdList) ";
 
         List<Role> applicableRoleList = new ArrayList<Role>();
-        applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_USER).getRole());
-        if (role.equalsIgnoreCase("universe")){
+        if(role.equalsIgnoreCase("all-unverified"))
+        {
             applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_UNVERIFIED).getRole());
+        }
+        else if (role.equalsIgnoreCase("universe")){
+            applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_USER).getRole());
+            applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_UNVERIFIED).getRole());
+        }else{
+            applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_USER).getRole());
         }
 
         List<User> userIdsByCategory = getSession().createQuery(query)
