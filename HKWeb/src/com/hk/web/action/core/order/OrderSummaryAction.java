@@ -134,7 +134,7 @@ public class OrderSummaryAction extends BaseAction {
         // Ground Shipping logic ends --
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
-        if (netShopping > codFreeAfter) {
+        if (netShopping >= codFreeAfter) {
             codCharges = 0.0;
         }
         availableCourierList = courierService.getAvailableCouriers(order);
