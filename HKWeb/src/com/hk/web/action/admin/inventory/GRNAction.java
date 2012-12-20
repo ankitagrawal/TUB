@@ -7,12 +7,15 @@ import com.hk.admin.manager.GRNManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
+import com.hk.admin.pact.service.inventory.PoLineItemService;
+import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumSurcharge;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -68,6 +71,10 @@ public class GRNAction extends BasePaginatedAction {
 	private SupplierDao supplierDao;
 	@Autowired
 	private SkuService skuService;
+	@Autowired
+	private PoLineItemService poLineItemService;
+	@Autowired
+	private PurchaseOrderService purchaseOrderService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloads;
@@ -94,7 +101,7 @@ public class GRNAction extends BasePaginatedAction {
 	private Sku sku;
 	public GrnStatus grnStatus;
 	public Double surcharge;
-	private Map<Sku,Boolean> skuIsNew = new HashMap<Sku,Boolean>();
+	private Map<Sku, Boolean> skuIsNew = new HashMap<Sku, Boolean>();
 
 	private Integer defaultPerPage = 20;
 
@@ -142,10 +149,10 @@ public class GRNAction extends BasePaginatedAction {
 		if (grn != null) {
 			logger.debug("grn@view: " + grn.getId());
 			grnDto = grnManager.generateGRNDto(grn);
-			for(GrnLineItem grnlineitem : grn.getGrnLineItems()){
+			for (GrnLineItem grnlineitem : grn.getGrnLineItems()) {
 				List<GrnLineItem> grnLineItemsList = grnLineItemDao.getAllGrnLineItemBySku(grnlineitem.getSku());
-				if(grnLineItemsList != null && grnLineItemsList.size() == 1){
-					skuIsNew.put(grnlineitem.getSku(),true);
+				if (grnLineItemsList != null && grnLineItemsList.size() == 1) {
+					skuIsNew.put(grnlineitem.getSku(), true);
 				}
 			}
 
@@ -166,8 +173,8 @@ public class GRNAction extends BasePaginatedAction {
 			}
 
 			double overallDiscount = 0;
-			if(grn.getPurchaseOrder().getDiscount() != null && grn.getPurchaseOrder().getPayable() != null && grn.getPurchaseOrder().getPayable() > 0 && grn.getPayable() != null) {
-				overallDiscount = (grn.getPurchaseOrder().getDiscount()/grn.getPurchaseOrder().getPayable()) * grn.getPayable();
+			if (grn.getPurchaseOrder().getDiscount() != null && grn.getPurchaseOrder().getPayable() != null && grn.getPurchaseOrder().getPayable() > 0 && grn.getPayable() != null) {
+				overallDiscount = (grn.getPurchaseOrder().getDiscount() / grn.getPurchaseOrder().getPayable()) * grn.getPayable();
 			}
 			grn.setDiscount(overallDiscount);
 
@@ -184,8 +191,8 @@ public class GRNAction extends BasePaginatedAction {
 				if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null) {
 					grnLineItemDao.delete(grnLineItem);
 				} else if (grnLineItem.getQty() > 0) {
-					if(grnLineItem.getPayableAmount() != null) {
-						grnLineItem.setProcurementPrice((grnLineItem.getPayableAmount() / grnLineItem.getQty()) - (grnLineItem.getPayableAmount() / grnLineItem.getQty() * discountRatio ));
+					if (grnLineItem.getPayableAmount() != null) {
+						grnLineItem.setProcurementPrice((grnLineItem.getPayableAmount() / grnLineItem.getQty()) - (grnLineItem.getPayableAmount() / grnLineItem.getQty() * discountRatio));
 					}
 
 					if (grnLineItem.getId() != null) {
@@ -196,6 +203,7 @@ public class GRNAction extends BasePaginatedAction {
 					}
 					grnLineItem.setGoodsReceivedNote(grn);
 					grnLineItemDao.save(grnLineItem);
+					getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getQty());
 				}
 				sku = grnLineItem.getSku();
 				skuService.saveSku(sku);
@@ -218,6 +226,10 @@ public class GRNAction extends BasePaginatedAction {
 
 			grn.setFinalPayableAmount(grn.getPayable() - overallDiscount);
 			goodsReceivedNoteDao.save(grn);
+			grn.getPurchaseOrder().setPurchaseOrderStatus(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus());
+			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
+			getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
+
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		return new RedirectResolution(GRNAction.class);
@@ -358,7 +370,7 @@ public class GRNAction extends BasePaginatedAction {
 
 				}
 				if (grnLineItem.getQty() != null && grnLineItem.getCostPrice() != null) {
-					taxableAmount = (grnLineItem.getQty() * (grnLineItem.getCostPrice() - grnLineItem.getCostPrice()*discountPercentage/100));
+					taxableAmount = (grnLineItem.getQty() * (grnLineItem.getCostPrice() - grnLineItem.getCostPrice() * discountPercentage / 100));
 					totalTaxable += taxableAmount;
 					purchaseInvoiceLineItem.setTaxableAmount(taxableAmount);
 				}
@@ -375,7 +387,7 @@ public class GRNAction extends BasePaginatedAction {
 				getPurchaseInvoiceDao().save(purchaseInvoiceLineItem);
 
 			}
-			if(grn.getDiscount() != null) {
+			if (grn.getDiscount() != null) {
 				overallDiscount += grn.getDiscount();
 			}
 			grn.setReconciled(true);
@@ -634,5 +646,21 @@ public class GRNAction extends BasePaginatedAction {
 
 	public void setSkuIsNew(Map<Sku, Boolean> skuIsNew) {
 		this.skuIsNew = skuIsNew;
+	}
+
+	public PoLineItemService getPoLineItemService() {
+		return poLineItemService;
+	}
+
+	public void setPoLineItemService(PoLineItemService poLineItemService) {
+		this.poLineItemService = poLineItemService;
+	}
+
+	public PurchaseOrderService getPurchaseOrderService() {
+		return purchaseOrderService;
+	}
+
+	public void setPurchaseOrderService(PurchaseOrderService purchaseOrderService) {
+		this.purchaseOrderService = purchaseOrderService;
 	}
 }

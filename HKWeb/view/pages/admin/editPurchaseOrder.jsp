@@ -1,11 +1,10 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
-<%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.inventory.EnumPurchaseOrderStatus" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" var="pa"/>
@@ -17,236 +16,246 @@
 <c:set var="poCancelled" value="<%=EnumPurchaseOrderStatus.Cancelled.getId()%>"/>
 <c:set var="poApproved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
 <c:set var="poPlaced" value="<%=EnumPurchaseOrderStatus.SentToSupplier.getId()%>"/>
+<c:set var="poReceived" value="<%=EnumPurchaseOrderStatus.Received.getId()%>"/>
 <s:layout-component name="htmlHead">
 <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.lightbox-0.5.js"></script>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquery.lightbox-0.5.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquery.lightbox-0.5.css"
+      media="screen"/>
 
 <script type="text/javascript">
-	$(document).ready(function () {
+$(document).ready(function () {
 
-		$('a.lightbox').lightBox({conPath:"${pageContext.request.contextPath}/"});
+	$('a.lightbox').lightBox({conPath:"${pageContext.request.contextPath}/"});
 
-		$('.hkProductLightbox').each(function(){
-			var valueChangeRow = $(this).parents('.lineItemRow');
-			this.href = valueChangeRow.find('#mediumImage').attr('src');
-		}).lightBox({conPath:"${pageContext.request.contextPath}/"});
+	$('.hkProductLightbox').each(function () {
+		var valueChangeRow = $(this).parents('.lineItemRow');
+		this.href = valueChangeRow.find('#mediumImage').attr('src');
+	}).lightBox({conPath:"${pageContext.request.contextPath}/"});
 
-		$('.addRowButton').click(function () {
+	$('.addRowButton').click(function () {
 
-			var lastIndex = $('.lastRow').attr('count');
-			if (!lastIndex) {
-				lastIndex = -1;
-			}
-			$('.lastRow').removeClass('lastRow');
+		var lastIndex = $('.lastRow').attr('count');
+		if (!lastIndex) {
+			lastIndex = -1;
+		}
+		$('.lastRow').removeClass('lastRow');
 
-			var nextIndex = eval(lastIndex + "+1");
-			var newRowHtml =
-					'<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
-							'<td>' + Math.round(nextIndex + 1) + '.</td>' +
-							'<td></td>' +
-							'  <td>' +
-							'    <input type="hidden" name="poLineItems[' + nextIndex + '].id" />' +
-							'    <input type="text" class="variant" name="poLineItems[' + nextIndex + '].productVariant"/>' +
-							'  </td>' +
-							'<td></td>' +
-							'<td class="supplierCode"></td>' +
-							'<td class="otherRemark"></td>' +
-							' <td class="pvDetails"></td>' +
-							'<td><input type="text" class="taxCategory" readonly="readonly" name="poLineItems[' + nextIndex + '].taxCategory"/></td>' +
-							'<td></td>' +
-							'<td></td>' +
-							'<td class="last30DaysSales"></td>' +
-							'  <td>' +
-							'    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity valueChange" />' +
-							'  </td>' +
-							'  <td>' +
-							'    <input class="costPrice valueChange" type="text" name="poLineItems[' + nextIndex + '].costPrice" />' +
-							'  </td>' +
-							'  <td>' +
-							'    <input class="mrp" type="text" name="poLineItems[' + nextIndex + '].mrp" />' +
-							'  </td>' +
-							'  <td>' +
-							'    <input class="discountPercentage valueChange" type="text" name="poLineItems[' + nextIndex + '].discountPercent" />' +
-							'  </td>'+
-							'  <td></td>'+
-							'  <td ><input class="taxableAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].taxableAmount"/></td>' +
-							'  <td ><input class="taxAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].taxAmount"></td>' +
-							'  <td ><input class="surchargeAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].surchargeAmount"/></td>' +
-							'  <td ><input class="payableAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].payableAmount"/></td>' +
-							'</tr>';
+		var nextIndex = eval(lastIndex + "+1");
+		var newRowHtml =
+				'<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
+						'<td>' + Math.round(nextIndex + 1) + '.</td>' +
+						'<td></td>' +
+						'  <td>' +
+						'    <input type="hidden" name="poLineItems[' + nextIndex + '].id" />' +
+						'    <input type="text" class="variant" name="poLineItems[' + nextIndex + '].productVariant"/>' +
+						'  </td>' +
+						'<td></td>' +
+						'<td class="supplierCode"></td>' +
+						'<td class="otherRemark"></td>' +
+						' <td class="pvDetails"></td>' +
+						'<td><input type="text" class="taxCategory" readonly="readonly" name="poLineItems[' + nextIndex + '].taxCategory"/></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'<td class="last30DaysSales"></td>' +
+						'  <td>' +
+						'    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity valueChange" />' +
+						'  </td>' +
+						'<td class="historicalFillRate"></td>' +
+						'  <td>' +
+						'    <input class="costPrice valueChange" type="text" name="poLineItems[' + nextIndex + '].costPrice" />' +
+						'  </td>' +
+						'  <td>' +
+						'    <input class="mrp" type="text" name="poLineItems[' + nextIndex + '].mrp" />' +
+						'  </td>' +
+						'  <td>' +
+						'    <input class="discountPercentage valueChange" type="text" name="poLineItems[' + nextIndex + '].discountPercent" />' +
+						'  </td>' +
+						'  <td></td>' +
+						'  <td ><input class="taxableAmount" type="text" readonly="readonly" name="poLineItems[' + nextIndex + '].taxableAmount"/></td>' +
+						'  <td ><input class="taxAmount" type="text" readonly="readonly" name="poLineItems[' + nextIndex + '].taxAmount"></td>' +
+						'  <td ><input class="surchargeAmount" type="text" readonly="readonly" name="poLineItems[' + nextIndex + '].surchargeAmount"/></td>' +
+						'  <td ><input class="payableAmount" type="text" readonly="readonly" name="poLineItems[' + nextIndex + '].payableAmount"/></td>' +
+						'</tr>';
 
-			$('#poTable').append(newRowHtml);
+		$('#poTable').append(newRowHtml);
 
-			return false;
-		});
-
-		$('.valueChange').live("change", function () {
-			var valueChangeRow = $(this).parents('.lineItemRow');
-			var costPrice = valueChangeRow.find('.costPrice').val();
-			var mrp = valueChangeRow.find('.mrp').val();
-			var qty = valueChangeRow.find('.quantity').val();
-			var discountPercentage = valueChangeRow.find('.discountPercentage').val();
-			if (qty == "" || costPrice == "") {
-				alert("All fields are compulsory.");
-				return false;
-			}
-			if (isNaN(qty) || isNaN(costPrice) || qty < 0 || costPrice < 0 || discountPercentage < 0) {
-				alert("Enter values in correct format.");
-				return false;
-			}
-			var taxCategory = valueChangeRow.find('.taxCategory').val();
-			if(taxCategory == null) {
-				taxCategory = 0;
-			}
-			var surchargeCategory = 0.0;
-			var stateIdentifier = $('.state').html();
-			if (stateIdentifier == 'CST' && taxCategory != 0) {
-				surchargeCategory = 0.0;
-				taxCategory = 0.02;
-			} else {
-				surchargeCategory = 0.05;
-			}
-			var tax = valueChangeRow.find('.taxAmount').val();
-			var taxable = costPrice * qty;
-
-			var discountedAmount = 0.0;
-			if (discountPercentage!=null && (isNaN(discountPercentage) || discountPercentage < 0)) {
-				alert("Enter valid discount");
-				return;
-			}
-			if(discountPercentage > 0) {
-				discountedAmount = (discountPercentage / 100) * taxable;
-			}
-
-			taxable -= discountedAmount;
-			tax = taxable*taxCategory;
-			var surcharge = tax * surchargeCategory;
-			var payable = surcharge + taxable + tax;
-			valueChangeRow.find('.taxableAmount').val(taxable.toFixed(2));
-			valueChangeRow.find('.taxAmount').val(tax.toFixed(2));
-			valueChangeRow.find('.surchargeAmount').val(surcharge.toFixed(2));
-			valueChangeRow.find('.payableAmount').val(payable.toFixed(2));
-
-			updateTotal('.taxableAmount', '.totalTaxable', 0);
-			updateTotal('.taxAmount', '.totalTax', 0);
-			updateTotal('.surchargeAmount', '.totalSurcharge', 0);
-			updateTotal('.payableAmount', '.totalPayable', 0);
-			updateTotal('.payableAmount', '.finalPayable', 0);
-
-			var finalPayable = parseFloat($('.finalPayable').val().replace(/,/g, ''));
-			var overallDiscount = parseFloat($('.overallDiscount').val().replace(/,/g, ''));
-			if (isNaN(overallDiscount)) {
-				overallDiscount = 0;
-			}
-
-			finalPayable -= overallDiscount;
-			$('.finalPayable').val(finalPayable.toFixed(2));
-		});
-
-		function updateTotal(fromTotalClass,toTotalClass,toHtml){
-			var total=0;
-			$.each($(fromTotalClass),function(index,value){
-				var eachRow=$(value);
-				var eachRowValue=eachRow.val().trim();
-				total+=parseFloat(eachRowValue);
-			});
-			if(toHtml == 1){
-				$(toTotalClass).html(total);
-			} else {
-				$(toTotalClass).val(total.toFixed(2));
-			}
-		};
-
-		$('.variant').live("change", function () {
-			var variantRow = $(this).parents('.lineItemRow');
-			var productVariantId = variantRow.find('.variant').val();
-			var productVariantDetails = variantRow.find('.pvDetails');
-			$.getJSON(
-					$('#pvInfoLink').attr('href'), {productVariantId:productVariantId, warehouse : ${pa.purchaseOrder.warehouse}},
-					function (res) {
-						if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-							variantRow.find('.supplierCode').html(res.data.variant.supplierCode);
-							variantRow.find('.otherRemark').html(res.data.variant.otherRemark);
-							variantRow.find('.mrp').val(res.data.variant.markedPrice);
-							variantRow.find('.costPrice').val(res.data.variant.costPrice);
-							variantRow.find('.taxCategory').val(res.data.tax);
-							variantRow.find('.last30DaysSales').html(res.data.last30DaysSales);
-							productVariantDetails.html(
-									res.data.product + '<br/>' +
-											res.data.options
-							);
-						} else {
-							$('.variantDetails').html('<h2>' + res.message + '</h2>');
-						}
-					}
-			);
-		});
-
-		$('.footerChanges').live("change", function overallDiscount() {
-			var overallDiscount=parseFloat($('.overallDiscount').val());
-			if(isNaN(overallDiscount)){
-				overallDiscount=0;
-			}
-			updateTotal('.payableAmount','.finalPayable',0);
-			var finalPayable=parseFloat($('.finalPayable').val().replace(/,/g,''));
-			finalPayable-=overallDiscount;
-			$('.finalPayable').val(finalPayable.toFixed(2));
-		} );
+		return false;
 	});
 
-	function validateSubmitForm() {
-
-		var returnFalse = false;
-		if (${actionBean.purchaseOrder.supplier.creditDays < 0}) {
-			var advPayment = $('.advPayment').val();
-			if (advPayment == "" || isNaN(advPayment)) {
-				alert("Please enter a valid adv payment as credit days is negative (i.e. No Credit)");
-				returnFalse = true;
-				return false;
-			}
+	$('.valueChange').live("change", function () {
+		var valueChangeRow = $(this).parents('.lineItemRow');
+		var costPrice = valueChangeRow.find('.costPrice').val();
+		var mrp = valueChangeRow.find('.mrp').val();
+		var qty = valueChangeRow.find('.quantity').val();
+		var discountPercentage = valueChangeRow.find('.discountPercentage').val();
+		if (qty == "" || costPrice == "") {
+			alert("All fields are compulsory.");
+			return false;
 		}
-		$.each($('.quantity'), function checkQty() {
-			var quantity = $(this).val();
-			if (quantity == "" || isNaN(quantity)) {
-				alert("Please enter a valid quantity.");
-				returnFalse = true;
-				return false;
-			}
-		});
-		$.each($('.discountPercentage'), function(index, value) {
+		if (isNaN(qty) || isNaN(costPrice) || qty < 0 || costPrice < 0 || discountPercentage < 0) {
+			alert("Enter values in correct format.");
+			return false;
+		}
+		var taxCategory = valueChangeRow.find('.taxCategory').val();
+		if (taxCategory == null) {
+			taxCategory = 0;
+		}
+		var surchargeCategory = 0.0;
+		var stateIdentifier = $('.state').html();
+		if (stateIdentifier == 'CST' && taxCategory != 0) {
+			surchargeCategory = 0.0;
+			taxCategory = 0.02;
+		} else {
+			surchargeCategory = 0.05;
+		}
+		var tax = valueChangeRow.find('.taxAmount').val();
+		var taxable = costPrice * qty;
+
+		var discountedAmount = 0.0;
+		if (discountPercentage != null && (isNaN(discountPercentage) || discountPercentage < 0)) {
+			alert("Enter valid discount");
+			return;
+		}
+		if (discountPercentage > 0) {
+			discountedAmount = (discountPercentage / 100) * taxable;
+		}
+
+		taxable -= discountedAmount;
+		tax = taxable * taxCategory;
+		var surcharge = tax * surchargeCategory;
+		var payable = surcharge + taxable + tax;
+		valueChangeRow.find('.taxableAmount').val(taxable.toFixed(2));
+		valueChangeRow.find('.taxAmount').val(tax.toFixed(2));
+		valueChangeRow.find('.surchargeAmount').val(surcharge.toFixed(2));
+		valueChangeRow.find('.payableAmount').val(payable.toFixed(2));
+
+		updateTotal('.taxableAmount', '.totalTaxable', 0);
+		updateTotal('.taxAmount', '.totalTax', 0);
+		updateTotal('.surchargeAmount', '.totalSurcharge', 0);
+		updateTotal('.payableAmount', '.totalPayable', 0);
+		updateTotal('.payableAmount', '.finalPayable', 0);
+
+		var finalPayable = parseFloat($('.finalPayable').val().replace(/,/g, ''));
+		var overallDiscount = parseFloat($('.overallDiscount').val().replace(/,/g, ''));
+		if (isNaN(overallDiscount)) {
+			overallDiscount = 0;
+		}
+
+		finalPayable -= overallDiscount;
+		$('.finalPayable').val(finalPayable.toFixed(2));
+	});
+
+	function updateTotal(fromTotalClass, toTotalClass, toHtml) {
+		var total = 0;
+		$.each($(fromTotalClass), function (index, value) {
 			var eachRow = $(value);
-			var discountPercentage = eachRow.val().trim();
-			if (discountPercentage < 0) {
-				alert("Discount percentage should be greater than zero");
-				returnFalse = true;
-				return false;
-			}
+			var eachRowValue = eachRow.val().trim();
+			total += parseFloat(eachRowValue);
 		});
-
-		var statusSelected = $('.status').find('option:selected');
-		var approver = $('.approver').find('option:selected');
-		if (statusSelected.text() == "Sent For Approval" && approver.text() == "-Select Approver-") {
-			alert("Approver Not Selected.");
-			return false;
+		if (toHtml == 1) {
+			$(toTotalClass).html(total);
+		} else {
+			$(toTotalClass).val(total.toFixed(2));
 		}
-
-		if(returnFalse){
-			return false;
-		}else{
-			return true;
-		}
-
 	}
 
-	function temp(){
-		var submit =  validateSubmitForm();
-		alert("submit? "+submit);
-		return submit;
+	;
+
+	$('.variant').live("change", function () {
+		var variantRow = $(this).parents('.lineItemRow');
+		var productVariantId = variantRow.find('.variant').val();
+		var productVariantDetails = variantRow.find('.pvDetails');
+		$.getJSON(
+				$('#pvInfoLink').attr('href'), {productVariantId:productVariantId, warehouse: ${pa.purchaseOrder.warehouse}, purchaseOrder:${pa.purchaseOrder.id}},
+				function (res) {
+					if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+						variantRow.find('.supplierCode').html(res.data.variant.supplierCode);
+						variantRow.find('.otherRemark').html(res.data.variant.otherRemark);
+						variantRow.find('.mrp').val(res.data.variant.markedPrice);
+						variantRow.find('.costPrice').val(res.data.variant.costPrice);
+						variantRow.find('.taxCategory').val(res.data.tax);
+						variantRow.find('.last30DaysSales').html(res.data.last30DaysSales);
+						if (res.data.newSku) {
+							variantRow.css('background-color', 'goldenrod');
+						}
+						productVariantDetails.html(
+								res.data.product + '<br/>' +
+										res.data.options
+						);
+
+						variantRow.find('.historicalFillRate').html(res.data.historicalFillRate);
+					} else {
+						$('.variantDetails').html('<h2>' + res.message + '</h2>');
+					}
+				}
+		);
+	});
+
+	$('.footerChanges').live("change", function overallDiscount() {
+		var overallDiscount = parseFloat($('.overallDiscount').val());
+		if (isNaN(overallDiscount)) {
+			overallDiscount = 0;
+		}
+		updateTotal('.payableAmount', '.finalPayable', 0);
+		var finalPayable = parseFloat($('.finalPayable').val().replace(/,/g, ''));
+		finalPayable -= overallDiscount;
+		$('.finalPayable').val(finalPayable.toFixed(2));
+	});
+});
+
+function validateSubmitForm() {
+
+	var returnFalse = false;
+	if (${actionBean.purchaseOrder.supplier.creditDays < 0}) {
+		var advPayment = $('.advPayment').val();
+		if (advPayment == "" || isNaN(advPayment)) {
+			alert("Please enter a valid adv payment as credit days is negative (i.e. No Credit)");
+			returnFalse = true;
+			return false;
+		}
 	}
+	$.each($('.quantity'), function checkQty() {
+		var quantity = $(this).val();
+		if (quantity == "" || isNaN(quantity)) {
+			alert("Please enter a valid quantity.");
+			returnFalse = true;
+			return false;
+		}
+	});
+	$.each($('.discountPercentage'), function (index, value) {
+		var eachRow = $(value);
+		var discountPercentage = eachRow.val().trim();
+		if (discountPercentage < 0) {
+			alert("Discount percentage should be greater than zero");
+			returnFalse = true;
+			return false;
+		}
+	});
+
+	var statusSelected = $('.status').find('option:selected');
+	var approver = $('.approver').find('option:selected');
+	if (statusSelected.text() == "Sent For Approval" && approver.text() == "-Select Approver-") {
+		alert("Approver Not Selected.");
+		return false;
+	}
+
+	if (returnFalse) {
+		return false;
+	} else {
+		return true;
+	}
+
+}
+
+function temp() {
+	var submit = validateSubmitForm();
+	alert("submit? " + submit);
+	return submit;
+}
 </script>
 <%--<style type="text/css">
 			input {
@@ -295,7 +304,7 @@
 		</td>
 		<td>Lead Time</td>
 		<td>
-			${pa.purchaseOrder.supplier.leadTime}
+				${pa.purchaseOrder.supplier.leadTime}
 		</td>
 	</tr>
 	<tr>
@@ -374,7 +383,17 @@
 		<td></td>
 		<td></td>
 	</tr>
-	<tr><td colspan="6" style="text-align:right;"><em class="mandatory">*</em> marked fields are mandatory</td></tr>
+	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id == poReceived}">
+		<tr>
+			<td colspan="6"><s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction"
+			                        event="closePurchaseOrder" style="color: #0000ff;">
+				<s:param name="purchaseOrder" value="${pa.purchaseOrder.id}"/>
+				Close this PO</s:link></td>
+		</tr>
+	</c:if>
+	<tr>
+		<td colspan="6" style="text-align:right;"><em class="mandatory">*</em> marked fields are mandatory</td>
+	</tr>
 
 </table>
 
@@ -393,6 +412,7 @@
 		<th>Current Inventory <br>All Warehouses</th>
 		<th>Last 30 days Sale</th>
 		<th>Qty</th>
+		<th>Historical <br>Fill Rate</th>
 		<th>Cost Price<br/>(Without TAX)</th>
 		<th>MRP</th>
 		<th>Discount<br/>(%)</th>
@@ -401,6 +421,7 @@
 		<th>Tax</th>
 		<th>Surcharge</th>
 		<th>Payable</th>
+		<th>PO Fill Rate</th>
 
 	</tr>
 	</thead>
@@ -412,101 +433,134 @@
 		<s:hidden name="poLineItems[${ctr.index}]" value="${poLineItemDto.poLineItem.id}"/>
 		<s:hidden name="poLineItems[${ctr.index}].productVariant" value="${productVariant.id}"/>
 		<%--<s:hidden name="poLineItems[${ctr.index}].sku" value="${sku.id}"/>--%>
+		<c:choose>
+			<c:when test="${hk:collectionContains(pa.newSkuIdList, poLineItemDto.poLineItem.sku.id)}">
+				<tr style="background-color:goldenrod;" count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+			</c:when>
+			<c:otherwise>
+				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+			</c:otherwise>
+		</c:choose>
 
-		<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
-			<td>${ctr.index+1}.</td>
-			<td>
-				<div class='img48' style="vertical-align:top;">
-					<c:choose>
-						<c:when test="${productVariant.product.mainImageId != null}">
-							<div style="display: none;">
-								<hk:productImage imageId="${productVariant.product.mainImageId}" size="<%=EnumImageSize.MediumSize%>" id="mediumImage"/>
-							</div>
-							<a href="#" class="hkProductLightbox">
-								<hk:productImage imageId="${productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
-							</a>
-						</c:when>
-						<c:otherwise>
-							<a href="${pageContext.request.contextPath}/images/ProductImages/ProductImagesOriginal/${productVariant.product.id}.jpg" class="lightbox">
-								<img class="prod48"
-								     src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${productVariant.product.id}.jpg"
-								     alt="${productVariant.product.name}"/>
-							</a>
-						</c:otherwise>
-					</c:choose>
-				</div>
-			</td>
-			<td>
-					${productVariant.id}
-				<s:hidden class="variant" name="poLineItems[${ctr.index}].productVariant"
-				          value="${poLineItemDto.poLineItem.productVariant.id}"/>
-			</td>
-			<td>${productVariant.upc}</td>
-			<td class="supplierCode">${productVariant.supplierCode}</td>
-			<td class="otherRemark">${productVariant.otherRemark} </label></td>
-			<td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
-			</td>
-				<%--<td class="taxCategory"> ${sku.tax.value}--%>
-			<td>
-				<input type="text" class="taxCategory" value="${sku.tax.value}" disabled="disabled"/>
-			</td>
-			<td>
-					${hk:netInventory(sku)}
-			</td>
-			<td>
-					${hk:netInventory(productVariant)}
-			</td>
-			<td>
-					${hk:findInventorySoldInGivenNoOfDays(sku, 30)}
-			</td>
-			<td>
-				<s:text name="poLineItems[${ctr.index}].qty" value="${poLineItemDto.poLineItem.qty}" class="quantity valueChange" readonly="${actionBean.purchaseOrder.purchaseOrderStatus.id >= poApproved ? 'readonly' : ''}"/>
-			</td>
-			<td>
-				<s:text class="costPrice valueChange" name="poLineItems[${ctr.index}].costPrice"
-				        value="${poLineItemDto.poLineItem.costPrice}"/>
-			</td>
-			<td>
-				<s:text class="mrp" name="poLineItems[${ctr.index}].mrp" value="${poLineItemDto.poLineItem.mrp}"/>
-			</td>
-			<td>
-				<s:text class="discountPercentage valueChange" name="poLineItems[${ctr.index}].discountPercent" value="${poLineItemDto.poLineItem.discountPercent}"/>
-			</td>
-			<td>
-				<fmt:formatNumber value="${poLineItemDto.marginMrpVsCP}" maxFractionDigits="2"/>
-			</td>
-			<td>
-				<s:text readonly="readonly" class="taxableAmount" name="poLineItems[${ctr.index}].taxableAmount" value="${poLineItemDto.poLineItem.taxableAmount}" />
-			</td>
-			<td>
-				<s:text readonly="readonly" class="taxAmount" name="poLineItems[${ctr.index}].taxAmount" value="${poLineItemDto.poLineItem.taxAmount}" />
-			</td>
-			<td>
-				<s:text readonly="readonly" class="surchargeAmount" name="poLineItems[${ctr.index}].surchargeAmount" value="${poLineItemDto.poLineItem.surchargeAmount}" />
-			</td>
-			<td>
-				<s:text readonly="readonly" class="payableAmount" name="poLineItems[${ctr.index}].payableAmount" value="${poLineItemDto.poLineItem.payableAmount}" />
-			</td>
+		<td>${ctr.index+1}.</td>
+		<td>
+			<div class='img48' style="vertical-align:top;">
+				<c:choose>
+					<c:when test="${productVariant.product.mainImageId != null}">
+						<div style="display: none;">
+							<hk:productImage imageId="${productVariant.product.mainImageId}"
+							                 size="<%=EnumImageSize.MediumSize%>" id="mediumImage"/>
+						</div>
+						<a href="#" class="hkProductLightbox">
+							<hk:productImage imageId="${productVariant.product.mainImageId}"
+							                 size="<%=EnumImageSize.TinySize%>"/>
+						</a>
+					</c:when>
+					<c:otherwise>
+						<a href="${pageContext.request.contextPath}/images/ProductImages/ProductImagesOriginal/${productVariant.product.id}.jpg"
+						   class="lightbox">
+							<img class="prod48"
+							     src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${productVariant.product.id}.jpg"
+							     alt="${productVariant.product.name}"/>
+						</a>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</td>
+		<td>
+				${productVariant.id}
+			<s:hidden class="variant" name="poLineItems[${ctr.index}].productVariant"
+			          value="${poLineItemDto.poLineItem.productVariant.id}"/>
+		</td>
+		<td>${productVariant.upc}</td>
+		<td class="supplierCode">${productVariant.supplierCode}</td>
+		<td class="otherRemark">${productVariant.otherRemark} </label></td>
+		<td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
+		</td>
+		<%--<td class="taxCategory"> ${sku.tax.value}--%>
+		<td>
+			<input type="text" class="taxCategory" value="${sku.tax.value}" disabled="disabled"/>
+		</td>
+		<td>
+				${hk:netInventory(sku)}
+		</td>
+		<td>
+				${hk:netInventory(productVariant)}
+		</td>
+		<td>
+				${hk:findInventorySoldInGivenNoOfDays(sku, 30)}
+		</td>
+		<td>
+			<s:text name="poLineItems[${ctr.index}].qty" value="${poLineItemDto.poLineItem.qty}"
+			        class="quantity valueChange"
+			        readonly="${actionBean.purchaseOrder.purchaseOrderStatus.id >= poApproved ? 'readonly' : ''}"/>
+		</td>
+		<td class="historicalFillRate">
+				${hk:getPVSupplierInfo(pa.purchaseOrder.supplier, productVariant).fillRate}
+		</td>
+		<td>
+			<s:text class="costPrice valueChange" name="poLineItems[${ctr.index}].costPrice"
+			        value="${poLineItemDto.poLineItem.costPrice}"/>
+		</td>
+		<td>
+			<s:text class="mrp" name="poLineItems[${ctr.index}].mrp" value="${poLineItemDto.poLineItem.mrp}"/>
+		</td>
+		<td>
+			<s:text class="discountPercentage valueChange" name="poLineItems[${ctr.index}].discountPercent"
+			        value="${poLineItemDto.poLineItem.discountPercent}"
+			        readonly="${actionBean.purchaseOrder.purchaseOrderStatus.id >= poApproved ? 'readonly' : ''}"/>
+		</td>
+		<td>
+			<fmt:formatNumber value="${poLineItemDto.marginMrpVsCP}" maxFractionDigits="2"/>
+		</td>
+		<td>
+			<s:text readonly="readonly" class="taxableAmount" name="poLineItems[${ctr.index}].taxableAmount"
+			        value="${poLineItemDto.poLineItem.taxableAmount}"/>
+		</td>
+		<td>
+			<s:text readonly="readonly" class="taxAmount" name="poLineItems[${ctr.index}].taxAmount"
+			        value="${poLineItemDto.poLineItem.taxAmount}"/>
+		</td>
+		<td>
+			<s:text readonly="readonly" class="surchargeAmount" name="poLineItems[${ctr.index}].surchargeAmount"
+			        value="${poLineItemDto.poLineItem.surchargeAmount}"/>
+		</td>
+		<td>
+			<s:text readonly="readonly" class="payableAmount" name="poLineItems[${ctr.index}].payableAmount"
+			        value="${poLineItemDto.poLineItem.payableAmount}"/>
+		</td>
+		<td>
+				${poLineItemDto.poLineItem.fillRate}
+		</td>
 		</tr>
 	</c:forEach>
 	</tbody>
 	<tfoot>
 	<tr>
 		&nbsp; &nbsp;
-		<td colspan="16">Total</td>
-		<td><s:text readonly="readonly" class="totalTaxable" name="purchaseOrderDto.totalTaxable" value="${pa.purchaseOrderDto.totalTaxable}" /></td>
-		<td><s:text readonly="readonly" class="totalTax" name="purchaseOrderDto.totalTax" value="${pa.purchaseOrderDto.totalTax}" /></td>
-		<td><s:text readonly="readonly" class="totalSurcharge" name="purchaseOrderDto.totalSurcharge" value="${pa.purchaseOrderDto.totalSurcharge}"/></td>
-		<td><s:text readonly="readonly" class="totalPayable" name="purchaseOrderDto.totalPayable" value="${pa.purchaseOrderDto.totalPayable}"/></td>
+		<td colspan="17">Total</td>
+		<td><s:text readonly="readonly" class="totalTaxable" name="purchaseOrderDto.totalTaxable"
+		            value="${pa.purchaseOrderDto.totalTaxable}"/></td>
+		<td><s:text readonly="readonly" class="totalTax" name="purchaseOrderDto.totalTax"
+		            value="${pa.purchaseOrderDto.totalTax}"/></td>
+		<td><s:text readonly="readonly" class="totalSurcharge" name="purchaseOrderDto.totalSurcharge"
+		            value="${pa.purchaseOrderDto.totalSurcharge}"/></td>
+		<td><s:text readonly="readonly" class="totalPayable" name="purchaseOrderDto.totalPayable"
+		            value="${pa.purchaseOrderDto.totalPayable}"/></td>
 	</tr>
 	<tr>
-		<td colspan="18"></td><td>Overall Discount<br/>(In Rupees)</td>
-		<td><s:text class="overallDiscount footerChanges" name="purchaseOrder.discount" value="${pa.purchaseOrder.discount}"/></td>
+		<td colspan="19"></td>
+		<td>Overall Discount<br/>(In Rupees)</td>
+		<td><s:text class="overallDiscount footerChanges" name="purchaseOrder.discount"
+		            value="${pa.purchaseOrder.discount}"
+		            readonly="${actionBean.purchaseOrder.purchaseOrderStatus.id >= poApproved ? 'readonly' : ''}"/></td>
 	</tr>
 	<tr>
 	<tr>
-		<td colspan="18"></td><td>Final Payable</td>
-		<td><s:text readonly="readonly" class="finalPayable" name="purchaseOrder.finalPayableAmount" value="${pa.purchaseOrder.finalPayableAmount}"/></td>
+		<td colspan="19"></td>
+		<td>Final Payable</td>
+		<td><s:text readonly="readonly" class="finalPayable" name="purchaseOrder.finalPayableAmount"
+		            value="${pa.purchaseOrder.finalPayableAmount}"/></td>
 	</tr>
 	</tfoot>
 </table>
@@ -518,8 +572,8 @@
 		<br/>
 	</c:if>
 
-	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poPlaced}">
-			<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id <= poPlaced}">
+		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 	</c:if>
 </shiro:hasPermission>
 </s:form>

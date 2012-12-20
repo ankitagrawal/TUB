@@ -7,7 +7,6 @@ import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.api.HkApiUser;
 import com.hk.exception.HealthkartSignupException;
-import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.security.HkAuthService;
@@ -37,11 +36,9 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
     @Autowired
     StoreService storeService;
     @Autowired
-    RewardPointService rewardPointService;
-    @Autowired
     HkAuthService hkAuthService;
     @Autowired
-    ReferrerProgramManager referrerProgramManager;
+    RewardPointService rewardPointService;
     @Autowired
     UserManager userManager;
 
@@ -90,7 +87,7 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
         HkApiUser hkApiUser=hkAuthService.getApiUserFromUserAccessToken(userAccessToken);
         //TODO allow this only for hkplus - but there is no way out here right now other than hardcoding the logic for "HealthkartPlus"
         // as name of HkApiUser - which I am not sure as of now
-         rewardPointService.addRewardPoints(null,null,null,rewardPoints,hkApiUser.getName(), EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HealthkartPlus.asRewardPointMode());
+         rewardPointService.addRewardPoints(null,null,null,rewardPoints,hkApiUser.getName(), EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HKPLUS_POINTS.asRewardPointMode());
 
         HKAPIBaseDTO hkapiBaseDTO =new HKAPIBaseDTO();
         return hkapiBaseDTO;
@@ -99,7 +96,7 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
     public HKAPIBaseDTO getUserRewardPointDetails(String userAccessToken){
         HKAPIBaseDTO hkapiBaseDTO=new HKAPIBaseDTO();
         User user=hkAuthService.getUserFromAccessToken(userAccessToken);
-        double rewardPoints=referrerProgramManager.getTotalRedeemablePoints(user);
+        double rewardPoints=rewardPointService.getEligibleRewardPointsForUser(user.getLogin());
         hkapiBaseDTO.setData(rewardPoints);
         return hkapiBaseDTO;
     }

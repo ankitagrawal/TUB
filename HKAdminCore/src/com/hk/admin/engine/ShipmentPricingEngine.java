@@ -1,5 +1,7 @@
 package com.hk.admin.engine;
 
+import com.hk.domain.payment.GatewayIssuerMapping;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Pratham
@@ -43,6 +47,9 @@ public class ShipmentPricingEngine {
 
     @Autowired
     CourierCostCalculator courierCostCalculator;
+
+    @Autowired
+    GatewayIssuerMappingService gatewayIssuerMappingService;
 
     public Double calculateShipmentCost(ShippingOrder shippingOrder){
         Shipment shipment = shippingOrder.getShipment();
@@ -133,7 +140,11 @@ public class ShipmentPricingEngine {
                 reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount() ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
             }else{
-                reconciliationCharges = amount * EnumPaymentMode.getPaymentMode(payment.getPaymentMode()).getReconciliationCharges();
+                GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(),payment.getGateway(),null);
+                if(gatewayIssuerMapping == null){
+                    return 0D;
+                }
+                reconciliationCharges = amount * gatewayIssuerMapping.getReconciliationCharge();
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
             }
         }

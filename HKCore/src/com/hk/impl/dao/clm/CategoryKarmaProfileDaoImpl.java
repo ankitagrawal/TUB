@@ -28,7 +28,7 @@ public class CategoryKarmaProfileDaoImpl extends BaseDaoImpl implements Category
 
     public CategoryKarmaProfile findByUserAndCategory(User user, Category category) {
 
-        return (CategoryKarmaProfile) findUniqueByNamedParams(" from CategoryKarmaProfile ckp where ckp.user = :user and ckp.category = :category", new String[]{"user","category"}, new Object[]{user, category});
+        return (CategoryKarmaProfile) findUniqueByNamedParams(" from CategoryKarmaProfile ckp where ckp.user.id = :userId and ckp.category.name = :categoryName", new String[]{"userId","categoryName"}, new Object[]{user.getId(), category.getName()});
         //return  (KarmaProfile) getSession().createQuery("from KarmaProfile kp where kp.user = :user ").setEntity("user", user).uniqueResult();
     }
 

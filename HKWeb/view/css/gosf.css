@@ -1,0 +1,313 @@
+@charset
+"utf-8"
+;
+/* CSS Document */
+
+.opaque {
+    opacity: 0.4;
+    filter: alpha(opacity = 40);
+
+}
+
+.opaque:hover {
+    opacity: 1.0;
+    filter: alpha(opacity = 100);
+}
+
+.navBox {
+    position: relative;
+    z-index: 2;
+}
+
+.navigation {
+    margin: 0;
+    width: 100%;
+    padding: 0;
+    list-style: none;
+    background: #262626;
+    height: 37px;
+    border-top: 1px solid #F2861D;
+}
+
+/* Little tricking with positions */
+.navigation  li {
+    float: left; /* Show list items inline */
+
+    position: relative;
+}
+
+/* Playing with Main Categories */
+.navigation  li a {
+    background: #262626;
+    color: #fff;
+    display: block; /* Making sure a element covers whole li area */
+    padding: 8px 15px;
+    text-decoration: none; /* No underline */
+    text-transform: uppercase;
+}
+
+.navigation  li a:hover {
+    color: #F2861D;
+}
+
+/* Sub Cat Menu stuff*/
+.navigation  ul {
+    position: absolute;
+    left: 0;
+    display: none; /* Hide it by default */
+    margin: 0 0 0 -1px;
+    padding: 0;
+    list-style: none;
+    border-bottom: 3px solid #F2861D;
+}
+
+.navigation  ul li {
+    width: 200px;
+    float: left;
+    border-top: none;
+    text-align: left;
+}
+
+/* Sub Cat menu link properties */
+.navigation  ul a {
+    display: block; /* Making sure a element covers whole li area */
+    height: 15px;
+    padding: 8px 7px 13px 7px;
+    color: #fff;
+    text-decoration: none;
+    border-top: none;
+    border-bottom: 1px dashed #6B6B6B;
+}
+
+.navigation  ul a:hover {
+    color: #F2861D;
+}
+
+.prodBoxes {
+    position: relative;
+    z-index: 1;
+}
+
+a, a:hover {
+    border-bottom: none;
+}
+
+.cl {
+    clear: both;
+}
+
+p, h3, h1, h2, h4 {
+    margin: 0;
+    padding: 0;
+}
+
+@font-face
+{
+    font-family: 'robotoregular'
+;
+    src: url('roboto-regular-webfont.eot')
+;
+    src: url('roboto-regular-webfont.eot?#iefix') format('embedded-opentype'), url('roboto-regular-webfont.woff') format('woff'), url('roboto-regular-webfont.ttf') format('truetype'), url('roboto-regular-webfont.svg#robotoregular') format('svg')
+;
+    font-weight: normal
+;
+    font-style: normal
+;
+
+}
+
+@font-face
+{
+    font-family: 'roboto_ltregular'
+;
+    src: url('roboto-light-webfont.eot')
+;
+    src: url('roboto-light-webfont.eot?#iefix') format('embedded-opentype'), url('roboto-light-webfont.woff') format('woff'), url('roboto-light-webfont.ttf') format('truetype'), url('roboto-light-webfont.svg#roboto_ltregular') format('svg')
+;
+    font-weight: normal
+;
+    font-style: normal
+;
+
+}
+
+#pageContainer {
+    margin: 15px auto;
+    width: 960px;
+    overflow: auto;
+    padding-bottom: 260px;
+    font-family: 'robotoregular';
+    color: #231f20;
+}
+
+.product {
+    width: 215px;
+    border-bottom: none;
+    text-align: left;
+    float: left;
+    margin: 20px 15px 0 10px;
+    position: relative;
+    height: 520px;
+}
+
+.product  .gosf-logo {
+    position: absolute;
+    top: 177px;
+    right: 0px;
+}
+
+.product .img {
+    border: 1px solid #CCC;
+    width: 213px;
+    height: 256px;
+}
+
+.product h3, .product h2, .product .bid {
+    font-size: 13px;
+    font-weight: normal;
+    color: #333;
+    padding: 0;
+}
+
+/*.product h3 { height:23px; }*/
+
+.product .description {
+    font-size: 12px;
+    line-height: normal;
+    font-weight: normal;
+    color: #999;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.product h3 {
+	min-height: 36px;
+}
+
+.product h3 a {
+    font-size: 13px;
+    color: #333;
+    text-decoration: none;
+}
+
+.product h3 a:hover {
+    font-size: 13px;
+    color: #333;
+
+}
+
+.product .price {
+    text-align: left;
+    margin: 5px 0;
+    font-size: 18px;
+    color: #333;
+    line-height: normal;
+    font-family: 'roboto_ltregular';
+}
+
+.product .price span {
+    font-size: 15px;
+    color: #999;
+    text-decoration: line-through;
+    font-style: normal;
+}
+
+.product a.buynow {
+    color: #000;
+    display: inline-block;
+    font-size: 18px;
+    padding: 5px 15px;
+    border: 1px #000 solid;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.product .buynow a:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.product:hover {
+    border-bottom: none;
+}
+
+.heading1 {
+    border-bottom: 1px solid #c0c0c0;
+    width: 960px;
+    height: 40px;
+    line-height: 40px;
+    margin: 40px 0 10px 0;
+    text-align: center;
+    font-weight: bold;
+    color: #666;
+    font-size: 20px;
+}
+
+.product .img180 img {
+    max-height: 180px;
+    max-width: 180px;
+}
+
+.see-more {
+    font-size: 13px;
+    font-weight: normal;
+    color: #999;
+    margin-top: 20px;
+    text-decoration: none;
+}
+
+.see-more a {
+    color: #999;
+    text-decoration: none;
+}
+
+.see-more a:hover {
+    color: #000;
+}
+
+.pages {
+    clear: both;
+    float: right;
+    margin: 5px 0 10px;
+}
+
+.pages .pages_link {
+    border: 1px solid #CCC;
+    text-decoration: none;
+    color: #999;
+    float: left;
+    padding-top: 3px;
+    height: 22px;
+    margin-left: 5px;
+    margin-right: 5px;
+    position: relative;
+    text-align: center;
+    width: 30px;
+}
+
+.pages a.pages_link {
+    color: #333;
+}
+
+.pages a.pages_link:hover, a.next:hover {
+    color: #1b75bb;
+}
+
+.pages .next {
+    color: #333;
+    float: left;
+    margin: 0 10px;
+    padding-top: 5px;
+    height: 22px;
+    text-decoration: none;
+}
+
+.pages a.next {
+    color: #333;
+    text-decoration: none;
+}
+
+.pages a.next:hover {
+    color: #1b75bb;
+}
+

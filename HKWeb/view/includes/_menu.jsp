@@ -11,8 +11,8 @@
 <s:layout-definition>
     <c:set var="topCategoryUrl" value="/${topCategory}"/>
     <c:set var="allCategories" value="${allCategories}"/>
-
-  <div style="cursor:default; width: 960px; margin: 35px auto 7px;">
+ <div class="clear"></div>
+  <div id="logoBoxContainer" style="cursor:default; width: 960px; margin: 35px auto 7px;">
 
     <div class='logoBox' style="float:left;">
       <s:link href="/" title='go to healthkart home'>
@@ -26,6 +26,7 @@
     </s:form>
 
     <div class="offerAndBrands">
+      <div style="float:left"><s:link href='/resources'>HealthMag&nbsp;</s:link></div><div style="float:left; margin-right: 15px;"><s:link href='/resources'><img src="<hk:vhostImage/>/images/resources_16.png"></s:link></div>
       <div style="float:left"><s:link href='/brands'>Brands&nbsp;</s:link></div><div style="float:left; margin-right: 15px;"><s:link href='/brands'><img src="<hk:vhostImage/>/images/brand_16.png"></s:link></div>
       <div style="float:left"><s:link href='/super-savers' style="color: #990000;">Offers&nbsp;</s:link></div><div style="float:left"><s:link href='/super-savers'><img src="<hk:vhostImage/>/images/offer_16.png"></s:link></div>
     </div>
@@ -41,13 +42,13 @@
   
     <%
       DateTime dateTime = new DateTime();
-      Date endOfOfferDate = new Date(new DateTime(2012, 11, 14, 23, 59, 59, 59).getMillis());
+      Date endOfOfferDate = new Date(new DateTime(2012, 11, 25, 23, 59, 59, 59).getMillis());
         if (dateTime.isBefore(endOfOfferDate.getTime())) {
     %>
     <div class="siteNotice" style="width:960px; margin-left:auto; margin-right:auto;">
-        <div style="height: 48px; padding-top: 6px; font-size: 1em; color: black; background-color: yellow;">
-            Diwali Discount! <strong>12% CashBack Sitewide*</strong> (only on prepaid orders above Rs 1000, TnC apply), Use Coupon Code <strong>DIWALISALE2012</strong><br/>
-            <span style="font-size: 1.2em;">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</span>
+        <div style="height: 44px; padding-top: 6px; font-size: 1em; color: black; background-color: white; border: solid 4px #4484c4;">
+            <strong>Great Online Shopping Festival</strong>! Over 500 products, upto <strong>80% off! *</strong>, <strong><a href="http://www.healthkart.com/online-shopping-festival?src=hk2">Click here to start Shopping!</a></strong><br/>
+            <span style="font-size: 1.2em; color: #e62580">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</span>
         </div>
     </div>
     <%

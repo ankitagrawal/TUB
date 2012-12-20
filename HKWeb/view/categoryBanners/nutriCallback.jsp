@@ -15,10 +15,7 @@
 </style>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
   <s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
-	<!--<img src="${pageContext.request.contextPath}/images/banners/top/nutrition_faq_banner.jpg" alt="All Your Nutrition Questions - Answered Here.">
-    -->
-    <img src="${pageContext.request.contextPath}/images/banners/top/nutrition_strip_banner3.jpg"
-         alt="Get Expert Advice on Diet for Fitness, Weight Loss & Bodybuilding">
+    <img src="${pageContext.request.contextPath}/images/banners/top/nutrition_strip_banner3.jpg" alt="Get Expert Advice on Diet for Fitness, Weight Loss & Bodybuilding">
   </s:link>
   <%--<a href="${pageContext.request.contextPath}/faq" >
     <img src="${pageContext.request.contextPath}/images/banners/top/nutrition_faq_banner.jpg" alt="All Your Nutrition Questions - Answered Here.">

@@ -19,7 +19,6 @@ import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.Order;
-import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.web.HealthkartResponse;
 
@@ -27,8 +26,6 @@ import com.hk.web.HealthkartResponse;
 public class PublishOnFBAction extends BaseAction {
 
     private static Logger      logger = LoggerFactory.getLogger(PublishOnFBAction.class);
-    @Autowired
-    ReferrerProgramManager     referrerProgramManager;
     @Autowired
     private RewardPointService rewardPointService;
 
@@ -47,7 +44,7 @@ public class PublishOnFBAction extends BaseAction {
                 && order.getPayment().getAmount() > 500.0) {
             RewardPoint fbRewardPoint = getRewardPointService().addRewardPoints(order.getUser(), null, order, 50.0, "FB Order Sharing", EnumRewardPointStatus.PENDING,
                     getRewardPointService().getRewardPointMode(EnumRewardPointMode.FB_SHARING));
-            referrerProgramManager.approveRewardPoints(Arrays.asList(fbRewardPoint), new DateTime().plusMonths(1).toDate());
+            rewardPointService.approveRewardPoints(Arrays.asList(fbRewardPoint), new DateTime().plusMonths(1).toDate());
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Published on facebook. Reward points added.");
             return new JsonResolution(healthkartResponse);
         } else {
@@ -72,6 +69,5 @@ public class PublishOnFBAction extends BaseAction {
     public void setRewardPointService(RewardPointService rewardPointService) {
         this.rewardPointService = rewardPointService;
     }
-    
-    
+
 }

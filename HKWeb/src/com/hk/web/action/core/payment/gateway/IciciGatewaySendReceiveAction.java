@@ -19,6 +19,7 @@ import com.opus.epg.sfa.java.Merchant;
 import com.opus.epg.sfa.java.PGResponse;
 import com.opus.epg.sfa.java.PostLib;
 import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.apache.commons.lang.math.NumberUtils;
@@ -107,7 +108,11 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
                 validatedData = IciciPaymentGatewayWrapper.validateEncryptedData(data, propertyFilePath);
             } catch (Exception e) {
                 logger.info("Payment failed while decrypting data in icici backend");
+                return new ForwardResolution("/pages/payment/paymentFail.jsp");
             }
+        }else{
+            logger.info("Received Empty response from Icici Gateway");
+            return new ForwardResolution("/pages/payment/paymentFail.jsp");
         }
 
         Map<String, String> paramMap = IciciPaymentGatewayWrapper.parseResponse(validatedData, responseMethod);
@@ -116,20 +121,16 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
 
         Double amount = NumberUtils.toDouble(amountStr);
         String authStatus = paramMap.get(CitrusPaymentGatewayWrapper.RespCode);
-        String responseMsg = ((String) paramMap.get(CitrusPaymentGatewayWrapper.Message)).replace('+', ' ');
+	    String responseMsg = paramMap.get(CitrusPaymentGatewayWrapper.Message);
+	    if (responseMsg != null) {
+		    responseMsg = ((String) responseMsg).replace('+', ' ');
+	    } else {
+		    responseMsg = "";
+	    }
         String gatewayOrderId = paramMap.get(CitrusPaymentGatewayWrapper.TxnID);
         String rrn = paramMap.get(CitrusPaymentGatewayWrapper.RRN);
         String ePGTxnID = paramMap.get(CitrusPaymentGatewayWrapper.ePGTxnID);
         String authIdCode = paramMap.get(CitrusPaymentGatewayWrapper.AuthIdCode);
-
-/*
-        String encodedTxnDateTime = paramMap.get(CitrusPaymentGatewayWrapper.TxnDateTime);
-        String txnDateTime = "";
-        try {
-            txnDateTime = URLDecoder.decode(encodedTxnDateTime, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-        }
-*/
 
         logger.info("response msg received from citrus is " + responseMsg + "for gateway order id " + gatewayOrderId);
         String merchantParam = null;

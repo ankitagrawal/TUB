@@ -23,6 +23,7 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.combo.ComboService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import org.slf4j.Logger;
@@ -53,14 +54,15 @@ public class InventoryServiceImpl implements InventoryService {
     @Autowired
     private ShippingOrderDao           shippingOrderDao;
     @Autowired
+    private ComboService               comboService;
+    @Autowired
     private OrderDao                   orderDao;
     @Autowired
-    private ProductService             productService;
-
-    @Autowired
     private BaseDao                    baseDao;
-	@Autowired
+	  @Autowired
     private UpdatePvPriceDao           updatePvPriceDao;
+    @Autowired
+    private ProductService             productService;
 	
 
     @Override
@@ -68,6 +70,11 @@ public class InventoryServiceImpl implements InventoryService {
         List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
             checkInventoryHealth(skuList, productVariant);
+        }else{
+            //all variants without sku marked out of stock
+            //todo check for product oos as well
+            productVariant.setOutOfStock(true);
+            productVariantService.save(productVariant);
         }
     }
 
@@ -148,6 +155,8 @@ public class InventoryServiceImpl implements InventoryService {
             productVariant.setOutOfStock(true);
             //First product variant goes out of stock
             productVariant = getProductVariantService().save(productVariant);
+            //calling Async method to set all out of stock combos to in stock
+            getComboService().markRelatedCombosOutOfStock(productVariant);
             LowInventory lowInventoryInDB = getLowInventoryDao().findLowInventory(productVariant);
             if (lowInventoryInDB == null) {
                 LowInventory lowInventory = new LowInventory();
@@ -165,7 +174,9 @@ public class InventoryServiceImpl implements InventoryService {
         } else if (availableUnbookedInventory > 0 && productVariant.isOutOfStock()) {
             logger.debug("Inventory status is positive now. Setting IN stock.");
             productVariant.setOutOfStock(false);
+          //calling Async method to set all out of stock combos to in stock
             productVariant = getProductVariantService().save(productVariant);
+            getComboService().markRelatedCombosOutOfStock(productVariant);
             product = productVariant.getProduct();
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
             if (!isJit && !product.isService() && !product.getDropShipping() && !product.getDeleted()) {
@@ -353,4 +364,7 @@ public class InventoryServiceImpl implements InventoryService {
         this.emailManager = emailManager;
     }
 
+  public ComboService getComboService() {
+    return comboService;
+  }
 }

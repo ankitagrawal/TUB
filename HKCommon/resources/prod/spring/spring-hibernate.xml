@@ -90,7 +90,7 @@
 			<value>DB_PASSWD</value>
 		</property>
 	  <property name="maxActive">
-			<value>150</value>
+			<value>200</value>
 		</property>
 		<property name="maxWait">
 			<value>15000</value>
@@ -113,7 +113,7 @@
 		<property name="initialSize">
 			<value>50</value>
 		</property>
-		<!--<property name="defaultTransactionIsolation" value="1"/>-->
+		<property name="defaultTransactionIsolation" value="1"/>
 	</bean>
 
 

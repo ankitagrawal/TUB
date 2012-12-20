@@ -4,10 +4,12 @@ import java.util.*;
 
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageType;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.image.ProductImageService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
@@ -280,20 +282,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductVariant validTryOnProductVariant(Product product) {
         if (product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)) {
-            for (ProductVariant productVariant : product.getInStockVariants()) {
-                int optionsCounter = 0;
-                for (ProductOption productOption : productVariant.getProductOptions()) {
-                    if (productOption.getName().equalsIgnoreCase("Color") || productOption.getName().equalsIgnoreCase("Gender") || productOption.getName().equalsIgnoreCase("Size")) {
-                        optionsCounter++;
+//            Category virtualTryOnCategory = new Category("Virtual Try On", "Try It Online");
+//            if (product.getCategories().contains(virtualTryOnCategory)) {
+                for (ProductVariant productVariant : product.getInStockVariants()) {
+                    int optionsCounter = 0;
+                    for (ProductOption productOption : productVariant.getProductOptions()) {
+                        if (productOption.getName().equalsIgnoreCase("Color") || productOption.getName().equalsIgnoreCase("Gender") || productOption.getName().equalsIgnoreCase("Size") || productOption.getName().equalsIgnoreCase("Virtual Try On")) {
+                            optionsCounter++;
+                        }
+                    }
+                    if (optionsCounter != 4) {
+                        return null;
+                    }
+                    if (!productImageService.searchProductImages(EnumImageType.FrontFacingEye.getId(), product, productVariant, false, null).isEmpty() && !productImageService.searchProductImages(EnumImageType.SideFacingEye.getId(), product, productVariant, false, null).isEmpty()) {
+                        return productVariant;
                     }
                 }
-                if (optionsCounter != 3) {
-                    return null;
-                }
-                if (!productImageService.searchProductImages(EnumImageType.FrontFacingEye.getId(), product, productVariant, false, null).isEmpty() && !productImageService.searchProductImages(EnumImageType.SideFacingEye.getId(), product, productVariant, false, null).isEmpty()) {
-                    return productVariant;
-                }
-            }
+//            }
         }
         return null;
     }
@@ -341,18 +346,18 @@ public class ProductServiceImpl implements ProductService {
         return false;
     }
 
-    public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
-        PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
-        Collections.sort(primaryCategoryHeading.getProducts(), new ProductOrderRankingComparator());
-        List<Product> sortedProductsByOrder = new ArrayList<Product>();
-        for (Product product : primaryCategoryHeading.getProducts()) {
-            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
-            if (isProductValid(product)){
-                sortedProductsByOrder.add(product);
-            }
-        }
-        return sortedProductsByOrder;
-    }
+//    public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
+//        PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
+//        Collections.sort(primaryCategoryHeading.getProducts(), new ProductOrderRankingComparator());
+//        List<Product> sortedProductsByOrder = new ArrayList<Product>();
+//        for (Product product : primaryCategoryHeading.getProducts()) {
+//            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
+//            if (isProductValid(product)){
+//                sortedProductsByOrder.add(product);
+//            }
+//        }
+//        return sortedProductsByOrder;
+//    }
 
 	public Map<String, List<Long>> getGroupedFilters(List<Long> filters){
 		Map<String, List<Long>> filterMap = new HashMap<String, List<Long>>();
@@ -549,14 +554,14 @@ public class ProductServiceImpl implements ProductService {
         return solrProduct;
     }
 
-    public List<SolrProduct> getProductsSortedByOrderRanking(PrimaryCategoryHeading primaryCategoryHeading) {
-        List<Product> products = primaryCategoryHeading.getProductSortedByOrderRanking();
-        List<SolrProduct> solrProducts = new ArrayList<SolrProduct>();
-        for (Product product : products){
-            solrProducts.add(createSolrProduct(product));
-        }
-        return solrProducts;
-    }
+//    public List<SolrProduct> getProductsSortedByOrderRanking(PrimaryCategoryHeading primaryCategoryHeading) {
+//        List<Product> products = primaryCategoryHeading.getProductSortedByOrderRanking();
+//        List<SolrProduct> solrProducts = new ArrayList<SolrProduct>();
+//        for (Product product : products){
+//            solrProducts.add(createSolrProduct(product));
+//        }
+//        return solrProducts;
+//    }
 
     public List<Product> getSimilarProducts(Product product) {
         List<Product> inStockSimilarProducts = new ArrayList<Product>();
@@ -573,5 +578,3 @@ public class ProductServiceImpl implements ProductService {
         return inStockSimilarProducts;
     }
 }
-
-

@@ -142,5 +142,11 @@ public enum EnumShippingOrderStatus {
                    EnumShippingOrderStatus.SO_CheckedOut.asShippingOrderStatus().getId());
        }
 
+    public static List<EnumShippingOrderStatus> getStatusForEnteringShippingCost() {
+        return Arrays.asList(EnumShippingOrderStatus.SO_Shipped,
+                EnumShippingOrderStatus.SO_Lost,
+                EnumShippingOrderStatus.SO_Returned,
+                EnumShippingOrderStatus.SO_Delivered);
+    }
 
 }

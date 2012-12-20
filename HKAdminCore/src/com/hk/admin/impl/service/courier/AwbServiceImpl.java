@@ -47,8 +47,10 @@ public class AwbServiceImpl implements AwbService {
         ThirdPartyAwbDetails thirdPartyAwbDetails = thirdPartyAwbService.getThirdPartyAwbDetails(shippingOrder, weightInKg);
         if (thirdPartyAwbDetails != null) {
             Awb hkAwb = createAwb(courier, thirdPartyAwbDetails.getTrackingNumber(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
+			if (shippingOrder.getAmount() == 0){
+				thirdPartyAwbDetails.setCod(false);
+			}
             hkAwb = thirdPartyAwbService.syncHKAwbWithThirdPartyAwb(hkAwb, thirdPartyAwbDetails);
-
             thirdPartyAwbService.syncHKCourierServiceInfo(courierId, thirdPartyAwbDetails);
 
             return hkAwb;
@@ -85,6 +87,10 @@ public class AwbServiceImpl implements AwbService {
         return awbDao.findByCourierAwbNumber(courier, awbNumber);
     }
 
+	 public Awb findByCourierAwbNumber(List<Courier> couriers, String awbNumber) {
+        return awbDao.findByCourierAwbNumber(couriers, awbNumber);
+    }
+
     public List<Awb> getAllAwb() {
         return awbDao.getAll(Awb.class);
     }
@@ -93,7 +99,8 @@ public class AwbServiceImpl implements AwbService {
         return awbDao.getAlreadyPresentAwb(courier, awbNumberList);
     }
 
-  public  Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod) {
+
+  	public  Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod) {
         Awb awb = new Awb();
         awb.setCourier(courier);
         awb.setAwbNumber(trackingNumber);

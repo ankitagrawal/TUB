@@ -96,10 +96,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
            return hkapiBaseDTO;
         }
         if(!validateAppForOrderPlacement(appToken)){
-            hkapiBaseDTO.setStatus(HKAPIOperationStatus.ERROR);
-            hkapiBaseDTO.setErrorCode(EnumHKAPIErrorCode.UnauthorizedToPlaceOrder.getId());
-            hkapiBaseDTO.setMessage(EnumHKAPIErrorCode.UnauthorizedToPlaceOrder.getMessage());
-            return hkapiBaseDTO;
+            return new HKAPIBaseDTO(EnumHKAPIErrorCode.UnauthorizedToPlaceOrder);
         }
         Set<CartLineItem> cartLineItems = new HashSet<CartLineItem>();
         // get hkuser object if he already exists or create a new hkuser
@@ -125,9 +122,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
             String hkOrderId=order.getId().toString();
             hkapiBaseDTO.setData(hkOrderId);
         } else {
-            hkapiBaseDTO.setStatus(HKAPIOperationStatus.ERROR);
-            hkapiBaseDTO.setErrorCode(EnumHKAPIErrorCode.EmptyCart.getId());
-            hkapiBaseDTO.setMessage(EnumHKAPIErrorCode.EmptyCart.getMessage());
+            hkapiBaseDTO=new HKAPIBaseDTO(EnumHKAPIErrorCode.EmptyCart);
         }
         return hkapiBaseDTO;
     }

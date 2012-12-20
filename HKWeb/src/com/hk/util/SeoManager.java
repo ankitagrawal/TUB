@@ -2,6 +2,7 @@ package com.hk.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.apache.commons.lang.StringUtils;
 
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
@@ -22,23 +23,27 @@ public class SeoManager {
     private MenuHelper         menuHelper;
 
     public SeoData generateSeo(String id) {
-        SeoData seoData = getBaseDao().get(SeoData.class, id);
-        Product product = getProductService().getProductById(id);
-
-        // TODO: brand names with space like Sally Hansen come as Sally+Hansen will change this when we move to ids
-        // instead of strings
-        String brandName = id.replaceAll("\\+", " ");
-        if (seoData == null) {
-            if (product != null) {
-                return generateSeoForProduct(id);
-            } else if (id.contains(KEY_BRAND_IN_CAT)) {
-                return generateSeoForBrandInCategory(id);
-            } else if (getProductService().doesBrandExist(brandName)) {
-                return generateSeoForBrand(id);
-            } else {
-                return generateSeoForCategory(id);
-            }
-        } else {
+	    SeoData seoData = getBaseDao().get(SeoData.class, id);
+	    Product product = getProductService().getProductById(id);    	    
+	    if (seoData == null) {
+		    if (product != null) {
+			    return generateSeoForProduct(id);
+		    } else {
+			    // TODO: brand names with space like Sally Hansen come as Sally+Hansen will change this when we move to ids
+			    String brandName = id.replaceAll("\\+", " ");
+			    if (StringUtils.isNotBlank(brandName)) {
+				    String[] sArr = StringUtils.split(brandName, "||");
+				    brandName = sArr[0];
+			    }
+			    if (id.contains(KEY_BRAND_IN_CAT)) {
+				    return generateSeoForBrandInCategory(id);
+			    } else if (getProductService().doesBrandExist(brandName)) {
+				    return generateSeoForBrand(id);
+			    } else {
+				    return generateSeoForCategory(id);
+			    }
+		    }
+	    } else {
             if (product != null) {
                 return checkAndSetAllSeoTagsNotFilledForProducts(seoData, product);
             } else {
@@ -67,7 +72,7 @@ public class SeoManager {
             seoData.setMetaKeyword("buy " + productName + " , " + productName + " india, buy " + productName + " india, buy " + productName + " online, buy " + productName + " online india");
         }
         if (seoData.getMetaDescription() == null) {
-            seoData.setMetaDescription("Buy " + productName + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
+            seoData.setMetaDescription("Buy " + productName + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 300");
         }
         return seoData;
     }
@@ -80,7 +85,7 @@ public class SeoManager {
             seoData.setMetaKeyword("buy " + name + ", " + name + " india, buy " + name + " india, buy " + name + " online, buy " + name + " online india");
         }
         if (seoData.getMetaDescription() == null) {
-            seoData.setMetaDescription("Buy " + name + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
+            seoData.setMetaDescription("Buy " + name + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 300");
         }
         return seoData;
     }
@@ -97,7 +102,7 @@ public class SeoManager {
         seoData.setH1(product.getName());
         seoData.setTitle( productName + " | Buy Online " + productName + " in India");
         seoData.setMetaKeyword(productName + ", buy " + productName + ", buy " + productName + " in india, buy " + productName + " online");
-        seoData.setMetaDescription("Buy " + productName + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
+        seoData.setMetaDescription("Buy " + productName + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 300");
         seoData.setDescriptionTitle("About " + productName);
 
         // seoData.metaDescription=product.overview;
@@ -115,7 +120,7 @@ public class SeoManager {
         seoData.setH1(name);
         seoData.setTitle(name + " | Buy Online " + name + " in India");
         seoData.setMetaKeyword("buy " + name + ", " + name + " india, buy " + name + " india, buy " + name + " online, buy " + name + " online india");
-        seoData.setMetaDescription("Buy " + name + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
+        seoData.setMetaDescription("Buy " + name + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 300");
         seoData.setDescriptionTitle("About " + name + "");
 
         return seoData;
@@ -124,6 +129,10 @@ public class SeoManager {
     private SeoData generateSeoForBrand(String brandName) {
         SeoData seoData = new SeoData();
         seoData.setId(brandName);
+	    if (StringUtils.isNotBlank(brandName)) {
+		    String[] sArr = StringUtils.split(brandName, "||");
+		    brandName = sArr[0];
+	    }
         seoData.setH1(brandName);
         seoData.setTitle(brandName);
         seoData.setMetaKeyword("buy " + brandName + " products, " + brandName + " products shop online ");

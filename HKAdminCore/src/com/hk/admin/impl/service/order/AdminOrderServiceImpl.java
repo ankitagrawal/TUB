@@ -1,5 +1,19 @@
 package com.hk.admin.impl.service.order;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
@@ -25,8 +39,8 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.manager.StoreOrderService;
 import com.hk.manager.SMSManager;
+import com.hk.manager.StoreOrderService;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
@@ -39,14 +53,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.service.ServiceLocatorFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @Service
 public class AdminOrderServiceImpl implements AdminOrderService {
@@ -139,6 +145,11 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 for (ShippingOrder shippingOrder : order.getShippingOrders()) {
                     getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
                 }
+            } else {
+                Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+                for (CartLineItem cartLineItem : cartLineItems) {
+                    inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+                }
             }
 
             affilateService.cancelTxn(order);
@@ -149,7 +160,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             List<RewardPoint> rewardPointList = getRewardPointService().findByReferredOrder(order);
             if (rewardPointList != null && rewardPointList.size() > 0) {
                 for (RewardPoint rewardPoint : rewardPointList) {
-                    referrerProgramManager.cancelReferredOrderRewardPoint(rewardPoint);
+                    rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
             // Send Email Comm. for HK Users Only
@@ -195,11 +206,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
         User user = userService.getLoggedInUser();
+        //User user = UserCache.getInstance().getLoggedInUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
         logOrderActivity(order, user, orderLifecycleActivity, null);
     }
 
     public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
+        //User user = UserCache.getInstance().getAdminUser();
         User user = userService.getAdminUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
         logOrderActivity(order, user, orderLifecycleActivity, comments);
@@ -220,10 +233,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         boolean shouldUpdate = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-            if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
-                shouldUpdate = false;
-                break;
-            }
+	        if (!shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
+		        if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
+			        shouldUpdate = false;
+			        break;
+		        }
+	        }
         }
 
         if (shouldUpdate) {
@@ -313,9 +328,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     @Transactional
     public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
-
+        //User loggedInUser = UserCache.getInstance().getLoggedInUser();
+        User loggedInUser = getUserService().getLoggedInUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
-        logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
+        logOrderActivity(order, loggedInUser, orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
 
         return order;
     }
@@ -334,7 +350,14 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 order = getOrderService().save(order);
             }
         } else {
-            shippingOrders = getOrderService().createShippingOrders(order);
+	        if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
+	            //User adminUser = UserCache.getInstance().getAdminUser();
+	            User adminUser = getUserService().getAdminUser();
+		        orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
+		        //DO Nothing for B2B Orders
+	        } else {
+		        shippingOrders = getOrderService().createShippingOrders(order);
+	        }
         }
 
         if (shippingOrders != null && shippingOrders.size() > 0) {
@@ -348,7 +371,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
              * Order lifecycle activity logging - Order split to shipping orders
              */
             String comments = "No. of Shipping Orders created  " + shippingOrders.size();
-            orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
+            //User adminUser = UserCache.getInstance().getAdminUser();
+            User adminUser = getUserService().getAdminUser();
+            orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
 
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {

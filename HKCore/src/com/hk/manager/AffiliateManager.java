@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.RoleCache;
 import com.hk.constants.affiliate.AffiliateConstants;
 import com.hk.constants.affiliate.EnumAffiliateStatus;
 import com.hk.constants.affiliate.EnumAffiliateTxnType;
@@ -25,7 +26,6 @@ import com.hk.impl.dao.affiliate.AffiliateTxnDaoImpl;
 import com.hk.pact.dao.CheckDetailsDao;
 import com.hk.pact.dao.affiliate.AffiliateCategoryDao;
 import com.hk.pact.dao.affiliate.AffiliateTxnDao;
-import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.discount.CouponService;
@@ -35,8 +35,9 @@ public class AffiliateManager {
 
     @Autowired
     private UserService          userService;
-    @Autowired
-    private RoleService          roleService;
+    /*
+     * @Autowired private RoleService roleService;
+     */
     @Autowired
     private CouponService        couponService;
     @Autowired
@@ -52,7 +53,7 @@ public class AffiliateManager {
     @Autowired
     private AffiliateTxnDao      affiliateTxnDao;
     @Autowired
-    private CheckDetailsDao checkDetailsDao;
+    private CheckDetailsDao      checkDetailsDao;
     @Autowired
     private AffiliateCategoryDao affiliateCategoryCommissionDao;
 
@@ -66,7 +67,8 @@ public class AffiliateManager {
         Affiliate affiliate = new Affiliate();
         try {
             affiliate.setUser(getUserManager().signup(email, name, password, null, RoleConstants.HK_AFFILIATE_UNVERIFIED));
-            affiliate.getUser().getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_UNVERIFIED));
+            // affiliate.getUser().getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_UNVERIFIED));
+            affiliate.getUser().getRoles().add(RoleCache.getInstance().getRoleByName(RoleConstants.HK_UNVERIFIED).getRole());
         } catch (HealthkartSignupException e) {
             throw new HealthkartSignupException("affiliate by this email id already exists");
         }
@@ -79,12 +81,13 @@ public class AffiliateManager {
         affiliate.setAffiliateType(affiliateType);
         affiliate.setValidDays(AffiliateConstants.affiliateExpiryDays);
         affiliate.setWeeklyCouponLimit(AffiliateConstants.weeklyCouponLimit);
-	    affiliate.setAffiliateStatus(EnumAffiliateStatus.Unverified.asAffiliateStatus());
+        affiliate.setAffiliateStatus(EnumAffiliateStatus.Unverified.asAffiliateStatus());
         affiliate.setWebsiteName(websiteName);
-	    Offer offer = getOfferManager().getOfferForReferralAndAffiliateProgram();
-	    affiliate.setOffer(offer);
-	    getAffilateService().save(affiliate);
-//        getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false, EnumCouponType.AFFILIATE.asCouponType());
+        Offer offer = getOfferManager().getOfferForReferralAndAffiliateProgram();
+        affiliate.setOffer(offer);
+        getAffilateService().save(affiliate);
+        // getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false,
+        // EnumCouponType.AFFILIATE.asCouponType());
 
         getEmailManager().affiliateSignupEmail(affiliate.getUser().getEmail(), affiliate.getUser().getName());
         return affiliate;
@@ -100,31 +103,33 @@ public class AffiliateManager {
         return getAffilateService().getAffilateByUser(user);
     }
 
-    public Affiliate  userToAffiliate(User user, String websiteName, Long affiliateMode, Long affiliateType) throws HealthkartSignupException {
+    public Affiliate userToAffiliate(User user, String websiteName, Long affiliateMode, Long affiliateType) throws HealthkartSignupException {
         if (getAffilateService().getAffiliateByUserId(user.getId()) != null) {
             throw new HealthkartSignupException("User already exists by this id/email");
         }
         Affiliate affiliate = new Affiliate();
         Set<Role> roles = user.getRoles();
-        roles.add(getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED));
+        // roles.add(getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED));
+        roles.add(RoleCache.getInstance().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED).getRole());
         user.setRoles(roles);
         getUserService().save(user);
         affiliate.setUser(user);
         affiliate.setWebsiteName(websiteName);
-	    affiliate.setAffiliateMode(affiliateMode);
-	    affiliate.setAffiliateType(affiliateType);
-	    affiliate.setValidDays(AffiliateConstants.affiliateExpiryDays);
-	    affiliate.setWeeklyCouponLimit(AffiliateConstants.weeklyCouponLimit);
-	    affiliate.setAffiliateStatus(EnumAffiliateStatus.Unverified.asAffiliateStatus());
-	    String code = createCode(affiliate.getUser());
+        affiliate.setAffiliateMode(affiliateMode);
+        affiliate.setAffiliateType(affiliateType);
+        affiliate.setValidDays(AffiliateConstants.affiliateExpiryDays);
+        affiliate.setWeeklyCouponLimit(AffiliateConstants.weeklyCouponLimit);
+        affiliate.setAffiliateStatus(EnumAffiliateStatus.Unverified.asAffiliateStatus());
+        String code = createCode(affiliate.getUser());
         while (getCouponService().findByCode(code) != null) {
             code = createCode(affiliate.getUser());
         }
         affiliate.setCode(code);
-	    Offer offer = getOfferManager().getOfferForReferralAndAffiliateProgram();
-	    affiliate.setOffer(offer);
-	    getAffilateService().save(affiliate);
-//	    getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false, EnumCouponType.AFFILIATE.asCouponType());
+        Offer offer = getOfferManager().getOfferForReferralAndAffiliateProgram();
+        affiliate.setOffer(offer);
+        getAffilateService().save(affiliate);
+        // getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false,
+        // EnumCouponType.AFFILIATE.asCouponType());
         getEmailManager().affiliateSignupEmail(user.getEmail(), user.getName());
         return affiliate;
     }
@@ -135,46 +140,54 @@ public class AffiliateManager {
         return affiliateAccountAmount;
     }
 
-	public Double getPayableAmount(Affiliate affiliate) {
-		return getAffiliateTxnDao().getPayableAmount(affiliate);
-	}
+    public Double getPayableAmount(Affiliate affiliate) {
+        return getAffiliateTxnDao().getPayableAmount(affiliate);
+    }
 
-
-	public void paidToAffiiliate(Affiliate affiliate, Double amountPaid, CheckDetails checkDetails) {
+    public void paidToAffiiliate(Affiliate affiliate, Double amountPaid, CheckDetails checkDetails) {
         AffiliateTxnType affiliateTxnType = getAffilateService().getAffiliateTxnType(EnumAffiliateTxnType.SENT.getId());
-	    AffiliateTxn affiliateTxn = getAffiliateTxnDao().saveTxn(affiliate, amountPaid, affiliateTxnType, null);
-	    getAffiliateTxnDao().markDueAffiliateTxnAsPaid(affiliate);
+	      AffiliateTxn affiliateTxn = getAffiliateTxnDao().saveTxn(affiliate, amountPaid, affiliateTxnType, null, checkDetails.getIssueDate());
+	      getAffiliateTxnDao().markDueAffiliateTxnAsPaid(affiliate, checkDetails.getIssueDate());
         checkDetails.setAffiliateTxn(affiliateTxn);
         checkDetails.setAffiliate(affiliate);
         getCheckDetailsDao().save(checkDetails);
     }
 
     public void verifyAffiliate(User user, String customMessage) {
-        Role unverifiedAffiliateRole = getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED);
+        // Role unverifiedAffiliateRole = getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED);
+        Role unverifiedAffiliateRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED).getRole();
         if (user.getRoles().contains(unverifiedAffiliateRole)) {
             user.getRoles().remove(unverifiedAffiliateRole);
-            Role hkUnVerifiedRole = getRoleService().getRoleByName(RoleConstants.HK_UNVERIFIED);
+            // Role hkUnVerifiedRole = getRoleService().getRoleByName(RoleConstants.HK_UNVERIFIED);
+
+            Role hkUnVerifiedRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_UNVERIFIED).getRole();
             if (user.getRoles().contains(hkUnVerifiedRole)) {
                 user.getRoles().remove(hkUnVerifiedRole);
             }
-            user.getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_USER));
-            user.getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE));
+            /*
+             * user.getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_USER));
+             * user.getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE));
+             */
+
+            user.getRoles().add(RoleCache.getInstance().getRoleByName(RoleConstants.HK_USER).getRole());
+            user.getRoles().add(RoleCache.getInstance().getRoleByName(RoleConstants.HK_AFFILIATE).getRole());
+
             user = getUserService().save(user);
             Affiliate affiliate = getAffilateService().getAffilateByUser(user);
-	        affiliate.setAffiliateStatus(EnumAffiliateStatus.Verified.asAffiliateStatus());
+            affiliate.setAffiliateStatus(EnumAffiliateStatus.Verified.asAffiliateStatus());
             getAffiliateCategoryCommissionDao().insertCategoryCommissionsAffiliateWise(affiliate);
             getAffilateService().save(affiliate);
             getEmailManager().affiliateVerfiedEmail(user.getEmail(), user.getName(), affiliate.getCode(), customMessage);
         }
     }
 
-	public void rejectAffiliate(User user) {
-			Affiliate affiliate = getAffilateService().getAffilateByUser(user);
-			affiliate.setAffiliateStatus(EnumAffiliateStatus.Rejected.asAffiliateStatus());
-			getAffilateService().save(affiliate);
-	}
+    public void rejectAffiliate(User user) {
+        Affiliate affiliate = getAffilateService().getAffilateByUser(user);
+        affiliate.setAffiliateStatus(EnumAffiliateStatus.Rejected.asAffiliateStatus());
+        getAffilateService().save(affiliate);
+    }
 
-	public UserService getUserService() {
+    public UserService getUserService() {
         return userService;
     }
 
@@ -182,13 +195,10 @@ public class AffiliateManager {
         this.userService = userService;
     }
 
-    public RoleService getRoleService() {
-        return roleService;
-    }
-
-    public void setRoleService(RoleService roleService) {
-        this.roleService = roleService;
-    }
+    /*
+     * public RoleService getRoleService() { return roleService; } public void setRoleService(RoleService roleService) {
+     * this.roleService = roleService; }
+     */
 
     public EmailManager getEmailManager() {
         return emailManager;

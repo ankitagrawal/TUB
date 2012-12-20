@@ -3,6 +3,7 @@ package com.hk.pact.service.shippingOrder;
 import com.akube.framework.dao.Page;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.courier.Zone;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
@@ -72,5 +73,11 @@ public interface ShippingOrderService {
 	public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, String comments);
 
 	public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments);
+
+	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
+
+	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder);
+
+	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);
 
 }

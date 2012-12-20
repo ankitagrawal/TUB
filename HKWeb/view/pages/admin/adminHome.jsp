@@ -64,8 +64,10 @@
 	<shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction">Run Ant Tasks </s:link></h3>
 	</shiro:hasRole>
-    <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+	<shiro:hasPermission name="<%=PermissionConstants.POPULATE_BUSY_DATA%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction"> Populate Busy Data </s:link></h3>
+	</shiro:hasPermission>
+	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link beanclass="com.hk.web.action.admin.user.PopulateUserDetailAction"> Populate User Detail Data </s:link></h3>
 	</shiro:hasRole>
 		<%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
@@ -224,7 +226,7 @@
 		<s:param name="courierDownloadFunctionality" value="false"/>
 	</s:link></h3>
 
-	<shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
+	<!--<shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
 					event="generateCourierReport">Add/Edit Hub
@@ -234,7 +236,7 @@
 	</shiro:hasRole>
 
 
-</div>
+--></div>
 
 <div class="cl"></div>
 
@@ -323,6 +325,8 @@
 	<h3><s:link beanclass="com.hk.web.action.admin.email.SMSHomeAction">Send SMS</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.report.ReportAction">Report Manager</s:link></h3>
+
+	<h3><s:link beanclass="com.hk.web.action.report.AdvReportAction">Adv. Reports</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.marketing.GoogleBannedWordAction">Google Banned Words Report</s:link></h3>
