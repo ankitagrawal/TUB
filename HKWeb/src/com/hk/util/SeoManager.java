@@ -32,7 +32,7 @@ public class SeoManager {
 			    // TODO: brand names with space like Sally Hansen come as Sally+Hansen will change this when we move to ids
 			    String brandName = id.replaceAll("\\+", " ");
 			    if (StringUtils.isNotBlank(brandName)) {
-				    String[] sArr = StringUtils.split(id, "||");
+				    String[] sArr = StringUtils.split(brandName, "||");
 				    brandName = sArr[0];
 			    }
 			    if (id.contains(KEY_BRAND_IN_CAT)) {

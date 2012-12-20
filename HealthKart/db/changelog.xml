@@ -10438,7 +10438,12 @@
     <changeSet author="Rohit (generated)" id="1355468432445-7">
         <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="product_variant_supplier_info" constraintName="fk_product_variant_supplier_info_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1355737809715-1">
+    <changeSet author="Ajeet (generated)" id="1355912895463-1">
+        <addColumn tableName="traffic_tracking">
+            <column name="returning_user" type="INT"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Tarun (generated)" id="1355737809715-1">
         <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="pincode"/>
     </changeSet>
 </databaseChangeLog>
