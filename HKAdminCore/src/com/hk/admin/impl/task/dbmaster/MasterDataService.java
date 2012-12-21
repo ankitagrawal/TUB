@@ -146,6 +146,8 @@ public class MasterDataService {
     ConsignmentLifecycleStatusSeedData consignmentLifecycleStatusSeedData;
 	@Autowired
 	ReplacementOrderReasonSeedData replacementOrderReasonSeedData;
+	@Autowired
+	DispatchLotStatusSeedData dispatchLotStatusSeedData;
 
 	public void insert() {
 
@@ -299,5 +301,8 @@ public class MasterDataService {
 
 	    logger.debug("inserting consignment Replacement order reasons");
         replacementOrderReasonSeedData.invokeInsert();
+
+		logger.debug("inserting Dispatch Lot Status");
+		dispatchLotStatusSeedData.invokeInsert();
     }
 }

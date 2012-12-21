@@ -135,4 +135,10 @@ public interface MasterDataDao
     public List<Country> getAllCountry();
 
 	public List<Zone> getAllZones();
+
+	public List<DispatchLotStatus> getDispatchLotStatusList();
+
+	public List<String> getSourceAndDestinationListForDispatchLot();
+
+	public List<String> getShipmentStatusForDispatchLot();
 }
