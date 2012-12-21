@@ -1,5 +1,5 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/gosf.js"></script>
+
 <script>// Executes the function when DOM will be loaded fully
 $(document).ready(function () {
     // hover property will help us set the events for mouse enter and mouse leave
@@ -16,7 +16,7 @@ $(document).ready(function () {
             }
             );
 
-    initSliderPaginator();
+    
 });
 </script>
 
@@ -46,11 +46,3 @@ $(document).ready(function () {
 
 </div>
 
-<div id="slidebox">
-    <a class="close"></a>
-
-    <p>The Great Online Shopping Festival Starts Midnight. Do Visit Us for Discounts Up to 91%!</p>
-
-    <h2>Keep your wallets ready and your fingers on the mouse!</h2>
-    <a class="more" target="_blank" href="http://www.healthkart.com/online-shopping-festival">Browse Our Range >> </a>
-</div>

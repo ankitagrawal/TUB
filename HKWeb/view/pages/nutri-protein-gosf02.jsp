@@ -56,8 +56,8 @@
                        <div class="cl"></div>
 
         <div class="prodBoxes">
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1147' productDesc='This helps build muscle mass. It also promotes faster post-workout recovery and can be used by both men and women.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1208' productDesc='Pick Pure Platinum Whey for better mass gains with great taste. Eliminate muscle wasting and benefit from quick absorption. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT594' productDesc='Fortified with essential nutrients and high-quality proteins to help one stay in shape.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT475' productDesc='Feed your muscles the best protein. Promote muscle growth and improve your athletic performance with Gaspari IntraPro Pure Whey.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1157' productDesc='This offers Gold Standard protein, that aids in building muscles and stimulating protein synthesis'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1209' productDesc='Cramped with whey protein isolates that help you sculpt lean muscles with confidence'/>
@@ -74,7 +74,12 @@
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1343' productDesc='Optimizes anabolism, triggers growth, and strengths of muscles.'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1359' productDesc='If you want to gain lean muscle with the energy to power your workouts, then grab QNT Metapure Mass+ Today!'/>
 			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1279' productDesc='Professional support for your physique, with low sugar, ensuring that you pick up only lean muscle mass without the added fat. '/>
-			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1718' productDesc='Get the best Casein available & juggernaut your way to your cherished body. Contains added enzymes to facilitate digestion. '/>			
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT1718' productDesc='Get the best Casein available & juggernaut your way to your cherished body. Contains added enzymes to facilitate digestion. '/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT637' productDesc='A high quality mass gain supplement, it is a clinically tested and effective nutritional supplement with all the essential nutrients.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT782' productDesc='Build muscle mass, increase stamina and fortify your body with essential proteins.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT680' productDesc='Maintain and tone-up muscles with high quality protein, tursted by athletes worldwide.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT679' productDesc='Provides a 6 hour protein release, so that your muscles are constantly fed & nourished.'/>
+			<s:layout-render name="/layouts/embed/_productThumb200gosf.jsp" productId='NUT681' productDesc='A whey protein that helps build muscle mass and enhance ones nitrogen balance.'/>			
          </div>
 
         <div class="cl"></div>

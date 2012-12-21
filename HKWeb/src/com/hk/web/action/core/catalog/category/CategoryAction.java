@@ -47,6 +47,7 @@ public class CategoryAction extends BaseAction {
     @DontValidate
     @DefaultHandler
     public Resolution pre() {
+      
         headings = primaryCategoryHeadingDao.getHeadingsByCategory(category);
         String categoryName = "default";
         if (category != null) {

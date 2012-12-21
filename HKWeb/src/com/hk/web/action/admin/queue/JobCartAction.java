@@ -471,6 +471,7 @@ public class JobCartAction extends BaseAction {
 
     private ShippingOrderSearchCriteria getShippingOrderSearchCriteria(List<EnumShippingOrderStatus> shippingOrderStatuses) {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+	    shippingOrderSearchCriteria.setSearchForPrinting(true);
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(shippingOrderStatuses));
 
         if (baseGatewayOrderId != null) {
