@@ -38,10 +38,11 @@
 
 				var reconciliationTypeOptions = '<select class="reconciliationType valueChange" name="rvLineItems[' + nextIndex + '].reconciliationType">';
 			<c:forEach items="${reconciliationTypeList}" var="reconciliationTypeVar">
-				reconciliationTypeOptions += '<option value="'+${reconciliationTypeVar.id}+
-				'">' + "${reconciliationTypeVar.name}" + '</option>';
+				reconciliationTypeOptions += '<option value="'+${reconciliationTypeVar.id}+'">' + "${reconciliationTypeVar.name}" + '</option>';
 			</c:forEach>
+				var test = 9;
 			
+			  var link = '<s:link  class ="singlesave" beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="saveRv">save</s:link>';
 
 				var newRowHtml =
 						'<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
@@ -51,16 +52,16 @@
 						'  </td>' +
 						'  <td class="pvDetails"></td>' +
 						'  <td>' +
-						'    <input type="text" name="rvLineItems[' + nextIndex + '].qty" />' +
+						'    <input type="text" id="quantity" name="rvLineItems[' + nextIndex + '].qty" />' +
 						'  </td>' +
 						'<td>'+
-						'${rvLineItem[nextIndex].qty}'+
+						'<input type="text" id="reconciliedqty" name="rvLineItems[' + nextIndex + '].reconciliedQty" />'+
 						'</td>' +
-						'   <td>' +
+						'<td>' +
 						reconciliationTypeOptions +
 						'</select>' +
 						'<input type="hidden" value="finance" class="reconciliationTypeIdentifier"/>' +
-						'<input type="hidden" name="listIndex" value="' + nextIndex + '"/>' +
+//						'<input type="hidden" class="rowcount" name="listIndex" value="' + nextIndex + '"/>' +
 				'</td>' +
 				'  <td>' +
 				'    <input class="costPrice" type="text" name="rvLineItems[' + nextIndex + '].costPrice" />' +
@@ -81,7 +82,7 @@
 				'    <textarea rows="4" columns="10" name="rvLineItems[' + nextIndex + '].remarks" style="height:50px;"/>' +
 				'  </td>' +
 				'<td> ' +
-				'<input type="submit"  id ="singleSave" value="saveRv"/>'+
+				link +
 				'</td>' +
 				'</tr>';
 
@@ -110,27 +111,83 @@
 						}
 						);
 			});
-		   $('.batch').live("change",function(){
-			   var variantRow = $(this).parents('.lineItemRow');
-			  var batchNo = $(this).val();
-			   $.getJSON(
-					     $('#batchInfoLink').attr('href'),{batchNumber :batchNo , warehouse : ${whAction.setWarehouse.id},listIndex:},
-					     function(res) {
-						     if(res.code == '<%=HealthkartResponse.STATUS_OK%>'){
+			$('.batch').live("change", function() {
+				var variantRow = $(this).parents('.lineItemRow');
+				var batchNo = $(this).val();
+				var qty = variantRow.find('#quantity').val();
+				var lastIndex = $('.lastRow').attr('count');
+				$.getJSON(
+						$('#batchInfoLink').attr('href'), {batchNumber :batchNo , askedQty:qty, warehouse : ${whAction.setWarehouse.id},listIndex:lastIndex},
+						function(res) {
+							if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 
 
-						     }   else{
-							    $('.error').show();
+							} else {
+								$('.error').show();
 								$('.error').html('<h2>' + res.message + '</h2>');
-								$('.error').fadeIn(10*1000);
-						     }
-					     }
-					   );
+								$('.error').fadeIn(10 * 1000);
+							}
+						}
+						);
 
 
-		   });
+			});
 		
+		  $('.singlesave').live('click',function(){
+			 alert('j');
+			  var queryString='';
+			  var sep='';
+			  var qty = $('#quantity').val() ;
+			  var variant =$('.variant').val();
+			  var batch = $('.batch').val();
+			  if(qty == null || qty.trim()== '' || variant == null || variant.trim() == '' || batch ==null || batch.trim() =='' ){
+				  alert("ProductVariant/Qty/Batch are manadatory");
+				  return false;
+			  }
+			  $(this).parents('tr').find('input,select,textarea').each(function(){
+				if($(this).attr('class') == 'reconciliationTypeIdentifier'){
+				return;
+				}
+				queryString = queryString + sep +$(this).attr('name')+'='+escape($(this).attr('value'));
+				sep = '&';
+			  });			
+			  console.log(queryString);
+			  var href =$('#reconForm').attr('action');
+			  console.log('ee'+href);
 
+			  $.ajax({
+				  type:"POST",
+				  url : href + '?saveRv=',
+				  data:queryString,
+				  dataType:'json',
+				  success: function(data) {
+					  if (data.code == '<%=HealthkartResponse.STATUS_OK%>') {
+
+						  $(this).parents('tr').find('input,select,textarea').each(function() {
+							  $(this).attr("readonly", "readonly");
+						  });
+						  $(this).css("display", "none");
+						  alert('reconqty'+data.data.rvLineItems[0].reconciliedQty);
+						  if(data.data.rvLineItems.size > 1){
+
+						  }
+//						  $(this).parents('tr').find('#reconciliedqty').val(data.data.rvLineItems[0].reconciliedQty);
+					  }
+					  if (data.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+						  $('.error').empty();
+						  $('.error').html('<h2>' + data.message + '</h2>');
+						  $('.error').show();
+					  }
+					  console.log(data) ;
+					 },
+					 error:function onError() {
+						alert('Could not add product to cart please try again');
+					}
+
+
+			  });
+			   return false
+		  });
 
 		});
 	</script>
@@ -144,10 +201,11 @@
 		        </s:link>
 		<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="batchInfoLink"
 		        event="getBatchDetails"></s:link>
+		<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" class="singleSaveLink" event="saveRv"/>
 	</div>
 	<h2>Edit Reconciliation Voucher</h2>
 	<h2>RV No # ${pa.reconciliationVoucher.id}</h2>
-	<s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
+	<s:form id="reconForm" beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
 		<s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
 		<table>
 			<tr>
@@ -193,9 +251,9 @@
 			<c:forEach var="rvLineItem" items="${pa.reconciliationVoucher.rvLineItems}" varStatus="ctr">
 				<c:set var="productVariant" value="${rvLineItem.sku.productVariant}"/>
 				<s:hidden name="rvLineItems[${ctr.index}]" value="${rvLineItem.id}"/>
-				<%--<c:set var="currentIndex" value="${ctr.index}"/>--%>
-				<s:hidden name="listIndex" value="${ctr.index}"/>
-				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+
+				<%--<s:hidden name="listIndex" value="${ctr.index}"/>--%>
+				<tr count="${ctr.index}" id="rowno" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
 					<td>
 							${productVariant.id}
 					</td>
@@ -257,16 +315,11 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 
-			$('.singleSave').click(function disableSaveButton() {
-				$(this).css("display", "none");
-			});
-
 			$('.saveButton').click(function disableSaveButton() {
 				$(this).css("display", "none");
 			});
 		});
 	</script>
 </s:layout-component>
-
 
 </s:layout-render>

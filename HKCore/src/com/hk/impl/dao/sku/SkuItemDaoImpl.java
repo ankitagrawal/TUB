@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Projections;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuItemDao;
 
@@ -44,6 +49,14 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 			minMRPUnbookedSkuGroup = (SkuGroup) getSession().createQuery(query).setParameter("skuItemId", firstUnBookedSkuItem.get(0)).uniqueResult();
 		}
 		return minMRPUnbookedSkuGroup;
+	}
+
+	public List<SkuItem> getInStockSkuItem(SkuGroup skuGroup) {
+		//replace with Criteria query
+		List<SkuItem> skuItemList = new ArrayList<SkuItem>(skuGroup.getSkuItems());
+		String hqlQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null and pvi.skuItem in (:skuItemList)" +
+				" group by pvi.skuItem .id having sum(qty) > 0";
+		return (List<SkuItem>) getSession().createQuery(hqlQuery).setParameterList("skuItemList", skuItemList).list();
 	}
 }
 
