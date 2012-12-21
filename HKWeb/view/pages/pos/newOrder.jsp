@@ -12,9 +12,13 @@
 <head>
 	<title>HealthKart.com Store : New Order</title>
 	<style type="text/css">
-		table tr th { text-align: left;}
+		table tr th {
+			text-align: left;
+		}
 
-		.apply-border td {border:1px solid #DDD;}
+		.apply-border td {
+			border: 1px solid #DDD;
+		}
 	</style>
 </head>
 <body>
@@ -37,6 +41,14 @@
 		<td><b>Welcome! Ajeet</b></td>
 	</tr>
 
+	<tr><td style="border:0px;">&nbsp;</td></tr>
+
+	<tr class="applyBorder" style="background:#EEE">
+		<td><b>New Order</b></td>
+		<td style="font-size:.9em">Search Order</td>
+		<td style="font-size:.9em">Order List</td>
+		<td style="font-size:.9em">Inventory</td>
+	</tr>
 	<tr><td style="border:0px;">&nbsp;</td></tr>
 
 	<tr>
@@ -63,20 +75,20 @@
 
 	<tr><td style="border:0px;">&nbsp;</td></tr>
 
-	<tr><td colspan="4"><b>Order ID:</b></td></tr>
-
-	<tr><td style="border:0px;">&nbsp;</td></tr>
-
 	<tr>
 		<td colspan="4">
 			<fieldset>
 				<legend><b>Order</b></legend>
 				<table width="100%" border="1">
 					<tr><th>S.No.</th><th>Item</th><th>MRP</th><th>Offer Price</th><th>Qty</th><th>Total</th></tr>
-					<tr><td>1.</td><td><input> </td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-					<tr><td>2.</td><td><input> </td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-					<tr><td>3.</td><td><input> </td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+					<tr><td>1.</td><td><input>
+					</td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+					<tr><td>2.</td><td><input>
+					</td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+					<tr><td>3.</td><td><input>
+					</td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
 					<tr><td colspan="5" align="right"><b>Grand Total</b></td><td><input></td></tr>
+					<tr><td><b>Order ID</b></td><td>&nbsp;</td><td colspan="3" align="right"><b>Payment Mode</b></td><td><select><option>Cash</option><option>Card</option> </select></td></tr>
 				</table>
 			</fieldset>
 		</td>
@@ -86,7 +98,8 @@
 
 	<tr>
 		<td colspan="2" align="left"><input type="button" value="Cancel or Reset"/></td>
-	    <td colspan="2" align="right"><input type="button" value="Confirm"/>&nbsp;<input type="button" value="Print"/></td>
+		<td colspan="2" align="right"><input type="button" value="Confirm"/>&nbsp;<input type="button"
+		                                                                                 value="Print"/></td>
 	</tr>
 </table>
 
