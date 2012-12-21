@@ -1,4 +1,4 @@
-Error creating shipment for SO  : ${courier.name}
+Error creating shipment
 <html>
 <head>
   <title>Welcome to HealthKart.com</title>

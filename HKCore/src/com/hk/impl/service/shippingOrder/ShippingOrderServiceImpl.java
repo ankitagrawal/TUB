@@ -71,6 +71,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ReplacementOrderDao        replacementOrderDao;
 	@Autowired
 	private PincodeService pincodeService;
+	@Autowired
+	private ShipmentService shipmentService;
 
     private OrderService               orderService;
 
@@ -208,6 +210,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         return false;
                     }
                 }
+				if(shippingOrder.getShipment() == null){
+					String comments = "Because shipment has not been created";
+					logShippingOrderActivity(shippingOrder, adminUser,
+                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
+					return false;
+				}
                 return true;
             }
         } else {
@@ -248,6 +256,15 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         return false;
                     }
                 }
+				if(shippingOrder.getShipment() == null){
+					Shipment newShipment = shipmentService.createShipment(shippingOrder);
+					if (newShipment == null) {
+						String comments = "Because shipment has not been created";
+						logShippingOrderActivity(shippingOrder, adminUser,
+								getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
+						return false;
+					}
+				}
                 return true;
             }
         } else {

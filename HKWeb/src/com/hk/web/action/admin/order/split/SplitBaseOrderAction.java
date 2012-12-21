@@ -30,12 +30,14 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.core.Pincode;
 import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -55,6 +57,8 @@ public class SplitBaseOrderAction extends BaseAction {
     private OrderService orderService;
 	@Autowired
 	UserService userService;
+	@Autowired
+	PincodeDao pincodeDao;
 
     Map<CartLineItem, Warehouse> cartLineItemWarehouseMap = new HashMap<CartLineItem, Warehouse>();
 
@@ -83,10 +87,16 @@ public class SplitBaseOrderAction extends BaseAction {
             for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseCartLineItemsMap.entrySet()) {
 
                 try {
-                    ShippingOrder shippingOrder = adminShippingOrderService.createSOforManualSplit(warehouseSetEntry.getValue(), warehouseSetEntry.getKey());
-                    if (shippingOrder != null) {
-                        orderLoggingService.logOrderActivity(baseOrder, userService.getLoggedInUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderManualSplit), null);
-                    }
+					Pincode pincode = pincodeDao.getByPincode(baseOrder.getAddress().getPin());
+					if (pincode != null) {
+						ShippingOrder shippingOrder = adminShippingOrderService.createSOforManualSplit(warehouseSetEntry.getValue(), warehouseSetEntry.getKey());
+						if (shippingOrder != null) {
+							orderLoggingService.logOrderActivity(baseOrder, userService.getLoggedInUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderManualSplit), null);
+						}
+					}
+					else{
+						addRedirectAlertMessage(new SimpleMessage("Order cannot be split as Pincode is not found in System "));
+					}
                 } catch (NoSkuException e) {
                     logger.error("No sku found", e);
                     addRedirectAlertMessage(new SimpleMessage(e.getMessage()));

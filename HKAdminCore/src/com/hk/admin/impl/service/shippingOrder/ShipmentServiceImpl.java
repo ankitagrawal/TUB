@@ -71,6 +71,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             User adminUser = getUserService().getAdminUser();
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
                     CourierConstants.PINCODE_INVALID);
+			adminEmailManager.sendNoShipmentEmail(CourierConstants.PINCODE_INVALID, shippingOrder);
             return null;
         }
 
@@ -95,9 +96,8 @@ public class ShipmentServiceImpl implements ShipmentService {
             return null;
         } else {
             String pin = pincode.getPincode();
-            Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
-
-            if (!courierServiceInfoDao.isCourierServiceInfoAvailable(suggestedCourier.getId(), pin, shippingOrder.isCOD(), isGroundShipped, isCodAllowedOnGroundShipping)) {
+            boolean isCodOnGroundShipped = isCodAndGroundShipped(pin, isGroundShipped);
+            if (!courierServiceInfoDao.isCourierServiceInfoAvailable(suggestedCourier.getId(), pin, shippingOrder.isCOD(), isGroundShipped, isCodOnGroundShipped)) {
                 shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(),
                         CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
 				adminEmailManager.sendNoShipmentEmail(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND, shippingOrder);
@@ -129,7 +129,6 @@ public class ShipmentServiceImpl implements ShipmentService {
         // If we dont have AWB , shipment will not be created
         if (suggestedAwb == null) {
             String msg = CourierConstants.AWB_NOT_ASSIGNED + suggestedCourier.getName();
-
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
                     msg);
             if (!(ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId))) {
@@ -217,6 +216,11 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
         return false;
     }
+
+	public boolean isCodAndGroundShipped(String pin, boolean isGroundShipped ){
+		Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
+		return (isCodAllowedOnGroundShipping && isGroundShipped);
+	}
 
     public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder) {
         Double estimatedWeight = 100D;
