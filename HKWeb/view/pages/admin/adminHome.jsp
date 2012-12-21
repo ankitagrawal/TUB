@@ -1,3 +1,4 @@
+<%@ taglib prefix="shirp" uri="http://shiro.apache.org/tags" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
@@ -235,8 +236,17 @@
 		</h3>
 	</shiro:hasRole>
 
+-->
+	<shiro:hasPermission name="<%=PermissionConstants.DISPATCH_LOT_OPERATIONS%>">
+	<h3><s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction">Create New Dispatch Lot
+		</s:link>
+		</h3>
 
---></div>
+		<h3><s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="showDispatchLotList">
+			Dispatch Lot List</s:link></h3>
+	</shiro:hasPermission>
+
+</div>
 
 <div class="cl"></div>
 
