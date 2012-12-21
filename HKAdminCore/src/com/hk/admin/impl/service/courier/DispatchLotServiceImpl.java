@@ -1,5 +1,18 @@
 package com.hk.admin.impl.service.courier;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.DispatchLotDao;
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
@@ -13,7 +26,12 @@ import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.report.ReportConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.domain.courier.*;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.DispatchLot;
+import com.hk.domain.courier.DispatchLotHasShipment;
+import com.hk.domain.courier.DispatchLotStatus;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Zone;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.hkDelivery.ConsignmentTracking;
@@ -27,13 +45,6 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -96,7 +107,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			List<ShippingOrder> soListInDB = getAdminShippingOrderDao().getShippingOrderByGatewayOrderList(soGatewayOrderIdInExcel);
 			String invalidGatewayOrderIds = validateShippingOrdersForDispatchLot(soGatewayOrderIdInExcel, soListInDB);
 
-			if(invalidGatewayOrderIds != null){
+			if(invalidGatewayOrderIds !=null){
 				throw new ExcelBlankFieldException("Following gatewayOrderIds are Invalid : " + invalidGatewayOrderIds);
 			}
 
@@ -252,7 +263,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			List<ConsignmentTracking> consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedInUser,consignmentList ,consignmentLifecycleStatus);
 			consignmentService.saveConsignmentTracking(consignmentTrackingList);
 		}
-		long dispatchLotSize = (long)getShipmentsForDispatchLot(dispatchLot).size();
+		//long dispatchLotSize = (long)getShipmentsForDispatchLot(dispatchLot).size();
 		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.PartiallyReceived.getDispatchLotStatus());
 
 		long currentReceivedShipmentSize = getDispatchLotHasShipmentListByDispatchLot(dispatchLot, DispatchLotConstants.SHIPMENT_RECEIVED).size();
@@ -336,6 +347,9 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 	public DispatchLot cancelDispatchLot(DispatchLot dispatchLot) {
 		if(dispatchLot != null) {
 			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.Cancelled.getDispatchLotStatus());
+			/***
+			 * TODO: mark shipments in this dispatch lot also cancelled.
+			 */
 			dispatchLot = (DispatchLot)getDispatchLotDao().save(dispatchLot);
 		}
 		return dispatchLot;
@@ -350,6 +364,10 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 	}
 
 	public List<DispatchLotHasShipment> getDispatchLotHasShipmentListByDispatchLot(DispatchLot dispatchLot, String shipmentStatus) {
+	    
+	    /**
+	     * TODO: can be done via a query only
+	     */
 		List<DispatchLotHasShipment> dispatchLotHasShipmentList = new ArrayList<DispatchLotHasShipment>(0);
 		dispatchLotHasShipmentList = getDispatchLotDao().getDispatchLotHasShipmentListByDispatchLot(dispatchLot);
 		List<DispatchLotHasShipment> filteredDispatchLotHasShipmentList = new ArrayList<DispatchLotHasShipment>();

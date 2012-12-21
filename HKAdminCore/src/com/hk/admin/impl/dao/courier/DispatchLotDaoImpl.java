@@ -71,12 +71,14 @@ public class DispatchLotDaoImpl extends BaseDaoImpl implements DispatchLotDao {
 		return list(criteria, pageNo, perPage);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Shipment> getShipmentsForDispatchLot(DispatchLot dispatchLot) {
 		String query = "select ds.shipment from DispatchLotHasShipment ds where ds.dispatchLot = :dispatchLot";
         return (List<Shipment>) findByNamedParams(query, new String[]{"dispatchLot"}, new Object[]{dispatchLot});
 	}
 
-	public List<DispatchLot> getDispatchLotsForShipment(Shipment shipment) {
+	@SuppressWarnings("unchecked")
+    public List<DispatchLot> getDispatchLotsForShipment(Shipment shipment) {
 		String query = "select ds.dispatchLot from DispatchLotHasShipment ds where ds.shipment = :shipment";
         return (List<DispatchLot>) findByNamedParams(query, new String[]{"shipment"}, new Object[]{shipment});
 	}
@@ -86,6 +88,7 @@ public class DispatchLotDaoImpl extends BaseDaoImpl implements DispatchLotDao {
         return  (DispatchLotHasShipment)findUniqueByNamedParams(query, new String[]{"shipment", "dispatchLot"}, new Object[]{shipment, dispatchLot});
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Shipment> getShipmentListExistingInOtherActiveDispatchLot(DispatchLot dispatchLot, List<Shipment> shipmentList) {
 		String query = "select ds.shipment from DispatchLotHasShipment ds join ds.dispatchLot d where ds.shipment in (:shipmentList) " +
 				" and ds.dispatchLot != :dispatchLot and d.dispatchLotStatus.id != " + EnumDispatchLotStatus.Cancelled.getId() +
