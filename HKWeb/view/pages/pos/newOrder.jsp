@@ -57,7 +57,7 @@
 				<legend><b>Customer</b></legend>
 				<table width="100%">
 					<tr>
-						<td>
+						<td width="50%">
 							<table>
 								<tr><td>Name: <input> </td></tr>
 								<tr><td>Email: <input> </td></tr>
