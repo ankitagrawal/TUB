@@ -143,6 +143,12 @@
 			        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
 				        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
 		        </c:if>
+                <c:if test="${purchaseOrder.purchaseOrderStatus.id == received}">
+                <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">Create Extra Inventory
+                   <s:param name="purchaseOrderId" value="${purchaseOrder.id}"/>
+                    <s:param name="wareHouseId" value="${purchaseOrder.warehouse.id}" />
+                </s:link>
+                </c:if>
 	        </td>
         </tr>
       </c:forEach>

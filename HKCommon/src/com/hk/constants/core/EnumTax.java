@@ -33,4 +33,5 @@ public enum EnumTax {
     tax.setValue(value);
     return tax;
   }
+  
 }

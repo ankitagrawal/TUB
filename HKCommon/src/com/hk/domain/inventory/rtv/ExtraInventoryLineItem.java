@@ -19,6 +19,9 @@ import com.hk.domain.core.Tax;
 @Entity
 @Table(name = "extra_inventory_line_item")
 
+@NamedQueries({
+    @NamedQuery(name = "getExtraInventoryLineItemsByExtraInventoryId", query = "select eilt from ExtraInventoryLineItem eilt where extraInventory.id = :extraInventoryId")
+})
 
 public class ExtraInventoryLineItem implements Serializable{
 

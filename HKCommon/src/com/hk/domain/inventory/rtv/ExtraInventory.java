@@ -19,6 +19,9 @@ import java.util.Date;
 @Entity
 @Table(name = "extra_inventory")
 
+@NamedQueries({
+    @NamedQuery(name = "getExtraInventoryByPoId", query = "select ev from ExtraInventory ev where purchaseOrder.id = :purchaseOrderId")
+})
 public class ExtraInventory implements Serializable{
 
 

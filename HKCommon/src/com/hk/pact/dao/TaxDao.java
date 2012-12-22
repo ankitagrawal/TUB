@@ -12,6 +12,8 @@ public interface TaxDao extends BaseDao{
     public List<Tax> taxListForReport() ;
 
     public List<Tax> getTaxList() ;
+
+    public Tax findByValue(Double taxValue);
        
 
 }
