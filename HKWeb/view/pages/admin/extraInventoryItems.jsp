@@ -14,14 +14,15 @@
 
             $('.variantId').live('change',function(){
                 var variant = $(this).val();
+                var obj = $(this);
               $.getJSON($('#skuCheck').attr('href'), {productVariantId: variant, wareHouseId: ${extraInventory.wareHouseId}}, function (res) {
                         if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
-                            alert("sku_id = : " + res.data.sku.id);
-                            $(this).val(res.data.sku.id);
+//                            alert("sku_id = : " + res.data.sku.id);
+                            obj.val(res.data.sku.id);
                         }
                         else{
                             alert(res.message);
-                            $(this).val("");
+                            obj.val("");
                             return false;
                         }
                     }
@@ -33,7 +34,8 @@
                 $('.variants').each(function(){
                     var this_index = $(this).attr('value');
                     if(this_index == index){
-                        var txtBox = "<input type='text'  class='variantId' placeholder='Enter Variant ID' name='extraInventoryLineItems['" + index+1 + "'].sku />" ;
+//                        alert(index);
+                        var txtBox = "<input type='text'  class='variantId' placeholder='Enter Variant ID' name='extraInventoryLineItems[" + index + "].sku' />" ;
                         var isChecked = $(this).attr('checked')?true:false;
                         if(isChecked){
                             $(this).parent().children('span').html('');
@@ -125,13 +127,13 @@
                         '    <input type="text" class="receivedQty valueChange" name="extraInventoryLineItems[' + nextIndex + '].receivedQty"  />' +
                         '  </td>' +
                         '<td>' +
-                        ' <select class="taxSelect" name="extraInventoryLineItems[' + nextIndex + '].tax " >' +
+                        ' <select class="taxSelect" name="extraInventoryLineItems[' + nextIndex + '].tax" >' +
                         '<option value="<%=EnumTax.NA.getValue()%>" ><%=EnumTax.NA.getName()%></option>' +
                         '<option value="<%=EnumTax.SERVICE_10_3.getValue()%>" ><%=EnumTax.SERVICE_10_3.getName()%> </option>' +
-                        '<option value="<%=EnumTax.VAT_0.asTax()%>" > <%=EnumTax.VAT_0.getName()%> </option>' +
-                        '<option value="<%=EnumTax.VAT_5.asTax()%>" ><%=EnumTax.VAT_5.getName()%></option>' +
-                        '<option value="<%=EnumTax.VAT_12_5.asTax()%>" ><%=EnumTax.VAT_12_5.getName()%></option>' +
-                        '<option value="<%=EnumTax.VAT_12_36.asTax()%>" ><%=EnumTax.VAT_12_36.getName()%></option>' +
+                        '<option value="<%=EnumTax.VAT_0.getValue()%>" > <%=EnumTax.VAT_0.getName()%> </option>' +
+                        '<option value="<%=EnumTax.VAT_5.getValue()%>" ><%=EnumTax.VAT_5.getName()%></option>' +
+                        '<option value="<%=EnumTax.VAT_12_5.getValue()%>" ><%=EnumTax.VAT_12_5.getName()%></option>' +
+                        '<option value="<%=EnumTax.VAT_12_36.getValue()%>" ><%=EnumTax.VAT_12_36.getName()%></option>' +
                         ' </select>' +
                         '</td>' +
                         '</tr>';
@@ -183,17 +185,29 @@
             </tr>
             </thead>
             <tbody>
-            <c:if test="${extraInventory.extraInventory!=null}">
+            <c:choose>
+            <c:when test="${extraInventory.extraInventory!=null}">
                 <tr>
                     <td> ${extraInventory.extraInventory.id}</td>
                     <td>${extraInventory.extraInventory.createdBy.name}</td>
                     <td>${extraInventory.extraInventory.createDate}</td>
                     <td>${extraInventory.extraInventory.updateDate}</td>
-                    <td><textarea rows="10" cols="10">${extraInventory.extraInventory.comments}</textarea></td>
+                    <td><textarea name = "comments" rows="10" cols="10">${extraInventory.extraInventory.comments}</textarea></td>
                 </tr>
-            </c:if>
+            </c:when>
+                <c:otherwise>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><textarea name = "comments" rows="10" cols="20"></textarea></td>
+                    </tr>
+                </c:otherwise>
+            </c:choose>
             </tbody>
         </table>
+        <s:hidden name="extraInventoryId" value="${extraInventory.extraInventory.id}"/>
         <br><br>
         <div class="clear"></div>
         <table border="1">
@@ -216,11 +230,13 @@
                         <td>${ctr.index+1}.</td>
                         <td>
                             <s:checkbox class="checkbox1" value="${eInLineItems.id}" name="extraInventoryLineItemsSelected[${ctr.index}].id"/>${eInLineItems.id}
+                            <s:hidden name="extraInventoryLineItems[${ctr.index}].id" value="${eInLineItems.id}"/>
                         </td>
                         <td class="txtSku">
                             <c:choose>
                                 <c:when test="${eInLineItems.sku !=null}">
                                     ${eInLineItems.sku.productVariant.id}
+                                    <s:hidden name="extraInventoryLineItems[${ctr.index}].sku" value="${eInLineItems.sku.productVariant.id}"/>
                                 </c:when>
                                 <c:otherwise>
                                     <input type="checkbox" class="variants" value="${ctr.index}"> <span>check this if you know Variant Id :</span>
@@ -240,19 +256,14 @@
                             <input type="text" class="receivedQty valueChange" name="extraInventoryLineItems[${ctr.index}].receivedQty" value="${eInLineItems.receivedQty}"/>
                         </td>
                         <td>
-                            <select class="taxSelect" name="extraInventoryLineItems[${ctr.index}].tax " >
-                                <option value="<%=EnumTax.NA.getValue()%>"><%=EnumTax.NA.getName()%></option>
-                                <option value="<%=EnumTax.SERVICE_10_3.getValue()%>"><%=EnumTax.SERVICE_10_3.getName()%></option>
-                                <option value="<%=EnumTax.VAT_0.getValue()%>"><%=EnumTax.VAT_0.getName()%></option>
-                                <option value="<%=EnumTax.VAT_12_36.getValue()%>"><%=EnumTax.VAT_12_36.getName()%></option>
-                                <option value="<%=EnumTax.VAT_12_5.getValue()%>"><%=EnumTax.VAT_12_5.getName()%></option>
-                                <option value="<%=EnumTax.VAT_5.getValue()%>"><%=EnumTax.VAT_5.getName()%></option>
+                            <select class="taxSelect" name="extraInventoryLineItems[${ctr.index}].tax">
+                                <option value="<%=EnumTax.NA.getValue()%>" ${eInLineItems.tax.value == 0.0 ? 'selected' : ''}> <%=EnumTax.NA.getName()%> </option>
+                                <option value="<%=EnumTax.SERVICE_10_3.getValue()%>" ${eInLineItems.tax.value == 0.103 ? 'selected' : ''}> <%=EnumTax.SERVICE_10_3.getName()%> </option>
+                                <option value="<%=EnumTax.VAT_0.getValue()%>" ${eInLineItems.tax.value == 0.0 ? 'selected' : ''}> <%=EnumTax.VAT_0.getName()%> </option>
+                                <option value="<%=EnumTax.VAT_12_36.getValue()%>" ${eInLineItems.tax.value == 0.1236 ? 'selected' : ''}> <%=EnumTax.VAT_12_36.getName()%> </option>
+                                <option value="<%=EnumTax.VAT_12_5.getValue()%>" ${eInLineItems.tax.value == 0.125 ? 'selected' : ''}> <%=EnumTax.VAT_12_5.getName()%> </option>
+                                <option value="<%=EnumTax.VAT_5.getValue()%>" ${eInLineItems.tax.value == 0.05 ? 'selected' : ''}> <%=EnumTax.VAT_5.getName()%> </option>
                             </select>
-                            <script type="text/javascript">
-                                $(document).ready(function(){
-                                    $('.taxSelect').val(${eInLineItems.tax.value});
-                                });
-                            </script>
                         </td>
                     </tr>
                 </c:forEach>
@@ -265,7 +276,9 @@
         <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}" />
         <s:submit name="save" value="SAVE" id="save" />
     </s:form>
-
+       <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">
+            <div align="center" style="font-weight:bold; font-size:150%">BACK</div>
+          </s:link>
     <div class="clear"></div>
 
 </s:layout-component>

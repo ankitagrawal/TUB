@@ -19,6 +19,10 @@ public class ExtraInventoryServiceImpl implements ExtraInventoryService{
   @Autowired
   BaseDao baseDao;
 
+  public ExtraInventory getExtraInventoryById(Long extraInventoryId){
+    return (ExtraInventory) getBaseDao().findUniqueByNamedQueryAndNamedParam("getExtraInventoryById", new String[]{"extraInventoryId"}, new Object[]{extraInventoryId});
+  }
+
   public ExtraInventory getExtraInventoryByPoId(Long purchaseOrderId){
     return (ExtraInventory)getBaseDao().findUniqueByNamedQueryAndNamedParam("getExtraInventoryByPoId", new String[]{"purchaseOrderId"}, new Object[]{purchaseOrderId});
   }

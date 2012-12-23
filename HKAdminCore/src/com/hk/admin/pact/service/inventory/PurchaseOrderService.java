@@ -12,4 +12,6 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 public interface PurchaseOrderService {
 
 	public void updatePOFillRate(PurchaseOrder purchaseOrder);
+
+  public PurchaseOrder getPurchaseOrderById(Long purchaseOrderId);
 }

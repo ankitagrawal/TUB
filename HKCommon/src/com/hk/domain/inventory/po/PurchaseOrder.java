@@ -21,6 +21,10 @@ import java.util.List;
 @Entity
 @Table (name = "purchase_order")
 /*@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)*/
+
+@NamedQueries({
+    @NamedQuery(name = "getPurchaseOrderById", query = "select pc from PurchaseOrder pc where id = :purchaseOrderId")
+})
 public class PurchaseOrder implements java.io.Serializable {
 
 

@@ -40,6 +40,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	}
 
+  public PurchaseOrder getPurchaseOrderById(Long purchaseOrderId){
+     return (PurchaseOrder)getPurchaseOrderDao().findUniqueByNamedQueryAndNamedParam("getPurchaseOrderById", new String[]{"purchaseOrderId"} , new Object[]{purchaseOrderId});
+  }
+
 	public PurchaseOrderDao getPurchaseOrderDao() {
 		return purchaseOrderDao;
 	}

@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface ExtraInventoryLineItemService {
 
+ public ExtraInventoryLineItem getExtraInventoryLineItemById(Long extraInventoryLineItemId);
+
   public List<ExtraInventoryLineItem> getExtraInventoryLineItemsByExtraInventoryId(Long extraInventoryId);
 
   public ExtraInventoryLineItem save(ExtraInventoryLineItem extraInventoryLineItem);

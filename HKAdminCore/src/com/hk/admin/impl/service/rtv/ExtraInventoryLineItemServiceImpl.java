@@ -21,6 +21,10 @@ public class ExtraInventoryLineItemServiceImpl implements ExtraInventoryLineItem
  @Autowired
  BaseDao baseDao;
 
+  public ExtraInventoryLineItem getExtraInventoryLineItemById(Long extraInventoryLineItemId){
+    return (ExtraInventoryLineItem) getBaseDao().findUniqueByNamedQueryAndNamedParam("getExtraInventoryLineItemById", new String[]{"extraInventoryLineItemId"}, new Object[]{extraInventoryLineItemId});
+  }
+
   @SuppressWarnings("unchecked")
   public List<ExtraInventoryLineItem> getExtraInventoryLineItemsByExtraInventoryId(Long extraInventoryId){
     return (List<ExtraInventoryLineItem>)  getBaseDao().findByNamedQueryAndNamedParam("getExtraInventoryLineItemsByExtraInventoryId", new String[]{"extraInventoryId"}, new Object[]{extraInventoryId});

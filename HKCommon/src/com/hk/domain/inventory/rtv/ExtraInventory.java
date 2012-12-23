@@ -20,7 +20,8 @@ import java.util.Date;
 @Table(name = "extra_inventory")
 
 @NamedQueries({
-    @NamedQuery(name = "getExtraInventoryByPoId", query = "select ev from ExtraInventory ev where purchaseOrder.id = :purchaseOrderId")
+    @NamedQuery(name = "getExtraInventoryByPoId", query = "select ev from ExtraInventory ev where purchaseOrder.id = :purchaseOrderId"),
+    @NamedQuery(name = "getExtraInventoryById", query = "select ev from ExtraInventory ev where id = :extraInventoryId")
 })
 public class ExtraInventory implements Serializable{
 

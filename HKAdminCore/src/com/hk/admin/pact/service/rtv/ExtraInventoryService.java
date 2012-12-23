@@ -11,6 +11,8 @@ import com.hk.domain.inventory.rtv.ExtraInventory;
  */
 public interface ExtraInventoryService {
 
+  public ExtraInventory getExtraInventoryById(Long extraInventoryId);
+
   public ExtraInventory getExtraInventoryByPoId(Long purchaseOrderId);
 
   public ExtraInventory save(ExtraInventory extraInventory);

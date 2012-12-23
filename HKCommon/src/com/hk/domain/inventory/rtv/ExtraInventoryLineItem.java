@@ -20,7 +20,8 @@ import com.hk.domain.core.Tax;
 @Table(name = "extra_inventory_line_item")
 
 @NamedQueries({
-    @NamedQuery(name = "getExtraInventoryLineItemsByExtraInventoryId", query = "select eilt from ExtraInventoryLineItem eilt where extraInventory.id = :extraInventoryId")
+    @NamedQuery(name = "getExtraInventoryLineItemsByExtraInventoryId", query = "select eilt from ExtraInventoryLineItem eilt where extraInventory.id = :extraInventoryId"),
+    @NamedQuery(name = "getExtraInventoryLineItemById", query = "select eilt from ExtraInventoryLineItem  eilt where id = :extraInventoryId")
 })
 
 public class ExtraInventoryLineItem implements Serializable{
@@ -31,7 +32,7 @@ public class ExtraInventoryLineItem implements Serializable{
 	private Long id;
 
   @OneToOne
-  @JoinColumn (name="po_line_item_id", nullable = false)
+  @JoinColumn (name="po_line_item_id")
   private PoLineItem poLineItem;
 
   @ManyToOne (fetch = FetchType.LAZY)
