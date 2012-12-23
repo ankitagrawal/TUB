@@ -57,6 +57,7 @@ public class UserEmailResource {
             for (User user : emailRecepients){
                 UserDto userDto = new UserDto();
                 userDto.email = user.getEmail();
+                userDto.name = user.getName();
                 categoryUsers.add(userDto);
             }
             final GenericEntity<List<UserDto>> entity = new GenericEntity<List<UserDto>>(categoryUsers){};
