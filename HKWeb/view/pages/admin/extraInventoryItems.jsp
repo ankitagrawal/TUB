@@ -12,6 +12,19 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
+            $('#createRtv').live('click',function(){
+                var bool = true;
+                $('.checkbox1').each(function(){
+                   if ($(this).attr("checked") == "checked") {
+                       bool = false;
+                   }
+                });
+                if(bool){
+                    alert("Please select Line Items to create RTV / GRN");
+                    return false;
+                }
+            });
+
             $('.variantId').live('change',function(){
                 var variant = $(this).val();
                 var obj = $(this);
@@ -210,6 +223,7 @@
         <s:hidden name="extraInventoryId" value="${extraInventory.extraInventory.id}"/>
         <br><br>
         <div class="clear"></div>
+         <h2>Extra Inventory Line Items</h2>
         <table border="1">
             <thead>
             <tr>
@@ -229,7 +243,18 @@
                     <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                         <td>${ctr.index+1}.</td>
                         <td>
+                            <c:set var="bool" value="0"/>
+                                <c:if test="${eInLineItems.rtvCreated}">
+                                    ${eInLineItems.id}(RTV Created)
+                                    <c:set var="bool" value="1"/>
+                                </c:if>
+                                <c:if test="${eInLineItems.grnCreated}">
+                                    ${eInLineItems.id}(GRN Created)
+                                    <c:set var="bool" value="1"/>
+                                </c:if>
+                            <c:if test="${bool eq '0'}">
                             <s:checkbox class="checkbox1" value="${eInLineItems.id}" name="extraInventoryLineItemsSelected[${ctr.index}].id"/>${eInLineItems.id}
+                            </c:if>
                             <s:hidden name="extraInventoryLineItems[${ctr.index}].id" value="${eInLineItems.id}"/>
                         </td>
                         <td class="txtSku">
@@ -274,6 +299,10 @@
         <br/>
         <s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}" />
         <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}" />
+        <s:submit name="createRtv" value="Create RTV" id="createRtv"/>
+        <s:submit name="editRtv" value="Edit RTV" id="createRtv"/>        
+        <%--<s:submit name="createGRN" value="Create GRN" id="createRtv"/>--%>
+        <%--<s:submit name="editGRN" value="Edit GRN" id="createRtv"/>--%>
         <s:submit name="save" value="SAVE" id="save" />
     </s:form>
        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">

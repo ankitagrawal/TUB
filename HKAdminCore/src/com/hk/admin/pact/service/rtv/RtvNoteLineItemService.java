@@ -1,5 +1,10 @@
 package com.hk.admin.pact.service.rtv;
 
+import com.hk.domain.inventory.rtv.RtvNoteLineItem;
+import com.hk.domain.inventory.rtv.RtvNote;
+
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Shrey
@@ -8,4 +13,10 @@ package com.hk.admin.pact.service.rtv;
  * To change this template use File | Settings | File Templates.
  */
 public interface RtvNoteLineItemService {
+
+  public RtvNoteLineItem save(RtvNoteLineItem rtvNoteLineItem);
+
+  public RtvNoteLineItem getRtvNoteLineItemById(Long rtvNoteLineItemId);
+
+  public List<RtvNoteLineItem> getRtvNoteLineItemsByRtvNote(RtvNote rtvNote);
 }

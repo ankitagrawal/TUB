@@ -39,7 +39,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		getPurchaseOrderDao().saveOrUpdate(purchaseOrder);
 
 	}
-
+    public PurchaseOrder save(PurchaseOrder purchaseOrder){
+      return (PurchaseOrder)getPurchaseOrderDao().save(purchaseOrder);
+    }
   public PurchaseOrder getPurchaseOrderById(Long purchaseOrderId){
      return (PurchaseOrder)getPurchaseOrderDao().findUniqueByNamedQueryAndNamedParam("getPurchaseOrderById", new String[]{"purchaseOrderId"} , new Object[]{purchaseOrderId});
   }

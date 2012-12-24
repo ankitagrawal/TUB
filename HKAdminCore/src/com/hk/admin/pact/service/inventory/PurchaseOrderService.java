@@ -14,4 +14,6 @@ public interface PurchaseOrderService {
 	public void updatePOFillRate(PurchaseOrder purchaseOrder);
 
   public PurchaseOrder getPurchaseOrderById(Long purchaseOrderId);
+
+  public PurchaseOrder save(PurchaseOrder purchaseOrder);
 }

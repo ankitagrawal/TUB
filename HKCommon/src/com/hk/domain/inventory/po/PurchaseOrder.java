@@ -330,6 +330,14 @@ public class PurchaseOrder implements java.io.Serializable {
 	public void setFillRate(Double fillRate) {
 		this.fillRate = fillRate;
 	}
+
+  public ExtraInventory getExtraInventory() {
+    return extraInventory;
+  }
+
+  public void setExtraInventory(ExtraInventory extraInventory) {
+    this.extraInventory = extraInventory;
+  }
 }
 
 

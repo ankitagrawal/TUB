@@ -1,5 +1,7 @@
 package com.hk.domain.inventory.rtv;
 
+import com.hk.domain.user.User;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -15,6 +17,11 @@ import java.util.Date;
 @Entity
 @Table(name = "rtv_note")
 
+@NamedQueries({
+    @NamedQuery(name = "getRtvNoteByExtraInventory" , query = "select rtv from RtvNote rtv where extraInventory.id = :extraInventoryId"),
+    @NamedQuery(name = "getRtvNoteLineItemById", query = "select rtv from RtvNote rtv where id = :rtvNoteId")
+})
+
 public class RtvNote implements Serializable{
 
   @Id
@@ -25,6 +32,10 @@ public class RtvNote implements Serializable{
   @ManyToOne  (fetch = FetchType.LAZY)
   @JoinColumn (name = "extra_inventory_id" , nullable = false)
   private ExtraInventory extraInventory;
+
+  @ManyToOne (fetch = FetchType.LAZY)
+	@JoinColumn (name = "created_by", nullable = false)
+	private User createdBy;
 
    @ManyToOne (fetch = FetchType.LAZY)
    @JoinColumn (name = "rtv_note_status_id", nullable = false)
@@ -42,6 +53,10 @@ public class RtvNote implements Serializable{
   @Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "create_dt", nullable = false, length = 19)
 	private Date createDate = new Date();
+
+  @Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "update_dt", nullable = false, length = 19)
+	private Date updateDate = new Date();
 
   public Long getId() {
     return id;
@@ -97,5 +112,21 @@ public class RtvNote implements Serializable{
 
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
+  }
+
+  public Date getUpdateDate() {
+    return updateDate;
+  }
+
+  public void setUpdateDate(Date updateDate) {
+    this.updateDate = updateDate;
+  }
+
+  public User getCreatedBy() {
+    return createdBy;
+  }
+
+  public void setCreatedBy(User createdBy) {
+    this.createdBy = createdBy;
   }
 }

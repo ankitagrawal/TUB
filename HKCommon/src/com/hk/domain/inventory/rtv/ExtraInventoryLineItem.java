@@ -59,6 +59,12 @@ public class ExtraInventoryLineItem implements Serializable{
   @Column (name = "mrp" , nullable = false)
   private Double mrp;
 
+  @Column (name = "is_rtv_created")
+  private Boolean isRtvCreated;
+
+  @Column (name ="is_grn_created")
+  private Boolean isGrnCreated;
+
   @Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "create_dt", nullable = false, length = 19)
 	private Date createDate = new Date();
@@ -153,5 +159,21 @@ public class ExtraInventoryLineItem implements Serializable{
 
   public void setUpdateDate(Date updateDate) {
     this.updateDate = updateDate;
+  }
+
+  public Boolean isRtvCreated() {
+    return isRtvCreated;
+  }
+
+  public void setRtvCreated(Boolean rtvCreated) {
+    isRtvCreated = rtvCreated;
+  }
+
+  public Boolean isGrnCreated() {
+    return isGrnCreated;
+  }
+
+  public void setGrnCreated(Boolean grnCreated) {
+    isGrnCreated = grnCreated;
   }
 }

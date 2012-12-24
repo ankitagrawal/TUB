@@ -14,6 +14,11 @@ import java.io.Serializable;
 @Entity
 @Table(name = "rtv_note_line_item")
 
+@NamedQueries({
+    @NamedQuery(name = "getRtvNoteLineItemsByRtvNote" , query = "select rli from RtvNoteLineItem rli where rtvNote = :rtvNote"),
+    @NamedQuery(name = "getRtvNoteLineItemById", query = "select rli from RtvNoteLineItem rli where id = :rtvNoteLineItemId")
+})
+
 public class RtvNoteLineItem implements Serializable{
 
   @Id
@@ -21,12 +26,13 @@ public class RtvNoteLineItem implements Serializable{
 	@Column (name = "id", unique = true, nullable = false)
 	private Long id;
 
+  @ManyToOne (fetch = FetchType.LAZY)
+  @JoinColumn (name = "rtv_note_id", nullable = false)
+  private RtvNote rtvNote;
+
   @OneToOne
   @JoinColumn (name = "extra_inventory_line_item" , nullable = false)
   private ExtraInventoryLineItem extraInventoryLineItem;
-
-  @Column (name = "remarks")
-  private String remarks;
 
   public ExtraInventoryLineItem getExtraInventoryLineItem() {
     return extraInventoryLineItem;
@@ -36,19 +42,19 @@ public class RtvNoteLineItem implements Serializable{
     this.extraInventoryLineItem = extraInventoryLineItem;
   }
 
-  public String getRemarks() {
-    return remarks;
-  }
-
-  public void setRemarks(String remarks) {
-    this.remarks = remarks;
-  }
-
-  public Long getId() {
+   public Long getId() {
     return id;
   }
 
   public void setId(Long id) {
     this.id = id;
+  }
+
+  public RtvNote getRtvNote() {
+    return rtvNote;
+  }
+
+  public void setRtvNote(RtvNote rtvNote) {
+    this.rtvNote = rtvNote;
   }
 }
