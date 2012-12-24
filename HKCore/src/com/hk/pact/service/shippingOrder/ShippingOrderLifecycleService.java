@@ -2,6 +2,7 @@ package com.hk.pact.service.shippingOrder;
 
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.domain.order.ShippingOrderLifecycle;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ import java.util.List;
  */
 public interface ShippingOrderLifecycleService {
     public List<ShippingOrderLifeCycleActivity> getOrderActivities(List<EnumShippingOrderLifecycleActivity> enumShippingOrderActivities);
+
+	public List<ShippingOrderLifecycle> getShippingOrderLifecycleBySOAndActivity(Long shippingOrderId, Long shippingOrderLifeCycleActivityId);
 }
