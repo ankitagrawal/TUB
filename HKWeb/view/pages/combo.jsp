@@ -172,12 +172,12 @@
             </a>
         </c:if>
         <c:if test="${!empty productBean.relatedCombos}">
-            <a class='top_link' href='#related_combos' style="font-weight:bold;">
+            <a class='top_link' href='#related_combos' id="related_combo_link" style="font-weight:bold;">
                 Special Offers &darr;
             </a>
         </c:if>
         <c:if test="${!empty productCombo.relatedProducts}">
-            <a class='top_link' href='#related_products'>
+            <a class='top_link' id="related_product_link" href='#related_products'>
                 Related Products &darr;
             </a>
         </c:if>
@@ -435,6 +435,7 @@
         </div>
     </shiro:hasPermission>
     <c:if test="${!empty productBean.relatedCombos}">
+        <c:set var="check_related_combos" value="0"/>
         <div class='products content' id="related_combos">
             <h4>
                 Special Offers on ${productCombo.name}
@@ -442,14 +443,24 @@
             <c:forEach items="${productBean.relatedCombos}" var="relatedCombo">
                 <c:if test="${!relatedCombo.outOfStock and !relatedCombo.hidden and !relatedCombo.deleted and !relatedCombo.googleAdDisallowed}">
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="${relatedCombo.id}"/>
+                    <c:set var="check_related_combos" value="1"/>
                 </c:if>
             </c:forEach>
 
             <div class="floatfix"></div>
         </div>
+         <c:if test="${hk:equalsIgnoreCase(check_related_combos,'0')}">
+                 <script type="text/javascript">
+                     $(document).ready(function(){
+                        $("#related_combos").remove();
+                         $("#related_combo_link").remove();
+                     });
+                 </script>
+        </c:if>
     </c:if>
     <c:set var="relatedProducts" value="${productCombo.relatedProducts}"/>
     <c:if test="${!empty relatedProducts}">
+        <c:set var="check_related_products" value="0"/>
         <div class='products content' id="related_products">
             <h4>
                 People who bought this also bought these products
@@ -458,6 +469,7 @@
             <c:forEach items="${relatedProducts}" var="relatedProduct">
                 <c:if test="${!relatedProduct.outOfStock and !relatedProduct.deleted and !relatedProduct.hidden and !relatedProduct.googleAdDisallowed}">
                 <s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${relatedProduct}"/>
+                    <c:set var="check_related_products" value="1"/>
                 </c:if>
             </c:forEach>
 
@@ -465,6 +477,14 @@
             <a class='go_to_top' href='#top'>go to top &uarr;</a>
 
         </div>
+           <c:if test="${hk:equalsIgnoreCase(check_related_products,'0')}">
+          <script type="text/javascript">
+              $(document).ready(function(){
+                 $("#related_products").remove();
+                  $("#related_product_link").remove();
+              });
+          </script>
+        </c:if>
     </c:if>
 </div>
 

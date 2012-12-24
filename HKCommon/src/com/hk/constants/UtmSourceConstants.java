@@ -23,8 +23,10 @@ public class UtmSourceConstants {
   public static final String NOTIFYME = "notifyme";
   public static final String SPORTSKEEDA = "sportsKeeda";
   public static final String ABGVSLZR = "abgvslzr";
-  public static final String VIZURY = "VZR";
+  public static final String VIZURY = "vzr";
   public static final String HEALTHKART = "healthkart";
   public static final String WANDERVOGEL = "http://www.wandervogel.at/latex/upus/tosab/";
   public static final String AFFILIATES = "affiliate";
+  public static final String ADWORDS = "adwords";
+  public static final String GOOGLE = "google";
 }

@@ -94,6 +94,7 @@ public class OrderSummaryAction extends BaseAction {
     @DefaultHandler
     public Resolution pre() {
         User user = getUserService().getUserById(getPrincipal().getId());
+        // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
         // Trimming empty line items once again.
         orderManager.trimEmptyLineItems(order);
@@ -133,7 +134,7 @@ public class OrderSummaryAction extends BaseAction {
         // Ground Shipping logic ends --
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
-        if (netShopping > codFreeAfter) {
+        if (netShopping >= codFreeAfter) {
             codCharges = 0.0;
         }
         availableCourierList = courierService.getAvailableCouriers(order);

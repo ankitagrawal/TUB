@@ -19,6 +19,9 @@
       | HealthKart.com
     </title>
     <jsp:include page="/includes/_style.jsp"/>
+    <s:layout-component name="analytics">
+      <jsp:include page="/includes/_analytics.jsp"/>
+    </s:layout-component>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
     <s:layout-component name="htmlHead"/>
@@ -73,10 +76,6 @@
       <div class="floatfix"></div>
     </div>
     <s:layout-render name="/includes/_footer.jsp"/>
-
-    <s:layout-component name="analytics">
-      <jsp:include page="/includes/_analytics.jsp"/>
-    </s:layout-component>
 
     <s:layout-component name="remarketing"/>
 

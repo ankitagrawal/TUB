@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:layout-render name="/layouts/categoryBlankLanding.jsp" pageTitle="Abbott FreeStyle Opium Glucometer">
+<s:layout-render name="/layouts/categoryBlankLanding.jsp" pageTitle="Abbott FreeStyle Optium Glucometer">
 
     <s:layout-component name="htmlHead">
         <style type="text/css">
@@ -97,17 +97,17 @@
         <div class='crumb_outer'>
             <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
             &gt;
-            <span class="crumb last" style="font-size: 12px;">Abbott FreeStyle Opium Glucometer</span>
+            <span class="crumb last" style="font-size: 12px;">Abbott FreeStyle Optium Glucometer</span>
 
             <h1 class="title">
-                Abbott FreeStyle Opium Glucometer
+                Abbott FreeStyle Optium Glucometer
             </h1>
         </div>
 
     </s:layout-component>
 
     <s:layout-component
-            name="metaDescription">Special Offers on Abbott FreeStyle Opium Glucometer from HealthKart.com.</s:layout-component>
+            name="metaDescription">Special Offers on Abbott FreeStyle Optium Glucometer from HealthKart.com.</s:layout-component>
     <s:layout-component name="metaKeywords"></s:layout-component>
 
     <s:layout-component name="content">
@@ -120,20 +120,15 @@
 
 
             <div class="productThumb">
-                <h3><a href="http://www.healthkart.com/product/freestyle-optium-glucometer/DM033">FreeStyle Optium
-                    Glucometer</a></h3>
+                <h3><a href="http://www.healthkart.com/product/freestyle-optium-glucometer/DM033">FreeStyle Optium Blood Glucose Monitoring System</a></h3>
 
                    <img src="${pageContext.request.contextPath}/images/abbottFSO/FreeStyle-Optium-Glucometer.jpg"
                      width="340" height="340" class="tThumb"/>
 
-                <div class="tDesc"><p>The Abbott FreeStyle Optium Glucometer makes testing an easier and pain-free
-                    experience. Less than a drop of blood is required for testing and it gives accurate results in just
-                    5 seconds.</p>
+                <div class="tDesc"><p>Improved testing experience with FreeStyle Optium Blood Glucose Monitoring System. Only 0.6 µL of blood sample required to get an accurate result in 5 seconds.</p>
 
-                    <p>Monitor blood glucose effectively with Freestyle Optium Glucometer. This simple blood glucose
-                        testing device comes with a large backlit display which ensures that you have accurate readings.
-                        The meter also comes with a large memory so that one can store blood glucose readings for
-                        reference.</p>
+                    <p>Re-application of blood possible that prevents strip wastage. This simple device comes with a large backlit display and can record upto 450 readings so that once can store blood glucose readings for reference.
+</p>
                 </div>
 
                 <p class="tPrice">
@@ -145,8 +140,7 @@
                 </p>
 
 
-                <p><strong>How to Apply Coupon
-                    Code?</strong></p>
+                <p><strong>How to apply Coupon Code to avail discount of INR 700?</strong></p>
                 <ul style="list-style:disc; margin-left:350px;">
                 <li>Click on the "Buy Now" tab to proceed to the product page.</li>
                 <li>Click on "Place Order" tab. Selected item will get added to the cart.</li>

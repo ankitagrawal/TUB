@@ -86,13 +86,8 @@ public class PaymentServiceImpl implements PaymentService {
         EnumPaymentMode enumPaymentMode = EnumPaymentMode.getPaymentModeFromId(payment.getPaymentMode().getId());
 
         switch (enumPaymentMode) {
-            case CITRUS_NetBanking_Old:
-            case CITRUS_CreditDebit:
-            case CITRUS_NetBanking_New:
-            case EBS:
-            case TECHPROCESS:
-            case ICICI:
-            case CCAVENUE_DUMMY:
+            case ONLINE_PAYMENT:
+            case SUBSCRIPTION_PAYMENT:
             case FREE_CHECKOUT:
                 if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
                     paymentEmailSent = getEmailManager().sendOrderConfirmEmailToUser(order);

@@ -1,6 +1,7 @@
 package com.hk.impl.service.analytics;
 
 import com.hk.constants.HttpRequestAndSessionConstants;
+import com.hk.constants.core.HealthkartConstants;
 import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.analytics.UserBrowsingHistory;
 import com.hk.domain.catalog.category.Category;
@@ -11,6 +12,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.analytics.UserBrowsingHistoryDao;
 import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.util.TrafficSourceFinder;
+import com.hk.web.filter.WebContext;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Map;
 
@@ -42,6 +46,11 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 
 	@Transactional
 	public TrafficTracking saveTrafficTracking(HttpServletRequest httpRequest, User user) {
+		String pageUrl = httpRequest.getRequestURL().toString();
+		if (StringUtils.isNotBlank(pageUrl) && StringUtils.equals(pageUrl, "http:///")) {
+			return null;
+		}
+
 		Map<String, String> trafficInfoMap = TrafficSourceFinder.getTrafficDetails(httpRequest);
 		TrafficTracking trafficTracking = new TrafficTracking();
 
@@ -63,8 +72,8 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		trafficTracking.setTrafficSrcDetails(trafficSrcDetails);
 		trafficTracking.setTrafficSrcPaid(Boolean.valueOf(trafficInfoMap.get(TrafficSourceFinder.TRAFFIC_SRC_PAID)));
 
-		String pageUrl = httpRequest.getRequestURL().toString();
 		trafficTracking.setLandingUrl(pageUrl);
+		
 		Category category = null;
 		String categoryName = trafficInfoMap.get(TrafficSourceFinder.CATEGORY);
 		if (StringUtils.isNotBlank(categoryName))
@@ -84,6 +93,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		}
 		if (user != null) {
 			trafficTracking.setUserId(user.getId());
+			trafficTracking.setReturningUser(1L);
 		}
 		trafficTracking.setIp(httpRequest.getRemoteAddr());
 		trafficTracking.setSessionId(httpRequest.getSession().getId());
@@ -91,6 +101,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		trafficTracking.setUpdateDt(new Date());
 
 		trafficTracking = (TrafficTracking) getBaseDao().save(trafficTracking);
+		
 
 		return trafficTracking;
 	}
@@ -119,7 +130,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 					}
 				} else {
 					//Do nothing					
-					logger.warn("Entry for the pageUrl and trackingId already exists - so skipping entry");
+					//logger.warn("Entry for the pageUrl and trackingId already exists - so skipping entry");
 				}
 			}
 		}

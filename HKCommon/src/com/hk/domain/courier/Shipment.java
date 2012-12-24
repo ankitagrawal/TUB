@@ -68,6 +68,10 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	@Column (name = "packer")
 	private String packer;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "zone_id", nullable = true)
+	private Zone zone;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "create_dt", nullable = false)
 	private Date createDate = new Date();
@@ -229,5 +233,13 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public Zone getZone() {
+		return zone;
+	}
+
+	public void setZone(Zone zone) {
+		this.zone = zone;
 	}
 }

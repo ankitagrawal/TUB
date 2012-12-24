@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hk.admin.util.XslParser;
+import com.hk.cache.CategoryCache;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
@@ -124,7 +125,9 @@ public class ProductCatalogServiceImpl {
 			product.setCategories(new ArrayList<Category>(new HashSet<Category>(categoryList)));
 			//Check for Primary category and set it
 			if (primaryCategory != null) {
-				product.setPrimaryCategory(getCategoryService().getCategoryByName(primaryCategory.getName()));
+			    Category category = CategoryCache.getInstance().getCategoryByName(primaryCategory.getName()).getCategory();
+				//product.setPrimaryCategory(getCategoryService().getCategoryByName(primaryCategory.getName()));
+				product.setPrimaryCategory(category);
 			}
 
 			product = getProductService().save(product);

@@ -62,10 +62,12 @@
             <s:hidden name="purchaseInvoiceId" value="${paymentHistoryBean.purchaseInvoiceId}" />
             <s:hidden name="purchaseInvoice" value="${purchaseInvoice.id}"/>
               <tr>
-                <td>Payment Date</td>
+                <td style="font-weight:bold;">Payment Date</td>
                 <td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseInvoice.paymentDate" value="${purchaseInvoice.paymentDate}"/></td>
-                <td>Payment Details<br/><span class="sml gry">(eg. Cheque no.)</span></td>
-                <td><s:textarea name="purchaseInvoice.paymentDetails" style="height:50px;" >${purchaseInvoice.paymentDetails}</s:textarea></td>
+                <td style="font-weight:bold;">Status:</td>
+	            <td>${paymentHistoryBean.purchaseInvoice.purchaseInvoiceStatus.name}</td>
+	            <td style="font-weight:bold;">Payment Details<br/><span class="sml gry">(eg. Cheque no.)</span></td>
+                <td><s:textarea name="purchaseInvoice.paymentDetails" style="height:50px;" >${paymentHistoryBean.purchaseInvoice.paymentDetails}</s:textarea></td>
               </tr>
               <tr>
                 <td>

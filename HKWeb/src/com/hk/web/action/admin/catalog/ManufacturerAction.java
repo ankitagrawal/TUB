@@ -29,7 +29,6 @@ import com.hk.util.LatLongGenerator;
 @Component
 public class ManufacturerAction extends BasePaginatedAction {
 
-    private final String STRING_PATTERN   = "^[A-Za-z]*$";
     private final String EMAIL_PATTERN    = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     private Manufacturer manufacturer;
@@ -61,15 +60,24 @@ public class ManufacturerAction extends BasePaginatedAction {
             getContext().getValidationErrors().add("1", new SimpleError("Please Enter Name"));
         }
 
-        Pattern pattern = Pattern.compile(STRING_PATTERN);
-        if (manufacturer != null && manufacturer.getName() != null && !pattern.matcher(manufacturer.getName()).matches()) {
-            getContext().getValidationErrors().add("2", new SimpleError("Please Enter only characters in Name"));
-        }
+      if(manufacturer==null || manufacturer.getEmail()==null || manufacturer.getEmail().trim().equals("") ){
+          getContext().getValidationErrors().add("2", new SimpleError("Please Enter Email Id"));
+      }
 
-        pattern = Pattern.compile(EMAIL_PATTERN);
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        if(manufacturer!=null && manufacturer.getEmail()!=null && manufacturer.getEmail().contains(",")){
+        String[] emails = manufacturer.getEmail().trim().split(",");
+          for(String email : emails){
+            if (manufacturer != null && email != null && !pattern.matcher(email).matches()) {
+            getContext().getValidationErrors().add("3", new SimpleError("Please Enter Email ID in correct format"));
+           }
+          }
+        }
+      else{
         if (manufacturer != null && manufacturer.getEmail() != null && !pattern.matcher(manufacturer.getEmail()).matches()) {
             getContext().getValidationErrors().add("3", new SimpleError("Please Enter Email ID in correct format"));
         }
+      }
     }
 
     public Resolution createOrEditManufacturer() {
@@ -81,8 +89,8 @@ public class ManufacturerAction extends BasePaginatedAction {
             manufacturerDao.save(manufacturer);
         else {
             manufacturerDb = getBaseDao().get(Manufacturer.class, manufacturer.getId());
-            manufacturerDb.setName(manufacturer.getName());
-            manufacturerDb.setEmail(manufacturer.getEmail());
+            manufacturerDb.setName(manufacturer.getName().trim());
+            manufacturerDb.setEmail(manufacturer.getEmail().trim());
             manufacturerDb.setDescription(manufacturer.getDescription());
             manufacturerDb.setWebsite(manufacturer.getWebsite());
             manufacturerDb = (Manufacturer) getBaseDao().save(manufacturerDb);

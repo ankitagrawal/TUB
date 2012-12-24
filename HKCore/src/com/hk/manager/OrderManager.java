@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.servlet.http.HttpSession;
+
+import com.hk.pact.service.combo.ComboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.cache.UserCache;
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
@@ -23,6 +27,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.referrer.EnumPrimaryReferrerForOrder;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.affiliate.Affiliate;
+import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.Product;
@@ -44,7 +49,6 @@ import com.hk.domain.order.SecondaryReferrerForOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
-import com.hk.domain.analytics.TrafficTracking;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.pact.dao.BaseDao;
@@ -71,8 +75,6 @@ import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
 import com.hk.web.filter.WebContext;
 
-import javax.servlet.http.HttpSession;
-
 @Component
 public class OrderManager {
 
@@ -82,6 +84,8 @@ public class OrderManager {
     ProductVariantService                     productVariantService;
     @Autowired
     private CartLineItemService               cartLineItemService;
+    @Autowired
+    private ComboService                      comboService;
     @Autowired
     private OrderService                      orderService;
     @Autowired
@@ -106,7 +110,6 @@ public class OrderManager {
     private CartLineItemDao                   cartLineItemDao;
     @Autowired
     private LinkManager                       linkManager;
-
     @Autowired
     private SkuService                        skuService;
     @Autowired
@@ -123,7 +126,6 @@ public class OrderManager {
     private SubscriptionService               subscriptionService;
     @Autowired
     private SMSManager                        smsManager;
-
     @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
@@ -366,7 +368,9 @@ public class OrderManager {
                 getOrderLoggingService().logOrderActivity(order, order.getUser(),
                         getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
             } else if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.ON_DELIVERY.getId())) {
-                getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(),
+                //User adminUser = UserCache.getInstance().getAdminUser();
+                User adminUser = getUserService().getAdminUser();
+                getOrderLoggingService().logOrderActivity(order, adminUser,
                         getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), "Auto confirmation as valid user based on history.");
             }
 
@@ -432,6 +436,11 @@ public class OrderManager {
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 	    if (trafficTracking != null) {
 		    trafficTracking.setOrderId(order.getId());
+		    if (order.getUser().getOrders().size() > 1) {
+			    trafficTracking.setFirstOrder(0L);
+		    }else{
+				trafficTracking.setFirstOrder(1L);			    
+		    }
 		    getBaseDao().save(trafficTracking);
 	    }
 	    
@@ -588,6 +597,15 @@ public class OrderManager {
                                     if (unbookedInventory < 0) {
                                         unbookedInventory = 0L;
                                     }
+                                  //setting productVariant and it's related Combos out of stock
+                                  if(unbookedInventory <= 0L){
+                                    //Firstly setting product variant out of stock
+                                    ProductVariant productVariantOutOfStock = getProductVariantService().getVariantById(lineItem.getProductVariant().getId());
+                                    productVariantOutOfStock.setOutOfStock(true);
+                                    getProductVariantService().save(productVariantOutOfStock);
+                                   //calling Async method to set related combos out of stock
+                                    getComboService().markRelatedCombosOutOfStock(lineItem.getProductVariant());
+                                  }
                                     if (lineItem.getComboInstance() != null) {
                                         comboInstanceIds.add(lineItem.getComboInstance().getId());
                                         lineItem.setQty(0L);
@@ -956,4 +974,8 @@ public class OrderManager {
     public void setSmsManager(SMSManager smsManager) {
         this.smsManager = smsManager;
     }
+
+  public ComboService getComboService() {
+    return comboService;
+  }
 }

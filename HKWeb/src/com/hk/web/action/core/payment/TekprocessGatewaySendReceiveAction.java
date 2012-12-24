@@ -11,8 +11,10 @@ import com.hk.manager.payment.TekprocessPaymentGatewayWrapper;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
 import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +71,11 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
 				 */
 
 		logger.info("returning from payment gateway TekProcess with the parameter string msg : " + msg);
+
+        if(msg == null || StringUtils.isEmpty(msg)){
+            logger.info("Received Empty response from TekProcess Gateway, redirecting to failure page");
+            return new ForwardResolution("/pages/payment/paymentFail.jsp");
+        }
 
 		String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/tekprocess.live.properties";
 
