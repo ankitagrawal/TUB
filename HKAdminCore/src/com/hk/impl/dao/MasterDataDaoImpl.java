@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.domain.courier.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -91,6 +92,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private CourierService      courierService;
 	@Autowired
 	private ConsignmentService  consignmentService;
+
+	@Autowired
+	private DispatchLotService dispatchLotService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -409,5 +413,17 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
 	public List<String> getCustomerOnHoldReasonsForHkDelivery() {
 		return consignmentService.getCustomerOnHoldReasonsForHkDelivery();
+	}
+
+	public List<DispatchLotStatus> getDispatchLotStatusList() {
+		return getBaseDao().getAll(DispatchLotStatus.class);
+	}
+
+	public List<String> getSourceAndDestinationListForDispatchLot() {
+		return dispatchLotService.getSourceAndDestinationListForDispatchLot();
+	}
+
+	public List<String> getShipmentStatusForDispatchLot() {
+		return dispatchLotService.getShipmentStatusForDispatchLot();
 	}
 }
