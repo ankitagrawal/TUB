@@ -37,4 +37,6 @@ public interface ThirdPartyAwbService {
 
     public boolean deleteThirdPartyAwb(String awbNumber);
 
+	public String trackFedExShipment(String trackingId);
+
 }
