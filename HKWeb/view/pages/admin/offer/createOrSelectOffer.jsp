@@ -1,3 +1,4 @@
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -6,6 +7,12 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="heading">Step 2: Create / Select offer action</s:layout-component>
+	<s:layout-component name="htmlHead">
+		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+		    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+		    <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+		    <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+	</s:layout-component>
 
   <s:layout-component name="content">
 
@@ -63,6 +70,9 @@
           <li><label>Cashback Offer</label><s:checkbox name="offerActionCreate.cashback"/></li>
           <li><label>Reward Point Limit</label><s:text name="offerActionCreate.rewardPointCashbackLimit"/></li>
           <li><label>Reward Point Discount Percent</label><s:text name="offerActionCreate.rewardPointDiscountPercent"/></li>
+	        <li><label>Reward Points Expiry Date</label><s:text class="date_input endDate" style="width:150px"
+                                            formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="offerActionCreate.rewardPointExpiryDate"/>
+                </li>
           <li><label>&nbsp;</label>
 
             <div class="buttons"><s:submit name="create" value="Create New Offer Action"/></div>
