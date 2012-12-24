@@ -25,24 +25,24 @@ import java.util.Date;
 public class RtvNote implements Serializable{
 
   @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column (name = "id", unique = true, nullable = false)
-	private Long id;
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column (name = "id", unique = true, nullable = false)
+  private Long id;
 
   @ManyToOne  (fetch = FetchType.LAZY)
   @JoinColumn (name = "extra_inventory_id" , nullable = false)
   private ExtraInventory extraInventory;
 
   @ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn (name = "created_by", nullable = false)
-	private User createdBy;
+  @JoinColumn (name = "rtv_note_status_id", nullable = false)
+  private RtvNoteStatus rtvNoteStatus;
 
-   @ManyToOne (fetch = FetchType.LAZY)
-   @JoinColumn (name = "rtv_note_status_id", nullable = false)
-   private RtvNoteStatus rtvNoteStatus;
+  @ManyToOne (fetch = FetchType.LAZY)
+  @JoinColumn (name = "created_by", nullable = false)
+  private User createdBy;
 
-   @Column (name = "is_debit_to_supplier")
-   private Boolean isDebitToSupplier;
+  @Column (name = "is_debit_to_supplier")
+  private Boolean isDebitToSupplier;
 
   @Column (name = "reconciled")
   private Boolean reconciled;
@@ -51,12 +51,12 @@ public class RtvNote implements Serializable{
   private String remarks;
 
   @Temporal (TemporalType.TIMESTAMP)
-	@Column (name = "create_dt", nullable = false, length = 19)
-	private Date createDate = new Date();
+  @Column (name = "create_dt", nullable = false, length = 19)
+  private Date createDate = new Date();
 
   @Temporal (TemporalType.TIMESTAMP)
-	@Column (name = "update_dt", nullable = false, length = 19)
-	private Date updateDate = new Date();
+  @Column (name = "update_dt", nullable = false, length = 19)
+  private Date updateDate = new Date();
 
   public Long getId() {
     return id;
