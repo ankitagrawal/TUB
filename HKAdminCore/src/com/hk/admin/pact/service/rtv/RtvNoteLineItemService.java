@@ -18,5 +18,7 @@ public interface RtvNoteLineItemService {
 
   public RtvNoteLineItem getRtvNoteLineItemById(Long rtvNoteLineItemId);
 
+  public RtvNoteLineItem getRtvNoteLineItemByExtraInventoryLineItem(Long extraInventoryLineItemId);
+
   public List<RtvNoteLineItem> getRtvNoteLineItemsByRtvNote(RtvNote rtvNote);
 }

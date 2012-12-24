@@ -11,6 +11,7 @@ import com.hk.domain.inventory.rtv.RtvNoteStatus;
 public enum EnumRtvNoteStatus {
 
   Created(10L, "Created"),
+  SentToSupplier(20L, "Sent To Supplier"),
   Reconciled(40L, "Reconciled");
 
   private String name;

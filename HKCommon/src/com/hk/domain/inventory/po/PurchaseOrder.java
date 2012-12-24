@@ -116,7 +116,7 @@ public class PurchaseOrder implements java.io.Serializable {
 	@Column(name = "fill_rate")
 	private Double fillRate;
 
-  @ManyToOne (fetch = FetchType.LAZY)
+  @OneToOne
   @JoinColumn (name = "extra_inventory_id")
   private ExtraInventory extraInventory;
 

@@ -21,7 +21,7 @@ import com.hk.domain.core.Tax;
 
 @NamedQueries({
     @NamedQuery(name = "getExtraInventoryLineItemsByExtraInventoryId", query = "select eilt from ExtraInventoryLineItem eilt where extraInventory.id = :extraInventoryId"),
-    @NamedQuery(name = "getExtraInventoryLineItemById", query = "select eilt from ExtraInventoryLineItem  eilt where id = :extraInventoryId")
+    @NamedQuery(name = "getExtraInventoryLineItemById", query = "select eilt from ExtraInventoryLineItem  eilt where id = :extraInventoryLineItemId")
 })
 
 public class ExtraInventoryLineItem implements Serializable{
@@ -165,6 +165,10 @@ public class ExtraInventoryLineItem implements Serializable{
     return isRtvCreated;
   }
 
+  public Boolean getRtvCreated() {
+    return isRtvCreated;
+  }
+
   public void setRtvCreated(Boolean rtvCreated) {
     isRtvCreated = rtvCreated;
   }
@@ -175,5 +179,9 @@ public class ExtraInventoryLineItem implements Serializable{
 
   public void setGrnCreated(Boolean grnCreated) {
     isGrnCreated = grnCreated;
+  }
+
+   public Boolean getGrnCreated() {
+    return isGrnCreated;
   }
 }

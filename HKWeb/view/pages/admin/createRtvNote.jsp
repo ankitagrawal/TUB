@@ -13,8 +13,10 @@
     <s:layout-component name="content">
  <h2>Purchase Order # ${rtvNote.purchaseOrderId}</h2>
  <h4 style="color:blue;">Extra Inventory # ${rtvNote.extraInventory.id}</h4>
-
+<c:set var="reconciled" value="<%=EnumRtvNoteStatus.Reconciled.getId()%>"/>
         <s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">
+    <br><br>
+   <h2>Rtv Note</h2>
         <table>
             <thead>
             <tr>
@@ -35,23 +37,40 @@
                     <td> ${rtvNote.rtvNote.id}</td>
                     <td>${rtvNote.rtvNote.extraInventory.id}</td>
                     <td>
-                            <s:select name="rtvStatus">
-                                <s:option value="<%=EnumRtvNoteStatus.Created%>%>">Created</s:option>
-                                <s:option value="<%=EnumRtvNoteStatus.Reconciled%>%>">Reconciled</s:option>
-                            </s:select>
+                        <c:choose>
+                            <c:when test="${rtvNote.rtvNote.rtvNoteStatus.id eq reconciled}">
+                               <h6 style="color:blue">${rtvNote.rtvNote.rtvNoteStatus.name}(Closed)</h6>
+                            </c:when>
+                            <c:otherwise>
+                               <select name="rtvStatus">
+                                <option value="<%=EnumRtvNoteStatus.Created%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 10 ? 'selected':''}>Created</option>
+                                <option value="<%=EnumRtvNoteStatus.SentToSupplier%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 20 ? 'selected':''}>Sent To Supplier</option>
+                                <option value="<%=EnumRtvNoteStatus.Reconciled%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 40 ? 'selected':''}>Reconciled</option>
+                            </select>
+                            </c:otherwise>
+                        </c:choose>
+
                         </td>
                     <td>${rtvNote.rtvNote.createdBy.name}</td>
                     <td>
-                        <s:select name="isDebitToSupplier">
-                           <s:option value="0">No</s:option>
-                            <s:option value="1">Yes</s:option>
-                        </s:select>
+                        <select name="debitToSupplier">
+                           <option value="0" ${!rtvNote.rtvNote.debitToSupplier ? 'selected':''}>No</option>
+                            <option value="1" ${rtvNote.rtvNote.debitToSupplier ? 'selected':''}>Yes</option>
+                        </select>
                     </td>
                     <td>
-                       <s:select name="isReconciled">
-                           <s:option value="0">No</s:option>
-                            <s:option value="1">Yes</s:option>
-                        </s:select>
+                        <c:choose>
+                            <c:when test="${rtvNote.rtvNote.reconciled}">
+                               <h6 style="color:blue">${rtvNote.rtvNote.reconciled ? 'Yes' : 'No'}(Closed)</h6>
+                            </c:when>
+                            <c:otherwise>
+                                <select name="reconciled">
+                                    <option value="0" ${!rtvNote.rtvNote.reconciled ? 'selected':''}>No</option>
+                                    <option value="1" ${rtvNote.rtvNote.reconciled ? 'selected':''}>Yes</option>
+                                </select>
+                            </c:otherwise>
+                        </c:choose>
+
                     </td>
                     <td>${rtvNote.rtvNote.createDate}</td>
                     <td>${rtvNote.rtvNote.updateDate}</td>

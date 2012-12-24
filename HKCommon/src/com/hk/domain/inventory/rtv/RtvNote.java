@@ -19,7 +19,7 @@ import java.util.Date;
 
 @NamedQueries({
     @NamedQuery(name = "getRtvNoteByExtraInventory" , query = "select rtv from RtvNote rtv where extraInventory.id = :extraInventoryId"),
-    @NamedQuery(name = "getRtvNoteLineItemById", query = "select rtv from RtvNote rtv where id = :rtvNoteId")
+    @NamedQuery(name = "getRtvNoteById", query = "select rtv from RtvNote rtv where id = :rtvNoteId")
 })
 
 public class RtvNote implements Serializable{
@@ -33,12 +33,12 @@ public class RtvNote implements Serializable{
   @JoinColumn (name = "extra_inventory_id" , nullable = false)
   private ExtraInventory extraInventory;
 
-  @ManyToOne (fetch = FetchType.LAZY)
+  @ManyToOne
   @JoinColumn (name = "rtv_note_status_id", nullable = false)
   private RtvNoteStatus rtvNoteStatus;
 
   @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "created_by", nullable = false)
+  @JoinColumn (name = "user_id", nullable = false)
   private User createdBy;
 
   @Column (name = "is_debit_to_supplier")
@@ -86,11 +86,19 @@ public class RtvNote implements Serializable{
     return isDebitToSupplier;
   }
 
+  public Boolean getDebitToSupplier() {
+    return isDebitToSupplier;
+  }
+
   public void setDebitToSupplier(Boolean debitToSupplier) {
     isDebitToSupplier = debitToSupplier;
   }
 
   public Boolean isReconciled() {
+    return reconciled;
+  }
+
+  public Boolean getReconciled() {
     return reconciled;
   }
 

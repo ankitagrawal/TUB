@@ -16,7 +16,8 @@ import java.io.Serializable;
 
 @NamedQueries({
     @NamedQuery(name = "getRtvNoteLineItemsByRtvNote" , query = "select rli from RtvNoteLineItem rli where rtvNote = :rtvNote"),
-    @NamedQuery(name = "getRtvNoteLineItemById", query = "select rli from RtvNoteLineItem rli where id = :rtvNoteLineItemId")
+    @NamedQuery(name = "getRtvNoteLineItemById", query = "select rli from RtvNoteLineItem rli where id = :rtvNoteLineItemId"),
+    @NamedQuery(name = "getRtvNoteLineItemByExtraInventoryLineItem", query = "select rli from RtvNoteLineItem rli where extraInventoryLineItem.id = :extraInventoryLineItemId")
 })
 
 public class RtvNoteLineItem implements Serializable{
@@ -31,7 +32,7 @@ public class RtvNoteLineItem implements Serializable{
   private RtvNote rtvNote;
 
   @OneToOne
-  @JoinColumn (name = "extra_inventory_line_item" , nullable = false)
+  @JoinColumn (name = "extra_inventory_line_item_id" , nullable = false)
   private ExtraInventoryLineItem extraInventoryLineItem;
 
   public ExtraInventoryLineItem getExtraInventoryLineItem() {

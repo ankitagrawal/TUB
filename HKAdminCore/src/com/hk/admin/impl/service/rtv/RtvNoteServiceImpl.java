@@ -4,6 +4,7 @@ import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.pact.dao.BaseDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Time: 11:12:41 PM
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class RtvNoteServiceImpl implements RtvNoteService {
 
   @Autowired

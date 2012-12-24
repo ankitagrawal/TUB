@@ -6,6 +6,7 @@ import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.domain.inventory.rtv.RtvNoteLineItem;
 import com.hk.pact.dao.BaseDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * Time: 11:13:01 PM
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class RtvNoteLineItemServiceImpl implements RtvNoteLineItemService {
 
   @Autowired
@@ -24,6 +26,10 @@ public class RtvNoteLineItemServiceImpl implements RtvNoteLineItemService {
   public RtvNoteLineItem getRtvNoteLineItemById(Long rtvNoteLineItemId){
     return (RtvNoteLineItem) getBaseDao().findUniqueByNamedQueryAndNamedParam("getRtvNoteLineItemById", new String[]{"rtvNoteLineItemId"}, new Object[]{rtvNoteLineItemId});
   }
+
+    public RtvNoteLineItem getRtvNoteLineItemByExtraInventoryLineItem(Long extraInventoryLineItemId){
+      return (RtvNoteLineItem) getBaseDao().findUniqueByNamedQueryAndNamedParam("getRtvNoteLineItemByExtraInventoryLineItem", new String[]{"extraInventoryLineItemId"}, new Object[]{extraInventoryLineItemId});
+    }
 
   public RtvNoteLineItem save(RtvNoteLineItem rtvNoteLineItem){
       return (RtvNoteLineItem)getBaseDao().save(rtvNoteLineItem);

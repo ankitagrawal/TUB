@@ -90,10 +90,26 @@
                 });
                 $(".variantId").each(function(){
                     var variant = $(this).val();
+                    var obj = $(this);
                     if(variant == null || variant.trim(variant) == ""){
                         alert("Variant Id can't be left Empty.");
                         bool = false;
                         return false;
+                    }
+                    else if(isNaN(variant)){
+                        $.getJSON($('#skuCheck').attr('href'), {productVariantId: variant, wareHouseId: ${extraInventory.wareHouseId}}, function (res) {
+                        if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
+//                            alert("sku_id = : " + res.data.sku.id);
+                            obj.val(res.data.sku.id);
+                        }
+                        else{
+                            alert(res.message);
+                            obj.val("");
+                            bool = false;
+                            return false;
+                        }
+                    }
+                            );
                     }
                 });
                 $('.receivedQty').each(function () {
@@ -187,6 +203,7 @@
     </div>
     <br><br>
     <s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">
+   <h2>Extra Inventory</h2>
         <table>
             <thead>
             <tr>
@@ -246,10 +263,12 @@
                             <c:set var="bool" value="0"/>
                                 <c:if test="${eInLineItems.rtvCreated}">
                                     ${eInLineItems.id}(RTV Created)
+                                       <s:hidden name="extraInventoryLineItems[${ctr.index}].rtvCreated" value="${eInLineItems.rtvCreated}"/>
                                     <c:set var="bool" value="1"/>
                                 </c:if>
-                                <c:if test="${eInLineItems.grnCreated}">
+                               <c:if test="${eInLineItems.grnCreated}">
                                     ${eInLineItems.id}(GRN Created)
+                                     <s:hidden name="extraInventoryLineItems[${ctr.index}].grnCreated" value="${eInLineItems.grnCreated}"/>
                                     <c:set var="bool" value="1"/>
                                 </c:if>
                             <c:if test="${bool eq '0'}">
@@ -261,7 +280,7 @@
                             <c:choose>
                                 <c:when test="${eInLineItems.sku !=null}">
                                     ${eInLineItems.sku.productVariant.id}
-                                    <s:hidden name="extraInventoryLineItems[${ctr.index}].sku" value="${eInLineItems.sku.productVariant.id}"/>
+                                    <s:hidden name="extraInventoryLineItems[${ctr.index}].sku" value="${eInLineItems.sku.id}"/>
                                 </c:when>
                                 <c:otherwise>
                                     <input type="checkbox" class="variants" value="${ctr.index}"> <span>check this if you know Variant Id :</span>
@@ -295,14 +314,23 @@
             </c:if>
             </tbody>
         </table>
+        <c:choose>
+        <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
         <a href="extraInventoryItems.jsp?purchaseOrderId=${extraInventory.purchaseOrderId}&wareHouseId=${extraInventory.wareHouseId}#" id="addRowButton" style="font-size:1.2em">Add new row</a>
+        </c:when>
+            <c:otherwise>
+               <h4 style="color:blue;">RTV Status Closed</h4> 
+            </c:otherwise>
+        </c:choose>
         <br/>
         <s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}" />
         <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}" />
+        <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
         <s:submit name="createRtv" value="Create RTV" id="createRtv"/>
-        <s:submit name="editRtv" value="Edit RTV" id="createRtv"/>        
+        </c:if>
+        <s:submit name="editRtv" value="Check RTV Status"/>        
         <%--<s:submit name="createGRN" value="Create GRN" id="createRtv"/>--%>
-        <%--<s:submit name="editGRN" value="Edit GRN" id="createRtv"/>--%>
+        <%--<s:submit name="editGRN" value="Edit GRN"/>--%>
         <s:submit name="save" value="SAVE" id="save" />
     </s:form>
        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">
