@@ -27,7 +27,6 @@ import com.hk.pact.service.subscription.SubscriptionProductService;
  */
 
 public class SubscriptionAction extends BaseAction implements ValidationErrorHandler {
-  //private static Logger logger = Logger.getLogger(AddToCartAction.class);
 
   SubscriptionProduct subscriptionProduct;
   @Validate(required = true)

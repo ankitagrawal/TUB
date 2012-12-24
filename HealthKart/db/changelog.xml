@@ -10443,6 +10443,25 @@
             <column name="returning_user" type="INT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pradeep (generated)" id="1356002931704-1">
+        <addColumn tableName="hk_api_user">
+            <column name="order_placement_enabled" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1356002931704-2">
+        <addColumn tableName="hk_api_user">
+            <column name="secret_key" type="VARCHAR(300)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1356002931704-3">
+        <addColumn tableName="store">
+            <column name="callback_rest_url" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Rohit (generated)" id="1355814825152-1">
         <createTable tableName="dispatch_lot">
             <column autoIncrement="true" name="id" type="INT">
