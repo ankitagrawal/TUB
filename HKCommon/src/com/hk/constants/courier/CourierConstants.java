@@ -36,6 +36,7 @@ public class CourierConstants {
     public static final String CHHOTU = "CHHOTU";
     public static final String DTDC = "DTDC";
     public static final String DELHIVERY = "DELHIVERY";
+	public static final String FEDEX = "FEDEX";
 	public static final String QUANTIUM = "QUANTIUM";
 
 
