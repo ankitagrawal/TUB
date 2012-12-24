@@ -241,6 +241,10 @@
 --/sports/footwear/kids-shoes
 --/sports/footwear/other-shoes
 --/sports/footwear/accessories
+-/sports/fab-corner
+--/sports/fab-corner/win-win-deals
+--/sports/fab-corner/league-of-innovations
+--/sports/fab-corner/new-arrivals
 
 /diabetes
 -/diabetes/devices : Monitoring Devices
