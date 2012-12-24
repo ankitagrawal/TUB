@@ -19,6 +19,7 @@
 		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
+        <fileset file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 
 
 	</path>
@@ -40,7 +41,7 @@
 	</target>
 	-->
 
-	<target name="build.dependencies" depends="dependencies.check,build.core" />
+	<target name="build.dependencies" depends="dependencies.check,build.core,build.admin.core" />
 	<target name="dependencies.check">
 		<condition property="build.core.available">
 			<available file="${project.core.dir}/dist/hk-core.jar" />
@@ -49,6 +50,12 @@
 
 	<target name="build.core" unless="build.core.available">
 		<ant dir="${project.core.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
+	</target>
+
+    <target name="build.admin.core" unless="build.common.available">
+		<ant dir="${project.admin.core.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
 		</ant>
 	</target>

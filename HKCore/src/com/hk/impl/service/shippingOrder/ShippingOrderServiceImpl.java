@@ -71,8 +71,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ReplacementOrderDao        replacementOrderDao;
 	@Autowired
 	private PincodeService pincodeService;
-	@Autowired
-	private ShipmentService shipmentService;
+	
 
     private OrderService               orderService;
 
@@ -228,7 +227,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
         return false;
     }
-
+	 /*
     public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
         logger.debug("Trying to manually escalate order#" + shippingOrder.getId());
         if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
@@ -276,7 +275,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         }
         return false;
     }
-
+     */
     @Transactional
     public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder) {
         if (isShippingOrderAutoEscalable(shippingOrder)) {

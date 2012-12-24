@@ -49,6 +49,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 
 @Component
 public class ActionAwaitingQueueAction extends BasePaginatedAction {
@@ -84,6 +85,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 	ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     ShippingOrderLifecycleService shippingOrderLifecycleService;
+	@Autowired
+	AdminShippingOrderService adminShippingOrderService;
 
 	private Long orderId;
 	private Long storeId;
@@ -243,7 +246,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 		falseMessage.append("Shipping order which couldn't be escalated are ");
 		if (!shippingOrderList.isEmpty()) {
 			for (ShippingOrder shippingOrder : shippingOrderList) {
-				boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
+				boolean isManualEscalable = adminShippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
 				if (isManualEscalable) {
 					trueMessage.append(shippingOrder.getId());
 					trueMessage.append(" ");

@@ -2,6 +2,8 @@ package com.hk.report.manager;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,16 +17,13 @@ import java.util.Set;
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.hk.admin.util.BarcodeGenerator;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.DateUtils;
@@ -35,6 +34,7 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.report.ReportConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.core.search.ShippingOrderSearchCriteria;
@@ -130,6 +130,8 @@ public class ReportManager {
 
     @Autowired
     NotifyMeDao                notifyMeDao;
+	@Autowired
+	BarcodeGenerator	barcodeGenerator;
 
     TaxDao                     taxDaoProvider;
 
@@ -293,6 +295,15 @@ public class ReportManager {
         Sheet sheet1 = wb.createSheet("Courier");
         Row row = sheet1.createRow(0);
         row.setHeightInPoints((short) 30);
+		
+		// for adding barcode picture to excel
+		InputStream is = null;
+        byte[] bytes = null;
+        int pictureIdx = 0;
+        CreationHelper helper = null;
+		Drawing drawing = sheet1.createDrawingPatriarch();
+        ClientAnchor anchor = null;
+        Picture pict = null;
 
         int totalColumnNo = 25;
 
@@ -327,6 +338,9 @@ public class ReportManager {
 	    if(zone != null){
 	        setCellValue(row, 23, ReportConstants.ZONE);
         }
+		if (courierList.contains(EnumCourier.Speedpost.asCourier())){
+			setCellValue(row, 24, ReportConstants.BARCODE);
+		}
 
         int rowCounter = 1;
         if (startDate == null && endDate == null) {
@@ -429,7 +443,34 @@ public class ReportManager {
                 if (shipment.getBoxWeight() != null) {
                     setCellValue(row, 22, shipment.getBoxWeight());
                 }
+				if (shipment.getAwb() != null) {
+					String barcodePath = barcodeGenerator.getBarcodePath(shipment.getAwb().getAwbNumber(), 1.0f, 150, false);
+					// add picture data to this workbook.
+					is = new FileInputStream(barcodePath);
+					bytes = IOUtils.toByteArray(is);
+					pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+					is.close();
+					helper = wb.getCreationHelper();
 
+					// Create the drawing patriarch. This is the top level container for all shapes.
+					// add a picture shape
+					anchor = helper.createClientAnchor();
+					anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
+
+					// set top-left corner of the picture,
+					pict = drawing.createPicture(anchor, pictureIdx);
+					pict.resize(8.0);
+
+					//setCellValue(row, 24, awbNumber );
+					anchor.setDx1(10);
+					anchor.setDx2(700);
+					anchor.setDy1(10);
+					anchor.setDy2(200);
+					anchor.setCol1(24);
+					anchor.setRow1(rowCounter);
+					anchor.setCol2(24);
+					anchor.setRow2(rowCounter);
+				}
             }
         }
         wb.write(out);

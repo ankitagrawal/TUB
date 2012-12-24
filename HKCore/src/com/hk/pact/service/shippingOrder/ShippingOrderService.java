@@ -44,9 +44,7 @@ public interface ShippingOrderService {
 	 * @return true if it passes all the use cases i.e jit or availableUnbookedInventory Ajeet - 15-Feb-2012
 	 * @description shipping order
 	 */
-	public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder);
-
-	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
+	public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder);	
 
 	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
 

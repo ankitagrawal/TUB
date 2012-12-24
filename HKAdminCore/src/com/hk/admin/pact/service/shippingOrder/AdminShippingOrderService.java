@@ -19,7 +19,7 @@ public interface AdminShippingOrderService {
 
     public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse);
     
-    
+    public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
     
         
 

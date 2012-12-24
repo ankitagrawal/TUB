@@ -88,7 +88,7 @@ public class ShippingOrderAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution manualEscalateShippingOrder() {
-		boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
+		boolean isManualEscalable = adminShippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
 		String message = "";
 		if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
 			if (isManualEscalable) {
