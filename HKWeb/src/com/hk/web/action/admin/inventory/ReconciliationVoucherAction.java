@@ -30,6 +30,8 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.Sku;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
@@ -85,6 +87,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	private Warehouse warehouse;
 	private Integer askedQty;
 	private String batchNumber;
+	private String errorMessage;
 
 	@Validate(required = true, on = "parse")
 	private FileBean fileBean;
@@ -134,52 +137,108 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	}
 
 
-
-
-	
 	public Resolution saveAll() {
-		List<RvLineItem> rvNotSaved = reconciliationVoucherService.newSave(rvLineItems, reconciliationVoucher);
-		if (rvNotSaved.size() > 0) {
-			addRedirectAlertMessage(new SimpleMessage("Below RV Line items are not saved"));
-			for (RvLineItem rvLineItem : rvNotSaved) {
-				addRedirectAlertMessage(new SimpleMessage("Product Variant =  " + rvLineItem.getProductVariant() + "Batch Number =  " + rvLineItem.getBatchNumber()));
+		Map<RvLineItem,String>  rvNotSavedMap = new HashMap<RvLineItem,String>();
+		List<RvLineItem> rvLineItemsCorrectSize = new ArrayList<RvLineItem>();
+		List<RvLineItem> rvLineItemsFinal = new ArrayList<RvLineItem>();
+		if (rvLineItems != null && (!(rvLineItems.isEmpty()))) {
+			for (RvLineItem rvLineItem : rvLineItems) {
+				if (rvLineItem != null) {
+					rvLineItemsCorrectSize.add(rvLineItem);
+				}
+			}
+			for (RvLineItem rvLineItem : rvLineItemsCorrectSize) {
+
+				if (rvLineItem.getId() == null && (rvLineItem.getQty() == null || rvLineItem.getQty() == 0)) {
+					rvNotSavedMap.put(rvLineItem, "Quantity is Zero");
+					continue;
+				}
+				if (rvLineItem.getProductVariant() == null) {
+					rvNotSavedMap.put(rvLineItem, "Invalid Product Variant");
+					continue;
+				}
+				if(rvLineItem.getSku() == null){
+				Sku sku = skuService.getSKU(rvLineItem.getProductVariant(), reconciliationVoucher.getWarehouse());
+				if (sku == null) {
+					rvNotSavedMap.put(rvLineItem, "Sku does not exist. Contact Category Manager");
+					continue;
+				}
+				rvLineItem.setSku(sku);
+				}
+			if (rvLineItemsFinal.contains(rvLineItem)) {
+				int index = rvLineItemsFinal.indexOf(rvLineItem);
+				RvLineItem rvLineItemO = rvLineItemsFinal.get(index);
+				rvLineItemO.setQty(rvLineItemO.getQty() + rvLineItem.getQty());
+			}
+			else{
+				rvLineItemsFinal.add(rvLineItem);
 			}
 		}
-		return new RedirectResolution(ReconciliationVoucherAction.class);
+		reconciliationVoucherService.save(rvLineItemsFinal, reconciliationVoucher);
+		if (rvNotSavedMap.size() > 0) {
+			addRedirectAlertMessage(new SimpleMessage("Below RV Line items are not saved"));
+			for (RvLineItem rvLineItem : rvNotSavedMap.keySet()) {
+				String errorMessage =  rvNotSavedMap.get(rvLineItem);
+				addRedirectAlertMessage(new SimpleMessage("Product Variant =  " + rvLineItem.getProductVariant() + " REASON::::  "  +errorMessage));
+			}
+		}
+		}
+		return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
 	}
 
 
 	@JsonHandler
-	public Resolution saveRv() {
+	public Resolution saveAndReconcileRv() {
 		Map dataMap = new HashMap();
-		HealthkartResponse healthkartResponse = null;
+		HealthkartResponse healthkartResponse ;
 		if (rvLineItems != null && (!rvLineItems.isEmpty())) {
-			RvLineItem rvLineItem = rvLineItems.get(0);
-			List<SkuGroup> skuGroupList = getValidSkuGroups(rvLineItem.getBatchNumber().trim());
-			if (skuGroupList == null) {
-				//remove the lines after testing datamap
-				dataMap.put("rvLineItems", rvLineItems);
-				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Batch Number", dataMap);
-				return new JsonResolution(healthkartResponse);
-			}
-			List<SkuItem> skuItemList = skuItemDao.getInStockSkuItem(skuGroupList.get(0));
-			if (skuItemList.size() > rvLineItem.getQty()) {
-				try {
-					reconciliationVoucherService.newSave(rvLineItems, reconciliationVoucher);
-					rvLineItem.setReconciliedQty(rvLineItem.getQty());
-					dataMap.put("rvLineItems", rvLineItems);
-					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "successful", dataMap);
-				} catch (Exception e) {
-					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage());
+			for(RvLineItem rvLineItemTemp:rvLineItems){
+				if(rvLineItemTemp != null){
+					rvLineItem = rvLineItemTemp;
+					break;
 				}
-			} else {
-				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Operation Failed::::Batch contains qty" + skuItemList.size() + " < " + rvLineItem.getQty() + "Qty");
 			}
-		} else {
 
+			try {
+				if (rvLineItem.getProductVariant() != null) {
+					ProductVariant productVariant = rvLineItem.getProductVariant();				
+					List<SkuGroup> skuGroupList = getValidSkuGroups(rvLineItem.getBatchNumber().trim(), productVariant.getId());
+					if (skuGroupList != null && skuGroupList.size() > 0) {
+						List<SkuItem> skuItemList  = skuItemDao.getInStockSkuItem(skuGroupList.get(0));
+						if ( skuItemList.size() >= rvLineItem.getQty().intValue()) {
+							Sku sku = skuService.getSKU(productVariant, getUserService().getWarehouseForLoggedInUser());
+							rvLineItem.setSku(sku);
+							RvLineItem rvLineItemSaved = reconciliationVoucherService.reconcile(rvLineItem, reconciliationVoucher,skuGroupList.get(0));
+							if(rvLineItemSaved == null){
+							healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "EXCEPTION:: Reconciliation Failed", dataMap);
+							}
+							else{
+							dataMap.put("rvLineItems", rvLineItems);
+							healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "successful", dataMap);
+							}
+
+						} else {
+							String msg = "Operation Failed::::Batch contains qty  " + skuItemList.size() + " < " + rvLineItem.getQty() + "Qty";
+							healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, msg );
+						}
+					} else {
+						healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, errorMessage);
+					}
+				} else {
+					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product Variant");
+				}
+
+			} catch (Exception e) {
+				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage());
+			}
+
+		} else {
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "EXCEPTION ::::RV Line Item Null");
 		}
+
 		return new JsonResolution(healthkartResponse);
 	}
+
 
 
 	public Resolution create() {
@@ -197,25 +256,24 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 	public Resolution view() {
 		if (reconciliationVoucher != null) {
+			rvLineItems=reconciliationVoucher.getRvLineItems();
 			logger.debug("reconciliationVoucher@Pre: " + reconciliationVoucher.getId());
 		}
+
 		return new ForwardResolution("/pages/admin/createReconciliationVoucher.jsp");
 	}
 
-
+	@JsonHandler
 	public Resolution getBatchDetails() {
-		SkuGroup skuGroup = null;
-		String msg = null;
-		HealthkartResponse healthkartResponse = null;
-		Map dataMap = new HashMap();
+		HealthkartResponse healthkartResponse ;
+		Map<String,List<SkuGroup>> dataMap = new HashMap<String,List<SkuGroup>>();
 		try {
-			List<SkuGroup> skuGroupList = getValidSkuGroups(batchNumber.trim());
+			List<SkuGroup> skuGroupList = getValidSkuGroups(batchNumber.trim(),productVariantId);
 			if (skuGroupList != null && skuGroupList.size() > 0) {
 				dataMap.put("skuGroupList", skuGroupList);
-				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, " ", dataMap);
+				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, errorMessage, dataMap);
 			} else {
-				msg = "Eneterd Batch is not correct for row";
-				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, msg);
+				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, errorMessage);
 			}
 			return new JsonResolution(healthkartResponse);
 
@@ -226,19 +284,48 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 	}
 
-	public List<SkuGroup> getValidSkuGroups(String batchNumber) {
-		SkuGroup skuGroup = null;
+	private  List<SkuGroup> getValidSkuGroups(String batchNumber,String productVariantId) {
+		SkuGroup skuGroup ;
 		List<SkuGroup> skuGroupList = null;
-		skuGroup = skuGroupDao.getSkuGroup(batchNumber.trim());
-		if (skuGroup != null) {
-			skuGroupList = new ArrayList<SkuGroup>();
-			skuGroupList.add(skuGroup);
+		errorMessage = "";
+		ProductVariant productVariant = productVariantService.getVariantById(productVariantId);
+		if (productVariant != null) {
+			Sku sku = skuService.getSKU(productVariant, getUserService().getWarehouseForLoggedInUser());
+			if (sku != null) {
+				skuGroup = skuGroupDao.getSkuGroup(batchNumber.trim());
+				if (skuGroup != null) {
+					if (skuGroup.getSku().getProductVariant().equals(productVariant)) {
+						skuGroupList = new ArrayList<SkuGroup>();
+						skuGroupList.add(skuGroup);
+						return skuGroupList;
+					} else {
+						errorMessage = "batch number does not belong to enetred variant Id";
+					}
+				} else {
+					skuGroupList = skuGroupDao.getSkuGroupByBatch(batchNumber.trim());
+					if (skuGroupList != null && skuGroupList.size() > 0) {
+						skuGroupList = skuGroupDao.getSkuGroupByBatch(batchNumber.trim(), sku);
+						if (skuGroupList != null && skuGroupList.size() > 0) {
+							return skuGroupList;
+						} else {
+							errorMessage = "batch number does not belong to enetred variant Id";
+						}
+
+					} else {
+						errorMessage = "Invalid Batch Number";
+					}
+
+
+				}
+			} else {
+				errorMessage = "Sku of Product varinat  does not exist";
+			}
 		} else {
-			skuGroupList = skuGroupDao.getSkuGroupByBatch(batchNumber.trim());
+			errorMessage = "Invalid Product varinat Id";
 		}
 		return skuGroupList;
-
 	}
+
 
 	public ReconciliationVoucher getReconciliationVoucher() {
 		return reconciliationVoucher;

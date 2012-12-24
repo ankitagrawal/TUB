@@ -42,11 +42,18 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
        return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
      }
 
-	 public List<SkuGroup> getSkuGroupByBatch(String batch) {
-		 DetachedCriteria skuGroupDetachedCriteria = DetachedCriteria.forClass(SkuGroup.class);
-		 skuGroupDetachedCriteria.add(Restrictions.eq("batchNumber",batch));
+	public List<SkuGroup> getSkuGroupByBatch(String batch, Sku sku) {
+		DetachedCriteria skuGroupDetachedCriteria = DetachedCriteria.forClass(SkuGroup.class);
+		skuGroupDetachedCriteria.add(Restrictions.eq("batchNumber", batch));
+		if (sku != null) {
+			skuGroupDetachedCriteria.add(Restrictions.eq("sku", sku));
+		}
 		return (List<SkuGroup>) findByCriteria(skuGroupDetachedCriteria);
-     }
+	}
+
+	public List<SkuGroup> getSkuGroupByBatch(String batch){
+		return getSkuGroupByBatch( batch, null);
+	}
 
    /* public void resetInventory(ProductVariant productVariant) {
         List<Long> toBeRemovedIds = (List<Long>) getSession().createQuery("select id from SkuGroup sg where sg.sku.productVariant = :productVariant").setParameter(

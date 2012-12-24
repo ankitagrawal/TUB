@@ -6,6 +6,7 @@ import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.sku.SkuGroup;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,5 +21,7 @@ public interface ReconciliationVoucherService {
 
 	public ReconciliationVoucher save(ReconciliationVoucher reconciliationVoucher);
 
-	 public List<RvLineItem> newSave( List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
+	 public void save( List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
+
+	public RvLineItem reconcile(RvLineItem rvLineItem,ReconciliationVoucher reconciliationVoucher,SkuGroup skuGroup);
 }

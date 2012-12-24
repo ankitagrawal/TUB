@@ -53,10 +53,16 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 
 	public List<SkuItem> getInStockSkuItem(SkuGroup skuGroup) {
 		//replace with Criteria query
+		List<SkuItem> skuItemListFinal = new ArrayList<SkuItem>();
 		List<SkuItem> skuItemList = new ArrayList<SkuItem>(skuGroup.getSkuItems());
 		String hqlQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null and pvi.skuItem in (:skuItemList)" +
-				" group by pvi.skuItem .id having sum(qty) > 0";
-		return (List<SkuItem>) getSession().createQuery(hqlQuery).setParameterList("skuItemList", skuItemList).list();
+				" group by pvi.skuItem.id having sum(qty) > 0";
+		 List<Long>  skuItemIdList = getSession().createQuery(hqlQuery).setParameterList("skuItemList", skuItemList).list();
+		if(skuItemIdList != null && skuItemIdList.size() > 0) {
+		String query ="from SkuItem sk where sk.id in(:skuIdList)";
+		skuItemListFinal = getSession().createQuery(query).setParameterList("skuIdList", skuItemIdList).list();
+		}
+		return skuItemListFinal;
 	}
 }
 

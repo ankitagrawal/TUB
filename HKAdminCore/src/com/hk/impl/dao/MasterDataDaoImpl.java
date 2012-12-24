@@ -23,6 +23,7 @@ import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
+import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
@@ -205,7 +206,13 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<ReconciliationType> getReconciliationTypeList() {
-        return getBaseDao().getAll(ReconciliationType.class);
+    List<ReconciliationType> reconciliationList =getBaseDao().getAll(ReconciliationType.class);
+	    ReconciliationType add = EnumReconciliationType.Add.asReconciliationType();
+	    ReconciliationType subtract = EnumReconciliationType.Subtract.asReconciliationType();
+	    reconciliationList.remove(add);
+	     reconciliationList.remove(subtract);
+	    return reconciliationList;
+
     }
 
     public List<EmailType> getEmailTypeList() {

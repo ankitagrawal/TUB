@@ -43,7 +43,7 @@
 				</td>
 			</tr>
 		</table>
-		<s:submit name="create" value="save"/>
+		<s:submit name="create" value="Continue"/>
 	</s:form>
 </s:layout-component>
 </s:layout-render>

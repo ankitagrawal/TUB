@@ -22,6 +22,7 @@ import javax.persistence.TemporalType;
 
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.akube.framework.gson.JsonSkip;
 
 
 @Entity
@@ -50,6 +51,7 @@ public class ReconciliationVoucher implements java.io.Serializable {
   @JoinColumn(name = "created_by", nullable = false)
   private User createdBy;
 
+  @JsonSkip	
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reconciliationVoucher")
   private List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
 
