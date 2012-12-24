@@ -73,6 +73,10 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     private         User                loggedOnUser;
     private         List<ConsignmentDto>  consignmentDtoList;
+
+	private         Map<Consignment, String> consignmentOnHoldReason;
+
+//	private         String
     @Autowired
     ShippingOrderService                  shippingOrderService;
     @Autowired
@@ -130,7 +134,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be greater than expected amount "));
                 return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
-            runsheetService.saveRunSheet(runsheet, changedConsignmentList);
+            runsheetService.saveRunSheet(runsheet, changedConsignmentList, consignmentOnHoldReason);
             addRedirectAlertMessage(new SimpleMessage("Runsheet saved"));
             return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
         }
@@ -143,7 +147,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     public Resolution markAllDelivered(){
         if(runsheet != null){
             runsheetService.markAllConsignmentsAsDelivered(runsheet);
-            runsheetService.saveRunSheet(runsheet, changedConsignmentList);
+            runsheetService.saveRunSheet(runsheet, changedConsignmentList, consignmentOnHoldReason);
         }
         return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
     }
@@ -166,7 +170,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 addRedirectAlertMessage(new SimpleMessage("cannot close runsheet with consignment status out for delivery or receieved at hub."));
                 return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
-            runsheetService.saveRunSheet(runsheet, changedConsignmentList);
+            runsheetService.saveRunSheet(runsheet, changedConsignmentList, consignmentOnHoldReason);
 
         }
         return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
@@ -552,4 +556,12 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     public void setConsignmentDtoList(List<ConsignmentDto> consignmentDtoList) {
         this.consignmentDtoList = consignmentDtoList;
     }
+
+	public Map<Consignment, String> getConsignmentOnHoldReason() {
+		return consignmentOnHoldReason;
+	}
+
+	public void setConsignmentOnHoldReason(Map<Consignment, String> consignmentOnHoldReason) {
+		this.consignmentOnHoldReason = consignmentOnHoldReason;
+	}
 }
