@@ -51,7 +51,7 @@ public class ProductResource {
     @GET
     @Path ("/{productId}/info")
     @Produces (MediaType.APPLICATION_JSON)
-    public HKAPIBaseDTO productiinfo(@PathParam ("productId") String productId) {
+    public HKAPIBaseDTO productInfo(@PathParam ("productId") String productId) {
 
         return hkapiProductService.getProductDetails(productId);
     }

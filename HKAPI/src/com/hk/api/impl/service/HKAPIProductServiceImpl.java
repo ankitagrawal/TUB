@@ -80,7 +80,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
 	private static final Integer pixelSize = 1024;
 
     public HKAPIBaseDTO getProductDetails(String productId){
-         Product product=productService.getProductById(productId);
+        Product product=productService.getProductById(productId);
         HKAPIBaseDTO hkAPIBaseDto=new HKAPIBaseDTO();
         if(product!=null){
             HKAPIProductDTO productDTO=new HKAPIProductDTO();
@@ -88,15 +88,18 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
             productDTO.setOutOfStock(product.getOutOfStock());
             productDTO.setProductID(product.getId());
             List<ProductVariant> productVariantList=product.getProductVariants();
-            HKAPIProductVariantDTO[] productVariantDTOs=new HKAPIProductVariantDTO[productVariantList.size()];
+            HKAPIProductVariantDTO[] productVariantDTOs = new HKAPIProductVariantDTO[productVariantList.size()];
             int i=0;
             for(ProductVariant variant:productVariantList){
-                productVariantDTOs[i].setProductVariantID(variant.getId());
-                productVariantDTOs[i].setHkDiscountPercent(variant.getDiscountPercent());
-                productVariantDTOs[i].setHkPrice(variant.getHkPrice());
-                productVariantDTOs[i].setMrp(variant.getMarkedPrice());
-                productVariantDTOs[i].setDeleted(variant.isDeleted());
-                productVariantDTOs[i].setOutOfStock(variant.isOutOfStock());
+	              HKAPIProductVariantDTO productVariantDTO = new HKAPIProductVariantDTO();
+	              productVariantDTO.setProductVariantID(variant.getId());
+                productVariantDTO.setHkDiscountPercent(variant.getDiscountPercent());
+                productVariantDTO.setHkPrice(variant.getHkPrice());
+                productVariantDTO.setMrp(variant.getMarkedPrice());
+                productVariantDTO.setDeleted(variant.isDeleted());
+                productVariantDTO.setOutOfStock(variant.isOutOfStock());
+	              productVariantDTOs[i] = productVariantDTO;
+	              i++;
             }
             productDTO.setProductVariantDTOs(productVariantDTOs);
             hkAPIBaseDto.setData(productDTO);
