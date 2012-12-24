@@ -10535,4 +10535,9 @@
     <changeSet author="Rohit (generated)" id="1355814825152-11">
         <addForeignKeyConstraint baseColumnNames="shipment_id" baseTableName="dispatch_lot_has_shipment" constraintName="fk_dispatch_lot_has_shipment_shipment1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipment" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1356342327664-1">
+        <addColumn tableName="offer_action">
+            <column name="reward_point_expiry_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
