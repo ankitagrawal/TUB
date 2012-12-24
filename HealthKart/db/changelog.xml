@@ -10540,4 +10540,9 @@
             <column name="reward_point_expiry_date" type="DATETIME"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1356344043298-1">
+        <addColumn tableName="offer_action">
+            <column name="reward_point_redeem_within_days" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

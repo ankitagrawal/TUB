@@ -63,6 +63,9 @@ public class OfferAction implements java.io.Serializable {
   @Column (name = "reward_point_expiry_date")
   private Date rewardPointExpiryDate;
 
+	@Column (name = "reward_point_redeem_within_days")
+  private Integer rewardPointRedeemWithinDays;
+
   public Long getId() {
     return this.id;
   }
@@ -161,6 +164,14 @@ public class OfferAction implements java.io.Serializable {
 
 	public void setRewardPointExpiryDate(Date rewardPointExpiryDate) {
 		this.rewardPointExpiryDate = rewardPointExpiryDate;
+	}
+
+	public Integer getRewardPointRedeemWithinDays() {
+		return rewardPointRedeemWithinDays;
+	}
+
+	public void setRewardPointRedeemWithinDays(Integer rewardPointRedeemWithinDays) {
+		this.rewardPointRedeemWithinDays = rewardPointRedeemWithinDays;
 	}
 
 	@Override
