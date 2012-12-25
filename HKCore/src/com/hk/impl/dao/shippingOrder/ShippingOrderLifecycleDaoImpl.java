@@ -3,6 +3,8 @@ package com.hk.impl.dao.shippingOrder;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.order.ShippingOrderLifecycle;
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -31,4 +33,10 @@ public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements Shippi
 
         return criteria.list();
     }
+
+	public List<ShippingOrderLifecycle> getShippingOrderLifecycleBySOAndActivity(Long shippingOrderId, Long shippingOrderLifeCycleActivityId) {
+		return findByNamedParams("select sl from ShippingOrderLifecycle sl where sl.shippingOrder.id = :shippingOrderId " +
+				" and sl.shippingOrderLifeCycleActivity.id = :shippingOrderLifeCycleActivityId ", new String[]{"shippingOrderId", "shippingOrderLifeCycleActivityId"},
+				new Object[]{shippingOrderId, shippingOrderLifeCycleActivityId});
+	}
 }
