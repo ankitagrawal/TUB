@@ -93,6 +93,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		}
 		if (user != null) {
 			trafficTracking.setUserId(user.getId());
+			trafficTracking.setReturningUser(1L);
 		}
 		trafficTracking.setIp(httpRequest.getRemoteAddr());
 		trafficTracking.setSessionId(httpRequest.getSession().getId());
