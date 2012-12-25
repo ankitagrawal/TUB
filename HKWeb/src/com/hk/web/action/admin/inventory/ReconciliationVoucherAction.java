@@ -131,7 +131,6 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		}
 		reconciliationVoucherService.save(loggedOnUser, rvLineItems, reconciliationVoucher);
-
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		return new RedirectResolution(ReconciliationVoucherAction.class);
 	}
@@ -213,7 +212,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 							healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "EXCEPTION:: Reconciliation Failed", dataMap);
 							}
 							else{
-							dataMap.put("rvLineItems", rvLineItems);
+							dataMap.put("rvLineItem", rvLineItemSaved);
 							healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "successful", dataMap);
 							}
 

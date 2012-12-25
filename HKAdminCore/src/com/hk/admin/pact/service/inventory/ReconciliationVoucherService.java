@@ -17,11 +17,11 @@ import java.util.Map;
  */
 public interface ReconciliationVoucherService {
 
-    public void save(User loggedOnUser, List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
+	public void save(User loggedOnUser, List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
 
 	public ReconciliationVoucher save(ReconciliationVoucher reconciliationVoucher);
 
-	 public void save( List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
+	public void save(List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
 
-	public RvLineItem reconcile(RvLineItem rvLineItem,ReconciliationVoucher reconciliationVoucher,SkuGroup skuGroup);
+	public RvLineItem reconcile(RvLineItem rvLineItem, ReconciliationVoucher reconciliationVoucher, SkuGroup skuGroup);
 }

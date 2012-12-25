@@ -173,7 +173,7 @@
 				dataType:'json',
 				success: function(data) {
 					if (data.code == '<%=HealthkartResponse.STATUS_OK%>') {
-
+						var reconQty = data.data.rvLineItem.reconciliedQty;
 						curEle.parents('tr').find('input,select,textarea').each(function() {
 							if ($(this).attr('type') == 'hidden')
 							{
@@ -185,14 +185,16 @@
 							}
 							else
 							{
-								$(this).replaceWith($(this).val());
+								if ($(this).attr('id') == 'reconciliedqty')
+								{
+									$(this).replaceWith('' + reconQty);
+								}
+								else {
+									$(this).replaceWith($(this).val());
+								}
 							}
 						});
 						curEle.css("display", "none");
-						var reconQty =data.data.rvLineItems[0].reconciliedQty;
-						$(this).parents('tr').find('#reconciliedqty').val(reconQty);
-
-
 					}
 					if (data.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
 
@@ -290,7 +292,7 @@
 						</td>
 						<td><s:text name="rvLineItems[${ctr.index}].qty" id="quantity" value="${rvLineItem.qty}"/>
 						</td>
-						<td><s:text name="rvLineItems[${ctr.index}].reconciliedQty" id="reconciliedqty" 
+						<td><s:text name="rvLineItems[${ctr.index}].reconciliedQty" id="reconciliedqty"
 						            value="${rvLineItem.reconciliedQty}"/>
 						</td>
 						<td class="reconciliationType">
@@ -314,11 +316,13 @@
 							        value="${rvLineItem.batchNumber}"/>
 						</td>
 						<td>
-							<s:text name="rvLineItems[${ctr.index}].mfgDate" value="${rvLineItem.mfgDate}"  formatPattern="yyyy-MM-dd"/>
-							</td>
+							<s:text name="rvLineItems[${ctr.index}].mfgDate" value="${rvLineItem.mfgDate}"
+							        formatPattern="yyyy-MM-dd"/>
+						</td>
 						<td>
-							<s:text name="rvLineItems[${ctr.index}].expiryDate" value="${rvLineItem.expiryDate}" formatPattern="yyyy-MM-dd"/>
-							</td>
+							<s:text name="rvLineItems[${ctr.index}].expiryDate" value="${rvLineItem.expiryDate}"
+							        formatPattern="yyyy-MM-dd"/>
+						</td>
 						<td>
 							<s:textarea name="rvLineItems[${ctr.index}].remarks" value="${rvLineItem.remarks}"/>
 
@@ -386,7 +390,6 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-
 
 
 		$('.saveButton').click(function(e) {

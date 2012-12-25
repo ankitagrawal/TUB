@@ -10545,4 +10545,9 @@
             <column name="reward_point_redeem_within_days" type="INT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1356418728416-1">
+        <addColumn tableName="rv_line_item">
+            <column name="reconcilied_qty" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
