@@ -5,6 +5,8 @@ import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
+import com.hk.pact.dao.BaseDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,9 @@ import java.util.List;
 
 @Service
 public class GrnLineItemServiceImpl implements GrnLineItemService {
+
+  @Autowired
+  BaseDao baseDao;
 
 	public Long getPoLineItemQty(GrnLineItem grnLineItem) {
 		if (grnLineItem != null) {
@@ -49,4 +54,11 @@ public class GrnLineItemServiceImpl implements GrnLineItemService {
 		return grnLineItemQtyAlreadySet;
 	}
 
+  public GrnLineItem save(GrnLineItem grnLineItem){
+     return (GrnLineItem)getBaseDao().save(grnLineItem);
+  }
+
+  public BaseDao getBaseDao() {
+    return baseDao;
+  }
 }

@@ -190,7 +190,15 @@ public class PoLineItem implements java.io.Serializable {
 		this.fillRate = fillRate;
 	}
 
-	@Override
+  public ExtraInventoryLineItem getExtraInventoryLineItem() {
+    return extraInventoryLineItem;
+  }
+
+  public void setExtraInventoryLineItem(ExtraInventoryLineItem extraInventoryLineItem) {
+    this.extraInventoryLineItem = extraInventoryLineItem;
+  }
+
+  @Override
 	public String toString() {
 		return this.id != null ? this.id.toString() : "";
 	}

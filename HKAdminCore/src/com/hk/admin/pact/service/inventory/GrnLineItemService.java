@@ -17,4 +17,6 @@ public interface GrnLineItemService {
 
 	public Long getGrnLineItemQtyAlreadySet(GoodsReceivedNote grn ,Sku sku);
 
+  public GrnLineItem save(GrnLineItem grnLineItem);
+
 }

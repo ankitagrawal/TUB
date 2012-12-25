@@ -10718,6 +10718,9 @@
     <changeSet author="Shrey (generated)" id="24122012-01">
         <sql>
             insert into rtv_note_status values(10, 'Created'),(20, 'Sent To Supplier'),(40, 'Reconciled');
+            insert into feedback_issuetype(id,issue_type)
+            values(10,'Delivery'),(20,'Customer Service'),(30,'Pricing'),(40,'Others'),(50,'Out of stock'),(60,'Packaging'),(70,'Site usability'),
+            (80,'product Additions'),(90,'Product Quality'),(100,'Loyalty'),(110,'Payment');
         </sql>
     </changeSet>
 </databaseChangeLog>

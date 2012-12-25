@@ -4,6 +4,7 @@ import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.inventory.rtv.ExtraInventory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,12 +40,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		getPurchaseOrderDao().saveOrUpdate(purchaseOrder);
 
 	}
+
     public PurchaseOrder save(PurchaseOrder purchaseOrder){
       return (PurchaseOrder)getPurchaseOrderDao().save(purchaseOrder);
     }
+
   public PurchaseOrder getPurchaseOrderById(Long purchaseOrderId){
      return (PurchaseOrder)getPurchaseOrderDao().findUniqueByNamedQueryAndNamedParam("getPurchaseOrderById", new String[]{"purchaseOrderId"} , new Object[]{purchaseOrderId});
   }
+  
+   public PurchaseOrder getPurchaseOrderByExtraInventory(ExtraInventory extraInventory){
+    return (PurchaseOrder) getPurchaseOrderDao().findUniqueByNamedQueryAndNamedParam("getPurchaseOrderByExtraInventory", new String[]{"extraInventory"}, new Object[]{extraInventory});
+   }
 
 	public PurchaseOrderDao getPurchaseOrderDao() {
 		return purchaseOrderDao;

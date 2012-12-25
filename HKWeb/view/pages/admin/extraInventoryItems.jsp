@@ -15,9 +15,9 @@
             $('#createRtv').live('click',function(){
                 var bool = true;
                 $('.checkbox1').each(function(){
-                   if ($(this).attr("checked") == "checked") {
-                       bool = false;
-                   }
+                    if ($(this).attr("checked") == "checked") {
+                        bool = false;
+                    }
                 });
                 if(bool){
                     alert("Please select Line Items to create RTV / GRN");
@@ -28,18 +28,18 @@
             $('.variantId').live('change',function(){
                 var variant = $(this).val();
                 var obj = $(this);
-              $.getJSON($('#skuCheck').attr('href'), {productVariantId: variant, wareHouseId: ${extraInventory.wareHouseId}}, function (res) {
-                        if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
-//                            alert("sku_id = : " + res.data.sku.id);
-                            obj.val(res.data.sku.id);
-                        }
-                        else{
-                            alert(res.message);
-                            obj.val("");
-                            return false;
-                        }
+                $.getJSON($('#skuCheck').attr('href'), {productVariantId: variant, wareHouseId: ${extraInventory.wareHouseId}}, function (res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
+                        obj.parent().parent().children('td.skuId').children('.skus').val(res.data.sku.id);
                     }
-                            );
+                    else{
+                        alert(res.message);
+                        obj.val("");
+                        obj.parent().parent().children('td.skuId').children('.skus').val("");
+                        return false;
+                    }
+                }
+                        );
             });
 
             $(".variants").live('click',function(){
@@ -47,15 +47,18 @@
                 $('.variants').each(function(){
                     var this_index = $(this).attr('value');
                     if(this_index == index){
-//                        alert(index);
-                        var txtBox = "<input type='text'  class='variantId' placeholder='Enter Variant ID' name='extraInventoryLineItems[" + index + "].sku' />" ;
+                        //                        alert(index);
+                        var txtBox = "<input type='text'  class='variantId' placeholder='Enter Variant ID'/>" ;
+                        var txtBox2 = "<input type='text' class='skus' readonly='readonly' name='extraInventoryLineItems[" + index + "].sku' />" ;
                         var isChecked = $(this).attr('checked')?true:false;
                         if(isChecked){
                             $(this).parent().children('span').html('');
+                            $(this).parent().parent().children('td.skuId').append(txtBox2);
                             $(this).parent().append(txtBox);
                         }
                         else{
                             $(this).parent().children('input[type="text"]').remove();
+                            $(this).parent().parent().children('td.skuId').children('.skus').remove();
                             $(this).parent().children('span').html('check this if you know Variant Id :');
                         }
                     }
@@ -65,15 +68,15 @@
             $("#save").click(function(){
                 var bool = true;
                 $('.productName').each(function(){
-                   var product = $(this).val();
-                   if(product == null || product.trim(product) == ""){
-                       alert("Product Name can't be left Empty");
-                       bool = false;
-                       return false;
-                   }
+                    var product = $(this).val();
+                    if(product == null || product.trim(product) == ""){
+                        alert("Product Name can't be left Empty");
+                        bool = false;
+                        return false;
+                    }
                 });
                 $('.mrp').each(function(){
-                   var mrp = $(this).val();
+                    var mrp = $(this).val();
                     if(mrp==null || mrp.trim(mrp) == "" || isNaN(mrp)){
                         alert("Enter MRP in correct format.");
                         bool = false;
@@ -81,7 +84,7 @@
                     }
                 });
                 $('.costPrice').each(function(){
-                   var costPrice = $(this).val();
+                    var costPrice = $(this).val();
                     if(costPrice == null || costPrice.trim(costPrice) == "" || isNaN(costPrice)){
                         alert("Enter Cost Price in correct format.");
                         bool = false;
@@ -98,18 +101,18 @@
                     }
                     else if(isNaN(variant)){
                         $.getJSON($('#skuCheck').attr('href'), {productVariantId: variant, wareHouseId: ${extraInventory.wareHouseId}}, function (res) {
-                        if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
-//                            alert("sku_id = : " + res.data.sku.id);
-                            obj.val(res.data.sku.id);
+                            if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
+                                obj.parent().parent().children('td.skuId').children('.skus').val(res.data.sku.id);
+                            }
+                            else{
+                                alert(res.message);
+                                obj.val("");
+                                obj.parent().parent().children('td.skuId').children('.skus').val("");
+                                bool = false;
+                                return false;
+                            }
                         }
-                        else{
-                            alert(res.message);
-                            obj.val("");
-                            bool = false;
-                            return false;
-                        }
-                    }
-                            );
+                                );
                     }
                 });
                 $('.receivedQty').each(function () {
@@ -139,6 +142,8 @@
                         '<tr class="lastRow lineItemRow" count="' + nextIndex + '" >' +
                         '<td>' + Math.round(nextIndex + 1) + '.</td>' +
                         '<td>' +
+                        '</td>' +
+                        '<td class="skuId">' +
                         '</td>' +
                         '<td class="txtSku"> <input type="checkbox" class="variants" value="' + nextIndex + '" /> <span> Check this if you know Variant Id: </span>' +
                         '</td>' +
@@ -173,12 +178,12 @@
             });
 
             $('.valueChange').live("change", function () {
-                  var value = $(this).val();
-                   if(value.trim(value) =="" || value == null){
+                var value = $(this).val();
+                if(value.trim(value) =="" || value == null){
                     alert("All fields are compulsory.");
                     return false;
                 }
-                   if(isNaN(value)){
+                if(isNaN(value)){
                     alert("Enter value in correct format.");
                     return false;
                 }
@@ -203,7 +208,7 @@
     </div>
     <br><br>
     <s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">
-   <h2>Extra Inventory</h2>
+        <h2>Extra Inventory</h2>
         <table>
             <thead>
             <tr>
@@ -216,15 +221,15 @@
             </thead>
             <tbody>
             <c:choose>
-            <c:when test="${extraInventory.extraInventory!=null}">
-                <tr>
-                    <td> ${extraInventory.extraInventory.id}</td>
-                    <td>${extraInventory.extraInventory.createdBy.name}</td>
-                    <td>${extraInventory.extraInventory.createDate}</td>
-                    <td>${extraInventory.extraInventory.updateDate}</td>
-                    <td><textarea name = "comments" rows="10" cols="10">${extraInventory.extraInventory.comments}</textarea></td>
-                </tr>
-            </c:when>
+                <c:when test="${extraInventory.extraInventory!=null}">
+                    <tr>
+                        <td> ${extraInventory.extraInventory.id}</td>
+                        <td>${extraInventory.extraInventory.createdBy.name}</td>
+                        <td>${extraInventory.extraInventory.createDate}</td>
+                        <td>${extraInventory.extraInventory.updateDate}</td>
+                        <td><textarea name = "comments" rows="10" cols="10">${extraInventory.extraInventory.comments}</textarea></td>
+                    </tr>
+                </c:when>
                 <c:otherwise>
                     <tr>
                         <td></td>
@@ -240,12 +245,13 @@
         <s:hidden name="extraInventoryId" value="${extraInventory.extraInventory.id}"/>
         <br><br>
         <div class="clear"></div>
-         <h2>Extra Inventory Line Items</h2>
+        <h2>Extra Inventory Line Items</h2>
         <table border="1">
             <thead>
             <tr>
                 <th>S.No</th>
                 <th>ID</th>
+                <th>SKU ID</th>
                 <th>Variant ID</th>
                 <th>Product Name</th>
                 <th>MRP</th>
@@ -261,29 +267,48 @@
                         <td>${ctr.index+1}.</td>
                         <td>
                             <c:set var="bool" value="0"/>
-                                <c:if test="${eInLineItems.rtvCreated}">
-                                    ${eInLineItems.id}(RTV Created)
-                                       <s:hidden name="extraInventoryLineItems[${ctr.index}].rtvCreated" value="${eInLineItems.rtvCreated}"/>
-                                    <c:set var="bool" value="1"/>
-                                </c:if>
-                               <c:if test="${eInLineItems.grnCreated}">
-                                    ${eInLineItems.id}(GRN Created)
-                                     <s:hidden name="extraInventoryLineItems[${ctr.index}].grnCreated" value="${eInLineItems.grnCreated}"/>
-                                    <c:set var="bool" value="1"/>
-                                </c:if>
+                            <c:if test="${eInLineItems.rtvCreated}">
+                                ${eInLineItems.id}(RTV Created)
+                                <s:hidden name="extraInventoryLineItems[${ctr.index}].rtvCreated" value="${eInLineItems.rtvCreated}"/>
+                                <c:set var="bool" value="1"/>
+                            </c:if>
+                            <c:if test="${eInLineItems.grnCreated}">
+                                ${eInLineItems.id}(GRN Created)
+                                <s:hidden name="extraInventoryLineItems[${ctr.index}].grnCreated" value="${eInLineItems.grnCreated}"/>
+                                <c:set var="bool" value="1"/>
+                            </c:if>
                             <c:if test="${bool eq '0'}">
-                            <s:checkbox class="checkbox1" value="${eInLineItems.id}" name="extraInventoryLineItemsSelected[${ctr.index}].id"/>${eInLineItems.id}
+                                <s:checkbox class="checkbox1" value="${eInLineItems.id}" name="extraInventoryLineItemsSelected[${ctr.index}].id"/>${eInLineItems.id}
                             </c:if>
                             <s:hidden name="extraInventoryLineItems[${ctr.index}].id" value="${eInLineItems.id}"/>
                         </td>
-                        <td class="txtSku">
+                        <td class="skuId">
                             <c:choose>
-                                <c:when test="${eInLineItems.sku !=null}">
-                                    ${eInLineItems.sku.productVariant.id}
+                                <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated}">
+                                    ${eInLineItems.sku.id}
                                     <s:hidden name="extraInventoryLineItems[${ctr.index}].sku" value="${eInLineItems.sku.id}"/>
                                 </c:when>
                                 <c:otherwise>
-                                    <input type="checkbox" class="variants" value="${ctr.index}"> <span>check this if you know Variant Id :</span>
+                                    <c:if test="${eInLineItems.sku !=null}">
+                                        <s:text name="extraInventoryLineItems[${ctr.index}].sku" class="skus" readonly="readonly" value="${eInLineItems.sku.id}"/>
+                                    </c:if>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td class="txtSku">
+                            <c:choose>
+                                <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated}">
+                                    ${eInLineItems.sku.productVariant.id}
+                                </c:when>
+                                <c:otherwise>
+                                    <c:choose>
+                                        <c:when test="${eInLineItems.sku !=null}">
+                                            <input type="text" class='variantId' value="${eInLineItems.sku.productVariant.id}"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <input type="checkbox" class="variants" value="${ctr.index}"> <span>check this if you know Variant Id :</span>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:otherwise>
                             </c:choose>
                         </td>
@@ -315,27 +340,27 @@
             </tbody>
         </table>
         <c:choose>
-        <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
-        <a href="extraInventoryItems.jsp?purchaseOrderId=${extraInventory.purchaseOrderId}&wareHouseId=${extraInventory.wareHouseId}#" id="addRowButton" style="font-size:1.2em">Add new row</a>
-        </c:when>
+            <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
+                <a href="extraInventoryItems.jsp?purchaseOrderId=${extraInventory.purchaseOrderId}&wareHouseId=${extraInventory.wareHouseId}#" id="addRowButton" style="font-size:1.2em">Add new row</a>
+            </c:when>
             <c:otherwise>
-               <h4 style="color:blue;">RTV Status Closed</h4> 
+                <h4 style="color:blue;">RTV Status Closed</h4>
             </c:otherwise>
         </c:choose>
         <br/>
         <s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}" />
         <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}" />
+        <s:submit name="save" value="SAVE" id="save" class="_blank"/>
         <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
-        <s:submit name="createRtv" value="Create RTV" id="createRtv"/>
+            <s:submit name="createRtv" value="Create RTV" id="createRtv"/>
         </c:if>
-        <s:submit name="editRtv" value="Check RTV Status"/>        
-        <%--<s:submit name="createGRN" value="Create GRN" id="createRtv"/>--%>
-        <%--<s:submit name="editGRN" value="Edit GRN"/>--%>
-        <s:submit name="save" value="SAVE" id="save" />
+        <s:submit name="editRtv" value="Check RTV Status"/>
+        <s:submit name="createGRN" value="Create GRN" id="createRtv"/>
+        <s:submit name="editGRN" value="Check GRN Status"/>
     </s:form>
-       <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">
-            <div align="center" style="font-weight:bold; font-size:150%">BACK</div>
-          </s:link>
+    <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">
+        <div align="center" style="font-weight:bold; font-size:150%">BACK</div>
+    </s:link>
     <div class="clear"></div>
 
 </s:layout-component>

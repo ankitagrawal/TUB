@@ -23,7 +23,8 @@ import java.util.List;
 /*@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)*/
 
 @NamedQueries({
-    @NamedQuery(name = "getPurchaseOrderById", query = "select pc from PurchaseOrder pc where id = :purchaseOrderId")
+    @NamedQuery(name = "getPurchaseOrderById", query = "select pc from PurchaseOrder pc where id = :purchaseOrderId"),
+    @NamedQuery(name = "getPurchaseOrderByExtraInventory", query = "select pc from PurchaseOrder pc where extraInventory = :extraInventory")
 })
 public class PurchaseOrder implements java.io.Serializable {
 
