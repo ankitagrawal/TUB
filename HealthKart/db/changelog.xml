@@ -10723,4 +10723,34 @@
             (80,'Product Addition'),(90,'Product Damaged'),(100,'Product Expired'),(110,'Loyalty'),(120,'Payment');
         </sql>
     </changeSet>
+	<changeSet author="Pradeep (generated)" id="1356002931704-1">
+       <addColumn tableName="hk_api_user">
+           <column defaultValueNumeric="0" name="order_placement_enabled" type="TINYINT">
+               <constraints nullable="false"/>
+           </column>
+       </addColumn>
+   </changeSet>
+   <changeSet author="Pradeep (generated)" id="1356002931704-2">
+       <addColumn tableName="hk_api_user">
+           <column name="secret_key" type="VARCHAR(300)">
+               <constraints nullable="false"/>
+           </column>
+       </addColumn>
+   </changeSet>
+   <changeSet author="Pradeep (generated)" id="1356002931704-3">
+       <addColumn tableName="store">
+           <column name="callback_rest_url" type="VARCHAR(100)"/>
+       </addColumn>
+   </changeSet>
+	<changeSet author="Rahul (generated)" id="1356518834014-1">
+		<createTable tableName="download_process">
+			<column autoIncrement="true" name="download_id" type="INT">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column name="run_date" type="DATETIME"/>
+			<column name="last_run_date" type="DATETIME"/>
+			<column name="status" type="VARCHAR(5)"/>
+			<column name="create_dt" type="DATETIME"/>
+		</createTable>
+	</changeSet>
 </databaseChangeLog>
