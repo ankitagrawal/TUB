@@ -30,52 +30,51 @@ import com.hk.pact.dao.courier.PincodeDao;
 @Repository
 public class PincodeRegionZoneDaoImpl extends BaseDaoImpl implements PincodeRegionZoneDao {
 
-    private static Logger logger = LoggerFactory.getLogger(PincodeRegionZoneDaoImpl.class);
-	 @Autowired
-	PincodeDao pincodeDao;
+	private static Logger logger = LoggerFactory.getLogger(PincodeRegionZoneDaoImpl.class);
 
-    public List<PincodeRegionZone> getSortedRegionList(List<Courier> courierList, Pincode pincode, Warehouse warehouse) {
 
-        /*   select * from pincode_region_zone prz,region_type rt where prz.region_type_id = rt.id and prz.pincode_id = 1
-        and rt.priority =(select min(r.priority) from pincode_region_zone p,region_type r where p.region_type_id = r.id and p.pincode_id = 1)
-        */
+	public List<PincodeRegionZone> getSortedRegionList(List<Courier> courierList, Pincode pincode, Warehouse warehouse) {
 
-        Long minPriority = (Long) getSession().createQuery("select min(prz.regionType.priority) from PincodeRegionZone prz inner join prz.courierGroup.couriers c " +
-                "where c in (:courierList) and prz.pincode = :pincode and prz.warehouse = :warehouse")
-                .setParameterList("courierList", courierList)
-                .setParameter("pincode", pincode)
-                .setParameter("warehouse", warehouse)
-                .uniqueResult();
+		/*   select * from pincode_region_zone prz,region_type rt where prz.region_type_id = rt.id and prz.pincode_id = 1
+				and rt.priority =(select min(r.priority) from pincode_region_zone p,region_type r where p.region_type_id = r.id and p.pincode_id = 1)
+				*/
 
-        logger.info("minPriority is " + minPriority);
+		Long minPriority = (Long) getSession().createQuery("select min(prz.regionType.priority) from PincodeRegionZone prz inner join prz.courierGroup.couriers c " +
+				"where c in (:courierList) and prz.pincode = :pincode and prz.warehouse = :warehouse")
+				.setParameterList("courierList", courierList)
+				.setParameter("pincode", pincode)
+				.setParameter("warehouse", warehouse)
+				.uniqueResult();
 
-        return getSession().createQuery("select prz from PincodeRegionZone prz inner join prz.courierGroup.couriers c " +
-                "where c in (:courierList) and prz.pincode = :pincode and prz.warehouse = :warehouse and prz.regionType.priority = :minPriority")
-                .setParameterList("courierList", courierList)
-                .setParameter("pincode", pincode)
-                .setParameter("warehouse", warehouse)
-                .setParameter("minPriority", minPriority)
-                .list();
+		logger.info("minPriority is " + minPriority);
 
-    }
+		return getSession().createQuery("select prz from PincodeRegionZone prz inner join prz.courierGroup.couriers c " +
+				"where c in (:courierList) and prz.pincode = :pincode and prz.warehouse = :warehouse and prz.regionType.priority = :minPriority")
+				.setParameterList("courierList", courierList)
+				.setParameter("pincode", pincode)
+				.setParameter("warehouse", warehouse)
+				.setParameter("minPriority", minPriority)
+				.list();
 
-    public List<PincodeRegionZone> getApplicableRegionList(List<Courier> courierList, Pincode pincode, Warehouse warehouse) {
+	}
 
-        return getSession().createQuery("select prz from PincodeRegionZone prz inner join prz.courierGroup.couriers c " +
-                "where c in (:courierList) and prz.pincode = :pincode and prz.warehouse = :warehouse")
-                .setParameterList("courierList", courierList)
-                .setParameter("pincode", pincode)
-                .setParameter("warehouse", warehouse)
-                .list();
+	public List<PincodeRegionZone> getApplicableRegionList(List<Courier> courierList, Pincode pincode, Warehouse warehouse) {
 
-    }
+		return getSession().createQuery("select prz from PincodeRegionZone prz inner join prz.courierGroup.couriers c " +
+				"where c in (:courierList) and prz.pincode = :pincode and prz.warehouse = :warehouse")
+				.setParameterList("courierList", courierList)
+				.setParameter("pincode", pincode)
+				.setParameter("warehouse", warehouse)
+				.list();
+
+	}
 
 	public PincodeRegionZone getPincodeRegionZone(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse) {
 		Criteria pincodeRegionZoneCriteria = getPincodeRegionZoneCriteria(courierGroup, pincode, warehouse);
 		return (PincodeRegionZone) pincodeRegionZoneCriteria.uniqueResult();
 	}
 
-	public Criteria getPincodeRegionZoneCriteria(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse) {
+	private Criteria getPincodeRegionZoneCriteria(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse) {
 		Criteria pincodeRegionZoneCriteria = getSession().createCriteria(PincodeRegionZone.class);
 		if (pincode != null) {
 			pincodeRegionZoneCriteria.add(Restrictions.eq("pincode", pincode));
@@ -94,37 +93,27 @@ public class PincodeRegionZoneDaoImpl extends BaseDaoImpl implements PincodeRegi
 		return (List<PincodeRegionZone>) pincodeRegionZoneCriteria.list();
 	}
 
-	//get NearbyPincode(Pincodes of same city) , save Pincode Region Zones of new pincode/edited pincode same as NearByPincode
-	public Integer assignPincodeRegionZoneToPincode(Pincode pincode) {
-		int recordsSaved = 0;
-		List<Pincode> nearByPincodes = pincodeDao.getPincodes(pincode.getCity());
-		List<PincodeRegionZone> pincodeRegionZoneList = new ArrayList();
+	public List<PincodeRegionZone> getPincodeRegionZoneList(Pincode pincode) {
+		return getPincodeRegionZoneList(null, pincode, null);
+	}
 
-		if (nearByPincodes != null && nearByPincodes.size() > 0) {
-			for (Pincode pincodeO : nearByPincodes) {
-				if (pincodeO.equals(pincode)) {
-					continue;
-				}
-				List<PincodeRegionZone> pincodeRegionZoneListDb = getPincodeRegionZoneList(null, pincodeO, null);
-				if (pincodeRegionZoneListDb != null && pincodeRegionZoneListDb.size() > 0) {
-					pincodeRegionZoneList = pincodeRegionZoneListDb;
-					break;
-				}
-			}
-			List<PincodeRegionZone> alreadyExistingPrzForPincode = getPincodeRegionZoneList(null, pincode, null);
-			for (PincodeRegionZone pincodeRegionZone : alreadyExistingPrzForPincode) {
-				delete(pincodeRegionZone);
-			}
-			for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
-				PincodeRegionZone newPincodeRegionZone = new PincodeRegionZone();
-				newPincodeRegionZone.setRegionType(pincodeRegionZone.getRegionType());
-				newPincodeRegionZone.setCourierGroup(pincodeRegionZone.getCourierGroup());
-				newPincodeRegionZone.setWarehouse(pincodeRegionZone.getWarehouse());
-				newPincodeRegionZone.setPincode(pincode);
-				save(newPincodeRegionZone);
-				recordsSaved++;
-			}
+	//get NearbyPincode(Pincodes of same city) , save Pincode Region Zones of new pincode/edited pincode same as NearByPincode
+	public int assignPincodeRegionZoneToPincode(Pincode pincode, List<PincodeRegionZone> pincodeRegionZoneList) {
+		int recordsSaved = 0;
+		List<PincodeRegionZone> alreadyExistingPrzForPincode = getPincodeRegionZoneList(pincode);
+		for (PincodeRegionZone pincodeRegionZone : alreadyExistingPrzForPincode) {
+			super.delete(pincodeRegionZone);
 		}
+		for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
+			PincodeRegionZone newPincodeRegionZone = new PincodeRegionZone();
+			newPincodeRegionZone.setRegionType(pincodeRegionZone.getRegionType());
+			newPincodeRegionZone.setCourierGroup(pincodeRegionZone.getCourierGroup());
+			newPincodeRegionZone.setWarehouse(pincodeRegionZone.getWarehouse());
+			newPincodeRegionZone.setPincode(pincode);
+			super.save(newPincodeRegionZone);
+			recordsSaved++;
+		}
+
 
 		return recordsSaved;
 	}

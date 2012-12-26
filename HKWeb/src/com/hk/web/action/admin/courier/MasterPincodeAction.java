@@ -31,6 +31,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeRegionZoneService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -56,7 +57,7 @@ public class MasterPincodeAction extends BaseAction {
 	@Autowired
 	XslGenerator xslGenerator;
 	@Autowired
-	PincodeRegionZoneDao pincodeRegionZoneDao;
+	PincodeRegionZoneService pincodeRegionZoneService;
 	@Autowired
 	PincodeService pincodeService;
 
@@ -109,7 +110,7 @@ public class MasterPincodeAction extends BaseAction {
 	}
 
 	public Resolution save() {
-		Integer PrzSaved  = 0;
+		int numberOfPRZSavedForPinocde  = 0;
 		if (pincode == null || StringUtils.isBlank(pincode.getPincode()) || pincode.getCity() == null || pincode.getState() == null
 				|| pincode.getPincode().length() < 6 || (!StringUtils.isNumeric(pincode.getPincode()))) {
 			addRedirectAlertMessage(new SimpleMessage("Enter values correctly."));
@@ -126,14 +127,14 @@ public class MasterPincodeAction extends BaseAction {
 			pincodeByCode.setDefaultCourier(pincode.getDefaultCourier());
 			pincodeDb = (Pincode) pincodeDao.save(pincodeByCode);
 			if (!(previousCity.equals(pincode.getCity()))) {
-				PrzSaved = pincodeRegionZoneDao.assignPincodeRegionZoneToPincode(pincodeDb);
+				numberOfPRZSavedForPinocde = pincodeRegionZoneService.assignPincodeRegionZoneToPincode(pincodeDb);
 			}
 		} else {
 			pincodeDb = (Pincode) pincodeDao.save(pincode);
-			PrzSaved = pincodeRegionZoneDao.assignPincodeRegionZoneToPincode(pincodeDb);
+			numberOfPRZSavedForPinocde = pincodeRegionZoneService.assignPincodeRegionZoneToPincode(pincodeDb);
 		}
-		if(PrzSaved > 0){
-		addRedirectAlertMessage(new SimpleMessage(" Pincode Saved and  Total ::::::::  " + PrzSaved + "    ------- New Pincode Region Zone also saved For Pincode :: " + pincodeDb.getPincode()));
+		if(numberOfPRZSavedForPinocde > 0){
+		addRedirectAlertMessage(new SimpleMessage(" Pincode Saved and  Total ::::::::  " + numberOfPRZSavedForPinocde + "    ------- New Pincode Region Zone also saved For Pincode :: " + pincodeDb.getPincode()));
 		return new RedirectResolution(MasterPincodeAction.class, "searchPincodeRegion").addParameter("pincodeRegionZone.pincode.pincode", pincodeDb.getPincode());
 		}
 		else {
@@ -205,7 +206,7 @@ public class MasterPincodeAction extends BaseAction {
 
 	public Resolution savePincodeRegionList() {
 		for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
-			pincodeRegionZoneDao.saveOrUpdate(pincodeRegionZone);
+			pincodeRegionZoneService.saveOrUpdate(pincodeRegionZone);
 		}
 		addRedirectAlertMessage(new SimpleMessage("Pincode Region saved"));
 		return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
@@ -218,16 +219,17 @@ public class MasterPincodeAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
 		} else {
 			try {
-				PincodeRegionZone pincodeRegionZoneDb = pincodeRegionZoneDao.getPincodeRegionZone(pincodeRegionZone.getCourierGroup(), pincodeObj, pincodeRegionZone.getWarehouse());
+				PincodeRegionZone pincodeRegionZoneDb = pincodeRegionZoneService.getPincodeRegionZone(pincodeRegionZone.getCourierGroup(), pincodeObj, pincodeRegionZone.getWarehouse());
 				if (pincodeRegionZoneDb != null) {
 					pincodeRegionZoneDb.setRegionType(pincodeRegionZone.getRegionType());
 				} else {
 					pincodeRegionZone.setPincode(pincodeObj);
 					pincodeRegionZoneDb = pincodeRegionZone;
 				}
-				pincodeRegionZoneDao.save(pincodeRegionZoneDb);
+				pincodeRegionZoneService.save(pincodeRegionZoneDb);
 			} catch (Exception ex) {
 				addRedirectAlertMessage(new SimpleMessage("EXCEPTION IN SAVING" + ex.getMessage()));
+				logger.debug("Exception In Saving Pincode Region" + ex.getStackTrace());
 				return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
 			}
 			addRedirectAlertMessage(new SimpleMessage("Pincode region saved"));
@@ -240,7 +242,7 @@ public class MasterPincodeAction extends BaseAction {
 		if (pincode == null) {
 			addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
 		} else {
-			pincodeRegionZoneList = pincodeRegionZoneDao.getPincodeRegionZoneList(pincodeRegionZone.getCourierGroup(), pincode, pincodeRegionZone.getWarehouse());
+			pincodeRegionZoneList = pincodeRegionZoneService.getPincodeRegionZoneList(pincodeRegionZone.getCourierGroup(), pincode, pincodeRegionZone.getWarehouse());
 			if (pincodeRegionZoneList == null) {
 				addRedirectAlertMessage(new SimpleMessage("Pincode Region zone does not exist for Pincode"));
 			}
