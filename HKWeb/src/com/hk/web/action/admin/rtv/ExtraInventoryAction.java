@@ -278,7 +278,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         }
       }
     }
-    List<Long> skus = new ArrayList<Long>();
+//    List<Long> skus = new ArrayList<Long>();
     //checking if one of sku is null
     for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
       if(extraInventoryLineItem!=null){
@@ -288,24 +288,24 @@ public class ExtraInventoryAction extends BasePaginatedAction{
           addRedirectAlertMessage(new SimpleMessage("One of the selected Line Item sku is null, please Enter Sku and then press create GRN !!!"));
           return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
         }
-        skus.add(extraInventoryLineItem.getSku().getId());
+//        skus.add(extraInventoryLineItem.getSku().getId());
       }
     }
     purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
     //checking if one of the selected sku has already been created under this PO
-    if(purchaseOrder.getGoodsReceivedNotes()!=null && purchaseOrder.getGoodsReceivedNotes().size()!=0){
-      for(GoodsReceivedNote goodsReceivedNote : purchaseOrder.getGoodsReceivedNotes()){
-        if(goodsReceivedNote.getGrnLineItems()!=null && goodsReceivedNote.getGrnLineItems().size()!=0){
-          for(GrnLineItem grnLineItem : goodsReceivedNote.getGrnLineItems()){
-            if(skus.contains(grnLineItem.getSku().getId())){
-              noCache();
-              addRedirectAlertMessage(new SimpleMessage("Grn of one of the selected Line Item is already created under this PO !!!!"));
-              return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
-            }
-          }
-        }
-      }
-    }
+//    if(purchaseOrder.getGoodsReceivedNotes()!=null && purchaseOrder.getGoodsReceivedNotes().size()!=0){
+//      for(GoodsReceivedNote goodsReceivedNote : purchaseOrder.getGoodsReceivedNotes()){
+//        if(goodsReceivedNote.getGrnLineItems()!=null && goodsReceivedNote.getGrnLineItems().size()!=0){
+//          for(GrnLineItem grnLineItem : goodsReceivedNote.getGrnLineItems()){
+//            if(skus.contains(grnLineItem.getSku().getId())){
+//              noCache();
+//              addRedirectAlertMessage(new SimpleMessage("Grn of one of the selected Line Item is already created under this PO !!!!"));
+//              return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+//            }
+//          }
+//        }
+//      }
+//    }
     noCache();
     return new ForwardResolution(ExtraInventoryAction.class, "generateGRN").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
   }

@@ -207,7 +207,7 @@
         <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" id="skuCheck" event="getSku"></s:link>
     </div>
     <br><br>
-    <s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">
+    <s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" >
         <h2>Extra Inventory</h2>
         <table>
             <thead>
@@ -350,12 +350,12 @@
         <br/>
         <s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}" />
         <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}" />
-        <s:submit name="save" value="SAVE" id="save" class="_blank"/>
+        <s:submit name="save" value="SAVE" id="save" />
         <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
-            <s:submit name="createRtv" value="Create RTV" id="createRtv"/>
+            <s:submit name="createRtv" value="Create RTV" id="createRtv" />
         </c:if>
-        <s:submit name="editRtv" value="Check RTV Status"/>
-        <s:submit name="createGRN" value="Create GRN" id="createRtv"/>
+        <s:submit name="editRtv" value="Check RTV Status" />
+        <s:submit name="createGRN" value="Create GRN" id="createRtv" />
         <s:submit name="editGRN" value="Check GRN Status"/>
     </s:form>
     <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">
