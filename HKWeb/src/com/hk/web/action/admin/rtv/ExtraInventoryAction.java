@@ -95,7 +95,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     }
     purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
     if(purchaseOrder!=null){
-       newPurchaseOrderId = purchaseOrder.getId();
+      newPurchaseOrderId = purchaseOrder.getId();
     }
     if(extraInventory != null){
       rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
@@ -174,7 +174,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     }
     purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
     if(purchaseOrder!=null){
-       newPurchaseOrderId = purchaseOrder.getId();
+      newPurchaseOrderId = purchaseOrder.getId();
     }
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!! "));
@@ -253,7 +253,22 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       rtvNote.setDebitToSupplier(isDebitToSupplier);
       rtvNote = getRtvNoteService().save(rtvNote);
     }
-    rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
+//    rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
+    if(extraInventory!=null){
+      extraInventoryLineItems= getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+    }
+    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
+    if(purchaseOrder!=null){
+      newPurchaseOrderId = purchaseOrder.getId();
+    }
+    if(extraInventory != null){
+      rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
+      if(rtvNote!=null){
+        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+          reconciledStatus = "reconciled";
+        }
+      }
+    }
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Changes Saved successfully !!!!"));
     return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
@@ -263,15 +278,15 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   public Resolution editRtv(){
     rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventoryId);
     if(rtvNote == null){
-     addRedirectAlertMessage(new SimpleMessage("No RTV Exist !!!! "));
-    return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+      addRedirectAlertMessage(new SimpleMessage("No RTV Exist !!!! "));
+      return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
     }
     rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
     extraInventory = rtvNote.getExtraInventory();
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
-  
+
   public Resolution createPO(){
     extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
     extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
@@ -377,9 +392,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         poLineItem = getPoLineItemService().save(poLineItem);
       }
     }
-    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);    
-     if(purchaseOrder!=null){
-       newPurchaseOrderId = purchaseOrder.getId();
+    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
+    if(purchaseOrder!=null){
+      newPurchaseOrderId = purchaseOrder.getId();
     }
     noCache();
     addRedirectAlertMessage(new SimpleMessage("PO and PoLine Item has been created !!! with New PO ID - " + newPurchaseOrder.getId() ));

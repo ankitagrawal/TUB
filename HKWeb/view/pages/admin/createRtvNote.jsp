@@ -6,10 +6,12 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Rtv Note">
  <s:useActionBean beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" var="rtvNote"/>
     <s:layout-component name="htmlHead">
-                <script type="text/javascript">
-
-                </script>
+ <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.lightbox-0.5.js"></script>
         </s:layout-component>
+
     <s:layout-component name="content">
  <h2>Purchase Order # ${rtvNote.purchaseOrderId}</h2>
  <h4 style="color:blue;">Extra Inventory # ${rtvNote.extraInventory.id}</h4>
@@ -128,7 +130,8 @@
             </tbody>
         </table>
         <br/>
-        <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}" />
+        <s:hidden name="purchaseOrderId" value="${rtvNote.purchaseOrderId}" />
+        <s:hidden name="wareHouseId" value="${rtvNote.wareHouseId}"/>
         <s:submit name="editRtvNote" value="SAVE" id="save" />
     </s:form>
     </s:layout-component>
