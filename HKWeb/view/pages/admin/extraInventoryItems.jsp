@@ -145,6 +145,8 @@
                         '<td>' + Math.round(nextIndex + 1) + '.</td>' +
                         '<td>' +
                         '</td>' +
+                        '<td>'+
+                        '</td>' +
                         '<td class="skuId">' +
                         '</td>' +
                         '<td class="txtSku"> <input type="checkbox" class="variants" value="' + nextIndex + '" /> <span> Check this if you know Variant Id: </span>' +

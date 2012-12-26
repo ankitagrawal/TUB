@@ -266,7 +266,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId);
   }
 
-  @Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
+  
   public Resolution createPO(){
     extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
     extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
@@ -296,7 +296,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return new ForwardResolution(ExtraInventoryAction.class, "generatePO").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
   }
 
-  @Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
+
   public Resolution generatePO(){
 
     purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
