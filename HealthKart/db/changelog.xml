@@ -10445,7 +10445,7 @@
     </changeSet>
     <changeSet author="Pradeep (generated)" id="1356002931704-1">
         <addColumn tableName="hk_api_user">
-            <column name="order_placement_enabled" type="TINYINT">
+            <column defaultValueNumeric="0" name="order_placement_enabled" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
