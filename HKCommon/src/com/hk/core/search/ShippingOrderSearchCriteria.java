@@ -2,6 +2,7 @@ package com.hk.core.search;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +40,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 	private Date                                     lastEscStartDate;
 	private Date                                     lastEscEndDate;
 	private Zone                                     zone;
+    private Set<String>                              shippingOrderCategories;
 
     public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
         this.searchForPrinting = searchForPrinting;
@@ -127,6 +129,11 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 		this.zone = zone;
 		return this;
 	}
+
+     public ShippingOrderSearchCriteria setShippingOrderCategories(Set<String> shippingOrderCategories) {
+        this.shippingOrderCategories = shippingOrderCategories;
+        return this;
+    }
 
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
@@ -225,7 +232,11 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
             criteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
         }
-        
+
+
+        if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
+            criteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
+        }
 
         /*
          * paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));

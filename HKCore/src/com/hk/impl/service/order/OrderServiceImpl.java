@@ -411,7 +411,10 @@ public class OrderServiceImpl implements OrderService {
         CartLineItemFilter dropShipLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> dropShippedCartLineItemSet = dropShipLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyDropShippedItems(true).filter();
 
-
+//     Its contain only the groundshipped Line Item
+        if (groundShippedCartLineItemSet != null && !groundShippedCartLineItemSet.isEmpty())  {
+            groundShippedCartLineItemSet.removeAll(dropShippedCartLineItemSet);
+        }
         productCartLineItems.removeAll(serviceCartLineItems);
         productCartLineItems.removeAll(groundShippedCartLineItemSet); // i.e product cart lineItems without services
                                                                         // and ground shipped product

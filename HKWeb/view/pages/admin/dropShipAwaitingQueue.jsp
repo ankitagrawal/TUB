@@ -105,8 +105,19 @@
           <s:option value="60">60</s:option>
           <s:option value="120">120</s:option>
         </s:select>
-      
+
+          <li><label style="float:left;width: 100px;"><strong> SO Category </strong></label> &nbsp;
+                    <div class="checkBoxList">
+                        <c:forEach items="${categoryList}" var="category" varStatus="ctr">
+                            <label><s:checkbox name="basketCategories[${ctr.index}]"
+                                               value="${category.name}"/> ${category.displayName}</label>
+                            <%--<br/>--%>
+                        </c:forEach>
+                    </div>
+        </li>
+       <div  style="text-align: right">
         <s:submit name="searchOrders" value="Search"/>
+       </div>    
         <%--<s:submit name="chooseItemsForPrintingPicking" value="Select Category and Send For Printing/Picking"/>--%>
       </s:form>
       <script language=javascript type=text/javascript>

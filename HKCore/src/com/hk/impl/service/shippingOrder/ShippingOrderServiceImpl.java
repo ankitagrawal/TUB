@@ -182,15 +182,17 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     if (productVariant.getProduct().isService() != null && productVariant.getProduct().isService()) {
                         continue;
                     }
-                    if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
+
+
+                    if (productVariant.getProduct().isDropShipping()) {
+                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
+                 //      setting shipping order Drop shipped
+                        shippingOrder.setDropShipping(true);
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
                         return false;
-                    } else if (productVariant.getProduct().isDropShipping()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
-                 //      setting shipping order Drop shipped                 
-                        shippingOrder.setDropShipping(true);
+                    } else if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
+                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
                         return false;

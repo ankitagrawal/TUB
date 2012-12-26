@@ -110,6 +110,17 @@ public enum EnumCourier {
         );
     }
 
+
+      public static List<EnumCourier> getCurrentlyApplicableVendorCouriers() {
+        return Arrays.asList(
+                EnumCourier.DTDC_Surface,
+                EnumCourier.Delhivery_Surface,
+                EnumCourier.FedEx_Surface
+        );
+    }
+
+
+
     public static List<Long> getDTDCCouriers() {
         List<Long> dtdcCourierIds = new ArrayList<Long>();
         dtdcCourierIds.add(EnumCourier.DTDC_COD.getId());
@@ -137,6 +148,8 @@ public enum EnumCourier {
 		List<Long> dispatchLotCourierIds = new ArrayList<Long>();
 		dispatchLotCourierIds.add(EnumCourier.HK_Delivery.getId());
 		return dispatchLotCourierIds;
-	}
+	}  
+
+
 }
 

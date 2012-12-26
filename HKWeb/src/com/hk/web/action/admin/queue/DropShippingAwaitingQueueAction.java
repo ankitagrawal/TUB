@@ -11,6 +11,7 @@ import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.catalog.category.Category;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -44,6 +45,8 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
+    CategoryDao categoryDao;
 
     private Long                       shippingOrderId;
     private Long                       baseOrderId;
@@ -54,6 +57,9 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
     private Category category;
     private ShippingOrderStatus shippingOrderStatus;
     private Integer                    defaultPerPage    = 30;
+     private List<String> basketCategories = new ArrayList<String>();
+
+
 
     @DontValidate
     @DefaultHandler
@@ -89,6 +95,20 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
         }
         shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForDropShippingQueue());
         shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
+
+         logger.debug("basketCategories : " + basketCategories.size());
+        Set<String> basketCategoryList = new HashSet<String>();
+        for (String category : basketCategories) {
+            if (category != null) {
+                Category basketCategory = (Category) categoryDao.getCategoryByName(category);
+                if (basketCategory != null) {
+                    basketCategoryList.add(basketCategory.getName());
+                }
+            }
+        }
+        shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
+        logger.debug("basketCategoryList : " + basketCategoryList.size());
+
 
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
 
@@ -157,6 +177,14 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
         // params.add("gatewayOrderId");
         params.add("baseGatewayOrderId");
         params.add("shippingOrderStatus");
+
+        int ctr1 = 0;
+        for (String category : basketCategories) {
+            if (category != null) {
+                params.add("basketCategories[" + ctr1 + "]");
+            }
+            ctr1++;
+        }
         return params;
     }
 
@@ -240,5 +268,13 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
 
     public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
         this.shippingOrderStatusService = shippingOrderStatusService;
+    }
+
+    public List<String> getBasketCategories() {
+        return basketCategories;
+    }
+
+    public void setBasketCategories(List<String> basketCategories) {
+        this.basketCategories = basketCategories;
     }
 }

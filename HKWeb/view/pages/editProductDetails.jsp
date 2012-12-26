@@ -9,13 +9,13 @@
   <s:layout-component name="htmlHead">
       <script type="text/javascript">
               $(document).ready(function() {
-              $('.save').click(function() {
-                  if (($('.dropShip').is(':checked')) && ($('.groundship').is(':checked'))) {
-                      alert(" Product cannot be marked dropship and groundship at the same time");
-                      return false;
-                  }
-              }
-                 );
+//              $('.save').click(function() {
+//                  if (($('.dropShip').is(':checked')) && ($('.groundship').is(':checked'))) {
+//                      alert(" Product cannot be marked dropship and groundship at the same time");
+//                      return false;
+//                  }
+//              }
+//                 );
           });
 
       </script>

@@ -403,4 +403,11 @@ public class MasterDataDaoImpl implements MasterDataDao {
 	public List<Zone> getAllZones() {
 		return getBaseDao().getAll(Zone.class);
 	}
+
+
+      public List<Courier> getListOfVendorCouriers(){
+           return courierService.listOfVendorCouriers();
+      }
+
+    
 }

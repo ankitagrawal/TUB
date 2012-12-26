@@ -43,6 +43,7 @@ public class CreateDropShipmentAction extends BaseAction {
 
     private ShippingOrder shippingOrder;
     Courier selectedCourier;
+    Courier vendorCourier;
     private String trackingId;
     @Autowired
     AwbService awbService;
@@ -90,6 +91,10 @@ public class CreateDropShipmentAction extends BaseAction {
             shipment = new Shipment();
         } else {
             shipment = shippingOrder.getShipment();
+        }
+
+        if (vendorCourier != null && !vendorCourier.equals("")){
+              selectedCourier = vendorCourier;
         }
 
         shipment.setEmailSent(false);
@@ -185,6 +190,14 @@ public class CreateDropShipmentAction extends BaseAction {
         logger.info("Drop shipment Item mark as shipped");
         if (shippingOrder != null) {
             // shippingOrder.setAccountingInvoiceNumber();
+            if (trackingId == null || trackingId.isEmpty()){
+              addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Please Enter the Tracking Id"));
+              return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
+            }
+            if (selectedCourier == null){
+              addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Please select the courier"));
+              return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
+            }
             String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
             shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
             adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
@@ -286,5 +299,13 @@ public class CreateDropShipmentAction extends BaseAction {
 
     public void setSuggestedCourier(Courier suggestedCourier) {
         this.suggestedCourier = suggestedCourier;
+    }
+
+    public Courier getVendorCourier() {
+        return vendorCourier;
+    }
+
+    public void setVendorCourier(Courier vendorCourier) {
+        this.vendorCourier = vendorCourier;
     }
 }

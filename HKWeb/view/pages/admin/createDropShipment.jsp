@@ -15,7 +15,7 @@
     MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
     pageContext.setAttribute("boxSizeList", baseDao.getAll(BoxSize.class));
     pageContext.setAttribute("courierList", masterDataDao.getAvailableCouriers());
-//  pageContext.setAttribute("groundShippedCourierList", masterDataDao.getGroundShippedCourierList());
+    pageContext.setAttribute("vendorCourierList", masterDataDao.getListOfVendorCouriers());
 %>
 
 <c:set var="commentTypeDelivery" value="<%= MasterDataDao.USER_COMMENT_TYPE_DELIVERY_BASE_ORDER %>"/>
@@ -65,6 +65,19 @@
                         $('.error').show();
                         return false;
                     }
+
+                    var  selectedCourier = $('#courier').val();
+                    var  vendorCourier =  $('#vendorCourier').val();
+
+//                    alert(selectedCourier.length + " " + vendorCourier.length) ;
+                     if ( vendorCourier !=""  && selectedCourier!= "") {
+                      alert("HK Courier and Vendor Courier cannot be selected at same time");
+                      return false;
+                  }
+                    else if(vendorCourier == "" && selectedCourier == ""){
+                         alert("Please select atleast one courier");
+                         return false;
+                     }
                 });
 
                 var grncheck = false;
@@ -85,6 +98,8 @@
                     }
 
                 });
+
+
 
             });
         </script>
@@ -121,7 +136,7 @@
                                                        value="${shipmentQueueBean.shippingOrder.shipment.boxWeight}"/>
                 <label>Tracking ID:</label><s:text class="tracking" name="trackingId"
                                                    value="${shipmentQueueBean.shippingOrder.shipment.awb.awbNumber}"/>
-                <label>Courier</label>
+                <label>HK Courier</label>
                 <s:select name="selectedCourier" value="${shipmentQueueBean.shippingOrder.shipment.awb.courier.id}"
                           id="courier">
                     <s:option value="">-select-</s:option>
@@ -129,6 +144,17 @@
                         <s:option value="${courier.id}">${courier.name}</s:option>
                     </c:forEach>
                 </s:select>
+
+
+                 <label>Vendor Courier</label>
+                  <s:select name="vendorCourier" value="${shipmentQueueBean.shippingOrder.shipment.awb.courier.id}"
+                          id="vendorCourier">
+                    <s:option value="">-select-</s:option>
+                    <c:forEach var="vendorCourier" items="${vendorCourierList}">
+                        <s:option value="${vendorCourier.id}">${vendorCourier.name}</s:option>
+                    </c:forEach>
+                </s:select>
+
 
                 <%--<s:link class="com.hk.web.action.admin.shipment.CreateDropShipmentAction" event="getAwbForHkCourier"> Get HK Couriers </s:link>--%>
                 <c:if test="${!(shippingOrderStatusSoShipped ==shipmentQueueBean.shippingOrder.orderStatus.id)}">
