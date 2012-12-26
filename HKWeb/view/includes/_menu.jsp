@@ -40,16 +40,16 @@
     });
   </script>
 
-	<%
+	<%--<%
 		DateTime dateTime = new DateTime();
 		Date endOfOfferDate = new Date(new DateTime(2012, 12, 26, 18, 59, 59, 59).getMillis());
 		if (dateTime.isBefore(endOfOfferDate.getTime())) {
 	%>
 	<div class="siteNotice" style="width:960px; margin-left:auto; margin-right:auto;">
-			<%--<div style="height: 44px; padding-top: 6px; font-size: 1em; color: black; background-color: white; border: solid 4px #4484c4;">
+			--%><%--<div style="height: 44px; padding-top: 6px; font-size: 1em; color: black; background-color: white; border: solid 4px #4484c4;">
 									<strong>Great Online Shopping Festival</strong>! Over 500 products, upto <strong>80% off! *</strong>, <strong><a href="http://www.healthkart.com/online-shopping-festival?src=hk2">Click here to start Shopping!</a></strong><br/>
 									<span style="font-size: 1.2em; color: #e62580">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</span>
-							</div>--%>
+							</div>--%><%--
 
 		<div
 				style="border-top: 2px solid #ff9999; border-bottom: 2px solid #ff6666; height: 20px; padding-top: 3px; font-size: 1em;">
@@ -58,7 +58,7 @@
 	</div>
 	<%
 		}
-	%>
+	%>--%>
 
     <div class='menuBar' id="top">
 
