@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.domain.courier.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
     @Autowired
     private CourierService      courierService;
+	@Autowired
+	private ConsignmentService  consignmentService;
+
 	@Autowired
 	private DispatchLotService dispatchLotService;
 
@@ -405,6 +409,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
 	public List<Zone> getAllZones() {
 		return getBaseDao().getAll(Zone.class);
+	}
+
+	public List<String> getCustomerOnHoldReasonsForHkDelivery() {
+		return consignmentService.getCustomerOnHoldReasonsForHkDelivery();
 	}
 
 	public List<DispatchLotStatus> getDispatchLotStatusList() {

@@ -1,9 +1,6 @@
 package com.hk.admin.impl.service.hkDelivery;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,11 +75,11 @@ public class RunSheetServiceImpl implements RunSheetService {
     }
 
     @Override
-    public void saveRunSheet(Runsheet runsheet, List<Consignment> changedConsignmentsList) {
+    public void saveRunSheet(Runsheet runsheet, List<Consignment> changedConsignmentsList, Map<Consignment, String> consignmentOnHoldReason) {
         if (changedConsignmentsList != null) {
             // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
             User loggedOnUser = userService.getLoggedInUser();
-            updateConsignmentTrackingForRunsheet(changedConsignmentsList, loggedOnUser);
+            updateConsignmentTrackingForRunsheet(changedConsignmentsList, loggedOnUser, consignmentOnHoldReason);
         }
         runsheet.setUpdateDate(new Date());
         runsheetDao.saveRunSheet(runsheet);
@@ -114,7 +111,7 @@ public class RunSheetServiceImpl implements RunSheetService {
         }
         // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         User loggedOnUser = userService.getLoggedInUser();
-        updateConsignmentTrackingForRunsheet(consignmentListWithChangedStatuses, loggedOnUser);
+        updateConsignmentTrackingForRunsheet(consignmentListWithChangedStatuses, loggedOnUser, null);
         runsheet.setConsignments(consignments);
         return runsheet;
     }
@@ -126,7 +123,7 @@ public class RunSheetServiceImpl implements RunSheetService {
         return false;
     }
 
-    public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user) {
+    public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user, Map<Consignment, String> consignmentOnHoldReason) {
         Long consignmentLifecycleStatusId;
         Hub sourceHub = null;
         Hub destinationHub = null;
@@ -135,6 +132,11 @@ public class RunSheetServiceImpl implements RunSheetService {
             if (consignmentObj != null) {
                 consignmentLifecycleStatusId = HKDeliveryUtil.getLifcycleStatusIdFromConsignmentStatus(consignmentObj.getConsignmentStatus().getStatus());
                 ConsignmentLifecycleStatus consignmentLifecycleStatus = runsheetDao.get(ConsignmentLifecycleStatus.class, consignmentLifecycleStatusId);
+	            String consignmentTrackingRemark = null;
+	            if(consignmentOnHoldReason != null && consignmentOnHoldReason.get(consignmentObj) != null &&
+			           !consignmentOnHoldReason.get(consignmentObj).equals("") ){
+		            consignmentTrackingRemark = consignmentOnHoldReason.get(consignmentObj);
+	            }
                 if (consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())) {
                     sourceHub = consignmentObj.getHub();
                     destinationHub = hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
@@ -145,7 +147,7 @@ public class RunSheetServiceImpl implements RunSheetService {
                     sourceHub = consignmentObj.getHub();
                     destinationHub = consignmentObj.getHub();
                 }
-                consignmentTrackingList.add(consignmentService.createConsignmentTracking(sourceHub, destinationHub, user, consignmentObj, consignmentLifecycleStatus));
+                consignmentTrackingList.add(consignmentService.createConsignmentTracking(sourceHub, destinationHub, user, consignmentObj, consignmentLifecycleStatus, consignmentTrackingRemark));
             }
         }
         if (consignmentTrackingList.size() > 0) {
