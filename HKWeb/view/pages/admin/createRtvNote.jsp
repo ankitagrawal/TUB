@@ -74,7 +74,7 @@
                     </td>
                     <td>${rtvNote.rtvNote.createDate}</td>
                     <td>${rtvNote.rtvNote.updateDate}</td>
-                    <td><textarea name = "comments" rows="10" cols="10">${rtvNote.rtvNote.remarks}</textarea></td>
+                    <td><textarea name = "comments" rows="10" cols="10" style="height:60px; width:210px;">${rtvNote.rtvNote.remarks}</textarea></td>
                 </tr>
             </c:if>
             </tbody>

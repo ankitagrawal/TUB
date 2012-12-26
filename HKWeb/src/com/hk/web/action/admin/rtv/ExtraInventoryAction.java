@@ -345,6 +345,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       }
       newPurchaseOrder = getPurchaseOrderService().save(newPurchaseOrder);
     }
+    else{
+      newPurchaseOrder = purchaseOrder1;
+    }
 
     //Creating new POLine Items and set Extra inventory Line Items Id in it
 
