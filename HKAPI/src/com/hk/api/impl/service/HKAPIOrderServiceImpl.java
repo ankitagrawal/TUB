@@ -12,6 +12,7 @@ import com.hk.api.constants.HKAPIOperationStatus;
 import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.api.dto.order.*;
 import com.hk.api.pact.service.HKAPIOrderService;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.pact.service.core.AddressService;
@@ -88,7 +89,6 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     @Autowired
     StoreService storeService;
 
-    @Deprecated
     public HKAPIBaseDTO createOrderInHK(String appToken, HKAPIOrderDTO hkapiOrderDTO) {
         HKAPIBaseDTO hkapiBaseDTO=new HKAPIBaseDTO();
         if(hkapiOrderDTO==null){
@@ -258,6 +258,9 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
 
         Payment payment = order.getPayment();
         payment.setId(null);
+        if(payment.getPaymentMode().getId().equals(15L)){
+            payment.setPaymentMode(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
+        }
         payment.setOrder(hkOrder);
 
         payment.setGatewayOrderId(hkOrder.getId().toString() +"-"+ order.getGatewayOrderId().split("-")[1]);
