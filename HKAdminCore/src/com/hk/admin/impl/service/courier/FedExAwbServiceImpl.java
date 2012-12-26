@@ -12,6 +12,7 @@ import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.util.FedExShipmentDeleteUtil;
 import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
+import com.hk.admin.util.courier.thirdParty.FedExTrackShipmentUtil;
 import com.hk.constants.core.Keys;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.CourierServiceInfo;
@@ -89,6 +90,13 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
        FedExShipmentDeleteUtil fedExShipmentDeleteUtil = new FedExShipmentDeleteUtil(fedExAuthKey, fedExAccountNo, fedExMeterNo, fedExPassword, fedExServerUrl);
        return fedExShipmentDeleteUtil.deleteShipment(awbNumber);
     }
+
+	@Override
+	public String trackFedExShipment(String trackingId){
+		// Tracking can only be done for real fedex shipments 
+		FedExTrackShipmentUtil fedExTrack = new FedExTrackShipmentUtil();
+		return fedExTrack.trackFedExShipment(trackingId);
+	}
 
     public CourierServiceInfoDao getCourierServiceInfoDao() {
         return courierServiceInfoDao;

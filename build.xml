@@ -34,11 +34,11 @@
   </target>
 	<target name="dev-clean" depends="clean, build"/>
 	<target name="db">
-		<updateDatabase changelogfile="${project.healthkart.dir}/db/changelog.xml" driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" classpathref="compile.classpath" />
+		<updateDatabase changelogfile="${project.healthkart.dir}/db/changelog.xml" driver="${database.driver}" url="jdbc:mysql://${DB_SERVER}:${DB_PORT}/${DB_NAME}" username="${DB_USERID}" password="${DB_PASSWD}" classpathref="compile.classpath" />
 	    </target>
 
 	<target name="db-diff" description="Does a diff of the current db with the workbench db. adds to changelog.xml any changes to db">
-		<diffDatabaseToChangeLog driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" changelogfile="${project.healthkart.dir}/db/changelog.xml" referencedriver="${database.driver}" referenceurl="${database.url.workbench}" referenceusername="${database.username}" referencepassword="${database.password}" classpathref="compile.classpath">
+		<diffDatabaseToChangeLog driver="${database.driver}" url="jdbc:mysql://${DB_SERVER}:${DB_PORT}/${DB_NAME}" username="${DB_USERID}" password="${DB_PASSWD}" changelogfile="${project.healthkart.dir}/db/changelog.xml" referencedriver="${database.driver}" referenceurl="${database.url.workbench}" referenceusername="${DB_USERID}" referencepassword="${DB_PASSWD}" classpathref="compile.classpath">
 		</diffDatabaseToChangeLog>
 	</target>
 
