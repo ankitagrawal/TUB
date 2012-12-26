@@ -288,8 +288,8 @@
                             <s:hidden name="extraInventoryLineItems[${ctr.index}].id" value="${eInLineItems.id}"/>
                         </td>
                         <td>
-                            <c:if test="${extraInventory.purchaseOrderId!=null and eInLineItems.grnCreated}">
-                                ${extraInventory.purchaseOrderId}
+                            <c:if test="${extraInventory.newPurchaseOrderId!=null and eInLineItems.grnCreated}">
+                                ${extraInventory.newPurchaseOrderId}
                             </c:if>
                         </td>
                         <td class="skuId">

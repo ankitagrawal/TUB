@@ -172,6 +172,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         }
       }
     }
+    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
     if(purchaseOrder!=null){
        newPurchaseOrderId = purchaseOrder.getId();
     }
@@ -372,6 +373,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         poLineItem = getPoLineItemService().save(poLineItem);
       }
     }
+    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);    
      if(purchaseOrder!=null){
        newPurchaseOrderId = purchaseOrder.getId();
     }
