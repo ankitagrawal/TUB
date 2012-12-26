@@ -10545,7 +10545,16 @@
             <column name="reward_point_redeem_within_days" type="INT"/>
         </addColumn>
     </changeSet>
+	<changeSet author="Tarun" id="12-26-2012">
+		<sql>
+			UPDATE pincode SET zone_id=1 WHERE zone_id IS NULL;
+			UPDATE shipment SET zone_id=1 WHERE zone_id IS NULL;
+		</sql>
+	</changeSet>
 	<changeSet author="Tarun (generated)" id="1355737809715-1">
         <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="pincode"/>
     </changeSet>   
+    <changeSet author="Tarun (generated)" id="1356513899742-1">
+        <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="shipment"/>
+    </changeSet>
 </databaseChangeLog>
