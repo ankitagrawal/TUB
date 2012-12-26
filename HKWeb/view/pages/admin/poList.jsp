@@ -89,6 +89,7 @@
         <th>GRNs</th>
 	    <th>Fill Rate</th>
         <th>Actions</th>
+        <th>Parent PO</th>
       </tr>
       </thead>
       <c:forEach items="${poa.purchaseOrderList}" var="purchaseOrder" varStatus="ctr">
@@ -138,7 +139,7 @@
 		        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInPdf" target="_blank">PDF
 			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
 		        &nbsp;
-		        <c:if test="${(purchaseOrder.purchaseOrderStatus.id == sentToSupplier) || (purchaseOrder.purchaseOrderStatus.id == received) && (purchaseOrder.extraInventory == null)}">
+		        <c:if test="${(purchaseOrder.purchaseOrderStatus.id == sentToSupplier) || (purchaseOrder.purchaseOrderStatus.id == received)}">
 			        <br/>
 			        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
 				        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
@@ -150,6 +151,13 @@
                 </s:link>
                 </c:if>
 	        </td>
+            <td>
+                <c:if test="${purchaseOrder.extraInventory!=null}">
+                    <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" event="pre">${purchaseOrder.extraInventory.purchaseOrder.id}
+                        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/>
+                    </s:link>
+                </c:if>
+            </td>
         </tr>
       </c:forEach>
     </table>

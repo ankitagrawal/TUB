@@ -3,12 +3,10 @@ package com.hk.admin.impl.dao.inventory;
 import java.util.Date;
 import java.util.List;
 
-import com.hk.pact.dao.BaseDao;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
@@ -25,9 +23,6 @@ import com.hk.impl.dao.BaseDaoImpl;
 public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceivedNoteDao {
 
 	/*private static Logger logger = LoggerFactory.getLogger(GoodsReceivedNoteDao.class);*/
-
-  @Autowired
-  BaseDao baseDao;
 
 	public List<GoodsReceivedNote> getGRNByPO(PurchaseOrder purchaseOrder) {
 		return (List<GoodsReceivedNote>) getSession().createQuery("from GoodsReceivedNote o where o.purchaseOrder = :purchaseOrder").setParameter("purchaseOrder", purchaseOrder).list();
@@ -136,11 +131,4 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
 		return hqlGrnQuery.list();
 	}
 
-  public GoodsReceivedNote save(GoodsReceivedNote goodsReceiveNote){
-     return(GoodsReceivedNote) getBaseDao().save(goodsReceiveNote);
-  }
-
-  public BaseDao getBaseDao() {
-    return baseDao;
-  }
 }

@@ -31,6 +31,7 @@
                 $.getJSON($('#skuCheck').attr('href'), {productVariantId: variant, wareHouseId: ${extraInventory.wareHouseId}}, function (res) {
                     if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
                         obj.parent().parent().children('td.skuId').children('.skus').val(res.data.sku.id);
+                        obj.parent().parent().children('td.proName').children('.productName').val(res.data.productName);
                     }
                     else{
                         alert(res.message);
@@ -103,6 +104,7 @@
                         $.getJSON($('#skuCheck').attr('href'), {productVariantId: variant, wareHouseId: ${extraInventory.wareHouseId}}, function (res) {
                             if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
                                 obj.parent().parent().children('td.skuId').children('.skus').val(res.data.sku.id);
+                                obj.parent().parent().children('td.proName').children('.productName').val(res.data.productName);
                             }
                             else{
                                 alert(res.message);
@@ -148,7 +150,7 @@
                         '<td class="txtSku"> <input type="checkbox" class="variants" value="' + nextIndex + '" /> <span> Check this if you know Variant Id: </span>' +
                         '</td>' +
                         '<input type="hidden" name="extraInventoryLineItems[' + nextIndex + '].id" />' +
-                        '  <td>' +
+                        '  <td class="proName">' +
                         '    <input type="text" class="productName" name="extraInventoryLineItems[' + nextIndex + '].productName" />' +
                         '  </td>' +
                         '  <td>' +
@@ -227,7 +229,7 @@
                         <td>${extraInventory.extraInventory.createdBy.name}</td>
                         <td>${extraInventory.extraInventory.createDate}</td>
                         <td>${extraInventory.extraInventory.updateDate}</td>
-                        <td><textarea name = "comments" rows="10" cols="10">${extraInventory.extraInventory.comments}</textarea></td>
+                        <td><textarea name = "comments" rows="10" cols="10" style="height:60px; width:210px;">${extraInventory.extraInventory.comments}</textarea></td>
                     </tr>
                 </c:when>
                 <c:otherwise>
@@ -236,7 +238,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td><textarea name = "comments" rows="10" cols="20"></textarea></td>
+                        <td><textarea name = "comments" rows="10" cols="10" style="height:60px; width:210px;"></textarea></td>
                     </tr>
                 </c:otherwise>
             </c:choose>
@@ -251,6 +253,7 @@
             <tr>
                 <th>S.No</th>
                 <th>ID</th>
+                <th>New PO ID</th>
                 <th>SKU ID</th>
                 <th>Variant ID</th>
                 <th>Product Name</th>
@@ -273,7 +276,7 @@
                                 <c:set var="bool" value="1"/>
                             </c:if>
                             <c:if test="${eInLineItems.grnCreated}">
-                                ${eInLineItems.id}(GRN Created)
+                                ${eInLineItems.id}(PO Created)
                                 <s:hidden name="extraInventoryLineItems[${ctr.index}].grnCreated" value="${eInLineItems.grnCreated}"/>
                                 <c:set var="bool" value="1"/>
                             </c:if>
@@ -281,6 +284,11 @@
                                 <s:checkbox class="checkbox1" value="${eInLineItems.id}" name="extraInventoryLineItemsSelected[${ctr.index}].id"/>${eInLineItems.id}
                             </c:if>
                             <s:hidden name="extraInventoryLineItems[${ctr.index}].id" value="${eInLineItems.id}"/>
+                        </td>
+                        <td>
+                            <c:if test="${extraInventory.purchaseOrderId!=null and eInLineItems.grnCreated}">
+                                ${extraInventory.purchaseOrderId}
+                            </c:if>
                         </td>
                         <td class="skuId">
                             <c:choose>
@@ -312,7 +320,7 @@
                                 </c:otherwise>
                             </c:choose>
                         </td>
-                        <td>
+                        <td class="proName">
                             <input type="text" class="productName" name="extraInventoryLineItems[${ctr.index}].productName" value="${eInLineItems.productName}"/>
                         </td>
                         <td>
@@ -355,8 +363,7 @@
             <s:submit name="createRtv" value="Create RTV" id="createRtv" />
         </c:if>
         <s:submit name="editRtv" value="Check RTV Status" />
-        <s:submit name="createGRN" value="Create GRN" id="createRtv" />
-        <s:submit name="editGRN" value="Check GRN Status"/>
+        <s:submit name="createPO" value="Create PO" id="createRtv" />
     </s:form>
     <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">
         <div align="center" style="font-weight:bold; font-size:150%">BACK</div>

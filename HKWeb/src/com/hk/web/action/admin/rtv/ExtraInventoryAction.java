@@ -2,9 +2,6 @@ package com.hk.web.action.admin.rtv;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.manager.AdminEmailManager;
-import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
-import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.rtv.ExtraInventoryLineItemService;
@@ -13,10 +10,7 @@ import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.pact.service.core.WarehouseService;
-import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.domain.user.User;
 import com.hk.constants.rtv.EnumRtvNoteStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -69,10 +63,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   RtvNoteLineItemService rtvNoteLineItemService;
   @Autowired
   PoLineItemService poLineItemService;
-  @Autowired
-  GoodsReceivedNoteDao goodsReceivedNoteDao;
-  @Autowired
-  GrnLineItemService grnLineItemService;
+
 
   private List<ExtraInventoryLineItem> extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
   private List<ExtraInventoryLineItem> extraInventoryLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
@@ -93,13 +84,18 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   private Boolean isDebitToSupplier;
   private Boolean isReconciled;
   private String reconciledStatus;
-  private AdminEmailManager adminEmailManager;
+  private Long newPurchaseOrderId;
+
 
   @DefaultHandler
   public Resolution pre(){
     extraInventory = getExtraInventoryService().getExtraInventoryByPoId(purchaseOrderId);
     if(extraInventory!=null){
       extraInventoryLineItems= getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+    }
+    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
+    if(purchaseOrder!=null){
+       newPurchaseOrderId = purchaseOrder.getId();
     }
     if(extraInventory != null){
       rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
@@ -118,16 +114,16 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
     List<Long> skus = new ArrayList<Long>();
     for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItems){
-      if(skus.size() == 0){
+      if(skus.size() == 0 && extraInventoryLineItem.getSku()!=null){
         skus.add(extraInventoryLineItem.getSku().getId());
       }
-      else if(skus.contains(extraInventoryLineItem.getSku().getId())){
+      else if(extraInventoryLineItem.getSku()!=null && skus.contains(extraInventoryLineItem.getSku().getId())){
         extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
         noCache();
         addRedirectAlertMessage(new SimpleMessage("Same Sku is present more than once !!!! "));
         return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
       }
-      else{
+      else if(extraInventoryLineItem.getSku()!=null){
         skus.add(extraInventoryLineItem.getSku().getId());
       }
     }
@@ -175,6 +171,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
           reconciledStatus = "reconciled";
         }
       }
+    }
+    if(purchaseOrder!=null){
+       newPurchaseOrderId = purchaseOrder.getId();
     }
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!! "));
@@ -266,8 +265,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     extraInventory = rtvNote.getExtraInventory();
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId);
   }
+
   @Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
-  public Resolution createGRN(){
+  public Resolution createPO(){
     extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
     extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
     if(extraInventory != null){
@@ -285,33 +285,20 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
         if(extraInventoryLineItem.getSku()==null){
           noCache();
-          addRedirectAlertMessage(new SimpleMessage("One of the selected Line Item sku is null, please Enter Sku and then press create GRN !!!"));
+          addRedirectAlertMessage(new SimpleMessage("One of the selected Line Item sku is null, please Enter Sku and then press create PO !!!"));
           return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
         }
 //        skus.add(extraInventoryLineItem.getSku().getId());
       }
     }
-    purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
-    //checking if one of the selected sku has already been created under this PO
-//    if(purchaseOrder.getGoodsReceivedNotes()!=null && purchaseOrder.getGoodsReceivedNotes().size()!=0){
-//      for(GoodsReceivedNote goodsReceivedNote : purchaseOrder.getGoodsReceivedNotes()){
-//        if(goodsReceivedNote.getGrnLineItems()!=null && goodsReceivedNote.getGrnLineItems().size()!=0){
-//          for(GrnLineItem grnLineItem : goodsReceivedNote.getGrnLineItems()){
-//            if(skus.contains(grnLineItem.getSku().getId())){
-//              noCache();
-//              addRedirectAlertMessage(new SimpleMessage("Grn of one of the selected Line Item is already created under this PO !!!!"));
-//              return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
-//            }
-//          }
-//        }
-//      }
-//    }
+
     noCache();
-    return new ForwardResolution(ExtraInventoryAction.class, "generateGRN").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
+    return new ForwardResolution(ExtraInventoryAction.class, "generatePO").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
   }
 
   @Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
-  public Resolution generateGRN(){
+  public Resolution generatePO(){
+
     purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
     extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
     extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
@@ -324,10 +311,11 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       }
     }
     PurchaseOrder purchaseOrder1 = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
-    List<GoodsReceivedNote> gRNs = getGoodsReceivedNoteDao().getGRNByPO(purchaseOrder1);
-    if(gRNs==null || gRNs.size()==0){
+    PurchaseOrder newPurchaseOrder = new PurchaseOrder();
+
+    if(purchaseOrder1==null){
       //Creating New PurchaseOrder and set Extra Inventory in it
-      PurchaseOrder newPurchaseOrder = new PurchaseOrder();
+
       newPurchaseOrder.setExtraInventory(extraInventory);
       newPurchaseOrder.setSupplier(purchaseOrder.getSupplier());
       newPurchaseOrder.setCreateDate(new Date());
@@ -344,8 +332,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         user = getUserService().getUserById(getPrincipal().getId());
       }
       newPurchaseOrder.setCreatedBy(user);
-      newPurchaseOrder.setApprovedBy(purchaseOrder.getApprovedBy());
-      newPurchaseOrder.setPurchaseOrderStatus(getBaseDao().get(PurchaseOrderStatus.class, EnumPurchaseOrderStatus.Approved.getId()));
+      newPurchaseOrder.setPurchaseOrderStatus(getBaseDao().get(PurchaseOrderStatus.class, EnumPurchaseOrderStatus.Generated.getId()));
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(new Date());
       calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getLeadTime());
@@ -357,100 +344,42 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         newPurchaseOrder.setEstPaymentDate(new Date());
       }
       newPurchaseOrder = getPurchaseOrderService().save(newPurchaseOrder);
-
-      //Generating Goods Received Note
-
-      GoodsReceivedNote goodsReceivedNote = new GoodsReceivedNote();
-      goodsReceivedNote.setGrnDate(new Date());
-      goodsReceivedNote.setPurchaseOrder(newPurchaseOrder);
-      goodsReceivedNote.setReconciled(false);
-      goodsReceivedNote.setReceivedBy(user);
-      goodsReceivedNote.setWarehouse(newPurchaseOrder.getWarehouse());
-      goodsReceivedNote.setDiscount(0.0D);
-      goodsReceivedNote.setTaxAmount(newPurchaseOrder.getTaxAmount());
-      goodsReceivedNote.setTaxableAmount(newPurchaseOrder.getTaxableAmount());
-      goodsReceivedNote.setCreateDate(new Date());
-      goodsReceivedNote.setSurchargeAmount(newPurchaseOrder.getSurchargeAmount());
-      goodsReceivedNote.setEstPaymentDate(newPurchaseOrder.getEstPaymentDate());
-      goodsReceivedNote.setGrnStatus(EnumGrnStatus.GoodsReceived.asGrnStatus());
-      goodsReceivedNote.setInvoiceNumber("-");
-      goodsReceivedNote.setInvoiceDate(new Date());
-      goodsReceivedNote = getGoodsReceivedNoteDao().save(goodsReceivedNote);
-
-      //Creating new POLine Items and set Extra inventory Line Items Id in it
-      //Parallel creating grn line items also
-      for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
-        if(extraInventoryLineItem!=null){
-          extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
-          extraInventoryLineItem.setGrnCreated(true);
-          extraInventoryLineItem = getExtraInventoryLineItemService().save(extraInventoryLineItem);
-          PoLineItem poLineItem = new PoLineItem();
-          GrnLineItem grnLineItem = new GrnLineItem();
-          poLineItem.setExtraInventoryLineItem(extraInventoryLineItem);
-          poLineItem.setCostPrice(extraInventoryLineItem.getCostPrice());
-          grnLineItem.setCostPrice(extraInventoryLineItem.getCostPrice());
-          poLineItem.setMrp(extraInventoryLineItem.getMrp());
-          grnLineItem.setMrp(extraInventoryLineItem.getMrp());
-          poLineItem.setQty(extraInventoryLineItem.getReceivedQty());
-          grnLineItem.setQty(extraInventoryLineItem.getReceivedQty());
-          poLineItem.setReceivedQty(extraInventoryLineItem.getReceivedQty());
-          grnLineItem.setCheckedInQty(extraInventoryLineItem.getReceivedQty());
-          poLineItem.setSku(extraInventoryLineItem.getSku());
-          grnLineItem.setSku(extraInventoryLineItem.getSku());
-          poLineItem.setPurchaseOrder(newPurchaseOrder);
-          grnLineItem.setGoodsReceivedNote(goodsReceivedNote);
-          poLineItem.setDiscountPercent(0.0D);
-          grnLineItem.setDiscountPercent(0.0D);
-          poLineItem.setTaxAmount(newPurchaseOrder.getTaxAmount());
-          grnLineItem.setTaxAmount(goodsReceivedNote.getTaxAmount());
-          poLineItem.setTaxableAmount(newPurchaseOrder.getTaxableAmount());
-          grnLineItem.setTaxableAmount(goodsReceivedNote.getTaxableAmount());
-          poLineItem.setSurchargeAmount(newPurchaseOrder.getSurchargeAmount());
-          grnLineItem.setSurchargeAmount(goodsReceivedNote.getSurchargeAmount());
-          poLineItem = getPoLineItemService().save(poLineItem);
-          grnLineItem = getGrnLineItemService().save(grnLineItem);
-        }
-      }
-      //getAdminEmailManager().sendGRNEmail(goodsReceivedNote);
-    }
-    else{
-      GoodsReceivedNote goodsReceivedNote = gRNs.get(0);
-      for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
-        if(extraInventoryLineItem!=null){
-          PoLineItem poLineItem = new PoLineItem();
-          GrnLineItem grnLineItem = new GrnLineItem();
-          poLineItem.setExtraInventoryLineItem(extraInventoryLineItem);
-          poLineItem.setCostPrice(extraInventoryLineItem.getCostPrice());
-          grnLineItem.setCostPrice(extraInventoryLineItem.getCostPrice());
-          poLineItem.setMrp(extraInventoryLineItem.getMrp());
-          grnLineItem.setMrp(extraInventoryLineItem.getMrp());
-          poLineItem.setQty(extraInventoryLineItem.getReceivedQty());
-          grnLineItem.setQty(extraInventoryLineItem.getReceivedQty());
-          poLineItem.setReceivedQty(extraInventoryLineItem.getReceivedQty());
-          grnLineItem.setCheckedInQty(extraInventoryLineItem.getReceivedQty());
-          poLineItem.setSku(extraInventoryLineItem.getSku());
-          grnLineItem.setSku(extraInventoryLineItem.getSku());
-          poLineItem.setPurchaseOrder(purchaseOrder1);
-          grnLineItem.setGoodsReceivedNote(goodsReceivedNote);
-          poLineItem.setDiscountPercent(0.0D);
-          grnLineItem.setDiscountPercent(0.0D);
-          poLineItem.setTaxAmount(purchaseOrder1.getTaxAmount());
-          grnLineItem.setTaxAmount(goodsReceivedNote.getTaxAmount());
-          poLineItem.setTaxableAmount(purchaseOrder1.getTaxableAmount());
-          grnLineItem.setTaxableAmount(goodsReceivedNote.getTaxableAmount());
-          poLineItem = getPoLineItemService().save(poLineItem);
-          grnLineItem = getGrnLineItemService().save(grnLineItem);
-        }
-      }
     }
 
+    //Creating new POLine Items and set Extra inventory Line Items Id in it
+
+    for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
+
+      if(extraInventoryLineItem!=null){
+        extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
+        extraInventoryLineItem.setGrnCreated(true);
+        extraInventoryLineItem = getExtraInventoryLineItemService().save(extraInventoryLineItem);
+        PoLineItem poLineItem = new PoLineItem();
+        poLineItem.setExtraInventoryLineItem(extraInventoryLineItem);
+        poLineItem.setCostPrice(extraInventoryLineItem.getCostPrice());
+        poLineItem.setMrp(extraInventoryLineItem.getMrp());
+        poLineItem.setQty(extraInventoryLineItem.getReceivedQty());
+        poLineItem.setReceivedQty(extraInventoryLineItem.getReceivedQty());
+        poLineItem.setSku(extraInventoryLineItem.getSku());
+        poLineItem.setPurchaseOrder(newPurchaseOrder);
+        poLineItem.setDiscountPercent(0.0D);
+        poLineItem.setTaxAmount(newPurchaseOrder.getTaxAmount());
+        poLineItem.setTaxableAmount(newPurchaseOrder.getTaxableAmount());
+        poLineItem.setSurchargeAmount(newPurchaseOrder.getSurchargeAmount());
+        poLineItem = getPoLineItemService().save(poLineItem);
+      }
+    }
+     if(purchaseOrder!=null){
+       newPurchaseOrderId = purchaseOrder.getId();
+    }
     noCache();
-    addRedirectAlertMessage(new SimpleMessage("Grn Has been created !!!"));
+    addRedirectAlertMessage(new SimpleMessage("PO and PoLine Item has been created !!! with New PO ID - " + newPurchaseOrder.getId() ));
     return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
   @SuppressWarnings("unchecked")
   public Resolution getSku(){
+
     HealthkartResponse healthkartResponse = null;
     Warehouse wareHouse = null;
     Sku sku = null;
@@ -467,6 +396,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       sku = getSkuService().getSKU(pv,wareHouse);
       if(sku!=null){
         dataMap.put("sku",sku);
+        dataMap.put("productName",sku.getProductVariant().getProduct().getName());
         healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant",dataMap);
       }
       else{
@@ -653,15 +583,11 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return poLineItemService;
   }
 
-  public GoodsReceivedNoteDao getGoodsReceivedNoteDao() {
-    return goodsReceivedNoteDao;
+  public Long getNewPurchaseOrderId() {
+    return newPurchaseOrderId;
   }
 
-  public GrnLineItemService getGrnLineItemService() {
-    return grnLineItemService;
-  }
-
-  public AdminEmailManager getAdminEmailManager() {
-    return adminEmailManager;
+  public void setNewPurchaseOrderId(Long newPurchaseOrderId) {
+    this.newPurchaseOrderId = newPurchaseOrderId;
   }
 }
