@@ -325,18 +325,51 @@
                             </c:choose>
                         </td>
                         <td class="proName">
-                            <input type="text" class="productName" name="extraInventoryLineItems[${ctr.index}].productName" value="${eInLineItems.productName}"/>
+                            <c:choose>
+                                <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                                    ${eInLineItems.productName}
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="text" class="productName" name="extraInventoryLineItems[${ctr.index}].productName" value="${eInLineItems.productName}"/>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
                         <td>
+                             <c:choose>
+                                <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                                    ${eInLineItems.mrp}
+                                </c:when>
+                                <c:otherwise>
                             <input type="text" class="mrp valueChange" name="extraInventoryLineItems[${ctr.index}].mrp" value="${eInLineItems.mrp}"/>
+                            </c:otherwise>
+                            </c:choose>
                         </td>
                         <td>
+                             <c:choose>
+                                <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                                    ${eInLineItems.costPrice}
+                                </c:when>
+                                <c:otherwise>
                             <input type="text" class="costPrice valueChange" name="extraInventoryLineItems[${ctr.index}].costPrice" value="${eInLineItems.costPrice}"/>
+                            </c:otherwise>
+                            </c:choose>
                         </td>
                         <td>
+                             <c:choose>
+                                <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                                    ${eInLineItems.receivedQty}
+                                </c:when>
+                                <c:otherwise>
                             <input type="text" class="receivedQty valueChange" name="extraInventoryLineItems[${ctr.index}].receivedQty" value="${eInLineItems.receivedQty}"/>
+                            </c:otherwise>
+                            </c:choose>
                         </td>
                         <td>
+                             <c:choose>
+                                <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                                    ${eInLineItems.tax.value}
+                                </c:when>
+                                <c:otherwise>
                             <select class="taxSelect" name="extraInventoryLineItems[${ctr.index}].tax">
                                 <option value="<%=EnumTax.NA.getValue()%>" ${eInLineItems.tax.value == 0.0 ? 'selected' : ''}> <%=EnumTax.NA.getName()%> </option>
                                 <option value="<%=EnumTax.SERVICE_10_3.getValue()%>" ${eInLineItems.tax.value == 0.103 ? 'selected' : ''}> <%=EnumTax.SERVICE_10_3.getName()%> </option>
@@ -345,6 +378,8 @@
                                 <option value="<%=EnumTax.VAT_12_5.getValue()%>" ${eInLineItems.tax.value == 0.125 ? 'selected' : ''}> <%=EnumTax.VAT_12_5.getName()%> </option>
                                 <option value="<%=EnumTax.VAT_5.getValue()%>" ${eInLineItems.tax.value == 0.05 ? 'selected' : ''}> <%=EnumTax.VAT_5.getName()%> </option>
                             </select>
+                            </c:otherwise>
+                            </c:choose>
                         </td>
                     </tr>
                 </c:forEach>

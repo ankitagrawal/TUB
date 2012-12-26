@@ -232,7 +232,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     }
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Rtv Created !!!!"));
-    return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId);
+    return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
   public Resolution editRtvNote(){
@@ -256,15 +256,19 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Changes Saved successfully !!!!"));
-    return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId);
+    return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
 
   public Resolution editRtv(){
     rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventoryId);
+    if(rtvNote == null){
+     addRedirectAlertMessage(new SimpleMessage("No RTV Exist !!!! "));
+    return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+    }
     rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
     extraInventory = rtvNote.getExtraInventory();
-    return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId);
+    return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
   
