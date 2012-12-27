@@ -133,12 +133,24 @@ public class RewardPointServiceImpl implements RewardPointService {
                             RewardPoint techProcessRewardPoint = getRewardPointDao().addRewardPoints(order.getUser(), null, order,
                                     cashbackLimit != null ? applicableDiscount < cashbackLimit ? applicableDiscount : cashbackLimit : applicableDiscount, "Cashback Offer",
                                     EnumRewardPointStatus.APPROVED, getRewardPointMode(EnumRewardPointMode.HK_CASHBACK));
-                            approveRewardPoints(Arrays.asList(techProcessRewardPoint), new DateTime().plusMonths(1).toDate());
+	                        if (offerAction.getRewardPointExpiryDate() != null) {
+		                        approveRewardPoints(Arrays.asList(techProcessRewardPoint), offerAction.getRewardPointExpiryDate());
+	                        } else if (offerAction.getRewardPointRedeemWithinDays() != null) {
+		                        approveRewardPoints(Arrays.asList(techProcessRewardPoint), new DateTime().plusDays(offerAction.getRewardPointRedeemWithinDays()).toDate());
+	                        } else {
+		                        approveRewardPoints(Arrays.asList(techProcessRewardPoint), new DateTime().plusMonths(1).toDate());
+	                        }
                         } else {
                             RewardPoint notTechProcessRewardPoint = getRewardPointDao().addRewardPoints(order.getUser(), null, order,
                                     cashbackLimit != null ? applicableDiscount < cashbackLimit ? applicableDiscount : cashbackLimit : applicableDiscount, "Cashback Offer",
                                     EnumRewardPointStatus.PENDING, getRewardPointMode(EnumRewardPointMode.HK_CASHBACK));
-                            approveRewardPoints(Arrays.asList(notTechProcessRewardPoint), new DateTime().plusMonths(1).toDate());
+	                        if (offerAction.getRewardPointExpiryDate() != null) {
+		                        approveRewardPoints(Arrays.asList(notTechProcessRewardPoint), offerAction.getRewardPointExpiryDate());
+	                        } else if (offerAction.getRewardPointRedeemWithinDays() != null) {
+		                        approveRewardPoints(Arrays.asList(notTechProcessRewardPoint), new DateTime().plusDays(offerAction.getRewardPointRedeemWithinDays()).toDate());
+	                        } else {
+		                        approveRewardPoints(Arrays.asList(notTechProcessRewardPoint), new DateTime().plusMonths(1).toDate());
+	                        }
                         }
                     }
                 }

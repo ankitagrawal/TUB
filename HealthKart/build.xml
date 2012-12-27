@@ -27,6 +27,7 @@
 		<ant dir="${project.report.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.core.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.common.dir}" target="clean" inheritall="false" />
+        <ant dir="${project.api.dir}" target="clean" inheritall="false"/>
 
 		<!--
 		
@@ -181,7 +182,8 @@
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.common.dir}/dist/hk-common.jar" />
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.core.dir}/dist/hk-core.jar" />
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
-		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.report.dir}/dist/hk-report.jar" />        
+		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.report.dir}/dist/hk-report.jar" />
+        <copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.api.dir}/dist/hk-api.jar" />
 	</target>
 
 	<target name="collect-web">
@@ -232,6 +234,10 @@
 		<ant dir="${project.web.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
 		</ant>
+
+        <ant dir="${project.api.dir}" target="build" inheritall="false">
+            <property name="build.env" value="${build.env}" />
+        </ant>
 	</target>
 
 
@@ -246,6 +252,7 @@
 		<ant dir="${project.core.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.admin.core.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.report.dir}" target="prepare" inheritall="false" />
+        <ant dir="${project.api.dir}" target="prepare" inheritall="false" />
 		<!--<ant dir="${project.web.dir}" target="prepare" inheritall="false" />-->
 		<tstamp />
 	</target>

@@ -2,6 +2,7 @@ package com.hk.admin.pact.service.hkDelivery;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.akube.framework.dao.Page;
@@ -19,7 +20,7 @@ public interface RunSheetService {
 
     public Runsheet saveRunSheet(Runsheet runsheet);
 
-    public void saveRunSheet(Runsheet runsheet, List<Consignment> changedConsignmentList);
+    public void saveRunSheet(Runsheet runsheet, List<Consignment> changedConsignmentList, Map<Consignment, String> consignmentOnHoldReason);
 
     public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage);
 
@@ -29,7 +30,7 @@ public interface RunSheetService {
 
     public boolean agentHasOpenRunsheet(User agent);
 
-    public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user);
+    public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user, Map<Consignment, String> consignmentOnHoldReason);
 
     public Runsheet updateExpectedAmountForClosingRunsheet(Runsheet runsheet);
 
