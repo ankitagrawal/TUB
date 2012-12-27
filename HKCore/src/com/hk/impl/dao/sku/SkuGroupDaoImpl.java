@@ -67,7 +67,7 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 	}
 
 
-	public List<SkuGroup> getSkuGroup(String barcode, Sku sku) {		
+	public List<SkuGroup> getSkuGroupByBarcode(String barcode, Sku sku) {		
 		List<SkuGroup> skuGroupList = getAllInStockSkuGroups(sku);
 		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(skuGroupList,barcode,null);
 		return findByCriteria(skuGroupCriteria);
@@ -75,7 +75,7 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 	}
 
 
-	public List<SkuGroup> getInStockSkuGroup(String batch, Sku sku) {
+	public List<SkuGroup> getInStockSkuGroupByBatch(String batch, Sku sku) {
 		List<SkuGroup> skuGroupList = getAllInStockSkuGroups(sku);
 		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(skuGroupList,null,batch);
 		return findByCriteria(skuGroupCriteria);

@@ -56,12 +56,12 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 	}
 
 
-	public List<SkuGroup> getSkuGroup(String barcode, Sku sku) {
-		return skuGroupDao.getSkuGroup(barcode, sku);
+	public List<SkuGroup> getSkuGroupByBarcode(String barcode, Sku sku){
+		return skuGroupDao.getSkuGroupByBarcode( barcode, sku);
 	}
 
-	public List<SkuGroup> getInStockSkuGroup(String batch, Sku sku) {
-		return skuGroupDao.getInStockSkuGroup(batch, sku);
+	public List<SkuGroup> getInStockSkuGroupByBatch(String batch, Sku sku){
+		return skuGroupDao.getInStockSkuGroupByBatch(batch, sku);
 	}
 
 
@@ -79,13 +79,18 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return getInStockSkuItem(skuGroup);
 	}
 
-	public List<SkuItem> getInStockSkuItem(String batchNumber, Sku sku, String barcode) {
-		List<SkuGroup> skuGroupList;
-		if (barcode != null) {
-			skuGroupList = skuGroupDao.getSkuGroup(barcode, sku);
-		} else {
-			skuGroupList = skuGroupDao.getInStockSkuGroup(batchNumber, sku);
+
+	public List<SkuItem> getInStockSkuItemByBatch(String batchNumber, Sku sku) {
+		List<SkuGroup> skuGroupList = getInStockSkuGroupByBatch(batchNumber, sku);
+		List<SkuItem> skuItemList = new ArrayList<SkuItem>();
+		for (SkuGroup skuGroup : skuGroupList) {
+			skuItemList.addAll(skuGroup.getSkuItems());
 		}
+		return skuItemList;
+	}
+
+	public List<SkuItem> getInStockSkuItemByBarcode(String barcode, Sku sku) {
+		List<SkuGroup> skuGroupList = getSkuGroupByBarcode(barcode, sku);
 		List<SkuItem> skuItemList = new ArrayList<SkuItem>();
 		for (SkuGroup skuGroup : skuGroupList) {
 			skuItemList.addAll(skuGroup.getSkuItems());
@@ -93,6 +98,22 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return skuItemList;
 
 	}
+
+
+//	public List<SkuItem> getInStockSkuItem(String batchNumber, Sku sku, String barcode) {
+//		List<SkuGroup> skuGroupList;
+//		if (barcode != null) {
+//			skuGroupList = skuGroupDao.getSkuGroup(barcode, sku);
+//		} else {
+//			skuGroupList = skuGroupDao.getInStockSkuGroup(batchNumber, sku);
+//		}
+//		List<SkuItem> skuItemList = new ArrayList<SkuItem>();
+//		for (SkuGroup skuGroup : skuGroupList) {
+//			skuItemList.addAll(skuGroup.getSkuItems());
+//		}
+//		return skuItemList;
+//
+//	}
 
 
 }

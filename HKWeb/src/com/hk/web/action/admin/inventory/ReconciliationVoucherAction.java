@@ -311,12 +311,12 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 		if (productVariant != null) {
 			Sku sku = skuService.getSKU(productVariant, getUserService().getWarehouseForLoggedInUser());
 			if (sku != null) {
-				skuItemList = skuGroupService.getInStockSkuItem(null,sku ,batchNumber);
+				skuItemList = skuGroupService.getInStockSkuItemByBarcode(batchNumber, sku);
 				if (skuItemList != null && skuItemList.size() > 0) {
 					return skuItemList;
 				}
 				else {
-					skuItemList = skuGroupService.getInStockSkuItem(batchNumber, sku,null);
+					 skuItemList = skuGroupService.getInStockSkuItemByBatch(batchNumber,sku);
 					if (skuItemList != null && skuItemList.size() > 0) {
 						return skuItemList;
 					} else {
