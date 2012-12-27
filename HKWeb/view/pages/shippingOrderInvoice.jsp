@@ -268,8 +268,7 @@ ORDER INVOICE <c:choose>
     <div style="font-size:.8em">
         <h3 style="margin:0;">Please do not accept if the box is tampered</h3>
 
-        Note: This is to certify that items inside do not contain any prohibited or hazardous
-        material.
+        Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are meant for personal use only and are not for resale.
     </div>
     <hr/>
     <c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
