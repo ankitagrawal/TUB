@@ -2,6 +2,7 @@ package com.hk.web.action.core.order;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
@@ -26,6 +27,7 @@ import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.EnumQuantiumCourierCodes;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.exception.HealthkartCheckedException;
 
@@ -118,16 +120,16 @@ public class TrackCourierAction extends BaseAction {
             case BlueDart:
             case BlueDart_COD:
                 courierName = CourierConstants.BLUEDART;
-                Element ele = null;
+                Element xmlElement = null;
                 try {
-                    ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
+                    xmlElement = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
                 } catch (HealthkartCheckedException hce) {
                     logger.debug("Exception occurred in TrackCourierAction");
                 }
-                if (ele != null) {
-                    String responseStatus = ele.getChildText(CourierConstants.BLUEDART_STATUS);
+                if (xmlElement != null) {
+                    String responseStatus = xmlElement.getChildText(CourierConstants.BLUEDART_STATUS);
                     if (!responseStatus.equals(CourierConstants.BLUEDART_ERROR_MSG)) {
-                        status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
+                        status = xmlElement.getChildText(CourierConstants.BLUEDART_STATUS);
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
@@ -188,29 +190,33 @@ public class TrackCourierAction extends BaseAction {
 
 			case Quantium:
 				courierName = CourierConstants.QUANTIUM;
-				ele = null;
-                try {
-                    ele = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
-                } catch (HealthkartCheckedException hce) {
-                    logger.debug("Exception occurred in TrackCourierAction");
-                }
-                if (ele != null) {
-                    String courierDeliveryStatus = ele.getChildText(CourierConstants.QUANTIUM_STATUS);
-                    if (courierDeliveryStatus != null) {
-                        status = courierDeliveryStatus;
-                    }
-                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
-                } else {
-                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
-                }
-
+				resolution = getStatusForQuantium();
 				break;
+
             default:
                 resolution = new RedirectResolution("/pages/trackShipment.jsp");
 
         }
         return resolution;
     }
+
+	Resolution getStatusForQuantium(){
+		Element xmlElement = null;
+		try {
+			xmlElement = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
+		} catch (HealthkartCheckedException hce) {
+			logger.debug("Exception occurred in TrackCourierAction");
+		}
+		if (xmlElement != null) {
+			String courierDeliveryStatus = xmlElement.getChildText(CourierConstants.QUANTIUM_STATUS);
+			if (courierDeliveryStatus != null) {
+				status = EnumQuantiumCourierCodes.valueOf(courierDeliveryStatus).getName();				
+			}
+			return new ForwardResolution("/pages/courierDetails.jsp");
+		} else {
+			return new RedirectResolution("/pages/trackShipment.jsp");
+		}
+	}	
 
     public String getTrackingId() {
         return trackingId;
