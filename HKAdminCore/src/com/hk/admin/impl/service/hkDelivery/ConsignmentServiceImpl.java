@@ -86,7 +86,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Override
     public ConsignmentTracking createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment,
-            ConsignmentLifecycleStatus consignmentLifecycleStatus) {
+            ConsignmentLifecycleStatus consignmentLifecycleStatus, String consignmentTrackingRemark) {
         ConsignmentTracking consignmntTracking = new ConsignmentTracking();
         consignmntTracking.setConsignment(consignment);
         consignmntTracking.setCreateDate(new Date());
@@ -94,6 +94,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         consignmntTracking.setDestinationHub(destinationHub);
         consignmntTracking.setUser(user);
         consignmntTracking.setConsignmentLifecycleStatus(consignmentLifecycleStatus);
+	    consignmntTracking.setRemarks(consignmentTrackingRemark);
         return consignmntTracking;
     }
 
@@ -290,4 +291,18 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub) {
         return consignmentDao.getConsignmentsForPaymentReconciliation(startDate, endDate, hub);
     }
+
+	@Override
+	public List<String> getCustomerOnHoldReasonsForHkDelivery() {
+		List<String> customerOnHoldReasons = new ArrayList<String>();
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_UNCONTACTABLE);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_HOUSE_LOCKED);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_FUTURE_DELIVERY);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_PAYMENT_NOT_READY);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_WRONG_ADDRESS);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_NOT_INTERESTED);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_DELAY_DELIVERY);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_WRONG_DELIVERY);
+		return customerOnHoldReasons;
+	}
 }

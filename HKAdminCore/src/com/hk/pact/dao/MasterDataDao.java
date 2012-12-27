@@ -136,6 +136,8 @@ public interface MasterDataDao
 
 	public List<Zone> getAllZones();
 
+	public List<String> getCustomerOnHoldReasonsForHkDelivery();
+
 	public List<DispatchLotStatus> getDispatchLotStatusList();
 
 	public List<String> getSourceAndDestinationListForDispatchLot();

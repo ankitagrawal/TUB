@@ -78,13 +78,18 @@
 <div class="grid_4">
   <div style="float: right;">
    <c:choose>
-      <c:when test="${orderSummary.order.user.login == 'support@madeinhealth.com' || orderSummary.order.store.id == 2}">
-        <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
-      </c:when>
-      <c:otherwise>
-        <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
-      </c:otherwise>
-    </c:choose>
+            <c:when test="${orderSummary.order.store.id == 2 || orderSummary.order.store.id == 3}">
+	            <c:if test="${orderSummary.order.store.id == 2}">
+                <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
+	            </c:if>
+	            <c:if test="${orderSummary.order.store.id == 3}">
+                <img src="${pageContext.request.contextPath}/images/fitnesspro.png" alt="FitnessPro Logo"/>
+	            </c:if>
+            </c:when>
+            <c:otherwise>
+                <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
+            </c:otherwise>
+        </c:choose>
   </div>
 </div>
 

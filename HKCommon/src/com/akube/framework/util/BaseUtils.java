@@ -69,6 +69,10 @@ public class BaseUtils {
         return properties;
     }
 
+    public static String md5Hash(String string,String salt,int hashIterations){
+        return new Md5Hash(string, salt, hashIterations).toBase64();
+    }
+
     public static String passwordEncrypt(String password) {
         return new Md5Hash(password, HibernateSecurityRealm.passwordSalt, HibernateSecurityRealm.hashIterations).toBase64();
     }
