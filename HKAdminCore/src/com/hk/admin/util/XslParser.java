@@ -505,6 +505,10 @@ public class XslParser {
 	            String zoneName=getCellValue(XslConstants.ZONE, rowMap, headerMap);
 	            
 	            Zone zone = getPincodeService().getZoneByName(zoneName);
+	            if(zone == null){
+		            logger.error("Exception @ Row:" + rowCount);
+					throw new Exception("Zone is incorrect @ Row:" + rowCount);
+	            }
 	            pincode.setZone(zone);
                 pincodeList.add(pincode);
 
