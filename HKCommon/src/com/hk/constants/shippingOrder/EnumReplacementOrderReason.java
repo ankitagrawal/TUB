@@ -19,8 +19,8 @@ public enum EnumReplacementOrderReason {
 	CodAmountNotReady(110L, "Customer-COD Amount not ready"),                                          //RTO
 	CustomerNotContactable(120L, "Customer-Customer not contactable"),
 	OutsideDeliveryArea(130L, "courier-Outside Delivery Area"),                             //RTO
-	FakeRTO(140L, "courier - Fake RTO"),                                                    //RTO
-	ShipmentMisrouted(150L, "courier - Shipment Misrouted");                                //RTO
+	FakeRTO(140L, "courier-Fake RTO"),                                                    //RTO
+	ShipmentMisrouted(150L, "courier-Shipment Misrouted");                                //RTO
 
 
 
