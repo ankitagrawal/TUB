@@ -400,9 +400,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         poLineItem.setSku(extraInventoryLineItem.getSku());
         poLineItem.setPurchaseOrder(newPurchaseOrder);
         poLineItem.setDiscountPercent(0.0D);
-        poLineItem.setTaxAmount(newPurchaseOrder.getTaxAmount());
-        poLineItem.setTaxableAmount(newPurchaseOrder.getTaxableAmount());
-        poLineItem.setSurchargeAmount(newPurchaseOrder.getSurchargeAmount());
+        poLineItem.setTaxAmount(extraInventoryLineItem.getSku().getTax().getValue());
+        poLineItem.setTaxableAmount(0.0D);
+        poLineItem.setSurchargeAmount(0.0D);
         poLineItem = getPoLineItemService().save(poLineItem);
       }
     }

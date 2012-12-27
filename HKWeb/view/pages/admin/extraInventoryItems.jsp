@@ -53,7 +53,6 @@
                 $('.variants').each(function(){
                     var this_index = $(this).attr('value');
                     if(this_index == index){
-                                                alert(index);
                         var txtBox = "<input type='text'  class='variantId' placeholder='Enter Variant ID'/>" ;
                         var txtBox2 = "<input type='text' class='skus' readonly='readonly' name='extraInventoryLineItems[" + index + "].sku' />" ;
                         var isChecked = $(this).attr('checked')?true:false;
