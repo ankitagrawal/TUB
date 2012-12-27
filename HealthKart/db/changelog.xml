@@ -10147,7 +10147,7 @@
         insert into country values (198,'VIRGIN ISLANDS, U.S.', 'VI');
         insert into country values (199,'WALLIS AND FUTUNA', 'WF');
         insert into country values (200,'WESTERN SAHARA', 'EH');
-        insert into country values (201,'ZAMBIA', 'ZM');      
+        insert into country values (201,'ZAMBIA', 'ZM');
     </sql>
   </changeSet>
     <changeSet author="Pratham" id="20121129-01">
@@ -10753,4 +10753,16 @@
 			<column name="create_dt" type="DATETIME"/>
 		</createTable>
 	</changeSet>
+	<changeSet author="Tarun" id="12-26-2012">
+		<sql>
+			UPDATE pincode SET zone_id=1 WHERE zone_id IS NULL;
+			UPDATE shipment SET zone_id=1 WHERE zone_id IS NULL;
+		</sql>
+	</changeSet>
+	<changeSet author="Tarun (generated)" id="1355737809715-1">
+        <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1356513899742-1">
+        <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="shipment"/>
+    </changeSet>
 </databaseChangeLog>

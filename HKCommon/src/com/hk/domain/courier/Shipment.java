@@ -69,7 +69,7 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	private String packer;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "zone_id", nullable = true)
+	@JoinColumn(name = "zone_id", nullable = false)
 	private Zone zone;
 
 	@Temporal(TemporalType.TIMESTAMP)

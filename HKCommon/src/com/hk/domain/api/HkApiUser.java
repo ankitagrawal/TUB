@@ -32,6 +32,9 @@ public class HkApiUser {
     @Column(name = "api_key", nullable = false, length = 500)
     private String  apiKey;
 
+    @Column(name = "secret_key", nullable = false, length = 300)
+    private String  secretKey;
+
     @Column(name = "login_success_redirect_url", nullable = false, length = 500)
     private String  loginSuccessRedirectUrl;
 
@@ -46,6 +49,9 @@ public class HkApiUser {
 
     @Column(name = "create_dt", nullable = false, length = 500)
     private Date    createDate;
+
+    @Column(name = "order_placement_enabled", nullable = false)
+    private boolean orderPlacementEnabled;
 
     public Long getId() {
         return id;
@@ -111,4 +117,19 @@ public class HkApiUser {
         this.createDate = createDate;
     }
 
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    public boolean isOrderPlacementEnabled() {
+        return orderPlacementEnabled;
+    }
+
+    public void setOrderPlacementEnabled(boolean orderPlacementEnabled) {
+        this.orderPlacementEnabled = orderPlacementEnabled;
+    }
 }
