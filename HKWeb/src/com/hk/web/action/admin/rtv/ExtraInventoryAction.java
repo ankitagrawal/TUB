@@ -433,14 +433,14 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       noCache();
     }
     if(pv!=null){
-      sku = getSkuService().getSKU(pv,wareHouse);
+      sku = getSkuService().findSKU(pv,wareHouse);
       if(sku!=null){
         dataMap.put("sku",sku);
         dataMap.put("productName",sku.getProductVariant().getProduct().getName());
         healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant",dataMap);
       }
       else{
-        healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Variant Id");
+        healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Sku Not present for this Variant Id");
       }
     }
     else{
