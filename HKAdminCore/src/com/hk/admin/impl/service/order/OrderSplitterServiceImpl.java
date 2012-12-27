@@ -22,13 +22,11 @@ import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.util.helper.OrderSplitterHelper;
-import com.hk.admin.manager.AdminEmailManager;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.courier.CourierConstants;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.order.CartLineItem;
@@ -97,9 +95,6 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double               codMinAmount;
-
-	@Autowired
-	AdminEmailManager adminEmailManager;
 
     public List<DummyOrder> listBestDummyOrdersPractically(Order order, Set<CartLineItem> CartlineItems) {
         TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order, CartlineItems);
