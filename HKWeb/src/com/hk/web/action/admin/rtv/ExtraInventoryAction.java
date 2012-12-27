@@ -118,7 +118,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         skus.add(extraInventoryLineItem.getSku().getId());
       }
       else if(extraInventoryLineItem.getSku()!=null && skus.contains(extraInventoryLineItem.getSku().getId())){
+        if(extraInventory!=null){
         extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+        }
         noCache();
         addRedirectAlertMessage(new SimpleMessage("Same Sku is present more than once !!!! "));
         return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
