@@ -20,7 +20,6 @@
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
 
-
 	</path>
 
 

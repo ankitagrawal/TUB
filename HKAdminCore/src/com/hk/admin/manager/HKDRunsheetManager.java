@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.hkDelivery.Hub;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -50,7 +51,7 @@ public class HKDRunsheetManager {
     @Autowired
     private ConsignmentService consignmentService;
 
-    public File generateWorkSheetXls(String xslFilePath, Set<Consignment> consignments, String assignedTo, Double totalCODAmount, int totalPackets, int totalCODPackets)
+    public File generateWorkSheetXls(String xslFilePath, Set<Consignment> consignments, String assignedTo, Double totalCODAmount, int totalPackets, int totalCODPackets, Hub hub)
             throws NullPointerException, IOException, ParseException {
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
@@ -161,7 +162,7 @@ public class HKDRunsheetManager {
         setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_MOBILE);
         setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_DATE);
         setCellValue(row, 4, currentDate + "");
-        setCellValue(row, 5, "");
+        setCellValue(row, 5, CourierConstants.HKD_HUB+ " "+ hub.getName() );
         addEmptyLine(row, sheet1, ++rowCounter, cell);
         row = sheet1.createRow(++rowCounter);
         for (int i = 0; i < 6; i++) {
