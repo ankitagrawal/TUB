@@ -2,6 +2,7 @@ package com.hk.impl.service.shippingOrder;
 
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 
@@ -26,6 +27,10 @@ public class ShippingOrderLifecycleServiceImpl implements ShippingOrderLifecycle
     public List<ShippingOrderLifeCycleActivity> getOrderActivities(List<EnumShippingOrderLifecycleActivity> enumShippingOrderActivities){
         return shippingOrderLifecycleDao.getOrderActivities(enumShippingOrderActivities);
     }
+
+	public List<ShippingOrderLifecycle> getShippingOrderLifecycleBySOAndActivity(Long shippingOrderId, Long shippingOrderLifeCycleActivityId) {
+		return shippingOrderLifecycleDao.getShippingOrderLifecycleBySOAndActivity(shippingOrderId, shippingOrderLifeCycleActivityId);
+	}
 
 
 }

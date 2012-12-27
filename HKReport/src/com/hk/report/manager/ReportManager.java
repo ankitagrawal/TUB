@@ -1418,6 +1418,7 @@ public class ReportManager {
         xlsWriter.addHeader("BO_GATEWAY_ID", "BO_GATEWAY_ID");
         xlsWriter.addHeader("NAME", "NAME");
         xlsWriter.addHeader("ORDER_DATE", "ORDER_DATE");
+	    xlsWriter.addHeader("PAYMENT_STATUS", "PAYMENT_STATUS");
         xlsWriter.addHeader("CATEGORY", "CATEGORY");
         xlsWriter.addHeader("ITEM_NAME", "ITEM_NAME");
         xlsWriter.addHeader("BRAND", "BRAND");
@@ -1444,6 +1445,7 @@ public class ReportManager {
                 xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getGatewayOrderId());
                 xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getAddress().getName());
                 xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getPayment().getPaymentDate());
+	            xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getPayment().getPaymentStatus().getName());
 
                 productVariant = cartLineItem.getProductVariant();
                 xlsWriter.addCell(rowCounter, getCategoryService().getTopLevelCategory(productVariant.getProduct()).getDisplayName());
