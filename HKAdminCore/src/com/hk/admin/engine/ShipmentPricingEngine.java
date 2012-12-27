@@ -141,6 +141,9 @@ public class ShipmentPricingEngine {
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
             }else{
                 GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(),payment.getGateway(),null);
+                if(gatewayIssuerMapping == null){
+                    return 0D;
+                }
                 reconciliationCharges = amount * gatewayIssuerMapping.getReconciliationCharge();
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
             }
