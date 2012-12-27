@@ -24,7 +24,7 @@ public interface ConsignmentService {
 
     public List<ConsignmentTracking> createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, List<Consignment> consignment , ConsignmentLifecycleStatus consignmentLifecycleStatus);
 
-    public ConsignmentTracking createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment, ConsignmentLifecycleStatus consignmentLifecycleStatus);
+    public ConsignmentTracking createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment, ConsignmentLifecycleStatus consignmentLifecycleStatus, String consignmentTrackingRemark);
 
     public void saveConsignments(List<Consignment> consignmentList);
 
@@ -69,5 +69,7 @@ public interface ConsignmentService {
     public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage);
 
 	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub);
+
+	public List<String> getCustomerOnHoldReasonsForHkDelivery();
 
 }

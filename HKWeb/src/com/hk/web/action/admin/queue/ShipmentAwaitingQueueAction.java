@@ -6,10 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -287,7 +284,12 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   }
 
   public Set<String> getParamSet() {
-    return null;
+    HashSet<String> params = new HashSet<String>();
+	params.add("gatewayOrderId");
+	params.add("zone");
+	params.add("orderId");
+	params.add("courier");
+	return params;
   }
 
   public List<ShippingOrder> getShippingOrderList() {
