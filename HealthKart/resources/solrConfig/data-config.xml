@@ -1,9 +1,9 @@
 <dataConfig>
-  <dataSource type="JdbcDataSource"
+  <!--<dataSource type="JdbcDataSource"
               driver="com.mysql.jdbc.Driver"
               url="jdbc:mysql://172.16.3.50:3306/healthkart_prod?autoReconnect=true"
-              user="hkadmin"
-              password="admin2K11!"/>
+              user=""
+              password=""/>-->
   <document>
     <entity name="product" query="select ID,name,brand,overview,description,order_ranking,deleted,main_image_id,is_google_ad_disallowed from product where deleted=0">
             <field column="ID" name="prd_id"/>

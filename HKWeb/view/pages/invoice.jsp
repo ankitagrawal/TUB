@@ -383,8 +383,7 @@
 <div style="margin-top: 5px;"></div>
 
 <div class="grid_12">
-  <div style="font-size:.8em">Note: This is to certify that items inside do not contain any prohibited or hazardous
-    material.
+  <div style="font-size:.8em">Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are meant for personal use only and are not for resale.
   </div>
   <hr/>
   <c:choose>
