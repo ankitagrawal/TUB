@@ -381,10 +381,11 @@ public class ReportManager {
 		            }
 	            }
                 Shipment shipment = order.getShipment();
+				Awb awb = shipment.getAwb();
                 Address address = order.getBaseOrder().getAddress();
                 String trackingId = null;
-                if (shipment.getAwb() != null) {
-                    trackingId = shipment.getAwb().getAwbNumber();
+                if ( awb != null) {
+                    trackingId = awb.getAwbNumber();
                 }
                 setCellValue(row, 0, trackingId);
                 setCellValue(row, 1, order.getGatewayOrderId());
@@ -435,7 +436,7 @@ public class ReportManager {
                     setCellValue(row, 17, order.getAmount());
                     paymentMode = ReportConstants.COD;
                 }
-                setCellValue(row, 18, shipment.getAwb().getCourier().getName());
+                setCellValue(row, 18, awb.getCourier().getName());
                 setCellValue(row, 19, paymentMode);
                 setCellValue(row, 20, shipment.getShipDate());
                 if (shipment.getBoxSize() != null) {
@@ -444,8 +445,8 @@ public class ReportManager {
                 if (shipment.getBoxWeight() != null) {
                     setCellValue(row, 22, shipment.getBoxWeight());
                 }
-				Awb awb = shipment.getAwb();
-				if (awb.getCourier().equals((EnumCourier.Speedpost.asCourier())) && awb != null) {
+
+				if ( awb != null && awb.getCourier().equals((EnumCourier.Speedpost.asCourier()))) {
 					String barcodePath = barcodeGenerator.getBarcodePath(awb.getAwbNumber(), 1.0f, 150, false);
 					// add picture data to this workbook.
 					is = new FileInputStream(barcodePath);
