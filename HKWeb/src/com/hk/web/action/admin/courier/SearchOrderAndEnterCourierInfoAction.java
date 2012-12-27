@@ -248,6 +248,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 		shipment.setAwb(finalAwb);
 		shipment.setShippingOrder(shippingOrder);
 		shippingOrder.setShipment(shipment);
+		if(shipment.getZone() == null){
+			Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			shipment.setZone(pinCode.getZone());
+		}
 		shipmentService.save(shipment);
 		if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
 			shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));

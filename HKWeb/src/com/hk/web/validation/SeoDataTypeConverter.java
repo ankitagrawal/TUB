@@ -34,14 +34,15 @@ public class SeoDataTypeConverter implements TypeConverter<SeoData> {
         } else if (getBaseDao().get(SeoData.class,s) != null) {
             return getBaseDao().get(SeoData.class, s);
            // return seoDataDao.find(s);
-        }else{
-	        String[] sArr = StringUtils.split(s, "||");
-	        if (StringUtils.isNotBlank(s) && getBaseDao().get(SeoData.class,sArr[0]) != null) {
-            return getBaseDao().get(SeoData.class, sArr[0]);
-           // return seoDataDao.find(s);
         } else {
-            return seoManager.generateSeo(s);
-        }  }
+	        String[] sArr = StringUtils.split(s, "||");
+	        if (StringUtils.isNotBlank(s) && getBaseDao().get(SeoData.class, sArr[0]) != null) {
+		        return getBaseDao().get(SeoData.class, sArr[0]);
+		        // return seoDataDao.find(s);
+	        } else {
+		        return seoManager.generateSeo(s);
+	        }
+        }
     }
 
     public BaseDao getBaseDao() {

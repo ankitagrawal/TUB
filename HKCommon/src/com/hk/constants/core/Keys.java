@@ -109,7 +109,6 @@ public class Keys {
         public static final String dbPort                          = "dbPort";
 
         public static final String healthkartRestUrl               = "healthkartRestUrl";
-        public static final String mihRestUrl                      = "mihRestUrl";
 
         public static final String fedExServerUrl                  = "fedExServerUrl";
         public static final String fedExAuthKey                    = "fedExAuthKey";

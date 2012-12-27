@@ -21,7 +21,6 @@
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
         <fileset file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 
-
 	</path>
 
 
