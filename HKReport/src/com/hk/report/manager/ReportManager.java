@@ -46,6 +46,7 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.Tax;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.order.CartLineItem;
@@ -443,14 +444,19 @@ public class ReportManager {
                 if (shipment.getBoxWeight() != null) {
                     setCellValue(row, 22, shipment.getBoxWeight());
                 }
-				if (shipment.getAwb() != null) {
-					String barcodePath = barcodeGenerator.getBarcodePath(shipment.getAwb().getAwbNumber(), 1.0f, 150, false);
+				Awb awb = shipment.getAwb();
+				if (awb.getCourier().equals((EnumCourier.Speedpost.asCourier())) && awb != null) {
+					String barcodePath = barcodeGenerator.getBarcodePath(awb.getAwbNumber(), 1.0f, 150, false);
 					// add picture data to this workbook.
 					is = new FileInputStream(barcodePath);
 					bytes = IOUtils.toByteArray(is);
 					pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
 					is.close();
 					helper = wb.getCreationHelper();
+					sheet1.autoSizeColumn(24);
+					//sheet1.addMergedRegion()
+					//sheet1.groupRow(rowCounter, rowCounter++);
+					row.setHeightInPoints(60);
 
 					// Create the drawing patriarch. This is the top level container for all shapes.
 					// add a picture shape
@@ -463,7 +469,7 @@ public class ReportManager {
 
 					//setCellValue(row, 24, awbNumber );
 					anchor.setDx1(10);
-					anchor.setDx2(700);
+					anchor.setDx2(1000);
 					anchor.setDy1(10);
 					anchor.setDy2(200);
 					anchor.setCol1(24);
