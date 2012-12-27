@@ -173,6 +173,14 @@ public class SolrProduct {
     private
     boolean isCODAllowed;
 
+    @Field
+    private
+    String productUrl;
+
+    @Field
+    private
+    String smallImageUrl;
+
 
     public
     String getName() {
@@ -446,6 +454,22 @@ public class SolrProduct {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public String getSmallImageUrl() {
+        return smallImageUrl;
+    }
+
+    public void setSmallImageUrl(String smallImageUrl) {
+        this.smallImageUrl = smallImageUrl;
+    }
+
+    public String getProductUrl() {
+        return productUrl;
+    }
+
+    public void setProductUrl(String productUrl) {
+        this.productUrl = productUrl;
     }
 
     public SolrProduct(){

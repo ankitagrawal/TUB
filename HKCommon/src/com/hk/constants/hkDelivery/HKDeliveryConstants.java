@@ -51,6 +51,12 @@ public class HKDeliveryConstants {
 	public static final String USER_SOURCE = "Healthkart Warehouse";
 	public static final String USER_DESTINATION = "Customer";
 
-
-
+    public static final String CUST_HOLD_WRONG_ADDRESS = "Address Incorrect";
+	public static final String CUST_HOLD_HOUSE_LOCKED = "House Locked";
+	public static final String CUST_HOLD_UNCONTACTABLE = "Customer Not contactable";
+	public static final String CUST_HOLD_PAYMENT_NOT_READY = "COD Payment not ready";
+    public static final String CUST_HOLD_FUTURE_DELIVERY = "Customer requested future delivery date";
+    public static final String CUST_HOLD_WRONG_DELIVERY = "Customer Refuse - Wrong delivery";
+	public static final String CUST_HOLD_DELAY_DELIVERY = "Customer Refuse - Delay Delivery";
+	public static final String CUST_HOLD_NOT_INTERESTED = "Customer Refuse - Not interested";
 }
