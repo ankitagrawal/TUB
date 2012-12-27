@@ -42,18 +42,46 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
        return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
      }
 
-	public List<SkuGroup> getSkuGroupByBatch(String batch, Sku sku) {
-		DetachedCriteria skuGroupDetachedCriteria = DetachedCriteria.forClass(SkuGroup.class);
-		skuGroupDetachedCriteria.add(Restrictions.eq("batchNumber", batch));
-		if (sku != null) {
-			skuGroupDetachedCriteria.add(Restrictions.eq("sku", sku));
+
+
+	private  DetachedCriteria  getSkuGroupCriteria(List<SkuGroup> skuGroupList ,String barcode ,String batchNumber ){
+		DetachedCriteria skuGroupCriteria = DetachedCriteria.forClass(SkuGroup.class);
+		List<Long> skuGroupIds = new ArrayList<Long>();
+		for(SkuGroup skuGroup:skuGroupList){
+			skuGroupIds.add(skuGroup.getId());
 		}
-		return (List<SkuGroup>) findByCriteria(skuGroupDetachedCriteria);
+
+		if (skuGroupIds.size() > 0) {
+			skuGroupCriteria.add(Restrictions.in("id", skuGroupIds));
+		}
+
+		if (barcode != null) {
+			skuGroupCriteria.add(Restrictions.eq("barcode", barcode.trim()));
+		}
+
+		if (batchNumber != null) {
+			skuGroupCriteria.add(Restrictions.eq("batchNumber", batchNumber.trim()));
+		}
+		return skuGroupCriteria;
+
 	}
 
-	public List<SkuGroup> getSkuGroupByBatch(String batch){
-		return getSkuGroupByBatch( batch, null);
+
+	public List<SkuGroup> getSkuGroup(String barcode, Sku sku) {		
+		List<SkuGroup> skuGroupList = getAllInStockSkuGroups(sku);
+		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(skuGroupList,barcode,null);
+		return findByCriteria(skuGroupCriteria);
+
 	}
+
+
+	public List<SkuGroup> getInStockSkuGroup(String batch, Sku sku) {
+		List<SkuGroup> skuGroupList = getAllInStockSkuGroups(sku);
+		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(skuGroupList,null,batch);
+		return findByCriteria(skuGroupCriteria);
+	}
+
+
 
    /* public void resetInventory(ProductVariant productVariant) {
         List<Long> toBeRemovedIds = (List<Long>) getSession().createQuery("select id from SkuGroup sg where sg.sku.productVariant = :productVariant").setParameter(

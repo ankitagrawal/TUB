@@ -24,10 +24,11 @@ public interface SkuGroupDao extends BaseDao {
 
   public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku);
 
-  public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
+	public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
 
-  public List<SkuGroup> getSkuGroupByBatch(String batch,Sku sku);
+	public List<SkuGroup> getSkuGroup(String barcode, Sku sku);
 
- public List<SkuGroup> getSkuGroupByBatch(String batch);
+	public List<SkuGroup> getInStockSkuGroup(String batch, Sku sku);
+
 
 }

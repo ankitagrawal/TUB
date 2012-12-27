@@ -14,8 +14,8 @@
 
     <%
         MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
-        List<ReconciliationType> reconciliationTypeList  = masterDataDao.getReconciliationTypeList();
-        pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
+        List<ReconciliationType> reconciliationList  = masterDataDao.getAddReconciliationTypeList();
+        pageContext.setAttribute("reconciliationList", reconciliationList);
     %>
 
 
@@ -37,7 +37,7 @@
 
 
                 var reconciliationTypeOptions = '<select class="reconciliationType valueChange" name="rvLineItems[' + nextIndex + '].reconciliationType">';
-                <c:forEach items="${reconciliationTypeList}" var="reconciliationTypeVar">
+                <c:forEach items="${reconciliationList}" var="reconciliationTypeVar">
                 reconciliationTypeOptions += '<option value="'+${reconciliationTypeVar.id}+'">'+"${reconciliationTypeVar.name}"+'</option>';
                 </c:forEach>
 
@@ -171,7 +171,7 @@
                                class="reconciliationTypeIdentifier"/>
                         <s:select name="rvLineItems[${ctr.index}].reconciliationType"
                                   value="${rvLineItem.reconciliationType.id}" class="valueChange">
-                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="reconciliationTypeList" value="id"
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="addReconciliationTypeList" value="id"
                                                        label="name"/>
                         </s:select>
                     </td>

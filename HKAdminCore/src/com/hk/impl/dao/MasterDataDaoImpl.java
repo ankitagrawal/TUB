@@ -425,4 +425,13 @@ public class MasterDataDaoImpl implements MasterDataDao {
 	public List<String> getShipmentStatusForDispatchLot() {
 		return dispatchLotService.getShipmentStatusForDispatchLot();
 	}
+
+
+	public List<ReconciliationType> getAddReconciliationTypeList() {
+		List<ReconciliationType> reconciliationList = new ArrayList<ReconciliationType>();
+		ReconciliationType addReconType = EnumReconciliationType.Add.asReconciliationType();
+		reconciliationList.add(addReconType);
+		return reconciliationList;
+
+	}
 }

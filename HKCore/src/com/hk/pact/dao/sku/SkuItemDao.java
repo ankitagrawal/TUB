@@ -17,5 +17,4 @@ public interface SkuItemDao extends BaseDao {
 
 	public List<SkuItem> getInStockSkuItem(SkuGroup skuGroup);
 
-
 }

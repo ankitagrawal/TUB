@@ -4,6 +4,7 @@ import com.hk.domain.user.User;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 
 import java.util.List;
 import java.util.Map;
@@ -23,5 +24,5 @@ public interface ReconciliationVoucherService {
 
 	public void save(List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
 
-	public RvLineItem reconcile(RvLineItem rvLineItem, ReconciliationVoucher reconciliationVoucher, SkuGroup skuGroup);
+	public RvLineItem reconcile(RvLineItem rvLineItem, ReconciliationVoucher reconciliationVoucher, List<SkuItem> skuItemList);
 }

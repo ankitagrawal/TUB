@@ -41,6 +41,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.SkuGroupService;
 
 @Service
 public class AdminInventoryServiceImpl implements AdminInventoryService {
@@ -70,7 +71,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     @Autowired
     private ProductVariantInventoryDao      productVariantInventoryDao;
     @Autowired
-    private SkuGroupDao                     skuGroupDao;
+    private SkuGroupService skuGroupService;
 
     @Override
     public List<SkuGroup> getInStockSkuGroups(String upc) {
@@ -272,7 +273,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
      }
 
     public SkuGroup getSkuGroupByHkBarcode(String barcode) {
-        return getSkuGroupDao().getSkuGroup(barcode);
+        return skuGroupService.getSkuGroup(barcode);
     }
 
     public BaseDao getBaseDao() {
@@ -371,13 +372,6 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         this.productVariantInventoryDao = productVariantInventoryDao;
     }
 
-    public SkuGroupDao getSkuGroupDao() {
-        return skuGroupDao;
-    }
-
-    public void setSkuGroupDao(SkuGroupDao skuGroupDao) {
-        this.skuGroupDao = skuGroupDao;
-    }
 
 
 

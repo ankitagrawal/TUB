@@ -58,9 +58,7 @@
 					'  <td>' +
 					'    <input type="text" id="quantity" name="rvLineItems[' + nextIndex + '].qty" />' +
 					'  </td>' +
-					'<td>' +
-					'<input type="text" id="reconciliedqty" value="0" name="rvLineItems[' + nextIndex + '].reconciliedQty" />' +
-					'</td>' +
+
 					'<td>' +
 					reconciliationTypeOptions +
 					'</select>' +
@@ -85,6 +83,9 @@
 					'  <td>' +
 					'    <textarea rows="4"  class ="textare" columns="10" name="rvLineItems[' + nextIndex + '].remarks" style="height:50px;"/>' +
 					'  </td>' +
+					'<td>' +
+					'<input type="text" id="reconciliedqty" value="0" name="rvLineItems[' + nextIndex + '].reconciliedQty" readonly="readonly" />' +
+					'</td>' +					
 					'<td> ' +
 					link +
 					'</td>' +
@@ -173,7 +174,10 @@
 				dataType:'json',
 				success: function(data) {
 					if (data.code == '<%=HealthkartResponse.STATUS_OK%>') {
-						var reconQty = data.data.rvLineItem.reconciliedQty;
+						var reconQty = ''+data.data.rvLineItem.reconciliedQty;
+						var qty =   ''+data.data.rvLineItem.qty;
+						if( reconQty == qty) {						
+						curEle.parents('tr').css({"background-color":"#ccff99"}) ;
 						curEle.parents('tr').find('input,select,textarea').each(function() {
 							if ($(this).attr('type') == 'hidden')
 							{
@@ -195,6 +199,13 @@
 							}
 						});
 						curEle.css("display", "none");
+
+						}
+
+						else{
+						$('#reconciliedqty').val('' + reconQty);
+
+						}
 					}
 					if (data.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
 
@@ -228,6 +239,9 @@
 	        event="getBatchDetails"></s:link>
 	<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" class="singleSaveLink"
 	        event="saveAndReconcileRv"/>
+</div>
+<div>
+
 </div>
 <h2>Edit Reconciliation Voucher</h2>
 
@@ -264,7 +278,6 @@
 			<th>VariantID</th>
 			<th>Details</th>
 			<th>Qty<br/>Only(+)</th>
-			<th>Reconcilied Qty</th>
 			<th>Reconciliation Type<br/>(New)</th>
 			<th>Cost Price<br/>(Without TAX)</th>
 			<th>MRP</th>
@@ -272,6 +285,7 @@
 			<th>Mfg. Date<br/>(yyyy-MM-dd)</th>
 			<th>Exp. Date<br/>(yyyy-MM-dd)</th>
 			<th>Remarks</th>
+			<th>Reconcilied Qty</th>
 
 		</tr>
 		</thead>
@@ -279,7 +293,7 @@
 		<c:forEach var="rvLineItem" items="${pa.reconciliationVoucher.rvLineItems}" varStatus="ctr">
 			<c:set var="productVariant" value="${rvLineItem.sku.productVariant}"/>
 			<c:choose>
-				<c:when test="${rvLineItem.reconciliedQty == 0}">
+				<c:when test="${(rvLineItem.reconciliedQty == 0) || (rvLineItem.reconciliedQty < rvLineItem.qty)}">
 					<tr count="${ctr.index}" id="rowno" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
 						<s:hidden name="rvLineItems[${ctr.index}]" class="rvitem" value="${rvLineItem.id}"/>
 						<s:hidden name="rvLineItems[${ctr.index}].reconciliationVoucher"
@@ -292,9 +306,7 @@
 						</td>
 						<td><s:text name="rvLineItems[${ctr.index}].qty" id="quantity" value="${rvLineItem.qty}"/>
 						</td>
-						<td><s:text name="rvLineItems[${ctr.index}].reconciliedQty" id="reconciliedqty"
-						            value="${rvLineItem.reconciliedQty}"/>
-						</td>
+
 						<td class="reconciliationType">
 							<input type="hidden" value="finance"
 							       class="reconciliationTypeIdentifier"/>
@@ -327,6 +339,9 @@
 							<s:textarea name="rvLineItems[${ctr.index}].remarks" value="${rvLineItem.remarks}"/>
 
 						</td>
+						<td><s:text name="rvLineItems[${ctr.index}].reconciliedQty" id="reconciliedqty"
+						            value="${rvLineItem.reconciliedQty}" readonly="readonly"/>
+						</td>
 						<td>
 							<s:link class="singlesave"
 							        beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
@@ -336,13 +351,11 @@
 				</c:when>
 
 				<c:otherwise>
-					<tr>
+					<tr style="background-color:#ccff99;">
 						<td>
 								${productVariant.id}
 						</td>
 						<td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
-						</td>
-						<td>${rvLineItem.qty}
 						</td>
 						<td>${rvLineItem.reconciliedQty}
 						</td>
@@ -358,7 +371,7 @@
 						<td>
 							<fmt:formatDate value="${rvLineItem.expiryDate}" type="both"/></td>
 						<td>${rvLineItem.remarks}</td>
-
+					   <td>${rvLineItem.qty}</td>
 					</tr>
 				</c:otherwise>
 			</c:choose>

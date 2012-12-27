@@ -51,13 +51,18 @@ public class ReconciliationVoucher implements java.io.Serializable {
   @JoinColumn(name = "created_by", nullable = false)
   private User createdBy;
 
-  @JsonSkip	
+  @JsonSkip
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reconciliationVoucher")
   private List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "warehouse_id")
   private Warehouse warehouse;
+
+  @ManyToOne(fetch=FetchType.LAZY)
+  @JoinColumn(name="reconciliation_type_id")
+  private ReconciliationType reconciliationType;
+
 
   public Long getId() {
     return id;
@@ -114,4 +119,13 @@ public class ReconciliationVoucher implements java.io.Serializable {
   public void setWarehouse(Warehouse warehouse) {
     this.warehouse = warehouse;
   }
+
+
+	public ReconciliationType getReconciliationType() {
+		return reconciliationType;
+	}
+
+	public void setReconciliationType(ReconciliationType reconciliationType) {
+		this.reconciliationType = reconciliationType;
+	}
 }

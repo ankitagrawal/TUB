@@ -4,11 +4,16 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.inventory.EnumReconciliationType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" var="pa"/>
  <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create Reconciliation Voucher">
+	<%
+		int subtractRecontype = EnumReconciliationType.Subtract.getId().intValue();
+		pageContext.setAttribute("subtractRecontype", subtractRecontype);
+	%>
 <jsp:useBean id="now" class="java.util.Date" scope="request" />
 	<s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -20,6 +25,7 @@
 	    <h2>Create Reconciliation Voucher</h2>
 	<s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
 		<s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+		<input type="hidden" name="reconciliationVoucher.reconciliationType" value="20"/>
 		<table>
 			<tr>
 				<td>Reconciliation Date</td>

@@ -20,6 +20,7 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.web.action.admin.inventory.InventoryCheckinAction;
 
 /**
@@ -32,7 +33,7 @@ import com.hk.web.action.admin.inventory.InventoryCheckinAction;
 public class InventoryBinAllocationAction extends BaseAction {
    private static Logger logger = Logger.getLogger(InventoryCheckinAction.class);
   @Autowired
-  SkuGroupDao skuGroupDao;
+  SkuGroupService skuGroupService;
 
 
    @Autowired
@@ -71,7 +72,7 @@ public class InventoryBinAllocationAction extends BaseAction {
        return new ForwardResolution("/pages/admin/inventoryBinAllocation.jsp").addParameter("saved","false");
     }
 
-    this.skuGroup = skuGroupDao.getSkuGroup(barcode);
+    this.skuGroup = skuGroupService.getSkuGroup(barcode);
     if (skuGroup != null) {
    ProductVariant productVariant = skuGroup.getSku().getProductVariant();
       if (productVariant == null) {
