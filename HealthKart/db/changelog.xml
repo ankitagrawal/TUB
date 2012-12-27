@@ -10765,4 +10765,22 @@
     <changeSet author="Tarun (generated)" id="1356513899742-1">
         <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="shipment"/>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1356589574750-1">
+        <createTable tableName="sku_item_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1356589574750-2">
+        <addColumn tableName="sku_item">
+            <column name="sku_item_status_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1356589574750-3">
+        <addForeignKeyConstraint baseColumnNames="sku_item_status_id" baseTableName="sku_item" constraintName="fk_sku_item_sku_item_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item_status" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
