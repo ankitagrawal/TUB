@@ -72,10 +72,6 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	@Autowired
 	private ProductVariantService productVariantService;
 	@Autowired
-	SkuGroupDao skuGroupDao;
-	@Autowired
-	SkuItemDao skuItemDao;
-	@Autowired
 	SkuGroupService skuGroupService;
 
 	private ReconciliationVoucher reconciliationVoucher;
