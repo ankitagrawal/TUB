@@ -112,7 +112,7 @@ public class MasterPincodeAction extends BaseAction {
 	public Resolution save() {
 		int numberOfPRZSavedForPinocde  = 0;
 		if (pincode == null || StringUtils.isBlank(pincode.getPincode()) || pincode.getCity() == null || pincode.getState() == null
-				|| pincode.getPincode().length() < 6 || (!StringUtils.isNumeric(pincode.getPincode()))) {
+				|| pincode.getZone() == null || pincode.getPincode().length() < 6 || (!StringUtils.isNumeric(pincode.getPincode()))) {
 			addRedirectAlertMessage(new SimpleMessage("Enter values correctly."));
 			return new RedirectResolution(MasterPincodeAction.class);
 		}
