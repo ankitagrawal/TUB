@@ -12,6 +12,8 @@ public class SolrSchemaConstants {
     public static final String productID = "id";
     public static final String category = "category";
     public static final String brand = "brand";
+    //Does not try to match exact brand..To be used in text search
+    public static final String brandLiberal = "brand_liberal";
     public static final String name = "name";
     public static final String variantName = "variantNames";
     public static final String metaKeywords = "metaKeyword";
