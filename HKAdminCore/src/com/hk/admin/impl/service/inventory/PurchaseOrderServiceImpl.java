@@ -8,6 +8,8 @@ import com.hk.domain.inventory.rtv.ExtraInventory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Rohit
@@ -52,6 +54,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
    public PurchaseOrder getPurchaseOrderByExtraInventory(ExtraInventory extraInventory){
     return (PurchaseOrder) getPurchaseOrderDao().findUniqueByNamedQueryAndNamedParam("getPurchaseOrderByExtraInventory", new String[]{"extraInventory"}, new Object[]{extraInventory});
    }
+
+  @SuppressWarnings("unchecked")
+  public List<PurchaseOrder> getAllPurchaseOrderByExtraInventory(){
+    return (List<PurchaseOrder>) getPurchaseOrderDao().findByNamedQuery("getAllPurchaseOrderByExtraInventory");
+  }
 
 	public PurchaseOrderDao getPurchaseOrderDao() {
 		return purchaseOrderDao;

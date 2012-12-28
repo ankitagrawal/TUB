@@ -24,7 +24,8 @@ import java.util.List;
 
 @NamedQueries({
     @NamedQuery(name = "getPurchaseOrderById", query = "select pc from PurchaseOrder pc where id = :purchaseOrderId"),
-    @NamedQuery(name = "getPurchaseOrderByExtraInventory", query = "select pc from PurchaseOrder pc where extraInventory = :extraInventory")
+    @NamedQuery(name = "getPurchaseOrderByExtraInventory", query = "select pc from PurchaseOrder pc where extraInventory = :extraInventory"),
+    @NamedQuery(name = "getAllPurchaseOrderByExtraInventory", query = "select pc from PurchaseOrder pc where extraInventory is not NULL")
 })
 public class PurchaseOrder implements java.io.Serializable {
 

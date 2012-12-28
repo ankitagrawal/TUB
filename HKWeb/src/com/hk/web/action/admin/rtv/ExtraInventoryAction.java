@@ -26,6 +26,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.domain.inventory.rtv.RtvNoteLineItem;
 import com.hk.web.HealthkartResponse;
+import com.hk.web.action.admin.inventory.POAction;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,25 +256,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       rtvNote.setDebitToSupplier(isDebitToSupplier);
       rtvNote = getRtvNoteService().save(rtvNote);
     }
-//    rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
-    if(extraInventory!=null){
-      extraInventoryLineItems= getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-    }
-    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
-    if(purchaseOrder!=null){
-      newPurchaseOrderId = purchaseOrder.getId();
-    }
-    if(extraInventory != null){
-      rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
-      if(rtvNote!=null){
-        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
-          reconciledStatus = "reconciled";
-        }
-      }
-    }
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Changes Saved successfully !!!!"));
-    return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+    return new RedirectResolution(RTVAction.class,"pre");
   }
 
 
@@ -281,6 +266,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventoryId);
     if(rtvNote == null){
       extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
+      if(extraInventory!=null){
       extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
       if(extraInventory != null){
         rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
@@ -294,6 +280,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       if(purchaseOrder!=null){
         newPurchaseOrderId = purchaseOrder.getId();
       }
+    }
       addRedirectAlertMessage(new SimpleMessage("No RTV Exist !!!! "));
       return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
     }
@@ -305,6 +292,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   public Resolution createPO(){
     extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
+    if(extraInventory!=null){
     extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
     if(extraInventory != null){
       rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
@@ -329,7 +317,12 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     }
 
     noCache();
-    return new ForwardResolution(ExtraInventoryAction.class, "generatePO").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
+    return new ForwardResolution(ExtraInventoryAction.class, "generatePO").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryId",extraInventoryId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
+    }
+    else{
+      addRedirectAlertMessage(new SimpleMessage("There came an Error, please Try again Later !!!"));
+      return new RedirectResolution(POAction.class,"pre");
+    }
   }
 
 
@@ -415,6 +408,13 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     noCache();
     addRedirectAlertMessage(new SimpleMessage("PO and PoLine Item has been created !!! with New PO ID - " + newPurchaseOrder.getId() ));
     return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+  }
+
+  public Resolution editRtvNoteLineItems(){
+   rtvNote = getRtvNoteService().getRtvNoteById(rtvNoteId);
+    extraInventory = rtvNote.getExtraInventory();
+    rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
+    return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId);
   }
 
   @SuppressWarnings("unchecked")

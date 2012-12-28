@@ -130,8 +130,6 @@
             </tbody>
         </table>
         <br/>
-        <s:hidden name="purchaseOrderId" value="${rtvNote.purchaseOrderId}" />
-        <s:hidden name="wareHouseId" value="${rtvNote.wareHouseId}"/>
         <s:submit name="editRtvNote" value="SAVE" id="save" />
     </s:form>
     </s:layout-component>

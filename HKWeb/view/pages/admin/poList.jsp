@@ -62,6 +62,8 @@
             </c:otherwise>
           </c:choose>   &nbsp; &nbsp;
         <s:submit name="pre" value="Search PO"/>
+          <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="getExtraInventoryPO" class="addBtn button_orange">All Extra Inventory PO              
+          </s:link>
           <s:submit name="generateExcelReport" value="Download to Excel" />
       </s:form>
     </fieldset>

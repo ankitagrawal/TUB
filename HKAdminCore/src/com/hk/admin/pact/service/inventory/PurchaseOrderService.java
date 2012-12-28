@@ -3,6 +3,8 @@ package com.hk.admin.pact.service.inventory;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rtv.ExtraInventory;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Rohit
@@ -19,4 +21,7 @@ public interface PurchaseOrderService {
   public PurchaseOrder save(PurchaseOrder purchaseOrder);
 
   public PurchaseOrder getPurchaseOrderByExtraInventory(ExtraInventory extraInventory);
+
+  public List<PurchaseOrder> getAllPurchaseOrderByExtraInventory();
+
 }
