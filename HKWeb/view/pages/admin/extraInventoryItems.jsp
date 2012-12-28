@@ -26,6 +26,7 @@
                     alert("Please select Line Items to create RTV / GRN");
                     return false;
                 }
+                $(this).hide();
             });
 
             $('.variantId').live('change',function(){
@@ -73,6 +74,7 @@
             });
 
             $("#save").click(function(){
+                $(this).hide();
                 var bool = true;
                 $('.productName').each(function(){
                     var product = $(this).val();
@@ -255,7 +257,7 @@
         </c:choose>
         </tbody>
     </table>
-    <s:hidden name="extraInventoryId" value="${extraInventory.extraInventory.id}"/>
+    <input type="hidden" name="extraInventoryId" value="${extraInventory.extraInventory.id}"/>
     <br><br>
     <div class="clear"></div>
     <h2>Extra Inventory Line Items</h2>
