@@ -156,7 +156,7 @@
             <td>
                 <c:if test="${purchaseOrder.extraInventory!=null}">
                     <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" event="pre">${purchaseOrder.extraInventory.purchaseOrder.id}
-                        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/>
+                        <s:param name="purchaseOrder" value="${purchaseOrder.extraInventory.purchaseOrder.id}"/>
                     </s:link>
                 </c:if>
             </td>
