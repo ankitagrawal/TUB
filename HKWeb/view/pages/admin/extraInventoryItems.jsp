@@ -291,7 +291,7 @@
                             <s:hidden name="extraInventoryLineItems[${ctr.index}].grnCreated" value="${eInLineItems.grnCreated}"/>
                             <c:set var="bool" value="1"/>
                         </c:if>
-                        <c:if test="${bool eq '0'}">
+                        <c:if test="${bool eq '0' and eInLineItems.id !=null}">
                             <s:checkbox class="checkbox1" value="${eInLineItems.id}" name="extraInventoryLineItemsSelected[${ctr.index}].id"/>${eInLineItems.id}
                         </c:if>
                         <input type="hidden" name="extraInventoryLineItems[${ctr.index}].id" value="${eInLineItems.id}"/>
