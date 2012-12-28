@@ -120,7 +120,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       }
       else if(extraInventoryLineItem.getSku()!=null && skus.contains(extraInventoryLineItem.getSku().getId())){
         if(extraInventory!=null){
-        extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+          extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
         }
         noCache();
         addRedirectAlertMessage(new SimpleMessage("Same Sku is present more than once !!!! "));
@@ -267,20 +267,20 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(rtvNote == null){
       extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
       if(extraInventory!=null){
-      extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-      if(extraInventory != null){
-        rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
-        if(rtvNote!=null){
-          if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
-            reconciledStatus = "reconciled";
+        extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+        if(extraInventory != null){
+          rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
+          if(rtvNote!=null){
+            if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+              reconciledStatus = "reconciled";
+            }
           }
         }
+        purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
+        if(purchaseOrder!=null){
+          newPurchaseOrderId = purchaseOrder.getId();
+        }
       }
-      purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
-      if(purchaseOrder!=null){
-        newPurchaseOrderId = purchaseOrder.getId();
-      }
-    }
       addRedirectAlertMessage(new SimpleMessage("No RTV Exist !!!! "));
       return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
     }
@@ -293,31 +293,31 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   public Resolution createPO(){
     extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
     if(extraInventory!=null){
-    extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-    if(extraInventory != null){
-      rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
-      if(rtvNote!=null){
-        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
-          reconciledStatus = "reconciled";
+      extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+      if(extraInventory != null){
+        rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
+        if(rtvNote!=null){
+          if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+            reconciledStatus = "reconciled";
+          }
         }
       }
-    }
 //    List<Long> skus = new ArrayList<Long>();
-    //checking if one of sku is null
-    for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
-      if(extraInventoryLineItem!=null){
-        extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
-        if(extraInventoryLineItem.getSku()==null){
-          noCache();
-          addRedirectAlertMessage(new SimpleMessage("One of the selected Line Item sku is null, please Enter Sku and then press create PO !!!"));
-          return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
-        }
+      //checking if one of sku is null
+      for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
+        if(extraInventoryLineItem!=null){
+          extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
+          if(extraInventoryLineItem.getSku()==null){
+            noCache();
+            addRedirectAlertMessage(new SimpleMessage("One of the selected Line Item sku is null, please Enter Sku and then press create PO !!!"));
+            return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+          }
 //        skus.add(extraInventoryLineItem.getSku().getId());
+        }
       }
-    }
 
-    noCache();
-    return new ForwardResolution(ExtraInventoryAction.class, "generatePO").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryId",extraInventoryId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
+      noCache();
+      return new ForwardResolution(ExtraInventoryAction.class, "generatePO").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryId",extraInventoryId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
     }
     else{
       addRedirectAlertMessage(new SimpleMessage("There came an Error, please Try again Later !!!"));
@@ -376,6 +376,15 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     }
     else{
       newPurchaseOrder = purchaseOrder1;
+      if(!newPurchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Generated.getId())){
+        purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
+        if(purchaseOrder!=null){
+          newPurchaseOrderId = purchaseOrder.getId();
+        }
+        noCache();
+        addRedirectAlertMessage(new SimpleMessage("PO is not in Generated State"));
+        return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+      }
     }
 
     //Creating new POLine Items and set Extra inventory Line Items Id in it
@@ -411,7 +420,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   }
 
   public Resolution editRtvNoteLineItems(){
-   rtvNote = getRtvNoteService().getRtvNoteById(rtvNoteId);
+    rtvNote = getRtvNoteService().getRtvNoteById(rtvNoteId);
     extraInventory = rtvNote.getExtraInventory();
     rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId);
