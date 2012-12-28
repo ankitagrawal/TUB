@@ -352,7 +352,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         String qf = "";
         qf += SolrSchemaConstants.name + "^2.0 ";
         qf += SolrSchemaConstants.variantName + "^1.9 ";
-        qf += SolrSchemaConstants.brand + "^1.8 ";
+        qf += SolrSchemaConstants.brandLiberal + "^1.8 ";
         qf += SolrSchemaConstants.category + "^1.6 ";
         qf += SolrSchemaConstants.metaKeywords + "^1.4 ";
         qf += SolrSchemaConstants.overview + "^1.2 ";
