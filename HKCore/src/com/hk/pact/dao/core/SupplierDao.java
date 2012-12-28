@@ -14,9 +14,9 @@ public interface SupplierDao extends BaseDao {
 
     public List<Supplier> getListOrderedByName();
 
-    public Page getSupplierByTinAndName(String tinNumber, String name, int page, int perPage);
+    public Page getSupplierByTinAndName(String tinNumber, String name, Boolean status, int page, int perPage);
 
-    public List<Supplier> getSupplierByTinAndName(String tinNumber, String name);
+    public List<Supplier> getSupplierByTinAndName(String tinNumber, String name, Boolean status);
 
     public boolean doesTinNumberExist(String tinNumber);
     

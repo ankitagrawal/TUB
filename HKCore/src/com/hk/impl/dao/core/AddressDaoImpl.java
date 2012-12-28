@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,9 @@ import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.domain.user.BillingAddress;
+import com.hk.domain.order.Order;
+import com.hk.domain.core.Country;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.core.AddressDao;
 
@@ -35,7 +39,7 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     public List<Address> getVisibleAddresses(User user) {
         List<Address> addresses = new ArrayList<Address>();
         for (Address address : user.getAddresses()) {
-            if (!address.isDeleted())
+            if (!address.isDeleted() && !(address instanceof BillingAddress))
                 addresses.add(address);
         }
         return addresses;
@@ -44,7 +48,7 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     public List<Address> getVisibleAddresses(List<Address> addressList) {
         List<Address> addresses = new ArrayList<Address>();
         for (Address address : addressList) {
-            if (!address.isDeleted())
+            if (!address.isDeleted() && !(address instanceof BillingAddress))
                 addresses.add(address);
         }
         return addresses;
@@ -105,4 +109,30 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     //
     // }
 
-}   
+
+    public List<BillingAddress> getVisibleBillingAddresses(User user) {
+        List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>();
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BillingAddress.class);
+        detachedCriteria.add(Restrictions.eq("user", user));
+        List<BillingAddress> billingAddressList = (List<BillingAddress>) findByCriteria(detachedCriteria);
+        for (BillingAddress billingaddress : billingAddressList) {
+            if (!billingaddress.isDeleted())
+                billingAddresses.add(billingaddress);
+        }
+        return billingAddresses;
+    }
+
+
+    public BillingAddress getBillingAddressById(Long billingAddressId) {
+        return get(BillingAddress.class, billingAddressId);
+    }
+
+    public List<Country> getAllCountry() {
+        return getAll(Country.class);
+    }
+
+    public Country getCountry(Long countryId) {
+        return get(Country.class, countryId);
+    }
+          
+}

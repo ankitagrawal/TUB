@@ -31,8 +31,10 @@
         $(this).parents('tr').addClass('item_selected');
       } else {
         $(this).parents('tr').removeClass('item_selected');
-      }                                                                           l
+      }
     }
+
+
 
 
   </script>
@@ -101,7 +103,7 @@
             <div class='pin'>${address.pin}</div>
             <div class='phone'>${address.phone}</div>
             <br/>
-            <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" class="delete" onclick="return confirm('Are you sure you want to delete this address?')">
+            <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" class="delete">
               <s:param name="deleteAddress" value="${address.id}"/>
               (delete)
             </s:link>
@@ -117,7 +119,9 @@
         </s:link>
       </c:forEach>
       <script type="text/javascript">
-        $('.edit').click(function() {
+          $(document).ready(function() {
+              var bool = false;
+          $('.edit').click(function() {
           form = $('#newAddressForm');
           addressBlock = $(this).parents('.address');
           name = addressBlock.find('.name').text();
@@ -140,13 +144,26 @@
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
-        $(document).ready(function() {
+        $('.delete').click(function(){
+            if (confirm('Are you sure you want to delete this address?')) {
+                bool = true;
+                return true;
+                            } else {
+                              return false;
+                            }
+        });
+
 	        $('.address').hover(
 			        function() {
 				        $(this).children('.hidden').slideDown(100);
 				        $(this).children('.edit').click(function() {
 					        return false;
 				        });
+                        $(this).children('.delete').click(function() {
+                          if(bool) return true;
+                            else
+                           return false;
+                        });
 			        },
 			        function() {
 				        $(this).children('.hidden').slideUp(50);
@@ -155,15 +172,22 @@
 	        $('.address').click(function() {
 		        var add_url = $(this).children('a').attr('href');
 		        document.location.href = add_url;
-	        });
+	        });          
+
 	        $('.addressValidation').click(function() {
                 var pincodeRegEx = /^([0-9]{6})$/;
                 var pincode = $('.pincode').val();
+		        var phone = $('#phoneNo').val();
+		        var phoneRegEx = /^((\+91)?[0-9]{10,13}?)$/;
                 var state = $('.stateselect').val();
                 if (!pincodeRegEx.test(pincode)) {
                     alert("Please enter a valid (6 digit) Pincode.");
                     return false;
                 }
+		        if(!phoneRegEx.test(phone)){
+			        alert("Please enter a valid phone number (+91xxxxxxxxxx).");
+			        return false;
+		        }
 	        });
         });
 
@@ -207,7 +231,7 @@
           <div class='label'>PIN Code<span class="aster">*</span></div>
           <s:text name="address.pin" class="pincode" maxlength="6"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
-          <s:text name="address.phone"/>
+          <s:text name="address.phone" id="phoneNo"/>
           <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>
           <div class="special" style="text-align: right;">
             Proceed to Order Confirmation <br/>(This address will be added to your address book so you can use it later)

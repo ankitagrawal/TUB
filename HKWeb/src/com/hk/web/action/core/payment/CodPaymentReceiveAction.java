@@ -60,7 +60,8 @@ public class CodPaymentReceiveAction extends BaseAction {
 	@Validate(required = true)
 	private String codContactPhone;
 
-	private User user;
+	@SuppressWarnings("unused")
+    private User user;
 
 	public Resolution pre() {
 		Resolution resolution = null;
@@ -90,7 +91,7 @@ public class CodPaymentReceiveAction extends BaseAction {
 			order = orderManager.recalAndUpdateAmount(order);
 			// first create a payment row, this will also cotain the payment checksum
 			Payment payment = getPaymentManager().createNewPayment(order, getPaymentService().findPaymentMode(EnumPaymentMode.COD), BaseUtils.getRemoteIpAddrForUser(getContext()),
-					null);
+                    null, null);
 
 			String gatewayOrderId = payment.getGatewayOrderId();
 

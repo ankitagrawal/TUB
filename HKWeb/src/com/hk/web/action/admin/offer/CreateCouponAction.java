@@ -101,7 +101,8 @@ public class CreateCouponAction extends BaseAction {
         }
         if (repetitiveUsage == null)
             repetitiveUsage = false;
-        Coupon coupon = getCouponService().createCoupon(couponCode, endDate, allowedTimes, alreadyUsed, offer, null, repetitiveUsage, null);
+        // Coupon coupon =
+        getCouponService().createCoupon(couponCode, endDate, allowedTimes, alreadyUsed, offer, null, repetitiveUsage, null);
 
         addRedirectAlertMessage(new LocalizableMessage("/CreateCoupon.action.coupon.created"));
         return new RedirectResolution(CreateCouponAction.class);
@@ -231,7 +232,8 @@ public class CreateCouponAction extends BaseAction {
                 return getContext().getSourcePageResolution();
             }
 
-            Coupon coupon = getCouponService().createCoupon(couponCode, endDate, allowedTimes, alreadyUsed, offer, null, false, null);
+            // Coupon coupon =
+            getCouponService().createCoupon(couponCode, endDate, allowedTimes, alreadyUsed, offer, null, false, null);
 
         }
 
@@ -342,7 +344,5 @@ public class CreateCouponAction extends BaseAction {
     public Boolean getRepetitiveUsage() {
         return repetitiveUsage;
     }
-    
-    
 
 }

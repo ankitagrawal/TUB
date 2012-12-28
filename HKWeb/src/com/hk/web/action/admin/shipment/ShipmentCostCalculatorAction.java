@@ -110,7 +110,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
         if (shippingOrder != null) {
             Shipment shipment = shippingOrder.getShipment();
-            if (shipment != null && courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
+            if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                 shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
                 shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                 shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
@@ -158,10 +158,10 @@ public class ShipmentCostCalculatorAction extends BaseAction {
             }
         }
         if (courierList.size() == 0) {
-            courierList = courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
+            courierList = courierDao.getCouriers(null,null,false);
         }
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInDeliveryQueue()));
+        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForEnteringShippingCost()));
         shippingOrderSearchCriteria.setCourierList(courierList);
         shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setShipmentEndDate(shippedEndDate);
         List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
@@ -169,7 +169,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         if (shippingOrderList != null) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 Shipment shipment = shippingOrder.getShipment();
-                if (shipment != null && courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
+                if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                     if (overrideHistoricalShipmentCost || shipment.getEstmShipmentCharge() == null) {
                         shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
                         shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));

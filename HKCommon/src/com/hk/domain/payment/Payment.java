@@ -46,11 +46,16 @@ public class Payment implements java.io.Serializable {
     private Order         order;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gateway_id")
+    private Gateway gateway;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "issuer_id")
+    private Issuer issuer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_status_id", nullable = false)
     private PaymentStatus paymentStatus;
-
-    @Column(name = "bank_code")
-    private String        bankCode;
 
     @Column(name = "amount", nullable = false, precision = 8)
     private Double        amount;
@@ -72,7 +77,7 @@ public class Payment implements java.io.Serializable {
     @Column(name = "payment_checksum", length = 45)
     private String        paymentChecksum;
 
-    @Column(name = "error_log", length = 45)
+    @Column(name = "error_log", length = 100)
     private String        errorLog;
 
     @Column(name = "email", length = 80)
@@ -98,6 +103,15 @@ public class Payment implements java.io.Serializable {
 
     @Column(name = "cheque_number", length = 10)
     private String        chequeNumber;
+
+    @Column(name = "rrn", length = 45)
+    private String        rrn;
+
+    @Column(name = "response_message", length = 200)
+    private String        responseMessage;
+
+    @Column(name = "authid_code", length = 45)
+    private String        authIdCode;
 
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
@@ -275,12 +289,28 @@ public class Payment implements java.io.Serializable {
         this.selected = selected;
     }
 
-    public String getBankCode() {
-        return bankCode;
+    public String getRrn() {
+        return rrn;
     }
 
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
+    public void setRrn(String rrn) {
+        this.rrn = rrn;
+    }
+
+    public String getResponseMessage() {
+        return responseMessage;
+    }
+
+    public void setResponseMessage(String responseMessage) {
+        this.responseMessage = responseMessage;
+    }
+
+    public String getAuthIdCode() {
+        return authIdCode;
+    }
+
+    public void setAuthIdCode(String authIdCode) {
+        this.authIdCode = authIdCode;
     }
 
     @Transient
@@ -291,6 +321,22 @@ public class Payment implements java.io.Serializable {
     @Override
     public String toString() {
         return id == null ? "" : id.toString();
+    }
+
+    public Gateway getGateway() {
+        return gateway;
+    }
+
+    public void setGateway(Gateway gateway) {
+        this.gateway = gateway;
+    }
+
+    public Issuer getIssuer() {
+        return issuer;
+    }
+
+    public void setIssuer(Issuer issuer) {
+        this.issuer = issuer;
     }
 
     public String getPaymentDetails() {

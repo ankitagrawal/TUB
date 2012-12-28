@@ -17,6 +17,7 @@ import com.hk.domain.store.Store;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.domain.user.BillingAddress;
 
 import javax.persistence.*;
 import java.util.*;
@@ -53,6 +54,7 @@ public class Order implements java.io.Serializable {
     @JoinColumn(name = "address_id")
     private Address                   address;
 
+
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "offer_instance_id")
@@ -64,7 +66,7 @@ public class Order implements java.io.Serializable {
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_dt", nullable = false, length = 19)
-    private Date                      createDate = new Date();
+    private Date                      createDate        = new Date();
 
     /*
      * @JsonSkip @Temporal(TemporalType.TIMESTAMP) @Column(name = "update_date", nullable = false, length = 19) private
@@ -156,8 +158,20 @@ public class Order implements java.io.Serializable {
     @Column(name = "target_dispatch_date", nullable = true)
     private Date                      targetDispatchDate;
 
+    @JsonSkip
+    @Column(name = "target_del_date", nullable = true)
+    private Date                      targetDelDate;
+    
+    @JsonSkip
+    @Column(name = "target_dispatch_date_on_verify", nullable = true)
+    private Date                      targetDispatchDateOnVerification;
+
     @Column(name = "is_delivery_email_sent", nullable = false)
     private Boolean                   deliveryEmailSent = false;
+
+    @Column(name = "comment_type")
+    private Long                      commentType;
+
 
     public boolean isPriorityOrder() {
         if (this.score != null) {
@@ -313,14 +327,14 @@ public class Order implements java.io.Serializable {
     }
 
     @Deprecated
-    public List<CartLineItem> getExclusivelyComboCartLineItems() {
-        List<CartLineItem> cartLineItemList = new ArrayList<CartLineItem>();
-        Long oldComboInstanceId = null;
+    public Set<CartLineItem> getExclusivelyComboCartLineItems() {
+        Set<CartLineItem> cartLineItemList = new HashSet<CartLineItem>(0);
+        Set<Long> comboInstanceIds = new HashSet<Long>(0);
         for (CartLineItem cartLineItem : this.getProductCartLineItems()) {
             if (cartLineItem.getComboInstance() != null) {
-                if (oldComboInstanceId == null || oldComboInstanceId != cartLineItem.getComboInstance().getId()) {
+                if (cartLineItemList.size()==0 || (!comboInstanceIds.contains(cartLineItem.getComboInstance().getId()))) {
                     cartLineItemList.add(cartLineItem);
-                    oldComboInstanceId = cartLineItem.getComboInstance().getId();
+                     comboInstanceIds.add(cartLineItem.getComboInstance().getId());
                 }
             }
         }
@@ -539,4 +553,29 @@ public class Order implements java.io.Serializable {
     public Boolean isDeliveryEmailSent() {
         return deliveryEmailSent;
     }
+
+    public Long getCommentType() {
+        return commentType;
+    }
+
+    public void setCommentType(Long commentType) {
+        this.commentType = commentType;
+    }
+
+    public Date getTargetDelDate() {
+        return targetDelDate;
+    }
+
+    public void setTargetDelDate(Date targetDelDate) {
+        this.targetDelDate = targetDelDate;
+    }
+
+    public Date getTargetDispatchDateOnVerification() {
+        return targetDispatchDateOnVerification;
+    }
+
+    public void setTargetDispatchDateOnVerification(Date targetDispatchDateOnVerification) {
+        this.targetDispatchDateOnVerification = targetDispatchDateOnVerification;
+    }
+
 }

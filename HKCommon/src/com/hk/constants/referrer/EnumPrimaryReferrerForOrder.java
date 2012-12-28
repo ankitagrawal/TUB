@@ -13,7 +13,8 @@ public enum EnumPrimaryReferrerForOrder {
   HEALTHKART(5L, "healthkart"),
   OTHERS(6L, "other"),
   RFERRAL(7L, "referred"),
-  AFFILIATE(8L, "affiliate")  ;
+  AFFILIATE(8L, "affiliate"),
+  OUT_BOUND(9L, "out-bound")  ;
 
   private java.lang.String name;
   private java.lang.Long id;

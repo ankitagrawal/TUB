@@ -32,7 +32,7 @@
           %>
         </div>--%>
 
-        <s:submit class="button_orange" name="forgotPassword" value="Send Password"/>
+        <s:submit id="forgotPassword" class="button_orange" name="forgotPassword" value="Send Password"/>
       </s:form>
 
     </div>
@@ -40,6 +40,7 @@
       function _sendNewPasswordEmail(res) {
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
           $('#forgotPasswordWindow .msg').html(res.message);
+          $('#forgotPassword').hide();
 //          $('#forgotPasswordWindow').jqmShow();
         } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
           $('#forgot-password-errors').html(getErrorHtmlFromJsonResponse(res));

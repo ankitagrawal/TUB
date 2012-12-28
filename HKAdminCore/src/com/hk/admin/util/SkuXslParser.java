@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.util.XslParser;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Tax;
 import com.hk.domain.sku.Sku;
@@ -84,7 +83,7 @@ public class SkuXslParser {
         // HSSFSheet productSheet = workbook.getSheet("Sku");
         HSSFSheet productSheet = workbook.getSheetAt(0);
         Iterator<Row> objRowIt = productSheet.rowIterator();
-        Iterator objCellIterator = null;
+        /*Iterator objCellIterator = null;*/
 
         // Declaring data elements
         List<String> pVariantWarehouseList = new ArrayList<String>();
@@ -106,7 +105,7 @@ public class SkuXslParser {
                 String variantId = null;
                 long warehouseId = 0l;
                 String taxName = null;
-                double costPrice = 0.0;
+                /*double costPrice = 0.0;*/
                 long cutOffInventory = 0l;
                 long forecastedQty = 0l;
                 String variant_warehouse_id = null;
@@ -214,6 +213,7 @@ public class SkuXslParser {
         return columnIndex;
     }
 
+    @SuppressWarnings("unused")
     private Date getDate(String value) {
         Date date = null;
         try {
@@ -225,6 +225,7 @@ public class SkuXslParser {
         return date;
     }
 
+    @SuppressWarnings("unused")
     private Double getDouble(String value) {
         Double valueInDouble = null;
         try {
@@ -245,6 +246,7 @@ public class SkuXslParser {
         return valueInLong;
     }
 
+    @SuppressWarnings("unchecked")
     private Map<Integer, String> getRowMap(Iterator<Row> objRowIt) {
         // Header are read and related columns are taken care of
         // accordignly.

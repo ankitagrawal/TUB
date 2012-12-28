@@ -5,8 +5,6 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +26,7 @@ import com.hk.pact.dao.user.UserDao;
 @Component
 public class BOInvoiceAction extends BaseAction {
 
-  private static Logger logger = LoggerFactory.getLogger(BOInvoiceAction.class);
+  /*private static Logger logger = LoggerFactory.getLogger(BOInvoiceAction.class);*/
   private PricingDto pricingDto;
 
   @Validate (required = true, encrypted = true)

@@ -6,11 +6,7 @@ import java.util.Set;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.search.SolrProduct;
 
@@ -62,7 +58,7 @@ public interface ProductService {
 
     public Page getProductByCategoryAndBrand(String category, String brand, int page, int perPage);
 
-    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage);
+    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand,boolean onlyCOD, boolean includeCombo, int page, int perPage);
 
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage);
 
@@ -90,8 +86,6 @@ public interface ProductService {
 
     public ProductOption findProductOptionByNameAndValue(String name, String value);
 
-    public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer);
-
     public boolean isComboInStock(Combo combo);
 
     public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage);
@@ -106,12 +100,15 @@ public interface ProductService {
 
     public Map<String, List<Long>> getGroupedFilters(List<Long> filters);
 
-	public boolean isProductOutOfStock(Product product);
+	  public boolean isProductOutOfStock(Product product);
+
+    public ProductVariant validTryOnProductVariant(Product product);
 
     SolrProduct createSolrProduct(Product pr);
 
-	public List<Product> getSimilarProducts(Product product);
+	  public List<Product> getSimilarProducts(Product product);
 
     boolean isCombo(Product product);
+
     boolean isComboInStock(Product product);
 }

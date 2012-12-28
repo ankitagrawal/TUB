@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.constants.order.EnumOrderStatus;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 
@@ -57,6 +58,7 @@ public class CartLineItemUpdateAction extends BaseAction {
     @JsonHandler
     public Resolution pre() {
 
+      if(cartLineItem!=null && cartLineItem.getOrder()!=null && cartLineItem.getOrder().getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())){
         if (cartLineItem != null && cartLineItem.getHkPrice() != null && cartLineItem.getHkPrice() != 0D) {
             if (cartLineItem.getComboInstance() != null) {
                 List<CartLineItem> siblingLineItems = comboInstanceDao.getSiblingLineItems(cartLineItem);
@@ -114,6 +116,12 @@ public class CartLineItemUpdateAction extends BaseAction {
 
             return new JsonResolution(healthkartResponse);
         }
+      }
+      else{
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Your cart might have Expired, Please refresh your cart", cartLineItem.getId());
+
+            return new JsonResolution(healthkartResponse);
+      }
     }
 
     public CartLineItem getCartLineItem() {

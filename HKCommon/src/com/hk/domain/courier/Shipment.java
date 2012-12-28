@@ -16,11 +16,6 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	@Column (name = "id", unique = true, nullable = false)
 	private Long id;
 
-    @JsonSkip
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "courier_id")
-    private Courier courier;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "awb_id")
     private Awb awb;
@@ -73,6 +68,10 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	@Column (name = "packer")
 	private String packer;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "zone_id", nullable = false)
+	private Zone zone;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "create_dt", nullable = false)
 	private Date createDate = new Date();
@@ -94,13 +93,6 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 		this.id = id;
 	}
 
-	public Courier getCourier() {
-		return courier;
-	}
-
-	public void setCourier(Courier courier) {
-		this.courier = courier;
-	}
 
 	public BoxSize getBoxSize() {
 		return boxSize;
@@ -241,5 +233,13 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public Zone getZone() {
+		return zone;
+	}
+
+	public void setZone(Zone zone) {
+		this.zone = zone;
 	}
 }

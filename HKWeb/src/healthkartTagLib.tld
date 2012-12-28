@@ -482,9 +482,9 @@
         </description>
         <name>checkedInUnitsCount</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long checkedinUnitsCount(java.lang.Object,java.lang.Object)</function-signature>
+        <function-signature>java.lang.Long checkedinUnitsCount(java.lang.Object)</function-signature>
         <example>
-            ${hk:checkedInUnitsCount(${object1}, ${object2})}
+            ${hk:checkedInUnitsCount(${object1})}
         </example>
     </function>
 
@@ -749,17 +749,17 @@
             ${hk:getMatchingSku(${object})}
         </example>
     </function>
-    <function>
-        <description>
-            product list for a primary heading in a sorted order.
-        </description>
-        <name>getCategoryHeadingProductsSortedByOrder</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>
-        <example>
-            ${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}
-        </example>
-    </function>
+    <!--<function>-->
+        <!--<description>-->
+            <!--product list for a primary heading in a sorted order.-->
+        <!--</description>-->
+        <!--<name>getCategoryHeadingProductsSortedByOrder</name>-->
+        <!--<function-class>com.hk.taglibs.Functions</function-class>-->
+        <!--<function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>-->
+        <!--<example>-->
+            <!--${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}-->
+        <!--</example>-->
+    <!--</function>-->
     <function>
         <description>
             returns surcharge based on supplier and warehouse state
@@ -872,6 +872,30 @@
     </function>
     <function>
         <description>
+            get TryOnImageURL for a product variant
+        </description>
+        <name>getTryOnImageURL</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getTryOnImageURL(com.hk.domain.catalog.product.ProductVariant))
+        </function-signature>
+        <example>
+            ${hk:getTryOnImageURL(${product})}
+        </example>
+    </function>
+    <function>
+        <description>
+            get validTryOnProductVariant for a Product
+        </description>
+        <name>validTryOnProductVariant</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature> com.hk.domain.catalog.product.ProductVariant validTryOnProductVariant(com.hk.domain.catalog.product.Product)
+        </function-signature>
+        <example>
+            ${hk:getTryOnImageURL(${product})}
+        </example>
+    </function>
+    <function>
+        <description>
             get cod converter url for an order
         </description>
         <name>getCodConverterLink</name>
@@ -897,7 +921,7 @@
             returns true if cod is allowed on order
         </description>
         <name>getHubForHkdeliveryUser</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-class>com.hk.taglibs.Functions</function-class>                                ;
         <function-signature>com.hk.domain.hkDelivery.Hub getHubForHkdeliveryUser(com.hk.domain.user.User)</function-signature>
         <example>
             ${hk:getHubForHkdeliveryUser(${user})}
@@ -909,7 +933,7 @@
         </description>
         <name>searchProductImages</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long searchProductImages(com.hk.domain.catalog.product.Product,com.hk.domain.catalog.product.ProductVariant,java.lang.Long,boolean,boolean)</function-signature>
+        <function-signature>java.lang.Long searchProductImages(com.hk.domain.catalog.product.Product,com.hk.domain.catalog.product.ProductVariant,java.lang.Long,boolean,java.lang.Object)</function-signature>
         <example>
         ${hk:searchProductImages(${product})}
         </example>
@@ -948,4 +972,96 @@
             ${hk:getDisplayNameForHkdeliveryTracking(${status})}
         </example>
     </function>
+
+	<function>
+		<description>
+			Returns PO Line Item qty corresponding to the grn Line Item Qty
+		</description>
+		<name>getPoLineItemQty</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>java.lang.Long getPoLineItemQty(com.hk.domain.inventory.GrnLineItem)</function-signature>
+		<example>
+			${hk:getPoLineItemQty(${grnLineItem})}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			Returns the line item qty for all other grns
+		</description>
+		<name>getGrnLineItemQtyAlreadySet</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>java.lang.Long getGrnLineItemQtyAlreadySet(com.hk.domain.inventory.GoodsReceivedNote,com.hk.domain.sku.Sku))</function-signature>
+		<example>
+			${hk:getGrnLineItemQtyAlreadySet(${grn, sku})}
+		</example>
+	</function>
+
+     <function>
+        <description>
+            returns a country based on countryid
+        </description>
+        <name>getCountry</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.core.Country getCountry(java.lang.Long))</function-signature>
+        <example>
+            ${hk:getCountry(${id})}
+        </example>
+    </function>
+
+     <function>
+        <description>
+            returns Heading Products based on rank
+        </description>
+        <name>getHeadingProductsSortedByRank</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getHeadingProductsSortedByRank(java.lang.Long))</function-signature>
+        <example>
+            ${hk:getHeadingProductsSortedByRank(${id})}
+        </example>
+    </function>
+    <function>
+    <description>
+            returns a encrypted orderId
+        </description>
+        <name>encryptOrderId</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String encryptOrderId(java.lang.Long))</function-signature>
+        <example>
+            ${hk:encryptOrderId(${id})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns image file path for issuer
+        </description>
+        <name>readIssuerImageIcon</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String readIssuerImageIcon(byte[],java.lang.String))</function-signature>
+        <example>
+            <!--${hk:readIssuerImageIcon(${id})}-->
+        </example>
+    </function>
+    <function>
+        <description>
+            returns image file path for issuer
+        </description>
+        <name>isOrderForDiscretePackaging</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Boolean isOrderForDiscretePackaging(com.hk.domain.order.ShippingOrder)</function-signature>
+        <example>
+            <!--${hk:isOrderForDiscretePackaging(${id})}-->
+        </example>
+    </function>
+	<function>
+		<description>
+			returns ProductVariantSupplierInfo
+		</description>
+		<name>getPVSupplierInfo</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>com.hk.domain.catalog.ProductVariantSupplierInfo getPVSupplierInfo(com.hk.domain.catalog.Supplier,com.hk.domain.catalog.product.ProductVariant)</function-signature>
+		<example>
+			${hk:getPVSupplierInfo(${supplier, productVariant})}
+		</example>
+	</function>
 </taglib>

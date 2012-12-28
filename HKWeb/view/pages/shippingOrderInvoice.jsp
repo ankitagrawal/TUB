@@ -9,6 +9,7 @@
 <%@ page import="com.hk.admin.util.courier.thirdParty.FedExCourierUtil" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
+<%@ page import="com.hk.admin.pact.service.shippingOrder.ShipmentService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -70,9 +71,10 @@
     </style>
     <link href="<hk:vhostCss/>/css/960.css" rel="stylesheet" type="text/css"/>
     <%
-        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);        
         pageContext.setAttribute("sexualCare", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("sexual-care")));
         pageContext.setAttribute("personalCareWomen", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("women")));
+        pageContext.setAttribute("discretePackaging", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("discrete-packaging")));
     %>
 </head>
 <body>
@@ -83,7 +85,8 @@
 <c:set var="fedEx" value="<%=EnumCourier.FedEx.getId()%>"/>
 <c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.getId()%>"/>
 <c:set var="groundShipped" value="${orderSummary.groundShipped}"/>
-<c:set var="courierId" value="${orderSummary.shipment.courier.id}"/>
+<c:set var="courierId" value="${orderSummary.shipment.awb.courier.id}"/>
+
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">
@@ -98,7 +101,7 @@
                     </c:when>
                     <c:otherwise>
                         <div class="clear"></div>
-                        <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name}</div>
+                        <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.awb.courier.name}</div>
                         <div class="clear"></div>
                         <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
                              src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
@@ -114,14 +117,24 @@
 
 <div class="grid_4">
     <div style="text-align: center;">
-        ORDER INVOICE
-    </div>
+ORDER INVOICE <c:choose>
+<c:when
+        test="${orderSummary.printable && hk:isOrderForDiscretePackaging(orderSummary.shippingOrder)}"><b>(OUT)</b></c:when>
+        <c:otherwise><b>(IN)</b>
+        </c:otherwise>
+        </c:choose>
+</div>
 </div>
 <div class="grid_4">
     <div style="float: right;">
         <c:choose>
-            <c:when test="${orderSummary.shippingOrder.baseOrder.user.login == 'support@madeinhealth.com' || orderSummary.shippingOrder.baseOrder.store.id == 2}">
+            <c:when test="${orderSummary.shippingOrder.baseOrder.store.id == 2 || orderSummary.shippingOrder.baseOrder.store.id == 3}">
+	            <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 2}">
                 <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
+	            </c:if>
+	            <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 3}">
+                <img src="${pageContext.request.contextPath}/images/fitnesspro.png" alt="FitnessPro Logo"/>
+	            </c:if>
             </c:when>
             <c:otherwise>
                 <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
@@ -132,11 +145,12 @@
 </div>
 
 
+
 <c:choose>
     <c:when test="${courierId == fedEx || courierId == fedExSurface}">
         <div class="grid_12">
 
-            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name} &nbsp;&nbsp;
+            <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.awb.courier.name} &nbsp;&nbsp;
                 <c:choose>
                     <c:when test="${groundShipped}">
                         Economy
@@ -145,10 +159,10 @@
                         Standard Overnight
                     </c:otherwise>
                 </c:choose>
-                <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD && orderSummary.invoiceDto.grandTotal > 0}">
+                <c:if test="${orderSummary.shippingOrder.COD}">
                     COD
                 </c:if>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
+                &nbsp;&nbsp;wt:${orderSummary.estimatedWeightOfPackage}Kg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
             </div>
 
             <div class="clear"></div>
@@ -237,6 +251,14 @@
 <div style="margin-top: 5px;"></div>
 
 <div class="grid_12">
+    <c:if test="${orderSummary.printZone && orderSummary.zone != null}">
+        <hr/>
+        <p><strong>ZONE:-</strong> ${orderSummary.zone}</p>
+        <hr/>
+    </c:if>
+</div>
+
+<div class="grid_12">
     <c:if test="${baseOrder.userComments != null}">
         <hr/>
         <p><strong>User Instructions:-</strong> ${baseOrder.userComments}</p>
@@ -284,7 +306,8 @@
         <tr>
             <th>Item</th>
             <th>Quantity</th>
-            <th>Unit price</th>
+            <th>MRP</th>
+            <th>Rate</th>
             <th>Total(Rs.)</th>
         </tr>
         <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
@@ -292,7 +315,7 @@
                 <td>
                     <c:choose>
                         <c:when test="${orderSummary.printable && (hk:collectionContainsCollection(invoiceLineItem.productCategories, sexualCare)
-						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen))}">
+						                || hk:collectionContainsCollection(invoiceLineItem.productCategories, personalCareWomen) || hk:collectionContainsCollection(invoiceLineItem.productCategories, discretePackaging))}">
                             <p>Personal Care Product</p>
                         </c:when>
                         <c:otherwise>
@@ -337,8 +360,10 @@
                                                    var="configValue" varStatus="configValueCtr">
                                             <c:set var="additinalParam"
                                                    value="${configValue.variantConfigOption.additionalParam}"/>
+
+	                                        <c:set var="side" value="${configValue.variantConfigOption.name}"/>
                                             <c:if
-                                                    test="${configValueCtr.index %2 ==0 && !( additinalParam == TH || additinalParam == THBF
+                                                    test="${  fn:startsWith(side,'R' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF) }">
                                                 <td>
@@ -353,8 +378,9 @@
                                                    var="configValue" varStatus="configValueCtr">
                                             <c:set var="additinalParam"
                                                    value="${configValue.variantConfigOption.additionalParam}"/>
+	                                        <c:set var="side" value="${configValue.variantConfigOption.name}"/>
                                             <c:if
-                                                    test="${configValueCtr.index %2 !=0 && !( additinalParam == TH || additinalParam == THBF
+                                                    test="${fn:startsWith(side,'L' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF)}">
                                                 <td>
@@ -370,6 +396,7 @@
                 </td>
 
                 <td><fmt:formatNumber value="${invoiceLineItem.qty}" maxFractionDigits="0"/></td>
+                <td> ${invoiceLineItem.markedPrice} </td>
                 <td> ${invoiceLineItem.hkPrice} </td>
                 <td class="itemsubTotal">
                     <fmt:formatNumber value="${invoiceLineItem.lineItemTotal}" type="currency"
@@ -379,14 +406,15 @@
             <%-- </c:if>--%>
         </c:forEach>
 
-        <c:if test="${orderSummary.freebieItem != null && orderSummary.freebieItem != ''}">
+        <%--<c:if test="${orderSummary.freebieItem != null && orderSummary.freebieItem != ''}">
             <tr>
                 <td>${orderSummary.freebieItem}</td>
                 <td>1</td>
                 <td>0.0</td>
                 <td>0.0</td>
+                <td>0.0</td>
             </tr>
-        </c:if>
+        </c:if>--%>
 
     </table>
 

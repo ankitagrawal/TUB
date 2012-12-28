@@ -3,6 +3,7 @@ package com.hk.core.search;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
@@ -37,6 +38,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private boolean                                  searchForPrinting = false;
 	private Date                                     lastEscStartDate;
 	private Date                                     lastEscEndDate;
+	private Zone                                     zone;
 
     public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
         this.searchForPrinting = searchForPrinting;
@@ -121,6 +123,11 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
+	public ShippingOrderSearchCriteria setShipmentZone(Zone zone) {
+		this.zone = zone;
+		return this;
+	}
+
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
 
@@ -132,21 +139,28 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             criteria.add(Restrictions.in("shippingOrderStatus", shippingOrderStatusList));
         }
 
-        DetachedCriteria shipmentCriteria = null;
-        if (awbList != null && awbList.size() > 0) {
+	    DetachedCriteria shipmentCriteria = null;
+	    if (awbList != null && awbList.size() > 0) {
+		    shipmentCriteria = criteria.createCriteria("shipment");
 
-            if (shipmentCriteria == null) {
-                shipmentCriteria = criteria.createCriteria("shipment");
-            }
-            shipmentCriteria.add(Restrictions.in("awb", awbList));
-        }
+		    shipmentCriteria.add(Restrictions.in("awb", awbList));
+	    }
 
-        if (courierList != null && !courierList.isEmpty()) {
-            if (shipmentCriteria == null) {
-                shipmentCriteria = criteria.createCriteria("shipment");
-            }
-            shipmentCriteria.add(Restrictions.in("courier", courierList));
-        }
+	    if(zone != null){
+		    if(shipmentCriteria == null){
+			     shipmentCriteria = criteria.createCriteria("shipment");
+		    }
+		    shipmentCriteria.add(Restrictions.eq("zone.id", zone.getId()));
+	    }
+
+	    DetachedCriteria awbCriteria = null;
+	    if (courierList != null && !courierList.isEmpty()) {
+		    if (shipmentCriteria == null) {
+			    shipmentCriteria = criteria.createCriteria("shipment");
+		    }
+		    awbCriteria = shipmentCriteria.createCriteria("awb");
+		    awbCriteria.add(Restrictions.in("courier", courierList));
+	    }
 
         if (shipmentStartDate != null && shipmentEndDate != null) {
             if (shipmentCriteria == null) {

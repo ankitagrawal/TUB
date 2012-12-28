@@ -1,11 +1,14 @@
 package com.hk.admin.impl.dao.courier;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.domain.courier.Awb;
@@ -16,12 +19,22 @@ import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository
-public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
+public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {   
 
-    public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
+
+ 	public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
+	     List couriers= new ArrayList<Courier>();
+		 if(courier != null){
+			 couriers.add(courier);
+		 }
+		 return getAvailableAwbForCourierByWarehouseCodStatus(couriers,awbNumber,warehouse,isCod,awbStatus);
+    }
+
+    public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(List<Courier> couriers, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
-        if (courier != null) {
-            detachedCriteria.add(Restrictions.eq("courier", courier));
+
+        if (couriers != null && !couriers.isEmpty()) {
+            detachedCriteria.add(Restrictions.in("courier", couriers));
         }
         if (awbNumber != null && StringUtils.isNotBlank(awbNumber)) {
             detachedCriteria.add(Restrictions.eq("awbNumber", awbNumber));
@@ -46,6 +59,14 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
            return awbList.get(0);
        }
          return null;
+     }
+
+	 public Awb findByCourierAwbNumber(List<Courier> couriers ,String awbNumber){
+      List<Awb> awbList= getAvailableAwbForCourierByWarehouseCodStatus(couriers,awbNumber,null,null,null);
+       if(awbList != null && awbList.size() > 0){
+           return awbList.get(0);
+       }
+         return null;
 
      }
 
@@ -60,6 +81,18 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
         return null;
 
     }
+
+	@Transactional
+	public Object save(Awb awb, Integer newStatus) {
+		if (awb.getId() != null) {
+			Integer originalStatus =  awb.getAwbStatus().getId().intValue();
+			String query = "UPDATE awb SET awb_status_id=? WHERE id=? AND awb_status_id=?";
+			Object[] param = {newStatus, awb.getId(),originalStatus};
+			return  executeNativeSql(query, param);
+		} else {
+			return save(awb);
+		}
+	}
 
 }
 

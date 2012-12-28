@@ -11,16 +11,22 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.domain.user.User;
+import com.hk.domain.analytics.TrafficTracking;
 import com.hk.pact.dao.marketing.CampaignTrackingDao;
+import com.hk.pact.dao.analytics.TrafficTrackingDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.OrderSourceFinder;
 import com.shiro.PrincipalImpl;
@@ -35,7 +41,8 @@ public class CampaignTrackingFilter implements Filter {
 
     private static Logger logger = LoggerFactory.getLogger(CampaignTrackingFilter.class);
 
-    private CampaignTrackingDao campaignTrackingDao;
+    private TrafficTrackingDao trafficTrackingDao;
+    private TrafficAndUserBrowsingService trafficAndUserBrowsingService;
     private UserService         userService;
 
     // private static org.slf4j.Logger logger = LoggerFactory.getLogger(CampaignTrackingFilter.class);
@@ -43,8 +50,9 @@ public class CampaignTrackingFilter implements Filter {
     private Boolean     newSession;
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        campaignTrackingDao = (CampaignTrackingDao) ServiceLocatorFactory.getService(CampaignTrackingDao.class);
-        userService = (UserService) ServiceLocatorFactory.getService(UserService.class);
+        trafficTrackingDao = ServiceLocatorFactory.getService(TrafficTrackingDao.class);
+        trafficAndUserBrowsingService = ServiceLocatorFactory.getService(TrafficAndUserBrowsingService.class);
+        userService = ServiceLocatorFactory.getService(UserService.class);
     }
     
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -62,34 +70,58 @@ public class CampaignTrackingFilter implements Filter {
             return ;
         }
         
-        String utm_source = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_SOURCE);
-        String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
-        String utm_medium = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_MEDIUM);
-        Map<String, Long> ReferrerIds = OrderSourceFinder.getOrderReferrer(httpRequest); // if its a new session Object newSession =
-        newSession = (Boolean) httpRequest.getSession().getAttribute(HttpRequestAndSessionConstants.NEW_SESSION);
+
+        Map<String, Long> ReferrerIds = OrderSourceFinder.getOrderReferrer(httpRequest);
+	    HttpSession httpSession = httpRequest.getSession();
+	    newSession = (Boolean) httpSession.getAttribute(HttpRequestAndSessionConstants.NEW_SESSION);
 
         User user = getPrincipalUser();
+	    String trackingId = null;
         //Get temp user from cookie
-        if (user == null && httpRequest.getCookies() != null) {
-          for (Cookie cookie : httpRequest.getCookies()) {
-            if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.tempHealthKartUser)) {
-              String userHash = cookie.getValue();
-              user = userService.findByUserHash(userHash);
-              logger.debug("Getting Temp User from Cookie and Setting as Principal User="+user.getUserHash());
-              new PrincipalImpl(user);
-            }
-          }
-        }
+	    if (httpRequest.getCookies() != null) {
+		    for (Cookie cookie : httpRequest.getCookies()) {
+			    if (user == null && cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.tempHealthKartUser)) {
+				    String userHash = cookie.getValue();
+				    user = userService.findByUserHash(userHash);
+				    if (user != null) {
+					    logger.debug("Getting Temp User from Cookie and Setting as Principal User=" + userHash);
+					    new PrincipalImpl(user);
+				    }
+			    } else if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.trackingId)) {
+				    trackingId = cookie.getValue();
+			    }
+		    }
+	    }
 
         if (newSession == null || !newSession.equals(true)) {
-            String referrer = httpRequest.getHeader(HttpRequestAndSessionConstants.REFERER);
-            campaignTrackingDao.saveRequest(referrer != null ? referrer : null, httpRequest.getRequestURL().toString(), utm_source, utm_medium, utm_campaign,
-                    user);
-            httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.NEW_SESSION, true);
-            httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.REFERER, referrer);
-            httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN, utm_campaign);
-            httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID, ReferrerIds.get(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID));
-            httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID, ReferrerIds.get(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID));
+	        httpSession.setAttribute(HttpRequestAndSessionConstants.NEW_SESSION, true);
+	        
+	        if (StringUtils.isNotBlank(trackingId)) {
+		        TrafficTracking trafficTracking = trafficTrackingDao.get(TrafficTracking.class, Long.valueOf(trackingId));
+		        if (trafficTracking != null)
+			        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);
+
+	        } else {
+		        String userAgent = httpRequest.getHeader(HttpRequestAndSessionConstants.USER_AGENT);
+		        //Check if it is a crawler or a bot
+		        if (userAgent != null && !userAgent.equals("")
+				        && !userAgent.toLowerCase().contains("bot") && !userAgent.toLowerCase().contains("spider")
+				        && !userAgent.toLowerCase().contains("price") && !userAgent.toLowerCase().contains("monit/4.10.1") ) {
+			        TrafficTracking trafficTracking = trafficAndUserBrowsingService.saveTrafficTracking(httpRequest, user);
+			        if (trafficTracking != null && trafficTracking.getId() != null) {
+				        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);
+				        Cookie cookie = new Cookie(HealthkartConstants.Cookie.trackingId, trafficTracking.getId().toString());
+				        cookie.setPath("/");
+				        cookie.setMaxAge(24 * 60 * 60); // 24 hours
+				        HttpServletResponse httpResponse = (HttpServletResponse) response;
+				        httpResponse.addCookie(cookie);
+			        }
+		        }
+	        }
+
+	        //To use is for Order
+            httpSession.setAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID, ReferrerIds.get(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID));
+            httpSession.setAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID, ReferrerIds.get(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID));
         }
         chain.doFilter(request, response);
 

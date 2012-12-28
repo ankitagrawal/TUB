@@ -84,8 +84,12 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
                                 <td>
                                     ${productLineItem.qty}
                                 </td>
-                                <td><span
-                                        style="text-decoration: line-through;">${productLineItem.markedPrice}</span> ${productLineItem.hkPrice}
+                                <td>
+	                                <#if productLineItem.markedPrice &gt; productLineItem.hkPrice>
+	                                <span
+                                        style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
+	                                </#if>
+	                                ${productLineItem.hkPrice}
                                 </td>
                                 <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
                             </tr>
@@ -139,7 +143,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
                     <td align="right" valign="middle"
                         style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
                             href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;|
-                        &nbsp;t: +91 124 4551616
+                        &nbsp;t: 0124-4551616
                     </td>
                 </tr>
             </table>

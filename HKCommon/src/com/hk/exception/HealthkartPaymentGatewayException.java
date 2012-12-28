@@ -14,6 +14,8 @@ public class HealthkartPaymentGatewayException extends Exception {
     PAYMENT_NOT_FOUND(5,"Payment Not Found"),
     COD_CONTACT_INFO_INVALID(10, "Contact Information (name/phone) not provided"),
     KEY_NOT_FOUND(20, "KEY NOT FOUND"),
+    REJECTED_BY_GATEWAY(25, "Rejected By Gateway"),
+    REJECTED_BY_ISSUER(30, "Rejected By Issuer"),
     UNKNOWN(100,"Unknown"),
     ;
 

@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.dto.search.SearchResult;
-import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -31,12 +29,14 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
 import com.hk.dto.menu.MenuNode;
+import com.hk.dto.search.SearchResult;
 import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 
@@ -85,21 +85,33 @@ public class BrandCatalogAction extends BasePaginatedAction {
 
   SeoData seoData;
 
-  @DefaultHandler
+  @SuppressWarnings({ "deprecation", "unchecked" })
+@DefaultHandler
   public Resolution pre() throws MalformedURLException, SolrServerException {
 	  List<String> categoryNames = new ArrayList<String>();
 	  categoryNames.add(topLevelCategory);
 	  urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
+      Boolean includeCombo = true;
+      Boolean onlyCOD = false;
 	  if (StringUtils.isBlank(brand)) {
 		  return new RedirectResolution("/" + topLevelCategory);
 	  } else {
 		  try {
+              if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
+                  String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
+                  includeCombo = Boolean.parseBoolean( params[0].toString());
+              }
+
+              if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")){
+                  String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
+                  onlyCOD = Boolean.parseBoolean( params[0].toString());
+              }
 			  SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
 			  productPage = new Page(searchResult.getSolrProducts(), getPerPage(), getPageNo(), searchResult.getResultSize());
 		  } catch (Exception e) {
 			  logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
 			  categories = categoryDao.getCategoriesByBrand(brand, topLevelCategory);
-			  productPage = productDao.getProductByCategoryAndBrand(categoryNames, URLDecoder.decode(brand), getPageNo(), getPerPage());
+			  productPage = productDao.getProductByCategoryAndBrand(categoryNames, URLDecoder.decode(brand),onlyCOD, includeCombo, getPageNo(), getPerPage());
 		  }
 		  if (productPage != null) {
 			  productList = productPage.getList();
@@ -111,7 +123,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
 				  }
 			  }
 		  }
-		  seoData = seoManager.generateSeo(brand); 		  		  
+		  seoData = seoManager.generateSeo(brand+"||"+topLevelCategory); 		  		  
 	  }
 	  return new ForwardResolution("/pages/brand-catalog.jsp");
   }

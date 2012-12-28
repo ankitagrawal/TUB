@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.hk.domain.courier.Zone;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -35,6 +36,8 @@ import com.hk.admin.pact.dao.inventory.RetailLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.cache.CategoryCache;
+import com.hk.cache.RoleCache;
 import com.hk.constants.XslConstants;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
@@ -57,7 +60,6 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.core.State;
 import com.hk.domain.core.Tax;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -67,6 +69,7 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.ExcelBlankFieldException;
@@ -96,11 +99,11 @@ import com.hk.service.ServiceLocatorFactory;
 public class XslParser {
 
     @Autowired
-    private BaseDao baseDao;
+    private BaseDao                  baseDao;
 
-    private static Logger logger = LoggerFactory.getLogger(XslParser.class);
+    private static Logger            logger         = LoggerFactory.getLogger(XslParser.class);
 
-    public static Pattern p = Pattern.compile("([0-9]*\\.?[0-9]*) ?%");
+    public static Pattern            p              = Pattern.compile("([0-9]*\\.?[0-9]*) ?%");
 
     // public static void main(String[] args) {
     // Matcher matcher = p.matcher("VAT - 3.125 %");
@@ -109,56 +112,55 @@ public class XslParser {
     // }
     // }
 
-    private Set<Product> colProductList = null;
+    private Set<Product>             colProductList = null;
 
     @Autowired
-    private PurchaseOrderDao purchaseOrderDao;
+    private PurchaseOrderDao         purchaseOrderDao;
     @Autowired
-    private LowInventoryDao lowInventoryDao;
+    private LowInventoryDao          lowInventoryDao;
     @Autowired
-    private SupplierDao supplierDao;
+    private SupplierDao              supplierDao;
     @Autowired
-    private GrnLineItemDao grnLineItemDao;
+    private GrnLineItemDao           grnLineItemDao;
     @Autowired
-    private PoLineItemDao poLineItemDao;
+    private PoLineItemDao            poLineItemDao;
     @Autowired
-    private RetailLineItemDao retailLineItemDao;
+    private RetailLineItemDao        retailLineItemDao;
     @Autowired
     private AffiliateCategoryDaoImpl affiliateCategoryDao;
 
     @Autowired
-    private ProductService productService;
+    private ProductService           productService;
     @Autowired
-    private ProductVariantService productVariantService;
+    private ProductVariantService    productVariantService;
     @Autowired
-    private CourierService courierService;
+    private CourierService           courierService;
     @Autowired
-    private PincodeService pincodeService;
+    private PincodeService           pincodeService;
     @Autowired
-    private SkuService skuService;
+    private SkuService               skuService;
     @Autowired
-    private ShipmentService shipmentService;
+    private ShipmentService          shipmentService;
     @Autowired
-    private TaxService taxService;
+    private TaxService               taxService;
     @Autowired
-    private RoleService roleService;
+    private RoleService              roleService;
     @Autowired
-    private CategoryService categoryService;
+    private CategoryService          categoryService;
     @Autowired
-    private WarehouseService warehouseService;
+    private WarehouseService         warehouseService;
     @Autowired
-    private ShippingOrderService shippingOrderService;
+    private ShippingOrderService     shippingOrderService;
     @Autowired
-    private PaymentService paymentService;
+    private PaymentService           paymentService;
     @Autowired
-    private AdminInventoryService adminInventoryService;
+    private AdminInventoryService    adminInventoryService;
     @Autowired
-    private InventoryService inventoryService;
+    private InventoryService         inventoryService;
     @Autowired
-    CityService cityService;
+    CityService                      cityService;
     @Autowired
-    StateService stateService;
-
+    StateService                     stateService;
 
     public Set<Product> readProductList(File objInFile, User loggedOnUser) throws Exception {
 
@@ -173,7 +175,7 @@ public class XslParser {
         HSSFSheet productSheet = workbook.getSheet("Product");
         HSSFSheet manufacturerSheet = workbook.getSheet("Manufacturer");
         Iterator<Row> objRowIt = productSheet.rowIterator();
-        //Iterator objCellIterator = null;
+        // Iterator objCellIterator = null;
 
         // Declaring data elements
         Product product = null;
@@ -217,7 +219,8 @@ public class XslParser {
                     String description = getCellValue(XslConstants.DESCRIPTION, rowMap, headerMap);
 
                     Product productInDB = getProductService().getProductById(productId);
-                    if (loggedOnUser != null && !loggedOnUser.getRoles().contains(getRoleService().getRoleByName(EnumRole.GOD.getRoleName()))) {
+                    Role godRole = RoleCache.getInstance().getRoleByName(EnumRole.GOD).getRole();
+                    if (loggedOnUser != null && !loggedOnUser.getRoles().contains(godRole)) {
                         if (productInDB != null) {
                             throw new HealthKartCatalogUploadException("The same product has already been created, Pls make updates through UI only, Exception @ Row:", rowCount);
                         }
@@ -240,7 +243,9 @@ public class XslParser {
                     }
                     String secondaryCategory = getCellValue(XslConstants.SECONDARY_CATEGORY, rowMap, headerMap);
                     if (StringUtils.isNotBlank(secondaryCategory)) {
-                        Category secondaryCat = getCategoryService().getCategoryByName(Category.getNameFromDisplayName(secondaryCategory));
+                        Category secondaryCat = CategoryCache.getInstance().getCategoryByName(Category.getNameFromDisplayName(secondaryCategory)).getCategory();
+                        // Category secondaryCat =
+                        // getCategoryService().getCategoryByName(Category.getNameFromDisplayName(secondaryCategory));
                         if (secondaryCat != null && secondaryCat.getName() != null) {
                             product.setSecondaryCategory(secondaryCat);
                         }
@@ -264,6 +269,19 @@ public class XslParser {
                     product.setOrderRanking(sortingOrder);
                     product.setBrand(getCellValue(XslConstants.BRAND, rowMap, headerMap));
                     product.setManufacturer(getManufacturerDetails(getCellValue(XslConstants.MANUFACTURER, rowMap, headerMap), manufacturerSheet));
+                    String isDeleted = getCellValue(XslConstants.IS_DELETED, rowMap, headerMap);
+                    boolean isDeletedBoolean = StringUtils.isNotBlank(isDeleted) && isDeleted.trim().toLowerCase().equals("y") ? true : false;
+                    product.setDeleted(isDeletedBoolean);
+                    String isOutOfStock = getCellValue(XslConstants.OUT_OF_STOCK, rowMap, headerMap);
+                    boolean isOutOfStockBoolean = StringUtils.isNotBlank(isOutOfStock) && isOutOfStock.trim().toLowerCase().equals("y") ? true : false;
+                    product.setOutOfStock(isOutOfStockBoolean);
+                    String isHidden = getCellValue(XslConstants.IS_HIDDEN, rowMap, headerMap);
+                    boolean isHiddenBoolean = StringUtils.isNotBlank(isHidden) && isHidden.trim().toLowerCase().equals("y") ? true : false;
+                    product.setHidden(isHiddenBoolean);
+                    String isGroundShippingAvailable = getCellValue(XslConstants.GROUND_SHIPPING_AVAILABLE, rowMap, headerMap);
+                    boolean isGroundShippingAvailableBoolean = StringUtils.isNotBlank(isGroundShippingAvailable) && isGroundShippingAvailable.trim().toLowerCase().equals("y") ? true
+                            : false;
+                    product.setGroundShipping(isGroundShippingAvailableBoolean);
                     product.setOverview(overview);
                     product.setDescription(description);
                     product.setVideoEmbedCode(videoEmbedCode);
@@ -300,7 +318,8 @@ public class XslParser {
                 // product extra options - For Eye
                 List<ProductExtraOption> productExtraOptions = getProductExtraOptions(getCellValue(XslConstants.EXTRA_OPTIONS, rowMap, headerMap));
                 ProductVariant productVariantDb = getProductVariantService().getVariantById(variantId);
-                if (loggedOnUser != null && !loggedOnUser.getRoles().contains(getRoleService().getRoleByName(EnumRole.GOD.getRoleName()))) {
+                Role godRole = RoleCache.getInstance().getRoleByName(EnumRole.GOD).getRole();
+                if (loggedOnUser != null && !loggedOnUser.getRoles().contains(godRole)) {
                     if (productVariantDb != null) {
                         throw new HealthKartCatalogUploadException("Variant ID already exists in DB, Exception @ Row:", rowCount);
                     }
@@ -341,7 +360,8 @@ public class XslParser {
                 }
                 productVariant.setUpc(getCellValue(XslConstants.UPC, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.UPC, rowMap, headerMap));
                 productVariant.setOtherRemark(getCellValue(XslConstants.OTHER_REMARK, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.OTHER_REMARK, rowMap, headerMap));
-                productVariant.setSupplierCode(getCellValue(XslConstants.SUPPLIER_CODE, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.SUPPLIER_CODE, rowMap, headerMap));
+                productVariant.setSupplierCode(getCellValue(XslConstants.SUPPLIER_CODE, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.SUPPLIER_CODE, rowMap,
+                        headerMap));
                 productVariant.setColorHex(getCellValue(XslConstants.COLOR_HEX, rowMap, headerMap));
                 productVariant.setVariantName(getCellValue(XslConstants.VARIANT_NAME, rowMap, headerMap));
                 Double mrp = Double.parseDouble(getCellValue(XslConstants.MRP, rowMap, headerMap));
@@ -398,7 +418,8 @@ public class XslParser {
                 }
                 productVariant.setOrderRanking(variantSortingOrder);
                 productVariant.setAffiliateCategory(getAffiliateCategoryDao().getAffiliateCategoryByName(
-                        (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) != null ? (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) : primaryCategory.getName()));
+                        (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) != null ? (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap))
+                                : primaryCategory.getName()));
                 if (StringUtils.isNotBlank(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap))) {
                     if (getBaseDao().get(ProductImage.class, getLong(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap))) != null) {
                         productVariant.setMainImageId(getLong(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap)));
@@ -420,7 +441,6 @@ public class XslParser {
         }
         return colProductList;
     }
-
 
     @SuppressWarnings("unchecked")
     public Set<Pincode> readPincodeList(File objInFile) throws Exception {
@@ -482,6 +502,14 @@ public class XslParser {
                         pincode.setDefaultCourier(courier);
 
                 }
+	            String zoneName=getCellValue(XslConstants.ZONE, rowMap, headerMap);
+	            
+	            Zone zone = getPincodeService().getZoneByName(zoneName);
+	            if(zone == null){
+		            logger.error("Exception @ Row:" + rowCount);
+					throw new Exception("Zone is incorrect @ Row:" + rowCount);
+	            }
+	            pincode.setZone(zone);
                 pincodeList.add(pincode);
 
                 logger.debug("read row " + rowCount);
@@ -543,7 +571,7 @@ public class XslParser {
                 }
 
                 String courierId = getCellValue(XslConstants.COURIER_ID, rowMap, headerMap);
-//        String techCourierId = getCellValue(XslConstants.COD_AVAILABLE, rowMap, headerMap);
+                // String techCourierId = getCellValue(XslConstants.COD_AVAILABLE, rowMap, headerMap);
                 if (StringUtils.isNotEmpty(courierId)) {
                     Courier courier = getCourierService().getCourierById(getLong(courierId));
                     if (courier == null) {
@@ -557,9 +585,9 @@ public class XslParser {
                     String groundShippingAvailable = getCellValue(XslConstants.GROUND_SHIPPING_AVAILABLE, rowMap, headerMap);
                     boolean isGroundShippingAvailable = StringUtils.isNotBlank(groundShippingAvailable) && groundShippingAvailable.trim().toLowerCase().equals("y") ? true : false;
 
-
                     Double estimatedShippingCost = getDouble(getCellValue(XslConstants.ESTIMATED_SHIPPING_COST, rowMap, headerMap));
-                    PincodeDefaultCourier pincodeDefaultCourier = pincodeService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable, isCODAvailable, estimatedShippingCost);
+                    PincodeDefaultCourier pincodeDefaultCourier = pincodeService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable,
+                            isCODAvailable, estimatedShippingCost);
                     defaultPincodeList.add(pincodeDefaultCourier);
 
                     logger.debug("read row " + rowCount);
@@ -623,13 +651,13 @@ public class XslParser {
                                     EnumInvTxnType.INV_CHECKIN), null);
 
                             /*
-                            * SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch,
-                            * getDate(getCellValue(XlsConstants.MFG_DATE, rowMap, headerMap)),
-                            * getDate(getCellValue(XlsConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null,
-                            * null); getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, checkinQty,
-                            * null, grnLineItem, null,
-                            * getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), null);
-                            */
+                             * SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch,
+                             * getDate(getCellValue(XlsConstants.MFG_DATE, rowMap, headerMap)),
+                             * getDate(getCellValue(XlsConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null,
+                             * null); getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, checkinQty,
+                             * null, grnLineItem, null,
+                             * getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), null);
+                             */
                             getInventoryService().checkInventoryHealth(productVariant);
                         }
 
@@ -799,11 +827,11 @@ public class XslParser {
             while (objRowIt.hasNext()) {
                 rowCount++;
                 /*
-                * List<LineItem> productLineItems = null; List<LineItem> productLineItemsByCourier = null; List<LineItem>
-                * productLineItemsByAwb = null; RetailLineItem retailLineItem = null; Double
-                * totalHkPriceDeliveredByCourier = 0.0; Double totalWeightDeliveredByCourier = 0.0; Long
-                * totalItemsInCourier = 0L;
-                */
+                 * List<LineItem> productLineItems = null; List<LineItem> productLineItemsByCourier = null; List<LineItem>
+                 * productLineItemsByAwb = null; RetailLineItem retailLineItem = null; Double
+                 * totalHkPriceDeliveredByCourier = 0.0; Double totalWeightDeliveredByCourier = 0.0; Long
+                 * totalItemsInCourier = 0L;
+                 */
                 rowMap = getRowMap(objRowIt);
                 ShippingOrder shippingOrder = getShippingOrderService().findByGatewayOrderId(getCellValue(ReportConstants.GATEWAY_ORDER_ID, rowMap, headerMap));
                 String awb = getCellValue(ReportConstants.AWB, rowMap, headerMap);
@@ -828,7 +856,7 @@ public class XslParser {
                     continue;
                 }
                 if (courier != null) {
-                    if (!(shipment.getCourier().equals(courier))) {
+                    if (!(shipment.getAwb().getCourier().equals(courier))) {
                         messagePostUpdation += "Courier Name in the list and present in our DataBase mismatches at Row " + rowCount + "<br/>";
                         continue;
                     }
@@ -846,29 +874,29 @@ public class XslParser {
                 shipmentService.save(shipment);
 
                 /*
-                * if (courier != null) { productLineItemsByCourier =
-                * shippingOrder.getProductLineItemByCourier(courier); } if (StringUtils.isNotBlank(awb)) {
-                * productLineItemsByAwb = shippingOrder.getProductLineItemWithAwb(awb); }
-                */
+                 * if (courier != null) { productLineItemsByCourier =
+                 * shippingOrder.getProductLineItemByCourier(courier); } if (StringUtils.isNotBlank(awb)) {
+                 * productLineItemsByAwb = shippingOrder.getProductLineItemWithAwb(awb); }
+                 */
 
                 // productLineItemsByAwb.removeAll(Collections.singleton(null));
                 // productLineItemsByCourier.removeAll(Collections.singleton(null));
                 // productLineItems taken from awb will be preffered
                 /*
-                * if (productLineItemsByAwb != null && !productLineItemsByAwb.isEmpty()) { productLineItems =
-                * productLineItemsByAwb; } else { productLineItems = productLineItemsByCourier; } if (productLineItems ==
-                * null || productLineItems.isEmpty()) { messagePostUpdation += " no products delivered with gateway
-                * shippingOrder id " + shippingOrder.getGatewayOrderId() + " at Row " + rowCount + "<br/> "; continue; }
-                * for (LineItem productLineItem : productLineItems) { totalHkPriceDeliveredByCourier +=
-                * productLineItem.getHkPrice() * productLineItem.getQty(); totalItemsInCourier +=
-                * productLineItem.getQty(); }
-                *//**
-                 * This for loop is added to distribute the shipping charges as per the weight of each product
-                 * variant. And this is set to 0 when the product variant has 0 value due to insufficient data.
-                 */
+                 * if (productLineItemsByAwb != null && !productLineItemsByAwb.isEmpty()) { productLineItems =
+                 * productLineItemsByAwb; } else { productLineItems = productLineItemsByCourier; } if (productLineItems ==
+                 * null || productLineItems.isEmpty()) { messagePostUpdation += " no products delivered with gateway
+                 * shippingOrder id " + shippingOrder.getGatewayOrderId() + " at Row " + rowCount + "<br/> "; continue; }
+                 * for (LineItem productLineItem : productLineItems) { totalHkPriceDeliveredByCourier +=
+                 * productLineItem.getHkPrice() * productLineItem.getQty(); totalItemsInCourier +=
+                 * productLineItem.getQty(); }
+                 *//**
+                     * This for loop is added to distribute the shipping charges as per the weight of each product
+                     * variant. And this is set to 0 when the product variant has 0 value due to insufficient data.
+                     */
                 /*
-                * for (LineItem productLineItem : productLineItems) {
-                *//*
+                 * for (LineItem productLineItem : productLineItems) {
+                 *//*
                      * if (productLineItem.getProductVariant().getWeight() != null &&
                      * productLineItem.getProductVariant().getWeight() != 0.0) { totalWeightDeliveredByCourier +=
                      * productLineItem.getProductVariant().getWeight() * productLineItem.getQty(); } else {
@@ -946,11 +974,11 @@ public class XslParser {
             while (objRowIt.hasNext()) {
                 rowCount++;
                 /*
-                * List<LineItem> productLineItems = null; List<LineItem> productLineItemsByCourier = null; List<LineItem>
-                * productLineItemsByAwb = null; RetailLineItem retailLineItem = null; Double
-                * totalHkPriceDeliveredByCourier = 0.0; Double totalWeightDeliveredByCourier = 0.0; Long
-                * totalItemsInCourier = 0L;
-                */
+                 * List<LineItem> productLineItems = null; List<LineItem> productLineItemsByCourier = null; List<LineItem>
+                 * productLineItemsByAwb = null; RetailLineItem retailLineItem = null; Double
+                 * totalHkPriceDeliveredByCourier = 0.0; Double totalWeightDeliveredByCourier = 0.0; Long
+                 * totalItemsInCourier = 0L;
+                 */
                 rowMap = getRowMapStringFormat(objRowIt);
                 ShippingOrder shippingOrder = getShippingOrderService().findByGatewayOrderId(getCellValue(ReportConstants.GATEWAY_ORDER_ID, rowMap, headerMap));
                 String awb = getCellValue(ReportConstants.AWB, rowMap, headerMap);
@@ -978,7 +1006,7 @@ public class XslParser {
                     continue;
                 }
                 if (courier != null) {
-                    if (!(shipment.getCourier().equals(courier))) {
+                    if (!(shipment.getAwb().getCourier().equals(courier))) {
                         messagePostUpdation += "Courier Name in the list and present in our DataBase mismatches at Row " + rowCount + "<br/>";
                         continue;
                     }
@@ -996,38 +1024,38 @@ public class XslParser {
                 getShipmentService().save(shipment);
                 // this is to give preference to productlineitem list by awb in case of mismatch.
                 /*
-                * if (productLineItemsByAwb != null && !productLineItemsByAwb.isEmpty()) { productLineItems =
-                * productLineItemsByAwb; } else { productLineItems = productLineItemsByCourier; } if (productLineItems ==
-                * null || productLineItems.isEmpty()) { messagePostUpdation += " no products delivered with gateway
-                * shippingOrder id " + shippingOrder.getGatewayOrderId() + " at Row " + rowCount + ".<br/> ";
-                * continue; } for (LineItem productLineItem : productLineItems) { totalHkPriceDeliveredByCourier +=
-                * productLineItem.getHkPrice() * productLineItem.getQty(); totalItemsInCourier +=
-                * productLineItem.getQty(); }
-                *//**
-                 * This for loop is added to distribute the shipping charges as per the weight of each product
-                 * variant. And this is set to 0 when the product variant has 0 value due to insufficient data.
-                 */
+                 * if (productLineItemsByAwb != null && !productLineItemsByAwb.isEmpty()) { productLineItems =
+                 * productLineItemsByAwb; } else { productLineItems = productLineItemsByCourier; } if (productLineItems ==
+                 * null || productLineItems.isEmpty()) { messagePostUpdation += " no products delivered with gateway
+                 * shippingOrder id " + shippingOrder.getGatewayOrderId() + " at Row " + rowCount + ".<br/> ";
+                 * continue; } for (LineItem productLineItem : productLineItems) { totalHkPriceDeliveredByCourier +=
+                 * productLineItem.getHkPrice() * productLineItem.getQty(); totalItemsInCourier +=
+                 * productLineItem.getQty(); }
+                 *//**
+                     * This for loop is added to distribute the shipping charges as per the weight of each product
+                     * variant. And this is set to 0 when the product variant has 0 value due to insufficient data.
+                     */
                 /*
-                * for (LineItem productLineItem : productLineItems) { if
-                * (productLineItem.getSku().getProductVariant().getWeight() != null &&
-                * productLineItem.getSku().getProductVariant().getWeight() != 0.0) { totalWeightDeliveredByCourier +=
-                * productLineItem.getSku().getProductVariant().getWeight() * productLineItem.getQty(); } else {
-                * totalWeightDeliveredByCourier = 0.0D; break; } } for (LineItem productLineItem : productLineItems) {
-                * retailLineItem = retailLineItemDao.getRetailLineItem(productLineItem); if (retailLineItem == null) {
-                * messagePostUpdation += " retail line item not found for product line item " + productLineItem.getId() + "
-                * gateway shippingOrder id " + shippingOrder.getGatewayOrderId() + " at Row " + rowCount + "<br/> ";
-                * continue; } CourierCharge courierCharge = CourierChargeUtil.getCourierCharge(productLineItem,
-                * totalWeightDeliveredByCourier, totalHkPriceDeliveredByCourier, totalItemsInCourier,
-                * shippingChargeFromExcel, collectionChargeFromExcel, extraCharges);
-                * retailLineItem.setEstimatedShippingChargedByCourier(courierCharge.getShippingCharged());
-                * retailLineItem.setEstimatedCollectionChargedByCourier(courierCharge.getCollectionCharged());
-                * retailLineItem.setExtraCharge(courierCharge.getExtraCharge());
-                * retailLineItemDao.save(retailLineItem); } logger.debug("read row " + rowCount); }
-                */
+                 * for (LineItem productLineItem : productLineItems) { if
+                 * (productLineItem.getSku().getProductVariant().getWeight() != null &&
+                 * productLineItem.getSku().getProductVariant().getWeight() != 0.0) { totalWeightDeliveredByCourier +=
+                 * productLineItem.getSku().getProductVariant().getWeight() * productLineItem.getQty(); } else {
+                 * totalWeightDeliveredByCourier = 0.0D; break; } } for (LineItem productLineItem : productLineItems) {
+                 * retailLineItem = retailLineItemDao.getRetailLineItem(productLineItem); if (retailLineItem == null) {
+                 * messagePostUpdation += " retail line item not found for product line item " + productLineItem.getId() + "
+                 * gateway shippingOrder id " + shippingOrder.getGatewayOrderId() + " at Row " + rowCount + "<br/> ";
+                 * continue; } CourierCharge courierCharge = CourierChargeUtil.getCourierCharge(productLineItem,
+                 * totalWeightDeliveredByCourier, totalHkPriceDeliveredByCourier, totalItemsInCourier,
+                 * shippingChargeFromExcel, collectionChargeFromExcel, extraCharges);
+                 * retailLineItem.setEstimatedShippingChargedByCourier(courierCharge.getShippingCharged());
+                 * retailLineItem.setEstimatedCollectionChargedByCourier(courierCharge.getCollectionCharged());
+                 * retailLineItem.setExtraCharge(courierCharge.getExtraCharge());
+                 * retailLineItemDao.save(retailLineItem); } logger.debug("read row " + rowCount); }
+                 */
 
                 /*
-                * ProductVariant productVariant = productVariantDao.find(getCellValue(VARIANT_ID, rowMap, headerMap)); }
-                */
+                 * ProductVariant productVariant = productVariantDao.find(getCellValue(VARIANT_ID, rowMap, headerMap)); }
+                 */
 
             }
         } catch (Exception e) {
@@ -1046,12 +1074,12 @@ public class XslParser {
     private Tax getTaxDetails(String taxName) {
 
         /*
-        * Matcher matcher = p.matcher(taxName); String value = "0.0"; //Fix for Null pointer error if (matcher.find()) {
-        * value = matcher.group(1); } Tax tax = new Tax(); tax.setName(taxName); double percentVal = 0; try {
-        * percentVal = Double.parseDouble(value); } catch (NumberFormatException e) { throw new
-        * RuntimeException("Invalid tax value/or unable to parse : " + taxName); } tax.setValue(percentVal / 100);
-        * return tax;
-        */
+         * Matcher matcher = p.matcher(taxName); String value = "0.0"; //Fix for Null pointer error if (matcher.find()) {
+         * value = matcher.group(1); } Tax tax = new Tax(); tax.setName(taxName); double percentVal = 0; try {
+         * percentVal = Double.parseDouble(value); } catch (NumberFormatException e) { throw new
+         * RuntimeException("Invalid tax value/or unable to parse : " + taxName); } tax.setValue(percentVal / 100);
+         * return tax;
+         */
         Tax taxDb = getTaxService().findByName(taxName);
         if (taxDb == null) {
             taxDb = getTaxService().findByName("0.125");
@@ -1064,7 +1092,7 @@ public class XslParser {
     /**
      * reads all column values that start with the prefix VAR_ returns a list of product options option name = value of
      * string minus the VAR_ prefix option value = value in the cell
-     *
+     * 
      * @param productOptionsStr
      * @return
      */
@@ -1171,11 +1199,10 @@ public class XslParser {
 
     /**
      * Returns a list of categories. Category format Eg: <p/> Baby, Baby Food, Cereal ; Baby, Baby Food, Formula <p/>
-     * Here parent relationships are set . left most category is the parent. <p/> Eg:
-     * <p/>
-     * <p/> Category String = Diabetes>Testing Supplies>Meters>GLUCOCARD01| Home Health Devices>Diabetes Meters>Blood
-     * Glucose Meters>GLUCOCARD01 <p/> <p/> Parsing is done as follows for the above string: <p/>
-     * <p/>
+     * Here parent relationships are set . left most category is the parent. <p/> Eg: <p/> <p/> Category String =
+     * Diabetes>Testing Supplies>Meters>GLUCOCARD01| Home Health Devices>Diabetes Meters>Blood Glucose
+     * Meters>GLUCOCARD01 <p/> <p/> Parsing is done as follows for the above string: <p/> <p/>
+     * 
      * <pre>
      *   [diabetes: Diabetes ()]
      * &lt;p/&gt;
@@ -1186,13 +1213,13 @@ public class XslParser {
      *                                    {display name-&gt; for UI}
      * &lt;p/&gt;
      * </pre>
-     * <p/>
-     * <p/> and so on... <p/> [diabetes>testing supplies>meters: Meters (Testing Supplies)] [diabetes>testing
+     * 
+     * <p/> <p/> and so on... <p/> [diabetes>testing supplies>meters: Meters (Testing Supplies)] [diabetes>testing
      * supplies>meters>glucocard01: GLUCOCARD01 (Meters)] [home health devices: Home Health Devices ()] [home health
      * devices>diabetes meters: Diabetes Meters (Home Health Devices)] [home health devices>diabetes meters>blood
      * glucose meters: Blood Glucose Meters (Diabetes Meters)] [home health devices>diabetes meters>blood glucose
      * meters>glucocard01: GLUCOCARD01 (Blood Glucose Meters)]
-     *
+     * 
      * @param categoryString
      * @return
      */
@@ -1233,6 +1260,7 @@ public class XslParser {
     }
 
     public static void main(String[] args) {
+
         String catString = "Diabetes>Testing Supplies>Meters>GLUCOCARD01| Home Health Devices>Diabetes Meters>Blood Glucose Meters>GLUCOCARD01";
         XslParser xslParser = new XslParser();
         List<Category> categoryList = xslParser.getCategroyListFromCategoryString(catString);
@@ -1399,88 +1427,86 @@ public class XslParser {
         return headerMap;
     }
 
-
-//  public Set<Awb> readAwbExcel(File file) throws Exception {
-//    logger.debug("parsing Awb info : " + file.getAbsolutePath());
-//    Set<Awb> awbSet = new HashSet<Awb>();
-//    InputStream awbInputStream = new FileInputStream(file);
-//    POIFSFileSystem awbInFileSys = new POIFSFileSystem(awbInputStream);
-//
-//    HSSFWorkbook workbook = new HSSFWorkbook(awbInFileSys);
-//
-//    // Assuming there is only one sheet, the first one only will be picked
-//    HSSFSheet awbSheet = workbook.getSheet("AWB");
-//    Iterator<Row> objRowIt = awbSheet.rowIterator();
-//    Map<Integer, String> headerMap;
-//    Map<Integer, String> rowMap;
-//    int rowCount = 1;
-//    headerMap = getRowMap(objRowIt);
-//    try {
-//      while (objRowIt.hasNext()) {
-//        rowCount++;
-//        rowMap = getRowMap(objRowIt);
-//        String courierId = getCellValue(XslConstants.COURIER_ID, rowMap, headerMap);
-//        String awbNumber = getCellValue(XslConstants.AWB_NUMBER, rowMap, headerMap);
-//        String cod = getCellValue(XslConstants.COD, rowMap, headerMap);
-//
-//        Awb awb = new Awb();
-//        if (StringUtils.isEmpty(courierId)) {
-//
-//          if (StringUtils.isEmpty(awbNumber) && cod.isEmpty()) {
-//            if (awbSet.size() > 0) {
-//              return awbSet;
-//            }
-//            return null;
-//
-//          } else {
-//            logger.error("courier id cannot be call");
-//            throw new ExcelBlankFieldException("courier ID  cannot be null" + "    ", rowCount);
-//          }
-//
-//        }
-//        Courier courier = courierDao.getCourierById(getLong(courierId));
-//        awb.setCourier(courier);
-//        if (StringUtils.isEmpty(awbNumber)) {
-//          logger.error("awbNumber cannot be call");
-//          throw new ExcelBlankFieldException("awbNumber cannot be null " + "    ", rowCount);
-//
-//        }
-//        awb.setAwbNumber(awbNumber);
-//        awb.setAwbBarCode(awbNumber);
-//        awb.setUsed(false);
-//        if (userService.getWarehouseForLoggedInUser() == null) {
-//          throw new ExcelBlankFieldException("Please login in warehouse");
-//        }
-//        awb.setWarehouse(userService.getWarehouseForLoggedInUser());
-//        if (cod.isEmpty()) {
-//          throw new ExcelBlankFieldException("Please enter mode of payment");
-//        }
-//        if (getLong(cod).equals(0l)) {
-//          awb.setCod(true);
-//        } else if (getLong(cod).equals(1l)) {
-//          awb.setCod(false);
-//        }
-//        awbSet.add(awb);
-//      }
-//    } catch (ExcelBlankFieldException e) {
-//      throw new ExcelBlankFieldException(e.getMessage());
-//
-//    }
-//
-//    finally {
-//    }
-//    if (awbInputStream != null) {
-//      IOUtils.closeQuietly(awbInputStream);
-//    }
-//
-//    if (awbSet.size() > 0) {
-//      return awbSet;
-//    }
-//
-//    return null;
-//
-//  }
-
+    // public Set<Awb> readAwbExcel(File file) throws Exception {
+    // logger.debug("parsing Awb info : " + file.getAbsolutePath());
+    // Set<Awb> awbSet = new HashSet<Awb>();
+    // InputStream awbInputStream = new FileInputStream(file);
+    // POIFSFileSystem awbInFileSys = new POIFSFileSystem(awbInputStream);
+    //
+    // HSSFWorkbook workbook = new HSSFWorkbook(awbInFileSys);
+    //
+    // // Assuming there is only one sheet, the first one only will be picked
+    // HSSFSheet awbSheet = workbook.getSheet("AWB");
+    // Iterator<Row> objRowIt = awbSheet.rowIterator();
+    // Map<Integer, String> headerMap;
+    // Map<Integer, String> rowMap;
+    // int rowCount = 1;
+    // headerMap = getRowMap(objRowIt);
+    // try {
+    // while (objRowIt.hasNext()) {
+    // rowCount++;
+    // rowMap = getRowMap(objRowIt);
+    // String courierId = getCellValue(XslConstants.COURIER_ID, rowMap, headerMap);
+    // String awbNumber = getCellValue(XslConstants.AWB_NUMBER, rowMap, headerMap);
+    // String cod = getCellValue(XslConstants.COD, rowMap, headerMap);
+    //
+    // Awb awb = new Awb();
+    // if (StringUtils.isEmpty(courierId)) {
+    //
+    // if (StringUtils.isEmpty(awbNumber) && cod.isEmpty()) {
+    // if (awbSet.size() > 0) {
+    // return awbSet;
+    // }
+    // return null;
+    //
+    // } else {
+    // logger.error("courier id cannot be call");
+    // throw new ExcelBlankFieldException("courier ID cannot be null" + " ", rowCount);
+    // }
+    //
+    // }
+    // Courier courier = courierDao.getCourierById(getLong(courierId));
+    // awb.setCourier(courier);
+    // if (StringUtils.isEmpty(awbNumber)) {
+    // logger.error("awbNumber cannot be call");
+    // throw new ExcelBlankFieldException("awbNumber cannot be null " + " ", rowCount);
+    //
+    // }
+    // awb.setAwbNumber(awbNumber);
+    // awb.setAwbBarCode(awbNumber);
+    // awb.setUsed(false);
+    // if (userService.getWarehouseForLoggedInUser() == null) {
+    // throw new ExcelBlankFieldException("Please login in warehouse");
+    // }
+    // awb.setWarehouse(userService.getWarehouseForLoggedInUser());
+    // if (cod.isEmpty()) {
+    // throw new ExcelBlankFieldException("Please enter mode of payment");
+    // }
+    // if (getLong(cod).equals(0l)) {
+    // awb.setCod(true);
+    // } else if (getLong(cod).equals(1l)) {
+    // awb.setCod(false);
+    // }
+    // awbSet.add(awb);
+    // }
+    // } catch (ExcelBlankFieldException e) {
+    // throw new ExcelBlankFieldException(e.getMessage());
+    //
+    // }
+    //
+    // finally {
+    // }
+    // if (awbInputStream != null) {
+    // IOUtils.closeQuietly(awbInputStream);
+    // }
+    //
+    // if (awbSet.size() > 0) {
+    // return awbSet;
+    // }
+    //
+    // return null;
+    //
+    // }
 
     public boolean checkIfNotEmpty(String excelField, int rowCount) {
         if (StringUtils.isEmpty(excelField)) {
@@ -1489,7 +1515,6 @@ public class XslParser {
         }
         return true;
     }
-
 
     public PurchaseOrderDao getPurchaseOrderDao() {
         return purchaseOrderDao;

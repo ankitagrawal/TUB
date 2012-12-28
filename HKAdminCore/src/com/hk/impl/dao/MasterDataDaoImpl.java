@@ -5,19 +5,27 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.domain.courier.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
+import com.hk.cache.RoleCache;
+import com.hk.cache.vo.RoleVO;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
+import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
@@ -25,23 +33,7 @@ import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.core.CancellationType;
-import com.hk.domain.core.CartLineItemType;
-import com.hk.domain.core.City;
-import com.hk.domain.core.EmailType;
-import com.hk.domain.core.OrderStatus;
-import com.hk.domain.core.PaymentMode;
-import com.hk.domain.core.PaymentStatus;
-import com.hk.domain.core.ProductVariantPaymentType;
-import com.hk.domain.core.ProductVariantServiceType;
-import com.hk.domain.core.PurchaseFormType;
-import com.hk.domain.core.PurchaseOrderStatus;
-import com.hk.domain.core.State;
-import com.hk.domain.core.Surcharge;
-import com.hk.domain.core.Tax;
-import com.hk.domain.courier.BoxSize;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.RegionType;
+import com.hk.domain.core.*;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
@@ -51,10 +43,12 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
 import com.hk.domain.subscription.SubscriptionStatus;
+import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.MasterDataDao;
@@ -70,28 +64,37 @@ import com.hk.pact.service.store.StoreService;
 public class MasterDataDaoImpl implements MasterDataDao {
 
     @Autowired
-    private BaseDao          baseDao;
+    private BaseDao             baseDao;
     @Autowired
-    private UserService      userService;
+    private UserService         userService;
     @Autowired
-    private CategoryService  categoryService;
+    private CategoryService     categoryService;
     @Autowired
-    private RoleService      roleService;
+    private RoleService         roleService;
     @Autowired
-    private MarketingService marketingService;
+    private MarketingService    marketingService;
     @Autowired
-    private StoreService     storeService;
+    private StoreService        storeService;
     @Autowired
-    private CourierDao       courierDao;
+    private CourierDao          courierDao;
     @Autowired
-    private CityService      cityService;
+    private CityService         cityService;
     @Autowired
-    private StateService     stateService;
+    private StateService        stateService;
     @Autowired
-    private HubService       hubService;
+    private HubService          hubService;
     @Autowired
-    private RunSheetService  runsheetService;
+    private RunSheetService     runsheetService;
+    @Autowired
+    private CourierGroupService courierGroupService;
 
+    @Autowired
+    private CourierService      courierService;
+	@Autowired
+	private ConsignmentService  consignmentService;
+
+	@Autowired
+	private DispatchLotService dispatchLotService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -138,7 +141,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<User> getTicketAdminList() {
-        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.TICKETADMIN));
+        RoleVO ticketAdminRole = RoleCache.getInstance().getRoleByName(EnumRole.TICKETADMIN);
+        // return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.TICKETADMIN));
+        return getUserService().findByRole(ticketAdminRole.getRole());
     }
 
     public List<Category> getTopLevelCategoryList() {
@@ -183,11 +188,15 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<User> getApproverList() {
-        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.PO_APPROVER));
+        Role poApproverRole = RoleCache.getInstance().getRoleByName(EnumRole.PO_APPROVER).getRole();
+        // return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.PO_APPROVER));
+        return getUserService().findByRole(poApproverRole);
     }
 
     public List<User> getCreatorList() {
-        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.CATEGORY_MANAGER));
+        Role categoryManRole = RoleCache.getInstance().getRoleByName(EnumRole.CATEGORY_MANAGER).getRole();
+        // return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.CATEGORY_MANAGER));
+        return getUserService().findByRole(categoryManRole);
     }
 
     public List<DebitNoteStatus> getDebitNoteStatusList() {
@@ -217,6 +226,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
         courierListForDBUpdation.add(CourierConstants.CHHOTU);
         courierListForDBUpdation.add(CourierConstants.DELHIVERY);
         courierListForDBUpdation.add(CourierConstants.DTDC);
+        courierListForDBUpdation.add(CourierConstants.QUANTIUM);
         return courierListForDBUpdation;
     }
 
@@ -294,32 +304,31 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return storeList;
     }
 
-    public List<SubscriptionStatus> getSubscriptionStatusList(){
+    public List<SubscriptionStatus> getSubscriptionStatusList() {
         return getBaseDao().getAll(SubscriptionStatus.class);
     }
 
-  public List<State> getStateList() {
-    List<State> stateList = stateService.getAllStates();
-    Collections.sort(stateList);
-    return stateList;
+    public List<State> getStateList() {
+        List<State> stateList = stateService.getAllStates();
+        Collections.sort(stateList);
+        return stateList;
 
-  }
+    }
 
-  public List<City> getCityList() {
-    List<City> cityList = cityService.getAllCity();
-    Collections.sort(cityList, new City());
-    return cityList;
-  }
+    public List<City> getCityList() {
+        List<City> cityList = cityService.getAllCity();
+        Collections.sort(cityList, new City());
+        return cityList;
+    }
 
     public List<Courier> getCourierList() {
-        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
+        List<Courier> courierList = courierService.getAllCouriers();
+        Courier migrateCourier = EnumCourier.MIGRATE.asCourier();
+        courierList.remove(migrateCourier);
+        return courierList;
     }
 
-     public List<Courier> getGroundShippedCourierList() {
-        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableGroundShippedCouriers()));
-    }
-
-    public List<ShippingOrderStatus> getSOStatusForReconcilation(){
+    public List<ShippingOrderStatus> getSOStatusForReconcilation() {
         return EnumShippingOrderStatus.getStatusForReconcilationReport();
     }
 
@@ -327,28 +336,94 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return hubService.getAllHubs();
     }
 
-    public List<User> getHKDeliveryAgentList(){
+    public List<User> getHKDeliveryAgentList() {
+        // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         User loggedOnUser = getUserService().getLoggedInUser();
-        Hub currentHub =  hubService.getHubForUser(loggedOnUser);
-        if(currentHub != null){
+        Hub currentHub = hubService.getHubForUser(loggedOnUser);
+        if (currentHub != null) {
             return hubService.getAgentsForHub(currentHub);
         }
-        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.HK_DELIVERY_GUY));
+        RoleVO hkDelGuyRole = RoleCache.getInstance().getRoleByName(EnumRole.HK_DELIVERY_GUY);
+        // return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.HK_DELIVERY_GUY));
+        return getUserService().findByRole(hkDelGuyRole.getRole());
     }
 
-    public List<RunsheetStatus> getRunsheetStatusList(){
+    public List<RunsheetStatus> getRunsheetStatusList() {
         return getBaseDao().getAll(RunsheetStatus.class);
     }
 
-    public List<User> getAgentsWithOpenRunsheet() {                     
-        return runsheetService.getAgentList(getBaseDao().get(RunsheetStatus.class,EnumRunsheetStatus.Open.getId()));
+    public List<User> getAgentsWithOpenRunsheet() {
+        return runsheetService.getAgentList(getBaseDao().get(RunsheetStatus.class, EnumRunsheetStatus.Open.getId()));
     }
 
-    public List<ConsignmentStatus> getConsignmentStatusList(){
+    public List<ConsignmentStatus> getConsignmentStatusList() {
         return getBaseDao().getAll(ConsignmentStatus.class);
     }
 
-	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
-	       return EnumPurchaseOrderStatus.getStatusForNonApprover();
+    public List<CourierGroup> getCourierGroupList() {
+        return courierGroupService.getAllCourierGroup();
+    }
+
+    public List<Courier> getDisableCourier() {
+        return courierService.getCouriers(null, null, true);
+    }
+
+    public List<Courier> getAvailableCouriers() {
+        return courierService.getCouriers(null, null, false);
+    }
+
+    public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
+        return EnumPurchaseOrderStatus.getStatusForNonApprover();
+
+    }
+
+    public List<ReplacementOrderReason> getReplacementOrderReasonForReplacement() {
+        List<Long> replacementOrderReasonIds = EnumReplacementOrderReason.getReasonForReplacementOrder();
+        List<ReplacementOrderReason> replacementOrderReasonList = new ArrayList<ReplacementOrderReason>();
+        ReplacementOrderReason replacementOrderReason;
+        for (Long replacementOrderReasonId : replacementOrderReasonIds) {
+            replacementOrderReason = getBaseDao().get(ReplacementOrderReason.class, replacementOrderReasonId);
+            if (replacementOrderReason != null) {
+                replacementOrderReasonList.add(replacementOrderReason);
+            }
+        }
+        return replacementOrderReasonList;
+    }
+
+    public List<ReplacementOrderReason> getReplacementOrderReasonForRto() {
+        List<Long> replacementOrderReasonIds = EnumReplacementOrderReason.getReasonForReplacementForRTO();
+        List<ReplacementOrderReason> replacementOrderReasonList = new ArrayList<ReplacementOrderReason>();
+        ReplacementOrderReason replacementOrderReason;
+        for (Long replacementOrderReasonId : replacementOrderReasonIds) {
+            replacementOrderReason = getBaseDao().get(ReplacementOrderReason.class, replacementOrderReasonId);
+            if (replacementOrderReason != null) {
+                replacementOrderReasonList.add(replacementOrderReason);
+            }
+        }
+        return replacementOrderReasonList;
+    }
+
+     public List<Country> getAllCountry(){
+         return getBaseDao().getAll(Country.class);
+     }
+
+	public List<Zone> getAllZones() {
+		return getBaseDao().getAll(Zone.class);
+	}
+
+	public List<String> getCustomerOnHoldReasonsForHkDelivery() {
+		return consignmentService.getCustomerOnHoldReasonsForHkDelivery();
+	}
+
+	public List<DispatchLotStatus> getDispatchLotStatusList() {
+		return getBaseDao().getAll(DispatchLotStatus.class);
+	}
+
+	public List<String> getSourceAndDestinationListForDispatchLot() {
+		return dispatchLotService.getSourceAndDestinationListForDispatchLot();
+	}
+
+	public List<String> getShipmentStatusForDispatchLot() {
+		return dispatchLotService.getShipmentStatusForDispatchLot();
 	}
 }

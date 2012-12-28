@@ -5,7 +5,9 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.cache.UserCache;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.order.Order;
@@ -15,22 +17,22 @@ import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderLoggingService;
 
-
 @Service
 public class OrderLoggingServiceImpl implements OrderLoggingService {
 
     @Autowired
-    private OrderDao orderDao;
+    private OrderDao    orderDao;
     @Autowired
     private UserService userService;
-    
+
     public OrderLifecycleActivity getOrderLifecycleActivity(EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
         return getOrderDao().get(OrderLifecycleActivity.class, enumOrderLifecycleActivity.getId());
     }
 
     public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
-        User loggedOnUser= getUserService().getLoggedInUser();
-        if(loggedOnUser==null){
+        User loggedOnUser = getUserService().getLoggedInUser();
+        //User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        if (loggedOnUser == null) {
             loggedOnUser = order.getUser();
         }
 
@@ -38,12 +40,15 @@ public class OrderLoggingServiceImpl implements OrderLoggingService {
         logOrderActivity(order, loggedOnUser, orderLifecycleActivity, null);
     }
 
+    @Transactional
     public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
-        User user = getUserService().getAdminUser();
+        //User adminUser = UserCache.getInstance().getAdminUser();
+        User adminUser = getUserService().getAdminUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLifecycleActivity(enumOrderLifecycleActivity);
-        logOrderActivity(order, user, orderLifecycleActivity, comments);
+        logOrderActivity(order, adminUser, orderLifecycleActivity, comments);
     }
 
+    @Transactional
     public void logOrderActivity(Order order, User user, OrderLifecycleActivity orderLifecycleActivity, String comments) {
         OrderLifecycle orderLifecycle = new OrderLifecycle();
         orderLifecycle.setOrder(order);
@@ -72,5 +77,4 @@ public class OrderLoggingServiceImpl implements OrderLoggingService {
         this.userService = userService;
     }
 
-    
 }

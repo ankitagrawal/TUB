@@ -1,5 +1,22 @@
 package com.hk.web.action.core.order;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.LocalizableMessage;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+import org.stripesstuff.plugin.session.Session;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
@@ -14,88 +31,76 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
-import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.order.RewardPointService;
 import com.hk.pricing.PricingEngine;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.payment.PaymentModeAction;
 import com.hk.web.action.core.user.SelectAddressAction;
-import net.sourceforge.stripes.action.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-import org.stripesstuff.plugin.session.Session;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Secure
 @Component
 public class OrderSummaryAction extends BaseAction {
 
-    //private static Logger     logger        = LoggerFactory.getLogger(OrderSummaryAction.class);
+    // private static Logger logger = LoggerFactory.getLogger(OrderSummaryAction.class);
 
     @Autowired
-    private CourierService    courierService;
+    private CourierService     courierService;
     @Autowired
-    UserDao                   userDao;
+    UserDao                    userDao;
     @Autowired
-    OrderManager              orderManager;
+    OrderManager               orderManager;
     @Autowired
-    PricingEngine             pricingEngine;
+    PricingEngine              pricingEngine;
     @Autowired
-    ReferrerProgramManager    referrerProgramManager;
+    private RewardPointService rewardPointService;
     @Autowired
-    private AdminOrderService adminOrderService;
+    private AdminOrderService  adminOrderService;
 
     @Session(key = HealthkartConstants.Session.useRewardPoints)
-    private boolean           useRewardPoints;
+    private boolean            useRewardPoints;
 
-    private PricingDto        pricingDto;
-    private Order             order;
-    private Address           billingAddress;
-    private boolean           codAllowed;
-    private Double            redeemableRewardPoints;
-    private List<Courier>     availableCourierList;
-    private boolean           groundShippingAllowed;
-    private boolean           groundShippedItemPresent;
-    private boolean           codAllowedOnGroundShipping;
-    private Double            cashbackOnGroundshipped;
-    Map<String, String>       codFailureMap = new HashMap<String, String>();
+    private PricingDto         pricingDto;
+    private Order              order;
+    private Address            billingAddress;
+    private boolean            codAllowed;
+    private Double             redeemableRewardPoints;
+    private List<Courier>      availableCourierList;
+    private boolean            groundShippingAllowed;
+    private boolean            groundShippedItemPresent;
+    private boolean            codAllowedOnGroundShipping;
+    private Double             cashbackOnGroundshipped;
+    Map<String, String>        codFailureMap = new HashMap<String, String>();
 
     // COD related changes
     @Autowired
-    PaymentManager            paymentManager;
+    PaymentManager             paymentManager;
     @Autowired
-    PaymentModeDao            paymentModeDao;
+    PaymentModeDao             paymentModeDao;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
-    private Double            codCharges;
+    private Double             codCharges;
 
     @Value("#{hkEnvProps['" + Keys.Env.codFreeAfter + "']}")
-    private Double            codFreeAfter;
+    private Double             codFreeAfter;
 
-   /* @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
-    private Double            codMinAmount;
-
-    // @Named(Keys.Env.codMaxAmount)
-    @Value("#{hkEnvProps['codMaxAmount']}")
-    private Double            codMaxAmount;*/
+    /*
+     * @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}") private Double codMinAmount; //
+     * @Named(Keys.Env.codMaxAmount) @Value("#{hkEnvProps['codMaxAmount']}") private Double codMaxAmount;
+     */
 
     @DefaultHandler
     public Resolution pre() {
         User user = getUserService().getUserById(getPrincipal().getId());
+        // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
         // Trimming empty line items once again.
         orderManager.trimEmptyLineItems(order);
         // OfferInstance offerInstance = order.getOfferInstance();
         Double rewardPointsUsed = 0D;
-        redeemableRewardPoints = referrerProgramManager.getTotalRedeemablePoints(user);
+        redeemableRewardPoints = rewardPointService.getTotalRedeemablePoints(user);
         if (useRewardPoints)
             rewardPointsUsed = redeemableRewardPoints;
         if (order.getAddress() == null) {
@@ -129,7 +134,7 @@ public class OrderSummaryAction extends BaseAction {
         // Ground Shipping logic ends --
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
-        if (netShopping > codFreeAfter) {
+        if (netShopping >= codFreeAfter) {
             codCharges = 0.0;
         }
         availableCourierList = courierService.getAvailableCouriers(order);

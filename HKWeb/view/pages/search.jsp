@@ -67,7 +67,7 @@
 		</div>
 
 
-		<div class="catalog container_24">
+		<div class="catalog">
 
 			<div class='controls grid_18 alpha'>
 				<a class='control' title='switch to grid view' id="grid-control" href="#">

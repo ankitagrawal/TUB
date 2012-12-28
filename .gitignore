@@ -8,6 +8,7 @@ bin-groovy/
 .svn/
 .metadata/
 .idea/
+.gradle/
 *.class
 *.bak
 *.log
@@ -24,3 +25,6 @@ Thumbs.db
 .project
 environmentLocator.properties
 rebel.xml
+.swp
+clean.bat
+

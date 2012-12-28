@@ -1,5 +1,7 @@
 package com.hk.admin.engine;
 
+import com.hk.domain.payment.GatewayIssuerMapping;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,9 +48,12 @@ public class ShipmentPricingEngine {
     @Autowired
     CourierCostCalculator courierCostCalculator;
 
+    @Autowired
+    GatewayIssuerMappingService gatewayIssuerMappingService;
+
     public Double calculateShipmentCost(ShippingOrder shippingOrder){
         Shipment shipment = shippingOrder.getShipment();
-        Courier courier = shipment.getCourier();
+        Courier courier = shipment.getAwb().getCourier();
         Double weight = shipment.getBoxWeight() * 1000;
         if (EnumCourierGroup.COMMON.getId().equals(courierGroupService.getCourierGroup(courier).getId())) {
             EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
@@ -97,7 +104,7 @@ public class ShipmentPricingEngine {
     public Double calculateReconciliationCost(ShippingOrder shippingOrder){
         Shipment shipment = shippingOrder.getShipment();
         Order order = shippingOrder.getBaseOrder();
-        Courier courier = shipment.getCourier();
+        Courier courier = shipment.getAwb().getCourier();
         String pincode = order.getAddress().getPin();
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
         if(pincodeObj == null)   {
@@ -133,7 +140,11 @@ public class ShipmentPricingEngine {
                 reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount() ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
             }else{
-                reconciliationCharges = amount * EnumPaymentMode.getPaymentMode(payment.getPaymentMode()).getReconciliationCharges();
+                GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(),payment.getGateway(),null);
+                if(gatewayIssuerMapping == null){
+                    return 0D;
+                }
+                reconciliationCharges = amount * gatewayIssuerMapping.getReconciliationCharge();
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
             }
         }

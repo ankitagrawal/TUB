@@ -13,10 +13,13 @@ public class HealthkartConstants {
     public static final String newSession = "newSession";
     public static final String userId = "userId";
     public static final String signupDate = "signupDate";
+    public static final String orderCount = "orderCount";
+    public static final String orderCountSetBoolean = "orderCountSet";
   }
 
   public static class Cookie {        
     public static final String tempHealthKartUser = "tempHealthKartUser";
+    public static final String trackingId = "trackingId";
     public static final String referred_by = "referred_by";
     public static final String affiliate_id = "affiliate_id";
     public static final String preferredZone = "preferredZone";
@@ -26,5 +29,9 @@ public class HealthkartConstants {
   public static class BreadcrumbContext {
     public static final String admin = "admin";
   }
+
+	public static class CompanyName {
+		public static final String brightLifeCarePvtLtd = "Bright Life Care Pvt. Ltd.";
+	}
   
 }

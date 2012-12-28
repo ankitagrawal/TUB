@@ -2,7 +2,6 @@ package com.hk.pact.dao.catalog.combo;
 
 import java.util.List;
 
-import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.pact.dao.BaseDao;

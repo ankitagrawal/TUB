@@ -1,9 +1,10 @@
-	package com.hk.web.action.core.order;
+package com.hk.web.action.core.order;
 
 import java.util.List;
 import java.util.Map;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.ConsignmentTracking;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -16,11 +17,13 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.JsonObject;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.order.ShippingOrder;
@@ -30,6 +33,7 @@ import com.hk.exception.HealthkartCheckedException;
  * User: rahul
  * Time: 15 Feb, 2010 5:38:57 PM
  */
+@Component
 public class TrackCourierAction extends BaseAction {
 
     private static            Logger                      logger                 = LoggerFactory.getLogger(TrackCourierAction.class);
@@ -53,13 +57,18 @@ public class TrackCourierAction extends BaseAction {
 	@Autowired
 	ConsignmentService consignmentService;
 
+	@Autowired
+	ThirdPartyAwbService thirdPartyAwbService;
+
 
     @SuppressWarnings("unchecked")
     @DefaultHandler
     public Resolution pre() {
         Resolution resolution = null;
-
         EnumCourier enumCourier = EnumCourier.getEnumCourierFromCourierId(courierId);
+	    if(enumCourier == null){
+		 return new RedirectResolution("/pages/trackShipment.jsp");  
+	    }
         switch (enumCourier) {
             case Aramex:
                 resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);
@@ -82,7 +91,7 @@ public class TrackCourierAction extends BaseAction {
                 if (chhotuCourierDelivery != null) {
                     resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
 
@@ -102,7 +111,7 @@ public class TrackCourierAction extends BaseAction {
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
             case BlueDart:
@@ -115,13 +124,13 @@ public class TrackCourierAction extends BaseAction {
                     logger.debug("Exception occurred in TrackCourierAction");
                 }
                 if (ele != null) {
-                    String responseStatus = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
-                    if (!responseStatus.equals(CourierConstants.DELHIVERY_ERROR_MSG)) {
-                        status = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
+                    String responseStatus = ele.getChildText(CourierConstants.BLUEDART_STATUS);
+                    if (!responseStatus.equals(CourierConstants.BLUEDART_ERROR_MSG)) {
+                        status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
             case DTDC_COD:
@@ -143,9 +152,22 @@ public class TrackCourierAction extends BaseAction {
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
+			case FedEx:
+			case FedEx_Surface:	
+				//resolution = new RedirectResolution("https://www.fedex.com/Tracking?clienttype=dotcomreg&ascend_header=1&cntry_code=in&language=english&mi=n&", false).addParameter("tracknumbers", trackingId);
+				courierName = CourierConstants.FEDEX;
+        		ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);        
+				status = thirdPartyAwbService.trackFedExShipment(trackingId);
+				if(status != null){
+				  resolution = new ForwardResolution("/pages/courierDetails.jsp");
+				}
+				else {
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
+                }
+				break;
 
 	        case HK_Delivery:
 		        if (trackingId != null) {
@@ -154,16 +176,16 @@ public class TrackCourierAction extends BaseAction {
 				        consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
 				        resolution = new ForwardResolution("/pages/hkDeliveryTracking.jsp");
 			        } else {
-				        resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+				        resolution = new RedirectResolution("/pages/trackShipment.jsp");
 			        }
 		        }
 		        else{
-			        resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+			        resolution = new RedirectResolution("/pages/trackShipment.jsp");
 		        }
 	            
 	            break;
             default:
-                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                resolution = new RedirectResolution("/pages/trackShipment.jsp");
 
         }
         return resolution;

@@ -3,6 +3,7 @@ package com.hk.report.dto.order.reconcilation;
 import java.util.Date;
 
 import com.hk.domain.courier.Courier;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 
 
@@ -18,12 +19,14 @@ public class ReconcilationReportDto {
     String awb;
     Date shipmentDate;
     Date deliveryDate;
-    String reconciled;
+    //String reconciled;
+    boolean reconciled;
     String orderStatus;
     Double boxWeight;
     String boxSize;
     Warehouse warehouse;
     Courier courier;
+	ShippingOrder shippingOrder;
 
     public String getInvoiceId() {
         return invoiceId;
@@ -113,15 +116,24 @@ public class ReconcilationReportDto {
         this.deliveryDate = deliveryDate;
     }
 
-    public String getReconciled() {
+    /*public String getReconciled() {
         return reconciled;
     }
 
     public void setReconciled(String reconciled) {
         this.reconciled = reconciled;
     }
+*/
 
-    public String getOrderStatus() {
+	public boolean isReconciled() {
+		return reconciled;
+	}
+
+	public void setReconciled(boolean reconciled) {
+		this.reconciled = reconciled;
+	}
+
+	public String getOrderStatus() {
         return orderStatus;
     }
 
@@ -152,4 +164,12 @@ public class ReconcilationReportDto {
     public void setWarehouse(Warehouse warehouse) {
         this.warehouse = warehouse;
     }
+
+	public ShippingOrder getShippingOrder() {
+		return shippingOrder;
+	}
+
+	public void setShippingOrder(ShippingOrder shippingOrder) {
+		this.shippingOrder = shippingOrder;
+	}
 }

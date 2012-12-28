@@ -8,6 +8,7 @@
 	pageContext.setAttribute("isSecure", isSecure);
 	if (AnalyticsConstants.analytics) {
 %>
+
 <%--HealthKart Main--%>
 <script type="text/javascript">
   /* <![CDATA[ */
@@ -301,7 +302,7 @@
 	  <c:choose>
 		  <c:when test="${isSecure}">
 			  <img height="1" width="1" style="border-style:none;" alt=""
-			       src="http://www.googleadservices.com/pagead/conversion/1001538852/?value=${conversion_value}&amp;label=CbkyCIysjAMQpIrJ3QM&amp;guid=ON&amp;script=0"/>
+			       src="https://www.googleadservices.com/pagead/conversion/1001538852/?value=${conversion_value}&amp;label=CbkyCIysjAMQpIrJ3QM&amp;guid=ON&amp;script=0"/>
 		  </c:when>
 		  <c:otherwise>
 			  <img height="1" width="1" style="border-style:none;" alt=""
@@ -335,7 +336,7 @@
 	  <c:choose>
 		  <c:when test="${isSecure}">
 			  <img height="1" width="1" style="border-style:none;" alt=""
-			       src="http://www.googleadservices.com/pagead/conversion/1018305592/?value=${conversion_value}&amp;label=jPm5CLja1wIQuLjI5QM&amp;guid=ON&amp;script=0"/>
+			       src="https://www.googleadservices.com/pagead/conversion/1018305592/?value=${conversion_value}&amp;label=jPm5CLja1wIQuLjI5QM&amp;guid=ON&amp;script=0"/>
 		  </c:when>
 		  <c:otherwise>
 			  <img height="1" width="1" style="border-style:none;" alt=""
@@ -345,12 +346,24 @@
   </div>
 </noscript>
 
-<!-- Microsoft AdCenter Code for Payment Success Conversion Page-->
-<script type="text/javascript"> if (!window.mstag) mstag = {loadTag : function(){},time : (new Date()).getTime()};</script> <script id="mstag_tops" type="text/javascript" src="//flex.atdmt.com/mstag/site/ea4f02d0-419a-40f0-a7ac-6071afd7a2b4/mstag.js"></script> <script type="text/javascript"> mstag.loadTag("analytics", {dedup:"1",domainId:"1707567",type:"1",actionid:"62604"})</script> <noscript> <iframe src="//flex.atdmt.com/mstag/tag/ea4f02d0-419a-40f0-a7ac-6071afd7a2b4/analytics.html?dedup=1&domainId=1707567&type=1&actionid=62604" frameborder="0" scrolling="no" width="1" height="1" style="visibility:hidden;display:none"> </iframe> </noscript>
-<!-- Some 2 other codes for Conversion tracking -->
-<script type="text/javascript"> if (!window.mstag) mstag = {loadTag : function(){},time : (new Date()).getTime()};</script> <script id="mstag_tops" type="text/javascript" src="//flex.atdmt.com/mstag/site/4add059a-95ad-41fd-9286-3647da8567e9/mstag.js"></script> <script type="text/javascript"> mstag.loadTag("analytics", {dedup:"1",domainId:"1707580",type:"1",actionid:"62833"})</script> <noscript> <iframe src="//flex.atdmt.com/mstag/tag/4add059a-95ad-41fd-9286-3647da8567e9/analytics.html?dedup=1&domainId=1707580&type=1&actionid=62833" frameborder="0" scrolling="no" width="1" height="1" style="visibility:hidden;display:none"> </iframe> </noscript>
-<script type="text/javascript"> if (!window.mstag) mstag = {loadTag : function(){},time : (new Date()).getTime()};</script> <script id="mstag_tops" type="text/javascript" src="//flex.atdmt.com/mstag/site/0de44004-d46b-40c9-851b-73856e9be38f/mstag.js"></script> <script type="text/javascript"> mstag.loadTag("analytics", {dedup:"1",domainId:"1707607",type:"1",actionid:"62834"})</script> <noscript> <iframe src="//flex.atdmt.com/mstag/tag/0de44004-d46b-40c9-851b-73856e9be38f/analytics.html?dedup=1&domainId=1707607&type=1&actionid=62834" frameborder="0" scrolling="no" width="1" height="1" style="visibility:hidden;display:none"> </iframe> </noscript>
+<%--Facebook Conversion Tracking Codes--%>
 
+<script type="text/javascript">
+var fb_param = {};
+fb_param.pixel_id = '6006045200899';
+fb_param.value = '0.00';
+if (${conversion_value}) {
+	fb_param.value = ${conversion_value};
+}
+(function(){
+  var fpw = document.createElement('script');
+  fpw.async = true;
+  fpw.src = (location.protocol=='http:'?'http':'https')+'://connect.facebook.net/en_US/fp.js';
+  var ref = document.getElementsByTagName('script')[0];
+  ref.parentNode.insertBefore(fpw, ref);
+})();
+</script>
+<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/offsite_event.php?id=6006045200899&amp;value=${conversion_value}" /></noscript>
 
 <%
   }

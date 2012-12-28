@@ -1,12 +1,15 @@
 package com.hk.impl.service.inventory;
 
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.LowInventory;
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.manager.EmailManager;
@@ -20,6 +23,7 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.combo.ComboService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import org.slf4j.Logger;
@@ -50,14 +54,15 @@ public class InventoryServiceImpl implements InventoryService {
     @Autowired
     private ShippingOrderDao           shippingOrderDao;
     @Autowired
+    private ComboService               comboService;
+    @Autowired
     private OrderDao                   orderDao;
     @Autowired
-    private ProductService             productService;
-
-    @Autowired
     private BaseDao                    baseDao;
-	@Autowired
+	  @Autowired
     private UpdatePvPriceDao           updatePvPriceDao;
+    @Autowired
+    private ProductService             productService;
 	
 
     @Override
@@ -65,6 +70,11 @@ public class InventoryServiceImpl implements InventoryService {
         List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
             checkInventoryHealth(skuList, productVariant);
+        }else{
+            //all variants without sku marked out of stock
+            //todo check for product oos as well
+            productVariant.setOutOfStock(true);
+            productVariantService.save(productVariant);
         }
     }
 
@@ -145,6 +155,8 @@ public class InventoryServiceImpl implements InventoryService {
             productVariant.setOutOfStock(true);
             //First product variant goes out of stock
             productVariant = getProductVariantService().save(productVariant);
+            //calling Async method to set all out of stock combos to in stock
+            getComboService().markRelatedCombosOutOfStock(productVariant);
             LowInventory lowInventoryInDB = getLowInventoryDao().findLowInventory(productVariant);
             if (lowInventoryInDB == null) {
                 LowInventory lowInventory = new LowInventory();
@@ -162,7 +174,9 @@ public class InventoryServiceImpl implements InventoryService {
         } else if (availableUnbookedInventory > 0 && productVariant.isOutOfStock()) {
             logger.debug("Inventory status is positive now. Setting IN stock.");
             productVariant.setOutOfStock(false);
+          //calling Async method to set all out of stock combos to in stock
             productVariant = getProductVariantService().save(productVariant);
+            getComboService().markRelatedCombosOutOfStock(productVariant);
             product = productVariant.getProduct();
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
             if (!isJit && !product.isService() && !product.getDropShipping() && !product.getDeleted()) {
@@ -187,7 +201,7 @@ public class InventoryServiceImpl implements InventoryService {
 			    if (leastMRPSkuGroup != null && leastMRPSkuGroup.getMrp() != null
 					    && !productVariant.getMarkedPrice().equals(leastMRPSkuGroup.getMrp())) {
 				    //logger.info("MRP: "+productVariant.getMarkedPrice()+"-->"+leastMRPSkuGroup.getMrp());
-				    UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, false);
+				    UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, EnumUpdatePVPriceStatus.Pending.getId());
 				    if (updatePvPrice == null) {
 					    updatePvPrice = new UpdatePvPrice();
 				    }
@@ -197,8 +211,10 @@ public class InventoryServiceImpl implements InventoryService {
 				    updatePvPrice.setOldMrp(productVariant.getMarkedPrice());
 				    updatePvPrice.setNewMrp(leastMRPSkuGroup.getMrp());
 				    updatePvPrice.setOldHkprice(productVariant.getHkPrice());
-				    updatePvPrice.setNewHkprice(leastMRPSkuGroup.getMrp() * (1 - productVariant.getDiscountPercent()));
+				    Double newHkPrice = leastMRPSkuGroup.getMrp() * (1 - productVariant.getDiscountPercent());
+				    updatePvPrice.setNewHkprice(newHkPrice);
 				    updatePvPrice.setTxnDate(new Date());
+				    updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
 				    baseDao.save(updatePvPrice);
 			    }
 		    }
@@ -244,6 +260,15 @@ public class InventoryServiceImpl implements InventoryService {
 			bookedInventory = bookedInventoryForProductVariant + bookedInventoryForSKUs;
 		}
 		return bookedInventory;
+	}
+
+	public boolean allInventoryCheckedIn(GoodsReceivedNote grn){
+		for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
+			if(!grnLineItem.getQty().equals(grnLineItem.getCheckedInQty())){
+				return false;
+			}
+		}
+		return true;
 	}
     
     @Override
@@ -339,4 +364,7 @@ public class InventoryServiceImpl implements InventoryService {
         this.emailManager = emailManager;
     }
 
+  public ComboService getComboService() {
+    return comboService;
+  }
 }

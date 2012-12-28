@@ -8,7 +8,7 @@
             </span>
       <br/>
       0124 - 4551616 &nbsp;<br/>
-      <span class="small">(Mon to Sun 9am - 9pm)</span>
+      <span class="small">(24x7)</span>
     </div>
     <div class='prom' style="width: 360px;">
 

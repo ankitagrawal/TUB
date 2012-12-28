@@ -16,5 +16,7 @@ public class ProductReferrerConstants {
   public static final String BRAND_PAGE = "brand-page";
   public static final String RELATED_PRODUCTS_PAGE = "related-products-page";
   public static final String SEARCH_PAGE = "search-page";
+  public static final String MOBILE_CATALOG = "mobile-catalog";
+  public static final String MOBILE_SEARCH = "mobile-search";
 
 }

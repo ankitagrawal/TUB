@@ -15,11 +15,13 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.RoleCache;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.B2bUserDetails;
+import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.RoleDao;
@@ -55,8 +57,8 @@ public class MyAccountAction extends BaseAction {
   @Autowired
   RoleDao roleDao;
   
-  @Autowired
-  private RoleService roleService;
+  /*@Autowired
+  private RoleService roleService;*/
 
   @DefaultHandler
   public Resolution pre() {
@@ -121,7 +123,8 @@ public class MyAccountAction extends BaseAction {
       return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
     user = userDao.save(user);
-    if (user.getRoles().contains(roleService.getRoleByName(EnumRole.B2B_USER))) {
+    Role b2bRole = RoleCache.getInstance().getRoleByName(EnumRole.B2B_USER).getRole();
+    if (user.getRoles().contains(b2bRole)) {
       b2bUserDetailsDao.save(b2bUserDetails);
     }
 

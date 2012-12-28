@@ -26,6 +26,8 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
 	public static String Amount = "Amount";
 	public static String Message = "Message";
 	public static String AuthIdCode = "AuthIdCode";
+	public static String authIdCode = "authIdCode";
+	public static String TxnDateTime = "TxnDateTime";
 	public static String RRN = "RRN";
 	public static String TxnID = "TxnID";
 	public static String ePGTxnID = "ePGTxnID";
@@ -136,4 +138,6 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
 		}
 		return paramMap;
 	}
+
+    
 }

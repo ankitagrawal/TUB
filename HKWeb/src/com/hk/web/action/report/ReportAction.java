@@ -32,10 +32,12 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.DateUtils;
+import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderStatus;
@@ -46,6 +48,9 @@ import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.ReconciliationStatusDaoImpl;
 import com.hk.manager.EmailManager;
@@ -54,8 +59,8 @@ import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.service.OrderStatusService;
-import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.report.dto.catalog.CategoryPerformanceDto;
 import com.hk.report.dto.inventory.ExpiryAlertReportDto;
 import com.hk.report.dto.inventory.InventorySoldDto;
@@ -77,109 +82,112 @@ import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure (hasAnyPermissions = {PermissionConstants.REPORT_ADMIN}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.REPORT_ADMIN }, authActionBean = AdminPermissionAction.class)
 @Component
 public class ReportAction extends BaseAction {
 
-    private Date startDate;
-    private Date endDate;
-    private Date activityDate;
-    private PaymentMode paymentMode;
-    private Courier codMode;
-    private ReconciliationStatus reconciliationStatus;
-    float avgDeliveryTime = 0F;
-    float avgShipmentTime = 0F;
-    private int daysBtwMonthStartDateCurrentDate;
-    private List<Tax> taxes = new ArrayList<Tax>();
-    private List<OrderStatus> orderStatuses = new ArrayList<OrderStatus>();
-    private String inRegion;
-    private String[] productIdArray;
-    private String productIdListCommaSeparated;
+    private Date                                   startDate;
+    private Date                                   endDate;
+    private Date                                   activityDate;
+    private PaymentMode                            paymentMode;
+    private Courier                                codMode;
+    private ReconciliationStatus                   reconciliationStatus;
+    float                                          avgDeliveryTime                      = 0F;
+    float                                          avgShipmentTime                      = 0F;
+    private int                                    daysBtwMonthStartDateCurrentDate;
+    private List<Tax>                              taxes                                = new ArrayList<Tax>();
+    private List<OrderStatus>                      orderStatuses                        = new ArrayList<OrderStatus>();
+    private String                                 inRegion;
+    private String[]                               productIdArray;
+    private String                                 productIdListCommaSeparated;
     // private InventorySoldDto inventorySold;
-    private OrderStatus orderStatus;
+    private OrderStatus                            orderStatus;
+    private Warehouse                              warehouse;
+    private ShippingOrderStatus                    shippingOrderStatus;
 
-    private Warehouse warehouse;
-
-    @Value ("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-    String adminDownloads;
-    File xlsFile;
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+    String                                         adminDownloads;
+    File                                           xlsFile;
     @Autowired
-    ReportShippingOrderService shippingOrderReportingService;
+    ReportShippingOrderService                     shippingOrderReportingService;
     @Autowired
-    ReportOrderService reportOrderService;
+    ReportOrderService                             reportOrderService;
     @Autowired
-    private ReportProductVariantService reportProductVariantService;
+    private ReportProductVariantService            reportProductVariantService;
     @Autowired
-    ReportManager reportGenerator;
+    ReportManager                                  reportGenerator;
     @Autowired
-    OrderDao orderDao;
+    OrderDao                                       orderDao;
     @Autowired
-    PaymentModeDao paymentModeDao;
+    PaymentModeDao                                 paymentModeDao;
     @Autowired
-    ReconciliationStatusDaoImpl reconciliationStatusDao;
+    ReconciliationStatusDaoImpl                    reconciliationStatusDao;
+    /*
+     * @Autowired private CategoryService categoryService;
+     */
     @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    OrderManager orderManager;
+    OrderManager                                   orderManager;
     // @Autowired
-    EmailManager emailManager;
+    EmailManager                                   emailManager;
     @Autowired
-    ProductVariantDao productVariantDao;
+    ProductVariantDao                              productVariantDao;
     @Autowired
-    OrderService orderService;
+    OrderService                                   orderService;
     @Autowired
-    OrderStatusService orderStatusService;
+    OrderStatusService                             orderStatusService;
+    @Autowired
+    ShippingOrderService                           shippingOrderService;
 
-    private List<CategorySalesDto> categorySalesDtoList = new ArrayList<CategorySalesDto>();
+    private List<CategorySalesDto>                 categorySalesDtoList                 = new ArrayList<CategorySalesDto>();
 
-    private List<DaySaleDto> daySaleList = new ArrayList<DaySaleDto>();
-    private List<DaySaleShipDateWiseDto> daySaleShipDateWiseDtoList = new ArrayList<DaySaleShipDateWiseDto>();
+    private List<DaySaleDto>                       daySaleList                          = new ArrayList<DaySaleDto>();
+    private List<DaySaleShipDateWiseDto>           daySaleShipDateWiseDtoList           = new ArrayList<DaySaleShipDateWiseDto>();
 
-    private List<ShipmentDto> shipmentDtoList = new ArrayList<ShipmentDto>();
+    private List<ShipmentDto>                      shipmentDtoList                      = new ArrayList<ShipmentDto>();
 
     private List<OrderLifecycleStateTransitionDto> orderLifecycleStateTransitionDtoList = new ArrayList<OrderLifecycleStateTransitionDto>();
 
-    private List<Order> orderList = new ArrayList<Order>();
+    private List<Order>                            orderList                            = new ArrayList<Order>();
 
-    private List<CategoryPerformanceDto> categoryPerformanceList = new ArrayList<CategoryPerformanceDto>();
+    private List<CategoryPerformanceDto>           categoryPerformanceList              = new ArrayList<CategoryPerformanceDto>();
 
-    private List<String> categoryList = new ArrayList<String>();
+    private List<String>                           categoryList                         = new ArrayList<String>();
 
-    private List<CODConfirmationDto> CODUnConfirmedOrderList = new ArrayList<CODConfirmationDto>();
+    private List<CODConfirmationDto>               CODUnConfirmedOrderList              = new ArrayList<CODConfirmationDto>();
 
-    private List<CODConfirmationDto> CODConfirmedOrderList = new ArrayList<CODConfirmationDto>();
+    private List<CODConfirmationDto>               CODConfirmedOrderList                = new ArrayList<CODConfirmationDto>();
 
-    private List<InventorySoldDto> inventorySoldList = new ArrayList<InventorySoldDto>();
+    private List<InventorySoldDto>                 inventorySoldList                    = new ArrayList<InventorySoldDto>();
 
-    private Category topLevelCategory;
+    private Category                               topLevelCategory;
 
-    private Courier courier;
+    private Courier                                courier;
 
-    private Double avgTxn = 0.0;
-    private Double avgTnxCOD = 0.0;
-    private Double avgTxnOfferOrder = 0.0;
-    private Double avgSku = 0.0;
-    private Double avgMrp = 0.0;
-    private Double avgHkp = 0.0;
-    private Double avgHkpPostDiscount = 0.0;
+    private Double                                 avgTxn                               = 0.0;
+    private Double                                 avgTnxCOD                            = 0.0;
+    private Double                                 avgTxnOfferOrder                     = 0.0;
+    private Double                                 avgSku                               = 0.0;
+    private Double                                 avgMrp                               = 0.0;
+    private Double                                 avgHkp                               = 0.0;
+    private Double                                 avgHkpPostDiscount                   = 0.0;
 
-    private Double avgSameDayShipping = 0.0;
-    private Double avgNextDayShipping = 0.0;
-    private Double avgShippingOnDayTwo = 0.0;
+    private Double                                 avgSameDayShipping                   = 0.0;
+    private Double                                 avgNextDayShipping                   = 0.0;
+    private Double                                 avgShippingOnDayTwo                  = 0.0;
 
-    private Double totalAmount = 0.0;
-    private Integer totalOrders = 0;
-    private Integer totalDistinctOrders = 0;
-    private Integer sumOfMrp = 0;
-    private Integer sumOfHkPrice = 0;
-    private Long total = 0L;
+    private Double                                 totalAmount                          = 0.0;
+    private Integer                                totalOrders                          = 0;
+    private Integer                                totalDistinctOrders                  = 0;
+    private Integer                                sumOfMrp                             = 0;
+    private Integer                                sumOfHkPrice                         = 0;
+    private Long                                   total                                = 0L;
 
-    private Map<String, CategoriesOrderReportDto> categoriesOrderReportDtosMap = new HashMap<String, CategoriesOrderReportDto>();
-    private Map<String, CategoriesOrderReportDto> sixHourlyCategoriesOrderReportMap = new HashMap<String, CategoriesOrderReportDto>();
+    private Map<String, CategoriesOrderReportDto>  categoriesOrderReportDtosMap         = new HashMap<String, CategoriesOrderReportDto>();
+    private Map<String, CategoriesOrderReportDto>  sixHourlyCategoriesOrderReportMap    = new HashMap<String, CategoriesOrderReportDto>();
 
-    private Map<String, Long> targetMrpSalesMap;
-    private Map<String, Long> targetOrderCountMap;
-    private Map<String, Long> targetDailyMrpSalesMap = new HashMap<String, Long>();
+    private Map<String, Long>                      targetMrpSalesMap;
+    private Map<String, Long>                      targetOrderCountMap;
+    private Map<String, Long>                      targetDailyMrpSalesMap               = new HashMap<String, Long>();
 
     @DefaultHandler
     @DontValidate
@@ -194,7 +202,7 @@ public class ReportAction extends BaseAction {
         return new ForwardResolution("/pages/admin/report.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.SKU_SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.SKU_SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateOrderReportExcel() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -208,7 +216,7 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.SKU_SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.SKU_SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateSKUSalesExcel() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -222,44 +230,44 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.ACCOUNTING_SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.ACCOUNTING_SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateAccountingSalesExcel() {
         /*
-        * try { SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); xlsFile = new File(adminDownloads +
-        * "/reports/accounting-sales-report-" + sdf.format(new Date()) + ".xls"); xlsFile =
-        * reportGenerator.generateSalesReportXsl(xlsFile.getPath(), startDate, endDate); addRedirectAlertMessage(new
-        * SimpleMessage("Sales report successfully generated.")); } catch (Exception e) { e.printStackTrace(); //To
-        * change body of catch statement use File | Settings | File Templates. addRedirectAlertMessage(new
-        * SimpleMessage("Sales report generation failed")); }
-        */
+         * try { SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); xlsFile = new File(adminDownloads +
+         * "/reports/accounting-sales-report-" + sdf.format(new Date()) + ".xls"); xlsFile =
+         * reportGenerator.generateSalesReportXsl(xlsFile.getPath(), startDate, endDate); addRedirectAlertMessage(new
+         * SimpleMessage("Sales report successfully generated.")); } catch (Exception e) { e.printStackTrace(); //To
+         * change body of catch statement use File | Settings | File Templates. addRedirectAlertMessage(new
+         * SimpleMessage("Sales report generation failed")); }
+         */
         return new HTTPResponseResolution();
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.ACCOUNTING_SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.ACCOUNTING_SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateAccountingSalesExcelForBusy() {
         /*
-        * try { SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); xlsFile = new File(adminDownloads +
-        * "/reports/sales-data-busy-" + sdf.format(new Date()) + ".xls"); xlsFile =
-        * reportGenerator.generateSalesReportXslForBusy(xlsFile.getPath(), startDate, endDate);
-        * addRedirectAlertMessage(new SimpleMessage("Sales report successfully generated.")); } catch (Exception e) {
-        * e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
-        * addRedirectAlertMessage(new SimpleMessage("Sales report generation failed")); }
-        */
+         * try { SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); xlsFile = new File(adminDownloads +
+         * "/reports/sales-data-busy-" + sdf.format(new Date()) + ".xls"); xlsFile =
+         * reportGenerator.generateSalesReportXslForBusy(xlsFile.getPath(), startDate, endDate);
+         * addRedirectAlertMessage(new SimpleMessage("Sales report successfully generated.")); } catch (Exception e) {
+         * e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
+         * addRedirectAlertMessage(new SimpleMessage("Sales report generation failed")); }
+         */
         return new HTTPResponseResolution();
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateSalesByDateReport() {
         List<OrderStatus> orderStatusList = orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForReporting());
         daySaleList = reportOrderService.findSaleForTimeFrame(orderStatusList, startDate, endDate);
         for (DaySaleDto daySaleDto : daySaleList) {
             /*
-            * Double orderLevelCouponAndRewardPoints =
-            * orderDao.getNetDiscountViaOrderLevelCouponAndRewardPoints(daySaleDto.getOrderDate()); if
-            * (orderLevelCouponAndRewardPoints != null) {
-            * daySaleDto.setSumOfHkPricePostAllDiscounts(daySaleDto.getSumOfHkPricePostAllDiscounts() +
-            * orderLevelCouponAndRewardPoints); }
-            */
+             * Double orderLevelCouponAndRewardPoints =
+             * orderDao.getNetDiscountViaOrderLevelCouponAndRewardPoints(daySaleDto.getOrderDate()); if
+             * (orderLevelCouponAndRewardPoints != null) {
+             * daySaleDto.setSumOfHkPricePostAllDiscounts(daySaleDto.getSumOfHkPricePostAllDiscounts() +
+             * orderLevelCouponAndRewardPoints); }
+             */
             /**
              * Commented COD/Offer/First-timer data as query were killing the report Need Optimisation here - may be
              * computed values need to kept somewhere. now SSD is there, then y fear --> but ssd ne bhi haar maan li
@@ -291,25 +299,25 @@ public class ReportAction extends BaseAction {
         return new ForwardResolution("/pages/admin/salesByDateReport.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateDetailedSalesDailyReport() {
         // TODO: #warehouse refactor this
 
         /*
-        * daySaleList = orderDao.findBasicCountSaleForTimeFrame(DateUtils.getStartOfPreviousDay(new Date()),
-        * DateUtils.getEndOfDay(new Date())); for (DaySaleDto daySaleDto : daySaleList) { Long codOrderCount = 0L;
-        * codOrderCount = orderDao.getOrderCount(daySaleDto.getOrderDate(),
-        * paymentModeDao.find(EnumPaymentMode.COD.getId())); daySaleDto.setCodTxnCount(codOrderCount); Long
-        * offerInstanceOrderCount = 0L; offerInstanceOrderCount =
-        * orderDao.getOrderCountByOfferInstance(daySaleDto.getOrderDate());
-        * daySaleDto.setOfferTxnCount(offerInstanceOrderCount); Long getFirstTimeTxnUsers = 0L; getFirstTimeTxnUsers =
-        * orderDao.getFirstTimeTxnUsers(daySaleDto.getOrderDate()); daySaleDto.setFirstTxnCount(getFirstTimeTxnUsers); }
-        */
+         * daySaleList = orderDao.findBasicCountSaleForTimeFrame(DateUtils.getStartOfPreviousDay(new Date()),
+         * DateUtils.getEndOfDay(new Date())); for (DaySaleDto daySaleDto : daySaleList) { Long codOrderCount = 0L;
+         * codOrderCount = orderDao.getOrderCount(daySaleDto.getOrderDate(),
+         * paymentModeDao.find(EnumPaymentMode.COD.getId())); daySaleDto.setCodTxnCount(codOrderCount); Long
+         * offerInstanceOrderCount = 0L; offerInstanceOrderCount =
+         * orderDao.getOrderCountByOfferInstance(daySaleDto.getOrderDate());
+         * daySaleDto.setOfferTxnCount(offerInstanceOrderCount); Long getFirstTimeTxnUsers = 0L; getFirstTimeTxnUsers =
+         * orderDao.getFirstTimeTxnUsers(daySaleDto.getOrderDate()); daySaleDto.setFirstTxnCount(getFirstTimeTxnUsers); }
+         */
 
         return new ForwardResolution("/pages/admin/detailedSalesDailyReport.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateSalesByDateReportForShippedProducts() {
 
         daySaleShipDateWiseDtoList = reportGenerator.generateSalesByDateReportForShippedProducts(startDate, endDate);
@@ -317,7 +325,7 @@ public class ReportAction extends BaseAction {
         return new ForwardResolution("/pages/admin/salesByDateReportForShippedItems.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateSalesByDateExcel() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -331,7 +339,7 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateSalesByDateForShippedProductsExcel() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -345,56 +353,56 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.MASTER_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.MASTER_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution generateMasterPerformanceReport() {
         // TODO: #warehouse refactor this
         orderLifecycleStateTransitionDtoList = shippingOrderReportingService.getOrderLifecycleStateTransitionDtoList(startDate, endDate);
         return new ForwardResolution("/pages/admin/masterPerformanceReport.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.COD_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.COD_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution getUnescalatedOrders() {
 
         // TODO: #warehouse refactor this
 
         /*
-        * List<Long> orderIds = orderDao.getActivityPerformedOrderIds(activityDate,
-        * EnumOrderLifecycleActivity.OrderPlaced.getId(), -1, 17, 0, 17); Calendar calendar = Calendar.getInstance();
-        * calendar.setTime(activityDate); if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
-        * calendar.add(Calendar.HOUR, -24); List<Long> sundayOrderIds =
-        * orderDao.getActivityPerformedOrderIds(calendar.getTime(), EnumOrderLifecycleActivity.OrderPlaced.getId(), -1,
-        * 17, 0, 17); if (sundayOrderIds != null && sundayOrderIds.size() > 0) { orderIds.addAll(sundayOrderIds); } }
-        * for (Long orderId : orderIds) { Order order = orderDao.find(orderId); if
-        * (order.getOrderStatus().getId().equals(EnumOrderStatus.Pending.getId())) { if
-        * (order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId()) ||
-        * order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.ON_DELIVERY.getId())) { List<LineItem>
-        * productLineItems = order.getProductLineItems(); try { if (productLineItems.size() > 0 &&
-        * productLineItems.get(0).getLineItemStatus().getId().equals(EnumLineItemStatus.ACTION_AWAITING.getId())) {
-        * Category basketCategory =
-        * productCatalogService.getTopLevelCategory(productLineItems.get(0).getProductVariant().getProduct());
-        * order.setBasketCategory(basketCategory.getDisplayName()); orderList.add(order); } } catch (Exception e) {
-        * //TODO } } } }
-        */
+         * List<Long> orderIds = orderDao.getActivityPerformedOrderIds(activityDate,
+         * EnumOrderLifecycleActivity.OrderPlaced.getId(), -1, 17, 0, 17); Calendar calendar = Calendar.getInstance();
+         * calendar.setTime(activityDate); if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+         * calendar.add(Calendar.HOUR, -24); List<Long> sundayOrderIds =
+         * orderDao.getActivityPerformedOrderIds(calendar.getTime(), EnumOrderLifecycleActivity.OrderPlaced.getId(), -1,
+         * 17, 0, 17); if (sundayOrderIds != null && sundayOrderIds.size() > 0) { orderIds.addAll(sundayOrderIds); } }
+         * for (Long orderId : orderIds) { Order order = orderDao.find(orderId); if
+         * (order.getOrderStatus().getId().equals(EnumOrderStatus.Pending.getId())) { if
+         * (order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId()) ||
+         * order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.ON_DELIVERY.getId())) { List<LineItem>
+         * productLineItems = order.getProductLineItems(); try { if (productLineItems.size() > 0 &&
+         * productLineItems.get(0).getLineItemStatus().getId().equals(EnumLineItemStatus.ACTION_AWAITING.getId())) {
+         * Category basketCategory =
+         * productCatalogService.getTopLevelCategory(productLineItems.get(0).getProductVariant().getProduct());
+         * order.setBasketCategory(basketCategory.getDisplayName()); orderList.add(order); } } catch (Exception e) {
+         * //TODO } } } }
+         */
 
         // this is a old comment not done while refactoring
         /*
-        * Set<Order> tmpOrderList = orderDao.getOrderLyingIdleInActionQueue(orderIds, activityDate, 17); for (Order
-        * order : tmpOrderList) { try { Category basketCategory =
-        * productCatalogService.getTopLevelCategory(order.getProductLineItems().get(0).getProductVariantId().getProduct());
-        * order.setBasketCategory(basketCategory.getDisplayName()); orderList.add(order); } catch (Exception e) {
-        * //TODO } }
-        */
+         * Set<Order> tmpOrderList = orderDao.getOrderLyingIdleInActionQueue(orderIds, activityDate, 17); for (Order
+         * order : tmpOrderList) { try { Category basketCategory =
+         * productCatalogService.getTopLevelCategory(order.getProductLineItems().get(0).getProductVariantId().getProduct());
+         * order.setBasketCategory(basketCategory.getDisplayName()); orderList.add(order); } catch (Exception e) {
+         * //TODO } }
+         */
         return new ForwardResolution("/pages/admin/unescalatedOrders.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.COD_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.COD_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution generateCODConfirmationReport() {
         CODUnConfirmedOrderList = reportGenerator.generateUnConfirmedOrderList(startDate, endDate);
         CODConfirmedOrderList = reportGenerator.generateConfirmedOrderList(startDate, endDate);
         return new ForwardResolution("/pages/admin/codConfirmationPerformaceReport.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateSalesReport() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -408,7 +416,7 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.CRM_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.CRM_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution generateCRMReport() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -419,13 +427,23 @@ public class ReportAction extends BaseAction {
             } else if (categories.size() == 0) {
 
                 // TODO: please change such queries does not make any sense do it this way
-                categories.add(categoryService.getCategoryByName(CategoryConstants.HOME_DEVICES));
-                categories.add(categoryService.getCategoryByName(CategoryConstants.DIABETES));
-                categories.add(categoryService.getCategoryByName(CategoryConstants.BABY));
-                categories.add(categoryService.getCategoryByName(CategoryConstants.NUTRITION));
-                categories.add(categoryService.getCategoryByName(CategoryConstants.PERSONAL_CARE));
-                categories.add(categoryService.getCategoryByName(CategoryConstants.EYE));
-                categories.add(categoryService.getCategoryByName(CategoryConstants.BEAUTY));
+                /*
+                 * categories.add(categoryService.getCategoryByName(CategoryConstants.HEALTH_DEVICES));
+                 * categories.add(categoryService.getCategoryByName(CategoryConstants.DIABETES));
+                 * categories.add(categoryService.getCategoryByName(CategoryConstants.BABY));
+                 * categories.add(categoryService.getCategoryByName(CategoryConstants.NUTRITION));
+                 * categories.add(categoryService.getCategoryByName(CategoryConstants.PERSONAL_CARE));
+                 * categories.add(categoryService.getCategoryByName(CategoryConstants.EYE));
+                 * categories.add(categoryService.getCategoryByName(CategoryConstants.BEAUTY));
+                 */
+
+                categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.HEALTH_DEVICES).getCategory());
+                categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.DIABETES).getCategory());
+                categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.BABY).getCategory());
+                categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.NUTRITION).getCategory());
+                categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.PERSONAL_CARE).getCategory());
+                categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.EYE).getCategory());
+                categories.add(CategoryCache.getInstance().getCategoryByName(CategoryConstants.BEAUTY).getCategory());
             }
             xlsFile = reportGenerator.generateCategorySalesReportXsl(xlsFile.getPath(), startDate, endDate, categories);
             addRedirectAlertMessage(new SimpleMessage("CRM report successfully generated."));
@@ -436,42 +454,42 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.CATEGORY_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.CATEGORY_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution generateCategoryPerformanceReportUI() {
 
         // TODO: # warehouse fix this
 
         /*
-        * System.out.println("categoryList: " + categoryList); List<Category> applicableCategories = new ArrayList<Category>();
-        * if (categoryList != null && categoryList.size() > 0) { for (String category : categoryList) { if (category !=
-        * null && !category.equals("")) { Category cat = categoryDao.getCategoryByName(category); if (cat != null)
-        * applicableCategories.add(cat); } } } if (applicableCategories.size() == 0) {
-        * applicableCategories.addAll(categoryDao.getPrimaryCategories()); } Double orderLevelDiscounts = 0D; Set<Order>
-        * distinctOrderBucket = new HashSet<Order>(); for (Category applicableCategory : applicableCategories) {
-        * orderList = orderDao.findCategoryPerformanceParametersForTimeFrame(startDate, endDate, applicableCategory);
-        * int distinctOrders = 0, mixedOrders = 0; for (Order order : orderList) { if (order.getProductLineItems() !=
-        * null && order.getProductLineItems().size() > 0) { if (order.getProductLineItems().size() == 1 &&
-        * !distinctOrderBucket.contains(order)) { distinctOrders++; totalDistinctOrders++;
-        * distinctOrderBucket.add(order); } else if (order.getProductLineItems().size() > 1) { Category oldCategory =
-        * null; boolean isMixOrder = false; for (LineItem lineItem : order.getProductLineItems()) { Category category =
-        * productCatalogService.getTopLevelCategory(lineItem.getProductVariant().getProduct()); // on 25th oct data, there is
-        * a particular product lineitem whose cat is null, have to check how, hence putting null check if (category !=
-        * null && oldCategory != null && !category.equals(oldCategory)) { mixedOrders++; isMixOrder = true; break; }
-        * oldCategory = category; } if (!isMixOrder && !distinctOrderBucket.contains(order)) { distinctOrders++;
-        * totalDistinctOrders++; distinctOrderBucket.add(order); } } } } CategoryPerformanceDto categoryPerformanceDto =
-        * orderDao.findCategoryWiseSalesForTimeFrame(startDate, endDate, applicableCategory);
-        * categoryPerformanceDto.setCategory(applicableCategory);
-        * categoryPerformanceDto.setDistinctOrders(distinctOrders); categoryPerformanceDto.setMixedOrders(mixedOrders);
-        * if (categoryPerformanceDto.getSumOfHkPricePostAllDiscounts() != null && orderLevelDiscounts != null) {
-        * categoryPerformanceDto.setSumOfHkPricePostAllDiscounts(categoryPerformanceDto.getSumOfHkPrice() -
-        * categoryPerformanceDto.getSumOfHkPricePostAllDiscounts() + orderLevelDiscounts); }
-        * categoryPerformanceList.add(categoryPerformanceDto); } totalOrders =
-        * orderDao.findOrdersForTimeFrame(startDate, endDate, applicableCategories).size();
-        */
+         * System.out.println("categoryList: " + categoryList); List<Category> applicableCategories = new ArrayList<Category>();
+         * if (categoryList != null && categoryList.size() > 0) { for (String category : categoryList) { if (category !=
+         * null && !category.equals("")) { Category cat = categoryDao.getCategoryByName(category); if (cat != null)
+         * applicableCategories.add(cat); } } } if (applicableCategories.size() == 0) {
+         * applicableCategories.addAll(categoryDao.getPrimaryCategories()); } Double orderLevelDiscounts = 0D; Set<Order>
+         * distinctOrderBucket = new HashSet<Order>(); for (Category applicableCategory : applicableCategories) {
+         * orderList = orderDao.findCategoryPerformanceParametersForTimeFrame(startDate, endDate, applicableCategory);
+         * int distinctOrders = 0, mixedOrders = 0; for (Order order : orderList) { if (order.getProductLineItems() !=
+         * null && order.getProductLineItems().size() > 0) { if (order.getProductLineItems().size() == 1 &&
+         * !distinctOrderBucket.contains(order)) { distinctOrders++; totalDistinctOrders++;
+         * distinctOrderBucket.add(order); } else if (order.getProductLineItems().size() > 1) { Category oldCategory =
+         * null; boolean isMixOrder = false; for (LineItem lineItem : order.getProductLineItems()) { Category category =
+         * productCatalogService.getTopLevelCategory(lineItem.getProductVariant().getProduct()); // on 25th oct data,
+         * there is a particular product lineitem whose cat is null, have to check how, hence putting null check if
+         * (category != null && oldCategory != null && !category.equals(oldCategory)) { mixedOrders++; isMixOrder =
+         * true; break; } oldCategory = category; } if (!isMixOrder && !distinctOrderBucket.contains(order)) {
+         * distinctOrders++; totalDistinctOrders++; distinctOrderBucket.add(order); } } } } CategoryPerformanceDto
+         * categoryPerformanceDto = orderDao.findCategoryWiseSalesForTimeFrame(startDate, endDate, applicableCategory);
+         * categoryPerformanceDto.setCategory(applicableCategory);
+         * categoryPerformanceDto.setDistinctOrders(distinctOrders); categoryPerformanceDto.setMixedOrders(mixedOrders);
+         * if (categoryPerformanceDto.getSumOfHkPricePostAllDiscounts() != null && orderLevelDiscounts != null) {
+         * categoryPerformanceDto.setSumOfHkPricePostAllDiscounts(categoryPerformanceDto.getSumOfHkPrice() -
+         * categoryPerformanceDto.getSumOfHkPricePostAllDiscounts() + orderLevelDiscounts); }
+         * categoryPerformanceList.add(categoryPerformanceDto); } totalOrders =
+         * orderDao.findOrdersForTimeFrame(startDate, endDate, applicableCategories).size();
+         */
         return new ForwardResolution("/pages/admin/categoryPerformanceReport.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.CATEGORY_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.CATEGORY_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution generateDailyCategoryPerformaceReportUI() {
 
         targetMrpSalesMap = CategoryConstants.targetMrpSalesMap;
@@ -492,7 +510,7 @@ public class ReportAction extends BaseAction {
         targetDailyMrpSalesMap.put(CategoryConstants.BEAUTY, CategoryConstants.BEAUTY_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.DIABETES, CategoryConstants.DIABETES_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.EYE, CategoryConstants.EYE_TARGET_SALES / numberOfDaysInMonth);
-        targetDailyMrpSalesMap.put(CategoryConstants.HOME_DEVICES, CategoryConstants.HOME_DEVICES_TARGET_SALES / numberOfDaysInMonth);
+        targetDailyMrpSalesMap.put(CategoryConstants.HEALTH_DEVICES, CategoryConstants.HEALTH_DEVICES_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.NUTRITION, CategoryConstants.NUTRITION_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.PERSONAL_CARE, CategoryConstants.PERSONAL_CARE_TARGET_SALES / numberOfDaysInMonth);
         targetDailyMrpSalesMap.put(CategoryConstants.SERVICES, CategoryConstants.SERVICES_TARGET_SALES / numberOfDaysInMonth);
@@ -503,34 +521,34 @@ public class ReportAction extends BaseAction {
         return new ForwardResolution("/pages/admin/categoryPerformanceDailyReport.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.CATEGORY_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.CATEGORY_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution generateSixHourlyCategoryPerformaceReportUI() {
 
         sixHourlyCategoriesOrderReportMap = reportGenerator.generateSixHourlyCategoryPerformaceReportUI();
         return new ForwardResolution("/pages/admin/categoryPerformanceSixHourlyReport.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.VIEW_RECONCILIATION_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_RECONCILIATION_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution generateReconciliationReportUI() {
         // TODO: # warehouse fix this
         /*
-        * orderList = orderDao.findReconciledOrdersForTimeFrame(startDate, endDate, orderStatus, paymentMode, codMode,
-        * reconciliationStatus); Long ms = 86400000L; Long shipmentDiffinDays = 0L; float totalDeliveredOrders = 0;
-        * Long deliveryDiffinDays = 0L; for (Order order : orderList) { if
-        * (order.getProductLineItems().get(0).getDeliveryDate() != null) { totalDeliveredOrders++; deliveryDiffinDays +=
-        * order.getProductLineItems().get(0).getDeliveryDate().getTime() -
-        * order.getProductLineItems().get(0).getShipDate().getTime(); } totalAmount += order.getPayment().getAmount();
-        * shipmentDiffinDays += order.getProductLineItems().get(0).getShipDate().getTime() -
-        * order.getPayment().getPaymentDate().getTime(); } if (totalDeliveredOrders == 0F) { totalDeliveredOrders = 1; }
-        * int orderSize = orderList.size(); if (orderSize == 0) { orderSize = 1; } avgDeliveryTime =
-        * BaseUtils.roundTwoDecimals((deliveryDiffinDays / new Float(ms)) / new Float(totalDeliveredOrders));
-        * avgShipmentTime = BaseUtils.roundTwoDecimals((shipmentDiffinDays / new Float(ms)) / new Float(orderSize));
-        * System.out.println(avgShipmentTime + avgDeliveryTime + totalAmount);
-        */
+         * orderList = orderDao.findReconciledOrdersForTimeFrame(startDate, endDate, orderStatus, paymentMode, codMode,
+         * reconciliationStatus); Long ms = 86400000L; Long shipmentDiffinDays = 0L; float totalDeliveredOrders = 0;
+         * Long deliveryDiffinDays = 0L; for (Order order : orderList) { if
+         * (order.getProductLineItems().get(0).getDeliveryDate() != null) { totalDeliveredOrders++; deliveryDiffinDays +=
+         * order.getProductLineItems().get(0).getDeliveryDate().getTime() -
+         * order.getProductLineItems().get(0).getShipDate().getTime(); } totalAmount += order.getPayment().getAmount();
+         * shipmentDiffinDays += order.getProductLineItems().get(0).getShipDate().getTime() -
+         * order.getPayment().getPaymentDate().getTime(); } if (totalDeliveredOrders == 0F) { totalDeliveredOrders = 1; }
+         * int orderSize = orderList.size(); if (orderSize == 0) { orderSize = 1; } avgDeliveryTime =
+         * BaseUtils.roundTwoDecimals((deliveryDiffinDays / new Float(ms)) / new Float(totalDeliveredOrders));
+         * avgShipmentTime = BaseUtils.roundTwoDecimals((shipmentDiffinDays / new Float(ms)) / new Float(orderSize));
+         * System.out.println(avgShipmentTime + avgDeliveryTime + totalAmount);
+         */
         return new ForwardResolution("/pages/admin/reconciliationReport.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.UPDATE_RECONCILIATION_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_RECONCILIATION_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution reconcile() {
         for (Order order : orderList) {
             orderDao.save(order);
@@ -539,7 +557,7 @@ public class ReportAction extends BaseAction {
         return new ForwardResolution("/pages/admin/reconciliationReport.jsp");
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.VIEW_RECONCILIATION_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_RECONCILIATION_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution generateReconciliationReport() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -553,7 +571,7 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.COD_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.COD_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution generateCODConfirmationReportXls() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -589,7 +607,7 @@ public class ReportAction extends BaseAction {
 
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.COURIER_DELIVERY_REPORTS}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.COURIER_DELIVERY_REPORTS }, authActionBean = AdminPermissionAction.class)
     public Resolution generateCourierReport() {
         try {
             if (courier == null) {
@@ -616,7 +634,7 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
-    @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateSaleForProductsByTaxAndStatusInRegion() {
 
         // daySaleShipDateWiseDtoList = reportGenerator.generateSalesByDateReportForShippedProducts(startDate, endDate);
@@ -696,7 +714,7 @@ public class ReportAction extends BaseAction {
             xlsWriter.addHeader("STOCK TRANSFER CHECKOUT", "STOCK TRANSFER CHECKOUT");
             xlsWriter.addHeader("STOCK TRANSFER CHECKIN", "STOCK TRANSFER CHECKIN");
             xlsWriter.addHeader("LOST DURING TRANSIT", "LOST DURING TRANSIT");
-//      EnumInvTxnType.TRANSIT_LOST
+            // EnumInvTxnType.TRANSIT_LOST
             productIdArray = productIdListCommaSeparated.split(",");
             for (String productId : productIdArray) {
                 stockReportDto = reportProductVariantService.getStockDetailsByProductVariant(productId, warehouse, startDate, endDate);
@@ -761,7 +779,8 @@ public class ReportAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
             return new HTTPResponseResolution();
-        } else return new ForwardResolution("/pages/admin/report.jsp");
+        } else
+            return new ForwardResolution("/pages/admin/report.jsp");
     }
 
     public Resolution generateExpiryAlertReport() {
@@ -865,7 +884,7 @@ public class ReportAction extends BaseAction {
             xlsWriter.addCell(xlsRow, purchaseOrder.getId());
             xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
             xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
-            if(purchaseOrder.getApprovedBy() != null) {
+            if (purchaseOrder.getApprovedBy() != null) {
                 xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy().getName());
             } else {
                 xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy());
@@ -880,18 +899,19 @@ public class ReportAction extends BaseAction {
             xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnStatus().getName());
             xlsWriter.addCell(xlsRow, productVariant.getMarkedPrice());
             xlsWriter.addCell(xlsRow, productVariant.getCostPrice());
-            xlsWriter.addCell(xlsRow, (productVariant.getMarkedPrice() - productVariant.getCostPrice())/productVariant.getCostPrice()*100);
+            xlsWriter.addCell(xlsRow, (productVariant.getMarkedPrice() - productVariant.getCostPrice()) / productVariant.getCostPrice() * 100);
 
             xlsRow++;
         }
         xlsWriter.writeData(xlsFile, "PurchaseOrder_Report");
 
     }
+
     public Resolution generatePOReportByVariant() {
         if (productIdListCommaSeparated == null) {
             List<GrnLineItem> grnLineItemList = getReportProductVariantService().getGrnLineItemForPurchaseOrder(null, warehouse, startDate, endDate);
             prepareXlsForPurchaseOrder(grnLineItemList);
-        }else {
+        } else {
             productIdArray = productIdListCommaSeparated.split(",");
             for (String productVariantId : productIdArray) {
                 ProductVariant productVariant = productVariantDao.getVariantById(productVariantId);
@@ -905,11 +925,59 @@ public class ReportAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
+    public Resolution generateReportBySOStatus() {
+        if (shippingOrderStatus == null) {
+            addRedirectAlertMessage(new SimpleMessage("Download complete"));
+            return new ForwardResolution("/pages/admin/report.jsp");
+        }
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+        List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
+        shippingOrderStatusList.add(shippingOrderStatus);
+        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList);
+        List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, true);
+        prepareXlsForShippingOrder(shippingOrders);
+        addRedirectAlertMessage(new SimpleMessage("Download complete"));
+        return new HTTPResponseResolution();
+    }
+
+    private void prepareXlsForShippingOrder(List<ShippingOrder> shippingOrderList) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        xlsFile = new File(adminDownloads + "/reports/SOreportByStatus.xls");
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+        int xlsRow = 1;
+        xlsWriter.addHeader("SHIPPING ORDER NUMBER", "SHIPPING ORDER NUMBER");
+        xlsWriter.addHeader("BASE OREDR NUMBER", "BASE OREDR NUMBER");
+        xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+        xlsWriter.addHeader("VARIANT ID", "VARIANT ID");
+        xlsWriter.addHeader("QTY", "QTY");
+        xlsWriter.addHeader("AMOUNT", "AMOUNT");
+        xlsWriter.addHeader("ORDER DATE", "ORDER DATE");
+        xlsWriter.writeData(xlsFile, "SO_StatusReport");
+
+        for (ShippingOrder shippingOrder : shippingOrderList) {
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                ProductVariant productVariant = lineItem.getSku().getProductVariant();
+                Order order = shippingOrder.getBaseOrder();
+                xlsWriter.addCell(xlsRow, shippingOrder.getId());
+                xlsWriter.addCell(xlsRow, order.getId());
+                xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
+                xlsWriter.addCell(xlsRow, productVariant.getId());
+                xlsWriter.addCell(xlsRow, lineItem.getQty());
+                xlsWriter.addCell(xlsRow, lineItem.getHkPrice());
+                if (order.getPayment() != null && order.getPayment().getPaymentDate() != null) {
+                    xlsWriter.addCell(xlsRow, sdf.format(order.getPayment().getPaymentDate()));
+                }
+                xlsRow++;
+            }
+        }
+        xlsWriter.writeData(xlsFile, "ShippingOrder_Status_Report");
+    }
+
     public Date getStartDate() {
         return startDate;
     }
 
-    @Validate (converter = CustomDateTypeConvertor.class)
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
@@ -918,7 +986,7 @@ public class ReportAction extends BaseAction {
         return endDate;
     }
 
-    @Validate (converter = CustomDateTypeConvertor.class)
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
@@ -1306,5 +1374,13 @@ public class ReportAction extends BaseAction {
 
     public void setReportProductVariantService(ReportProductVariantService reportProductVariantService) {
         this.reportProductVariantService = reportProductVariantService;
+    }
+
+    public ShippingOrderStatus getShippingOrderStatus() {
+        return shippingOrderStatus;
+    }
+
+    public void setShippingOrderStatus(ShippingOrderStatus shippingOrderStatus) {
+        this.shippingOrderStatus = shippingOrderStatus;
     }
 }

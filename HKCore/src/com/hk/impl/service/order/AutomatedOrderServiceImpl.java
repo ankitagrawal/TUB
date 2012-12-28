@@ -5,8 +5,10 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.UserCache;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -17,13 +19,12 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.OrderCategory;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
-import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -46,9 +47,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 public class AutomatedOrderServiceImpl implements AutomatedOrderService{
 
     @Autowired
-    private OrderManager orderManager;
-    @Autowired
-    private OrderService orderService;
+    private OrderService         orderService;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
@@ -77,6 +76,7 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
      * @param isSubscriptionOrder
      * @return
      */
+    @Transactional
     public Order placeOrder(Order order, Set<CartLineItem> cartLineItems, Address address, Payment payment, Store store, boolean isSubscriptionOrder){
         //first of all save the cartLine items
         order.setCartLineItems(cartLineItems);
@@ -92,7 +92,6 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         order=recalAndUpdateAmount(order);
 
         //update order payment status and order status in general
-        //orderManager.orderPaymentReceieved(payment);
         order.setGatewayOrderId(payment.getGatewayOrderId());
         order.setPayment(payment);
         // save order with placed status since amount has been applied
@@ -101,7 +100,10 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
 	    order.setCategories(categories);
 
         order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
-	    getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
+        //User adminUser = UserCache.getInstance().getAdminUser();
+        User adminUser = getUserService().getAdminUser();
+        getOrderLoggingService().logOrderActivity(order, adminUser,
+                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
 
 	    order=orderService.save(order);
         //finalize order -- create shipping order and update inventory
@@ -178,7 +180,9 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
             /**
              * Order lifecycle activity logging - Order split to shipping orders
              */
-            orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+            //User adminUser = UserCache.getInstance().getAdminUser();
+            User adminUser = getUserService().getAdminUser();
+            orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
@@ -193,14 +197,6 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
-    }
-
-    public OrderManager getOrderManager() {
-        return orderManager;
-    }
-
-    public void setOrderManager(OrderManager orderManager) {
-        this.orderManager = orderManager;
     }
 
     public OrderService getOrderService() {

@@ -263,7 +263,16 @@
   <span class="xsml gry">Payment :</span>
   <span
       class="paymentStatusName">${order.payment.paymentStatus != null ? order.payment.paymentStatus.name : 'N/A'}</span><br/>
-  <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
+    <span class="xsml gry">Mode :</span>
+  <span
+          class="paymentModeName">${order.payment.paymentMode != null ? order.payment.paymentMode.name : 'N/A'}</span><br/>
+    <c:if test="${order.payment.gateway != null && order.payment.issuer != null}">
+        <span class="xsml gry">Gateway :</span>  <span
+            class="paymentGatewayName">${order.payment.gateway.name}</span><br/>
+        <span class="xsml gry">Issuer :</span>
+        <span class="paymentModeName">${order.payment.issuer != null ? order.payment.issuer.name : 'N/A'}</span><br/>
+    </c:if>
+    <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
     <s:param name="order" value="${order.id}"/>
     Manage Payments
   </s:link>
@@ -505,7 +514,7 @@
             Status: ${shippingOrder.orderStatus.name} <br/>
             <c:if test="${shippingOrder.shipment !=null}">
               Track Link: <s:link beanclass="com.hk.web.action.core.order.TrackCourierAction" target="_blank">
-              <s:param name="courierId" value="${shippingOrder.shipment.courier.id}"/>
+              <s:param name="courierId" value="${shippingOrder.shipment.awb.courier.id}"/>
                <s:param name="shippingOrder" value="${shippingOrder.id}"/>
               <s:param name="trackingId" value="${shippingOrder.shipment.awb.awbNumber}"/>
               ${shippingOrder.shipment.awb.awbNumber}

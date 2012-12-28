@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.cache.CategoryCache;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
@@ -120,7 +121,9 @@ public class CreateOrSelectProductAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Secondary Category cannot be null"));
             return new ForwardResolution("/pages/admin/createOrSelectProduct.jsp");
         }
-        Category secondaryCat = getCategoryService().getCategoryByName(Category.getNameFromDisplayName(secondaryCategory));
+        //Category secondaryCat = getCategoryService().getCategoryByName(Category.getNameFromDisplayName(secondaryCategory));
+        Category secondaryCat = CategoryCache.getInstance().getCategoryByName(Category.getNameFromDisplayName(secondaryCategory)).getCategory();
+        
         if (secondaryCat == null) {
             addRedirectAlertMessage(new SimpleMessage("Please enter a valid Category in Secondary Category"));
             return new ForwardResolution("/pages/admin/createOrSelectProduct.jsp");
@@ -155,7 +158,9 @@ public class CreateOrSelectProductAction extends BaseAction {
             Category category;
             String name = getNameFromDisplayName(displayName);
             // String displayName = catStr.substring(catStr.indexOf(":") + 1);
-            category = getCategoryService().getCategoryByName(name);
+            //category = getCategoryService().getCategoryByName(name);
+            category = CategoryCache.getInstance().getCategoryByName(name).getCategory();
+            
             if (category == null) {
                 category = new Category();
                 category.setName(name);

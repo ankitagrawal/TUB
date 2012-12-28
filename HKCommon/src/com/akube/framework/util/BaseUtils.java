@@ -43,6 +43,7 @@ public class BaseUtils {
 	
     private static Logger logger = LoggerFactory.getLogger(BaseUtils.class);
     public static String newline = System.getProperty("line.separator");
+    public static String fileSeparator = System.getProperty("file.separator");
 
     public static Properties getPropertyFile(String propertyFileName) {
         Properties properties = null;
@@ -66,6 +67,10 @@ public class BaseUtils {
             }
         }
         return properties;
+    }
+
+    public static String md5Hash(String string,String salt,int hashIterations){
+        return new Md5Hash(string, salt, hashIterations).toBase64();
     }
 
     public static String passwordEncrypt(String password) {

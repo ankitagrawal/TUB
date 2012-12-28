@@ -13,6 +13,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.core.Pincode;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.FileBean;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -66,6 +74,10 @@ public class GenerateReconcilationReportAction extends BaseAction {
 	PaymentModeDao paymentModeDao;
 	@Autowired
 	XslGenerator xslGenerator;
+	@Autowired
+	PincodeService pincodeService;
+	@Autowired
+	ShippingOrderLifecycleService shippingOrderLifecycleService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloadsPath;
@@ -117,6 +129,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		xlsWriter.addHeader("NAME", "NAME");
 		xlsWriter.addHeader("CITY", "CITY");
 		xlsWriter.addHeader("PINCODE", "PINCODE");
+		xlsWriter.addHeader("ZONE", "ZONE");
 		xlsWriter.addHeader("PAYMENT", "PAYMENT");
 		xlsWriter.addHeader("TOTAL", "TOTAL");
 		xlsWriter.addHeader("COURIER", "COURIER");
@@ -125,17 +138,33 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		xlsWriter.addHeader("DELIVERY DATE", "DELIVERY DATE");
 		xlsWriter.addHeader("RECONCILED", "RECONCILED");
 		xlsWriter.addHeader("ORDER STATUS", "ORDER STATU");
+		xlsWriter.addHeader("RTO_COMMENTS", "RTO_COMMENTS");
 		xlsWriter.addHeader("BOX WEIGHT", "BOX WEIGHT");
 		xlsWriter.addHeader("BOX SIZE", "BOX SIZE");
 		xlsWriter.addHeader("WAREHOUSE", "WAREHOUSE");
 
 		int row = 1;
 		for (ReconcilationReportDto reconcilationReportDto : reconcilationReportDtoList) {
+			String rtoInitiatedComments = "";
+			ShippingOrder shippingOrder = reconcilationReportDto.getShippingOrder();
+
+			List<ShippingOrderLifecycle> shippingOrderLifecycleList =
+					getShippingOrderLifecycleService().getShippingOrderLifecycleBySOAndActivity(shippingOrder.getId(), EnumShippingOrderLifecycleActivity.RTO_Initiated.getId());
+			if (shippingOrderLifecycleList != null && shippingOrderLifecycleList.size() > 0) {
+				rtoInitiatedComments = shippingOrderLifecycleList.get(0).getComments();
+			}
+
 			xlsWriter.addCell(row, reconcilationReportDto.getInvoiceId());
 			xlsWriter.addCell(row, reconcilationReportDto.getOrderDate() != null ? simpleDateFormat.format(reconcilationReportDto.getOrderDate()) : "");
 			xlsWriter.addCell(row, reconcilationReportDto.getName());
 			xlsWriter.addCell(row, reconcilationReportDto.getCity());
 			xlsWriter.addCell(row, reconcilationReportDto.getPincode());
+			Pincode pincode = getPincodeService().getByPincode(reconcilationReportDto.getPincode());
+			if (pincode != null) {
+				xlsWriter.addCell(row, pincode.getZone().getName());
+			} else {
+				xlsWriter.addCell(row, "");
+			}
 			xlsWriter.addCell(row, reconcilationReportDto.getPayment());
 			xlsWriter.addCell(row, reconcilationReportDto.getTotal());
 			xlsWriter.addCell(row, reconcilationReportDto.getCourier().getName());
@@ -147,8 +176,9 @@ public class GenerateReconcilationReportAction extends BaseAction {
 				xlsWriter.addCell(row, reconcilationReportDto.getDeliveryDate() != null ? simpleDateFormat.format(reconcilationReportDto.getDeliveryDate()) : "");
 			}
 
-			xlsWriter.addCell(row, reconcilationReportDto.getReconciled());
+			xlsWriter.addCell(row, reconcilationReportDto.isReconciled() ? 'Y' : 'N');
 			xlsWriter.addCell(row, reconcilationReportDto.getOrderStatus());
+			xlsWriter.addCell(row, rtoInitiatedComments);
 			xlsWriter.addCell(row, reconcilationReportDto.getBoxWeight());
 			xlsWriter.addCell(row, reconcilationReportDto.getBoxSize());
 			xlsWriter.addCell(row, reconcilationReportDto.getWarehouse().getName());
@@ -364,5 +394,22 @@ public class GenerateReconcilationReportAction extends BaseAction {
 
 	public void setXslGenerator(XslGenerator xslGenerator) {
 		this.xslGenerator = xslGenerator;
+	}
+
+	public PincodeService getPincodeService() {
+		return pincodeService;
+	}
+
+	public void setPincodeService(PincodeService pincodeService) {
+		this.pincodeService = pincodeService;
+	}
+
+	public ShippingOrderLifecycleService getShippingOrderLifecycleService() {
+
+		return shippingOrderLifecycleService;
+	}
+
+	public void setShippingOrderLifecycleService(ShippingOrderLifecycleService shippingOrderLifecycleService) {
+		this.shippingOrderLifecycleService = shippingOrderLifecycleService;
 	}
 }

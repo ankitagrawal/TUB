@@ -1,6 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.hkDelivery.EnumConsignmentStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -25,10 +26,18 @@
                 var new_status = $(this).attr('name');
                 var consignment = $(this).attr('id');
                 consignment= consignment.substring(7);
+	             var onHoldReason = $('#on-hold-reason-'+consignment);
                 $('#'+consignment).val(new_status);
                 var new_status_text = $(this).text();
                 $('#current-status-'+consignment).text(new_status_text);
                 $('#new-'+consignment).val(new_status);
+	            if(new_status == <%=EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId()%>){
+
+		             onHoldReason.show();
+	            }
+	            else{
+		            onHoldReason.hide();
+	            }
             });
 
 /*
@@ -43,6 +52,30 @@
             $('#save-runsheet').click(function(){
                 createChangedConsignmentList();
             });
+
+	        $('.popup-expected-amount').click(function(event){
+		        var expected_amount = 0;
+		        $('.consignment-row').each(function(index){
+			        var payment_type = $(this).find('.payment-type').text();
+			        var cons_status = $(this).find('.cons-status').text();
+			        if(payment_type.toLowerCase() == "COD".toLowerCase()
+					        && cons_status.toLowerCase().indexOf("<%=EnumConsignmentStatus.ShipmentDelivered.getStatus()%>".toLowerCase()) != -1){
+						var current_amount_string= $(this).find('.amount').text();
+						var current_amount = (parseFloat(current_amount_string.toString().replace(/\D+/g,''), 10))/100;
+						expected_amount += current_amount;
+			        }
+					//check if reason is not null when shipment is on hold by customer
+			        var onHoldReason = $(this).find('.on-hold-reason').val();
+			        if(cons_status.indexOf("<%=EnumConsignmentStatus.ShipmentOnHoldByCustomer.getStatus()%>") != -1){
+				        if(onHoldReason=="" || !onHoldReason || onHoldReason==" "){
+					        alert("On hold by customer reason cannot be left blank, please select one !")
+					        event.preventDefault();
+					        return false;
+				        }
+			        }
+		        });
+		        alert("Current expected amount = "+expected_amount);
+	        });
 
             $('.closeConfirmationDialogue').click(function(event){
                 var confirm_action = confirm("Are you sure you want to close the runsheet?");
@@ -153,6 +186,7 @@
                     <th>Reconciliation Id</th>
                     <th>Status</th>
                     <th>Action</th>
+	                <th>Reason</th>
 
                 </tr>
                 </thead>
@@ -162,11 +196,11 @@
                         <td><s:hidden name="runsheetConsignments[${ctr.index}]" value="${consignment.id}"/>${ctr.index+1}</td>
                         <td>${consignment.awbNumber}</td>
                         <td>${consignment.cnnNumber}</td>
-                        <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
+                        <td class="amount"><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
                                               maxFractionDigits="2"/></td>
-                        <td>${consignment.paymentMode}</td>
+                        <td class="payment-type">${consignment.paymentMode}</td>
                         <td>${consignment.hkdeliveryPaymentReconciliation.id}</td>
-                        <td><s:hidden class="consignment-status" id= "${consignment.id}" name="runsheetConsignments[${ctr.index}].consignmentStatus"
+                        <td class="cons-status"><s:hidden class="consignment-status" id= "${consignment.id}" name="runsheetConsignments[${ctr.index}].consignmentStatus"
                                       value="${consignment.consignmentStatus.id}">
                             </s:hidden>
                             <span id="current-status-${consignment.id}">${consignment.consignmentStatus.status}</span>
@@ -183,13 +217,22 @@
                                  </a>&nbsp;&nbsp;
                              </c:forEach>
                         </td>
+	                    <td>
+			                    <s:select id="on-hold-reason-${consignment.id}" style="display:none;" name="consignmentOnHoldReason[${consignment.id}]"
+					                    class="on-hold-reason">
+			                    <option value="">-Select Reason-</option>
+				                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
+				                                               serviceProperty="customerOnHoldReasonsForHkDelivery"
+						                    />
+			                    </s:select>
+	                    </td>
                     </tr>
                 </c:forEach>
             </table>
             <c:if test="${runsheetAction.runsheet.runsheetStatus.id !=  20}" >
-                <s:submit id="save-runsheet" name="saveRunsheet" value="Save runsheet" />
-                <s:submit class="closeConfirmationDialogue" name="closeRunsheet" value="Close runsheet" />
-                <s:submit class="markAllConfirmationDialogue" name="markAllDelivered" value="Mark all as delivered"/>
+                <s:submit id="save-runsheet" name="saveRunsheet" value="Save runsheet" class="popup-expected-amount"/>
+                <s:submit class="popup-expected-amount closeConfirmationDialogue" name="closeRunsheet" value="Close runsheet" />
+                <s:submit class="popup-expected-amount markAllConfirmationDialogue" name="markAllDelivered" value="Mark all as delivered"/>
             </c:if>
         </s:form>
     </s:layout-component>

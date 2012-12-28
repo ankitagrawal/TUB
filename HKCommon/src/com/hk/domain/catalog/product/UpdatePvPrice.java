@@ -51,8 +51,8 @@ public class UpdatePvPrice implements java.io.Serializable {
 	private Date txnDate;
 
 
-	@Column (name = "updated", nullable = false, columnDefinition = "tinyint(1) default 0")
-	private boolean updated;
+	@Column (name = "status", nullable = false)
+	private Long status;
 
 	@Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "update_date", length = 19)
@@ -139,12 +139,12 @@ public class UpdatePvPrice implements java.io.Serializable {
 		this.txnDate = txnDate;
 	}
 
-	public boolean isUpdated() {
-		return this.updated;
+	public Long getStatus() {
+		return status;
 	}
 
-	public void setUpdated(boolean updated) {
-		this.updated = updated;
+	public void setStatus(Long status) {
+		this.status = status;
 	}
 
 	public Date getUpdateDate() {

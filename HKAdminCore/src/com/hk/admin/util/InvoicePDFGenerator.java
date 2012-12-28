@@ -1,24 +1,12 @@
 package com.hk.admin.util;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.dto.accounting.InvoiceLineItemDto;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.cache.CategoryCache;
 import com.hk.constants.core.EnumRole;
+import static com.hk.constants.core.HealthkartConstants.CompanyName.brightLifeCarePvtLtd;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.payment.EnumPaymentMode;
@@ -32,17 +20,23 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.catalog.CategoryService;
-import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class InvoicePDFGenerator {
@@ -116,7 +110,7 @@ public class InvoicePDFGenerator {
         boolean isCod = shippingOrder.isCOD();
         CourierServiceInfo courierServiceInfo = null;
 	 
-        if (EnumCourier.BlueDart_COD.getId().equals(shippingOrder.getShipment().getCourier().getId())) {
+        if (EnumCourier.BlueDart_COD.getId().equals(shippingOrder.getShipment().getAwb().getCourier().getId())) {
             courierServiceInfo = courierService.searchCourierServiceInfo(EnumCourier.BlueDart_COD.getId(), address.getPin(), isCod , false, false);             
             if (courierServiceInfo != null) {
                 routingCode = courierServiceInfo.getRoutingCode();
@@ -229,7 +223,7 @@ public class InvoicePDFGenerator {
         // addEmptyLine(copyrightsParagraph,1);
         
         if (shippingOrder.getBaseOrder().getUser().getRoles().contains(EnumRole.B2B_USER.getRoleName())) {
-            copyrightsParagraph.add(new Paragraph("Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur, Badshahpur |"
+            copyrightsParagraph.add(new Paragraph(brightLifeCarePvtLtd + " | Khasra No. 146/25/2/1, Jail Road, Dhumaspur, Badshahpur |"
                     + " Gurgaon, Haryana- 122101 | TIN:06101832036", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
         } else {
             copyrightsParagraph.add(new Paragraph("Aquamarine Healthcare Pvt. Ltd." + "|" + shippingOrder.getWarehouse().getLine1() + "|" + shippingOrder.getWarehouse().getLine2()
@@ -273,7 +267,9 @@ public class InvoicePDFGenerator {
         float[] widths = { 50f, 15f, 15f, 15f };
         orderDetailTable.setWidths(widths);
         orderDetailTable.setWidthPercentage(100f);
-        sexualCareCategory = getCategoryService().getCategoryByName("sexual-care");
+        
+        //sexualCareCategory = getCategoryService().getCategoryByName("sexual-care");
+        sexualCareCategory = CategoryCache.getInstance().getCategoryByName("sexual-care").getCategory();
 
         PdfPCell c1 = new PdfPCell(new Phrase("Item", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD)));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);

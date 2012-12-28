@@ -4,6 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.cache.UserCache;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.domain.order.ReplacementOrderReason;
+import com.hk.pact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +16,12 @@ import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.user.User;
 import com.hk.helper.ReplacementOrderHelper;
 import com.hk.helper.ShippingOrderHelper;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 
@@ -30,14 +36,19 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     @Autowired
     LineItemDao                        lineItemDao;
     @Autowired
-    BaseDao                            baseDao;
+    ReplacementOrderDao                replacementOrderDao;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private ReconciliationStatusDao    reconciliationStatusDao;
+	@Autowired
+	UserService                        userService;
+    
 
-    public void createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto) {
+    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason) {
         Set<LineItem> lineItemSet = new HashSet<LineItem>();
+        //User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+        User loggedOnUser = userService.getLoggedInUser();
         ReplacementOrder replacementOrder = ReplacementOrderHelper.getReplacementOrderFromShippingOrder(shippingOrder, shippingOrderStatusService, reconciliationStatusDao);
         for (LineItem lineItem : lineItems) {
             if (lineItem.getQty() != 0) {
@@ -60,27 +71,35 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         replacementOrder.setLineItems(lineItemSet);
         replacementOrder.setAmount(ShippingOrderHelper.getAmountForSO(replacementOrder));
         replacementOrder.setRto(isRto);
+	    replacementOrder.setReplacementOrderReason(replacementOrderReason);
 
         replacementOrder.setRefShippingOrder(shippingOrder);
-        replacementOrder = (ReplacementOrder) getBaseDao().save(replacementOrder);
-        ShippingOrderHelper.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
-        getBaseDao().saveOrUpdate(replacementOrder);
+        replacementOrder = (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
+        shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
+	    replacementOrder.getBaseOrder().setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
+
+	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
+	    shippingOrderService.logShippingOrderActivity(replacementOrder, loggedOnUser,
+				        EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
+				        "Replacement order created for shipping order: "+shippingOrder.getGatewayOrderId()+" .Status of old shipping order: "+shippingOrder.getOrderStatus().getName());
+
+	    shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser,
+			    EnumShippingOrderLifecycleActivity.RO_Created.asShippingOrderLifecycleActivity(),
+			    "Replacement order created. Gateway order Id of replacement order: "+replacementOrder.getGatewayOrderId());
+        return replacementOrder;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
+    @Override
+    public List<ReplacementOrder> getReplacementOrderForRefShippingOrder(Long refShippingOrderId) {
+        return getReplacementOrderDao().getReplacementOrderFromShippingOrder(refShippingOrderId);
     }
 
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
+    public ReplacementOrderDao getReplacementOrderDao() {
+        return replacementOrderDao;
     }
 
     public ShippingOrderStatusService getShippingOrderStatusService() {
         return shippingOrderStatusService;
-    }
-
-    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-        this.shippingOrderStatusService = shippingOrderStatusService;
     }
 
     public ReconciliationStatusDao getReconciliationStatusDao() {
@@ -90,4 +109,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     public void setReconciliationStatusDao(ReconciliationStatusDao reconciliationStatusDao) {
         this.reconciliationStatusDao = reconciliationStatusDao;
     }
+
+    
+    
+    
 }
