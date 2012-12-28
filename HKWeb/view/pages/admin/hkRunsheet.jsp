@@ -113,6 +113,7 @@
 
         <fieldset class="right_label">
         <legend>Runsheet</legend>
+        <c:set var="onHoldByCustomerId" value="<%=EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId()%>"/>
         <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction">
             <s:hidden name="runsheet" value="${runsheetAction.runsheet.id}"/>
 
@@ -208,6 +209,7 @@
                         <input type="hidden" class="new-status" id="new-${consignment.id}" value="${consignment.consignmentStatus.id}" />
                         </td>
                         <td>
+	                    
                              <c:forEach items="${runsheetAction.consignmentStatuses}" var="consignmentStatus" varStatus="statusCtr">
                                  <a href="#" class="linkbutton consignment-status-button" id= "status-${consignment.id}" name="${consignmentStatus.id}">
                                     ${consignmentStatus .status}
@@ -218,6 +220,18 @@
                              </c:forEach>
                         </td>
 	                    <td>
+		                    <c:choose>
+		                    <c:when test="${runsheetAction.consignmentOnHoldReason[consignment] !=null
+		                    && consignment.consignmentStatus.id== onHoldByCustomerId}">
+			                    <s:select id="" name="consignmentOnHoldReason[${consignment.id}]"
+					                    class="on-hold-reason">
+			                    <option value="">-Select Reason-</option>
+				                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
+				                                               serviceProperty="customerOnHoldReasonsForHkDelivery"
+						                    />
+			                    </s:select>
+		                    </c:when>
+		                    <c:otherwise>
 			                    <s:select id="on-hold-reason-${consignment.id}" style="display:none;" name="consignmentOnHoldReason[${consignment.id}]"
 					                    class="on-hold-reason">
 			                    <option value="">-Select Reason-</option>
@@ -225,6 +239,8 @@
 				                                               serviceProperty="customerOnHoldReasonsForHkDelivery"
 						                    />
 			                    </s:select>
+		                    </c:otherwise>
+		                    </c:choose>
 	                    </td>
                     </tr>
                 </c:forEach>

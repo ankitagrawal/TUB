@@ -3,6 +3,7 @@ package com.hk.admin.impl.dao.hkDelivery;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.hkDelivery.*;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -12,12 +13,6 @@ import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.hkDelivery.ConsignmentStatus;
-import com.hk.domain.hkDelivery.ConsignmentTracking;
-import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.Runsheet;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.impl.dao.BaseDaoImpl;
 
@@ -104,6 +99,19 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
          String query = "from ConsignmentTracking ct where ct.consignment.id = :consignmentId";
         return (List<ConsignmentTracking>) findByNamedParams(query,new String[]{"consignmentId"},new Object[]{consignment.getId()});
     }
+
+	public ConsignmentTracking getConsignmentTrackingByRunsheetAndStatus(Consignment consignment, Runsheet runsheet, ConsignmentLifecycleStatus consignmentLifecycleStatus){
+		String query = "from ConsignmentTracking ct where ct.consignment.id = :consignmentId and " +
+				"ct.runsheet.id = :runsheetId and ct.consignmentLifecycleStatus.id = :consignmentLifecycleStatusId " +
+				"order by ct.createDate desc";
+
+		List<ConsignmentTracking> consignmentTrackingList = (List<ConsignmentTracking>) findByNamedParams(query, new String[]{"consignmentId", "runsheetId", "consignmentLifecycleStatusId"},
+				new Object[]{consignment.getId(), runsheet.getId(), consignmentLifecycleStatus.getId()});
+		if(consignmentTrackingList != null && consignmentTrackingList.size() > 0){
+			return consignmentTrackingList.get(0);
+		}
+		return null;
+	}
 
     @Override
     public ShippingOrder getShippingOrderFromConsignment(Consignment consignment) {

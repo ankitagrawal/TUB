@@ -10765,4 +10765,12 @@
     <changeSet author="Tarun (generated)" id="1356513899742-1">
         <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="shipment"/>
     </changeSet>
+    <changeSet author="Tarun (generated)" id="1356676742452-1">
+        <addColumn tableName="consignment_tracking">
+            <column name="runsheet_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1356676742452-2">
+        <addForeignKeyConstraint baseColumnNames="runsheet_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_runsheet1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
