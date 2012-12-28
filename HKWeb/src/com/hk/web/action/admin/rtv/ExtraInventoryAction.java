@@ -326,7 +326,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     }
 
     noCache();
-    return new ForwardResolution(ExtraInventoryAction.class, "generatePO").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryId",extraInventoryId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
+    return new RedirectResolution(ExtraInventoryAction.class, "generatePO").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryId",extraInventoryId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
   }
 
 
