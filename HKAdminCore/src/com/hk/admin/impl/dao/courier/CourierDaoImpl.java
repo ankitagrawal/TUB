@@ -63,12 +63,12 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 		List<String> courierNameList = null;
 		if (courierName != null) {
 			courierNameList = new ArrayList<String>();
-			courierNameList.add(courierName);
+			courierNameList.add(courierName.trim());
 		}
 		List<String> courierGroupList = null;
 		if (courierGroup != null) {
 			courierGroupList = new ArrayList<String>();
-			courierGroupList.add(courierGroup);
+			courierGroupList.add(courierGroup.trim());
 		}
 		return list(getCourierCriteria(null, courierNameList, courierGroupList, disabled), page, perPage);
 	}
