@@ -51,7 +51,6 @@ public class RTVAction extends BasePaginatedAction{
   private RtvNote rtvNote;
   private ExtraInventory extraInventory;
   private Long extraInventoryId;
-  boolean reconciled;
   private EnumRtvNoteStatus enumRtvNoteStatus;
 
   @DefaultHandler
@@ -61,7 +60,7 @@ public class RTVAction extends BasePaginatedAction{
       if(enumRtvNoteStatus!=null){
       rtvNoteStatus = enumRtvNoteStatus.asRtvNoteStatus();
       }
-      rtvNotePage = getRtvNoteService().searchRtvNote(rtvNoteId,extraInventory,reconciled,rtvNoteStatus, getPageNo(), getPerPage());
+      rtvNotePage = getRtvNoteService().searchRtvNote(rtvNoteId,extraInventory,rtvNoteStatus, getPageNo(), getPerPage());
       rtvNotes = rtvNotePage.getList();
       return new ForwardResolution("/pages/admin/rtvList.jsp");
   }
@@ -82,7 +81,6 @@ public class RTVAction extends BasePaginatedAction{
     HashSet<String> params = new HashSet<String>();
     params.add("rtvNoteId");
     params.add("extraInventoryId");
-    params.add("reconciled");
     params.add("enumRtvNoteStatus");
     return params;
   }
@@ -111,13 +109,6 @@ public class RTVAction extends BasePaginatedAction{
     this.rtvNotes = rtvNotes;
   }
 
-  public boolean isReconciled() {
-    return reconciled;
-  }
-
-  public void setReconciled(boolean reconciled) {
-    this.reconciled = reconciled;
-  }
 
   public EnumRtvNoteStatus getEnumRtvNoteStatus() {
     return enumRtvNoteStatus;

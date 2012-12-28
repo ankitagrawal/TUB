@@ -27,12 +27,6 @@
               <s:form beanclass="com.hk.web.action.admin.rtv.RTVAction">
                 <label>RTV ID:</label><input type="text" name="rtvNoteId"/>
                 <label>Extra Inventory ID:</label><input type="text" name="extraInventoryId"/>
-                <label>Reconciled:</label>
-                  <select name="reconciled">
-                      <option value="" selected="selected">-ALL-</option>
-                      <option value="true">Yes</option>
-                      <option value="false">No</option>
-                  </select>
                 <label>Status:</label>
                   <select name="enumRtvNoteStatus">
                       <option selected="selected" value="">---ALL---</option>
@@ -55,7 +49,6 @@
                 <th>Rtv Note Status</th>
                 <th>Created By</th>
                 <th>is Debit To Supplier</th>
-                <th>Reconciled</th>
                 <th>Create Date</th>
                 <th>Update Date</th>
                 <th>Remarks</th>
@@ -81,9 +74,6 @@
                 </td>
                 <td>
                     ${rtvNote.debitToSupplier}
-                </td>
-                <td>
-                    ${rtvNote.reconciled}
                 </td>
                 <td>
                     ${rtvNote.createDate}

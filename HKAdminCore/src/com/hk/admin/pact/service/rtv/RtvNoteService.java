@@ -18,7 +18,7 @@ public interface RtvNoteService {
 
   public RtvNote getRtvNoteByExtraInventory(Long extraInventoryId);
 
-  public Page searchRtvNote(Long rtvNoteId, ExtraInventory extraInventory, Boolean reconciled, RtvNoteStatus rtvNoteStatus, int pageNo, int perPage);
+  public Page searchRtvNote(Long rtvNoteId, ExtraInventory extraInventory, RtvNoteStatus rtvNoteStatus, int pageNo, int perPage);
 
   public RtvNote save(RtvNote rtvNote);
 }

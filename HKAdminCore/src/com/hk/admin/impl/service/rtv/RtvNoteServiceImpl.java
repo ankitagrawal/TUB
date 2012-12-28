@@ -34,16 +34,13 @@ public class RtvNoteServiceImpl implements RtvNoteService {
      return (RtvNote) getBaseDao().findUniqueByNamedQueryAndNamedParam("getRtvNoteByExtraInventory", new String[]{"extraInventoryId"}, new Object[]{extraInventoryId});
    }
 
-  public Page searchRtvNote(Long rtvNoteId, ExtraInventory extraInventory, Boolean reconciled, RtvNoteStatus rtvNoteStatus, int pageNo, int perPage){
+  public Page searchRtvNote(Long rtvNoteId, ExtraInventory extraInventory, RtvNoteStatus rtvNoteStatus, int pageNo, int perPage){
     DetachedCriteria detachedCriteria = DetachedCriteria.forClass(RtvNote.class);
       if(rtvNoteId!=null){
         detachedCriteria.add(Restrictions.eq("id",rtvNoteId));
       }
     if(extraInventory!=null){
         detachedCriteria.add(Restrictions.eq("extraInventory",extraInventory));
-    }
-     if(reconciled!=null && reconciled){
-       detachedCriteria.add(Restrictions.eq("reconciled",reconciled));
     }
     if(rtvNoteStatus!=null){
       detachedCriteria.add(Restrictions.eq("rtvNoteStatus",rtvNoteStatus));

@@ -103,8 +103,10 @@
                         saveObj.show();
                         return false;
                     }
+                    costPrice = parseFloat(costPrice);
                     var mrp = $(this).parent().parent().children('td').children('.mrp').val();
-                    if(mrp<costPrice){
+                    mrp = parseFloat(mrp);
+                    if(mrp <= costPrice){
                         alert("MRP can't be less than Cost Price");
                         bool = false;
                         $(this).val("");
