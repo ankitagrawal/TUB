@@ -106,6 +106,9 @@ public class PermissionConstants {
 	public static final String EDIT_PAYMENT_HISTORY                  ="EDIT_PAYMENT_HISTORY";
 	public static final String POPULATE_BUSY_DATA                    ="POPULATE_BUSY_DATA";
 
+	public static final String DISPATCH_LOT_OPERATIONS               ="DISPATCH_LOT_OPERATIONS";
+
     public static final String  VIEW_DROP_SHIPPING_QUEUE             = "VIEW_DROP_SHIPPING_QUEUE";
-    public static final String  UPDATE_DROP_SHIPPING_QUEUE           = "UPDATE_DROP_SHIPPING_QUEUE";
+    public static final String  UPDATE_DROP_SHIPPING_QUEUE           = "UPDATE_DROP_SHIPPING_QUEUE"; 
+    
 }

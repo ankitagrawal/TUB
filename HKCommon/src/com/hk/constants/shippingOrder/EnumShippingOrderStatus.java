@@ -147,7 +147,8 @@ public enum EnumShippingOrderStatus {
         return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.asShippingOrderStatus(),
                 EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus(),
                 EnumShippingOrderStatus.SO_Returned.asShippingOrderStatus(),
-                EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus());
+                EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus(),
+	            EnumShippingOrderStatus.RTO_Initiated.asShippingOrderStatus());
     }
 
     public static List<Long> getStatusForSearchOrderAndEnterCourierInfo() {

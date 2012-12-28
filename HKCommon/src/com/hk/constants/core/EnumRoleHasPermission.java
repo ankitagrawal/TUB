@@ -100,7 +100,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
 		            EnumPermission.ADD_HUB,
-		            EnumPermission.POPULATE_BUSY_DATA
+		            EnumPermission.POPULATE_BUSY_DATA,
+		            EnumPermission.DISPATCH_LOT_OPERATIONS
             )
     ),
 
@@ -157,7 +158,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.REPORT_ADMIN,
                     EnumPermission.ASSIGN_BIN,
                     EnumPermission.HK_EMPLOYEE,
-                    EnumPermission.CREATE_EDIT_SKU
+                    EnumPermission.CREATE_EDIT_SKU,
+		            EnumPermission.DISPATCH_LOT_OPERATIONS
             )
     ),
 
@@ -438,7 +440,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.SELECT_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-		            EnumPermission.ADD_HUB
+		            EnumPermission.ADD_HUB,
+		            EnumPermission.DISPATCH_LOT_OPERATIONS
             )
     ),
     HK_DELIVERY_HUB_MANAGER(
@@ -451,7 +454,8 @@ public enum EnumRoleHasPermission {
 
                     EnumPermission.VIEW_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+		            EnumPermission.DISPATCH_LOT_OPERATIONS
             )
     ),
 

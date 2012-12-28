@@ -169,6 +169,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 						trackingId = awb.getAwbNumber();
 					}
 				}
+				if (availableCouriers == null || availableCouriers.isEmpty() || suggestedCourier == null) {
+					trackingId = null;
+				} else if (availableCouriers != null && suggestedCourier != null) {
+					if (!(availableCouriers.contains(suggestedCourier))) {
+						trackingId = null;
+					}
+				}
 
 			} else {
 				addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
@@ -248,6 +255,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 		shipment.setAwb(finalAwb);
 		shipment.setShippingOrder(shippingOrder);
 		shippingOrder.setShipment(shipment);
+		if(shipment.getZone() == null){
+			Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			shipment.setZone(pinCode.getZone());
+		}
 		shipmentService.save(shipment);
 		if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
 			shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
