@@ -17,7 +17,7 @@ import com.hk.domain.core.Tax;
  */
 
 @Entity
-@Table(name = "extra_inventory_line_item")
+@Table(name = "extra_inventory_line_item", uniqueConstraints = @UniqueConstraint(columnNames = {"extra_inventory_id", "sku_id"}))
 
 @NamedQueries({
     @NamedQuery(name = "getExtraInventoryLineItemsByExtraInventoryId", query = "select eilt from ExtraInventoryLineItem eilt where extraInventory.id = :extraInventoryId"),

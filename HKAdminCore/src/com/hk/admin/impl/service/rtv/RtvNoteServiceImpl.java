@@ -42,7 +42,7 @@ public class RtvNoteServiceImpl implements RtvNoteService {
     if(extraInventory!=null){
         detachedCriteria.add(Restrictions.eq("extraInventory",extraInventory));
     }
-     if(reconciled!=null){
+     if(reconciled!=null && reconciled){
        detachedCriteria.add(Restrictions.eq("reconciled",reconciled));
     }
     if(rtvNoteStatus!=null){

@@ -74,6 +74,7 @@
             });
 
             $("#save").click(function(){
+                var saveObj = $(this);
                 $(this).hide();
                 var bool = true;
                 $('.productName').each(function(){
@@ -81,6 +82,7 @@
                     if(product == null || product.trim(product) == ""){
                         alert("Product Name can't be left Empty");
                         bool = false;
+                        saveObj.show();
                         return false;
                     }
                 });
@@ -89,6 +91,7 @@
                     if(mrp==null || mrp.trim(mrp) == "" || isNaN(mrp)){
                         alert("Enter MRP in correct format.");
                         bool = false;
+                        saveObj.show();
                         return false;
                     }
                 });
@@ -97,8 +100,19 @@
                     if(costPrice == null || costPrice.trim(costPrice) == "" || isNaN(costPrice)){
                         alert("Enter Cost Price in correct format.");
                         bool = false;
+                        saveObj.show();
                         return false;
                     }
+                    var mrp = $(this).parent().parent().children('td').children('.mrp').val();
+                    if(mrp<costPrice){
+                        alert("MRP can't be less than Cost Price");
+                        bool = false;
+                        $(this).val("");
+                        $(this).parent().parent().children('td').children('.mrp').val("");
+                        saveObj.show();
+                        return false;
+                    }
+
                 });
                 $(".variantId").each(function(){
                     var variant = $(this).val();
@@ -106,6 +120,7 @@
                     if(variant == null || variant.trim(variant) == ""){
                         alert("Variant Id can't be left Empty.");
                         bool = false;
+                        saveObj.show();
                         return false;
                     }
                     else if(isNaN(variant)){
@@ -119,6 +134,7 @@
                                 obj.val("");
                                 obj.parent().parent().children('td.skuId').children('.skus').val("");
                                 bool = false;
+                                saveObj.show();
                                 return false;
                             }
                         }
@@ -130,6 +146,7 @@
                     if (quantity == null || quantity.trim(quantity) == "" || isNaN(quantity)) {
                         alert("Please enter a valid quantity.");
                         bool = false;
+                        saveObj.show();
                         return false;
                     }
                 });

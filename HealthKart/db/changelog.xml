@@ -10765,4 +10765,10 @@
     <changeSet author="Tarun (generated)" id="1356513899742-1">
         <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="shipment"/>
     </changeSet>
+    <changeSet author="Shrey (generated)" id="1356699493647-1">
+        <createIndex indexName="uniq_exinventory_sku" tableName="extra_inventory_line_item" unique="true">
+            <column name="sku_id"/>
+            <column name="extra_inventory_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
