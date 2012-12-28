@@ -10792,4 +10792,7 @@
 			DROP table sku_temp;
 		</sql>
 	</changeSet>
+    <changeSet author="Rohit (generated)" id="1356676950361-1">
+        <addNotNullConstraint columnDataType="INT" columnName="sku_item_status_id" tableName="sku_item"/>
+    </changeSet>
 </databaseChangeLog>
