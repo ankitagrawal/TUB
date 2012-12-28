@@ -121,6 +121,16 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       else if(extraInventoryLineItem.getSku()!=null && skus.contains(extraInventoryLineItem.getSku().getId())){
         if(extraInventory!=null){
           extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+            rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
+            if(rtvNote!=null){
+              if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+                reconciledStatus = "reconciled";
+              }
+            }
+          purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
+          if(purchaseOrder!=null){
+            newPurchaseOrderId = purchaseOrder.getId();
+          }
         }
         noCache();
         addRedirectAlertMessage(new SimpleMessage("Same Sku is present more than once !!!! "));
@@ -292,31 +302,31 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   public Resolution createPO(){
     extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
-      extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-      if(extraInventory != null){
-        rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
-        if(rtvNote!=null){
-          if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
-            reconciledStatus = "reconciled";
-          }
+    extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+    if(extraInventory != null){
+      rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
+      if(rtvNote!=null){
+        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+          reconciledStatus = "reconciled";
         }
       }
+    }
 //    List<Long> skus = new ArrayList<Long>();
-      //checking if one of sku is null
-      for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
-        if(extraInventoryLineItem!=null){
-          extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
-          if(extraInventoryLineItem.getSku()==null){
-            noCache();
-            addRedirectAlertMessage(new SimpleMessage("One of the selected Line Item sku is null, please Enter Sku and then press create PO !!!"));
-            return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
-          }
-//        skus.add(extraInventoryLineItem.getSku().getId());
+    //checking if one of sku is null
+    for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
+      if(extraInventoryLineItem!=null){
+        extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
+        if(extraInventoryLineItem.getSku()==null){
+          noCache();
+          addRedirectAlertMessage(new SimpleMessage("One of the selected Line Item sku is null, please Enter Sku and then press create PO !!!"));
+          return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
         }
+//        skus.add(extraInventoryLineItem.getSku().getId());
       }
+    }
 
-      noCache();
-      return new ForwardResolution(ExtraInventoryAction.class, "generatePO").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryId",extraInventoryId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
+    noCache();
+    return new ForwardResolution(ExtraInventoryAction.class, "generatePO").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId).addParameter("extraInventoryId",extraInventoryId).addParameter("extraInventoryLineItemsSelected",extraInventoryLineItemsSelected);
   }
 
 
