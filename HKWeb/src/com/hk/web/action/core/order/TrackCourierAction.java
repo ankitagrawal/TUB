@@ -79,8 +79,9 @@ public class TrackCourierAction extends BaseAction {
                 resolution = new RedirectResolution("http://trackntrace.aflwiz.com/aflwizhtmltrack", false).addParameter("shpntnum", trackingId);
                 break;
             case Speedpost:
-                resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
-                break;
+                //resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
+                resolution = new RedirectResolution("http://services.ptcmysore.gov.in/Speednettracking/Track.aspx", false).addParameter("articlenumber", trackingId);
+				break;
             case FirstFLight:
                 resolution = new RedirectResolution("http://www.firstflight.net/n_contrac_new.asp", false).addParameter("tracking1", trackingId);
                 break;
@@ -193,6 +194,11 @@ public class TrackCourierAction extends BaseAction {
 				resolution = getStatusForQuantium();
 				break;
 
+			case IndiaOnTime:
+				courierName = CourierConstants.INDIAONTIME;
+				resolution = new RedirectResolution("http://www.indiaontime.com/track-awb.php", false).addParameter("awbno", trackingId);
+				break;
+			
             default:
                 resolution = new RedirectResolution("/pages/trackShipment.jsp");
 
