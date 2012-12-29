@@ -19,6 +19,7 @@ public enum EnumProductReferrer {
   mobile_search(15L, "mobile-search"),
   replenish_email(16L, "replenish-email"),
   notify_email(17L, "notify-email"),
+  email_newsletter(18L, "email_newsletter"),
 	;
 
   private String name;
