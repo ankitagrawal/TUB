@@ -45,7 +45,7 @@
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/main_banner.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/grooming.jpg" />
 
  <div class="cl"></div>
 		<div class="pages">
