@@ -234,7 +234,7 @@ public class MasterPincodeAction extends BaseAction {
 			}
 			addRedirectAlertMessage(new SimpleMessage("Pincode region saved"));
 		}
-		return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+		return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
 	}
 
 	public Resolution searchPincodeRegion() {
