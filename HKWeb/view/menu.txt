@@ -80,9 +80,9 @@
 --/nutrition/specialty-nutrition/healthy-food  :Healthy Food
 ---/nutrition/specialty-nutrition/healthy-food/snacks
 ---/nutrition/specialty-nutrition/healthy-food/cereals
----/nutrition/specialty-nutrition/healhty-food/bars
----/nutrition/specialty-nutrition/healhty-food/food-preparations
----/nutrition/specialty-nutrition/healhty-food/daily-need       :Daily Need
+---/nutrition/specialty-nutrition/healthy-food/bars
+---/nutrition/specialty-nutrition/healthy-food/food-preparations
+---/nutrition/specialty-nutrition/healthy-food/daily-need       :Daily Need
 --/nutrition/specialty-nutrition/infants  : Infants
 --/nutrition/specialty-nutrition/kids  :Kids
 --/nutrition/specialty-nutrition/mother : Mother
