@@ -2,7 +2,6 @@ package com.akube.framework.stripes.action;
 
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.controller.StripesFilter;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
@@ -10,11 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.service.PaymentGatewayWrapper;
-import com.paypal.sdk.core.nvp.NVPDecoder;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-import java.io.IOException;
 
 /**
  * Extend this action for any action that will send and receive requests to a payment gateway.<br/> Author: Kani Date:

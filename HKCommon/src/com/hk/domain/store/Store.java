@@ -27,6 +27,9 @@ public class Store implements Serializable {
     @Column(name = "prefix", nullable = false, length = 45)
     private String prefix;
 
+    @Column(name ="callback_rest_url", length = 100)
+    private String callbackRestUrl;
+
     public Long getId() {
         return id;
     }
@@ -49,6 +52,14 @@ public class Store implements Serializable {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+    }
+
+    public String getCallbackRestUrl() {
+        return callbackRestUrl;
+    }
+
+    public void setCallbackRestUrl(String callbackRestUrl) {
+        this.callbackRestUrl = callbackRestUrl;
     }
 
     @Override

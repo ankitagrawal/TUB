@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
+import com.hk.security.exception.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class HkAuthServiceImpl implements HkAuthService {
     @Autowired
     private UserService userService;
 
+    private static final int md5HashIterations=1;
+    private static final String salt="";
+
     @Override
     public HkAuthentication authenticate(HkAuthentication authentication) throws HkAuthenticationException {
 
@@ -48,8 +52,6 @@ public class HkAuthServiceImpl implements HkAuthService {
             checkApiKeyExists(apiKey);
 
             User user = getUserService().findByLogin(userName);
-
-            // User user = UserCache.getInstance().getUserByLogin(userName).getUser();
 
             if (user == null) {
                 throw new HkUserNotFoundException(userName);
@@ -81,10 +83,10 @@ public class HkAuthServiceImpl implements HkAuthService {
 
     @Override
     public String generateAuthToken(String userName, String passwordCheckSum, String apiKey) {
-        // String userName = (String) authentication.getPrincipal();
-        // String password = (String) authentication.getCredentials();
-        // String passwordCheckSum = BaseUtils.passwordEncrypt(password);
-        // String apiKey = (String) authentication.getApiKey();
+        //String userName = (String) authentication.getPrincipal();
+        //String password = (String) authentication.getCredentials();
+        //String passwordCheckSum = BaseUtils.passwordEncrypt(password);
+        //String apiKey = (String) authentication.getApiKey();
 
         HkApiUser hkApiUser = checkApiKeyExists(apiKey);
         /**
@@ -112,7 +114,7 @@ public class HkAuthServiceImpl implements HkAuthService {
     public boolean validateToken(String authToken, String apiKey, boolean validatePwd) {
         checkApiKeyExists(apiKey);
         boolean valid = true;
-        String[] decodedTokenArr = decodeAuthToken(authToken);
+        String[] decodedTokenArr = decodeToken(authToken);
 
         Date expiredOn = new Date(Long.parseLong(decodedTokenArr[1]));
 
@@ -131,12 +133,11 @@ public class HkAuthServiceImpl implements HkAuthService {
             String userName = decodedTokenArr[0];
             User user = getUserService().findByLogin(userName);
 
-            // User user = UserCache.getInstance().getUserByLogin(userName).getUser();
-
             if (user == null) {
                 throw new HkUserNotFoundException(userName);
             }
 
+            
             String passWordChkSum = user.getPasswordChecksum();
 
             String reConstructedToken = userName.concat(":").concat(passWordChkSum).concat(":").concat(decodedTokenArr[1]);
@@ -157,26 +158,114 @@ public class HkAuthServiceImpl implements HkAuthService {
         return refershUserNamePasswordAuthToken(authToken, apiKey);
     }
 
+    public boolean isValidAppKey(String appKey){
+        HkApiUser apiUser=HkApiUserCache.getInstance().getHkApiUser(appKey);
+        if(apiUser==null){
+            throw new HkInvalidApiKeyException(appKey);
+        }
+        return true;
+    }
+
+    public boolean isValidAppToken(String appToken){
+         String[] decodedTokenArr=decodeToken(appToken);
+        if(decodedTokenArr.length!=3){
+            throw new HkInvalidAppTokenException(appToken);
+        }
+        String apiKey= decodedTokenArr[0];
+        String expiryTimeStamp = decodedTokenArr[1];
+        if(!BaseUtils.md5Hash(apiKey+":"+expiryTimeStamp+":"+HkApiUserCache.getInstance().getHkApiUser(apiKey).getSecretKey(),salt,md5HashIterations).equals(decodedTokenArr[2])){
+              throw new HkInvalidTokenSignatureException(appToken);
+        }
+        Date expiryDate=new Date(Long.parseLong(expiryTimeStamp));
+        if(expiryDate.compareTo(new Date())==-1){
+            throw new HkTokenExpiredException(appToken);
+        }
+        checkApiKeyExists(apiKey);
+        return true;
+    }
+
+    public boolean isValidUserAccessToken(String userAccessToken){
+        String[] decodedTokenArr=decodeToken(userAccessToken);
+
+        if(decodedTokenArr.length!=4){
+            throw new HkInvalidUserAccessTokenException(userAccessToken);
+        }
+        String apiKey= decodedTokenArr[0];
+        String expiryTimeStamp = decodedTokenArr[1];
+        String userEmail = decodedTokenArr[2];
+        String md5Hash=BaseUtils.md5Hash(apiKey+TOKEN_DELIMITER+expiryTimeStamp+TOKEN_DELIMITER+
+                userEmail+TOKEN_DELIMITER+HkApiUserCache.getInstance().getHkApiUser(apiKey).getSecretKey(),
+                salt,md5HashIterations);
+        if(!md5Hash.equals(decodedTokenArr[3])){ //checking the sent md5hash with calculated hash
+            throw new HkInvalidTokenSignatureException(userAccessToken);
+        }
+        Date expiryDate=new Date(Long.parseLong(expiryTimeStamp));
+        if(expiryDate.compareTo(new Date())==-1){
+            throw new HkTokenExpiredException(userAccessToken);
+        }
+        checkApiKeyExists(apiKey);
+        User user = getUserService().findByLogin(userEmail);
+
+        if (user == null) {
+            throw new HkUserNotFoundException(userEmail);
+        }
+
+        return true;
+    }
+
+    public String generateUserAccessToken(String userEmail, String appKey){
+        int expiryMin=10;//10 min expiration
+        StringBuilder uaToken=new StringBuilder("");
+        uaToken.append(appKey);
+        uaToken.append(TOKEN_DELIMITER+getExpiryTimeStamp(expiryMin));
+        String appSecret=HkApiUserCache.getInstance().getHkApiUser(appKey).getSecretKey();
+        uaToken.append(TOKEN_DELIMITER+userEmail);
+        String md5Hash=BaseUtils.md5Hash(uaToken.toString()+TOKEN_DELIMITER+appSecret,salt,md5HashIterations);
+        uaToken.append(TOKEN_DELIMITER+md5Hash);
+
+        byte[] base64encoding = Base64.encodeBase64(uaToken.toString().getBytes());
+
+        return new String(base64encoding);
+    }
+
+    public HkApiUser getApiUserFromAppToken( String appToken){
+        String[] decodedTokenArr=decodeToken(appToken);
+        return HkApiUserCache.getInstance().getHkApiUser(decodedTokenArr[0]);
+    }
+
+    public HkApiUser getApiUserFromUserAccessToken(String userAccessToken){
+        String[] decodedTokenArr=decodeToken(userAccessToken);
+        return HkApiUserCache.getInstance().getHkApiUser(decodedTokenArr[0]);
+    }
+
+    public User getUserFromAccessToken(String userAccessToken){
+        String[] decodedTokenArr=decodeToken(userAccessToken);
+        String userName = decodedTokenArr[2];
+        User user = getUserService().findByLogin(userName);
+
+        if (user == null) {
+            throw new HkUserNotFoundException(userName);
+        }
+        return user;
+    }
+
     private String refershUserNamePasswordAuthToken(String authToken, String apiKey) {
-        String[] decodedTokenArr = decodeAuthToken(authToken);
+        String[] decodedTokenArr = decodeToken(authToken);
 
         String userName = decodedTokenArr[0];
         User user = getUserService().findByLogin(userName);
-
-        // User user = UserCache.getInstance().getUserByLogin(userName).getUser();
 
         if (user == null) {
             throw new HkUserNotFoundException(userName);
         }
 
         String passwordchkSum = user.getPasswordChecksum();
-        // HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName,
-        // passwordchkSum, apiKey);
+        //HkUsernamePasswordAuthenticationToken authentication = new HkUsernamePasswordAuthenticationToken(userName, passwordchkSum, apiKey);
         return generateAuthToken(userName, passwordchkSum, apiKey);
     }
 
-    private String[] decodeAuthToken(String authToken) {
-        byte[] base64DecodedArr = Base64.decodeBase64(authToken);
+    private String[] decodeToken(String token) {
+        byte[] base64DecodedArr = Base64.decodeBase64(token);
         String base64Decoded = new String(base64DecodedArr);
 
         String[] decodedTokenArr = base64Decoded.split(":");
@@ -185,6 +274,12 @@ public class HkAuthServiceImpl implements HkAuthService {
 
     public UserService getUserService() {
         return userService;
+    }
+
+    private Long getExpiryTimeStamp(int min){
+        long t=BaseUtils.getCurrentTimestamp().getTime();
+        long ms=min*60*1000 ;
+        return (t+ms);
     }
 
     public static void main(String[] args) {

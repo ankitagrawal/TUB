@@ -1,3 +1,4 @@
+<%@ taglib prefix="shirp" uri="http://shiro.apache.org/tags" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
@@ -226,7 +227,7 @@
 		<s:param name="courierDownloadFunctionality" value="false"/>
 	</s:link></h3>
 
-	<shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
+	<!--<shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
 					event="generateCourierReport">Add/Edit Hub
@@ -235,6 +236,15 @@
 		</h3>
 	</shiro:hasRole>
 
+-->
+	<shiro:hasPermission name="<%=PermissionConstants.DISPATCH_LOT_OPERATIONS%>">
+	<h3><s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction">Create New Dispatch Lot
+		</s:link>
+		</h3>
+
+		<h3><s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="showDispatchLotList">
+			Dispatch Lot List</s:link></h3>
+	</shiro:hasPermission>
 
 </div>
 

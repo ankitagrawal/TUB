@@ -58,7 +58,7 @@ public class CartLineItemUpdateAction extends BaseAction {
     @JsonHandler
     public Resolution pre() {
 
-      if(cartLineItem!=null && cartLineItem.getOrder().getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())){
+      if(cartLineItem!=null && cartLineItem.getOrder()!=null && cartLineItem.getOrder().getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())){
         if (cartLineItem != null && cartLineItem.getHkPrice() != null && cartLineItem.getHkPrice() != 0D) {
             if (cartLineItem.getComboInstance() != null) {
                 List<CartLineItem> siblingLineItems = comboInstanceDao.getSiblingLineItems(cartLineItem);

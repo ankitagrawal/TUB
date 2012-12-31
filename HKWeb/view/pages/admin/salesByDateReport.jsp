@@ -19,13 +19,9 @@
         <th>ORDER_DATE</th>
         <th>DAY_OF_WEEK</th>
         <th>TXN_COUNT</th>
-       <%-- <th>(%) First Txn</th>
-        <th>(%) COD</th>
-        <th>(%) Offer</th>--%>
         <th>SKU_COUNT</th>
         <th>SUM_MRP</th>
         <th>SUM_HK_PRICE</th>
-        <th>SUM_HK_PRICE_POST_DISCOUNT</th>
       </tr>
       </thead>
 
@@ -33,18 +29,12 @@
         <td colspan="2" style="font-weight:bold; font-size:14px;">Avg Values</td>
         <td style="font-weight:bold; font-size:14px;">
           <fmt:formatNumber value="${reportBean.avgTxn}" pattern="<%=FormatUtils.currencyFormatPattern%>"/></td>
-        <%--<td></td>
-        <td style="font-weight:bold; font-size:14px;">
-          <fmt:formatNumber value="${reportBean.avgTnxCOD/reportBean.avgTxn * 100}" pattern="#.#"/></td>
-        <td style="font-weight:bold; font-size:14px;">
-            <fmt:formatNumber value="${reportBean.avgTxnOfferOrder/reportBean.avgTxn * 100}" pattern="#.#"/></td>--%>
         <td style="font-weight:bold; font-size:14px;">
           <fmt:formatNumber value="${reportBean.avgSku}" pattern="<%=FormatUtils.currencyFormatPattern%>"/></td>
         <td style="font-weight:bold; font-size:14px;">
           <fmt:formatNumber value="${reportBean.avgMrp}" pattern="<%=FormatUtils.currencyFormatPattern%>"/></td>
         <td style="font-weight:bold; font-size:14px;">
           <fmt:formatNumber value="${reportBean.avgHkp}" pattern="<%=FormatUtils.currencyFormatPattern%>"/></td>
-        <td style="font-weight:bold; font-size:14px;"><%--<fmt:formatNumber value="${reportBean.avgHkpPostDiscount}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>--%></td>
       </tr>
 
       <c:forEach items="${reportBean.daySaleList}" var="daySaleList">
@@ -52,17 +42,9 @@
           <td><fmt:formatDate value="${daySaleList.orderDate}"/></td>
           <td><fmt:formatDate value="${daySaleList.orderDate}" pattern="E"/></td>
           <td>${daySaleList.txnCount}</td>
-          <%--<td>
-            <fmt:formatNumber value="${daySaleList.firstTxnCount/daySaleList.txnCount * 100}" pattern="#.#"/></td>
-          <td>
-            <fmt:formatNumber value="${daySaleList.codTxnCount/daySaleList.txnCount * 100}" pattern="#.#"/></td>
-          <td>
-            <fmt:formatNumber value="${daySaleList.offerTxnCount/daySaleList.txnCount * 100}" pattern="#.#"/></td>--%>
           <td>${daySaleList.skuCount}</td>
           <td>${daySaleList.sumOfMrp}</td>
           <td>${daySaleList.sumOfHkPrice}</td>
-          <td>
-            <fmt:formatNumber value="${daySaleList.sumOfHkPrice - daySaleList.sumOfHkPricePostAllDiscounts}" pattern="<%=FormatUtils.currencyFormatPattern%>"/></td>
         </tr>
       </c:forEach>
     </table>

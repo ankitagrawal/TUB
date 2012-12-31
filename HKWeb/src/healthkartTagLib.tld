@@ -749,17 +749,17 @@
             ${hk:getMatchingSku(${object})}
         </example>
     </function>
-    <function>
-        <description>
-            product list for a primary heading in a sorted order.
-        </description>
-        <name>getCategoryHeadingProductsSortedByOrder</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>
-        <example>
-            ${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}
-        </example>
-    </function>
+    <!--<function>-->
+        <!--<description>-->
+            <!--product list for a primary heading in a sorted order.-->
+        <!--</description>-->
+        <!--<name>getCategoryHeadingProductsSortedByOrder</name>-->
+        <!--<function-class>com.hk.taglibs.Functions</function-class>-->
+        <!--<function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>-->
+        <!--<example>-->
+            <!--${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}-->
+        <!--</example>-->
+    <!--</function>-->
     <function>
         <description>
             returns surcharge based on supplier and warehouse state
@@ -1011,6 +1011,17 @@
 
      <function>
         <description>
+            returns Heading Products based on rank
+        </description>
+        <name>getHeadingProductsSortedByRank</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getHeadingProductsSortedByRank(java.lang.Long))</function-signature>
+        <example>
+            ${hk:getHeadingProductsSortedByRank(${id})}
+        </example>
+    </function>
+    <function>
+    <description>
             returns a encrypted orderId
         </description>
         <name>encryptOrderId</name>
@@ -1042,5 +1053,15 @@
             <!--${hk:isOrderForDiscretePackaging(${id})}-->
         </example>
     </function>
-
+	<function>
+		<description>
+			returns ProductVariantSupplierInfo
+		</description>
+		<name>getPVSupplierInfo</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>com.hk.domain.catalog.ProductVariantSupplierInfo getPVSupplierInfo(com.hk.domain.catalog.Supplier,com.hk.domain.catalog.product.ProductVariant)</function-signature>
+		<example>
+			${hk:getPVSupplierInfo(${supplier, productVariant})}
+		</example>
+	</function>
 </taglib>

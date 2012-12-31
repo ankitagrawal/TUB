@@ -1,0 +1,35 @@
+<dataConfig>
+  <!--<dataSource type="JdbcDataSource"
+              driver="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://172.16.3.50:3306/healthkart_prod?autoReconnect=true"
+              user=""
+              password=""/>-->
+  <document>
+    <entity name="product" query="select ID,name,brand,overview,description,order_ranking,deleted,main_image_id,is_google_ad_disallowed from product where deleted=0">
+            <field column="ID" name="prd_id"/>
+            <field column="NAME" name="name"/>
+            <field column="BRAND" name="brand"/>
+            <field column="OVERVIEW" name="overview"/>
+            <field column="DESCRIPTION" name="description"/>
+            <field column="deleted" name="deleted"/>
+            <field column="is_google_ad_disallowed" name="is_google_ad_disallowed"/>
+            <field column="order_ranking" name="ranking"/>
+            <field column="main_image_id" name="image"/>
+    <entity name="variant" query="SELECT IFNULL(pv.hk_price,c.hk_price) as hk_price from product p left join product_variant pv on p.id = pv.product_id
+                                  left join combo c on c.product_combo_id = p.id where p.id = '${product.ID}' and (pv.deleted is null or pv.deleted=0) order by hk_price asc">
+            <field column="HK_PRICE" name="hk_price"/>
+    <entity name="category" query="select category_name from category_has_product where product_id='${product.ID}'">
+            <field name="category_name" column="CATEGORY_NAME" />
+    <entity name="metadata" query="select h1,title,meta_keyword,meta_description,description,description_title from seo_data where id='${product.ID}'">
+            <field name="h1" column="h1"/>
+            <field name="title" column="title"/>
+            <field name="meta_keyword" column="meta_keyword"/>
+            <field name="meta_description" column="meta_description"/>
+            <field name="description_title" column="description_title"/>
+            <field name="description" column="seo_description"/>
+    </entity>
+    </entity>
+    </entity>
+    </entity>
+  </document>
+</dataConfig>
