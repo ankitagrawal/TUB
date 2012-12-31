@@ -63,8 +63,10 @@
 <h2 class="txt01">4% Body Fat </h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+
+<img src="${pageContext.request.contextPath}/images/ny2013/4fat.jpg"/>
 <p>With the approaching 2013, tell the world that you are there. Slash your body fat to 4 %, show off your abs, biceps, triceps, calves and quads and rule the gym. To get there, you need a few gruelling months with a killer workout, some fat burners, whey proteins and aminos. With a proper diet chart in place, these supplements will enhance fat loss, muscle recovery and growth and pure mass gains! You'll get the added energy from pre workout supplements  & aminos. Get glovesfor easy lifting and a duffel bag to hit the gym in style the whole year!</p>
+
 </div>
 
 <div class="cl"></div>

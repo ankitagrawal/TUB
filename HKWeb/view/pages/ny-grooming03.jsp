@@ -66,7 +66,10 @@
 <h2 class="txt01">Long Lasting Makeup</h2>
 
 <div class="contant01">
+
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+
+<img src="${pageContext.request.contextPath}/images/ny2013/long-lasting-makeup.jpg"/>
 <p>Now that you are moisturizing your New Year with a hydrating resolution, ward off chapped skin with the ultra-nourishing goodness of sublimely exotic skin care essentials. Wear a blush this winter while your skin breaths in the freshness of the new season setting in.</p>
 </div>
 
@@ -118,8 +121,9 @@
 <h2 class="txt01">Obliterate hair Loss</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/hair-loss.jpg"/>
 <p>Is receding hair line or a bald spot resulting in dreadful sleepless nights? It’s a sensitive topic; one easily raises lifestyle, stress and hormonal changes as culprits. However by paying a little more attention than just applying soap, lathering and rinsing your hair, take a closer look at what you are eating. By incorporating supplements to your diet, it is possible to curb hair fall and add shine, texture and length to your mane. Still not up for the idea? Then may we suggest Baba Ramdevs rubbing left and right hand nails exercise!</p>
+
 </div>
 
 <div class="cl"></div>
@@ -153,7 +157,7 @@
 <h2 class="txt01">Pamper Yourself</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/pamper-yourself.jpg"/>
 <p>You do it all, manage the house, cuddle the kids, soothe their skinned knees and most importantly forget about yourself.  No more. Mark it on the calendar if you have to, just like any other appointment and get away for a spa weekend. We guarantee you will discover a renewed, rejuvenated, revitalized and regenerated self.</p>
 </div>
 

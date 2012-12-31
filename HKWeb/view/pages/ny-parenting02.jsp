@@ -116,11 +116,10 @@
 <h2 class="txt01">Gift the Gift of Life to the Earth!</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p> </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/ovulation-kit.jpg"/>
+<p>The gift of life sometimes appears elusive. Now, you can leverage science to your advantage - with Ovulation Kits, Fertility Supplements and a host of other alternatives designed to make conceiving an easy task.</p>
 </div>
-
-<div class="cl">The gift of life sometimes appears elusive. Now, you can leverage science to your advantage - with Ovulation Kits, Fertility Supplements and a host of other alternatives designed to make conceiving an easy task.</div>
+<div class="cl"></div>
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PHL002'/>
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BIOMRCA005'/>

@@ -64,7 +64,7 @@
 <h2 class="txt01">Don’t Pause at Menopause</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/4fat.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
 </div>
 
@@ -97,11 +97,11 @@
 
     <!--container01 start-->
 
-<div class="container01">
+<div class="	container01">
 <h2 class="txt01">GO on a Bike Trip</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/potty-train.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
 </div>
 
@@ -126,7 +126,7 @@
 <h2 class="txt01">Grandparents travelling</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/dump-your-spectacles.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
 </div>
 
@@ -143,7 +143,27 @@
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EQUINOX002' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BREMED024' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WA001' />
-	
+</div>
+<!--container01 close-->
+
+    <!--container01 start-->
+
+<div class="container01">
+<h2 class="txt01">IN House Training</h2>
+
+<div class="contant01">
+<img src="${pageContext.request.contextPath}/images/ny2013/work-life-balance.jpg"/>
+<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+</div>
+
+<div class="cl"></div>
+
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1124' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1136' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1164' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1165' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1181' />
+>>>>>>> 2b6b37aaf70bff5aa7ed35f8a16eb22b7f97db89
 
 
 </div>

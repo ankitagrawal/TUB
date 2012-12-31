@@ -59,13 +59,35 @@
 
 
 
+<!--container01 start-->
+
+<div class="container01">
+<h2 class="txt01">Poop Effortlessly</h2>
+
+<div class="contant01">
+<img src="${pageContext.request.contextPath}/images/ny2013/poopeffortlessly.jpg"/>
+<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+</div>
+
+<div class="cl"></div>
+
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1204' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1521' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1531' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT818' />
+
+
+</div>
+<!--container01 close-->
+>>>>>>> 2b6b37aaf70bff5aa7ed35f8a16eb22b7f97db89
+
     <!--container01 start-->
 
 <div class="container01">
 <h2 class="txt01">Potty Train Your Baby</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/potty-train.jpg"/>
 <p>Ease the transition to potty training with quality diapers, nappies, gentle wipes and creams. Your child hates diaper rashes as much as you do!</p>
 </div>
 
@@ -89,7 +111,7 @@
 <h2 class="txt01">Prepare For Your Childs Illness</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/prepare-child.jpg"/>
 <p>The only thing worser than an ill baby is a baby that falls ill all of a sudden. You wont have to panic, as long as you are prepared with digital thermometers that dont require any contact, herbal teas for toddlers, nebulizers for kids that dislike medicines and more. Now you can win the battle against illness, Effortlessly!</p>
 </div>
 
@@ -119,7 +141,7 @@
 <h2 class="txt01">Send Your Child to School. Happily. Everyday.</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/send-child-school.jpg"/>
 <p>Make going to school a happy & joyful affair for your little devil, with cool lunch boxes, groovy bags, water bottles, healthy and tasty breakfast options like cereals and multi grain shakes. </p>
 </div>
 

@@ -57,8 +57,10 @@
 <h2 class="txt01">Higher Grades this Year!</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+
+<img src="${pageContext.request.contextPath}/images/ny2013/brain-power.jpg"/>
 <p>Poor grades are not due to lacking intelligence. Rather, they come from a lack of interest & a nutritional imbalance. Give the best morning beverage to your child to boost her/his memory, along with a heap of Chyawanprash for higher immunity & concentration.</p>
+
 </div>
 
 <div class="cl"></div>

@@ -65,7 +65,7 @@
 <h2 class="txt01">Reduced Chapped Skin</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/reduce-chopped-skin.jpg"/>
 <p>For a skin that deserves a cakewalk, nothing works better than the wholesome luxury of handcrafted recreational skin butters and bath foams. From lining your lips for a seriously head-turning pout to scrubbing off dead scales of skin, here is a class of skin elixirs you cannot say no to, especially when you have a resolution to keep. Love yourself. Indulge.</p>
 </div>
 
@@ -109,7 +109,7 @@
 <h2 class="txt01">Remove dark undearms</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/light-underarms.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
 </div>
 
@@ -129,7 +129,7 @@
 <h2 class="txt01">Replace specs with fashion</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/dump-your-spectacles.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
 </div>
 
@@ -152,7 +152,7 @@
 <h2 class="txt01">Shaving</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/shaving.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
 </div>
 

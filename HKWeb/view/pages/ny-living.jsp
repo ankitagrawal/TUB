@@ -84,9 +84,9 @@
 
 <div class="container01">
 <h2 class="txt01">Alarm</h2>
-
+    
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/reduce-body-aches.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
 </div>
 
@@ -105,7 +105,8 @@
 <h2 class="txt01">Bathe Like a Queen</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+
+<img src="${pageContext.request.contextPath}/images/ny2013/long-lasting-makeup.jpg"/>
 <p>Pamper the Divinity within with a luxurious bath and rejuvenate your senses. Use the best bath salts, lotions, appealing aromas and essences to feel enlightened and spread the scent of the new year.</p>
 </div>
 
@@ -153,7 +154,8 @@
 <h2 class="txt01">Control Blood Sugar</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+
+<img src="${pageContext.request.contextPath}/images/ny2013/reduce-medical.jpg"/>
 <p>Put a rest to all sugar and diabetes related worries with regular testing and Diabetes friendly snacks and deserts.</p>
 </div>
 
