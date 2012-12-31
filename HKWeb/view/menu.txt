@@ -185,10 +185,16 @@
 ---/sports/sports-equipment/table-tennis/accessories
 --/sports/sports-equipment/cricket
 ---/sports/sports-equipment/cricket/bats
+----/sports/sports-equipment/cricket/bats/kashmir-willow: Kashmir Willow
+----/sports/sports-equipment/cricket/bats/english-willow: English Willow
 ---/sports/sports-equipment/cricket/balls
 ---/sports/sports-equipment/cricket/gloves
 ---/sports/sports-eqipment/cricket/helmets
 ---/sports/sports-equipment/cricket/pads
+---/sports/sports-equipment/cricket/guards
+---/sports/sports-equipment/cricket/bags
+---/sports/sports-equipment/cricket/caps
+---/sports/sports-equipment/cricket/cricket-wear
 ---/sports/sports-equipment/cricket/accessories
 --/sports/sports-equipment/chess
 --/sports/sports-equipment/swimming
@@ -204,6 +210,8 @@
 --/sports/sports-equipment/basketball
 ---/sports/sports-equipment/basketball/balls
 ---/sports/sports-equipment/basketball/accessories
+--/sports/sports-equipment/volleyball
+---/sports/sports-equipment/volleyball/balls
 --/sports/sports-equipment/squash
 ---/sports/sports-equipment/squash/rackets
 ---/sports/sports-equipment/squash/balls
@@ -226,7 +234,10 @@
 --/sports/apparel/men
 --/sports/apparel/women
 --/sports/apparel/kids
+--/sports/apparel/sports-wear
 --/sports/apparel/bags
+--/sports/apparel/caps
+--/sports/apparel/socks
 --/sports/apparel/bottles-shakers : Bottles & Shakers
 --/sports/apparel/miscellaneous
 -/sports/footwear
