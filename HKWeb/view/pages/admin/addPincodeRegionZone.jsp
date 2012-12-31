@@ -20,6 +20,11 @@
 					return true;
 				})
 
+				$('.saveall').click(function(){
+				$(this).css("display", "none");
+					return true;
+				})
+
 
 			});
 		</script>
@@ -39,7 +44,7 @@
 						<table align="center">
 							<tr>
 								<td><label>Pincode</label></td>
-								<td><s:text name="pincodeRegionZone.pincode.pincode" id="pin"/></td>
+								<td><s:text name="pincodeRegionZone.pincode.pincode"   id="pin"/></td>
 								<td><s:submit name="searchPincodeRegion" value="Search"/></td>
 							</tr>
 							<tr>
@@ -81,6 +86,7 @@
 				</fieldset>
 			</div>
 
+			
 			<div style="display:inline-block;">
 				<s:form beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
 					<table align="center" class="cont"> Available Pincode Region :
@@ -118,14 +124,6 @@
 									${prz.courierGroup.name}
 									<s:hidden name="pincodeRegionZoneList[${ctr.index}].courierGroup" value="${prz.courierGroup.id}"/>
 
-									<%--<s:select name="pincodeRegionZoneList[${ctr.index}].courierGroup" id="group"--%>
-								              <%--value="${prz.courierGroup.id}">--%>
-									<%--<s:option value="">--Select Group--</s:option>--%>
-									<%--<hk:master-data-collection service="<%=MasterDataDao.class%>"--%>
-									                           <%--serviceProperty="courierGroupList" value="id"--%>
-									                           <%--label="name"/>--%>
-								<%--</s:select>--%>
-
 								</td>
 
 							</tr>
@@ -133,10 +131,11 @@
 						</c:forEach>
 					</table>
 					<div>
-						<s:submit name="savePincodeRegionList" value="saveAll"/>
+						<s:submit  class ="saveall" name="savePincodeRegionList" value="saveAll"/>
 					</div>
 				</s:form>
 			</div>
+
 
 
 			<div style="display:inline-block; float:right;padding-right:40px;">

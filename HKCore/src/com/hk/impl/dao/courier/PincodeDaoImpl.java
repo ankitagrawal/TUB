@@ -69,8 +69,9 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
 		String hqlQuery = "from Pincode p  where p not in (select pincode from PincodeRegionZone ) ";
 		List<Pincode> pincodeList = getSession().createQuery(hqlQuery).list();
 		Integer totalGroupCount = getSession().createQuery("from CourierGroup ").list().size();
-		String query = "select distinct(prz.pincode) from PincodeRegionZone prz join prz.courierGroup cg group by prz.warehouse " +
-				" , prz.pincode having count(prz.courierGroup) < :totalGroupCount";
+		totalGroupCount = totalGroupCount *2;
+		String query = "select distinct(prz.pincode) from PincodeRegionZone prz group by prz.pincode " +
+				" having count(prz.courierGroup) < :totalGroupCount";
 		List<Pincode> incompletePincodeList = getSession().createQuery(query).setParameter("totalGroupCount", totalGroupCount.longValue()).list();
 		pincodeList.addAll(incompletePincodeList);
 		return pincodeList;
