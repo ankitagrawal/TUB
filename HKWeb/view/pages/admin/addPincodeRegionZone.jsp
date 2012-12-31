@@ -88,6 +88,7 @@
 
 			
 			<div style="display:inline-block;">
+				<c:if test="${(mpa.pincodeRegionZoneList != null) &&(fn:length(mpa.pincodeRegionZoneList) > 0)}">
 				<s:form beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
 					<table align="center" class="cont"> Available Pincode Region :
 						<thead>
@@ -134,6 +135,7 @@
 						<s:submit  class ="saveall" name="savePincodeRegionList" value="saveAll"/>
 					</div>
 				</s:form>
+				</c:if>
 			</div>
 
 

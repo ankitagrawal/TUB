@@ -14,6 +14,7 @@ import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.constants.courier.EnumCourierGroup;
 
 
 @SuppressWarnings("unchecked")                                                                   
@@ -68,10 +69,9 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
 	public List<Pincode> getPincodeNotInPincodeRegionZone() {
 		String hqlQuery = "from Pincode p  where p not in (select pincode from PincodeRegionZone ) ";
 		List<Pincode> pincodeList = getSession().createQuery(hqlQuery).list();
-		Integer totalGroupCount = getSession().createQuery("from CourierGroup ").list().size();
-		totalGroupCount = totalGroupCount *2;
-		String query = "select distinct(prz.pincode) from PincodeRegionZone prz group by prz.pincode " +
-				" having count(prz.courierGroup) < :totalGroupCount";
+		Integer totalGroupCount = EnumCourierGroup.getValidCourierGroupsForSplitting().size() * 2;		
+		String query = "select prz.pincode from PincodeRegionZone prz group by prz.pincode " +
+				" having count(prz.id) < :totalGroupCount";
 		List<Pincode> incompletePincodeList = getSession().createQuery(query).setParameter("totalGroupCount", totalGroupCount.longValue()).list();
 		pincodeList.addAll(incompletePincodeList);
 		return pincodeList;
