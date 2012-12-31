@@ -21,8 +21,13 @@
 				})
 
 				$('.saveall').click(function(){
-				$(this).css("display", "none");
-					return true;
+				 var row = $('.przlist');
+					row.each(function(col){
+					if(col.attr("type") == "input" )	
+
+					})
+				
+					
 				})
 
 
@@ -104,7 +109,7 @@
 							<s:hidden name="pincodeRegionZoneList[${ctr.index}].id" value="${prz.id}"/>
 							<input type="hidden" name="pincodeRegionZoneList[${ctr.index}].pincode"
 							       value="${prz.pincode.id}"/>
-							<tr>
+							<tr class="przlist">
 								<td>${prz.pincode.pincode}</td>
 
 								<td><s:select name="pincodeRegionZoneList[${ctr.index}].warehouse" id="warehouse"

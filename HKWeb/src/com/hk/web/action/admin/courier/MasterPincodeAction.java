@@ -138,7 +138,7 @@ public class MasterPincodeAction extends BaseAction {
 		return new RedirectResolution(MasterPincodeAction.class, "searchPincodeRegion").addParameter("pincodeRegionZone.pincode.pincode", pincodeDb.getPincode());
 		}
 		else {
-		addRedirectAlertMessage(new SimpleMessage("Pincode changes saved and PRZs are not changed"));	
+		addRedirectAlertMessage(new SimpleMessage("Pincode changes saved "));	
 		return new RedirectResolution(CourierServiceInfoAction.class).addParameter("pincode", pincode.getPincode());
 		}
 	}
@@ -234,7 +234,7 @@ public class MasterPincodeAction extends BaseAction {
 			}
 			addRedirectAlertMessage(new SimpleMessage("Pincode region saved"));
 		}
-		return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
+		return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
 	}
 
 	public Resolution searchPincodeRegion() {
