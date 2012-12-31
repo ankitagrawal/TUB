@@ -114,13 +114,19 @@
 										                           serviceProperty="regionTypeList" value="id"
 										                           label="name"/>
 									</s:select></td>
-								<td><s:select name="pincodeRegionZoneList[${ctr.index}].courierGroup" id="group"
-								              value="${prz.courierGroup.id}">
-									<s:option value="">--Select Group--</s:option>
-									<hk:master-data-collection service="<%=MasterDataDao.class%>"
-									                           serviceProperty="courierGroupList" value="id"
-									                           label="name"/>
-								</s:select></td>
+								<td>
+									${prz.courierGroup.name}
+									<s:hidden name="pincodeRegionZoneList[${ctr.index}].courierGroup" value="${prz.courierGroup.id}"/>
+
+									<%--<s:select name="pincodeRegionZoneList[${ctr.index}].courierGroup" id="group"--%>
+								              <%--value="${prz.courierGroup.id}">--%>
+									<%--<s:option value="">--Select Group--</s:option>--%>
+									<%--<hk:master-data-collection service="<%=MasterDataDao.class%>"--%>
+									                           <%--serviceProperty="courierGroupList" value="id"--%>
+									                           <%--label="name"/>--%>
+								<%--</s:select>--%>
+
+								</td>
 
 							</tr>
 
