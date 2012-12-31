@@ -43,18 +43,21 @@
 
 
 
-
-
-<img src="${pageContext.request.contextPath}/images/ny2013/homepage.jpg" usemap="#Map" border="0" />
-<map name="Map" id="Map">
-  <area shape="rect" coords="0,0,963,369" href="${pageContext.request.contextPath}/pages/ny2013.jsp" />
-  <area shape="rect" coords="1,369,960,737" href="${pageContext.request.contextPath}/pages/ny-brain.jsp" />
-  <area shape="rect" coords="1,738,957,1104" href="${pageContext.request.contextPath}/pages/ny-health.jsp" />
-  <area shape="rect" coords="3,1107,956,1470" href="${pageContext.request.contextPath}/pages/ny-fitness.jsp" />
-  <area shape="rect" coords="3,1474,959,1840" href="${pageContext.request.contextPath}/pages/ny-parenting.jsp" />
-  <area shape="rect" coords="4,1844,956,2210" href="${pageContext.request.contextPath}/pages/ny-grooming.jsp" />
-  <area shape="rect" coords="3,2214,961,2575" href="${pageContext.request.contextPath}/pages/ny-living.jsp" />
-</map>
+<div class="cl"></div>
+<a href="${pageContext.request.contextPath}/pages/ny2013.jsp"><img src="${pageContext.request.contextPath}/images/ny2013/main_banner.jpg" /></a>
+    <div class="cl"></div>
+<a href="${pageContext.request.contextPath}/pages/ny-brain.jsp"><img src="${pageContext.request.contextPath}/images/ny2013/brain.jpg" /></a>
+    <div class="cl"></div>
+<a href="${pageContext.request.contextPath}/pages/ny-health.jsp"><img src="${pageContext.request.contextPath}/images/ny2013/health.jpg" /></a>
+    <div class="cl"></div>
+<a href="${pageContext.request.contextPath}/pages/ny-fitness.jsp"><img src="${pageContext.request.contextPath}/images/ny2013/fitness.jpg" /></a>
+    <div class="cl"></div>
+<a href="${pageContext.request.contextPath}/pages/ny-parenting.jsp"><img src="${pageContext.request.contextPath}/images/ny2013/parenting.jpg" /></a>
+    <div class="cl"></div>
+<a href="${pageContext.request.contextPath}/pages/ny-grooming.jsp"><img src="${pageContext.request.contextPath}/images/ny2013/grooming.jpg" /></a>
+    <div class="cl"></div>
+<a href="${pageContext.request.contextPath}/pages/ny-living.jsp"><img src="${pageContext.request.contextPath}/images/ny2013/living.jpg" /></a>
+<div class="cl"></div>
 
 
 
