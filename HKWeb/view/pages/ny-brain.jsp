@@ -54,23 +54,53 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Brain power</h2>
+<h2 class="txt01">Higher Grades this Year!</h2>
 
 <div class="contant01">
+
 <img src="${pageContext.request.contextPath}/images/ny2013/brain-power.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Poor grades are not due to lacking intelligence. Rather, they come from a lack of interest & a nutritional imbalance. Give the best morning beverage to your child to boost her/his memory, along with a heap of Chyawanprash for higher immunity & concentration.</p>
+
 </div>
 
 <div class="cl"></div>
 
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB152' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB152' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT822' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT684' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT970' />
+<div class="cl"></div>
+
+<div class="container01">
+<h2 class="txt01">Better Memory, Higher Focus & Higher IQ</h2>
+
+<div class="contant01">
+<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<p>Studies reveal that the brain needs fuel, just like the body. A good regime of puzzles, tricks and memory exercises go a long way in ensuring that mental acumen is both honed and preserved. Enriching your diet with Gingko Biloba, Curcumin & Omega 3 Fatty acids, leads to an overall improvement in memory, concentration and productivity. Further, you can also go the Ayurveda way and enhance your memory and cognition. Time to be the Jedi! </p>
+</div>
+
+
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT432' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT449' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1321' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1464' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1065' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1730' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1678' />
+
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1285' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT993' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1139' />
+
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2408' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1140' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT558' />
+
 <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1204' />
 <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1516' />
 <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1526' />
 <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1767' />
-<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT684' />
 <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT794' />
-<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT971' />
 
 </div>
 <!--container01 close-->

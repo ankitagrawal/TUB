@@ -66,26 +66,36 @@
 <h2 class="txt01">Long Lasting Makeup</h2>
 
 <div class="contant01">
+
+<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+
 <img src="${pageContext.request.contextPath}/images/ny2013/long-lasting-makeup.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Now that you are moisturizing your New Year with a hydrating resolution, ward off chapped skin with the ultra-nourishing goodness of sublimely exotic skin care essentials. Wear a blush this winter while your skin breaths in the freshness of the new season setting in.</p>
 </div>
 
 <div class="cl"></div>
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NYX33' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NVEY04' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MYBLN31' />
+	
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CLRBR25' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CLRBR30' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL16' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY527' />
+		
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL20' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNSNC07' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY792' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NYX17' />
+	
 
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB012' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB016' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR11' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR15' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR52' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY051' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY203' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY313' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY351' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY354' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY355' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY629' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY680' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FABIN26' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FAC001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FAC006' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FARA5' />
@@ -98,18 +108,9 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LTHB12' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MYBLN20' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MYBLN30' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MYBLN37' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP015' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP016' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP027' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP030' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP039' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='REV19' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SHNZ18' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SRTWR02' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI15' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT2' />
-    
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SRTWR02' />   
 </div>
 <!--container01 close-->
 
@@ -121,7 +122,8 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/hair-loss.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Is receding hair line or a bald spot resulting in dreadful sleepless nights? It’s a sensitive topic; one easily raises lifestyle, stress and hormonal changes as culprits. However by paying a little more attention than just applying soap, lathering and rinsing your hair, take a closer look at what you are eating. By incorporating supplements to your diet, it is possible to curb hair fall and add shine, texture and length to your mane. Still not up for the idea? Then may we suggest Baba Ramdevs rubbing left and right hand nails exercise!</p>
+
 </div>
 
 <div class="cl"></div>
@@ -139,7 +141,12 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ORIY18' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP091' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TPIC01' />
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY285' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VICHY5' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ORIY17' />
+	
+	
+	
 </div>
 <!--container01 close-->
 
@@ -151,11 +158,10 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/pamper-yourself.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>You do it all, manage the house, cuddle the kids, soothe their skinned knees and most importantly forget about yourself.  No more. Mark it on the calendar if you have to, just like any other appointment and get away for a spa weekend. We guarantee you will discover a renewed, rejuvenated, revitalized and regenerated self.</p>
 </div>
 
 <div class="cl"></div>
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS3' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ALVDA10' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ARVDC01' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ARVDC08' />
@@ -163,24 +169,8 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTQ032' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTQ033' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTQ036' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY003' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY013' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY032' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY091' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY149' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY150' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY157' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY171' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY172' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY208' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY209' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY231' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY274' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY279' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY299' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY303' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY308' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY536' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY558' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY559' />
@@ -188,15 +178,38 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY714' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY715' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY790' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DNM005' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FABIN32' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER010' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMLY19' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='IMPL01' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='IMPL02' />
-
-
+    
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR100' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VTRE08' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PINSPA4' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PINSPA7' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NYSA05' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR106' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR30' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR36' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BBW7' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIC8' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIC7' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY616' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY620' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY05' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY06' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY04' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTCMB04' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTCMB06' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI64' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ARVDC31' />
+   	 <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEVCMB16' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR17' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR18' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR15' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AVRA13' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AVRA39' />
+     
+     
+     
+     
 </div>
 <!--container01 close-->
 
