@@ -369,7 +369,7 @@
 ---/health-devices/medical-care/women-care/chlamydia-test
 ---/health-devices/medical-care/women-care/breast-screening
 --/health-devices/medical-care/baby-care
----/health-devices/medical-care/baby-care/gaurds
+---/health-devices/medical-care/baby-care/guards
 ---/health-devices/medical-care/baby-care/mosquito-nets
 ---/health-devices/medical-care/baby-care/baby-thermometer : Baby Thermometer
 ---/health-devices/medical-care/baby-care/medical-kits
@@ -517,10 +517,10 @@
 ---/personal-care/elderly-care/support-systems/wrist-forearm-supports:Wrist & Forearm Supports
 ---/personal-care/elderly-care/support-systems/elbow-thumb-supports:Elbow & Thumb Supports
 ---/personal-care/elderly-care/support-systems/arm-supports:Arm Supports
----/personal-care/elderly-care/support systems/abdominal-supports:Abdominal Supports
+---/personal-care/elderly-care/support-systems/abdominal-supports:Abdominal Supports
 ---/personal-care/elderly-care/support-systems/back-supports:Back Supports
 ---/personal-care/elderly-care/support-systems/compression-supports:Compression Supports
----/personal-care/elderly-care/support systems/knee-supports:Knee Supports
+---/personal-care/elderly-care/support-systems/knee-supports:Knee Supports
 ---/personal-care/elderly-care/support-systems/ankle-supports:Ankle Supports
 ---/personal-care/elderly-care/support-systems/traction-accessories:Traction Accessories
 ---/personal-care/elderly-care/support-systems/premium-range:Premium Range
