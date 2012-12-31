@@ -18,17 +18,33 @@
 						return false;
 					}
 					return true;
-				})
+				});
 
-				$('.saveall').click(function(){
-				 var row = $('.przlist');
-					row.each(function(col){
-					if(col.attr("type") == "input" )	
-
-					})
-				
-					
-				})
+				$('.saveall').click(function() {
+					var row = $('.przlist');
+					var error = false;
+					row.each(function(col) {
+						$(this).find('td').each(function() {
+							if ($(this).find('select').length) {
+								var selectval = $(this).find('select').val();
+								if (selectval == null || selectval == '') {
+									alert('select Warehouse /Region Type');
+									error = true;
+									return false;
+								}
+							}
+						});
+						if (error) {
+							return false;
+						}
+					});
+					if (error) {
+						return false;
+					}
+					else {
+						return true;
+					}
+				});
 
 
 			});
