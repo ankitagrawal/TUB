@@ -101,7 +101,7 @@
 <h2 class="txt01">GO On a bike trip</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/potty-train.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/bike-trip.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
 </div>
 
@@ -126,7 +126,7 @@
 <h2 class="txt01">Grandparents travelling</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/dump-your-spectacles.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/grandparents-travelling.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
 </div>
 
@@ -154,7 +154,7 @@
 <h2 class="txt01">IN House Training</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/work-life-balance.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/home-gym.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
 </div>
 
