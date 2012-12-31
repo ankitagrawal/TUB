@@ -98,7 +98,7 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">GO On a bike trip</h2>
+<h2 class="txt01">GO on a Bike Trip</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
@@ -110,7 +110,7 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='3M002' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE100' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE584' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HP004' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HEA007' />	
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OH089' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRS001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT183' />
@@ -136,35 +136,14 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LITTMN001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PA001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PA012' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PA014' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP018' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP019' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP047' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP063' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP093' />
-
-
-</div>
-<!--container01 close-->
-
-    <!--container01 start-->
-
-<div class="container01">
-<h2 class="txt01">IN House Training</h2>
-
-<div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-</div>
-
-<div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1124' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1136' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1164' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1165' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1181' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ACUL009' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ACUL010' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ACUL011' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WA002' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EQUINOX002' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BREMED024' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WA001' />
+	
 
 
 </div>

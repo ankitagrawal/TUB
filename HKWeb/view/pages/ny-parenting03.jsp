@@ -58,44 +58,25 @@
 
 
 
-<!--container01 start-->
-
-<div class="container01">
-<h2 class="txt01">Poop Effortlessly</h2>
-
-<div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-</div>
-
-<div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1204' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1521' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1531' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT818' />
-
-
-</div>
-<!--container01 close-->
 
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Potty Train ur baby</h2>
+<h2 class="txt01">Potty Train Your Baby</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Ease the transition to potty training with quality diapers, nappies, gentle wipes and creams. Your child hates diaper rashes as much as you do!</p>
 </div>
 
 <div class="cl"></div>
 
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB003' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1931' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1934' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB483' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2067' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1961' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2010' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB276' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB808' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2222' />
 
 
 </div>
@@ -105,23 +86,27 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Prepare your child for Illness</h2>
+<h2 class="txt01">Prepare For Your Childs Illness</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>The only thing worser than an ill baby is a baby that falls ill all of a sudden. You wont have to panic, as long as you are prepared with digital thermometers that dont require any contact, herbal teas for toddlers, nebulizers for kids that dislike medicines and more. Now you can win the battle against illness, Effortlessly!</p>
 </div>
 
 <div class="cl"></div>
 
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='3M003' />
+    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1908' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BCKRST003' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HICKS013' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HT004' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HT006' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HT007' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OPT001' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BRN1' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB141' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BREMED004' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB142' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OMRN001' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUTCMB97' />
 
 
 </div>
@@ -131,29 +116,44 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Send ur Child to School</h2>
+<h2 class="txt01">Send Your Child to School. Happily. Everyday.</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Make going to school a happy & joyful affair for your little devil, with cool lunch boxes, groovy bags, water bottles, healthy and tasty breakfast options like cereals and multi grain shakes. </p>
 </div>
 
 <div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT651' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT716' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT775' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT779' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT791' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT868' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT870' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SWT034' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SWT035' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SWT036' />
-
-
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1128'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1519'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1512'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT505'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1284'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT684'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1315'/>    
 </div>
 <!--container01 close-->
+
+<div class="container01">
+<h2 class="txt01">Make Your Child Learn by Playing!</h2>
+
+<div class="contant01">
+<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<p>Research has proved that playing enhances a childs development, behavior and social interaction. Grab a toy to put your baby on the fast track to brain development with bathing toys, amusing tri-cycles and colourful rattles.</p>
+</div>
+
+<div class="cl"></div>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2184'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1268'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1275'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2192'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2202'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2183'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2001'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1286'/>    
+</div>
+<!--container01 close-->
+
 
 
     <div class="cl"></div>

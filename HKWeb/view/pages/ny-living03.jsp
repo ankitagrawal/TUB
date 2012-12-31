@@ -61,7 +61,7 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Intercourse With Some One</h2>
+<h2 class="txt01">Sizzle Between the Sheets</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
@@ -121,7 +121,21 @@
 </div>
 
 <div class="cl"></div>
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2499' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2511' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2515' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT176' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT329' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1302' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1345' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1392' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT133' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT123' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1661' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2518' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT908' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1442' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1324' />	
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1319' />
 
 
