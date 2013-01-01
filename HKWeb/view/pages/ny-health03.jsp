@@ -56,25 +56,6 @@
         </div>
 <div class="cl"></div>
 
-
-<!--container01 start-->
-
-<div class="container01">
-<h2 class="txt01">Hydrate Everyday</h2>
-
-<div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-</div>
-
-<div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1289' />
-
-</div>
-<!--container01 close-->
-
-
     <!--container01 start-->
 
 <div class="container01">
@@ -82,7 +63,8 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/root-canal.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>A stitch in time saves 9000. Especially when it comes to a root canal (don't even get us started on how much it hurts and how long it takes and did we mention costs?)</p>
+<p>Anyway, here's how you can eliminate root canal from your life forever!</p>
 </div>
 
 <div class="cl"></div>
@@ -118,19 +100,14 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/quit-smoking.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>You have always dreaded the 3-day-hump and the prospect of going cold turkey. All of that's in the paleolithic era. Now you can quit smoking and do it without getting into any vicious cycle of relapse. Here's to a tobacco free 2013!</p>
 </div>
 
 <div class="cl"></div>
-
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NIC001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1401' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT804' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT861' />
-
-
-
-
 </div>
 <!--container01 close-->
 
@@ -142,7 +119,7 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/reduce-medical.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>With regular medical tests (and a good medical insurance), you can eliminate recurring medical expenses. As the old saying goes, forewarned is forearmed.</p>
 </div>
 
 <div class="cl"></div>

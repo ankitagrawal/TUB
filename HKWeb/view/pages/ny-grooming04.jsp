@@ -70,7 +70,6 @@
 </div>
 
 <div class="cl"></div>
-
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR34' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY300' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY305' />
@@ -83,8 +82,7 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NIVEA15' />    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PF010' />    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT22' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT69' />
-    
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT69' />    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR100' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNOG05' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNOG06' />
@@ -92,13 +90,9 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNOG29' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MYBLN37' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NEAT005' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LIVEPRF12' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FABIN65' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VTRE35' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR31' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY03' />
-    
-    
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR31' />       
 </div>
 <!--container01 close-->
 
@@ -106,11 +100,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Remove dark undearms</h2>
+<h2 class="txt01">Remove Dark Undearms</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/light-underarms.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Being a Sith Lord has it's own travails. Especially, when everything starts to turn dark. We hate dark underarms as much as you do and here's how you can get rid of dark underarms without becoming a silly Jedi!</p>
 </div>
 
 <div class="cl"></div>
@@ -126,11 +120,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Replace specs with fashion</h2>
+<h2 class="txt01">Say No To Specs</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/dump-your-spectacles.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Specs are a thing of the past. These days, people can talk to each other, face to face, without really being there. Unless you have cool steampunk specs or better still - a gold rim monocle, it would be wise to switch to contacts.</p>
 </div>
 
 <div class="cl"></div>
@@ -149,11 +143,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Shaving</h2>
+<h2 class="txt01">Become Aerodynamic</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/shaving.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>In the winters, the wind is the super hero's true enemy. It turns a whisker or any other bit of facial hair into full blown menace, hampers speed and often prevents one from breaking the sound barrier.</p>
+<p>If only one could remove facial hair and become smooth and pierce through the air, leaving behind a whiff of musk. Sounds like a plan, doesn't it?<p>
 </div>
 
 <div class="cl"></div>
