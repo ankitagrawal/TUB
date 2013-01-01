@@ -89,7 +89,7 @@
 <h2 class="txt01">Gain Lean Muscle</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/gain-mass.jpg"/>
 <p>Gaining lean muscle mass was never this easy. Take your pick from the lot that the champs rely on. It doesn't matter if you are a hard gainer or a vegetarian. With the right diet, workout and the most appropriate mass gainer. Whether you want to look Spartan or a Space Marine, we have it all covered.</p>
 </div>
 
@@ -117,7 +117,7 @@
 <h2 class="txt01">Hit the GYM Like a PRO!</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/go-gym.jpg"/>
 <p>Gym gear is the most under appreciated part of hitting the gym daily. Proper gear ensures that you lift with the right form, don't have unwanted sweat dripping along with annoying itches. Hygiene apart, good gym gear also includes a sipper which can keep you hydrated & energized with your favourite intra workout! All of this is incomplete without a duffel bag!</p>
 </div>
 
@@ -169,7 +169,7 @@
 <h2 class="txt01">Build a Home Gym!</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/home-gym.jpg"/>
 <p>Getting to the gym can get difficult and there are times, when getting to the gym is just not enough? Do you find yourself lacking focus in the gym? Do you absolutely hate random gym music? Do you hate waiting for your turn for any machine? Do you hate gym rats, smelly bathrooms and annoying trainers? It's time to build a shrine to the beast within!</p>
 </div>
 
@@ -195,7 +195,7 @@
 <h2 class="txt01">Pick Up Your Favorite Sport!</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/learn-newsport.jpg"/>
 	<p>Improve your fitness, socialize, build a newer character and tweak your team work skills in one stroke! All you need to do, is choose a sport that resonates with your physical attributes & personality. The sport equipment you choose will decide how fun your game turns out to be.</p>
 </div>
 

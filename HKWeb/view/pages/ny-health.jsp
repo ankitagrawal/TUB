@@ -66,7 +66,7 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Complete nutrition for women is a rather tricky domain - given their combination of infinite work and zero rest. Timely supplement consumption can help ward off worries like bone & joint issues, heart problems and the like.</p>
 </div>
 
 <div class="cl"></div>
@@ -93,8 +93,8 @@
 <h2 class="txt01">Diabetes Management</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/reduce-medical.jpg"/>
+<p>Managing Diabetes and getting the most out of life was never easier. Now you can choose from India's best meters, testing strips, sweeteners, cripies, drizzles and shakes and put all your sugar related fears at bay!</p>
 </div>
 
 <div class="cl"></div>
@@ -147,18 +147,15 @@
 <h2 class="txt01">Do not Go Hungry</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/hydrate-daily.jpg"/>
+<p>If a lean waist or a lighter body is what you want, then you don't need to starve! Especially, when there are some good protein bars and other low calorie snacks on sale.</p>
 </div>
 
 <div class="cl"></div>
-
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT651' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT716' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT974' />
-
-
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SWT036' />
 </div>
 <!--container01 close-->
 

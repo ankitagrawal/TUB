@@ -56,32 +56,7 @@
         </div>
 <div class="cl"></div>
 
-
-
-
 <!--container01 start-->
-
-<div class="container01">
-<h2 class="txt01">Poop Effortlessly</h2>
-
-<div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/poopeffortlessly.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-</div>
-
-<div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1204' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1521' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1531' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT818' />
-
-
-</div>
-<!--container01 close-->
->>>>>>> 2b6b37aaf70bff5aa7ed35f8a16eb22b7f97db89
-
-    <!--container01 start-->
 
 <div class="container01">
 <h2 class="txt01">Potty Train Your Baby</h2>
@@ -89,6 +64,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/potty-train.jpg"/>
 <p>Ease the transition to potty training with quality diapers, nappies, gentle wipes and creams. Your child hates diaper rashes as much as you do!</p>
+<p>PS: Studies reveal that babies with successful potty training are more likely to become Engineers or Doctors or Scientists!</p> 
 </div>
 
 <div class="cl"></div>
@@ -161,23 +137,19 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>Research has proved that playing enhances a childs development, behavior and social interaction. Grab a toy to put your baby on the fast track to brain development with bathing toys, amusing tri-cycles and colourful rattles.</p>
+<p>Research has proved that playing enhances a child's development, behaviour and social interaction. Grab a toy to put your baby on the fast track to brain development with bathing toys, amusing tri-cycles and colourful rattles.</p>
 </div>
-
 <div class="cl"></div>
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2184'/>
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1268'/>
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1275'/>
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2192'/>
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2202'/>
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2183'/>
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2001'/>
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1286'/>    
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1284'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1312'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1313'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1903'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1902'/>        
 </div>
 <!--container01 close-->
-
-
-
     <div class="cl"></div>
 		<div class="pages">
 	         <a class="next"  href="${pageContext.request.contextPath}/pages/ny-parenting02.jsp">← Previous</a>
