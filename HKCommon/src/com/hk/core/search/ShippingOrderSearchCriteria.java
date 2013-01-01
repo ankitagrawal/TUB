@@ -135,6 +135,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
+
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
 

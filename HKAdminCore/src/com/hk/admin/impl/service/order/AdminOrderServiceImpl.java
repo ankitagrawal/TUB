@@ -1,11 +1,6 @@
 package com.hk.admin.impl.service.order;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -317,7 +312,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Transactional
     public Order markOrderAsCompletedWithInstallation(Order order){
-       boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
+//       boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
+        boolean isUpdated = updateOrderStatusFromShippingOrdersForInstallation(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
         if (isUpdated) {
             logOrderActivity(order, EnumOrderLifecycleActivity.OrderInstalled);
             getAdminEmailManager().sendOrderInstalltionEmail(order);
@@ -336,6 +332,43 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
         return order;
     }
+
+
+
+
+    @Transactional
+       private boolean updateOrderStatusFromShippingOrdersForInstallation(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess) {
+
+           boolean shouldUpdate = true;
+           Set<ShippingOrder> baseShippingOrderList = order.getShippingOrders();
+           List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+            for (ShippingOrder shippingOrder : baseShippingOrderList) {
+                if (shippingOrder.isDropShipping() && shipmentService.isShippingOrderHasInstallableItem(shippingOrder)) {
+                    shippingOrderList.add(shippingOrder);
+                }
+            }
+
+           for (ShippingOrder shippingOrder : shippingOrderList) {
+               if (!shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
+                   if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
+                       shouldUpdate = false;
+                       break;
+                   }
+               }
+           }
+
+           if (shouldUpdate) {
+               order.setOrderStatus(getOrderStatusService().find(boStatusOnSuccess));
+               order = getOrderService().save(order);
+           }
+           /*
+            * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =
+            * orderDaoProvider.get().save(order); }
+            */
+
+           return shouldUpdate;
+       }
+    
 
     @Override
     @Transactional

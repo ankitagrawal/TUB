@@ -3,7 +3,7 @@ Your order ${order.gatewayOrderId} has been Installed !
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>Your order has been delivered...</title>
+	<title>Your order has been Installed...</title>
 </head>
 
 <body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#FFFFFF;">

@@ -30,7 +30,7 @@
 
   <s:form beanclass="com.hk.web.action.admin.queue.ShipmentInstallationAwaitingQueueAction" autocomplete="off">
     <%--<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${installationQueueBean}"/>--%>
-    <h7> Showing Total -- ${installationQueueBean.noOfInstallableItems} Items </h7>
+    <h7> Showing Total -- ${installationQueueBean.noOfInstallableItems} -- Items </h7>
       <br>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${installationQueueBean}"/>
     <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
@@ -38,7 +38,7 @@
     <div>
       <%--<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${installationQueueBean}"/>--%>
      <br>
-     <h7> Showing Total -- ${installationQueueBean.noOfInstallableItems} Items </h7>
+     <h7> Showing Total -- ${installationQueueBean.noOfInstallableItems} -- Items </h7>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${installationQueueBean}"/>
     </div>
     <div id="hiddenShippingIds"></div>

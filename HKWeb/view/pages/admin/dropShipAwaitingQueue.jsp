@@ -105,6 +105,7 @@
           <s:option value="60">60</s:option>
           <s:option value="120">120</s:option>
         </s:select>
+          <br>
 
           <li><label style="float:left;width: 100px;"><strong> SO Category </strong></label> &nbsp;
                     <div class="checkBoxList">

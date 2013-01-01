@@ -21,7 +21,7 @@ public interface ShipmentService {
 
     public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder );
 
-     public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder );
+    public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder );
 
 	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
     

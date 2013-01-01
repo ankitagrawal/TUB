@@ -36,9 +36,9 @@ import net.sourceforge.stripes.validation.Validate;
  */
 
 
-public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction{
+public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction {
 
-      private static Logger logger            = LoggerFactory.getLogger(DropShippingAwaitingQueueAction.class);
+    private static Logger logger = LoggerFactory.getLogger(DropShippingAwaitingQueueAction.class);
 
     Page shippingOrderPage;
     List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
@@ -51,23 +51,21 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private ShipmentService shipmentService;
-   
 
-    private Long                       shippingOrderId;
-    private Long                       orderId;
-
-    private String                     gatewayOrderId;
-    private String                     baseGatewayOrderId;
+    private Long shippingOrderId;
+    private Long orderId;
+    private String gatewayOrderId;
+    private String baseGatewayOrderId;
     private Date startDate;
-    private Date                       endDate;
+    private Date endDate;
     private Category category;
-    private ShippingOrderStatus        shippingOrderStatus;
-    private Integer                    defaultPerPage    = 30;
-    private Integer                    noOfInstallableItems;
+    private ShippingOrderStatus shippingOrderStatus;
+    private Integer defaultPerPage = 30;
+    private Integer noOfInstallableItems;
 
     @DontValidate
     @DefaultHandler
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_DROP_SHIPPING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         Long startTime = (new Date()).getTime();
         if (shippingOrderStatus == null) {
@@ -78,16 +76,14 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
         shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
 
-        // orderPage = orderDao.searchPackingAwaitingOrders(null, null, null, null, getPageNo(), getPerPage(),
-        // applicableLineItemStatus);
         if (shippingOrderPage != null) {
-         List<ShippingOrder>    shippingOrderList1 = shippingOrderPage.getList();
-            for(ShippingOrder shippingOrder : shippingOrderList1) {
-                 if (shippingOrder.isDropShipping() && shipmentService.isShippingOrderHasInstallableItem(shippingOrder))  {
+            List<ShippingOrder> baseshippingOrderList = shippingOrderPage.getList();
+            for (ShippingOrder shippingOrder : baseshippingOrderList) {
+                if (shippingOrder.isDropShipping() && shipmentService.isShippingOrderHasInstallableItem(shippingOrder)) {
                     shippingOrderList.add(shippingOrder);
-                  }
+                }
             }
-             noOfInstallableItems = shippingOrderList.size();
+            noOfInstallableItems = shippingOrderList.size();
             logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
         }
         return new ForwardResolution("/pages/admin/installationAwaitingQueue.jsp");
@@ -95,18 +91,24 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
 
     public Resolution searchOrders() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInInstallationQueue()));
+        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInInstallationQueue()));
 //        shippingOrderStatus = shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered);
 //        shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {
-            shippingOrderList = shippingOrderPage.getList();
+            List<ShippingOrder> baseshippingOrderList = shippingOrderPage.getList();
+            for (ShippingOrder shippingOrder : baseshippingOrderList) {
+                if (shippingOrder.isDropShipping() && shipmentService.isShippingOrderHasInstallableItem(shippingOrder)) {
+                    shippingOrderList.add(shippingOrder);
+                }
+            }
+            noOfInstallableItems = shippingOrderList.size();
         }
         return new ForwardResolution("/pages/admin/installationAwaitingQueue.jsp");
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DROP_SHIPPING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution markShippingOrderAsInstalled() {
         if (shippingOrderList != null && !shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {

@@ -3,6 +3,7 @@ package com.hk.web.action.admin.shipment;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.*;
+import com.hk.domain.core.Pincode;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -16,6 +17,7 @@ import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction;
 import com.hk.web.action.error.AdminPermissionAction;
 import com.hk.helper.InvoiceNumHelper;
@@ -60,6 +62,8 @@ public class CreateDropShipmentAction extends BaseAction {
     AdminShippingOrderService adminShippingOrderService;
     @Autowired
     private SeekInvoiceNumService seekInvoiceNumService;
+    @Autowired
+    PincodeDao pincodeDao;
 
     List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
     Double boxWeight;
@@ -170,6 +174,10 @@ public class CreateDropShipmentAction extends BaseAction {
         shipment.setBoxSize(boxSize);
         shippingOrder.setShipment(shipment);
         shipment.setShippingOrder(shippingOrder);
+        if(shipment.getZone() == null){
+			Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			shipment.setZone(pinCode.getZone());
+		}
         shipmentService.save(shipment);
         shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
         shippingOrderDao.save(shippingOrder);
@@ -190,6 +198,9 @@ public class CreateDropShipmentAction extends BaseAction {
         logger.info("Drop shipment Item mark as shipped");
         if (shippingOrder != null) {
             // shippingOrder.setAccountingInvoiceNumber();
+           trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
+           selectedCourier = shippingOrder.getShipment().getAwb().getCourier(); 
+
             if (trackingId == null || trackingId.isEmpty()){
               addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Please Enter the Tracking Id"));
               return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
