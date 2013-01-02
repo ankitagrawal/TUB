@@ -326,10 +326,10 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 					}
 				}
 			} else {
-				errorMessage = "Sku of Product varinat  does not exist";
+				errorMessage = "Sku of Product variant  does not exist";
 			}
 		} else {
-			errorMessage = "Invalid Product varinat Id";
+			errorMessage = "Invalid Product variant Id";
 		}
 		return skuItemList;
 	}
