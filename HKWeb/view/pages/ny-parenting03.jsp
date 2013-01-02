@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/parenting.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/parenting01.jpg" />
 
     <div class="cl"></div>
 		<div class="pages">
@@ -59,12 +61,12 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Potty Train Your Baby</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/potty-train.jpg"/>
-<p>Ease the transition to potty training with quality diapers, nappies, gentle wipes and creams. Your child hates diaper rashes as much as you do!</p>
-<p>PS: Studies reveal that babies with successful potty training are more likely to become Engineers or Doctors or Scientists!</p> 
+<img src="${pageContext.request.contextPath}/images/ny2013/potty-train.png"/>
+    <h2 class="txt01">Potty Train Your Baby</h2>
+<p>Ease the transition to potty training with quality diapers, nappies, gentle wipes and creams. Your child hates diaper rashes as much as you do!<br/>PS: Studies reveal that babies with successful potty training are more likely to become Engineers or Doctors or Scientists!</p> 
 </div>
 
 <div class="cl"></div>
@@ -84,10 +86,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Prepare For Your Childs Illness</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/prepare-child.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/protect-child.png"/>
+    <h2 class="txt01">Protect your child from illness</h2>
 <p>The only thing worser than an ill baby is a baby that falls ill all of a sudden. You wont have to panic, as long as you are prepared with digital thermometers that dont require any contact, herbal teas for toddlers, nebulizers for kids that dislike medicines and more. Now you can win the battle against illness, Effortlessly!</p>
 </div>
 
@@ -114,10 +117,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Send Your Child to School. Happily. Everyday.</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/send-child-school.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/send-child-to-school.png"/>
+    <h2 class="txt01">Send Your Child to School. Happily. Everyday.</h2>
 <p>Make going to school a happy & joyful affair for your little devil, with cool lunch boxes, groovy bags, water bottles, healthy and tasty breakfast options like cereals and multi grain shakes. </p>
 </div>
 
@@ -133,10 +137,11 @@
 <!--container01 close-->
 
 <div class="container01">
-<h2 class="txt01">Make Your Child Learn by Playing!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/learn-sport.png"/>
+    <h2 class="txt01">Make Your Child Learn by Playing!</h2>
 <p>Research has proved that playing enhances a child's development, behaviour and social interaction. Grab a toy to put your baby on the fast track to brain development with bathing toys, amusing tri-cycles and colourful rattles.</p>
 </div>
 <div class="cl"></div>

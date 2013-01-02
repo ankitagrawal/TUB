@@ -39,13 +39,13 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
-
-
-<img src="${pageContext.request.contextPath}/images/ny2013/grooming.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/grooming01.jpg" />
 
  <div class="cl"></div>
 		<div class="pages">
@@ -62,10 +62,11 @@
  <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Fair Skin</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/fair-skin.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/light-underarms.png"/>
+    <h2 class="txt01">Fair Skin</h2>
 <p>Want to look fairer? Tried lot of creams and your mothers home-made remedies but all in vain? Discover the secret to fairer skin tone with highly effective natural herbs and see the difference for yourself.</p> 
 </div>
 
@@ -107,10 +108,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Get Rid of Body Odour</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/body-odor.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/kill-body-odor.png"/>
+    <h2 class="txt01">Get Rid of Body Odour</h2>
 <p>The days of marking your territory with your natural scent are long gone. This new year, let the menace of body odour fade into oblivion with deodorants & the like that have helped many a genin, turn into a true Shinobi!</p>
 </div>
 
@@ -146,10 +148,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Get a Shapely Body</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/get-shape.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/get-in-shape.png"/>
+    <h2 class="txt01">Get a Shapely Body</h2>
 <p>Get that dream shape that you have always had on your mind. Whether its a sensuous curve or washboard abs or simply some arcane spot reduction - we have it all covered. Unveil the New You!</p>
 </div>
 

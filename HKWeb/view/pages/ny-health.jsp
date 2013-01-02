@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/health.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/health01.jpg" />
 
 
 <div class="cl"></div>
@@ -62,10 +64,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Complete Nutrition for Mommy</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/complete-nutrition-for-mommy.png"/>
+    <h2 class="txt01">Complete Nutrition for Mommy</h2>
 <p>Complete nutrition for women is a rather tricky domain - given their combination of infinite work and zero rest. Timely supplement consumption can help ward off worries like bone & joint issues, heart problems and the like.</p>
 </div>
 
@@ -90,10 +93,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Diabetes Management</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/reduce-medical.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/diabetes-management.png"/>
+    <h2 class="txt01">Diabetes Management</h2>
 <p>Managing Diabetes and getting the most out of life was never easier. Now you can choose from India's best meters, testing strips, sweeteners, cripies, drizzles and shakes and put all your sugar related fears at bay!</p>
 </div>
 
@@ -144,10 +148,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Do not Go Hungry</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/hydrate-daily.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/dont-stay-hungry.png"/>
+    <h2 class="txt01">Do not Go Hungry</h2>
 <p>If a lean waist or a lighter body is what you want, then you don't need to starve! Especially, when there are some good protein bars and other low calorie snacks on sale.</p>
 </div>
 

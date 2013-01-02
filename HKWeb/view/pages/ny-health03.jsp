@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/health.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/health01.jpg" />
 
     <div class="cl"></div>
 		<div class="pages">
@@ -59,12 +61,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">No more Root Canal</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/root-canal.jpg"/>
-<p>A stitch in time saves 9000. Especially when it comes to a root canal (don't even get us started on how much it hurts and how long it takes and did we mention costs?)</p>
-<p>Anyway, here's how you can eliminate root canal from your life forever!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/root-canal.png"/>
+    <h2 class="txt01">No More Root Canal</h2>
+<p>A stitch in time saves 9000. Especially when it comes to a root canal (don't even get us started on how much it hurts and how long it takes and did we mention costs?)<br/>Anyway, here's how you can eliminate root canal from your life forever!</p>
 </div>
 
 <div class="cl"></div>
@@ -96,10 +98,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">QUIT Smoking</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/quit-smoking.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/quit-smoking.png"/>
+    <h2 class="txt01">QUIT Smoking</h2>
 <p>You have always dreaded the 3-day-hump and the prospect of going cold turkey. All of that's in the paleolithic era. Now you can quit smoking and do it without getting into any vicious cycle of relapse. Here's to a tobacco free 2013!</p>
 </div>
 
@@ -115,10 +118,11 @@
         <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Reduce Medical Expenses</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/reduce-medical.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/reduce-medical-bills.png"/>
+    <h2 class="txt01">Reduce Medical Expenses</h2>
 <p>With regular medical tests (and a good medical insurance), you can eliminate recurring medical expenses. As the old saying goes, forewarned is forearmed.</p>
 </div>
 

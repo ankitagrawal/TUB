@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/parenting.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/parenting01.jpg" />
 
   <div class="cl"></div>
 		<div class="pages">
@@ -61,10 +63,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Looking for Baby Shower Gifts</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/baby-shower.png"/>
+    <h2 class="txt01">Looking for Baby Shower Gifts</h2>
 <p>The best thing that a baby can have (apart from mommy, daddy, siblings and puppies) are dainty little creams, oils and ofcourse soaps and powders.</p>
 </div>
 
@@ -88,10 +91,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Feed Babies With Ease</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/comfortable-baby-feeding.png"/>
+    <h2 class="txt01">Feed Babies With Ease</h2>
 <p>You can get any job done, as long as you have the right tools for it & this is true when it comes to feeding your little devil(s). Be prepared to have feeding without fuss!</p>
 </div>
 
@@ -106,8 +110,8 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER018' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB363' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER017' />
-    
-    
+
+
 
 
 </div>

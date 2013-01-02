@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/parenting.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/parenting01.jpg" />
 
 <div class="cl"></div>
 		<div class="pages">
@@ -62,10 +64,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">No More Pregnancy Stretch Marks</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/get-rid-pregmarks.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/pregnancy-strech-marks.png"/>
+    <h2 class="txt01">No More Pregnancy Stretch Marks</h2>
 <p>New Mommies fret and fume over stretch marks. Riding the challenge to treat stretch marks is a daring way to welcome life's greetings! To gain total effects in the shortest possible time, skin care products formulated distinctly for moms and post pregnancy body shaping formulae will give you the edge you always wanted. Ofcourse, you can start flaunting your Mommy figure - it won't be there for long!</p>
 </div>
 
@@ -82,10 +85,11 @@
      <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Help Elders get on top of health</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/help-elders.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/top-of-health-elder.png"/>
+    <h2 class="txt01">Help Elders get on top of health</h2>
 <p>Sometimes, it's our parents who need to be treated with the care and concern that you have for your children. More often than not, the New Year is a great occasion to make your concern felt in action!</p>
 </div>
 
@@ -113,10 +117,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Gift the Gift of Life to the Earth!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/ovulation-kit.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/ovulation-kit.png"/>
+    <h2 class="txt01">Get Pregnant!</h2>
 <p>The gift of life sometimes appears elusive. Now, you can leverage science to your advantage - with Ovulation Kits, Fertility Supplements and a host of other alternatives designed to make conceiving an easy task.</p>
 </div>
 <div class="cl"></div>
