@@ -100,14 +100,6 @@ public class ChangeUserRolesAction extends BaseAction {
               roleSet.add(role);
             }
           }
-//            for (Role role : userRoles) {
-//                if (role.isSelected()) {
-//                    roleSet.add(role);
-//                }
-//            }
-//            if (roleSet.size() == 0) {
-//                addValidationError("userRoles", new LocalizableError("/ChangeUserRoles.action.no.role.selected"));
-//            }
         }
 
     }
