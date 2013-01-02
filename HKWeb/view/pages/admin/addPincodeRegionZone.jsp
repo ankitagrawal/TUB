@@ -38,7 +38,7 @@
 							if ($(this).find('select').length) {
 								var selectval = $(this).find('select').val();
 								if (selectval == null || selectval == '') {
-									alert('select Warehouse /Region Type');
+									alert('Select Region Type');
 									error = true;
 									return false;
 								}
@@ -138,11 +138,17 @@
 							<tr class="przlist">
 								<td>${prz.pincode.pincode}</td>
 
-								<td><s:select name="pincodeRegionZoneList[${ctr.index}].warehouse" id="warehouse"
-								              value="${prz.warehouse.id}">
-									<s:option value="">--Select Warehouse--</s:option>
-									<s:options-collection collection="${warehouseList}" value="id" label="name"/>
-								</s:select></td>
+								<td>
+									${prz.warehouse.name}
+									<s:hidden name="pincodeRegionZoneList[${ctr.index}].warehouse" value="${prz.warehouse.id}"/>
+
+									<%--<s:select name="pincodeRegionZoneList[${ctr.index}].warehouse" id="warehouse"--%>
+								              <%--value="${prz.warehouse.id}">--%>
+									<%--<s:option value="">--Select Warehouse--</s:option>--%>
+									<%--<s:options-collection collection="${warehouseList}" value="id" label="name"/>--%>
+								<%--</s:select>--%>
+
+								</td>
 
 								<td>
 									<s:select name="pincodeRegionZoneList[${ctr.index}].regionType" id="region"
