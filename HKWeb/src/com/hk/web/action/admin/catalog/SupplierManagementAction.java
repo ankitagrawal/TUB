@@ -135,15 +135,16 @@ public class SupplierManagementAction extends BasePaginatedAction {
         if (supplier != null) {
             Supplier oldSupplier = supplierDao.findByTIN(supplier.getTinNumber());
             if (oldSupplier == null) {
-                if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
+                if (checkForMandatoryFields(supplier)) {
                     addRedirectAlertMessage(new SimpleMessage("Supplier added successfully."));
                     supplierDao.save(supplier);
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
-                    return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
-                }
+                    //return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
+                    return new ForwardResolution("/pages/admin/supplier.jsp");
+				}
             } else if (supplier.getId() != null) {
-                if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
+                if (checkForMandatoryFields(supplier)) {
                     addRedirectAlertMessage(new SimpleMessage("Supplier edited successfully."));
                     supplierDao.save(supplier);
                 } else {
@@ -191,6 +192,13 @@ public class SupplierManagementAction extends BasePaginatedAction {
             }
         }
     }
+
+	private boolean checkForMandatoryFields(Supplier supplier){
+		return (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) &&
+				StringUtils.isNotBlank(supplier.getState()) && supplier.getCreditDays() != null &&
+				supplier.getTargetCreditDays() != null && supplier.getLeadTime() != null &&
+				supplier.getActive() != null);
+	}
 
     public List<Supplier> getSupplierList() {
         return supplierList;
