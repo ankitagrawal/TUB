@@ -42,7 +42,6 @@ import java.util.*;
  * Time: 1:50:37 PM
  * To change this template use File | Settings | File Templates.
  */
-@Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
 public class ExtraInventoryAction extends BasePaginatedAction{
 
@@ -109,6 +108,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
   public Resolution save(){
 
     extraInventory = getExtraInventoryService().getExtraInventoryByPoId(purchaseOrderId);
@@ -194,6 +194,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
+@Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
   public Resolution createRtv(){
     extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
     List<ExtraInventoryLineItem> extraLineItems = new ArrayList<ExtraInventoryLineItem>();
@@ -248,6 +249,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
   public Resolution editRtvNote(){
     rtvNote = getRtvNoteService().getRtvNoteById(rtvNoteId);
     extraInventory = rtvNote.getExtraInventory();
@@ -271,7 +273,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return new RedirectResolution(RTVAction.class,"pre");
   }
 
-
+  @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
   public Resolution editRtv(){
     rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventoryId);
     if(rtvNote == null){
@@ -299,7 +301,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
-
+  @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
   public Resolution createPO(){
     extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
     extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
@@ -328,7 +330,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return new ForwardResolution(ExtraInventoryAction.class, "pre").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
-
+  @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
   public Resolution generatePO(){
 
     purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
@@ -422,6 +424,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
   public Resolution editRtvNoteLineItems(){
     rtvNote = getRtvNoteService().getRtvNoteById(rtvNoteId);
     extraInventory = rtvNote.getExtraInventory();

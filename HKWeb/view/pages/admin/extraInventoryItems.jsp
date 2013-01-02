@@ -2,6 +2,7 @@
 <%@ page import="com.hk.constants.core.EnumTax" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.EnumPermission" %>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Extra Inventory">
 <s:useActionBean beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" var="extraInventory"/>
@@ -313,7 +314,9 @@
                             <c:set var="bool" value="1"/>
                         </c:if>
                         <c:if test="${bool eq '0' and eInLineItems.id !=null}">
+                            <shiro:hasPermission name="<%=EnumPermission.PO_MANAGEMENT%>">
                             <s:checkbox class="checkbox1" value="${eInLineItems.id}" name="extraInventoryLineItemsSelected[${ctr.index}].id"/>${eInLineItems.id}
+                            </shiro:hasPermission>
                         </c:if>
                         <input type="hidden" name="extraInventoryLineItems[${ctr.index}].id" value="${eInLineItems.id}"/>
                     </td>
@@ -427,12 +430,16 @@
     <br/>
     <s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}" />
     <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}" />
+    <shiro:hasPermission name="<%=EnumPermission.GRN_CREATION%>">
     <s:submit name="save" value="SAVE" id="save" />
+    </shiro:hasPermission>
+    <shiro:hasPermission name="<%=EnumPermission.PO_MANAGEMENT%>">
     <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
         <s:submit name="createRtv" value="Create RTV" class="createRtv" />
     </c:if>
     <s:submit name="editRtv" value="Check RTV Status" id="checkRtvStatus" />
     <s:submit name="createPO" value="Create PO" class="createRtv" />
+    </shiro:hasPermission>
 </s:form>
 <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">
     <div align="center" style="font-weight:bold; font-size:150%">BACK</div>
