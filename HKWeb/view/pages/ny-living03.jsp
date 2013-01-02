@@ -61,11 +61,12 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Intercourse With Some One</h2>
+<h2 class="txt01">Sizzle Between the Sheets</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/get-laid.jpg"/>
+<p>We really don't want to say anything. Just make sure that your partner and you play safe (but not too safe)</p>
+<p>The world is your oyster and you can out do all bunny rabbits!</p>
 </div>
 
 <div class="cl"></div>
@@ -113,15 +114,29 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Learn a new sport</h2>
+<h2 class="txt01">Learn a New Sport</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/learn-newsport.jpg"/>
+<p>You can bundle health, fitness, fun and socializing into 1 awesome thing - a sport! Whether it's TT or football or basky or gully cricket, we have everything you need to get started. The new year (and the winters too) are perfect for any Sport. Go be a Champ!</p>
 </div>
 
 <div class="cl"></div>
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2499' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2511' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2515' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT176' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT329' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1302' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1345' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1392' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT133' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT123' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1661' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2518' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT908' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1442' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1324' />	
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1319' />
 
 
@@ -134,39 +149,24 @@
 <h2 class="txt01">Reduce Body Aches</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/reduce-body-aches.jpg"/>
+<p>It's a New Year, it's a new You and You are unstoppable! That annoying ache has had it enough! It's time to put it to rest and move on to more gratifying vistas.</p>
 </div>
 
 <div class="cl"></div>
 
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MDRM001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MDRM002' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI36' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HEA011' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HEA010' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HEA004' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HP012' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='3M007' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GO001' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEU70' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HP033' />
 
 </div>
 <!--container01 close-->
-
-    <!--container01 start-->
-
-<div class="container01">
-<h2 class="txt01">Work Life Balance</h2>
-
-<div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-</div>
-
-<div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT410' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT411' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT874' />
-
-
-</div>
-<!--container01 close-->
-
+   
     <div class="cl"></div>
 		<div class="pages">
 	         <a class="next"  href="${pageContext.request.contextPath}/pages/ny-living02.jsp">← Previous</a>

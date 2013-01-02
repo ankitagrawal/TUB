@@ -62,34 +62,31 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Get rid of Pregnancy Stretch Marks</h2>
+<h2 class="txt01">No More Pregnancy Stretch Marks</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/get-rid-pregmarks.jpg"/>
+<p>New Mommies fret and fume over stretch marks. Riding the challenge to treat stretch marks is a daring way to welcome life's greetings! To gain total effects in the shortest possible time, skin care products formulated distinctly for moms and post pregnancy body shaping formulae will give you the edge you always wanted. Ofcourse, you can start flaunting your Mommy figure - it won't be there for long!</p>
 </div>
 
 <div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB150' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB151' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT411' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT821' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT874' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PHL002' />
-
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB361' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT4' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB364' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='QTNC1' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='QTNC6' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER014' />
 </div>
 <!--container01 close-->
 
      <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Help Elders to get on top of health</h2>
+<h2 class="txt01">Help Elders get on top of health</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/help-elders.jpg"/>
+<p>Sometimes, it's our parents who need to be treated with the care and concern that you have for your children. More often than not, the New Year is a great occasion to make your concern felt in action!</p>
 </div>
 
 <div class="cl"></div>
@@ -116,18 +113,20 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Ovulation Kit</h2>
+<h2 class="txt01">Gift the Gift of Life to the Earth!</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/ovulation-kit.jpg"/>
+<p>The gift of life sometimes appears elusive. Now, you can leverage science to your advantage - with Ovulation Kits, Fertility Supplements and a host of other alternatives designed to make conceiving an easy task.</p>
 </div>
-
 <div class="cl"></div>
-
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER001' />
-
-
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PHL002'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BIOMRCA005'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BIOMRCA003'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PW006'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER007'/>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER010'/>    
 </div>
 <!--container01 close-->
 

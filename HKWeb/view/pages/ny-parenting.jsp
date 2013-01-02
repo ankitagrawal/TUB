@@ -61,11 +61,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Aweome Baby Shower Gift</h2>
+<h2 class="txt01">Looking for Baby Shower Gifts</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>The best thing that a baby can have (apart from mommy, daddy, siblings and puppies) are dainty little creams, oils and ofcourse soaps and powders.</p>
 </div>
 
 <div class="cl"></div>
@@ -85,45 +85,29 @@
 </div>
 <!--container01 close-->
 
-
-    <!--container01 start-->
+<!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Confident Breastfeeding</h2>
+<h2 class="txt01">Feed Babies With Ease</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>You can get any job done, as long as you have the right tools for it & this is true when it comes to feeding your little devil(s). Be prepared to have feeding without fuss!</p>
 </div>
 
 <div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB058' />
-
-
-</div>
-<!--container01 close-->
-
-
-    <!--container01 start-->
-
-<div class="container01">
-<h2 class="txt01">Easy Feeding for Babies</h2>
-
-<div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-</div>
-
-<div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB021' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB024' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB032' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB033' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB034' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB035' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB036' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1311' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB150' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1959' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB444' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB241' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB243' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB405' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER018' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB363' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER017' />
+    
+    
 
 
 </div>

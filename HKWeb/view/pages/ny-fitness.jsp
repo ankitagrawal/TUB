@@ -63,24 +63,23 @@
 <h2 class="txt01">4% Body Fat </h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+
+<img src="${pageContext.request.contextPath}/images/ny2013/4fat.jpg"/>
+<p>With the approaching 2013, tell the world that you are there. Slash your body fat to 4 %, show off your abs, biceps, triceps, calves and quads and rule the gym. To get there, you need a few gruelling months with a killer workout, some fat burners, whey proteins and aminos. With a proper diet chart in place, these supplements will enhance fat loss, muscle recovery and growth and pure mass gains! You'll get the added energy from pre workout supplements  & aminos. Get glovesfor easy lifting and a duffel bag to hit the gym in style the whole year!</p>
+
 </div>
 
 <div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EQNX011' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EQNX013' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EQNX014' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EQNX015' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT101' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT102' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT108' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT109' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1141' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1151' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1159' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1160' />
+    
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT390' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT402' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT108' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1304' />
+    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1225' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1226' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1257' />
@@ -113,16 +112,26 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Bigger Chest</h2>
+<h2 class="txt01">Get That Massive Chest, with 500 Push Ups a Day!</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/go-gym.jpg"/>
+<p>Been tired enough trying to accomplish a bigger chest? Here is why you should up yourself and put your enerrgy back into it. Because you want it! Conquer the league of 500 push ups and get that tone you desire. Press away twice as much of your body weight at a throw-away convenience with compact push up accessories & supplements for a bigger chest. Bring home the perfect equipment for chest expansion and lid your space issues with expedient chest expanders. Enjoy handy chest enhancement with blasting proteins, whey addons & ideal-for-home chest expansion accessories.</p>
 </div>
 
 <div class="cl"></div>
 
-   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT056' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1431' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT414' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT772' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT020' />
+
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1432' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT074' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT053' />
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT395' />
+
+<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT056' />
 <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1153' />
 <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1157' />
 <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1162' />
@@ -170,19 +179,22 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Easier Physiotherapy</h2>
+<h2 class="txt01">Become Your Own Physiotherapist!</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>They New Year, break free from your medical expenses and emerge as your own physio to treat the nasty roots of pain. Professional physiotherapy runs up to thousands, burning a hole in your pocket. This is where, at home, therapy accessories come to your resuce. With easier physiotherapy options, you can cut the cost of physio sessions by choosing quick to use therapy accessories. Heal without worrying about escalated therapy costs with a range of rehab supports. You'll surprise yourself with the ease of use that these products have to offer.</p>
 </div>
 
 <div class="cl"></div>
-
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT678' />
-
-
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR024' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT649' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT666' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT654' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT676' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT663' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT665' />
 </div>
 <!--container01 close-->
 

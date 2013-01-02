@@ -65,47 +65,34 @@
 <h2 class="txt01">Reduced Chapped Skin</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/reduce-chopped-skin.jpg"/>
+<p>For a skin that deserves a cakewalk, nothing works better than the wholesome luxury of handcrafted recreational skin butters and bath foams. From lining your lips for a seriously head-turning pout to scrubbing off dead scales of skin, here is a class of skin elixirs you cannot say no to, especially when you have a resolution to keep. Love yourself. Indulge.</p>
 </div>
 
 <div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AYUCR4' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR34' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY286' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY300' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY305' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY309' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY311' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTYGAR1' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GAT12' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HB012' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV003' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KAYA7' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KHADI29' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL37' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL39' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MOOD01' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MOOD02' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MORPN001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NGENA6' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NIVEA15' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NIVEA7' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PF010' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PM011' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PS052' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PS054' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1294' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1295' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1462' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI11' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI37' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT15' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL39' />    
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NIVEA15' />    
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PF010' />    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT22' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT69' />
-    
-    
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT69' />    
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR100' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNOG05' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNOG06' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BBP28' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNOG29' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MYBLN37' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NEAT005' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FABIN65' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VTRE35' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR31' />       
 </div>
 <!--container01 close-->
 
@@ -113,11 +100,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Remove dark undearms</h2>
+<h2 class="txt01">Remove Dark Undearms</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/light-underarms.jpg"/>
+<p>Being a Sith Lord has it's own travails. Especially, when everything starts to turn dark. We hate dark underarms as much as you do and here's how you can get rid of dark underarms without becoming a silly Jedi!</p>
 </div>
 
 <div class="cl"></div>
@@ -133,11 +120,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Replace specs with fashion</h2>
+<h2 class="txt01">Say No To Specs</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/dump-your-spectacles.jpg"/>
+<p>Specs are a thing of the past. These days, people can talk to each other, face to face, without really being there. Unless you have cool steampunk specs or better still - a gold rim monocle, it would be wise to switch to contacts.</p>
 </div>
 
 <div class="cl"></div>
@@ -156,11 +143,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Shaving</h2>
+<h2 class="txt01">Become Aerodynamic</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/shaving.jpg"/>
+<p>In the winters, the wind is the super hero's true enemy. It turns a whisker or any other bit of facial hair into full blown menace, hampers speed and often prevents one from breaking the sound barrier.</p>
+<p>If only one could remove facial hair and become smooth and pierce through the air, leaving behind a whiff of musk. Sounds like a plan, doesn't it?<p>
 </div>
 
 <div class="cl"></div>

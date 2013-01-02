@@ -60,16 +60,24 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Endurance training </h2>
+<h2 class="txt01">Run a Marathon!</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>26.2 miles of physical endurance along with meticulous planning equals a marathon. Good shoes, first aid kit, chafing cream and heart rate monitor and adequate recovery after workouts will minimize the risk of inujury. Last minute preps? No more! Pack these essentials along for that incredible winning experience! </p>
 </div>
 
 <div class="cl"></div>
 
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1213' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1508' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1320' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT779' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT616' />
+    
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AS004' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1519' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEU085' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NEAT011' />       
     
 </div>
 <!--container01 close-->
@@ -78,20 +86,24 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Gain Weight Mass</h2>
+<h2 class="txt01">Gain Lean Muscle</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/gain-mass.jpg"/>
+<p>Gaining lean muscle mass was never this easy. Take your pick from the lot that the champs rely on. It doesn't matter if you are a hard gainer or a vegetarian. With the right diet, workout and the most appropriate mass gainer. Whether you want to look Spartan or a Space Marine, we have it all covered.</p>
 </div>
 
 <div class="cl"></div>
 
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1368' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1808' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT912' />
-   
-
+   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1368' />
+   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1808' />
+   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT912' />
+   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT476' />
+   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT922' />
+   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT905' />
+   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1222' />
+   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1332' />
+   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT825' />
 
 </div>
 <!--container01 close-->
@@ -102,34 +114,27 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">GO to GYM</h2>
+<h2 class="txt01">Hit the GYM Like a PRO!</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/go-gym.jpg"/>
+<p>Gym gear is the most under appreciated part of hitting the gym daily. Proper gear ensures that you lift with the right form, don't have unwanted sweat dripping along with annoying itches. Hygiene apart, good gym gear also includes a sipper which can keep you hydrated & energized with your favourite intra workout! All of this is incomplete without a duffel bag!</p>
 </div>
 
 <div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1158' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1227' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1256' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1289' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1382' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1420' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1468' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1599' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT327' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT335' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT420' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT693' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT728' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT906' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2100' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2101' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2102' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT303' />
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT448' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1701' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2313' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT198' />
+	
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1580' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1581' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT248' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT359' />
 </div>
 <!--container01 close-->
 
@@ -138,21 +143,79 @@
         <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Smaller Waist</h2>
+<h2 class="txt01">No More Love Handles!</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>You can get rid of love handles forever. Just take your pick & get started, working on reducing mid section fat. You can also opt for the waist shaper if you don't want to start exercising right away!</p>
 </div>
 
 <div class="cl"></div>
 
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RD001' />
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT001' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2348' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT015' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT437' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT106' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2516' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT837' />
 
 </div>
 <!--container01 close-->
 
+
+<div class="container01">
+<h2 class="txt01">Build a Home Gym!</h2>
+
+<div class="contant01">
+<img src="${pageContext.request.contextPath}/images/ny2013/home-gym.jpg"/>
+<p>Getting to the gym can get difficult and there are times, when getting to the gym is just not enough? Do you find yourself lacking focus in the gym? Do you absolutely hate random gym music? Do you hate waiting for your turn for any machine? Do you hate gym rats, smelly bathrooms and annoying trainers? It's time to build a shrine to the beast within!</p>
+</div>
+
+<div class="cl"></div>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1800' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2035' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT951' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT708' />
+	
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT055' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT022' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1560' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT813' />
+	
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2363' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2366' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT954' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1496' />
+</div>
+<!--container01 close-->
+
+<div class="container01">
+<h2 class="txt01">Pick Up Your Favorite Sport!</h2>
+
+<div class="contant01">
+<img src="${pageContext.request.contextPath}/images/ny2013/learn-newsport.jpg"/>
+	<p>Improve your fitness, socialize, build a newer character and tweak your team work skills in one stroke! All you need to do, is choose a sport that resonates with your physical attributes & personality. The sport equipment you choose will decide how fun your game turns out to be.</p>
+</div>
+
+<div class="cl"></div>
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2177' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2512' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1357' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1472' />
+	
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT279' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT870' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT153' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1325' />
+	
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT516' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2287' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1454' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1738' />
+</div>
+<!--container01 close-->
 
 
 <div class="cl"></div>
