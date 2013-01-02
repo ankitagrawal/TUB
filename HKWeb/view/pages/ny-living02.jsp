@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/living.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/living01.jpg" />
 
 <div class="cl"></div>
 		<div class="pages">
@@ -61,12 +63,12 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Don’t Pause at Menopause</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/4fat.jpg"/>
-<p>Menopause doesn't have to be what the media makes it out to be. Here is how you can ensure that you're feeling amazing while your body switches gears.</p>
-<p>All you need to do is choose the tea that suits your mood. The tea will take care of the detoxification. All you need to do is to let go and enjoy!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/dont-pause-at-menopause.png"/>
+    <h2 class="txt01">Don’t Pause at Menopause</h2>
+<p>Menopause doesn't have to be what the media makes it out to be. Here is how you can ensure that you're feeling amazing while your body switches gears.<br/>All you need to do is choose the tea that suits your mood. The tea will take care of the detoxification. All you need to do is to let go and enjoy!</p>
 </div>
 
 <div class="cl"></div>
@@ -99,12 +101,12 @@
     <!--container01 start-->
 
 <div class="	container01">
-<h2 class="txt01">GO on a Bike Trip</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/bike-trip.jpg"/>
-<p>That long awaited 'muhurat' will never come. The bike is waiting and so are the highways and the dhabhas and your friends. It's finally time for you to hit the road in style and show them how it's done.</p>
-<p>Now before you head out to Leh or Himachal, just remember that your bike trip is only as good as your preparation. Things go wrong everyday (trust us on this) - so load up now with stuff that will surely come in handy.</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/bike-trip.png"/>
+    <h2 class="txt01">GO on a Bike Trip</h2>
+<p>That long awaited 'muhurat' will never come. The bike is waiting and so are the highways and the dhabhas and your friends. It's finally time for you to hit the road in style and show them how it's done.<br/>Now before you head out to Leh or Himachal, just remember that your bike trip is only as good as your preparation. Things go wrong everyday (trust us on this) - so load up now with stuff that will surely come in handy.</p>
 </div>
 
 <div class="cl"></div>
@@ -120,12 +122,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Help Your Grandparents Travel</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/grandparents-travelling.jpg"/>
-<p>They helped you take your first few steps - now it's probably time, you made it possible for them to travel in ease!</p>
-<p>Whether it's Pilgrimage or simply revisiting their old 'addas', they will have tremendous fun. Just make sure that they are carrying all the essentials that they require and they're set!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/travel-grandparents.png"/>
+    <h2 class="txt01">Help Your Grandparents Travel</h2>
+<p>They helped you take your first few steps - now it's probably time, you made it possible for them to travel in ease!<br/>Whether it's Pilgrimage or simply revisiting their old 'addas', they will have tremendous fun. Just make sure that they are carrying all the essentials that they require and they're set!</p>
 </div>
 
 <div class="cl"></div>

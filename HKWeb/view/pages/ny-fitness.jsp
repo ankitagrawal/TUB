@@ -38,14 +38,14 @@
 <div id="wrapper">
 
 
+<div class="logo">
+<a href="http://www.healthkart.com"><img  src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
-
-
-<img src="${pageContext.request.contextPath}/images/ny2013/fitness.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/fitness01.jpg" />
 
   <div class="cl"></div>
 		<div class="pages">
@@ -60,12 +60,12 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">4% Body Fat </h2>
-
 <div class="contant01">
 
-<img src="${pageContext.request.contextPath}/images/ny2013/4fat.jpg"/>
-<p>With the approaching 2013, tell the world that you are there. Slash your body fat to 4 %, show off your abs, biceps, triceps, calves and quads and rule the gym. To get there, you need a few gruelling months with a killer workout, some fat burners, whey proteins and aminos. With a proper diet chart in place, these supplements will enhance fat loss, muscle recovery and growth and pure mass gains! You'll get the added energy from pre workout supplements  & aminos. Get glovesfor easy lifting and a duffel bag to hit the gym in style the whole year!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/4-percent.png"/>
+
+    <h2 class="txt01">4% Body Fat </h2>
+<p>With the approaching 2013, tell the world that you are there. Slash your body fat to 4 %, show off your abs, biceps, triceps, calves and quads and rule the gym. To get there, you need a few gruelling months with a killer workout, some fat burners, whey proteins and aminos. With a proper diet chart in place, these supplements will enhance fat loss, muscle recovery and growth and pure mass gains! You'll get the added energy from pre workout supplements  & aminos. Get gloves for easy lifting and a duffel bag to hit the gym in style the whole year!</p>
 
 </div>
 
@@ -112,10 +112,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Get That Massive Chest, with 500 Push Ups a Day!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/go-gym.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/go-to-gym.png"/>
+    <h2 class="txt01">Get That Massive Chest, with 500 Push Ups a Day!</h2>
 <p>Been tired enough trying to accomplish a bigger chest? Here is why you should up yourself and put your enerrgy back into it. Because you want it! Conquer the league of 500 push ups and get that tone you desire. Press away twice as much of your body weight at a throw-away convenience with compact push up accessories & supplements for a bigger chest. Bring home the perfect equipment for chest expansion and lid your space issues with expedient chest expanders. Enjoy handy chest enhancement with blasting proteins, whey addons & ideal-for-home chest expansion accessories.</p>
 </div>
 
@@ -179,10 +180,10 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Become Your Own Physiotherapist!</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/easier-physiotherapy.png"/>
+    <h2 class="txt01">Become Your Own Physiotherapist!</h2>    
 <p>They New Year, break free from your medical expenses and emerge as your own physio to treat the nasty roots of pain. Professional physiotherapy runs up to thousands, burning a hole in your pocket. This is where, at home, therapy accessories come to your resuce. With easier physiotherapy options, you can cut the cost of physio sessions by choosing quick to use therapy accessories. Heal without worrying about escalated therapy costs with a range of rehab supports. You'll surprise yourself with the ease of use that these products have to offer.</p>
 </div>
 

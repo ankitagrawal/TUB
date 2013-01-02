@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/grooming.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/grooming01.jpg" />
 
  <div class="cl"></div>
 		<div class="pages">
@@ -63,10 +65,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Intensive Hair Care</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/hair-care.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/hair-cure.png"/>
+    <h2 class="txt01">Intensive Hair Care</h2>
 <p>Want beautiful, silky hair? Tired of trying your moms home-made remedies for the same but all in vain? Check out our catalogue of advanced products to get smooth, lustrous hair without any side-effects.</p>
 </div>
 
@@ -112,10 +115,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Put the Rainbow to Shame!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/hair-color.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/hair-color.png"/>
+    <h2 class="txt01">Put the Rainbow to Shame!</h2>
 <p>As much as we all wish for it not to occur, at some point in your life, a gray hair or two is bound to pop out. It is totally your choice whether to go ahead with it and let the grays shine, or apply hair color to just blend them away. Want to go natural and avoid early signs of graying? Then may we suggest supplementing your diet with hair boosting supplements. </p>
 </div>
 
@@ -134,10 +138,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Leave Gangnam Behind (With Your Hair Style)</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/hair-styling.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/hair-styling.png"/>
+    <h2 class="txt01">Leave Gangnam Behind (With Your Hair Style)</h2>
 <p>From Basanti to Krur Singh to Gandalf the Gray to Rapunzel, we have every style covered (except for Johnny Bravo).</p>
 </div>
 
