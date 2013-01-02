@@ -35,7 +35,7 @@
 
                 <div class="img">
                     <div class='img180 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
-                        <s:link href="${product.productURL}?gosf=true" class="prod_link" title="${product.name}">
+                        <s:link href="${product.productURL}" class="prod_link" title="${product.name}">
                             <c:choose>
                                 <c:when test="${product.mainImageId != null}">
                                     <hk:productImage style="max-height:180px;max-width:180px;"

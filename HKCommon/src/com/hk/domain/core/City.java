@@ -1,5 +1,7 @@
 package com.hk.domain.core;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+
 import java.util.Comparator;
 
 import javax.persistence.Column;
@@ -56,4 +58,26 @@ public class City implements java.io.Serializable,Comparator<City>{
       return city1.getName().toUpperCase().compareTo(city2.getName().toUpperCase());
 
     }
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof City)) {
+			return false;
+		}
+		City city = (City) o;
+		if (id != null && city.id != null) {
+			return id.equals(city.id);
+		} else {
+			if (this.getName() != null && city.getName() != null) {
+				EqualsBuilder equalsBuilder = new EqualsBuilder();
+				equalsBuilder.append(this.getName(), city.getName());
+				return equalsBuilder.isEquals();
+			}
+
+		}
+		return false;
+	}
 }

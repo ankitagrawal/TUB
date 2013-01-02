@@ -88,7 +88,7 @@ public interface ProductService {
 
     public boolean isComboInStock(Combo combo);
 
-    public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage);
+    public Page getProductReviewsForCustomer(Product product, List<Long> reviewStatusList, int page, int perPage);
 
     public Long getAllReviews(Product product, List<Long> reviewStatusList);
 

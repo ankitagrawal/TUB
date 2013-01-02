@@ -1,7 +1,6 @@
 package com.hk.impl.dao.courier;
 
 import java.util.List;
-
 import com.hk.domain.courier.Zone;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
@@ -10,10 +9,13 @@ import org.springframework.stereotype.Repository;
 import org.apache.commons.lang.StringUtils;
 
 import com.hk.domain.core.Pincode;
+import com.hk.domain.core.City;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.constants.courier.EnumCourierGroup;
+
 
 @SuppressWarnings("unchecked")                                                                   
 @Repository
@@ -63,4 +65,24 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
 		} else
 			return null;
 	}
+
+	public List<Pincode> getPincodeNotInPincodeRegionZone() {
+		String hqlQuery = "from Pincode p  where p not in (select pincode from PincodeRegionZone ) ";
+		List<Pincode> pincodeList = getSession().createQuery(hqlQuery).list();
+		Integer totalGroupCount = EnumCourierGroup.getValidCourierGroupsInUse().size() * 2;
+		String query = "select prz.pincode from PincodeRegionZone prz group by prz.pincode " +
+				" having count(prz.id) < :totalGroupCount";
+		List<Pincode> incompletePincodeList = getSession().createQuery(query).setParameter("totalGroupCount", totalGroupCount.longValue()).list();
+		pincodeList.addAll(incompletePincodeList);
+		return pincodeList;
+	}
+
+
+	public List<Pincode> getPincodes(City city) {
+		DetachedCriteria pincodeCriteria = DetachedCriteria.forClass(Pincode.class);
+		pincodeCriteria.add(Restrictions.eq("city", city));
+		return (List<Pincode>) findByCriteria(pincodeCriteria);
+
+	}
 }
+

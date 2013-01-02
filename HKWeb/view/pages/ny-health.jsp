@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/health.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/health01.jpg" />
 
 
 <div class="cl"></div>
@@ -62,11 +64,12 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Complete Nutrition for Mommy</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>Complete nutrition for women is a rather tricky domain - given their combination of infinite work and zero rest. Timely supplement consumption can help ward off worries like bone & joint issues, heart problems and the like.</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/complete-nutrition-for-mommy.png"/>
+    <h2 class="txt01">Complete Nutrition for Mommy</h2>
+<p>New mommies are swamped. Days go by when they don’t know what day it is, forget what they ate for breakfast and manage to carry a temperament that is hard to get through. Here’s a nice set of supplements you can slip in when she decides to eat. They will help fortify her with all the iron and minerals along with proteins and other essentials, such that both the baby and the mum are not left wanting.</p>
 </div>
 
 <div class="cl"></div>
@@ -90,11 +93,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Diabetes Management</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/reduce-medical.jpg"/>
-<p>Managing Diabetes and getting the most out of life was never easier. Now you can choose from India's best meters, testing strips, sweeteners, cripies, drizzles and shakes and put all your sugar related fears at bay!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/diabetes-management.png"/>
+    <h2 class="txt01">Diabetes Management</h2>
+<p>Managing Diabetes and getting the most out of life was never easier. Now you can choose from India's best meters, testing strips, sweeteners, crispies, drizzles and shakes and put all your sugar related worries away!</p>
 </div>
 
 <div class="cl"></div>
@@ -144,11 +148,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Do not Go Hungry</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/hydrate-daily.jpg"/>
-<p>If a lean waist or a lighter body is what you want, then you don't need to starve! Especially, when there are some good protein bars and other low calorie snacks on sale.</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/dont-stay-hungry.png"/>
+    <h2 class="txt01">Do not Go Hungry</h2>
+<p>A lean waist a lighter body without starving yourself crazy! It is possible with some good protein bars and other low calorie snacks that we have on sale.</p>
 </div>
 
 <div class="cl"></div>
