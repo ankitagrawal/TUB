@@ -65,7 +65,7 @@
 
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/light-underarms.png"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/fair-skin.png"/>
     <h2 class="txt01">Fair Skin</h2>
 <p>Want to look fairer? Tired of creams and your grandmother’s home-made remedies? Get sublime natural herbs and potions to work their magic on you, expect some heads to turn.</p> 
 </div>

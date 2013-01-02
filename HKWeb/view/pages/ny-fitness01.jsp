@@ -64,7 +64,7 @@
 
 <div class="container01">
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/top-of-health-elder.png"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/marathon.png"/>
     <h2 class="txt01">Run a Marathon!</h2>
 <p>26.2 miles of physical endurance along with meticulous planning equals a marathon. Good shoes, first aid kit, chafing cream and heart rate monitor and adequate recovery after workouts will minimize the risk of injury. Healthkart has what you need in each of the cases, all you need to do now is run!</p>
 </div>

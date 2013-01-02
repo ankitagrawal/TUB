@@ -115,7 +115,7 @@
 
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/go-to-gym.png"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/bigger-chest.png"/>
     <h2 class="txt01">Get That Massive Chest, with 500 Push Ups a Day!</h2>
 <p>Want a 44 inch chest? Conquer the league of 500 pushups and get that tone you desire. Press away twice as much of your body weight at a throw-away convenience with compact push up accessories & supplements for a bigger chest. Bring home the perfect equipment for chest expansion and lid your space issues with expedient chest expanders. Enjoy handy chest enhancements with potent proteins, whey add-ons & ideal-for-home chest expansion accessories.</p>
 </div>

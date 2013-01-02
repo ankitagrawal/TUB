@@ -140,7 +140,7 @@
 
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/learn-sport.png"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/play-and-learn.png"/>
     <h2 class="txt01">Make Your Child Learn by Playing!</h2>
 <p>Research has proved that playing makes your child smarter and less shy. The earlier they start, the better. We have these nice numbers that we think will make your little devil get curious and develop hand eye co-ordination faster.</p>
 </div>
