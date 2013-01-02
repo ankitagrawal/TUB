@@ -27,8 +27,8 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.dao.RoleDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**
@@ -85,14 +85,29 @@ public class ChangeUserRolesAction extends BaseAction {
             addValidationError("userRoles", new LocalizableError("/ChangeUserRoles.action.no.role.selected"));
         } else {
             roleSet = new HashSet<Role>();
-            for (Role role : userRoles) {
-                if (role.isSelected()) {
-                    roleSet.add(role);
-                }
+            userDao.refresh(user);
+            Set<Role> userRolesDb = user.getRoles();
+              for(Role role : userRoles){
+                 if(userRolesDb.contains(role) && role.isSelected()){
+                   roleSet.add(role);
+                 }
+                else if(!(userRolesDb.contains(role)) && (role.isSelected())){
+                   roleSet.add(role);
+                 }
+              }
+          for(Role role : userRolesDb){
+            if(!userRoles.contains(role)){
+              roleSet.add(role);
             }
-            if (roleSet.size() == 0) {
-                addValidationError("userRoles", new LocalizableError("/ChangeUserRoles.action.no.role.selected"));
-            }
+          }
+//            for (Role role : userRoles) {
+//                if (role.isSelected()) {
+//                    roleSet.add(role);
+//                }
+//            }
+//            if (roleSet.size() == 0) {
+//                addValidationError("userRoles", new LocalizableError("/ChangeUserRoles.action.no.role.selected"));
+//            }
         }
 
     }
@@ -112,7 +127,7 @@ public class ChangeUserRolesAction extends BaseAction {
     public void setUser(User user) {
         this.user = user;
     }
-
+                                                                   
     public List<Role> getUserRoles() {
         return userRoles;
     }
