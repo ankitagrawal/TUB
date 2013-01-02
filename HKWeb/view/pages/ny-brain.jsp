@@ -76,7 +76,7 @@
 
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/einstien.png"/>
     <div class="cl"></div>
     <h2 class="txt01">Better Memory, Higher Focus & Higher IQ</h2>
     <div class="cl"></div>

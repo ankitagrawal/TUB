@@ -92,7 +92,7 @@
 
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/eat-healty.png"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/ayurveda.png"/>
     <h2 class="txt01">Ayurveda to the Rescue!</h2>
 <p>Ailments big and small run for cover when they come face to face with Ayurveda. Browse through our little arsenal of Ayurvedic goodies and be fighting fit this new year.</p>
 </div>
