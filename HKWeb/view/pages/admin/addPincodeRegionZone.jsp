@@ -20,6 +20,16 @@
 					return true;
 				});
 
+				$('.pinsearch').click(function(){
+					var pin = $('#pin').val();
+					if(pin == null || pin.trim() == ''){
+						alert('Enter Pincode');
+						return false;
+					}
+					return true;
+
+				})
+
 				$('.saveall').click(function() {
 					var row = $('.przlist');
 					var error = false;
@@ -66,7 +76,7 @@
 							<tr>
 								<td><label>Pincode</label></td>
 								<td><s:text name="pincodeRegionZone.pincode.pincode"   id="pin"/></td>
-								<td><s:submit name="searchPincodeRegion" value="Search"/></td>
+								<td><s:submit name="searchPincodeRegion" class="pinsearch" value="Search"/></td>
 							</tr>
 							<tr>
 								<td><label>Region</label></td>
