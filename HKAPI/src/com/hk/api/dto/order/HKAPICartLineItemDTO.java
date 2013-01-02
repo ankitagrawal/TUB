@@ -7,6 +7,7 @@ package com.hk.api.dto.order;
 public class HKAPICartLineItemDTO {
   private String productId;
   private Long qty;
+  private Long cartLineItemType;
   private Double storePrice;
   private Double discountOnStorePrice;
   private Double storeMrp;
@@ -49,6 +50,14 @@ public class HKAPICartLineItemDTO {
 
     public void setStoreMrp(Double storeMrp) {
         this.storeMrp = storeMrp;
+    }
+
+    public Long getCartLineItemType() {
+        return cartLineItemType;
+    }
+
+    public void setCartLineItemType(Long cartLineItemType) {
+        this.cartLineItemType = cartLineItemType;
     }
 }
 
