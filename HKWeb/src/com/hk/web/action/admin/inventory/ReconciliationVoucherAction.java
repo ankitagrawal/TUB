@@ -33,8 +33,6 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
-import com.hk.pact.dao.sku.SkuGroupDao;
-import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
@@ -220,15 +218,15 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 			try {
 				if (rvLineItem.getProductVariant() != null) {
-					if(rvLineItem.getQty() < rvLineItem.getReconciliedQty()){
+					if(rvLineItem.getQty() < rvLineItem.getReconciledQty()){
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Qty cannot be Less  than reconciliation Qty");
 					return new JsonResolution(healthkartResponse);
 					}
 					ProductVariant productVariant = rvLineItem.getProductVariant();
 					List<SkuItem> skuItemList = getInStockSkuItemsForEnteredBatch(rvLineItem.getBatchNumber().trim(), productVariant.getId());
 					if (skuItemList != null && skuItemList.size() > 0) {
-						int targetReconciliedQty = rvLineItem.getQty().intValue() - rvLineItem.getReconciliedQty().intValue();
-						if ( skuItemList.size() >= targetReconciliedQty) {
+						int targetReconciledQty = rvLineItem.getQty().intValue() - rvLineItem.getReconciledQty().intValue();
+						if ( skuItemList.size() >= targetReconciledQty) {
 							Sku sku = skuService.getSKU(productVariant, getUserService().getWarehouseForLoggedInUser());
 							rvLineItem.setSku(sku);
 							RvLineItem rvLineItemSaved = reconciliationVoucherService.reconcile(rvLineItem, reconciliationVoucher,skuItemList);

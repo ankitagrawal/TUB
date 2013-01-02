@@ -75,9 +75,9 @@ public class RvLineItem implements java.io.Serializable {
 	private String remarks;
 
 	@Column(name = "reconcilied_qty")
-	private Long reconciliedQty;
+	private Long reconciledQty;
 
-  public Long getId() {
+	public Long getId() {
     return this.id;
   }
 
@@ -173,12 +173,12 @@ public class RvLineItem implements java.io.Serializable {
     this.remarks = remarks;
   }
 
-	public Long getReconciliedQty() {		
-		return reconciliedQty;
+	public Long getReconciledQty() {
+		return reconciledQty;
 	}
 
-	public void setReconciliedQty(Long reconciliedQty) {
-		this.reconciliedQty = reconciliedQty;
+	public void setReconciledQty(Long reconciledQty) {
+		this.reconciledQty = reconciledQty;
 	}
 
 

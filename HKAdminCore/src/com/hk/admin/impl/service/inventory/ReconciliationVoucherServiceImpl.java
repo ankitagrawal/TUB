@@ -104,7 +104,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 						SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
 						adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, rvLineItem.getQty(), null, null, rvLineItem, null, inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CHECKIN), loggedOnUser);
 					}
-				rvLineItem.setReconciliedQty(rvLineItem.getQty());
+				rvLineItem.setReconciledQty(rvLineItem.getQty());
 				rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);					
 
 				} else if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Subtract.getId())) {
@@ -203,12 +203,12 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 			}
 
 			try {
-				int targetReconciliedQty = rvLineItem.getQty().intValue() - rvLineItem.getReconciliedQty().intValue();
+				int targetReconciledQty = rvLineItem.getQty().intValue() - rvLineItem.getReconciledQty().intValue();
 				int counter = 0;
 				if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Damage.getId())) {
 					// Delete from entered batches.
 					for (SkuItem instockSkuItem : skuItemList) {
-						if (counter < Math.abs(targetReconciliedQty)) {
+						if (counter < Math.abs(targetReconciledQty)) {
 							adminInventoryService.inventoryCheckinCheckout(rvLineItem.getSku(), instockSkuItem, null, null, null, rvLineItem, null,
 									inventoryService.getInventoryTxnType(EnumInvTxnType.RV_DAMAGED), -1L, loggedOnUser);
 							adminInventoryService.damageInventoryCheckin(instockSkuItem, null);
@@ -221,7 +221,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 				} else if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Expired.getId())) {
 					// Delete from available batches.
 					for (SkuItem instockSkuItem : skuItemList) {
-						if (counter < Math.abs(targetReconciliedQty)) {
+						if (counter < Math.abs(targetReconciledQty)) {
 							adminInventoryService.inventoryCheckinCheckout(rvLineItem.getSku(), instockSkuItem, null, null, null, rvLineItem, null,
 									inventoryService.getInventoryTxnType(EnumInvTxnType.RV_EXPIRED), -1L, loggedOnUser);
 							// inventoryService.damageInventoryCheckin(instockSkuItem, null);
@@ -234,7 +234,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 				} else if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Lost.getId())) {
 					// Delete from available batches.
 					for (SkuItem instockSkuItem : skuItemList) {
-						if (counter < Math.abs(targetReconciliedQty)) {
+						if (counter < Math.abs(targetReconciledQty)) {
 							adminInventoryService.inventoryCheckinCheckout(rvLineItem.getSku(), instockSkuItem, null, null, null, rvLineItem, null,
 									inventoryService.getInventoryTxnType(EnumInvTxnType.RV_LOST_PILFERAGE), -1L, loggedOnUser);
 							// inventoryService.damageInventoryCheckin(instockSkuItem, null);
@@ -245,8 +245,8 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 					}
 
 				}
-				long alreadyReconciledQty = rvLineItem.getReconciliedQty().intValue()+counter;
-				rvLineItem.setReconciliedQty(Long.valueOf(alreadyReconciledQty));
+				long alreadyReconciledQty = rvLineItem.getReconciledQty().intValue()+counter;
+				rvLineItem.setReconciledQty(Long.valueOf(alreadyReconciledQty));
 				rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
 
 			} catch (Exception e) {

@@ -84,7 +84,7 @@
 					'    <textarea rows="4"  class ="textare" columns="10" name="rvLineItems[' + nextIndex + '].remarks" style="height:50px;"/>' +
 					'  </td>' +
 					'<td>' +
-					'<input type="text" id="reconciliedqty" value="0" name="rvLineItems[' + nextIndex + '].reconciliedQty" readonly="readonly" />' +
+					'<input type="text" id="reconciliedqty" value="0" name="rvLineItems[' + nextIndex + '].reconciledQty" readonly="readonly" />' +
 					'</td>' +					
 					'<td> ' +
 					link +
@@ -174,7 +174,7 @@
 				dataType:'json',
 				success: function(data) {
 					if (data.code == '<%=HealthkartResponse.STATUS_OK%>') {
-						var reconQty = ''+data.data.rvLineItem.reconciliedQty;
+						var reconQty = ''+data.data.rvLineItem.reconciledQty;
 						var qty =   ''+data.data.rvLineItem.qty;
 						if( reconQty == qty) {						
 						curEle.parents('tr').css({"background-color":"#ccff99"}) ;
@@ -293,7 +293,7 @@
 		<c:forEach var="rvLineItem" items="${pa.reconciliationVoucher.rvLineItems}" varStatus="ctr">
 			<c:set var="productVariant" value="${rvLineItem.sku.productVariant}"/>
 			<c:choose>
-				<c:when test="${(rvLineItem.reconciliedQty == 0) || (rvLineItem.reconciliedQty < rvLineItem.qty)}">
+				<c:when test="${(rvLineItem.reconciledQty == 0) || (rvLineItem.reconciledQty < rvLineItem.qty)}">
 					<tr count="${ctr.index}" id="rowno" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
 						<s:hidden name="rvLineItems[${ctr.index}]" class="rvitem" value="${rvLineItem.id}"/>
 						<s:hidden name="rvLineItems[${ctr.index}].reconciliationVoucher"
@@ -339,8 +339,8 @@
 							<s:textarea name="rvLineItems[${ctr.index}].remarks" value="${rvLineItem.remarks}"/>
 
 						</td>
-						<td><s:text name="rvLineItems[${ctr.index}].reconciliedQty" id="reconciliedqty"
-						            value="${rvLineItem.reconciliedQty}" readonly="readonly"/>
+						<td><s:text name="rvLineItems[${ctr.index}].reconciledQty" id="reconciliedqty"
+						            value="${rvLineItem.reconciledQty}" readonly="readonly"/>
 						</td>
 						<td>
 							<s:link class="singlesave"
@@ -357,7 +357,7 @@
 						</td>
 						<td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
 						</td>
-						<td>${rvLineItem.reconciliedQty}
+						<td>${rvLineItem.reconciledQty}
 						</td>
 						<td>${rvLineItem.reconciliationType.name}
 						</td>
