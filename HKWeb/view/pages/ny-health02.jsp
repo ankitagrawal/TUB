@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/health.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/health01.jpg" />
 
 
 <div class="cl"></div>
@@ -63,10 +65,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Get More Sleep</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/get-more-sleep.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/get-more-sleep.png"/>
+    <h2 class="txt01">Get More Sleep</h2>
 <p>Whether it's mosquitos, or sleep apnea or indigestion that is bothering you - we have it all covered. Seriously, just browse through and get sound sleep everyday!</p>
 </div>
 
@@ -86,10 +89,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Turn to Ayurveda!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/gluten-free.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/eat-healty.png"/>
+    <h2 class="txt01">Turn to Ayurveda!</h2>
 <p>A number of ailments, both big and small, flee when faced with an Ayurvedic adversary. Browse through our mini arsenal of Ayurvedic goodies and put ill health behind 2012.</p>
 </div>
 

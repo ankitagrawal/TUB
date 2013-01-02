@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/grooming.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/grooming01.jpg" />
 
 <div class="cl"></div>
 		<div class="pages">
@@ -62,10 +64,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Reduced Chapped Skin</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/reduce-chopped-skin.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/reduce-chapped-and-broken-skin.png"/>
+    <h2 class="txt01">Reduced Chapped Skin</h2>
 <p>For a skin that deserves a cakewalk, nothing works better than the wholesome luxury of handcrafted recreational skin butters and bath foams. From lining your lips for a seriously head-turning pout to scrubbing off dead scales of skin, here is a class of skin elixirs you cannot say no to, especially when you have a resolution to keep. Love yourself. Indulge.</p>
 </div>
 
@@ -100,10 +103,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Remove Dark Undearms</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/light-underarms.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/light-underarms.png"/>
+    <h2 class="txt01">Remove Dark Undearms</h2>
 <p>Being a Sith Lord has it's own travails. Especially, when everything starts to turn dark. We hate dark underarms as much as you do and here's how you can get rid of dark underarms without becoming a silly Jedi!</p>
 </div>
 
@@ -120,10 +124,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Say No To Specs</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/dump-your-spectacles.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/dump-spectacles.png"/>
+    <h2 class="txt01">Say No To Specs</h2>
 <p>Specs are a thing of the past. These days, people can talk to each other, face to face, without really being there. Unless you have cool steampunk specs or better still - a gold rim monocle, it would be wise to switch to contacts.</p>
 </div>
 
@@ -143,12 +148,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Become Aerodynamic</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/shaving.jpg"/>
-<p>In the winters, the wind is the super hero's true enemy. It turns a whisker or any other bit of facial hair into full blown menace, hampers speed and often prevents one from breaking the sound barrier.</p>
-<p>If only one could remove facial hair and become smooth and pierce through the air, leaving behind a whiff of musk. Sounds like a plan, doesn't it?<p>
+<img src="${pageContext.request.contextPath}/images/ny2013/shave.png"/>
+    <h2 class="txt01">Become Aerodynamic</h2>
+<p>In the winters, the wind is the super hero's true enemy. It turns a whisker or any other bit of facial hair into full blown menace, hampers speed and often prevents one from breaking the sound barrier.<br/>If only one could remove facial hair and become smooth and pierce through the air, leaving behind a whiff of musk. Sounds like a plan, doesn't it?<p>
 </div>
 
 <div class="cl"></div>
