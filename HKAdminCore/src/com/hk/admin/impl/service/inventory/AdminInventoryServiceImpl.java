@@ -372,7 +372,18 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         this.productVariantInventoryDao = productVariantInventoryDao;
     }
 
+	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList) {
+		return adminSkuItemDao.getInStockSkuItems(skuGroupList);
+	}
 
+
+	public List<SkuGroup> getSkuGroupsByBatch(String barcode, Sku sku) {
+		return adminSkuItemDao.getSkuGroupsByBatch(barcode, sku);
+	}
+
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+		return adminSkuItemDao.getInStockSkuItems(skuGroup);
+	}
 
 
 }

@@ -30,9 +30,6 @@ public interface SkuGroupService {
 
 	public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
 
-	public List<SkuGroup> getSkuGroupByBarcode(String barcode, Sku sku);
-
-	public List<SkuGroup> getInStockSkuGroupByBatch(String batch, Sku sku);
 
 
 
@@ -44,11 +41,6 @@ public interface SkuGroupService {
 
 	public List<SkuItem> getInStockSkuItem(SkuGroup skuGroup);
 
-	public List<SkuItem> getInStockSkuItemByBatch(String batchNumber, Sku sku);
-
-	public List<SkuItem> getInStockSkuItemByBarcode(String barcode, Sku sku);
-
-//	public List<SkuItem> getInStockSkuItem(String batchNumber, Sku sku, String barcode);
 
 
 }

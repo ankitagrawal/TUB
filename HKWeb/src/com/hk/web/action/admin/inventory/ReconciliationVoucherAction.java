@@ -304,20 +304,22 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 	}
 
-	private  List<SkuItem> getInStockSkuItemsForEnteredBatch(String batchNumber,String productVariantId) {
+	private List<SkuItem> getInStockSkuItemsForEnteredBatch(String batchNumber, String productVariantId) {
 		List<SkuItem> skuItemList = null;
+		List<SkuGroup> skuGroupList = null;
 		errorMessage = "";
 		ProductVariant productVariant = productVariantService.getVariantById(productVariantId);
 		if (productVariant != null) {
 			Sku sku = skuService.getSKU(productVariant, getUserService().getWarehouseForLoggedInUser());
 			if (sku != null) {
-				skuItemList = skuGroupService.getInStockSkuItemByBarcode(batchNumber, sku);
-				if (skuItemList != null && skuItemList.size() > 0) {
+				SkuGroup skuGroup = adminInventoryService.getSkuGroupByHkBarcode(batchNumber);
+				if (skuGroup != null ) {
+					skuItemList = adminInventoryService.getInStockSkuItems(skuGroup);
 					return skuItemList;
-				}
-				else {
-					 skuItemList = skuGroupService.getInStockSkuItemByBatch(batchNumber,sku);
-					if (skuItemList != null && skuItemList.size() > 0) {
+				} else {
+					skuGroupList = adminInventoryService.getSkuGroupsByBatch(batchNumber, sku);
+					if (skuGroupList != null && skuGroupList.size() > 0) {
+						skuItemList = adminInventoryService.getInStockSkuItems(skuGroupList);
 						return skuItemList;
 					} else {
 						errorMessage = "Invalid Batch OR Batch is Empty";

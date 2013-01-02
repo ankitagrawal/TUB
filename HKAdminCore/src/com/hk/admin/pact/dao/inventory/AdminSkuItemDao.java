@@ -21,9 +21,12 @@ public interface AdminSkuItemDao extends BaseDao {
 
     public List<SkuItem> getInStockSkuItemsBySku(List<Sku> skuList);
 
-
-
     public List<SkuGroup> getInStockSkuGroups(Sku sku);
+
+	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList);
+
+
+
 
 
 
@@ -36,7 +39,9 @@ public interface AdminSkuItemDao extends BaseDao {
   public void resetInventory(ProductVariant productVariant);
 
   public List<SkuGroup> getInStockSkuGroupsByCreateDate(Sku sku);
+
   public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup);
 
+	public List<SkuGroup> getSkuGroupsByBatch(String barcode, Sku sku);
 
 }

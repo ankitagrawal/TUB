@@ -44,45 +44,6 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 
 
 
-	private  DetachedCriteria  getSkuGroupCriteria(List<SkuGroup> skuGroupList ,String barcode ,String batchNumber ){
-		DetachedCriteria skuGroupCriteria = DetachedCriteria.forClass(SkuGroup.class);
-		List<Long> skuGroupIds = new ArrayList<Long>();
-		for(SkuGroup skuGroup:skuGroupList){
-			skuGroupIds.add(skuGroup.getId());
-		}
-
-		if (skuGroupIds.size() > 0) {
-			skuGroupCriteria.add(Restrictions.in("id", skuGroupIds));
-		}
-
-		if (barcode != null) {
-			skuGroupCriteria.add(Restrictions.eq("barcode", barcode.trim()));
-		}
-
-		if (batchNumber != null) {
-			skuGroupCriteria.add(Restrictions.eq("batchNumber", batchNumber.trim()));
-		}
-		return skuGroupCriteria;
-
-	}
-
-
-	public List<SkuGroup> getSkuGroupByBarcode(String barcode, Sku sku) {		
-		List<SkuGroup> skuGroupList = getAllInStockSkuGroups(sku);
-		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(skuGroupList,barcode,null);
-		return findByCriteria(skuGroupCriteria);
-
-	}
-
-
-	public List<SkuGroup> getInStockSkuGroupByBatch(String batch, Sku sku) {
-		List<SkuGroup> skuGroupList = getAllInStockSkuGroups(sku);
-		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(skuGroupList,null,batch);
-		return findByCriteria(skuGroupCriteria);
-	}
-
-
-
    /* public void resetInventory(ProductVariant productVariant) {
         List<Long> toBeRemovedIds = (List<Long>) getSession().createQuery("select id from SkuGroup sg where sg.sku.productVariant = :productVariant").setParameter(
                 "productVariant", productVariant).list();

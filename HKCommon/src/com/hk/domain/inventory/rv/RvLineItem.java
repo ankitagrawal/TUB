@@ -199,7 +199,7 @@ public class RvLineItem implements java.io.Serializable {
 				}
 				equalsBuilder.append(this.productVariant.getId(), rvLineItem.getProductVariant().getId());
 				equalsBuilder.append(this.batchNumber, rvLineItem.getBatchNumber());
-				equalsBuilder.append(this.reconciliationType.getId(), getReconciliationType().getId());
+				equalsBuilder.append(this.reconciliationType.getId(), rvLineItem.getReconciliationType().getId());
 				return equalsBuilder.isEquals();
 			}
 		}

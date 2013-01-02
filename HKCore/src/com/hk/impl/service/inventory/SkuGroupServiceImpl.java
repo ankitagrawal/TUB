@@ -56,15 +56,6 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 	}
 
 
-	public List<SkuGroup> getSkuGroupByBarcode(String barcode, Sku sku){
-		return skuGroupDao.getSkuGroupByBarcode( barcode, sku);
-	}
-
-	public List<SkuGroup> getInStockSkuGroupByBatch(String batch, Sku sku){
-		return skuGroupDao.getInStockSkuGroupByBatch(batch, sku);
-	}
-
-
 
 	//SkuItemDao Methods
 	public List<SkuGroup> getInStockSkuGroups(Sku sku) {
@@ -78,42 +69,5 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 	public List<SkuItem> getInStockSkuItem(SkuGroup skuGroup) {
 		return getInStockSkuItem(skuGroup);
 	}
-
-
-	public List<SkuItem> getInStockSkuItemByBatch(String batchNumber, Sku sku) {
-		List<SkuGroup> skuGroupList = getInStockSkuGroupByBatch(batchNumber, sku);
-		List<SkuItem> skuItemList = new ArrayList<SkuItem>();
-		for (SkuGroup skuGroup : skuGroupList) {
-			skuItemList.addAll(skuGroup.getSkuItems());
-		}
-		return skuItemList;
-	}
-
-	public List<SkuItem> getInStockSkuItemByBarcode(String barcode, Sku sku) {
-		List<SkuGroup> skuGroupList = getSkuGroupByBarcode(barcode, sku);
-		List<SkuItem> skuItemList = new ArrayList<SkuItem>();
-		for (SkuGroup skuGroup : skuGroupList) {
-			skuItemList.addAll(skuGroup.getSkuItems());
-		}
-		return skuItemList;
-
-	}
-
-
-//	public List<SkuItem> getInStockSkuItem(String batchNumber, Sku sku, String barcode) {
-//		List<SkuGroup> skuGroupList;
-//		if (barcode != null) {
-//			skuGroupList = skuGroupDao.getSkuGroup(barcode, sku);
-//		} else {
-//			skuGroupList = skuGroupDao.getInStockSkuGroup(batchNumber, sku);
-//		}
-//		List<SkuItem> skuItemList = new ArrayList<SkuItem>();
-//		for (SkuGroup skuGroup : skuGroupList) {
-//			skuItemList.addAll(skuGroup.getSkuItems());
-//		}
-//		return skuItemList;
-//
-//	}
-
 
 }
