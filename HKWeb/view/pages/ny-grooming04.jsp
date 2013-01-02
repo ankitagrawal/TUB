@@ -69,7 +69,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/reduce-chapped-and-broken-skin.png"/>
     <h2 class="txt01">Reduced Chapped Skin</h2>
-<p>For a skin that deserves a cakewalk, nothing works better than the wholesome luxury of handcrafted recreational skin butters and bath foams. From lining your lips for a seriously head-turning pout to scrubbing off dead scales of skin, here is a class of skin elixirs you cannot say no to, especially when you have a resolution to keep. Love yourself. Indulge.</p>
+<p>For a skin that deserves all the pampering, nothing works better than the wholesome luxury of handcrafted recreational skin butters and bath foams. From lining your lips for a seriously head-turning pout to scrubbing off dead scales of skin, here is a class of skin elixirs you cannot say no to.</p>
 </div>
 
 <div class="cl"></div>
@@ -153,7 +153,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/shave.png"/>
     <h2 class="txt01">Become Aerodynamic</h2>
-<p>In the winters, the wind is the super hero's true enemy. It turns a whisker or any other bit of facial hair into full blown menace, hampers speed and often prevents one from breaking the sound barrier.<br/>If only one could remove facial hair and become smooth and pierce through the air, leaving behind a whiff of musk. Sounds like a plan, doesn't it?<p>
+<p>In the winters, the wind is the super hero's true enemy. It turns a whisker or any other bit of facial hair into full blown menace, hampers speed and often prevents one from breaking the sound barrier. If only one could remove facial hair and become smooth and pierce through the air, leaving behind a whiff of musk. Not anymore…<p>
 </div>
 
 <div class="cl"></div>

@@ -66,7 +66,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/root-canal.png"/>
     <h2 class="txt01">No More Root Canal</h2>
-<p>A stitch in time saves 9000. Especially when it comes to a root canal (don't even get us started on how much it hurts and how long it takes and did we mention costs?)<br/>Anyway, here's how you can eliminate root canal from your life forever!</p>
+<p>A stitch in time saves 9000. Especially when it comes to a root canal (don't even get us started on how much it hurts and how long it takes and did we mention costs?) So here are some numbers that will bring down the pain a level, not to mention prevent root canal completely.</p>
 </div>
 
 <div class="cl"></div>
@@ -103,7 +103,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/quit-smoking.png"/>
     <h2 class="txt01">QUIT Smoking</h2>
-<p>You have always dreaded the 3-day-hump and the prospect of going cold turkey. All of that's in the paleolithic era. Now you can quit smoking and do it without getting into any vicious cycle of relapse. Here's to a tobacco free 2013!</p>
+<p>You have always dreaded the 3-day-hump and the prospect of going cold turkey. You keep saying that you’ve quit smoking but that lasted only for 15 minutes. Now you can quit smoking like a manly man who keeps his word. Here’s how!</p>
 </div>
 
 <div class="cl"></div>
@@ -123,7 +123,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/reduce-medical-bills.png"/>
     <h2 class="txt01">Reduce Medical Expenses</h2>
-<p>With regular medical tests (and a good medical insurance), you can eliminate recurring medical expenses. As the old saying goes, forewarned is forearmed.</p>
+<p>A range of medical tests for and stellar rates, so that you are not taken in by surprise when something pops up without warning.</p>
 </div>
 
 <div class="cl"></div>

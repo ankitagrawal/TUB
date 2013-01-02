@@ -70,7 +70,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/get-more-sleep.png"/>
     <h2 class="txt01">Get More Sleep</h2>
-<p>Whether it's mosquitos, or sleep apnea or indigestion that is bothering you - we have it all covered. Seriously, just browse through and get sound sleep everyday!</p>
+<p>Can’t sleep? Be it mosquitos, sleep apnea, indigestion, or your better half, we have it all covered. Just browse through and try any from our fabulous little range, then hit the bed with a vengeance.</p>
 </div>
 
 <div class="cl"></div>
@@ -93,8 +93,8 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/eat-healty.png"/>
-    <h2 class="txt01">Turn to Ayurveda!</h2>
-<p>A number of ailments, both big and small, flee when faced with an Ayurvedic adversary. Browse through our mini arsenal of Ayurvedic goodies and put ill health behind 2012.</p>
+    <h2 class="txt01">Ayurveda to the Rescue!</h2>
+<p>Ailments big and small run for cover when they come face to face with Ayurveda. Browse through our little arsenal of Ayurvedic goodies and be fighting fit this new year.</p>
 </div>
 
 <div class="cl"></div>

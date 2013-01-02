@@ -94,7 +94,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/alarm.png"/>
     <h2 class="txt01">Sayonara Monsieur Fear</h2>
-<p>Do you find Modern Times too insecure? We have the right goodies for every security need that is possible. Whether it's defending yourself from a group of miscreants, or helping you carry a suitable pepper spray in your keychain or simply having an alarm that goes off when someone is trying to elope with your handbag - we have it all covered. Wish 'fear' good bye!</p>
+<p>Do you find Modern Times too insecure? We have the right goodies for every security need that is possible. Whether it's defending yourself from a group of miscreants, or helping you carry a suitable pepper spray in your keychain or simply having an alarm that goes off when someone is trying to elope with your handbag . Wish 'fear' good bye!</p>
 </div>
 
 <div class="cl"></div>
@@ -116,7 +116,7 @@
 
 <img src="${pageContext.request.contextPath}/images/ny2013/bathe-like-a-queen.png"/>
     <h2 class="txt01">Bathe Like a Queen</h2>
-<p>Pamper the Divinity within with a luxurious bath and rejuvenate your senses. Use the best bath salts, lotions, appealing aromas and essences to feel enlightened and spread the scent of the new year.<br/>From soaps out of a poet's dream, to fragrances from Pradise, to bath oils straight out of Valhalla, we have  everything that you need to make your bath more Royal and less like a shower. Indulge yourself, after all, you owe it to the world! </p> 
+<p>A luxurious bath rejuvenates your senses. We have sensuous bath salts and lotions, mesmerizing aromas and essences, for the queen that you are. Indulge; you owe it to the world after all!</p> 
 </div>
 
 <div class="cl"></div>
@@ -164,7 +164,7 @@
 
 <img src="${pageContext.request.contextPath}/images/ny2013/blood-sugar-management.png"/>
     <h2 class="txt01">Control Blood Sugar. Like a Boss!</h2>
-<p>Put a rest to all sugar and diabetes related worries with India's favorite glucometers and testing strips. <br/>You don't have to compromise on your taste buds. Enough of that already. Check out Drizzles & Shakes that are digested over a period of 6 - 9 hours. Sounds perfect, doesn't it?</p> 
+<p>Put a rest to all sugar and diabetes related worries with India's favorite glucometers and testing strips. <br/>You don't have to compromise on your taste buds too, check out Drizzles & Shakes that digest over a period of 6 - 9 hours. Sounds perfect, doesn't it?</p> 
 </div>
 
 <div class="cl"></div>

@@ -68,7 +68,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/dont-pause-at-menopause.png"/>
     <h2 class="txt01">Don’t Pause at Menopause</h2>
-<p>Menopause doesn't have to be what the media makes it out to be. Here is how you can ensure that you're feeling amazing while your body switches gears.<br/>All you need to do is choose the tea that suits your mood. The tea will take care of the detoxification. All you need to do is to let go and enjoy!</p>
+<p>There is a cougar in you. Get fabulous while your body switches gears. Choose the tea that suits your mood and detoxify yourself, rev up your engines and get back on the prowl.</p>
 </div>
 
 <div class="cl"></div>
@@ -105,8 +105,8 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/bike-trip.png"/>
-    <h2 class="txt01">GO on a Bike Trip</h2>
-<p>That long awaited 'muhurat' will never come. The bike is waiting and so are the highways and the dhabhas and your friends. It's finally time for you to hit the road in style and show them how it's done.<br/>Now before you head out to Leh or Himachal, just remember that your bike trip is only as good as your preparation. Things go wrong everyday (trust us on this) - so load up now with stuff that will surely come in handy.</p>
+    <h2 class="txt01">Go on a Bike Trip</h2>
+<p>The bike is waiting, so are the highways, the dhabhas and your friends. The road comes free with it. Now before you head out to Leh or Himachal, just remember that your bike trip is only as good as your preparation. Things go wrong everyday (trust us on this) - so load up with these numbers and you will be less sorry later.</p>
 </div>
 
 <div class="cl"></div>
@@ -127,7 +127,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/travel-grandparents.png"/>
     <h2 class="txt01">Help Your Grandparents Travel</h2>
-<p>They helped you take your first few steps - now it's probably time, you made it possible for them to travel in ease!<br/>Whether it's Pilgrimage or simply revisiting their old 'addas', they will have tremendous fun. Just make sure that they are carrying all the essentials that they require and they're set!</p>
+<p>They helped you take your first few steps now it's your turn. Help them travel with ease, whether it's Pilgrimage or simply revisiting their old 'addas'. Just make sure that they are carrying all the essentials that watch them have the time of their lives!</p>
 </div>
 
 <div class="cl"></div>

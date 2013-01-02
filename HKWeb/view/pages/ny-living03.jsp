@@ -68,7 +68,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/get-laid-safe-sex.png"/>
     <h2 class="txt01">Sizzle Between the Sheets</h2>
-<p>We really don't want to say anything. Just make sure that your partner and you play safe (but not too safe)<br/>The world is your oyster and you can out do all bunny rabbits!</p>
+<p>We really don't want to say anything. Just make sure that your partner and you play safe (but not too safe).The world is your rabbit hole and you are all bunny rabbits!</p>
 </div>
 
 <div class="cl"></div>
@@ -121,7 +121,7 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/learn-sport.png"/>
     <h2 class="txt01">Learn a New Sport</h2>
-<p>You can bundle health, fitness, fun and socializing into 1 awesome thing - a sport! Whether it's TT or football or basky or gully cricket, we have everything you need to get started. The new year (and the winters too) are perfect for any Sport. Go be a Champ!</p>
+<p>You can bundle health, fitness, fun and socializing into 1 awesome thing - a sport! Whether it's TT or football or basky or gully cricket, we have everything you need to get started. This new year (and the winters too) is perfect for any Sport. Just get up and go do something.</p>
 </div>
 
 <div class="cl"></div>
