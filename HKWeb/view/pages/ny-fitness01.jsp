@@ -39,13 +39,16 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img  src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/fitness.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/fitness01.jpg" />
 
  <div class="cl"></div>
 		<div class="pages">
@@ -60,11 +63,10 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Run a Marathon!</h2>
-
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>26.2 miles of physical endurance along with meticulous planning equals a marathon. Good shoes, first aid kit, chafing cream and heart rate monitor and adequate recovery after workouts will minimize the risk of inujury. Last minute preps? No more! Pack these essentials along for that incredible winning experience! </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/marathon.png"/>
+    <h2 class="txt01">Run a Marathon!</h2>
+<p>26.2 miles of physical endurance along with meticulous planning equals a marathon. Good shoes, first aid kit, chafing cream and heart rate monitor and adequate recovery after workouts will minimize the risk of injury. Healthkart has what you need in each of the cases, all you need to do now is run!</p>
 </div>
 
 <div class="cl"></div>
@@ -86,11 +88,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Gain Lean Muscle</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/gain-mass.jpg"/>
-<p>Gaining lean muscle mass was never this easy. Take your pick from the lot that the champs rely on. It doesn't matter if you are a hard gainer or a vegetarian. With the right diet, workout and the most appropriate mass gainer. Whether you want to look Spartan or a Space Marine, we have it all covered.</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/gain-mass.png"/>
+    <h2 class="txt01">Gain Lean Muscle</h2>
+<p>Become the lean, mean machine. Take your pick from the lot that the champions rely on. It doesn't matter if you are a hard gainer or a vegetarian. With the right diet, workout and mass gainer, get the look you want!  Samurai or Space Marine, we have it all covered!</p>
 </div>
 
 <div class="cl"></div>
@@ -114,11 +117,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Hit the GYM Like a PRO!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/go-gym.jpg"/>
-<p>Gym gear is the most under appreciated part of hitting the gym daily. Proper gear ensures that you lift with the right form, don't have unwanted sweat dripping along with annoying itches. Hygiene apart, good gym gear also includes a sipper which can keep you hydrated & energized with your favourite intra workout! All of this is incomplete without a duffel bag!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/go-to-gym.png"/>
+    <h2 class="txt01">Hit the GYM Like a PRO!</h2>
+<p>A proper gear ensures that you lift with the right form and don't have sweat dripping into crevices you don’t want to. Hygiene apart, good gym gear also includes a sipper which can keep you hydrated & energized with your favorite intra workout! All of this is incomplete without a duffel bag!</p>
 </div>
 
 <div class="cl"></div>
@@ -143,11 +147,12 @@
         <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">No More Love Handles!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>You can get rid of love handles forever. Just take your pick & get started, working on reducing mid section fat. You can also opt for the waist shaper if you don't want to start exercising right away!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/hourglass-figure.png"/>
+    <h2 class="txt01">No More Love Handles!</h2>
+<p>Get rid of love handles right now! Just take your pick & get started, working on reducing mid-section fat. You can also opt for the waist shaper if you don't want to start exercising right away!</p>
 </div>
 
 <div class="cl"></div>
@@ -166,11 +171,12 @@
 
 
 <div class="container01">
-<h2 class="txt01">Build a Home Gym!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/home-gym.jpg"/>
-<p>Getting to the gym can get difficult and there are times, when getting to the gym is just not enough? Do you find yourself lacking focus in the gym? Do you absolutely hate random gym music? Do you hate waiting for your turn for any machine? Do you hate gym rats, smelly bathrooms and annoying trainers? It's time to build a shrine to the beast within!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/home-gym.png"/>
+    <h2 class="txt01">Build a Home Gym!</h2>
+<p>Think the travel to your gym is taking too much time? Absolutely hate the random gym music? Loathe waiting for your turn for any machine? Abhor gym rats, smelly bathrooms and patronizing trainers? It's time kind sirs and ladies, to build a shrine for the beast within!</p>
 </div>
 
 <div class="cl"></div>
@@ -192,11 +198,12 @@
 <!--container01 close-->
 
 <div class="container01">
-<h2 class="txt01">Pick Up Your Favorite Sport!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/learn-newsport.jpg"/>
-	<p>Improve your fitness, socialize, build a newer character and tweak your team work skills in one stroke! All you need to do, is choose a sport that resonates with your physical attributes & personality. The sport equipment you choose will decide how fun your game turns out to be.</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/learn-sport.png"/>
+    <h2 class="txt01">Pick Up Your Favorite Sport!</h2>
+	<p>You’ve got a beer belly, can’t talk to strangers, suck at things that involve teamwork? All you need to do is pick a sport, any sport! Build you physique, confidence and the ability to wade through bull dung and get the job done. We have a range of sports goods to start your little journey, all you need to do is pick one.</p>
 </div>
 
 <div class="cl"></div>
