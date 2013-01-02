@@ -1,5 +1,10 @@
+<%@ page import="com.hk.constants.courier.EnumCourier" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<c:set var="DTDCList" value="<%=EnumCourier.getDTDCCouriers()%>"/>
+<c:set var="BluedartList" value="<%=EnumCourier.getBlueDartCouriers()%>"/>
+<c:set var="DelhiveryList" value="<%=EnumCourier.getDelhiveryCourierIds()%>"/>
+<c:set var="FedexList" value="<%=EnumCourier.getFedexCouriers()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.order.TrackCourierAction" var="tca"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Courier Details">
     <s:layout-component name="heading">Order Shipped through ${tca.courierName} Courier Services</s:layout-component>
@@ -14,12 +19,12 @@
                     Sorry, there is no return of Information from ${tca.courierName} Courier Services
                     <br/>
                     Please
-                    <c:if test="${tca.courierName =='DTDC'}">
+                    <c:if test="${hk:collectionContains(DTDCList, tca.courierId)}"><%--"${DTDCListtca.courierName =='DTDC'}">--%>
                         <a href="http://www.dtdc.in/" target="_blank">Visit ${tca.courierName} Courier</a><br/><br/>
                         Use Reference number=${tca.trackingId}
                     </c:if>
 
-                    <c:if test="${tca.courierName =='Delhivery'}">
+                    <c:if test="${hk:collectionContains(DelhiveryList, tca.courierId)}">
                         <a href="http://www.delhivery.com/" target="_blank">Visit Delhivery Courier</a>
                         and use order number=${tca.shippingOrder.gatewayOrderId}
                     </c:if>
@@ -29,11 +34,25 @@
                         and use shipment number=${tca.trackingId}
                     </c:if>
 
-                    <c:if test="${tca.courierName =='BlueDart'}">
+                    <c:if test="${hk:collectionContains(BluedartList, tca.courierId)}">
                         <a href="http://www.bluedart.com/" target="_blank">Visit BlueDart Courier</a><br/><br/>
                         Use Reference number=${tca.shippingOrder.gatewayOrderId}
                         <br/>
                         Waybill number=${tca.trackingId}
+                    </c:if>
+
+                     <c:if test="${tca.courierName == 'Quantium'}">
+                        <a href="http://www.quantiumsolutions.com/" target="_blank">Visit Quantium Courier</a><br/><br/>
+                        Use Reference number=${tca.shippingOrder.gatewayOrderId}
+                        <br/>
+                        Waybill number=${tca.trackingId}
+                     </c:if>
+
+                    <c:if test="${hk:collectionContains(FedexList, tca.courierId)}">
+                        <a href="http://www.fedex.com/in/" target="_blank">Visit Fedex Courier</a><br/><br/>
+                        Use Reference number=${tca.shippingOrder.gatewayOrderId}
+                        <br/>
+                        Tracking number=${tca.trackingId}
                     </c:if>
                 </div>
 
