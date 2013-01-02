@@ -89,11 +89,16 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Confident Breastfeeding</h2>
+<h2 class="txt01">Comfortable Breast Feeding</h2>
 
 <div class="contant01">
+<<<<<<< HEAD
 <img src="${pageContext.request.contextPath}/images/ny2013/reduce-chopped-skin.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+=======
+<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<p>Put all your feeding woes to rest and focus just on the prospect of giving the best gift a mother can to her child, everyday! Choose from a wide range of feeding accessories that make regular feeding a peice of cake, both for Mommy & baby.</p>
+>>>>>>> 947a234796aa58f7155e22ebc7d80b2c4bfc4953
 </div>
 
 <div class="cl"></div>
@@ -116,14 +121,18 @@
 </div>
 
 <div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB021' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB024' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB032' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB033' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB034' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB035' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB036' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1311' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB150' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1959' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB444' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB241' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB243' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB405' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER018' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB363' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER017' />
+    
+    
 
 
 </div>

@@ -65,20 +65,42 @@
 <h2 class="txt01">Fair Skin</h2>
 
 <div class="contant01">
+<<<<<<< HEAD
 <img src="${pageContext.request.contextPath}/images/ny2013/fair-skin.jpg"/>
 <p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+=======
+<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<p>Want to look fairer? Tried hell lot of creams and your mothers home-made remedies but all in vain? Discover the secret to fairer skin tone with highly effective natural herbs and see the difference for yourself.</p>
+>>>>>>> 947a234796aa58f7155e22ebc7d80b2c4bfc4953
 </div>
 
 <div class="cl"></div>
 
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY305' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY308' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY004' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MYBLN30' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KAYA10' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTYVLC2' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JSTHB29' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OLY011' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LAKAB72' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR104' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR108' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL52' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR02' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY337' />
+	
+	
+
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KAYA15' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KAYA6' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NGENA4' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PG013' />
+    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SHNZ05' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SUN006' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI21' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI31' />
+    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT1' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT5' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT70' />
@@ -91,7 +113,7 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Ge rid of your body odour</h2>
+<h2 class="txt01">Get Rid of Body Odour</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/body-odor.jpg"/>
@@ -99,7 +121,20 @@
 </div>
 
 <div class="cl"></div>
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA6' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA4' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='YRDLY2' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS5' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MANDAR04' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NIVEA3' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR39' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRVLY02' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRVLY03' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRVLY04' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LARM3' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FRG056' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LARM2' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ENBLZR03' />	
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS1' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY174' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY301' />

@@ -57,6 +57,28 @@
 <div class="cl"></div>
 
 
+<!--container01 start-->
+
+<div class="container01">
+<h2 class="txt01">Poop Effortlessly</h2>
+
+<div class="contant01">
+<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+</div>
+
+<div class="cl"></div>
+
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1204' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1521' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1531' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT818' />
+
+
+</div>
+<!--container01 close-->
+
+
 
 <!--container01 start-->
 
@@ -83,22 +105,45 @@
 <h2 class="txt01">Bathe Like a Queen</h2>
 
 <div class="contant01">
+
 <img src="${pageContext.request.contextPath}/images/ny2013/long-lasting-makeup.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Pamper the Divinity within with a luxurious bath and rejuvenate your senses. Use the best bath salts, lotions, appealing aromas and essences to feel enlightened and spread the scent of the new year.</p>
 </div>
 
 <div class="cl"></div>
 
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NIVEA13' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NIVEA2' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OSSG01' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI22' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI40' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI5' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI52' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='YRDLY7' />
-
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTCMB06' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TVM01' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMSPA39' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMSPA34' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-BTY01' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMSPA12' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BBP14' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BPP09' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BPP13' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VTRE20' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI36' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR34' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNOG02' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BBP01' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMSPA22' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR16' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ARVDC36' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNOG03' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NYSA4' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NYSA11' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VICA8' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR01' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR24' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PENSPA5' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PENSPA3' />
+	
 </div>
 <!--container01 close-->
 
@@ -109,8 +154,9 @@
 <h2 class="txt01">Control Blood Sugar</h2>
 
 <div class="contant01">
+
 <img src="${pageContext.request.contextPath}/images/ny2013/reduce-medical.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Put a rest to all sugar and diabetes related worries with regular testing and Diabetes friendly snacks and deserts.</p>
 </div>
 
 <div class="cl"></div>

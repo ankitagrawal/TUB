@@ -98,7 +98,9 @@
 </div>
 
 <div class="cl"></div>
-
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT108' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT109' />
+    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DL003' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DL004' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DL005' />
