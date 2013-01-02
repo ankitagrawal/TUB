@@ -66,8 +66,4 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedQty);
 	}
 
-	public List<SkuItem> getInStockSkuItem(SkuGroup skuGroup) {
-		return getInStockSkuItem(skuGroup);
-	}
-
 }

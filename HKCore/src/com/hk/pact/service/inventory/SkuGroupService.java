@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
- * User:User
+ * User:Seema
  * Date: Dec 27, 2012
  * Time: 11:40:27 AM
  * To change this template use File | Settings | File Templates.
@@ -38,9 +38,5 @@ public interface SkuGroupService {
 	public List<SkuGroup> getInStockSkuGroups(Sku sku);
 
 	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty);
-
-	public List<SkuItem> getInStockSkuItem(SkuGroup skuGroup);
-
-
 
 }

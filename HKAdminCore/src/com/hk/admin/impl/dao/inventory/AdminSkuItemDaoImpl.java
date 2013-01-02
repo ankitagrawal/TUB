@@ -25,11 +25,6 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
                 + "where pvi.skuItem is not null and pvi.sku.productVariant in( :productVariantList) and pvi.skuItem.skuGroup.sku.warehouse =:warehouse "
                 + "group by pvi.skuItem.id having sum(pvi.qty) > 0";
 
-//	    String skuItemListQuery = "select distinct sg from ProductVariantInventory pvi, SkuItem si, ProductVariant  pv, SkuGroup sg, Sku sku, Warehouse wh "
-//                + " where pvi.skuItem.id = si.id  and pvi.sku.id = sku.id  and " +
-//			    " sku.productVariant.id = pv.id and si.skuGroup.id = sg.id and sku.warehouse.id = wh.id " +
-//			    "  and si.id is not null and pv in( :productVariantList) and wh =:warehouse " + " "
-//                + " group by si.id having sum(pvi.qty) > 0";
         List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery).setParameterList("productVariantList", productVariantList).setParameter("warehouse",
                 warehouse).list();
         if (skuItemIdList != null && skuItemIdList.size() > 0) {
@@ -183,15 +178,14 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
     }
 
 
-
-		private DetachedCriteria getSkuGroupCriteria(List<SkuGroup> skuGroupList ,String barcode ,String batchNumber ,Sku sku){
+	private DetachedCriteria getSkuGroupCriteria(List<SkuGroup> skuGroupList, String barcode, String batchNumber, Sku sku) {
 		DetachedCriteria skuGroupCriteria = DetachedCriteria.forClass(SkuGroup.class);
 		List<Long> skuGroupIds = new ArrayList<Long>();
-			if (skuGroupList != null) {
-				for (SkuGroup skuGroup : skuGroupList) {
-					skuGroupIds.add(skuGroup.getId());
-				}
+		if (skuGroupList != null) {
+			for (SkuGroup skuGroup : skuGroupList) {
+				skuGroupIds.add(skuGroup.getId());
 			}
+		}
 
 		if (skuGroupIds.size() > 0) {
 			skuGroupCriteria.add(Restrictions.in("id", skuGroupIds));
@@ -205,7 +199,7 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
 			skuGroupCriteria.add(Restrictions.eq("batchNumber", batchNumber.trim()));
 		}
 
-		if(sku != null){
+		if (sku != null) {
 			skuGroupCriteria.add(Restrictions.eq("sku", sku));
 		}
 		return skuGroupCriteria;
@@ -223,8 +217,8 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
 		return inStockSkuItems;
 	}
 
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku){
-		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null,null,batch,sku);
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
+		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, null, batch, sku);
 		return findByCriteria(skuGroupCriteria);
 	}
 
