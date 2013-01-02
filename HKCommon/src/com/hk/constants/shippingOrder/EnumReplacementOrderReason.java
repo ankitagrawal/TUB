@@ -17,7 +17,10 @@ public enum EnumReplacementOrderReason {
 	ShipmentOffload(90L, "courier-Shipment Offload"),                                                 //RTO
 	CustomerNotInterested(100L, "Customer-Customer not interested"),                                   //RTO
 	CodAmountNotReady(110L, "Customer-COD Amount not ready"),                                          //RTO
-	CustomerNotContactable(120L, "Customer-Customer not contactable");                                //RTO
+	CustomerNotContactable(120L, "Customer-Customer not contactable"),
+	OutsideDeliveryArea(130L, "courier-Outside Delivery Area"),                             //RTO
+	FakeRTO(140L, "courier-Fake RTO"),                                                    //RTO
+	ShipmentMisrouted(150L, "courier-Shipment Misrouted");                                //RTO
 
 
 
@@ -56,7 +59,10 @@ public enum EnumReplacementOrderReason {
 		        EnumReplacementOrderReason.CodAmountNotReady.getId(),
 		        EnumReplacementOrderReason.CustomerNotContactable.getId(),
 		        EnumReplacementOrderReason.CustomerUnavailable.getId(),
-                EnumReplacementOrderReason.WrongAddress.getId()
+                EnumReplacementOrderReason.WrongAddress.getId(),
+		        EnumReplacementOrderReason.OutsideDeliveryArea.getId(),
+		        EnumReplacementOrderReason.FakeRTO.getId(),
+		        EnumReplacementOrderReason.ShipmentMisrouted.getId()
         );
     }
 }

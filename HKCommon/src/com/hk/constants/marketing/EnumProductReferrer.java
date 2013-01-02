@@ -16,7 +16,11 @@ public enum EnumProductReferrer {
   relatedProductsPage(12L, "related-products-page"),
   brandPage(13L, "brand-page"),
   mobile_catalog(14L, "mobile-catalog"),
-  mobile_search(15L, "mobile-search");
+  mobile_search(15L, "mobile-search"),
+  replenish_email(16L, "replenish-email"),
+  notify_email(17L, "notify-email"),
+  email_newsletter(18L, "email_newsletter"),
+	;
 
   private String name;
   private Long id;
