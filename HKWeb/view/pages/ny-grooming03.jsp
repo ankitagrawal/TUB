@@ -63,12 +63,9 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Long Lasting Makeup</h2>
+<h2 class="txt01">Almost Permanent Makeup</h2>
 
 <div class="contant01">
-
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-
 <img src="${pageContext.request.contextPath}/images/ny2013/long-lasting-makeup.jpg"/>
 <p>Now that you are moisturizing your New Year with a hydrating resolution, ward off chapped skin with the ultra-nourishing goodness of sublimely exotic skin care essentials. Wear a blush this winter while your skin breaths in the freshness of the new season setting in.</p>
 </div>
@@ -122,7 +119,7 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/hair-loss.jpg"/>
-<p>Is receding hair line or a bald spot resulting in dreadful sleepless nights? It’s a sensitive topic; one easily raises lifestyle, stress and hormonal changes as culprits. However by paying a little more attention than just applying soap, lathering and rinsing your hair, take a closer look at what you are eating. By incorporating supplements to your diet, it is possible to curb hair fall and add shine, texture and length to your mane. Still not up for the idea? Then may we suggest Baba Ramdevs rubbing left and right hand nails exercise!</p>
+<p>Is receding hair line or a bald spot resulting in dreadful sleepless nights? It’s a sensitive topic; one easily raises lifestyle, stress and hormonal changes as culprits. However by paying a little more attention than just applying soap, lathering and rinsing your hair, take a closer look at what you are eating. By incorporating supplements to your diet, it is possible to curb hair fall and add shine, texture and length to your mane. Still not up for the idea? Then may we suggest Baba Ramdev's rubbing left and right hand nails exercise!</p>
 
 </div>
 
@@ -182,8 +179,8 @@
     
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR100' />
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VTRE08' />
-     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PINSPA4' />
-     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PINSPA7' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PIENSPA4' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PIENSPA7' />
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NYSA05' />
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR106' />
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR30' />
@@ -192,10 +189,7 @@
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIC8' />
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIC7' />
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY616' />
-     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY620' />
-     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY05' />
-     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY06' />
-     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY04' />
+     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY620' />     
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTCMB04' />
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTCMB06' />
      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI64' />

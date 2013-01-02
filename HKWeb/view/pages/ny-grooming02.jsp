@@ -63,16 +63,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Hair Care</h2>
+<h2 class="txt01">Intensive Hair Care</h2>
 
 <div class="contant01">
-<<<<<<< HEAD
 <img src="${pageContext.request.contextPath}/images/ny2013/hair-care.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-=======
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
 <p>Want beautiful, silky hair? Tired of trying your moms home-made remedies for the same but all in vain? Check out our catalogue of advanced products to get smooth, lustrous hair without any side-effects.</p>
->>>>>>> 947a234796aa58f7155e22ebc7d80b2c4bfc4953
 </div>
 
 <div class="cl"></div>
@@ -82,16 +77,15 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KHADI27' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LORMAS2' />
     
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DIV07' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DIV01' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DIVO7' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DIVO1' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KENT14' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VDLSN06' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LTDOFF14' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LORMAS1' />
     
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY716' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ARVDC03' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ONO38' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ARVDC03' />    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BVR27' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LYD1' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LASS4' />
@@ -104,9 +98,7 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SKOF02' />
     
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PLMCL04' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PLMCL07' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SKOF032' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BRV26' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PLMCL07' />    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMSPA23' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NRWNA5' />
 
@@ -120,20 +112,14 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Hair Color</h2>
+<h2 class="txt01">Put the Rainbow to Shame!</h2>
 
 <div class="contant01">
-<<<<<<< HEAD
 <img src="${pageContext.request.contextPath}/images/ny2013/hair-color.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-=======
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
 <p>As much as we all wish for it not to occur, at some point in your life, a gray hair or two is bound to pop out. It is totally your choice whether to go ahead with it and let the grays shine, or apply hair color to just blend them away. Want to go natural and avoid early signs of graying? Then may we suggest supplementing your diet with hair boosting supplements. </p>
->>>>>>> 947a234796aa58f7155e22ebc7d80b2c4bfc4953
 </div>
 
-<div class="cl"></div>
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY044' />	
+<div class="cl"></div>	
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY153' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY163' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY164' />
@@ -148,11 +134,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Hair Styling</h2>
+<h2 class="txt01">Leave Gangnam Behind (With Your Hair Style)</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/hair-styling.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>From Basanti to Krur Singh to Gandalf the Gray to Rapunzel, we have every style covered (except for Johnny Bravo).</p>
 </div>
 
 <div class="cl"></div>

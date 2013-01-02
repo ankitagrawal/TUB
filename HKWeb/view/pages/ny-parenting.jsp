@@ -61,11 +61,11 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Awesome Baby Shower Gift</h2>
+<h2 class="txt01">Looking for Baby Shower Gifts</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/reduce-chopped-skin.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<p>The best thing that a baby can have (apart from mommy, daddy, siblings and puppies) are dainty little creams, oils and ofcourse soaps and powders.</p>
 </div>
 
 <div class="cl"></div>
@@ -85,39 +85,14 @@
 </div>
 <!--container01 close-->
 
-
-    <!--container01 start-->
+<!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Comfortable Breast Feeding</h2>
+<h2 class="txt01">Feed Babies With Ease</h2>
 
 <div class="contant01">
-<<<<<<< HEAD
-<img src="${pageContext.request.contextPath}/images/ny2013/reduce-chopped-skin.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-=======
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>Put all your feeding woes to rest and focus just on the prospect of giving the best gift a mother can to her child, everyday! Choose from a wide range of feeding accessories that make regular feeding a peice of cake, both for Mommy & baby.</p>
->>>>>>> 947a234796aa58f7155e22ebc7d80b2c4bfc4953
-</div>
-
-<div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB058' />
-
-
-</div>
-<!--container01 close-->
-
-
-    <!--container01 start-->
-
-<div class="container01">
-<h2 class="txt01">Easy Feeding for Babies</h2>
-
-<div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/prepare-child.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>You can get any job done, as long as you have the right tools for it & this is true when it comes to feeding your little devil(s). Be prepared to have feeding without fuss!</p>
 </div>
 
 <div class="cl"></div>

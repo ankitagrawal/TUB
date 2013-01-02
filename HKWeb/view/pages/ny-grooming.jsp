@@ -65,13 +65,8 @@
 <h2 class="txt01">Fair Skin</h2>
 
 <div class="contant01">
-<<<<<<< HEAD
 <img src="${pageContext.request.contextPath}/images/ny2013/fair-skin.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-=======
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>Want to look fairer? Tried hell lot of creams and your mothers home-made remedies but all in vain? Discover the secret to fairer skin tone with highly effective natural herbs and see the difference for yourself.</p>
->>>>>>> 947a234796aa58f7155e22ebc7d80b2c4bfc4953
+<p>Want to look fairer? Tried lot of creams and your mothers home-made remedies but all in vain? Discover the secret to fairer skin tone with highly effective natural herbs and see the difference for yourself.</p> 
 </div>
 
 <div class="cl"></div>
@@ -83,8 +78,7 @@
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KAYA10' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTYVLC2' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JSTHB29' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OLY011' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LAKAB72' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OLY011' />	
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR104' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR108' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL52' />
@@ -117,7 +111,7 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/body-odor.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>The days of marking your territory with your natural scent are long gone. This new year, let the menace of body odour fade into oblivion with deodorants & the like that have helped many a genin, turn into a true Shinobi!</p>
 </div>
 
 <div class="cl"></div>
@@ -125,7 +119,7 @@
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA4' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='YRDLY2' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS5' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MANDAR04' />
+	
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NIVEA3' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR39' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRVLY02' />
@@ -152,15 +146,14 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Get Shapely Body</h2>
+<h2 class="txt01">Get a Shapely Body</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/get-shape.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Get that dream shape that you have always had on your mind. Whether its a sensuous curve or washboard abs or simply some arcane spot reduction - we have it all covered. Unveil the New You!</p>
 </div>
 
 <div class="cl"></div>
-
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AYUCR1' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY531' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY581' />
@@ -204,7 +197,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT742' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT838' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLC001' />
-
 </div>
 <!--container01 close-->
 

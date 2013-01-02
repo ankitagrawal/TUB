@@ -115,13 +115,8 @@
 <h2 class="txt01">Get That Massive Chest, with 500 Push Ups a Day!</h2>
 
 <div class="contant01">
-<<<<<<< HEAD
-<img src="${pageContext.request.contextPath}/images/ny2013/reduce-body-aches.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-=======
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/go-gym.jpg"/>
 <p>Been tired enough trying to accomplish a bigger chest? Here is why you should up yourself and put your enerrgy back into it. Because you want it! Conquer the league of 500 push ups and get that tone you desire. Press away twice as much of your body weight at a throw-away convenience with compact push up accessories & supplements for a bigger chest. Bring home the perfect equipment for chest expansion and lid your space issues with expedient chest expanders. Enjoy handy chest enhancement with blasting proteins, whey addons & ideal-for-home chest expansion accessories.</p>
->>>>>>> 947a234796aa58f7155e22ebc7d80b2c4bfc4953
 </div>
 
 <div class="cl"></div>
@@ -187,13 +182,8 @@
 <h2 class="txt01">Become Your Own Physiotherapist!</h2>
 
 <div class="contant01">
-<<<<<<< HEAD
-<img src="${pageContext.request.contextPath}/images/ny2013/reduce-chopped-skin.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-=======
 <img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
 <p>They New Year, break free from your medical expenses and emerge as your own physio to treat the nasty roots of pain. Professional physiotherapy runs up to thousands, burning a hole in your pocket. This is where, at home, therapy accessories come to your resuce. With easier physiotherapy options, you can cut the cost of physio sessions by choosing quick to use therapy accessories. Heal without worrying about escalated therapy costs with a range of rehab supports. You'll surprise yourself with the ease of use that these products have to offer.</p>
->>>>>>> 947a234796aa58f7155e22ebc7d80b2c4bfc4953
 </div>
 
 <div class="cl"></div>

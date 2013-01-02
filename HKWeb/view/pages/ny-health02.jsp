@@ -60,24 +60,6 @@
 
 
 
-<!--container01 start-->
-
-<div class="container01">
-<h2 class="txt01">Eat Health Diet</h2>
-
-<div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/ovulation-kit.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
-</div>
-
-<div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SWT036' />
-
-</div>
-<!--container01 close-->
-
-
     <!--container01 start-->
 
 <div class="container01">
@@ -85,16 +67,18 @@
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/get-more-sleep.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>Whether it's mosquitos, or sleep apnea or indigestion that is bothering you - we have it all covered. Seriously, just browse through and get sound sleep everyday!</p>
 </div>
 
 <div class="cl"></div>
-
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MOS001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1529' />
-    
-    
-
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1105' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR42' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NEC012' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HR017' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RES002' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CHOICE001' />    
 </div>
 <!--container01 close-->
 
@@ -102,11 +86,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Go Glutten Free</h2>
+<h2 class="txt01">Turn to Ayurveda!</h2>
 
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/gluten-free.jpg"/>
-<p>The Treadmill T2000 is a great buy for anyone looking to embark on a journey towards better health and fitness. This treadmill will go from a speed of 0.8 to 12Km and also has an incline function to add more challenge to your workouts. </p>
+<p>A number of ailments, both big and small, flee when faced with an Ayurvedic adversary. Browse through our mini arsenal of Ayurvedic goodies and put ill health behind 2012.</p>
 </div>
 
 <div class="cl"></div>
