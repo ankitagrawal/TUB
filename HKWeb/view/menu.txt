@@ -80,9 +80,9 @@
 --/nutrition/specialty-nutrition/healthy-food  :Healthy Food
 ---/nutrition/specialty-nutrition/healthy-food/snacks
 ---/nutrition/specialty-nutrition/healthy-food/cereals
----/nutrition/specialty-nutrition/healhty-food/bars
----/nutrition/specialty-nutrition/healhty-food/food-preparations
----/nutrition/specialty-nutrition/healhty-food/daily-need       :Daily Need
+---/nutrition/specialty-nutrition/healthy-food/bars
+---/nutrition/specialty-nutrition/healthy-food/food-preparations
+---/nutrition/specialty-nutrition/healthy-food/daily-need       :Daily Need
 --/nutrition/specialty-nutrition/infants  : Infants
 --/nutrition/specialty-nutrition/kids  :Kids
 --/nutrition/specialty-nutrition/mother : Mother
@@ -185,10 +185,16 @@
 ---/sports/sports-equipment/table-tennis/accessories
 --/sports/sports-equipment/cricket
 ---/sports/sports-equipment/cricket/bats
+----/sports/sports-equipment/cricket/bats/kashmir-willow: Kashmir Willow
+----/sports/sports-equipment/cricket/bats/english-willow: English Willow
 ---/sports/sports-equipment/cricket/balls
 ---/sports/sports-equipment/cricket/gloves
----/sports/sports-eqipment/cricket/helmets
+---/sports/sports-equipment/cricket/helmets
 ---/sports/sports-equipment/cricket/pads
+---/sports/sports-equipment/cricket/guards
+---/sports/sports-equipment/cricket/bags
+---/sports/sports-equipment/cricket/caps
+---/sports/sports-equipment/cricket/cricket-wear
 ---/sports/sports-equipment/cricket/accessories
 --/sports/sports-equipment/chess
 --/sports/sports-equipment/swimming
@@ -204,6 +210,8 @@
 --/sports/sports-equipment/basketball
 ---/sports/sports-equipment/basketball/balls
 ---/sports/sports-equipment/basketball/accessories
+--/sports/sports-equipment/volleyball
+---/sports/sports-equipment/volleyball/balls
 --/sports/sports-equipment/squash
 ---/sports/sports-equipment/squash/rackets
 ---/sports/sports-equipment/squash/balls
@@ -226,7 +234,10 @@
 --/sports/apparel/men
 --/sports/apparel/women
 --/sports/apparel/kids
+--/sports/apparel/sports-wear
 --/sports/apparel/bags
+--/sports/apparel/caps
+--/sports/apparel/socks
 --/sports/apparel/bottles-shakers : Bottles & Shakers
 --/sports/apparel/miscellaneous
 -/sports/footwear
@@ -241,6 +252,10 @@
 --/sports/footwear/kids-shoes
 --/sports/footwear/other-shoes
 --/sports/footwear/accessories
+-/sports/fab-corner
+--/sports/fab-corner/win-win-deals
+--/sports/fab-corner/league-of-innovations
+--/sports/fab-corner/new-arrivals
 
 /diabetes
 -/diabetes/devices : Monitoring Devices
@@ -354,7 +369,7 @@
 ---/health-devices/medical-care/women-care/chlamydia-test
 ---/health-devices/medical-care/women-care/breast-screening
 --/health-devices/medical-care/baby-care
----/health-devices/medical-care/baby-care/gaurds
+---/health-devices/medical-care/baby-care/guards
 ---/health-devices/medical-care/baby-care/mosquito-nets
 ---/health-devices/medical-care/baby-care/baby-thermometer : Baby Thermometer
 ---/health-devices/medical-care/baby-care/medical-kits
@@ -502,10 +517,10 @@
 ---/personal-care/elderly-care/support-systems/wrist-forearm-supports:Wrist & Forearm Supports
 ---/personal-care/elderly-care/support-systems/elbow-thumb-supports:Elbow & Thumb Supports
 ---/personal-care/elderly-care/support-systems/arm-supports:Arm Supports
----/personal-care/elderly-care/support systems/abdominal-supports:Abdominal Supports
+---/personal-care/elderly-care/support-systems/abdominal-supports:Abdominal Supports
 ---/personal-care/elderly-care/support-systems/back-supports:Back Supports
 ---/personal-care/elderly-care/support-systems/compression-supports:Compression Supports
----/personal-care/elderly-care/support systems/knee-supports:Knee Supports
+---/personal-care/elderly-care/support-systems/knee-supports:Knee Supports
 ---/personal-care/elderly-care/support-systems/ankle-supports:Ankle Supports
 ---/personal-care/elderly-care/support-systems/traction-accessories:Traction Accessories
 ---/personal-care/elderly-care/support-systems/premium-range:Premium Range

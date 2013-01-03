@@ -10147,7 +10147,7 @@
         insert into country values (198,'VIRGIN ISLANDS, U.S.', 'VI');
         insert into country values (199,'WALLIS AND FUTUNA', 'WF');
         insert into country values (200,'WESTERN SAHARA', 'EH');
-        insert into country values (201,'ZAMBIA', 'ZM');      
+        insert into country values (201,'ZAMBIA', 'ZM');
     </sql>
   </changeSet>
     <changeSet author="Pratham" id="20121129-01">
@@ -10442,5 +10442,333 @@
         <addColumn tableName="traffic_tracking">
             <column name="returning_user" type="INT"/>
         </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-1">
+        <createTable tableName="dispatch_lot">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="docket_number" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="zone_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="destination" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="no_of_shipments_sent" type="INT"/>
+            <column name="no_of_shipments_received" type="INT"/>
+            <column name="no_of_mother_bags" type="INT"/>
+            <column defaultValueNumeric="0.00" name="total_weight" type="DECIMAL(12,2)"/>
+            <column name="remarks" type="TEXT"/>
+            <column name="dispatch_date" type="DATETIME"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="receiving_dt" type="DATETIME"/>
+            <column name="dispatch_lot_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="received_by" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-2">
+        <createTable tableName="dispatch_lot_has_shipment">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="dispatch_lot_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipment_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipment_status" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-3">
+        <createTable tableName="dispatch_lot_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-4">
+        <createIndex indexName="dispatch_lot_shipment_unique" tableName="dispatch_lot_has_shipment" unique="true">
+            <column name="dispatch_lot_id"/>
+            <column name="shipment_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-5">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="dispatch_lot" constraintName="fk_dispatch_lot_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-6">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="dispatch_lot" constraintName="fk_dispatch_lot_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-7">
+        <addForeignKeyConstraint baseColumnNames="dispatch_lot_status_id" baseTableName="dispatch_lot" constraintName="fk_dispatch_lot_dispatch_lot_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="dispatch_lot_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-8">
+        <addForeignKeyConstraint baseColumnNames="received_by" baseTableName="dispatch_lot" constraintName="fk_dispatch_lot_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-9">
+        <addForeignKeyConstraint baseColumnNames="zone_id" baseTableName="dispatch_lot" constraintName="fk_dispatch_lot_zone1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="zone" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-10">
+        <addForeignKeyConstraint baseColumnNames="dispatch_lot_id" baseTableName="dispatch_lot_has_shipment" constraintName="fk_dispatch_lot_has_shipment_dispatch_lot1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="dispatch_lot" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1355814825152-11">
+        <addForeignKeyConstraint baseColumnNames="shipment_id" baseTableName="dispatch_lot_has_shipment" constraintName="fk_dispatch_lot_has_shipment_shipment1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipment" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1356342327664-1">
+        <addColumn tableName="offer_action">
+            <column name="reward_point_expiry_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1356344043298-1">
+        <addColumn tableName="offer_action">
+            <column name="reward_point_redeem_within_days" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-1">
+        <createTable tableName="extra_inventory">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="purchase_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comments" type="TEXT"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-2">
+        <createTable tableName="extra_inventory_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="po_line_item_id" type="INT"/>
+            <column name="extra_inventory_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_id" type="INT"/>
+            <column name="tax_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="received_qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost_price" type="DECIMAL(8,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mrp" type="DECIMAL(8,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_rtv_created" type="TINYINT"/>
+            <column defaultValueNumeric="0" name="is_grn_created" type="TINYINT"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-3">
+        <createTable tableName="feedback_issuetype">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="issue_type" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-4">
+        <createTable tableName="rtv_note">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="extra_inventory_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rtv_note_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_debit_to_supplier" type="TINYINT"/>
+            <column defaultValueNumeric="0" name="reconciled" type="TINYINT"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remarks" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-5">
+        <createTable tableName="rtv_note_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="extra_inventory_line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rtv_note_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-6">
+        <createTable tableName="rtv_note_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-7">
+        <addColumn tableName="feedback">
+            <column name="feedback_issuetype_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-10">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="extra_inventory" constraintName="fk_extra_inventory_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-11">
+        <addForeignKeyConstraint baseColumnNames="purchase_order_id" baseTableName="extra_inventory" constraintName="fk_extra_inventory_purchase_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-12">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_id" baseTableName="extra_inventory_line_item" constraintName="fk_extra_inventory_line_item_extra_inventory1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-13">
+        <addForeignKeyConstraint baseColumnNames="po_line_item_id" baseTableName="extra_inventory_line_item" constraintName="fk_extra_inventory_line_item_po_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="po_line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-14">
+        <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="extra_inventory_line_item" constraintName="fk_extra_inventory_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-15">
+        <addForeignKeyConstraint baseColumnNames="tax_id" baseTableName="extra_inventory_line_item"  constraintName="fk_extra_inventory_line_item_tax1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tax" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-16">
+        <addForeignKeyConstraint baseColumnNames="feedback_issuetype_id" baseTableName="feedback"  constraintName="fk_feedback_feedback_issuetype1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="feedback_issuetype" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-17">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_id" baseTableName="rtv_note" constraintName="fk_rtv_note_extra_inventory1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-18">
+        <addForeignKeyConstraint baseColumnNames="rtv_note_status_id" baseTableName="rtv_note" constraintName="fk_rtv_note_rtv_note_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="rtv_note_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-19">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="rtv_note" constraintName="fk_rtv_note_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-20">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_line_item_id" baseTableName="rtv_note_line_item" constraintName="fk_rtv_note_line_item_extra_inventory_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory_line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356345519189-21">
+        <addForeignKeyConstraint baseColumnNames="rtv_note_id" baseTableName="rtv_note_line_item" constraintName="fk_rtv_note_line_item_rtv_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="rtv_note" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356347146956-1">
+        <addColumn tableName="po_line_item">
+            <column name="extra_inventory_line_item_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356347146956-2">
+        <addColumn tableName="purchase_order">
+            <column name="extra_inventory_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356347146956-3">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_line_item_id" baseTableName="po_line_item" constraintName="fk_po_line_item_extra_inventory_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory_line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356347146956-4">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_id" baseTableName="purchase_order" constraintName="fk_purchase_order_extra_inventory1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="24122012-01">
+        <sql>
+            insert into rtv_note_status values(10, 'Created'),(20, 'Sent To Supplier'),(40, 'Reconciled');
+            insert into feedback_issuetype(id,issue_type)
+            values(10,'Delivery'),(20,'Customer Service'),(30,'Pricing'),(40,'Others'),(50,'Out of Stock'),(60,'Packaging'),(70,'Site Usability'),
+            (80,'Product Addition'),(90,'Product Damaged'),(100,'Product Expired'),(110,'Loyalty'),(120,'Payment');
+        </sql>
+    </changeSet>
+	<changeSet author="Pradeep (generated)" id="1356002931704-1">
+       <addColumn tableName="hk_api_user">
+           <column defaultValueNumeric="0" name="order_placement_enabled" type="TINYINT">
+               <constraints nullable="false"/>
+           </column>
+       </addColumn>
+   </changeSet>
+   <changeSet author="Pradeep (generated)" id="1356002931704-2">
+       <addColumn tableName="hk_api_user">
+           <column name="secret_key" type="VARCHAR(300)">
+               <constraints nullable="false"/>
+           </column>
+       </addColumn>
+   </changeSet>
+   <changeSet author="Pradeep (generated)" id="1356002931704-3">
+       <addColumn tableName="store">
+           <column name="callback_rest_url" type="VARCHAR(100)"/>
+       </addColumn>
+   </changeSet>
+	<changeSet author="Rahul (generated)" id="1356518834014-1">
+		<createTable tableName="download_process">
+			<column autoIncrement="true" name="download_id" type="INT">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column name="run_date" type="DATETIME"/>
+			<column name="last_run_date" type="DATETIME"/>
+			<column name="status" type="VARCHAR(5)"/>
+			<column name="create_dt" type="DATETIME"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="Tarun" id="12-26-2012">
+		<sql>
+			UPDATE pincode SET zone_id=1 WHERE zone_id IS NULL;
+			UPDATE shipment SET zone_id=1 WHERE zone_id IS NULL;
+		</sql>
+	</changeSet>
+	<changeSet author="Tarun (generated)" id="1355737809715-1">
+        <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1356513899742-1">
+        <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="shipment"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1356699493647-1">
+        <createIndex indexName="uniq_exinventory_sku" tableName="extra_inventory_line_item" unique="true">
+            <column name="sku_id"/>
+            <column name="extra_inventory_id"/>
+        </createIndex>
     </changeSet>
 </databaseChangeLog>

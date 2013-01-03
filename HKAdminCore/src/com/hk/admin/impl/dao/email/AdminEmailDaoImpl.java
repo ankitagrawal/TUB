@@ -152,6 +152,31 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         return userIdsByCategory;
     }
 
+    public List<User> getMailingListByCategory(String category, int storeId, String type) {
+        String query = "select distinct u from OrderCategory oc join oc.order.user u join u.roles r "
+                 + "where oc.category.name = (:category) " + "and r in (:roleList)"
+                + " and u.store.id = (:storeIdList) ";
+
+        List<Role> applicableRoleList = new ArrayList<Role>();
+        if(type.equalsIgnoreCase("all-unverified"))
+        {
+            applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_UNVERIFIED).getRole());
+        }
+        else if (type.equalsIgnoreCase("all")){
+            applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_USER).getRole());
+            applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_UNVERIFIED).getRole());
+        }else{
+            applicableRoleList.add(RoleCache.getInstance().getRoleByName(EnumRole.HK_USER).getRole());
+        }
+
+        List<User> userIdsByCategory = getSession().createQuery(query)
+                .setParameter("category", category)
+                .setParameterList("roleList",applicableRoleList)
+                .setInteger("storeIdList", storeId).list();
+
+        return userIdsByCategory;
+    }
+
     public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category) {
 
         String query = "select count(distinct u.id) from OrderCategory oc join oc.order.user u join u.roles r, "
