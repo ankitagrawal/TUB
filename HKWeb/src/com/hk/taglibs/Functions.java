@@ -631,11 +631,11 @@ public class Functions {
 
 	public static boolean hideFilterHeads(String secondChild, String thirdChild, String attribute) {
 		List<String> secondChildList = Arrays.asList("proteins", "sunglasses", "weight-gainer");
-		if (secondChildList.contains(secondChild) && attribute.equalsIgnoreCase("SIZE")) {
+		if (secondChildList.contains(secondChild) && attribute.equalsIgnoreCase("size")) {
 			return true;
 		} else if (thirdChild.equalsIgnoreCase("dietary-supplements")) {
-			List<String> attributeList = Arrays.asList("Size", "Quantity", "Type", "Flavor", "Protein/Serving", "Strength");
-			if (attributeList.contains(attribute)) {
+			List<String> attributeList = Arrays.asList("size", "quantity", "type", "flavor", "protein/serving", "strength");
+			if (attributeList.contains(attribute.toLowerCase())) {
 				return true;
 			}
 		}
