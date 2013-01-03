@@ -36,7 +36,12 @@
                 $.getJSON($('#skuCheck').attr('href'), {wareHouseId: ${extraInventory.wareHouseId} , productVariantId: variant}, function (res) {
                     if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
                         obj.parent().parent().children('td.skuId').children('.skus').val(res.data.sku.id);
-                        obj.parent().parent().children('td.proName').children('.productName').val(res.data.productName);
+                         var checkLength = res.data.productName;
+                                var finalProName = res.data.productName;
+                                if(checkLength.length > 45){
+                                 finalProName = finalProName.substring(0,44);
+                                }
+                                obj.parent().parent().children('td.proName').children('.productName').val(finalProName);
                         $('#checkRtvStatus').remove();
                         $('.createRtv').remove();
                     }
@@ -130,7 +135,12 @@
                         $.getJSON($('#skuCheck').attr('href'), {productVariantId: variant, wareHouseId: ${extraInventory.wareHouseId}}, function (res) {
                             if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
                                 obj.parent().parent().children('td.skuId').children('.skus').val(res.data.sku.id);
-                                obj.parent().parent().children('td.proName').children('.productName').val(res.data.productName);
+                                var checkLength = res.data.productName;
+                                var finalProName = res.data.productName;
+                                if(checkLength.length > 45){
+                                 finalProName = finalProName.substring(0,44);
+                                }
+                                obj.parent().parent().children('td.proName').children('.productName').val(finalProName);
                             }
                             else{
                                 alert(res.message);
@@ -181,7 +191,7 @@
                         '</td>' +
                         '<input type="hidden" name="extraInventoryLineItems[' + nextIndex + '].id" />' +
                         '  <td class="proName">' +
-                        '    <input type="text" class="productName" name="extraInventoryLineItems[' + nextIndex + '].productName" />' +
+                        '    <input type="text" class="productName" maxlength="45" name="extraInventoryLineItems[' + nextIndex + '].productName" />' +
                         '  </td>' +
                         '  <td>' +
                         '    <input class="mrp valueChange" type="text" name="extraInventoryLineItems[' + nextIndex + '].mrp" />' +
@@ -359,7 +369,7 @@
                                 <input type="text" class="productName" readonly="readonly" name="extraInventoryLineItems[${ctr.index}].productName" value="${eInLineItems.productName}"/>
                             </c:when>
                             <c:otherwise>
-                                <input type="text" class="productName" name="extraInventoryLineItems[${ctr.index}].productName" value="${eInLineItems.productName}"/>
+                                <input type="text" class="productName" maxlength="45" name="extraInventoryLineItems[${ctr.index}].productName" value="${eInLineItems.productName}"/>
                             </c:otherwise>
                         </c:choose>
                     </td>
@@ -396,7 +406,8 @@
                     <td>
                         <c:choose>
                             <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                                <input type="text" name="extraInventoryLineItems[${ctr.index}].tax" readonly="readonly" value="${eInLineItems.tax.id}"/>
+                                <input type="text" readonly="readonly" value="${eInLineItems.tax.name}"/>
+                                <input type="hidden" name="extraInventoryLineItems[${ctr.index}].tax" readonly="readonly" value="${eInLineItems.tax.id}"/>
                             </c:when>
                             <c:otherwise>
                                 <s:select name="extraInventoryLineItems[${ctr.index}].tax">
