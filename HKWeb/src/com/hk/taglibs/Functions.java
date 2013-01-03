@@ -630,10 +630,10 @@ public class Functions {
     }
 
 	public static boolean hideFilterHeads(String secondChild, String thirdChild, String attribute) {
-		List<String> secondChildList = Arrays.asList("proteins", "sunglasses", "weight-gainer");
-		if (secondChildList.contains(secondChild) && attribute.equalsIgnoreCase("size")) {
+		List<String> thirdChildList = Arrays.asList("proteins", "sunglasses", "weight-gainer");
+		if (thirdChildList.contains(thirdChild) && attribute.equalsIgnoreCase("size")) {
 			return true;
-		} else if (thirdChild.equalsIgnoreCase("dietary-supplements")) {
+		} else if (secondChild.equalsIgnoreCase("dietary-supplements")) {
 			List<String> attributeList = Arrays.asList("size", "quantity", "type", "flavor", "protein/serving", "strength");
 			if (attributeList.contains(attribute.toLowerCase())) {
 				return true;
