@@ -122,9 +122,6 @@ public class XslAwbParser {
                 } else if (XslUtil.getLong(cod).equals(0l)) {
                     awb.setCod(false);
                 }
-	             if ((StringUtils.isEmpty(cod))) {
-                    throw new ExcelBlankFieldException("DELETE cannot be empty " + "    ", rowCount);
-                }
                 awbList.add(awb);
             }
 
@@ -154,6 +151,7 @@ public class XslAwbParser {
 		xlsWriter.addHeader(XslConstants.AWB_NUMBER, XslConstants.AWB_NUMBER);
 		xlsWriter.addHeader(XslConstants.COD, XslConstants.COD);
 		xlsWriter.addHeader(XslConstants.WAREHOUSE, XslConstants.WAREHOUSE);
+		xlsWriter.addHeader(XslConstants.STATUS, XslConstants.STATUS);
 
 		for (Awb awb : awbList) {
 			xlsWriter.addCell(xlsRow, awb.getCourier().getId());
@@ -164,6 +162,7 @@ public class XslAwbParser {
 			}
 			xlsWriter.addCell(xlsRow, cod);
 			xlsWriter.addCell(xlsRow, awb.getWarehouse().getId());
+			xlsWriter.addCell(xlsRow,awb.getAwbStatus().getStatus());
 			xlsRow++;
 		}
 		xlsWriter.writeData(xlsFile, "Sheet1");

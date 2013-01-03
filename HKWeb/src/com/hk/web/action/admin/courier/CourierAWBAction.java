@@ -96,9 +96,23 @@ public class CourierAWBAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Select Courier"));
 			return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
 		}
-		String selectedStatus = awbStatus.getStatus();
+		String selectedStatus = null;
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-		List<Awb> unusedAwbListFromDb = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, warehouse, null, awbStatus);
+		List<Awb> unusedAwbListFromDb = new ArrayList<Awb>();
+		if (awbStatus == null) {
+			selectedStatus = "Unused+Attach+Authorization";
+			List<AwbStatus> awbStatusList = EnumAwbStatus.getAllStatusExceptUsed();
+			for (AwbStatus awbStatusFromList : awbStatusList) {
+				List<Awb> awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, warehouse, null, awbStatusFromList);
+				if (awbList != null && awbList.size() > 0) {
+					unusedAwbListFromDb.addAll(awbList);
+				}
+			}
+		}
+		else{
+		selectedStatus = awbStatus.getStatus();
+		unusedAwbListFromDb = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, warehouse, null, awbStatus);
+		}
 		String excelFilePath = adminDownloadsPath + "/courierExcelFiles/" + courier.getName()+"_"+ selectedStatus + ".xls";
 		final File excelFile = new File(excelFilePath);
 		xslAwbParser.generateAwbExcel(unusedAwbListFromDb, excelFile);
