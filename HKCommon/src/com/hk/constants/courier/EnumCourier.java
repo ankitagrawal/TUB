@@ -35,6 +35,8 @@ public enum EnumCourier {
     HK_Delivery(500L, "HealthKart Delivery"),
     FedEx(600L, "FedEx"),
     FedEx_Surface(610L, "FedEx Surface"),
+    Gati(650L, "Gati"),
+    Star_Track(660L, "Star Track"),  
 
     MIGRATE(-1L, "MIGRATE");
 
@@ -113,9 +115,10 @@ public enum EnumCourier {
 
       public static List<EnumCourier> getCurrentlyApplicableVendorCouriers() {
         return Arrays.asList(
-                EnumCourier.DTDC_Surface,
-                EnumCourier.Delhivery_Surface,
-                EnumCourier.FedEx_Surface
+                EnumCourier.BlueDart,
+                EnumCourier.Gati,
+                EnumCourier.Safexpress,
+                EnumCourier.Star_Track
         );
     }
 
