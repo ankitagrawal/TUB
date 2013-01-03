@@ -948,6 +948,7 @@ public class ReportAction extends BaseAction {
         xlsWriter.addHeader("SHIPPING ORDER NUMBER", "SHIPPING ORDER NUMBER");
         xlsWriter.addHeader("BASE OREDR NUMBER", "BASE OREDR NUMBER");
         xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+        xlsWriter.addHeader("VARIANT NAME", "VARIANT NAME");
         xlsWriter.addHeader("VARIANT ID", "VARIANT ID");
         xlsWriter.addHeader("QTY", "QTY");
         xlsWriter.addHeader("AMOUNT", "AMOUNT");
@@ -961,6 +962,7 @@ public class ReportAction extends BaseAction {
                 xlsWriter.addCell(xlsRow, shippingOrder.getId());
                 xlsWriter.addCell(xlsRow, order.getId());
                 xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
+                xlsWriter.addCell(xlsRow, productVariant.getVariantName());
                 xlsWriter.addCell(xlsRow, productVariant.getId());
                 xlsWriter.addCell(xlsRow, lineItem.getQty());
                 xlsWriter.addCell(xlsRow, lineItem.getHkPrice());
