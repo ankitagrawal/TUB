@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.order.AdminOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.discount.EnumRewardPointMode;

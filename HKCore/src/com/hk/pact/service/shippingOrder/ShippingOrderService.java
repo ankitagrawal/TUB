@@ -35,20 +35,8 @@ public interface ShippingOrderService {
 	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage);
 
 	public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse);
-
-	/**
-	 * Auto-escalation logic for all successful transactions This method will check inventory availability and escalate
-	 * orders from action queue to processing queue accordingly.
-	 *
-	 * @param shippingOrder
-	 * @return true if it passes all the use cases i.e jit or availableUnbookedInventory Ajeet - 15-Feb-2012
-	 * @description shipping order
-	 */
-	public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder);	
-
-	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
-
-	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
+    	
+	
 
 	/**
 	 * Creates a shipping order with basic details

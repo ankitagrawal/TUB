@@ -9,7 +9,7 @@
 <%@ page import="com.hk.admin.util.courier.thirdParty.FedExCourierUtil" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
-<%@ page import="com.hk.admin.pact.service.shippingOrder.ShipmentService" %>
+<%@ page import="com.hk.pact.service.shippingOrder.ShipmentService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>

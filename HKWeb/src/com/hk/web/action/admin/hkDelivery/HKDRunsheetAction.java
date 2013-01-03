@@ -22,7 +22,7 @@ import com.hk.domain.courier.Courier;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.UserService;
 import com.hk.admin.pact.service.courier.AwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.manager.HKDRunsheetManager;

@@ -18,7 +18,7 @@ import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -375,17 +375,16 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             User adminUser = getUserService().getAdminUser();
             orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
 
-            // auto escalate shipping orders if possible
-            if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
-                for (ShippingOrder shippingOrder : shippingOrders) {
-                    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
-                }
-            }
-
-            for (ShippingOrder shippingOrder : shippingOrders) {
+			for (ShippingOrder shippingOrder : shippingOrders) {
                 shipmentService.createShipment(shippingOrder);
             }
 
+            // auto escalate shipping orders if possible
+            if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
+                for (ShippingOrder shippingOrder : shippingOrders) {
+                    adminShippingOrderService.autoEscalateShippingOrder(shippingOrder);
+                }
+            }
         }
         // Check Inventory health of order lineitems
         for (CartLineItem cartLineItem : productCartLineItems) {

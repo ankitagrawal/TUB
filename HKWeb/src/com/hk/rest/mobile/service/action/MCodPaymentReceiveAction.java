@@ -24,7 +24,7 @@ import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;

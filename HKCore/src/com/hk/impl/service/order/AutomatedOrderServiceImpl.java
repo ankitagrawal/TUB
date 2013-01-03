@@ -36,6 +36,7 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 
 /**
  * Created with IntelliJ IDEA.
@@ -64,6 +65,8 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
     private PaymentStatusDao paymentStatusDao;
     @Autowired
     private PaymentService paymentService;
+	@Autowired
+	private ShipmentService shipmentService;
 
     /**
      * creates base orders from within the code rather than through the usual UI flow.
@@ -184,6 +187,9 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
             User adminUser = getUserService().getAdminUser();
             orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
+			for (ShippingOrder shippingOrder : shippingOrders) {
+                shipmentService.createShipment(shippingOrder);
+            }
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
@@ -270,4 +276,8 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
     public void setPaymentService(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
+
+	public ShipmentService getShipmentService() {
+		return shipmentService;
+	}
 }

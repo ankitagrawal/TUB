@@ -104,7 +104,8 @@ public class OrderServiceImpl implements OrderService {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     LineItemDao                        lineItemDao;
-
+	@Autowired
+	AdminShippingOrderService 
     /*
      * @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}") private Double codMinAmount;
      */
