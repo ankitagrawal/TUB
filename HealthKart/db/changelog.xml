@@ -10769,7 +10769,7 @@
 
 	 <changeSet author="Seema (generated)" id="1356418728416-1">
         <addColumn tableName="rv_line_item">
-            <column name="reconcilied_qty" type="INT"/>
+            <column name="reconciled_qty" type="INT"/>
         </addColumn>
     </changeSet>
     <changeSet author="Seema (generated)" id="1356533241680-1">

@@ -74,7 +74,7 @@ public class RvLineItem implements java.io.Serializable {
 	@Column(name = "remarks")
 	private String remarks;
 
-	@Column(name = "reconcilied_qty")
+	@Column(name = "reconciled_qty")
 	private Long reconciledQty;
 
 	public Long getId() {
