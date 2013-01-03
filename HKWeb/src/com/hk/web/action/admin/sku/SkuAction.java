@@ -83,7 +83,6 @@ public class SkuAction extends BaseAction {
       skuService.saveSku(sku);
       addRedirectAlertMessage(new SimpleMessage("New SKU saved successfully."));
       return new RedirectResolution(SkuAction.class);
-
     }
     addRedirectAlertMessage(new SimpleMessage("Invalid Product Variant Id."));
     return new RedirectResolution(SkuAction.class);

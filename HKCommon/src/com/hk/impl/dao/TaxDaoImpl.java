@@ -15,7 +15,15 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
     public Tax findByName(String name) {
         return (Tax) getSession().createQuery("from Tax t where t.name = :name").setString("name", name).uniqueResult();
     }
-
+     public Tax findByValue(Double taxValue) {
+        List<Tax> taxes = (List<Tax>)getSession().createQuery("from Tax t where t.value = :taxValue").setDouble("taxValue", taxValue).list();
+        if(taxes.size()>1)
+         return (Tax) taxes.get(1);
+       else if(taxes.size()==1)
+        return (Tax) taxes.get(0);
+       else
+          return null;
+    }
     
     //TODO: change these querry styles execute one query only.  
     public List<Tax> taxListForReport() {
