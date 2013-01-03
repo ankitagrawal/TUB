@@ -185,6 +185,10 @@ public class GRNAction extends BasePaginatedAction {
 
 			for (GrnLineItem grnLineItem : grnLineItems) {
 				//setting sku when adding new grn line item
+				if(grnLineItem.getMrp().longValue() < grnLineItem.getCostPrice().longValue()){
+					addRedirectAlertMessage(new SimpleMessage("Cost price cannot be less than MRP for item "+grnLineItem.getSku().getProductVariant().getId()));
+					return new ForwardResolution(GRNAction.class, "view").addParameter("grn", grn.getId());
+				}
 				if (grnLineItem.getSku() == null && grnLineItem.getProductVariant() != null) {
 					grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
 				}
