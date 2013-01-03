@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.hk.constants.core.EnumTax" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
@@ -36,7 +36,12 @@
                 $.getJSON($('#skuCheck').attr('href'), {wareHouseId: ${extraInventory.wareHouseId} , productVariantId: variant}, function (res) {
                     if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
                         obj.parent().parent().children('td.skuId').children('.skus').val(res.data.sku.id);
-                        obj.parent().parent().children('td.proName').children('.productName').val(res.data.productName);
+                         var checkLength = res.data.productName;
+                                var finalProName = res.data.productName;
+                                if(checkLength.length > 45){
+                                 finalProName = finalProName.substring(0,44);
+                                }
+                                obj.parent().parent().children('td.proName').children('.productName').val(finalProName);
                         $('#checkRtvStatus').remove();
                         $('.createRtv').remove();
                     }
@@ -130,7 +135,12 @@
                         $.getJSON($('#skuCheck').attr('href'), {productVariantId: variant, wareHouseId: ${extraInventory.wareHouseId}}, function (res) {
                             if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
                                 obj.parent().parent().children('td.skuId').children('.skus').val(res.data.sku.id);
-                                obj.parent().parent().children('td.proName').children('.productName').val(res.data.productName);
+                                var checkLength = res.data.productName;
+                                var finalProName = res.data.productName;
+                                if(checkLength.length > 45){
+                                 finalProName = finalProName.substring(0,44);
+                                }
+                                obj.parent().parent().children('td.proName').children('.productName').val(finalProName);
                             }
                             else{
                                 alert(res.message);
@@ -165,7 +175,7 @@
                 }
 
                 $('.lastRow').removeClass('lastRow');
-
+              
                 var nextIndex = eval(lastIndex + "+1");
 
                 var newRowHtml =
@@ -181,7 +191,7 @@
                         '</td>' +
                         '<input type="hidden" name="extraInventoryLineItems[' + nextIndex + '].id" />' +
                         '  <td class="proName">' +
-                        '    <input type="text" class="productName" name="extraInventoryLineItems[' + nextIndex + '].productName" />' +
+                        '    <input type="text" class="productName" maxlength="45" name="extraInventoryLineItems[' + nextIndex + '].productName" />' +
                         '  </td>' +
                         '  <td>' +
                         '    <input class="mrp valueChange" type="text" name="extraInventoryLineItems[' + nextIndex + '].mrp" />' +
@@ -192,20 +202,16 @@
                         '  <td>' +
                         '    <input type="text" class="receivedQty valueChange" name="extraInventoryLineItems[' + nextIndex + '].receivedQty"  />' +
                         '  </td>' +
-                        '<td>' +
-                        ' <select class="taxSelect" name="extraInventoryLineItems[' + nextIndex + '].tax" >' +
-                        '<option value="<%=EnumTax.NA.getValue()%>" ><%=EnumTax.NA.getName()%></option>' +
-                        '<option value="<%=EnumTax.SERVICE_10_3.getValue()%>" ><%=EnumTax.SERVICE_10_3.getName()%> </option>' +
-                        '<option value="<%=EnumTax.VAT_0.getValue()%>" > <%=EnumTax.VAT_0.getName()%> </option>' +
-                        '<option value="<%=EnumTax.VAT_5.getValue()%>" ><%=EnumTax.VAT_5.getName()%></option>' +
-                        '<option value="<%=EnumTax.VAT_12_5.getValue()%>" ><%=EnumTax.VAT_12_5.getName()%></option>' +
-                        '<option value="<%=EnumTax.VAT_12_36.getValue()%>" ><%=EnumTax.VAT_12_36.getName()%></option>' +
-                        ' </select>' +
+                        '<td >' +
+                        '<select name="extraInventoryLineItems[' + nextIndex + '].tax"> '+
+                         <c:forEach items="${extraInventory.taxList}" var="tax">
+                        '<option value="' + ${tax.id} + '">' + "${tax.name}" + '</option>' +
+                         </c:forEach>
+                        '</select>' +
                         '</td>' +
                         '</tr>';
 
                 $('#poTable').append(newRowHtml);
-
                 $('#checkRtvStatus').remove();
                 $('.createRtv').remove();
 
@@ -363,7 +369,7 @@
                                 <input type="text" class="productName" readonly="readonly" name="extraInventoryLineItems[${ctr.index}].productName" value="${eInLineItems.productName}"/>
                             </c:when>
                             <c:otherwise>
-                                <input type="text" class="productName" name="extraInventoryLineItems[${ctr.index}].productName" value="${eInLineItems.productName}"/>
+                                <input type="text" class="productName" maxlength="45" name="extraInventoryLineItems[${ctr.index}].productName" value="${eInLineItems.productName}"/>
                             </c:otherwise>
                         </c:choose>
                     </td>
@@ -400,18 +406,14 @@
                     <td>
                         <c:choose>
                             <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                                <input type="text" name="extraInventoryLineItems[${ctr.index}].tax" readonly="readonly" value="${eInLineItems.tax.value}"/>
+                                <input type="text" readonly="readonly" value="${eInLineItems.tax.name}"/>
+                                <input type="hidden" name="extraInventoryLineItems[${ctr.index}].tax" readonly="readonly" value="${eInLineItems.tax.id}"/>
                             </c:when>
                             <c:otherwise>
-                                <select class="taxSelect" name="extraInventoryLineItems[${ctr.index}].tax">
-                                    <option value="<%=EnumTax.NA.getValue()%>" ${eInLineItems.tax.value == 0.0 ? 'selected' : ''}> <%=EnumTax.NA.getName()%> </option>
-                                    <option value="<%=EnumTax.SERVICE_10_3.getValue()%>" ${eInLineItems.tax.value == 0.103 ? 'selected' : ''}> <%=EnumTax.SERVICE_10_3.getName()%> </option>
-                                    <option value="<%=EnumTax.VAT_0.getValue()%>" ${eInLineItems.tax.value == 0.0 ? 'selected' : ''}> <%=EnumTax.VAT_0.getName()%> </option>
-                                    <option value="<%=EnumTax.VAT_12_36.getValue()%>" ${eInLineItems.tax.value == 0.1236 ? 'selected' : ''}> <%=EnumTax.VAT_12_36.getName()%> </option>
-                                    <option value="<%=EnumTax.VAT_12_5.getValue()%>" ${eInLineItems.tax.value == 0.125 ? 'selected' : ''}> <%=EnumTax.VAT_12_5.getName()%> </option>
-                                    <option value="<%=EnumTax.VAT_5.getValue()%>" ${eInLineItems.tax.value == 0.05 ? 'selected' : ''}> <%=EnumTax.VAT_5.getName()%> </option>
-                                </select>
-                        </c:otherwise>
+                                <s:select name="extraInventoryLineItems[${ctr.index}].tax">
+                                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="taxList" value="id" label="name"/>
+                                </s:select>
+                            </c:otherwise>
                         </c:choose>
                     </td>
                 </tr>

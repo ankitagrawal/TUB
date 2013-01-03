@@ -26,16 +26,16 @@ public class TaxTypeConverter implements TypeConverter<Tax> {
   private TaxDao taxDao;
 
   public Tax convert(String s, Class<? extends Tax> aClass, Collection<ValidationError> validationErrors) {
-    Double idDouble = null;
+    Long idLong = null;
     try {
-      idDouble = Double.parseDouble(s);
+      idLong = Long.parseLong(s);
     } catch (NumberFormatException e) {
     }
-    if (idDouble == null) {
+    if (idLong == null) {
       return null;
     } else {
-      //return taxDao.find(idLong);
-        return   getTaxDao().findByValue(idDouble);      
+//      return taxDao.find(idLong);
+      return getTaxDao().get(Tax.class, idLong);
     }
   }
 
