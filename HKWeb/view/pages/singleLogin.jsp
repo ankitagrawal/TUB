@@ -23,7 +23,7 @@
                 <a href="#" id="logintab" class="tab">log in</a>
             </c:otherwise>
         </c:choose>
-        <img src="${httpPath}/images/stripe_top.png" alt="top_stripe" border="0" height="10" width="705">
+        <img src="${httpPath}/images/hk_bar_SSO.jpg" alt="top_stripe" border="0" height="10" width="705">
     </div>
     <div class="logo_block">
         <a title="go to healthkart home" href="/"><img src="${httpPath}/images/hk_plus_logo.png" alt="Healthkart Logo" border="0" height="40" width="140"></a>
@@ -69,7 +69,6 @@
                 <s:hidden name="redirectUrl" value="${sla.redirectUrl}"/>
                 <div class="login_block">
                     <s:submit tabindex="60" name="signup" id="signup" class="submit" value="Sign up"></s:submit>
-                    <a id="signup_forgotPasswordLink" class="forgot_link" href="">Forgot password?</a>
                 </div>
             </s:form>
         </div>
