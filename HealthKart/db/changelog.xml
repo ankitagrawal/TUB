@@ -10765,8 +10765,6 @@
     <changeSet author="Tarun (generated)" id="1356513899742-1">
         <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="shipment"/>
     </changeSet>
-
-
 	 <changeSet author="Seema (generated)" id="1356418728416-1">
         <addColumn tableName="rv_line_item">
             <column name="reconciled_qty" type="INT"/>
@@ -10778,5 +10776,16 @@
                 <constraints nullable="false"/>
             </column>
         </addColumn>
+    </changeSet>
+	<changeSet author="Seema (generated)" id="1356533241680-2">
+       <sql>
+	       update reconciliation_voucher rv,(select max(cc),reconciliation_type_id,reconciliation_voucher_id from
+	       (select reconciliation_voucher_id,
+	       reconciliation_type_id ,count(reconciliation_type_id) as cc
+	       FROM `rv_line_item` GROUP BY reconciliation_voucher_id, reconciliation_type_id )aa group by
+	       reconciliation_voucher_id)rvli
+	       set rv.reconciliation_type_id= rvli.reconciliation_type_id
+	       where rv.id=rvli.reconciliation_voucher_id;
+       </sql>
     </changeSet>
 </databaseChangeLog>
