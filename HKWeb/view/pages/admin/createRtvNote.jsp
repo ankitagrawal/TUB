@@ -122,7 +122,7 @@
                             ${rtvLineItem.extraInventoryLineItem.receivedQty}
                         </td>
                         <td>
-                            ${rtvLineItem.extraInventoryLineItem.tax.value}
+                            ${rtvLineItem.extraInventoryLineItem.tax.name}
                         </td>
                     </tr>
                 </c:forEach>
