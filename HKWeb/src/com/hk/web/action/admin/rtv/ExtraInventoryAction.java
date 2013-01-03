@@ -193,6 +193,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(purchaseOrder!=null){
       newPurchaseOrderId = purchaseOrder.getId();
     }
+     taxList = getMasterDataDao().getTaxList();
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!! "));
     return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
@@ -423,6 +424,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(purchaseOrder!=null){
       newPurchaseOrderId = purchaseOrder.getId();
     }
+     taxList = getMasterDataDao().getTaxList();
     noCache();
     addRedirectAlertMessage(new SimpleMessage("PO and PoLine Item has been created !!! with New PO ID - " + newPurchaseOrder.getId() ));
     return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
