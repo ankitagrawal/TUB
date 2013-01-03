@@ -218,7 +218,7 @@ public class MProductAction extends MBaseAction{
             totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
             if (totalReviews != null && totalReviews > 0) {
                 averageRating = getProductService().getAverageRating(product);
-                Page userReviewPage = getProductService().getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5);
+                Page userReviewPage = getProductService().getProductReviewsForCustomer(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5);
                 if (userReviewPage != null) {
                     userReviews = userReviewPage.getList();
                 }
