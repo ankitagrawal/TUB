@@ -12,6 +12,7 @@ import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.MasterDataDao;
 import com.hk.constants.rtv.EnumRtvNoteStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.accounting.PoLineItem;
@@ -26,7 +27,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.domain.inventory.rtv.RtvNoteLineItem;
 import com.hk.web.HealthkartResponse;
-import com.hk.web.action.admin.inventory.POAction;
+import com.hk.domain.core.Tax;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,11 +64,13 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   RtvNoteLineItemService rtvNoteLineItemService;
   @Autowired
   PoLineItemService poLineItemService;
-
+  @Autowired
+  MasterDataDao masterDataDao;
 
   private List<ExtraInventoryLineItem> extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
   private List<ExtraInventoryLineItem> extraInventoryLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
   private List<RtvNoteLineItem> rtvNoteLineItems = new ArrayList<RtvNoteLineItem>();
+  private List<Tax> taxList = new ArrayList<Tax>();
   private Integer defaultPerPage = 20;
   Page purchaseOrderPage;
   private Long purchaseOrderId;
@@ -105,6 +108,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         }
       }
     }
+    taxList = getMasterDataDao().getTaxList();
     return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
@@ -644,5 +648,17 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   public void setNewPurchaseOrderId(Long newPurchaseOrderId) {
     this.newPurchaseOrderId = newPurchaseOrderId;
+  }
+
+  public List<Tax> getTaxList() {
+    return taxList;
+  }
+
+  public void setTaxList(List<Tax> taxList) {
+    this.taxList = taxList;
+  }
+
+  public MasterDataDao getMasterDataDao() {
+    return masterDataDao;
   }
 }
