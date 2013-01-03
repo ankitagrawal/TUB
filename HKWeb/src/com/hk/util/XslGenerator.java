@@ -37,6 +37,7 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -1021,6 +1022,30 @@ public class XslGenerator {
 
 	public void setAdminInventoryService(AdminInventoryService adminInventoryService) {
 		this.adminInventoryService = adminInventoryService;
+	}
+
+
+	public File generateAwbExcel(List<Awb> awbList, File xlsFile) {
+		HkXlsWriter xlsWriter = new HkXlsWriter();
+		int xlsRow = 1;
+		xlsWriter.addHeader(XslConstants.COURIER_ID, XslConstants.COURIER_ID);
+		xlsWriter.addHeader(XslConstants.AWB_NUMBER, XslConstants.AWB_NUMBER);
+		xlsWriter.addHeader(XslConstants.COD, XslConstants.COD);
+		xlsWriter.addHeader(XslConstants.WAREHOUSE, XslConstants.WAREHOUSE);
+
+		for (Awb awb : awbList) {
+			xlsWriter.addCell(xlsRow, awb.getCourier().getId());
+			xlsWriter.addCell(xlsRow, awb.getAwbNumber());
+			String cod = "0";
+			if (awb.getCod()) {
+				cod = "1";
+			}
+			xlsWriter.addCell(xlsRow, cod);
+			xlsWriter.addCell(xlsRow, awb.getWarehouse().getId());
+			xlsRow++;
+		}
+		xlsWriter.writeData(xlsFile, "Sheet1");
+		return xlsFile;
 	}
 
 }

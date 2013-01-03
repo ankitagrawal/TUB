@@ -14,7 +14,12 @@
             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
           </s:select></li>
           <li>
-
+	        <li><label>AWB Status : </label>
+	         <s:select name="awbStatus">
+		        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allAwbStatus"
+		                                   value="id" label="status"/>
+	        </s:select></li>
+	        <li>
             <div class="buttons">
               <s:submit name="generateCourierAWBExcel" value="Download"/>
             </div>
@@ -46,6 +51,32 @@
                 Excel in Format COURIER_ID (int) ,AWB_NUMBER (alphanumeric) ,COD (1 if COD , 0 if tech process) ,
                 WAREHOUSE (1 for Gurgaon 2, Mumbai)
 
+            </li>
+        </div>
+        </s:form>
+      </ul>
+    </fieldset>
+
+
+
+	   <fieldset class="right_label">
+      <legend>Upload Courier AWB to Delete</legend>
+      <ul>
+
+        <s:form beanclass="com.hk.web.action.admin.courier.CourierAWBAction">
+
+        <div class="grid_4">
+          <li><label>File to Upload</label>
+            <s:file name="fileBean" size="30"/>
+          </li>
+          <li>
+              <div class="buttons">
+                  <s:submit name="uploadCourierAWBExcelForDelete" value="Upload"/>
+              </div>
+          </li>
+            <li>
+                Excel in Format COURIER_ID (int) ,AWB_NUMBER (alphanumeric) ,COD (1 if COD , 0 if tech process) ,
+                WAREHOUSE (1 for Gurgaon 2, Mumbai)
             </li>
         </div>
         </s:form>
