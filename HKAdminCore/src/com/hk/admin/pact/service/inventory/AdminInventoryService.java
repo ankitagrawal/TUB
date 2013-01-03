@@ -64,8 +64,6 @@ public interface AdminInventoryService {
 
     public List<VariantConfig> getAllVariantConfig();
 
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
-
 	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList);
 
 	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);

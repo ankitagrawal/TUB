@@ -315,7 +315,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 					skuItemList = adminInventoryService.getInStockSkuItems(skuGroup);
 					return skuItemList;
 				} else {
-					skuGroupList = adminInventoryService.getSkuGroupsByBatch(batchNumber, sku);
+					skuGroupList = skuGroupService.getSkuGroupsByBatch(batchNumber, sku);
 					if (skuGroupList != null && skuGroupList.size() > 0) {
 						skuItemList = adminInventoryService.getInStockSkuItems(skuGroupList);
 						return skuItemList;

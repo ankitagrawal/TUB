@@ -178,34 +178,6 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
     }
 
 
-	private DetachedCriteria getSkuGroupCriteria(List<SkuGroup> skuGroupList, String barcode, String batchNumber, Sku sku) {
-		DetachedCriteria skuGroupCriteria = DetachedCriteria.forClass(SkuGroup.class);
-		List<Long> skuGroupIds = new ArrayList<Long>();
-		if (skuGroupList != null) {
-			for (SkuGroup skuGroup : skuGroupList) {
-				skuGroupIds.add(skuGroup.getId());
-			}
-		}
-
-		if (skuGroupIds.size() > 0) {
-			skuGroupCriteria.add(Restrictions.in("id", skuGroupIds));
-		}
-
-		if (barcode != null) {
-			skuGroupCriteria.add(Restrictions.eq("barcode", barcode.trim()));
-		}
-
-		if (batchNumber != null) {
-			skuGroupCriteria.add(Restrictions.eq("batchNumber", batchNumber.trim()));
-		}
-
-		if (sku != null) {
-			skuGroupCriteria.add(Restrictions.eq("sku", sku));
-		}
-		return skuGroupCriteria;
-
-	}
-
 	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList) {
 		List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
 		for (SkuGroup skuGroup : skuGroupList) {
@@ -217,10 +189,6 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
 		return inStockSkuItems;
 	}
 
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
-		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, null, batch, sku);
-		return findByCriteria(skuGroupCriteria);
-	}
 
 
 }

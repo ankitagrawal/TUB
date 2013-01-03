@@ -111,4 +111,39 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 
   }
 
+
+	private DetachedCriteria getSkuGroupCriteria(List<SkuGroup> skuGroupList, String barcode, String batchNumber, Sku sku) {
+		DetachedCriteria skuGroupCriteria = DetachedCriteria.forClass(SkuGroup.class);
+		List<Long> skuGroupIds = new ArrayList<Long>();
+		if (skuGroupList != null) {
+			for (SkuGroup skuGroup : skuGroupList) {
+				skuGroupIds.add(skuGroup.getId());
+			}
+		}
+
+		if (skuGroupIds.size() > 0) {
+			skuGroupCriteria.add(Restrictions.in("id", skuGroupIds));
+		}
+
+		if (barcode != null) {
+			skuGroupCriteria.add(Restrictions.eq("barcode", barcode.trim()));
+		}
+
+		if (batchNumber != null) {
+			skuGroupCriteria.add(Restrictions.eq("batchNumber", batchNumber.trim()));
+		}
+
+		if (sku != null) {
+			skuGroupCriteria.add(Restrictions.eq("sku", sku));
+		}
+		return skuGroupCriteria;
+
+	}
+
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
+		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, null, batch, sku);
+		return findByCriteria(skuGroupCriteria);
+	}
+
+
 }

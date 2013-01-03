@@ -42,6 +42,5 @@ public interface AdminSkuItemDao extends BaseDao {
 
   public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup);
 
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
 
 }

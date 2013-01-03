@@ -55,6 +55,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return skuGroupDao.getInStockSkuGroupByQty(sku);
 	}
 
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku){
+		return  skuGroupDao.getSkuGroupsByBatch(batch,sku);
+	}
+
 
 
 	//SkuItemDao Methods

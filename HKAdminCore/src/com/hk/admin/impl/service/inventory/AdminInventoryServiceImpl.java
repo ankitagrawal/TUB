@@ -376,11 +376,6 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		return adminSkuItemDao.getInStockSkuItems(skuGroupList);
 	}
 
-
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
-		return adminSkuItemDao.getSkuGroupsByBatch(batch, sku);
-	}
-
 	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
 		return adminSkuItemDao.getInStockSkuItems(skuGroup);
 	}
