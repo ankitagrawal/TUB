@@ -629,6 +629,19 @@ public class Functions {
         return renderNewCatalogFilter;
     }
 
+	public static boolean hideFilterHeads(String secondChild, String thirdChild, String attribute) {
+		List<String> secondChildList = Arrays.asList("proteins", "sunglasses", "weight-gainer");
+		if (secondChildList.contains(secondChild) && attribute.equalsIgnoreCase("SIZE")) {
+			return true;
+		} else if (thirdChild.equalsIgnoreCase("dietary-supplements")) {
+			List<String> attributeList = Arrays.asList("Size", "Quantity", "Type", "Flavor", "Protein/Serving", "Strength");
+			if (attributeList.contains(attribute)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
     public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, Object showHiddenImages) {
         ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
         Boolean showHiddenImagesBoolean = (Boolean) showHiddenImages;
