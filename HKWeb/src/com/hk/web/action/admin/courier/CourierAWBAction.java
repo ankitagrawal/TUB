@@ -99,9 +99,9 @@ public class CourierAWBAction extends BaseAction {
 		String selectedStatus = awbStatus.getStatus();
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
 		List<Awb> unusedAwbListFromDb = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, warehouse, null, awbStatus);
-		String excelFilePath = adminDownloadsPath + "/courierExcelFiles/Courier_" + selectedStatus + ".xls";
+		String excelFilePath = adminDownloadsPath + "/courierExcelFiles/" + courier.getName()+"_"+ selectedStatus + ".xls";
 		final File excelFile = new File(excelFilePath);
-		xslGenerator.generateAwbExcel(unusedAwbListFromDb, excelFile);
+		xslAwbParser.generateAwbExcel(unusedAwbListFromDb, excelFile);
 		addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
 
 		return new Resolution() {
