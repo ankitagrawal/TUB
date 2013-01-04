@@ -165,6 +165,9 @@
 ---/sports/fitness-equipment/heart-rate-monitors/accessories
 --/sports/fitness-equipment/trampolines
 --/sports/fitness-equipment/weighing-scales
+---/sports/fitness-equipment/weighing-scales/Analog
+---/sports/fitness-equipment/weighing-scales/Digital
+---/sports/fitness-equipment/weighing-scales/BMI
 --/sports/fitness-equipment/miscellaneous-equipments
 -/sports/sports-equipment
 --/sports/sports-equipment/football
@@ -189,7 +192,7 @@
 ----/sports/sports-equipment/cricket/bats/english-willow: English Willow
 ---/sports/sports-equipment/cricket/balls
 ---/sports/sports-equipment/cricket/gloves
----/sports/sports-equipment/cricket/helmets
+---/sports/sports-eqipment/cricket/helmets
 ---/sports/sports-equipment/cricket/pads
 ---/sports/sports-equipment/cricket/guards
 ---/sports/sports-equipment/cricket/bags
