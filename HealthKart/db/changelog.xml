@@ -10791,6 +10791,7 @@
 	</changeSet>
 	<changeSet author="Rohit" id="12-28-2012">
 		<sql>
+			INSERT into sku_item_status(id, name) values (10, "CHECKED IN"), (20, "CHECKED OUT");
 			CREATE table sku_temp(qty int, sku_item int);
 			INSERT into sku_temp select sum(qty),sku_item_id from product_variant_inventory group by sku_item_id;
 			UPDATE sku_item s, sku_temp t set sku_item_status_id = 20 where s.id = t.sku_item and qty = 0;
