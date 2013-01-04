@@ -57,6 +57,7 @@
                 <th>Destination Hub</th>
                 <th>Date</th>
                 <th>Status</th>
+	            <th>Remarks</th>
 	            <th>Activity by user:</th>
             </tr>
             </thead>
@@ -68,6 +69,7 @@
                     <td>${consignmentTrackingList.destinationHub.name}</td>
                     <td><fmt:formatDate value="${consignmentTrackingList.createDate}" type="both" timeStyle="short"/></td>
                     <td>${consignmentTrackingList.consignmentLifecycleStatus.status}</td>
+	                <td>${consignmentTrackingList.remarks}</td>
 	                <td>${consignmentTrackingList.user.name}</td>
                 </tr>
             </c:forEach>
