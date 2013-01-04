@@ -141,7 +141,15 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE340' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE341' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE342' />
-
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE004' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE005' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE007' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE017' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE018' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE034' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE035' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE039' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE763' />
 </div>
 <!--container01 close-->
 
