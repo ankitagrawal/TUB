@@ -10,6 +10,7 @@ import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
+import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.util.PurchaseOrderPDFGenerator;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -72,12 +73,12 @@ public class POAction extends BasePaginatedAction {
 	XslGenerator xslGenerator;
 	@Autowired
 	PurchaseOrderPDFGenerator purchaseOrderPDFGenerator;
-
 	@Autowired
 	GrnLineItemService grnLineItemService;
-
 	@Autowired
 	private ProductVariantSupplierInfoService productVariantSupplierInfoService;
+  @Autowired
+  private PurchaseOrderService purchaseOrderService;
 
 	private File xlsFile;
 	Page purchaseOrderPage;
@@ -113,6 +114,15 @@ public class POAction extends BasePaginatedAction {
 		return new ForwardResolution("/pages/admin/poList.jsp");
 	}
 
+  public Resolution getExtraInventoryPO(){
+
+     purchaseOrderList =   getPurchaseOrderService().getAllPurchaseOrderByExtraInventory();
+    if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
+				warehouse = getPrincipalUser().getSelectedWarehouse();
+			}
+    return new ForwardResolution("/pages/admin/poList.jsp");
+
+  }
 	public Resolution generateExcelReport() {
 		if (productVariant != null) {
 			purchaseOrderList = getPurchaseOrderDao().listPurchaseOrdersWithProductVariant(productVariant);
@@ -479,4 +489,8 @@ public class POAction extends BasePaginatedAction {
 	public void setPurchaseOrderPDFGenerator(PurchaseOrderPDFGenerator purchaseOrderPDFGenerator) {
 		this.purchaseOrderPDFGenerator = purchaseOrderPDFGenerator;
 	}
+
+  public PurchaseOrderService getPurchaseOrderService() {
+    return purchaseOrderService;
+  }
 }

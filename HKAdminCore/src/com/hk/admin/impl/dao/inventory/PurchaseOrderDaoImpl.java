@@ -48,7 +48,7 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
         DetachedCriteria purchaseOrderCriteria = DetachedCriteria.forClass(PurchaseOrder.class);
         DetachedCriteria supplierCriteria = null;
         if (purchaseOrder != null) {
-            purchaseOrderCriteria.add(Restrictions.eq("id", purchaseOrder.getId()));
+            purchaseOrderCriteria.add(Restrictions.eq("id",purchaseOrder.getId()));
         }
         if (purchaseOrderStatus != null) {
             purchaseOrderCriteria.add(Restrictions.eq("purchaseOrderStatus", purchaseOrderStatus));
