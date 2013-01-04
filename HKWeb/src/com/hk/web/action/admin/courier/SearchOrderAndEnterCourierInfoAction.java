@@ -168,6 +168,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 						trackingId = awb.getAwbNumber();
 					}
 				}
+				if (availableCouriers == null || availableCouriers.isEmpty() || suggestedCourier == null) {
+					trackingId = null;
+				} else if (availableCouriers != null && suggestedCourier != null) {
+					if (!(availableCouriers.contains(suggestedCourier))) {
+						trackingId = null;
+					}
+				}
 
 			} else {
 				addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
