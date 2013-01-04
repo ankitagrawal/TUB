@@ -10796,6 +10796,7 @@
 			UPDATE sku_item s, sku_temp t set sku_item_status_id = 20 where s.id = t.sku_item and qty = 0;
 			UPDATE sku_item s, sku_temp t set sku_item_status_id = 10 where s.id = t.sku_item and qty = 1;
 			DROP table sku_temp;
+			UPDATE sku_item s set sku_item_status_id = 20 where s.sku_item_status_id is null;
 		</sql>
 	</changeSet>
 	<changeSet author="Rohit (generated)" id="1356676950361-1">
