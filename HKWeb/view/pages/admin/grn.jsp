@@ -5,6 +5,8 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.inventory.EnumGrnStatus" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.core.EnumPermission" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
@@ -476,7 +478,9 @@
 <div class="variantDetails info"></div>
 <br/>
 <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
-<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+<shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
+	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+</shiro:hasPermission>
 <%--todo rahul: need to remove this add new row button added for finace team on 29-Nov-2012--%>
 <%--<c:choose>
 	<c:when test="${pa.grn.grnStatus.id < inCheckedIn}">
