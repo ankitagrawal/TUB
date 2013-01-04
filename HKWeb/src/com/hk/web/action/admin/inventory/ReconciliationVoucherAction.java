@@ -243,7 +243,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 							healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, msg );
 						}
 					} else {
-						healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Batch is Empty");
+						healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, errorMessage);
 					}
 				} else {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product Variant");
@@ -311,14 +311,23 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 			Sku sku = skuService.getSKU(productVariant, getUserService().getWarehouseForLoggedInUser());
 			if (sku != null) {
 				SkuGroup skuGroup = adminInventoryService.getSkuGroupByHkBarcode(batchNumber);
-				if (skuGroup != null ) {
+				if (skuGroup != null) {
 					skuItemList = adminInventoryService.getInStockSkuItems(skuGroup);
-					return skuItemList;
+					if (skuItemList != null && skuItemList.size() > 0) {
+						return skuItemList;
+					} else {
+						errorMessage = "Batch is Empty";
+					}
 				} else {
 					skuGroupList = skuGroupService.getSkuGroupsByBatch(batchNumber, sku);
 					if (skuGroupList != null && skuGroupList.size() > 0) {
 						skuItemList = adminInventoryService.getInStockSkuItems(skuGroupList);
-						return skuItemList;
+						if (skuItemList != null && skuItemList.size() > 0) {
+							return skuItemList;
+						} else {
+							errorMessage = "Batch is Empty";
+						}
+
 					} else {
 						errorMessage = "Invalid Batch";
 					}
