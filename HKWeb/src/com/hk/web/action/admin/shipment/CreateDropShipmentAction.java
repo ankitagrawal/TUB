@@ -198,6 +198,11 @@ public class CreateDropShipmentAction extends BaseAction {
         logger.info("Drop shipment Item mark as shipped");
         if (shippingOrder != null) {
             // shippingOrder.setAccountingInvoiceNumber();
+            if (shippingOrder.getShipment()== null){
+              addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Please Enter the shipment details"));
+              return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
+            }
+            
            trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
            selectedCourier = shippingOrder.getShipment().getAwb().getCourier(); 
 
