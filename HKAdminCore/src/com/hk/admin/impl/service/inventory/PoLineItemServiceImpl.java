@@ -44,6 +44,10 @@ public class PoLineItemServiceImpl implements PoLineItemService {
 		}
 	}
 
+  public PoLineItem save(PoLineItem poLineItem){
+    return (PoLineItem)getPoLineItemDao().save(poLineItem);
+  }
+
 	public GrnLineItemService getGrnLineItemService() {
 		return grnLineItemService;
 	}

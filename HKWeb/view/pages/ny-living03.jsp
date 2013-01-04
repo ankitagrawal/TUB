@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/living.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/living01.jpg" />
 
     <div class="cl"></div>
 		<div class="pages">
@@ -61,12 +63,12 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Sizzle Between the Sheets</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/get-laid.jpg"/>
-<p>We really don't want to say anything. Just make sure that your partner and you play safe (but not too safe)</p>
-<p>The world is your oyster and you can out do all bunny rabbits!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/get-laid-safe-sex.png"/>
+    <h2 class="txt01">Sizzle Between the Sheets</h2>
+<p>We really don't want to say anything. Just make sure that your partner and you play safe (but not too safe).The world is your rabbit hole and you are all bunny rabbits!</p>
 </div>
 
 <div class="cl"></div>
@@ -114,11 +116,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Learn a New Sport</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/learn-newsport.jpg"/>
-<p>You can bundle health, fitness, fun and socializing into 1 awesome thing - a sport! Whether it's TT or football or basky or gully cricket, we have everything you need to get started. The new year (and the winters too) are perfect for any Sport. Go be a Champ!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/learn-sport.png"/>
+    <h2 class="txt01">Learn a New Sport</h2>
+<p>You can bundle health, fitness, fun and socializing into 1 awesome thing - a sport! Whether it's TT or football or basky or gully cricket, we have everything you need to get started. This new year (and the winters too) is perfect for any Sport. Just get up and go do something.</p>
 </div>
 
 <div class="cl"></div>
@@ -146,10 +149,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Reduce Body Aches</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/reduce-body-aches.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/reduce-body-aches.png"/>
+    <h2 class="txt01">Reduce Body Aches</h2>
 <p>It's a New Year, it's a new You and You are unstoppable! That annoying ache has had it enough! It's time to put it to rest and move on to more gratifying vistas.</p>
 </div>
 

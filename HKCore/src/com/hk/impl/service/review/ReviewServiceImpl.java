@@ -19,8 +19,13 @@ public class ReviewServiceImpl implements ReviewService {
 
 
   @Override
-    public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage) {
-        return reviewDao.getProductReviews(product, reviewStatusList, page, perPage);
+    public Page getProductReviewsForCustomer(Product product, List<Long> reviewStatusList, int page, int perPage) {
+        return reviewDao.getProductReviewsForCustomer(product, reviewStatusList, page, perPage);
+    }
+
+    @Override
+    public Page getProductReviewsForAdmin(Product product, List<Long> reviewStatusList, int page, int perPage) {
+        return reviewDao.getProductReviewsForAdmin(product, reviewStatusList, page, perPage);
     }
 
     @Override

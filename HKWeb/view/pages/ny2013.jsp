@@ -37,14 +37,7 @@
 
 <div id="wrapper">
 
-
-
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
-
-
-
-<div class="cl"></div>
-<a href="${pageContext.request.contextPath}/pages/ny2013.jsp"><img src="${pageContext.request.contextPath}/images/ny2013/main_banner.jpg" /></a>
+<img src="${pageContext.request.contextPath}/images/ny2013/main_banner.jpg" />
     <div class="cl"></div>
 <a href="${pageContext.request.contextPath}/pages/ny-brain.jsp"><img src="${pageContext.request.contextPath}/images/ny2013/brain.jpg" /></a>
     <div class="cl"></div>
