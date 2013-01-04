@@ -329,8 +329,9 @@ public class GRNAction extends BasePaginatedAction {
 		PurchaseInvoice purchaseInvoice = new PurchaseInvoice();
 		purchaseInvoice.setCreateDate(new Date());
 		purchaseInvoice.setCreatedBy(loggedOnUser);
-		if (grnListForPurchaseInvoice.get(0) != null && grnListForPurchaseInvoice.get(0).getEstPaymentDate() != null) {
-			purchaseInvoice.setEstPaymentDate(grnListForPurchaseInvoice.get(0).getEstPaymentDate());
+		int first_index = grnListForPurchaseInvoice.size()-1;
+		if (grnListForPurchaseInvoice.get(first_index) != null && grnListForPurchaseInvoice.get(first_index).getEstPaymentDate() != null) {
+			purchaseInvoice.setEstPaymentDate(grnListForPurchaseInvoice.get(first_index).getEstPaymentDate());
 		}
 		purchaseInvoice.setPurchaseInvoiceStatus(getPurchaseInvoiceDao().get(PurchaseInvoiceStatus.class, EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getId()));
 		if (supplier != null) {
