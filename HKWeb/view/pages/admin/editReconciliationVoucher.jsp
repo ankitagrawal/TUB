@@ -387,21 +387,6 @@
 	<a href="editReconciliationVoucher.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
 	<s:submit name="saveAll" value="Save" class="saveButton"/>
-	<shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
-		<hr/>
-		<fieldset>
-			<legend>Upload Excel to Create RV LineItems</legend>
-			<br/>
-			<span class="large gry">(VARIANT_ID, QTY, BATCH_NUMBER, EXP_DATE(yyyy/MM), MFG_DATE(yyyy/MM), MRP, COST) as excel headers</span>
-			<br/><br/>
-
-			<h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
-
-			<div class="buttons">
-				<s:submit name="parse" value="Create RV LineItems"/>
-			</div>
-		</fieldset>
-	</shiro:hasRole>
 
 </s:form>
 
