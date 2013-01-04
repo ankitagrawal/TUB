@@ -39,6 +39,7 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.web.action.error.AdminPermissionAction;
 import com.hk.web.HealthkartResponse;
+import com.hk.exception.NoSkuException;
 
 @Secure(hasAnyPermissions = {PermissionConstants.RECON_VOUCHER_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -177,22 +178,21 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 					continue;
 				}
 				if(rvLineItem.getSku() == null){
-				Sku sku = skuService.getSKU(rvLineItem.getProductVariant(), reconciliationVoucher.getWarehouse());
+				Sku sku = null;
+				try{
+				sku  = skuService.getSKU(rvLineItem.getProductVariant(), reconciliationVoucher.getWarehouse());
+				}catch(NoSkuException e){
+
+				}
 				if (sku == null) {
 					rvNotSavedMap.put(rvLineItem, "Sku does not exist. Contact Category Manager");
 					continue;
 				}
-				rvLineItem.setSku(sku);
+					rvLineItem.setSku(sku);
 				}
-			if (rvLineItemsFinal.contains(rvLineItem)) {
-				int index = rvLineItemsFinal.indexOf(rvLineItem);
-				RvLineItem rvLineItemO = rvLineItemsFinal.get(index);
-				rvLineItemO.setQty(rvLineItemO.getQty() + rvLineItem.getQty());
-			}
-			else{
 				rvLineItemsFinal.add(rvLineItem);
+
 			}
-		}
 		reconciliationVoucherService.save(rvLineItemsFinal, reconciliationVoucher);
 		if (rvNotSavedMap.size() > 0) {
 			addRedirectAlertMessage(new SimpleMessage("Below RV Line items are not saved"));
@@ -320,7 +320,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 			Sku sku = null;
 			try {
 			sku = skuService.getSKU(productVariant, getUserService().getWarehouseForLoggedInUser());
-			} catch (Exception ex) {
+			} catch (NoSkuException ex) {
 				errorMessage = "Sku of Product variant  does not exist";
 				return  skuItemList;
 			}

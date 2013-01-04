@@ -144,7 +144,7 @@
 		});
 
 		$('.singlesave').live('click', function() {
-			$('error').hide();
+			$('.error').hide();
 			var curEle = $(this);
 			var queryString = '';
 			var sep = '';
