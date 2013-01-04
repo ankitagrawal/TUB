@@ -59,6 +59,7 @@ import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
@@ -105,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     LineItemDao                        lineItemDao;
 	@Autowired
-	AdminShippingOrderService 
+	ShipmentService shipmentService;
     /*
      * @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}") private Double codMinAmount;
      */
@@ -318,6 +319,7 @@ public class OrderServiceImpl implements OrderService {
         // Auto escalation of order if unbooked inventory is positive
         if (order.getShippingOrders() != null && !order.getShippingOrders().isEmpty()) {
             for (ShippingOrder shippingOrder : order.getShippingOrders()) {
+				shipmentService.createShipment(shippingOrder);
                 shippingOrderService.autoEscalateShippingOrder(shippingOrder);
             }
         } else if (order.getShippingOrders() == null && order.getShippingOrders().isEmpty()) {
