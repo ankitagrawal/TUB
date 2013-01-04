@@ -6,16 +6,17 @@
 
   <s:layout-component name="content">
     <fieldset class="right_label">
-      <legend>Download Courier AWB Info Excel</legend>
+      <legend>Download AWB Excel</legend>
       <ul>
         <s:form beanclass="com.hk.web.action.admin.courier.CourierAWBAction">
           <li><label>Courier AWB numbers to download : </label><s:select name="courier" class="codModeSelect">
-            <s:option value="">-All-</s:option>
+            <s:option value="">-Select Courier-</s:option>
             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
           </s:select></li>
           <li>
 	        <li><label>AWB Status : </label>
-	         <s:select name="awbStatus">
+	        <s:select name="awbStatus">
+		        <s:option value="">All Status</s:option>
 		        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allAwbStatus"
 		                                   value="id" label="status"/>
 	        </s:select></li>
@@ -60,7 +61,7 @@
 
 
 	   <fieldset class="right_label">
-      <legend>Upload Courier AWB to Delete</legend>
+      <legend style="color:darkblue;font-size:15px;font-weight:bold;">Upload AWB  Excel to Delete</legend>
       <ul>
 
         <s:form beanclass="com.hk.web.action.admin.courier.CourierAWBAction">
@@ -71,7 +72,7 @@
           </li>
           <li>
               <div class="buttons">
-                  <s:submit name="uploadCourierAWBExcelForDelete" value="Upload"/>
+                  <s:submit name="uploadCourierAWBExcelForDelete" value="Delete"/>
               </div>
           </li>
             <li>
