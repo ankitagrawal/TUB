@@ -41,8 +41,7 @@
 		<c:forEach items="${reconciliationTypeList}" var="reconciliationTypeVar">
 			reconciliationTypeOptions += '<option value="'+${reconciliationTypeVar.id}+
 			'">' + "${reconciliationTypeVar.name}" + '</option>';
-		</c:forEach>
-			var test = 9;
+		</c:forEach>		
 
 			var link = '<s:link  class ="singlesave" beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="saveAndReconcileRv">Reconcile</s:link>';
 
@@ -261,7 +260,7 @@
 		</tr>
 		<tr>
 			<td>Remarks<br/><span class="sml gry">(eg. XXX)</span></td>
-			<td>${pa.reconciliationVoucher.remarks}/></td>
+			<td>${pa.reconciliationVoucher.remarks}</td>
 		</tr>
 		<tr>
 			<td>For Warehouse</td>
@@ -339,7 +338,7 @@
 							        formatPattern="yyyy-MM-dd"/>
 						</td>
 						<td>
-							<s:textarea name="rvLineItems[${ctr.index}].remarks" value="${rvLineItem.remarks}"/>
+							<s:textarea style="height:60px;" name="rvLineItems[${ctr.index}].remarks" value="${rvLineItem.remarks}"/>
 
 						</td>
 						<td><s:text name="rvLineItems[${ctr.index}].reconciledQty" id="reconciliedqty"
@@ -356,11 +355,11 @@
 				<c:otherwise>
 					<tr style="background-color:#ccff99;">
 						<td>
-								${productVariant.id}
+							${productVariant.id}
 						</td>
 						<td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
 						</td>
-						<td>${rvLineItem.reconciledQty}
+						<td>${rvLineItem.qty}
 						</td>
 						<td>${rvLineItem.reconciliationType.name}
 						</td>
@@ -374,7 +373,7 @@
 						<td>
 							<fmt:formatDate value="${rvLineItem.expiryDate}" type="both"/></td>
 						<td>${rvLineItem.remarks}</td>
-					   <td>${rvLineItem.qty}</td>
+					   <td>${rvLineItem.reconciledQty}</td>
 					</tr>
 				</c:otherwise>
 			</c:choose>
@@ -388,7 +387,14 @@
 	<s:submit name="saveAll" value="Save" class="saveButton"/>
 
 </s:form>
+ <style type="text/css">
+	 #reconciliedqty{
+		 border:none;		
+		 width:13px;
+	 }
 
+
+ </style>
 <script type="text/javascript">
 	$(document).ready(function() {
 

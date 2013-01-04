@@ -213,11 +213,16 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(Surcharge.class);
     }
 
-    public List<ReconciliationType> getReconciliationTypeList() {
-        return getBaseDao().getAll(ReconciliationType.class);
-    }
+	public List<ReconciliationType> getReconciliationTypeList() {
+		List<ReconciliationType> reconciliationList = getBaseDao().getAll(ReconciliationType.class);
+		ReconciliationType add = EnumReconciliationType.Add.asReconciliationType();
+		ReconciliationType subtract = EnumReconciliationType.Subtract.asReconciliationType();
+		reconciliationList.remove(add);
+		reconciliationList.remove(subtract);
+		return reconciliationList;
+	}
 
-    public List<EmailType> getEmailTypeList() {
+	public List<EmailType> getEmailTypeList() {
         return getBaseDao().getAll(EmailType.class);
     }
 

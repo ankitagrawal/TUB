@@ -209,6 +209,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 			}
 
 		}
+		addRedirectAlertMessage(new SimpleMessage("changes saved"));
 		return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
 	}
 
