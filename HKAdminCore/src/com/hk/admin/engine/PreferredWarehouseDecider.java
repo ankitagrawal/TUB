@@ -15,6 +15,7 @@ import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeRegionZoneService;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -48,7 +49,7 @@ public class PreferredWarehouseDecider {
     CourierPricingEngineDao courierPricingEngineDao;
 
     @Autowired
-    PincodeRegionZoneDao pincodeRegionZoneDao;
+    PincodeRegionZoneService pincodeRegionZoneService;
 
     @Autowired
     CourierService courierService;
@@ -98,7 +99,7 @@ public class PreferredWarehouseDecider {
             Double totalCost = 0D;
             Map<Courier, Double> courierCostingMap = new HashMap<Courier, Double>();
 
-            List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneDao.getSortedRegionList(applicableCouriers, pincode, warehouse);
+            List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getSortedRegionList(applicableCouriers, pincode, warehouse);
             for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
                 Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCouriers);
                 for (Courier courier : couriers) {
