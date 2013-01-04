@@ -193,6 +193,11 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		    getBaseDao().save(skuItem);
 	    }
 
+	    if (skuItem != null && qty > 0) {
+		    skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		    getBaseDao().save(skuItem);
+	    }
+
 	    // Setting checked in qty to make increments in sync with checkin
         if (grnLineItem != null && qty > 0) {
             grnLineItem.setCheckedInQty(grnLineItem.getCheckedInQty() + qty);
