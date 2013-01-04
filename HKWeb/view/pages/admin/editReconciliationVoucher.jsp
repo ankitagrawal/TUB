@@ -261,8 +261,7 @@
 		</tr>
 		<tr>
 			<td>Remarks<br/><span class="sml gry">(eg. XXX)</span></td>
-			<td><s:textarea name="reconciliationVoucher.remarks" style="height:50px;"
-			                value="${pa.reconciliationVoucher.remarks}"/></td>
+			<td>${pa.reconciliationVoucher.remarks}/></td>
 		</tr>
 		<tr>
 			<td>For Warehouse</td>
