@@ -167,6 +167,7 @@
 				sep = '&';
 			});
 			var href = $('#reconForm').attr('action');
+			curEle.css("display", "none");
 			$.ajax({
 				type:"POST",
 				url : href + '?saveAndReconcileRv=',
@@ -210,7 +211,7 @@
 						$('.error').hide();
 					}
 					if (data.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
-
+						$('.singlesave').css("display","block");
 						$('.error').empty();
 						$('.error').html(data.message);
 						$('.error').show();
@@ -218,7 +219,8 @@
 					console.log(data);
 				},
 				error:function onError() {
-					alert('error in exceuting json');
+					$('.singlesave').css("display", "block");
+					alert('Error in  Saving JSON');
 				}
 
 
