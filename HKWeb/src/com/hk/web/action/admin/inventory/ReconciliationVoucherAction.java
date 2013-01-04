@@ -134,8 +134,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 
 	public Resolution addReconciliation() {
-		if (reconciliationVoucher != null) {
-			rvLineItems=reconciliationVoucher.getRvLineItems();
+		if (reconciliationVoucher != null) {			
 			logger.debug("reconciliationVoucher@Pre: " + reconciliationVoucher.getId());
 		}
 
@@ -150,12 +149,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		}
 		if (rvLineItems != null && rvLineItems.size() > 0) {
-			if (reconciliationVoucher.getId() == null) {
 				reconciliationVoucherService.save(loggedOnUser, rvLineItems, reconciliationVoucher);
-				addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-			} else {
-				addRedirectAlertMessage(new SimpleMessage("Changes Not Saved , Click \"Add Reconciliation Voucher \" to make New Reconciliation"));
-			}
+				addRedirectAlertMessage(new SimpleMessage("Changes saved."));  			
 		}
 
 		return new RedirectResolution(ReconciliationVoucherAction.class);
