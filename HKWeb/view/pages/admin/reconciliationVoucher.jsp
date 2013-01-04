@@ -51,7 +51,7 @@
                                 '  </td>' +
                                 '  <td class="pvDetails"></td>' +
                                 '  <td>' +
-                                '    <input type="text" name="rvLineItems[' + nextIndex + '].qty" />' +
+                                '    <input type="text" id ="quantity" name="rvLineItems[' + nextIndex + '].qty" />' +
                                 '  </td>' +
                                 '   <td>' +
                                 reconciliationTypeOptions+
@@ -65,7 +65,7 @@
                                 '    <input class="mrp" type="text" name="rvLineItems[' + nextIndex + '].mrp" />' +
                                 '  </td>' +
                                 '  <td>' +
-                                '    <input type="text" name="rvLineItems[' + nextIndex + '].batchNumber" />' +
+                                '    <input type="text" class = "batch" name="rvLineItems[' + nextIndex + '].batchNumber" />' +
                                 '  </td>' +
                                 '  <td>' +
                                 '    <input class="date_input" formatPattern="yyyy-MM-dd" type="text" name="rvLineItems[' + nextIndex + '].mfgDate" />' +
@@ -214,9 +214,44 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $('.saveButton').click(function disableSaveButton(){
-                $(this).css("display", "none");
-            });
+
+	        $('.saveButton').click(function(e) {
+			var result = true;
+			$('#poTable tr').each(function() {
+				var qty = $(this).find('#quantity').val() ;
+				var variant = $(this).find('.variant').val();
+				var batch = $(this).find('.batch').val();
+
+				if ($(this).find("input").length) {
+					if (variant == null || variant.trim() == '') {
+						$(this).remove();
+						return;
+					}
+				}
+				if (variant != null && ( (batch == null || batch.trim() == '') || (qty == null || qty.trim() == ''))) {
+					alert('Enter Batch Number && Qty for varinat :::::: ' + variant);
+					result = false;
+					return false;
+
+				}
+
+			});
+			if (!result) {
+				return false;
+			}
+			else {
+				return $(this).submit();
+				$(this).css("display", "none");
+			}
+
+		});
+
+
+
+
+//            $('.saveButton').click(function disableSaveButton(){
+//              $(this).css("display", "none");
+//            });
         });
     </script>
 </s:layout-component>

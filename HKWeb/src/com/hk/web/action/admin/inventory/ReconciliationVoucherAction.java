@@ -143,16 +143,21 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	}
 
 
-
 	public Resolution save() {
+
 		User loggedOnUser = null;
 		if (getPrincipal() != null) {
 			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		}
-		if(rvLineItems != null && rvLineItems.size() > 0){
-		reconciliationVoucherService.save(loggedOnUser, rvLineItems, reconciliationVoucher);
-		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+		if (rvLineItems != null && rvLineItems.size() > 0) {
+			if (reconciliationVoucher.getId() == null) {
+				reconciliationVoucherService.save(loggedOnUser, rvLineItems, reconciliationVoucher);
+				addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+			} else {
+				addRedirectAlertMessage(new SimpleMessage("Changes Not Saved , Click \"Add Reconciliation Voucher \" to make New Reconciliation"));
+			}
 		}
+
 		return new RedirectResolution(ReconciliationVoucherAction.class);
 	}
 
