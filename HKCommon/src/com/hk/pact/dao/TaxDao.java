@@ -13,7 +13,7 @@ public interface TaxDao extends BaseDao{
 
     public List<Tax> getTaxList() ;
 
-    public Tax findByValue(Double taxValue);
+//    public Tax findByValue(Double taxValue);
        
 
 }
