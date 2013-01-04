@@ -19,7 +19,5 @@ public interface ShipmentService {
 
 	public Shipment recreateShipment(ShippingOrder shippingOrder);
 
-    public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder );
-
 	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
 }

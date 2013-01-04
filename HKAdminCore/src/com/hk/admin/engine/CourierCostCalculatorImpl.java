@@ -1,10 +1,10 @@
 package com.hk.admin.engine;
 
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.comparator.MapValueComparator;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
@@ -49,7 +49,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
     CourierGroupService courierGroupService;
 
     @Autowired
-    CourierServiceInfoDao courierServiceInfoDao;
+    private PincodeCourierService pincodeCourierService;
 
     @Autowired
     ShippingOrderDao shippingOrderDao;
@@ -58,25 +58,25 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
 
     Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
 
-    public Courier getCheapestCourier(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight) {
-        Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight);
+    public Courier getCheapestCourier(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
+        Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight, ground);
         return courierCostingMapEntry.getKey();
     }
 
-    public Long getCheapestCourierCost(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight) {
-        Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight);
+    public Long getCheapestCourierCost(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
+        Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight, ground);
         return courierCostingMapEntry.getValue();
     }
 
-    public Map.Entry<Courier, Long> getCheapestCourierEntry(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight) {
-        TreeMap<Courier, Long> courierCostingMap = getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight);
+    public Map.Entry<Courier, Long> getCheapestCourierEntry(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
+        TreeMap<Courier, Long> courierCostingMap = getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, ground);
         return courierCostingMap.lastEntry();
     }
 
     @SuppressWarnings("unchecked")
-    public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight) {
+    public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
-        applicableCourierList = courierServiceInfoDao.searchCouriers(pincode, cod , false , false, false);
+        applicableCourierList = pincodeCourierService.getApplicableCouriers(pincodeObj, cod, ground, true);
         Double totalCost = 0D;
         List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneDao.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
 
@@ -84,10 +84,10 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
             Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
             for (Courier courier : couriers) {
                 CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
-	            if (courierPricingInfo == null) {
-		            continue;
-	            }
-	            totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
+                if (courierPricingInfo == null) {
+                    continue;
+                }
+                totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
                 logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
                 courierCostingMap.put(courier, totalCost.longValue());
             }

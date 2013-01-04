@@ -3,6 +3,9 @@ package com.hk.web.action.admin.courier;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.domain.courier.*;
+import com.hk.util.ShipmentServiceMapper;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
@@ -18,7 +21,6 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.akube.framework.gson.JsonUtils;
 import com.hk.admin.engine.ShipmentPricingEngine;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
@@ -31,10 +33,6 @@ import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.AwbStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
@@ -69,9 +67,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 	@Autowired
 	AwbService awbService;
 
-	@Autowired
-	CourierServiceInfoDao courierServiceInfoDao;
-
 	private String trackingId;
 	private String gatewayOrderId;
 	Courier suggestedCourier;
@@ -84,6 +79,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 	@Autowired
 	private CourierService courierService;
+    @Autowired
+    private PincodeCourierService pincodeCourierService;
 	@Autowired
 	private ShippingOrderStatusService shippingOrderStatusService;
 
@@ -97,20 +94,12 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			getContext().getValidationErrors().add("2", new SimpleError("None of the values can be migrate"));
 		}
 		Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+        ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
 		if (pinCode == null) {
 			getContext().getValidationErrors().add("3", new SimpleError("Pincode is invalid, It cannot be packed"));
 		} else {
-			boolean isCod = shippingOrder.isCOD();
 
-//  groundShipping logic Starts---
-			isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-			String pin = pinCode.getPincode();
-			if (isCod) {
-				availableCouriers = courierService.getCouriers(pin, isGroundShipped, isCod, null, false);
-			} else {
-				availableCouriers = courierService.getCouriers(pin, isGroundShipped, null, null, false);
-			}
-//  ground shipping logic ends
+            availableCouriers = pincodeCourierService.getApplicableCouriers(pinCode,null,shipmentServiceType, true);
 
 			if (availableCouriers == null || availableCouriers.isEmpty()) {
 				getContext().getValidationErrors().add("4", new SimpleError("No Couriers are applicable on this pincode, Please contact logistics, Order cannot be packed"));
@@ -128,6 +117,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 	@DontValidate
 	public Resolution searchOrders() {
+
+        ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
+
 		shippingOrder = shippingOrderDao.findByGatewayOrderId(gatewayOrderId);
 		if (shippingOrder == null) {
 			addRedirectAlertMessage(new SimpleMessage("Shipping Order not found for the corresponding gateway order id"));
@@ -151,14 +143,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
 			if (pinCode != null) {
 				boolean isCod = shippingOrder.isCOD();
-				isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
+				isGroundShipped = ShipmentServiceMapper.isGround(shipmentServiceType);
 
 				String pin = pinCode.getPincode();
-				if (isCod) {
-					availableCouriers = courierService.getCouriers(pin, isGroundShipped, isCod, null, false);
-				} else {
-					availableCouriers = courierService.getCouriers(pin, isGroundShipped, null, null, false);
-				}
+                availableCouriers = pincodeCourierService.getApplicableCouriers(pinCode,null,shipmentServiceType, true);
 				if (shippingOrder.getShipment() != null) {
 					suggestedCourier = shippingOrder.getShipment().getAwb().getCourier();
 					trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();

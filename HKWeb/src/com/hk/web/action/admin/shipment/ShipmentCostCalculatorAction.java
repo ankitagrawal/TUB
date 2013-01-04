@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 
+import com.hk.util.ShipmentServiceMapper;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -24,7 +25,6 @@ import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Courier;
@@ -125,7 +125,8 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     }
 
     public Resolution calculateViaPincode() {
-        courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight);
+        //todo courier set as false by default, take input from screen
+        courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, false);
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
@@ -142,7 +143,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                     weight = lineItem.getSku().getProductVariant().getWeight();
                 }
             }
-            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPin(), shippingOrder.getCOD(), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight);
+            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPin(),(ShipmentServiceMapper.isCod(shippingOrder.getShipment().getShipmentServiceType())), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shippingOrder.getShipment().getShipmentServiceType())));
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
         }

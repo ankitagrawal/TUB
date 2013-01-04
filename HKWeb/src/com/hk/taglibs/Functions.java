@@ -6,14 +6,17 @@ import java.net.URLEncoder;
 import java.util.*;
 
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.content.HeadingProduct;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
@@ -477,13 +480,14 @@ public class Functions {
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
-	public static List<Courier> getAvailableCouriers(Object o) {
-
-		ShippingOrder shippingOrder = (ShippingOrder) o;
-		CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
-		return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false, false, false);
-
-	}
+    public static List<Courier> getAvailableCouriers(Object o) {
+        ShippingOrder shippingOrder = (ShippingOrder) o;
+        PincodeCourierService pincodeCourierService = ServiceLocatorFactory.getService(PincodeCourierService.class);
+        PincodeService pincodeService = ServiceLocatorFactory.getService(PincodeService.class);
+        String pin = shippingOrder.getBaseOrder().getAddress().getPin();
+        Pincode pincode = pincodeService.getByPincode(pin);
+        return pincodeCourierService.getApplicableCouriers(pincode, null, shippingOrder.getShipment().getShipmentServiceType(), true);
+    }
 
     public static boolean equalsIgnoreCase(String str1, String str2) {
         return !StringUtils.isBlank(str1) && str1.equalsIgnoreCase(str2);
