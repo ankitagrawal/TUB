@@ -317,14 +317,20 @@ public class OrderServiceImpl implements OrderService {
 
     public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order) {
         // Auto escalation of order if unbooked inventory is positive
-        if (order.getShippingOrders() != null && !order.getShippingOrders().isEmpty()) {
-            for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-				shipmentService.createShipment(shippingOrder);
-                shippingOrderService.autoEscalateShippingOrder(shippingOrder);
-            }
-        } else if (order.getShippingOrders() == null && order.getShippingOrders().isEmpty()) {
-            splitOrder(order);
-        }
+		Set<ShippingOrder> shippingOrders = null;
+		if (order.getShippingOrders() != null && !order.getShippingOrders().isEmpty()) {
+			shippingOrders = order.getShippingOrders();
+		} else {
+			shippingOrders = splitOrder(order);
+		}
+		if (shippingOrders != null && !shippingOrders.isEmpty()) {
+			for (ShippingOrder shippingOrder : shippingOrders) {
+				if (shippingOrder.getShipment() == null) {
+					shipmentService.createShipment(shippingOrder);
+				}
+				shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+			}
+		}
     }
 
     @Transactional

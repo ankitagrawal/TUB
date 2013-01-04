@@ -35,9 +35,9 @@ import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
-import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -58,7 +58,7 @@ public class SplitBaseOrderAction extends BaseAction {
 	@Autowired
 	UserService userService;
 	@Autowired
-	PincodeDao pincodeDao;
+	PincodeService pincodeService;
 
     Map<CartLineItem, Warehouse> cartLineItemWarehouseMap = new HashMap<CartLineItem, Warehouse>();
 
@@ -87,7 +87,7 @@ public class SplitBaseOrderAction extends BaseAction {
             for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseCartLineItemsMap.entrySet()) {
 
                 try {
-					Pincode pincode = pincodeDao.getByPincode(baseOrder.getAddress().getPin());
+					Pincode pincode = pincodeService.getByPincode(baseOrder.getAddress().getPin());
 					if (pincode != null) {
 						ShippingOrder shippingOrder = adminShippingOrderService.createSOforManualSplit(warehouseSetEntry.getValue(), warehouseSetEntry.getKey());
 						if (shippingOrder != null) {

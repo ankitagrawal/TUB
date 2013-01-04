@@ -382,7 +382,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                    adminShippingOrderService.autoEscalateShippingOrder(shippingOrder);
+                    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
                 }
             }
         }
