@@ -106,16 +106,22 @@
 <div class="contant01">
 <img src="${pageContext.request.contextPath}/images/ny2013/bike-trip.png"/>
     <h2 class="txt01">Go on a Bike Trip</h2>
-<p>The bike is waiting, so are the highways, the dhabhas and your friends. The road comes free with it. Now before you head out to Leh or Himachal, just remember that your bike trip is only as good as your preparation. Things go wrong everyday (trust us on this) - so load up with these numbers and you will be less sorry later.</p>
+<p>The bike is waiting, so are the highways, the dhabhas and your friends. The road comes free with it. Now before you head out to Leh or Himachal, just remember that your bike trip is only as good as your preparation. Things go wrong everyday (trust us on this) - so load up with these numbers and you will be less sorry later. <br/> Also, shades don't hurt!</p>
 </div>
 
 <div class="cl"></div>
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='3M002' />    
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE584' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='3M002' />        
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HEA007' />	
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OH089' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRS001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT183' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE584' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE1236' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE1713' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE1715' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE1716' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE297' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE583' />
 </div>
 <!--container01 close-->
 

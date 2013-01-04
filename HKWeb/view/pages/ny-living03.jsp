@@ -124,6 +124,30 @@
 <p>You can bundle health, fitness, fun and socializing into 1 awesome thing - a sport! Whether it's TT or football or basky or gully cricket, we have everything you need to get started. This new year (and the winters too) is perfect for any Sport. Just get up and go do something.</p>
 </div>
 
+    <a href="http://www.healthkart.com/sports/fab-corner/win-win-deals">
+<div class="offer02">
+<div class="offer-inside"><span class="discount-txt">Get Up to 40% on badminton, wrestling <br/> and gym gears</span>
+</div>
+</div></a>
+
+    <a href="http://www.healthkart.com/sports/fitness-accessories?brand=Grizzly">
+<div class="offer02b">
+<div class="offer-inside"><span class="discount-txt">Get  Up to 10-20% off on Grizzly training belts, balls gloves and knee sleeves.</span>
+</div>
+</div></a>
+
+    <div class="cl"></div>
+    <a href="http://www.healthkart.com/sports/fitness-accessories?brand=Adidas">
+<div class="offer01">
+<div class="offer-inside"><span class="discount-txt">Get Flat 30% off on Adidas Gym accessories</span>
+
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKADIDAS</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+
 <div class="cl"></div>
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2499' />
 	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2511' />

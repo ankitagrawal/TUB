@@ -22,6 +22,7 @@ import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
@@ -213,13 +214,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<ReconciliationType> getReconciliationTypeList() {
-    List<ReconciliationType> reconciliationList =getBaseDao().getAll(ReconciliationType.class);
-	    ReconciliationType add = EnumReconciliationType.Add.asReconciliationType();
-	    ReconciliationType subtract = EnumReconciliationType.Subtract.asReconciliationType();
-	    reconciliationList.remove(add);
-	     reconciliationList.remove(subtract);
-	    return reconciliationList;
-
+        return getBaseDao().getAll(ReconciliationType.class);
     }
 
     public List<EmailType> getEmailTypeList() {
@@ -434,12 +429,15 @@ public class MasterDataDaoImpl implements MasterDataDao {
 		return dispatchLotService.getShipmentStatusForDispatchLot();
 	}
 
+	public List<AwbStatus> getAllAwbStatus() {
+		return EnumAwbStatus.getAllStatusExceptUsed();
+	}
 
 	public List<ReconciliationType> getAddReconciliationTypeList() {
 		List<ReconciliationType> reconciliationList = new ArrayList<ReconciliationType>();
 		ReconciliationType addReconType = EnumReconciliationType.Add.asReconciliationType();
 		reconciliationList.add(addReconType);
 		return reconciliationList;
-
 	}
+
 }
