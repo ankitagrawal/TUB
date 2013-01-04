@@ -10771,4 +10771,36 @@
             <column name="extra_inventory_id"/>
         </createIndex>
     </changeSet>
+	<changeSet author="Rohit (generated)" id="1356589574750-1">
+		<createTable tableName="sku_item_status">
+			<column name="id" type="INT">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column name="name" type="VARCHAR(45)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="Rohit (generated)" id="1356589574750-2">
+		<addColumn tableName="sku_item">
+			<column name="sku_item_status_id" type="INT"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="Rohit (generated)" id="1356589574750-3">
+		<addForeignKeyConstraint baseColumnNames="sku_item_status_id" baseTableName="sku_item" constraintName="fk_sku_item_sku_item_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item_status" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Rohit" id="12-28-2012">
+		<sql>
+			INSERT into sku_item_status(id, name) values (10, "CHECKED IN"), (20, "CHECKED OUT");
+			CREATE table sku_temp(qty int, sku_item int);
+			INSERT into sku_temp select sum(qty),sku_item_id from product_variant_inventory group by sku_item_id;
+			UPDATE sku_item s, sku_temp t set sku_item_status_id = 20 where s.id = t.sku_item and qty = 0;
+			UPDATE sku_item s, sku_temp t set sku_item_status_id = 10 where s.id = t.sku_item and qty = 1;
+			DROP table sku_temp;
+			UPDATE sku_item s set sku_item_status_id = 20 where s.sku_item_status_id is null;
+		</sql>
+	</changeSet>
+	<changeSet author="Rohit (generated)" id="1356676950361-1">
+		<addNotNullConstraint columnDataType="INT" columnName="sku_item_status_id" tableName="sku_item"/>
+	</changeSet>
 </databaseChangeLog>

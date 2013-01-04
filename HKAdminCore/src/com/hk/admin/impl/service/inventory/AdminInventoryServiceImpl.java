@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.constants.sku.EnumSkuItemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -160,6 +161,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
             SkuItem skuItem = new SkuItem();
             skuItem.setSkuGroup(skuGroup);
             skuItem.setCreateDate(new Date());
+	        skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
             skuItem = (SkuItem) getBaseDao().save(skuItem);
 
             skuItem.setBarcode(skuItem.getId().toString());
@@ -186,7 +188,17 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         pvi.setTxnDate(new Date());
         getBaseDao().save(pvi);
 
-        // Setting checked in qty to make increments in sync with checkin
+	    if (skuItem != null && qty < 0) {
+		    skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
+		    getBaseDao().save(skuItem);
+	    }
+
+	    if (skuItem != null && qty > 0) {
+		    skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		    getBaseDao().save(skuItem);
+	    }
+
+	    // Setting checked in qty to make increments in sync with checkin
         if (grnLineItem != null && qty > 0) {
             grnLineItem.setCheckedInQty(grnLineItem.getCheckedInQty() + qty);
             getBaseDao().save(grnLineItem);
