@@ -279,5 +279,8 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 		}
 	}
 
+	public void delete(ReconciliationVoucher reconciliationVoucher){
+		getBaseDao().delete(reconciliationVoucher);
+	}
 
 }

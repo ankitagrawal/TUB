@@ -149,8 +149,10 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 		if (getPrincipal() != null) {
 			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		}
+		if(rvLineItems != null && rvLineItems.size() > 0){
 		reconciliationVoucherService.save(loggedOnUser, rvLineItems, reconciliationVoucher);
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+		}
 		return new RedirectResolution(ReconciliationVoucherAction.class);
 	}
 
@@ -199,6 +201,13 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 				addRedirectAlertMessage(new SimpleMessage("Product Variant =  " + rvLineItem.getProductVariant() + " REASON::::  "  +errorMessage));
 			}
 		}
+		} else {
+			List<RvLineItem> rvLineItemList = reconciliationVoucher.getRvLineItems();
+			if (rvLineItemList == null || rvLineItemList.size() == 0) {
+				reconciliationVoucherService.delete(reconciliationVoucher);
+				return new RedirectResolution(ReconciliationVoucherAction.class);
+			}
+
 		}
 		return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
 	}
@@ -308,7 +317,13 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 		errorMessage = "";
 		ProductVariant productVariant = productVariantService.getVariantById(productVariantId);
 		if (productVariant != null) {
-			Sku sku = skuService.getSKU(productVariant, getUserService().getWarehouseForLoggedInUser());
+			Sku sku = null;
+			try {
+			sku = skuService.getSKU(productVariant, getUserService().getWarehouseForLoggedInUser());
+			} catch (Exception ex) {
+				errorMessage = "Sku of Product variant  does not exist";
+				return  skuItemList;
+			}
 			if (sku != null) {
 				SkuGroup skuGroup = adminInventoryService.getSkuGroupByHkBarcode(batchNumber);
 				if (skuGroup != null) {
