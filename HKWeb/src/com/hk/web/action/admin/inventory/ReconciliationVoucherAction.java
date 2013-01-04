@@ -243,7 +243,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 							healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, msg );
 						}
 					} else {
-						healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, errorMessage);
+						healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Batch is Empty");
 					}
 				} else {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product Variant");
@@ -320,7 +320,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 						skuItemList = adminInventoryService.getInStockSkuItems(skuGroupList);
 						return skuItemList;
 					} else {
-						errorMessage = "Invalid Batch OR Batch is Empty";
+						errorMessage = "Invalid Batch";
 					}
 				}
 			} else {
