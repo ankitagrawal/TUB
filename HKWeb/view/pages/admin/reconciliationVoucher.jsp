@@ -169,11 +169,13 @@
                     <td class="reconciliationType">
                         <input type="hidden" value="finance"
                                class="reconciliationTypeIdentifier"/>
-                        <s:select name="rvLineItems[${ctr.index}].reconciliationType"
-                                  value="${rvLineItem.reconciliationType.id}" class="valueChange">
-                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="addReconciliationTypeList" value="id"
-                                                       label="name"/>
-                        </s:select>
+	                    <s:hidden name="rvLineItems[${ctr.index}].reconciliationType" value="${rvLineItem.reconciliationType.id}"/>
+	                     ${rvLineItem.reconciliationType.name}
+                        <%--<s:select name="rvLineItems[${ctr.index}].reconciliationType"--%>
+                                  <%--value="${rvLineItem.reconciliationType.id}" class="valueChange">--%>
+                            <%--<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="addReconciliationTypeList" value="id"--%>
+                                                       <%--label="name"/>--%>
+                        <%--</s:select>--%>
                     </td>
                     <td>${rvLineItem.costPrice}
                     </td>
