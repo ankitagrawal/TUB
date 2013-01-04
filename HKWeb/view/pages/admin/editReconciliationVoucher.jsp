@@ -206,6 +206,8 @@
 						$('#reconciliedqty').val('' + reconQty);
 
 						}
+						$('.error').empty();
+						$('.error').hide();
 					}
 					if (data.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
 
