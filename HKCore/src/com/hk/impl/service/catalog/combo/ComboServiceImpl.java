@@ -1,9 +1,11 @@
 package com.hk.impl.service.catalog.combo;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.pact.dao.catalog.combo.ComboDao;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.combo.ComboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -26,6 +28,8 @@ public class ComboServiceImpl implements ComboService{
 
   @Autowired
   ComboDao comboDao;
+  @Autowired
+  ProductService productService;
 
     @Async
     public void markRelatedCombosOutOfStock(ProductVariant productVariant){
@@ -67,7 +71,22 @@ public class ComboServiceImpl implements ComboService{
       }
     }
 
+  @Async
+  public void markProductOutOfStock(ProductVariant productVariant){
+    boolean productOutOfStock = getProductService().isProductOutOfStock(productVariant.getProduct());
+      Product product = productVariant.getProduct();
+      if(productOutOfStock && !product.isOutOfStock()){
+         product.setOutOfStock(true);
+          getProductService().save(product);
+      }
+    markRelatedCombosOutOfStock(productVariant);
+  }
+
   public ComboDao getComboDao() {
     return comboDao;
+  }
+
+  public ProductService getProductService() {
+    return productService;
   }
 }
