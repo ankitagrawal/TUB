@@ -1,7 +1,7 @@
 
 <%@ include file="/includes/_taglibInclude.jsp"%>
 <c:set var="httpPath" value="${pageContext.request.contextPath}" />
-<s:useActionBean beanclass="com.hk.web.action.core.auth.SingleLoginAction" var="sla" />
+<s:useActionBean beanclass="com.hk.web.action.core.auth.SSOLoginAction" var="sla" />
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -12,6 +12,17 @@
 <body>
 <div id="container">
     <div id="tabbox">
+        <c:choose>
+            <c:when test="${sla.logintabselected}">
+                <a href="#" id="signuptab" class="tab ">sign up</a>
+                <a href="#" id="logintab" class="tab select">log in</a>
+            </c:when>
+
+            <c:otherwise>
+                <a href="#" id="signuptab" class="tab signuptab">sign up</a>
+                <a href="#" id="logintab" class="tab">log in</a>
+            </c:otherwise>
+        </c:choose>
         <img src="${httpPath}/images/hk_bar_SSO.jpg" alt="top_stripe" border="0" height="10" width="705">
     </div>
     <div class="logo_block">
@@ -24,9 +35,9 @@
     <div id="panel">
         <h1 class="login-header">Welcome to the Healthkart Network</h1>
         <div id="loginbox">
-            <s:form id="signin_form" method="post" event="login" beanclass="com.hk.web.action.core.auth.SingleLoginAction">
+            <s:form id="signin_form" method="post" event="login" beanclass="com.hk.web.action.core.auth.SSOLoginAction">
 
-                <s:text type="text" placeholder="enter your username" name="userLogin" id="loginName" tabindex="10" size="50" maxlength="50" value=""/>
+                <s:text type="text" placeholder="enter your login email" name="userLogin" id="loginName" tabindex="10" size="50" maxlength="50" value=""/>
                 <p class="errors_class" id="loginNameError" ></p>
                 <s:text type="password" placeholder="enter password" name="password" id="password"  tabindex="20" size="50" maxlength="50" value=""/>
                 <p class="errors_class" id="passwordError" ></p>
@@ -36,9 +47,29 @@
                 <s:hidden name="redirectUrl" value="${sla.redirectUrl}"/>
                 <div class="login_block">
                     <s:submit tabindex="30" name="login" id="login"  class="submit" value="Log in"/>
-                    <a id="signin_forgotPasswordLink" tabindex="40" class="forgot_link" href="">Forgot password?</a>
+                    <s:link beanclass="com.hk.web.action.core.user.SSOForgotPasswordAction" id="signin_forgotPasswordLink" tabindex="40" class="forgot_link">Forgot password?</s:link>
                 </div>
 
+            </s:form>
+        </div>
+        <div id="signupbox">
+            <s:form id="signup_form" method="post" event="signup"  beanclass="com.hk.web.action.core.auth.SSOLoginAction">
+
+                <s:text placeholder="enter your name" name="userName" id="name" tabindex="10" size="50" maxlength="50" value=""/>
+                <p class="errors_class" id="nameError" ></p>
+                <s:text placeholder="enter your login email" name="userLogin" id="email" tabindex="20" size="50" maxlength="50" value=""/>
+                <p class="errors_class" id="emailError" ></p>
+                <s:text type="password" placeholder="enter password" name="password" id="signup_password" tabindex="30" size="50" maxlength="50" value=""/>
+                <p class="errors_class" id="signup_passwordError" ></p>
+                <s:text type="password" placeholder="re-enter password" name="repeatPassword" id="passwordConfirm" tabindex="40" size="50" maxlength="50" value=""/>
+                <p class="errors_class" id="passwordConfirmError" ></p>
+                <s:hidden name="logintabselected" value="false"></s:hidden>
+                <s:hidden name="signup" value="signup"/>
+                <s:hidden name="apiKey" value="${sla.apiKey}"/>
+                <s:hidden name="redirectUrl" value="${sla.redirectUrl}"/>
+                <div class="login_block">
+                    <s:submit tabindex="60" name="signup" id="signup" class="submit" value="Sign up"></s:submit>
+                </div>
             </s:form>
         </div>
     </div>
@@ -50,9 +81,41 @@
 <script type="text/javascript">
 $(document).ready(function()
 {
+    <%
+      if(sla.isLogintabselected()){
+    %>
+    $("#signupbox").hide();
+    $("#loginbox").show();
+    <%
+    }else{
+    %>
+    $("#signupbox").show();
+    $("#loginbox").hide();
+    <%
+    }
+    %>
 
     var errorflag = false;
 
+    $(".tab").click(function()
+    {
+        var X=$(this).attr('id');
+        if(X=='signuptab')
+        {
+            $("#logintab").removeClass('select');
+            $("#signuptab").addClass('signuptab');
+            $("#loginbox").hide();
+            $("#signupbox").show();
+        }
+        else
+        {
+            $("#signuptab").removeClass('signuptab');
+            $("#logintab").addClass('select');
+            $("#signupbox").hide();
+            $("#loginbox").show();
+        }
+
+    });
     function checkloginName(){
 
         var loginName;
@@ -232,6 +295,28 @@ $(document).ready(function()
 
         }
 
+
+    });
+
+    $('#signup').click(function(e) {
+        errorflag = false;
+        checkname();
+        checkemail();
+        checksignup_password();
+        checkpasswordConfirm()
+        if (errorflag == false)
+        {
+            $('#signup').attr("disabled", "disabled");
+            $('#signup').addClass("disabled_button");
+            $('#signup_form').submit();
+        }
+        else
+        {
+            e.preventDefault();
+            $('#signup').removeAttr("disabled");
+            $('#signup').removeClass("disabled_button");
+
+        }
 
     });
 });

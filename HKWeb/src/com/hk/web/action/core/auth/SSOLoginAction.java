@@ -8,10 +8,13 @@ import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.UserManager;
 import com.hk.security.HkAuthService;
 import com.hk.security.exception.HkInvalidApiKeyException;
+import com.hk.web.action.HomeAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.mgt.SecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +23,16 @@ import org.springframework.stereotype.Component;
 /**
  * Created with IntelliJ IDEA.
  * User: Pradeep
+ * Date: 11/16/12
+ * Time: 4:25 PM
  */
 @Component
-public class SSOForgotPasswordAction extends BaseAction{
-    private static Logger logger = LoggerFactory.getLogger(SingleLoginAction.class);
+public class SSOLoginAction extends BaseAction{
+    private static Logger logger = LoggerFactory.getLogger(SSOLoginAction.class);
 
-    @Validate(required = true,on={"signup","login"})
-    String                     apiKey;
+    private String                     apiKey;
 
-    @Validate(required = true,on={"signup","login"})
-    String                     redirectUrl;
+    private String                     redirectUrl;
 
     @Validate(required = true, on = "signup")
     String userName;
@@ -43,6 +46,8 @@ public class SSOForgotPasswordAction extends BaseAction{
     @Validate(required = true, on="signup")
     String repeatPassword;
 
+    /*@Validate(required = true, on="login")
+    String appToken;*/
     boolean logintabselected =true;
 
     String error;
@@ -51,22 +56,37 @@ public class SSOForgotPasswordAction extends BaseAction{
     HkAuthService hkAuthService;
     @Autowired
     UserManager userManager;
-
+    @Autowired
+    SecurityManager securityManager;
 
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        return new ForwardResolution("/pages/singleLogin.jsp");
+        if(getSubject().isAuthenticated()){
+            //check if the user is already authenticated in Healthkart, we are not allowing remembered users here
+            if(!StringUtils.isEmpty(redirectUrl) && !StringUtils.isEmpty(apiKey)){
+                try{
+                    hkAuthService.isValidAppToken(apiKey);
+                }catch (HkInvalidApiKeyException ex){
+                    logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
+                    return new RedirectResolution(redirectUrl);
+                }
+                redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(getPrincipal().getEmail(),apiKey));
+                return new RedirectResolution(redirectUrl, false);
+            }else {
+                return new RedirectResolution(HomeAction.class);
+            }
+        }
+        return new ForwardResolution("/pages/sso/singleLogin.jsp");
     }
 
-    @DontValidate
     @HandlesEvent("login")
     public Resolution login(){
         logintabselected =true;
         UserLoginDto userLoginDto = null;
         try{
-            if(hkAuthService.isValidAppKey(apiKey)){
-                //no logic right now
+            if(!StringUtils.isEmpty(apiKey)){
+                hkAuthService.isValidAppKey(apiKey);
             }
             userLoginDto = userManager.login(userLogin, password, true);
         } catch (HkInvalidApiKeyException ex){
@@ -94,8 +114,38 @@ public class SSOForgotPasswordAction extends BaseAction{
             logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
             return new RedirectResolution(redirectUrl);
         }*/
-        redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(userLogin,apiKey));
-        return new RedirectResolution(redirectUrl, false);
+        if(!StringUtils.isEmpty(redirectUrl)&&!StringUtils.isEmpty(apiKey)){
+            redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(userLogin,apiKey));
+            return new RedirectResolution(redirectUrl, false);
+        } else{
+            return new RedirectResolution(HomeAction.class);
+        }
+    }
+
+    @HandlesEvent("signup")
+    public Resolution signup(){
+        logintabselected =false;
+        try{
+            if(!StringUtils.isEmpty(apiKey)){
+                hkAuthService.isValidAppKey(apiKey);
+            }
+        } catch (HkInvalidApiKeyException ex){
+            logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
+            return new RedirectResolution(redirectUrl);
+        }
+        try {
+            userManager.signup(userLogin, userName, password, null);
+        } catch (HealthkartSignupException e) {
+            addValidationError("e1", new LocalizableError("/Signup.action.email.id.already.exists"));
+            return new ForwardResolution(getContext().getSourcePage()).addParameter("apiKey",apiKey).addParameter("redirectUrl",redirectUrl);
+        }
+
+        if(!StringUtils.isEmpty(redirectUrl)&& !StringUtils.isEmpty(apiKey)){
+            redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(userLogin,apiKey));
+            return new RedirectResolution(redirectUrl, false);
+        }else{
+            return new RedirectResolution(HomeAction.class);
+        }
     }
 
     @ValidationMethod(on = {"signup"})
