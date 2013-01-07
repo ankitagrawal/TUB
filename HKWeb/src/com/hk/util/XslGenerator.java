@@ -37,6 +37,7 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -1021,6 +1022,6 @@ public class XslGenerator {
 
 	public void setAdminInventoryService(AdminInventoryService adminInventoryService) {
 		this.adminInventoryService = adminInventoryService;
-	}
+	}	
 
 }

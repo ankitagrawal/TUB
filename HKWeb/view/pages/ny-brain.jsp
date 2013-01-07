@@ -38,14 +38,14 @@
 <div id="wrapper">
 
 
-
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
-
-
-
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/brain.jpg" />
+
+
+<img src="${pageContext.request.contextPath}/images/ny2013/brain01.jpg" />
 
 
 
@@ -54,12 +54,13 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Higher Grades this Year!</h2>
-
 <div class="contant01">
 
-<img src="${pageContext.request.contextPath}/images/ny2013/brain-power.jpg"/>
-<p>Poor grades are not due to lacking intelligence. Rather, they come from a lack of interest & a nutritional imbalance. Give the best morning beverage to your child to boost her/his memory, along with a heap of Chyawanprash for higher immunity & concentration.</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/brain-power.png"/>
+    <div class="cl"></div>
+    <h2 class="txt01">Higher Grades this Year!</h2>
+    <div class="cl"></div>
+<p>You think your child is onto you when she pulls up home with bad grades and a typical disgust for homework? We’ve just what you need, a bundle of goodies that boosts memory and sharpens focus of you little one. So the next when she sits down for homework, expect it to be done in half the time and with much better results.</p>
 
 </div>
 
@@ -72,11 +73,14 @@
 <div class="cl"></div>
 
 <div class="container01">
-<h2 class="txt01">Better Memory, Higher Focus & Higher IQ</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>Studies reveal that the brain needs fuel, just like the body. A good regime of puzzles, tricks and memory exercises go a long way in ensuring that mental acumen is both honed and preserved. Enriching your diet with Gingko Biloba, Curcumin & Omega 3 Fatty acids, leads to an overall improvement in memory, concentration and productivity. Further, you can also go the Ayurveda way and enhance your memory and cognition. Time to be the Jedi! </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/einstien.png"/>
+    <div class="cl"></div>
+    <h2 class="txt01">Better Memory, Higher Focus & Higher IQ</h2>
+    <div class="cl"></div>
+<p>Studies reveal that the brain needs fuel, just like the body. Enrich your diet with Gingko Biloba, Curcumin & Omega 3 Fatty acids, and you’ll see a marked improvement in memory, concentration and productivity. Further, you can also go the Ayurveda way to achieve the same superhuman results.</p>
 </div>
 
 
@@ -109,7 +113,7 @@
 
 
 <div class="footer-ny">
-<p>© 2012 healthkart.com</p>
+<p>© 2013 healthkart.com</p>
 <a href="https://twitter.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/twitter-img.jpg" /></a>
 <a href="https://www.facebook.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/fb-img.jpg" /></a>
 </div>
