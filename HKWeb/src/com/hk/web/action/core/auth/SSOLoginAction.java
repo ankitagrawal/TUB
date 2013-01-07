@@ -2,6 +2,8 @@ package com.hk.web.action.core.auth;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.HkApiUserCache;
+import com.hk.domain.api.HkApiUser;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
@@ -66,7 +68,7 @@ public class SSOLoginAction extends BaseAction{
             //check if the user is already authenticated in Healthkart, we are not allowing remembered users here
             if(!StringUtils.isEmpty(redirectUrl) && !StringUtils.isEmpty(apiKey)){
                 try{
-                    hkAuthService.isValidAppToken(apiKey);
+                    hkAuthService.isValidAppKey(apiKey);
                 }catch (HkInvalidApiKeyException ex){
                     logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
                     return new RedirectResolution(redirectUrl);
