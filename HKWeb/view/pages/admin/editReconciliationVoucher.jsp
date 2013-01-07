@@ -246,7 +246,7 @@
 <div>
 
 </div>
-<h2>Edit Reconciliation Voucher</h2>
+<h2>Subtract/Edit Reconciliation Voucher</h2>
 
 <h2>RV No # ${pa.reconciliationVoucher.id}</h2>
 <s:form id="reconForm" beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">

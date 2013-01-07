@@ -113,7 +113,7 @@
         <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink"
                 event="getPVDetails"></s:link>
     </div>
-    <h2>Create/Edit Reconciliation Voucher</h2>
+    <h2>Add/Edit Reconciliation Voucher</h2>
     <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
         <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
         <table>
