@@ -599,6 +599,7 @@ public class OrderManager {
             if (toBeRemovedComboInstanceSet.contains(lineItem.getComboInstance()) || lineItem.getQty() <= 0) {
                 iterator.remove();
                 order.getCartLineItems().remove(lineItem);
+                getBaseDao().delete(lineItem);
                 productVariant.setOutOfStock(true);
                 getProductVariantService().save(productVariant);
                 getComboService().markProductOutOfStock(productVariant);
@@ -616,8 +617,8 @@ public class OrderManager {
        return null;
      }
     else{
-      for(CartLineItem cartLineItem : newCartLineItems){
-        if(!oldCartLineItems.contains(cartLineItem)){
+      for(CartLineItem cartLineItem : oldCartLineItems){
+        if(!newCartLineItems.contains(cartLineItem)){
           if(cartLineItem.getComboInstance()!=null){
             if(!comboIds.contains(cartLineItem.getComboInstance().getCombo().getId())){
               comboIds.add(cartLineItem.getComboInstance().getCombo().getId());

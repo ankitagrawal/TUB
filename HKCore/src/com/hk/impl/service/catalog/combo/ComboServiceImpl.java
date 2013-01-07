@@ -79,6 +79,10 @@ public class ComboServiceImpl implements ComboService{
          product.setOutOfStock(true);
           getProductService().save(product);
       }
+    else if(!productOutOfStock && product.isOutOfStock()){
+        product.setOutOfStock(false);
+        getProductService().save(product);
+      }
     markRelatedCombosOutOfStock(productVariant);
   }
 

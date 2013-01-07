@@ -4,9 +4,11 @@ import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -69,7 +71,7 @@ public class PaymentAction extends BaseAction {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
-            Set<CartLineItem> oldCartLineItems = order.getCartLineItems();
+            Set<CartLineItem>oldCartLineItems =new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
             order = orderManager.trimEmptyLineItems(order);
             Set<CartLineItem> newCartLineItems = order.getCartLineItems();
 //            Collection<CartLineItem> diffCartLineItems = CollectionUtils.subtract(oldCartLineItems,newCartLineItems);

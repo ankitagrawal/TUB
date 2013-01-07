@@ -696,15 +696,16 @@
 </s:layout-component>
 </c:if>
 
-<c:if test="${cartAction.trimCartLineItems!=null and fn:length(cartAction.trimCartLineItems) > 0}">
+<s:layout-component name="htmlHead">
+<c:if test="${cartAction.trimCartLineItems!=null && fn:length(cartAction.trimCartLineItems) >0}">
         <script type="text/javascript">
           $(document).ready(function () {
               ShowDialog(true);
-              e.preventDefault();
-              $('.button_green').click(function(){
+//              e.preventDefault();
+              $('.button_green').live('click',function(){
                   $(this).hide();
+                  HideDialog();
               });
-          });
 
           function ShowDialog(modal)
           {
@@ -723,15 +724,15 @@
               $("#overlay2").hide();
               $("#dialog2").fadeOut(300);
           }
+          });
     </script>
      </c:if>
-
+</s:layout-component>
 </s:layout-render>
 
 <div id="overlay2" class="web_dialog_overlay"></div>
    <div id="dialog2" class="web_dialog">
 
-  <s:form beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
        <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
            <tr>
                <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
@@ -772,12 +773,13 @@
                          </td>
                          <td>
                            <div class='name'>
-                               <table width="70%">
+                               <table width="100%">
                                    <tr>
                                        <td>
                                                ${cartLineItem.productVariant.product.name} <br/>
-
+                                               <c:if test="${cartLineItem.comboInstance == null}">
                                                ${cartLineItem.productVariant.variantName}
+                                               </c:if>    
                                            <%--<c:set var="${invoiceLineItem.qty}" value="0"/>--%>
                                        </td>
                                    </tr>
@@ -799,20 +801,79 @@
            </tr>
            <tr>
                <td colspan="2" style="text-align: center;">
-                 <c:choose>
-                 <c:when test="${cartAction.sizeOfCLI > 0}">
-                    <s:button name="pre" value="Back to Shopping" style="color:green;"/>
-                  </td>
-                  <td>&nbsp;</td>
-                  <td>
-                    <a href="#" class="button_green">Continue</a>
-                 </c:when>
-                 <c:otherwise>
-                    <s:button name="pre" value="Back to Shopping"/>
-                 </c:otherwise>
-                 </c:choose>
+
+                 <c:if test="${cartAction.sizeOfCLI > 0}">
+                   <a class="button_green" style="width:120px; height: 18px;">Continue</a>
+                     </td><td>
+                   </c:if>
+                   <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green"
+                           style="width: 160px; height: 18px;">Back to Shopping
+                   </s:link>
                </td>
            </tr>
        </table>
-   </s:form>
    </div>
+
+
+<style type="text/css">
+
+     .web_dialog_overlay
+   {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000000;
+      opacity: .15;
+      filter: alpha(opacity=15);
+      -moz-opacity: .15;
+      z-index: 101;
+      display: none;
+   }
+   .web_dialog
+   {
+      display: none;
+      position: fixed;
+      width: 450px;
+      /*height: 400px;*/
+      top: 50%;
+      left: 50%;
+      margin-left: -265px;
+      margin-top: -180px;
+      /*background-color: #ffffff;*/
+      background-color: white;
+      /*border: 2px solid #336699;*/
+      padding: 0px;
+      z-index: 102;
+      font-family: Verdana;
+      font-size: 10pt;
+      color: #333;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
+   }
+   .web_dialog_title
+   {
+      /*border-bottom: solid 2px #336699;*/
+      /*background-color: #336699;*/
+     font-size: 16px;
+     font-weight: bold;
+     padding: 5px;
+      background-color: #f2f7fb;
+      color: White;
+      font-weight:bold;
+   }
+   .web_dialog_title a
+   {
+      color: White;
+      text-decoration: none;
+   }
+   .align_right
+   {
+      text-align: right;
+   }
+
+   </style>

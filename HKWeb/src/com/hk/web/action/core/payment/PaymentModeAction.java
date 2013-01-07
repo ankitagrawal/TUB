@@ -2,7 +2,9 @@ package com.hk.web.action.core.payment;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumIssuerType;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.GatewayIssuerMapping;
@@ -55,7 +57,7 @@ public class PaymentModeAction extends BaseAction {
       addRedirectAlertMessage(new SimpleMessage("You have not selected the shipping address"));
       return new RedirectResolution(SelectAddressAction.class);
     }
-    Set<CartLineItem> oldCartLineItems = order.getCartLineItems();
+    Set<CartLineItem> oldCartLineItems =new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
     order = orderManager.trimEmptyLineItems(order);
     Set<CartLineItem> newCartLineItems = order.getCartLineItems();
 //    Collection<CartLineItem> diffCartLineItems = CollectionUtils.subtract(oldCartLineItems,newCartLineItems);

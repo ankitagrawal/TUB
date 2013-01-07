@@ -96,7 +96,7 @@ public class OrderSummaryAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
-        Set<CartLineItem> oldCartLineItems = order.getCartLineItems();
+        Set<CartLineItem> oldCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         // Trimming empty line items once again.
         orderManager.trimEmptyLineItems(order);
         // OfferInstance offerInstance = order.getOfferInstance();

@@ -159,9 +159,16 @@ public class ProductCatalogServiceImpl {
 				if (productVariantInDB != null) {
 					productVariant.setCreatedDate(productVariantInDB.getCreatedDate());
 					productVariant.setFreeProductVariant(productVariantInDB.getFreeProductVariant());
+          productVariant.setOutOfStock(productVariantInDB.getOutOfStock());
 				} else {
+          if(productVariant.getProduct().isJit()!=null && !productVariant.getProduct().isJit()){
+             productVariant.setOutOfStock(true);
+          }
+          else{
+            productVariant.setOutOfStock(false);
+          }
 					productVariant.setCreatedDate(new Date());
-				}
+				} 
 				logger.debug("saving product variant : " + productVariant.getId() + "," + productVariant.getHkPrice(null));
 				logger.debug("inserting product variant " + productVariant.getId() + " - " + productVariant.getProduct().getName());
 

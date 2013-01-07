@@ -110,7 +110,7 @@ public class CartAction extends BaseAction {
       Set<CartLineItem> oldCartLineItems = null;
         if (user != null) {
             order = orderManager.getOrCreateOrder(user);
-             oldCartLineItems = order.getCartLineItems();
+             oldCartLineItems =new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
             Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
             // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
             order = orderManager.trimEmptyLineItems(order);

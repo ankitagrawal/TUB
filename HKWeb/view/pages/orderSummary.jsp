@@ -231,14 +231,14 @@
      </c:when>
       <c:otherwise>
       <c:if test="${orderSummary.trimCartLineItems!=null and fn:length(orderSummary.trimCartLineItems) > 0}">
-        <script type="text/javascript">
+         <script type="text/javascript">
           $(document).ready(function () {
               ShowDialog(true);
-              e.preventDefault();
-              $('.button_green').click(function(){
+//              e.preventDefault();
+              $('.button_green').live('click',function(){
                   $(this).hide();
+                  HideDialog();
               });
-          });
 
           function ShowDialog(modal)
           {
@@ -257,7 +257,8 @@
               $("#overlay2").hide();
               $("#dialog2").fadeOut(300);
           }
-         </script>
+          });
+    </script>
      </c:if>
      </c:otherwise>
       </c:choose>
@@ -350,10 +351,10 @@
    </s:form>
    </div>
 
-<div id="overlay2" class="web_dialog_overlay"></div>
+
+  <div id="overlay2" class="web_dialog_overlay"></div>
    <div id="dialog2" class="web_dialog">
 
-  <s:form beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
        <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
            <tr>
                <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
@@ -374,7 +375,7 @@
                <td>&nbsp;</td>
                <td>&nbsp;</td>
            </tr>
-               <c:forEach items="${orderSummary.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
+               <c:forEach items="${cartAction.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
                    <tr>
                        <div class='product' style="border-bottom-style: solid;">
                          <td style="padding-left: 15px;">
@@ -394,12 +395,13 @@
                          </td>
                          <td>
                            <div class='name'>
-                               <table width="70%">
+                               <table width="100%">
                                    <tr>
                                        <td>
                                                ${cartLineItem.productVariant.product.name} <br/>
-
+                                               <c:if test="${cartLineItem.comboInstance == null}">
                                                ${cartLineItem.productVariant.variantName}
+                                               </c:if>
                                            <%--<c:set var="${invoiceLineItem.qty}" value="0"/>--%>
                                        </td>
                                    </tr>
@@ -421,18 +423,17 @@
            </tr>
            <tr>
                <td colspan="2" style="text-align: center;">
-                 <c:choose>
-                 <c:when test="${orderSummary.sizeOfCLI > 0}">
-                    <s:button name="pre" value="Go Back and Add Another Product"/>
-                 </c:when>
-                   <c:otherwise>
-                    <a href="#" class="button_green"></a>
-                   </c:otherwise>
-                   </c:choose>
+
+                 <c:if test="${cartAction.sizeOfCLI > 0}">
+                   <a class="button_green" style="width:120px; height: 18px;">Continue</a>
+                     </td><td>
+                   </c:if>
+                   <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green"
+                           style="width: 160px; height: 18px;">Back to Shopping
+                   </s:link>
                </td>
            </tr>
        </table>
-   </s:form>
    </div>
 
 <style type="text/css">
