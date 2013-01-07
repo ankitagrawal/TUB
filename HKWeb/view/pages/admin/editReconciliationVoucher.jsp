@@ -167,8 +167,8 @@
 			});
 			var href = $('#reconForm').attr('action');
 			curEle.css("display", "none");
-			$('.addRowButton').css("display", "none");
-			$('.saveButton').css("display", "none");
+			$('.addRowButton').hide();
+			$('.saveButton').hide();
 
 			$.ajax({
 				type:"POST",
@@ -212,12 +212,13 @@
 						$('.error').empty();
 						$('.error').hide();
 					}
-					$('.addRowButton').css("display", "block");
-					$('.saveButton').css("display", "block");
+
+					$('.addRowButton').show();
+					$('.saveButton').show();
 					if (data.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
-						$('.singlesave').css("display","block");
-						$('.addRowButton').css("display", "block");
-						$('.saveButton').css("display", "block");
+						$('.singlesave').css("display", "block");
+						$('.addRowButton').show();
+						$('.saveButton').show();
 						$('.error').empty();
 						$('.error').html(data.message);
 						$('.error').show();
@@ -225,8 +226,8 @@
 				},
 				error:function onError() {
 					$('.singlesave').css("display", "block");
-					$('.addRowButton').css("display", "block");
-					$('.saveButton').css("display", "block");					
+					$('.addRowButton').show();
+					$('.saveButton').show();
 					alert('Error in  Saving JSON');
 				}
 
