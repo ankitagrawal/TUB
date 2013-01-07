@@ -144,5 +144,7 @@ public interface MasterDataDao
 
 	public List<String> getShipmentStatusForDispatchLot();
 
-     public List <Courier> getListOfVendorCouriers();
+	public List<AwbStatus> getAllAwbStatus();
+    
+    public List <Courier> getListOfVendorCouriers();
 }

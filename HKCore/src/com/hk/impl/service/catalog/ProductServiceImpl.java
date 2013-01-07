@@ -194,8 +194,8 @@ public class ProductServiceImpl implements ProductService {
         return savedProduct;
     }
 
-    public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage) {
-        return getReviewService().getProductReviews(product, reviewStatusList, page, perPage);
+    public Page getProductReviewsForCustomer(Product product, List<Long> reviewStatusList, int page, int perPage) {
+        return getReviewService().getProductReviewsForCustomer(product, reviewStatusList, page, perPage);
     }
 
     public Long getAllReviews(Product product, List<Long> reviewStatusList) {

@@ -56,7 +56,7 @@ public class ProductReviewAction extends BasePaginatedAction {
     @SuppressWarnings("unchecked")
     @DefaultHandler
     public Resolution pre() {
-        productReviewPage = reviewService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), getPageNo(), getPerPage());
+        productReviewPage = reviewService.getProductReviewsForCustomer(product, Arrays.asList(EnumReviewStatus.Published.getId()), getPageNo(), getPerPage());
         if (productReviewPage != null) {
             productReviews = productReviewPage.getList();
         }
