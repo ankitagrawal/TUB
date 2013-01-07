@@ -45,7 +45,53 @@
 
 
 
+
 <img src="${pageContext.request.contextPath}/images/ny2013/fitness01.jpg" />
+
+
+
+
+
+<a href="http://www.healthkart.com/sports/footwear?brand=Joola">
+<div class="offer">
+<div class="offer-inside"><span class="discount-txt">10% off on Joola tennis shoes</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKJOOLA</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+
+
+ <a href="http://www.healthkart.com/sports/footwear?brand=Nivia">
+<div class="offer">
+<div class="offer-inside"><span class="discount-txt">Get Flat 20% off on Nivia Shoes</span>
+
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKNIVIA</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+
+
+<a href="http://www.healthkart.com/sports/footwear?brand=Vector+X">
+<div class="offer">
+<div class="offer-inside"><span class="discount-txt"> Get Flat20% off on Vector X Shoes</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKVECTORX</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>    
+
+
+
+
+
+
+
+
 
   <div class="cl"></div>
 		<div class="pages">
@@ -68,6 +114,28 @@
 <p>Show the world that you have arrived! Slash your body fat to 4 %, show off your abs, biceps, triceps, calves and quads and see some jaws drop. To get there, you need not just a few gruelling months with a killer work out; you’ll need some fat burners, whey proteins and aminos. These supplements will enhance fat loss, muscle recovery and growth and pure mass gains! You'll get the added energy from pre workout supplements & aminos. We also have gym accessories to make the sessions  far more effective!</p>
 
 </div>
+
+
+<a href="http://www.healthkart.com/sports/fitness-equipment?brand=Tunturi">
+<div class="offer02">
+<div class="offer-inside"><span class="discount-txt"> Flat 25% off on Tunturi Gym and Work-out Equipment</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKFITNESS</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>  
+
+<a href="http://www.healthkart.com/sports/fitness-equipment?brand=Finnlo">
+<div class="offer02b">
+<div class="offer-inside"><span class="discount-txt"> Extra 5% off on Finnlo Bio Force Sport Multi-Gym</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKFINNLO</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+    
 
 <div class="cl"></div>
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1141' />
@@ -216,7 +284,7 @@
 
 
 <div class="footer-ny">
-<p>© 2012 healthkart.com</p>
+<p>© 2013 healthkart.com</p>
 <a href="https://twitter.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/twitter-img.jpg" /></a>
 <a href="https://www.facebook.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/fb-img.jpg" /></a>
 </div>

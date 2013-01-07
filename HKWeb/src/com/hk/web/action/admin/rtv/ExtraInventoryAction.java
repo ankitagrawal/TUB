@@ -112,7 +112,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
-  @Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
+  
   public Resolution save(){
 
     extraInventory = getExtraInventoryService().getExtraInventoryByPoId(purchaseOrderId);

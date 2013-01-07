@@ -434,9 +434,7 @@
     <br/>
     <s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}" />
     <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}" />
-    <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
     <s:submit name="save" value="SAVE" id="save" />
-    </shiro:hasPermission>
     <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
     <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
         <s:submit name="createRtv" value="Create RTV" class="createRtv" />

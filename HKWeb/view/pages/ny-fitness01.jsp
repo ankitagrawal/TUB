@@ -96,6 +96,17 @@
 <p>Become the lean, mean machine. Take your pick from the lot that the champions rely on. It doesn't matter if you are a hard gainer or a vegetarian. With the right diet, workout and mass gainer, get the look you want!  Samurai or Space Marine, we have it all covered!</p>
 </div>
 
+
+    <a href="http://www.healthkart.com/product/lonsdale-crawling-machine-528-home-use/SPT1496?productReferrerId=3">
+<div class="offer01">
+<div class="offer-inside"><span class="discount-txt">Get Flat 25% off on Lonsdale Crawling Machine</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKCRAWLING</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+
 <div class="cl"></div>
 
    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1368' />
@@ -124,6 +135,39 @@
     <h2 class="txt01">Hit the GYM Like a PRO!</h2>
 <p>A proper gear ensures that you lift with the right form and don't have sweat dripping into crevices you don’t want to. Hygiene apart, good gym gear also includes a sipper which can keep you hydrated & energized with your favorite intra workout! All of this is incomplete without a duffel bag!</p>
 </div>
+
+    <a href="http://www.healthkart.com/sports/apparel?brand=Summer+69">
+<div class="offer">
+<div class="offer-inside"><span class="discount-txt">Flat 20% off on your favourite Summer 69 t-shirt</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKSUMMER69</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+
+
+ <a href="http://www.healthkart.com/sports/apparel?brand=MuscleBlaze">
+<div class="offer">
+<div class="offer-inside"><span class="discount-txt">Flat 50% off on Muscle Blaze T-shirts</span>
+
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKMB50</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+
+
+<a href="http://www.healthkart.com/sports/fitness-accessories?brand=SKLZ">
+<div class="offer">
+<div class="offer-inside"><span class="discount-txt"> Flat 30% off on SKLZ Fitness accessories</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKSKLZ</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
 
 <div class="cl"></div>
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2100' />
@@ -240,7 +284,7 @@
 
 
 <div class="footer-ny">
-<p>© 2012 healthkart.com</p>
+<p>© 2013 healthkart.com</p>
 <a href="https://twitter.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/twitter-img.jpg" /></a>
 <a href="https://www.facebook.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/fb-img.jpg" /></a>
 </div>

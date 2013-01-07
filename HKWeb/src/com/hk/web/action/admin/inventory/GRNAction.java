@@ -185,6 +185,10 @@ public class GRNAction extends BasePaginatedAction {
 
 			for (GrnLineItem grnLineItem : grnLineItems) {
 				//setting sku when adding new grn line item
+				if(grnLineItem.getMrp().longValue() < grnLineItem.getCostPrice().longValue()){
+					addRedirectAlertMessage(new SimpleMessage("MRP cannot be less than cost price for item "+grnLineItem.getSku().getProductVariant().getId()));
+					return new RedirectResolution(GRNAction.class, "view").addParameter("grn", grn.getId());
+				}
 				if (grnLineItem.getSku() == null && grnLineItem.getProductVariant() != null) {
 					grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
 				}
@@ -325,8 +329,9 @@ public class GRNAction extends BasePaginatedAction {
 		PurchaseInvoice purchaseInvoice = new PurchaseInvoice();
 		purchaseInvoice.setCreateDate(new Date());
 		purchaseInvoice.setCreatedBy(loggedOnUser);
-		if (grnListForPurchaseInvoice.get(0) != null && grnListForPurchaseInvoice.get(0).getEstPaymentDate() != null) {
-			purchaseInvoice.setEstPaymentDate(grnListForPurchaseInvoice.get(0).getEstPaymentDate());
+		int first_index = grnListForPurchaseInvoice.size()-1;
+		if (grnListForPurchaseInvoice.get(first_index) != null && grnListForPurchaseInvoice.get(first_index).getEstPaymentDate() != null) {
+			purchaseInvoice.setEstPaymentDate(grnListForPurchaseInvoice.get(first_index).getEstPaymentDate());
 		}
 		purchaseInvoice.setPurchaseInvoiceStatus(getPurchaseInvoiceDao().get(PurchaseInvoiceStatus.class, EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getId()));
 		if (supplier != null) {
