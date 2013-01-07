@@ -481,7 +481,6 @@
 <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
 	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 </shiro:hasPermission>
-<%--todo rahul: need to remove this add new row button added for finace team on 29-Nov-2012--%>
 <%--<c:choose>
 	<c:when test="${pa.grn.grnStatus.id < inCheckedIn}">
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>

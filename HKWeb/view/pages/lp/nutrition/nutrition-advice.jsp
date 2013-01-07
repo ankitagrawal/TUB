@@ -115,7 +115,7 @@
 			</div>
 			<div class="cl"></div>
 
-			<p class="footer"> © 2012 healthkart.com </p>
+			<p class="footer"> © 2013 healthkart.com </p>
 
 
 

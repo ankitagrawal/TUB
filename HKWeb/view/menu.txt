@@ -272,7 +272,7 @@
 --/diabetes/testing-supplies/lancing-devices
 --/diabetes/testing-supplies/insulin-supplies
 -/diabetes/diabetic-food
---/diabetes/diabetic-food/sweetener : Sweetners
+--/diabetes/diabetic-food/sweetener
 --/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
 --/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food
 --/diabetes/diabetic-food/diabetic-supplements
