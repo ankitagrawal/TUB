@@ -8,6 +8,7 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
@@ -22,14 +23,14 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Author: Pratham
@@ -42,6 +43,8 @@ public class PaymentAction extends BaseAction {
     private Gateway gateway;
     private Long billingAddressId;
     private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
+    private Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
+    private Integer               sizeOfCLI;
 
     @Validate(required = true)
     Issuer issuer;
@@ -66,8 +69,17 @@ public class PaymentAction extends BaseAction {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
-
-            String issuerCode = null;
+            Set<CartLineItem> oldCartLineItems = order.getCartLineItems();
+            order = orderManager.trimEmptyLineItems(order);
+            Set<CartLineItem> newCartLineItems = order.getCartLineItems();
+//            Collection<CartLineItem> diffCartLineItems = CollectionUtils.subtract(oldCartLineItems,newCartLineItems);
+           Set<CartLineItem> diffCartLineItems = orderManager.getDiffCartLineItems(oldCartLineItems,newCartLineItems); 
+           if(diffCartLineItems!=null && diffCartLineItems.size()>0){
+              trimCartLineItems.addAll(diffCartLineItems);
+              sizeOfCLI = order.getCartLineItems().size();
+              return new RedirectResolution(PaymentModeAction.class).addParameter("order", order);              
+            }
+          String issuerCode = null;
             if (issuer != null) {
                 try {
                     List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
@@ -156,4 +168,20 @@ public class PaymentAction extends BaseAction {
     public void setBillingAddressId(Long billingAddressId) {
         this.billingAddressId = billingAddressId;
     }
+
+  public Integer getSizeOfCLI() {
+    return sizeOfCLI;
+  }
+
+  public void setSizeOfCLI(Integer sizeOfCLI) {
+    this.sizeOfCLI = sizeOfCLI;
+  }
+
+  public Set<CartLineItem> getTrimCartLineItems() {
+    return trimCartLineItems;
+  }
+
+  public void setTrimCartLineItems(Set<CartLineItem> trimCartLineItems) {
+    this.trimCartLineItems = trimCartLineItems;
+  }
 }

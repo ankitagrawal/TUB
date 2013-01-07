@@ -1,9 +1,6 @@
 package com.hk.web.action.core.cart;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -27,6 +24,7 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.SubscriptionFilter;
+import org.apache.commons.collections.CollectionUtils;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.coupon.Coupon;
@@ -67,6 +65,8 @@ public class CartAction extends BaseAction {
     private Long                itemsInCart   = 0L;
     private String              freebieBanner;
     private Set<Subscription>   subscriptions;
+    private Set<CartLineItem>   trimCartLineItems = new HashSet<CartLineItem>();
+    private Integer               sizeOfCLI;
 
     @Autowired
     private UserService         userService;
@@ -107,28 +107,11 @@ public class CartAction extends BaseAction {
         } else {
             user = userManager.createAndLoginAsGuestUser(null, null);
         }
+      Set<CartLineItem> oldCartLineItems = null;
         if (user != null) {
             order = orderManager.getOrCreateOrder(user);
+             oldCartLineItems = order.getCartLineItems();
             Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-            Set<Long> comboInstanceIds = new TreeSet<Long>();
-            for (CartLineItem lineItem : cartLineItems) {
-                if (lineItem != null && lineItem.getProductVariant() != null) {
-                    ProductVariant productVariant = lineItem.getProductVariant();
-                    if ((productVariant.getProduct().isDeleted() != null && productVariant.getProduct().isDeleted()) || productVariant.isDeleted() || productVariant.isOutOfStock()) {
-                        lineItem.setQty(0L);
-                        if (lineItem.getComboInstance() != null) {
-                            comboInstanceIds.add(lineItem.getComboInstance().getId());
-                        }
-                    }
-                }
-            }
-            for (Long comboInstanceId : comboInstanceIds) {
-                for (CartLineItem cartLineItem : cartLineItems) {
-                    if (cartLineItem.getComboInstance() != null && cartLineItem.getComboInstance().getId().equals(comboInstanceId)) {
-                        cartLineItem.setQty(0L);
-                    }
-                }
-            }
             // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
             order = orderManager.trimEmptyLineItems(order);
 
@@ -176,6 +159,15 @@ public class CartAction extends BaseAction {
         }
 
         freebieBanner = cartFreebieService.getFreebieBanner(order);
+      if(oldCartLineItems!=null){
+        Set<CartLineItem> newCartLineItems = order.getCartLineItems();
+//        Collection<CartLineItem> diffCartLineItems = CollectionUtils.subtract(oldCartLineItems,newCartLineItems);
+        Set<CartLineItem> diffCartLineItems = orderManager.getDiffCartLineItems(oldCartLineItems,newCartLineItems);
+        if(diffCartLineItems!=null && diffCartLineItems.size()>0){
+          trimCartLineItems.addAll(diffCartLineItems);
+        }
+      }
+      sizeOfCLI = order.getCartLineItems().size();
         return new ForwardResolution("/pages/cart.jsp");
     }
 
@@ -220,12 +212,7 @@ public class CartAction extends BaseAction {
     }
 
     public Resolution checkout() {
-        orderManager.trimEmptyLineItems(order);
-        /*
-         * for (Iterator<LineItem> lineItemIterator = order.getProductCartLineItems().iterator();
-         * lineItemIterator.hasNext();) { LineItem lineItem = lineItemIterator.next(); lineItemDao.save(lineItem); }
-         */
-
+//        orderManager.trimEmptyLineItems(order);
         return new RedirectResolution(SelectAddressAction.class);
     }
 
@@ -295,4 +282,20 @@ public class CartAction extends BaseAction {
     public OrderDao getOrderDao() {
         return orderDao;
     }
+
+  public Set<CartLineItem> getTrimCartLineItems() {
+    return trimCartLineItems;
+  }
+
+  public void setTrimCartLineItems(Set<CartLineItem> trimCartLineItems) {
+    this.trimCartLineItems = trimCartLineItems;
+  }
+
+  public Integer getSizeOfCLI() {
+    return sizeOfCLI;
+  }
+
+  public void setSizeOfCLI(Integer sizeOfCLI) {
+    this.sizeOfCLI = sizeOfCLI;
+  }
 }

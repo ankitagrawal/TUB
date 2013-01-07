@@ -1,9 +1,6 @@
 package com.hk.web.action.core.order;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -21,6 +18,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.constants.core.HealthkartConstants;
+import org.apache.commons.collections.CollectionUtils;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.core.fliter.CartLineItemFilter;
@@ -73,6 +71,8 @@ public class OrderSummaryAction extends BaseAction {
     private boolean            codAllowedOnGroundShipping;
     private Double             cashbackOnGroundshipped;
     Map<String, String>        codFailureMap = new HashMap<String, String>();
+    private Set<CartLineItem>  trimCartLineItems = new HashSet<CartLineItem>();
+    private Integer               sizeOfCLI;
 
     // COD related changes
     @Autowired
@@ -96,6 +96,7 @@ public class OrderSummaryAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
+        Set<CartLineItem> oldCartLineItems = order.getCartLineItems();
         // Trimming empty line items once again.
         orderManager.trimEmptyLineItems(order);
         // OfferInstance offerInstance = order.getOfferInstance();
@@ -141,6 +142,13 @@ public class OrderSummaryAction extends BaseAction {
         if (availableCourierList != null && availableCourierList.size() == 0) {
             availableCourierList = null;
         }
+       Set<CartLineItem> newCartLineItems = order.getCartLineItems();
+//        Collection<CartLineItem> diffCartLineItems = CollectionUtils.subtract(oldCartLineItems,newCartLineItems);
+        Set<CartLineItem> diffCartLineItems = orderManager.getDiffCartLineItems(oldCartLineItems,newCartLineItems);
+        if(diffCartLineItems!=null && diffCartLineItems.size()>0){
+          trimCartLineItems.addAll(diffCartLineItems);
+        }
+      sizeOfCLI = order.getCartLineItems().size();
         return new ForwardResolution("/pages/orderSummary.jsp");
     }
 
@@ -252,4 +260,20 @@ public class OrderSummaryAction extends BaseAction {
     public void setCodFailureMap(Map<String, String> codFailureMap) {
         this.codFailureMap = codFailureMap;
     }
+
+  public Set<CartLineItem> getTrimCartLineItems() {
+    return trimCartLineItems;
+  }
+
+  public void setTrimCartLineItems(Set<CartLineItem> trimCartLineItems) {
+    this.trimCartLineItems = trimCartLineItems;
+  }
+
+  public Integer getSizeOfCLI() {
+    return sizeOfCLI;
+  }
+
+  public void setSizeOfCLI(Integer sizeOfCLI) {
+    this.sizeOfCLI = sizeOfCLI;
+  }
 }

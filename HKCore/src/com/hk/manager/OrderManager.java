@@ -1,10 +1,6 @@
 package com.hk.manager;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -613,6 +609,29 @@ public class OrderManager {
         return order;
     }
 
+  public Set<CartLineItem> getDiffCartLineItems(Set<CartLineItem> oldCartLineItems, Set<CartLineItem> newCartLineItems){
+    Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
+    Set<String> comboIds = new HashSet<String>();
+     if(newCartLineItems.containsAll(oldCartLineItems)){
+       return null;
+     }
+    else{
+      for(CartLineItem cartLineItem : newCartLineItems){
+        if(!oldCartLineItems.contains(cartLineItem)){
+          if(cartLineItem.getComboInstance()!=null){
+            if(!comboIds.contains(cartLineItem.getComboInstance().getCombo().getId())){
+              comboIds.add(cartLineItem.getComboInstance().getCombo().getId());
+              trimCartLineItems.add(cartLineItem);
+            }
+          }
+          else{
+            trimCartLineItems.add(cartLineItem);
+          }
+        }
+      }
+       return trimCartLineItems;
+    }
+  }
     public boolean isStepUpAllowed(CartLineItem cartLineItem) {
         ProductVariant productVariant = cartLineItem.getProductVariant();
         Product product = productVariant.getProduct();

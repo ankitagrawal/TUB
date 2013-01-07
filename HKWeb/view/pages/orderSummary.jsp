@@ -190,7 +190,8 @@
       </s:form>
 
     </div>
-    <c:if test="${orderSummary.groundShippedItemPresent && !(orderSummary.groundShippingAllowed)}">
+    <c:choose>
+    <c:when test="${orderSummary.groundShippedItemPresent && !(orderSummary.groundShippingAllowed)}">
       <script type="text/javascript">
           $(document).ready(function () {
               ShowDialog(true);
@@ -227,7 +228,39 @@
 
 
       </script>
+     </c:when>
+      <c:otherwise>
+      <c:if test="${orderSummary.trimCartLineItems!=null and fn:length(orderSummary.trimCartLineItems) > 0}">
+        <script type="text/javascript">
+          $(document).ready(function () {
+              ShowDialog(true);
+              e.preventDefault();
+              $('.button_green').click(function(){
+                  $(this).hide();
+              });
+          });
+
+          function ShowDialog(modal)
+          {
+              $("#overlay2").show();
+              $("#dialog2").fadeIn(300);
+
+              if (modal)
+              {
+                  $("#overlay2").unbind("click");
+              }
+          }
+
+          function HideDialog()
+          {
+
+              $("#overlay2").hide();
+              $("#dialog2").fadeOut(300);
+          }
+         </script>
      </c:if>
+     </c:otherwise>
+      </c:choose>
   </s:layout-component>
 </s:layout-render>
 
@@ -317,6 +350,90 @@
    </s:form>
    </div>
 
+<div id="overlay2" class="web_dialog_overlay"></div>
+   <div id="dialog2" class="web_dialog">
+
+  <s:form beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+       <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
+           <tr>
+               <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
+               <td class="web_dialog_title align_right">
+                   <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
+               </td>
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+           <tr>
+               <td colspan="3" style="padding-left: 15px;">
+                   <b>The following items have been removed due to no available inventory</b>
+               </td>
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+               <c:forEach items="${orderSummary.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
+                   <tr>
+                       <div class='product' style="border-bottom-style: solid;">
+                         <td style="padding-left: 15px;">
+                           <div class='img48' style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
+                               <c:choose>
+                                   <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
+                                       <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}"
+                                                        size="<%=EnumImageSize.TinySize%>"/>
+                                   </c:when>
+                                   <c:otherwise>
+                                       <img class="prod48"
+                                            src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
+                                            alt="${cartLineItem.productVariant.product.name}"/>
+                                   </c:otherwise>
+                               </c:choose>
+                           </div>
+                         </td>
+                         <td>
+                           <div class='name'>
+                               <table width="70%">
+                                   <tr>
+                                       <td>
+                                               ${cartLineItem.productVariant.product.name} <br/>
+
+                                               ${cartLineItem.productVariant.variantName}
+                                           <%--<c:set var="${invoiceLineItem.qty}" value="0"/>--%>
+                                       </td>
+                                   </tr>
+                               </table>
+                           </div>
+                         </td>
+
+                       </div>
+                   </tr>
+                 </c:forEach>
+
+
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+           <tr>
+
+           </tr>
+           <tr>
+               <td colspan="2" style="text-align: center;">
+                 <c:choose>
+                 <c:when test="${orderSummary.sizeOfCLI > 0}">
+                    <s:button name="pre" value="Go Back and Add Another Product"/>
+                 </c:when>
+                   <c:otherwise>
+                    <a href="#" class="button_green"></a>
+                   </c:otherwise>
+                   </c:choose>
+               </td>
+           </tr>
+       </table>
+   </s:form>
+   </div>
 
 <style type="text/css">
 
