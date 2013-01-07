@@ -14,7 +14,7 @@ import com.hk.domain.shippingOrder.LineItem;
 
 public interface ReplacementOrderService {
 
-    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason);
+    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason, String roComment);
 
 	public List<ReplacementOrder> getReplacementOrderForRefShippingOrder(Long refShippingOrderId);
 

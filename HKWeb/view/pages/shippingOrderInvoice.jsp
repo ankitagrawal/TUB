@@ -159,7 +159,7 @@ ORDER INVOICE <c:choose>
                         Standard Overnight
                     </c:otherwise>
                 </c:choose>
-                <c:if test="${orderSummary.shippingOrder.COD}">
+                <c:if test="${orderSummary.shippingOrder.COD && orderSummary.invoiceDto.grandTotal > 0}">
                     COD
                 </c:if>
                 &nbsp;&nbsp;wt:${orderSummary.estimatedWeightOfPackage}Kg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender

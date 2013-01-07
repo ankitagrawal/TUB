@@ -164,6 +164,10 @@ public class EditPurchaseOrderAction extends BaseAction {
 			}
 			for (PoLineItem poLineItem : poLineItems) {
 				if (poLineItem.getQty() != null) {
+					if(poLineItem.getMrp() < poLineItem.getCostPrice()){
+						addRedirectAlertMessage(new SimpleMessage("MRP cannot be less than cost price for variant " + poLineItem.getSku().getProductVariant().getId()));
+						return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+					}
 					if (poLineItem.getQty() == 0 && poLineItem.getId() != null) {
 						getBaseDao().delete(poLineItem);
 					} else if (poLineItem.getQty() > 0) {
