@@ -445,4 +445,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
 		return reconciliationList;
 	}
 
+     public List<Courier> getListOfVendorCouriers(){
+       return courierService.listOfVendorCouriers();
+    }
 }

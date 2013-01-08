@@ -156,6 +156,12 @@
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link></h3>
 
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction">Drop Shipping Queue</s:link></h3>
+
+    <h3><s:link
+			beanclass="com.hk.web.action.admin.queue.ShipmentInstallationAwaitingQueueAction">Installation Awaiting Queue</s:link></h3>
+
 	<h3>
 		</c:if>
 		<s:link

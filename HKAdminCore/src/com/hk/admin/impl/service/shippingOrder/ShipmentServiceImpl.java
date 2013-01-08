@@ -1,6 +1,6 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.Date;
+import java.util.*;
 
 import com.hk.domain.courier.Zone;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,10 @@ import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
@@ -32,8 +35,12 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.helper.ShippingOrderHelper;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
@@ -60,6 +67,15 @@ public class ShipmentServiceImpl implements ShipmentService {
     UserService           userService;
     @Autowired
     AdminEmailManager     adminEmailManager;
+    @Autowired
+    ShippingOrderStatusService shippingOrderStatusService ;
+
+     @Autowired
+    private LineItemDao lineItemDao;
+
+    @Autowired
+    private ShippingOrderDao shippingOrderDao;
+
 
     @Transactional
     public Shipment createShipment(ShippingOrder shippingOrder) {
@@ -102,6 +118,7 @@ public class ShipmentServiceImpl implements ShipmentService {
                         CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
             }
         }
+
 
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
@@ -234,4 +251,19 @@ public class ShipmentServiceImpl implements ShipmentService {
     public UserService getUserService() {
         return userService;
     }
+
+
+    public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder) {
+        if (shippingOrder.isDropShipping()) {
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                if (lineItem.getSku().getProductVariant().getProduct().getInstallable()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
 }

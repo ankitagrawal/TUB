@@ -34,6 +34,10 @@
       if (dateTime.isBefore(endOfOfferDate.getTime())) {
   %>
   <!-- remove this after gosf -->
+<<<<<<< HEAD
+  <%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/gosf.js"></script>--%>
+  <script>$(document).ready(function () {initSliderPaginator();});</script>
+=======
   <script type="text/javascript">
     var initSliderPaginator = function() {
         $(window).scroll(function() {
@@ -60,6 +64,7 @@
     };
   </script>
   <script type="text/javascript">$(document).ready(function () {initSliderPaginator();});</script>
+>>>>>>> master
   <div id="slidebox">
     <a class="close"></a>
 
