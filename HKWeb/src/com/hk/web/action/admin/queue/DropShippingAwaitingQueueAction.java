@@ -11,6 +11,7 @@ import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.catalog.category.Category;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
@@ -46,7 +47,7 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    CategoryDao categoryDao;
+    CategoryService categoryService;
 
     private Long                       shippingOrderId;
     private Long                       baseOrderId;
@@ -100,7 +101,7 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
         Set<String> basketCategoryList = new HashSet<String>();
         for (String category : basketCategories) {
             if (category != null) {
-                Category basketCategory = (Category) categoryDao.getCategoryByName(category);
+                Category basketCategory = (Category) categoryService.getCategoryByName(category);
                 if (basketCategory != null) {
                     basketCategoryList.add(basketCategory.getName());
                 }

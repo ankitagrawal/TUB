@@ -1,36 +1,33 @@
 package com.hk.web.action.admin.shipment;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.courier.*;
-import com.hk.domain.core.Pincode;
-import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.constants.shipment.EnumBoxSize;
-import com.hk.constants.courier.EnumAwbStatus;
-import com.hk.constants.core.PermissionConstants;
+import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
-import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.*;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.helper.InvoiceNumHelper;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
-import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction;
 import com.hk.web.action.error.AdminPermissionAction;
-import com.hk.helper.InvoiceNumHelper;
+import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-import net.sourceforge.stripes.action.*;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,15 +52,13 @@ public class CreateDropShipmentAction extends BaseAction {
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    ShippingOrderDao shippingOrderDao;
-    @Autowired
     ShippingOrderService shippingOrderService;
     @Autowired
     AdminShippingOrderService adminShippingOrderService;
     @Autowired
     private SeekInvoiceNumService seekInvoiceNumService;
     @Autowired
-    PincodeDao pincodeDao;
+    PincodeService pincodeService;
 
     List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
     Double boxWeight;
@@ -175,12 +170,12 @@ public class CreateDropShipmentAction extends BaseAction {
         shippingOrder.setShipment(shipment);
         shipment.setShippingOrder(shippingOrder);
         if(shipment.getZone() == null){
-			Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			Pincode pinCode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
 			shipment.setZone(pinCode.getZone());
 		}
         shipmentService.save(shipment);
         shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
-        shippingOrderDao.save(shippingOrder);
+        shippingOrderService.save(shippingOrder);
         String comment = "";
         if (shipment != null) {
             String trackingId = shipment.getAwb().getAwbNumber();

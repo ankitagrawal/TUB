@@ -3,7 +3,6 @@ package com.hk.web.action.core.payment;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Set;
-import java.util.HashSet;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -41,9 +40,6 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
-import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.Product;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.user.UserDao;
@@ -75,7 +71,7 @@ public class PaymentSuccessAction extends BaseAction {
     @Autowired
     UserDao userDao;
     @Autowired
-    private OrderService orderService;
+    private OrderServqice orderService;
     @Autowired
     private ShippingOrderService shippingOrderService;
     @Autowired
