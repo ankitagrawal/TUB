@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.hk.domain.order.ReplacementOrderReason;
+import com.hk.domain.order.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +27,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
@@ -302,7 +299,31 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return shippingOrder;
     }
 
-    public ShippingOrderService getShippingOrderService() {
+
+	public ReplacementOrderReason getRTOReasonForShippingOrder(ShippingOrder shippingOrder) {
+		String rtoReason = null;
+		ReplacementOrderReason replacementOrderReason = null;
+		for (ShippingOrderLifecycle shippingOrderLifecycle : shippingOrder.getShippingOrderLifecycles()){
+			if(shippingOrderLifecycle.getShippingOrderLifeCycleActivity().getId().equals(EnumShippingOrderLifecycleActivity.RTO_Initiated.getId())){
+				if(shippingOrderLifecycle.getComments() != null){
+					replacementOrderReason = getReplacementOrderReasonByName(shippingOrderLifecycle.getComments());
+				}
+			}
+		}
+		return replacementOrderReason;
+	}
+
+	public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReasonString) {
+		List<ReplacementOrderReason> replacementOrderReasonList = getAdminShippingOrderDao().getAll(ReplacementOrderReason.class);
+		for(ReplacementOrderReason replacementOrderReason : replacementOrderReasonList){
+			if(replacementOrderReasonString.contains(replacementOrderReason.getName())){
+				return replacementOrderReason;
+			}
+		}
+		return null;
+	}
+
+	public ShippingOrderService getShippingOrderService() {
         return shippingOrderService;
     }
 
