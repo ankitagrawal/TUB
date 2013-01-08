@@ -147,4 +147,7 @@ public interface MasterDataDao
 	public List<AwbStatus> getAllAwbStatus();
     
     public List <Courier> getListOfVendorCouriers();
+
+	public List<ReconciliationType> getAddReconciliationTypeList();
+
 }
