@@ -2,16 +2,21 @@ package com.hk.web.action.core.auth;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.cache.HkApiUserCache;
+import com.hk.domain.api.HkApiUser;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.UserManager;
 import com.hk.security.HkAuthService;
 import com.hk.security.exception.HkInvalidApiKeyException;
+import com.hk.web.action.HomeAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.mgt.SecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +29,12 @@ import org.springframework.stereotype.Component;
  * Time: 4:25 PM
  */
 @Component
-public class SingleLoginAction extends BaseAction{
-    private static Logger logger = LoggerFactory.getLogger(SingleLoginAction.class);
+public class SSOLoginAction extends BaseAction{
+    private static Logger logger = LoggerFactory.getLogger(SSOLoginAction.class);
 
-    @Validate(required = true,on={"signup","login"})
-    String                     apiKey;
+    private String                     apiKey;
 
-    @Validate(required = true,on={"signup","login"})
-    String                     redirectUrl;
+    private String                     redirectUrl;
 
     @Validate(required = true, on = "signup")
     String userName;
@@ -55,22 +58,37 @@ public class SingleLoginAction extends BaseAction{
     HkAuthService hkAuthService;
     @Autowired
     UserManager userManager;
-
+    @Autowired
+    SecurityManager securityManager;
 
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-            return new ForwardResolution("/pages/singleLogin.jsp");
+        if(getSubject().isAuthenticated()){
+            //check if the user is already authenticated in Healthkart, we are not allowing remembered users here
+            if(!StringUtils.isEmpty(redirectUrl) && !StringUtils.isEmpty(apiKey)){
+                try{
+                    hkAuthService.isValidAppKey(apiKey);
+                }catch (HkInvalidApiKeyException ex){
+                    logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
+                    return new RedirectResolution(redirectUrl);
+                }
+                redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(getPrincipal().getEmail(),apiKey));
+                return new RedirectResolution(redirectUrl, false);
+            }else {
+                return new RedirectResolution(HomeAction.class);
+            }
+        }
+        return new ForwardResolution("/pages/sso/singleLogin.jsp");
     }
 
-    @DontValidate
     @HandlesEvent("login")
     public Resolution login(){
         logintabselected =true;
         UserLoginDto userLoginDto = null;
         try{
-            if(hkAuthService.isValidAppKey(apiKey)){
-               //no logic right now
+            if(!StringUtils.isEmpty(apiKey)){
+                hkAuthService.isValidAppKey(apiKey);
             }
             userLoginDto = userManager.login(userLogin, password, true);
         } catch (HkInvalidApiKeyException ex){
@@ -98,17 +116,20 @@ public class SingleLoginAction extends BaseAction{
             logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
             return new RedirectResolution(redirectUrl);
         }*/
-        redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(userLogin,apiKey));
-        return new RedirectResolution(redirectUrl, false);
+        if(!StringUtils.isEmpty(redirectUrl)&&!StringUtils.isEmpty(apiKey)){
+            redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(userLogin,apiKey));
+            return new RedirectResolution(redirectUrl, false);
+        } else{
+            return new RedirectResolution(HomeAction.class);
+        }
     }
 
-    @DontValidate
     @HandlesEvent("signup")
     public Resolution signup(){
         logintabselected =false;
         try{
-            if(hkAuthService.isValidAppKey(apiKey)){
-                //no logic right now
+            if(!StringUtils.isEmpty(apiKey)){
+                hkAuthService.isValidAppKey(apiKey);
             }
         } catch (HkInvalidApiKeyException ex){
             logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
@@ -121,8 +142,12 @@ public class SingleLoginAction extends BaseAction{
             return new ForwardResolution(getContext().getSourcePage()).addParameter("apiKey",apiKey).addParameter("redirectUrl",redirectUrl);
         }
 
-        redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(userLogin,apiKey));
-        return new RedirectResolution(redirectUrl, false);
+        if(!StringUtils.isEmpty(redirectUrl)&& !StringUtils.isEmpty(apiKey)){
+            redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(userLogin,apiKey));
+            return new RedirectResolution(redirectUrl, false);
+        }else{
+            return new RedirectResolution(HomeAction.class);
+        }
     }
 
     @ValidationMethod(on = {"signup"})
@@ -179,7 +204,7 @@ public class SingleLoginAction extends BaseAction{
         this.password = password;
     }
 
-   /* public String getAppToken() {
+    /* public String getAppToken() {
         return appToken;
     }
 

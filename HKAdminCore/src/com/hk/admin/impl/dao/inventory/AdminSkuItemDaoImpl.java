@@ -8,6 +8,8 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.springframework.stereotype.Repository;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +24,7 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
         String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi "
                 + "where pvi.skuItem is not null and pvi.sku.productVariant in( :productVariantList) and pvi.skuItem.skuGroup.sku.warehouse =:warehouse "
                 + "group by pvi.skuItem.id having sum(pvi.qty) > 0";
+
         List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery).setParameterList("productVariantList", productVariantList).setParameter("warehouse",
                 warehouse).list();
         if (skuItemIdList != null && skuItemIdList.size() > 0) {
@@ -173,6 +176,19 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
         }
         return skuGroupList;
     }
+
+
+	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList) {
+		List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
+		for (SkuGroup skuGroup : skuGroupList) {
+			List<SkuItem> skuItemBykuGroup = getInStockSkuItems(skuGroup);
+			if (skuItemBykuGroup != null && skuItemBykuGroup.size() > 0) {
+				inStockSkuItems.addAll(skuItemBykuGroup);
+			}
+		}
+		return inStockSkuItems;
+	}
+
 
 
 }

@@ -145,4 +145,6 @@ public interface MasterDataDao
 	public List<String> getShipmentStatusForDispatchLot();
 
 	public List<AwbStatus> getAllAwbStatus();
+
+	public List<ReconciliationType> getAddReconciliationTypeList();
 }

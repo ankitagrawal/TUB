@@ -23,6 +23,7 @@ public class SkuItem implements java.io.Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
+	@JsonSkip
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sku_group_id", nullable = false)
 	private SkuGroup skuGroup;
