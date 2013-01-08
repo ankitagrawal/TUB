@@ -10853,4 +10853,9 @@
             <column defaultValue="0" name="drop_shipping" type="TINYINT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Ankit" id="08-01-2013">
+       <sql>
+         INSERT into courier(id, name,disabled) values (650 , 'Gati' , 1), (660 , 'Star Track' , 1);  
+       </sql>
+    </changeSet>
 </databaseChangeLog>
