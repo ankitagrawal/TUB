@@ -319,11 +319,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Transactional
        public ShippingOrder moveShippingOrderBackToDropShippingQueue(ShippingOrder shippingOrder) {
            shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
-           getAdminInventoryService().reCheckInInventory(shippingOrder);
+//           getAdminInventoryService().reCheckInInventory(shippingOrder);
            getShippingOrderService().save(shippingOrder);
-
            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_BackToDropShippingQueue);
-
            return shippingOrder;
        }
 

@@ -10811,16 +10811,6 @@
     <changeSet author="Tarun (generated)" id="1356676742452-2">
         <addForeignKeyConstraint baseColumnNames="runsheet_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_runsheet1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet" referencesUniqueColumn="false"/>
     </changeSet>
-      <changeSet author="Ankit (generated)" id="1355308128790-1">
-        <addColumn tableName="product">
-            <column defaultValue="0" name="is_installable" type="TINYINT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1355308128790-2">
-        <addColumn tableName="shipping_order">
-            <column defaultValue="0" name="drop_shipping" type="TINYINT"/>
-        </addColumn>
-    </changeSet>
 	   <changeSet author="Seema (generated)" id="1357322001110-1">
         <addColumn tableName="reconciliation_voucher">
             <column name="reconciliation_type_id" type="INT">
@@ -10852,5 +10842,20 @@
     </changeSet>
     <changeSet author="Seema (generated)" id="1357322001110-5">
         <addForeignKeyConstraint baseColumnNames="reconciliation_type_id" baseTableName="reconciliation_voucher"  constraintName="fk_reconciliation_voucher_reconciliation_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_type"  referencesUniqueColumn="false"/>
+    </changeSet>
+     <changeSet author="Ankit (generated)" id="1355308128790-1">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="is_installable" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1355308128790-2">
+        <addColumn tableName="shipping_order">
+            <column defaultValue="0" name="drop_shipping" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit" id="08-01-2013">
+       <sql>
+         INSERT into courier(id, name,disabled) values (650 , 'Gati' , 1), (660 , 'Star Track' , 1);  
+       </sql>
     </changeSet>
 </databaseChangeLog>
