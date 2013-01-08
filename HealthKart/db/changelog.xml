@@ -10875,4 +10875,54 @@
     <changeSet author="Seema (generated)" id="1357322001110-5">
         <addForeignKeyConstraint baseColumnNames="reconciliation_type_id" baseTableName="reconciliation_voucher"  constraintName="fk_reconciliation_voucher_reconciliation_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_type"  referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1355125289354-1">
+        <createTable tableName="pincode_courier_mapping">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="pincode_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prepaid_air" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prepaid_ground" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cod_air" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cod_ground" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="routing_code" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355142601346-2">
+        <createTable tableName="shipment_service_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(90)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355142601346-3">
+        <addColumn tableName="shipment">
+            <column name="shipment_service_type_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355142601346-10">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="pincode_courier_mapping" constraintName="fk_pincode_courier_mapping_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355142601346-11">
+        <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="pincode_courier_mapping" constraintName="fk_pincode_courier_mapping_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pincode" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355142601346-12">
+        <addForeignKeyConstraint baseColumnNames="shipment_service_type_id" baseTableName="shipment" constraintName="fk_shipment_shipment_service_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipment_service_type" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
