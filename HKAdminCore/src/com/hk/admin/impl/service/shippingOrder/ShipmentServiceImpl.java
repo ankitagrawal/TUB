@@ -22,10 +22,7 @@ import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
@@ -35,12 +32,10 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.courier.PincodeDao;
-import com.hk.pact.dao.shippingOrder.LineItemDao;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.helper.ShippingOrderHelper;
+
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
@@ -69,12 +64,6 @@ public class ShipmentServiceImpl implements ShipmentService {
     AdminEmailManager     adminEmailManager;
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService ;
-
-     @Autowired
-    private LineItemDao lineItemDao;
-
-    @Autowired
-    private ShippingOrderDao shippingOrderDao;
 
 
     @Transactional
