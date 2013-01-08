@@ -1,6 +1,5 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-
-
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.core.Keys" %>
@@ -444,6 +443,36 @@
 </c:otherwise>
 </c:choose></div>
 </div>
+<c:if test="${cartAction.trimCartLineItems!=null && fn:length(cartAction.trimCartLineItems) >0}">
+        <script type="text/javascript">
+          $(document).ready(function () {
+              ShowDialog(true);
+//              e.preventDefault();
+              $('.button_green').live('click',function(){
+                  $(this).hide();
+                  HideDialog();
+              });
+
+          function ShowDialog(modal)
+          {
+              $("#overlay2").show();
+              $("#dialog2").fadeIn(300);
+
+              if (modal)
+              {
+                  $("#overlay2").unbind("click");
+              }
+          }
+
+          function HideDialog()
+          {
+
+              $("#overlay2").hide();
+              $("#dialog2").fadeOut(300);
+          }
+          });
+    </script>
+     </c:if>
 </s:layout-component>
 
 
@@ -457,3 +486,150 @@
 
 </s:layout-render>
 
+<div id="overlay2" class="web_dialog_overlay"></div>
+   <div id="dialog2" class="web_dialog">
+
+       <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
+           <tr>
+               <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
+               <td class="web_dialog_title align_right">
+                   <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
+               </td>
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+           <tr>
+               <td colspan="3" style="padding-left: 15px;">
+                   <b>The following items have been removed due to no available inventory</b>
+               </td>
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+               <c:forEach items="${cartAction.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
+                   <tr>
+                       <div class='product' style="border-bottom-style: solid;">
+                         <td style="padding-left: 15px;">
+                           <div class='img48' style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
+                               <c:choose>
+                                   <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
+                                       <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}"
+                                                        size="<%=EnumImageSize.TinySize%>"/>
+                                   </c:when>
+                                   <c:otherwise>
+                                       <img class="prod48"
+                                            src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
+                                            alt="${cartLineItem.productVariant.product.name}"/>
+                                   </c:otherwise>
+                               </c:choose>
+                           </div>
+                         </td>
+                         <td>
+                           <div class='name'>
+                               <table width="100%">
+                                   <tr>
+                                       <td>
+                                               ${cartLineItem.productVariant.product.name} <br/>
+                                               <c:if test="${cartLineItem.comboInstance == null}">
+                                               ${cartLineItem.productVariant.variantName}
+                                               </c:if>
+                                           <%--<c:set var="${invoiceLineItem.qty}" value="0"/>--%>
+                                       </td>
+                                   </tr>
+                               </table>
+                           </div>
+                         </td>
+
+                       </div>
+                   </tr>
+                 </c:forEach>
+
+
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+           <tr>
+
+           </tr>
+           <tr>
+               <td colspan="2" style="text-align: center;">
+
+                 <c:if test="${cartAction.sizeOfCLI > 0}">
+                   <a class="button_green" style="width:120px; height: 18px;">Continue</a>
+                     </td><td>
+                   </c:if>
+                   <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green"
+                           style="width: 160px; height: 18px;">Back to Shopping
+                   </s:link>
+               </td>
+           </tr>
+       </table>
+   </div>
+
+
+<style type="text/css">
+
+     .web_dialog_overlay
+   {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000000;
+      opacity: .15;
+      filter: alpha(opacity=15);
+      -moz-opacity: .15;
+      z-index: 101;
+      display: none;
+   }
+   .web_dialog
+   {
+      display: none;
+      position: fixed;
+      width: 450px;
+      /*height: 400px;*/
+      top: 50%;
+      left: 50%;
+      margin-left: -265px;
+      margin-top: -180px;
+      /*background-color: #ffffff;*/
+      background-color: white;
+      /*border: 2px solid #336699;*/
+      padding: 0px;
+      z-index: 102;
+      font-family: Verdana;
+      font-size: 10pt;
+      color: #333;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
+   }
+   .web_dialog_title
+   {
+      /*border-bottom: solid 2px #336699;*/
+      /*background-color: #336699;*/
+     font-size: 16px;
+     font-weight: bold;
+     padding: 5px;
+      background-color: #f2f7fb;
+      color: White;
+      font-weight:bold;
+   }
+   .web_dialog_title a
+   {
+      color: White;
+      text-decoration: none;
+   }
+   .align_right
+   {
+      text-align: right;
+   }
+
+   </style>
