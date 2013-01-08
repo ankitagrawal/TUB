@@ -53,37 +53,37 @@ import com.hk.web.filter.WebContext;
 @Component
 public class PaymentSuccessAction extends BaseAction {
 
-    private static Logger        logger       = LoggerFactory.getLogger(PaymentSuccessAction.class);
+    private static Logger logger = LoggerFactory.getLogger(PaymentSuccessAction.class);
 
     @Validate(required = true, encrypted = true)
-    private String               gatewayOrderId;
+    private String gatewayOrderId;
 
-    private Payment              payment;
-    private Order                order;
-    private PricingDto           pricingDto;
-    private EnumPaymentMode      paymentMode;
-    private String               purchaseDate;
-    private String               couponCode;
-    private int                  couponAmount = 0;
+    private Payment payment;
+    private Order order;
+    private PricingDto pricingDto;
+    private EnumPaymentMode paymentMode;
+    private String purchaseDate;
+    private String couponCode;
+    private int couponAmount = 0;
 
     @Autowired
-    private PaymentDao           paymentDao;
+    private PaymentDao paymentDao;
     @Autowired
-    UserDao                      userDao;
+    UserDao userDao;
     @Autowired
-    private OrderService         orderService;
+    private OrderService orderService;
     @Autowired
     private ShippingOrderService shippingOrderService;
     @Autowired
-    ShipmentService              shipmentService;
+    ShipmentService shipmentService;
     @Autowired
-    RewardPointService           rewardPointService;
+    RewardPointService rewardPointService;
     @Value("#{hkEnvProps['" + Keys.Env.cashBackPercentage + "']}")
-    private Double               cashBackPercentage;
+    private Double cashBackPercentage;
     @Autowired
-    AdminOrderService            adminOrderService;
+    AdminOrderService adminOrderService;
     @Autowired
-    OrderLoggingService          orderLoggingService;
+    OrderLoggingService orderLoggingService;
 
     public Resolution pre() {
         payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
@@ -142,9 +142,10 @@ public class PaymentSuccessAction extends BaseAction {
                                     for (ShippingOrder shippingOrder : shippingOrders) {
                                         shippingOrderService.nullifyCodCharges(shippingOrder);
                                         shipmentService.recreateShipment(shippingOrder);
-                                        shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+                                        shippingOrderService.autoEscalateShippingOrder(shippingOrder);                          
                                     }
                                 }
+
                                 Set<CartLineItem> cartLineItems = order.getCartLineItems();
                                 cartLineItems.removeAll(codCartLineItems);
                                 getBaseDao().deleteAll(codCartLineItems);

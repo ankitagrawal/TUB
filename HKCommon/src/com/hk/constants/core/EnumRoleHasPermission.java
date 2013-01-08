@@ -16,6 +16,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_NOTIFY_LIST,
                     EnumPermission.VIEW_PACKING_QUEUE,
                     EnumPermission.UPDATE_PACKING_QUEUE,
+                    EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
+                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE,
                     EnumPermission.VIEW_SHIPMENT_QUEUE,
                     EnumPermission.VIEW_SERVICE_QUEUE,
                     EnumPermission.UPDATE_SERVICE_QUEUE,
@@ -128,6 +130,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.UPDATE_ACTION_QUEUE,
                     EnumPermission.VIEW_PACKING_QUEUE,
                     EnumPermission.UPDATE_PACKING_QUEUE,
+                    EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
+                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE,
                     EnumPermission.VIEW_SHIPMENT_QUEUE,
                     EnumPermission.UPDATE_SHIPMENT_QUEUE,
                     EnumPermission.VIEW_SHIPMENT_AWAITING_QUEUE,
@@ -190,7 +194,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
                     EnumPermission.HK_EMPLOYEE,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+                    EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
+                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE
             )
     ),
 
@@ -251,6 +257,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.UPDATE_ACTION_QUEUE,
                     EnumPermission.VIEW_PACKING_QUEUE,
                     EnumPermission.UPDATE_PACKING_QUEUE,
+                    EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
+                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE,
                     EnumPermission.VIEW_SERVICE_QUEUE,
                     EnumPermission.UPDATE_SERVICE_QUEUE,
                     EnumPermission.SEARCH_ORDERS,

@@ -13,4 +13,6 @@ public interface CourierDao extends BaseDao {
 
 	public List<Courier> getCouriers(List<Long> courierIds ,List<String> courierNames , Boolean disabled);
 
+     public List<Courier> listOfVendorCouriers();
+
 }
