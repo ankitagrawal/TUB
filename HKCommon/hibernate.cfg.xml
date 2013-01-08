@@ -198,5 +198,11 @@
         <mapping class="com.hk.domain.payment.GatewayIssuerMapping" />
         <mapping class="com.hk.domain.core.Country" />
         <mapping class="com.hk.domain.payment.CurrencyConverter" />
+        <mapping class="com.hk.domain.inventory.rtv.ExtraInventory"/>
+        <mapping class="com.hk.domain.inventory.rtv.ExtraInventoryLineItem"/>
+        <mapping class="com.hk.domain.inventory.rtv.RtvNote"/>
+        <mapping class="com.hk.domain.inventory.rtv.RtvNoteLineItem"/>
+        <mapping class="com.hk.domain.inventory.rtv.RtvNoteStatus" />
+	    <mapping class="com.hk.domain.sku.SkuItemStatus" />
     </session-factory>
 </hibernate-configuration>

@@ -38,6 +38,7 @@ public class CourierConstants {
     public static final String DELHIVERY = "DELHIVERY";
 	public static final String FEDEX = "FEDEX";
 	public static final String QUANTIUM = "QUANTIUM";
+	public static final String INDIAONTIME = "INDIA ONTIME";
 
 
     //Constants for DTDC

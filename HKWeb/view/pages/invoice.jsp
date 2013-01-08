@@ -115,6 +115,7 @@
       </h3>
     </div>
   </div>
+  <c:if test="${orderSummary.order.store.id != 3}">
   <div class="grid_4 alpha omega" style="width: 320px;">
     <div class="formatting" style="float: right;">
       <div
@@ -136,6 +137,7 @@
       </div>
     </div>
   </div>
+  </c:if>
 </div>
 
 <div class="clear"></div>
@@ -248,8 +250,9 @@
 								var="configValue" varStatus="configValueCtr">
 								<c:set var="additinalParam"
 									value="${configValue.variantConfigOption.additionalParam}" />
+								<c:set var="side" value="${configValue.variantConfigOption.name}"/>
 								<c:if
-									test="${configValueCtr.index %2 ==0 && !( additinalParam == TH || additinalParam == THBF 
+									test="${ fn:startsWith(side,'R' ) && !( additinalParam == TH || additinalParam == THBF 
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF) }">
 									<td><b>${configValue.variantConfigOption.displayName}:${configValue.value}</b></td>
@@ -262,8 +265,9 @@
 								var="configValue" varStatus="configValueCtr">
 								<c:set var="additinalParam"
 									value="${configValue.variantConfigOption.additionalParam}" />
+								<c:set var="side" value="${configValue.variantConfigOption.name}"/>
 								<c:if
-									test="${configValueCtr.index %2 !=0 && !( additinalParam == TH || additinalParam == THBF 
+									test="${fn:startsWith(side,'L' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF)}">
 									<td><b>${configValue.variantConfigOption.displayName}:${configValue.value}</b></td>

@@ -39,13 +39,13 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
-
-
-<img src="${pageContext.request.contextPath}/images/ny2013/grooming.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/grooming01.jpg" />
 
  <div class="cl"></div>
 		<div class="pages">
@@ -62,11 +62,12 @@
  <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Fair Skin</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/fair-skin.jpg"/>
-<p>Want to look fairer? Tried lot of creams and your mothers home-made remedies but all in vain? Discover the secret to fairer skin tone with highly effective natural herbs and see the difference for yourself.</p> 
+<img src="${pageContext.request.contextPath}/images/ny2013/fair-skin.png"/>
+    <h2 class="txt01">Fair Skin</h2>
+<p>Want to look fairer? Tired of creams and your grandmother’s home-made remedies? Get sublime natural herbs and potions to work their magic on you, expect some heads to turn.</p> 
 </div>
 
 <div class="cl"></div>
@@ -107,11 +108,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Get Rid of Body Odour</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/body-odor.jpg"/>
-<p>The days of marking your territory with your natural scent are long gone. This new year, let the menace of body odour fade into oblivion with deodorants & the like that have helped many a genin, turn into a true Shinobi!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/kill-body-odor.png"/>
+    <h2 class="txt01">Get Rid of Body Odour</h2>
+<p>The days of marking your territory with your natural scent are long gone. This new year, let the menace of body odor fade into oblivion with deodorants & the like that have helped many a Genin, turn into a true Shinobi of Konoha!</p>
 </div>
 
 <div class="cl"></div>
@@ -146,11 +148,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Get a Shapely Body</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/get-shape.jpg"/>
-<p>Get that dream shape that you have always had on your mind. Whether its a sensuous curve or washboard abs or simply some arcane spot reduction - we have it all covered. Unveil the New You!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/get-in-shape.png"/>
+    <h2 class="txt01">Get a Shapely Body</h2>
+<p>Get that dream shape that you have always had on your mind. Whether it’s a sensuous curve or washboard abs or simply some arcane spot reduction - we do it all!</p>
 </div>
 
 <div class="cl"></div>
@@ -215,7 +218,7 @@
 
 
 <div class="footer-ny">
-<p>© 2012 healthkart.com</p>
+<p>© 2013 healthkart.com</p>
 <a href="https://twitter.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/twitter-img.jpg" /></a>
 <a href="https://www.facebook.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/fb-img.jpg" /></a>
 </div>

@@ -150,7 +150,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             //fetching the consignments just created above.
             consignmentList = consignmentService.getConsignmentListByAwbNumbers(new ArrayList<String>(awbNumberSet));
             //creating consignmentTrackingList
-            consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList ,consignmentLifecycleStatus);
+            consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList ,consignmentLifecycleStatus, null);
             //saving it.
             consignmentService.saveConsignmentTracking(consignmentTrackingList);
             addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));

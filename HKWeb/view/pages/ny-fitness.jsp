@@ -38,14 +38,60 @@
 <div id="wrapper">
 
 
+<div class="logo">
+<a href="http://www.healthkart.com"><img  src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
+
+
+
+
+<img src="${pageContext.request.contextPath}/images/ny2013/fitness01.jpg" />
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/fitness.jpg" />
+<a href="http://www.healthkart.com/sports/footwear?brand=Joola">
+<div class="offer">
+<div class="offer-inside"><span class="discount-txt">10% off on Joola tennis shoes</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKJOOLA</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+
+
+ <a href="http://www.healthkart.com/sports/footwear?brand=Nivia">
+<div class="offer">
+<div class="offer-inside"><span class="discount-txt">Get Flat 20% off on Nivia Shoes</span>
+
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKNIVIA</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+
+
+<a href="http://www.healthkart.com/sports/footwear?brand=Vector+X">
+<div class="offer">
+<div class="offer-inside"><span class="discount-txt"> Get Flat20% off on Vector X Shoes</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKVECTORX</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>    
+
+
+
+
+
+
+
+
 
   <div class="cl"></div>
 		<div class="pages">
@@ -60,14 +106,36 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">4% Body Fat </h2>
-
 <div class="contant01">
 
-<img src="${pageContext.request.contextPath}/images/ny2013/4fat.jpg"/>
-<p>With the approaching 2013, tell the world that you are there. Slash your body fat to 4 %, show off your abs, biceps, triceps, calves and quads and rule the gym. To get there, you need a few gruelling months with a killer workout, some fat burners, whey proteins and aminos. With a proper diet chart in place, these supplements will enhance fat loss, muscle recovery and growth and pure mass gains! You'll get the added energy from pre workout supplements  & aminos. Get glovesfor easy lifting and a duffel bag to hit the gym in style the whole year!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/4-percent.png"/>
+
+    <h2 class="txt01">4% Body Fat </h2>
+<p>Show the world that you have arrived! Slash your body fat to 4 %, show off your abs, biceps, triceps, calves and quads and see some jaws drop. To get there, you need not just a few gruelling months with a killer work out; you’ll need some fat burners, whey proteins and aminos. These supplements will enhance fat loss, muscle recovery and growth and pure mass gains! You'll get the added energy from pre workout supplements & aminos. We also have gym accessories to make the sessions  far more effective!</p>
 
 </div>
+
+
+<a href="http://www.healthkart.com/sports/fitness-equipment?brand=Tunturi">
+<div class="offer02">
+<div class="offer-inside"><span class="discount-txt"> Flat 25% off on Tunturi Gym and Work-out Equipment</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKFITNESS</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>  
+
+<a href="http://www.healthkart.com/sports/fitness-equipment?brand=Finnlo">
+<div class="offer02b">
+<div class="offer-inside"><span class="discount-txt"> Extra 5% off on Finnlo Bio Force Sport Multi-Gym</span>
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKFINNLO</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+    
 
 <div class="cl"></div>
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1141' />
@@ -112,11 +180,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Get That Massive Chest, with 500 Push Ups a Day!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/go-gym.jpg"/>
-<p>Been tired enough trying to accomplish a bigger chest? Here is why you should up yourself and put your enerrgy back into it. Because you want it! Conquer the league of 500 push ups and get that tone you desire. Press away twice as much of your body weight at a throw-away convenience with compact push up accessories & supplements for a bigger chest. Bring home the perfect equipment for chest expansion and lid your space issues with expedient chest expanders. Enjoy handy chest enhancement with blasting proteins, whey addons & ideal-for-home chest expansion accessories.</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/bigger-chest.png"/>
+    <h2 class="txt01">Get That Massive Chest, with 500 Push Ups a Day!</h2>
+<p>Want a 44 inch chest? Conquer the league of 500 pushups and get that tone you desire. Press away twice as much of your body weight at a throw-away convenience with compact push up accessories & supplements for a bigger chest. Bring home the perfect equipment for chest expansion and lid your space issues with expedient chest expanders. Enjoy handy chest enhancements with potent proteins, whey add-ons & ideal-for-home chest expansion accessories.</p>
 </div>
 
 <div class="cl"></div>
@@ -179,11 +248,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Become Your Own Physiotherapist!</h2>
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/resu01.jpg"/>
-<p>They New Year, break free from your medical expenses and emerge as your own physio to treat the nasty roots of pain. Professional physiotherapy runs up to thousands, burning a hole in your pocket. This is where, at home, therapy accessories come to your resuce. With easier physiotherapy options, you can cut the cost of physio sessions by choosing quick to use therapy accessories. Heal without worrying about escalated therapy costs with a range of rehab supports. You'll surprise yourself with the ease of use that these products have to offer.</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/easier-physiotherapy.png"/>
+    <h2 class="txt01">Become Your Own Physiotherapist!</h2>    
+<p>This New Year, be your own physiotherapist! You heard right, we’re going to make a physio out of you and help you save tons and tons of money. Therapy accessories that are a breeze to set up and extremely effective for you, right here at HealthKart.</p>
 </div>
 
 <div class="cl"></div>
@@ -215,7 +284,7 @@
 
 
 <div class="footer-ny">
-<p>© 2012 healthkart.com</p>
+<p>© 2013 healthkart.com</p>
 <a href="https://twitter.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/twitter-img.jpg" /></a>
 <a href="https://www.facebook.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/fb-img.jpg" /></a>
 </div>

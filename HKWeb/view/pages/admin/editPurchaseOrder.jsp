@@ -138,6 +138,7 @@ $(document).ready(function () {
 		updateTotal('.surchargeAmount', '.totalSurcharge', 0);
 		updateTotal('.payableAmount', '.totalPayable', 0);
 		updateTotal('.payableAmount', '.finalPayable', 0);
+		updateTotal('.quantity', '.totalQuantity', 1);
 
 		var finalPayable = parseFloat($('.finalPayable').val().replace(/,/g, ''));
 		var overallDiscount = parseFloat($('.overallDiscount').val().replace(/,/g, ''));
@@ -205,6 +206,7 @@ $(document).ready(function () {
 		finalPayable -= overallDiscount;
 		$('.finalPayable').val(finalPayable.toFixed(2));
 	});
+	updateTotal('.quantity', '.totalQuantity', 1);
 });
 
 function validateSubmitForm() {
@@ -538,7 +540,8 @@ function temp() {
 	<tfoot>
 	<tr>
 		&nbsp; &nbsp;
-		<td colspan="17">Total</td>
+		<td colspan="11">Total</td>
+		<td colspan="6" class="totalQuantity"></td>
 		<td><s:text readonly="readonly" class="totalTaxable" name="purchaseOrderDto.totalTaxable"
 		            value="${pa.purchaseOrderDto.totalTaxable}"/></td>
 		<td><s:text readonly="readonly" class="totalTax" name="purchaseOrderDto.totalTax"

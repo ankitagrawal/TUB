@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/living.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/living01.jpg" />
 
     <div class="cl"></div>
 		<div class="pages">
@@ -58,15 +60,74 @@
 
 
 
-<!--container01 start-->
+
+
+    <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Sizzle Between the Sheets</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/get-laid.jpg"/>
-<p>We really don't want to say anything. Just make sure that your partner and you play safe (but not too safe)</p>
-<p>The world is your oyster and you can out do all bunny rabbits!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/learn-sport.png"/>
+    <h2 class="txt01">Learn a New Sport</h2>
+<p>You can bundle health, fitness, fun and socializing into 1 awesome thing - a sport! Whether it's TT or football or basky or gully cricket, we have everything you need to get started. This new year (and the winters too) is perfect for any Sport. Just get up and go do something.</p>
+</div>
+
+    <a href="http://www.healthkart.com/sports/fab-corner/win-win-deals">
+<div class="offer02">
+<div class="offer-inside"><span class="discount-txt">Get Up to 40% on badminton, wrestling <br/> and gym gears</span>
+</div>
+</div></a>
+
+    <a href="http://www.healthkart.com/sports/fitness-accessories?brand=Grizzly">
+<div class="offer02b">
+<div class="offer-inside"><span class="discount-txt">Get  Up to 10-20% off on Grizzly training belts, balls gloves and knee sleeves.</span>
+</div>
+</div></a>
+
+    <div class="cl"></div>
+    <a href="http://www.healthkart.com/sports/fitness-accessories?brand=Adidas">
+<div class="offer01">
+<div class="offer-inside"><span class="discount-txt">Get Flat 30% off on Adidas Gym accessories</span>
+
+<div class="cl"></div>
+<div class="coupon-box">
+<span class="coupon-txt">Use Coupon Code: HKADIDAS</span></div>
+<span class="coupon-expiry">*Coupon expiry on 10th January 2013</span>
+</div>
+</div></a>
+
+<div class="cl"></div>
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2499' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2511' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2515' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT176' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT329' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1302' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1345' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1392' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT133' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT123' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1661' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2518' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT908' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1442' />
+	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1324' />	
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1319' />
+
+
+</div>
+<!--container01 close-->
+
+    <!--container01 start-->
+
+<div class="container01">
+
+
+<div class="contant01">
+<img src="${pageContext.request.contextPath}/images/ny2013/get-laid-safe-sex.png"/>
+    <h2 class="txt01">Sizzle Between the Sheets</h2>
+<p>We really don't want to say anything. Just make sure that your partner and you play safe (but not too safe).The world is your rabbit hole and you are all bunny rabbits!</p>
 </div>
 
 <div class="cl"></div>
@@ -114,42 +175,11 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Learn a New Sport</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/learn-newsport.jpg"/>
-<p>You can bundle health, fitness, fun and socializing into 1 awesome thing - a sport! Whether it's TT or football or basky or gully cricket, we have everything you need to get started. The new year (and the winters too) are perfect for any Sport. Go be a Champ!</p>
-</div>
-
-<div class="cl"></div>
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2499' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2511' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2515' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT176' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT329' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1302' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1345' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1392' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT133' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT123' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1661' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2518' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT908' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1442' />
-	<s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1324' />	
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1319' />
-
-
-</div>
-<!--container01 close-->
-
-    <!--container01 start-->
-
-<div class="container01">
-<h2 class="txt01">Reduce Body Aches</h2>
-
-<div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/reduce-body-aches.jpg"/>
+<img src="${pageContext.request.contextPath}/images/ny2013/reduce-body-aches.png"/>
+    <h2 class="txt01">Reduce Body Aches</h2>
 <p>It's a New Year, it's a new You and You are unstoppable! That annoying ache has had it enough! It's time to put it to rest and move on to more gratifying vistas.</p>
 </div>
 
@@ -178,7 +208,7 @@
 
 
 <div class="footer-ny">
-<p>© 2012 healthkart.com</p>
+<p>© 2013 healthkart.com</p>
 <a href="https://twitter.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/twitter-img.jpg" /></a>
 <a href="https://www.facebook.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/fb-img.jpg" /></a>
 </div>

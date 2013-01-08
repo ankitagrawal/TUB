@@ -99,7 +99,8 @@ public enum EnumRoleHasPermission {
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
 		            EnumPermission.ADD_HUB,
 		            EnumPermission.POPULATE_BUSY_DATA,
-		            EnumPermission.DISPATCH_LOT_OPERATIONS
+		            EnumPermission.DISPATCH_LOT_OPERATIONS,
+		            EnumPermission.EDIT_GRN
             )
     ),
 
@@ -108,13 +109,15 @@ public enum EnumRoleHasPermission {
             Arrays.asList(
                     EnumPermission.GRN_CREATION,
                     EnumPermission.RECON_VOUCHER_MANAGEMENT,
-                    EnumPermission.SUPPLIER_MANAGEMENT
+                    EnumPermission.SUPPLIER_MANAGEMENT,
+		            EnumPermission.EDIT_GRN
             )),
 
     WH_MANAGER_L1(
             EnumRole.WH_MANAGER_L1,
             Arrays.asList(
-                    EnumPermission.CHANGE_WAREHOUSE
+                    EnumPermission.CHANGE_WAREHOUSE,
+		            EnumPermission.EDIT_GRN
             )),
 
     OPS_MANAGER(

@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/grooming.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/grooming01.jpg" />
 
  <div class="cl"></div>
 		<div class="pages">
@@ -63,11 +65,12 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Intensive Hair Care</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/hair-care.jpg"/>
-<p>Want beautiful, silky hair? Tired of trying your moms home-made remedies for the same but all in vain? Check out our catalogue of advanced products to get smooth, lustrous hair without any side-effects.</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/hair-cure.png"/>
+    <h2 class="txt01">Intensive Hair Care</h2>
+<p>Hate those models that come on TV with long flowing silky hair that you so want? You can either kidnap them and get them off air or check out our catalogue of advanced products to get smooth, lustrous hair without any side-effects.</p>
 </div>
 
 <div class="cl"></div>
@@ -112,11 +115,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Put the Rainbow to Shame!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/hair-color.jpg"/>
-<p>As much as we all wish for it not to occur, at some point in your life, a gray hair or two is bound to pop out. It is totally your choice whether to go ahead with it and let the grays shine, or apply hair color to just blend them away. Want to go natural and avoid early signs of graying? Then may we suggest supplementing your diet with hair boosting supplements. </p>
+<img src="${pageContext.request.contextPath}/images/ny2013/hair-color.png"/>
+    <h2 class="txt01">Insane Hair Colors!</h2>
+<p>Grey hair giving away the fact that you’re too old for the party? Go ahead and let the grays shine, or apply hair color to just blend them away. Want to go natural and avoid early signs of graying? Then may we suggest supplementing your diet with hair rejuvenating supplements.</p>
 </div>
 
 <div class="cl"></div>	
@@ -134,11 +138,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Leave Gangnam Behind (With Your Hair Style)</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/hair-styling.jpg"/>
-<p>From Basanti to Krur Singh to Gandalf the Gray to Rapunzel, we have every style covered (except for Johnny Bravo).</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/hair-styling.png"/>
+    <h2 class="txt01">Cutting Edge Hairstyles</h2>
+<p>From Edward Scissor-hands to Krur Singh to Gandalf the Gray to Rapunzel; style your hair the way you want!</p>
 </div>
 
 <div class="cl"></div>
@@ -172,7 +177,7 @@
 
 
 <div class="footer-ny">
-<p>© 2012 healthkart.com</p>
+<p>© 2013 healthkart.com</p>
 <a href="https://twitter.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/twitter-img.jpg" /></a>
 <a href="https://www.facebook.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/fb-img.jpg" /></a>
 </div>

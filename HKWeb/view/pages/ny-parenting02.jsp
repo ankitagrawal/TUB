@@ -39,13 +39,15 @@
 
 
 
-<a href="http://www.healthkart.com"><img class="logo" src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+<div class="logo">
+<a href="http://www.healthkart.com"><img src="${pageContext.request.contextPath}/images/ny2013/logo.jpg" />  </a>
+</div>
 
 
 
 
 
-<img src="${pageContext.request.contextPath}/images/ny2013/parenting.jpg" />
+<img src="${pageContext.request.contextPath}/images/ny2013/parenting01.jpg" />
 
 <div class="cl"></div>
 		<div class="pages">
@@ -62,11 +64,12 @@
 <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">No More Pregnancy Stretch Marks</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/get-rid-pregmarks.jpg"/>
-<p>New Mommies fret and fume over stretch marks. Riding the challenge to treat stretch marks is a daring way to welcome life's greetings! To gain total effects in the shortest possible time, skin care products formulated distinctly for moms and post pregnancy body shaping formulae will give you the edge you always wanted. Ofcourse, you can start flaunting your Mommy figure - it won't be there for long!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/pregnancy-strech-marks.png"/>
+    <h2 class="txt01">No More Pregnancy Stretch Marks</h2>
+<p>Don’t fret over stretch marks. Skin care products formulated distinctly for moms coupled with post pregnancy body shaping formulae will ensure you remove stretch marks and get back into shape.</p>
 </div>
 
 <div class="cl"></div>
@@ -82,11 +85,12 @@
      <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Help Elders get on top of health</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/help-elders.jpg"/>
-<p>Sometimes, it's our parents who need to be treated with the care and concern that you have for your children. More often than not, the New Year is a great occasion to make your concern felt in action!</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/top-of-health-elder.png"/>
+    <h2 class="txt01">Help Elders get on top of health</h2>
+<p>Most times, your parents become akin to children as they grow older. They need all the care and attention they can get. If you think you need to put your worries into action, here are some things you can start with.</p>
 </div>
 
 <div class="cl"></div>
@@ -113,11 +117,12 @@
     <!--container01 start-->
 
 <div class="container01">
-<h2 class="txt01">Gift the Gift of Life to the Earth!</h2>
+
 
 <div class="contant01">
-<img src="${pageContext.request.contextPath}/images/ny2013/ovulation-kit.jpg"/>
-<p>The gift of life sometimes appears elusive. Now, you can leverage science to your advantage - with Ovulation Kits, Fertility Supplements and a host of other alternatives designed to make conceiving an easy task.</p>
+<img src="${pageContext.request.contextPath}/images/ny2013/ovulation-kit.png"/>
+    <h2 class="txt01">Get Pregnant!</h2>
+<p>Making babies? Science’s  got your back with Ovulation Kits, Fertility Supplements and a host of other alternatives designed to make babies faster!</p>
 </div>
 <div class="cl"></div>
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FER001' />
@@ -143,7 +148,7 @@
 
 
 <div class="footer-ny">
-<p>© 2012 healthkart.com</p>
+<p>© 2013 healthkart.com</p>
 <a href="https://twitter.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/twitter-img.jpg" /></a>
 <a href="https://www.facebook.com/healthkart"><img src="${pageContext.request.contextPath}/images/ny2013/fb-img.jpg" /></a>
 </div>
