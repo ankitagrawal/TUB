@@ -79,15 +79,16 @@ public class SupplierManagementAction extends BasePaginatedAction {
     @ValidationMethod(on = "save")
     public void validateSaveSupplier() {
         String regex = "^0-9$";
-        if (supplier.getState() != null && supplier.getTinNumber() != null) {
+        if (supplier != null) {
+            if (supplier.getState() != null && supplier.getTinNumber() != null) {
 
-            if (supplier.getTinNumber().length() != LenghtOfTIN) {
-                getContext().getValidationErrors().add("e1", new SimpleError("TIN should be of 11 digits"));
+                if (supplier.getTinNumber().length() != LenghtOfTIN) {
+                    getContext().getValidationErrors().add("e1", new SimpleError("TIN should be of 11 digits"));
+                }
+                if (!(supplier.getTinNumber().substring(0, 2).equals(StateList.stateMapTIN.get(supplier.getState())))) {
+                    getContext().getValidationErrors().add("e1", new SimpleError("check the first two digits of TIN"));
+                }
             }
-            if (!(supplier.getTinNumber().substring(0, 2).equals(StateList.stateMapTIN.get(supplier.getState())))) {
-                getContext().getValidationErrors().add("e1", new SimpleError("check the first two digits of TIN"));
-            }
-        }
 
         //validation for the margins
         /*if(supplier.getMargins() !=null){
@@ -113,42 +114,51 @@ public class SupplierManagementAction extends BasePaginatedAction {
             }
         }*/
 
-        // Validation for the Email Id
-        if(supplier.getEmail_id() != null){
-            Pattern pattern;
-            String email_id = supplier.getEmail_id();
-            final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-            pattern = Pattern.compile(EMAIL_PATTERN);
-            boolean bool = pattern.matcher(email_id).matches();
-            if(!bool)
-                getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"));
+
+            // Validation for the Email Id
+            if (supplier.getEmail_id() != null) {
+                Pattern pattern;
+                String email_id = supplier.getEmail_id();
+                final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+                pattern = Pattern.compile(EMAIL_PATTERN);
+                boolean bool = pattern.matcher(email_id).matches();
+                if (!bool)
+                    getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"));
+            }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Please enter values."));
         }
     }
 
 	@Secure(hasAnyRoles = { RoleConstants.PO_APPROVER }, authActionBean = AdminPermissionAction.class)
     public Resolution save() {
-        Supplier oldSupplier = supplierDao.findByTIN(supplier.getTinNumber());
-        if (oldSupplier == null) {
-            if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
-                addRedirectAlertMessage(new SimpleMessage("Supplier added successfully."));
-                supplierDao.save(supplier);
+        if (supplier != null) {
+            Supplier oldSupplier = supplierDao.findByTIN(supplier.getTinNumber());
+            if (oldSupplier == null) {
+                if (checkForMandatoryFields(supplier)) {
+                    addRedirectAlertMessage(new SimpleMessage("Supplier added successfully."));
+                    supplierDao.save(supplier);
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
+                    //return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
+                    return new ForwardResolution("/pages/admin/supplier.jsp");
+				}
+            } else if (supplier.getId() != null) {
+                if (checkForMandatoryFields(supplier)) {
+                    addRedirectAlertMessage(new SimpleMessage("Supplier edited successfully."));
+                    supplierDao.save(supplier);
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
+                    return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
+                }
             } else {
-                addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
-                return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
+                addRedirectAlertMessage(new SimpleMessage("Supplier with provided TIN already exists."));
             }
-        } else if (supplier.getId() != null) {
-            if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
-                addRedirectAlertMessage(new SimpleMessage("Supplier edited successfully."));
-                supplierDao.save(supplier);
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
-                return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
-            }
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Supplier with provided TIN already exists."));
-        }
 
-        return new RedirectResolution(SupplierManagementAction.class);
+            return new RedirectResolution(SupplierManagementAction.class);
+        } else {
+            return new RedirectResolution("/pages/admin/supplier.jsp");
+        }
     }
 
     public Resolution generateExcelReport() {
@@ -157,10 +167,8 @@ public class SupplierManagementAction extends BasePaginatedAction {
         xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
 
 
-
         if (supplierList != null) {
             xslGenerator.generateSupplierListExcel(xlsFile, supplierList);
-
 
 
             return new HTTPResponseResolution();
@@ -184,6 +192,13 @@ public class SupplierManagementAction extends BasePaginatedAction {
             }
         }
     }
+
+	private boolean checkForMandatoryFields(Supplier supplier){
+		return (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) &&
+				StringUtils.isNotBlank(supplier.getState()) && supplier.getCreditDays() != null &&
+				supplier.getTargetCreditDays() != null && supplier.getLeadTime() != null &&
+				supplier.getActive() != null);
+	}
 
     public List<Supplier> getSupplierList() {
         return supplierList;
