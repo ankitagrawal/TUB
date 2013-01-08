@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.constants.courier.EnumCourier;
 
 @Repository
 public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
@@ -43,4 +45,14 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 	    return (List<Courier>) findByCriteria(courierCriteria);
 
     }
+    
+     public List<Courier> listOfVendorCouriers() {
+        List<EnumCourier> workingVendorCouriers = EnumCourier.getCurrentlyApplicableVendorCouriers();
+
+        List<Long> courierIds = EnumCourier.getCourierIDs(workingVendorCouriers);
+        Criteria criteria = getSession().createCriteria(Courier.class);
+        criteria.add(Restrictions.in("id", courierIds));
+        return criteria.list();
+    }
+
 }

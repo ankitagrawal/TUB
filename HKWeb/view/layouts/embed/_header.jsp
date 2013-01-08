@@ -113,7 +113,7 @@
 			        </c:choose>
 		        </s:link>
 	        </div>
-          
+
         </div>
 
         <div style="margin-top: 2px; float: right; margin-right: 10px; font-size: 12px;">
