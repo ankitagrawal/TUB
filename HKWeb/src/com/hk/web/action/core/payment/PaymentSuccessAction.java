@@ -71,7 +71,7 @@ public class PaymentSuccessAction extends BaseAction {
     @Autowired
     UserDao userDao;
     @Autowired
-    private OrderServqice orderService;
+    private OrderService orderService;
     @Autowired
     private ShippingOrderService shippingOrderService;
     @Autowired
