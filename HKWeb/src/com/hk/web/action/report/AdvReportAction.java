@@ -15,7 +15,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import java.util.List;
 
-@Secure (hasAllRoles = {RoleConstants.ADMIN}, authActionBean = AdminPermissionAction.class)
+@Secure (hasAllRoles = {RoleConstants.MARKETING}, authActionBean = AdminPermissionAction.class)
 @Component
 public class AdvReportAction extends BaseAction {
 
