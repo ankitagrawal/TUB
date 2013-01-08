@@ -11,6 +11,27 @@
 	    String id= (String) pageContext.getAttribute("id");
         pageContext.setAttribute("id", id);
     %>
+    
+    
+    <%-- Script for Facebook Retargeting --%>
+	<script type="text/javascript">
+	adroll_adv_id = "SKDGP6YYENHVJCJDIKHUF7";
+	adroll_pix_id = "JLZMDLGRYBFDFHEIKFE456";
+	(function () {
+	var oldonload = window.onload;
+	window.onload = function(){
+	   __adroll_loaded=true;
+	   var scr = document.createElement("script");
+	   var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
+	   scr.setAttribute('async', 'true');
+	   scr.type = "text/javascript";
+	   scr.src = host + "/j/roundtrip.js";
+	   ((document.getElementsByTagName('head') || [null])[0] ||
+	    document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
+	   if(oldonload){oldonload()}};
+	}());
+	</script>
+	    
     <!-- Google Code for Remarketing List -->
     <script type="text/javascript">
         /* <![CDATA[ */

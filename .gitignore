@@ -8,6 +8,7 @@ bin-groovy/
 .svn/
 .metadata/
 .idea/
+.gradle/
 *.class
 *.bak
 *.log

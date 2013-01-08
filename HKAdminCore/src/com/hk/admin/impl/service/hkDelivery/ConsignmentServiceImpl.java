@@ -65,7 +65,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Override
     public List<ConsignmentTracking> createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, List<Consignment> consignments,
-            ConsignmentLifecycleStatus consignmentLifecycleStatus) {
+            ConsignmentLifecycleStatus consignmentLifecycleStatus, Runsheet runsheet) {
         List<ConsignmentTracking> consignmntTrackingList = new ArrayList<ConsignmentTracking>();
         for (Consignment consignment : consignments) {
             ConsignmentTracking consignmntTracking = new ConsignmentTracking();
@@ -74,6 +74,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             consignmntTracking.setSourceHub(sourceHub);
             consignmntTracking.setDestinationHub(destinationHub);
             consignmntTracking.setUser(user);
+	        consignmntTracking.setRunsheet(runsheet);
             if (consignmentLifecycleStatus == null) {
 
             } else {
@@ -86,7 +87,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Override
     public ConsignmentTracking createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment,
-            ConsignmentLifecycleStatus consignmentLifecycleStatus) {
+            ConsignmentLifecycleStatus consignmentLifecycleStatus, String consignmentTrackingRemark, Runsheet runsheet) {
         ConsignmentTracking consignmntTracking = new ConsignmentTracking();
         consignmntTracking.setConsignment(consignment);
         consignmntTracking.setCreateDate(new Date());
@@ -94,6 +95,8 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         consignmntTracking.setDestinationHub(destinationHub);
         consignmntTracking.setUser(user);
         consignmntTracking.setConsignmentLifecycleStatus(consignmentLifecycleStatus);
+	    consignmntTracking.setRemarks(consignmentTrackingRemark);
+	    consignmntTracking.setRunsheet(runsheet);
         return consignmntTracking;
     }
 
@@ -290,4 +293,23 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub) {
         return consignmentDao.getConsignmentsForPaymentReconciliation(startDate, endDate, hub);
     }
+
+	@Override
+	public List<String> getCustomerOnHoldReasonsForHkDelivery() {
+		List<String> customerOnHoldReasons = new ArrayList<String>();
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_UNCONTACTABLE);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_HOUSE_LOCKED);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_FUTURE_DELIVERY);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_PAYMENT_NOT_READY);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_WRONG_ADDRESS);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_NOT_INTERESTED);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_DELAY_DELIVERY);
+		customerOnHoldReasons.add(HKDeliveryConstants.CUST_HOLD_WRONG_DELIVERY);
+		return customerOnHoldReasons;
+	}
+
+	@Override
+	public ConsignmentTracking getConsignmentTrackingByRunsheetAndStatus(Consignment consignment, Runsheet runsheet, ConsignmentLifecycleStatus consignmentLifecycleStatus) {
+		return consignmentDao.getConsignmentTrackingByRunsheetAndStatus(consignment,runsheet,consignmentLifecycleStatus);
+	}
 }

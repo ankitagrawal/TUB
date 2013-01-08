@@ -19,7 +19,6 @@ import com.akube.framework.gson.JsonUtils;
 import com.hk.domain.order.Order;
 import com.hk.pact.service.order.OrderService;
 import com.hk.rest.mobile.service.utils.MHKConstants;
-import com.hk.rest.pact.service.APIOrderService;
 import com.hk.web.HealthkartResponse;
 
 /**
@@ -32,8 +31,6 @@ import com.hk.web.HealthkartResponse;
 @Path("/mOrder")
 @Component
 public class MOrderAction extends MBaseAction{
-    @Autowired
-    private APIOrderService apiOrderService;
     @Autowired
     OrderService orderService;
 
@@ -72,12 +69,4 @@ public class MOrderAction extends MBaseAction{
         return jsonBuilder;
     }
 
-
-    public APIOrderService getApiOrderService() {
-        return apiOrderService;
-    }
-
-    public void setApiOrderService(APIOrderService apiOrderService) {
-        this.apiOrderService = apiOrderService;
-    }
 }

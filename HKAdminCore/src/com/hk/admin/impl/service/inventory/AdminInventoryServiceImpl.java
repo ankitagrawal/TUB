@@ -42,6 +42,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.SkuGroupService;
 
 @Service
 public class AdminInventoryServiceImpl implements AdminInventoryService {
@@ -71,7 +72,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     @Autowired
     private ProductVariantInventoryDao      productVariantInventoryDao;
     @Autowired
-    private SkuGroupDao                     skuGroupDao;
+    private SkuGroupService skuGroupService;
 
     @Override
     public List<SkuGroup> getInStockSkuGroups(String upc) {
@@ -193,6 +194,11 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		    getBaseDao().save(skuItem);
 	    }
 
+	    if (skuItem != null && qty > 0) {
+		    skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		    getBaseDao().save(skuItem);
+	    }
+
 	    // Setting checked in qty to make increments in sync with checkin
         if (grnLineItem != null && qty > 0) {
             grnLineItem.setCheckedInQty(grnLineItem.getCheckedInQty() + qty);
@@ -279,7 +285,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
      }
 
     public SkuGroup getSkuGroupByHkBarcode(String barcode) {
-        return getSkuGroupDao().getSkuGroup(barcode);
+        return skuGroupService.getSkuGroup(barcode);
     }
 
     public BaseDao getBaseDao() {
@@ -378,14 +384,13 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         this.productVariantInventoryDao = productVariantInventoryDao;
     }
 
-    public SkuGroupDao getSkuGroupDao() {
-        return skuGroupDao;
-    }
+	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList) {
+		return adminSkuItemDao.getInStockSkuItems(skuGroupList);
+	}
 
-    public void setSkuGroupDao(SkuGroupDao skuGroupDao) {
-        this.skuGroupDao = skuGroupDao;
-    }
-
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+		return adminSkuItemDao.getInStockSkuItems(skuGroup);
+	}
 
 
 }

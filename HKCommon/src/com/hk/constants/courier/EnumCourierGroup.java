@@ -33,6 +33,10 @@ public enum EnumCourierGroup {
         return getEnumIDs(Arrays.asList(EnumCourierGroup.COMMON, EnumCourierGroup.Bluedart, EnumCourierGroup.Local, EnumCourierGroup.EarthMovers));
     }
 
+	public static List<Long> getValidCourierGroupsInUse() {
+        return getEnumIDs(Arrays.asList(EnumCourierGroup.COMMON, EnumCourierGroup.Bluedart, EnumCourierGroup.Local));
+    }
+
 
     public java.lang.String getName() {
         return name;
