@@ -4,16 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Projections;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.dao.sku.SkuGroupDao;
 
 @SuppressWarnings("unchecked")
 @Repository
 public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
+	@Autowired
+	SkuGroupDao skuGroupDao;
 
   public List<SkuGroup> getInStockSkuGroups(Sku sku) {
      List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
@@ -45,6 +54,8 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		}
 		return minMRPUnbookedSkuGroup;
 	}
+
+
 }
 
 
