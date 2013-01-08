@@ -57,6 +57,7 @@ public class PaymentModeAction extends BaseAction {
       addRedirectAlertMessage(new SimpleMessage("You have not selected the shipping address"));
       return new RedirectResolution(SelectAddressAction.class);
     }
+    if(trimCartLineItems==null || (trimCartLineItems.size()==0)){
     Set<CartLineItem> oldCartLineItems =new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
     order = orderManager.trimEmptyLineItems(order);
     Set<CartLineItem> newCartLineItems = order.getCartLineItems();
@@ -64,6 +65,7 @@ public class PaymentModeAction extends BaseAction {
      Set<CartLineItem> diffCartLineItems = orderManager.getDiffCartLineItems(oldCartLineItems,newCartLineItems);
     if(diffCartLineItems!=null && diffCartLineItems.size()>0){
       trimCartLineItems.addAll(diffCartLineItems);
+       }
     }
     sizeOfCLI = order.getCartLineItems().size();
     bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(),true);

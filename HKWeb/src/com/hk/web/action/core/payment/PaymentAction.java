@@ -21,6 +21,7 @@ import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.factory.PaymentModeActionFactory;
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -79,7 +80,7 @@ public class PaymentAction extends BaseAction {
            if(diffCartLineItems!=null && diffCartLineItems.size()>0){
               trimCartLineItems.addAll(diffCartLineItems);
               sizeOfCLI = order.getCartLineItems().size();
-              return new RedirectResolution(PaymentModeAction.class).addParameter("order", order);              
+              return new ForwardResolution("/pages/paymentMode.jsp").addParameter("order", order);
             }
           String issuerCode = null;
             if (issuer != null) {
