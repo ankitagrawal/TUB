@@ -87,7 +87,7 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
         HkApiUser hkApiUser=hkAuthService.getApiUserFromUserAccessToken(userAccessToken);
         //TODO allow this only for hkplus - but there is no way out here right now other than hardcoding the logic for "HealthkartPlus"
         // as name of HkApiUser - which I am not sure as of now
-         rewardPointService.addRewardPoints(null,null,null,rewardPoints,hkApiUser.getName(), EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HKPLUS_POINTS.asRewardPointMode());
+         rewardPointService.addRewardPoints(user,null,null,rewardPoints,hkApiUser.getName(), EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HKPLUS_POINTS.asRewardPointMode());
 
         HKAPIBaseDTO hkapiBaseDTO =new HKAPIBaseDTO();
         return hkapiBaseDTO;
