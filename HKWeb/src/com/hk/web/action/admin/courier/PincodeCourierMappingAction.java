@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ import java.util.*;
  * Time: 3:34 PM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class PincodeCourierMappingAction extends BaseAction {
 
     Pincode pincode;

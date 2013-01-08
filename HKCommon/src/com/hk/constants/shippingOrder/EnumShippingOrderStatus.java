@@ -137,9 +137,9 @@ public enum EnumShippingOrderStatus {
                 EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus());
     }
 
-    public static List<Long> getStatusForSearchOrderAndEnterCourierInfo() {
-           return Arrays.asList(EnumShippingOrderStatus.SO_Packed.asShippingOrderStatus().getId(),
-                   EnumShippingOrderStatus.SO_CheckedOut.asShippingOrderStatus().getId());
+    public static List<EnumShippingOrderStatus> getStatusForCreateUpdateShipment() {
+           return Arrays.asList(EnumShippingOrderStatus.SO_Packed,
+                   EnumShippingOrderStatus.SO_CheckedOut);
        }
 
     public static List<EnumShippingOrderStatus> getStatusForEnteringShippingCost() {

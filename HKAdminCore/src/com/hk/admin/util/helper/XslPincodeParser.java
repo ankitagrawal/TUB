@@ -27,6 +27,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,6 +42,7 @@ import java.util.*;
  * Time: 2:32 PM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class XslPincodeParser {
 
     private Map<String, Integer> headerMap = new HashMap<String, Integer>();
