@@ -20,10 +20,11 @@
                 <link>http://www.healthkart.com/product/${product.slug}/${product.id}</link>
                 <price>"${product.minimumMRPProducVariant.hkPrice}"</price>
                 <description>${hk:escapeXML(product.description)}</description>
+                <condition>'new'</condition>
                 <c:when test="${product.mainImageId != null}">
-                <c:set var="imageId" value="${product.mainImageId}"/>
-                <%Long imageId = (Long) pageContext.getAttribute("imageId");%>
-                <image_link><=%HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId,false)%></image_link>
+                    <c:set var="imageId" value="${product.mainImageId}"/>
+                    <%Long imageId = (Long) pageContext.getAttribute("imageId");%>
+                    <image_link><=%HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId,false)%></image_link>
                 </c:when>
                 <%--<images>
                     <c:choose>
