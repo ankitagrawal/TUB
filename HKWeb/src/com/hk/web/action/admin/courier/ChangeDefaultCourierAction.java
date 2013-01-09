@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.util.helper.XslPincodeParser;
 import com.hk.constants.core.Keys;
@@ -10,6 +11,8 @@ import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.core.WarehouseService;
+import com.hk.domain.courier.Courier;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,10 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private PincodeService pincodeService;
     @Autowired
     XslPincodeParser xslPincodeParser;
+    @Autowired
+    WarehouseService warehouseService;
+    @Autowired
+    CourierService courierService;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminDownloadsPath;
@@ -45,6 +52,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private Pincode pincode;
     private List<PincodeDefaultCourier> pincodeDefaultCouriers;
     private List<PincodeCourierMapping> pincodeCourierMappings;
+    private List<Warehouse> allWarehouse;
+    private List<Courier> allCourier;
 
     Warehouse warehouse;
     boolean isCod;
@@ -75,21 +84,24 @@ public class ChangeDefaultCourierAction extends BaseAction {
             pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGround);
             pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, isCod, isGround, true);
         }
-        addRedirectAlertMessage(new SimpleMessage("courier info saved"));
-        return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
+        allWarehouse = getWarehouseService().getAllWarehouses();
+        allCourier = getCourierService().getAllCouriers();
+        return new ForwardResolution("/pages/courier/changeDefaultCourierAction.jsp");
     }
 
     public Resolution save() {
         for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
             if (!pincodeCourierService.isDefaultCourierApplicable(pincode, defaultCourier.getCourier(), defaultCourier.isGroundShipping(), defaultCourier.isCod())) {
-                break;
+                 addRedirectAlertMessage(new SimpleMessage("One of the mappings is currently not serviceable"));
+                 break;
             }
-            addRedirectAlertMessage(new SimpleMessage("One of the mappings is currently not serviceable"));
         }
         for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
             getBaseDao().save(defaultCourier);
-            addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
         }
+        allWarehouse = getWarehouseService().getAllWarehouses();
+        allCourier = getCourierService().getAllCouriers();
+       addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
         return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
     }
 
@@ -120,15 +132,16 @@ public class ChangeDefaultCourierAction extends BaseAction {
     }
 
     public Resolution uploadPincodeExcel() throws Exception {
+        allWarehouse = getWarehouseService().getAllWarehouses();
+        allCourier = getCourierService().getAllCouriers();
         if (fileBean == null) {
             addRedirectAlertMessage(new SimpleMessage("Please chose a file"));
-            return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
+            return new ForwardResolution("/pages/courier/changeDefaultCourierAction.jsp");
         }
         String excelFilePath = adminUploadsPath + "/pincodeExcelFiles/defaultpincodes" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
-
         try {
             Set<PincodeDefaultCourier> pincodeDefaultCourierSet = xslPincodeParser.readDefaultPincodeList(excelFile);
             for (PincodeDefaultCourier defaultCourier : pincodeDefaultCourierSet) {
@@ -137,11 +150,11 @@ public class ChangeDefaultCourierAction extends BaseAction {
         } catch (Exception e) {
             logger.error("Exception while reading excel sheet.", e);
             addRedirectAlertMessage(new SimpleMessage("Upload failed " + e.getMessage()));
-            return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
+            return new ForwardResolution("/pages/courier/changeDefaultCourierAction.jsp");
         }
         excelFile.delete();
         addRedirectAlertMessage(new SimpleMessage("Database Updated"));
-        return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
+        return new ForwardResolution("/pages/courier/changeDefaultCourierAction.jsp");
     }
 
     public String getPincodeString() {
@@ -203,4 +216,28 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public void setPincodeCourierMappings(List<PincodeCourierMapping> pincodeCourierMappings) {
         this.pincodeCourierMappings = pincodeCourierMappings;
     }
+
+  public List<Warehouse> getAllWarehouse() {
+    return allWarehouse;
+  }
+
+  public void setAllWarehouse(List<Warehouse> allWarehouse) {
+    this.allWarehouse = allWarehouse;
+  }
+
+  public List<Courier> getAllCourier() {
+    return allCourier;
+  }
+
+  public void setAllCourier(List<Courier> allCourier) {
+    this.allCourier = allCourier;
+  }
+
+  public CourierService getCourierService() {
+    return courierService;
+  }
+
+  public WarehouseService getWarehouseService() {
+    return warehouseService;
+  }
 }
