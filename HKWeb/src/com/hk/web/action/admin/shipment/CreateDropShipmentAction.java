@@ -5,7 +5,7 @@ import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
