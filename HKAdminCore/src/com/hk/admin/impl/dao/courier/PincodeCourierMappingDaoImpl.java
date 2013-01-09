@@ -68,9 +68,10 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
         }
         if(multipleConditions){
             pincodeCourierMappingCriteria.add(Restrictions.or(Restrictions.eq(lhsCondition, true), Restrictions.eq(rhsCondition, true)));
-        } else{
-            pincodeCourierMappingCriteria.add(Restrictions.eq(lhsCondition,true));
         }
+//        else{
+//            pincodeCourierMappingCriteria.add(Restrictions.eq(lhsCondition,true));
+//        }
         return findByCriteria(pincodeCourierMappingCriteria);
     }
 

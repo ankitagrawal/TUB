@@ -14,6 +14,13 @@
       <script type="text/javascript">
           $(document).ready(function(){
               var estimatedWeight = ${cusa.estimatedWeight};
+              $('#search').click(function(){
+                 var gateWayOrderId = $('#gatewayOrderId').val();
+                  if(gateWayOrderId == "" || gateWayOrderId == null){
+                      alert("Gateway Order can't be Empty");
+                      return false;
+                  }
+              });
               $('#validate').click(function(){
                  var boxSize = $('#boxSize').val();
                   var boxWeight = $('#boxWeight').val();
@@ -39,8 +46,9 @@
      <s:layout-component name="content">
       <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">
          <label>Enter Gateway Id</label>
-          <s:text name="gatewayOrderId"/>
-          <s:submit name="searchShipment" value="Search"/>
+          <s:text name="gatewayOrderId" id="gatewayOrderId"/>
+          <s:submit name="searchShipment" value="Search" id="search"/>
+          <c:if test="${cusa.shipment!=null}">
                <table class="zebra_vert">
                  <tr>
                      <th>AWB</th>
@@ -83,6 +91,7 @@
                    </tr>
                 </table>
                   <s:submit name="updateShipment" value="SAVE" id="validate"/>
+          </c:if>
       </s:form>
      </s:layout-component>
     </s:layout-render>

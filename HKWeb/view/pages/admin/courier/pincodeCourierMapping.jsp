@@ -117,17 +117,18 @@
                     </c:choose>
                 </table>
             </div>
+
             <h2>File to Upload
                 <s:file name="fileBean" size="30"/></h2>
             <s:submit name="uploadExcel" value="Upload Courier Excel"/>
             <div class="clear"></div>
-            <h2>
+
+            <h2>Download Pincode Courier Excel</h2>
                 <s:select name="updateCourier"  id="status">
                     <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
                                                value="id" label="name"/>
                 </s:select>
                 <s:submit name="generateExcel" value="Download Courier Excel"/>
-            </h2>
 
         </s:form>
     </s:layout-component>

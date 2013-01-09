@@ -60,7 +60,7 @@ public class CreateUpdateShipmentAction extends BaseAction {
     @DontValidate
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/courier/createUpdateShipment.jsp");
+        return new ForwardResolution("/pages/admin/courier/createUpdateShipmentAction.jsp");
     }
 
     public Resolution searchShipment() {
@@ -70,7 +70,7 @@ public class CreateUpdateShipmentAction extends BaseAction {
 
         if (shippingOrderList.isEmpty()) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Gateway Order id or Shipping Order is not in applicable SO Status"));
-            return new RedirectResolution("/pages/admin/courier/createUpdateShipment.jsp");
+            return new RedirectResolution("/pages/admin/courier/createUpdateShipmentAction.jsp");
         }
 
         shippingOrder = shippingOrderList.get(0);
@@ -84,7 +84,7 @@ public class CreateUpdateShipmentAction extends BaseAction {
           return new ForwardResolution("/pages/courier/createUpdateAwb.jsp");
         }
         estimatedWeight = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
-        return new ForwardResolution("/pages/admin/courier/createUpdateShipment.jsp");
+        return new ForwardResolution("/pages/admin/courier/createUpdateShipmentAction.jsp");
     }
 
     public Resolution createUpdateAwb(){
