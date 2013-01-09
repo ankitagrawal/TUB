@@ -182,14 +182,17 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     if (productVariant.getProduct().isService() != null && productVariant.getProduct().isService()) {
                         continue;
                     }
-                    if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
+
+
+                    if (productVariant.getProduct().isDropShipping()) {
+                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
+                 //      setting shipping order Drop shipped
+                        shippingOrder.setDropShipping(true);
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
                         return false;
-                    } else if (productVariant.getProduct().isDropShipping()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
-
+                    } else if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
+                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
                         return false;
@@ -233,12 +236,16 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
-                    if (productVariant.getProduct().isDropShipping()) {
+
+                //  dropship Shipping order now manually escalable         
+             /*         if (productVariant.getProduct().isDropShipping()) {
                         String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
                         return false;
-                    } else if (availableUnbookedInv <= 0) {
+                    } else        */
+
+                    if (availableUnbookedInv <= 0) {
                         String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
                                 + availableUnbookedInv;
                         logger.info("Could not manually escalate order as availableUnbookedInv of sku[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv
@@ -281,6 +288,21 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }
+
+
+    public ShippingOrder escalateShippingOrderFromActionTODropQueue(ShippingOrder shippingOrder, boolean isAutoEsc) {
+         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
+         shippingOrder.setLastEscDate(HKDateUtil.getNow());
+         shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
+         if (isAutoEsc) {
+             logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToDropShippingQueue);
+         } else {
+             logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
+         }
+         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
+         return shippingOrder;
+     }
+    
 
     /**
      * Creates a shipping order with basic details

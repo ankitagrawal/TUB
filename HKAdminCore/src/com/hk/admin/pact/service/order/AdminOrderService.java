@@ -24,6 +24,8 @@ public interface AdminOrderService {
 
     public Order markOrderAsRTO(Order order);
 
+    public Order markOrderAsCompletedWithInstallation(Order order);
+
     public Order markOrderAsLost(Order order);
 
     public Order unHoldOrder(Order order);
@@ -32,7 +34,6 @@ public interface AdminOrderService {
 
     public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser);
 
-	public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order);
 
 	/**
 	 * TODO:#ankit please document all keys and there meaning in the map being returned
