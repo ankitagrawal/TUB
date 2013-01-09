@@ -167,10 +167,11 @@
                     </c:forEach>
                     <a href="changeDefaultCourierAction.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
                     <br/>
-
+                    <s:submit name="save" value="Save" id="save"/>
+                    </c:if>
                     <c:if test="${cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0}">
                        <h2>Pincode Courier Mappings</h2>
-                         <table id="courierTable" class="zebra_vert">
+                         <table class="zebra_vert">
                     <tr>
                         <th>S.No</th>
                         <th>Courier Name</th>
@@ -212,9 +213,7 @@
                         </table>
                         </c:if>
                     <br/>
-                    <s:submit name="save" value="Save" id="save"/>
                 </table>
-            </c:if>
         </s:form>
     </s:layout-component>
 </s:layout-render>

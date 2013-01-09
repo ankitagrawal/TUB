@@ -25,14 +25,6 @@
                         return false;
                     }
                 });
-                $('.check').click(function(){
-                    if ($("#courierContainer").css("display","none")) {
-                        $("#courierContainer").css("display","block");
-                        $("#courierContainer").slideDown("slow");
-                    } else {
-                        $("#courierContainer").css("display","none");
-                    }
-                });
                 $('.YesNo').click(function(){
                     var value = $(this).val();
                     if(value == "Y"){
@@ -55,7 +47,6 @@
             <s:submit name="search" value="Basic Search" class="check"/>
             <s:submit name="detailedAnalysis" value="Detailed Analysis" class="check"/>
 
-            <div id="courierContainer" class="pincodeCourier" style="display:none;">
                 <c:choose>
                 <c:when test="${pcma.applicableShipmentServices!=null and fn:length(pcma.applicableShipmentServices)>0}">
                     <table>
@@ -116,7 +107,6 @@
                     </c:otherwise>
                     </c:choose>
                 </table>
-            </div>
 
             <h2>File to Upload
                 <s:file name="fileBean" size="30"/></h2>
@@ -129,7 +119,6 @@
                                                value="id" label="name"/>
                 </s:select>
                 <s:submit name="generateExcel" value="Download Courier Excel"/>
-
         </s:form>
     </s:layout-component>
 </s:layout-render>
