@@ -12,6 +12,7 @@ import com.hk.manager.UserManager;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.security.HkAuthService;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.api.dto.user.HKAPIUserDTO;
 import com.hk.api.pact.service.HKAPIUserService;
+
+import java.util.Date;
 
 
 /**
@@ -91,7 +94,7 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
         if(hkApiUser.getApiKey().equals("healthkartplus")){
 
             RewardPoint rewardPoint=rewardPointService.addRewardPoints(user,null,null,rewardPoints,hkApiUser.getName(), EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HKPLUS_POINTS.asRewardPointMode());
-            rewardPointService.createRewardPointTxnForApprovedRewardPoints(rewardPoint);
+            rewardPointService.createRewardPointTxnForApprovedRewardPoints(rewardPoint, new DateTime().plusMonths(3).toDate());
 
             return new HKAPIBaseDTO();
         }

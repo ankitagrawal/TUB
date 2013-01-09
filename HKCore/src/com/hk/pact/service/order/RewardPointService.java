@@ -22,7 +22,7 @@ public interface RewardPointService {
     public RewardPoint addRewardPoints(User referredBy, User referredUser, Order referredOrder, Double value, String comment, EnumRewardPointStatus rewardPointStatus,
             RewardPointMode rewardPointMode) throws InvalidRewardPointsException;
 
-    public RewardPointTxn createRewardPointTxnForApprovedRewardPoints(RewardPoint rewardPoint);
+    public RewardPointTxn createRewardPointTxnForApprovedRewardPoints(RewardPoint rewardPoint, Date expiryDate);
 
     // logic for cashback offer
     public void awardRewardPoints(Order order);
