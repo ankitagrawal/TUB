@@ -50,6 +50,7 @@
 
     <s:layout-component name="content">
         <s:form beanclass="com.hk.web.action.admin.courier.PincodeCourierMappingAction">
+            <label>Enter Pincode</label>
             <s:text name="pin"/>
             <s:button name="search" value="Basic Search" class="check"/>
             <s:button name="detailedAnalysis" value="Detailed Analysis" class="check"/>
