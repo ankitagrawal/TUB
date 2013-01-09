@@ -15,7 +15,7 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $('.check').click(function(){
-                    var text = $(this).val();
+                    var text = $('#pin').val();
                     if(text == "" || text == null){
                         alert("Pincode can't be left Empty");
                         return false;
@@ -51,9 +51,9 @@
     <s:layout-component name="content">
         <s:form beanclass="com.hk.web.action.admin.courier.PincodeCourierMappingAction">
             <label>Enter Pincode</label>
-            <s:text name="pin"/>
-            <s:button name="search" value="Basic Search" class="check"/>
-            <s:button name="detailedAnalysis" value="Detailed Analysis" class="check"/>
+            <s:text name="pin" id="pin"/>
+            <s:submit name="search" value="Basic Search" class="check"/>
+            <s:submit name="detailedAnalysis" value="Detailed Analysis" class="check"/>
 
             <div id="courierContainer" class="pincodeCourier" style="display:none;">
                 <c:choose>
@@ -72,7 +72,7 @@
                     </table>
                 </c:when>
                 <c:otherwise>
-                <c:when test="${pcma.pincodeCourierMappings!=null and fn:length(pcma.pincodeCourierMappings)>0}">
+                <c:if test="${pcma.pincodeCourierMappings!=null and fn:length(pcma.pincodeCourierMappings)>0}">
                 <table class="zebra_vert">
                     <thead>
                     <tr>
@@ -111,22 +111,22 @@
                             </td>
                         </tr>
                     </c:forEach>
-                    <s:button name="update" value="SAVE"/>
-                    </c:when>
+                    <s:submit name="update" value="SAVE"/>
+                    </c:if>
                     </c:otherwise>
                     </c:choose>
                 </table>
             </div>
             <h2>File to Upload
                 <s:file name="fileBean" size="30"/></h2>
-            <s:button name="uploadExcel" value="Upload Courier Excel"/>
+            <s:submit name="uploadExcel" value="Upload Courier Excel"/>
             <div class="clear"></div>
             <h2>
                 <s:select name="updateCourier"  id="status">
                     <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
                                                value="id" label="name"/>
                 </s:select>
-                <s:button name="generateExcel" value="Download Courier Excel"/>
+                <s:submit name="generateExcel" value="Download Courier Excel"/>
             </h2>
 
         </s:form>

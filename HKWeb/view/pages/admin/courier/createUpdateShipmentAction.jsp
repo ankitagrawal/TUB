@@ -40,7 +40,7 @@
       <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">
          <label>Enter Gateway Id</label>
           <s:text name="gatewayOrderId"/>
-          <s:button name="searchShipment" value="Search"/>
+          <s:submit name="searchShipment" value="Search"/>
                <table class="zebra_vert">
                  <tr>
                      <th>AWB</th>
@@ -82,7 +82,7 @@
                        </td>
                    </tr>
                 </table>
-                  <s:button name="updateShipment" value="SAVE" id="validate"/>
+                  <s:submit name="updateShipment" value="SAVE" id="validate"/>
       </s:form>
      </s:layout-component>
     </s:layout-render>

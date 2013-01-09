@@ -125,7 +125,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Shipping Order not found for the corresponding gateway order id"));
 			return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
 		} else {
-			if (EnumShippingOrderStatus.getStatusForSearchOrderAndEnterCourierInfo().contains(shippingOrder.getOrderStatus().getId())) {
+			if (EnumShippingOrderStatus.getStatusForCreateUpdateShipment().contains(shippingOrder.getOrderStatus().getId())) {
 				shipment = shippingOrder.getShipment();
 				shippingOrderList.add(shippingOrder);
 				for (LineItem lineItem : shippingOrder.getLineItems()) {

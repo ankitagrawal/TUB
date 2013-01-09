@@ -72,7 +72,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
+        return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
     public Resolution search() {
@@ -86,7 +86,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         }
         allWarehouse = getWarehouseService().getAllWarehouses();
         allCourier = getCourierService().getAllCouriers();
-        return new ForwardResolution("/pages/courier/changeDefaultCourierAction.jsp");
+        return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
     public Resolution save() {
@@ -102,7 +102,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         allWarehouse = getWarehouseService().getAllWarehouses();
         allCourier = getCourierService().getAllCouriers();
        addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
-        return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
+        return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
     public Resolution generatePincodeExcel() throws Exception {
@@ -136,7 +136,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         allCourier = getCourierService().getAllCouriers();
         if (fileBean == null) {
             addRedirectAlertMessage(new SimpleMessage("Please chose a file"));
-            return new ForwardResolution("/pages/courier/changeDefaultCourierAction.jsp");
+            return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
         }
         String excelFilePath = adminUploadsPath + "/pincodeExcelFiles/defaultpincodes" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
@@ -150,11 +150,11 @@ public class ChangeDefaultCourierAction extends BaseAction {
         } catch (Exception e) {
             logger.error("Exception while reading excel sheet.", e);
             addRedirectAlertMessage(new SimpleMessage("Upload failed " + e.getMessage()));
-            return new ForwardResolution("/pages/courier/changeDefaultCourierAction.jsp");
+            return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
         }
         excelFile.delete();
         addRedirectAlertMessage(new SimpleMessage("Database Updated"));
-        return new ForwardResolution("/pages/courier/changeDefaultCourierAction.jsp");
+        return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
     public String getPincodeString() {

@@ -197,6 +197,12 @@
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
 
+    <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.PincodeCourierMappingAction">Change Default Courier</s:link></h3>
+
+    <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Change Default Courier</s:link></h3>
+
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.shipment.UpdateDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart,DTDC</s:link></h3>
 
