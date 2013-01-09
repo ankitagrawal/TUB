@@ -35,7 +35,7 @@ import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.dao.inventory.RetailLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.cache.CategoryCache;
 import com.hk.cache.RoleCache;
 import com.hk.constants.XslConstants;

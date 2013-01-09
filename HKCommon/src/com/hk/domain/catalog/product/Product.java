@@ -163,6 +163,9 @@ public class Product  implements java.io.Serializable {
     @Column(name = "is_subscribable", nullable = true)
     private Boolean              isSubscribable;
 
+    @Column(name = "is_installable")
+    private Boolean   installable ;
+
     @Transient
     private String               categoriesPipeSeparated;
 
@@ -703,6 +706,17 @@ public class Product  implements java.io.Serializable {
     public void setSubscribable(boolean subscribable) {
         isSubscribable = subscribable;
     }
-    
-    
+
+    public Boolean isInstallable() {
+        return installable;
+    }
+
+    public void setInstallable(Boolean installable) {
+        this.installable = installable;
+    }
+
+     public Boolean getInstallable() {
+		return installable;
+	}
+
 }

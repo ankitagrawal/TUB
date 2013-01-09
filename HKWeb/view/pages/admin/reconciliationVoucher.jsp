@@ -14,7 +14,7 @@
 
     <%
         MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
-        List<ReconciliationType> reconciliationTypeList  = masterDataDao.getReconciliationTypeList();
+        List<ReconciliationType> reconciliationTypeList  = masterDataDao.getAddReconciliationTypeList();
         pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
     %>
 
@@ -51,7 +51,7 @@
                                 '  </td>' +
                                 '  <td class="pvDetails"></td>' +
                                 '  <td>' +
-                                '    <input type="text" name="rvLineItems[' + nextIndex + '].qty" />' +
+                                '    <input type="text" id="quantity" name="rvLineItems[' + nextIndex + '].qty" />' +
                                 '  </td>' +
                                 '   <td>' +
                                 reconciliationTypeOptions+
@@ -65,7 +65,7 @@
                                 '    <input class="mrp" type="text" name="rvLineItems[' + nextIndex + '].mrp" />' +
                                 '  </td>' +
                                 '  <td>' +
-                                '    <input type="text" name="rvLineItems[' + nextIndex + '].batchNumber" />' +
+                                '    <input type="text" class="batch" name="rvLineItems[' + nextIndex + '].batchNumber" />' +
                                 '  </td>' +
                                 '  <td>' +
                                 '    <input class="date_input" formatPattern="yyyy-MM-dd" type="text" name="rvLineItems[' + nextIndex + '].mfgDate" />' +
@@ -113,7 +113,7 @@
         <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink"
                 event="getPVDetails"></s:link>
     </div>
-    <h2>Create/Edit Reconciliation Voucher</h2>
+    <h2>Add/Edit Reconciliation Voucher</h2>
     <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
         <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
         <table>
@@ -169,11 +169,13 @@
                     <td class="reconciliationType">
                         <input type="hidden" value="finance"
                                class="reconciliationTypeIdentifier"/>
-                        <s:select name="rvLineItems[${ctr.index}].reconciliationType"
-                                  value="${rvLineItem.reconciliationType.id}" class="valueChange">
-                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="reconciliationTypeList" value="id"
-                                                       label="name"/>
-                        </s:select>
+	                    <s:hidden name="rvLineItems[${ctr.index}].reconciliationType" value="${rvLineItem.reconciliationType.id}"/>
+	                     ${rvLineItem.reconciliationType.name}
+                        <%--<s:select name="rvLineItems[${ctr.index}].reconciliationType"--%>
+                                  <%--value="${rvLineItem.reconciliationType.id}" class="valueChange">--%>
+                            <%--<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="addReconciliationTypeList" value="id"--%>
+                                                       <%--label="name"/>--%>
+                        <%--</s:select>--%>
                     </td>
                     <td>${rvLineItem.costPrice}
                     </td>
@@ -213,11 +215,32 @@
     </s:form>
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('.saveButton').click(function disableSaveButton(){
-                $(this).css("display", "none");
-            });
-        });
+	    $(document).ready(function() {
+		    $('.saveButton').click(function disableSaveButton() {
+
+			    var result = true;
+			    $('#poTable tr').each(function() {
+				    var qty = $(this).find('#quantity').val() ;
+				    var variant = $(this).find('.variant').val();
+				    var batch = $(this).find('.batch').val();
+
+				    if ((variant != null && variant != '') && ( (batch == null || batch.trim() == '') || (qty == null || qty.trim() == ''))) {
+					    alert('Enter Batch Number && Qty for varinat :::::: ' + variant);
+					    result = false;
+					    return false;
+
+				    }
+
+			    });
+			    if (!result) {
+				    return false;
+			    }
+			    else {
+				    return $(this).submit();
+			    }
+			    $(this).css("display", "none");
+		    });
+	    });
     </script>
 </s:layout-component>
 
