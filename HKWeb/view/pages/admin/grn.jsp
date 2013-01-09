@@ -332,7 +332,7 @@
 		<th>Tax</th>
 		<th>Surcharge</th>
 		<th>Payable</th>
-		<th>Weight</th>
+		<th>Weight <br/>(in gms)</th>
 		<th>Length</th>
 		<th>Breadth</th>
 		<th>Height</th>
