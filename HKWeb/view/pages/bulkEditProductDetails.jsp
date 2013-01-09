@@ -79,11 +79,11 @@
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productDeleted']}">
+    <%--<c:if test="${bep.toBeEditedOptions['productDeleted']}">--%>
         <th>
             Is Deleted
         </th>
-    </c:if>
+    <%--</c:if>--%>
 
     <c:if test="${bep.toBeEditedOptions['productMinDays']}">
         <th>
@@ -211,9 +211,9 @@
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productDeleted']}">
+<%--<c:if test="${bep.toBeEditedOptions['productDeleted']}">--%>
     <td width="60px" align="right" class="productDeleted">
-        <s:select name="products[${ctr.index}].deleted" class="productDeletedDropDown">
+        <s:select name="products[${ctr.index}].deleted" class="productDeletedDropDown" >
             <s:option value="${product.deleted}" selected="true">${product.deleted}</s:option>
             <c:choose>
                 <c:when test="${product.deleted == true}">
@@ -225,7 +225,7 @@
             </c:choose>
         </s:select>
     </td>
-</c:if>
+<%--</c:if>--%>
 
 <c:if test="${bep.toBeEditedOptions['productMinDays']}">
     <td valign="top">
@@ -710,7 +710,8 @@
                 }
             });
             $('.productSupplierTin').each(function() {
-                if ($(this).val().trim() === "") {
+	            var isDeleted = $(this).parents('.productRow').find('.productDeletedDropDown').val();
+                if ($(this).val().trim() === "" && isDeleted == 'false') {
                     ctr = 1;
                     var productId = $(this).parents('.productRow').find('.productId').val();
                     $('.errors').append("<br/> Please enter supplier's tin number for: " + productId);

@@ -54,6 +54,7 @@
 <c:set var="shippingOrderStatusRTOInitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
 <c:set var="shippingOrderStatusLost" value="<%=EnumShippingOrderStatus.SO_Lost.getId()%>"/>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
+<c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
 
 
 <table width="100%" class="align_top" style="margin:1px;padding:0;">
@@ -154,6 +155,14 @@
             Accounting Invoice
         </s:link>)
         </shiro:hasAnyRoles>
+
+         <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
+           (<s:link beanclass="com.hk.web.action.admin.shipment.CreateDropShipmentAction" event="pre" target="_blank">
+            <s:param name="shippingOrder" value="${shippingOrder}"/>
+            Create Shipment
+        </s:link>)
+        </c:if>
+
         <c:if test="${isActionQueue == true}">
             <shiro:hasPermission name="<%=PermissionConstants.EDIT_LINEITEM%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.EditShippingOrderAction" class="editSO">
@@ -194,6 +203,11 @@
             Mark SO Delivered 
         </s:link>)
         </c:if>
+
+        <c:if test="${shippingOrder.dropShipping}">
+             <h7> Drop Ship Product</h7>
+         </c:if>
+
         <c:if test="${isSearchShippingOrder}">
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
@@ -201,6 +215,7 @@
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Flip Warehouse
             </s:link>)
+                
             </shiro:hasAnyRoles>
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_LOGISTICS_ADMIN%>">
                 <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>

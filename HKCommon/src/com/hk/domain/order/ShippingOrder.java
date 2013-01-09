@@ -104,6 +104,11 @@ public class ShippingOrder implements java.io.Serializable {
     @Column(name = "target_del_date", nullable = true)
     private Date                        targetDelDate;
 
+
+    @Column(name = "drop_shipping")
+     private boolean                    isDropShipping;
+
+
     public Long getId() {
         return this.id;
     }
@@ -297,4 +302,12 @@ public class ShippingOrder implements java.io.Serializable {
         this.targetDelDate = targetDelDate;
     }
 
+    public boolean isDropShipping() {
+        return isDropShipping;
+    }
+
+    public void setDropShipping(boolean dropShipping) {
+        isDropShipping = dropShipping;
+    }
+    
 }
