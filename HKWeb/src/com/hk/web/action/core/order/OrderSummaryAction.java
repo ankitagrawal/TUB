@@ -96,9 +96,7 @@ public class OrderSummaryAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
-        Set<CartLineItem> oldCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        // Trimming empty line items once again.
-        orderManager.trimEmptyLineItems(order);
+        trimCartLineItems = orderManager.trimEmptyLineItems(order);
         // OfferInstance offerInstance = order.getOfferInstance();
         Double rewardPointsUsed = 0D;
         redeemableRewardPoints = rewardPointService.getTotalRedeemablePoints(user);
@@ -113,7 +111,6 @@ public class OrderSummaryAction extends BaseAction {
         order.setRewardPointsUsed(rewardPointsUsed);
         order = (Order) getBaseDao().save(order);
         if (order.getAddress() == null) {
-            // addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.address.not.selected"));
             return new RedirectResolution(SelectAddressAction.class);
         } else if (pricingDto.getProductLineCount() == 0) {
             addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
@@ -125,14 +122,12 @@ public class OrderSummaryAction extends BaseAction {
 
         codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
 
-        // Ground Shipping logic starts ---
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
         if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
             groundShippedItemPresent = true;
             groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
         }
-        // Ground Shipping logic ends --
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
         if (netShopping >= codFreeAfter) {
@@ -142,13 +137,6 @@ public class OrderSummaryAction extends BaseAction {
         if (availableCourierList != null && availableCourierList.size() == 0) {
             availableCourierList = null;
         }
-       Set<CartLineItem> newCartLineItems = order.getCartLineItems();
-//        Collection<CartLineItem> diffCartLineItems = CollectionUtils.subtract(oldCartLineItems,newCartLineItems);
-        Set<CartLineItem> diffCartLineItems = orderManager.getDiffCartLineItems(oldCartLineItems,newCartLineItems);
-        if(diffCartLineItems!=null && diffCartLineItems.size()>0){
-          trimCartLineItems.addAll(diffCartLineItems);
-        }
-      sizeOfCLI = order.getCartLineItems().size();
         return new ForwardResolution("/pages/orderSummary.jsp");
     }
 
@@ -267,13 +255,5 @@ public class OrderSummaryAction extends BaseAction {
 
   public void setTrimCartLineItems(Set<CartLineItem> trimCartLineItems) {
     this.trimCartLineItems = trimCartLineItems;
-  }
-
-  public Integer getSizeOfCLI() {
-    return sizeOfCLI;
-  }
-
-  public void setSizeOfCLI(Integer sizeOfCLI) {
-    this.sizeOfCLI = sizeOfCLI;
   }
 }

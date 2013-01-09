@@ -46,7 +46,6 @@ public class PaymentAction extends BaseAction {
     private Long billingAddressId;
     private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
     private Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
-    private Integer               sizeOfCLI;
 
     @Validate(required = true)
     Issuer issuer;
@@ -71,17 +70,11 @@ public class PaymentAction extends BaseAction {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
-            Set<CartLineItem>oldCartLineItems =new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-            order = orderManager.trimEmptyLineItems(order);
-            Set<CartLineItem> newCartLineItems = order.getCartLineItems();
-//            Collection<CartLineItem> diffCartLineItems = CollectionUtils.subtract(oldCartLineItems,newCartLineItems);
-           Set<CartLineItem> diffCartLineItems = orderManager.getDiffCartLineItems(oldCartLineItems,newCartLineItems); 
-           if(diffCartLineItems!=null && diffCartLineItems.size()>0){
-              trimCartLineItems.addAll(diffCartLineItems);
-              sizeOfCLI = order.getCartLineItems().size();
-              return new RedirectResolution(PaymentModeAction.class).addParameter("order", order);              
-            }
-          String issuerCode = null;
+//            trimCartLineItems = orderManager.trimEmptyLineItems(order);
+//            if (trimCartLineItems != null && trimCartLineItems.size() > 0) {
+//                return new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
+//            }
+            String issuerCode = null;
             if (issuer != null) {
                 try {
                     List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
@@ -170,14 +163,6 @@ public class PaymentAction extends BaseAction {
     public void setBillingAddressId(Long billingAddressId) {
         this.billingAddressId = billingAddressId;
     }
-
-  public Integer getSizeOfCLI() {
-    return sizeOfCLI;
-  }
-
-  public void setSizeOfCLI(Integer sizeOfCLI) {
-    this.sizeOfCLI = sizeOfCLI;
-  }
 
   public Set<CartLineItem> getTrimCartLineItems() {
     return trimCartLineItems;

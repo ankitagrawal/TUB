@@ -538,8 +538,6 @@ public class OrderManager {
         }
 
         return getCartLineItemService().save(codLine);
-        // cartLineItem.setLineItemStatus(lineItemStatusDao.find(EnumLineItemStatus.NA.getId()));
-        // return cartLineItemService.save(cartLineItem);
     }
 
     public Order recalAndUpdateAmount(Order order) {
@@ -550,12 +548,6 @@ public class OrderManager {
 
         order.setAmount(pricingDto.getGrandTotalPayable());
 
-        // set order as referred order if this order is using referral coupon and availing discount as well
-        // if (order.getUser().getReferredBy() != null && offerInstance != null && offerInstance.getCoupon() != null &&
-        // offerInstance.getCoupon().getReferrerUser() != null && pricingDto.getTotalDiscount() > 0) {
-        // order.setReferredOrder(true);
-        // }
-
         return getOrderService().save(order);
     }
 
@@ -563,8 +555,9 @@ public class OrderManager {
         return orderPaymentReceieved(payment);
     }
 
-    public Order trimEmptyLineItems(Order order) {
-       Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+    public Set<CartLineItem> trimEmptyLineItems(Order order) {
+        Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        Set<CartLineItem> trimmedCartLineItems = new HashSet<CartLineItem>();
         Set<ComboInstance> toBeRemovedComboInstanceSet = new HashSet<ComboInstance>();
         for (CartLineItem lineItem : cartLineItems) {
             ProductVariant productVariant = lineItem.getProductVariant();
@@ -597,6 +590,7 @@ public class OrderManager {
             CartLineItem lineItem = iterator.next();
             ProductVariant productVariant = lineItem.getProductVariant();
             if (toBeRemovedComboInstanceSet.contains(lineItem.getComboInstance()) || lineItem.getQty() <= 0) {
+                trimmedCartLineItems.add(lineItem);
                 iterator.remove();
                 order.getCartLineItems().remove(lineItem);
                 getBaseDao().delete(lineItem);
@@ -607,7 +601,7 @@ public class OrderManager {
 
         }
         order = getOrderService().save(order);
-        return order;
+        return trimmedCartLineItems;
     }
 
   public Set<CartLineItem> getDiffCartLineItems(Set<CartLineItem> oldCartLineItems, Set<CartLineItem> newCartLineItems){

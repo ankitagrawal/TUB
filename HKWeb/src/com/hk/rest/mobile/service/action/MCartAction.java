@@ -188,7 +188,7 @@ public class MCartAction extends MBaseAction{
             }
 
             // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
-            order = orderManager.trimEmptyLineItems(order);
+            orderManager.trimEmptyLineItems(order);
 
             if (order != null && cartLineItems != null) {
                 itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
