@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +31,9 @@ public class GoogleCatalogAction extends BaseAction {
     private List<Product> products;
 
     public Resolution pre() {
-        products = getProductService().getProductByCategory(category);
+        List<String> categories = new ArrayList<String>();
+        categories = Arrays.asList(getContext().getRequest().getParameterValues("category"));
+        products = getProductService().getProductByCategories(categories);
         return new ForwardResolution("/pages/googleCatalog.jsp");
     }
 
