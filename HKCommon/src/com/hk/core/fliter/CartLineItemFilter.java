@@ -21,6 +21,8 @@ public class CartLineItemFilter {
      */
     private boolean                   onlyServiceLineItems   = false;
     private boolean                   onlyGroundShippedItems = false;
+    private boolean                   onlyDropShippedItems = false;
+
 
     private String                    productVariantId;
     private Long                      cartLineItemConfigId;
@@ -46,6 +48,13 @@ public class CartLineItemFilter {
         //this.onlyServiceLineItems = false;
         return this;
     }
+
+
+    public CartLineItemFilter hasOnlyDropShippedItems(boolean onlyDropShippedItems) {
+           this.onlyDropShippedItems = onlyDropShippedItems;
+           //this.onlyServiceLineItems = false;
+           return this;
+       }
 
     public CartLineItemFilter setCategoryName(String categoryName) {
         this.categoryName = categoryName;
@@ -137,6 +146,24 @@ public class CartLineItemFilter {
         }
         currentLineItems.clear();
         currentLineItems.addAll(filteredCartLineItems);
+
+
+        if (onlyDropShippedItems) {
+                  for (CartLineItem cartLineItem : currentLineItems) {
+                      if (cartLineItem != null) {
+                          ProductVariant productVariant = cartLineItem.getProductVariant();
+                          if (productVariant != null) {
+                              Product product = productVariant.getProduct();
+                              if (product != null && !product.isDropShipping()) {
+                                  filteredCartLineItems.remove(cartLineItem);
+                              }
+                          }
+                      }
+                  }
+              }
+          currentLineItems.clear();
+           currentLineItems.addAll(filteredCartLineItems);
+
 
         if (onlyServiceLineItems) {
             for (CartLineItem cartLineItem : currentLineItems) {

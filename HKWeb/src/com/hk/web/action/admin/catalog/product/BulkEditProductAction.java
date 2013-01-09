@@ -186,7 +186,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
                     product.setSecondaryCategory(secondaryCat);
                 }
 
-                if (supplierTin != null) {
+                if (supplierTin != null && product.isDeleted().equals(Boolean.FALSE)) {
                     Supplier supplier = supplierDao.findByTIN(supplierTin.get(ctr));
                     if (combo == null && supplier == null) {
                         addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist for product: " + product.getId()));
