@@ -198,5 +198,8 @@
         <mapping class="com.hk.domain.payment.GatewayIssuerMapping" />
         <mapping class="com.hk.domain.core.Country" />
         <mapping class="com.hk.domain.payment.CurrencyConverter" />
+        <mapping class="com.hk.domain.review.ProductReviewMail"/>
+        <mapping class="com.hk.domain.review.Mail"/>
+        <mapping class="com.hk.domain.review.UserReviewMail"/>
     </session-factory>
 </hibernate-configuration>

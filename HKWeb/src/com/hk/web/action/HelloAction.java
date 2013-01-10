@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hk.domain.catalog.product.Product;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.service.ServiceLocatorFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HelloAction implements ActionBean {
     
     @Autowired
@@ -30,7 +32,7 @@ public class HelloAction implements ActionBean {
         return date;
     }
 
-    @DefaultHandler
+
     public Resolution currentDate(){
         date = new Date();
         ProductService testService = ServiceLocatorFactory.getService(ProductService.class);
@@ -38,6 +40,7 @@ public class HelloAction implements ActionBean {
         return new ForwardResolution(VIEW);
     }
 
+    @DefaultHandler
     public Resolution randomDate(){
         long max = System.currentTimeMillis();
         long random = new Random().nextLong() % max;

@@ -10765,4 +10765,86 @@
     <changeSet author="Tarun (generated)" id="1356513899742-1">
         <addNotNullConstraint columnDataType="INT" columnName="zone_id" tableName="shipment"/>
     </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-1">
+        <createTable tableName="mail">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+            <column name="content" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-2">
+        <createTable tableName="product_review_mail">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="time_window_days" type="INT"/>
+            <column name="days_to_review_again" type="INT"/>
+            <column name="create_dt" type="DATETIME"/>
+            <column name="update_dt" type="TIMESTAMP"/>
+            <column name="is_enabled" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mail_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_updated_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="test_email_id" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-3">
+        <createTable tableName="user_review_mail">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="due_date" type="DATETIME"/>
+            <column name="create_dt" type="DATETIME"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP"/>
+            <column name="is_mail_sent" type="BIT"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_review_id" type="INT"/>
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sent_date" type="DATETIME"/>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-4">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="product_review_mail" constraintName="fk_review_mail_product_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-5">
+        <addForeignKeyConstraint baseColumnNames="last_updated_by" baseTableName="product_review_mail"  constraintName="fk_review_mail_product_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-6">
+        <addForeignKeyConstraint baseColumnNames="mail_id" baseTableName="product_review_mail"  constraintName="fk_mailing_product_mail1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mail"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-7">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="product_review_mail"  constraintName="fk_mailing_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-8">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="user_review_mail"  constraintName="fk_user_review_mail_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-9">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="user_review_mail"  constraintName="fk_user_review_mail_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-10">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_review_mail" constraintName="fk_review_mail_user_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357544592684-11">
+        <addForeignKeyConstraint baseColumnNames="user_review_id" baseTableName="user_review_mail" constraintName="fk_review_mail_user_user_review1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_review"  referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
