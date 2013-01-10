@@ -73,11 +73,13 @@
     <table class="zebra_vert">
       <thead>
       <tr>
-        <th>ID</th>
-        <th>Create Date</th>
-        <th>Created By</th>
-        <th>Reconciliation Date</th>
-        <th>Actions</th>
+	      <th>ID</th>
+	      <th>Create Date</th>
+	      <th>Created By</th>
+	      <th>Reconciliation Date</th>
+	      <th>Reconciliation Type</th>
+	      <th>Actions</th>
+
       </tr>
       </thead>
       <c:forEach items="${poa.reconciliationVouchers}" var="reconvoucher" varStatus="ctr">
@@ -86,6 +88,17 @@
           <td><fmt:formatDate value="${reconvoucher.createDate}" type="both" timeStyle="short"/></td>
           <td>${reconvoucher.createdBy.name} <br/>(${reconvoucher.createdBy.login})</td>
           <td><fmt:formatDate value="${reconvoucher.reconciliationDate}" type="both" timeStyle="short"/></td>
+	        <td>
+		      <c:choose>
+		          <c:when test="${reconvoucher.reconciliationType.id == addId}">
+			        Add
+		          </c:when>
+		          <c:otherwise>
+			         Subtract
+		          </c:otherwise>
+	          </c:choose>
+
+	        </td>
           <td>
 	          <c:choose>
 		          <c:when test="${reconvoucher.reconciliationType.id == addId}">
