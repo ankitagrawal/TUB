@@ -31,6 +31,7 @@ import com.google.gson.JsonParser;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.exception.HealthkartCheckedException;
+import com.hk.admin.util.courier.thirdParty.IOTCourierTrackUtil;
 
 /**
  * Created by IntelliJ IDEA.
@@ -477,6 +478,30 @@ public class CourierStatusUpdateHelper {
 		}
 		return xmlElement;
 	}
+
+	public String updateDeliveryStatusIndiaOntime(String trackingId) throws HealthkartCheckedException {
+
+		String response = "";
+		courierName = EnumCourier.IndiaOnTime.getName();
+
+		//added for debugging
+		//trackingId = "70004207700";
+		try{
+			response = new IOTCourierTrackUtil().trackShipment(trackingId);
+			if (!response.equalsIgnoreCase(CourierConstants.QUANTIUM_INVALID_NO)) {
+
+			} 			
+		} catch (NullPointerException npe) {
+			logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + courierName + trackingId);
+			throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
+
+		} catch (Exception e) {
+			logger.debug(CourierConstants.EXCEPTION + courierName + trackingId);
+			throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
+		}
+		return response;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public String getHkDeliveryStatusForUser(String status) {

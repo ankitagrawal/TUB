@@ -436,6 +436,46 @@ public class DeliveryStatusUpdateManager {
 					}
 				}
 			}
+		} else if (courierName.equalsIgnoreCase(CourierConstants.INDIAONTIME)) {
+			SimpleDateFormat sdf_date = new SimpleDateFormat("dd/MM/yyyy");
+			courierIdList = new ArrayList<Long>();
+			courierIdList.add(EnumCourier.IndiaOnTime.getId());
+			shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+			Element responseElement;
+			String courierDeliveryStatus = null;
+			String deliveryDateString = null;
+
+			if (shippingOrderList != null && shippingOrderList.size() > 0) {
+				for (ShippingOrder shippingOrderInList : shippingOrderList) {
+					trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
+					try {
+						responseElement = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
+						if (responseElement != null) {
+							String trckNo = responseElement.getChildText(CourierConstants.QUANTIUM_TRACKING_NO);
+							String refId = responseElement.getChildText(CourierConstants.QUANTIUM_REF_NO);
+							courierDeliveryStatus = responseElement.getChildText(CourierConstants.QUANTIUM_STATUS);
+							deliveryDateString = responseElement.getChildText(CourierConstants.QUANTIUM_DELIVERY_DATE);
+							if (courierDeliveryStatus != null && deliveryDateString != null) {
+								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.QUANTIUM_DELIVERED)) {
+									if (refId != null && refId.equalsIgnoreCase(shippingOrderInList.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
+										try {
+											Date delivery_date = sdf_date.parse(deliveryDateString);
+											ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
+										} catch (ParseException pe) {
+											logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
+											unmodifiedTrackingIds.add(trackingId);
+										}
+									}
+								}
+							}
+						} else {
+							unmodifiedTrackingIds.add(trackingId);
+						}
+					} catch (Exception e) {
+						unmodifiedTrackingIds.add(trackingId);
+					}
+				}
+			}
 		}
 		return ordersDelivered;
 	}
