@@ -316,6 +316,8 @@ public class OrderServiceImpl implements OrderService {
 
     public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order) {
         // Auto escalation of order if unbooked inventory is positive
+		splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+		/*
 		Set<ShippingOrder> shippingOrders = null;
 		if (order.getShippingOrders() != null && !order.getShippingOrders().isEmpty()) {
 			shippingOrders = order.getShippingOrders();
@@ -330,6 +332,7 @@ public class OrderServiceImpl implements OrderService {
 				shippingOrderService.autoEscalateShippingOrder(shippingOrder);
 			}
 		}
+		*/
     }
 
     @Transactional
@@ -735,11 +738,11 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        boolean shippingOrderExists = isShippingOrderExists(order);
+        boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
 
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
-        if (shippingOrderExists) {
+        if (shippingOrderAlreadyExists) {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                 order.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
                 order = save(order);
@@ -756,7 +759,6 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (shippingOrders != null && shippingOrders.size() > 0) {
-            shippingOrderExists = true;
             // save order with InProcess status since shipping orders have been created
             order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
             order.setShippingOrders(shippingOrders);
@@ -768,17 +770,17 @@ public class OrderServiceImpl implements OrderService {
             String comments = "No. of Shipping Orders created  " + shippingOrders.size();
             //User adminUser = UserCache.getInstance().getAdminUser();
             User adminUser = getUserService().getAdminUser();
-            orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
-
+			if (!shippingOrderAlreadyExists) {
+				orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
+			}
+			for (ShippingOrder shippingOrder : shippingOrders) {
+                shipmentService.createShipment(shippingOrder);
+            }
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
                     shippingOrderService.autoEscalateShippingOrder(shippingOrder);
                 }
-            }
-
-            for (ShippingOrder shippingOrder : shippingOrders) {
-                shipmentService.createShipment(shippingOrder);
             }
 
         }
@@ -787,7 +789,7 @@ public class OrderServiceImpl implements OrderService {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
 
-        return shippingOrderExists;
+        return shippingOrderAlreadyExists;
     }
 
 

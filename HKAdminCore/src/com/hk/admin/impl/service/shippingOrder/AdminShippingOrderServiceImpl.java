@@ -161,10 +161,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             shippingOrder = getShippingOrderService().setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
-			shipmentService.createShipment(shippingOrder);
+			//shipmentService.createShipment(shippingOrder);
 	        // auto escalate shipping orders if possible
-	        getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
+	        //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
 
+			orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(baseOrder);
             return shippingOrder;
         }
         return null;
