@@ -170,4 +170,5 @@ public class ReportConstants {
     public static final String COURIER_ID_STR = "Courier Id";                   
 
 	public static final String ZONE = "ZONE";
+	public static final String BARCODE = "BARCODE";
 }

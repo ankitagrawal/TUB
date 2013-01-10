@@ -32,9 +32,12 @@ public enum EnumCourier {
     Smile_EExpress(190L, "Smile EExpress"),
     Smile_Express_DSP(195L,"Smile Express DSP"),
     EarthMoversPune(200L, "Earth Movers Pune"),
+	IndiaOnTime(210L, "IndiaOn Time"),
     HK_Delivery(500L, "HealthKart Delivery"),
     FedEx(600L, "FedEx"),
     FedEx_Surface(610L, "FedEx Surface"),
+    Gati(650L, "Gati"),
+    Star_Track(660L, "Star Track"),
 
     MIGRATE(-1L, "MIGRATE");
 
@@ -133,10 +136,26 @@ public enum EnumCourier {
         return delhiveryCourierIds;
     }
 
+	 public static List<Long> getFedexCouriers() {
+        List<Long> fedexCourierIds = new ArrayList<Long>();
+        fedexCourierIds.add(EnumCourier.FedEx.getId());
+        fedexCourierIds.add(EnumCourier.FedEx_Surface.getId());
+        return fedexCourierIds;
+    }
+
 	public static List<Long> getDispatchLotCouriers(){
 		List<Long> dispatchLotCourierIds = new ArrayList<Long>();
 		dispatchLotCourierIds.add(EnumCourier.HK_Delivery.getId());
 		return dispatchLotCourierIds;
 	}
+
+    public static List<EnumCourier> getCurrentlyApplicableVendorCouriers() {
+        return Arrays.asList(
+                EnumCourier.BlueDart,
+                EnumCourier.Gati,
+                EnumCourier.Safexpress,
+                EnumCourier.Star_Track
+        );
+    }
 }
 

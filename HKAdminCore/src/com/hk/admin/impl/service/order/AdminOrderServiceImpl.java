@@ -1,11 +1,6 @@
 package com.hk.admin.impl.service.order;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +13,7 @@ import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -315,6 +310,18 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     @Transactional
+    public Order markOrderAsCompletedWithInstallation(Order order){
+//       boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
+        boolean isUpdated = updateOrderStatusFromShippingOrdersForInstallation(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
+        if (isUpdated) {
+            logOrderActivity(order, EnumOrderLifecycleActivity.OrderInstalled);
+            getAdminEmailManager().sendOrderInstalltionEmail(order);
+        }
+        return order;
+    }
+
+
+    @Transactional
     public Order markOrderAsLost(Order order) {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Lost, EnumOrderStatus.Lost);
         if (isUpdated) {
@@ -325,6 +332,43 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return order;
     }
 
+
+
+
+    @Transactional
+       private boolean updateOrderStatusFromShippingOrdersForInstallation(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess) {
+
+           boolean shouldUpdate = true;
+           Set<ShippingOrder> baseShippingOrderList = order.getShippingOrders();
+           List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+            for (ShippingOrder shippingOrder : baseShippingOrderList) {
+                if (shippingOrder.isDropShipping() && shipmentService.isShippingOrderHasInstallableItem(shippingOrder)) {
+                    shippingOrderList.add(shippingOrder);
+                }
+            }
+
+           for (ShippingOrder shippingOrder : shippingOrderList) {
+               if (!shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
+                   if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
+                       shouldUpdate = false;
+                       break;
+                   }
+               }
+           }
+
+           if (shouldUpdate) {
+               order.setOrderStatus(getOrderStatusService().find(boStatusOnSuccess));
+               order = getOrderService().save(order);
+           }
+           /*
+            * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =
+            * orderDaoProvider.get().save(order); }
+            */
+
+           return shouldUpdate;
+       }
+    
+
     @Override
     @Transactional
     public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
@@ -334,65 +378,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         logOrderActivity(order, loggedInUser, orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
 
         return order;
-    }
-
-    @Override
-    @Transactional
-    public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order) {
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        boolean shippingOrderExists = orderService.isShippingOrderExists(order);
-
-        Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
-
-        if (shippingOrderExists) {
-            if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                order.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
-                order = getOrderService().save(order);
-            }
-        } else {
-	        if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
-	            //User adminUser = UserCache.getInstance().getAdminUser();
-	            User adminUser = getUserService().getAdminUser();
-		        orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
-		        //DO Nothing for B2B Orders
-	        } else {
-		        shippingOrders = getOrderService().createShippingOrders(order);
-	        }
-        }
-
-        if (shippingOrders != null && shippingOrders.size() > 0) {
-            shippingOrderExists = true;
-            // save order with InProcess status since shipping orders have been created
-            order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
-            order.setShippingOrders(shippingOrders);
-            order = getOrderService().save(order);
-
-            /**
-             * Order lifecycle activity logging - Order split to shipping orders
-             */
-            String comments = "No. of Shipping Orders created  " + shippingOrders.size();
-            //User adminUser = UserCache.getInstance().getAdminUser();
-            User adminUser = getUserService().getAdminUser();
-            orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
-
-            // auto escalate shipping orders if possible
-            if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
-                for (ShippingOrder shippingOrder : shippingOrders) {
-                    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
-                }
-            }
-
-            for (ShippingOrder shippingOrder : shippingOrders) {
-                shipmentService.createShipment(shippingOrder);
-            }
-
-        }
-        // Check Inventory health of order lineitems
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-        }
-
-        return shippingOrderExists;
     }
 
     /**

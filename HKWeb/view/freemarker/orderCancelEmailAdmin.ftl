@@ -9,7 +9,7 @@ Order cancellation for  ${order.gatewayOrderId} [${order.payment.paymentMode.nam
 
 <p style="margin-bottom:1em">We have cancelled your order id ${order.gatewayOrderId}.</p>
 <p style="margin-bottom:1em">In case of any confusion, please feel free to contact us about this on our customer care email - info@healthkart.com
-  or our customer care phone on 0124-4551616
+  or our customer care phone on 0124-4551666
 </p>
 
 <div>

@@ -26,7 +26,7 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.Keys;
@@ -150,7 +150,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             //fetching the consignments just created above.
             consignmentList = consignmentService.getConsignmentListByAwbNumbers(new ArrayList<String>(awbNumberSet));
             //creating consignmentTrackingList
-            consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList ,consignmentLifecycleStatus);
+            consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList ,consignmentLifecycleStatus, null);
             //saving it.
             consignmentService.saveConsignmentTracking(consignmentTrackingList);
             addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));

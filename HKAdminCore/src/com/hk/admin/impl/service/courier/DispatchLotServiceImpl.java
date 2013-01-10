@@ -260,7 +260,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		if(consignmentList.size() > 0 && !consignmentList.contains(null)){
 			consignmentService.saveConsignments(consignmentList);
 			consignmentList = consignmentService.getConsignmentListByAwbNumbers(awbNumbers);
-			List<ConsignmentTracking> consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedInUser,consignmentList ,consignmentLifecycleStatus);
+			List<ConsignmentTracking> consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedInUser,consignmentList ,consignmentLifecycleStatus, null);
 			consignmentService.saveConsignmentTracking(consignmentTrackingList);
 		}
 		//long dispatchLotSize = (long)getShipmentsForDispatchLot(dispatchLot).size();
