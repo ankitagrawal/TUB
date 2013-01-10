@@ -1,6 +1,6 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.Date;
+import java.util.*;
 
 import com.hk.domain.courier.Zone;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,7 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.cache.UserCache;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -34,6 +33,8 @@ import com.hk.domain.user.User;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
@@ -60,6 +61,9 @@ public class ShipmentServiceImpl implements ShipmentService {
     UserService           userService;
     @Autowired
     AdminEmailManager     adminEmailManager;
+    @Autowired
+    ShippingOrderStatusService shippingOrderStatusService ;
+
 
     @Transactional
     public Shipment createShipment(ShippingOrder shippingOrder) {
@@ -102,6 +106,7 @@ public class ShipmentServiceImpl implements ShipmentService {
                         CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
             }
         }
+
 
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
@@ -234,4 +239,19 @@ public class ShipmentServiceImpl implements ShipmentService {
     public UserService getUserService() {
         return userService;
     }
+
+
+    public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder) {
+        if (shippingOrder.isDropShipping()) {
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                if (lineItem.getSku().getProductVariant().getProduct().getInstallable()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
 }

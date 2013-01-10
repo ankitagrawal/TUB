@@ -19,7 +19,7 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -199,6 +199,19 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     @Transactional
+       public ShippingOrder markShippingOrderAsInstalled(ShippingOrder shippingOrder) {
+           shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Installed));
+           getShippingOrderService().save(shippingOrder);
+           getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Installed);
+           Order order = shippingOrder.getBaseOrder();
+           getAdminOrderService().markOrderAsCompletedWithInstallation(order);
+//	    smsManager.sendOrderDeliveredSMS(shippingOrder);
+           return shippingOrder;
+       }
+
+
+
+    @Transactional
     public ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Returned));
         shippingOrder.getShipment().setReturnDate(new Date());
@@ -300,6 +313,15 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
 
+    @Transactional
+       public ShippingOrder moveShippingOrderBackToDropShippingQueue(ShippingOrder shippingOrder) {
+           shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
+//           getAdminInventoryService().reCheckInInventory(shippingOrder);
+           getShippingOrderService().save(shippingOrder);
+           getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_BackToDropShippingQueue);
+           return shippingOrder;
+       }
+
 	public ReplacementOrderReason getRTOReasonForShippingOrder(ShippingOrder shippingOrder) {
 		String rtoReason = null;
 		ReplacementOrderReason replacementOrderReason = null;
@@ -323,7 +345,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		return null;
 	}
 
-	public ShippingOrderService getShippingOrderService() {
+
+    public ShippingOrderService getShippingOrderService() {
         return shippingOrderService;
     }
 

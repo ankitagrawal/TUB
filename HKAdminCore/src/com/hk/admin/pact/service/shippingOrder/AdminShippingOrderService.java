@@ -18,10 +18,6 @@ public interface AdminShippingOrderService {
     public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse);
 
     public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse);
-    
-    
-    
-        
 
 
 //    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
@@ -42,7 +38,11 @@ public interface AdminShippingOrderService {
 
     public ShippingOrder moveShippingOrderBackToPackingQueue(ShippingOrder shippingOrder);
 
-    ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder);
+    public ShippingOrder moveShippingOrderBackToDropShippingQueue(ShippingOrder shippingOrder);
+
+     ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder);
+
+    public ShippingOrder markShippingOrderAsInstalled(ShippingOrder shippingOrder);
 
     public ShippingOrder markShippingOrderAsLost(ShippingOrder shippingOrder);
 
