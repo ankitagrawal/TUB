@@ -89,7 +89,7 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
     public HKAPIBaseDTO awardRewardPoints(String userAccessToken, Double rewardPoints){
         User user=hkAuthService.getUserFromAccessToken(userAccessToken);
         HkApiUser hkApiUser=hkAuthService.getApiUserFromUserAccessToken(userAccessToken);
-        //TODO allow this only for hkplus - but there is no way out here right now other than hardcoding the logic for "HealthkartPlus"
+        //TODO allow this only for hkplus - hardcoded here - probably add an is allowed to add reward points at  the db level- which inturn needs a different reward point mode
         // probably add a column in the hk_api_user table for reward point allocation
         if(hkApiUser.getApiKey().equals("healthkartplus")){
 
