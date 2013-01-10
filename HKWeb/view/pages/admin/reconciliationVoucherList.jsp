@@ -93,7 +93,7 @@
 				          <s:param name="reconciliationVoucher" value="${reconvoucher.id}"/></s:link>
 		          </c:when>
 		          <c:otherwise>
-			          <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="subtractReconciliation">Edit
+			          <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="create">Edit
 				          <s:param name="reconciliationVoucher" value="${reconvoucher.id}"/></s:link>
 		          </c:otherwise>
 	          </c:choose>
