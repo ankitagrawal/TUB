@@ -17,7 +17,7 @@
             <product g:id="${product.id}">
                 <title><![CDATA[${hk:escapeXML(product.name)}]]></title>
                 <g:link>http://www.healthkart.com/product/${product.slug}/${product.id}</g:link>
-                <g:price>${product.minimumMRPProducVariant.hkPrice}</g:price>
+                <g:price>${product.minimumMRPProducVariant.hkPrice} INR</g:price>
                 <description>${hk:escapeXML(product.description)}</description>
                 <g:condition>new</g:condition>
                 <g:image_link>
