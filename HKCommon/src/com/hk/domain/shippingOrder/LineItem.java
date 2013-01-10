@@ -261,7 +261,7 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
     @Override
     public int hashCode() {
         if (this.id != null) {
-            return new HashCodeBuilder().append(this.id).hashCode();
+            return new HashCodeBuilder().append(this.id).toHashCode();
         } else {
             HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
             if (this.getShippingOrder() != null) {

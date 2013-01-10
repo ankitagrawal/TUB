@@ -81,7 +81,7 @@ Subscription Cancellation for Subscription ID ${subscription.id}
                         <br/>
                         <br/>
 
-                        If you have any questions, you can chat online with our Customer Care or call them at 0124-4551616.<br/>
+                        If you have any questions, you can chat online with our Customer Care or call them at 0124-4551666.<br/>
                         <br/>
 
 

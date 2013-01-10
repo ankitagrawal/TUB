@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -39,6 +41,8 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
            list();
        return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
      }
+
+
 
    /* public void resetInventory(ProductVariant productVariant) {
         List<Long> toBeRemovedIds = (List<Long>) getSession().createQuery("select id from SkuGroup sg where sg.sku.productVariant = :productVariant").setParameter(
@@ -106,5 +110,40 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
     return inStockSkuItems;
 
   }
+
+
+	private DetachedCriteria getSkuGroupCriteria(List<SkuGroup> skuGroupList, String barcode, String batchNumber, Sku sku) {
+		DetachedCriteria skuGroupCriteria = DetachedCriteria.forClass(SkuGroup.class);
+		List<Long> skuGroupIds = new ArrayList<Long>();
+		if (skuGroupList != null) {
+			for (SkuGroup skuGroup : skuGroupList) {
+				skuGroupIds.add(skuGroup.getId());
+			}
+		}
+
+		if (skuGroupIds.size() > 0) {
+			skuGroupCriteria.add(Restrictions.in("id", skuGroupIds));
+		}
+
+		if (barcode != null) {
+			skuGroupCriteria.add(Restrictions.eq("barcode", barcode.trim()));
+		}
+
+		if (batchNumber != null) {
+			skuGroupCriteria.add(Restrictions.eq("batchNumber", batchNumber.trim()));
+		}
+
+		if (sku != null) {
+			skuGroupCriteria.add(Restrictions.eq("sku", sku));
+		}
+		return skuGroupCriteria;
+
+	}
+
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
+		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, null, batch, sku);
+		return findByCriteria(skuGroupCriteria);
+	}
+
 
 }
