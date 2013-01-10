@@ -143,5 +143,5 @@ public interface MasterDataDao
 
 	public List<String> getShipmentStatusForDispatchLot();
 
-  public List<Warehouse> getAllWarehouse();
+  public List<Warehouse> getServiceableWarehouses();
 }

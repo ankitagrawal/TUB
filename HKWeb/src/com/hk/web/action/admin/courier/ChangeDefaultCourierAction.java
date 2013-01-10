@@ -36,10 +36,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private PincodeService pincodeService;
     @Autowired
     XslPincodeParser xslPincodeParser;
-    @Autowired
-    WarehouseService warehouseService;
-    @Autowired
-    CourierService courierService;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminDownloadsPath;
@@ -52,8 +48,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private Pincode pincode;
     private List<PincodeDefaultCourier> pincodeDefaultCouriers;
     private List<PincodeCourierMapping> pincodeCourierMappings;
-    private List<Warehouse> allWarehouse;
-    private List<Courier> allCourier;
 
     Warehouse warehouse;
     boolean isCod;
@@ -84,8 +78,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
             pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGround);
             pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, isCod, isGround, true);
         }
-        allWarehouse = getWarehouseService().getAllWarehouses();
-        allCourier = getCourierService().getAllCouriers();
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
@@ -99,8 +91,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
         for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
             getBaseDao().save(defaultCourier);
         }
-        allWarehouse = getWarehouseService().getAllWarehouses();
-        allCourier = getCourierService().getAllCouriers();
        addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
@@ -132,8 +122,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
     }
 
     public Resolution uploadPincodeExcel() throws Exception {
-        allWarehouse = getWarehouseService().getAllWarehouses();
-        allCourier = getCourierService().getAllCouriers();
         if (fileBean == null) {
             addRedirectAlertMessage(new SimpleMessage("Please chose a file"));
             return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
@@ -216,28 +204,4 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public void setPincodeCourierMappings(List<PincodeCourierMapping> pincodeCourierMappings) {
         this.pincodeCourierMappings = pincodeCourierMappings;
     }
-
-  public List<Warehouse> getAllWarehouse() {
-    return allWarehouse;
-  }
-
-  public void setAllWarehouse(List<Warehouse> allWarehouse) {
-    this.allWarehouse = allWarehouse;
-  }
-
-  public List<Courier> getAllCourier() {
-    return allCourier;
-  }
-
-  public void setAllCourier(List<Courier> allCourier) {
-    this.allCourier = allCourier;
-  }
-
-  public CourierService getCourierService() {
-    return courierService;
-  }
-
-  public WarehouseService getWarehouseService() {
-    return warehouseService;
-  }
 }

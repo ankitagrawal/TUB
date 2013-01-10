@@ -421,7 +421,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
 	public List<String> getShipmentStatusForDispatchLot() {
 		return dispatchLotService.getShipmentStatusForDispatchLot();
 	}
-  public List<Warehouse> getAllWarehouse(){
-     return warehouseService.getAllWarehouses();
+  public List<Warehouse> getServiceableWarehouses(){
+     return warehouseService.getServiceableWarehouses();
   }
 }

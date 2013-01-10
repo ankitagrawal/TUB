@@ -8,7 +8,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction" var="cdca"/>
+<%
+    MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
+    pageContext.setAttribute("allWarehouse", masterDataDao.getServiceableWarehouses());
+    pageContext.setAttribute("allCourier", masterDataDao.getAvailableCouriers());
+%>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="ChangeDefault Courier">
     <s:layout-component name="htmlHead">
@@ -70,7 +76,7 @@
                             '</td>' +
                             '<td>' +
                             '<select name="pincodeDefaultCouriers[' + nextIndex + '].warehouse">' +
-                                    <c:forEach items="${cdca.allWarehouse}" var="warehouse">
+                                    <c:forEach items="${allWarehouse}" var="warehouse">
                             '<option value="' + ${warehouse.id} + '"> ' + "${warehouse.name}" + '</option>' +
                                     </c:forEach>
                             '</select>' +
