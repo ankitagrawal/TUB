@@ -14,7 +14,8 @@
 <products>
     <c:forEach items="${googleBean.products}" var="product">
         <c:if test="${fn:length(product.productVariants) > 0 && product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">
-            <product g:id="${product.id}">
+            <product>
+                <g:id>${product.id}<g:id>
                 <title><![CDATA[${hk:escapeXML(product.name)}]]></title>
                 <g:link>http://www.healthkart.com/product/${product.slug}/${product.id}</g:link>
                 <g:price>${product.minimumMRPProducVariant.hkPrice} INR</g:price>
