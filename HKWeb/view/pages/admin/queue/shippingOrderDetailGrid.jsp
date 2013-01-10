@@ -93,6 +93,12 @@
     </div>
     <div class="clear" style=""></div>
     <div class="floatleft">
+        Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
+                <span
+                        style="margin-left:10px;"> </span>
+    </div>
+    <div class="clear" style=""></div>
+    <div class="floatleft">
         Amount: <strong>Rs.<fmt:formatNumber value="${shippingOrder.amount}"
                                              pattern="<%=FormatUtils.currencyFormatPattern%>"/></strong>
     </div>
@@ -363,8 +369,16 @@
             </c:choose>
             <td style="border-bottom:1px solid gray;border-top:1px solid gray;">
                 ${productVariant.product.name}
+                    <c:choose>
+                        <c:when test="${productVariant.product.groundShipping}">
+                             <span style="margin-left:10px;color: #ff0000;">G</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span style="margin-left:10px;color: #ff0000;">A</span>
+                        </c:otherwise>
+                    </c:choose>
 
-                <c:if test="${cartLineItem.comboInstance != null}">
+                    <c:if test="${cartLineItem.comboInstance != null}">
                 <span style="color:crimson;text-decoration:underline">
                 <br/>(Part of Combo: ${cartLineItem.comboInstance.combo.name})
                 </span>
