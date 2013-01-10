@@ -876,12 +876,17 @@ public class AdminEmailManager {
 		return emailService.sendHtmlEmail(freemarkerTemplate,valuesMap,logisticsAdminEmails,EmailTemplateConstants.operationsTeam);
 	}
 
-	public boolean sendNoShipmentEmail(String message, ShippingOrder shippingOrder){
+	public boolean sendNoShipmentEmail(String message, ShippingOrder shippingOrder, Order baseOrder){
 		HashMap valuesMap = new HashMap();
-		valuesMap.put("shippingOrder", shippingOrder);
+		if(shippingOrder != null){
+			valuesMap.put("orderId", shippingOrder.getGatewayOrderId());
+		}
+		else{
+			valuesMap.put("orderId", baseOrder.getGatewayOrderId());
+		}
 		valuesMap.put("message", message);
 		
-		Template freemarTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.courierShipmentInformation);
+		Template freemarTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.courierShipmentFail);
 		return emailService.sendHtmlEmail(freemarTemplate, valuesMap, logisticsAdminEmails, EmailTemplateConstants.operationsTeam);
 	}
 

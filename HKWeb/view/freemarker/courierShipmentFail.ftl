@@ -1,4 +1,4 @@
-Error creating shipment
+Error creating shipment for order : ${orderId} 
 <html>
 <head>
   <title>Welcome to HealthKart.com</title>
@@ -10,7 +10,7 @@ Error creating shipment
 
 <p style="margin-bottom:1em">
   ${message}
-  Shipping Order Id = ${shippingOrder.gatewayOrderId} <br/>
+  Order Id = ${orderId} <br/>
 </p>
 
 

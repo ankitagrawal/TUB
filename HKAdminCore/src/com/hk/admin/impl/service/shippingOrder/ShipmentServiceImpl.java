@@ -70,7 +70,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             User adminUser = getUserService().getAdminUser();
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
                     CourierConstants.PINCODE_INVALID);
-			adminEmailManager.sendNoShipmentEmail(CourierConstants.PINCODE_INVALID, shippingOrder);
+			//adminEmailManager.sendNoShipmentEmail(CourierConstants.PINCODE_INVALID, shippingOrder, shippingOrder.getBaseOrder());
             return null;
         }
 
@@ -91,7 +91,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (suggestedCourier == null) {
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
                     CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
-			adminEmailManager.sendNoShipmentEmail(CourierConstants.SUGGESTED_COURIER_NOT_FOUND, shippingOrder);
+			adminEmailManager.sendNoShipmentEmail(CourierConstants.SUGGESTED_COURIER_NOT_FOUND, shippingOrder, shippingOrder.getBaseOrder());
             return null;
         } else {
             String pin = pincode.getPincode();
@@ -99,7 +99,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             if (!courierServiceInfoDao.isCourierServiceInfoAvailable(suggestedCourier.getId(), pin, shippingOrder.isCOD(), isGroundShipped, isCodOnGroundShipped)) {
                 shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(),
                         CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
-				adminEmailManager.sendNoShipmentEmail(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND, shippingOrder);
+				adminEmailManager.sendNoShipmentEmail(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND, shippingOrder, shippingOrder.getBaseOrder());
             }
         }
 
