@@ -69,7 +69,7 @@
                             '<td>' +
                             '<select name="pincodeDefaultCouriers[' + nextIndex + '].courier">' +
                             '<option value="">--Select--</option>' +
-                                    <c:forEach items="${cdca.allCourier}" var="courier">
+                                    <c:forEach items="${allCourier}" var="courier">
                             '<option value="' + ${courier.id} + '"> ' + "${courier.name}" + '</option>' +
                                     </c:forEach>
                             '</select>' +
