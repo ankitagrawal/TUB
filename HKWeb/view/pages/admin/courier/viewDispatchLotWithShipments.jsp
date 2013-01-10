@@ -1,7 +1,10 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.courier.EnumDispatchLotStatus" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="View Dispatch Lot">
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.DispatchLotAction" var="dispatchLotBean"/>
+	<c:set var="dispatchLotGenerated" value="<%=EnumDispatchLotStatus.Generated.getId()%>"/>
+	<c:set var="dispatchLotPartiallyReceived" value="<%=EnumDispatchLotStatus.PartiallyReceived.getId()%>"/>
 	<s:layout-component name="htmlHead">
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -23,6 +26,15 @@
 			}
 
 		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#markDispatchLotReceived').click(function() {
+					if(!confirm("Some shipments are not yet received, do you still want to Mark Lot As Received?")) {
+						return false;
+					}
+				});
+			})
+		</script>
 	</s:layout-component>
 	<s:layout-component name="heading">
 		<h4>View Dispatch Lot: ${dispatchLotBean.dispatchLot.id}</h4>
@@ -106,14 +118,17 @@
 					<td><label><strong>Remarks</strong></label></td>
 					<td>${dispatchLotBean.dispatchLot.remarks}</td>
 				</tr>
-				<tr>
-					<td colspan="2">
-						<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
-							<s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}"/>
-							<s:submit name="markDispatchLotReceived" value="Mark Lot As Received"/>
-						</s:form>
-					</td>
-				</tr>
+				<c:if test="${dispatchLotBean.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated
+				|| dispatchLotBean.dispatchLot.dispatchLotStatus.id == dispatchLotPartiallyReceived}}">
+					<tr>
+						<td colspan="2">
+							<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
+								<s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}"/>
+								<s:submit name="markDispatchLotReceived" value="Mark Lot As Received" id="markDispatchLotReceived"/>
+							</s:form>
+						</td>
+					</tr>
+				</c:if>
 			</table>
 		</fieldset>
 
