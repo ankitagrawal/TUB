@@ -50,6 +50,8 @@ public interface ShippingOrderService {
 
 	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
 
+    public ShippingOrder escalateShippingOrderFromActionTODropQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
+
 	/**
 	 * Creates a shipping order with basic details
 	 *
@@ -76,6 +78,6 @@ public interface ShippingOrderService {
 
 	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder);
 
-	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);
+	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);   
 
 }

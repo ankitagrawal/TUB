@@ -51,6 +51,7 @@ public class UserResource {
     @POST
     @Path("/reward/{points}")
     @Produces("application/json")
+    @SecureResource(hasAllTokens = {HKAPITokenTypes.APP_TOKEN, HKAPITokenTypes.USER_ACCESS_TOKEN})
     public HKAPIBaseDTO awardRewardPoints(@HeaderParam(HKAPITokenTypes.USER_ACCESS_TOKEN) String userAccessToken,
                                          @PathParam("points") Double rewardPoints){
         return hkapiUserService.awardRewardPoints(userAccessToken,rewardPoints);

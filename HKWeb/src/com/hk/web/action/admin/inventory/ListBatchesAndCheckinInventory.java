@@ -29,6 +29,7 @@ import com.hk.pact.dao.inventory.LowInventoryDao;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
@@ -40,7 +41,7 @@ public class ListBatchesAndCheckinInventory extends BaseAction {
     @Autowired
     private ProductVariantService   productVariantService;
     @Autowired
-    SkuGroupDao                     skuGroupDao;
+    SkuGroupService                skuGroupService;
     @Autowired
     SkuItemDao                      skuItemDao;
     @Autowired
@@ -84,7 +85,7 @@ public class ListBatchesAndCheckinInventory extends BaseAction {
             if (productVariant != null) {
                 availableSkuGroups = adminInventoryService.getInStockSkuGroups(upc);
                 logger.debug("availableSkuGroups: " + availableSkuGroups.size());
-                allSkuGroups = skuGroupDao.getAllCheckedInBatches(productVariant);
+                allSkuGroups = skuGroupService.getAllCheckedInBatches(productVariant);
                 logger.debug("allSkuGroups: " + allSkuGroups.size());
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));

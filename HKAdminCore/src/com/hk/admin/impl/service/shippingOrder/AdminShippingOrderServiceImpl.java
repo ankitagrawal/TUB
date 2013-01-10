@@ -205,6 +205,19 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     @Transactional
+       public ShippingOrder markShippingOrderAsInstalled(ShippingOrder shippingOrder) {
+           shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Installed));
+           getShippingOrderService().save(shippingOrder);
+           getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Installed);
+           Order order = shippingOrder.getBaseOrder();
+           getAdminOrderService().markOrderAsCompletedWithInstallation(order);
+//	    smsManager.sendOrderDeliveredSMS(shippingOrder);
+           return shippingOrder;
+       }
+
+
+
+    @Transactional
     public ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Returned));
         shippingOrder.getShipment().setReturnDate(new Date());
@@ -305,6 +318,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return shippingOrder;
     }
 
+
 	@Override
 	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
         logger.debug("Trying to manually escalate order#" + shippingOrder.getId());
@@ -353,6 +367,18 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }
         return false;
     }
+
+
+    @Transactional
+       public ShippingOrder moveShippingOrderBackToDropShippingQueue(ShippingOrder shippingOrder) {
+           shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
+//           getAdminInventoryService().reCheckInInventory(shippingOrder);
+           getShippingOrderService().save(shippingOrder);
+           getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_BackToDropShippingQueue);
+           return shippingOrder;
+       }
+
+
 
     public ShippingOrderService getShippingOrderService() {
         return shippingOrderService;

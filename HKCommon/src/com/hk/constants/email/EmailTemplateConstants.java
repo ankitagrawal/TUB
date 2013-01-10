@@ -57,7 +57,8 @@ public class EmailTemplateConstants {
 	public static final String subscriptionPlacedEmailAdmin = "/subscription/subscriptionPlacedEmailToAdmin.ftl";
 	public static final String subscriptionVariantOutOfStockEmailAdmin = "/subscription/subscriptionVariantOutOfStockEmailAdmin.ftl";
 	public static final String productStockStatusEmail = "/productStockStatusEmail.ftl";
-	public static final String orderDeliveredEmail     = "/orderDeliveredEmail.ftl";	
+	public static final String orderDeliveredEmail     = "/orderDeliveredEmail.ftl";
+    public static final String orderInstalledEmail     = "/orderInstalledEmail.ftl";	
 	public static final String operationsTeam = "Operations Team";
 	public static final String poApprovedByWrongPerson = "/poApprovedByWrongPerson.ftl";
 }

@@ -77,8 +77,6 @@ public class MCodPaymentReceiveAction extends MBaseAction {
     @Value("#{hkEnvProps['" + Keys.Env.cashBackPercentage + "']}")
     private Double cashBackPercentage;
     @Autowired
-    AdminOrderService adminOrderService;
-    @Autowired
     OrderLoggingService orderLoggingService;
 
 	@Autowired
@@ -232,7 +230,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
                 couponAmount = pricingDto.getTotalPromoDiscount().intValue();
             }
 
-            adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+            orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
 /*
             RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
             RewardPoint prepayRewardPoints;

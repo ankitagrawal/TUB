@@ -40,7 +40,11 @@ public interface AdminShippingOrderService {
 
     public ShippingOrder moveShippingOrderBackToPackingQueue(ShippingOrder shippingOrder);
 
-    ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder);
+    public ShippingOrder moveShippingOrderBackToDropShippingQueue(ShippingOrder shippingOrder);
+
+     ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder);
+
+    public ShippingOrder markShippingOrderAsInstalled(ShippingOrder shippingOrder);
 
     public ShippingOrder markShippingOrderAsLost(ShippingOrder shippingOrder);
 

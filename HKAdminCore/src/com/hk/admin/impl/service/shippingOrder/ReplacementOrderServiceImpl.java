@@ -45,10 +45,14 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 	UserService                        userService;
     
 
-    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason) {
+    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason,
+                                                   String roComment) {
         Set<LineItem> lineItemSet = new HashSet<LineItem>();
         //User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         User loggedOnUser = userService.getLoggedInUser();
+	    if(roComment == null){
+		    roComment = "";
+	    }
         ReplacementOrder replacementOrder = ReplacementOrderHelper.getReplacementOrderFromShippingOrder(shippingOrder, shippingOrderStatusService, reconciliationStatusDao);
         for (LineItem lineItem : lineItems) {
             if (lineItem.getQty() != 0) {
@@ -81,7 +85,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
 	    shippingOrderService.logShippingOrderActivity(replacementOrder, loggedOnUser,
 				        EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
-				        "Replacement order created for shipping order: "+shippingOrder.getGatewayOrderId()+" .Status of old shipping order: "+shippingOrder.getOrderStatus().getName());
+				        "Replacement order created for shipping order: "+shippingOrder.getGatewayOrderId()+" .Status of old shipping order: "+shippingOrder.getOrderStatus().getName() +
+						        ". Special comment: "+roComment);
 
 	    shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser,
 			    EnumShippingOrderLifecycleActivity.RO_Created.asShippingOrderLifecycleActivity(),
