@@ -318,57 +318,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return shippingOrder;
     }
 
-
-	@Override
-	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
-        logger.debug("Trying to manually escalate order#" + shippingOrder.getId());
-        if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
-            if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-                User adminUser = getUserService().getAdminUser();
-                for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
-                    // is after including placed order qty
-
-                    logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
-                    ProductVariant productVariant = lineItem.getSku().getProductVariant();
-                    logger.debug("jit: " + productVariant.getProduct().isJit());
-                    if (productVariant.getProduct().isDropShipping()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
-                        getShippingOrderService().logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderService().getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
-                        return false;
-                    } else if (availableUnbookedInv <= 0) {
-                        String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
-                                + availableUnbookedInv;
-                        logger.info("Could not manually escalate order as availableUnbookedInv of sku[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv
-                                + " for shipping order id " + shippingOrder.getId());
-                        getShippingOrderService().logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderService().getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
-                        return false;
-                    }
-                }
-				if(shippingOrder.getShipment() == null){
-					Shipment newShipment = shipmentService.createShipment(shippingOrder);
-					if (newShipment == null) {
-						String comments = "Because shipment has not been created";
-						getShippingOrderService().logShippingOrderActivity(shippingOrder, adminUser,
-								getShippingOrderService().getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
-						return false;
-					}
-				}
-                return true;
-            }
-        } else {
-            String comments = "Because payment status is auth pending";
-            User adminUser = getUserService().getAdminUser();
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, adminUser,
-                    getShippingOrderService().getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
-            return false;
-        }
-        return false;
-    }
-
-
     @Transactional
        public ShippingOrder moveShippingOrderBackToDropShippingQueue(ShippingOrder shippingOrder) {
            shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));

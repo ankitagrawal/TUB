@@ -48,6 +48,8 @@ public interface ShippingOrderService {
 
 	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
 
+	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
+
 	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
 
     public ShippingOrder escalateShippingOrderFromActionTODropQueue(ShippingOrder shippingOrder, boolean isAutoEsc);

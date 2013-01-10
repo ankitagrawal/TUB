@@ -42,6 +42,7 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
@@ -73,6 +74,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 	private PincodeService pincodeService;
 	
     private OrderService               orderService;
+	@Autowired
+	private ShipmentService 		shipmentService;
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
@@ -151,6 +154,56 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
         getShippingOrderDao().save(shippingOrder);
     }
+
+	@Override
+	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
+        logger.debug("Trying to manually escalate order#" + shippingOrder.getId());
+        if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
+            if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+                User adminUser = getUserService().getAdminUser();
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
+                    // is after including placed order qty
+
+                    logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
+                    ProductVariant productVariant = lineItem.getSku().getProductVariant();
+                    logger.debug("jit: " + productVariant.getProduct().isJit());
+                    if (productVariant.getProduct().isDropShipping()) {
+                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
+                        logShippingOrderActivity(shippingOrder, adminUser,
+                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
+                        return false;
+                    } else if (availableUnbookedInv <= 0) {
+                        String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
+                                + availableUnbookedInv;
+                        logger.info("Could not manually escalate order as availableUnbookedInv of sku[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv
+                                + " for shipping order id " + shippingOrder.getId());
+                        logShippingOrderActivity(shippingOrder, adminUser,
+                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
+                        return false;
+                    }
+                }
+				if(shippingOrder.getShipment() == null){
+					Shipment newShipment = shipmentService.createShipment(shippingOrder);
+					if (newShipment == null) {
+						String comments = "Because shipment has not been created";
+						logShippingOrderActivity(shippingOrder, adminUser,
+								getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
+						return false;
+					}
+				}
+                return true;
+            }
+        } else {
+            String comments = "Because payment status is auth pending";
+            User adminUser = getUserService().getAdminUser();
+            logShippingOrderActivity(shippingOrder, adminUser,
+                    getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
+            return false;
+        }
+        return false;
+    }
+
 
 	/**
 	 * Auto-escalation logic for all successful transactions This method will check inventory availability and escalate
