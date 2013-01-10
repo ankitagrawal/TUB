@@ -782,6 +782,7 @@ public class OrderServiceImpl implements OrderService {
                     shippingOrderService.autoEscalateShippingOrder(shippingOrder);
                 }
             }
+			shippingOrderAlreadyExists = true;
 
         }
         // Check Inventory health of order lineitems
