@@ -627,11 +627,24 @@ public class Functions {
     }
 
     public static boolean renderNewCatalogFilter(String child, String secondChild) {
-        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer");
+        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer", "dietary-supplements");
         boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter,
                 secondChild));
         return renderNewCatalogFilter;
     }
+
+	public static boolean hideFilterHeads(String secondChild, String thirdChild, String attribute) {
+		List<String> thirdChildList = Arrays.asList("proteins", "sunglasses", "weight-gainer");
+		if (thirdChildList.contains(thirdChild) && attribute.equalsIgnoreCase("size")) {
+			return true;
+		} else if (secondChild.equalsIgnoreCase("dietary-supplements")) {
+			List<String> attributeList = Arrays.asList("size", "quantity", "type", "flavor", "protein/serving", "strength");
+			if (attributeList.contains(attribute.toLowerCase())) {
+				return true;
+			}
+		}
+		return false;
+	}
 
     public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, Object showHiddenImages) {
         ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);

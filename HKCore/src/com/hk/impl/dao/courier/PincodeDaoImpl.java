@@ -1,21 +1,21 @@
 package com.hk.impl.dao.courier;
 
-import java.util.List;
-
 import com.hk.constants.courier.EnumCourierGroup;
 import com.hk.domain.core.City;
+import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.Zone;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.courier.PincodeDao;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.apache.commons.lang.StringUtils;
 
-import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.PincodeDefaultCourier;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.courier.PincodeDao;
+import java.util.List;
+
 
 @SuppressWarnings("unchecked")                                                                   
 @Repository
@@ -84,5 +84,5 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
         return (List<Pincode>) findByCriteria(pincodeCriteria);
 
     }
-
 }
+

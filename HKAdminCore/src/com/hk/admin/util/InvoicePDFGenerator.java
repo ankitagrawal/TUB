@@ -168,7 +168,7 @@ public class InvoicePDFGenerator {
         copyrightsParagraph.setAlignment(Element.ALIGN_LEFT);
         addEmptyLine(copyrightsParagraph, 5);
 
-        copyrightsParagraph.add(new Paragraph("Note: This is to certify that items inside do not contain any prohibited or hazardous material.", new Font(
+        copyrightsParagraph.add(new Paragraph("Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are meant for personal use only and are not for resale.", new Font(
                 Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD)));
         // addEmptyLine(copyrightsParagraph,1);
         

@@ -4,7 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
@@ -15,6 +15,10 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.B2bUserDetails;
+import com.hk.domain.catalog.Supplier;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
@@ -79,6 +83,9 @@ public class SOInvoiceAction extends BaseAction {
 	private Double estimatedWeightOfPackage;
 	String  zone;
 	boolean printZone;
+    private boolean installableItemPresent;
+
+    private Supplier supplier;
 
     //todo courier more refactoring needed
 
@@ -131,10 +138,26 @@ public class SOInvoiceAction extends BaseAction {
 			}
 			coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
 			barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f, 150, false);
-
+            if(shippingOrder.isDropShipping()){
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    if (lineItem != null) {
+                        ProductVariant productVariant = lineItem.getSku().getProductVariant();
+                        if (productVariant != null) {
+                            Product product = productVariant.getProduct();
+                            if (product != null && product.getSupplier()!= null) {
+                                supplier = product.getSupplier();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
 			if (ShipmentServiceMapper.isGround(shipment.getShipmentServiceType())) {
 				setGroundShipped(true);
 			}
+             if (shipmentService.isShippingOrderHasInstallableItem(shippingOrder)){
+                     installableItemPresent = true;
+            }
 			estimatedWeightOfPackage = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
 
 			freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
@@ -268,4 +291,20 @@ public class SOInvoiceAction extends BaseAction {
 	public void setPrintZone(boolean printZone) {
 		this.printZone = printZone;
 	}
+
+    public boolean isInstallableItemPresent() {
+        return installableItemPresent;
+    }
+
+    public void setInstallableItemPresent(boolean installableItemPresent) {
+        this.installableItemPresent = installableItemPresent;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
 }

@@ -34,7 +34,7 @@ import com.google.gson.JsonElement;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.courier.CourierConstants;

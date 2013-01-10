@@ -4,7 +4,7 @@ import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
@@ -73,8 +73,6 @@ public class MCodPaymentReceiveAction extends MBaseAction {
     ReferrerProgramManager referrerProgramManager;
     @Value("#{hkEnvProps['" + Keys.Env.cashBackPercentage + "']}")
     private Double cashBackPercentage;
-    @Autowired
-    AdminOrderService adminOrderService;
     @Autowired
     OrderLoggingService orderLoggingService;
 
@@ -229,7 +227,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
                 couponAmount = pricingDto.getTotalPromoDiscount().intValue();
             }
 
-            adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+            orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
 /*
             RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
             RewardPoint prepayRewardPoints;

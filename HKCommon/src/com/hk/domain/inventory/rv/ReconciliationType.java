@@ -36,21 +36,21 @@ public class ReconciliationType implements java.io.Serializable {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj) {
-            return true;
-        }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
 
-        if(obj instanceof ReconciliationType) {
-            ReconciliationType reconciliationType = (ReconciliationType)obj;
-            if(this.getId().longValue() == reconciliationType.getId().longValue()) {
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
+		if (obj instanceof ReconciliationType) {
+			ReconciliationType reconciliationType = (ReconciliationType) obj;
+			if (reconciliationType.getId() != null && this.getId() != null) {
+				return reconciliationType.getId().equals(this.getId());
+			}
+			return false;
+		}
+		return false;
+	}
 
     @Override
     public int hashCode() {

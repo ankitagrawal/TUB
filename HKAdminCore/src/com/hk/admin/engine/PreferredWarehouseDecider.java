@@ -1,21 +1,10 @@
 package com.hk.admin.engine;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import com.hk.admin.pact.service.courier.PincodeCourierService;
-import com.hk.domain.courier.ShipmentServiceType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
-import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.admin.pact.service.courier.PincodeRegionZoneService;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -23,6 +12,7 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.PincodeRegionZone;
+import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -33,6 +23,11 @@ import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,7 +44,7 @@ public class PreferredWarehouseDecider {
     CourierPricingEngineDao courierPricingEngineDao;
 
     @Autowired
-    PincodeRegionZoneDao pincodeRegionZoneDao;
+    PincodeRegionZoneService pincodeRegionZoneService;
 
     @Autowired
     PincodeCourierService pincodeCourierService;
@@ -101,7 +96,7 @@ public class PreferredWarehouseDecider {
             Double totalCost = 0D;
             Map<Courier, Double> courierCostingMap = new HashMap<Courier, Double>();
 
-            List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneDao.getSortedRegionList(applicableCouriers, pincode, warehouse);
+            List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getSortedRegionList(applicableCouriers, pincode, warehouse);
             for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
                 Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCouriers);
                 for (Courier courier : couriers) {

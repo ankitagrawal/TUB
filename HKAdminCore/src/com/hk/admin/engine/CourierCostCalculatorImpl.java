@@ -1,10 +1,10 @@
 package com.hk.admin.engine;
 
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
-import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.admin.pact.service.courier.PincodeRegionZoneService;
 import com.hk.comparator.MapValueComparator;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
@@ -37,7 +37,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
     PincodeDao pincodeDao;
 
     @Autowired
-    PincodeRegionZoneDao pincodeRegionZoneDao;
+    PincodeRegionZoneService pincodeRegionZoneService;
 
     @Autowired
     CourierPricingEngineDao courierPricingEngineDao;
@@ -78,7 +78,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
         applicableCourierList = pincodeCourierService.getApplicableCouriers(pincodeObj, cod, ground, true);
         Double totalCost = 0D;
-        List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneDao.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
+        List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
 
         for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
             Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
@@ -103,7 +103,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
 
     public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse) {
         CourierGroup courierGroup = courierGroupService.getCourierGroup(courier);
-        PincodeRegionZone pincodeRegionZone = pincodeRegionZoneDao.getPincodeRegionZone(courierGroup, pincodeObj, srcWarehouse);
+        PincodeRegionZone pincodeRegionZone = pincodeRegionZoneService.getPincodeRegionZone(courierGroup, pincodeObj, srcWarehouse);
         if (pincodeRegionZone == null) {
             if (courierGroup == null) {
                 logger.error("courier group not found for courier " + courier.getName());

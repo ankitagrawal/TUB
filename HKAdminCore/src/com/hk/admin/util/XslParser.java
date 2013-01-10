@@ -1,41 +1,11 @@
 package com.hk.admin.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import com.hk.domain.courier.Zone;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.dao.inventory.RetailLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.cache.CategoryCache;
 import com.hk.cache.RoleCache;
 import com.hk.constants.XslConstants;
@@ -50,17 +20,9 @@ import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.core.City;
-import com.hk.domain.core.Pincode;
-import com.hk.domain.core.State;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.core.Tax;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
@@ -71,7 +33,6 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.exception.HealthKartCatalogUploadException;
 import com.hk.impl.dao.ReconciliationStatusDaoImpl;
@@ -83,16 +44,34 @@ import com.hk.pact.service.RoleService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.core.CityService;
-import com.hk.pact.service.core.PincodeService;
-import com.hk.pact.service.core.StateService;
 import com.hk.pact.service.core.TaxService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Pattern;
 
 @Component
 @SuppressWarnings("unchecked")
@@ -129,7 +108,7 @@ public class XslParser {
     @Autowired
     private SkuService               skuService;
     @Autowired
-    private ShipmentService          shipmentService;
+    private ShipmentService shipmentService;
     @Autowired
     private TaxService               taxService;
     @Autowired

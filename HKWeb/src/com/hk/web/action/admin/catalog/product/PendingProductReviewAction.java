@@ -69,7 +69,7 @@ public class PendingProductReviewAction extends BasePaginatedAction {
           }
         }
 
-        productReviewPage = reviewService.getProductReviews(productObj, reviewStatusList, getPageNo(), getPerPage());
+        productReviewPage = reviewService.getProductReviewsForAdmin(productObj, reviewStatusList, getPageNo(), getPerPage());
         if (productReviewPage != null) {
           productReviews = productReviewPage.getList();
         }
@@ -161,6 +161,7 @@ public class PendingProductReviewAction extends BasePaginatedAction {
     public Set<String> getParamSet() {
         HashSet<String> params = new HashSet<String>();
         params.add("product");
+        params.add("reviewStatus");
         return params;
     }
 

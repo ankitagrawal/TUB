@@ -74,6 +74,7 @@ public enum EnumPaymentMode {
 	public static List<Long> getPrePaidPaymentModes() {
 		return Arrays.asList(
                 EnumPaymentMode.SUBSCRIPTION_PAYMENT.getId(),
+                EnumPaymentMode.FREE_CHECKOUT.getId(),
                 EnumPaymentMode.ONLINE_PAYMENT.getId());
 	}
 

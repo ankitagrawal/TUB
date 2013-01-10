@@ -9,7 +9,7 @@
 <%@ page import="com.hk.admin.util.courier.thirdParty.FedExCourierUtil" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
-<%@ page import="com.hk.admin.pact.service.shippingOrder.ShipmentService" %>
+<%@ page import="com.hk.pact.service.shippingOrder.ShipmentService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -128,8 +128,13 @@ ORDER INVOICE <c:choose>
 <div class="grid_4">
     <div style="float: right;">
         <c:choose>
-            <c:when test="${orderSummary.shippingOrder.baseOrder.user.login == 'support@madeinhealth.com' || orderSummary.shippingOrder.baseOrder.store.id == 2}">
+            <c:when test="${orderSummary.shippingOrder.baseOrder.store.id == 2 || orderSummary.shippingOrder.baseOrder.store.id == 3}">
+	            <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 2}">
                 <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
+	            </c:if>
+	            <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 3}">
+                <img src="${pageContext.request.contextPath}/images/fitnesspro.png" alt="FitnessPro Logo"/>
+	            </c:if>
             </c:when>
             <c:otherwise>
                 <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
@@ -154,7 +159,7 @@ ORDER INVOICE <c:choose>
                         Standard Overnight
                     </c:otherwise>
                 </c:choose>
-                <c:if test="${orderSummary.shippingOrder.COD}">
+                <c:if test="${orderSummary.shippingOrder.COD && orderSummary.invoiceDto.grandTotal > 0}">
                     COD
                 </c:if>
                 &nbsp;&nbsp;wt:${orderSummary.estimatedWeightOfPackage}Kg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
@@ -222,8 +227,9 @@ ORDER INVOICE <c:choose>
         <div class="clear"></div>
         <div style="margin-top:5px;"></div>
         <img src="${pageContext.request.contextPath}/barcodes/${orderSummary.shippingOrder.gatewayOrderId}.png"/>
-
+        <c:if test="${!orderSummary.shippingOrder.dropShipping}">  
         <p>Fulfillment Centre: ${orderSummary.shippingOrder.warehouse.name}</p>
+       </c:if>
         <c:if test="${orderSummary.shippingOrder.warehouse.id == 1}">
             <p>Return Location: <b>DEL/ITG/111117</b></p>
         </c:if>
@@ -268,12 +274,17 @@ ORDER INVOICE <c:choose>
     <div style="font-size:.8em">
         <h3 style="margin:0;">Please do not accept if the box is tampered</h3>
 
-        Note: This is to certify that items inside do not contain any prohibited or hazardous
-        material.
+        Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are meant for personal use only and are not for resale.
     </div>
     <hr/>
     <c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
+     <c:set var="supplier" value="${orderSummary.supplier}"/>
     <c:choose>
+        <c:when test="${orderSummary.shippingOrder.dropShipping}">
+         <p style="font-size: .8em;"> ${supplier.name} | ${supplier.line1}, ${supplier.line2} |
+            ${supplier.city}, ${supplier.state}- ${supplier.pincode} | TIN: 
+             ${supplier.tinNumber}  </p>
+        </c:when>
         <c:when test="${hk:collectionContains(baseOrder.user.roleStrings, b2bUser)}">
             <p style="font-size: .8em;">Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur,
                 Badshahpur |
@@ -464,6 +475,12 @@ ORDER INVOICE <c:choose>
             </td>
         </tr>
     </table>
+
+  <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
+    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4551666</h6>
+   </c:if>
+
+
 </div>
 
 <div class="clear"></div>

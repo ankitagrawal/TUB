@@ -9,7 +9,6 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -23,6 +22,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.ShipmentServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,7 +182,6 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipmentDao.delete(shipment);
     }
 
-    @Override
     public Shipment recreateShipment(ShippingOrder shippingOrder) {
         Shipment newShipment = null;
         if (shippingOrder.getShipment() != null) {
@@ -212,4 +211,16 @@ public class ShipmentServiceImpl implements ShipmentService {
     public UserService getUserService() {
         return userService;
     }
+
+    public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder) {
+        if (shippingOrder.isDropShipping()) {
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                if (lineItem.getSku().getProductVariant().getProduct().getInstallable()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

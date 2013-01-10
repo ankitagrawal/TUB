@@ -2,6 +2,8 @@ package com.hk.report.manager;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,16 +17,13 @@ import java.util.Set;
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.hk.admin.util.BarcodeGenerator;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.DateUtils;
@@ -35,6 +34,7 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.report.ReportConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.core.search.ShippingOrderSearchCriteria;
@@ -46,6 +46,7 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.Tax;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.order.CartLineItem;
@@ -130,6 +131,8 @@ public class ReportManager {
 
     @Autowired
     NotifyMeDao                notifyMeDao;
+	@Autowired
+	BarcodeGenerator	barcodeGenerator;
 
     TaxDao                     taxDaoProvider;
 
@@ -293,6 +296,15 @@ public class ReportManager {
         Sheet sheet1 = wb.createSheet("Courier");
         Row row = sheet1.createRow(0);
         row.setHeightInPoints((short) 30);
+		
+		// for adding barcode picture to excel
+		InputStream is = null;
+        byte[] bytes = null;
+        int pictureIdx = 0;
+        CreationHelper helper = null;
+		Drawing drawing = sheet1.createDrawingPatriarch();
+        ClientAnchor anchor = null;
+        Picture pict = null;
 
         int totalColumnNo = 25;
 
@@ -327,6 +339,9 @@ public class ReportManager {
 	    if(zone != null){
 	        setCellValue(row, 23, ReportConstants.ZONE);
         }
+		if (courierList.contains(EnumCourier.Speedpost.asCourier())){
+			setCellValue(row, 24, ReportConstants.BARCODE);
+		}
 
         int rowCounter = 1;
         if (startDate == null && endDate == null) {
@@ -366,10 +381,11 @@ public class ReportManager {
 		            }
 	            }
                 Shipment shipment = order.getShipment();
+				Awb awb = shipment.getAwb();
                 Address address = order.getBaseOrder().getAddress();
                 String trackingId = null;
-                if (shipment.getAwb() != null) {
-                    trackingId = shipment.getAwb().getAwbNumber();
+                if ( awb != null) {
+                    trackingId = awb.getAwbNumber();
                 }
                 setCellValue(row, 0, trackingId);
                 setCellValue(row, 1, order.getGatewayOrderId());
@@ -420,7 +436,7 @@ public class ReportManager {
                     setCellValue(row, 17, order.getAmount());
                     paymentMode = ReportConstants.COD;
                 }
-                setCellValue(row, 18, shipment.getAwb().getCourier().getName());
+                setCellValue(row, 18, awb.getCourier().getName());
                 setCellValue(row, 19, paymentMode);
                 setCellValue(row, 20, shipment.getShipDate());
                 if (shipment.getBoxSize() != null) {
@@ -430,6 +446,38 @@ public class ReportManager {
                     setCellValue(row, 22, shipment.getBoxWeight());
                 }
 
+				if ( awb != null && awb.getCourier().equals((EnumCourier.Speedpost.asCourier()))) {
+					String barcodePath = barcodeGenerator.getBarcodePath(awb.getAwbNumber(), 1.0f, 150, false);
+					// add picture data to this workbook.
+					is = new FileInputStream(barcodePath);
+					bytes = IOUtils.toByteArray(is);
+					pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+					is.close();
+					helper = wb.getCreationHelper();
+					sheet1.autoSizeColumn(24);
+					//sheet1.addMergedRegion()
+					//sheet1.groupRow(rowCounter, rowCounter++);
+					row.setHeightInPoints(60);
+
+					// Create the drawing patriarch. This is the top level container for all shapes.
+					// add a picture shape
+					anchor = helper.createClientAnchor();
+					anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
+
+					// set top-left corner of the picture,
+					pict = drawing.createPicture(anchor, pictureIdx);
+					pict.resize(8.0);
+
+					//setCellValue(row, 24, awbNumber );
+					anchor.setDx1(10);
+					anchor.setDx2(1000);
+					anchor.setDy1(10);
+					anchor.setDy2(200);
+					anchor.setCol1(24);
+					anchor.setRow1(rowCounter);
+					anchor.setCol2(24);
+					anchor.setRow2(rowCounter);
+				}
             }
         }
         wb.write(out);
@@ -1418,6 +1466,7 @@ public class ReportManager {
         xlsWriter.addHeader("BO_GATEWAY_ID", "BO_GATEWAY_ID");
         xlsWriter.addHeader("NAME", "NAME");
         xlsWriter.addHeader("ORDER_DATE", "ORDER_DATE");
+	    xlsWriter.addHeader("PAYMENT_STATUS", "PAYMENT_STATUS");
         xlsWriter.addHeader("CATEGORY", "CATEGORY");
         xlsWriter.addHeader("ITEM_NAME", "ITEM_NAME");
         xlsWriter.addHeader("BRAND", "BRAND");
@@ -1444,6 +1493,7 @@ public class ReportManager {
                 xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getGatewayOrderId());
                 xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getAddress().getName());
                 xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getPayment().getPaymentDate());
+	            xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getPayment().getPaymentStatus().getName());
 
                 productVariant = cartLineItem.getProductVariant();
                 xlsWriter.addCell(rowCounter, getCategoryService().getTopLevelCategory(productVariant.getProduct()).getDisplayName());

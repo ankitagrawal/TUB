@@ -31,6 +31,8 @@
           <c:set value="${productVariant.product}" var="product"/>
               <tr>
                 <td>${product.name}<br/>${productVariant.optionsCommaSeparated}
+                    <c:if test="${product.dropShipping}">&nbsp; ( DS) </c:if>
+                    <c:if test= "${!product.dropShipping}">&nbsp; ( AS)  </c:if>
                 </td>
                 <td>${lineItem.qty}</td>
                 <td>

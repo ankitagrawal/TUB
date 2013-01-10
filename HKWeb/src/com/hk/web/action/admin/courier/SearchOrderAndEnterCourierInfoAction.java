@@ -19,13 +19,12 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.akube.framework.gson.JsonUtils;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
@@ -157,6 +156,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 						trackingId = awb.getAwbNumber();
 					}
 				}
+				if (availableCouriers == null || availableCouriers.isEmpty() || suggestedCourier == null) {
+					trackingId = null;
+				} else if (availableCouriers != null && suggestedCourier != null) {
+					if (!(availableCouriers.contains(suggestedCourier))) {
+						trackingId = null;
+					}
+				}
 
 			} else {
 				addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
@@ -236,6 +242,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 		shipment.setAwb(finalAwb);
 		shipment.setShippingOrder(shippingOrder);
 		shippingOrder.setShipment(shipment);
+		if(shipment.getZone() == null){
+			Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			shipment.setZone(pinCode.getZone());
+		}
 		shipmentService.save(shipment);
 		if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
 			shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));

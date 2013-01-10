@@ -17,4 +17,5 @@ public interface CourierService {
 
     public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping);
     public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
+    public List<Courier> listOfVendorCouriers();
 }

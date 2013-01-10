@@ -180,6 +180,8 @@
 												   serviceProperty="replacementOrderReasonForRto" value="id"
 												   label="name"/>
 					</s:select>
+	                <br/><br/>
+	                <s:label name="Comment/Remark:" style="margin-left:7px;"/><s:textarea name="roComment" style="height:50px;" />
                     <s:submit class="createReplacementOrderButton rto" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
@@ -228,7 +230,9 @@
 		                                           serviceProperty="replacementOrderReasonForReplacement" value="id"
 		                                           label="name"/>
 	                </s:select>
-					
+	                <br/><br/>
+					<s:label name="Comment/Remark:" style="margin-left:7px;"/><s:textarea name="roComment" style="height:50px;" />
+	                <br/>
                     <s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>

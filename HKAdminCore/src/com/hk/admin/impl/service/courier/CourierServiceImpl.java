@@ -45,6 +45,10 @@ public class CourierServiceImpl implements CourierService {
         return getCourierDao().getAll(Courier.class);
     }
 
+     public List<Courier> listOfVendorCouriers(){
+         return getCourierDao().listOfVendorCouriers();
+     }
+    
     public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping) {
         Warehouse warehouse = getUserService().getWarehouseForLoggedInUser();
         return pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);

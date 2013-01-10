@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.domain.courier.*;
 import com.hk.domain.warehouse.Warehouse;
@@ -23,9 +24,11 @@ import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
+import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
@@ -90,10 +93,12 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private CourierGroupService courierGroupService;
     @Autowired
     private CourierService      courierService;
-	  @Autowired
-	  private DispatchLotService dispatchLotService;
     @Autowired
-    private WarehouseService   warehouseService;
+    private DispatchLotService dispatchLotService;
+    @Autowired
+    private WarehouseService warehouseService;
+    @Autowired
+    private ConsignmentService consignmentService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -210,11 +215,16 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(Surcharge.class);
     }
 
-    public List<ReconciliationType> getReconciliationTypeList() {
-        return getBaseDao().getAll(ReconciliationType.class);
-    }
+	public List<ReconciliationType> getReconciliationTypeList() {
+		List<ReconciliationType> reconciliationList = getBaseDao().getAll(ReconciliationType.class);
+		ReconciliationType add = EnumReconciliationType.Add.asReconciliationType();
+		ReconciliationType subtract = EnumReconciliationType.Subtract.asReconciliationType();
+		reconciliationList.remove(add);
+		reconciliationList.remove(subtract);
+		return reconciliationList;
+	}
 
-    public List<EmailType> getEmailTypeList() {
+	public List<EmailType> getEmailTypeList() {
         return getBaseDao().getAll(EmailType.class);
     }
 
@@ -410,18 +420,38 @@ public class MasterDataDaoImpl implements MasterDataDao {
 		return getBaseDao().getAll(Zone.class);
 	}
 
-	public List<DispatchLotStatus> getDispatchLotStatusList() {
-		return getBaseDao().getAll(DispatchLotStatus.class);
-	}
+    public List<String> getCustomerOnHoldReasonsForHkDelivery() {
+        return consignmentService.getCustomerOnHoldReasonsForHkDelivery();
+    }
 
-	public List<String> getSourceAndDestinationListForDispatchLot() {
-		return dispatchLotService.getSourceAndDestinationListForDispatchLot();
-	}
+    public List<DispatchLotStatus> getDispatchLotStatusList() {
+        return getBaseDao().getAll(DispatchLotStatus.class);
+    }
 
-	public List<String> getShipmentStatusForDispatchLot() {
-		return dispatchLotService.getShipmentStatusForDispatchLot();
-	}
-  public List<Warehouse> getServiceableWarehouses(){
-     return warehouseService.getServiceableWarehouses();
-  }
+    public List<String> getSourceAndDestinationListForDispatchLot() {
+        return dispatchLotService.getSourceAndDestinationListForDispatchLot();
+    }
+
+    public List<String> getShipmentStatusForDispatchLot() {
+        return dispatchLotService.getShipmentStatusForDispatchLot();
+    }
+
+    public List<Warehouse> getServiceableWarehouses() {
+        return warehouseService.getServiceableWarehouses();
+    }
+
+    public List<AwbStatus> getAllAwbStatus() {
+        return EnumAwbStatus.getAllStatusExceptUsed();
+    }
+
+    public List<Courier> getListOfVendorCouriers() {
+        return courierService.listOfVendorCouriers();
+    }
+
+    public List<ReconciliationType> getAddReconciliationTypeList() {
+        List<ReconciliationType> reconciliationList = new ArrayList<ReconciliationType>();
+        ReconciliationType addReconType = EnumReconciliationType.Add.asReconciliationType();
+        reconciliationList.add(addReconType);
+        return reconciliationList;
+    }
 }
