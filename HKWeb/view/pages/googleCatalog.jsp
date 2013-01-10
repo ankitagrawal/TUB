@@ -17,7 +17,7 @@
             <product id="${product.id}">
                 <title><![CDATA[${hk:escapeXML(product.name)}]]></title>
                 <link>http://www.healthkart.com/product/${product.slug}/${product.id}</link>
-                <price>"${product.minimumMRPProducVariant.hkPrice}"</price>
+                <price>${product.minimumMRPProducVariant.hkPrice}</price>
                 <description>${hk:escapeXML(product.description)}</description>
                 <condition>new</condition>
                 <image_link>
