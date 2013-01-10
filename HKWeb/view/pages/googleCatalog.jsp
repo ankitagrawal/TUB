@@ -15,19 +15,19 @@
     <c:forEach items="${googleBean.products}" var="product">
         <c:if test="${fn:length(product.productVariants) > 0 && product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">
             <product>
-                <g:id>${product.id}<g:id>
+                <id>${product.id}</id>
                 <title><![CDATA[${hk:escapeXML(product.name)}]]></title>
-                <g:link>http://www.healthkart.com/product/${product.slug}/${product.id}</g:link>
-                <g:price>${product.minimumMRPProducVariant.hkPrice} INR</g:price>
+                <link>http://www.healthkart.com/product/${product.slug}/${product.id}</link>
+                <price>${product.minimumMRPProducVariant.hkPrice} INR</price>
                 <description>${hk:escapeXML(product.description)}</description>
-                <g:condition>new</g:condition>
-                <g:image_link>
+                <condition>new</condition>
+                <image_link>
                     <c:if test="${product.mainImageId != null}">
                         <c:set var="imageId" value="${product.mainImageId}"/>
                         <%Long imageId = (Long) pageContext.getAttribute("imageId");%>
                         <%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId,false)%>
                     </c:if>
-                </g:image_link>
+                </image_link>
             </product>
         </c:if>
     </c:forEach>
