@@ -1,6 +1,10 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.marketing.AnalyticsConstants" %>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!-- Start of Zopim Live Chat Script -->
+<%
+    if (AnalyticsConstants.analytics) {
+%>
 <script type="text/javascript">
 window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=
 z.s=d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o
@@ -47,3 +51,7 @@ t=+new Date;z._=[];e.parentNode.insertBefore($,e)})(document,'script')
     _sNode.parentNode.insertBefore(_we, _sNode);
   })(document);
 </script>
+
+<%
+    }
+%>

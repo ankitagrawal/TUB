@@ -29,6 +29,7 @@ public enum EnumOrderLifecycleActivity {
   OrderShippedEmailFired(95L, "Order Shipped Email Fired"),
   OrderDelivered(100L, "Order Delivered"),
   OrderDeliveredUpdated(105L, "Order Delivered Updated"),
+  OrderInstalled(108L, "Order Installed"),  
   OrderReturned(110L, "Order Returned"),
   OrderPartiallyReturned(111L, "Partial Order Returned"),
   ReCheckedInItem(113L, "Re-CheckedIn Item"),

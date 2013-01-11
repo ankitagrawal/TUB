@@ -10811,4 +10811,101 @@
     <changeSet author="Tarun (generated)" id="1356676742452-2">
         <addForeignKeyConstraint baseColumnNames="runsheet_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_runsheet1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet" referencesUniqueColumn="false"/>
     </changeSet>
+	   <changeSet author="Seema (generated)" id="1357322001110-1">
+        <addColumn tableName="reconciliation_voucher">
+            <column name="reconciliation_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1357322001110-2">
+        <addColumn tableName="rv_line_item">
+            <column name="reconciled_qty" type="INT"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Seema (generated)" id="1357322001119-1">
+       <sql>
+	       update reconciliation_voucher rv,(select max(cc),reconciliation_type_id,reconciliation_voucher_id from
+	       (select reconciliation_voucher_id,
+	       reconciliation_type_id ,count(reconciliation_type_id) as cc
+	       FROM `rv_line_item` GROUP BY reconciliation_voucher_id, reconciliation_type_id )aa group by
+	       reconciliation_voucher_id)rvli
+	       set rv.reconciliation_type_id= rvli.reconciliation_type_id
+	       where rv.id=rvli.reconciliation_voucher_id;
+
+	       delete rv from reconciliation_voucher rv left join (select distinct(reconciliation_voucher_id) from
+	       rv_line_item) rvi
+	       on rv.id=rvi.reconciliation_voucher_id where rvi.reconciliation_voucher_id is null;
+
+	       update rv_line_item set reconciled_qty = qty;
+       </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1357322001110-5">
+        <addForeignKeyConstraint baseColumnNames="reconciliation_type_id" baseTableName="reconciliation_voucher"  constraintName="fk_reconciliation_voucher_reconciliation_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_type"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355125289354-1">
+        <createTable tableName="pincode_courier_mapping">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="pincode_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prepaid_air" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prepaid_ground" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cod_air" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cod_ground" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="routing_code" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355142601346-2">
+        <createTable tableName="shipment_service_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(90)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355142601346-3">
+        <addColumn tableName="shipment">
+            <column name="shipment_service_type_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355142601346-10">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="pincode_courier_mapping" constraintName="fk_pincode_courier_mapping_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355142601346-11">
+        <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="pincode_courier_mapping" constraintName="fk_pincode_courier_mapping_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pincode" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1355142601346-12">
+        <addForeignKeyConstraint baseColumnNames="shipment_service_type_id" baseTableName="shipment" constraintName="fk_shipment_shipment_service_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipment_service_type" referencesUniqueColumn="false"/>
+    </changeSet>
+     <changeSet author="Ankit (generated)" id="1355308128790-1">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="is_installable" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1355308128790-2">
+        <addColumn tableName="shipping_order">
+            <column defaultValue="0" name="drop_shipping" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit" id="08-01-2013">
+       <sql>
+         INSERT into courier(id, name,disabled) values (650 , 'Gati' , 1), (660 , 'Star Track' , 1);  
+       </sql>
+    </changeSet>
 </databaseChangeLog>

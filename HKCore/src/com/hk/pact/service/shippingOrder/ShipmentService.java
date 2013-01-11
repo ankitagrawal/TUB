@@ -1,4 +1,4 @@
-package com.hk.admin.pact.service.shippingOrder;
+package com.hk.pact.service.shippingOrder;
 
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
@@ -21,5 +21,8 @@ public interface ShipmentService {
 
     public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder );
 
+    public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder );
+
 	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
+    
 }
