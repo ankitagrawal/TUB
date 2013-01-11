@@ -96,8 +96,8 @@ public class XslPincodeCourierMapping {
                 boolean isCodAir = StringUtils.isNotBlank(codAir) && codAir.trim().toLowerCase().equals("y");
                 boolean isCodGround = StringUtils.isNotBlank(codGround) && codGround.trim().toLowerCase().equals("y");
 
-                boolean isInValidMapping = isPrepaidAir || isPrepaidGround || isCodAir || isCodGround;
-                if (!isInValidMapping) {
+                boolean isValidMapping = isPrepaidAir || isPrepaidGround || isCodAir || isCodGround;
+                if (isValidMapping) {
                     pincodeCourierMapping.setPrepaidAir(isPrepaidAir);
                     pincodeCourierMapping.setPrepaidGround(isPrepaidGround);
                     pincodeCourierMapping.setCodAir(isCodAir);
