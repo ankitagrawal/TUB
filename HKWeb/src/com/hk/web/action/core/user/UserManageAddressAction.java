@@ -22,6 +22,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AddressService;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED, RoleConstants.ADMIN})
+@HttpCache(allow = false)
 public class UserManageAddressAction extends BaseAction {
   // private static Logger logger = Logger.getLogger(UserManageAddressAction.class);
 
@@ -60,21 +61,18 @@ public class UserManageAddressAction extends BaseAction {
     }
 
     affiliate = affiliateDao.getAffilateByUser(user);
-    noCache();
     return new ForwardResolution("/pages/manageUserAddresses.jsp");
   }
 
   public Resolution editUserAddresses() {
       if(!address.getUser().getId().equals(getPrincipalUser().getId())){
           addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
-          noCache();
           return new RedirectResolution(getContext().getSourcePage());
       }
     if (getPrincipal() != null) {
       user = getUserService().getUserById(getPrincipal().getId());
       affiliate = affiliateDao.getAffilateByUser(user);
     }
-    noCache();
     return new ForwardResolution("/pages/editUserAddresses.jsp");
 
   }
@@ -84,14 +82,12 @@ public class UserManageAddressAction extends BaseAction {
     if (user != null) {
         if(!address.getUser().getId().equals(user.getId())){
             addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
-            noCache();
             new RedirectResolution(getContext().getSourcePage());
         }
       address.setUser(user);
       address = addressDao.save(address);
     }
     addRedirectAlertMessage(new SimpleMessage("Your changes have been saved."));
-    noCache();
     return showAddressBook();
   }
 
@@ -106,10 +102,8 @@ public class UserManageAddressAction extends BaseAction {
       }
     }
     if (addresses.size() > 0) {
-        noCache();
       return new ForwardResolution("/pages/manageUserAddresses.jsp");
     } else {
-        noCache();
       return new ForwardResolution("/pages/editUserAddresses.jsp");
     }
   }

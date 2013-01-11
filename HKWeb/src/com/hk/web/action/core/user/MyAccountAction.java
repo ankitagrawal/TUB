@@ -1,10 +1,6 @@
 package com.hk.web.action.core.user;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED}, disallowRememberMe = true)
+@HttpCache(allow = false)
 public class MyAccountAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(MyAccountAction.class);
 
@@ -73,7 +70,6 @@ public class MyAccountAction extends BaseAction {
       }
       b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(user);
     }
-    noCache();
     return new ForwardResolution("/pages/userProfile.jsp");
   }
 
@@ -113,11 +109,9 @@ public class MyAccountAction extends BaseAction {
     if(!getPrincipalUser().getId().equals(user.getId())){
         logger.debug("user with id"+getPrincipal().getId()+" just tried to access information of user with id" + user.getId());
         addRedirectAlertMessage(new SimpleMessage("please don't mess up with other users in our system"));
-        noCache();
         return new RedirectResolution(getContext().getSourcePage());
     }
     logger.debug("Editing basic information for " + user.getName());
-    noCache();
     return new ForwardResolution("/pages/editBasicInformation.jsp");
   }
 
@@ -150,7 +144,6 @@ public class MyAccountAction extends BaseAction {
   public Resolution editPassword() {
      user=getPrincipalUser();
     logger.debug("Editing password for " + user.getName());
-      noCache();
     return new ForwardResolution("/pages/editPassword.jsp");
   }
 
