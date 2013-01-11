@@ -80,7 +80,7 @@ Your order ${order.gatewayOrderId} has been Installed !
 					<br/>
 					If you have any problems or concerns about your recent purchase, please get in touch with our customer service as soon as possible and we will do everything we can to help.
 					<br/> <br/>
-					Reach our Customer Care at 0124-4551666.
+					Reach our Customer Care at 0124-4502930.
 					<br/>
 
 					Healthy Shopping!<br/>
@@ -124,7 +124,7 @@ Your order ${order.gatewayOrderId} has been Installed !
 				<td align="right" valign="middle"
 				    style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
 						href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;|
-					&nbsp;t: 0124-4551666
+					&nbsp;t: 0124-4502930
 				</td>
 			</tr>
 		</table>
