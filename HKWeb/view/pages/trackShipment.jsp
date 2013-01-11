@@ -28,7 +28,7 @@
 				    location.
 				</li>
 				<li>For any other query read our <a href="/pages/termsAndConditions.jsp">Terms &amp; Conditions</a></li>
-				<li>For any other assistance pertaining to your order contact our customer care at 0124-4551616 or at
+				<li>For any other assistance pertaining to your order contact our customer care at 0124-4551666 or at
 				    email: <a href="mailto:info@healthkart.com">info@healthkart.com</a></li>
 			</ul>
 		</div>
