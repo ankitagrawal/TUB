@@ -96,12 +96,15 @@ public class XslPincodeCourierMapping {
                 boolean isCodAir = StringUtils.isNotBlank(codAir) && codAir.trim().toLowerCase().equals("y");
                 boolean isCodGround = StringUtils.isNotBlank(codGround) && codGround.trim().toLowerCase().equals("y");
 
-                pincodeCourierMapping.setPrepaidAir(isPrepaidAir);
-                pincodeCourierMapping.setPrepaidGround(isPrepaidGround);
-                pincodeCourierMapping.setCodAir(isCodAir);
-                pincodeCourierMapping.setCodGround(isCodGround);
-                pincodeCourierMapping.setRoutingCode(routingCode);
-                pincodeCourierMappings.add(pincodeCourierMapping);
+                boolean isInValidMapping = isPrepaidAir || isPrepaidGround || isCodAir || isCodGround;
+                if (!isInValidMapping) {
+                    pincodeCourierMapping.setPrepaidAir(isPrepaidAir);
+                    pincodeCourierMapping.setPrepaidGround(isPrepaidGround);
+                    pincodeCourierMapping.setCodAir(isCodAir);
+                    pincodeCourierMapping.setCodGround(isCodGround);
+                    pincodeCourierMapping.setRoutingCode(routingCode);
+                    pincodeCourierMappings.add(pincodeCourierMapping);
+                }
             }
 
         } catch (Exception e) {
