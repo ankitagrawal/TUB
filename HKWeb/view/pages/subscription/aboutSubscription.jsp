@@ -42,7 +42,7 @@
             After finalizing your product and plan, you have to prepay the whole amount for your subscription. When the delivery date arrives, our Customer Care Executive will give you a reminder call and will ensure a safe and sound delivery of your specified products.
           </p>
             <p>
-                You can notify our customer care in case you want to change your delivery date or your shipment address, according to your convenience.  The customer can drop in an email to <strong>info@healthkart.com</strong> or can call our Customer Care at <strong>0124-4551666</strong> notifying us about the new address of delivery.
+                You can notify our customer care in case you want to change your delivery date or your shipment address, according to your convenience.  The customer can drop in an email to <strong>info@healthkart.com</strong> or can call our Customer Care at <strong>0124-4502930</strong> notifying us about the new address of delivery.
         </p>
 
            <p></p>
@@ -96,7 +96,7 @@
             </div>
             <h3>What if my address changes?</h3>
             <div>
-                <p>In case of a change of shipping address, the customer can drop in an email to info@healthkart.com or a call our customer care at 0124-4551666 notifying us about the new address of delivery.</p>
+                <p>In case of a change of shipping address, the customer can drop in an email to info@healthkart.com or a call our customer care at 0124-4502930 notifying us about the new address of delivery.</p>
             </div>
             <h3>What if I go on a vacation?</h3>
             <div>
@@ -104,7 +104,7 @@
             </div>
             <h3>Can I change my next shipment date?</h3>
             <div>
-                <p>Yes, you can. You can notify our customer care when you receive a reminder call about your order or you can drop an email to info@healthkart.com or you can call our customer care at 0124-4551666.</p>
+                <p>Yes, you can. You can notify our customer care when you receive a reminder call about your order or you can drop an email to info@healthkart.com or you can call our customer care at 0124-4502930.</p>
             </div>
             <h3>Can I change the product during subscription?</h3>
             <div>
