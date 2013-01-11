@@ -9,7 +9,7 @@
 <%@ page import="com.hk.admin.util.courier.thirdParty.FedExCourierUtil" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
-<%@ page import="com.hk.admin.pact.service.shippingOrder.ShipmentService" %>
+<%@ page import="com.hk.pact.service.shippingOrder.ShipmentService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -159,7 +159,7 @@ ORDER INVOICE <c:choose>
                         Standard Overnight
                     </c:otherwise>
                 </c:choose>
-                <c:if test="${orderSummary.shippingOrder.COD}">
+                <c:if test="${orderSummary.shippingOrder.COD && orderSummary.invoiceDto.grandTotal > 0}">
                     COD
                 </c:if>
                 &nbsp;&nbsp;wt:${orderSummary.estimatedWeightOfPackage}Kg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
@@ -477,7 +477,7 @@ ORDER INVOICE <c:choose>
     </table>
 
   <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
-    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4551616</h6>
+    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4502930</h6>
    </c:if>
 
 
