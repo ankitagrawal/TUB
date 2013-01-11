@@ -95,7 +95,6 @@ public enum EnumCourier {
                 EnumCourier.Smile_Express_DSP,
                 EnumCourier.AFLWiz,
                 EnumCourier.BlueDart,
-                EnumCourier.BlueDart_COD,
                 EnumCourier.Safexpress,
                 EnumCourier.Quantium,
                 EnumCourier.HK_Delivery,
@@ -125,7 +124,6 @@ public enum EnumCourier {
     public static List<Long> getBlueDartCouriers() {
         List<Long> blueDartCourierIds = new ArrayList<Long>();
         blueDartCourierIds.add(EnumCourier.BlueDart.getId());
-        blueDartCourierIds.add(EnumCourier.BlueDart_COD.getId());
         return blueDartCourierIds;
     }
 
