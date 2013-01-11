@@ -31,6 +31,9 @@ import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.RoleService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED}, disallowRememberMe = true)
 public class MyAccountAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(MyAccountAction.class);
@@ -70,7 +73,7 @@ public class MyAccountAction extends BaseAction {
       }
       b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(user);
     }
-
+    noCache();
     return new ForwardResolution("/pages/userProfile.jsp");
   }
 
@@ -110,8 +113,11 @@ public class MyAccountAction extends BaseAction {
     if(!getPrincipalUser().getId().equals(user.getId())){
         logger.debug("user with id"+getPrincipal().getId()+" just tried to access information of user with id" + user.getId());
         addRedirectAlertMessage(new SimpleMessage("please don't mess up with other users in our system"));
+        noCache();
+        return new RedirectResolution(getContext().getSourcePage());
     }
     logger.debug("Editing basic information for " + user.getName());
+    noCache();
     return new ForwardResolution("/pages/editBasicInformation.jsp");
   }
 
@@ -144,6 +150,7 @@ public class MyAccountAction extends BaseAction {
   public Resolution editPassword() {
      user=getPrincipalUser();
     logger.debug("Editing password for " + user.getName());
+      noCache();
     return new ForwardResolution("/pages/editPassword.jsp");
   }
 
