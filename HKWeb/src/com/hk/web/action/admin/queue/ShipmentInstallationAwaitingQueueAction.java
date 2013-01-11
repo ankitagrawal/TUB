@@ -88,6 +88,8 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
 //        shippingOrderStatus = shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered);
 //        shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
+        shippingOrderSearchCriteria.setDropShipping(true);
+        shippingOrderSearchCriteria.setInstallable(true);
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
          if (shippingOrderPage != null) {
             shippingOrderList = shippingOrderPage.getList();
