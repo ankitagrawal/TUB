@@ -50,7 +50,7 @@ public class PincodeCourierMappingAction extends BaseAction {
     @Autowired
     PincodeService pincodeService;
 
-   
+    @Autowired
     XslPincodeCourierMapping xslPincodeCourierMapping;
 
     @Autowired
