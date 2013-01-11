@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
-import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -31,7 +30,7 @@ import com.google.gson.JsonParser;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.exception.HealthkartCheckedException;
-import com.hk.admin.util.courier.thirdParty.IOTCourierTrackUtil;
+import com.hk.admin.util.courier.thirdParty.IndiaOntimeCourierTrackUtil;
 
 /**
  * Created by IntelliJ IDEA.
@@ -479,18 +478,16 @@ public class CourierStatusUpdateHelper {
 		return xmlElement;
 	}
 
-	public String updateDeliveryStatusIndiaOntime(String trackingId) throws HealthkartCheckedException {
+	public IndiaOntimeCourierTrackUtil updateDeliveryStatusIndiaOntime(String trackingId) throws HealthkartCheckedException {
 
-		String response = "";
+		IndiaOntimeCourierTrackUtil response = null;
 		courierName = EnumCourier.IndiaOnTime.getName();
 
 		//added for debugging
-		//trackingId = "70004207700";
+		//trackingId = "70004207501";
 		try{
-			response = new IOTCourierTrackUtil().trackShipment(trackingId);
-			if (!response.equalsIgnoreCase(CourierConstants.QUANTIUM_INVALID_NO)) {
-
-			} 			
+			response = new IndiaOntimeCourierTrackUtil().trackShipment(trackingId);
+			
 		} catch (NullPointerException npe) {
 			logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + courierName + trackingId);
 			throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);

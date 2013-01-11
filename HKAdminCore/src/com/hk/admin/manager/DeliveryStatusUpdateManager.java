@@ -37,6 +37,7 @@ import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.admin.util.courier.thirdParty.IndiaOntimeCourierTrackUtil;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
@@ -437,11 +438,11 @@ public class DeliveryStatusUpdateManager {
 				}
 			}
 		} else if (courierName.equalsIgnoreCase(CourierConstants.INDIAONTIME)) {
-			SimpleDateFormat sdf_date = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat sdf_date = new SimpleDateFormat("dd-MM-yyyy hh:mm");
 			courierIdList = new ArrayList<Long>();
 			courierIdList.add(EnumCourier.IndiaOnTime.getId());
 			shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
-			Element responseElement;
+			IndiaOntimeCourierTrackUtil indiaOntimeCourierTrack = null;
 			String courierDeliveryStatus = null;
 			String deliveryDateString = null;
 
@@ -449,14 +450,14 @@ public class DeliveryStatusUpdateManager {
 				for (ShippingOrder shippingOrderInList : shippingOrderList) {
 					trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
 					try {
-						responseElement = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
-						if (responseElement != null) {
-							String trckNo = responseElement.getChildText(CourierConstants.QUANTIUM_TRACKING_NO);
-							String refId = responseElement.getChildText(CourierConstants.QUANTIUM_REF_NO);
-							courierDeliveryStatus = responseElement.getChildText(CourierConstants.QUANTIUM_STATUS);
-							deliveryDateString = responseElement.getChildText(CourierConstants.QUANTIUM_DELIVERY_DATE);
+						indiaOntimeCourierTrack = courierStatusUpdateHelper.updateDeliveryStatusIndiaOntime(trackingId);
+						if (indiaOntimeCourierTrack != null) {
+							String trckNo = indiaOntimeCourierTrack.getTrackingNo();
+							String refId = indiaOntimeCourierTrack.getReferenceNo();
+							courierDeliveryStatus = indiaOntimeCourierTrack.getStatusDescription();
+							deliveryDateString = indiaOntimeCourierTrack.getDeliveryDate();
 							if (courierDeliveryStatus != null && deliveryDateString != null) {
-								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.QUANTIUM_DELIVERED)) {
+								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.INDIAONTIME_DELIVERED)) {
 									if (refId != null && refId.equalsIgnoreCase(shippingOrderInList.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
 										try {
 											Date delivery_date = sdf_date.parse(deliveryDateString);
@@ -465,6 +466,9 @@ public class DeliveryStatusUpdateManager {
 											logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
 											unmodifiedTrackingIds.add(trackingId);
 										}
+									}
+									else{
+										 unmodifiedTrackingIds.add(trackingId);
 									}
 								}
 							}
