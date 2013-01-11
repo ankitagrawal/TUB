@@ -17,6 +17,7 @@ public enum EnumInvTxnType {
     INV_REPEAT_CHECKOUT(100L, "Inventory Checkout against Re-shipping"),       // -1
     STOCK_TRANSFER_CHECKOUT(110L, "Inventory Checkout against Stock-Transfer"),// -1
     STOCK_TRANSFER_CHECKIN(120L, "Inventory Checkin against Stock-Transfer"),  // +1
+	RV_MISMATCH(130L,"Inventory Checkout for Wrong Grn Mismatch"),              //-1
   ;
 
   private String name;

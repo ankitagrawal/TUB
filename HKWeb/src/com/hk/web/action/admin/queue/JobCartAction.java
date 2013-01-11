@@ -54,6 +54,7 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.admin.AdminHomeAction;
@@ -101,7 +102,7 @@ public class JobCartAction extends BaseAction {
     @Autowired
     ProductVariantDao                       productVariantDao;
     @Autowired
-    SkuGroupDao                             skuGroupDao;
+    SkuGroupService                         skuGroupService;
     @Autowired
     SkuDao                                  skuDao;
     @Autowired
@@ -349,7 +350,7 @@ public class JobCartAction extends BaseAction {
                 skuList.add(grnLineItem.getSku());
             }
             for (Sku sku : skuList) {
-                skuGroupListPerSku = skuGroupDao.getCurrentCheckedInBatchGrn(grn, sku);
+                skuGroupListPerSku = skuGroupService.getCurrentCheckedInBatchGrn(grn, sku);
                 listOfSkuGroupListPerGrn.add(skuGroupListPerSku);
             }
 
@@ -384,7 +385,7 @@ public class JobCartAction extends BaseAction {
                 logger.debug("Number of Sku List : " + skuList.size());
                 logger.debug("Number of Sku Groups : " + skuGroupListPerSku.size());
                 for (Sku sku : skuList) {
-                    skuGroupListPerSku = skuGroupDao.getCurrentCheckedInBatchNotInGrn(grn, sku);
+                    skuGroupListPerSku = skuGroupService.getCurrentCheckedInBatchNotInGrn(grn, sku);
                     if (skuGroupListPerSku != null && skuGroupListPerSku.size() > 0) {
                         SkuGroup skuGroup = getSkuGroupWithMaxId(skuGroupListPerSku);
                         skuGroupListsuggested.add(skuGroup);
@@ -392,7 +393,7 @@ public class JobCartAction extends BaseAction {
                 }
                 for (Sku sku : skuList) {
 
-                    skuGroupListPerSku = skuGroupDao.getCurrentCheckedInBatchGrn(grn, sku);
+                    skuGroupListPerSku = skuGroupService.getCurrentCheckedInBatchGrn(grn, sku);
                     listOfSkuGroupListPerGrn.add(skuGroupListPerSku);
                 }
                 for (List<SkuGroup> skugrouplist : listOfSkuGroupListPerGrn) {

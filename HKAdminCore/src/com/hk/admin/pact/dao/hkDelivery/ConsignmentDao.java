@@ -4,11 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.akube.framework.dao.Page;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.hkDelivery.ConsignmentStatus;
-import com.hk.domain.hkDelivery.ConsignmentTracking;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.Runsheet;
+import com.hk.domain.hkDelivery.*;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.dao.BaseDao;
 
@@ -28,6 +24,8 @@ public interface ConsignmentDao extends BaseDao {
     public Page searchConsignment(Consignment consignment, String awbNumber, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, Runsheet runsheet, Boolean reconciled, int pageNo, int perPage);
 
     public List<ConsignmentTracking> getConsignmentTracking(Consignment consignment);
+
+	ConsignmentTracking getConsignmentTrackingByRunsheetAndStatus(Consignment consignment, Runsheet runsheet, ConsignmentLifecycleStatus consignmentLifecycleStatus);
 
     public ShippingOrder getShippingOrderFromConsignment(Consignment consignment);
 

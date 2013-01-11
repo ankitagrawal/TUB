@@ -155,13 +155,28 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
 
     public Set<CartLineItem> addCartLineItems(HKAPIOrderDetailsDTO HKAPIOrderDetailsDTO, Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
-        for (HKAPICartLineItemDTO detail : HKAPIOrderDetailsDTO.getHkapiCartLineItemDTOs()) {
-            ProductVariant productVariant = getProductVariantService().getVariantById(detail.getProductId().trim());
-            if (productVariant != null) {
+        for (HKAPICartLineItemDTO apiCartLineItem : HKAPIOrderDetailsDTO.getHkapiCartLineItemDTOs()) {
+            if(apiCartLineItem.getCartLineItemType().equals(EnumCartLineItemType.Product.getId())){
+                ProductVariant productVariant = getProductVariantService().getVariantById(apiCartLineItem.getProductId().trim());
+                if (productVariant != null) {
+                    CartLineItemBuilder cartLineItemBuilder=new CartLineItemBuilder();
+                    cartLineItemBuilder.ofType(EnumCartLineItemType.Product);
+                    cartLineItemBuilder.forVariantQty(productVariant,apiCartLineItem.getQty()).hkPrice(apiCartLineItem.getStorePrice()).markedPrice(apiCartLineItem.getStoreMrp()).discountOnHkPrice(apiCartLineItem.getDiscountOnStorePrice());
+                    CartLineItem cartLineItem=cartLineItemBuilder.build();
+                    cartLineItem.setOrder(order);
+                    cartLineItems.add(cartLineItem);
+                }
+            }else {
                 CartLineItemBuilder cartLineItemBuilder=new CartLineItemBuilder();
-                cartLineItemBuilder.ofType(EnumCartLineItemType.Product);
-                cartLineItemBuilder.forVariantQty(productVariant,detail.getQty()).hkPrice(detail.getStorePrice()).markedPrice(detail.getStoreMrp()).discountOnHkPrice(detail.getDiscountOnStorePrice());
+                for(EnumCartLineItemType enumType:EnumCartLineItemType.values()){
+                    if(enumType.getId().equals(apiCartLineItem.getCartLineItemType())){
+                        cartLineItemBuilder.ofType(enumType);
+                        break;
+                    }
+                }
+                cartLineItemBuilder.hkPrice(apiCartLineItem.getStorePrice()).markedPrice(apiCartLineItem.getStoreMrp()).discountOnHkPrice(apiCartLineItem.getDiscountOnStorePrice());
                 CartLineItem cartLineItem=cartLineItemBuilder.build();
+                cartLineItem.setQty(apiCartLineItem.getQty());
                 cartLineItem.setOrder(order);
                 cartLineItems.add(cartLineItem);
             }

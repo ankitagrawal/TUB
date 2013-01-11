@@ -38,6 +38,7 @@ public class CourierConstants {
     public static final String DELHIVERY = "DELHIVERY";
 	public static final String FEDEX = "FEDEX";
 	public static final String QUANTIUM = "QUANTIUM";
+	public static final String INDIAONTIME = "INDIA ONTIME";
 
 
     //Constants for DTDC
@@ -94,7 +95,7 @@ public class CourierConstants {
     public static final String HKD_WORKSHEET_HEADING3 = "PARSVANATH ARCADIA";
     public static final String HKD_WORKSHEET_HEADING4 = "MG ROAD,SECTOR 14,";
     public static final String HKD_WORKSHEET_HEADING5 = "GURGAON-122001";
-    public static final String HKD_WORKSHEET_HEADING6 = "PH.NO-0124-4551616";
+    public static final String HKD_WORKSHEET_HEADING6 = "PH.NO-0124-4551666";
     public static final String HKD_WORKSHEET_NAME = "NAME";
     public static final String HKD_WORKSHEET_MOBILE = "MOBILE NO:";
     public static final String HKD_WORKSHEET_DATE = "DATE:";

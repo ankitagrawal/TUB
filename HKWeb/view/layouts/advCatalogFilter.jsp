@@ -297,7 +297,7 @@
 			</c:if>
 			<c:forEach items="${filterMap}" var="filter" varStatus="headCtr">
 				<c:choose>
-					<c:when test="${(ca.secondaryChildCategorySlug == 'proteins' || ca.secondaryChildCategorySlug == 'weight-gainer') && filter.key == 'SIZE'}">
+					<c:when test="${hk:hideFilterHeads(ca.childCategorySlug,ca.secondaryChildCategorySlug,filter.key)}">
 						<%--Do Nothing--%>
 					</c:when>
 					<c:otherwise>

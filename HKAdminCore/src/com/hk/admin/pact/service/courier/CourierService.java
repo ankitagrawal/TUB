@@ -3,7 +3,6 @@ package com.hk.admin.pact.service.courier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
-import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
 import com.akube.framework.dao.Page;
@@ -38,12 +37,13 @@ public interface CourierService {
 
 	public Courier save(Courier courier);
 
-	public Page getCouriers(String courierName,Boolean disabled,String courierGroup, int page, int perPage);
-
 	public List<Courier> getCouriers(List<Long> courierIds ,List<String> courierNames , Boolean disabled);
 
 	public List<Courier>  getCouriers(String pincode ,Boolean isrGroundShipping ,Boolean isCod,Boolean isCodAvailableOnGroundShipping,Boolean disabled);
 
-	public void saveOrUpdate(Courier courier);
+    public List<Courier> listOfVendorCouriers();
 
+	public Page getCouriers(String courierName,Boolean disabled, String courierGroup,int page, int perPage);
+
+	public void saveOrUpdate(Courier courier);
 }

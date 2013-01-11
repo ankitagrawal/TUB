@@ -75,6 +75,7 @@ public class PermissionConstants {
     public static final String SUPPLIER_MANAGEMENT                   = "SUPPLIER_MANAGEMENT";
     public static final String PO_MANAGEMENT                         = "PO_MANAGEMENT";
     public static final String GRN_CREATION                          = "GRN_CREATION";
+	public static final String EDIT_GRN                              = "EDIT_GRN";
     public static final String CHANGE_WAREHOUSE                      = "CHANGE_WAREHOUSE";
     public static final String INVENTORY_CHECKIN                     = "INVENTORY_CHECKIN";
     public static final String INVENTORY_CHECKOUT                    = "INVENTORY_CHECKOUT";
@@ -107,4 +108,8 @@ public class PermissionConstants {
 	public static final String POPULATE_BUSY_DATA                    ="POPULATE_BUSY_DATA";
 
 	public static final String DISPATCH_LOT_OPERATIONS               ="DISPATCH_LOT_OPERATIONS";
+
+    public static final String  VIEW_DROP_SHIPPING_QUEUE             = "VIEW_DROP_SHIPPING_QUEUE";
+    public static final String  UPDATE_DROP_SHIPPING_QUEUE           = "UPDATE_DROP_SHIPPING_QUEUE"; 
+    
 }

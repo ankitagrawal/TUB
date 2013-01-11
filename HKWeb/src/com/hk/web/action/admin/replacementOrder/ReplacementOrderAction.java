@@ -47,6 +47,7 @@ public class ReplacementOrderAction extends BaseAction {
 	private String gatewayOrderId;
 	private ShippingOrder shippingOrder;
 	private Boolean isRto;
+	private String roComment;
 	private List<LineItem> lineItems = new ArrayList<LineItem>();
 	private List<ReplacementOrder> replacementOrderList;
 	private ReplacementOrderReason replacementOrderReason;
@@ -140,7 +141,7 @@ public class ReplacementOrderAction extends BaseAction {
 			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 
-		replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto, replacementOrderReason);
+		replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto, replacementOrderReason, roComment);
 		if (replacementOrder == null) {
 			addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order."));
 			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
@@ -249,5 +250,13 @@ public class ReplacementOrderAction extends BaseAction {
 
 	public void setReplacementOrderReason(ReplacementOrderReason replacementOrderReason) {
 		this.replacementOrderReason = replacementOrderReason;
+	}
+
+	public String getRoComment() {
+		return roComment;
+	}
+
+	public void setRoComment(String roComment) {
+		this.roComment = roComment;
 	}
 }

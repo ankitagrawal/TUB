@@ -46,10 +46,7 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 
-/**
- * Created by IntelliJ IDEA. User: Rajni Date: Apr 3, 2012 Time: 11:52:58 AM To change this template use File | Settings |
- * File Templates.
- */
+
 
 @Secure(hasAnyPermissions = { PermissionConstants.UPLOAD_PRODUCT_CATALOG }, authActionBean = AdminPermissionAction.class)
 @Component

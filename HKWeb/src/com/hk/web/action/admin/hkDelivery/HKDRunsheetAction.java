@@ -22,7 +22,7 @@ import com.hk.domain.courier.Courier;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.UserService;
 import com.hk.admin.pact.service.courier.AwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.manager.HKDRunsheetManager;
@@ -118,6 +118,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         }
         consignmentStatuses = consignmentService.getConsignmentStatusList();
         runsheetConsignments = new ArrayList<Consignment>(runsheet.getConsignments());
+	    consignmentOnHoldReason = runsheetService.getOnHoldCustomerReasonForRunsheetConsignments(runsheet);
         return new ForwardResolution("/pages/admin/hkRunsheet.jsp");
     }
 
@@ -147,7 +148,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     public Resolution markAllDelivered(){
         if(runsheet != null){
             runsheetService.markAllConsignmentsAsDelivered(runsheet);
-            runsheetService.saveRunSheet(runsheet, changedConsignmentList, consignmentOnHoldReason);
+            runsheetService.saveRunSheet(runsheet, changedConsignmentList, null);
         }
         return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
     }
@@ -305,7 +306,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 // Saving Runsheet in db.
                 runsheetObj = runsheetService.saveRunSheet(runsheetObj);
                 //making corresponding entry in consignment tracking.
-                consignmentService.saveConsignmentTracking(consignmentService.createConsignmentTracking(hub, deliveryHub, loggedOnUser, new ArrayList<Consignment>(runsheetObj.getConsignments()), consignmentLifecycleStatus));
+                consignmentService.saveConsignmentTracking(consignmentService.createConsignmentTracking(hub, deliveryHub, loggedOnUser, new ArrayList<Consignment>(runsheetObj.getConsignments()), consignmentLifecycleStatus, runsheetObj));
                 // generating Xls file.
                 xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), runsheetObj.getConsignments(), agent.getName(), totalCODAmount, totalPackets, totalCODPackets, runsheetObj.getHub());
             } catch (IOException ioe) {

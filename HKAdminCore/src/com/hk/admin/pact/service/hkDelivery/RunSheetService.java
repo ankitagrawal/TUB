@@ -30,7 +30,7 @@ public interface RunSheetService {
 
     public boolean agentHasOpenRunsheet(User agent);
 
-    public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user, Map<Consignment, String> consignmentOnHoldReason);
+    public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user, Runsheet runsheet, Map<Consignment, String> consignmentOnHoldReason);
 
     public Runsheet updateExpectedAmountForClosingRunsheet(Runsheet runsheet);
 
@@ -43,4 +43,6 @@ public interface RunSheetService {
 	public void markShippingOrderDeliveredAgainstConsignments(Set<Consignment> consignmentList);
 
 	public Runsheet closeRunsheet(Runsheet runsheet);
+
+	public Map<Consignment, String> getOnHoldCustomerReasonForRunsheetConsignments(Runsheet runsheet);
 }

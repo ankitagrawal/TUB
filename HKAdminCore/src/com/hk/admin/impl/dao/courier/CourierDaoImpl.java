@@ -5,12 +5,14 @@ import java.util.ArrayList;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.constants.courier.EnumCourier;
 import com.akube.framework.dao.Page;
 
 @Repository
@@ -72,4 +74,13 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 		}
 		return list(getCourierCriteria(null, courierNameList, courierGroupList, disabled), page, perPage);
 	}
+
+	 public List<Courier> listOfVendorCouriers() {
+        List<EnumCourier> workingVendorCouriers = EnumCourier.getCurrentlyApplicableVendorCouriers();
+
+        List<Long> courierIds = EnumCourier.getCourierIDs(workingVendorCouriers);
+        Criteria criteria = getSession().createCriteria(Courier.class);
+        criteria.add(Restrictions.in("id", courierIds));
+        return criteria.list();
+    }
 }

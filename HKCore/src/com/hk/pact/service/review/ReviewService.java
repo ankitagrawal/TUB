@@ -8,7 +8,9 @@ import com.hk.domain.review.ReviewStatus;
 
 public interface ReviewService {
 
-    public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage);
+    public Page getProductReviewsForCustomer(Product product, List<Long> reviewStatusList, int page, int perPage);
+
+    public Page getProductReviewsForAdmin(Product product, List<Long> reviewStatusList, int page, int perPage);
 
     public Long getAllReviews(Product product, List<Long> reviewStatusList);
 

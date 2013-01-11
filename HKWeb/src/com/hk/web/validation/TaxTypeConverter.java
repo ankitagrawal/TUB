@@ -3,6 +3,7 @@ package com.hk.web.validation;
 import java.util.Collection;
 import java.util.Locale;
 
+import com.hk.pact.dao.TaxDao;
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
 
@@ -22,7 +23,7 @@ public class TaxTypeConverter implements TypeConverter<Tax> {
   }
   
   @Autowired
-  private BaseDao baseDao;
+  private TaxDao taxDao;
 
   public Tax convert(String s, Class<? extends Tax> aClass, Collection<ValidationError> validationErrors) {
     Long idLong = null;
@@ -33,17 +34,13 @@ public class TaxTypeConverter implements TypeConverter<Tax> {
     if (idLong == null) {
       return null;
     } else {
-      //return taxDao.find(idLong);
-      return getBaseDao().get(Tax.class, idLong);
+//      return taxDao.find(idLong);
+      return getTaxDao().get(Tax.class, idLong);
     }
   }
-  
-  public BaseDao getBaseDao() {
-      return baseDao;
-  }
 
-  public void setBaseDao(BaseDao baseDao) {
-      this.baseDao = baseDao;
+  public TaxDao getTaxDao() {
+    return taxDao;
   }
 }
 
