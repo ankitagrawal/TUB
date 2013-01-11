@@ -35,7 +35,7 @@
 
       <p>
         If an item is found defective, please get in touch with our customer care on info@healthkart.com or call us on
-        0124-4551616 within 14 days of receipt of the product. When we receive the item, we will inspect it to ensure
+        0124-4502930 within 14 days of receipt of the product. When we receive the item, we will inspect it to ensure
         everything is present and is in its original condition and then issue either a full refund, Healthkart Cash
         (store credit) or a different item in exchange, as per your request.
       </p>
@@ -57,7 +57,7 @@
           All items returned must be unused and in their original condition with all original tags or boxes and packaging intact
         </li>
         <li>
-          To coordinate a return, send a picture of the item(s) to info@healthkart.com with the email title “Return” or call 0124-4551616
+          To coordinate a return, send a picture of the item(s) to info@healthkart.com with the email title “Return” or call 0124-4502930
           within 14 days of the receipt of the product to ensure return eligibility of the product. Please bear in mind that we should
           receive the return package within 10 days of us sending the authorizing email
         </li>
@@ -116,7 +116,7 @@
         <li>Some special rules for promotional offers may override "Healthkart.com's 14 Day Returns Policy"</li>
       </ul>
 
-      <p>In case of any queries, please write to our customer care on info@healthkart.com or call us on 0124-4551616</p>
+      <p>In case of any queries, please write to our customer care on info@healthkart.com or call us on 0124-4502930</p>
 
     </div>
 

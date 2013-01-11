@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.hk.domain.order.ReplacementOrderReason;
+import com.hk.domain.order.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -27,9 +27,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
@@ -324,6 +321,29 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_BackToDropShippingQueue);
            return shippingOrder;
        }
+
+	public ReplacementOrderReason getRTOReasonForShippingOrder(ShippingOrder shippingOrder) {
+		String rtoReason = null;
+		ReplacementOrderReason replacementOrderReason = null;
+		for (ShippingOrderLifecycle shippingOrderLifecycle : shippingOrder.getShippingOrderLifecycles()){
+			if(shippingOrderLifecycle.getShippingOrderLifeCycleActivity().getId().equals(EnumShippingOrderLifecycleActivity.RTO_Initiated.getId())){
+				if(shippingOrderLifecycle.getComments() != null){
+					replacementOrderReason = getReplacementOrderReasonByName(shippingOrderLifecycle.getComments());
+				}
+			}
+		}
+		return replacementOrderReason;
+	}
+
+	public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReasonString) {
+		List<ReplacementOrderReason> replacementOrderReasonList = getAdminShippingOrderDao().getAll(ReplacementOrderReason.class);
+		for(ReplacementOrderReason replacementOrderReason : replacementOrderReasonList){
+			if(replacementOrderReasonString.contains(replacementOrderReason.getName())){
+				return replacementOrderReason;
+			}
+		}
+		return null;
+	}
 
 
     public ShippingOrderService getShippingOrderService() {

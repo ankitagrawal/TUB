@@ -21,7 +21,7 @@
   time you access this website. If you have any queries about these
   terms & conditions or have any comments or complaints on or about
   the website, please email us at info@healthkart.com or call us on
-  0124-4551616 We reserve the right to change these terms & conditions
+  0124-4502930 We reserve the right to change these terms & conditions
   from time to time without any obligation to inform you and it is
   your responsibility to look through them as often as possible.</p>
 <b>Ownership of rights:</b>
@@ -256,12 +256,16 @@
 <b>Communication:</b>
 
 <p style="text-align: justify">When you visit the Website or
-  send emails to us, you are communicating with us electronically. You
-  consent to receive communications from us electronically. We will
-  communicate with you by email or by posting notices on the Website.
-  You agree that all agreements, notices, disclosures and other
-  communications that we provide to you electronically satisfy any
-  legal requirement that such communications be in writing.</p>
+    send emails to us, you are communicating with us electronically. You
+    consent to receive communications from us electronically. We will
+    communicate with you by email or by posting notices on the Website.
+    You agree that all agreements, notices, disclosures and other
+    communications that we provide to you electronically satisfy any
+    legal requirement that such communications be in writing.
+    When you submit your phone number along with your shipping address or to request our call back, you consent to receive calls on that
+    number for communication related to your order/request and other site related communication.
+</p>
+
 <b>Website feedback, user comments and user generated content:</b>
 
 <p style="text-align: justify">All reviews, comments, feedback,

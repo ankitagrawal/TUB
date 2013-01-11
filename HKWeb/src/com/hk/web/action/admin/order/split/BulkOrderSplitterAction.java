@@ -2,7 +2,6 @@ package com.hk.web.action.admin.order.split;
 
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.order.Order;
@@ -39,9 +38,6 @@ public class BulkOrderSplitterAction extends BaseAction {
 	@Autowired
 	OrderService orderService;
 
-	@Autowired
-	AdminOrderService adminOrderService;
-
 	Order order;
 
 	@DefaultHandler
@@ -53,14 +49,14 @@ public class BulkOrderSplitterAction extends BaseAction {
 
 		if (orderList != null) {
 			for (Order order : orderList) {
-				adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+                orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
 			}
 		}
 		return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
 	}
 
 	public Resolution splitSingleOrder() {
-		boolean shippingOrderExists = adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+		boolean shippingOrderExists = orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
 		String message = "";
 		if (shippingOrderExists) {
 			message = "BO has been Split into SO";
