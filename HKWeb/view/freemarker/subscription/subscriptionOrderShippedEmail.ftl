@@ -96,7 +96,7 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
                         <br/>
                         <br/>
 
-                        In case you have any queries, feel free to chat with our Customer Care or call them at 0124-4551666. <br/>
+                        In case you have any queries, feel free to chat with our Customer Care or call them at 0124-4502930. <br/>
                         <br/>
 
                         Healthy Shopping!<br/>
@@ -134,7 +134,7 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
                                                                       alt="twitter" width="32" height="32" border="0"/></a></td>
                     <td align="right" valign="middle" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
                             href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;| &nbsp;t: +91
-                        124-4551666
+                        124-4502930
                     </td>
                 </tr>
             </table>
