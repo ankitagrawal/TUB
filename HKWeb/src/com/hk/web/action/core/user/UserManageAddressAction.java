@@ -67,7 +67,7 @@ public class UserManageAddressAction extends BaseAction {
   public Resolution editUserAddresses() {
       if(!address.getUser().getId().equals(getPrincipalUser().getId())){
           addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
-          return new RedirectResolution(getContext().getSourcePage());
+          return new RedirectResolution("/pages/editUserAddresses.jsp");
       }
     if (getPrincipal() != null) {
       user = getUserService().getUserById(getPrincipal().getId());
@@ -82,7 +82,7 @@ public class UserManageAddressAction extends BaseAction {
     if (user != null) {
         if(!address.getUser().getId().equals(user.getId())){
             addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
-            new RedirectResolution(getContext().getSourcePage());
+            new RedirectResolution(UserManageAddressAction.class);
         }
       address.setUser(user);
       address = addressDao.save(address);
