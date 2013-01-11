@@ -249,15 +249,15 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
         if (isDropShipping()) {
             criteria.add(Restrictions.eq("isDropShipping", dropShipping));
-            if (isInstallable())   {
+        }
+
+         if (isInstallable()){
                 lineItemsCriteria = criteria.createCriteria("lineItems");
                 skuCriteria = lineItemsCriteria.createCriteria("sku");
                 productVariantCriteria = skuCriteria.createCriteria("productVariant");
                 productCriteria = productVariantCriteria.createCriteria("product");
                 productCriteria.add(Restrictions.eq("installable", true));
             }
-        }
-
 
         /*
         * paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
