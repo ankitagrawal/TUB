@@ -102,6 +102,7 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
 		return inStockSkuItems;
 	}
 
+	//This seems to be wrong hence deprecating it, please use it at your own risk
 	public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup) {
         List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
         String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem.skuGroup =:skuGroup and pvi.qty = 1";
