@@ -3,12 +3,7 @@ package com.hk.web.action.core.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
 
@@ -80,6 +75,10 @@ public class UserManageAddressAction extends BaseAction {
   public Resolution saveAddress() {
     user = userService.getLoggedInUser();
     if (user != null) {
+        if(!address.getUser().getId().equals(user.getId())){
+            addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
+            new RedirectResolution(getContext().getSourcePage());
+        }
       address.setUser(user);
       address = addressDao.save(address);
     }

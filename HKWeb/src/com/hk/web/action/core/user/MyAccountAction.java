@@ -107,11 +107,20 @@ public class MyAccountAction extends BaseAction {
   }
 
   public Resolution editBasicInformation() {
+    if(!getPrincipalUser().getId().equals(user.getId())){
+        logger.debug("user with id"+getPrincipal().getId()+" just tried to access information of user with id" + user.getId());
+        addRedirectAlertMessage(new SimpleMessage("please don't mess up with other users in our system"));
+    }
     logger.debug("Editing basic information for " + user.getName());
     return new ForwardResolution("/pages/editBasicInformation.jsp");
   }
 
   public Resolution saveBasicInformation() {
+    if(!user.getId().equals(getPrincipalUser().getId())){
+        user=getPrincipalUser();
+        addRedirectAlertMessage(new SimpleMessage("Please don't mess up with our system"));
+        return new RedirectResolution(getContext().getSourcePage());
+    }
     if (user.getName().length() > 80) {
       logger.debug("new user name entered exceeded the allowed limit");
       addRedirectAlertMessage(new SimpleMessage("Please enter a valid name!"));
@@ -133,6 +142,7 @@ public class MyAccountAction extends BaseAction {
   }
 
   public Resolution editPassword() {
+     user=getPrincipalUser();
     logger.debug("Editing password for " + user.getName());
     return new ForwardResolution("/pages/editPassword.jsp");
   }
