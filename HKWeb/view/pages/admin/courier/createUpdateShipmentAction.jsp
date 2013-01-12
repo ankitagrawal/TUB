@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="com.hk.constants.shipment.EnumShipmentServiceType" %>
+<%@ page import="com.hk.constants.shipment.EnumBoxSize" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction" var="cusa"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Update Shipment">
@@ -60,6 +62,17 @@
                      <th>Picker Name</th>
                  </tr>
                    <tr>
+                       <s:hidden name="shipment.id" value="${cusa.shipment.id}"/>
+                       <s:hidden name="shipment.shipDate" value="${cusa.shipment.shipDate}"/>
+                       <s:hidden name="shipment.deliveryDate" value="${cusa.shipment.deliveryDate}"/>
+                       <s:hidden name="shipment.emailSent" value="${cusa.shipment.emailSent}"/>
+                       <s:hidden name="shipment.collectionCharge" value="${cusa.shipment.collectionCharge}" />
+                       <s:hidden name="shipment.shipmentCharge" value="${cusa.shipment.shipmentCharge}"/>
+                       <s:hidden name="shipment.returnDate" value="${cusa.shipment.returnDate}"/>
+                       <s:hidden name="shipment.estmShipmentCharge" value="${cusa.shipment.estmShipmentCharge}" />
+                       <s:hidden name="shipment.estmCollectionCharge" value="${cusa.shipment.estmCollectionCharge}" />
+                       <s:hidden name="shipment.extraCharge" value="${cusa.shipment.extraCharge}" />
+                       <s:hidden name="shipment.zone" value="${cusa.shipment.zone.id}" />
                        <td>
                            ${cusa.shipment.awb.id}
                            <s:hidden name="shipment.awb" value="${cusa.shipment.awb.id}"/>
@@ -70,10 +83,22 @@
                        </td>
                        <td>
                            ${cusa.shipment.shipmentServiceType.name}
-                           <s:hidden name="shipment.shipmentServiceType" value="${cusa.shipment.shipmentServiceType}"/>
+                           <s:hidden name="shipment.shipmentServiceType" value="<%=EnumShipmentServiceType.getShipmentTypeFromId(cusa.getShipment().getShipmentServiceType().getId())%>"/>
                        </td>
                        <td>
-                           <label>Enter Size in cm(Centimeter)</label>
+                           <label>Select Box Size</label>
+                           <s:select name="shipment.boxSize" id="boxSize">
+                             <s:option value="">--Select--</s:option>
+                             <s:option value="<%=EnumBoxSize.L.getId()%>"><%=EnumBoxSize.L.getName()%></s:option>
+                             <s:option value="<%=EnumBoxSize.L2.getId()%>"><%=EnumBoxSize.L2.getName()%></s:option>
+                             <s:option value="<%=EnumBoxSize.M.getId()%>"><%=EnumBoxSize.M.getName()%></s:option>
+                             <s:option value="<%=EnumBoxSize.M2.getId()%>"><%=EnumBoxSize.M2.getName()%></s:option>
+                             <s:option value="<%=EnumBoxSize.S.getId()%>"><%=EnumBoxSize.S.getName()%></s:option>
+                             <s:option value="<%=EnumBoxSize.XL.getId()%>"><%=EnumBoxSize.XL.getName()%></s:option>
+                             <s:option value="<%=EnumBoxSize.XS.getId()%>"><%=EnumBoxSize.XS.getName()%></s:option>
+                             <s:option value="<%=EnumBoxSize.XXL.getId()%>"><%=EnumBoxSize.XXL.getName()%></s:option>
+                             <s:option value="<%=EnumBoxSize.XXXL.getId()%>"><%=EnumBoxSize.XXXL.getName()%></s:option>
+                           </s:select>
                           <s:text name="shipment.boxSize" id = "boxSize" value="${cusa.shipment.boxSize}"/>
                        </td>
                        <td>
