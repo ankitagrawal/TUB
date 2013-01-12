@@ -60,9 +60,6 @@ public class XslConstants {
     public static final String    UPC                             = "UPC";
     public static final String    IS_HIDDEN                       = "IS_HIDDEN";
     public static final String    OUT_OF_STOCK                    = "OUT_OF_STOCK";
-  // Universal
-    // Product
-    // Code
 
     public static final String    ID                              = "ID";
     public static final String    PINCODE                         = "PINCODE";

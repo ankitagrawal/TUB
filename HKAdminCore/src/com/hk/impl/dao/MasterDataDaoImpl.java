@@ -8,6 +8,8 @@ import java.util.List;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.domain.courier.*;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.core.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -89,14 +91,14 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private RunSheetService     runsheetService;
     @Autowired
     private CourierGroupService courierGroupService;
-
     @Autowired
     private CourierService      courierService;
-	@Autowired
-	private ConsignmentService  consignmentService;
-
-	@Autowired
-	private DispatchLotService dispatchLotService;
+    @Autowired
+    private DispatchLotService dispatchLotService;
+    @Autowired
+    private WarehouseService warehouseService;
+    @Autowired
+    private ConsignmentService consignmentService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -418,34 +420,38 @@ public class MasterDataDaoImpl implements MasterDataDao {
 		return getBaseDao().getAll(Zone.class);
 	}
 
-	public List<String> getCustomerOnHoldReasonsForHkDelivery() {
-		return consignmentService.getCustomerOnHoldReasonsForHkDelivery();
-	}
+    public List<String> getCustomerOnHoldReasonsForHkDelivery() {
+        return consignmentService.getCustomerOnHoldReasonsForHkDelivery();
+    }
 
-	public List<DispatchLotStatus> getDispatchLotStatusList() {
-		return getBaseDao().getAll(DispatchLotStatus.class);
-	}
+    public List<DispatchLotStatus> getDispatchLotStatusList() {
+        return getBaseDao().getAll(DispatchLotStatus.class);
+    }
 
-	public List<String> getSourceAndDestinationListForDispatchLot() {
-		return dispatchLotService.getSourceAndDestinationListForDispatchLot();
-	}
+    public List<String> getSourceAndDestinationListForDispatchLot() {
+        return dispatchLotService.getSourceAndDestinationListForDispatchLot();
+    }
 
-	public List<String> getShipmentStatusForDispatchLot() {
-		return dispatchLotService.getShipmentStatusForDispatchLot();
-	}
+    public List<String> getShipmentStatusForDispatchLot() {
+        return dispatchLotService.getShipmentStatusForDispatchLot();
+    }
 
-	public List<AwbStatus> getAllAwbStatus() {
-		return EnumAwbStatus.getAllStatusExceptUsed();
-	}
+    public List<Warehouse> getServiceableWarehouses() {
+        return warehouseService.getServiceableWarehouses();
+    }
 
-     public List<Courier> getListOfVendorCouriers(){
+    public List<AwbStatus> getAllAwbStatus() {
+        return EnumAwbStatus.getAllStatusExceptUsed();
+    }
+
+    public List<Courier> getListOfVendorCouriers() {
         return courierService.listOfVendorCouriers();
     }
 
-	public List<ReconciliationType> getAddReconciliationTypeList() {
-		List<ReconciliationType> reconciliationList = new ArrayList<ReconciliationType>();
-		ReconciliationType addReconType = EnumReconciliationType.Add.asReconciliationType();
-		reconciliationList.add(addReconType);
-		return reconciliationList;
-	}
+    public List<ReconciliationType> getAddReconciliationTypeList() {
+        List<ReconciliationType> reconciliationList = new ArrayList<ReconciliationType>();
+        ReconciliationType addReconType = EnumReconciliationType.Add.asReconciliationType();
+        reconciliationList.add(addReconType);
+        return reconciliationList;
+    }
 }

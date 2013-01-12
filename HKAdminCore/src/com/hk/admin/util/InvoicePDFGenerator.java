@@ -2,7 +2,6 @@ package com.hk.admin.util;
 
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.dto.accounting.InvoiceLineItemDto;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.cache.CategoryCache;
 import com.hk.constants.core.EnumRole;
@@ -52,29 +51,17 @@ public class InvoicePDFGenerator {
     @Autowired
     BarcodeGenerator        barcodeGenerator;
     @Autowired
-    CourierServiceInfoDao   courierServiceInfoDao;
-    @Autowired
     CourierService          courierService;
     @Autowired
     AddressDao              addressDao;
     @Autowired
     BaseDao baseDao;
 
-    // @Named(Keys.Env.adminDownloads)
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                  adminDownloadsPath;
 
     @Autowired
     private CategoryService categoryService;
-
-    /*
-     * public void generateInvoicePDF(ShippingOrder shippingOrder) { try { Document orderDetailsDocument = new
-     * Document(); PdfWriter.getInstance(orderDetailsDocument, new FileOutputStream(FILE)); coupon =
-     * referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
-     * orderDetailsDocument.open(); addOrderDetailsContent(orderDetailsDocument, shippingOrder, coupon);
-     * orderDetailsDocument.close(); } catch (Exception e) { logger.error("Exception occurred while generating pdf." +
-     * e.getMessage()); } k }
-     */
 
     public void generateMasterInvoicePDF(java.util.List<ShippingOrder> shippingOrderList, String pdfFilePath) {
         Document orderDetailsDocument = new Document();
@@ -105,17 +92,6 @@ public class InvoicePDFGenerator {
         }
         barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(),1.0f, 150, false);
         Image barcodeImage = Image.getInstance(barcodePath);
-        String routingCode = null;
-        Address address = addressDao.get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
-        boolean isCod = shippingOrder.isCOD();
-        CourierServiceInfo courierServiceInfo = null;
-	 
-        if (EnumCourier.BlueDart_COD.getId().equals(shippingOrder.getShipment().getAwb().getCourier().getId())) {
-            courierServiceInfo = courierService.searchCourierServiceInfo(EnumCourier.BlueDart_COD.getId(), address.getPin(), isCod , false, false);             
-            if (courierServiceInfo != null) {
-                routingCode = courierServiceInfo.getRoutingCode();
-            }
-        }
 
         Paragraph preface = new Paragraph();
         Paragraph header = new Paragraph("ORDER INVOICE", new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.NORMAL));
@@ -143,25 +119,6 @@ public class InvoicePDFGenerator {
         preface.add(new Paragraph("Please do not accept if the box is tampered", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD)));
         addEmptyLine(preface, 1);
 
-        /*
-         * if (!shippingOrder.getBaseOrder().getUser().equals("support@madeinhealth.com")) { Paragraph referAndEarnPara =
-         * new Paragraph(); referAndEarnPara.setAlignment(Element.ALIGN_RIGHT);
-         * referAndEarnPara.setIndentationLeft(335f); referAndEarnPara.add(new Paragraph( "Introducing the Refer and
-         * Earn program", new Font(Font.FontFamily.TIMES_ROMAN, 9, Font.BOLD))); referAndEarnPara.add(new Paragraph(
-         * "Your referral coupon code :", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
-         *//*
-             * referAndEarnPara.add(new Paragraph(coupon.getCode().toUpperCase(), new Font(Font.FontFamily.TIMES_ROMAN,
-             * 10, Font.BOLD)));
-             *//*
-             * referAndEarnPara.add(new Paragraph( "How it works:", new Font(Font.FontFamily.TIMES_ROMAN, 8,
-             * Font.NORMAL))); referAndEarnPara.add(new Paragraph( "Pass this coupon code to your friends and
-             * family.They", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL))); referAndEarnPara.add(new
-             * Paragraph( "get a Rs. 100 discount on their first purchase* at", new Font(Font.FontFamily.TIMES_ROMAN, 8,
-             * Font.NORMAL))); referAndEarnPara.add(new Paragraph( "healthkart.com and you get reward points worth Rs.
-             * 100", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL))); referAndEarnPara.add(new Paragraph( "in
-             * your account for your referral*.", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
-             * preface.add(referAndEarnPara); }
-             */
         preface.add(new Paragraph("Name & Address", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD)));
 
         preface.add(new Paragraph(shippingOrder.getBaseOrder().getAddress().getName(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL)));
@@ -172,6 +129,7 @@ public class InvoicePDFGenerator {
             preface.add(new Paragraph(shippingOrder.getBaseOrder().getAddress().getLine2(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL)));
         }
 
+/*
         if (routingCode != null && !("".equals(routingCode))) {
             preface.add(new Paragraph(shippingOrder.getBaseOrder().getAddress().getCity() + "-" + shippingOrder.getBaseOrder().getAddress().getPin() + "[" + routingCode + "]",
                     new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL)));
@@ -179,19 +137,11 @@ public class InvoicePDFGenerator {
             preface.add(new Paragraph(shippingOrder.getBaseOrder().getAddress().getCity() + "-" + shippingOrder.getBaseOrder().getAddress().getPin(), new Font(
                     Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL)));
         }
+*/
 
         preface.add(new Paragraph(shippingOrder.getBaseOrder().getAddress().getState(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL)));
 
         preface.add(new Paragraph("Ph:" + shippingOrder.getBaseOrder().getAddress().getPhone(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL)));
-
-        /*
-         * if (shippingOrder.getBaseOrder().getOfferInstance() != null) { preface.add(new Paragraph("You have won a
-         * Complementary Coupon!", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL))); preface.add(new
-         * Paragraph(shippingOrder.getBaseOrder().getOfferInstance().getOffer().getDescription(), new
-         * Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL))); preface.add(new Paragraph("Your Complementary Coupon
-         * Code :" + shippingOrder.getBaseOrder().getOfferInstance().getCoupon().getComplimentaryCoupon(), new
-         * Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL))); }
-         */
 
         if (shippingOrder.getBaseOrder().getUserComments() != null) {
             preface.add(new Paragraph("User Instructions :" + shippingOrder.getBaseOrder().getUserComments(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL)));
@@ -366,54 +316,6 @@ public class InvoicePDFGenerator {
         document.add(orderSummaryTable);
 
     }
-
-    /*
-     * private void createAlignmentTable(Paragraph document, ShippingOrder shippingOrder, Coupon coupon) throws
-     * BadElementException, DocumentException { PdfPTable table = new PdfPTable(2); float[] widths = {50f, 50f};
-     * table.setWidths(widths); table.setWidthPercentage(100f); //
-     * table.getDefaultCell().setBorder(Rectangle.NO_BORDER); //table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
-     * table.getDefaultCell().setFixedHeight(50f); table.setHeaderRows(1); PdfPCell cellLeft = new PdfPCell();
-     * //cellLeft.setBorder(0); cellLeft.setBorderWidth(0f); Paragraph leftPara = new Paragraph(); leftPara.add(new
-     * Paragraph( "Proforma Invoice for Order ::::::" + shippingOrder.getGatewayOrderId(), new
-     * Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL))); leftPara.add(new Paragraph( "Placed On :" +
-     * shippingOrder.getBaseOrder().getPayment().getCreateDate(), new Font(Font.FontFamily.TIMES_ROMAN, 10,
-     * Font.NORMAL))); cellLeft.addElement(leftPara); table.addCell(cellLeft); PdfPCell cellRight = new PdfPCell();
-     * cellRight.setBorderWidth(0f); Paragraph rightPara = new Paragraph(); rightPara.add(new Paragraph( "Introducing
-     * the Refer and Earn programmmmmmm", new Font(Font.FontFamily.TIMES_ROMAN, 9, Font.BOLD))); rightPara.add(new
-     * Paragraph( "Your referral coupon code :", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
-     * rightPara.add(new Paragraph(coupon.getCode().toUpperCase(), new Font(Font.FontFamily.TIMES_ROMAN, 10,
-     * Font.BOLD))); rightPara.add(new Paragraph( "How it works:", new Font(Font.FontFamily.TIMES_ROMAN, 8,
-     * Font.NORMAL))); rightPara.add(new Paragraph( "Pass this coupon code to your friends and family.They", new
-     * Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL))); rightPara.add(new Paragraph( "get a Rs. 100 discount on
-     * their first purchase* at", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL))); rightPara.add(new Paragraph(
-     * "healthkart.com and you get reward points worth Rs. 100", new Font(Font.FontFamily.TIMES_ROMAN, 8,
-     * Font.NORMAL))); rightPara.add(new Paragraph( "in your account for your referral*.", new
-     * Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL))); cellRight.addElement(rightPara); table.addCell(cellRight);
-     *//*
-         * table.addCell(new PdfPCell(new Phrase(""))); table.addCell(new PdfPCell(new Phrase("Introducing the Refer and
-         * Earn program", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD)))); table.addCell(new PdfPCell(new
-         * Phrase(""))); table.addCell(new PdfPCell(new Phrase("Your referral coupon code :", new
-         * Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)))); table.addCell(new PdfPCell(new Phrase("")));
-         * table.addCell(new PdfPCell(new Phrase("" + coupon.getCode().toUpperCase(), new
-         * Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD)))); table.addCell(new PdfPCell(new Phrase("Proforma Invoice
-         * for Order :", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)))); table.addCell(new PdfPCell(new
-         * Phrase("How it works:", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)))); table.addCell(new
-         * PdfPCell(new Phrase("Placed On :" + shippingOrder.getBaseOrder().getPayment().getCreateDate(), new
-         * Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL)))); table.addCell(new PdfPCell(new Phrase("Pass this
-         * coupon code to your friends and family.They", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)))); long
-         * codId = EnumPaymentMode.COD.getId(); if (shippingOrder.getBaseOrder().getPayment().getPaymentMode().getId() ==
-         * codId) { table.addCell(new PdfPCell(new Phrase("Cash on delivery : Rs." + invoiceDto.getGrandTotal(), new
-         * Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL)))); } else { table.addCell(new PdfPCell(new Phrase(""))); }
-         * table.addCell(new PdfPCell(new Phrase("get a Rs. 100 discount on their first purchase* at", new
-         * Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)))); table.addCell(new PdfPCell(new Phrase("Please do not
-         * accept if the box is tampered", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD)))); table.addCell(new
-         * PdfPCell(new Phrase("healthkart.com and you get reward points worth Rs. 100", new
-         * Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)))); table.addCell(new PdfPCell(new Phrase("")));
-         * table.addCell(new PdfPCell(new Phrase("in your account for your referral*.", new
-         * Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)))); table.addCell(new PdfPCell(new Phrase("")));
-         *//*
-         * document.add(table); }
-         */
 
     private void addEmptyLine(Paragraph paragraph, int number) {
         for (int i = 0; i < number; i++) {

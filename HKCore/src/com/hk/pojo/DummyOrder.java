@@ -30,6 +30,8 @@ public class DummyOrder {
 
     boolean isCod;
 
+    boolean isGround;
+
     Pincode pincode;
 
     Payment payment;
@@ -55,6 +57,15 @@ public class DummyOrder {
         return amount;
     }
 
+    public boolean isGround() {
+        for (CartLineItem cartLineItem : cartLineItemList) {
+            if (!cartLineItem.getProductVariant().getProduct().isGroundShipping()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public Double getWeight() {
         weight = 0D;
         Double variantWt = 0D;
@@ -66,6 +77,10 @@ public class DummyOrder {
             weight += variantWt * cartLineItem.getQty();
         }
         return weight;
+    }
+
+    public void setGround(boolean ground) {
+        isGround = ground;
     }
 
     public void setAmount(Double amount) {

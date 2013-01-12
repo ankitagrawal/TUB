@@ -25,6 +25,11 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
     @JoinColumn(name = "shipping_order_id")
     private ShippingOrder shippingOrder;
 
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipment_service_type_id")
+    private ShipmentServiceType shipmentServiceType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "box_size_id")
     private BoxSize boxSize;
@@ -242,4 +247,12 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	public void setZone(Zone zone) {
 		this.zone = zone;
 	}
+
+    public ShipmentServiceType getShipmentServiceType() {
+        return shipmentServiceType;
+    }
+
+    public void setShipmentServiceType(ShipmentServiceType shipmentServiceType) {
+        this.shipmentServiceType = shipmentServiceType;
+    }
 }

@@ -1,29 +1,16 @@
 package com.hk.web.action.core.accounting;
 
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.apache.commons.lang.StringUtils;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.accounting.InvoiceDto;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
-import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
@@ -38,6 +25,19 @@ import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.order.CartFreebieService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.util.ShipmentServiceMapper;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Component
 public class SOInvoiceAction extends BaseAction {
@@ -53,13 +53,9 @@ public class SOInvoiceAction extends BaseAction {
 	@Autowired
 	private CategoryService categoryService;
 	@Autowired
-	private CourierService courierService;
-	@Autowired
 	private CartFreebieService cartFreebieService;
 	@Autowired
 	private B2bUserDetailsDao b2bUserDetailsDao;
-	@Autowired
-	private CourierServiceInfoDao courierServiceInfoDao;
 	@Autowired
 	PincodeService pincodeService;
 	@Autowired
@@ -68,6 +64,8 @@ public class SOInvoiceAction extends BaseAction {
 	ShipmentService shipmentService;
 	@Autowired
 	ShippingOrderService shippingOrderService;
+    @Autowired
+    PincodeCourierService pincodeCourierService;
 
 
 	@Value("#{hkEnvProps['" + Keys.Env.barcodeDir + "']}")
@@ -89,6 +87,8 @@ public class SOInvoiceAction extends BaseAction {
 
     private Supplier supplier;
 
+    //todo courier more refactoring needed
+
 	private void generateBarcodesForInvoice(Awb awb) {
 		Long courierId = shipment.getAwb().getCourier().getId();
 		if (courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())) {
@@ -96,7 +96,7 @@ public class SOInvoiceAction extends BaseAction {
 			if (StringUtils.isNotBlank(awbBarCode)) {
 				barcodeGenerator.getBarcodePath(awbBarCode, 2.0f, 200, true);
 			}
-			if (shippingOrder.isCOD()) {
+            if (ShipmentServiceMapper.isCod(shipment.getShipmentServiceType())) {
 				String codReturnBarCode = awb.getReturnAwbBarCode();
 				if (StringUtils.isNotBlank(codReturnBarCode)) {
 					barcodeGenerator.getBarcodePath(codReturnBarCode, 2.0f, 200, true);
@@ -108,23 +108,14 @@ public class SOInvoiceAction extends BaseAction {
 		}
 	}
 
-	private void generateRoutingCodeForInvoice(String pincode, boolean isCod) {
-		CourierServiceInfo courierServiceInfo = null;
-		Long courierId = shipment.getAwb().getCourier().getId();
-		if (courierId.equals(EnumCourier.BlueDart_COD.getId()) || courierId.equals(EnumCourier.BlueDart.getId())) {
-			courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, isCod, false, false);
-		} else if (courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())) {
-			courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, false, false, false);
-		}
+    private void generateRoutingCodeForInvoice(ShippingOrder shippingOrder) {
+        PincodeCourierMapping pincodeCourierMapping = pincodeCourierService.getApplicablePincodeCourierMapping(shippingOrder.getBaseOrder().getAddress().getPin(), Arrays.asList(shippingOrder.getShipment().getAwb().getCourier()), shippingOrder.getShipment().getShipmentServiceType(), null);
+        if (pincodeCourierMapping != null) {
+            routingCode = pincodeCourierMapping.getRoutingCode();
+        }
+    }
 
-		if (courierServiceInfo != null) {
-			routingCode = courierServiceInfo.getRoutingCode();
-		}
-
-	}
-
-
-	@DefaultHandler
+    @DefaultHandler
 	public Resolution pre() {
 		if (shippingOrder != null) {
 			shipment = shippingOrder.getShipment();
@@ -133,7 +124,7 @@ public class SOInvoiceAction extends BaseAction {
 				if (awb != null && awb.getAwbNumber() != null) {
 					generateBarcodesForInvoice(awb);
 				}
-				generateRoutingCodeForInvoice(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD());
+				generateRoutingCodeForInvoice(shippingOrder);
 			}
 			ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
 			String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
@@ -147,38 +138,21 @@ public class SOInvoiceAction extends BaseAction {
 			}
 			coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
 			barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f, 150, false);
-			/*Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
-						boolean isCod = shippingOrder.isCOD();
-						CourierServiceInfo courierServiceInfo = null;
-						courierServiceInfo = courierService.searchCourierServiceInfo(EnumCourier.BlueDart_COD.getId(), address.getPin(), isCod , false, false);
-						if (courierServiceInfo != null) {
-							routingCode = courierServiceInfo.getRoutingCode();
-						}
-						 if (shipment.getCourier().getId().equals(EnumCourier.FedEx.getId())){
-							courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(shipment.getCourier().getId(),address.getPin(), false, false, false);
-							if (courierServiceInfo != null){
-							   routingCode = courierServiceInfo.getRoutingCode();
-							}
-						 }
-
-						*/
-
             if(shippingOrder.isDropShipping()){
-                 for (LineItem lineItem : shippingOrder.getLineItems()) {
-                  if (lineItem != null) {
-                      ProductVariant productVariant = lineItem.getSku().getProductVariant();
-                      if (productVariant != null) {
-                          Product product = productVariant.getProduct();
-                          if (product != null && product.getSupplier()!= null) {
-                               supplier = product.getSupplier();
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    if (lineItem != null) {
+                        ProductVariant productVariant = lineItem.getSku().getProductVariant();
+                        if (productVariant != null) {
+                            Product product = productVariant.getProduct();
+                            if (product != null && product.getSupplier()!= null) {
+                                supplier = product.getSupplier();
                                 break;
-                          }
-                      }
-                  }
-              }
+                            }
+                        }
+                    }
+                }
             }
-
-			if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)) {
+			if (ShipmentServiceMapper.isGround(shipment.getShipmentServiceType())) {
 				setGroundShipped(true);
 			}
              if (shipmentService.isShippingOrderHasInstallableItem(shippingOrder)){
@@ -268,14 +242,6 @@ public class SOInvoiceAction extends BaseAction {
 
 	public void setCategoryService(CategoryService categoryService) {
 		this.categoryService = categoryService;
-	}
-
-	public CourierService getCourierService() {
-		return courierService;
-	}
-
-	public void setCourierService(CourierService courierService) {
-		this.courierService = courierService;
 	}
 
 	public String getFreebieItem() {

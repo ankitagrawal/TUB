@@ -1,7 +1,6 @@
 package com.hk.pact.service.shippingOrder;
 
 import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
 
@@ -18,8 +17,6 @@ public interface ShipmentService {
     public void delete(Shipment shipment);
 
 	public Shipment recreateShipment(ShippingOrder shippingOrder);
-
-    public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder );
 
     public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder );
 

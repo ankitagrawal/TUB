@@ -25,6 +25,7 @@ import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
 import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 
 public interface MasterDataDao 
 {
@@ -143,6 +144,8 @@ public interface MasterDataDao
 	public List<String> getSourceAndDestinationListForDispatchLot();
 
 	public List<String> getShipmentStatusForDispatchLot();
+
+   public List<Warehouse> getServiceableWarehouses();
 
 	public List<AwbStatus> getAllAwbStatus();
 

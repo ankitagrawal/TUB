@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -48,6 +49,8 @@ public class OrderSummaryAction extends BaseAction {
 
     @Autowired
     private CourierService     courierService;
+    @Autowired
+    private PincodeCourierService pincodeCourierService;
     @Autowired
     UserDao                    userDao;
     @Autowired
@@ -129,7 +132,7 @@ public class OrderSummaryAction extends BaseAction {
         Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
         if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
             groundShippedItemPresent = true;
-            groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
+            groundShippingAllowed = pincodeCourierService.isGroundShippingAllowed(pin);
         }
         // Ground Shipping logic ends --
 
@@ -137,7 +140,7 @@ public class OrderSummaryAction extends BaseAction {
         if (netShopping >= codFreeAfter) {
             codCharges = 0.0;
         }
-        availableCourierList = courierService.getAvailableCouriers(order);
+        availableCourierList = pincodeCourierService.getAvailableCouriers(order);
         if (availableCourierList != null && availableCourierList.size() == 0) {
             availableCourierList = null;
         }

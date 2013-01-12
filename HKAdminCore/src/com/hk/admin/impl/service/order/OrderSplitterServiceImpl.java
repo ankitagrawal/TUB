@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.util.helper.OrderSplitterHelper;
@@ -65,9 +64,6 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
     @Autowired
     PincodeRegionZoneDao         pincodeRegionZoneDao;
-
-    @Autowired
-    CourierServiceInfoDao        courierServiceInfoDao;
 
     @Autowired
     SkuService                   skuService;

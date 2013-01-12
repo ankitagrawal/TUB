@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.order;
 
 import java.util.*;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private AdminEmailManager         adminEmailManager;
     @Autowired
     private CourierService            courierService;
+    @Autowired
+    private PincodeCourierService pincodeCourierService;
 	@Autowired
     private SMSManager                smsManager;
 
@@ -412,7 +415,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         // Double payable = pricingDto.getGrandTotalPayable();
         //Double payable = order.getAmount();
-        if (!courierService.isCodAllowed(pin)) {
+        if (!pincodeCourierService.isCodAllowed(pin)) {
             codFailureMap.put("CodAllowedOnPin", "N");
             codFailureMap.put("Pincode", pin);
         } else if (payable < codMinAmount || payable > codMaxAmount) {
@@ -422,10 +425,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         } else if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
             codFailureMap.put("CodOnSubscription", "N");
         } else if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
-            if (courierService.isGroundShippingAllowed(pin)) {
+            if (pincodeCourierService.isGroundShippingAllowed(pin)) {
                 codFailureMap.put("GroundShippingAllowed", "Y");
             }
-            if (!courierService.isCodAllowedOnGroundShipping(pin)) {
+            if (!pincodeCourierService.isCodAllowedOnGroundShipping(pin)) {
                 codFailureMap.put("CodAllowedOnGroundShipping", "N");
             }
 

@@ -1,28 +1,8 @@
 package com.hk.rest.mobile.service.action;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-
-import net.sourceforge.stripes.validation.Validate;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.BaseUtils;
-import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
@@ -51,6 +31,23 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.util.ga.GAUtil;
 import com.hk.web.HealthkartResponse;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Secure
 @Path("/mPayment")
@@ -80,7 +77,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
     OrderLoggingService orderLoggingService;
 
 	@Autowired
-	private CourierService courierService;
+	private PincodeCourierService pincodeCourierService;
 	@Autowired
 	private OrderManager orderManager;
 	@Autowired
@@ -163,7 +160,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
 			Address address = order.getAddress();
 			String pin = address != null ? address.getPin() : null;
 
-			if (!getCourierService().isCodAllowed(pin)) {
+			if (!pincodeCourierService.isCodAllowed(pin)) {
                 message = MHKConstants.COD_NOT_IN_PINCODE + pin;
                 status = MHKConstants.STATUS_ERROR;
                 return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, status));
@@ -311,14 +308,6 @@ public class MCodPaymentReceiveAction extends MBaseAction {
 
 	public void setCodContactPhone(String codContactPhone) {
 		this.codContactPhone = codContactPhone;
-	}
-
-	public CourierService getCourierService() {
-		return courierService;
-	}
-
-	public void setCourierService(CourierService courierService) {
-		this.courierService = courierService;
 	}
 
 	public OrderManager getOrderManager() {

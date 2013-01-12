@@ -1,25 +1,7 @@
 package com.hk.rest.mobile.service.action;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.gson.JsonUtils;
-import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
@@ -33,6 +15,21 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.order.OrderSummaryAction;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA. User: Satish Date: Oct 2, 2012 Time: 9:36:13 PM To
@@ -57,7 +54,7 @@ public class MAddressAction extends MBaseAction {
 	@Autowired
 	AddressBookManager addressManager;
 	@Autowired
-	private CourierService courierService;
+	private PincodeCourierService pincodeCourierService;
 	private List<Address> addresses = new ArrayList<Address>(1);
 
 	// @Validate(on = "checkout", required = true)
@@ -97,7 +94,7 @@ public class MAddressAction extends MBaseAction {
 					address.setLine2(line2);
 					address.setName(name);
 					address.setPhone(phone);
-					if (courierService.isCodAllowed(pin))
+					if (pincodeCourierService.isCodAllowed(pin))
 						address.setPin(pin);
 					else {
 						message = MHKConstants.COD_NOT_IN_PINCODE + pin;

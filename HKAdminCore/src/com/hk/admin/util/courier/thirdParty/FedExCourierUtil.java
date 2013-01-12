@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.util.ShipmentServiceMapper;
 import org.apache.axis.types.NonNegativeInteger;
 import org.apache.axis.types.PositiveInteger;
 import org.apache.commons.lang.StringUtils;
@@ -206,7 +208,7 @@ public class FedExCourierUtil {
         requestedShipment.setShipTimestamp(Calendar.getInstance()); // Ship date and time
         requestedShipment.setDropoffType(DropoffType.REGULAR_PICKUP);
 
-        if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)) {
+        if (ShipmentServiceMapper.isGround(shippingOrder.getShipment().getShipmentServiceType())) {
             requestedShipment.setServiceType(ServiceType.FEDEX_EXPRESS_SAVER);
         } else {
             requestedShipment.setServiceType(ServiceType.STANDARD_OVERNIGHT);
