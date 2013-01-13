@@ -7,7 +7,7 @@
               To place your order by phone, or for any assistance, call us on
             </span>
       <br/>
-      0124 - 4551666 &nbsp;<br/>
+      0124 - 4502930 &nbsp;<br/>
       <span class="small">(24x7)</span>
     </div>
     <div class='prom' style="width: 360px;">
