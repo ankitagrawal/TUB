@@ -53,18 +53,14 @@
 					<td>${auditBrand.warehouse.name}</td>
 					<td>${auditBrand.auditor.login}</td>
 					<td>${auditBrand.brand}</td>
-					<td><select>
-						<c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
-							<c:choose>
-								<c:when test="${auditBrand.auditStatus == status.id}">
-									<option value="${status.id}" selected="selected">${status.name}</option>
-								</c:when>
-								<c:otherwise>
-									<option value="${status.id}">${status.name}</option>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</select></td>
+					<td>
+                    	<c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
+                    		<c:if test="${auditBrand.auditStatus == status.id}">
+                    				${status.name}
+                    		</c:if>
+                    	</c:forEach>
+                   </td>
+
 					<td>
 						<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
 							<s:param name="brandsToAudit" value="${auditBrand.id}"/>
