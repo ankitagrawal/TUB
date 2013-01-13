@@ -103,10 +103,10 @@
                         </tr>
                     </c:forEach>
                     <s:submit name="update" value="SAVE"/>
+                     </table>
                     </c:if>
                     </c:otherwise>
                     </c:choose>
-                </table>
 
             <h2>File to Upload
                 <s:file name="fileBean" size="30"/></h2>

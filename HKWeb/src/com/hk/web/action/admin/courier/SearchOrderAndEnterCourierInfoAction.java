@@ -3,6 +3,10 @@ package com.hk.web.action.admin.courier;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
+import com.hk.domain.order.ReplacementOrder;
+import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.domain.courier.*;
 import com.hk.util.ShipmentServiceMapper;
@@ -65,6 +69,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 	private ShipmentPricingEngine shipmentPricingEngine;
 	@Autowired
 	AwbService awbService;
+	@Autowired
+	AdminShippingOrderService adminShippingOrderService;
 
 	private String trackingId;
 	private String gatewayOrderId;
@@ -181,6 +187,22 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
 			return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
 		}
+
+		if(shippingOrder instanceof ReplacementOrder){
+			ShippingOrder parentShippingOrder = ((ReplacementOrder) shippingOrder).getRefShippingOrder();
+			if(((ReplacementOrder) shippingOrder).isRto()){
+				ReplacementOrderReason replacementOrderReason = getAdminShippingOrderService().getRTOReasonForShippingOrder(parentShippingOrder);
+				if(replacementOrderReason != null){
+					if(EnumReplacementOrderReason.getCourierRelatedReasonForRto().contains(replacementOrderReason.getId())){
+						if(selectedCourier != null && parentShippingOrder.getShipment().getAwb().getCourier().getId().equals(selectedCourier.getId())){
+							addRedirectAlertMessage(new SimpleMessage("Previous shipping order was returned due to the courier selected. Please select another courier or contact admin"));
+							return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class, "searchOrders").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+						}
+					}
+				}
+			}
+		}
+
 		Awb finalAwb = null;
 		Awb suggestedAwb = null;
 		if (shippingOrder.getShipment() != null) {
@@ -365,5 +387,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 	public void setSelectedCourier(Courier selectedCourier) {
 		this.selectedCourier = selectedCourier;
+	}
+
+	public AdminShippingOrderService getAdminShippingOrderService() {
+		return adminShippingOrderService;
 	}
 }

@@ -9,6 +9,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction" var="cdca"/>
 <%
     MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
@@ -34,6 +35,7 @@
 
                 $('#save').click(function(){
                     var bool = true;
+                    $(this).hide();
                     $('.pincode').each(function(){
                         var pincode = $(this).val();
                         if(pincode == "" || pincode == null || isNaN(pincode)){
@@ -41,8 +43,14 @@
                             bool = false;
                             return false;
                         }
-
+//                        alert($(this).parent().children('input.pincodeValue').attr('value'));
+                        if($(this).parent().children('input.pincodeValue').attr('value')== null || $(this).parent().children('input.pincodeValue').attr('value') == ""){
+                            alert("Invalid Pincode !!!!");
+                            bool = false;
+                            return false;
+                        }
                     });
+
                     $('.estimatedShippingCost').each(function(){
                         var estimatedShippingCost = $(this).val();
                         if(estimatedShippingCost!=null && estimatedShippingCost!="" && isNaN(estimatedShippingCost)){
@@ -51,9 +59,23 @@
                             return false;
                         }
                     });
-                    if(!bool)return false;
+                    if(!bool){$(this).show();return false;}
                 });
-
+                  $('.pincode').live('change',function(){
+                var pincode = $(this).val();
+                var obj = $(this);
+                $.getJSON($('#pincodeCheck').attr('href'), { pincodeString: pincode }, function (res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
+                        obj.parent().children('input.pincodeValue').attr('value',res.data.pincode.id);
+                    }
+                    else{
+                        alert(res.message);
+                        obj.val("");
+                        return false;
+                    }
+                }
+                        );
+            });
                 $('.addRowButton').click(function () {
 
                     var lastIndex = $('.lastRow').attr('count');
@@ -76,13 +98,14 @@
                             '</td>' +
                             '<td>' +
                             '<select name="pincodeDefaultCouriers[' + nextIndex + '].warehouse">' +
-                                    <c:forEach items="${allWarehouse}" var="warehouse">
+                                   <c:forEach items="${allWarehouse}" var="warehouse">
                             '<option value="' + ${warehouse.id} + '"> ' + "${warehouse.name}" + '</option>' +
                                     </c:forEach>
                             '</select>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" name="pincodeDefaultCouriers[' + nextIndex + '].pincode" class="pincode" />' +
+                            '<input type="text"  class="pincode" />' +
+                            '<input type="hidden" value="" class="pincodeValue" name="pincodeDefaultCouriers[' + nextIndex + '].pincode" >' +
                             '</td>' +
                             '<td>' +
                             '<select name="pincodeDefaultCouriers[' + nextIndex + '].cod">' +
@@ -109,6 +132,9 @@
         </script>
     </s:layout-component>
     <s:layout-component name="content">
+        <div style="display: none;">
+    <s:link beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction" id="pincodeCheck" event="getPincodeJson"></s:link>
+</div>
         <s:form beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">
             <label>Enter Pincode</label>
             <s:text name="pincodeString" id="pincode"/>
@@ -141,6 +167,7 @@
                         <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                             <td>
                                     ${ctr.index+1}.
+                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
                             </td>
                             <td>
                                 <s:select name="pincodeDefaultCouriers[${ctr.index}].courier"  value="${pincodeDefaultCourier.courier.id}">
@@ -155,7 +182,7 @@
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.pincode.pincode}
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].pincode" value="${pincodeDefaultCourier.pincode.id}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].pincode" value="${pincodeDefaultCourier.pincode.id}"/>
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.cod}
@@ -171,6 +198,7 @@
                             </td>
                         </tr>
                     </c:forEach>
+                    </table>
                     <a href="changeDefaultCourierAction.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
                     <br/>
                     <s:submit name="save" value="Save" id="save"/>
@@ -219,7 +247,6 @@
                         </table>
                         </c:if>
                     <br/>
-                </table>
         </s:form>
     </s:layout-component>
 </s:layout-render>

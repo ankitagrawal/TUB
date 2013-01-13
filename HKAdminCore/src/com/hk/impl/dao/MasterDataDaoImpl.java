@@ -454,4 +454,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
         reconciliationList.add(addReconType);
         return reconciliationList;
     }
+   public List<Warehouse> getAllWarehouse(){
+     return warehouseService.getAllWarehouses();
+  }
 }

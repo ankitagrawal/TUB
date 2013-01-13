@@ -13,6 +13,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.courier.Courier;
+import com.hk.web.HealthkartResponse;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,9 @@ import org.stripesstuff.plugin.security.Secure;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
@@ -94,6 +97,24 @@ public class ChangeDefaultCourierAction extends BaseAction {
        addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
+
+    @SuppressWarnings("unchecked")
+  public Resolution getPincodeJson(){
+
+    HealthkartResponse healthkartResponse = null;
+      Map dataMap = new HashMap();
+     Pincode pincode =  pincodeService.getByPincode(pincodeString);
+      if(pincode!=null){
+        dataMap.put("pincode",pincode);
+        healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Pincode",dataMap);
+        noCache();
+      }
+      else{
+        healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid PinCode !!!");
+        noCache();
+      }
+    return new JsonResolution(healthkartResponse);
+  }
 
     public Resolution generatePincodeExcel() throws Exception {
         pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGround);
@@ -173,7 +194,11 @@ public class ChangeDefaultCourierAction extends BaseAction {
         return pincodeDefaultCouriers;
     }
 
-    public Warehouse getWarehouse() {
+  public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
+    this.pincodeDefaultCouriers = pincodeDefaultCouriers;
+  }
+
+  public Warehouse getWarehouse() {
         return warehouse;
     }
 
