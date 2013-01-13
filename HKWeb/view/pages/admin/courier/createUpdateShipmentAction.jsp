@@ -75,15 +75,17 @@
                        <s:hidden name="shipment.zone" value="${cusa.shipment.zone.id}" />
                        <td>
                            ${cusa.shipment.awb.id}
-                           <s:hidden name="shipment.awb" value="${cusa.shipment.awb.id}"/>
+                           <input type="hidden" name="shipment.awb" value="${cusa.shipment.awb.id}"/>
                        </td>
                        <td>
                            ${cusa.shipment.shippingOrder.id}
                            <s:hidden name="shipment.shippingOrder" value="${cusa.shipment.shippingOrder.id}"/>
                        </td>
                        <td>
+                           <c:if test="${cusa.shipment.shipmentServiceType!=null}">
                            ${cusa.shipment.shipmentServiceType.name}
-                           <s:hidden name="shipment.shipmentServiceType" value="<%=EnumShipmentServiceType.getShipmentTypeFromId(cusa.getShipment().getShipmentServiceType().getId())%>"/>
+                           <s:hidden name="shipment.shipmentServiceType" value="<%=EnumShipmentServiceType.getShipmentTypeFromId(cusa.getShipment().getShipmentServiceType().getId()).asShipmentServiceType()%>"/>
+                            </c:if>
                        </td>
                        <td>
                            <label>Select Box Size</label>
@@ -99,7 +101,6 @@
                              <s:option value="<%=EnumBoxSize.XXL.getId()%>"><%=EnumBoxSize.XXL.getName()%></s:option>
                              <s:option value="<%=EnumBoxSize.XXXL.getId()%>"><%=EnumBoxSize.XXXL.getName()%></s:option>
                            </s:select>
-                          <s:text name="shipment.boxSize" id = "boxSize" value="${cusa.shipment.boxSize}"/>
                        </td>
                        <td>
                            <label>Enter Weight in KG</label>

@@ -95,7 +95,7 @@ public class CreateUpdateShipmentAction extends BaseAction {
     public Resolution updateShipment(){
         shipmentService.save(shipment);
         addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
-        return new ForwardResolution(CreateUpdateShipmentAction.class);
+        return new RedirectResolution(CreateUpdateShipmentAction.class);
     }
 
     public List<ShippingOrder> getShippingOrderList() {

@@ -171,6 +171,7 @@
                             </td>
                         </tr>
                     </c:forEach>
+                    </table>
                     <a href="changeDefaultCourierAction.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
                     <br/>
                     <s:submit name="save" value="Save" id="save"/>
@@ -219,7 +220,6 @@
                         </table>
                         </c:if>
                     <br/>
-                </table>
         </s:form>
     </s:layout-component>
 </s:layout-render>

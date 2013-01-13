@@ -143,6 +143,9 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 		return isEmailSent;
 	}
 
+  public Boolean getEmailSent(){
+    return isEmailSent;
+  }
 	public void setEmailSent(Boolean emailSent) {
 		isEmailSent = emailSent;
 	}

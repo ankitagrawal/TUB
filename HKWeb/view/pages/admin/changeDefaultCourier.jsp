@@ -8,8 +8,8 @@
 		Search and Add Pincode
 	</s:layout-component>
 
-	<s:layout-component name="content">
-   <script>
+    <s:layout-component name="htmlHead">
+         <script type="text/javascript">
        $(document).ready(function(){
            $('#pincodeString').focus();
 
@@ -19,6 +19,9 @@
            });
        })
     </script>
+    </s:layout-component>
+	<s:layout-component name="content">
+
       <fieldset class="right_label">
 			<s:form beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">
 				<label>Search Pincode</label>
@@ -38,10 +41,6 @@
                 <br/>
 				<br/>  				
                 <label>Warehouse</label>
-                <%--<s:select name="pincodeDefaultCourier.warehouse">--%>
-                                    <%--<s:option value="1">Gurgaon</s:option>--%>
-                                    <%--<s:option value="2">Mumbai</s:option>--%>
-                    <%--</s:select>--%>
                 <s:select name="warehouseId">  								
 								<s:option value="1">Gurgaon</s:option>
 								<s:option value="2">Mumbai</s:option>
@@ -58,9 +57,7 @@
 						<s:file name="fileBean" size="30"/>
 					</li>
 					<li>
-
 							<s:submit name="uploadPincodeExcel" value="Upload"/>
-
 					</li>
                 </div>
 				</s:form>
