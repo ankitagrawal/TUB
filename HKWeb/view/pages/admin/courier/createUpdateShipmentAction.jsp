@@ -84,8 +84,8 @@
                        <td>
                            <c:if test="${cusa.shipment.shipmentServiceType!=null}">
                            ${cusa.shipment.shipmentServiceType.name}
-                           <s:hidden name="shipment.shipmentServiceType" value="<%=EnumShipmentServiceType.getShipmentTypeFromId(cusa.getShipment().getShipmentServiceType().getId()).asShipmentServiceType()%>"/>
-                            </c:if>
+                           <s:hidden name="shipment.shipmentServiceType.id" value="<%=EnumShipmentServiceType.getShipmentTypeFromId(cusa.getShipment().getShipmentServiceType().getId()).asShipmentServiceType()%>"/>
+                           </c:if>
                        </td>
                        <td>
                            <label>Select Box Size</label>
