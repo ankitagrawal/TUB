@@ -43,18 +43,14 @@
                             bool = false;
                             return false;
                         }
-                   $.getJSON($('#pincodeCheck').attr('href'), { pincodeString: pincode }, function (res) {
-                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
-                        obj.parent().children('input.pincodeValue').attr('value',res.data.pincode.id);
-                    }
-                    else{
-                        alert(res.message);
-                        obj.val("");
-                        return false;
-                    }
-                }
-                        );
+//                        alert($(this).parent().children('input.pincodeValue').attr('value'));
+                        if($(this).parent().children('input.pincodeValue').attr('value')== null || $(this).parent().children('input.pincodeValue').attr('value') == ""){
+                            alert("Invalid Pincode !!!!");
+                            bool = false;
+                            return false;
+                        }
                     });
+
                     $('.estimatedShippingCost').each(function(){
                         var estimatedShippingCost = $(this).val();
                         if(estimatedShippingCost!=null && estimatedShippingCost!="" && isNaN(estimatedShippingCost)){
