@@ -80,6 +80,18 @@
 							<s:option value="">-ALL-</s:option>
               <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="topLevelCategoryList" value="name" label="displayName"/>
             	</s:select>
+	      <label>Product Out of stock:</label>
+	      <s:select name="productInStock">
+		      <s:option value="">--All--</s:option>
+		      <s:option value="true">True</s:option>
+		      <s:option value="false">False</s:option>
+	      </s:select>
+	      <label>Product Deleted:</label>
+	      <s:select name="productDeleted">
+		      <s:option value="">--All--</s:option>
+		      <s:option value="true">True</s:option>
+		      <s:option value="false">False</s:option>
+	      </s:select>
           <s:submit name="generateNotifyMeList" value="Download"/>
           <s:submit name="pre" value="Search"/>
       </s:form>
