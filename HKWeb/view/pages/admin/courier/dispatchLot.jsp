@@ -91,7 +91,6 @@
 						                           serviceProperty="sourceAndDestinationListForDispatchLot"
 								/>
 					</s:select>
-						<%--<s:text name="dispatchLot.destination" style="width:200px" class="text"/>--%>
 					<span class="aster">*</span>
 
 					<div class="clear"></div>
@@ -106,21 +105,14 @@
 
 					<div class="clear"></div>
 
-						<%--<s:label name="dispatchDate" class="label">Dispatch Date</s:label>
-																		<s:text class="date_input text" style="width:150px"
-																				formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="dispatchLot.dispatchDate"/>
-
-																	<div class="clear"></div>--%>
-
 					<s:label name="remarks" class="label">Remarks</s:label>
 						<s:textarea name="dispatchLot.remarks" class="text"/>
 
 					<div class="clear"></div>
-						<%--<s:label name="noOfShipmentsSent" class="label">No. of Shipments Sent</s:label>
-							<s:text name="dispatchLot.noOfShipmentsSent" style="width:200px" class="text"
-							        readonly="readonly"/>
-
-						<div class="clear"></div>--%>
+					<s:label name="UploadDocument" class="label">Upload Document</s:label>
+					<s:file name="uploadDocumentFileBean" size="30" id="uploadDocument"/>
+					<s:submit name="uploadDocument" value="Upload Document"/>
+					<s:param name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
 					<c:if test="${dispatch.dispatchLot.id == null || dispatch.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated}">
 						<s:submit name="save" value="Save"/>
 					</c:if>

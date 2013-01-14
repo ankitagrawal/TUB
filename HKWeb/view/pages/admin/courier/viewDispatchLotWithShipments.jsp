@@ -3,7 +3,7 @@
 <%@ page import="com.hk.constants.courier.EnumDispatchLotStatus" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="View Dispatch Lot">
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.DispatchLotAction" var="dispatchLotBean"/>
-	<c:set var="dispatchLotGenerated" value="<%=EnumDispatchLotStatus.Generated.getId()%>"/>
+	<c:set var="dispatchLotInTransit" value="<%=EnumDispatchLotStatus.InTransit.getId()%>"/>
 	<c:set var="dispatchLotPartiallyReceived" value="<%=EnumDispatchLotStatus.PartiallyReceived.getId()%>"/>
 	<s:layout-component name="htmlHead">
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -118,8 +118,8 @@
 					<td><label><strong>Remarks</strong></label></td>
 					<td>${dispatchLotBean.dispatchLot.remarks}</td>
 				</tr>
-				<c:if test="${dispatchLotBean.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated
-				|| dispatchLotBean.dispatchLot.dispatchLotStatus.id == dispatchLotPartiallyReceived}}">
+				<c:if test="${dispatchLotBean.dispatchLot.dispatchLotStatus.id == dispatchLotInTransit
+				|| dispatchLotBean.dispatchLot.dispatchLotStatus.id == dispatchLotPartiallyReceived}">
 					<tr>
 						<td colspan="2">
 							<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
@@ -151,8 +151,6 @@
 		<table class="zebra_vert">
 			<thead>
 			<tr>
-				<th>Shipment ID</th>
-				<th>Shipping Order</th>
 				<th>Gateway Order Id</th>
 				<th>AWB Number</th>
 				<th>Shipment Status</th>
@@ -160,8 +158,6 @@
 			</thead>
 			<c:forEach items="${dispatchLotBean.dispatchLotShipments}" var="dispatchLotShipment">
 				<tr>
-					<td>${dispatchLotShipment.shipment.id}</td>
-					<td>${dispatchLotShipment.shipment.shippingOrder.id}</td>
 					<td>${dispatchLotShipment.shipment.shippingOrder.gatewayOrderId}</td>
 					<td>${dispatchLotShipment.shipment.awb.awbNumber}</td>
 					<td>${dispatchLotShipment.shipmentStatus}</td>

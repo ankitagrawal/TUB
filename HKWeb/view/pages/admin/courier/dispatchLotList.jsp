@@ -143,6 +143,12 @@
 							</s:link>
 							&nbsp;&nbsp;
 						</c:if>
+						<c:if test="${dispatchLot.documentFileName != null}">
+							<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="downloadDocument">Download Document
+								<s:param name="dispatchLot" value="${dispatchLot.id}"/>
+							</s:link>
+							&nbsp;&nbsp;
+						</c:if>
 					</td>
 				</tr>
 			</c:forEach>

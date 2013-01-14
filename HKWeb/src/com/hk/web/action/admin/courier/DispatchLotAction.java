@@ -22,8 +22,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -68,6 +69,8 @@ public class DispatchLotAction extends BasePaginatedAction {
 	private List<String> gatewayOrderIdList;
 	private List<DispatchLotHasShipment> dispatchLotShipments;
 	private String shipmentStatusFilter;
+	private FileBean uploadDocumentFileBean;
+	private File documentFile;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -143,9 +146,15 @@ public class DispatchLotAction extends BasePaginatedAction {
 		File excelFile = new File(excelFilePath);
 		excelFile.getParentFile().mkdirs();
 		try {
-			fileBean.save(excelFile);
-			getDispatchLotService().parseExcelAndSaveShipmentDetails(dispatchLot, excelFilePath, "Courier");
-			addRedirectAlertMessage(new SimpleMessage("File uploaded successfully."));
+			if (fileBean != null) {
+				fileBean.save(excelFile);
+				getDispatchLotService().parseExcelAndSaveShipmentDetails(dispatchLot, excelFilePath, "Courier");
+				addRedirectAlertMessage(new SimpleMessage("File uploaded successfully."));
+			} else {
+				addRedirectAlertMessage(new SimpleMessage("Please select a File to be uploaded"));
+				return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+			}
+
 		} catch (IOException e) {
 			logger.error("Exception while reading excel sheet.", e);
 			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
@@ -219,6 +228,62 @@ public class DispatchLotAction extends BasePaginatedAction {
 		getDispatchLotService().markDispatchLotReceived(dispatchLot);
 		addRedirectAlertMessage(new SimpleMessage("Dispatch Lot marked as Received"));
 		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
+	}
+
+	public Resolution uploadDocument() {
+		if(dispatchLot == null) {
+			addRedirectAlertMessage(new SimpleMessage("Invalid Dispatch Lot"));
+			return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+		}
+
+		if(uploadDocumentFileBean == null) {
+			addRedirectAlertMessage(new SimpleMessage("Please select a document to be uploaded"));
+			return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+		}
+
+		String documentFilePath = adminUploadsPath + "/dispatchLot/DispatchLot_" + dispatchLot.getId() + "_" + uploadDocumentFileBean.getFileName();
+		documentFile = new File(documentFilePath);
+		documentFile.getParentFile().mkdirs();
+		try {
+			documentFile.createNewFile();
+			uploadDocumentFileBean.save(documentFile);
+			dispatchLot.setDocumentFileName(uploadDocumentFileBean.getFileName());
+			dispatchLotService.save(dispatchLot);
+			addRedirectAlertMessage(new SimpleMessage("Document uploaded successfully"));
+		} catch (IOException e) {
+			logger.error("Document Upload failed: " + e);
+			addRedirectAlertMessage(new SimpleMessage("Document Upload failed: " + e.getMessage()));
+		}
+
+		return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+
+	}
+
+	public Resolution downloadDocument() {
+		if(dispatchLot != null) {
+			String documentFilePath = adminUploadsPath + "/dispatchLot/DispatchLot_" + dispatchLot.getId() + "_" + dispatchLot.getDocumentFileName();
+			documentFile = new File(documentFilePath);
+
+		}
+		return new HTTPResponseResolution();
+
+	}
+
+	private class HTTPResponseResolution implements Resolution {
+		public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+			OutputStream out = null;
+			InputStream in = new BufferedInputStream(new FileInputStream(documentFile));
+			res.setContentLength((int) documentFile.length());
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + documentFile.getName() + "\";");
+			out = res.getOutputStream();
+
+			// Copy the contents of the file to the output stream
+			byte[] buf = new byte[4096];
+			int count = 0;
+			while ((count = in.read(buf)) >= 0) {
+				out.write(buf, 0, count);
+			}
+		}
 	}
 
 	public int getPerPageDefault() {
@@ -391,5 +456,13 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 	public void setShipmentStatusFilter(String shipmentStatusFilter) {
 		this.shipmentStatusFilter = shipmentStatusFilter;
+	}
+
+	public FileBean getUploadDocumentFileBean() {
+		return uploadDocumentFileBean;
+	}
+
+	public void setUploadDocumentFileBean(FileBean uploadDocumentFileBean) {
+		this.uploadDocumentFileBean = uploadDocumentFileBean;
 	}
 }
