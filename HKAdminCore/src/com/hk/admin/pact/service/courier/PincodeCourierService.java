@@ -29,6 +29,8 @@ public interface PincodeCourierService {
 
     public List<Courier> getAvailableCouriers(Order order);
 
+    public List<Courier> getApplicableCouriers(ShippingOrder shippingOrders);
+
     public boolean isCourierAvailable(Pincode pincode, List<Courier> couriers, List<ShipmentServiceType> shipmentServiceTypes, Boolean activeCourier);
 
 

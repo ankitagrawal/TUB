@@ -102,16 +102,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         Double weightInKg = getEstimatedWeightOfShipment(shippingOrder);
         Long suggestedCourierId = suggestedCourier.getId();
 
-        Awb suggestedAwb;
-        if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId)) {
-            suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
-            if (suggestedAwb != null) {
-                suggestedAwb = (Awb) awbService.save(suggestedAwb, null);
-                awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
-            }
-        } else {
-            suggestedAwb = attachAwbToShipment(suggestedCourier, shippingOrder);
-        }
+        Awb suggestedAwb = attachAwbToShipment(suggestedCourier, shippingOrder, weightInKg);
 
         // If we dont have AWB , shipment will not be created
         if (suggestedAwb == null) {
@@ -158,10 +149,18 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Transactional
-    private Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
-
-        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
-                EnumAwbStatus.Unused.getAsAwbStatus());
+    private Awb attachAwbToShipment(Courier suggestedCourier, ShippingOrder shippingOrder, Double weightInKg) {
+        Awb suggestedAwb;
+        if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId())) {
+            suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
+            if (suggestedAwb != null) {
+                suggestedAwb = (Awb) awbService.save(suggestedAwb, null);
+                awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
+            }
+        } else {
+            suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
+                    EnumAwbStatus.Unused.getAsAwbStatus());
+        }
         if (suggestedAwb == null) {
             return null;
         }
@@ -170,7 +169,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (rowsUpdate == 1) {
             return suggestedAwb;
         } else {
-            return attachAwbToShipment(courier, shippingOrder);
+            return attachAwbToShipment(suggestedCourier, shippingOrder, weightInKg);
         }
     }
 
@@ -182,11 +181,34 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipmentDao.delete(shipment);
     }
 
+    @Override
+    public Shipment changeCourier(Shipment shipment, Courier newCourier, boolean preserveAwb) {
+        ShippingOrder shippingOrder = shipment.getShippingOrder();
+        Awb currentAwb = shipment.getAwb();
+        Awb suggestedAwb = attachAwbToShipment(newCourier, shippingOrder, shipment.getBoxWeight());
+        if (suggestedAwb != null) {
+            shipment.setAwb(suggestedAwb);
+            shipment = save(shipment);
+            changeAwbStatus(currentAwb, preserveAwb);
+            return shipment;
+        }
+        return null;
+    }
+
+    public Awb changeAwbStatus(Awb awb, boolean preserveAwb) {
+        if(preserveAwb){
+            awbService.preserveAwb(awb);
+        }else{
+            awb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
+        }
+        return (Awb) awbService.save(awb,0);
+    }
+
     public Shipment recreateShipment(ShippingOrder shippingOrder) {
         Shipment newShipment = null;
         if (shippingOrder.getShipment() != null) {
             Shipment oldShipment = shippingOrder.getShipment();
-            awbService.removeAwbForShipment(oldShipment.getAwb().getCourier(), oldShipment.getAwb());
+            awbService.preserveAwb(oldShipment.getAwb());
             newShipment = createShipment(shippingOrder);
             shippingOrder.setShipment(newShipment);
             delete(oldShipment);

@@ -96,6 +96,12 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
     }
 
     @Override
+    public List<Courier> getApplicableCouriers(ShippingOrder shippingOrder) {
+        Pincode pincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+        return pincodeCourierMappingDao.getApplicableCouriers(pincode, null, Arrays.asList(shippingOrder.getShipment().getShipmentServiceType()), true);
+    }
+
+    @Override
     public ShipmentServiceType getShipmentServiceType(ShippingOrder shippingOrder) {
         return pincodeCourierMappingDao.getShipmentServiceType(shippingOrder);
     }

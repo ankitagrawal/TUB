@@ -84,7 +84,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
             if(shippingOrder.getShipment()!= null){
                 Awb awbToRemove = shippingOrder.getShipment().getAwb();
-                awbService.removeAwbForShipment(shippingOrder.getShipment().getAwb().getCourier(),awbToRemove);
+                awbService.preserveAwb(awbToRemove);
                 Shipment shipmentToDelete = shippingOrder.getShipment();
                 shippingOrder.setShipment(null);
 	            shipmentService.delete(shipmentToDelete);
