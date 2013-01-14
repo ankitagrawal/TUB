@@ -28,6 +28,10 @@
           </script>
     </s:layout-component>
      <s:layout-component name="content">
+    You are Creating AWB for :- <br/><br/> 
+    Shipping Order Id # <h2 style="color:blue;"> ${cusa.shippingOrder.id} </h2>
+    COD # <h2 style="color:blue;">${cusa.shippingOrder.COD}</h2>
+    Warehouse # <h2 style="color:blue;">${cusa.shippingOrder.warehouse.name}</h2>
       <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">
            <label>Enter Courier Id</label>
              <s:select name="awb.courier"  id="status">
@@ -39,8 +43,9 @@
            <s:hidden name="awb.awbBarCode" id= "awbBarCode" value=""/>
            <s:hidden name="awb.cod" value="${cusa.shippingOrder.COD}"/>
            <s:hidden name="awb.warehouse" value="${cusa.shippingOrder.warehouse}"/>
-           <s:hidden name="awb.awbStatus" value="<%=EnumAwbStatus.Unused.getAsAwbStatus()%>"/>
-          <s:button name="createUpdateAwb" value="SAVE" id="save"/>
+           <s:hidden name="awb.awbStatus" value="<%=EnumAwbStatus.Unused.getId()%>"/>
+           <s:hidden name="shippingOrder" value="${cusa.shippingOrder.id}"/>
+          <s:submit name="createUpdateAwb" value="SAVE" id="save"/>
           </s:form>
     </s:layout-component>
     </s:layout-render>

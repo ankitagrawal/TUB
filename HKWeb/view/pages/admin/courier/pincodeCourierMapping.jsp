@@ -25,17 +25,6 @@
                         return false;
                     }
                 });
-                $('.YesNo').click(function(){
-                    var value = $(this).val();
-                    if(value == "Y"){
-                        $(this).val("N");
-                        $(this).parent().children('.booleanUpdate').attr('value') = false;
-                    }
-                    else if(value == "N"){
-                        $(this).val("Y");
-                        $(this).parent().children('.booleanUpdate').attr('value') = true;
-                    }
-                });
             });
         </script>
     </s:layout-component>
@@ -46,9 +35,12 @@
             <s:text name="pin" id="pin"/>
             <s:submit name="search" value="Basic Search" class="check"/>
             <s:submit name="detailedAnalysis" value="Detailed Analysis" class="check"/>
-
+           
+         <div class="clear"></div>
                 <c:choose>
                 <c:when test="${pcma.applicableShipmentServices!=null and fn:length(pcma.applicableShipmentServices)>0}">
+                    <h2>Applicable Shipment Services</h2>
+                    <br>
                     <table>
                         <c:forEach items="${pcma.applicableShipmentServices}" var="applicableShipmentService">
                             <tr>
@@ -64,6 +56,8 @@
                 </c:when>
                 <c:otherwise>
                 <c:if test="${pcma.pincodeCourierMappings!=null and fn:length(pcma.pincodeCourierMappings)>0}">
+                  <h2>Pincode Courier Mappings</h2>
+                    <br>
                 <table class="zebra_vert">
                     <thead>
                     <tr>
@@ -82,28 +76,28 @@
                                     ${pCourierMap.courier.name}
                             </td>
                             <td>
-                                    ${pCourierMap.courier.disabled ? 'Y' : 'N'}
+                                    ${pCourierMap.courier.disabled ? 'No' : 'Yes'}
                             </td>
                             <td>
-                                <s:hidden class="booleanUpdate" name="pincodeCourierMappings[${ctr.index}].prepaidAir" value="${pCourierMap.prepaidAir}"/>
-                                <a href="#" class="YesNo">${pCourierMap.prepaidAir ? 'Y':'N'}</a>
+                                <c:out value="${pCourierMap.prepaidAir}"/>
+                                <s:checkbox name="pincodeCourierMappings[${ctr.index}].prepaidAir" />
                             </td>
                             <td>
-                                <s:hidden class="booleanUpdate" name="pincodeCourierMappings[${ctr.index}].prepaidGround" value="${pCourierMap.prepaidGround}"/>
-                                <a href="#" class="YesNo">${pCourierMap.prepaidGround ? 'Y':'N'}</a>
+                                <c:out value="${pCourierMap.prepaidGround}"/>
+                                <s:checkbox  name="pincodeCourierMappings[${ctr.index}].prepaidGround" />
                             </td>
                             <td>
-                                <s:hidden class="booleanUpdate" name="pincodeCourierMappings[${ctr.index}].codAir" value="${pCourierMap.codAir}"/>
-                                <a href="#" class="YesNo">${pCourierMap.codAir ? 'Y':'N'}</a>
+                                <c:out value="${pCourierMap.codAir}"/>
+                                <s:checkbox name="pincodeCourierMappings[${ctr.index}].codAir" />
                             </td>
                             <td>
-                                <s:hidden class="booleanUpdate" name="pincodeCourierMappings[${ctr.index}].codGround" value="${pCourierMap.codGround}"/>
-                                <a href="#" class="YesNo">${pCourierMap.codGround ? 'Y':'N'}</a>
+                                <c:out value="${pCourierMap.codGround}" />
+                                <s:checkbox name="pincodeCourierMappings[${ctr.index}].codGround" />
                             </td>
                         </tr>
                     </c:forEach>
-                    <s:submit name="update" value="SAVE"/>
                      </table>
+                     <s:submit name="update" value="SAVE"/>
                     </c:if>
                     </c:otherwise>
                     </c:choose>

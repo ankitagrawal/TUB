@@ -13,6 +13,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,15 +80,23 @@ public class CreateUpdateShipmentAction extends BaseAction {
         }
         if (shipment == null) {
           addRedirectAlertMessage(new SimpleMessage("Awb doesn't Exist for this Gateway ID, please enter below details to create the new one !!!!"));
-          return new ForwardResolution("/pages/courier/createUpdateAwb.jsp");
+          return new ForwardResolution("/pages/admin/courier/createUpdateAwb.jsp");
         }
         estimatedWeight = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
         return new ForwardResolution("/pages/admin/courier/createUpdateShipmentAction.jsp");
     }
 
     public Resolution createUpdateAwb(){
+        if(shippingOrder!=null){
+        shippingOrder = shippingOrderService.find(shippingOrder.getId());
+        }
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
-        shipmentService.createShipment(shippingOrder);
+        shipment =  shipmentService.createShipment(shippingOrder);
+        if(shipment == null){
+          awbService.delete(awb);
+          addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check below shipping order life cycle"));
+          return new RedirectResolution(ShippingOrderLifecycleAction.class).addParameter("shippingOrder",shippingOrder.getId());
+        }
         addRedirectAlertMessage(new SimpleMessage("Awb and Shipment has been created, please Enter Gateway Order Id again to check !!!!!"));
         return new RedirectResolution(CreateUpdateShipmentAction.class);
     }
@@ -136,5 +145,13 @@ public class CreateUpdateShipmentAction extends BaseAction {
 
   public void setEstimatedWeight(Double estimatedWeight) {
     this.estimatedWeight = estimatedWeight;
+  }
+
+  public Awb getAwb() {
+    return awb;
+  }
+
+  public void setAwb(Awb awb) {
+    this.awb = awb;
   }
 }
