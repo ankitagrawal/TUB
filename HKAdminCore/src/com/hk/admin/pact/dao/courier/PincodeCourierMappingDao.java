@@ -33,7 +33,7 @@ public interface PincodeCourierMappingDao {
 
     ShipmentServiceType getShipmentServiceType(boolean isCod, boolean isGround);
 
-    PincodeCourierService savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping);
+    PincodeCourierMapping savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping);
 
     public Courier searchDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
 

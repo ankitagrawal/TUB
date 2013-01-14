@@ -29,6 +29,8 @@ public interface PincodeCourierService {
 
     public List<Courier> getAvailableCouriers(Order order);
 
+    public List<Courier> getApplicableCouriers(ShippingOrder shippingOrders);
+
     public boolean isCourierAvailable(Pincode pincode, List<Courier> couriers, List<ShipmentServiceType> shipmentServiceTypes, Boolean activeCourier);
 
 
@@ -54,7 +56,7 @@ public interface PincodeCourierService {
 
     public PincodeCourierMapping createPincodeCourierMapping(Pincode pincode, Courier courier, boolean prepaidAir, boolean prepaidGround, boolean codAir, boolean codGround);
 
-    public PincodeCourierService savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping);
+    public PincodeCourierMapping savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping);
 
 
     public boolean isDefaultCourierApplicable(Pincode pincode, Courier courier, boolean isGround, boolean isCod);

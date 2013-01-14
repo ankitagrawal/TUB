@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,6 +30,7 @@ import java.util.*;
  * Time: 5:20 PM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class XslPincodeCourierMapping {
 
     private static Logger logger = LoggerFactory.getLogger(XslPincodeCourierMapping.class);
@@ -77,7 +79,7 @@ public class XslPincodeCourierMapping {
                     throw new ExcelBlankFieldException("Pincode cannot be empty" + "    ", rowCount);
                 } else {
                     Pincode pincode = pincodeService.getByPincode(pin);
-                    if (pincode != null) {
+                    if (pincode == null) {
                         throw new ExcelBlankFieldException("Invalid Pincode" + "    ", rowCount);
                     }
                     pincodeCourierMapping.setPincode(pincode);
@@ -96,16 +98,19 @@ public class XslPincodeCourierMapping {
                 boolean isCodAir = StringUtils.isNotBlank(codAir) && codAir.trim().toLowerCase().equals("y");
                 boolean isCodGround = StringUtils.isNotBlank(codGround) && codGround.trim().toLowerCase().equals("y");
 
-                pincodeCourierMapping.setPrepaidAir(isPrepaidAir);
-                pincodeCourierMapping.setPrepaidGround(isPrepaidGround);
-                pincodeCourierMapping.setCodAir(isCodAir);
-                pincodeCourierMapping.setCodGround(isCodGround);
-                pincodeCourierMapping.setRoutingCode(routingCode);
-                pincodeCourierMappings.add(pincodeCourierMapping);
+                boolean isValidMapping = isPrepaidAir || isPrepaidGround || isCodAir || isCodGround;
+                if (isValidMapping) {
+                    pincodeCourierMapping.setPrepaidAir(isPrepaidAir);
+                    pincodeCourierMapping.setPrepaidGround(isPrepaidGround);
+                    pincodeCourierMapping.setCodAir(isCodAir);
+                    pincodeCourierMapping.setCodGround(isCodGround);
+                    pincodeCourierMapping.setRoutingCode(routingCode);
+                    pincodeCourierMappings.add(pincodeCourierMapping);
+                }
             }
 
         } catch (Exception e) {
-            logger.error("Exception @ Row:" + rowCount + e.getMessage());
+            logger.error("Exception @ Row:" + rowCount + e);
             throw new Exception("Exception @ Row:" + rowCount, e);
         }
         return pincodeCourierMappings;
@@ -157,10 +162,10 @@ public class XslPincodeCourierMapping {
             setCellValue(row, 0, pincode.getPincode());
             setCellValue(row, 1, pincodeCourierMapping.getCourier().getId());
             setCellValue(row, 2, pincodeCourierMapping.isPrepaidAir() ? "Y" : "N");
-            setCellValue(row, 2, pincodeCourierMapping.isPrepaidGround() ? "Y" : "N");
-            setCellValue(row, 2, pincodeCourierMapping.isCodAir() ? "Y" : "N");
-            setCellValue(row, 2, pincodeCourierMapping.isCodGround() ? "Y" : "N");
-            setCellValue(row, 5, pincodeCourierMapping.getRoutingCode());
+            setCellValue(row, 3, pincodeCourierMapping.isPrepaidGround() ? "Y" : "N");
+            setCellValue(row, 4, pincodeCourierMapping.isCodAir() ? "Y" : "N");
+            setCellValue(row, 5, pincodeCourierMapping.isCodGround() ? "Y" : "N");
+            setCellValue(row, 6, pincodeCourierMapping.getRoutingCode());
             initialRowNo++;
 
         }

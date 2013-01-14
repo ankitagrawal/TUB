@@ -1,1 +1,1 @@
-Your COD Order No.${order.gatewayOrderId} for the amount ${order.amount} has been placed. Check your email or call 0124-4551666 for further details. Thank you!
+Your COD Order No.${order.gatewayOrderId} for the amount ${order.amount} has been placed. Check your email or call 0124-4502930 for further details. Thank you!

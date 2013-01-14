@@ -33,7 +33,7 @@ import java.util.List;
 @Component
 public class CreateUpdateShipmentAction extends BaseAction {
 
-    private static Logger logger = LoggerFactory.getLogger(SearchOrderAndEnterCourierInfoAction.class);
+    private static Logger logger = LoggerFactory.getLogger(CreateUpdateShipmentAction.class);
 
     List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
     ShippingOrder shippingOrder;
