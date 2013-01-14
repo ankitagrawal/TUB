@@ -6,6 +6,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 
 public interface SkuGroupDao extends BaseDao {
@@ -27,6 +28,10 @@ public interface SkuGroupDao extends BaseDao {
 	public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
 
 	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
+
+	public SkuGroup getSkuGroup(String barcode, Warehouse warehouse);
+
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Warehouse warehouse);
 
 
 

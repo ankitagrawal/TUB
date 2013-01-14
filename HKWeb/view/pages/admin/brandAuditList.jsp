@@ -71,6 +71,12 @@
 							Edit
 						</s:link>
 					</td>
+					<td>
+					<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction" event="pre">
+							<s:param name="cycleCount.brandsToAudit" value="${auditBrand.id}"/>
+							Edit
+						</s:link>
+					</td>
 				</tr>
 			</c:forEach>
 		</table>

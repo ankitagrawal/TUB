@@ -6,11 +6,13 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Projections;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 
@@ -142,6 +144,21 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 
 	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
 		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, null, batch, sku);
+		return findByCriteria(skuGroupCriteria);
+	}
+
+	public SkuGroup getSkuGroup(String barcode, Warehouse warehouse) {
+		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, barcode, null, null);
+		skuGroupCriteria.createCriteria("sku", "sku");
+		skuGroupCriteria.add(Restrictions.eq("sku.warehouse", warehouse));
+		List<SkuGroup> skuGroupList = findByCriteria(skuGroupCriteria);
+		return skuGroupList != null && !skuGroupList.isEmpty() ? skuGroupList.get(0) : null;
+	}
+
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Warehouse warehouse) {
+		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, null, batch, null);
+		skuGroupCriteria.createCriteria("sku", "sku");
+		skuGroupCriteria.add(Restrictions.eq("sku.warehouse", warehouse));
 		return findByCriteria(skuGroupCriteria);
 	}
 

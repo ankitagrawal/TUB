@@ -8,6 +8,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.warehouse.Warehouse;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -57,6 +58,14 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 
 	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku){
 		return  skuGroupDao.getSkuGroupsByBatch(batch,sku);
+	}
+
+	public SkuGroup getSkuGroup(String barcode, Warehouse warehouse){
+		return  skuGroupDao.getSkuGroup(barcode,warehouse);
+	}
+
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Warehouse warehouse){
+		return  skuGroupDao.getSkuGroupsByBatch(batch,warehouse);
 	}
 
 

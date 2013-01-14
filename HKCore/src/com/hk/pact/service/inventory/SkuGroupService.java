@@ -5,6 +5,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.warehouse.Warehouse;
 
 import java.util.List;
 
@@ -31,6 +32,10 @@ public interface SkuGroupService {
 	public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
 
 	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
+
+	public SkuGroup getSkuGroup(String barcode, Warehouse warehouse);
+
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Warehouse warehouse);
 
 
 
