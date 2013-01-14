@@ -142,7 +142,8 @@
             </td>
             <td>
                  ${notifyMe.productVariant.deleted ? "Deleted": "Non-Deleted"}<br/>
-                ${notifyMe.productVariant.outOfStock ? "Out of Stock": "In-Stock"}
+                ${notifyMe.productVariant.outOfStock ? "Out of Stock": "In-Stock"}<br/>
+	            Available unbooked inventory: ${hk:netAvailableUnbookedInventory(notifyMe.productVariant)}
             </td>
             <td>
                 <s:link href="/product/${notifyMe.productVariant.product.slug}/${notifyMe.productVariant.product.id}" target="_blank">
