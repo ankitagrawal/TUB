@@ -24,7 +24,7 @@
 				<s:select name="setWarehouse" style="height:30px;font-size:1.2em;padding:1px;">
 					<s:option value="0">-None-</s:option>
 					<c:forEach items="${whList}" var="wh">
-						<s:option value="${wh.id}">${wh.city}</s:option>
+						<s:option value="${wh.id}">${wh.name}</s:option>
 					</c:forEach>
 				</s:select>
 				<s:submit class="button_orange" name="bindUserWithWarehouse" value="Save"/>
