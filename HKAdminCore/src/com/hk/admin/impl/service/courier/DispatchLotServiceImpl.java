@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.courier;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -7,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.XslConstants;
+import com.hk.util.io.HkXlsWriter;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,6 +198,14 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			return true;
 		}
 		return false;
+	}
+
+	public File generateDispatchLotExcel(File xlsFile, List<DispatchLotHasShipment> dispatchLotHasShipmentList) {
+		HkXlsWriter xlsWriter = new HkXlsWriter();
+				int xlsRow = 1;
+				xlsWriter.addHeader(XslConstants.SUPPLIER_NAME, XslConstants.SUPPLIER_NAME);
+
+
 	}
 
 	public List<Shipment> getShipmentsForDispatchLot(DispatchLot dispatchLot) {

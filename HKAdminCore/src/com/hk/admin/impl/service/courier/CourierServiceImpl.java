@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.courier;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
@@ -138,5 +139,12 @@ public class CourierServiceImpl implements CourierService {
 
 	public List<Courier>  getCouriers(String pincode ,Boolean isrGroundShipping ,Boolean isCod,Boolean isCodAvailableOnGroundShipping,Boolean disabled){
 		return getCourierServiceInfoDao().getCouriers(pincode ,isrGroundShipping ,isCod,isCodAvailableOnGroundShipping, disabled);
+	}
+
+	public List<Courier> getCouriersForDispatchLot() {
+		List<Courier> dispatchLotCourierList = new ArrayList<Courier>(0);
+		dispatchLotCourierList.add(EnumCourier.JP_CargoVan_Delhi.asCourier());
+		dispatchLotCourierList.add(EnumCourier.Xpress_Logistics.asCourier());
+		return dispatchLotCourierList;
 	}
 }

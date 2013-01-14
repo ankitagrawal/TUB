@@ -53,6 +53,10 @@ public class DispatchLotAction extends BasePaginatedAction {
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 
+	File xlsFile;
+	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+	String adminDownloads;
+
 	private List<DispatchLot> dispatchLotList = new ArrayList<DispatchLot>();
 	private Page dispatchLotPage;
 	private DispatchLot dispatchLot;
@@ -184,6 +188,21 @@ public class DispatchLotAction extends BasePaginatedAction {
 		}
 
 		dispatchLotShipments = getDispatchLotService().getDispatchLotHasShipmentListByDispatchLot(dispatchLot, shipmentStatusFilter);
+		return new ForwardResolution("/pages/admin/courier/viewDispatchLotWithShipments.jsp").addParameter("dispatchLot", dispatchLot.getId());
+	}
+
+	public Resolution downloadLotDetailsToExcel() {
+		if (dispatchLot == null) {
+			addRedirectAlertMessage(new SimpleMessage("Dispatch lot not found."));
+			return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
+		}
+
+		dispatchLotShipments = getDispatchLotService().getDispatchLotHasShipmentListByDispatchLot(dispatchLot, shipmentStatusFilter);
+		if(dispatchLotShipments != null) {
+			xlsFile = new File(adminDownloads + "/reports/dispatchLot/DispatchLotShipment_" + dispatchLot.getId()+".xls");
+			dispatchLotService.generateDispatchLotExcel(xlsFile, dispatchLotShipments);
+		}
+
 		return new ForwardResolution("/pages/admin/courier/viewDispatchLotWithShipments.jsp").addParameter("dispatchLot", dispatchLot.getId());
 	}
 

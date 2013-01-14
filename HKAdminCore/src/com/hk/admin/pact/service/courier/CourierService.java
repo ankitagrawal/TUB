@@ -41,4 +41,6 @@ public interface CourierService {
 	public List<Courier>  getCouriers(String pincode ,Boolean isrGroundShipping ,Boolean isCod,Boolean isCodAvailableOnGroundShipping,Boolean disabled);
 
     public List<Courier> listOfVendorCouriers();
+
+	public List<Courier> getCouriersForDispatchLot();
 }

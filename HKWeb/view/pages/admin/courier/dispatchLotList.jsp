@@ -62,7 +62,7 @@
 				<label>Courier:</label>
 				<s:select name="courier">
 					<s:option value="">-All-</s:option>
-					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
+					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="couriersForDispatchLot"
 					                           value="id"
 					                           label="name"/>
 				</s:select>
