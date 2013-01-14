@@ -110,7 +110,7 @@ public class XslPincodeCourierMapping {
             }
 
         } catch (Exception e) {
-            logger.error("Exception @ Row:" + rowCount + e.getMessage());
+            logger.error("Exception @ Row:" + rowCount + e);
             throw new Exception("Exception @ Row:" + rowCount, e);
         }
         return pincodeCourierMappings;
