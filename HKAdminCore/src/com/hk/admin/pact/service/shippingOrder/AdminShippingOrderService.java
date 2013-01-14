@@ -48,4 +48,8 @@ public interface AdminShippingOrderService {
     ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder, ReplacementOrderReason rtoReason);
 
     public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId);
+
+	public ReplacementOrderReason getRTOReasonForShippingOrder(ShippingOrder shippingOrder);
+
+	public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReason);
 }
