@@ -142,8 +142,8 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
     }
 
     @Override
-    public PincodeCourierService savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping) {
-        return (PincodeCourierService) save(pincodeCourierMapping);
+    public PincodeCourierMapping savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping) {
+        return (PincodeCourierMapping) save(pincodeCourierMapping);
     }
 
     public Courier searchDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {

@@ -14,7 +14,6 @@ import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.PincodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -163,7 +162,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
     }
 
     @Override
-    public PincodeCourierService savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping) {
+    public PincodeCourierMapping savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping) {
         return pincodeCourierMappingDao.savePincodeCourierMapping(pincodeCourierMapping);
     }
 
