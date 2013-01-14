@@ -154,7 +154,8 @@ public enum EnumCourier {
                 EnumCourier.BlueDart,
                 EnumCourier.Gati,
                 EnumCourier.Safexpress,
-                EnumCourier.Star_Track
+                EnumCourier.Star_Track ,
+                EnumCourier.Other
         );
     }
 }
