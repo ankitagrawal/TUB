@@ -119,7 +119,6 @@ public class TrackCourierAction extends BaseAction {
                 }
                 break;
             case BlueDart:
-            case BlueDart_COD:
                 courierName = CourierConstants.BLUEDART;
                 Element xmlElement = null;
                 try {

@@ -71,7 +71,7 @@
             value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
             currencySymbol="Rs "/> </strong></h4>
     <h6>If you have any trouble during the payment process, call our
-        helpline number <strong class='red'> 0124 - 4551666 </strong></h6>
+        helpline number <strong class='red'> 0124 - 4502930 </strong></h6>
 </div>
 
 <div class="alert messages" style="font-size: 14px; color: red">

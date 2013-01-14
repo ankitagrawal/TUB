@@ -81,7 +81,6 @@ public enum EnumCourier {
         return courierIds;
     }
 
-
     public static List<Long> getDTDCCouriers() {
         List<Long> dtdcCourierIds = new ArrayList<Long>();
         dtdcCourierIds.add(EnumCourier.DTDC_COD.getId());
@@ -94,7 +93,6 @@ public enum EnumCourier {
     public static List<Long> getBlueDartCouriers() {
         List<Long> blueDartCourierIds = new ArrayList<Long>();
         blueDartCourierIds.add(EnumCourier.BlueDart.getId());
-        blueDartCourierIds.add(EnumCourier.BlueDart_COD.getId());
         return blueDartCourierIds;
     }
 

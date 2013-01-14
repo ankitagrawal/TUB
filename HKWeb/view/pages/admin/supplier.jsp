@@ -97,6 +97,12 @@
 					<td><s:radio name="supplier.active" value="true" checked="${sma.supplier.active}"/>Active
 						<s:radio name="supplier.active" value="false" checked="${sma.supplier.active}"/>Inactive</td>
 				</tr>
+
+				<tr>
+					<td>Comments</td>
+					<td><s:textarea name="supplier.comments" rows="5" cols="20"/></td>
+				</tr>
+
 			</table>
 			<s:submit name="save" value="Save" class="buttons"/>
 
