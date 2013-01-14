@@ -182,7 +182,7 @@ public class CreateDropShipmentAction extends BaseAction {
             comment = "Shipment Details has been saved: " + shipment.getAwb().getCourier().getName() + "/" + trackingId;
         }
         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentDetailSaved, comment);
-        addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipmet has been created for your order"));
+        addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipment has been created for your order"));
         return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
     }
 

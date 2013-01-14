@@ -54,7 +54,7 @@ Hey ${user.firstName}. Long time no see.
 							<td height="15px"></td>
 						</tr>
 						<tr>
-							<td height="15"><p>We would like to hear more from you, so please keep in touch. We can be reached on our email at <a href="mailto:info@healthkart.com">info@healthkart.com</a> or call us on 0124-4551666</p>
+							<td height="15"><p>We would like to hear more from you, so please keep in touch. We can be reached on our email at <a href="mailto:info@healthkart.com">info@healthkart.com</a> or call us on 0124-4502930</p>
 								<p>Forever with you in your Odyssey to Health & Wellness!</p>
 								<p>Team HealthKart<br />
 								<strong>www.healthkart.com </strong></p></td>
