@@ -162,10 +162,10 @@ public class XslPincodeCourierMapping {
             setCellValue(row, 0, pincode.getPincode());
             setCellValue(row, 1, pincodeCourierMapping.getCourier().getId());
             setCellValue(row, 2, pincodeCourierMapping.isPrepaidAir() ? "Y" : "N");
-            setCellValue(row, 2, pincodeCourierMapping.isPrepaidGround() ? "Y" : "N");
-            setCellValue(row, 2, pincodeCourierMapping.isCodAir() ? "Y" : "N");
-            setCellValue(row, 2, pincodeCourierMapping.isCodGround() ? "Y" : "N");
-            setCellValue(row, 5, pincodeCourierMapping.getRoutingCode());
+            setCellValue(row, 3, pincodeCourierMapping.isPrepaidGround() ? "Y" : "N");
+            setCellValue(row, 4, pincodeCourierMapping.isCodAir() ? "Y" : "N");
+            setCellValue(row, 5, pincodeCourierMapping.isCodGround() ? "Y" : "N");
+            setCellValue(row, 6, pincodeCourierMapping.getRoutingCode());
             initialRowNo++;
 
         }
