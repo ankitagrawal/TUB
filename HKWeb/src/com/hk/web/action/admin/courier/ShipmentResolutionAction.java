@@ -103,6 +103,7 @@ public class ShipmentResolutionAction extends BaseAction {
 
     public Resolution changeShipmentServiceType() {
         shipment = shipmentService.save(shipment);
+        shipment = shipmentService.recreateShipment(shippingOrder);
         return new ForwardResolution("/pages/admin/courier/shipmentResolution.jsp");
     }
 

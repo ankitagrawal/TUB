@@ -8,7 +8,6 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -44,8 +43,6 @@ public class CreateUpdateShipmentAction extends BaseAction {
     private Double estimatedWeight;
 
     @Autowired
-    ShippingOrderDao shippingOrderDao;
-    @Autowired
     ShipmentService shipmentService;
     @Autowired
     ShippingOrderService shippingOrderService;
@@ -65,7 +62,8 @@ public class CreateUpdateShipmentAction extends BaseAction {
     public Resolution searchShipment() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
-        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()));        shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
+        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()));
+        shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
 
         if (shippingOrderList.isEmpty()) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Gateway Order id or Shipping Order is not in applicable SO Status"));
@@ -79,29 +77,29 @@ public class CreateUpdateShipmentAction extends BaseAction {
             shipment = shipmentService.createShipment(shippingOrder);
         }
         if (shipment == null) {
-          addRedirectAlertMessage(new SimpleMessage("Awb doesn't Exist for this Gateway ID, please enter below details to create the new one !!!!"));
-          return new ForwardResolution("/pages/admin/courier/createUpdateAwb.jsp");
+            addRedirectAlertMessage(new SimpleMessage("Awb doesn't Exist for this Gateway ID, please enter below details to create the new one !!!!"));
+            return new ForwardResolution("/pages/admin/courier/createUpdateAwb.jsp");
         }
         estimatedWeight = shipmentService.getEstimatedWeightOfShipment(shippingOrder);
         return new ForwardResolution("/pages/admin/courier/createUpdateShipmentAction.jsp");
     }
 
-    public Resolution createUpdateAwb(){
-        if(shippingOrder!=null){
-        shippingOrder = shippingOrderService.find(shippingOrder.getId());
+    public Resolution createUpdateAwb() {
+        if (shippingOrder != null) {
+            shippingOrder = shippingOrderService.find(shippingOrder.getId());
         }
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
-        shipment =  shipmentService.createShipment(shippingOrder);
-        if(shipment == null){
-          awbService.delete(awb);
-          addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check below shipping order life cycle"));
-          return new RedirectResolution(ShippingOrderLifecycleAction.class).addParameter("shippingOrder",shippingOrder.getId());
+        shipment = shipmentService.createShipment(shippingOrder);
+        if (shipment == null) {
+            awbService.delete(awb);
+            addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check below shipping order life cycle"));
+            return new RedirectResolution(ShippingOrderLifecycleAction.class).addParameter("shippingOrder", shippingOrder.getId());
         }
         addRedirectAlertMessage(new SimpleMessage("Awb and Shipment has been created, please Enter Gateway Order Id again to check !!!!!"));
         return new RedirectResolution(CreateUpdateShipmentAction.class);
     }
 
-    public Resolution updateShipment(){
+    public Resolution updateShipment() {
         shipmentService.save(shipment);
         addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
         return new RedirectResolution(CreateUpdateShipmentAction.class);
@@ -123,7 +121,7 @@ public class CreateUpdateShipmentAction extends BaseAction {
         this.gatewayOrderId = gatewayOrderId;
     }
 
-     public Shipment getShipment() {
+    public Shipment getShipment() {
         return shipment;
     }
 
@@ -131,27 +129,27 @@ public class CreateUpdateShipmentAction extends BaseAction {
         this.shipment = shipment;
     }
 
-  public ShippingOrder getShippingOrder() {
-    return shippingOrder;
-  }
+    public ShippingOrder getShippingOrder() {
+        return shippingOrder;
+    }
 
-  public void setShippingOrder(ShippingOrder shippingOrder) {
-    this.shippingOrder = shippingOrder;
-  }
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
 
-  public Double getEstimatedWeight() {
-    return estimatedWeight;
-  }
+    public Double getEstimatedWeight() {
+        return estimatedWeight;
+    }
 
-  public void setEstimatedWeight(Double estimatedWeight) {
-    this.estimatedWeight = estimatedWeight;
-  }
+    public void setEstimatedWeight(Double estimatedWeight) {
+        this.estimatedWeight = estimatedWeight;
+    }
 
-  public Awb getAwb() {
-    return awb;
-  }
+    public Awb getAwb() {
+        return awb;
+    }
 
-  public void setAwb(Awb awb) {
-    this.awb = awb;
-  }
+    public void setAwb(Awb awb) {
+        this.awb = awb;
+    }
 }

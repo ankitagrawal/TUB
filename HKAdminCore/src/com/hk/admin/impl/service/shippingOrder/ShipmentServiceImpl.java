@@ -63,22 +63,14 @@ public class ShipmentServiceImpl implements ShipmentService {
     public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
         User adminUser = getUserService().getAdminUser();
-        Zone zone = null;
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
-        if (pincode == null) {
-            shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                    CourierConstants.PINCODE_INVALID);
-            return null;
-        }
-
-        zone = pincode.getZone();
-        Courier suggestedCourier = null;
 
         ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
         boolean isCod = ShipmentServiceMapper.isCod(shipmentServiceType);
         boolean isGround = ShipmentServiceMapper.isGround(shipmentServiceType);
 
-        suggestedCourier = courierService.getDefaultCourier(pincode, isCod, isGround, shippingOrder.getWarehouse());
+        Courier suggestedCourier = courierService.getDefaultCourier(pincode, isCod, isGround, shippingOrder.getWarehouse());
+        Zone zone = pincode.getZone();
 
         if (suggestedCourier == null) {
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
@@ -100,8 +92,6 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
 
         Double weightInKg = getEstimatedWeightOfShipment(shippingOrder);
-        Long suggestedCourierId = suggestedCourier.getId();
-
         Awb suggestedAwb = attachAwbToShipment(suggestedCourier, shippingOrder, weightInKg);
 
         // If we dont have AWB , shipment will not be created
@@ -109,7 +99,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             String msg = CourierConstants.AWB_NOT_ASSIGNED + suggestedCourier.getName();
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
                     msg);
-            if (!(ThirdPartyAwbService.integratedCouriers.contains(suggestedCourierId))) {
+            if (!(ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId()))) {
                 adminEmailManager.sendAwbStatusEmail(suggestedCourier, shippingOrder);
             }
             return null;
@@ -150,6 +140,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     @Transactional
     private Awb attachAwbToShipment(Courier suggestedCourier, ShippingOrder shippingOrder, Double weightInKg) {
+        ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
+        boolean isCod = ShipmentServiceMapper.isCod(shipmentServiceType);
         Awb suggestedAwb;
         if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId())) {
             suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
@@ -158,8 +150,7 @@ public class ShipmentServiceImpl implements ShipmentService {
                 awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
             }
         } else {
-            suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(),
-                    EnumAwbStatus.Unused.getAsAwbStatus());
+            suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), isCod,EnumAwbStatus.Unused.getAsAwbStatus());
         }
         if (suggestedAwb == null) {
             return null;
