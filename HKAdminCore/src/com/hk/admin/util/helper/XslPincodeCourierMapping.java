@@ -79,7 +79,7 @@ public class XslPincodeCourierMapping {
                     throw new ExcelBlankFieldException("Pincode cannot be empty" + "    ", rowCount);
                 } else {
                     Pincode pincode = pincodeService.getByPincode(pin);
-                    if (pincode != null) {
+                    if (pincode == null) {
                         throw new ExcelBlankFieldException("Invalid Pincode" + "    ", rowCount);
                     }
                     pincodeCourierMapping.setPincode(pincode);
