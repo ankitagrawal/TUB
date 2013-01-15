@@ -9,8 +9,9 @@ package com.hk.constants.inventory;
  */
 public enum EnumCycleCountStatus {
 
-	Start(0L, "Start"),
-	Done(1L, "Done"),
+	Start(10L, "Start"),
+	InProgress(20L, "InProgress"),
+	PendingForApproval(30L, "PendingForApproval"),
 	Approved(99L, "Approved"),
 	Closed(999L, "Closed");
 

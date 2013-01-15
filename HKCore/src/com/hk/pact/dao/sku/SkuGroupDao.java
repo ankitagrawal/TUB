@@ -29,9 +29,8 @@ public interface SkuGroupDao extends BaseDao {
 
 	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
 
-	public SkuGroup getSkuGroup(String barcode, Warehouse warehouse);
+	public List<SkuGroup> getSkuGroup(String barcode, Warehouse warehouse);
 
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Warehouse warehouse);
 
 
 

@@ -91,4 +91,9 @@ public class CycleCount implements java.io.Serializable {
 	public void setAuditStatus(Long auditStatus) {
 		this.auditStatus = auditStatus;
 	}
+
+	@Override
+	public String toString() {
+		return this.id != null ? this.id.toString() : "";
+	}
 }

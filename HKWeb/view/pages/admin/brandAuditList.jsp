@@ -66,17 +66,27 @@
 						</c:forEach>
 					</select></td>
 					<td>
+						<c:choose>
+						<c:when test="${auditBrand.cycleCount != null}">
+						<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction" event="directToCycleCount">
+							<s:param name="cycleCount.brandsToAudit" value="${auditBrand.id}"/>
+							<s:param name="cycleCount" value="${auditBrand.cycleCount.id}"/>
+							<span style="color:brown;">Edit Cycle Count</span>
+						</s:link>
+						</c:when>
+					    <c:otherwise>
 						<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
 							<s:param name="brandsToAudit" value="${auditBrand.id}"/>
-							Edit
+							<span style="color:blue;">Edit</span>
 						</s:link>
-					</td>
-					<td>
-					<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction" event="pre">
+						    <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction" event="directToCycleCount">
 							<s:param name="cycleCount.brandsToAudit" value="${auditBrand.id}"/>
-							Edit
+							<span style="color:brown;">Start Cycle Count</span>
 						</s:link>
+					    </c:otherwise>
+						</c:choose>
 					</td>
+
 				</tr>
 			</c:forEach>
 		</table>

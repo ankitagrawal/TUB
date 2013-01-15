@@ -60,13 +60,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return  skuGroupDao.getSkuGroupsByBatch(batch,sku);
 	}
 
-	public SkuGroup getSkuGroup(String barcode, Warehouse warehouse){
+	public List<SkuGroup> getSkuGroup(String barcode, Warehouse warehouse){
 		return  skuGroupDao.getSkuGroup(barcode,warehouse);
 	}
 
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Warehouse warehouse){
-		return  skuGroupDao.getSkuGroupsByBatch(batch,warehouse);
-	}
 
 
 
@@ -77,6 +74,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 
 	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
 		return skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedQty);
+	}
+
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+		return skuItemDao.getInStockSkuItems(skuGroup);
 	}
 
 }

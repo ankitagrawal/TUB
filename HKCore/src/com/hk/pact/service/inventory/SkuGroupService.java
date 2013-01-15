@@ -33,9 +33,9 @@ public interface SkuGroupService {
 
 	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
 
-	public SkuGroup getSkuGroup(String barcode, Warehouse warehouse);
+	public List<SkuGroup> getSkuGroup(String barcode, Warehouse warehouse);
 
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Warehouse warehouse);
+
 
 
 
@@ -46,5 +46,7 @@ public interface SkuGroupService {
 	public List<SkuGroup> getInStockSkuGroups(Sku sku);
 
 	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty);
+
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
 }

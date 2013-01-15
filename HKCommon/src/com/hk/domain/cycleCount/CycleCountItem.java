@@ -32,12 +32,9 @@ public class CycleCountItem implements java.io.Serializable {
 	@JoinColumn(name = "sku_group_id", nullable = false)
 	private SkuGroup skuGroup;
 
-
 	@Column(name = "scanned_qty", unique = true, nullable = false)
 	private Integer scannedQty;
 
-	@Transient
-	private Integer  pviQuantity;
 
 	public Long getId() {
 		return id;
@@ -82,8 +79,8 @@ public class CycleCountItem implements java.io.Serializable {
 		}
 		CycleCountItem cCItem = (CycleCountItem) o;
 
-		if (id != null && cCItem.id != null && id.equals(cCItem.id)) {
-			return true;
+		if (id != null && cCItem.getId() != null) {
+			return id.equals(cCItem.getId());
 		} else {
 			EqualsBuilder equalsBuilder = new EqualsBuilder();
 			if (this.getSkuGroup().getId() != null || cCItem.getSkuGroup().getId() != null) {
@@ -96,12 +93,13 @@ public class CycleCountItem implements java.io.Serializable {
 
 	}
 
-
-	public Integer getPviQuantity() {
-		return pviQuantity;
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
 	}
 
-	public void setPviQuantity(Integer pviQuantity) {
-		this.pviQuantity = pviQuantity;
+	@Override
+	public String toString() {
+		return this.id != null ? this.id.toString() : "";
 	}
 }
