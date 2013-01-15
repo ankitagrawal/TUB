@@ -65,9 +65,11 @@ public class UserManageAddressAction extends BaseAction {
     }
 
     public Resolution editUserAddresses() {
-        if(!address.getUser().getId().equals(getPrincipalUser().getId())){
-            addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
-            return new ForwardResolution("/pages/editUserAddresses.jsp");
+        if(address.getUser()!=null){
+            if(!address.getUser().getId().equals(getPrincipalUser().getId())){
+                addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
+                return new ForwardResolution("/pages/editUserAddresses.jsp");
+            }
         }
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
