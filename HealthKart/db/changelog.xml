@@ -10934,20 +10934,20 @@
     <changeSet author="Rohit (generated)" id="1358238002137-7">
         <dropNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="mrp" tableName="stock_transfer_line_item"/>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1358238002137-8">
+	<changeSet author="Rohit (generated)" id="1358238002137-11">
+		<dropIndex indexName="stock_transfer_id_UNIQUE" tableName="stock_transfer_line_item"/>
+	</changeSet>
+	<changeSet author="Rohit (generated)" id="1358238002137-9">
+		<addForeignKeyConstraint baseColumnNames="checked_in_sku_group_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku_group2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_group" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Rohit (generated)" id="1358238002137-10">
+		<addForeignKeyConstraint baseColumnNames="checked_out_sku_group_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_group" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Rohit (generated)" id="1358238002137-8">
         <createIndex indexName="uq_stock_transfer_idx" tableName="stock_transfer_line_item" unique="true">
             <column name="stock_transfer_id"/>
             <column name="sku_id"/>
             <column name="checked_out_sku_group_id"/>
         </createIndex>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1358238002137-9">
-        <addForeignKeyConstraint baseColumnNames="checked_in_sku_group_id" baseTableName="stock_transfer_line_item" baseTableSchemaName="healthkart_workbench" constraintName="fk_stock_transfer_line_item_sku_group2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_group" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1358238002137-10">
-        <addForeignKeyConstraint baseColumnNames="checked_out_sku_group_id" baseTableName="stock_transfer_line_item" baseTableSchemaName="healthkart_workbench" constraintName="fk_stock_transfer_line_item_sku_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_group" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1358238002137-11">
-        <dropIndex indexName="stock_transfer_id_UNIQUE" tableName="stock_transfer_line_item"/>
     </changeSet>
 </databaseChangeLog>
