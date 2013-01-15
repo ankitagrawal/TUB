@@ -234,6 +234,7 @@ public class StockTransferAction extends BasePaginatedAction {
 		return new ForwardResolution("/pages/admin/inventoryCheckinAgainstStockTransfer.jsp");
 	}
 
+
 	public Resolution print() {
 		logger.debug("purchaseOrder: " + stockTransfer);
 		return new ForwardResolution("/pages/admin/stPrintView.jsp");

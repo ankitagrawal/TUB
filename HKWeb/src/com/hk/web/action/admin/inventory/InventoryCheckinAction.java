@@ -26,6 +26,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.util.XslGenerator;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.AdminHomeAction;
@@ -38,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
+import org.jsoup.helper.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -77,6 +79,9 @@ public class InventoryCheckinAction extends BaseAction {
 	@Autowired
 	private ProductVariantSupplierInfoService productVariantSupplierInfoService;
 
+    @Autowired
+	private SkuGroupService skuGroupService;
+
 	// SkuGroupDao skuGroupDao;
 
 	// SkuItemDao skuItemDao;
@@ -97,6 +102,8 @@ public class InventoryCheckinAction extends BaseAction {
 	private StockTransfer stockTransfer;
 	int strLength = 20;
 	File printBarcode;
+
+    private String productVariantBarcode;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
@@ -367,6 +374,66 @@ public class InventoryCheckinAction extends BaseAction {
 				stockTransfer.getId());
 
 	}
+
+    // adding new method
+
+    public Resolution saveStockTransfer() {
+            if (stockTransfer == null) {
+                addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
+                return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+            }
+               if (StringUtil.isBlank(productVariantBarcode)) {
+                    addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
+                    return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+                }
+
+                User loggedOnUser = null;
+                if (getPrincipal() != null) {
+                    loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+                }
+//  giving get(0)
+             SkuGroup skuGroup = skuGroupService.getSkuGroup(productVariantBarcode);
+             if (skuGroup == null){
+               addRedirectAlertMessage(new SimpleMessage("No SKU Group found for Barcode"));
+                 return new RedirectResolution( InventoryCheckinAction.class);
+             }
+
+           StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItemForCheckedOutSkuGrp(skuGroup);
+          if (stockTransferLineItem == null){
+                  addRedirectAlertMessage(new SimpleMessage("No StockTransfer Line Item Found"));
+                 return new RedirectResolution( InventoryCheckinAction.class);
+          }
+
+          StockTransferLineItem stockTransferLineItemAgainstCheckInSkuGrp = stockTransferDao.checkinSkuGroupExists(stockTransferLineItem);
+
+          if (stockTransferLineItemAgainstCheckInSkuGrp != null){
+
+          }   else {
+//      create new SKU grp
+            SkuGroup checkinSkuGroup = getAdminInventoryService().createSkuGroup(skuGroup.getBatchNumber(), skuGroup.getMfgDate(), skuGroup.getExpiryDate(), skuGroup.getCostPrice(), skuGroup.getMrp(), null, null, skuGroup.getStockTransfer(), null);
+            ProductVariant productVariant = skuGroup.getSku().getProductVariant();
+//            Warehouse toWarehouse =   stockTransferLineItemAgainstCheckInSkuGrp.ge
+
+          }
+
+//     checking if cinSKU group exist
+
+
+
+        
+
+
+
+
+
+
+        addRedirectAlertMessage(new SimpleMessage("Inventory Checked in successfully. Qty = " + qty));
+		return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+    }
+
+
+//
+
 
 	public Resolution generateGRNExcel() throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -667,4 +734,13 @@ public class InventoryCheckinAction extends BaseAction {
 	public void setMrp(Double mrp) {
 		this.mrp = mrp;
 	}
+
+    public String getProductVariantBarcode() {
+        return productVariantBarcode;
+    }
+
+    public void setProductVariantBarcode(String productVariantBarcode) {
+        this.productVariantBarcode = productVariantBarcode;
+    }
+
 }
