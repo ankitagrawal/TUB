@@ -97,7 +97,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Kindly enter the audit date!"));
                 return new RedirectResolution(BrandsToAuditAction.class, "view")
-                        .addParameter("brandToAudit", brandsToAudit.getId());
+                        .addParameter("brandsToAudit", brandsToAudit.getId());
             }
         }
         return new RedirectResolution(BrandsToAuditAction.class);
