@@ -206,7 +206,25 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         }
     }
 
-    public Long countOfCheckedInUnitsForGrnLineItem(GrnLineItem grnLineItem) {
+	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy) {
+		ProductVariantInventory pvi = new ProductVariantInventory();
+		pvi.setSku(sku);
+		pvi.setSkuItem(skuItem);
+		pvi.setStockTransferLineItem(stockTransferLineItem);
+		pvi.setInvTxnType(inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKOUT));
+		pvi.setQty(qty);
+		pvi.setTxnBy(txnBy);
+		pvi.setTxnDate(new Date());
+		getBaseDao().save(pvi);
+
+		if (skuItem != null && qty < 0) {
+			skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+			getBaseDao().save(skuItem);
+		}
+
+	}
+
+	public Long countOfCheckedInUnitsForGrnLineItem(GrnLineItem grnLineItem) {
         Long count = getAdminPVIDao().getChechedinItemCount(grnLineItem);
         if (count == null) {
             count = 0L;
@@ -390,6 +408,10 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
 	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
 		return adminSkuItemDao.getInStockSkuItems(skuGroup);
+	}
+
+	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse) {
+		return adminSkuItemDao.getInStockSkuItems(barcode, warehouse);
 	}
 
 

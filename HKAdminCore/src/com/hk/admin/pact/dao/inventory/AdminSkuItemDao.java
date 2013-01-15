@@ -42,5 +42,7 @@ public interface AdminSkuItemDao extends BaseDao {
 
   public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup);
 
+	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse);
+
 
 }

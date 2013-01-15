@@ -18,6 +18,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 
 public interface AdminInventoryService {
 
@@ -68,6 +69,8 @@ public interface AdminInventoryService {
 
 	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
-	
+	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse);
+
+	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy);
 
 }

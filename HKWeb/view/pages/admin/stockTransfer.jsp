@@ -74,7 +74,7 @@
 				return isValidated;
 			};
 
-            $("#saveBtn").click(function() {
+            $("#createST").click(function() {
                 var isValidated = validateForm();
                 if (!isValidated) {
                     return isValidated;
@@ -88,7 +88,6 @@
                         return isValidated;
                     }
                 }
-
 
             });
 
@@ -201,9 +200,30 @@
 					</c:forEach>
 				</s:select></td>
 			</tr>
+			<tr>
+				<td><s:submit name="createOrUpdateStockTransfer" value="Create/Update Stock Transfer" id="createST"/> </td>
+			</tr>
 		</table>
+	</s:form>
 
-		<table border="1">
+	<c:if test="${sta.stockTransfer.id != null}">
+		<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction" id="stForm2">
+		<fieldset class="right_label">
+			<legend>Scan Barcode:</legend>
+			<ul>
+				<li>
+			<s:label name="barcode">Product Variant Barcode</s:label>
+			<s:text name="productVariantBarcode" id="productVariantBarcode"/></li>
+				<li>
+			<div style="display: none;">
+			<s:submit name="save" id="save"/>
+			</div>
+				</li>
+			</ul>
+		</fieldset>
+		</s:form>
+	</c:if>
+		<%--<table border="1">
 			<thead>
 			<tr>
 				<th>VariantID</th>
@@ -241,13 +261,13 @@
 
 			</c:forEach>
 			</tbody>
-		</table>
-		<div class="variantDetails info"></div>
+		</table>--%>
+		<%--<div class="variantDetails info"></div>
 		<br/>
 		<a class="addRowButton" style="font-size:1.2em">Add new row</a>
 
-		<s:submit name="save" value="Save" id="saveBtn"/>
-	</s:form>
+		<s:submit name="save" value="Save" id="saveBtn"/>--%>
+
 
 </s:layout-component>
 

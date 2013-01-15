@@ -18,10 +18,11 @@ import javax.persistence.UniqueConstraint;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuGroup;
 
 
 @Entity
-@Table(name = "stock_transfer_line_item", uniqueConstraints = @UniqueConstraint(columnNames = {"stock_transfer_id", "sku_id"}))
+@Table(name = "stock_transfer_line_item", uniqueConstraints = @UniqueConstraint(columnNames = {"stock_transfer_id", "sku_id", "checked_out_sku_group_id"}))
 public class StockTransferLineItem implements java.io.Serializable {
 
 	@Id
@@ -62,6 +63,10 @@ public class StockTransferLineItem implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sku_id", nullable = false)
 	private Sku sku;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "checked_out_sku_group_id", nullable = false)
+	private SkuGroup checkedOutSkuGroup;
 
 	public Long getId() {
 		return id;
@@ -154,5 +159,13 @@ public class StockTransferLineItem implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return this.id != null ? this.id.toString() : "";
+	}
+
+	public SkuGroup getCheckedOutSkuGroup() {
+		return checkedOutSkuGroup;
+	}
+
+	public void setCheckedOutSkuGroup(SkuGroup checkedOutSkuGroup) {
+		this.checkedOutSkuGroup = checkedOutSkuGroup;
 	}
 }
