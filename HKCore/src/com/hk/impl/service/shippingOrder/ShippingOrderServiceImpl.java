@@ -72,8 +72,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ReplacementOrderDao        replacementOrderDao;
 	@Autowired
 	private PincodeService pincodeService;
-	@Autowired
+
 	ShipmentService 				shipmentService;
+
     private OrderService               orderService;
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
@@ -265,7 +266,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     }
 				}
 					if(shippingOrder.getShipment() == null){
-						Shipment newShipment = shipmentService.createShipment(shippingOrder);
+						Shipment newShipment = getShipmentService().createShipment(shippingOrder);
 						if (newShipment == null) {
 							String comments = "Because shipment has not been created";
 							logShippingOrderActivity(shippingOrder, adminUser,
@@ -446,6 +447,14 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         }
         return orderService;
     }
+
+	 public ShipmentService getShipmentService() {
+        if (shipmentService == null) {
+            shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
+        }
+        return shipmentService;
+    }
+
 
     public ShippingOrderDao getShippingOrderDao() {
         return shippingOrderDao;
