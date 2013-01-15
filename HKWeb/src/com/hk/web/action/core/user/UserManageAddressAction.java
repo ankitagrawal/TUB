@@ -90,8 +90,8 @@ public class UserManageAddressAction extends BaseAction {
             }
             address.setUser(user);
             address = addressDao.save(address);
+            addRedirectAlertMessage(new SimpleMessage("Your changes have been saved."));
         }
-        addRedirectAlertMessage(new SimpleMessage("Your changes have been saved."));
         return showAddressBook();
     }
 
