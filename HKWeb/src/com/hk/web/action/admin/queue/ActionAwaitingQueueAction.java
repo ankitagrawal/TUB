@@ -49,7 +49,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
-import com.hk.admin.manager.AdminEmailManager;
 
 @Component
 public class ActionAwaitingQueueAction extends BasePaginatedAction {
@@ -84,9 +83,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    ShippingOrderLifecycleService shippingOrderLifecycleService;
-    @Autowired
-    AdminEmailManager adminEmailManager;
+    ShippingOrderLifecycleService shippingOrderLifecycleService;       
 
     private Long orderId;
     private Long storeId;
@@ -257,7 +254,6 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                     trueMessage.append(" ");
                     if (shippingOrder.isDropShipping()) {
                         shippingOrderService.escalateShippingOrderFromActionTODropQueue(shippingOrder, false);
-                        adminEmailManager.sendEscalationToDropShipEmail(shippingOrder);
                     } else {
                         shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
                     }
@@ -267,7 +263,6 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                         trueMessage.append(" ");
                         if (shippingOrder.isDropShipping()) {
                             shippingOrderService.escalateShippingOrderFromActionTODropQueue(shippingOrder, false);
-                            adminEmailManager.sendEscalationToDropShipEmail(shippingOrder);
                         } else {
                             shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
                         }
