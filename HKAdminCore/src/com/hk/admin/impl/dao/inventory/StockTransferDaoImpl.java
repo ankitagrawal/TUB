@@ -55,9 +55,9 @@ public class StockTransferDaoImpl extends BaseDaoImpl implements StockTransferDa
         return stockTransferLineItems != null && !stockTransferLineItems.isEmpty() ? stockTransferLineItems.get(0) : null;
     }
 
-	public StockTransferLineItem getStockTransferLineItem(StockTransfer stockTransfer, Sku sku, SkuGroup skuGroup) {
-		String query = "select stli from StockTransferLineItem stli where stli.stockTransfer = :stockTransfer and stli.sku = :sku and stli.skuGroup = :skuGroup";
-		return (StockTransferLineItem) findUniqueByNamedParams(query, new String[]{"stockTransfer", "sku", "skuGroup"}, new Object[]{stockTransfer, sku, skuGroup});
+	public StockTransferLineItem getStockTransferLineItem(StockTransfer stockTransfer, Sku sku, SkuGroup checkedOutSkuGroup) {
+		String query = "select stli from StockTransferLineItem stli where stli.stockTransfer = :stockTransfer and stli.sku = :sku and stli.checkedOutSkuGroup = :skuGroup";
+		return (StockTransferLineItem) findUniqueByNamedParams(query, new String[]{"stockTransfer", "sku", "skuGroup"}, new Object[]{stockTransfer, sku, checkedOutSkuGroup});
 	}
 
 }
