@@ -16,8 +16,8 @@
           $(document).ready(function(){
              $('#save').click(function(){
                 var awbNumber = $('#awbNumber').val();
-                 if(awbNumber == null || awbNumber == ""){
-                     alert("Tracking Number can't be left empty");
+                 if(awbNumber == null || awbNumber == "" || (awbNumber.length >16 && awbNumber.length <8)){
+                     alert("Tracking Number can't be left empty or Length must be between 8 to 16");
                      return false;
                  }
                  else{
@@ -32,7 +32,7 @@
     Shipping Order Id # <h2 style="color:blue;"> ${cusa.shippingOrder.id} </h2>
     COD # <h2 style="color:blue;">${cusa.shippingOrder.COD}</h2>
     Warehouse # <h2 style="color:blue;">${cusa.shippingOrder.warehouse.name}</h2>
-      <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">
+      <s:form beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">
            <label>Enter Courier Id</label>
              <s:select name="awb.courier"  id="status">
                     <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
