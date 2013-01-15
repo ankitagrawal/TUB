@@ -167,10 +167,11 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
     public Resolution batchPrintOrders() {
 
-        List<ShippingOrder> existingOrdersInPrintingQueue = getShippingOrdersForPrintingInCategory();
+        List<ShippingOrder> ordersDisplayerForPrinting = getShippingOrdersList();
 
         int counter = 0;
-        for (ShippingOrder shippingOrder : existingOrdersInPrintingQueue) {
+
+        for (ShippingOrder shippingOrder : ordersDisplayerForPrinting) {
             if (EnumShippingOrderStatus.SO_ReadyForProcess.getId().equals(shippingOrder.getOrderStatus().getId())) {
                 getAdminShippingOrderService().markShippingOrderAsPrinted(shippingOrder);
                 counter++;
