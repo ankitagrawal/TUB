@@ -49,10 +49,13 @@
     <s:layout-component name="content">
         <c:set var="userDeliveryComment" value="<%=MasterDataDao.USER_COMMENT_TYPE_DELIVERY_BASE_ORDER%>"/>
         <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">
-            <label>Enter Gateway Id</label>
+            <fieldset>
+            <label>Enter SO Gateway Id</label>
             <s:text name="gatewayOrderId" id="gatewayOrderId"/>
             <s:submit name="searchShipment" value="Search" id="search"/>
+            </fieldset>
             <div class="clear"></div>
+            <fieldset>
             <c:if test="${cusa.shippingOrder!=null}">
                 <c:if test="${userDeliveryComment eq cusa.shippingOrder.baseOrder.commentType}">
                     User comment and Type Related to Base Order # <h2 style="color:blue">${cusa.shippingOrder.baseOrder.id}</h2> is :-
@@ -60,6 +63,8 @@
                     User Comment :- <h3 style="color:red;">${cusa.shippingOrder.baseOrder.comments}</h3>
                 </c:if>
             </c:if>
+            </fieldset>
+            <fieldset>
             <c:if test="${cusa.shipment!=null}">
                 <table class="zebra_vert">
                     <tr>
@@ -134,10 +139,14 @@
                 </table>
                 <s:submit name="updateShipment" value="SAVE" id="validate"/>
             </c:if>
+            </fieldset>
         </s:form>
+        <div class="clear"></div>
+        <fieldset>
         <c:if test="${cusa.shippingOrder!=null}">
             <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                              shippingOrders="${cusa.shippingOrderList}" hasAction="false" showCourier="true" isSearchShippingOrder = "true"/>
         </c:if>
+        </fieldset>
     </s:layout-component>
 </s:layout-render>

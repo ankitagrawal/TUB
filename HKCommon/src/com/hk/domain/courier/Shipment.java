@@ -9,9 +9,6 @@ import java.util.Date;
 @SuppressWarnings ("serial")
 @Entity
 @Table (name = "shipment")
-@NamedQueries({
-    @NamedQuery(name = "getShipmentById", query = "select s from Shipment s where id = :shipmentId")
-})
 public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 
 	@Id

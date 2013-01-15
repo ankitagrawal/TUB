@@ -111,6 +111,7 @@ public class ShipmentResolutionAction extends BaseAction {
     }
 
     public Resolution generateAWB() {
+        applicableCouriers = pincodeCourierService.getApplicableCouriers(shippingOrder);
         return new ForwardResolution("/pages/admin/courier/createUpdateAwb.jsp").addParameter("shippingOrder", shippingOrder.getId());
     }
 
@@ -118,6 +119,7 @@ public class ShipmentResolutionAction extends BaseAction {
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
         shipment = shipmentService.createShipment(shippingOrder);
         if (shipment == null) {
+//            awbService.save(awb,EnumAwbStatus.Used.getId().intValue());
             awbService.delete(awb);
             addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check shipping Order Life Cycle and resolve the issue"));
             return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());

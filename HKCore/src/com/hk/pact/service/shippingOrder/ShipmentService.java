@@ -25,5 +25,4 @@ public interface ShipmentService {
 
     public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
 
-    public Shipment getShipmentById(Long shipmentId);
 }
