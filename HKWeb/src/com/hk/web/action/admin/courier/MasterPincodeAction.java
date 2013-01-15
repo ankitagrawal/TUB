@@ -81,14 +81,7 @@ public class MasterPincodeAction extends BaseAction {
         } else {
             addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
         }
-        return new RedirectResolution(MasterPincodeAction.class);
-    }
-
-    @ValidationMethod(on = "save")
-    public void validateSave() {
-        if (pincodeString.length() < 6 || (!StringUtils.isNumeric(pincodeString))) {
-            getContext().getValidationErrors().add("1", new SimpleError("Invalid pincode entry"));
-        }
+        return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
     }
 
     public Resolution save() {
@@ -260,4 +253,19 @@ public class MasterPincodeAction extends BaseAction {
         return pincodeList;
     }
 
+  public List<PincodeCourierMapping> getPincodeCourierMappings() {
+    return pincodeCourierMappings;
+  }
+
+  public void setPincodeCourierMappings(List<PincodeCourierMapping> pincodeCourierMappings) {
+    this.pincodeCourierMappings = pincodeCourierMappings;
+  }
+
+  public Map<String, Boolean> getApplicableShipmentServices() {
+    return applicableShipmentServices;
+  }
+
+  public void setApplicableShipmentServices(Map<String, Boolean> applicableShipmentServices) {
+    this.applicableShipmentServices = applicableShipmentServices;
+  }
 }

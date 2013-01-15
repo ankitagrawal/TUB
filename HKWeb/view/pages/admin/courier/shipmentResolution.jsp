@@ -91,7 +91,9 @@
                    <tr>
                        <thead>
                          <th>Shipment ID</th>
-                         <th>Shipping Order ID</th>\
+                         <th>Shipping Order ID</th>
+                         <th>Pincode</th>
+                         <th>SO Amount</th>
                          <th>AWB</th>
                          <th>Courier Name</th>
                          <th>Shipment Service Type</th>
@@ -109,6 +111,12 @@
                                 <s:param name="shippingOrderGatewayId" value="${shipRes.shippingOrder.gatewayOrderId}"/>
                             </s:link>
                            <s:hidden name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
+                       </td>
+                       <td>
+                           ${shipRes.shippingOrder.baseOrder.address.pin}
+                       </td>
+                       <td>
+                           ${shipRes.shippingOrder.amount}
                        </td>
                        <td>
                            ${shipRes.shipment.awb.awbNumber}
