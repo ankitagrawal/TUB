@@ -70,4 +70,7 @@ public enum EnumShipmentServiceType {
         }
         return shipmentServiceTypeIds;
     }
+  public static List<EnumShipmentServiceType> getAllShipmentServiceType(){
+    return Arrays.asList(EnumShipmentServiceType.Cod_Air,EnumShipmentServiceType.Cod_Ground,EnumShipmentServiceType.Prepaid_Air,EnumShipmentServiceType.Prepaid_Ground);
+  }
 }

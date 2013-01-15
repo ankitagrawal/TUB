@@ -9,6 +9,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.constants.shipment.EnumShipmentServiceType" %>
 <%@ page import="com.hk.constants.shipment.EnumBoxSize" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction" var="cusa"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Update Shipment">
@@ -88,31 +89,28 @@
                            </c:if>
                        </td>
                        <td>
-                           <label>Select Box Size</label>
                            <s:select name="shipment.boxSize" id="boxSize">
                              <s:option value="">--Select--</s:option>
-                             <s:option value="<%=EnumBoxSize.L.getId()%>"><%=EnumBoxSize.L.getName()%></s:option>
-                             <s:option value="<%=EnumBoxSize.L2.getId()%>"><%=EnumBoxSize.L2.getName()%></s:option>
-                             <s:option value="<%=EnumBoxSize.M.getId()%>"><%=EnumBoxSize.M.getName()%></s:option>
-                             <s:option value="<%=EnumBoxSize.M2.getId()%>"><%=EnumBoxSize.M2.getName()%></s:option>
-                             <s:option value="<%=EnumBoxSize.S.getId()%>"><%=EnumBoxSize.S.getName()%></s:option>
-                             <s:option value="<%=EnumBoxSize.XL.getId()%>"><%=EnumBoxSize.XL.getName()%></s:option>
-                             <s:option value="<%=EnumBoxSize.XS.getId()%>"><%=EnumBoxSize.XS.getName()%></s:option>
-                             <s:option value="<%=EnumBoxSize.XXL.getId()%>"><%=EnumBoxSize.XXL.getName()%></s:option>
-                             <s:option value="<%=EnumBoxSize.XXXL.getId()%>"><%=EnumBoxSize.XXXL.getName()%></s:option>
+                              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allBoxSize"
+                                               value="id" label="name"/>   
                            </s:select>
                        </td>
                        <td>
-                           <label>Enter Weight in KG</label>
                            <s:text name="shipment.boxWeight" id = "boxWeight" value="${cusa.shipment.boxWeight}"/>
                        </td>
                        <td>
-                           <label>Enter Packer Name</label>
-                           <s:text name="shipment.packer" value="${cusa.shipment.packer}"/>
+                           <s:select name="shipment.packer" >
+                             <s:option value="">--Select</s:option>
+                             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allPacker"
+                                               value="name" label="name"/>
+                            </s:select>
                        </td>
                        <td>
-                           <label>Enter Picker Name</label>
-                           <s:text name="shipment.picker"  value="${cusa.shipment.picker}"/>
+                           <s:select name="shipment.picker">
+                           <s:option value="">--Select--</s:option>
+                               <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allPicker"
+                                               value="name" label="name"/>
+                           </s:select>
                        </td>
                    </tr>
                 </table>

@@ -87,7 +87,8 @@ public class PincodeCourierMappingAction extends BaseAction {
                 pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
             }
         }
-        return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
+        addRedirectAlertMessage(new SimpleMessage("changes saved in the system !!!!"));
+        return new RedirectResolution(PincodeCourierMappingAction.class, "search").addParameter("pin",pin);
     }
 
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)

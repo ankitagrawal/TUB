@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
@@ -16,10 +17,7 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +48,7 @@ public class ShipmentResolutionAction extends BaseAction {
     String reasoning;
     Awb awb;
     boolean preserveAwb;
+    Long shipmentServiceTypeId;
 
     List<ShippingOrderLifecycle> shippingOrderLifeCycles;
 
@@ -66,11 +65,12 @@ public class ShipmentResolutionAction extends BaseAction {
     @Autowired
     AwbService awbService;
 
-    public Resolution pre(){
+    @DefaultHandler
+    public Resolution pre() {
         return new ForwardResolution("/pages/admin/courier/shipmentResolution.jsp");
     }
 
-    public Resolution search(){
+    public Resolution search() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForShipmentResolution()));
@@ -78,7 +78,7 @@ public class ShipmentResolutionAction extends BaseAction {
 
         if (shippingOrderList.isEmpty()) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Gateway Order id or Shipping Order is not in applicable SO Status"));
-            return new RedirectResolution("/pages/admin/courier/createUpdateShipmentAction.jsp");
+            return new RedirectResolution("/pages/admin/courier/shipmentResolution.jsp");
         }
 
         shippingOrder = shippingOrderList.get(0);
@@ -89,7 +89,7 @@ public class ShipmentResolutionAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/shipmentResolution.jsp");
     }
 
-    public Resolution changeCourier(){
+    public Resolution changeCourier() {
         Awb currentAwb = shipment.getAwb();
         shipment = shipmentService.changeCourier(shipment, updateCourier, preserveAwb);
         Awb updatedAwb = shipment.getAwb();
@@ -98,21 +98,119 @@ public class ShipmentResolutionAction extends BaseAction {
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, comments);
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, reasoning);
         }
+        addRedirectAlertMessage(new SimpleMessage("Your Courier has been changed"));
         return new ForwardResolution("/pages/admin/courier/shipmentResolution.jsp");
     }
 
     public Resolution changeShipmentServiceType() {
+        shipment.setShipmentServiceType(EnumShipmentServiceType.getShipmentTypeFromId(shipmentServiceTypeId).asShipmentServiceType());
         shipment = shipmentService.save(shipment);
         shipment = shipmentService.recreateShipment(shippingOrder);
+        addRedirectAlertMessage(new SimpleMessage("Your Shipment Service Type has been changed"));
         return new ForwardResolution("/pages/admin/courier/shipmentResolution.jsp");
+    }
+
+    public Resolution generateAWB() {
+        return new ForwardResolution("/pages/admin/courier/createUpdateAwb.jsp").addParameter("shippingOrder", shippingOrder.getId());
     }
 
     public Resolution createAssignAwb() {
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
         shipmentService.createShipment(shippingOrder);
+        if (shipment == null) {
+            awbService.delete(awb);
+            addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check shipping Order Life Cycle and resolve the issue"));
+            return new RedirectResolution(ShipmentResolutionAction.class).addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+        }
         addRedirectAlertMessage(new SimpleMessage("Awb and Shipment has been created, please Enter Gateway Order Id again to check !!!!!"));
-        return new RedirectResolution(CreateUpdateShipmentAction.class);
+        return new RedirectResolution(ShipmentResolutionAction.class);
     }
 
+    public Awb getAwb() {
+        return awb;
+    }
 
+    public void setAwb(Awb awb) {
+        this.awb = awb;
+    }
+
+    public String getReasoning() {
+        return reasoning;
+    }
+
+    public void setReasoning(String reasoning) {
+        this.reasoning = reasoning;
+    }
+
+    public List<Courier> getApplicableCouriers() {
+        return applicableCouriers;
+    }
+
+    public void setApplicableCouriers(List<Courier> applicableCouriers) {
+        this.applicableCouriers = applicableCouriers;
+    }
+
+    public Shipment getShipment() {
+        return shipment;
+    }
+
+    public void setShipment(Shipment shipment) {
+        this.shipment = shipment;
+    }
+
+    public ShippingOrder getShippingOrder() {
+        return shippingOrder;
+    }
+
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
+
+    public List<ShippingOrder> getShippingOrderList() {
+        return shippingOrderList;
+    }
+
+    public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
+        this.shippingOrderList = shippingOrderList;
+    }
+
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
+
+    public void setGatewayOrderId(String gatewayOrderId) {
+        this.gatewayOrderId = gatewayOrderId;
+    }
+
+    public boolean isPreserveAwb() {
+        return preserveAwb;
+    }
+
+    public void setPreserveAwb(boolean preserveAwb) {
+        this.preserveAwb = preserveAwb;
+    }
+
+    public List<ShippingOrderLifecycle> getShippingOrderLifeCycles() {
+        return shippingOrderLifeCycles;
+    }
+
+    public void setShippingOrderLifeCycles(List<ShippingOrderLifecycle> shippingOrderLifeCycles) {
+        this.shippingOrderLifeCycles = shippingOrderLifeCycles;
+    }
+
+    public Courier getUpdateCourier() {
+        return updateCourier;
+    }
+
+    public void setUpdateCourier(Courier updateCourier) {
+        this.updateCourier = updateCourier;
+    }
+
+    public Long getShipmentServiceTypeId() {
+        return shipmentServiceTypeId;
+    }
+
+    public void setShipmentServiceTypeId(Long shipmentServiceTypeId) {
+        this.shipmentServiceTypeId = shipmentServiceTypeId;
+    }
 }

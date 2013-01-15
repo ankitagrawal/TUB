@@ -209,6 +209,9 @@
     <h3><s:link
 			beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Change Update Shipment</s:link></h3>
 
+     <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">Shipment Resolution</s:link></h3>
+
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.shipment.UpdateDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart,DTDC</s:link></h3>
 

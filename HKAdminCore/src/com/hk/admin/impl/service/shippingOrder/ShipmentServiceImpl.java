@@ -236,4 +236,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         return false;
     }
 
+  public Shipment getShipmentById(Long shipmentId){
+    return (Shipment)shipmentDao.findUniqueByNamedQueryAndNamedParam("getShipmentById",new String[]{"shipmentId"}, new Object[]{shipmentId});
+  }
+
 }

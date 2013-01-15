@@ -170,7 +170,7 @@
                                 <s:hidden name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
                             </td>
                             <td>
-                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier"  value="${pincodeDefaultCourier.courier.id}">
+                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier">
                                     <option value="">--Select--</option>
                                     <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
                                                                value="id" label="name"/>

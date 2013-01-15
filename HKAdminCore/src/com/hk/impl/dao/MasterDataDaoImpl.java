@@ -7,6 +7,10 @@ import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.constants.shipment.EnumPacker;
+import com.hk.constants.shipment.EnumPicker;
+import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.courier.*;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
@@ -456,5 +460,21 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
    public List<Warehouse> getAllWarehouse(){
      return warehouseService.getAllWarehouses();
+  }
+
+  public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes(){
+   return EnumShipmentServiceType.getAllShipmentServiceType();
+  }
+
+  public List<EnumPicker> getAllPicker(){
+    return EnumPicker.getAll();
+  }
+
+  public List<EnumPacker> getAllPacker(){
+    return EnumPacker.getAll();
+  }
+
+  public List<EnumBoxSize> getAllBoxSize(){
+    return EnumBoxSize.getAllEnumBoxSize();
   }
 }

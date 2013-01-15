@@ -9,7 +9,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.courier.EnumAwbStatus" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction" var="cusa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" var="cusa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Update AWB">
     <s:layout-component name="htmlHead">
       <script type="text/javascript">
@@ -45,7 +45,7 @@
            <s:hidden name="awb.warehouse" value="${cusa.shippingOrder.warehouse}"/>
            <s:hidden name="awb.awbStatus" value="<%=EnumAwbStatus.Unused.getId()%>"/>
            <s:hidden name="shippingOrder" value="${cusa.shippingOrder.id}"/>
-          <s:submit name="createUpdateAwb" value="SAVE" id="save"/>
+          <s:submit name="createAssignAwb" value="SAVE" id="save"/>
           </s:form>
     </s:layout-component>
     </s:layout-render>
