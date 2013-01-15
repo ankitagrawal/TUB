@@ -49,7 +49,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
-import com.hk.admin.manager.AdminEmailManager;
 
 @Component
 public class ActionAwaitingQueueAction extends BasePaginatedAction {
