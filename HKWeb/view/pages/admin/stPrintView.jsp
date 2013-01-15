@@ -91,6 +91,7 @@
 		</td>
 		<td><b>To Warehouse</b></td>
 		<td>
+			Bright Lifecare Pvt. Ltd.<br/>
 			${stockTransferBean.stockTransfer.toWarehouse.name} <br/>
 			${stockTransferBean.stockTransfer.toWarehouse.line1},
 			${stockTransferBean.stockTransfer.toWarehouse.line2}<br>

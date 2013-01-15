@@ -466,7 +466,7 @@
         </div>
         <div class="clear"></div>
         <div class="floatleft">
-            Size: ${shipment.boxSize}, Weight: ${shipment.boxWeight}
+            Size: ${shipment.boxSize.name}, Weight: ${shipment.boxWeight}
         </div>
         <div class="clear"></div>
 	    <div class="floatleft">
