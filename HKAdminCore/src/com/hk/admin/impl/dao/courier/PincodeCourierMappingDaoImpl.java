@@ -55,20 +55,15 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
 
         String lhsCondition = "";       //assuming we wont reach a state where more than two shipment service types are applicable
         String rhsCondition = "";
-        boolean multipleConditions = false;
         if (shipmentServiceTypes != null && !shipmentServiceTypes.isEmpty()) {
             if (shipmentServiceTypes.size() > 1) {
                 lhsCondition = shipmentServiceTypes.get(0).getName();
                 rhsCondition = shipmentServiceTypes.get(1).getName();
-                multipleConditions = true;
+                pincodeCourierMappingCriteria.add(Restrictions.or(Restrictions.eq(lhsCondition, true), Restrictions.eq(rhsCondition, true)));
             } else {
                 lhsCondition = shipmentServiceTypes.get(0).getName();
+                pincodeCourierMappingCriteria.add(Restrictions.eq(lhsCondition, true));
             }
-        }
-        if (multipleConditions) {
-            pincodeCourierMappingCriteria.add(Restrictions.or(Restrictions.eq(lhsCondition, true), Restrictions.eq(rhsCondition, true)));
-        } else {
-            pincodeCourierMappingCriteria.add(Restrictions.eq(lhsCondition, true));
         }
         return findByCriteria(pincodeCourierMappingCriteria);
     }
