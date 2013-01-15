@@ -180,7 +180,7 @@ public class DummyOrder {
             hashCodeBuilder.append(this.getCartLineItemList());
         }
         if (this.getPincode() != null) {
-            hashCodeBuilder.append(this.getPincode().getId());
+            hashCodeBuilder.append(this.getPincode().getPincode());
         }
         if (this.getWarehouse() != null) {
             hashCodeBuilder.append(this.getWarehouse().getId());

@@ -18,11 +18,8 @@ import com.hk.pact.service.core.StateService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -150,7 +145,7 @@ public class XslPincodeParser {
                 row.createCell(columnNo);
             }
 
-            setCellValue(row, 0, pincode.getId());
+            setCellValue(row, 0, pincode.getPincode());
             setCellValue(row, 1, pincode.getPincode());
             setCellValue(row, 2, pincode.getCity().getName());
             setCellValue(row, 3, pincode.getState().getName());

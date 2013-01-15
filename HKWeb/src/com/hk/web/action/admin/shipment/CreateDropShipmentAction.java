@@ -170,7 +170,7 @@ public class CreateDropShipmentAction extends BaseAction {
         shippingOrder.setShipment(shipment);
         shipment.setShippingOrder(shippingOrder);
         if(shipment.getZone() == null){
-			Pincode pinCode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			Pincode pinCode = shippingOrder.getBaseOrder().getAddress().getPincode();
 			shipment.setZone(pinCode.getZone());
 		}
         shipmentService.save(shipment);

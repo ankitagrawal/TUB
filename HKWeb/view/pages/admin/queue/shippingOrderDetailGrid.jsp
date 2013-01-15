@@ -327,7 +327,7 @@
             <c:set var="baseOrderAddress" value="${baseOrder.address}"/>
             ${baseOrderAddress.name}<br/>
             ${baseOrderAddress.city}<br/>
-            ${baseOrderAddress.state} - ( ${baseOrderAddress.pin} ) - ${baseOrderAddress.phone}<br/>
+            ${baseOrderAddress.state} - ( ${baseOrderAddress.pincode.pincode} ) - ${baseOrderAddress.phone}<br/>
         </div>
         </div>
     </td>

@@ -19,7 +19,6 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.ShippingOrderFilter;
@@ -411,7 +410,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
 
         Address address = order.getAddress();
-        String pin = address != null ? address.getPin() : null;
+        String pin = address != null ? address.getPincode().getPincode() : null;
 
         // Double payable = pricingDto.getGrandTotalPayable();
         //Double payable = order.getAmount();

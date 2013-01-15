@@ -22,8 +22,8 @@ import java.util.List;
 public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
 
     public Pincode getByPincode(String pincode) {
-        String hqlQuery = " from Pincode pincode where pincode.pincode = :pincode";
-        return (Pincode) getSession().createQuery(hqlQuery).setParameter("pincode", pincode).uniqueResult();
+        String queryString = "from Pincode p where p.pincode=:pincode";
+        return (Pincode) findByNamedParams(queryString, new String[]{"pincode"}, new Object[]{pincode});
     }
 
     public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
@@ -33,7 +33,7 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
         if (warehouse != null && StringUtils.isNotBlank(Long.toString(warehouse.getId()))) {
             pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
         }
-        if (pincode != null && StringUtils.isNotBlank(Long.toString(pincode.getId()))) {
+        if (pincode != null && StringUtils.isNotBlank(pincode.getPincode())) {
             pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
         }
         if (isCod != null) {
@@ -42,17 +42,12 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
         if (isGroundshipping != null) {
             pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundshipping));
         }
-        List<PincodeDefaultCourier> pincodeDefaultCouriers = pincodeDefaultCourierCriteria.list();
-
-        return pincodeDefaultCouriers;
+        return pincodeDefaultCourierCriteria.list();
     }
 
     public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
         List<PincodeDefaultCourier> pincodeDefaultCouriers = searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGroundshipping);
-        if (pincodeDefaultCouriers.size() > 0 && pincodeDefaultCouriers != null) {
-            return pincodeDefaultCouriers.get(0);
-        }
-        return null;
+        return pincodeDefaultCouriers.isEmpty() ? null : pincodeDefaultCouriers.get(0);
     }
 
 	public Zone getZoneByName(String zoneName) {

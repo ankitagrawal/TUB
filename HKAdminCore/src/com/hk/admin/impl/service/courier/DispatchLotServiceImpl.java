@@ -246,7 +246,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 					ShippingOrder shippingOrder = shipmentTemp.getShippingOrder();
 					String paymentMode = consignmentService.getConsignmentPaymentMode(shippingOrder);
 					String address = shipmentTemp.getShippingOrder().getBaseOrder().getAddress().getLine1()+","+shipmentTemp.getShippingOrder().getBaseOrder().getAddress().getLine2()+","+
-                        shipmentTemp.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentTemp.getShippingOrder().getBaseOrder().getAddress().getPin();
+                        shipmentTemp.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentTemp.getShippingOrder().getBaseOrder().getAddress().getPincode().getPincode();
 					consignment = consignmentService.createConsignment(shipmentTemp.getAwb().getAwbNumber(), shippingOrder.getGatewayOrderId(), shippingOrder.getAmount(), paymentMode,
 					address, hub);
 					consignmentList.add(consignment);

@@ -96,7 +96,7 @@ public class CodPaymentReceiveAction extends BaseAction {
 			String gatewayOrderId = payment.getGatewayOrderId();
 
 			Address address = order.getAddress();
-			String pin = address != null ? address.getPin() : null;
+			String pin = address != null ? address.getPincode().getPincode() : null;
 
             if (!pincodeCourierService.isCodAllowed(pin)) {
 				addRedirectAlertMessage(new SimpleMessage("Cod is not available for this location"));

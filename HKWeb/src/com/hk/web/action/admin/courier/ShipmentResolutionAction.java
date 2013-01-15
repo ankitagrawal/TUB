@@ -1,7 +1,9 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shipment.EnumShipmentServiceType;
@@ -64,6 +66,10 @@ public class ShipmentResolutionAction extends BaseAction {
     PincodeCourierService pincodeCourierService;
     @Autowired
     AwbService awbService;
+    @Autowired
+    CourierGroupService courierGroupService;
+    @Autowired
+    private ShipmentPricingEngine shipmentPricingEngine;
 
     @DefaultHandler
     public Resolution pre() {
@@ -92,6 +98,11 @@ public class ShipmentResolutionAction extends BaseAction {
     public Resolution changeCourier() {
         Awb currentAwb = shipment.getAwb();
         shipment = shipmentService.changeCourier(shipment, updateCourier, preserveAwb);
+        if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+            shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+            shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+            shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+        }
         Awb updatedAwb = shipment.getAwb();
         if (!currentAwb.equals(updatedAwb)) {
             String comments = "Courier/Awb changed to " + updatedAwb.getCourier().getName() + "-->" + updatedAwb.getAwbNumber();
@@ -119,7 +130,6 @@ public class ShipmentResolutionAction extends BaseAction {
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
         shipment = shipmentService.createShipment(shippingOrder);
         if (shipment == null) {
-//            awbService.save(awb,EnumAwbStatus.Used.getId().intValue());
             awbService.delete(awb);
             addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check shipping Order Life Cycle and resolve the issue"));
             return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());

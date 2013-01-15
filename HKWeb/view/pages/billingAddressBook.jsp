@@ -107,7 +107,7 @@
               <input type="hidden" value="${countryId}" class="countryId">
            <div class='country'>${hk:getCountry(countryId).name}</div>
 
-            <div class='pin'>${billingAddress.pin}</div>
+            <div class='pin'>${billingAddress.pincode.pincode}</div>
             <div class='phone'>${billingAddress.phone}</div>
             <br/>
             <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="remove" class="delete">
@@ -153,7 +153,7 @@
 
 //           form.find("input[type='text'][name='address.countryId']").val();
             $('select').val(countryId);
-            form.find("input[type='text'][name='address.pin']").val(pin);
+            form.find("input[type='text'][name='address.pincode.pincode']").val(pin);
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
@@ -235,7 +235,7 @@
             <%--</s:select>--%>
 
           <div class='label'>PIN Code<span class="aster">*</span></div>
-          <s:text name="address.pin" class="pincode" maxlength="20"/>
+          <s:text name="address.pincode.pincode" class="pincode" maxlength="20"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
           <s:text name="address.phone" id="phoneNo" maxlength = "25"/>
           <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>
@@ -259,7 +259,7 @@
         var billingAddressLine1 = document.forms["BillingAddressForm"]["address.line1"].value;
         var billingAddressCity = document.forms["BillingAddressForm"]["address.city"].value;
         var billingAddressState = document.forms["BillingAddressForm"]["address.state"].value;
-        var billingAddressPin = document.forms["BillingAddressForm"]["address.pin"].value;
+        var billingAddressPin = document.forms["BillingAddressForm"]["address.pincode.pincode"].value;
         var billingAddressPhone = document.forms["BillingAddressForm"]["address.phone"].value;
         var billingAddressCountry = document.forms["BillingAddressForm"]["address.countryId"].value;
         if (billingAddressName == null || billingAddressName == "")

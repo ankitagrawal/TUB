@@ -68,17 +68,6 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
   @Autowired
   LatLongGenerator latLongGenerator;
 
-  @ValidationMethod(on="addAddress")
-   public void validateAddress()
-    {
-      if (address == null) {
-            getContext().getValidationErrors().add("1", new SimpleError("Please enter all fields"));
-         } else if (address.getName() == null || address.getLine1() == null ||address.getLine2()==null || address.getCity() == null || address.getState() == null || address.getPin() == null || address.getPhone() == null) {
-           getContext().getValidationErrors().add("2", new SimpleError("Please enter all the fields"));
-            }
-   }
-
-
   @DefaultHandler
   public Resolution pre() {
     return new ForwardResolution("/pages/admin/manufacturerAddresses.jsp");

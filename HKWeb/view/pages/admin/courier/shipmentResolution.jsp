@@ -113,7 +113,7 @@
                            <s:hidden name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
                        </td>
                        <td>
-                           ${shipRes.shippingOrder.baseOrder.address.pin}
+                           ${shipRes.shippingOrder.baseOrder.address.pincode.pincode}
                        </td>
                        <td>
                            ${shipRes.shippingOrder.amount}

@@ -98,7 +98,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 		if ((shipment.getBoxSize() != null && shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId())) || (selectedCourier != null && selectedCourier.getId().equals(EnumCourier.MIGRATE.getId()))) {
 			getContext().getValidationErrors().add("2", new SimpleError("None of the values can be migrate"));
 		}
-		Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+		Pincode pinCode = shippingOrder.getBaseOrder().getAddress().getPincode();
         ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
 		if (pinCode == null) {
 			getContext().getValidationErrors().add("3", new SimpleError("Pincode is invalid, It cannot be packed"));
@@ -145,12 +145,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 		}
 
 		try {
-			Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			Pincode pinCode =  shippingOrder.getBaseOrder().getAddress().getPincode();
 			if (pinCode != null) {
 				boolean isCod = shippingOrder.isCOD();
 				isGroundShipped = ShipmentServiceMapper.isGround(shipmentServiceType);
 
-				String pin = pinCode.getPincode();
                 availableCouriers = pincodeCourierService.getApplicableCouriers(pinCode,null,shipmentServiceType, true);
 				if (shippingOrder.getShipment() != null) {
 					suggestedCourier = shippingOrder.getShipment().getAwb().getCourier();
@@ -265,7 +264,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 		shipment.setShippingOrder(shippingOrder);
 		shippingOrder.setShipment(shipment);
 		if(shipment.getZone() == null){
-			Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+			Pincode pinCode = shippingOrder.getBaseOrder().getAddress().getPincode();
 			shipment.setZone(pinCode.getZone());
 		}
 		shipmentService.save(shipment);

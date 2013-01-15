@@ -130,7 +130,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     public TreeMap<List<DummyOrder>, Long> splitBOPractically(Order order, Set<CartLineItem> productCartLineItems) {
 
         // get static things
-        Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        Pincode pincode = order.getAddress().getPincode();
         if (pincode == null) {
             String comments = "Pincode does not exist in our system, Please get in touch with OPS or customer care";
             orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
@@ -250,7 +250,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     public TreeMap<List<DummyOrder>, Long> splitBOPractically(Order order) {
 
         // get static things
-        Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        Pincode pincode = order.getAddress().getPincode();
         if (pincode == null) {
             String comments = "Pincode does not exist in our system, Please get in touch with OPS or customer care";
             orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
@@ -381,10 +381,9 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     @SuppressWarnings("unchecked")
     public TreeMap<List<DummyOrder>, Long> splitBOIdeally(Order order, Warehouse ggnWarehouse, Warehouse mumWarehouse) {
         // get static things
-        Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        Pincode pincode = order.getAddress().getPincode();
         Payment payment = order.getPayment();
         if (pincode == null) {
-            logger.info("illegal pincode entry for pincode " + order.getAddress().getPin() + " for " + order.getId());
             return null;
         }
 

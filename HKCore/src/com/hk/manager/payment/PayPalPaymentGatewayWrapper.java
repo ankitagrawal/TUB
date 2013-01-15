@@ -5,14 +5,11 @@ import com.akube.framework.service.PaymentGatewayWrapper;
 import com.paypal.sdk.profiles.APIProfile;
 import com.paypal.sdk.profiles.ProfileFactory;
 import com.paypal.sdk.core.nvp.NVPEncoder;
-import com.paypal.sdk.core.nvp.NVPDecoder;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.core.Country;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -130,7 +127,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
             encoder.add("PAYMENTREQUEST_0_SHIPTOSTATE", address.getState());
 //      Countrycode need to be discuss
             encoder.add("PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE", country.getCountryCode());
-            encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPin());
+            encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPincode().getPincode());
             encoder.add("EMAIL", user.getEmail());
             encoder.add("PAYMENTREQUEST_0_SHIPTOPHONENUM", address.getPhone());
         }

@@ -7,10 +7,12 @@ import com.hk.admin.util.FedExShipmentDeleteUtil;
 import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
 import com.hk.admin.util.courier.thirdParty.FedExTrackShipmentUtil;
 import com.hk.constants.core.Keys;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.pact.service.core.PincodeService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +41,8 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
 
     @Autowired
     private PincodeCourierService pincodeCourierService;
+    @Autowired
+    private PincodeService pincodeService;
 
     @Override
     public ThirdPartyAwbDetails getThirdPartyAwbDetails(ShippingOrder shippingOrder, Double weightInKg) {
@@ -66,7 +70,8 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
     @Override
     public boolean syncHKCourierServiceInfo(Courier courier, ThirdPartyAwbDetails thirdPartyAwbDetails) {
         // logic to update routing codes in hk, in case there is a change from fedex API.
-        PincodeCourierMapping pincodeCourierMapping = pincodeCourierService.getApplicablePincodeCourierMapping(thirdPartyAwbDetails.getPincode(), Arrays.asList(courier), null, null);
+        Pincode pincode = pincodeService.getByPincode(thirdPartyAwbDetails.getPincode());
+        PincodeCourierMapping pincodeCourierMapping = pincodeCourierService.getApplicablePincodeCourierMapping(pincode, Arrays.asList(courier), null, null);
 
         List<String> routingCode = thirdPartyAwbDetails.getRoutingCode();
         if (pincodeCourierMapping != null) {

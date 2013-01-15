@@ -157,7 +157,7 @@ public class MasterPincodeAction extends BaseAction {
     }
 
     public Resolution savePincodeRegion() {
-        Pincode pincodeObj = pincodeService.getByPincode(pincodeRegionZone.getPincode().getPincode());
+        Pincode pincodeObj = pincodeRegionZone.getPincode();
         if (pincodeObj == null) {
             addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
         } else {
@@ -180,7 +180,7 @@ public class MasterPincodeAction extends BaseAction {
     }
 
     public Resolution searchPincodeRegion() {
-        Pincode pincode = pincodeService.getByPincode(pincodeRegionZone.getPincode().getPincode());
+        Pincode pincode = pincodeRegionZone.getPincode();
         if (pincode == null) {
             addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
         } else {

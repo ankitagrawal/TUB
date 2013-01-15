@@ -534,7 +534,7 @@
                             <c:if test="${hk:isNotBlank(order.address.line2)}">${order.address.line2}<br/></c:if>
                         </div>
                         <div class="floatright">
-                            <span class="or">${order.address.city} - ${order.address.pin}</span> ( ${order.address.state} )<br/>
+                            <span class="or">${order.address.city} - ${order.address.pincode.pincode}</span> ( ${order.address.state} )<br/>
                             <span class="or"> Ph. ${order.address.phone}</span>
                         </div>
                     </div>

@@ -123,7 +123,7 @@ public class OrderSummaryAction extends BaseAction {
         }
 
         Address address = order.getAddress();
-        String pin = address != null ? address.getPin() : null;
+        String pin = address != null ? address.getPincode().getPincode() : null;
 
         codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
 

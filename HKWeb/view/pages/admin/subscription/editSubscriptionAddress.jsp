@@ -25,7 +25,7 @@
                         Address line2: <s:text name="newAddress.line2"/><br/>
                         City: <s:text name="newAddress.city"/><br/>
                         State: <s:text name="newAddress.state"/><br/>
-                        Pin: <s:text name="newAddress.pin"/><br/>
+                        Pin: <s:text name="newAddress.pincode.pincode"/><br/>
                         Phone: <s:text name="newAddress.phone"/><br/>
                         <s:hidden name="subscription" value="${addressBean.subscription}"/>
                         Copy This Address to user's address book <s:checkbox name="copyToUserAddressBook"/><br/>

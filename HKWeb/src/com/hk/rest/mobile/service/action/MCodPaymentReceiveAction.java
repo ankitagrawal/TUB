@@ -3,7 +3,6 @@ package com.hk.rest.mobile.service.action;
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
-import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -158,7 +157,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
 			String gatewayOrderId = payment.getGatewayOrderId();
 
 			Address address = order.getAddress();
-			String pin = address != null ? address.getPin() : null;
+			String pin = address != null ? address.getPincode().getPincode() : null;
 
 			if (!pincodeCourierService.isCodAllowed(pin)) {
                 message = MHKConstants.COD_NOT_IN_PINCODE + pin;

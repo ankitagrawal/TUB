@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.util.ShipmentServiceMapper;
 import org.apache.axis.types.NonNegativeInteger;
 import org.apache.axis.types.PositiveInteger;
@@ -161,7 +160,7 @@ public class FedExCourierUtil {
                     thirdPartyAwbDetails.setBarcodeList(setBarCodeList(reply, shippingOrder));
                     thirdPartyAwbDetails.setRoutingCode(setRoutingCode(reply));
                     thirdPartyAwbDetails.setCod(shippingOrder.isCOD());
-                    thirdPartyAwbDetails.setPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+                    thirdPartyAwbDetails.setPincode(shippingOrder.getBaseOrder().getAddress().getPincode().getPincode());
                 } else {
                     logger.debug("FedEx awb number could not be generated");
                 }
@@ -496,7 +495,7 @@ public class FedExCourierUtil {
         addressRecip.setStateOrProvinceCode(HKAddress.getState());// ("DL");
         // addressRecip.setStateOrProvinceCode(HKAddress.getState());//("DL");
 
-        addressRecip.setPostalCode(HKAddress.getPin());// ("110010");
+        addressRecip.setPostalCode(HKAddress.getPincode().getPincode());// ("110010");
         addressRecip.setCountryCode("IN");
         addressRecip.setCountryName("INDIA");
         addressRecip.setResidential(new Boolean(true));
@@ -523,10 +522,10 @@ public class FedExCourierUtil {
         // addressRecip.setStreetLines(new String[] { "1 RECIPIENT STREET" });
         addressRecip.setCity(HKAddress.getCity());// "NEWDELHI");
         addressRecip.setStateOrProvinceCode(HKAddress.getState());// "DL");
-        addressRecip.setPostalCode(HKAddress.getPin());// "110010");
+        addressRecip.setPostalCode(HKAddress.getPincode().getPincode());// "110010");
         addressRecip.setCountryCode("IN");
         addressRecip.setCountryName("INDIA");
-        addressRecip.setResidential(new Boolean(true));
+        addressRecip.setResidential(true);
         contactAndAddress.setAddress(addressRecip);
         return contactAndAddress;
     }

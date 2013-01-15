@@ -1,6 +1,5 @@
 package com.hk.taglibs;
 
-import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -15,7 +14,6 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.content.HeadingProduct;
-import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
@@ -38,10 +36,8 @@ import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
-import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -484,8 +480,7 @@ public class Functions {
         ShippingOrder shippingOrder = (ShippingOrder) o;
         PincodeCourierService pincodeCourierService = ServiceLocatorFactory.getService(PincodeCourierService.class);
         PincodeService pincodeService = ServiceLocatorFactory.getService(PincodeService.class);
-        String pin = shippingOrder.getBaseOrder().getAddress().getPin();
-        Pincode pincode = pincodeService.getByPincode(pin);
+        Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
         return pincodeCourierService.getApplicableCouriers(pincode, null, shippingOrder.getShipment().getShipmentServiceType(), true);
     }
 

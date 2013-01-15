@@ -157,7 +157,7 @@
         </c:if>
       </p>
 
-      <p>${orderSummary.order.address.city} - ${orderSummary.order.address.pin}</p>
+      <p>${orderSummary.order.address.city} - ${orderSummary.order.address.pincode.pincode}</p>
 
       <p>${orderSummary.order.address.state}</p>
 

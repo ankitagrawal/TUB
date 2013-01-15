@@ -399,7 +399,7 @@ public class ReportManager {
                 setCellValue(row, 6, "");
                 setCellValue(row, 7, "");
                 setCellValue(row, 8, address.getCity());
-                setCellValue(row, 9, address.getPin());
+                setCellValue(row, 9, address.getPincode().getPincode());
                 setCellValue(row, 10, address.getPhone());
                 setCellValue(row, 11, address.getPhone());
 
@@ -566,7 +566,7 @@ public class ReportManager {
                 setCellValue(row, 5, address.getLine2());
             }
             setCellValue(row, 6, address.getCity() + "/" + address.getState());
-            setCellValue(row, 7, address.getPin());
+            setCellValue(row, 7, address.getPincode());
             setCellValue(row, 8, address.getPhone());
             setCellValue(row, 9, address.getPhone());
 
@@ -963,7 +963,7 @@ public class ReportManager {
             xlsWriter.addCell(rowCounter, shipment.getShipDate().toString());
             xlsWriter.addCell(rowCounter, shipment.getDeliveryDate().toString());
             xlsWriter.addCell(rowCounter, order.getAddress().getCity());
-            xlsWriter.addCell(rowCounter, order.getAddress().getPin());
+            xlsWriter.addCell(rowCounter, order.getAddress().getPincode().getPincode());
             ship_date_cal.setTime(shipment.getShipDate());
             delivery_date_cal.setTime(shipment.getDeliveryDate());
             ship_date_cal.set(Calendar.HOUR_OF_DAY, 0);

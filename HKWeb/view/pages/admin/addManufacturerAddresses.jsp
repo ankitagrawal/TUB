@@ -55,7 +55,7 @@
             <div class="clear"></div>
 
             <s:label name="name" class="label">PIN Code<span class="aster">*</span></s:label>
-              <s:text class="text" name="address.pin"/>
+              <s:text class="text" name="address.pincode.pincode"/>
 
             <div class="clear"></div>
 

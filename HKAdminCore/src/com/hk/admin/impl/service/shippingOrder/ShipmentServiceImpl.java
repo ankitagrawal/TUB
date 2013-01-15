@@ -63,7 +63,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
         User adminUser = getUserService().getAdminUser();
-        Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        Pincode pincode = order.getAddress().getPincode();
 
         ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
         boolean isCod = ShipmentServiceMapper.isCod(shipmentServiceType);

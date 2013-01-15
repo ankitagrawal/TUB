@@ -52,7 +52,7 @@ public interface PincodeCourierService {
 
     public List<PincodeCourierMapping> getApplicablePincodeCourierMappingList(Pincode pincode, boolean isCod, boolean isGround, Boolean activeCourier);
 
-    public PincodeCourierMapping getApplicablePincodeCourierMapping(String pin, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier);
+    public PincodeCourierMapping getApplicablePincodeCourierMapping(Pincode pincode, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier);
 
     public PincodeCourierMapping createPincodeCourierMapping(Pincode pincode, Courier courier, boolean prepaidAir, boolean prepaidGround, boolean codAir, boolean codGround);
 

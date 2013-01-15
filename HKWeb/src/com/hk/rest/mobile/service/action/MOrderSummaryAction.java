@@ -152,11 +152,11 @@ public class MOrderSummaryAction extends MBaseAction {
             add.setLine2(address.getLine2());
             add.setName(address.getName());
             add.setPhone(address.getPhone());
-            add.setPin(address.getPin());
+            add.setPin(address.getPincode().getPincode());
             add.setState(address.getState());
             orderMap.put("addressSelected", add);
 
-            String pin = address != null ? address.getPin() : null;
+            String pin = address != null ? address.getPincode().getPincode() : null;
 
             codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
 

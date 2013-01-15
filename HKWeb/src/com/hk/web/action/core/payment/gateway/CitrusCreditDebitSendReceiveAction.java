@@ -63,7 +63,7 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressStreet1, address.getLine1());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressCity, address.getCity());
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressZip, address.getPin());
+        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressZip, address.getPincode());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressState, address.getState());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressCountry, "INDIA");
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.merchantTxnId, merchantTxnId);

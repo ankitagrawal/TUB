@@ -3,6 +3,7 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Awb;
@@ -100,7 +101,27 @@ public class CreateUpdateShipmentAction extends BaseAction {
     }
 
     public Resolution updateShipment() {
+        /*
+                if(shippingOrder instanceof ReplacementOrder){
+			ShippingOrder parentShippingOrder = ((ReplacementOrder) shippingOrder).getRefShippingOrder();
+			if(((ReplacementOrder) shippingOrder).isRto()){
+				ReplacementOrderReason replacementOrderReason = getAdminShippingOrderService().getRTOReasonForShippingOrder(parentShippingOrder);
+				if(replacementOrderReason != null){
+					if(EnumReplacementOrderReason.getCourierRelatedReasonForRto().contains(replacementOrderReason.getId())){
+						if(selectedCourier != null && parentShippingOrder.getShipment().getAwb().getCourier().getId().equals(selectedCourier.getId())){
+							addRedirectAlertMessage(new SimpleMessage("Previous shipping order was returned due to the courier selected. Please select another courier or contact admin"));
+							return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class, "searchOrders").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+						}
+					}
+				}
+			}
+		}
+         */
         shipmentService.save(shipment);
+        shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+        shippingOrderService.save(shippingOrder);
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed);
+
         addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
         return new RedirectResolution(CreateUpdateShipmentAction.class);
     }

@@ -94,7 +94,7 @@ public class XslPincodeCourierMapping {
                     throw new ExcelBlankFieldException("courierId is not valid  " + "    ", rowCount);
                 }
 
-                pincodeCourierMapping = pincodeCourierService.getApplicablePincodeCourierMapping(pin, Arrays.asList(courier), null, null);
+                pincodeCourierMapping = pincodeCourierService.getApplicablePincodeCourierMapping(pincode, Arrays.asList(courier), null, null);
 
                 if(pincodeCourierMapping == null){
                     pincodeCourierMapping = new PincodeCourierMapping();

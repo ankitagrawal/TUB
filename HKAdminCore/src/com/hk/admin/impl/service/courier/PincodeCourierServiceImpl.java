@@ -93,7 +93,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
             checkForCod = order.isCOD();
         }
         List<ShipmentServiceType> applicableShipmentServiceType = getShipmentServiceType(cartLineItems, checkForCod);
-        Pincode pincode = pincodeService.getByPincode(order.getAddress().getPin());
+        Pincode pincode =order.getAddress().getPincode();
         if (pincode == null) {
             return null;
         }
@@ -102,7 +102,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
 
     @Override
     public List<Courier> getApplicableCouriers(ShippingOrder shippingOrder) {
-        Pincode pincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+        Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
         return pincodeCourierMappingDao.getApplicableCouriers(pincode, null, Arrays.asList(getShipmentServiceType(shippingOrder)), true);
     }
 
@@ -156,9 +156,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
     }
 
     @Override
-    public PincodeCourierMapping getApplicablePincodeCourierMapping(String pin, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier) {
-        Pincode pincode = pincodeService.getByPincode(pin);
-        if(pincode == null) return null;
+    public PincodeCourierMapping getApplicablePincodeCourierMapping(Pincode pincode, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier) {
         List<PincodeCourierMapping> pincodeCourierMappings = getApplicablePincodeCourierMappingList(pincode,couriers,shipmentServiceType,activeCourier);
         return pincodeCourierMappings != null && !pincodeCourierMappings.isEmpty() ? pincodeCourierMappings.get(0) : null;
     }

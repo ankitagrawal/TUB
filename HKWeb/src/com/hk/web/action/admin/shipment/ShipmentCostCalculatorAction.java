@@ -143,7 +143,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                     weight = lineItem.getSku().getProductVariant().getWeight();
                 }
             }
-            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPin(),(ShipmentServiceMapper.isCod(shippingOrder.getShipment().getShipmentServiceType())), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shippingOrder.getShipment().getShipmentServiceType())));
+            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(),(ShipmentServiceMapper.isCod(shippingOrder.getShipment().getShipmentServiceType())), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shippingOrder.getShipment().getShipmentServiceType())));
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
         }

@@ -109,7 +109,7 @@ public class SOInvoiceAction extends BaseAction {
 	}
 
     private void generateRoutingCodeForInvoice(ShippingOrder shippingOrder) {
-        PincodeCourierMapping pincodeCourierMapping = pincodeCourierService.getApplicablePincodeCourierMapping(shippingOrder.getBaseOrder().getAddress().getPin(), Arrays.asList(shippingOrder.getShipment().getAwb().getCourier()), shippingOrder.getShipment().getShipmentServiceType(), null);
+        PincodeCourierMapping pincodeCourierMapping = pincodeCourierService.getApplicablePincodeCourierMapping(shippingOrder.getBaseOrder().getAddress().getPincode(), Arrays.asList(shippingOrder.getShipment().getAwb().getCourier()), shippingOrder.getShipment().getShipmentServiceType(), null);
         if (pincodeCourierMapping != null) {
             routingCode = pincodeCourierMapping.getRoutingCode();
         }

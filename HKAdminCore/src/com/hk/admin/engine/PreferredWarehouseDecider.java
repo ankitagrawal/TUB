@@ -80,7 +80,7 @@ public class PreferredWarehouseDecider {
         ShippingOrder shippingOrder = lineItem.getShippingOrder();
         ShipmentServiceType shipmentServiceType = shippingOrder.getShipment().getShipmentServiceType();
         Order order = shippingOrder.getBaseOrder();
-        Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        Pincode pincode = order.getAddress().getPincode();
         boolean isCod = order.isCOD();
 
         ProductVariant productVariant = lineItem.getSku().getProductVariant();

@@ -7,6 +7,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.core.Pincode;
 import org.hibernate.annotations.SQLDelete;
 
 import com.hk.domain.courier.Courier;
@@ -34,8 +35,8 @@ public class Address implements java.io.Serializable {
 
   @JsonSkip
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "default_courier_id")
-  private Courier courier;
+  @JoinColumn(name = "pincode_id")
+  private Pincode pincode;
 
   @Column(name = "name", nullable = false, length = 150)
   private String name;
@@ -90,14 +91,6 @@ public class Address implements java.io.Serializable {
     this.user = user;
   }
 
-  public Courier getCourier() {
-    return this.courier;
-  }
-
-  public void setCourier(Courier courier) {
-    this.courier = courier;
-  }
-
   public String getName() {
     return this.name;
   }
@@ -138,8 +131,8 @@ public class Address implements java.io.Serializable {
     this.state = state;
   }
 
-  public String getPin() {
-    return this.pin;
+  public Pincode getPincode() {
+    return this.pincode;
   }
 
   public void setPin(String pin) {
