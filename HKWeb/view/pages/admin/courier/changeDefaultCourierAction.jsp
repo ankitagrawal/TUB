@@ -136,6 +136,7 @@
     <s:link beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction" id="pincodeCheck" event="getPincodeJson"></s:link>
 </div>
         <s:form beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">
+            <fieldset>
             <label>Enter Pincode</label>
             <s:text name="pincodeString" id="pincode"/>
             <label>IsCod</label>
@@ -148,13 +149,17 @@
                 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allWarehouse"
                                            value="id" label="name"/>
             </s:select>
+                <br>
             <s:submit name="search" value="Search" id="search"/>
-
+             </fieldset>
+            <div class="clear"></div>
+            <fieldset>
             <c:if test="${cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0}">
                 <h2>Pincode Default Courier</h2>
                 <br/>
                 <table id="courierTable" class="zebra_vert">
                     <tr>
+                        <thead>
                         <th>S.No</th>
                         <th>Courier Name</th>
                         <th>WareHouseName</th>
@@ -162,6 +167,7 @@
                         <th>COD</th>
                         <th>Ground Shipping</th>
                         <th>Estimate Shipping Cost</th>
+                        </thead>
                     </tr>
                     <c:forEach items="${cdca.pincodeDefaultCouriers}" var="pincodeDefaultCourier" varStatus="ctr">
                         <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
@@ -203,10 +209,14 @@
                     <br/>
                     <s:submit name="save" value="Save" id="save"/>
                     </c:if>
+                    </fieldset>
+                    <div class="clear"></div>
+                    <fieldset>
                     <c:if test="${cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0}">
                        <h2>Pincode Courier Mappings</h2>
                          <table class="zebra_vert">
                     <tr>
+                        <thead>
                         <th>S.No</th>
                         <th>Courier Name</th>
                         <th>Pincode</th>
@@ -215,6 +225,7 @@
                         <th>COD Air</th>
                         <th>COD Ground</th>
                         <th>Routing Code</th>
+                        </thead>
                     </tr>
                        <c:forEach items="${cdca.pincodeCourierMappings}" var="pincodeCourierMapping" varStatus="ctr">
                          <tr>
@@ -246,7 +257,8 @@
                        </c:forEach>
                         </table>
                         </c:if>
-                    <br/>
+                        <br/>
+                        </fieldset>
         </s:form>
     </s:layout-component>
 </s:layout-render>

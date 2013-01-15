@@ -369,16 +369,7 @@
             </c:choose>
             <td style="border-bottom:1px solid gray;border-top:1px solid gray;">
                 ${productVariant.product.name}
-                    <c:choose>
-                        <c:when test="${productVariant.product.groundShipping}">
-                             <span style="margin-left:10px;color: #ff0000;">G</span>
-                        </c:when>
-                        <c:otherwise>
-                            <span style="margin-left:10px;color: #ff0000;">A</span>
-                        </c:otherwise>
-                    </c:choose>
-
-                    <c:if test="${cartLineItem.comboInstance != null}">
+                <c:if test="${cartLineItem.comboInstance != null}">
                 <span style="color:crimson;text-decoration:underline">
                 <br/>(Part of Combo: ${cartLineItem.comboInstance.combo.name})
                 </span>
@@ -409,6 +400,14 @@
                     <%-- </span>--%>
 
                 </c:if>
+                    <c:choose>
+                        <c:when test="${productVariant.product.groundShipping}">
+                             <span style="margin-left:10px;color: #ff0000;">(G)</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span style="margin-left:10px;color: #ff0000;">(A)</span>
+                        </c:otherwise>
+                    </c:choose>
                 <c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">
 
                     <c:set var="TH" value="TH"/>
@@ -435,19 +434,7 @@
 
                     </c:forEach>
                 </c:if>
-                <%--<c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">--%>
-                <%--<br/>--%>
-                <%--<span style="word-wrap:break-word">--%>
-                <%--<c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"--%>
-                <%--var="configValue"--%>
-                <%--varStatus="configCtr">--%>
-                <%--<c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>--%>
-                <%--${variantConfigOption.displayName} : ${configValue.value} ${!configCtr.last?',':''}--%>
-                <%--</c:forEach>--%>
-                <%--</span>--%>
-                <%--</c:if>--%>
-                <%--</span>--%>
-                <c:if test="${isActionQueue == true}">
+                               <c:if test="${isActionQueue == true}">
                     <%--<c:if test="${productVariant.product.jit}">--%>
                         ,<strong>Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days </strong>
                     <%--</c:if>--%>
