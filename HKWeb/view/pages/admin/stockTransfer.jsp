@@ -223,7 +223,7 @@
 		</fieldset>
 		</s:form>
 	</c:if>
-		<%--<table border="1">
+		<table border="1">
 			<thead>
 			<tr>
 				<th>VariantID</th>
@@ -239,6 +239,7 @@
 			<tbody id="stTable">
 			<c:forEach var="stockTransferLineItem" items="${sta.stockTransfer.stockTransferLineItems}" varStatus="ctr">
 				<c:set var="productVariant" value="${stockTransferLineItem.sku.productVariant}"/>
+				<c:set var="checkedOutSkuGroup" value="${stockTransferLineItem.checkedOutSkuGroup}"/>
 				<s:hidden name="stockTransferLineItems[${ctr.index}]" value="${stockTransferLineItem.id}"/>
 				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
 					<td>
@@ -248,20 +249,20 @@
 					</td>
 					<td> ${stockTransferLineItem.checkedoutQty}
 					</td>
-					<td>${stockTransferLineItem.costPrice}
+					<td>${checkedOutSkuGroup.costPrice}
 					</td>
-					<td> ${stockTransferLineItem.mrp}
+					<td> ${checkedOutSkuGroup.mrp}
 					</td>
-					<td>${stockTransferLineItem.batchNumber}</td>
+					<td>${checkedOutSkuGroup.batchNumber}</td>
 					<td>
-						<fmt:formatDate value="${stockTransferLineItem.mfgDate}" type="both"/></td>
+						<fmt:formatDate value="${checkedOutSkuGroup.mfgDate}" type="both"/></td>
 					<td>
-						<fmt:formatDate value="${stockTransferLineItem.expiryDate}" type="both"/></td>
+						<fmt:formatDate value="${checkedOutSkuGroup.expiryDate}" type="both"/></td>
 				</tr>
 
 			</c:forEach>
 			</tbody>
-		</table>--%>
+		</table>
 		<%--<div class="variantDetails info"></div>
 		<br/>
 		<a class="addRowButton" style="font-size:1.2em">Add new row</a>
