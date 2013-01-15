@@ -245,6 +245,20 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 					}
 
 				}
+				else if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Mismatch.getId())) {
+					// Delete from available batches.
+					for (SkuItem instockSkuItem : skuItemList) {
+						if (counter < Math.abs(targetReconciledQty)) {
+							adminInventoryService.inventoryCheckinCheckout(rvLineItem.getSku(), instockSkuItem, null, null, null, rvLineItem, null,
+									inventoryService.getInventoryTxnType(EnumInvTxnType.RV_MISMATCH), -1L, loggedOnUser);
+							// inventoryService.damageInventoryCheckin(instockSkuItem, null);
+							counter++;
+						} else {
+							break;
+						}
+					}
+
+				}
 				long alreadyReconciledQty = rvLineItem.getReconciledQty().intValue()+counter;
 				rvLineItem.setReconciledQty(Long.valueOf(alreadyReconciledQty));
 				rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);

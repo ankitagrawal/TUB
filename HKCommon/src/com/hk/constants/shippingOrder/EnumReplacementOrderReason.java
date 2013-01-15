@@ -65,4 +65,12 @@ public enum EnumReplacementOrderReason {
 		        EnumReplacementOrderReason.ShipmentMisrouted.getId()
         );
     }
+
+	public static List<Long> getCourierRelatedReasonForRto(){
+		return Arrays.asList(
+				EnumReplacementOrderReason.OutsideDeliveryArea.getId(),
+				EnumReplacementOrderReason.ShipmentOffload.getId(),
+				EnumReplacementOrderReason.ServiceUnavailable.getId()
+		);
+	}
 }

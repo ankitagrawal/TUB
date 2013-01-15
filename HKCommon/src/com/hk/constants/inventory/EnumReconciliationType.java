@@ -11,7 +11,8 @@ public enum EnumReconciliationType {
 	Subtract(20L, "Subtract"),
 	Damage(30L, "Damage"),
 	Expired(40L, "Expired"),
-	Lost(50L, "Lost"),;
+	Lost(50L, "Lost"),
+	Mismatch(60L,"Mismatch");
 
   private java.lang.String name;
   private java.lang.Long id;
