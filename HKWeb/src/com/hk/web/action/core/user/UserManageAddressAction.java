@@ -3,12 +3,7 @@ package com.hk.web.action.core.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
 
@@ -27,6 +22,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AddressService;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED, RoleConstants.ADMIN})
+@HttpCache(allow = false)
 public class UserManageAddressAction extends BaseAction {
   // private static Logger logger = Logger.getLogger(UserManageAddressAction.class);
 
@@ -69,6 +65,10 @@ public class UserManageAddressAction extends BaseAction {
   }
 
   public Resolution editUserAddresses() {
+      if(!address.getUser().getId().equals(getPrincipalUser().getId())){
+          addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
+          return new ForwardResolution("/pages/editUserAddresses.jsp");
+      }
     if (getPrincipal() != null) {
       user = getUserService().getUserById(getPrincipal().getId());
       affiliate = affiliateDao.getAffilateByUser(user);
@@ -79,7 +79,11 @@ public class UserManageAddressAction extends BaseAction {
 
   public Resolution saveAddress() {
     user = userService.getLoggedInUser();
-    if (user != null) {
+    if (user != null && address.getUser()!=null) {
+        if(!address.getUser().getId().equals(user.getId())){
+            addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
+            new ForwardResolution(UserManageAddressAction.class);
+        }
       address.setUser(user);
       address = addressDao.save(address);
     }

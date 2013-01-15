@@ -1,10 +1,6 @@
 package com.hk.web.action.core.user;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,7 +27,11 @@ import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.RoleService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED}, disallowRememberMe = true)
+@HttpCache(allow = false)
 public class MyAccountAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(MyAccountAction.class);
 
@@ -70,7 +70,6 @@ public class MyAccountAction extends BaseAction {
       }
       b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(user);
     }
-
     return new ForwardResolution("/pages/userProfile.jsp");
   }
 
@@ -107,18 +106,24 @@ public class MyAccountAction extends BaseAction {
   }
 
   public Resolution editBasicInformation() {
+    user=getPrincipalUser();
     logger.debug("Editing basic information for " + user.getName());
     return new ForwardResolution("/pages/editBasicInformation.jsp");
   }
 
   public Resolution saveBasicInformation() {
+    if(!user.getId().equals(getPrincipalUser().getId())){
+        user=getPrincipalUser();
+        addRedirectAlertMessage(new SimpleMessage("Please don't mess up with our system"));
+        return new ForwardResolution("/pages/editBasicInformation.jsp");
+    }
     if (user.getName().length() > 80) {
       logger.debug("new user name entered exceeded the allowed limit");
       addRedirectAlertMessage(new SimpleMessage("Please enter a valid name!"));
       return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
     if (!BaseUtils.isValidEmail(user.getEmail())) {
-      logger.info("email id  " + user.getEmail() + " invalid!");
+      logger.info("email id N " + user.getEmail() + " invalid!");
       addRedirectAlertMessage(new SimpleMessage("PLEASE ENTER A VALID EMAIL ID!"));
       return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
@@ -133,6 +138,7 @@ public class MyAccountAction extends BaseAction {
   }
 
   public Resolution editPassword() {
+     user=getPrincipalUser();
     logger.debug("Editing password for " + user.getName());
     return new ForwardResolution("/pages/editPassword.jsp");
   }
