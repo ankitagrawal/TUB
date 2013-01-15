@@ -15,10 +15,10 @@ import java.util.List;
  */
 public enum EnumShipmentServiceType {
 
-    Prepaid_Air(10L, "prepaid_air"),
-    Prepaid_Ground(20L, "prepaid_ground"),
-    Cod_Air(30L, "cod_air"),
-    Cod_Ground(40L, "cod_ground");
+    Prepaid_Air(10L, "prepaidAir"),
+    Prepaid_Ground(20L, "prepaidGround"),
+    Cod_Air(30L, "codAir"),
+    Cod_Ground(40L, "codGround");
     //futuristic, drop ship, express shipping
 
     private java.lang.String name;
