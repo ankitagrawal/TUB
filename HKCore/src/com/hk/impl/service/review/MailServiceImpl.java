@@ -27,6 +27,9 @@ public class MailServiceImpl implements MailService {
         return mailDao.getMailById(id);
     }
 
+    public Mail getMailByName(String name){
+        return mailDao.getMailByName(name);
+    }
     public List<Mail> getAllMailType(){
         return mailDao.findAllMailType();
     }

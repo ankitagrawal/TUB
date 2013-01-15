@@ -5,7 +5,7 @@
   Time: 12:43 PM
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page import="com.hk.pact.service.review.MailService" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" var="rmsa"    />
@@ -13,11 +13,19 @@
 
     <s:layout-component name="content">
         <s:messages/>
+
+        <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" >
+            orderId <s:text name="order"></s:text>
+            <s:submit name="test" id="test"/>
+        </s:form>
         <s:link beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction">Create Mail Template</s:link>
         <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">
 
             <fieldset class="right_label">
                 <legend>Create Product Mail Settings</legend>
+                <c:if test="${rmsa.editSettings}">
+                    <s:hidden name="productReviewMail.id"/>
+                </c:if>
                 <ul class="productList">
                     <li>
                         <label>Product ID</label>
@@ -33,9 +41,8 @@
                     </li>
                     <li>
                         <label>Mail Type</label>
-                        <s:select name="productReviewMail.mail">
-                            <s:option value="">--select mail type--</s:option>
-                            <hk:master-data-collection service="<%=MailService.class%>" serviceProperty="allMailType"
+                        <s:select name="productReviewMail.mail" >
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allMailType"
                                                        value="id" label="name"/>
                         </s:select>
                     </li>

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
  * User: user
  * Date: 1/9/13
  * Time: 12:30 PM
- * To change this template use File | Settings | File Templates.
  */
 @Service
 public class ProductReviewMailServiceImpl implements ProductReviewMailService {

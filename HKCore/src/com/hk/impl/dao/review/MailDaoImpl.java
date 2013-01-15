@@ -21,9 +21,12 @@ public class MailDaoImpl extends BaseDaoImpl implements MailDao {
     }
 
     public Mail getMailById(Long id){
-        return (Mail) findUniqueByNamedParams("from Mail m where m.Id = :id",new String[]{"id"},new Object[]{id});
+        return (Mail) findUniqueByNamedParams("from Mail m where m.id = :id",new String[]{"id"},new Object[]{id});
     }
 
+    public Mail getMailByName(String name){
+        return (Mail) findUniqueByNamedParams("from Mail m where m.name = :name",new String[]{"name"},new Object[]{name});
+    }
     public List<Mail> findAllMailType(){
         return findByQuery("from Mail");
     }

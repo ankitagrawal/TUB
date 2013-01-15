@@ -1,5 +1,6 @@
 package com.hk.pact.dao.review;
 
+import com.hk.domain.order.Order;
 import com.hk.domain.review.UserReviewMail;
 import com.hk.pact.dao.BaseDao;
 
@@ -14,8 +15,10 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface UserReviewMailDao extends BaseDao {
+
     public List<UserReviewMail> getAllUserReviewMailByDueDate(Date date);
+
     public UserReviewMail save(UserReviewMail userReviewMail);
 
-
+    public UserReviewMail getByOrder(Order order);
 }

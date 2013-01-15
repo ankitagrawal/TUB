@@ -8,6 +8,8 @@ import java.util.List;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.domain.courier.*;
+import com.hk.domain.review.Mail;
+import com.hk.pact.service.review.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -94,6 +96,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private CourierService      courierService;
 	@Autowired
 	private ConsignmentService  consignmentService;
+
+    @Autowired
+    private MailService mailService;
 
 	@Autowired
 	private DispatchLotService dispatchLotService;
@@ -222,6 +227,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
 		return reconciliationList;
 	}
 
+    public List<Mail> getAllMailType(){
+        return mailService.getAllMailType();
+    }
+
 	public List<EmailType> getEmailTypeList() {
         return getBaseDao().getAll(EmailType.class);
     }
@@ -251,6 +260,14 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
     public void setStoreService(StoreService storeService) {
         this.storeService = storeService;
+    }
+
+    public MailService getMailService() {
+        return mailService;
+    }
+
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
     }
 
     public UserService getUserService() {

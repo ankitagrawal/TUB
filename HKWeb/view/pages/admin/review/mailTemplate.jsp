@@ -13,20 +13,20 @@
 
 
     <s:layout-component name="content">
+        <div id ="error"></div>
+        <s:messages/>
         <script type="text/javascript" src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
         <script src="${pageContext.request.contextPath}/ckeditor/_samples/sample.js" type="text/javascript"></script>
         <link href="${pageContext.request.contextPath}/ckeditor/_samples/sample.css" rel="stylesheet" type="text/css"/>
-        <s:form beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction">
+        <s:form beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction" var ="enca">
             <fieldset class="right_label">
-                <legend>Create/Edit Mail Template</legend>
+                <legend>Create Mail Template</legend>
                 <ul class="mail">
                     <li>
                         <label>Mail Template Name</label>
-                        <s:text name="mail.name" /> <s:submit name="editMailTemplate" value="edit" />
-
-                        
+                        <s:text name="mail.name" id="name"/>
                     </li>
-                    <li>
+                    <%--<li>
                         <label>Template Content</label>
                         <s:textarea  name="mail.content"  id='mail.conent'/>
                         <script type="text/javascript">
@@ -39,18 +39,30 @@
 
                             //]]>
                         </script>
+                    </li><--%>
+                    <li>
+                        Content: <s:file name="contentBean"/><br/>
                     </li>
                     <li>
-                        <c:if test="${cmta.editTemplate}">
-                            <s:submit name="saveMailTemplate" value="save"/>
-                        </c:if>
-                        <c:if test="${!cmta.editTemplate}">
-                            <s:submit name="createMailTemplate" value="create"/>
-                        </c:if>
-
+                        <s:submit name="collectionReview" value="GENERATE FTL" id="btn"/>
                     </li>
                 </ul>
             </fieldset>
         </s:form>
+        <s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">BACK </s:link>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#btn').click(function() {
+                    var name = $('#name').val();
+                    var validNameRegex = /^[A-Za-z0-9_]+$/;
+                    if (!validNameRegex.test(name)) {
+                        $('#error').html("Invalid Mail type name: " + name + " . Only Alphanumeric characters and underscore is allowed!");
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
+            });
+        </script>
     </s:layout-component>
 </s:layout-render>

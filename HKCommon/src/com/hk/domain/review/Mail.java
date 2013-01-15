@@ -28,9 +28,10 @@ public class Mail  implements java.io.Serializable {
     
     @Column(name="content")
     private String content;
- 
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="mail")
-    private Set<ProductReviewMail> productReviewMails = new HashSet<ProductReviewMail>(0);
+
+    @Column(name = "amazon_file_name")
+    private String amazonFileName;
+
    
     public Long getId() {
         return this.id;
@@ -53,17 +54,14 @@ public class Mail  implements java.io.Serializable {
     public void setContent(String content) {
         this.content = content;
     }
-    public Set<ProductReviewMail> getProductReviewMails() {
-        return this.productReviewMails;
-    }
-    
-    public void setProductReviewMails(Set<ProductReviewMail> productReviewMails) {
-        this.productReviewMails = productReviewMails;
+
+    public String getAmazonFileName() {
+        return amazonFileName;
     }
 
-
-
-
+    public void setAmazonFileName(String amazonFileName) {
+        this.amazonFileName = amazonFileName;
+    }
 }
 
 

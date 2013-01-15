@@ -16,6 +16,7 @@ import java.util.List;
 public interface MailDao extends BaseDao {
     public Mail save(Mail mail);
     public Mail getMailById(Long id);
+    public Mail getMailByName(String name);
     public List<Mail> findAllMailType();
 
 }

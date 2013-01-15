@@ -6,6 +6,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.hk.domain.review.Mail;
+import com.hk.pact.service.review.MailService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.FileBean;
@@ -42,8 +44,17 @@ public class EmailNewsletterCampaignAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(EmailNewsletterCampaignAction.class);
   EmailCampaign emailCampaign;
 
+  @ValidateNestedProperties({
+    @Validate(field = "name", required = true)
+  })
+  Mail mail;
+
+  @Autowired
+  MailService mailService;
+
   @Autowired
   EmailCampaignDao emailCampaignDao;
+
   @Autowired
   AdminEmailCampaignService adminEmailCampaignService;
 
@@ -58,6 +69,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
   String name;
 //  String contentFolderName;
   Boolean ftlGenerated = Boolean.FALSE;
+  Boolean contentUploaded = Boolean.FALSE;
 
   @DontValidate
   @DefaultHandler
@@ -114,6 +126,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
           logger.info("ftl generated");
 
           adminEmailCampaignService.uploadEmailContent(contentFolder);
+          contentUploaded = true;
           logger.info("uploaded email content to s3.");
           FileUtils.deleteDirectory(contentFolder);
           FileUtils.deleteQuietly(contentZipFolder);
@@ -171,7 +184,27 @@ public class EmailNewsletterCampaignAction extends BaseAction {
     return new ForwardResolution(EmailNewsletterCampaignAction.class, "editEmailCampaign");
   }
 
-  public EmailCampaign getEmailCampaign() {
+  public Resolution collectionReview(){
+      //mail =  new Mail();
+      //mail.setName(name);
+      name = mail.getName() +"-Product Review";
+      Resolution r = generateFtlAndUploadData();
+      if(contentUploaded){
+          mail.setAmazonFileName(FtlUtils.getBasicAmazonS3Path() + HKFileUtils.getPathAfterSubstring(htmlPath, "emailContentFiles"));
+          mailService.save(mail);
+      }
+      return new ForwardResolution("/pages/admin/review/mailTemplate.jsp");
+  }
+
+    public Mail getMail() {
+        return mail;
+    }
+
+    public void setMail(Mail mail) {
+        this.mail = mail;
+    }
+
+    public EmailCampaign getEmailCampaign() {
     return emailCampaign;
   }
 

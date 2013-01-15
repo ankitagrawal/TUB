@@ -21,6 +21,7 @@ import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.review.Mail;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
 import com.hk.domain.subscription.SubscriptionStatus;
@@ -109,6 +110,8 @@ public interface MasterDataDao
     public List<ShippingOrderStatus> getSOStatusForReconcilation();
 
     public List<Hub> getHubList();
+
+    public List<Mail> getAllMailType();
 
     public List<User>  getHKDeliveryAgentList();
 

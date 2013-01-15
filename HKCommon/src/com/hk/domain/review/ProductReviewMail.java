@@ -17,56 +17,56 @@ import javax.persistence.*;
 public class ProductReviewMail  implements java.io.Serializable {
 
 
- 
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="id", unique=true, nullable=false)
     private Long id;
- 
-@ManyToOne(fetch=FetchType.LAZY)
+
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="created_by", nullable=false)
     private User createdBy;
- 
-@ManyToOne(fetch=FetchType.LAZY)
+
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="mail_id", nullable=false)
     private Mail mail;
- 
-@ManyToOne(fetch=FetchType.LAZY)
+
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="last_updated_by", nullable=false)
     private User lastUpdatedBy;
- 
-@ManyToOne(fetch=FetchType.LAZY)
+
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id", nullable=false)
     private Product product;
- 
-    
+
+
     @Column(name="time_window_days")
     private Long timeWindowDays;
- 
-    
+
+
     @Column(name="days_to_review_again")
     private Long daysToReviewAgain;
- 
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="create_dt", length=19)
     private Date createDt;
- 
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="update_dt", nullable=false, length=19)
     private Date updateDt;
- 
-    
+
+
     @Column(name="is_enabled", nullable=false)
     private boolean isEnabled;
- 
-    
+
+
     @Column(name="test_email_id", length=50)
     private String testEmailId;
-   
+
     public Long getId() {
         return this.id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -74,7 +74,7 @@ public class ProductReviewMail  implements java.io.Serializable {
     public Mail getMail() {
         return this.mail;
     }
-    
+
     public void setMail(Mail mail) {
         this.mail = mail;
     }
@@ -82,35 +82,35 @@ public class ProductReviewMail  implements java.io.Serializable {
     public Product getProduct() {
         return this.product;
     }
-    
+
     public void setProduct(Product product) {
         this.product = product;
     }
     public Long getTimeWindowDays() {
         return this.timeWindowDays;
     }
-    
+
     public void setTimeWindowDays(Long timeWindowDays) {
         this.timeWindowDays = timeWindowDays;
     }
     public Long getDaysToReviewAgain() {
         return this.daysToReviewAgain;
     }
-    
+
     public void setDaysToReviewAgain(Long daysToReviewAgain) {
         this.daysToReviewAgain = daysToReviewAgain;
     }
     public Date getCreateDt() {
         return this.createDt;
     }
-    
+
     public void setCreateDt(Date createDt) {
         this.createDt = createDt;
     }
     public Date getUpdateDt() {
         return this.updateDt;
     }
-    
+
     public void setUpdateDt(Date updateDt) {
         this.updateDt = updateDt;
     }
@@ -135,14 +135,22 @@ public class ProductReviewMail  implements java.io.Serializable {
         return isEnabled;
     }
 
+    public boolean getIsEnabled() {
+        return isEnabled;
+    }
+
     public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public void setIsEnabled(boolean enabled){
         isEnabled = enabled;
     }
 
     public String getTestEmailId() {
         return this.testEmailId;
     }
-    
+
     public void setTestEmailId(String testEmailId) {
         this.testEmailId = testEmailId;
     }

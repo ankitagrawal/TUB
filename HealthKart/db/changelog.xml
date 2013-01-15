@@ -10990,4 +10990,21 @@
     <changeSet author="user (generated)" id="1357544592684-11">
         <addForeignKeyConstraint baseColumnNames="user_review_id" baseTableName="user_review_mail" constraintName="fk_review_mail_user_user_review1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_review"  referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="user (generated)" id="1357913218117-1">
+        <addColumn tableName="mail">
+            <column name="amazon_file_name" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357913218117-2">
+        <modifyDataType columnName="is_enabled" newDataType="TINYINT" tableName="product_review_mail"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357913218117-3">
+        <dropNotNullConstraint columnDataType="TIMESTAMP" columnName="update_dt" tableName="product_review_mail"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357913218117-4">
+        <modifyDataType columnName="is_mail_sent" newDataType="BIT" tableName="user_review_mail"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1357913218117-5">
+        <dropNotNullConstraint columnDataType="TIMESTAMP" columnName="update_dt" tableName="user_review_mail"/>
+    </changeSet>
 </databaseChangeLog>
