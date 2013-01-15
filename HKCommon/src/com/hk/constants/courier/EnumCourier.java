@@ -81,37 +81,6 @@ public enum EnumCourier {
         return courierIds;
     }
 
-
-    public static List<EnumCourier> getCurrentlyApplicableCouriers() {
-        return Arrays.asList(
-                EnumCourier.DTDC_Plus,
-                EnumCourier.DTDC_Lite,
-                EnumCourier.DTDC_Surface,
-                EnumCourier.DTDC_COD,
-                EnumCourier.Speedpost,
-                EnumCourier.Delhivery,
-                EnumCourier.Delhivery_Surface,
-                EnumCourier.Smile_EExpress,
-                EnumCourier.Smile_Express_DSP,
-                EnumCourier.AFLWiz,
-                EnumCourier.BlueDart,
-                EnumCourier.Safexpress,
-                EnumCourier.Quantium,
-                EnumCourier.HK_Delivery,
-                EnumCourier.FedEx,
-                EnumCourier.FedEx_Surface
-        );
-    }
-
-
-     public static List<EnumCourier> getCurrentlyApplicableGroundShippedCouriers() {
-        return Arrays.asList(
-                EnumCourier.DTDC_Surface,
-                EnumCourier.Delhivery_Surface,
-                EnumCourier.FedEx_Surface
-        );
-    }
-
     public static List<Long> getDTDCCouriers() {
         List<Long> dtdcCourierIds = new ArrayList<Long>();
         dtdcCourierIds.add(EnumCourier.DTDC_COD.getId());
