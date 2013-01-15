@@ -16,6 +16,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,9 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
 
     @Autowired
     ShipmentDao shipmentDao;
+
+    @Autowired
+    ShipmentService shipmentService;
 
 
     @Override
@@ -99,7 +103,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
     @Override
     public List<Courier> getApplicableCouriers(ShippingOrder shippingOrder) {
         Pincode pincode = pincodeService.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
-        return pincodeCourierMappingDao.getApplicableCouriers(pincode, null, Arrays.asList(shippingOrder.getShipment().getShipmentServiceType()), true);
+        return pincodeCourierMappingDao.getApplicableCouriers(pincode, null, Arrays.asList(getShipmentServiceType(shippingOrder)), true);
     }
 
     @Override

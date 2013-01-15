@@ -158,11 +158,4 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
         }
         return null;
     }
-
-    @Override
-    public PincodeCourierMapping getPincodeCourierMapping(Pincode pincode, Courier courier) {
-
-    }
-
-
 }

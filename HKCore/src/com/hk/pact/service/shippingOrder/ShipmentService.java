@@ -11,7 +11,7 @@ public interface ShipmentService {
 
     public Shipment saveShipmentDate(Shipment shipment);
 
-    public Shipment save(Shipment shipment);   
+    public Shipment save(Shipment shipment);
 
     public Shipment findByAwb(Awb awb);
 
@@ -19,11 +19,11 @@ public interface ShipmentService {
 
     public Shipment changeCourier(Shipment shipment, Courier newCourier, boolean preserveAwb);
 
-	  public Shipment recreateShipment(ShippingOrder shippingOrder);
+    public Shipment recreateShipment(ShippingOrder shippingOrder);
 
-    public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder );
+    public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder);
 
-	  public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
+    public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
 
     public Shipment getShipmentById(Long shipmentId);
 }
