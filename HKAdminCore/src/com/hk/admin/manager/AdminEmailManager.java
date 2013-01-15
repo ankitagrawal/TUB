@@ -932,13 +932,6 @@ public class AdminEmailManager {
 	}
 
 
-    public boolean sendEscalationToDropShipEmail(ShippingOrder shippingOrder) {
-        HashMap valuesMap = new HashMap();
-        valuesMap.put("shippingOrder", shippingOrder);
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.dropShipEscalationEmail);
-        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, logisticsAdminEmails,
-                EmailTemplateConstants.operationsTeam);
-    }
 
     static enum Product_Status{
 
