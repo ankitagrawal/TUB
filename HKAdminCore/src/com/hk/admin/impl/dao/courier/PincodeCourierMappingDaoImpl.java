@@ -19,7 +19,10 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,8 +42,6 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
     public List<PincodeCourierMapping> getApplicablePincodeCourierMapping(Pincode pincode, List<Courier> couriers, List<ShipmentServiceType> shipmentServiceTypes, Boolean activeCourier) {
         DetachedCriteria pincodeCourierMappingCriteria = DetachedCriteria.forClass(PincodeCourierMapping.class);
 
-        if (shipmentServiceTypes != null) shipmentServiceTypes.removeAll(Collections.singleton(null));
-
         if (pincode != null) {
             pincodeCourierMappingCriteria.add(Restrictions.eq("pincode", pincode));
         }
@@ -54,15 +55,15 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
 
         String lhsCondition = "";       //assuming we wont reach a state where more than two shipment service types are applicable
         String rhsCondition = "";
-        if (shipmentServiceTypes != null && !shipmentServiceTypes.isEmpty()) {
-            if (shipmentServiceTypes.size() > 1) {
-                lhsCondition = shipmentServiceTypes.get(0).getName();
-                rhsCondition = shipmentServiceTypes.get(1).getName();
-                pincodeCourierMappingCriteria.add(Restrictions.or(Restrictions.eq(lhsCondition, true), Restrictions.eq(rhsCondition, true)));
-            } else {
-                lhsCondition = shipmentServiceTypes.get(0).getName();
-                pincodeCourierMappingCriteria.add(Restrictions.eq(lhsCondition, true));
-            }
+
+        int size = shipmentServiceTypes.size() - (shipmentServiceTypes.contains(null) ? 1 : 0);
+        if (size > 1) {
+            lhsCondition = shipmentServiceTypes.get(0).getName();
+            rhsCondition = shipmentServiceTypes.get(1).getName();
+            pincodeCourierMappingCriteria.add(Restrictions.or(Restrictions.eq(lhsCondition, true), Restrictions.eq(rhsCondition, true)));
+        } else if (size > 0) {
+            lhsCondition = shipmentServiceTypes.get(0).getName();
+            pincodeCourierMappingCriteria.add(Restrictions.eq(lhsCondition, true));
         }
         return findByCriteria(pincodeCourierMappingCriteria);
     }
