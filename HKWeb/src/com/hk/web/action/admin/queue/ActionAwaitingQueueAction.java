@@ -49,6 +49,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.admin.manager.AdminEmailManager;
 
 @Component
 public class ActionAwaitingQueueAction extends BasePaginatedAction {
@@ -84,6 +85,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     ShippingOrderLifecycleService shippingOrderLifecycleService;
+    @Autowired
+    AdminEmailManager adminEmailManager;
 
     private Long orderId;
     private Long storeId;
@@ -103,6 +106,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     private boolean sortByPaymentDate = true;
     private boolean sortByScore = true;
+    private Boolean dropShip = null;
 
     @DontValidate
     @DefaultHandler
@@ -219,6 +223,10 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
         orderSearchCriteria.setCategories(categoryList);
 
+        if (dropShip != null){
+           orderSearchCriteria.setDropShip(dropShip);
+        }
+
         logger.debug("basketCategories : " + basketCategories.size());
         Set<String> basketCategoryList = new HashSet<String>();
         for (String category : basketCategories) {
@@ -249,6 +257,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                     trueMessage.append(" ");
                     if (shippingOrder.isDropShipping()) {
                         shippingOrderService.escalateShippingOrderFromActionTODropQueue(shippingOrder, false);
+                        adminEmailManager.sendEscalationToDropShipEmail(shippingOrder);
                     } else {
                         shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
                     }
@@ -258,6 +267,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                         trueMessage.append(" ");
                         if (shippingOrder.isDropShipping()) {
                             shippingOrderService.escalateShippingOrderFromActionTODropQueue(shippingOrder, false);
+                            adminEmailManager.sendEscalationToDropShipEmail(shippingOrder);
                         } else {
                             shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
                         }
@@ -511,4 +521,15 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         this.sortByScore = sortByScore;
     }
 
+    public Boolean isDropShip() {
+        return dropShip;
+    }
+
+      public Boolean getDropShip() {
+         return dropShip;
+     }
+
+    public void setDropShip(Boolean dropShip) {
+        this.dropShip = dropShip;
+    }
 }
