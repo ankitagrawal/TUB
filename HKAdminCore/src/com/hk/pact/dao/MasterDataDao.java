@@ -2,6 +2,10 @@ package com.hk.pact.dao;
 
 import java.util.List;
 
+import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.constants.shipment.EnumPacker;
+import com.hk.constants.shipment.EnumPicker;
+import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
 import com.hk.domain.courier.*;
@@ -154,4 +158,12 @@ public interface MasterDataDao
     public List <Courier> getListOfVendorCouriers();
 
    public List<Warehouse> getAllWarehouse();
+
+   public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes();
+
+  public List<EnumPicker> getAllPicker();
+
+  public List<EnumPacker> getAllPacker();
+
+  public List<EnumBoxSize> getAllBoxSize();
 }
