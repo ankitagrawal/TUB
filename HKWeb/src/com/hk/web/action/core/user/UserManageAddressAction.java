@@ -65,7 +65,7 @@ public class UserManageAddressAction extends BaseAction {
   }
 
   public Resolution editUserAddresses() {
-      if(!address.getUser().getId().equals(getPrincipalUser().getId())){
+      if(address != null && !address.getUser().equals(getPrincipalUser())){
           addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
           return new ForwardResolution("/pages/editUserAddresses.jsp");
       }
@@ -79,8 +79,8 @@ public class UserManageAddressAction extends BaseAction {
 
   public Resolution saveAddress() {
     user = userService.getLoggedInUser();
-    if (user != null && address.getUser()!=null) {
-        if(!address.getUser().getId().equals(user.getId())){
+    if (user != null && address != null && address.getUser()!=null) {
+        if(!address.getUser().equals(user)){
             addRedirectAlertMessage(new SimpleMessage("Please don't messup with our system"));
             new ForwardResolution(UserManageAddressAction.class);
         }
