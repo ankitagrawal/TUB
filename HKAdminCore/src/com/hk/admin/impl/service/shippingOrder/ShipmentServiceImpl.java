@@ -186,13 +186,12 @@ public class ShipmentServiceImpl implements ShipmentService {
         return null;
     }
 
-    public Awb changeAwbStatus(Awb awb, boolean preserveAwb) {
+    public void changeAwbStatus(Awb awb, boolean preserveAwb) {
         if(preserveAwb){
             awbService.preserveAwb(awb);
         }else{
-            awb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
+            awbService.save(awb,EnumAwbStatus.Used.getId().intValue());
         }
-        return (Awb) awbService.save(awb,0);
     }
 
     public Shipment recreateShipment(ShippingOrder shippingOrder) {
