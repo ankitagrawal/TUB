@@ -26,5 +26,7 @@ public interface CourierGroupService {
 
 	public CourierGroup save(CourierGroup courierGroup);
 
+	public void saveOrUpdate(CourierGroup courierGroup);
+
 
 }
