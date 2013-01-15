@@ -106,11 +106,7 @@ public class MyAccountAction extends BaseAction {
   }
 
   public Resolution editBasicInformation() {
-    if(!getPrincipalUser().getId().equals(user.getId())){
-        logger.debug("user with id"+getPrincipal().getId()+" just tried to access information of user with id" + user.getId());
-        addRedirectAlertMessage(new SimpleMessage("please don't mess up with other users in our system"));
-        return new RedirectResolution(getContext().getSourcePage());
-    }
+    user=getPrincipalUser();
     logger.debug("Editing basic information for " + user.getName());
     return new ForwardResolution("/pages/editBasicInformation.jsp");
   }
@@ -119,7 +115,7 @@ public class MyAccountAction extends BaseAction {
     if(!user.getId().equals(getPrincipalUser().getId())){
         user=getPrincipalUser();
         addRedirectAlertMessage(new SimpleMessage("Please don't mess up with our system"));
-        return new RedirectResolution(getContext().getSourcePage());
+        return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
     if (user.getName().length() > 80) {
       logger.debug("new user name entered exceeded the allowed limit");
@@ -127,7 +123,7 @@ public class MyAccountAction extends BaseAction {
       return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
     if (!BaseUtils.isValidEmail(user.getEmail())) {
-      logger.info("email id  " + user.getEmail() + " invalid!");
+      logger.info("email id N " + user.getEmail() + " invalid!");
       addRedirectAlertMessage(new SimpleMessage("PLEASE ENTER A VALID EMAIL ID!"));
       return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
