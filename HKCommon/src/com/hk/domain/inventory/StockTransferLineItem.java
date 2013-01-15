@@ -40,10 +40,10 @@ public class StockTransferLineItem implements java.io.Serializable {
 	@Column(name = "checkedin_qty")
 	private Long checkedinQty;
 
-	@Column(name = "cost_price", precision = 8, nullable = false)
+	@Column(name = "cost_price", precision = 8)
 	private Double costPrice;
 
-	@Column(name = "mrp", precision = 8, nullable = false)
+	@Column(name = "mrp", precision = 8)
 	private Double mrp;
 
 	@Column(name = "batch_number")
@@ -67,6 +67,10 @@ public class StockTransferLineItem implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "checked_out_sku_group_id", nullable = false)
 	private SkuGroup checkedOutSkuGroup;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "checked_in_sku_group_id")
+	private SkuGroup checkedInSkuGroup;
 
 	public Long getId() {
 		return id;
@@ -167,5 +171,13 @@ public class StockTransferLineItem implements java.io.Serializable {
 
 	public void setCheckedOutSkuGroup(SkuGroup checkedOutSkuGroup) {
 		this.checkedOutSkuGroup = checkedOutSkuGroup;
+	}
+
+	public SkuGroup getCheckedInSkuGroup() {
+		return checkedInSkuGroup;
+	}
+
+	public void setCheckedInSkuGroup(SkuGroup checkedInSkuGroup) {
+		this.checkedInSkuGroup = checkedInSkuGroup;
 	}
 }
