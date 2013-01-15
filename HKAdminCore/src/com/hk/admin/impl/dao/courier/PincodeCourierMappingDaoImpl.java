@@ -2,16 +2,17 @@ package com.hk.admin.impl.dao.courier;
 
 import com.hk.admin.pact.dao.courier.PincodeCourierMappingDao;
 import com.hk.admin.pact.dao.shipment.ShipmentDao;
-import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.*;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.PincodeCourierMapping;
+import com.hk.domain.courier.PincodeDefaultCourier;
+import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -55,23 +56,20 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
         String lhsCondition = "";       //assuming we wont reach a state where more than two shipment service types are applicable
         String rhsCondition = "";
         boolean multipleConditions = false;
-        for (ShipmentServiceType shipmentServiceType : shipmentServiceTypes) {
-            if (StringUtils.isNotBlank(lhsCondition)) {
-                lhsCondition = shipmentServiceType.getName();
-                continue;
-            }
-            if (StringUtils.isNotBlank(rhsCondition)) {
-                rhsCondition = shipmentServiceType.getName();
+        if (shipmentServiceTypes != null && !shipmentServiceTypes.isEmpty()) {
+            if (shipmentServiceTypes.size() > 1) {
+                lhsCondition = shipmentServiceTypes.get(0).getName();
+                rhsCondition = shipmentServiceTypes.get(1).getName();
                 multipleConditions = true;
-                break;
+            } else {
+                lhsCondition = shipmentServiceTypes.get(0).getName();
             }
         }
-        if(multipleConditions){
+        if (multipleConditions) {
             pincodeCourierMappingCriteria.add(Restrictions.or(Restrictions.eq(lhsCondition, true), Restrictions.eq(rhsCondition, true)));
+        } else {
+            pincodeCourierMappingCriteria.add(Restrictions.eq(lhsCondition, true));
         }
-//        else{
-//            pincodeCourierMappingCriteria.add(Restrictions.eq(lhsCondition,true));
-//        }
         return findByCriteria(pincodeCourierMappingCriteria);
     }
 
@@ -96,9 +94,9 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
     public List<ShipmentServiceType> getShipmentServiceType(Set<CartLineItem> productCartLineItems, boolean checkForCod) {
         boolean isGroundShipped = false;
         for (CartLineItem productCartLineItem : productCartLineItems) {
-                if(productCartLineItem.getProductVariant().getProduct().isGroundShipping()){
-                    isGroundShipped = true;
-                    break;
+            if (productCartLineItem.getProductVariant().getProduct().isGroundShipping()) {
+                isGroundShipped = true;
+                break;
             }
         }
         if (isGroundShipped) {
@@ -123,18 +121,18 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
                 break;
             }
         }
-       return getShipmentServiceType(shippingOrder.isCOD(), isGroundShipped);
+        return getShipmentServiceType(shippingOrder.isCOD(), isGroundShipped);
     }
 
     @Override
     public ShipmentServiceType getShipmentServiceType(boolean isCod, boolean isGround) {
-        if(isCod){
-            if(isGround){
+        if (isCod) {
+            if (isGround) {
                 return EnumShipmentServiceType.Cod_Ground.asShipmentServiceType();
             }
             return EnumShipmentServiceType.Cod_Air.asShipmentServiceType();
-        }else{
-            if(isGround){
+        } else {
+            if (isGround) {
                 return EnumShipmentServiceType.Prepaid_Ground.asShipmentServiceType();
             }
             return EnumShipmentServiceType.Prepaid_Air.asShipmentServiceType();
