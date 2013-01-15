@@ -394,6 +394,10 @@ function temp() {
 		</tr>
 	</c:if>
 	<tr>
+		<td>Supplier Comments</td>
+		<td colspan="5">${pa.purchaseOrder.supplier.comments}</td>
+	</tr>
+	<tr>
 		<td colspan="6" style="text-align:right;"><em class="mandatory">*</em> marked fields are mandatory</td>
 	</tr>
 

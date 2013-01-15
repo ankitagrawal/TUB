@@ -111,7 +111,7 @@ public class SOInvoiceAction extends BaseAction {
 	private void generateRoutingCodeForInvoice(String pincode, boolean isCod) {
 		CourierServiceInfo courierServiceInfo = null;
 		Long courierId = shipment.getAwb().getCourier().getId();
-		if (courierId.equals(EnumCourier.BlueDart_COD.getId()) || courierId.equals(EnumCourier.BlueDart.getId())) {
+		if (courierId.equals(EnumCourier.BlueDart.getId())) {
 			courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, isCod, false, false);
 		} else if (courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())) {
 			courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, pincode, false, false, false);
