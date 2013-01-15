@@ -19,10 +19,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,6 +38,8 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
     @Override
     public List<PincodeCourierMapping> getApplicablePincodeCourierMapping(Pincode pincode, List<Courier> couriers, List<ShipmentServiceType> shipmentServiceTypes, Boolean activeCourier) {
         DetachedCriteria pincodeCourierMappingCriteria = DetachedCriteria.forClass(PincodeCourierMapping.class);
+
+        if (shipmentServiceTypes != null) shipmentServiceTypes.removeAll(Collections.singleton(null));
 
         if (pincode != null) {
             pincodeCourierMappingCriteria.add(Restrictions.eq("pincode", pincode));
