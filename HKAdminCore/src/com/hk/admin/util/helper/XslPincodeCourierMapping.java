@@ -1,6 +1,7 @@
 package com.hk.admin.util.helper;
 
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.util.XslUtil;
 import com.hk.constants.XslConstants;
 import com.hk.domain.core.Pincode;
@@ -37,6 +38,8 @@ public class XslPincodeCourierMapping {
 
     @Autowired
     PincodeService pincodeService;
+    @Autowired
+    PincodeCourierService pincodeCourierService;
 
     @Autowired
     CourierService courierService;
@@ -65,7 +68,7 @@ public class XslPincodeCourierMapping {
         try {
             while (rowiterator.hasNext()) {
                 rowCount++;
-                PincodeCourierMapping pincodeCourierMapping = new PincodeCourierMapping();
+                PincodeCourierMapping pincodeCourierMapping;
                 HKRow row = rowiterator.next();
                 String pin = row.getColumnValue(XslConstants.PINCODE);
                 String courierId = row.getColumnValue(XslConstants.COURIER_ID);
@@ -75,23 +78,29 @@ public class XslPincodeCourierMapping {
                 String codGround = row.getColumnValue(COD_GROUND);
                 String routingCode = row.getColumnValue(ROUTING_CODE);
 
+                Pincode pincode;
                 if (StringUtils.isBlank(pin)) {
                     throw new ExcelBlankFieldException("Pincode cannot be empty" + "    ", rowCount);
                 } else {
-                    Pincode pincode = pincodeService.getByPincode(pin);
+                    pincode = pincodeService.getByPincode(pin);
                     if (pincode == null) {
                         throw new ExcelBlankFieldException("Invalid Pincode" + "    ", rowCount);
                     }
-                    pincodeCourierMapping.setPincode(pincode);
                 }
                 Long courierLongId = XslUtil.getLong(courierId.trim());
                 Courier courier = courierService.getCourierById(courierLongId);
                 if (courier == null) {
                     logger.error("courierId is not valid  " + courierId, rowCount);
                     throw new ExcelBlankFieldException("courierId is not valid  " + "    ", rowCount);
-                } else {
-                    pincodeCourierMapping.setCourier(courier);
                 }
+
+                pincodeCourierMapping = pincodeCourierService.getApplicablePincodeCourierMapping(pin, Arrays.asList(courier), null, null);
+
+                if(pincodeCourierMapping == null){
+                    pincodeCourierMapping = new PincodeCourierMapping();
+                }
+                pincodeCourierMapping.setPincode(pincode);
+                pincodeCourierMapping.setCourier(courier);
 
                 boolean isPrepaidAir = StringUtils.isNotBlank(prepaidAir) && prepaidAir.trim().toLowerCase().equals("y");
                 boolean isPrepaidGround = StringUtils.isNotBlank(prepaidGround) && prepaidGround.trim().toLowerCase().equals("y");
