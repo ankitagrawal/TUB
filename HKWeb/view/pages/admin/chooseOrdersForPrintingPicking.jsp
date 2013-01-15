@@ -146,6 +146,7 @@
 			<c:if test="${fn:length(printPickBean.shippingOrdersList) > 0}">
 				<c:if test="${printPickBean.shippingOrderStatus == statusForPrinting}">
 					<div style="float:left; font-size: 0.9em; margin-top: 5px; margin-left:20px">
+						<s:hidden name="shippingOrdersList"  value="${printPickBean.shippingOrdersList}"/>
 
 						<s:submit name="batchPrintOrders" class="batchPrinting" value=" Do Batch Printing"/>
 						<s:hidden name="baseGatewayOrderId" value="${printPickBean.baseGatewayOrderId}"/>

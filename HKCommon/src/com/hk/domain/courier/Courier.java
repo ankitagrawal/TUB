@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "courier")
-public class Courier implements java.io.Serializable {
+public class Courier implements java.io.Serializable  {
 
 	@Id
 	@GeneratedValue (strategy = GenerationType.AUTO)
@@ -118,6 +118,7 @@ public class Courier implements java.io.Serializable {
 	public int hashCode() {
 	return this.id != null ? id.hashCode() :0 ;
 }
+
 
 }
 
