@@ -1,7 +1,6 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.util.helper.XslPincodeParser;
 import com.hk.constants.core.Keys;
@@ -11,8 +10,6 @@ import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.PincodeService;
-import com.hk.pact.service.core.WarehouseService;
-import com.hk.domain.courier.Courier;
 import com.hk.web.HealthkartResponse;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
@@ -53,8 +50,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private List<PincodeCourierMapping> pincodeCourierMappings;
 
     Warehouse warehouse;
-    boolean isCod;
-    boolean isGround;
+    boolean cod;
+    boolean ground;
 
     @Autowired
     PincodeCourierService pincodeCourierService;
@@ -64,7 +61,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
     add a new entry
     @validation method, that new/update entry should be in pincode courier mapping
     download/upload pincode default courier excel
-    now when i add/update PDC, i have isCod/isGround, i see in PCM, if for pin, for respective isCod && isGround, entry exists or not
+    now when i add/update PDC, i have cod/ground, i see in PCM, if for pin, for respective cod && ground, entry exists or not
      */
 
     @DefaultHandler
@@ -78,8 +75,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
             return new RedirectResolution(ChangeDefaultCourierAction.class);
         } else {
-            pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGround);
-            pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, isCod, isGround, true);
+            pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
+            pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, cod, ground, true);
         }
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
@@ -117,7 +114,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
   }
 
     public Resolution generatePincodeExcel() throws Exception {
-        pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGround);
+        pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
         final File excelFile = new File(excelFilePath);
 
@@ -207,19 +204,19 @@ public class ChangeDefaultCourierAction extends BaseAction {
     }
 
     public boolean isCod() {
-        return isCod;
+        return cod;
     }
 
     public void setCod(boolean cod) {
-        isCod = cod;
+        this.cod = cod;
     }
 
     public boolean isGround() {
-        return isGround;
+        return ground;
     }
 
     public void setGround(boolean ground) {
-        isGround = ground;
+        this.ground = ground;
     }
 
     public List<PincodeCourierMapping> getPincodeCourierMappings() {

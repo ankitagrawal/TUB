@@ -10,6 +10,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeCourierMapping;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -103,7 +104,16 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
 
     @Override
     public ShipmentServiceType getShipmentServiceType(ShippingOrder shippingOrder) {
-        return pincodeCourierMappingDao.getShipmentServiceType(shippingOrder);
+        Shipment shipment = shippingOrder.getShipment();
+        ShipmentServiceType shipmentServiceType = null;
+        if (shipment != null) {
+            shipmentServiceType = shipment.getShipmentServiceType();
+        }
+        if (shipmentServiceType != null) {
+            return shipmentServiceType;
+        } else {
+            return pincodeCourierMappingDao.getShipmentServiceType(shippingOrder);
+        }
     }
 
     @Override
