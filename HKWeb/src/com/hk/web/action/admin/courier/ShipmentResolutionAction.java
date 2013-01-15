@@ -99,7 +99,7 @@ public class ShipmentResolutionAction extends BaseAction {
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, reasoning);
         }
         addRedirectAlertMessage(new SimpleMessage("Your Courier has been changed"));
-        return new RedirectResolution(ShipmentResolutionAction.class,"search").addParameter("gatewayOrderId",shippingOrder.getGatewayOrderId());
+        return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
     }
 
     public Resolution changeShipmentServiceType() {
@@ -107,7 +107,7 @@ public class ShipmentResolutionAction extends BaseAction {
         shipment = shipmentService.save(shipment);
         shipment = shipmentService.recreateShipment(shippingOrder);
         addRedirectAlertMessage(new SimpleMessage("Your Shipment Service Type has been changed"));
-        return new RedirectResolution(ShipmentResolutionAction.class).addParameter("gatewayOrderId",shippingOrder.getGatewayOrderId());
+        return new RedirectResolution(ShipmentResolutionAction.class).addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
     }
 
     public Resolution generateAWB() {
@@ -117,11 +117,11 @@ public class ShipmentResolutionAction extends BaseAction {
     public Resolution createAssignAwb() {
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
         shipmentService.createShipment(shippingOrder);
-         if(shipment == null){
-           awbService.delete(awb);
-          addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check shipping Order Life Cycle and resolve the issue"));
-         return new RedirectResolution(ShipmentResolutionAction.class,"search").addParameter("gatewayOrderId",shippingOrder.getGatewayOrderId());
-       }
+        if (shipment == null) {
+            awbService.delete(awb);
+            addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check shipping Order Life Cycle and resolve the issue"));
+            return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+        }
         addRedirectAlertMessage(new SimpleMessage("Awb and Shipment has been created, please Enter Gateway Order Id again to check !!!!!"));
         return new RedirectResolution(ShipmentResolutionAction.class);
     }
