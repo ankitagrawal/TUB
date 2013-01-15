@@ -44,16 +44,20 @@ public enum EnumShipmentServiceType {
         return null;
     }
 
-    public static List<EnumShipmentServiceType> getCodEnumShipmentServiceTypes(){
-        return Arrays.asList(EnumShipmentServiceType.Cod_Air,EnumShipmentServiceType.Cod_Ground);
+    public static List<EnumShipmentServiceType> getCodEnumShipmentServiceTypes() {
+        return Arrays.asList(Cod_Air,Cod_Ground);
     }
 
-    public static List<EnumShipmentServiceType> getGroundEnumShipmentServiceTypes(){
-        return Arrays.asList(EnumShipmentServiceType.Prepaid_Ground,EnumShipmentServiceType.Cod_Ground);
+    public static List<EnumShipmentServiceType> getGroundEnumShipmentServiceTypes() {
+        return Arrays.asList(Prepaid_Ground,Cod_Ground);
     }
 
-    public static List<EnumShipmentServiceType> getAirEnumShipmentServiceTypes(){
-        return Arrays.asList(EnumShipmentServiceType.Cod_Air,EnumShipmentServiceType.Prepaid_Air);
+    public static List<EnumShipmentServiceType> getAirEnumShipmentServiceTypes() {
+        return Arrays.asList(Cod_Air,Prepaid_Air);
+    }
+
+    public static List<EnumShipmentServiceType> getAllShipmentServiceType() {
+        return Arrays.asList(Cod_Air,Cod_Ground,Prepaid_Air,Prepaid_Ground);
     }
 
     public ShipmentServiceType asShipmentServiceType() {
@@ -70,7 +74,4 @@ public enum EnumShipmentServiceType {
         }
         return shipmentServiceTypeIds;
     }
-  public static List<EnumShipmentServiceType> getAllShipmentServiceType(){
-    return Arrays.asList(EnumShipmentServiceType.Cod_Air,EnumShipmentServiceType.Cod_Ground,EnumShipmentServiceType.Prepaid_Air,EnumShipmentServiceType.Prepaid_Ground);
-  }
 }
