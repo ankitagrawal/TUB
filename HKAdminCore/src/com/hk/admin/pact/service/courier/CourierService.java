@@ -5,6 +5,7 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
+import com.akube.framework.dao.Page;
 
 import java.util.List;
 
@@ -41,4 +42,8 @@ public interface CourierService {
 	public List<Courier>  getCouriers(String pincode ,Boolean isrGroundShipping ,Boolean isCod,Boolean isCodAvailableOnGroundShipping,Boolean disabled);
 
     public List<Courier> listOfVendorCouriers();
+
+	public Page getCouriers(String courierName,Boolean disabled, String courierGroup,int page, int perPage);
+
+	public void saveOrUpdate(Courier courier);
 }
