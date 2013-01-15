@@ -37,7 +37,6 @@ public class BrandsToAuditAction extends BasePaginatedAction {
     private Date startDate;
     private Date endDate;
     private List<BrandsToAudit> brandsToAuditList = new ArrayList<BrandsToAudit>();
-    private List<String> brands = new ArrayList<String>();
     private Page brandsAuditPage;
     private BrandsToAudit brandsToAudit;
 
@@ -103,7 +102,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         }
         return new RedirectResolution(BrandsToAuditAction.class);
     }
-                                       <<<<<<
+
     public String getBrand() {
         return brand;
     }
