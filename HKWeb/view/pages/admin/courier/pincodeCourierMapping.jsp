@@ -77,14 +77,17 @@
 
     <s:layout-component name="content">
         <s:form beanclass="com.hk.web.action.admin.courier.PincodeCourierMappingAction">
+            <fieldset>
             <label>Enter Pincode</label>
             <s:text name="pin" id="pin"/>
+            <br>
             <s:submit name="search" value="Basic Search" class="check"/>
             <s:submit name="detailedAnalysis" value="Detailed Analysis" class="check"/>
-           
+            </fieldset>
          <div class="clear"></div>
                 <c:choose>
                 <c:when test="${pcma.applicableShipmentServices!=null and fn:length(pcma.applicableShipmentServices)>0}">
+                    <fieldset>
                     <h2>Applicable Shipment Services</h2>
                     <br>
                     <table>
@@ -99,9 +102,11 @@
                             </tr>
                         </c:forEach>
                     </table>
+                    </fieldset>
                 </c:when>
                 <c:otherwise>
                 <c:if test="${pcma.pincodeCourierMappings!=null and fn:length(pcma.pincodeCourierMappings)>0}">
+                  <fieldset>
                   <h2>Pincode Courier Mappings</h2>
                     <br>
                 <table class="zebra_vert" id="courierTable">
@@ -153,21 +158,26 @@
                     <a href="pincodeCourierMapping.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
                     <br/>
                      <s:submit name="update" value="SAVE"/>
+                    </fieldset>
                     </c:if>
                     </c:otherwise>
                     </c:choose>
-
+            <fieldset>
             <h2>File to Upload
                 <s:file name="fileBean" size="30"/></h2>
+              <br>
             <s:submit name="uploadExcel" value="Upload Courier Excel"/>
+            </fieldset>
             <div class="clear"></div>
-
+             <fieldset>
             <h2>Download Pincode Courier Excel</h2>
                 <s:select name="updateCourier"  id="status">
                     <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
                                                value="id" label="name"/>
                 </s:select>
+                 <br>
                 <s:submit name="generateExcel" value="Download Courier Excel"/>
+            </fieldset>
         </s:form>
     </s:layout-component>
 </s:layout-render>

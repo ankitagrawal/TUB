@@ -35,8 +35,9 @@
       <s:form beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">
            <label>Enter Courier Id</label>
              <s:select name="awb.courier"  id="status">
-                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
-                                               value="id" label="name"/>
+                  <c:forEach items="${cusa.applicableCouriers}" var="courier">
+                      <s:option value="${courier.id}">${courier.name}</s:option>
+                  </c:forEach>
                 </s:select>
           <label>Enter Tracking Number</label>
           <s:text name="awb.awbNumber" id = "awbNumber"/>
