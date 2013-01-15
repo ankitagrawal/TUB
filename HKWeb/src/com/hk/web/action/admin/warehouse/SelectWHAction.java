@@ -30,6 +30,7 @@ public class SelectWHAction extends BaseAction {
   @Autowired
   private UserService userService;
   private Warehouse setWarehouse;
+  private Boolean storeWarehouse;
 
   @DefaultHandler
   public Resolution pre() {
@@ -43,6 +44,9 @@ public class SelectWHAction extends BaseAction {
     User loggedOnUser = getPrincipalUser();
     Set<Warehouse> warehouses = new HashSet<Warehouse>();
     if (setWarehouse != null) {
+	    if(setWarehouse.getWarehouseType() != null){
+		    storeWarehouse = true;
+	    }
       warehouses.add(setWarehouse);
     }
     loggedOnUser.setWarehouses(warehouses);

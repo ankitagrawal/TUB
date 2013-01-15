@@ -5,17 +5,7 @@ package com.hk.domain.warehouse;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.user.User;
@@ -71,7 +61,12 @@ public class Warehouse implements java.io.Serializable {
   )
   private Set<User> users = new HashSet<User>(0);
 
-  public Long getId() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "warehouse_type_id", nullable = false)
+	private WarehouseType warehouseType;
+
+
+	public Long getId() {
     return this.id;
   }
 
@@ -156,7 +151,14 @@ public class Warehouse implements java.io.Serializable {
   public String toString() {
     return id == null ? "" : id.toString();
   }
-  
+
+	public WarehouseType getWarehouseType() {
+		return warehouseType;
+	}
+
+	public void setWarehouseType(WarehouseType warehouseType) {
+		this.warehouseType = warehouseType;
+	}
 }
 
 
