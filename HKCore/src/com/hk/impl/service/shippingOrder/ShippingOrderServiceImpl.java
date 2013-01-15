@@ -266,7 +266,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     }
 				}
 					if(shippingOrder.getShipment() == null){
-						Shipment newShipment = shipmentService.createShipment(shippingOrder);
+						Shipment newShipment = getShipmentService().createShipment(shippingOrder);
 						if (newShipment == null) {
 							String comments = "Because shipment has not been created";
 							logShippingOrderActivity(shippingOrder, adminUser,
