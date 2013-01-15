@@ -116,7 +116,7 @@ public class ShipmentResolutionAction extends BaseAction {
 
     public Resolution createAssignAwb() {
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
-        shipmentService.createShipment(shippingOrder);
+        shipment = shipmentService.createShipment(shippingOrder);
         if (shipment == null) {
             awbService.delete(awb);
             addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check shipping Order Life Cycle and resolve the issue"));
