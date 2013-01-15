@@ -96,7 +96,8 @@ public class StockTransferAction extends BasePaginatedAction {
 		stockTransfer.setToWarehouse(toWarehouse);
 		stockTransfer.setFromWarehouse(fromWarehouse);
 		stockTransfer = (StockTransfer) stockTransferDao.save(stockTransfer);
-		return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+		addRedirectAlertMessage(new SimpleMessage("Stock Transfer Updated"));
+		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
 	}
 
 	/* public Resolution save() {
