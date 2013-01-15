@@ -14,6 +14,7 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -46,6 +47,8 @@ public class StockTransferAction extends BasePaginatedAction {
 	AdminInventoryService adminInventoryService;
 	@Autowired
 	InventoryService inventoryService;
+	@Autowired
+	BaseDao baseDao;
 
 	private StockTransfer stockTransfer;
 	private String userLogin;
@@ -57,7 +60,6 @@ public class StockTransferAction extends BasePaginatedAction {
 	private Date checkOutDate;
 	private Warehouse fromWarehouse;
 
-	@Validate(required = true, on = "save")
 	private Warehouse toWarehouse;
 
 	private String productVariantBarcode;
@@ -177,7 +179,7 @@ public class StockTransferAction extends BasePaginatedAction {
 
 		if (StringUtil.isBlank(productVariantBarcode)) {
 			addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
-			return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
 		}
 
 		User loggedOnUser = null;
@@ -185,7 +187,7 @@ public class StockTransferAction extends BasePaginatedAction {
 			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		}
 
-		List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, fromWarehouse);
+		List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, stockTransfer.getFromWarehouse());
 		if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
 			SkuItem skuItem = inStockSkuItemList.get(0);
 			skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
@@ -204,71 +206,19 @@ public class StockTransferAction extends BasePaginatedAction {
 			} else {
 				stockTransferLineItem.setCheckedoutQty(1L);
 			}
-			stockTransferDao.save(stockTransferLineItem);
+			stockTransferLineItem = (StockTransferLineItem)baseDao.save(stockTransferLineItem);
 
 			adminInventoryService.inventoryCheckoutForStockTransfer(sku, skuItem, stockTransferLineItem, -1L, loggedOnUser);
 
 			getInventoryService().checkInventoryHealth(sku.getProductVariant());
 
+		} else {
+			addRedirectAlertMessage(new SimpleMessage("Either Invalid barcode, or insufficient Stock in warehouse."));
+			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
 		}
 
-		/*if (stockTransfer != null) {
-					logger.debug("stockTransferLineItems@Save: " + stockTransferLineItems.size());
-
-					for (String barcode : barcodeList) {
-						skuGroupService.getSkuGroup(barcode, fromWarehouse);
-
-						if (stockTransferLineItem.getId() != null) {
-							StockTransferLineItem stockTransferLineItemInDb = stockTransferDao.get(StockTransferLineItem.class, stockTransferLineItem.getId());
-							stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItemInDb);
-						} else {
-							Sku sku = stockTransferLineItem.getSku();
-							if (sku == null) {
-								try {
-									sku = skuService.getSKU(stockTransferLineItem.getProductVariant(), stockTransfer.getFromWarehouse());
-								} catch (Exception e) {
-									addRedirectAlertMessage(new SimpleMessage("SKU doesn't exist for " + stockTransferLineItem.getProductVariant().getId()));
-									return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId());
-								}
-							}
-							if (stockTransferLineItem.getCheckedoutQty() != null && stockTransferLineItem.getCheckedoutQty() == 0 && stockTransferLineItem.getId() != null) {
-								stockTransferDao.delete(stockTransferLineItem);
-							}
-							List<SkuItem> instockSkuItems = adminSkuItemDao.getInStockSkuItemsByQty(sku, stockTransferLineItem.getCheckedoutQty().intValue());
-							if (!instockSkuItems.isEmpty() && stockTransferLineItem.getCheckedoutQty() <= instockSkuItems.size()) {
-								stockTransferLineItem.setSku(sku);
-								stockTransferLineItem.setStockTransfer(stockTransfer);
-								try {
-									stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItem);
-								} catch (Exception e) {
-									logger.info("Duplicate batch and variant in stock transfer for - " + stockTransferLineItem.getSku().getProductVariant().getId());
-									addRedirectAlertMessage(new SimpleMessage("Duplicate batch and variant - " + stockTransferLineItem.getSku().getProductVariant().getId()));
-									return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId());
-								}
-
-								if (adminProductVariantInventoryDao.getPVIForStockTransfer(sku, stockTransferLineItem).isEmpty()) {
-									// Delete from available batches.
-									int counter = 0;
-									for (SkuItem instockSkuItem : instockSkuItems) {
-										if (counter < Math.abs(stockTransferLineItem.getCheckedoutQty())) {
-											adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, null, stockTransferLineItem,
-													inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKOUT), -1L, loggedOnUser);
-											counter++;
-										} else {
-											break;
-										}
-									}
-								}
-								getInventoryService().checkInventoryHealth(sku.getProductVariant());
-							} else {
-								addRedirectAlertMessage(new SimpleMessage("There are only " + instockSkuItems.size() + "  stock line item(PVI) for " + stockTransferLineItem.getProductVariant().getId()));
-								return new RedirectResolution(StockTransferAction.class).addParameter("view", stockTransfer.getId());
-							}
-						}
-					}
-				}*/
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-		return new RedirectResolution(StockTransferAction.class);
+		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
 	}
 
 	public Resolution checkinInventoryAgainstStockTransfer() {
