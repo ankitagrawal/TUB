@@ -73,5 +73,24 @@ public class SelectWHAction extends BaseAction {
   public void setUserService(UserService userService) {
     this.userService = userService;
   }
-  
+
+	public Boolean isStoreWarehouse() {
+		return storeWarehouse;
+	}
+
+	public Boolean getStoreWarehouse() {
+
+		if (setWarehouse == null) {
+			setWarehouse = userService.getWarehouseForLoggedInUser();
+		}
+		if (setWarehouse != null && setWarehouse.getWarehouseType() != null) {
+				return true;
+		}
+		return false;
+	}
+
+	public void setStoreWarehouse(Boolean storeWarehouse) {
+		this.storeWarehouse = storeWarehouse;
+	}
+
 }

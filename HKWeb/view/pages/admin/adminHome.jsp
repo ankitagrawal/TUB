@@ -36,7 +36,7 @@
 				</shiro:hasRole>
 			</td>
 			<td>
-				<c:if test="${whAction.setWarehouse != null}">
+				<c:if test="${whAction.setWarehouse != null && whAction.storeWarehouse}">
 				<shiro:hasRole name="<%=RoleConstants.GOD%>">
 					<s:link beanclass="com.hk.web.action.admin.order.UpdateOrderStatusAndSendEmailAction"
 					        style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
