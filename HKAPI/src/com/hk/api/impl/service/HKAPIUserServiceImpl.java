@@ -7,6 +7,7 @@ import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
+import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.UserManager;
 import com.hk.pact.service.order.RewardPointService;
@@ -58,6 +59,15 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
         } else {
             return createNewHKUser(HKAPIUserDTO, storeId);
         }
+    }
+
+    public HKAPIBaseDTO authenticate(String loginEmail, String password){
+        try{
+            userManager.login(loginEmail,password,false);
+        }catch (HealthkartLoginException e){
+            return new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidUserCredentials);
+        }
+        return new HKAPIBaseDTO();
     }
 
     public User getHKUser(User user){

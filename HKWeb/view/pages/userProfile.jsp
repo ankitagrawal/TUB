@@ -194,6 +194,7 @@
         </label>
       </div>
 
+      <s:hidden name="user" value="${maa.user}"/>
 
       <div style="float: right;font-size: 0.7em;">
         <s:submit name="editPassword" value="Change Password"/>
