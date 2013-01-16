@@ -10920,9 +10920,7 @@
     </changeSet>
     <changeSet author="Rohit (generated)" id="1358238002137-3">
         <addColumn tableName="stock_transfer_line_item">
-            <column name="checked_out_sku_group_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
+            <column name="checked_out_sku_group_id" type="INT"/>
         </addColumn>
     </changeSet>
     <changeSet author="Rohit (generated)" id="1358238002137-5">
