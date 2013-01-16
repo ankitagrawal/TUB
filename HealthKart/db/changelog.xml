@@ -10951,7 +10951,7 @@
           delete from pincode_courier_mapping where pincode_id=13701;
           delete from pincode where id=13701;
           insert into `pincode` (`id`,`pincode`,`locality`,`region`,`city_id`,`state_id`,`tier`,`zone_id`) values (999999,'999999','.','Default',1,1,'Metros',1);
-          update address adr left join pincode pc on adr.pin=pc.pincode set adr.pin='999999', deleted =1 where pc.pincode is null 
+          update address adr left join pincode pc on adr.pin=pc.pincode set adr.pin='999999', deleted =1 where pc.pincode is null;
           update address a , pincode p set  a.pincode_id = p.pincode where a.pin = p.pincode;
           update hub pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
           update pincode_courier_mapping pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
