@@ -22,7 +22,8 @@ public class SSOLogoutAction extends BaseAction {
     public Resolution pre() {
         getSubject().logout();
         if(!StringUtils.isEmpty(apiKey)&&!StringUtils.isEmpty(redirectUrl)) {
-            return new RedirectResolution(SSOLoginAction.class).addParameter("apiKey",apiKey).addParameter("redirectUrl",redirectUrl);
+
+            return new RedirectResolution(redirectUrl, false);
         }else{
             return new RedirectResolution(SSOLoginAction.class);
         }

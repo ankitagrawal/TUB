@@ -103,6 +103,14 @@ public class RewardPointServiceImpl implements RewardPointService {
     }
 
     @Override
+    public RewardPointTxn createRewardPointTxnForApprovedRewardPoints(RewardPoint rewardPoint, Date expiryDate){
+        if(rewardPoint.getRewardPointStatus().getId().equals(EnumRewardPointStatus.APPROVED.getId())){
+          return  rewardPointTxnDao.createRewardPointAddTxn(rewardPoint, expiryDate);
+        }
+        else return null;
+    }
+
+    @Override
     // logic for cashback offer
     public void awardRewardPoints(Order order) {
         OfferInstance offerInstance = order.getOfferInstance();

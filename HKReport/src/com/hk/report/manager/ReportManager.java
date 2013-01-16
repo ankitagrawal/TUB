@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -1254,7 +1255,7 @@ public class ReportManager {
 
     }
 
-    public File generateNotifyMeList(String xlsFilePath, Date startDate, Date endDate) throws Exception {
+    public File generateNotifyMeList(String xlsFilePath, Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,  Boolean productInStock, Boolean productDeleted) throws Exception {
 
         // return null;
         File file = new File(xlsFilePath);
@@ -1291,7 +1292,7 @@ public class ReportManager {
 
         int rowCounter = 1;
 
-        List<NotifyMe> notifyMeList = getNotifyMeDao().getNotifyMeListBetweenDate(startDate, endDate);
+        List<NotifyMe> notifyMeList = getNotifyMeDao().searchNotifyMe(startDate, endDate, product, productVariant, primaryCategory, productInStock, productDeleted);
 
         // System.out.println("notifyMeList: " + notifyMeList.size());
         for (NotifyMe notifyMe : notifyMeList) {

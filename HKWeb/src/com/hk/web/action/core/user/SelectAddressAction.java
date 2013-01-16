@@ -3,11 +3,7 @@ package com.hk.web.action.core.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.SimpleError;
 
@@ -32,6 +28,7 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 
 @Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 @Component
+@HttpCache(allow = false)
 public class SelectAddressAction extends BaseAction {
 
     //private static Logger logger    = LoggerFactory.getLogger(SelectAddressAction.class);

@@ -31,8 +31,27 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
         return (NotifyMe) super.save(notifyMe);
     }
 
-    public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory) {
-        DetachedCriteria notifyMeCriteria = DetachedCriteria.forClass(NotifyMe.class);
+    public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory,
+                               Boolean productInStock, Boolean productDeleted) {
+        DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
+                               productInStock, productDeleted);
+        if (pageNo == 0 && perPage == 0) {
+            return list(notifyMeCriteria, 1, 1000);
+        }
+        return list(notifyMeCriteria, pageNo, perPage);
+
+    }
+
+	public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
+                               Boolean productInStock, Boolean productDeleted) {
+		DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
+                               productInStock, productDeleted);
+		return findByCriteria(notifyMeCriteria);
+	}
+
+	private DetachedCriteria getNotifyMeListSearchCriteria(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
+                               Boolean productInStock, Boolean productDeleted){
+		DetachedCriteria notifyMeCriteria = DetachedCriteria.forClass(NotifyMe.class);
         if (startDate != null) {
             notifyMeCriteria.add(Restrictions.gt("createdDate", startDate));
         }
@@ -44,55 +63,35 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
             notifyMeCriteria.add(Restrictions.eq("productVariant", productVariant));
         }
         DetachedCriteria productVariantCriteria = null;
+	    if( product != null || primaryCategory != null || productDeleted != null || productInStock != null){
+		    productVariantCriteria = notifyMeCriteria.createCriteria("productVariant");
+	    }
+
         if (product != null) {
-            if (productVariantCriteria == null) {
-                productVariantCriteria = notifyMeCriteria.createCriteria("productVariant");
-            }
             productVariantCriteria.add(Restrictions.eq("product", product));
         }
         if (primaryCategory != null) {
-            if (productVariantCriteria == null) {
-                productVariantCriteria = notifyMeCriteria.createCriteria("productVariant");
-            }
             DetachedCriteria productCriteria = productVariantCriteria.createCriteria("product");
             productCriteria.add(Restrictions.eq("primaryCategory", primaryCategory));
         }
+	    if(productDeleted != null){
+		    productVariantCriteria.add(Restrictions.eq("deleted",productDeleted));
+	    }
+	    if(productInStock != null){
+		    productVariantCriteria.add(Restrictions.eq("outOfStock", productInStock));
+	    }
 
         notifyMeCriteria.add(Restrictions.isNull("notifiedDate"));
         notifyMeCriteria.add(Restrictions.isNull("notifiedByUser"));
         notifyMeCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
-        if (pageNo == 0 && perPage == 0) {
-            return list(notifyMeCriteria, 1, 1000);
-        }
-        return list(notifyMeCriteria, pageNo, perPage);
 
-    }
+		return notifyMeCriteria;
+	}
 
     public List<String> getPendingNotifyMeProductVariant() {
 
         String query = "select distinct nm.productVariant from NotifyMe nm  where nm.notifiedDate is null";
         return getSession().createQuery(query).list();
-
-    }
-
-    public List<NotifyMe> getNotifyMeListBetweenDate(Date startDate, Date endDate) {
-
-        if (startDate == null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MONTH, -1);
-            startDate = calendar.getTime();
-        }
-        if (endDate == null) {
-            endDate = new Date();
-        }
-
-        Criteria criteria = getSession().createCriteria(NotifyMe.class);
-        criteria.add(Restrictions.gt("createdDate", startDate));
-        criteria.add(Restrictions.lt("createdDate", endDate));
-        criteria.add(Restrictions.isNull("notifiedDate"));
-        criteria.add(Restrictions.isNull("notifiedByUser"));
-
-        return criteria.list();
 
     }
 
