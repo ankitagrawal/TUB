@@ -1,6 +1,7 @@
 package com.hk.api.resource;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 import com.hk.api.UserAPI;
 import com.hk.api.constants.HKAPITokenTypes;
@@ -43,14 +44,22 @@ public class UserResource {
 
     @GET
     @Path("/details")
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public HKAPIBaseDTO getUserDetails(@HeaderParam(HKAPITokenTypes.USER_ACCESS_TOKEN) String userAccessToken){
         return hkapiUserService.getUserDetails(userAccessToken);
     }
 
     @POST
+    @Path("/authenticate")
+    @Produces(MediaType.APPLICATION_JSON)
+    @SecureResource(hasAllTokens = {HKAPITokenTypes.APP_TOKEN, HKAPITokenTypes.USER_ACCESS_TOKEN})
+    public HKAPIBaseDTO authenticate(HKAPIUserDTO userDTO){
+       return hkapiUserService.authenticate(userDTO.getEmail(), userDTO.getPassword());
+    }
+
+    @POST
     @Path("/reward/{points}")
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @SecureResource(hasAllTokens = {HKAPITokenTypes.APP_TOKEN, HKAPITokenTypes.USER_ACCESS_TOKEN})
     public HKAPIBaseDTO awardRewardPoints(@HeaderParam(HKAPITokenTypes.USER_ACCESS_TOKEN) String userAccessToken,
                                          @PathParam("points") Double rewardPoints){
@@ -59,14 +68,14 @@ public class UserResource {
 
     @GET
     @Path("/rewardpoints")
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public HKAPIBaseDTO getUserRewardPoints(@HeaderParam(HKAPITokenTypes.USER_ACCESS_TOKEN) String userAccessToken){
         return hkapiUserService.getUserRewardPointDetails(userAccessToken);
     }
 
     @POST
     @Path("/sso/create")
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @SecureResource(hasAllTokens = {HKAPITokenTypes.APP_TOKEN})
     public HKAPIBaseDTO createUserInHK(HKAPIUserDTO userDetailDto){
        return hkapiUserService.createSSOUser(userDetailDto);

@@ -18,6 +18,7 @@ import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.factory.PaymentModeActionFactory;
+import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -36,6 +37,7 @@ import java.util.Random;
  */
 @Component
 @Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
+@HttpCache(allow = false)
 public class PaymentAction extends BaseAction {
 
     private PaymentMode paymentMode;
