@@ -7,6 +7,7 @@ import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
+import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.UserManager;
@@ -63,11 +64,16 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
 
     public HKAPIBaseDTO authenticate(String loginEmail, String password){
         try{
-            userManager.login(loginEmail,password,false);
+            UserLoginDto userLoginDto= userManager.login(loginEmail, password, false);
+            HKAPIUserDTO userDTO=new HKAPIUserDTO();
+            userDTO.setEmail(userLoginDto.getLoggedUser().getEmail());
+            userDTO.setName(userLoginDto.getLoggedUser().getName());
+            HKAPIBaseDTO responseDTO=new HKAPIBaseDTO();
+            responseDTO.setData(userDTO);
+            return responseDTO;
         }catch (HealthkartLoginException e){
             return new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidUserCredentials);
         }
-        return new HKAPIBaseDTO();
     }
 
     public User getHKUser(User user){
@@ -109,7 +115,7 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
             return new HKAPIBaseDTO();
         }
         else{
-             return new HKAPIBaseDTO(EnumHKAPIErrorCode.Unauthorized);
+            return new HKAPIBaseDTO(EnumHKAPIErrorCode.Unauthorized);
         }
     }
 
