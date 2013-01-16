@@ -28,7 +28,7 @@ public class IndiaOntimeCourierTrackUtil {
 	public IndiaOntimeCourierTrackUtil(){
 	}
 
-	public IndiaOntimeCourierTrackUtil trackShipment(String trackingId){
+	public boolean trackShipment(String trackingId){
 		IOT_APILocator serviceLocator = new IOT_APILocator();
 
 		try{
@@ -42,12 +42,13 @@ public class IndiaOntimeCourierTrackUtil {
 			this.setReferenceNo(status.getREF_NO());
 			this.setTrackingNo(status.getAWBNo());
 			this.setDeliveryDate(status.getStatusDate());
-			return this;
+			return true;
+			//return this;
 		}
 		catch(Exception e){
 		  logger.debug("Exception while tracking IndiaOnTime shipment for tracking id:" + trackingId);
     	}
-		return null;
+		return false;
 	}
 
 	public String getStatusDescription() {

@@ -478,15 +478,15 @@ public class CourierStatusUpdateHelper {
 		return xmlElement;
 	}
 
-	public IndiaOntimeCourierTrackUtil updateDeliveryStatusIndiaOntime(String trackingId) throws HealthkartCheckedException {
+	public boolean updateDeliveryStatusIndiaOntime(String trackingId) throws HealthkartCheckedException {
 
-		IndiaOntimeCourierTrackUtil response = null;
+		//IndiaOntimeCourierTrackUtil response = null;
 		courierName = EnumCourier.IndiaOnTime.getName();
 
 		//added for debugging
 		//trackingId = "70004207501";
 		try{
-			response = new IndiaOntimeCourierTrackUtil().trackShipment(trackingId);
+			return new IndiaOntimeCourierTrackUtil().trackShipment(trackingId);
 			
 		} catch (NullPointerException npe) {
 			logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + courierName + trackingId);
@@ -496,7 +496,7 @@ public class CourierStatusUpdateHelper {
 			logger.debug(CourierConstants.EXCEPTION + courierName + trackingId);
 			throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
 		}
-		return response;
+		//return response;
 	}
 
 

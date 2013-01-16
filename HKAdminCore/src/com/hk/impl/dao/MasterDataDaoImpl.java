@@ -226,16 +226,16 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(EmailType.class);
     }
 
-    public List<String> getCourierListForDBUpdation() {
-        List<String> courierListForDBUpdation = new ArrayList<String>();
-        courierListForDBUpdation.add(CourierConstants.AFL);
-        courierListForDBUpdation.add(CourierConstants.BLUEDART);
-        courierListForDBUpdation.add(CourierConstants.CHHOTU);
-        courierListForDBUpdation.add(CourierConstants.DELHIVERY);
-        courierListForDBUpdation.add(CourierConstants.DTDC);
-        courierListForDBUpdation.add(CourierConstants.QUANTIUM);
-		courierListForDBUpdation.add(CourierConstants.INDIAONTIME);
-        return courierListForDBUpdation;
+    public List<String> getCourierListForAutoDeliveryMarking() {
+        List<String> courierListForDeliveryMarking = new ArrayList<String>();
+        courierListForDeliveryMarking.add(CourierConstants.AFL);
+        courierListForDeliveryMarking.add(CourierConstants.BLUEDART);
+        //courierListForDeliveryMarking.add(CourierConstants.CHHOTU);
+        courierListForDeliveryMarking.add(CourierConstants.DELHIVERY);
+        courierListForDeliveryMarking.add(CourierConstants.DTDC);
+        courierListForDeliveryMarking.add(CourierConstants.QUANTIUM);
+		courierListForDeliveryMarking.add(CourierConstants.INDIAONTIME);
+        return courierListForDeliveryMarking;
     }
 
     public BaseDao getBaseDao() {
