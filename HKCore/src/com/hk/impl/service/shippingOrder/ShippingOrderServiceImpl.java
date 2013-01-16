@@ -72,11 +72,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     @Autowired
     private ReplacementOrderDao        replacementOrderDao;
     @Autowired
-	ShipmentService 				shipmentService;
-    @Autowired
 	private EmailManager        emailManager;
 
     private OrderService               orderService;
+	private ShipmentService 				shipmentService;
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
