@@ -3,12 +3,7 @@ package com.hk.web.action.core.referral;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.EmailTypeConverter;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.Validate;
@@ -32,6 +27,7 @@ import com.hk.web.action.core.user.ActivateAccountForReferralAction;
 
 @Secure(hasAllRoles = RoleConstants.HK_USER, authActionBean = ActivateAccountForReferralAction.class)
 @Component
+@HttpCache(allow = false)
 public class ReferralProgramAction extends BaseAction {
 
     @Autowired
