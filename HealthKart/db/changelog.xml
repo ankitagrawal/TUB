@@ -10924,12 +10924,6 @@
     <changeSet author="Shrey (generated)" id="1358322252952-16">
         <dropForeignKeyConstraint baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_pincode1"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-5">
-        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="pincode_courier_mapping"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-6">
-        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="pincode_default_courier"/>
-    </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-10">
         <dropForeignKeyConstraint baseTableName="address" constraintName="fk_address_courier1"/>
     </changeSet>
@@ -10948,12 +10942,6 @@
     <changeSet author="Shrey (generated)" id="1358322252952-17">
         <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-3">
-        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="hub"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-7">
-        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="pincode_region_zone"/>
-    </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-27">
         <dropColumn columnName="default_courier_id" tableName="pincode"/>
     </changeSet>
@@ -10962,14 +10950,29 @@
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-60">
         <sql>
-            insert into `pincode` (`id`,`pincode`,`locality`,`region`,`city_id`,`state_id`,`tier`,`zone_id`) values (999999,'999999','.','Default',1,1,'Metros',1);
-            update address adr, (select adr.pin from address adr left join pincode pc on adr.pin=pc.pincode where pc.pincode is null) pc set adr.pin = '999999', deleted = 1 where adr.pin=pc.pin;
-            update address a , pincode p set  a.pincode_id = p.pincode where a.pin = p.pincode;
+          DELETE FROM courier_service_info where pincode_id=13701;
+          delete from pincode_courier_mapping where pincode_id=13701;
+          delete from pincode where id=13701;
+          insert into `pincode` (`id`,`pincode`,`locality`,`region`,`city_id`,`state_id`,`tier`,`zone_id`) values (999999,'999999','.','Default',1,1,'Metros',1);
+          update address adr left join pincode pc on adr.pin=pc.pincode set adr.pin='999999', deleted =1 where pc.pincode is null 
+          update address a , pincode p set  a.pincode_id = p.pincode where a.pin = p.pincode;
           update hub pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
           update pincode_courier_mapping pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
           update pincode_region_zone pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
           update pincode_default_courier pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
         </sql>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-5">
+        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="pincode_courier_mapping"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-6">
+        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="pincode_default_courier"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-7">
+        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="pincode_region_zone"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-3">
+        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="hub"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-65">
         <addNotNullConstraint columnDataType="INT" columnName="pincode_id" tableName="address"/>
