@@ -229,7 +229,7 @@
           </s:select>
           <%--<s:text name="address.state"/>--%>
           <div class='label'>PIN Code<span class="aster">*</span></div>
-          <s:text name="address.pincode.pincode" class="pincode" maxlength="6"/>
+          <s:text name="address.pincode" class="pincode" maxlength="6"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
           <s:text name="address.phone" id="phoneNo"/>
           <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>
