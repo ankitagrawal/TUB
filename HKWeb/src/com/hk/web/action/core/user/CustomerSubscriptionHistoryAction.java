@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import com.hk.pact.service.subscription.SubscriptionService;
  */
 @Secure
 @Component
+@HttpCache(allow = false)
 public class CustomerSubscriptionHistoryAction extends BasePaginatedAction{
 
     private User user;
