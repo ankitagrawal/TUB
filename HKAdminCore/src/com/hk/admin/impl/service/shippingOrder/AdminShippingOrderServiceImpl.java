@@ -20,14 +20,12 @@ import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.user.User;
 import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
@@ -38,9 +36,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.UserService;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.util.HKDateUtil;
 
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
@@ -162,7 +158,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	        // auto escalate shipping orders if possible
 	        //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
 
-			orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(baseOrder);
+			orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
             return shippingOrder;
         }
         return null;

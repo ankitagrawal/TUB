@@ -55,7 +55,6 @@ import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
@@ -316,7 +315,7 @@ public class OrderServiceImpl implements OrderService {
 
     public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order) {
         // Auto escalation of order if unbooked inventory is positive
-		splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+		splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 		/*
 		Set<ShippingOrder> shippingOrders = null;
 		if (order.getShippingOrders() != null && !order.getShippingOrders().isEmpty()) {
@@ -736,11 +735,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public boolean splitBOEscalateSOCreateShipmentAndRelatedTasks(Order order) {
+    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
 
-        Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+        User adminUser = getUserService().getAdminUser();
 
         if (shippingOrderAlreadyExists) {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
@@ -748,32 +748,24 @@ public class OrderServiceImpl implements OrderService {
                 order = save(order);
             }
         } else {
+            //DO Nothing for B2B Orders
             if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
-                //User adminUser = UserCache.getInstance().getAdminUser();
-                User adminUser = getUserService().getAdminUser();
                 orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
-                //DO Nothing for B2B Orders
             } else {
                 shippingOrders = createShippingOrders(order);
             }
         }
 
         if (shippingOrders != null && shippingOrders.size() > 0) {
-            // save order with InProcess status since shipping orders have been created
-            order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
-            order.setShippingOrders(shippingOrders);
-            order = save(order);
-
-            /**
-             * Order lifecycle activity logging - Order split to shipping orders
-             */
-            String comments = "No. of Shipping Orders created  " + shippingOrders.size();
-            //User adminUser = UserCache.getInstance().getAdminUser();
-            User adminUser = getUserService().getAdminUser();
-			if (!shippingOrderAlreadyExists) {
-				orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
-			}
-			for (ShippingOrder shippingOrder : shippingOrders) {
+            if (!shippingOrderAlreadyExists) {
+                // save order with InProcess status since shipping orders have been created
+                order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
+                order.setShippingOrders(shippingOrders);
+                order = save(order);
+                String comments = "No. of Shipping Orders created  " + shippingOrders.size();
+                orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
+            }
+            for (ShippingOrder shippingOrder : shippingOrders) {
                 shipmentService.createShipment(shippingOrder);
             }
             // auto escalate shipping orders if possible
@@ -782,7 +774,7 @@ public class OrderServiceImpl implements OrderService {
                     shippingOrderService.autoEscalateShippingOrder(shippingOrder);
                 }
             }
-			shippingOrderAlreadyExists = true;
+            shippingOrderAlreadyExists = true;
 
         }
         // Check Inventory health of order lineitems
@@ -792,7 +784,6 @@ public class OrderServiceImpl implements OrderService {
 
         return shippingOrderAlreadyExists;
     }
-
 
 
 }
