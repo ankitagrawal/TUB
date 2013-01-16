@@ -10917,7 +10917,7 @@
         <dropForeignKeyConstraint baseTableName="address" constraintName="fk_address_courier1"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-151">
-        <dropForeignKeyConstraint baseTableName="address" constraintName="fk_pincode_courier1"/>
+        <dropForeignKeyConstraint baseTableName="pincode" constraintName="fk_pincode_courier1"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-25">
         <dropColumn columnName="default_courier_id" tableName="address"/>
