@@ -15,7 +15,9 @@ import com.hk.api.pact.service.HKAPIOrderService;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.builder.CartLineItemBuilder;
+import com.hk.domain.core.Pincode;
 import com.hk.pact.service.core.AddressService;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.security.HkAuthService;
 import org.slf4j.Logger;
@@ -87,6 +89,8 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     @Autowired
     AutomatedOrderService automatedOrderService;
     @Autowired
+    PincodeService pincodeService;
+    @Autowired
     StoreService storeService;
 
     public HKAPIBaseDTO createOrderInHK(String appToken, HKAPIOrderDTO hkapiOrderDTO) {
@@ -132,11 +136,12 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         return apiUser.isOrderPlacementEnabled();
     }
     public Address createAddress(HKAPIAddressDTO hkapiAddressDTO, User hkUser) {
+        Pincode pincode = pincodeService.getByPincode(hkapiAddressDTO.getPin());
         Address address = new Address();
         address.setLine1(hkapiAddressDTO.getLine1());
         address.setLine2(hkapiAddressDTO.getLine2());
         address.setState(hkapiAddressDTO.getState());
-        address.setPin(hkapiAddressDTO.getPin());
+        address.setPincode(pincode);
         address.setName(hkapiAddressDTO.getName());
         address.setPhone(hkapiAddressDTO.getPhone());
         address.setCity(hkapiAddressDTO.getCity());
