@@ -59,7 +59,6 @@
 			<table>
 				<s:form beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
                     <s:hidden name="pincodeString" value="${mpaBean.pincode.pincode}" id="savePincodeString" />
-					<s:hidden name="pincode.id" value="${mpaBean.pincode.id}"/>
 					<tr>
 						<td>Pincode:</td>
                         <td>
@@ -68,7 +67,7 @@
 						${mpaBean.pincode.pincode}
                         </c:when>
                          <c:otherwise>
-                             <s:text name="pincode.pincode" id="pincode"/>
+                             <s:text name="pincode" id="pincode"/>
                          </c:otherwise>
                         </c:choose>
                         </td>
@@ -188,7 +187,7 @@
 
 							<s:submit name="uploadPincodeExcel" value="Upload"/>
             <br/>
-             (Worksheet Name: PincodeInfo &nbsp&nbsp&nbsp 6 Fields: PINCODE &nbspCITY &nbspSTATE &nbspREGION &nbspLOCALITY &nbspDEFAULT_COURIER_ID &nbspZONE)</li>
+             (Worksheet Name: PincodeInfo &nbsp;&nbsp;&nbsp; 6 Fields: PINCODE &nbsp;CITY &nbsp;STATE &nbsp;REGION &nbsp;LOCALITY &nbsp;DEFAULT_COURIER_ID &nbsp;ZONE)</li>
                     <br>
                     <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
 					</s:form>

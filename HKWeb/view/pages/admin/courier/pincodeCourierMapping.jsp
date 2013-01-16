@@ -30,7 +30,7 @@
                     }
                 });
                  $('.addRowButton').click(function () {
-                     var pincode = ${pcma.pincode.id};
+                     var pincode = ${pcma.pincode.pincode};
                     var lastIndex = $('.lastRow').attr('count');
                     if (!lastIndex) {
                         lastIndex = -1;
@@ -125,7 +125,7 @@
                         <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                             <td>
                                 ${ctr.index + 1}.
-                                <input type="hidden" name="pincodeCourierMappings[${ctr.index}].pincode" value="${pCourierMap.pincode.id}"/>
+                                <input type="hidden" name="pincodeCourierMappings[${ctr.index}].pincode" value="${pCourierMap.pincode.pincode}"/>
                                 <s:hidden name="pincodeCourierMappings[${ctr.index}].id" value="${pCourierMap.id}"/>
                             </td>
                             <td>

@@ -66,7 +66,7 @@
                 var obj = $(this);
                 $.getJSON($('#pincodeCheck').attr('href'), { pincodeString: pincode }, function (res) {
                     if (res.code == '<%=HealthkartResponse.STATUS_OK%>'){
-                        obj.parent().children('input.pincodeValue').attr('value',res.data.pincode.id);
+                        obj.parent().children('input.pincodeValue').attr('value',res.data.pincode.pincode);
                     }
                     else{
                         alert(res.message);
@@ -188,7 +188,7 @@
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.pincode.pincode}
-                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].pincode" value="${pincodeDefaultCourier.pincode.id}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].pincode" value="${pincodeDefaultCourier.pincode.pincode}"/>
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.cod}
