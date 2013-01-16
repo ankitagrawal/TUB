@@ -31,6 +31,7 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.util.XslGenerator;
+import com.hk.util.HKDateUtil;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -401,55 +402,62 @@ public class InventoryCheckinAction extends BaseAction {
         if (skuGroup == null) {
             addRedirectAlertMessage(new SimpleMessage("No SKU Group found for Barcode"));
             return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-							"checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+                    "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
         }
 
         StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItemForCheckedOutSkuGrp(skuGroup, stockTransfer);
         if (stockTransferLineItem == null) {
-            addRedirectAlertMessage(new SimpleMessage("Stock Transfer Line Item not Found"));
+            addRedirectAlertMessage(new SimpleMessage("Wrong Barcode for this stock Transfer"));
             return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-							"checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+                    "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
         }
 
         StockTransferLineItem stockTransferLineItemAgainstCheckInSkuGrp = stockTransferDao.checkinSkuGroupExists(stockTransferLineItem);
         ProductVariant productVariant = skuGroup.getSku().getProductVariant();
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
         sku = skuService.findSKU(productVariant, toWarehouse);
-        
+
         if (stockTransferLineItemAgainstCheckInSkuGrp == null) {
             checkinSkuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(skuGroup.getBatchNumber(), skuGroup.getMfgDate(), skuGroup.getExpiryDate(), skuGroup.getCostPrice(), skuGroup.getMrp(), null, null, skuGroup.getStockTransfer(), sku);
             checkinSkuGroup.setBarcode(skuGroup.getBarcode());
             checkinSkuGroup = (SkuGroup) getBaseDao().save(checkinSkuGroup);
         } else {
-             checkinSkuGroup = stockTransferLineItemAgainstCheckInSkuGrp.getCheckedInSkuGroup();
+            checkinSkuGroup = stockTransferLineItemAgainstCheckInSkuGrp.getCheckedInSkuGroup();
         }
 
         skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
-
-        if (stockTransferLineItem.getCheckedinQty() == null || (! stockTransferLineItem.getCheckedinQty().equals(stockTransferLineItem.getCheckedoutQty()))) {
-            skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-            skuItem.setSkuGroup(checkinSkuGroup);
-            stockTransferLineItem.setStockTransfer(stockTransfer);
-            stockTransferLineItem.setCheckedInSkuGroup(checkinSkuGroup);
-            if (stockTransferLineItem.getCheckedinQty() != null) {
-                stockTransferLineItem.setCheckedinQty(stockTransferLineItem.getCheckedinQty() + 1L);
-            } else {
-                stockTransferLineItem.setCheckedinQty(1L);
-            }
-            baseDao.update(stockTransferLineItem);
+        if (skuItem != null) {
+            
+            if (stockTransferLineItem.getCheckedinQty() == null || (!stockTransferLineItem.getCheckedinQty().equals(stockTransferLineItem.getCheckedoutQty()))) {
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                skuItem.setSkuGroup(checkinSkuGroup);
+                stockTransfer.setCheckinDate(HKDateUtil.getNow());
+                stockTransferLineItem.setStockTransfer(stockTransfer);
+                stockTransferLineItem.setCheckedInSkuGroup(checkinSkuGroup);
+                if (stockTransferLineItem.getCheckedinQty() != null) {
+                    stockTransferLineItem.setCheckedinQty(stockTransferLineItem.getCheckedinQty() + 1L);
+                } else {
+                    stockTransferLineItem.setCheckedinQty(1L);
+                }
+                baseDao.update(stockTransferLineItem);
 //           adminInventoryService.inventoryCheckoutForStockTransfer(sku, skuItem, stockTransferLineItem, 1L, loggedOnUser, getInventoryService().getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-            adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, null, stockTransferLineItem, getInventoryService().getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
-            getInventoryService().checkInventoryHealth(sku.getProductVariant());
+                adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, null, stockTransferLineItem, getInventoryService().getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
+                getInventoryService().checkInventoryHealth(sku.getProductVariant());
 
-        }   else {
-               addRedirectAlertMessage(new SimpleMessage("All Sku Item has already been checked in against this stock transfer "));
-		  return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-							"checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("All Sku Item has already been checked in against this stock transfer "));
+                return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
+                        "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+            }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("NO Sku Item found in Transfer out State for SKU Group :" + skuGroup.getId()));
+            return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
+                    "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
         }
 
-         addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-		return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-							"checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+        addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+        return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
+                "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
     }
 
 
