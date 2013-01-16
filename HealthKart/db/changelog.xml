@@ -10918,20 +10918,6 @@
             <column name="pincode_id" type="VARCHAR(6)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-50">
-        <addColumn tableName="pincode_courier_mapping">
-            <column name="pincode_id" type="VARCHAR(6)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-51">
-        <addColumn tableName="pincode_default_courier">
-            <column name="pincode_id" type="VARCHAR(6)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-15">
         <dropForeignKeyConstraint baseTableName="pincode_courier_mapping" constraintName="fk_pincode_courier_mapping_pincode1"/>
     </changeSet>
