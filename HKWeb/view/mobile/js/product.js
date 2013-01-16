@@ -168,7 +168,7 @@ $('#product').bind('pagebeforeshow', function () {
             $.ajax({
                 url: URL + '&pageNo=' + pageNo + '&perPage=' + perPage,
                 dataType: 'json',
-                timeout: '8000',
+                timeout: '15000',
                 success: function (response) {
                     if (hasErr(response)) {
                         loadingPop('h');
