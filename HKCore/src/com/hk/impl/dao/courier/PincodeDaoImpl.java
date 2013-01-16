@@ -23,7 +23,7 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
 
     public Pincode getByPincode(String pincode) {
         String queryString = "from Pincode p where p.pincode=:pincode";
-        return (Pincode) findByNamedParams(queryString, new String[]{"pincode"}, new Object[]{pincode});
+        return (Pincode) findUniqueByNamedParams(queryString, new String[]{"pincode"}, new Object[]{pincode});
     }
 
     public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
