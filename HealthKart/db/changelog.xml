@@ -10915,16 +10915,28 @@
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-1">
         <addColumn tableName="address">
+            <column name="pincode_id" type="VARCHAR(6)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-50">
+        <addColumn tableName="pincode_courier_mapping">
             <column name="pincode_id" type="VARCHAR(6)">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-3">
-        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="hub"/>
+    <changeSet author="Shrey (generated)" id="1358322252952-51">
+        <addColumn tableName="pincode_default_courier">
+            <column name="pincode_id" type="VARCHAR(6)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-4">
-        <addNotNullConstraint columnDataType="VARCHAR(6)" columnName="pincode" tableName="pincode"/>
+    <changeSet author="Shrey (generated)" id="1358322252952-15">
+        <dropForeignKeyConstraint baseTableName="pincode_courier_mapping" constraintName="fk_pincode_courier_mapping_pincode1"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-16">
+        <dropForeignKeyConstraint baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_pincode1"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-5">
         <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="pincode_courier_mapping"/>
@@ -10932,20 +10944,11 @@
     <changeSet author="Shrey (generated)" id="1358322252952-6">
         <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="pincode_default_courier"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-7">
-        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="pincode_region_zone"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-8">
-        <addPrimaryKey columnNames="pincode" tableName="pincode"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-9">
-        <dropPrimaryKey tableName="pincode"/>
-    </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-10">
         <dropForeignKeyConstraint baseTableName="address" constraintName="fk_address_courier1"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-11">
-        <dropForeignKeyConstraint baseTableName="courier_service_info" constraintName="fk_courier_service_info_courier1"/>
+    <changeSet author="Shrey (generated)" id="1358322252952-25">
+        <dropColumn columnName="default_courier_id" tableName="address"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-12">
         <dropForeignKeyConstraint baseTableName="courier_service_info" constraintName="fk_courier_service_info_pincode1"/>
@@ -10956,25 +10959,43 @@
     <changeSet author="Shrey (generated)" id="1358322252952-14">
         <dropForeignKeyConstraint baseTableName="pincode" constraintName="fk_pincode_courier1"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-15">
-        <dropForeignKeyConstraint baseTableName="pincode_courier_mapping" constraintName="fk_pincode_courier_mapping_pincode1"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-16">
-        <dropForeignKeyConstraint baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_pincode1"/>
-    </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-17">
         <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-18">
-        <createIndex indexName="pincode_region_index" tableName="pincode_region_zone" unique="false">
-            <column name="warehouse_id"/>
-            <column name="pincode_id"/>
-            <column name="region_type_id"/>
-            <column name="courier_group_id"/>
-        </createIndex>
+    <changeSet author="Shrey (generated)" id="1358322252952-3">
+        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="hub"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-19">
-        <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="address" constraintName="fk_address_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="pincode" referencedTableName="pincode" referencesUniqueColumn="false"/>
+    <changeSet author="Shrey (generated)" id="1358322252952-7">
+        <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="pincode_region_zone"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-27">
+        <dropColumn columnName="default_courier_id" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-59">
+        <dropNotNullConstraint columnDataType="VARCHAR(30)" columnName="pin" tableName="address"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-60">
+        <sql>
+            insert into `pincode` (`id`,`pincode`,`locality`,`region`,`city_id`,`state_id`,`tier`,`zone_id`) values (999999,'999999','.','Default',1,1,'Metros',1);
+            update address adr, (select adr.pin from address adr left join pincode pc on adr.pin=pc.pincode where pc.pincode is null) pc set adr.pin = '999999', deleted = 1 where adr.pin=pc.pin;
+            update address a , pincode p set  a.pincode_id = p.pincode where a.pin = p.pincode;
+          update hub pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
+          update pincode_courier_mapping pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
+          update pincode_region_zone pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
+          update pincode_default_courier pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
+        </sql>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-65">
+        <addNotNullConstraint columnDataType="INT" columnName="pincode_id" tableName="address"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-66">
+        <addNotNullConstraint columnDataType="INT" columnName="pincode_id" tableName="pincode_default_courier"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-67">
+        <addNotNullConstraint columnDataType="INT" columnName="pincode_id" tableName="pincode_region_zone"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-68">
+        <addNotNullConstraint columnDataType="INT" columnName="pincode_id" tableName="pincode_courier_mapping"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-20">
         <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="hub" constraintName="fk_hub_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="pincode" referencedTableName="pincode"  referencesUniqueColumn="false"/>
@@ -10988,22 +11009,33 @@
     <changeSet author="Shrey (generated)" id="1358322252952-23">
         <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="pincode" referencedTableName="pincode" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-24">
-        <dropIndex indexName="pincode_region_index" tableName="pincode_region_zone"/>
+    <changeSet author="Shrey (generated)" id="1358322252952-19">
+        <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="address" constraintName="fk_address_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="pincode" referencedTableName="pincode" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-25">
-        <dropColumn columnName="default_courier_id" tableName="address"/>
+    <changeSet author="Shrey (generated)" id="1358322252952-4">
+        <addNotNullConstraint columnDataType="VARCHAR(6)" columnName="pincode" tableName="pincode"/>
     </changeSet>
-    <!--<changeSet author="Shrey (generated)" id="1358322252952-26">-->
-        <!--<dropColumn columnName="pin" tableName="address"/>-->
+    <changeSet author="Shrey (generated)" id="1358322252952-26">
+        <dropColumn columnName="pin" tableName="address"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-28">
+        <dropColumn columnName="id" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-8">
+        <addPrimaryKey columnNames="pincode" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-29">
+        <dropTable tableName="courier_service_info"/>
+    </changeSet>
+    <!--<changeSet author="Shrey (generated)" id="1358322252952-24">-->
+        <!--<dropIndex indexName="pincode_region_index" tableName="pincode_region_zone"/>-->
     <!--</changeSet>-->
-    <changeSet author="Shrey (generated)" id="1358322252952-27">
-        <dropColumn columnName="default_courier_id" tableName="pincode"/>
-    </changeSet>
-    <!--<changeSet author="Shrey (generated)" id="1358322252952-28">-->
-        <!--<dropColumn columnName="id" tableName="pincode"/>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="Shrey (generated)" id="1358322252952-29">-->
-        <!--<dropTable tableName="courier_service_info"/>-->
+    <!--<changeSet author="Shrey (generated)" id="1358322252952-18">-->
+        <!--<createIndex indexName="pincode_region_index" tableName="pincode_region_zone" unique="false">-->
+            <!--<column name="warehouse_id"/>-->
+            <!--<column name="pincode_id"/>-->
+            <!--<column name="region_type_id"/>-->
+            <!--<column name="courier_group_id"/>-->
+        <!--</createIndex>-->
     <!--</changeSet>-->
 </databaseChangeLog>
