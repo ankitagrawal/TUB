@@ -10913,6 +10913,15 @@
             <column name="comments" type="TEXT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-25">
+        <dropColumn columnName="default_courier_id" tableName="address"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-27">
+        <dropColumn columnName="default_courier_id" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-59">
+        <dropNotNullConstraint columnDataType="VARCHAR(30)" columnName="pin" tableName="address"/>
+    </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-1">
         <addColumn tableName="address">
             <column name="pincode_id" type="VARCHAR(6)"/>
@@ -10927,26 +10936,14 @@
     <changeSet author="Shrey (generated)" id="1358322252952-10">
         <dropForeignKeyConstraint baseTableName="address" constraintName="fk_address_courier1"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-25">
-        <dropColumn columnName="default_courier_id" tableName="address"/>
-    </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-12">
         <dropForeignKeyConstraint baseTableName="courier_service_info" constraintName="fk_courier_service_info_pincode1"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-13">
         <dropForeignKeyConstraint baseTableName="hub" constraintName="fk_hub_pincode1"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-14">
-        <dropForeignKeyConstraint baseTableName="pincode" constraintName="fk_pincode_courier1"/>
-    </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-17">
         <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-27">
-        <dropColumn columnName="default_courier_id" tableName="pincode"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-59">
-        <dropNotNullConstraint columnDataType="VARCHAR(30)" columnName="pin" tableName="address"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-60">
         <sql>
@@ -10975,16 +10972,19 @@
         <modifyDataType columnName="pincode_id" newDataType="VARCHAR(6)" tableName="hub"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-65">
-        <addNotNullConstraint columnDataType="INT" columnName="pincode_id" tableName="address"/>
+        <addNotNullConstraint columnDataType="VARCHAR(6)" columnName="pincode_id" tableName="address"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-66">
-        <addNotNullConstraint columnDataType="INT" columnName="pincode_id" tableName="pincode_default_courier"/>
+        <addNotNullConstraint columnDataType="VARCHAR(6)" columnName="pincode_id" tableName="pincode_default_courier"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-67">
-        <addNotNullConstraint columnDataType="INT" columnName="pincode_id" tableName="pincode_region_zone"/>
+        <addNotNullConstraint columnDataType="VARCHAR(6)" columnName="pincode_id" tableName="pincode_region_zone"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-68">
-        <addNotNullConstraint columnDataType="INT" columnName="pincode_id" tableName="pincode_courier_mapping"/>
+        <addNotNullConstraint columnDataType="VARCHAR(6)" columnName="pincode_id" tableName="pincode_courier_mapping"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358322252952-69">
+        <addNotNullConstraint columnDataType="VARCHAR(6)" columnName="pincode_id" tableName="hub"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-20">
         <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="hub" constraintName="fk_hub_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="pincode" referencedTableName="pincode"  referencesUniqueColumn="false"/>
