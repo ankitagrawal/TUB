@@ -34,9 +34,11 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 			}
 		}*/
 
-	public SkuGroup getSkuGroup(String barcode, Long warehouseId) {
+	public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId) {
 		List<SkuGroup> skuGroups = getSession().
-				createQuery("from SkuGroup sg where sg.barcode = :barcode and sg.sku.warehouse.id = :warehouseId ").
+				//"from SkuGroup sg where sg.barcode = :barcode and sg.sku.warehouse.id = :warehouseId "
+				createQuery("select distinct si.skuGroup from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId" +
+						" and si.skuItemStatus.id =  " + EnumSkuItemStatus.Checked_IN.getId()).
 				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).
 				list();
 		return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
@@ -155,6 +157,14 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
 		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, null, batch, sku);
 		return findByCriteria(skuGroupCriteria);
+	}
+
+	public List<SkuGroup> getSkuGroupsByBarcode(String barcode, Long warehouseId) {
+		List<SkuGroup> skuGroups = getSession().
+						createQuery("from SkuGroup sg where sg.barcode = :barcode and sg.sku.warehouse.id = :warehouseId").
+				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).list();
+		return skuGroups;
+
 	}
 
 

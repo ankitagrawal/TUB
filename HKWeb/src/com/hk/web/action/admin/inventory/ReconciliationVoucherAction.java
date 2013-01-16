@@ -329,7 +329,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 				return  skuItemList;
 			}
 			if (sku != null) {
-				SkuGroup skuGroup = adminInventoryService.getSkuGroupByHkBarcode(batchNumber, userService.getLoggedInUser().getSelectedWarehouse().getId());
+				//Todo: seema check if warehouse exists before fetching it from userService
+				SkuGroup skuGroup = skuGroupService.getInStockSkuGroup(batchNumber, userService.getLoggedInUser().getSelectedWarehouse().getId());
 				if (skuGroup != null) {
 					skuItemList = adminInventoryService.getInStockSkuItems(skuGroup);
 					if (skuItemList != null && skuItemList.size() > 0) {

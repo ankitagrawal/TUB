@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.inventory;
 
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -20,20 +21,23 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.web.action.error.AdminPermissionAction;
 
+import java.util.List;
+
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
 public class SearchHKBatchAction extends BaseAction {
 
     private static Logger logger = Logger.getLogger(SearchHKBatchAction.class);
 
-    @Autowired
-    AdminInventoryService      adminInventoryService;
+
+	@Autowired
+	SkuGroupService skuGroupService;
 	@Autowired
 	UserService                userService;
 
     @Validate(required = true)
     private String        hkBarcode;
 
-    private SkuGroup      skuGroup;
+    private List<SkuGroup> skuGroupList;
 
     @DefaultHandler
     @DontValidate
@@ -44,7 +48,7 @@ public class SearchHKBatchAction extends BaseAction {
     public Resolution showBatchInfo() {
         logger.debug("upc: " + hkBarcode);
         if (StringUtils.isNotBlank(hkBarcode)) {
-            skuGroup = adminInventoryService.getSkuGroupByHkBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
+            skuGroupList = skuGroupService.getSkuGroupsByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
             return new ForwardResolution("/pages/admin/searchHKBatch.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Invalid HK Barcode."));
@@ -60,11 +64,11 @@ public class SearchHKBatchAction extends BaseAction {
         this.hkBarcode = hkBarcode;
     }
 
-    public SkuGroup getSkuGroup() {
-        return skuGroup;
-    }
+	public List<SkuGroup> getSkuGroupList() {
+		return skuGroupList;
+	}
 
-    public void setSkuGroup(SkuGroup skuGroup) {
-        this.skuGroup = skuGroup;
-    }
+	public void setSkuGroupList(List<SkuGroup> skuGroupList) {
+		this.skuGroupList = skuGroupList;
+	}
 }
