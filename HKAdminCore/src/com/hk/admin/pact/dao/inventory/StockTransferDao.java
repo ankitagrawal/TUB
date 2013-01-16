@@ -19,7 +19,7 @@ public interface StockTransferDao extends BaseDao {
 
 	public StockTransferLineItem getStockTransferLineItem(StockTransfer stockTransfer, Sku sku, SkuGroup skuGroup);
 
-    public StockTransferLineItem getStockTransferLineItemForCheckedOutSkuGrp(SkuGroup checkedOutSkuGroup );
+    public StockTransferLineItem getStockTransferLineItemForCheckedOutSkuGrp(SkuGroup checkedOutSkuGroup, StockTransfer stockTransfer );
 
     public StockTransferLineItem checkinSkuGroupExists(StockTransferLineItem stockTransferLineItem );
 }

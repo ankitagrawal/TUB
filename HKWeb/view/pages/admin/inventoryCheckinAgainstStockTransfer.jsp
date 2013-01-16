@@ -13,7 +13,7 @@
             	$('#productVariantBarcode').change(function() {
 				var formName = $('#stForm2');
 				var formURL = formName.attr('action');
-				formName.attr('action', formURL+"?stockTransfer=" + ${sta.stockTransfer.id} + "&checkinInventoryAgainstStockTransferCheck=");
+				formName.attr('action', formURL+"?stockTransfer=" + ${ica.stockTransfer.id} + "&saveStockTransfer=");
 				formName.submit();
 			});
 
@@ -100,8 +100,8 @@
 				<%--<s:submit name="saveInventoryAgainstStockTransfer" value="Save" class="requiredFieldValidator"/>--%>
 			<%--</s:form>--%>
 
-       <%--<c:if test="${sta.stockTransfer.id != null}">--%>
-		<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction" id="stForm2">
+       <c:if test="${ica.stockTransfer.id != null}">
+		<s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="stForm2">
 		<fieldset class="right_label">
 			<legend>Scan Barcode:</legend>
 			<ul>
@@ -120,6 +120,7 @@
 				<th>VariantID</th>
 				<th>Details</th>
 				<th>Checkedout Qty</th>
+                <th>CheckedIN Qty</th>
 				<th>Cost Price<br/>(Without TAX)</th>
 				<th>MRP</th>
 				<th>Batch Number</th>
@@ -128,7 +129,7 @@
 			</tr>
 			</thead>
 			<tbody id="stTable">
-			<c:forEach var="stockTransferLineItem" items="${sta.stockTransfer.stockTransferLineItems}" varStatus="ctr">
+			<c:forEach var="stockTransferLineItem" items="${ica.stockTransfer.stockTransferLineItems}" varStatus="ctr">
 				<c:set var="productVariant" value="${stockTransferLineItem.sku.productVariant}"/>
 				<c:set var="checkedOutSkuGroup" value="${stockTransferLineItem.checkedOutSkuGroup}"/>
 				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
@@ -139,6 +140,8 @@
 					</td>
 					<td> ${stockTransferLineItem.checkedoutQty}
 					</td>
+                    <td> ${stockTransferLineItem.checkedinQty}
+                    </td>
 					<td>${checkedOutSkuGroup.costPrice}
 					</td>
 					<td> ${checkedOutSkuGroup.mrp}
@@ -153,7 +156,7 @@
 			</c:forEach>
 			</tbody>
 		</table>
-	<%--</c:if>--%>
+	</c:if>
 
 
 

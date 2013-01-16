@@ -13,10 +13,12 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuGroupDao;
+import com.hk.constants.sku.EnumSkuItemStatus;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -55,6 +57,14 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		return minMRPUnbookedSkuGroup;
 	}
 
+
+    public SkuItem getSkuItem(SkuGroup skuGroup , SkuItemStatus skuItemStatus){
+        DetachedCriteria criteria = DetachedCriteria.forClass(SkuItem.class) ;
+        criteria.add(Restrictions.eq("skuGroup",skuGroup));
+        criteria.add(Restrictions.eq("skuItemStatus",skuItemStatus));
+         List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
+        return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
+    }
 
 }
 

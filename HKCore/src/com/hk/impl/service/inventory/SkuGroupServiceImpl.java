@@ -6,6 +6,7 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 
@@ -69,5 +70,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
 		return skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedQty);
 	}
+
+
+    public SkuItem getSkuItem(SkuGroup skuGroup , SkuItemStatus skuItemStatus){
+        return skuItemDao.getSkuItem(skuGroup,skuItemStatus);
+    }
 
 }
