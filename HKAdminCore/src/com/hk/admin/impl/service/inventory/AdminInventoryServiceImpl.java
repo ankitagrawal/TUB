@@ -302,8 +302,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
          return getAdminPVIDao().getAllVariantConfig();
      }
 
-    public SkuGroup getSkuGroupByHkBarcode(String barcode) {
-        return skuGroupService.getSkuGroup(barcode);
+    public SkuGroup getSkuGroupByHkBarcode(String barcode, Long warehouseId) {
+        return skuGroupService.getSkuGroup(barcode, warehouseId);
     }
 
     public BaseDao getBaseDao() {

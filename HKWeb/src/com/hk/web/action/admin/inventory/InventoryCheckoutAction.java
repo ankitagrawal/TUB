@@ -150,7 +150,7 @@ public class InventoryCheckoutAction extends BaseAction {
         logger.debug("upc: " + upc);
 
         if (StringUtils.isNotBlank(upc)) {
-            skuGroupBarcode = skuGroupService.getSkuGroup(upc);
+            skuGroupBarcode = skuGroupService.getSkuGroup(upc, userService.getWarehouseForLoggedInUser().getId());
             if (skuGroupBarcode != null && skuGroupBarcode.getSku() != null) {
                 productVariant = skuGroupBarcode.getSku().getProductVariant();
                 skuGroups = new ArrayList<SkuGroup>();

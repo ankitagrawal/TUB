@@ -34,10 +34,10 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 			}
 		}*/
 
-	public SkuGroup getSkuGroup(String barcode) {
+	public SkuGroup getSkuGroup(String barcode, Long warehouseId) {
 		List<SkuGroup> skuGroups = getSession().
-				createQuery("from SkuGroup sg where sg.barcode = :barcode").
-				setParameter("barcode", barcode).
+				createQuery("from SkuGroup sg where sg.barcode = :barcode and sg.sku.warehouse.id = :warehouseId ").
+				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).
 				list();
 		return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
 	}

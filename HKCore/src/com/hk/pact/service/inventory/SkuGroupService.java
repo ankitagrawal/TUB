@@ -22,7 +22,7 @@ public interface SkuGroupService {
 
 	public List<SkuGroup> getAllCheckedInBatches(Sku sku);
 
-	public SkuGroup getSkuGroup(String barcode);
+	public SkuGroup getSkuGroup(String barcode, Long warehouseId);
 
 	public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku);
 

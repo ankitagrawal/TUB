@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
@@ -72,6 +73,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	private ProductVariantService productVariantService;
 	@Autowired
 	SkuGroupService skuGroupService;
+	@Autowired
+	UserService userService;
 
 	private ReconciliationVoucher reconciliationVoucher;
 	private List<ReconciliationVoucher> reconciliationVouchers = new ArrayList<ReconciliationVoucher>();
@@ -326,7 +329,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 				return  skuItemList;
 			}
 			if (sku != null) {
-				SkuGroup skuGroup = adminInventoryService.getSkuGroupByHkBarcode(batchNumber);
+				SkuGroup skuGroup = adminInventoryService.getSkuGroupByHkBarcode(batchNumber, userService.getLoggedInUser().getSelectedWarehouse().getId());
 				if (skuGroup != null) {
 					skuItemList = adminInventoryService.getInStockSkuItems(skuGroup);
 					if (skuItemList != null && skuItemList.size() > 0) {

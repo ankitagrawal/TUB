@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.inventory;
 
+import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -26,6 +27,8 @@ public class SearchHKBatchAction extends BaseAction {
 
     @Autowired
     AdminInventoryService      adminInventoryService;
+	@Autowired
+	UserService                userService;
 
     @Validate(required = true)
     private String        hkBarcode;
@@ -41,7 +44,7 @@ public class SearchHKBatchAction extends BaseAction {
     public Resolution showBatchInfo() {
         logger.debug("upc: " + hkBarcode);
         if (StringUtils.isNotBlank(hkBarcode)) {
-            skuGroup = adminInventoryService.getSkuGroupByHkBarcode(hkBarcode);
+            skuGroup = adminInventoryService.getSkuGroupByHkBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
             return new ForwardResolution("/pages/admin/searchHKBatch.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Invalid HK Barcode."));

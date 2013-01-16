@@ -72,7 +72,7 @@ public class InventoryBinAllocationAction extends BaseAction {
        return new ForwardResolution("/pages/admin/inventoryBinAllocation.jsp").addParameter("saved","false");
     }
 
-    this.skuGroup = skuGroupService.getSkuGroup(barcode);
+    this.skuGroup = skuGroupService.getSkuGroup(barcode, userService.getWarehouseForLoggedInUser().getId());
     if (skuGroup != null) {
    ProductVariant productVariant = skuGroup.getSku().getProductVariant();
       if (productVariant == null) {

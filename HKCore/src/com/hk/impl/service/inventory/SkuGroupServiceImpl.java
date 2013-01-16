@@ -39,8 +39,8 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return skuGroupDao.getAllCheckedInBatches(sku);
 	}
 
-	public SkuGroup getSkuGroup(String barcode) {
-		return skuGroupDao.getSkuGroup(barcode);
+	public SkuGroup getSkuGroup(String barcode, Long warehouseId) {
+		return skuGroupDao.getSkuGroup(barcode, warehouseId);
 	}
 
 	public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku) {
