@@ -34,7 +34,7 @@ public class StockTransferLineItem implements java.io.Serializable {
 	@JoinColumn(name = "stock_transfer_id", nullable = false)
 	private StockTransfer stockTransfer;
 
-	@Column(name = "checkedout_qty", nullable = false)
+	@Column(name = "checkedout_qty")
 	private Long checkedoutQty;
 
 	@Column(name = "checkedin_qty")
