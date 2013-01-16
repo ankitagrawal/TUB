@@ -22,7 +22,7 @@ import java.util.List;
 public class UserReviewMailDaoImpl extends BaseDaoImpl implements UserReviewMailDao {
 
     public List<UserReviewMail> getAllUserReviewMailByDueDate(Date date){
-        return findByNamedParams("from UserReviewMail urm where urm.dueDate = :date", new String[]{"date"}, new Object[]{date});
+        return findByNamedParams("from UserReviewMail urm where date(urm.dueDate) <= :date AND urm.isMailSent = false", new String[]{"date"}, new Object[]{date});
     }
 
     public UserReviewMail getByOrder(Order order){

@@ -3,7 +3,11 @@ package com.hk.web.action.admin.review;
 import com.akube.framework.stripes.population.CustomPopulationStrategy;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.order.Order;
+import com.hk.domain.review.Mail;
 import com.hk.domain.review.ProductReviewMail;
+import com.hk.domain.review.UserReviewMail;
+import com.hk.manager.EmailManager;
+import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.service.review.ProductReviewMailService;
 import com.hk.pact.service.review.UserReviewMailService;
 import net.sourceforge.stripes.action.*;
@@ -11,8 +15,14 @@ import com.akube.framework.stripes.action.BaseAction;
 import net.sourceforge.stripes.tag.BeanFirstPopulationStrategy;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,11 +35,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReviewMailSettingsAction extends BaseAction {
 
+
+   private static Logger logger = LoggerFactory.getLogger(ReviewMailSettingsAction.class);
+
    @Autowired
    ProductReviewMailService productReviewMailService;
 
     @Autowired
     UserReviewMailService userReviewMailService;
+
+    @Autowired
+    EmailManager emailManager;
+
+    @Autowired
+    EmailRecepientDao emailRecepientDao;
 
     private Order order;
 
@@ -95,6 +114,8 @@ public class ReviewMailSettingsAction extends BaseAction {
         editSettings = false;
         return new ForwardResolution("/pages/admin/review/settings.jsp");
     }
+
+
 
 
     public boolean isEditSettings() {

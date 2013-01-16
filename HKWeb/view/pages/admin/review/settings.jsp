@@ -41,7 +41,8 @@
                     </li>
                     <li>
                         <label>Mail Type</label>
-                        <s:select name="productReviewMail.mail" >
+                        <s:select name="productReviewMail.mail" value = "${rmsa.productReviewMail.mail.id}">
+                            <s:option value="">----Select Mail Template---</s:option>
                             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allMailType"
                                                        value="id" label="name"/>
                         </s:select>
@@ -63,6 +64,11 @@
                     </li>
                 </ul>
             </fieldset>
+        </s:form>
+        <s:form beanclass="com.hk.web.action.admin.review.SendReviewMail" >
+            <label>Product ID</label>
+            <s:text name="product" /><s:submit name= "testEmail" value="Test Email" />
+            <s:submit name= "sendEmails" value="Send Email" />
         </s:form>
     </s:layout-component>
 </s:layout-render>

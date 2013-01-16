@@ -42,6 +42,14 @@ public class CreateMailTemplateAction extends BaseAction {
         return new ForwardResolution("/pages/admin/review/mailTemplate.jsp");
     }
 
+    public Resolution searchMail(){
+        mail = mailService.getMailByName(mail.getName());
+        if(mail != null){
+            editTemplate = true;
+        } else
+            addRedirectAlertMessage(new SimpleMessage("Mail Template doesnt  exist."));
+        return new ForwardResolution("/pages/admin/review/mailTemplate.jsp");
+    }
     public Resolution createMailTemplate(){
         Mail priorMailTemplate=mailService.getMailByName(mail.getName());
         editTemplate = false;

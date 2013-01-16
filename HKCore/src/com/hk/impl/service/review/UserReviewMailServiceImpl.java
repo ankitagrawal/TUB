@@ -81,16 +81,18 @@ public class UserReviewMailServiceImpl implements UserReviewMailService {
                             userReview = reviewService.getReviewByUserAndProduct(user, productVariant.getProduct());
                             if(userReview == null){
                                 userReviewMail.setDueDate(BaseUtils.getFutureTimestamp( 24*3600*1000*productReviewMail.getTimeWindowDays()));
-                            }else{
-                               userReviewMail.setDueDate(new Date(userReview.getReviewDate().getTime() + 24*3600*1000*productReviewMail.getDaysToReviewAgain()));
+                                userReviewMail.setIsMailSent(false);
+                                userReviewMail.setUser(user);
+                                userReviewMail.setProductVariant(productVariant);
+                                userReviewMail.setBaseOrder(order);
+                                userReviewMail.setCreateDt(BaseUtils.getCurrentTimestamp());
+                                userReviewMail.setUpdateDt(BaseUtils.getCurrentTimestamp());
+                                userReviewMailDao.save(userReviewMail);
                             }
-                            userReviewMail.setIsMailSent(false);
-                            userReviewMail.setUser(user);
-                            userReviewMail.setProductVariant(productVariant);
-                            userReviewMail.setBaseOrder(order);
-                            userReviewMail.setCreateDt(BaseUtils.getCurrentTimestamp());
-                            userReviewMail.setUpdateDt(BaseUtils.getCurrentTimestamp());
-                            userReviewMailDao.save(userReviewMail);
+                            /*else{
+                               userReviewMail.setDueDate(new Date(userReview.getReviewDate().getTime() + 24*3600*1000*productReviewMail.getDaysToReviewAgain()));
+                            }*/
+
                         }
                     }
                 }

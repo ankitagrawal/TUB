@@ -21,12 +21,19 @@
         <s:form beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction" var ="enca">
             <fieldset class="right_label">
                 <legend>Create Mail Template</legend>
+                <c:if test="${cmta.editTemplate}">
+                    <s:hidden name="mail.id"/>
+                </c:if>
                 <ul class="mail">
                     <li>
                         <label>Mail Template Name</label>
                         <s:text name="mail.name" id="name"/>
+                        <s:form beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction" var ="cmta"><s:submit name="searchMail" value="Search" /></s:form>
                     </li>
-                    <%--<li>
+                    <li>
+                        Modify Content: <s:file name="contentBean"/><br/>
+                    </li>
+                    <li>
                         <label>Template Content</label>
                         <s:textarea  name="mail.content"  id='mail.conent'/>
                         <script type="text/javascript">
@@ -39,9 +46,6 @@
 
                             //]]>
                         </script>
-                    </li><--%>
-                    <li>
-                        Content: <s:file name="contentBean"/><br/>
                     </li>
                     <li>
                         <s:submit name="collectionReview" value="GENERATE FTL" id="btn"/>

@@ -10,6 +10,9 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.review.Mail;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -405,6 +408,26 @@ public class EmailManager {
 
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.passwordResetEmail);
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
+    }
+
+    public boolean sendProductReviewEmail(User user, Product product, Mail mail){
+        HashMap valuesMap = new HashMap();
+
+        valuesMap.put("user", user);
+        valuesMap.put("product", product);
+
+        String review_link = "http://www.healthkart.com/core/catalog/product/ProductReview.action?writeNewReview=&product="+product.getId();
+        valuesMap.put("review_link", review_link);
+
+        //template contents from db
+        String mailTemplateContents = mail.getContent();
+        if (mailTemplateContents != null && StringUtils.isNotBlank(mailTemplateContents)) {
+            Template freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(BaseUtils.newline + mailTemplateContents);
+            return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
+        } else {
+            logger.error("Email Template Content is not present");
+            return false;
+        }
     }
 
     public boolean sendDiscountCouponEmail(String name, String email, String coupon) {

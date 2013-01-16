@@ -125,8 +125,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
           ftlGenerated = Boolean.TRUE;
           logger.info("ftl generated");
 
-          adminEmailCampaignService.uploadEmailContent(contentFolder);
-          contentUploaded = true;
+          //contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
           logger.info("uploaded email content to s3.");
           FileUtils.deleteDirectory(contentFolder);
           FileUtils.deleteQuietly(contentZipFolder);
@@ -189,8 +188,10 @@ public class EmailNewsletterCampaignAction extends BaseAction {
       //mail.setName(name);
       name = mail.getName() +"-Product Review";
       Resolution r = generateFtlAndUploadData();
+      contentUploaded = true;
       if(contentUploaded){
           mail.setAmazonFileName(FtlUtils.getBasicAmazonS3Path() + HKFileUtils.getPathAfterSubstring(htmlPath, "emailContentFiles"));
+          mail.setContent(ftlContents);
           mailService.save(mail);
       }
       return new ForwardResolution("/pages/admin/review/mailTemplate.jsp");
