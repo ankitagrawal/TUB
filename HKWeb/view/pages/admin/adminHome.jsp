@@ -388,9 +388,6 @@
 	<h3>
 		<s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction">View/Edit Merchant Details</s:link></h3>
 
-	<h3>
-		<s:link
-				beanclass="com.hk.web.action.admin.address.BulkUploadMerchantAddressAction">Bulk Upload Merchant Address</s:link></h3>
 </div>
 
 <div class="cl"></div>
