@@ -193,7 +193,7 @@ $('#product').bind('pagebeforeshow', function () {
                     }
                 },
                 error: function () {
-                    popUpMob.show(_hkG.errs.requestFail);
+                    popUpMob.show(__hkG.errs.requestFail);
                     loadingPop('h');
                 }
 
