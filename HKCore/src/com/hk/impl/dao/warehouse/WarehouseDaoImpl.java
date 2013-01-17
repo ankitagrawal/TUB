@@ -39,6 +39,7 @@ public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
         warehouseIdList.add(currentWarehouseForSO.getId());
         warehouseIdList.add(WarehouseService.CORPORATE_OFFICE_ID);
         warehouseIdList.add(WarehouseService.GURGAON_PHARMA_WAREHOUSE_ID);
+	    warehouseIdList.add(WarehouseService.PUNJABI_BAGH_WH_STORE_ID);
         return (Warehouse) getSession().createQuery("from Warehouse w where w.id  not in ( :warehouseIdList)").setParameterList("warehouseIdList", warehouseIdList).uniqueResult();
 
     }

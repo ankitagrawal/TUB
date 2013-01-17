@@ -148,15 +148,15 @@
 			</td>
 			<td>${stockTransferLineItem.sku.productVariant}</td>
 			<td>
-					${stockTransferLineItem.batchNumber}
+					${stockTransferLineItem.checkedOutSkuGroup.batchNumber}
 			</td>
-			<td>${stockTransferLineItem.costPrice}
+			<td>${stockTransferLineItem.checkedOutSkuGroup.costPrice}
 			</td>
-			<td>${stockTransferLineItem.mrp}</td>
-			<td>${stockTransferLineItem.checkedoutQty}
+			<td>${stockTransferLineItem.checkedOutSkuGroup.mrp}</td>
+			<td>${stockTransferLineItem.checkedOutSkuGroup.checkedoutQty}
 			</td>
-			<td>${stockTransferLineItem.checkedoutQty * stockTransferLineItem.costPrice}
-				<c:set var="totalAmount" value="${totalAmount + (stockTransferLineItem.checkedoutQty * stockTransferLineItem.costPrice)}" />
+			<td>${stockTransferLineItem.checkedoutQty * stockTransferLineItem.checkedOutSkuGroup.costPrice}
+				<c:set var="totalAmount" value="${totalAmount + (stockTransferLineItem.checkedoutQty * stockTransferLineItem.checkedOutSkuGroup.costPrice)}" />
 			</td>
 		</tr>
 	</c:forEach>
