@@ -117,8 +117,8 @@ public class EmailNewsletterCampaignAction extends BaseAction {
           ftlGenerated = Boolean.TRUE;
           logger.info("ftl generated");
 
-          //contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
-            contentUploaded = true;
+          contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
+          //  contentUploaded = true;
           logger.info("uploaded email content to s3.");
           FileUtils.deleteDirectory(contentFolder);
           FileUtils.deleteQuietly(contentZipFolder);
