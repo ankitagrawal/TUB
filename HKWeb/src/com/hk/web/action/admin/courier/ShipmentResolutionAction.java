@@ -103,6 +103,7 @@ public class ShipmentResolutionAction extends BaseAction {
             shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
             shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
         }
+        shipment = shipmentService.save(shipment);
         Awb updatedAwb = shipment.getAwb();
         if (!currentAwb.equals(updatedAwb)) {
             String comments = "Courier/Awb changed to " + updatedAwb.getCourier().getName() + "-->" + updatedAwb.getAwbNumber();
