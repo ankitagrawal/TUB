@@ -1,4 +1,4 @@
-Shipping Order -: ${shippingOrder.gatewayOrderId?c} has been escalated to DropShip Queue
+Shipping Order -: ${shippingOrder.id?c} has been escalated to DropShip Queue
 <html>
 <head>
   <title>Welcome to HealthKart.com</title>
@@ -9,7 +9,7 @@ Shipping Order -: ${shippingOrder.gatewayOrderId?c} has been escalated to DropSh
 <p style="margin-bottom:1.2em">Attention!!</p>
 
 <p style="margin-bottom:1em">
-    Please note that  Shipping Order : ${shippingOrder.gatewayOrderId?c} has been escalated to DropShip Queue.
+    Please note that  Shipping Order : ${shippingOrder.id?c} has been escalated to DropShip Queue.
 
 </p>
 
