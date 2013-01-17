@@ -21,29 +21,16 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 
-			var validateForm = function() {
-				var isValidated = true;
-                if($('.toWarehouse').val() == " "){
-                 alert("Select  To Warehouse");
-                     isValidated = false;
-                }
-				return isValidated;
-			};
-
             $("#createST").click(function() {
-                var isValidated = validateForm();
-                if (!isValidated) {
-                    return isValidated;
-                }
-                if (isValidated) {
-                    var fromWarehouse = $('.toWarehouse').val();
-                    if (fromWarehouse == ${fromwarehouse}) {
-                        return confirm("To Warehouse value  and  From Warehouse are  same. Click Ok To Proceed");
-                    }
-                    else {
-                        return isValidated;
-                    }
-                }
+	            if ($('.toWarehouse').val() == " ") {
+		            alert("Select  To Warehouse");
+		            return false;
+	            }
+	            var fromWarehouse = $('.toWarehouse').val();
+	            if (fromWarehouse == ${fromwarehouse}) {
+		            return confirm("To Warehouse value  and  From Warehouse are  same. Click Ok To Proceed");
+	            }
+
             });
 
 			$('#productVariantBarcode').change(function() {
@@ -83,17 +70,24 @@
 				<td>From Warehouse :</td>
 				<td>
 					<s:hidden name="fromWarehouse" value="${whAction.setWarehouse}"/>
-						${whAction.setWarehouse.city}
+						${whAction.setWarehouse.name}
 				</td>
 				<td>
 					To Warehouse :
 				</td>
-				<td><s:select name="toWarehouse" value="${sta.stockTransfer.toWarehouse}" class="toWarehouse">
-					<s:option> </s:option>
-					<c:forEach items="${whList}" var="wh">
-						<s:option value="${wh}">${wh.city}</s:option>
-					</c:forEach>
-				</s:select></td>
+				<td><c:if test="${sta.stockTransfer.id == null}">
+					<s:select name="toWarehouse" value="${sta.stockTransfer.toWarehouse}" class="toWarehouse">
+						<s:option> </s:option>
+						<c:forEach items="${whList}" var="wh">
+							<s:option value="${wh}">${wh.name}</s:option>
+						</c:forEach>
+					</s:select>
+				</c:if>
+					<c:if test="${sta.stockTransfer.id != null}">
+						<s:hidden name="toWarehouse" value="${sta.stockTransfer.toWarehouse}"/>
+						${sta.stockTransfer.toWarehouse.name}
+					</c:if>
+				</td>
 			</tr>
 			<tr>
 				<td><s:submit name="createOrUpdateStockTransfer" value="Create/Update Stock Transfer" id="createST"/> </td>

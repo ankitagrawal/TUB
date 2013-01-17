@@ -64,8 +64,6 @@ public interface AdminInventoryService {
 
     public Long countOfCheckedInUnitsForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
 
-    public SkuGroup getSkuGroupByHkBarcode(String barcode);
-
     public List<VariantConfig> getAllVariantConfig();
 
 	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList);

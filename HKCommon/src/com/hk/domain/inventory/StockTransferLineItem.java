@@ -65,7 +65,7 @@ public class StockTransferLineItem implements java.io.Serializable {
 	private Sku sku;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "checked_out_sku_group_id", nullable = false)
+	@JoinColumn(name = "checked_out_sku_group_id")
 	private SkuGroup checkedOutSkuGroup;
 
 	@ManyToOne(fetch = FetchType.LAZY)

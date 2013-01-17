@@ -38,7 +38,6 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
-import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -323,9 +322,6 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
          return getAdminPVIDao().getAllVariantConfig();
      }
 
-    public SkuGroup getSkuGroupByHkBarcode(String barcode) {
-        return skuGroupService.getSkuGroup(barcode);
-    }
 
     public BaseDao getBaseDao() {
         return baseDao;

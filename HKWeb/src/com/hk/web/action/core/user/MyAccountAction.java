@@ -1,10 +1,6 @@
 package com.hk.web.action.core.user;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,6 +28,7 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.RoleService;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED}, disallowRememberMe = true)
+@HttpCache(allow = false)
 public class MyAccountAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(MyAccountAction.class);
 
