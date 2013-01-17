@@ -12,11 +12,14 @@ import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.*;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ReplacementOrder;
+import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
@@ -72,7 +75,21 @@ public class ShipmentServiceImpl implements ShipmentService {
         Courier suggestedCourier = courierService.getDefaultCourier(pincode, isCod, isGround, shippingOrder.getWarehouse());
         Zone zone = pincode.getZone();
 
-        if (suggestedCourier == null) {
+/*
+        if(shippingOrder instanceof ReplacementOrder){
+            ShippingOrder parentShippingOrder = ((ReplacementOrder) shippingOrder).getRefShippingOrder();
+            if(((ReplacementOrder) shippingOrder).isRto()){
+                ReplacementOrderReason replacementOrderReason = getAdminShippingOrderService().getRTOReasonForShippingOrder(parentShippingOrder);
+                if(replacementOrderReason != null){
+                    if(EnumReplacementOrderReason.getCourierRelatedReasonForRto().contains(replacementOrderReason.getId())){
+                        if(suggestedCourier != null && parentShippingOrder.getShipment().getAwb().getCourier().getId().equals(suggestedCourier.getId())){
+                        }
+                    }
+                }
+            }
+*/
+
+            if (suggestedCourier == null) {
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
                     CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
             return null;

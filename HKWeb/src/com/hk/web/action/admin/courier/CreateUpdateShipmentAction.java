@@ -101,21 +101,6 @@ public class CreateUpdateShipmentAction extends BaseAction {
     }
 
     public Resolution updateShipment() {
-        /*
-                if(shippingOrder instanceof ReplacementOrder){
-			ShippingOrder parentShippingOrder = ((ReplacementOrder) shippingOrder).getRefShippingOrder();
-			if(((ReplacementOrder) shippingOrder).isRto()){
-				ReplacementOrderReason replacementOrderReason = getAdminShippingOrderService().getRTOReasonForShippingOrder(parentShippingOrder);
-				if(replacementOrderReason != null){
-					if(EnumReplacementOrderReason.getCourierRelatedReasonForRto().contains(replacementOrderReason.getId())){
-						if(selectedCourier != null && parentShippingOrder.getShipment().getAwb().getCourier().getId().equals(selectedCourier.getId())){
-							addRedirectAlertMessage(new SimpleMessage("Previous shipping order was returned due to the courier selected. Please select another courier or contact admin"));
-						}
-					}
-				}
-			}
-		}
-         */
         shipmentService.save(shipment);
         shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
         shippingOrderService.save(shippingOrder);
