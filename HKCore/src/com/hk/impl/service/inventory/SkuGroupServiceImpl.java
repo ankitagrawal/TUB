@@ -77,4 +77,8 @@ public class SkuGroupServiceImpl implements SkuGroupService {
         return skuItemDao.getSkuItem(skuGroup,skuItemStatus);
     }
 
+     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId){
+       return skuGroupDao.getSkuGroupsByBarcodeForStockTransfer(barcode, warehouseId);  
+     }
+
 }

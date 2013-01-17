@@ -400,7 +400,8 @@ public class InventoryCheckinAction extends BaseAction {
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
-        skuGroupList = skuGroupService.getSkuGroupsByBarcode(productVariantBarcode, stockTransfer.getFromWarehouse().getId());
+
+        skuGroupList = skuGroupService.getSkuGroupsByBarcodeForStockTransfer(productVariantBarcode, stockTransfer.getFromWarehouse().getId());
         if (skuGroupList == null || skuGroupList.size() <= 0) {
             addRedirectAlertMessage(new SimpleMessage("No SKU Group found for Barcode"));
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
@@ -433,6 +434,7 @@ public class InventoryCheckinAction extends BaseAction {
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                 skuItem.setSkuGroup(checkinSkuGroup);
                 stockTransfer.setCheckinDate(HKDateUtil.getNow());
+                stockTransfer.setReceivedBy(loggedOnUser);
                 stockTransferLineItem.setStockTransfer(stockTransfer);
                 stockTransferLineItem.setCheckedInSkuGroup(checkinSkuGroup);
                 if (stockTransferLineItem.getCheckedinQty() != null) {
@@ -450,7 +452,7 @@ public class InventoryCheckinAction extends BaseAction {
                 return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
             }
         } else {
-            addRedirectAlertMessage(new SimpleMessage("NO Sku Item found in Transfer out State for SKU Group :" + skuGroup.getId()));
+            addRedirectAlertMessage(new SimpleMessage("All Sku Item has already been checked in agianst sku group :" + skuGroup.getId()));
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
 

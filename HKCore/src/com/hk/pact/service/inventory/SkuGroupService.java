@@ -47,6 +47,6 @@ public interface SkuGroupService {
 
     public SkuItem getSkuItem(SkuGroup skuGroup , SkuItemStatus skuItemStatus);
 
-
+      public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
 
 }
