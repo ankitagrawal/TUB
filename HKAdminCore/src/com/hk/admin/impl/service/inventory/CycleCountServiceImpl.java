@@ -44,8 +44,8 @@ public class CycleCountServiceImpl implements CycleCountService {
 		this.baseDao = baseDao;
 	}
 
-	public CycleCountItem getCycleCountItem(SkuGroup skuGroup){
-	  return  cycleCountDao.getCycleCountItem(skuGroup);
+	public CycleCountItem getCycleCountItem(CycleCount cycleCount ,SkuGroup skuGroup){
+	  return  cycleCountDao.getCycleCountItem(cycleCount ,skuGroup);
 	}
 
 	public List<CycleCountItem> getAllCycleCountItem(){

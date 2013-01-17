@@ -1,7 +1,10 @@
 package com.hk.admin.pact.dao.inventory;
 
 import com.hk.domain.cycleCount.CycleCountItem;
+import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,6 +16,7 @@ import com.hk.domain.sku.SkuGroup;
 public interface CycleCountDao {
 
 
-	public CycleCountItem getCycleCountItem(SkuGroup skuGroup);
+	public CycleCountItem getCycleCountItem(CycleCount cycleCount ,SkuGroup skuGroup);
+
 
 }

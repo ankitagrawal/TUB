@@ -23,7 +23,7 @@ public interface CycleCountService {
 
 	public CycleCountItem save(CycleCountItem cycleCountItem);
 
-	public CycleCountItem getCycleCountItem(SkuGroup skuGroup);
+	public CycleCountItem getCycleCountItem(CycleCount cycleCount ,SkuGroup skuGroup);
 
 	public List<CycleCountItem> getAllCycleCountItem();
 

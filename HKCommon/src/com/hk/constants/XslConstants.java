@@ -154,6 +154,10 @@ public class XslConstants {
 
 	public static final String GATEWAY_ORDER_ID = "GATEWAY ORDER ID";
 	public static final String AMOUNT = "AMOUNT";
+	public static final String HK_BARCODE = "HK BARCODE";
+	public static final String SCANNED_QTY = "SCANNED QTY";
+	public static final String SYSTEM_QTY = "SYSTEM QTY";
+	public static final String VARINACE_QTY = "VARINACE QTY";
 
 
 }

@@ -2,6 +2,7 @@ package com.hk.admin.impl.dao.inventory;
 
 import com.hk.admin.pact.dao.inventory.CycleCountDao;
 import com.hk.domain.cycleCount.CycleCountItem;
+import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.hibernate.criterion.DetachedCriteria;
@@ -20,18 +21,21 @@ import java.util.List;
 @Repository
 public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
 
-	public CycleCountItem getCycleCountItem(SkuGroup skuGroup) {
-		DetachedCriteria cycleCountItemCriteria = getCycleCountItemCriteria(skuGroup);
+	public CycleCountItem getCycleCountItem(CycleCount cycleCount,SkuGroup skuGroup) {
+		DetachedCriteria cycleCountItemCriteria = getCycleCountItemCriteria(cycleCount ,skuGroup);
 		List<CycleCountItem> cycleCountItems = findByCriteria(cycleCountItemCriteria);
 		return cycleCountItems != null && cycleCountItems.size() > 0 ? cycleCountItems.get(0) : null;
 
 	}
 
-	private DetachedCriteria getCycleCountItemCriteria(SkuGroup skuGroup) {
+	private DetachedCriteria getCycleCountItemCriteria(CycleCount cycleCount,SkuGroup skuGroup) {
 		DetachedCriteria cycleCountItemCriteria = DetachedCriteria.forClass(CycleCountItem.class);
 
 		if (skuGroup != null) {
 			cycleCountItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
+		}
+		if(cycleCount != null){
+			cycleCountItemCriteria.add(Restrictions.eq("cycleCount", cycleCount));
 		}
 		return cycleCountItemCriteria;
 	}

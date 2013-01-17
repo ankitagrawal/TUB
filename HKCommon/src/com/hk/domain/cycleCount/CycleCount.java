@@ -4,6 +4,8 @@ import com.hk.domain.inventory.BrandsToAudit;
 import com.hk.domain.user.User;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,8 +42,11 @@ public class CycleCount implements java.io.Serializable {
 	@Column(name = "end_date", nullable = false, length = 19)
 	private Date endDate = new Date();
 
-	@Column(name = "audit_status", nullable = false)
-	private Long auditStatus;
+	@Column(name = "cycle_status", nullable = false)
+	private Long cycleStatus;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cycleCount")
+	private List<CycleCountItem> cycleCountItems = new ArrayList<CycleCountItem>();;
 
 
 	public Long getId() {
@@ -84,16 +89,26 @@ public class CycleCount implements java.io.Serializable {
 		this.endDate = endDate;
 	}
 
-	public Long getAuditStatus() {
-		return auditStatus;
+	public Long getCycleStatus() {
+		return cycleStatus;
 	}
 
-	public void setAuditStatus(Long auditStatus) {
-		this.auditStatus = auditStatus;
+	public void setCycleStatus(Long cycleStatus) {
+		this.cycleStatus = cycleStatus;
 	}
 
 	@Override
 	public String toString() {
 		return this.id != null ? this.id.toString() : "";
 	}
+
+	public List<CycleCountItem> getCycleCountItems() {
+		return cycleCountItems;
+	}
+
+	public void setCycleCountItems(List<CycleCountItem> cycleCountItems) {
+		this.cycleCountItems = cycleCountItems;
+	}
+
+
 }
