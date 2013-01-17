@@ -10,7 +10,16 @@
 		<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
          <script type="text/javascript">
 		$(document).ready(function() {
+
+            $('#stForm2').submit(function(){
+                 var pvb = $('#productVariantBarcode').val();
+                    if(pvb == null || pvb == ""){
+                        alert("Value can't be Empty");
+                        return false;
+                    }
+            });
             	$('#productVariantBarcode').change(function() {
+
 				var formName = $('#stForm2');
 				var formURL = formName.attr('action');
 				formName.attr('action', formURL+"?stockTransfer=" + ${ica.stockTransfer.id} + "&saveStockTransfer=");

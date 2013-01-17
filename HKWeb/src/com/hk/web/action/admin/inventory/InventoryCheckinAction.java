@@ -85,6 +85,8 @@ public class InventoryCheckinAction extends BaseAction {
     @Autowired
     BaseDao baseDao;
 
+    private List<SkuGroup> skuGroupList;
+
 	// SkuGroupDao skuGroupDao;
 
 	// SkuItemDao skuItemDao;
@@ -390,26 +392,25 @@ public class InventoryCheckinAction extends BaseAction {
         }
         if (StringUtil.isBlank(productVariantBarcode)) {
             addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
-            return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+            return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
+                    "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
         }
 
         User loggedOnUser = null;
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
-
-        SkuGroup skuGroup = skuGroupService.getSkuGroup(productVariantBarcode);
-        if (skuGroup == null) {
+        skuGroupList = skuGroupService.getSkuGroupsByBarcode(productVariantBarcode, stockTransfer.getFromWarehouse().getId());
+        if (skuGroupList == null || skuGroupList.size() <= 0) {
             addRedirectAlertMessage(new SimpleMessage("No SKU Group found for Barcode"));
-            return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-                    "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+            return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
+        SkuGroup skuGroup = skuGroupList.get(0);
 
         StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItemForCheckedOutSkuGrp(skuGroup, stockTransfer);
         if (stockTransferLineItem == null) {
             addRedirectAlertMessage(new SimpleMessage("Wrong Barcode for this stock Transfer"));
-            return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-                    "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+            return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
 
         StockTransferLineItem stockTransferLineItemAgainstCheckInSkuGrp = stockTransferDao.checkinSkuGroupExists(stockTransferLineItem);
@@ -427,7 +428,7 @@ public class InventoryCheckinAction extends BaseAction {
 
         skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
         if (skuItem != null) {
-            
+
             if (stockTransferLineItem.getCheckedinQty() == null || (!stockTransferLineItem.getCheckedinQty().equals(stockTransferLineItem.getCheckedoutQty()))) {
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                 skuItem.setSkuGroup(checkinSkuGroup);
@@ -446,18 +447,15 @@ public class InventoryCheckinAction extends BaseAction {
 
             } else {
                 addRedirectAlertMessage(new SimpleMessage("All Sku Item has already been checked in against this stock transfer "));
-                return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-                        "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+                return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage("NO Sku Item found in Transfer out State for SKU Group :" + skuGroup.getId()));
-            return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-                    "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+            return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
 
         addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-        return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-                "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+        return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
     }
 
 
