@@ -14,23 +14,6 @@
         <welcome-file>/pages/home.jsp</welcome-file>
     </welcome-file-list>
 
-    <error-page>
-        <error-code>401</error-code>
-        <location>/pages/error/noPage.html</location>
-    </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/pages/error/noPage.html</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/pages/error/noPage.html</location>
-    </error-page>
-    <error-page>
-        <error-code>503</error-code>
-        <location>/pages/error/noPage.html</location>
-    </error-page>
-
     <!--  Listeners Start -->
     <listener>
         <listener-class>
@@ -123,11 +106,11 @@
         </init-param>
         <init-param>
             <param-name>SSL.SecureHost</param-name>
-            <param-value>www.healthkart.com</param-value>
+            <param-value>localhost:8443</param-value>
         </init-param>
         <init-param>
             <param-name>SSL.UnsecureHost</param-name>
-            <param-value>www.healthkart.com</param-value>
+            <param-value>localhost:8080</param-value>
         </init-param>
         <init-param>
             <param-name>SSL.SessionMode</param-name>
@@ -217,8 +200,6 @@
         <url-pattern>/diabetes/*</url-pattern>
         <url-pattern>/home-devices</url-pattern>
         <url-pattern>/home-devices/*</url-pattern>
-	    <url-pattern>/health-devices</url-pattern>
-	    <url-pattern>/health-devices/*</url-pattern>
         <url-pattern>/personal-care</url-pattern>
         <url-pattern>/personal-care/*</url-pattern>
         <url-pattern>/nutrition</url-pattern>
@@ -229,7 +210,6 @@
         <url-pattern>/autocomplete-search/*</url-pattern>
         <url-pattern>/admin</url-pattern>
         <url-pattern>/admin/*</url-pattern>
-        <url-pattern>/agent/order</url-pattern>
         <url-pattern>/core</url-pattern>
         <url-pattern>/core/*</url-pattern>
         <url-pattern>/affiliate</url-pattern>
@@ -256,26 +236,10 @@
         <url-pattern>/sitemap.xml</url-pattern>
         <url-pattern>/sitemap.txt</url-pattern>
         <url-pattern>/ror.xml</url-pattern>
-        <url-pattern>/revital</url-pattern>
         <url-pattern>/super-savers</url-pattern>
-        <url-pattern>/faq/*</url-pattern>
-	    <url-pattern>/dmp</url-pattern>
-		<url-pattern>/online-shopping-festival/baby</url-pattern>
-		<url-pattern>/online-shopping-festival/beauty</url-pattern>
-	    <url-pattern>/online-shopping-festival</url-pattern>
-	    <url-pattern>/feedback</url-pattern>
+        <url-pattern>/feedback</url-pattern>
+        <url-pattern>/loyaltypg/*</url-pattern>
     </servlet-mapping>
-    
-    <servlet>
-		<servlet-name>HKSingleLoginServlet</servlet-name>
-		<servlet-class>
-			com.hk.web.servlet.HKSingleLoginServlet
-		</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>HKSingleLoginServlet</servlet-name>
-		<url-pattern>/login/auth</url-pattern>
-	</servlet-mapping>
 
 
     <!--  Servlet End -->
@@ -315,70 +279,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-
-    <filter>
-        <filter-name>adminFilter</filter-name>
-        <filter-class>
-            com.akube.framework.filter.AdminFilter
-        </filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>adminFilter</filter-name>
-        <url-pattern>/admin/*</url-pattern>
-    </filter-mapping>
-
-    <filter>
-        <filter-name>AffiliateFilter</filter-name>
-        <filter-class>
-            com.hk.web.filter.AffiliateTrackingFilter
-        </filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>AffiliateFilter</filter-name>
-        <servlet-name>StripesDispatcher</servlet-name>
-        <url-pattern>*.jsp</url-pattern>
-        <url-pattern>/</url-pattern>
-    </filter-mapping>
-
-    <!-- Commenting this filter for performance issues  8th June 2012 -->
-    <filter>
-        <filter-name>CampaignTrackingFilter</filter-name>
-        <filter-class>
-            com.hk.web.filter.CampaignTrackingFilter
-        </filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>CampaignTrackingFilter</filter-name>
-        <servlet-name>StripesDispatcher</servlet-name>
-        <url-pattern>*.jsp</url-pattern>
-        <url-pattern>/</url-pattern>
-    </filter-mapping>
-
-  <filter>
-    <filter-name>AnalyticsFilter</filter-name>
-    <filter-class>
-      com.hk.web.filter.AnalyticsFilter
-    </filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>AnalyticsFilter</filter-name>
-    <servlet-name>StripesDispatcher</servlet-name>
-    <url-pattern>*.jsp</url-pattern>
-    <url-pattern>/</url-pattern>
-  </filter-mapping>
-    
-    <filter>
-        <filter-name>ServiceCityFilter</filter-name>
-        <filter-class>com.hk.web.filter.ServiceCityFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>ServiceCityFilter</filter-name>
-        <servlet-name>StripesDispatcher</servlet-name>
-        <url-pattern>*.jsp</url-pattern>
-        <url-pattern>/services</url-pattern>
-    </filter-mapping>
-
-
     <filter>
         <filter-name>RememberMeFilter</filter-name>
         <filter-class>com.hk.web.filter.RememberMeFilter</filter-class>
@@ -401,6 +301,19 @@
     </filter>
     <filter-mapping>
         <filter-name>whitespaceFilter</filter-name>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>CampaignTrackingFilter</filter-name>
+        <filter-class>
+            com.hk.web.filter.CampaignTrackingFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CampaignTrackingFilter</filter-name>
         <servlet-name>StripesDispatcher</servlet-name>
         <url-pattern>*.jsp</url-pattern>
         <url-pattern>/</url-pattern>
