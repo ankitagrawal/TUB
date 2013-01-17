@@ -100,7 +100,7 @@ public class FedExCourierUtil {
 
     private String               fedExServerUrl;
 
-    private ShipmentService      shipmentService          = ServiceLocatorFactory.getService(ShipmentService.class);
+    private ShipmentService shipmentService          = ServiceLocatorFactory.getService(ShipmentService.class);
 
     private ShippingOrderService shippingOrderService     = ServiceLocatorFactory.getService(ShippingOrderService.class);
     private UserService          userService              = ServiceLocatorFactory.getService(UserService.class);

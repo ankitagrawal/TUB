@@ -1,10 +1,6 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.hk.domain.order.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +35,7 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
 
 @Service
@@ -67,6 +64,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private AdminShippingOrderDao adminShippingOrderDao;
     @Autowired
     AwbService awbService;
+	@Autowired
+	UserService userService;
 //	@Autowired
 //	SMSManager smsManager;
 
@@ -155,10 +154,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             shippingOrder = getShippingOrderService().setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
+			//shipmentService.createShipment(shippingOrder);
 	        // auto escalate shipping orders if possible
-	        shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+	        //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
 
-	        shipmentService.createShipment(shippingOrder);
+			orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
             return shippingOrder;
         }
         return null;
@@ -312,7 +312,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return shippingOrder;
     }
 
-
     @Transactional
        public ShippingOrder moveShippingOrderBackToDropShippingQueue(ShippingOrder shippingOrder) {
            shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
@@ -344,6 +343,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		}
 		return null;
 	}
+
 
 
     public ShippingOrderService getShippingOrderService() {
@@ -429,4 +429,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         this.orderService = orderService;
     }
 
+	public UserService getUserService() {
+		return userService;
+	}
 }
