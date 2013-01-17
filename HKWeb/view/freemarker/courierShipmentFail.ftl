@@ -1,4 +1,4 @@
-Awbs are finished for courier : ${courier.name}
+Error creating shipment for order : ${orderId} 
 <html>
 <head>
   <title>Welcome to HealthKart.com</title>
@@ -9,10 +9,8 @@ Awbs are finished for courier : ${courier.name}
 <p style="margin-bottom:1.2em">Attention!!</p>
 
 <p style="margin-bottom:1em">
-  Please replenish awb's for courier: ${courier.name}.<br/>
-  For warehouse = ${shippingOrder.warehouse.name} <br/>
-  For orders delivered by COD = ${cod} <br/>
-  Shipping Order Id = ${shippingOrder.gatewayOrderId} <br/>
+  ${message}
+  Order Id = ${orderId} <br/>
 </p>
 
 
