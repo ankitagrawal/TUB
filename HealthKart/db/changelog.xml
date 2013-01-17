@@ -10845,7 +10845,7 @@
     </changeSet>
     <changeSet author="Pratham (generated)" id="1355125289354-1">
         <createTable tableName="pincode_courier_mapping">
-            <column autoIncrement="true" name="id" type="INT">
+            <column name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="pincode_id" type="INT">
@@ -10868,6 +10868,9 @@
             </column>
             <column name="routing_code" type="VARCHAR(45)"/>
         </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1355125289354-50">
+        <addAutoIncrement tableName="pincode_courier_mapping" columnName="id" columnDataType="INT"/>
     </changeSet>
     <changeSet author="Pratham (generated)" id="1355142601346-2">
         <createTable tableName="shipment_service_type">
