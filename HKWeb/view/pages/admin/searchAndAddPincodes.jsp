@@ -103,7 +103,7 @@
                         <td>
                        <c:choose>
                         <c:when test="${mpaBean.pincode!=null}">
-						${mpaBean.pincode.city}
+						${mpaBean.pincode.city.name}
                         </c:when>
                          <c:otherwise>
                              <s:select name="pincode.city" id="city">
@@ -120,7 +120,7 @@
 						 <td>
                        <c:choose>
                         <c:when test="${mpaBean.pincode!=null}">
-						${mpaBean.pincode.state}
+						${mpaBean.pincode.state.name}
                         </c:when>
                          <c:otherwise>
                              <s:select name="pincode.state" id="state">

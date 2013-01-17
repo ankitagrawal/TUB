@@ -85,7 +85,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
             if (!pincodeCourierService.isDefaultCourierApplicable(pincode, defaultCourier.getCourier(), defaultCourier.isGroundShipping(), defaultCourier.isCod())) {
                  addRedirectAlertMessage(new SimpleMessage("One of the mappings is currently not serviceable"));
-                 return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
+                 return new RedirectResolution(ChangeDefaultCourierAction.class,"search").addParameter("pincodeString",pincodeString);
             }
         }
         for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {

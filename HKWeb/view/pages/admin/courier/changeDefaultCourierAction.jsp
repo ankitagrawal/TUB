@@ -157,7 +157,7 @@
             <c:if test="${cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0}">
                 <h2>Pincode Default Courier</h2>
                 <br/>
-                <table id="courierTable" class="zebra_vert">
+                <table class="zebra_vert">
                     <tr>
                         <thead>
                         <th>S.No</th>
@@ -169,6 +169,7 @@
                         <th>Estimate Shipping Cost</th>
                         </thead>
                     </tr>
+                    <tbody id="courierTable">
                     <c:forEach items="${cdca.pincodeDefaultCouriers}" var="pincodeDefaultCourier" varStatus="ctr">
                         <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                             <td>
@@ -204,6 +205,7 @@
                             </td>
                         </tr>
                     </c:forEach>
+                    </tbody>
                     </table>
                     <a href="changeDefaultCourierAction.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
                     <br/>

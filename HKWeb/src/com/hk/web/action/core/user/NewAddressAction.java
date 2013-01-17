@@ -53,7 +53,7 @@ public class NewAddressAction extends BaseAction implements ValidationErrorHandl
             @Validate(field = "line2", maxlength = 120),
             @Validate(field = "city", required = true, maxlength = 60),
             @Validate(field = "state", required = true, maxlength = 50),
-            @Validate(field = "pin", required = true, maxlength = 6),
+            @Validate(field = "pincode", required = true, maxlength = 6),
             @Validate(field = "phone", required = true, maxlength = 25) })
     private Address             address;
 

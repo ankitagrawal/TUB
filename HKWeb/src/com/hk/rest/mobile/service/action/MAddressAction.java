@@ -3,6 +3,7 @@ package com.hk.rest.mobile.service.action;
 import com.akube.framework.gson.JsonUtils;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.core.RoleConstants;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.Role;
@@ -11,6 +12,7 @@ import com.hk.manager.AddressBookManager;
 import com.hk.manager.OrderManager;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.web.HealthkartResponse;
@@ -39,12 +41,8 @@ import java.util.List;
 @Component
 public class MAddressAction extends MBaseAction {
 
-	//@Autowired
-	//AddressDao addressDao;
 	@Autowired
 	OrderManager orderManager;
-//	@Autowired
-//	OrderDao orderDao;
 	@Autowired
 	OrderService orderService;
 	@Autowired
@@ -55,6 +53,8 @@ public class MAddressAction extends MBaseAction {
 	AddressBookManager addressManager;
 	@Autowired
 	private PincodeCourierService pincodeCourierService;
+    @Autowired
+    PincodeService pincodeService;
 	private List<Address> addresses = new ArrayList<Address>(1);
 
 	// @Validate(on = "checkout", required = true)
@@ -81,6 +81,12 @@ public class MAddressAction extends MBaseAction {
 		String message = MHKConstants.STATUS_DONE;
 		String status = MHKConstants.STATUS_OK;
 
+        Pincode pincode = pincodeService.getByPincode(pin);
+
+        if(pincode == null){
+            //todo courier refactor handle this
+        }
+
 		try {
 			User user = getUserService().getUserById(getPrincipal().getId());
 			if (null != getUserService().getLoggedInUser()) {
@@ -95,7 +101,7 @@ public class MAddressAction extends MBaseAction {
 					address.setName(name);
 					address.setPhone(phone);
 					if (pincodeCourierService.isCodAllowed(pin))
-						address.setPin(pin);
+						address.setPincode(pincode);
 					else {
 						message = MHKConstants.COD_NOT_IN_PINCODE + pin;
 						status = MHKConstants.STATUS_ERROR;

@@ -52,6 +52,7 @@
             <fieldset>
             <label>Enter SO Gateway Id</label>
             <s:text name="gatewayOrderId" id="gatewayOrderId"/>
+                <br><br>
             <s:submit name="searchShipment" value="Search" id="search"/>
             </fieldset>
             <div class="clear"></div>
@@ -71,7 +72,7 @@
                         <thead>
                         <th>AWB Tracking ID</th>
                         <th>Courier Name</th>
-                        <th>Shiiping Order</th>
+                        <th>Shipping Order</th>
                         <th>Shipment Service Type</th>
                         <th>Box Size</th>
                         <th>Box Weight</th>
@@ -137,6 +138,7 @@
                         </td>
                     </tr>
                 </table>
+                <s:hidden name="shippingOrder" value="${cusa.shippingOrder.id}"/>
                 <s:submit name="updateShipment" value="SAVE" id="validate"/>
             </c:if>
             </fieldset>

@@ -13,7 +13,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "pincode_courier_mapping")
+@Table(name = "pincode_courier_mapping", uniqueConstraints = @UniqueConstraint(columnNames = {"pincode_id", "courier_id"}))
 public class PincodeCourierMapping implements java.io.Serializable {
 
     @Id

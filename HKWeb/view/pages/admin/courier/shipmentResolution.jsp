@@ -166,10 +166,14 @@
              <c:otherwise>
                  <fieldset>
                  <c:if test="${shipRes.shippingOrder!=null}">
-                shipment is not created for Shipping Order # <h2 style="color:blue;">${shipRes.shippingOrder.id}</h2>
-                 Please Click on the link to <s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="generateAWB">create AWB
+                 shipment is not created for Shipping Order # <span style="color:blue;">${shipRes.shippingOrder.id}</span>
+                 Please Click on the below Button to create AWB
+                 <div class="clear"></div>
+                 <br><br>
+                 <s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="generateAWB" class="button_orange">create AWB
                  <s:param name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
                  </s:link>
+                 <br><br>    
                  </c:if>
                  </fieldset>
              </c:otherwise>

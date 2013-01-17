@@ -16,6 +16,7 @@
           $(document).ready(function(){
              $('#save').click(function(){
                 var awbNumber = $('#awbNumber').val();
+                 var courier = $('#status').val();
                  if(awbNumber == null || awbNumber == "" || (awbNumber.length >16 && awbNumber.length <8)){
                      alert("Tracking Number can't be left empty or Length must be between 8 to 16");
                      return false;
@@ -23,30 +24,41 @@
                  else{
                  $('#awbBarCode').attr('value',awbNumber);
                  }
+                  if(courier == null || courier == ""){
+                      alert("Please select a courier");
+                      return false;
+                  }
              });
           });
           </script>
     </s:layout-component>
      <s:layout-component name="content">
+    <fieldset>
     You are Creating AWB for :- <br/><br/> 
-    Shipping Order Id # <h2 style="color:blue;"> ${cusa.shippingOrder.id} </h2>
-    COD # <h2 style="color:blue;">${cusa.shippingOrder.COD}</h2>
-    Warehouse # <h2 style="color:blue;">${cusa.shippingOrder.warehouse.name}</h2>
+    Shipping Order Id # <span style="color:blue;"> ${cusa.shippingOrder.id} </span>
+    <br><br>
+    COD # <span style="color:blue;">${cusa.shippingOrder.COD}</span>
+    <br><br>
+    Warehouse # <span style="color:blue;">${cusa.shippingOrder.warehouse.name}</span>
+    </fieldset>
       <s:form beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">
+          <fieldset>
            <label>Enter Courier Id</label>
              <s:select name="awb.courier"  id="status">
+                 <s:option value="">--Select--</s:option>
                   <c:forEach items="${cusa.applicableCouriers}" var="courier">
                       <s:option value="${courier.id}">${courier.name}</s:option>
                   </c:forEach>
                 </s:select>
           <label>Enter Tracking Number</label>
-          <s:text name="awb.awbNumber" id = "awbNumber"/>
+          <s:text name="awb.awbNumber" id = "awbNumber" style="width:180px;height:25px;"/>
            <s:hidden name="awb.awbBarCode" id= "awbBarCode" value=""/>
            <s:hidden name="awb.cod" value="${cusa.shippingOrder.COD}"/>
            <s:hidden name="awb.warehouse" value="${cusa.shippingOrder.warehouse}"/>
            <s:hidden name="awb.awbStatus" value="<%=EnumAwbStatus.Unused.getId()%>"/>
            <s:hidden name="shippingOrder" value="${cusa.shippingOrder.id}"/>
           <s:submit name="createAssignAwb" value="SAVE" id="save"/>
+          </fieldset>
           </s:form>
     </s:layout-component>
     </s:layout-render>

@@ -109,7 +109,7 @@
                   <fieldset>
                   <h2>Pincode Courier Mappings</h2>
                     <br>
-                <table class="zebra_vert" id="courierTable">
+                <table class="zebra_vert" >
                     <thead>
                     <tr>
                         <th>S.No.</th>
@@ -121,6 +121,7 @@
                         <th>COD Ground</th>
                     </tr>
                     </thead>
+                    <tbody id="courierTable">
                     <c:forEach items="${pcma.pincodeCourierMappings}" var="pCourierMap" varStatus="ctr">
                         <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                             <td>
@@ -154,6 +155,7 @@
                             </td>
                         </tr>
                     </c:forEach>
+                    </tbody>
                      </table>
                     <a href="pincodeCourierMapping.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
                     <br/>

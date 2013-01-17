@@ -140,7 +140,7 @@
           form.find("input[type='text'][name='address.city']").val(city);
 //          form.find("input[type='text'][name='address.state']").val(state);
           form.find("[name='address.state']").val(state.toUpperCase());
-          form.find("input[type='text'][name='address.pincode.pincode']").val(pin);
+          form.find("input[type='text'][name='address.pincode']").val(pin);
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
@@ -229,7 +229,7 @@
           </s:select>
           <%--<s:text name="address.state"/>--%>
           <div class='label'>PIN Code<span class="aster">*</span></div>
-          <s:text name="address.pincode.pincode" class="pincode" maxlength="6"/>
+          <s:text name="address.pincode" class="pincode" maxlength="6"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
           <s:text name="address.phone" id="phoneNo"/>
           <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>
