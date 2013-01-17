@@ -82,11 +82,13 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     private ProductVariant    productVariant;
     private Product           product;
     private Category          primaryCategory;
+	private Boolean           productInStock;
+	private Boolean           productDeleted;
 
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        notifyMePage = notifyMeDao.searchNotifyMe(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory);
+        notifyMePage = notifyMeDao.searchNotifyMe(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productInStock, productDeleted);
         notifyMeList = notifyMePage.getList();
         return new ForwardResolution("/pages/admin/notifyMeList.jsp");
     }
@@ -118,7 +120,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/notify-me-list" + sdf.format(new Date()) + ".xls");
-            xlsFile = reportManager.generateNotifyMeList(xlsFile.getPath(), startDate, endDate);
+            xlsFile = reportManager.generateNotifyMeList(xlsFile.getPath(), startDate, endDate,  product, productVariant, primaryCategory, productInStock, productDeleted);
             addRedirectAlertMessage(new SimpleMessage("Notify me list successfully generated."));
         } catch (Exception e) {
             e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
@@ -152,7 +154,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     public Resolution sendMailToNotifiedUsers() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        notifyMePage = notifyMeDao.searchNotifyMe(startDate, endDate, 0, 0, product, productVariant, null);
+        notifyMePage = notifyMeDao.searchNotifyMe(startDate, endDate, 0, 0, product, productVariant, null, null, null);
         notifyMeList = notifyMePage.getList();
 
         User user = getPrincipalUser();
@@ -244,6 +246,8 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         params.add("startDate");
         params.add("endDate");
         params.add("primaryCategory");
+		params.add("productInStock");
+	    params.add("productDeleted");
         return params;
     }
 
@@ -307,4 +311,19 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         this.emailCampaignDao = emailCampaignDao;
     }
 
+	public Boolean getProductInStock() {
+		return productInStock;
+	}
+
+	public void setProductInStock(Boolean productInStock) {
+		this.productInStock = productInStock;
+	}
+
+	public Boolean getProductDeleted() {
+		return productDeleted;
+	}
+
+	public void setProductDeleted(Boolean productDeleted) {
+		this.productDeleted = productDeleted;
+	}
 }

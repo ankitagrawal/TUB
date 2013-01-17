@@ -83,7 +83,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    ShippingOrderLifecycleService shippingOrderLifecycleService;
+    ShippingOrderLifecycleService shippingOrderLifecycleService;       
 
     private Long orderId;
     private Long storeId;
@@ -103,6 +103,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     private boolean sortByPaymentDate = true;
     private boolean sortByScore = true;
+    private Boolean dropShip = null;
 
     @DontValidate
     @DefaultHandler
@@ -218,6 +219,10 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         }
 
         orderSearchCriteria.setCategories(categoryList);
+
+        if (dropShip != null){
+           orderSearchCriteria.setDropShip(dropShip);
+        }
 
         logger.debug("basketCategories : " + basketCategories.size());
         Set<String> basketCategoryList = new HashSet<String>();
@@ -511,4 +516,15 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         this.sortByScore = sortByScore;
     }
 
+    public Boolean isDropShip() {
+        return dropShip;
+    }
+
+      public Boolean getDropShip() {
+         return dropShip;
+     }
+
+    public void setDropShip(Boolean dropShip) {
+        this.dropShip = dropShip;
+    }
 }

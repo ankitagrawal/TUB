@@ -36,7 +36,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction {
 
-    private static Logger logger = LoggerFactory.getLogger(DropShippingAwaitingQueueAction.class);
+    private static Logger logger = LoggerFactory.getLogger(ShipmentInstallationAwaitingQueueAction.class);
 
     Page shippingOrderPage;
     List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
@@ -47,8 +47,7 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
-    @Autowired
-    private ShipmentService shipmentService;
+    
 
     private Long shippingOrderId;
     private Long orderId;
@@ -59,7 +58,7 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
     private Category category;
     private ShippingOrderStatus shippingOrderStatus;
     private Integer defaultPerPage = 30;
-    private Integer noOfInstallableItems;
+
 
     @DontValidate
     @DefaultHandler
@@ -72,20 +71,16 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
 
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
+        shippingOrderSearchCriteria.setDropShipping(true);
+        shippingOrderSearchCriteria.setInstallable(true);
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
-
         if (shippingOrderPage != null) {
-            List<ShippingOrder> baseshippingOrderList = shippingOrderPage.getList();
-            for (ShippingOrder shippingOrder : baseshippingOrderList) {
-                if (shippingOrder.isDropShipping() && shipmentService.isShippingOrderHasInstallableItem(shippingOrder)) {
-                    shippingOrderList.add(shippingOrder);
-                }
-            }
-            noOfInstallableItems = shippingOrderList.size();
-            logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
+            shippingOrderList = shippingOrderPage.getList();
         }
+        logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
         return new ForwardResolution("/pages/admin/installationAwaitingQueue.jsp");
     }
+
 
     public Resolution searchOrders() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
@@ -93,15 +88,11 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
 //        shippingOrderStatus = shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered);
 //        shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
+        shippingOrderSearchCriteria.setDropShipping(true);
+        shippingOrderSearchCriteria.setInstallable(true);
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
-        if (shippingOrderPage != null) {
-            List<ShippingOrder> baseshippingOrderList = shippingOrderPage.getList();
-            for (ShippingOrder shippingOrder : baseshippingOrderList) {
-                if (shippingOrder.isDropShipping() && shipmentService.isShippingOrderHasInstallableItem(shippingOrder)) {
-                    shippingOrderList.add(shippingOrder);
-                }
-            }
-            noOfInstallableItems = shippingOrderList.size();
+         if (shippingOrderPage != null) {
+            shippingOrderList = shippingOrderPage.getList();
         }
         return new ForwardResolution("/pages/admin/installationAwaitingQueue.jsp");
     }
@@ -220,15 +211,6 @@ public class ShipmentInstallationAwaitingQueueAction extends BasePaginatedAction
 
     public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
         this.shippingOrderStatusService = shippingOrderStatusService;
-    }
-
-
-    public Integer getNoOfInstallableItems() {
-        return noOfInstallableItems;
-    }
-
-    public void setNoOfInstallableItems(Integer noOfInstallableItems) {
-        this.noOfInstallableItems = noOfInstallableItems;
     }
 
     public Long getOrderId() {

@@ -10905,7 +10905,12 @@
     </changeSet>
     <changeSet author="Ankit" id="08-01-2013">
        <sql>
-         INSERT into courier(id, name,disabled) values (650 , 'Gati' , 1), (660 , 'Star Track' , 1);  
+         INSERT into courier(id, name,disabled) values (650 , 'Gati' , 1), (660 , 'Star Track' , 1);
        </sql>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1357818583466-1">
+        <addColumn tableName="supplier">
+            <column name="comments" type="TEXT"/>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
