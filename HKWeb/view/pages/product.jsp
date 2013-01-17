@@ -168,7 +168,6 @@
 	<%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" product="${product}"/>--%>
 	<%--</c:if>--%>
 
-	<c:if test="${pa.combo == null}">
 		<shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
 			<s:layout-render name="/pages/modal/productLink.jsp" product="${product}"
 			                 affiliateId="${pa.affiliate.id}"/>
@@ -176,7 +175,6 @@
 			<s:layout-render name="/pages/modal/productBannerLink.jsp" product="${product}"
 			                 affiliateId="${pa.affiliate.id}"/>
 		</shiro:hasPermission>
-	</c:if>
 
 	<div class="jqmWindow" style="display:none;" id="notifyMeWindow"></div>
 
