@@ -102,7 +102,7 @@ public class StockTransferAction extends BasePaginatedAction {
 		stockTransfer.setFromWarehouse(fromWarehouse);
 		stockTransfer = (StockTransfer) stockTransferDao.save(stockTransfer);
 		addRedirectAlertMessage(new SimpleMessage("Stock Transfer Updated"));
-		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
 	}
 
 	public Resolution save() {
@@ -152,7 +152,7 @@ public class StockTransferAction extends BasePaginatedAction {
 		}
 
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
 	}
 
 	public Resolution revertStockTransferOut() {
@@ -194,8 +194,8 @@ public class StockTransferAction extends BasePaginatedAction {
 
 		stliToBeReduced.setCheckedoutQty(stliToBeReduced.getCheckedoutQty() - 1);
 		baseDao.save(stliToBeReduced);
-		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+		addRedirectAlertMessage(new SimpleMessage("Qty reduced by 1."));
+		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
 	}
 
 	public Resolution checkinInventoryAgainstStockTransfer() {

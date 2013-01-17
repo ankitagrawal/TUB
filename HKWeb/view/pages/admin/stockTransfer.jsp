@@ -11,6 +11,8 @@
 	<%
 		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+		String messageColor = request.getParameter("messageColor");
+		pageContext.setAttribute("messageColor", messageColor);
 	%>
 
 
@@ -21,11 +23,18 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('.alert').hide();
-			$('#productVariantBarcode').click(function(){
+
+			$('#productVariantBarcode').focus();
+			$('#productVariantBarcode').keydown(function(){
 				$('.alertST').hide();
 			});
 
-			$('.alertST').find('li').css('font-size', '30px').css('color', 'red');
+			if($('#messageColorParam').val() == "green") {
+				$('.alertST').find('li').css('font-size', '30px').css('color', 'green');
+			} else {
+				$('.alertST').find('li').css('font-size', '30px').css('color', 'red');
+			}
+
 
             $("#createST").click(function() {
 	            if ($('.toWarehouse').val() == " ") {
@@ -51,6 +60,7 @@
 
 </s:layout-component>
 <s:layout-component name="content">
+	<input type="hidden" id="messageColorParam" value="${messageColor}">
 	<c:if test="${sta.stockTransfer.id != null}">
 		<h2>Edit Stock Transfer # ${sta.stockTransfer.id}</h2>
 	</c:if>
