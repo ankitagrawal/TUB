@@ -225,6 +225,13 @@ public class ShipmentServiceImpl implements ShipmentService {
         return newShipment;
     }
 
+    @Override
+    public boolean isValidShipment(Shipment shipment) {
+        Awb awb = shipment.getAwb();
+        //todo
+        return true;
+    }
+
     public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder) {
         Double estimatedWeight = 100D;
         for (LineItem lineItem : shippingOrder.getLineItems()) {

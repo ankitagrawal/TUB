@@ -21,6 +21,8 @@ public interface ShipmentService {
 
     public Shipment recreateShipment(ShippingOrder shippingOrder);
 
+    public boolean isValidShipment(Shipment shipment);
+
     public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder);
 
     public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
