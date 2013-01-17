@@ -44,5 +44,7 @@ public interface AdminSkuItemDao extends BaseDao {
   @Deprecated
   public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup);
 
+	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse);
+
 
 }
