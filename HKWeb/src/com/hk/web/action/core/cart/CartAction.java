@@ -5,12 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.joda.time.DateTime;
@@ -54,6 +49,7 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 import com.hk.web.action.core.user.SelectAddressAction;
 
 @Component
+@HttpCache(allow = false)
 public class CartAction extends BaseAction {
 
     @SuppressWarnings("unused")

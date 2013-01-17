@@ -365,6 +365,16 @@
                   <s:option value="60">60</s:option>
                   <s:option value="120">120</s:option>
                 </s:select></li>--%>
+            <li>
+                 <label style="float:left;width: 60px;">Drop Ship </label>
+                  <div class="checkBoxList">
+                 <s:select name="dropShip" value="">
+                                        <s:option value="">--Select--</s:option>
+                                        <s:option value="0">N</s:option>
+                                        <s:option value="1">Y</s:option>
+                 </s:select>
+                      </div>
+            </li>
 
 
                 <div class="buttons">

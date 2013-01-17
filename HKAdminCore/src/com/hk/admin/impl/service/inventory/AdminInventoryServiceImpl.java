@@ -37,7 +37,6 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
-import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -206,7 +205,25 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         }
     }
 
-    public Long countOfCheckedInUnitsForGrnLineItem(GrnLineItem grnLineItem) {
+	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy) {
+		ProductVariantInventory pvi = new ProductVariantInventory();
+		pvi.setSku(sku);
+		pvi.setSkuItem(skuItem);
+		pvi.setStockTransferLineItem(stockTransferLineItem);
+		pvi.setInvTxnType(inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKOUT));
+		pvi.setQty(qty);
+		pvi.setTxnBy(txnBy);
+		pvi.setTxnDate(new Date());
+		getBaseDao().save(pvi);
+
+		if (skuItem != null && qty < 0) {
+			skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+			getBaseDao().save(skuItem);
+		}
+
+	}
+
+	public Long countOfCheckedInUnitsForGrnLineItem(GrnLineItem grnLineItem) {
         Long count = getAdminPVIDao().getChechedinItemCount(grnLineItem);
         if (count == null) {
             count = 0L;
@@ -284,9 +301,6 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
          return getAdminPVIDao().getAllVariantConfig();
      }
 
-    public SkuGroup getSkuGroupByHkBarcode(String barcode) {
-        return skuGroupService.getSkuGroup(barcode);
-    }
 
     public BaseDao getBaseDao() {
         return baseDao;
@@ -390,6 +404,10 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
 	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
 		return adminSkuItemDao.getInStockSkuItems(skuGroup);
+	}
+
+	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse) {
+		return adminSkuItemDao.getInStockSkuItems(barcode, warehouse);
 	}
 
 

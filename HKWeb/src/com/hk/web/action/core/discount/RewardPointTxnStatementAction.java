@@ -1,6 +1,7 @@
 package com.hk.web.action.core.discount;
 
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.hk.domain.user.User;
 import com.hk.pact.service.order.RewardPointService;
 
 @Component
+@HttpCache(allow = false)
 public class RewardPointTxnStatementAction extends BaseAction {
 
     @Autowired

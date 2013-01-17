@@ -7,6 +7,7 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
+import com.akube.framework.dao.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,17 @@ public class CourierServiceImpl implements CourierService {
             return courierList.size() > 0 ? courierList.get(0) : null;
         }
         return null;
+    }
+
+    public List<Courier> getCouriers(List<Long> courierIds, List<String> courierNames, Boolean disabled) {
+        return courierDao.getCouriers(courierIds, courierNames, disabled);
+    }
+    public Page getCouriers(String courierName,Boolean disabled, String courierGroup,int page, int perPage){
+        return  courierDao.getCouriers(courierName,disabled,courierGroup,page,perPage);
+    }
+
+    public void saveOrUpdate(Courier courier) {
+        courierDao.saveOrUpdate(courier);
     }
 
     public List<Courier> getAllCouriers() {
@@ -75,7 +87,4 @@ public class CourierServiceImpl implements CourierService {
 
     }
 
-    public List<Courier> getCouriers(List<Long> courierIds, List<String> courierNames, Boolean disabled) {
-        return courierDao.getCouriers(courierIds, courierNames, disabled);
-    }
 }

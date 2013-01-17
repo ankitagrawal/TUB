@@ -46,6 +46,7 @@ import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 import com.hk.util.TokenUtils;
+import com.hk.manager.EmailManager;
 
 /**
  * @author vaibhav.adlakha
@@ -71,6 +72,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ReplacementOrderDao        replacementOrderDao;
 	@Autowired
 	private PincodeService pincodeService;
+
+    @Autowired
+	private EmailManager        emailManager;
 
     private OrderService               orderService;
 
@@ -300,6 +304,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
              logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
          }
          getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
+         emailManager.sendEscalationToDropShipEmail(shippingOrder);               
          return shippingOrder;
      }
     

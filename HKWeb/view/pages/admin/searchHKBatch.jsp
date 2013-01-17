@@ -22,30 +22,31 @@
         </td>
         <td valign="top">
           <c:choose>
-            <c:when test="${ssba.skuGroup != null}">
-              <c:set var="skuGroup" value="${ssba.skuGroup}"/>
-              <c:set var="variant" value="${skuGroup.sku.productVariant}"/>
-              <c:set var="product" value="${variant.product}"/>
-              <h2>Batch Info of ${skuGroup.barcode}</h2>
-              <table>
-                <tr>
-                  <td>Name:</td><td>${product.name}</td>
-                </tr><tr>
-                <td>Variant:</td><td>${variant.id}</td>
-              </tr><tr>
-                <td>Variant Options:</td><td>${variant.optionsSlashSeparated}</td>
-              </tr><tr>
-                <td>MRP:</td><td>${variant.markedPrice}</td>
-              </tr><tr>
-                <td>Batch:</td><td>${skuGroup.batchNumber}</td>
-              </tr><tr>
-                <td>Mfg. Date:</td><td>${skuGroup.mfgDate}</td>
-              </tr><tr>
-                <td>Exp. Date:</td><td>${skuGroup.expiryDate}</td>
-              </tr><tr>
-                <td>Inventory:</td><td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
-              </tr>
-              </table>
+            <c:when test="${ssba.skuGroupList != null}">
+	          <c:forEach items="${ssba.skuGroupList}" var="skuGroup">
+	              <c:set var="variant" value="${skuGroup.sku.productVariant}"/>
+	              <c:set var="product" value="${variant.product}"/>
+	              <h2>Batch Info of ${skuGroup.barcode}</h2>
+	              <table>
+	                <tr>
+	                  <td>Name:</td><td>${product.name}</td>
+	                </tr><tr>
+	                <td>Variant:</td><td>${variant.id}</td>
+	              </tr><tr>
+	                <td>Variant Options:</td><td>${variant.optionsSlashSeparated}</td>
+	              </tr><tr>
+	                <td>MRP:</td><td>${variant.markedPrice}</td>
+	              </tr><tr>
+	                <td>Batch:</td><td>${skuGroup.batchNumber}</td>
+	              </tr><tr>
+	                <td>Mfg. Date:</td><td>${skuGroup.mfgDate}</td>
+	              </tr><tr>
+	                <td>Exp. Date:</td><td>${skuGroup.expiryDate}</td>
+	              </tr><tr>
+	                <td>Inventory:</td><td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
+	              </tr>
+	              </table>
+	            </c:forEach>
             </c:when>
             <c:otherwise>
               <c:if test="${ssba.hkBarcode != null}">

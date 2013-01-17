@@ -14,11 +14,11 @@ public interface NotifyMeDao extends BaseDao {
 
     public NotifyMe save(NotifyMe notifyMe);
 
-    public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory);
+    public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory,  Boolean productInStock, Boolean productDeleted);
+
+	public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,  Boolean productInStock, Boolean productDeleted);
 
     public List<String> getPendingNotifyMeProductVariant();
-
-    public List<NotifyMe> getNotifyMeListBetweenDate(Date startDate, Date endDate);
 
     public List<NotifyMe> getNotifyMeListForProductVariantInStock();
 

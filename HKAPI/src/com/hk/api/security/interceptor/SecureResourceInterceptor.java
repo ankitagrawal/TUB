@@ -110,6 +110,8 @@ public class SecureResourceInterceptor implements PreProcessInterceptor {
             return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.TokenExpired),200,getJsonHeaders());
         }catch (HkInvalidApiKeyException ex){
             return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidAppKey),200,getJsonHeaders());
+        }catch (HkUserNotFoundException ex){
+            return new ServerResponse(new HKAPIBaseDTO(EnumHKAPIErrorCode.UserDoesNotExist),200, getJsonHeaders());
         }
         //to-do use shiro to store this user in security context - this can be use  to sign any message that is sent back
         return null;

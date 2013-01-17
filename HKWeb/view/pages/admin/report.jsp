@@ -287,7 +287,7 @@
 
                     <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
                         <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.city}</s:option>
+                            <s:option value="${wh.id}">${wh.name}</s:option>
                         </c:forEach>
                     </s:select>
 
@@ -320,7 +320,7 @@
 
                     <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
                         <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.city}</s:option>
+                            <s:option value="${wh.id}">${wh.name}</s:option>
                         </c:forEach>
                     </s:select>
 
@@ -353,7 +353,7 @@
 
                     <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
                         <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.city}</s:option>
+                            <s:option value="${wh.id}">${wh.name}</s:option>
                         </c:forEach>
                     </s:select>
 
@@ -394,7 +394,7 @@
 
                     <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
                         <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.city}</s:option>
+                            <s:option value="${wh.id}">${wh.name}</s:option>
                         </c:forEach>
                     </s:select>
 
@@ -435,7 +435,7 @@
 
                     <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
                         <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.city}</s:option>
+                            <s:option value="${wh.id}">${wh.name}</s:option>
                         </c:forEach>
                     </s:select>
 
