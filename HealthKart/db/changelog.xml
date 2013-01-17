@@ -11022,17 +11022,17 @@
     <changeSet author="Shrey (generated)" id="1358322252952-29">
         <dropTable tableName="courier_service_info"/>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-24">
-        <dropIndex indexName="pincode_region_index" tableName="pincode_region_zone"/>
-    </changeSet>
-    <changeSet author="Shrey (generated)" id="1358322252952-18">
-        <createIndex indexName="pincode_region_index" tableName="pincode_region_zone" unique="false">
-            <column name="warehouse_id"/>
-            <column name="pincode_id"/>
-            <column name="region_type_id"/>
-            <column name="courier_group_id"/>
-        </createIndex>
-    </changeSet>
+    <!--<changeSet author="Shrey (generated)" id="1358322252952-24">-->
+        <!--<dropIndex indexName="pincode_region_index" tableName="pincode_region_zone"/>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Shrey (generated)" id="1358322252952-18">-->
+        <!--<createIndex indexName="pincode_region_index" tableName="pincode_region_zone" unique="false">-->
+            <!--<column name="warehouse_id"/>-->
+            <!--<column name="pincode_id"/>-->
+            <!--<column name="region_type_id"/>-->
+            <!--<column name="courier_group_id"/>-->
+        <!--</createIndex>-->
+    <!--</changeSet>-->
     <changeSet author="Shrey (generated)" id="17012013-01">
         <sql>
             create table t(id integer,PName varchar(20),ground_shipping integer);
