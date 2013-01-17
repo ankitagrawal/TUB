@@ -44,14 +44,6 @@ public class EmailNewsletterCampaignAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(EmailNewsletterCampaignAction.class);
   EmailCampaign emailCampaign;
 
-  @ValidateNestedProperties({
-    @Validate(field = "name", required = true)
-  })
-  Mail mail;
-
-  @Autowired
-  MailService mailService;
-
   @Autowired
   EmailCampaignDao emailCampaignDao;
 
@@ -126,6 +118,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
           logger.info("ftl generated");
 
           //contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
+            contentUploaded = true;
           logger.info("uploaded email content to s3.");
           FileUtils.deleteDirectory(contentFolder);
           FileUtils.deleteQuietly(contentZipFolder);
@@ -183,26 +176,14 @@ public class EmailNewsletterCampaignAction extends BaseAction {
     return new ForwardResolution(EmailNewsletterCampaignAction.class, "editEmailCampaign");
   }
 
-  public Resolution collectionReview(){
-      //mail =  new Mail();
-      //mail.setName(name);
-      name = mail.getName() +"-Product Review";
-      Resolution r = generateFtlAndUploadData();
-      contentUploaded = true;
-      if(contentUploaded){
-          mail.setAmazonFileName(FtlUtils.getBasicAmazonS3Path() + HKFileUtils.getPathAfterSubstring(htmlPath, "emailContentFiles"));
-          mail.setContent(ftlContents);
-          mailService.save(mail);
-      }
-      return new ForwardResolution("/pages/admin/review/mailTemplate.jsp");
-  }
 
-    public Mail getMail() {
-        return mail;
+
+    public Boolean getContentUploaded() {
+        return contentUploaded;
     }
 
-    public void setMail(Mail mail) {
-        this.mail = mail;
+    public void setContentUploaded(Boolean contentUploaded) {
+        this.contentUploaded = contentUploaded;
     }
 
     public EmailCampaign getEmailCampaign() {

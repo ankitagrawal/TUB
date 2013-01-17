@@ -7,15 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 1/9/13
- * Time: 11:07 AM
- * To change this template use File | Settings | File Templates.
- */
+
 @Repository
 public class MailDaoImpl extends BaseDaoImpl implements MailDao {
+
     public Mail save(Mail mail){
         return (Mail) super.save(mail);
     }

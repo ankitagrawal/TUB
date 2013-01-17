@@ -2,7 +2,6 @@ package com.hk.web.validation;
 
 import com.hk.domain.review.Mail;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.review.MailDao;
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,6 @@ public class MailTypeConverter implements TypeConverter<Mail> {
     @Autowired
     private BaseDao baseDao;
 
-    @Autowired
-    MailDao mailDao;
-
     public void setLocale(Locale locale) {
     }
 
@@ -40,7 +36,8 @@ public class MailTypeConverter implements TypeConverter<Mail> {
         if (idLong == null) {
             return null;
         } else {
-            return mailDao.get(Mail.class, idLong);
+            return getBaseDao().get(Mail.class, idLong);
+
             // return addressDao.find(idLong);
         }
     }

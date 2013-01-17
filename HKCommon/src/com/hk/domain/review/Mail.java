@@ -32,6 +32,9 @@ public class Mail  implements java.io.Serializable {
     @Column(name = "amazon_file_name")
     private String amazonFileName;
 
+    @Column(name = "subject")
+    private String subject;
+
    
     public Long getId() {
         return this.id;
@@ -61,6 +64,19 @@ public class Mail  implements java.io.Serializable {
 
     public void setAmazonFileName(String amazonFileName) {
         this.amazonFileName = amazonFileName;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    @Override
+    public String toString() {
+        return id != null ? id.toString() : "";
     }
 }
 

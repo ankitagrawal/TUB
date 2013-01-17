@@ -9,7 +9,9 @@ import com.hk.domain.review.UserReviewMail;
 import com.hk.manager.EmailManager;
 import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.service.review.ProductReviewMailService;
+import com.hk.pact.service.review.ReviewCollectionFrameworkService;
 import com.hk.pact.service.review.UserReviewMailService;
+//import com.hk.web.validation.MailTypeConverter;
 import net.sourceforge.stripes.action.*;
 import com.akube.framework.stripes.action.BaseAction;
 import net.sourceforge.stripes.tag.BeanFirstPopulationStrategy;
@@ -24,13 +26,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 1/8/13
- * Time: 6:57 PM
- * To change this template use File | Settings | File Templates.
- */
+
 @CustomPopulationStrategy(BeanFirstPopulationStrategy.class)
 @Component
 public class ReviewMailSettingsAction extends BaseAction {
@@ -48,6 +44,9 @@ public class ReviewMailSettingsAction extends BaseAction {
     EmailManager emailManager;
 
     @Autowired
+    ReviewCollectionFrameworkService reviewCollectionFrameworkService;
+
+    @Autowired
     EmailRecepientDao emailRecepientDao;
 
     private Order order;
@@ -60,7 +59,7 @@ public class ReviewMailSettingsAction extends BaseAction {
     })
    private ProductReviewMail productReviewMail;
 
-   @Validate(required = true, on={"editProductSettings","createProductSettings","saveProductSettings"})
+   @Validate(required = true, on={"editProductSettings","createProductSettings","saveProductSettings", "testEmail"})
    private Product product;
 
    private boolean editSettings = false;
@@ -93,7 +92,7 @@ public class ReviewMailSettingsAction extends BaseAction {
             productReviewMailService.save(productReviewMail);
             addRedirectAlertMessage(new SimpleMessage("Review Mailing product saved successfully."));
         }
-        return new ForwardResolution("/pages/admin/review/settings.jsp");
+        return new RedirectResolution(ReviewMailSettingsAction.class);
     }
     public Resolution saveProductSettings(){
         editSettings = false;
@@ -102,16 +101,32 @@ public class ReviewMailSettingsAction extends BaseAction {
         productReviewMail.setProduct(product);
         productReviewMailService.save(productReviewMail);
         addRedirectAlertMessage(new SimpleMessage("Review Mailing product saved successfully."));
-        return new ForwardResolution("/pages/admin/review/settings.jsp");
+        return new RedirectResolution(ReviewMailSettingsAction.class);
     }
 
     public Resolution test(){
         if(order!=null){
-            userReviewMailService.userEntry(order);
+            reviewCollectionFrameworkService.userEntry(order);
         }else{
             addRedirectAlertMessage(new SimpleMessage("order doesn't exist"));
         }
         editSettings = false;
+        return new ForwardResolution("/pages/admin/review/settings.jsp");
+    }
+
+    public Resolution testEmail(){
+        boolean  result = reviewCollectionFrameworkService.testEmail(getPrincipalUser(), product);
+        if(result)
+            addRedirectAlertMessage(new SimpleMessage("Test Email Sent successfully."));
+        else
+            addRedirectAlertMessage(new SimpleMessage("Error in sending the test email."));
+
+        return new ForwardResolution("/pages/admin/review/settings.jsp");
+
+    }
+
+    public Resolution sendEmail(){
+        reviewCollectionFrameworkService.sendEmails();
         return new ForwardResolution("/pages/admin/review/settings.jsp");
     }
 

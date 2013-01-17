@@ -9,13 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 1/7/13
- * Time: 4:18 PM
- * To change this template use File | Settings | File Templates.
- */
+
 @Repository
 public class ProductReviewMailDaoImpl extends BaseDaoImpl implements ProductReviewMailDao {
 

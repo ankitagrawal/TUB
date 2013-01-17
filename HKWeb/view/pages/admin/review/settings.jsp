@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: user
-  Date: 1/9/13
-  Time: 12:43 PM
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
@@ -41,7 +35,7 @@
                     </li>
                     <li>
                         <label>Mail Type</label>
-                        <s:select name="productReviewMail.mail" value = "${rmsa.productReviewMail.mail.id}">
+                        <s:select name="productReviewMail.mail">
                             <s:option value="">----Select Mail Template---</s:option>
                             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allMailType"
                                                        value="id" label="name"/>
@@ -65,10 +59,10 @@
                 </ul>
             </fieldset>
         </s:form>
-        <s:form beanclass="com.hk.web.action.admin.review.SendReviewMail" >
+        <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" >
             <label>Product ID</label>
             <s:text name="product" /><s:submit name= "testEmail" value="Test Email" />
-            <s:submit name= "sendEmails" value="Send Email" />
+            <s:submit name= "sendEmail" value="Send Email" />
         </s:form>
     </s:layout-component>
 </s:layout-render>

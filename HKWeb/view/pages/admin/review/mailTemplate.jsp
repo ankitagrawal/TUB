@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: user
-  Date: 1/9/13
-  Time: 11:56 PM
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
@@ -18,7 +12,7 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
         <script src="${pageContext.request.contextPath}/ckeditor/_samples/sample.js" type="text/javascript"></script>
         <link href="${pageContext.request.contextPath}/ckeditor/_samples/sample.css" rel="stylesheet" type="text/css"/>
-        <s:form beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction" var ="enca">
+        <s:form beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction" var="cmta" >
             <fieldset class="right_label">
                 <legend>Create Mail Template</legend>
                 <c:if test="${cmta.editTemplate}">
@@ -28,10 +22,14 @@
                     <li>
                         <label>Mail Template Name</label>
                         <s:text name="mail.name" id="name"/>
-                        <s:form beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction" var ="cmta"><s:submit name="searchMail" value="Search" /></s:form>
+                        <s:submit name="searchMail" value="Search" />
                     </li>
                     <li>
-                        Modify Content: <s:file name="contentBean"/><br/>
+                        <label>Subject</label>
+                        <s:text name="mail.subject" id="subject" />
+                    </li>
+                    <li>
+                        <label>Modify Content</label> <s:file name="contentBean"/><br/>
                     </li>
                     <li>
                         <label>Template Content</label>
@@ -48,7 +46,7 @@
                         </script>
                     </li>
                     <li>
-                        <s:submit name="collectionReview" value="GENERATE FTL" id="btn"/>
+                        <s:submit name="generateFtl" value="GENERATE FTL" id="btn"/>
                     </li>
                 </ul>
             </fieldset>
@@ -61,6 +59,13 @@
                     var validNameRegex = /^[A-Za-z0-9_]+$/;
                     if (!validNameRegex.test(name)) {
                         $('#error').html("Invalid Mail type name: " + name + " . Only Alphanumeric characters and underscore is allowed!");
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    var subject = $('#subject').val().trim();
+                    if (subject === "") {
+                        $('#error').html("Kindly mention the subject for template");
                         return false;
                     } else {
                         return true;

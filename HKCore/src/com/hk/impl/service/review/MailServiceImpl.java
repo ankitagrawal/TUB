@@ -8,13 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 1/9/13
- * Time: 12:22 PM
- * To change this template use File | Settings | File Templates.
- */
 @Service
 public class MailServiceImpl implements MailService {
     @Autowired

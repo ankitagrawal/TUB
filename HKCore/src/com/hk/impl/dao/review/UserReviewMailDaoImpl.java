@@ -1,8 +1,11 @@
 package com.hk.impl.dao.review;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.review.UserReviewMail;
+import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.review.UserReviewMailDao;
 import org.springframework.stereotype.Repository;
@@ -10,13 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 1/9/13
- * Time: 2:35 AM
- * To change this template use File | Settings | File Templates.
- */
 @SuppressWarnings("unchecked")
 @Repository
 public class UserReviewMailDaoImpl extends BaseDaoImpl implements UserReviewMailDao {
@@ -35,6 +31,15 @@ public class UserReviewMailDaoImpl extends BaseDaoImpl implements UserReviewMail
     public UserReviewMail save(UserReviewMail userReviewMail){
         userReviewMail.setUpdateDt(BaseUtils.getCurrentTimestamp());
         return (UserReviewMail) super.save(userReviewMail);
+    }
+
+    public UserReviewMail getByUserAndProduct(User user, ProductVariant productVariant){
+        List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.user = :user AND urm.productVariant = :productVariant", new String[]{"user", "productVariant"}, new Object[]{user, productVariant});
+        if(result !=null && result.size()>0){
+            return result.get(0);
+        }else
+            return null;
+
     }
 
 }

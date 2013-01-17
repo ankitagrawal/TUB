@@ -1,23 +1,21 @@
 package com.hk.pact.service.review;
 
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.review.UserReviewMail;
+import com.hk.domain.user.User;
 
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 1/9/13
- * Time: 11:58 AM
- */
+
 public interface UserReviewMailService {
 
     public List<UserReviewMail> getAllUserReviewMailByDueDate(Date date);
 
     public UserReviewMail save(UserReviewMail userReviewMail);
 
-    public void userEntry(Order order);
+    public UserReviewMail getByUserAndProduct(User user, ProductVariant productVariant);
+
 
 }

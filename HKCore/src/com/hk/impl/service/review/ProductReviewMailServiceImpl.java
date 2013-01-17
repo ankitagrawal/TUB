@@ -8,12 +8,7 @@ import com.hk.pact.service.review.ProductReviewMailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 1/9/13
- * Time: 12:30 PM
- */
+
 @Service
 public class ProductReviewMailServiceImpl implements ProductReviewMailService {
 

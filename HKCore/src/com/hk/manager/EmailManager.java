@@ -422,7 +422,9 @@ public class EmailManager {
         //template contents from db
         String mailTemplateContents = mail.getContent();
         if (mailTemplateContents != null && StringUtils.isNotBlank(mailTemplateContents)) {
-            Template freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(BaseUtils.newline + mailTemplateContents);
+            StringBuilder finalContents = new StringBuilder(mail.getSubject());
+            finalContents.append(BaseUtils.newline + mailTemplateContents);
+            Template freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
             return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
         } else {
             logger.error("Email Template Content is not present");
