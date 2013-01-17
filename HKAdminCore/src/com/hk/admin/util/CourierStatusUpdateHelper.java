@@ -30,7 +30,8 @@ import com.google.gson.JsonParser;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.exception.HealthkartCheckedException;
-import com.hk.admin.util.courier.thirdParty.IndiaOntimeCourierTrackUtil;
+import com.hk.admin.util.courier.thirdParty.IndiaOntimeCourierTrack;
+import com.hk.admin.dto.courier.thirdParty.ThirdPartyTrackDetails;
 
 /**
  * Created by IntelliJ IDEA.
@@ -478,15 +479,15 @@ public class CourierStatusUpdateHelper {
 		return xmlElement;
 	}
 
-	public boolean updateDeliveryStatusIndiaOntime(String trackingId) throws HealthkartCheckedException {
+	public ThirdPartyTrackDetails updateDeliveryStatusIndiaOntime(String trackingId) throws HealthkartCheckedException {
 
-		//IndiaOntimeCourierTrackUtil response = null;
+		ThirdPartyTrackDetails trackDetails = null;
 		courierName = EnumCourier.IndiaOnTime.getName();
 
 		//added for debugging
 		//trackingId = "70004207501";
 		try{
-			return new IndiaOntimeCourierTrackUtil().trackShipment(trackingId);
+			trackDetails = new IndiaOntimeCourierTrack().trackShipment(trackingId);
 			
 		} catch (NullPointerException npe) {
 			logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + courierName + trackingId);
@@ -496,7 +497,7 @@ public class CourierStatusUpdateHelper {
 			logger.debug(CourierConstants.EXCEPTION + courierName + trackingId);
 			throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
 		}
-		//return response;
+		return trackDetails;
 	}
 
 

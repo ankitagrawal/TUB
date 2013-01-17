@@ -6,14 +6,15 @@ import clientStub.ResDO;
 import clientStub.AWBStatusVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.hk.admin.dto.courier.thirdParty.ThirdPartyTrackDetails;
 
 /**
  * Created by IntelliJ IDEA. * User: Neha * Date: Jan 10, 2013 * Time: 3:04:40 PM
  * To change this template use File | Settings | File Templates.
  */
-public class IndiaOntimeCourierTrackUtil {
+public class IndiaOntimeCourierTrack {
 
-	private Logger logger = LoggerFactory.getLogger(IndiaOntimeCourierTrackUtil.class);
+	private Logger logger = LoggerFactory.getLogger(IndiaOntimeCourierTrack.class);
 
 	private String statusDescription;
 
@@ -25,10 +26,10 @@ public class IndiaOntimeCourierTrackUtil {
 
 	private static final String SERVER_URL = "http://118.67.249.169/IOT_CUST_API/IOT_API.asmx";
 
-	public IndiaOntimeCourierTrackUtil(){
+	public IndiaOntimeCourierTrack(){
 	}
 
-	public boolean trackShipment(String trackingId){
+	public ThirdPartyTrackDetails trackShipment(String trackingId){
 		IOT_APILocator serviceLocator = new IOT_APILocator();
 
 		try{
@@ -38,17 +39,19 @@ public class IndiaOntimeCourierTrackUtil {
 			ResDO response = port.TRACK_AWB_STATUS(trackingId);
 			Object[] statusArray = response.getArrAWBStatus();
 			AWBStatusVO status = (AWBStatusVO)statusArray[0];
-			this.setStatusDescription(status.getStatusDescription());
-			this.setReferenceNo(status.getREF_NO());
-			this.setTrackingNo(status.getAWBNo());
-			this.setDeliveryDate(status.getStatusDate());
-			return true;
-			//return this;
+			if (status != null) {
+				ThirdPartyTrackDetails thirdPartyTrackDetails = new ThirdPartyTrackDetails();
+				thirdPartyTrackDetails.setAwbStatus(status.getStatusDescription());
+				thirdPartyTrackDetails.setReferenceNo(status.getREF_NO());
+				thirdPartyTrackDetails.setTrackingNo(status.getAWBNo());
+				thirdPartyTrackDetails.setDeliveryDate(status.getStatusDate());
+				return thirdPartyTrackDetails;
+			} 			
 		}
 		catch(Exception e){
 		  logger.debug("Exception while tracking IndiaOnTime shipment for tracking id:" + trackingId);
     	}
-		return false;
+		return null;
 	}
 
 	public String getStatusDescription() {

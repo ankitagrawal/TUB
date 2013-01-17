@@ -37,7 +37,8 @@ import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
-import com.hk.admin.util.courier.thirdParty.IndiaOntimeCourierTrackUtil;
+import com.hk.admin.util.courier.thirdParty.IndiaOntimeCourierTrack;
+import com.hk.admin.dto.courier.thirdParty.ThirdPartyTrackDetails;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
@@ -442,40 +443,40 @@ public class DeliveryStatusUpdateManager {
 			courierIdList = new ArrayList<Long>();
 			courierIdList.add(EnumCourier.IndiaOnTime.getId());
 			shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
-			IndiaOntimeCourierTrackUtil indiaOntimeCourierTrack = null;
+			ThirdPartyTrackDetails courierTrack = null;
 			String courierDeliveryStatus = null;
 			String deliveryDateString = null;
+			boolean statusUpdated;
 
 			if (shippingOrderList != null && shippingOrderList.size() > 0) {
 				for (ShippingOrder shippingOrderInList : shippingOrderList) {
 					trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
+					statusUpdated = false;
 					try {
-						indiaOntimeCourierTrack = courierStatusUpdateHelper.updateDeliveryStatusIndiaOntime(trackingId);
-						if (indiaOntimeCourierTrack != null) {
-							String trckNo = indiaOntimeCourierTrack.getTrackingNo();
-							String refId = indiaOntimeCourierTrack.getReferenceNo();
-							courierDeliveryStatus = indiaOntimeCourierTrack.getStatusDescription();
-							deliveryDateString = indiaOntimeCourierTrack.getDeliveryDate();
+						courierTrack = courierStatusUpdateHelper.updateDeliveryStatusIndiaOntime(trackingId);
+						if (courierTrack != null) {
+							String trckNo = courierTrack.getTrackingNo();
+							String refId = courierTrack.getReferenceNo();
+							courierDeliveryStatus = courierTrack.getAwbStatus();
+							deliveryDateString = courierTrack.getDeliveryDate();
 							if (courierDeliveryStatus != null && deliveryDateString != null) {
 								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.INDIAONTIME_DELIVERED)) {
 									if (refId != null && refId.equalsIgnoreCase(shippingOrderInList.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
 										try {
 											Date delivery_date = sdf_date.parse(deliveryDateString);
 											ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
+											statusUpdated = true;
 										} catch (ParseException pe) {
 											logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
-											unmodifiedTrackingIds.add(trackingId);
 										}
-									}
-									else{
-										 unmodifiedTrackingIds.add(trackingId);
 									}
 								}
 							}
-						} else {
-							unmodifiedTrackingIds.add(trackingId);
 						}
 					} catch (Exception e) {
+						logger.debug(CourierConstants.EXCEPTION + trackingId);
+					}
+					if(!statusUpdated){
 						unmodifiedTrackingIds.add(trackingId);
 					}
 				}
