@@ -265,7 +265,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         return false;
                     }
 				}
-					if(shippingOrder.getShipment() == null){
+					if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
 						Shipment newShipment = getShipmentService().createShipment(shippingOrder);
 						if (newShipment == null) {
 							String comments = "Because shipment has not been created";
@@ -297,33 +297,43 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
     @Transactional
     public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
-        shippingOrder.setLastEscDate(HKDateUtil.getNow());
+		shippingOrder.setLastEscDate(HKDateUtil.getNow());
+		if(shippingOrder.isDropShipping()){
+			shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
+		} else{
+        	shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
+		}
         shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
+
         if (isAutoEsc) {
             logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue);
         } else {
-            logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue);
+			if(shippingOrder.isDropShipping()){
+				logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
+				emailManager.sendEscalationToDropShipEmail(shippingOrder);
+			} else{
+            	logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue);
+			}
         }
         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }
 
-
+   /*
     public ShippingOrder escalateShippingOrderFromActionTODropQueue(ShippingOrder shippingOrder, boolean isAutoEsc) {
-         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
-         shippingOrder.setLastEscDate(HKDateUtil.getNow());
-         shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
+         //shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
+         //shippingOrder.setLastEscDate(HKDateUtil.getNow());
+         //shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
          if (isAutoEsc) {
              logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToDropShippingQueue);
          } else {
-             logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
+            // logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
          }
-         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
-         emailManager.sendEscalationToDropShipEmail(shippingOrder);               
-         return shippingOrder;
+         //getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
+         //emailManager.sendEscalationToDropShipEmail(shippingOrder);
+         //return shippingOrder;
      }
-    
+     */
 
     /**
      * Creates a shipping order with basic details

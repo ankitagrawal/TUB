@@ -128,7 +128,7 @@ public class SplitBaseOrderAction extends BaseAction {
 
 				baseOrder.setOrderStatus(orderStatusService.find(EnumOrderStatus.InProcess));
 				baseOrder = orderService.save(baseOrder);
-				getOrderLoggingService().logOrderActivity(baseOrder, EnumOrderLifecycleActivity.OrderSplit);
+				//getOrderLoggingService().logOrderActivity(baseOrder, EnumOrderLifecycleActivity.OrderSplit);
 
 				addRedirectAlertMessage(new SimpleMessage("Order : " + baseOrder.getGatewayOrderId() + " was split manually."));
 				return new RedirectResolution(ActionAwaitingQueueAction.class);
