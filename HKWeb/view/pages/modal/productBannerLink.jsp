@@ -55,27 +55,52 @@
                    title="${product.name}" target="_blank">${product.name}</a>
                 <a href="${pageContext.request.contextPath}/product/${product.slug}/${product.id}?affid=${affiliate.code}"
                    title="${product.name}" target="_blank">
-                  <div class='prices' style="font-size: 12px;margin-left:10px;margin-bottom:5px">
-                    <div class='cut' style="font-size: 12px;">
+                    <c:choose>
+                        <c:when test="${pa.combo != null}">
+                            <div class='prices' style="font-size: 12px;margin-left:10px;margin-bottom:5px">
+                                <div class='cut' style="font-size: 12px;">
                       <span class='num' style="font-size: 12px;">
-                        Rs <fmt:formatNumber value="${product.productVariants[0].markedPrice}"
+                        Rs <fmt:formatNumber value="${pa.combo.markedPrice}"
                                              maxFractionDigits="0"/>
                       </span>
-                    </div>
-                    <div class='hk' style="font-size: 12px;margin-top:0px">
+                                </div>
+                                <div class='hk' style="font-size: 12px;margin-top:0px">
                       <span class='num' style="font-size: 12px;;text-decoration:none">
-                        Rs <fmt:formatNumber
-                          value="${hk:getApplicableOfferPrice(product.productVariants[0]) + hk:getPostpaidAmount(product.productVariants[0])}"
-                          maxFractionDigits="0"/>
+                        Rs <fmt:formatNumber value="${pa.combo.hkPrice}" maxFractionDigits="0"/>
                       </span>
-                    </div>
-                    <div class="special green" style="font-size: 12px;margin-top:0px">
-                      you save
-                                      <span style="font-weight: bold;;text-decoration:none"><fmt:formatNumber
-                                          value="${product.productVariants[0].discountPercent*100}"
-                                          maxFractionDigits="0"/>%</span>
-                    </div>
-                  </div>
+                                </div>
+                                <div class="special green" style="font-size: 12px;margin-top:0px">
+                                    you save
+                <span style="font-weight: bold;;text-decoration:none"><fmt:formatNumber
+                        value="${pa.combo.discountPercent*100}" maxFractionDigits="0"/>
+                  %
+                </span>
+                                </div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class='prices' style="font-size: 12px;margin-left:10px;margin-bottom:5px">
+                                <div class='cut' style="font-size: 12px;">
+                      <span class='num' style="font-size: 12px;">
+                        Rs <fmt:formatNumber value="${pa.product.productVariants[0].markedPrice}"
+                                             maxFractionDigits="0"/>
+                      </span>
+                                </div>
+                                <div class='hk' style="font-size: 12px;margin-top:0px">
+                      <span class='num' style="font-size: 12px;;text-decoration:none">
+                        Rs <fmt:formatNumber value="${pa.product.productVariants[0].hkPrice}" maxFractionDigits="0"/>
+                      </span>
+                                </div>
+                                <div class="special green" style="font-size: 12px;margin-top:0px">
+                                    you save
+                <span style="font-weight: bold;;text-decoration:none"><fmt:formatNumber
+                        value="${pa.product.productVariants[0].discountPercent*100}" maxFractionDigits="0"/>
+                  %
+                </span>
+                                </div>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </a>
                 <a href="${pageContext.request.contextPath}/product/${product.slug}/${product.id}?affid=${affiliate.code}"
                    target='_blank' target="_blank"><img
