@@ -1,5 +1,7 @@
 package com.hk.impl.service.inventory;
 
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
@@ -69,6 +71,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 
 	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
 		return skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedQty);
+	}
+
+	public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
+		return skuItemDao.getSkuItem(skuGroup, skuItemStatus);
 	}
 
 }

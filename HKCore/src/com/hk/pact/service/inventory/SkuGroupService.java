@@ -5,6 +5,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.sku.SkuItemStatus;
 
 import java.util.List;
 
@@ -43,5 +44,7 @@ public interface SkuGroupService {
 	public List<SkuGroup> getInStockSkuGroups(Sku sku);
 
 	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty);
+
+	public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus);
 
 }
