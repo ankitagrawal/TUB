@@ -1,12 +1,12 @@
 package com.hk.impl.service.inventory;
 
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.SkuItemStatus;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItemStatus;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 
@@ -73,8 +73,12 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedQty);
 	}
 
-	public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
-		return skuItemDao.getSkuItem(skuGroup, skuItemStatus);
-	}
+      public SkuItem getSkuItem(SkuGroup skuGroup , SkuItemStatus skuItemStatus){
+        return skuItemDao.getSkuItem(skuGroup,skuItemStatus);
+    }
+
+     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId){
+       return skuGroupDao.getSkuGroupsByBarcodeForStockTransfer(barcode, warehouseId);  
+     }
 
 }

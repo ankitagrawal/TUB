@@ -9,10 +9,10 @@ import com.hk.domain.sku.SkuItemStatus;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.DetachedCriteria;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,13 +66,14 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		return minMRPUnbookedSkuGroup;
 	}
 
-	public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
-		DetachedCriteria criteria = DetachedCriteria.forClass(SkuItem.class);
-		criteria.add(Restrictions.eq("skuGroup", skuGroup));
-		criteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
-		List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
-		return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
-	}
+    public SkuItem getSkuItem(SkuGroup skuGroup , SkuItemStatus skuItemStatus){
+           DetachedCriteria criteria = DetachedCriteria.forClass(SkuItem.class) ;
+           criteria.add(Restrictions.eq("skuGroup",skuGroup));
+           criteria.add(Restrictions.eq("skuItemStatus",skuItemStatus));
+            List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
+           return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
+       }
+    
 
 }
 

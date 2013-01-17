@@ -8,6 +8,7 @@ import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.sku.Sku;
@@ -142,8 +143,7 @@ public class StockTransferAction extends BasePaginatedAction {
 			}
 			stockTransferLineItem = (StockTransferLineItem)baseDao.save(stockTransferLineItem);
 
-			adminInventoryService.inventoryCheckoutForStockTransfer(sku, skuItem, stockTransferLineItem, -1L, loggedOnUser);
-
+     		adminInventoryService.inventoryCheckoutForStockTransfer(sku, skuItem, stockTransferLineItem, -1L, loggedOnUser);
 			getInventoryService().checkInventoryHealth(sku.getProductVariant());
 
 		} else {
@@ -210,6 +210,7 @@ public class StockTransferAction extends BasePaginatedAction {
 		}
 		return new ForwardResolution("/pages/admin/inventoryCheckinAgainstStockTransfer.jsp");
 	}
+
 
 	public Resolution print() {
 		logger.debug("purchaseOrder: " + stockTransfer);

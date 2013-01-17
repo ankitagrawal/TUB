@@ -8,124 +8,206 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 		<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+         <script type="text/javascript">
+		$(document).ready(function() {
+
+            $('#stForm2').submit(function(){
+                 var pvb = $('#productVariantBarcode').val();
+                    if(pvb == null || pvb == ""){
+                        alert("Value can't be Empty");
+                        return false;
+                    }
+            });
+            	$('#productVariantBarcode').change(function() {
+
+				var formName = $('#stForm2');
+				var formURL = formName.attr('action');
+				formName.attr('action', formURL+"?stockTransfer=" + ${ica.stockTransfer.id} + "&saveStockTransfer=");
+				formName.submit();
+			});
+
+		});
+	</script>
 	</s:layout-component>
+
 	<s:layout-component name="heading">Inventory Checkin Against Stock Transfer</s:layout-component>
 	<s:layout-component name="content">
 		<div style="display:inline;float:left;">
 			<h2>Item Checkin against Stock Transfer#${ica.stockTransfer.id}</h2>
-			<s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction">
-				<s:hidden name="stockTransfer" value="${ica.stockTransfer.id}"/>
-				<table border="1">
-					<tr>
-						<td>UPC(Barcode) or VariantID:</td>
-						<td><s:text name="upc" class="variant"/></td>
-					</tr>
-					<tr>
-						<td>Checkin Date:</td>
-						<td>
-							<s:text class="date_input" formatPattern="yyyy-MM-dd" name="stockTransfer.checkinDate"
-							        value="${ica.stockTransfer.checkinDate != null ? ica.stockTransfer.checkinDate : now}"/>
-						</td>
-					</tr>
-					<tr>
-						<td>Checkin Qty:</td>
-						<td><s:text name="qty" class="qty" value="0"/></td>
-					</tr>
-					<tr>
-						<td>Cost Price:</td>
-						<td><s:text name="costPrice" class="costPrice" value="0.0"/></td>
-					</tr>
-					<tr>
-						<td>MRP:</td>
-						<td><s:text name="mrp" class="mrp" value="0.0"/></td>
-					</tr>
-					<tr>
-						<td>Batch Number:</td>
-						<td><s:text name="batch" class="batchNumber"/></td>
-					</tr>
-					<tr>
-						<td>Mfg. Date:</td>
-						<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="mfgDate"/></td>
-					</tr>
-					<tr>
-						<td>Expiry Date:</td>
-						<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="expiryDate"/></td>
-					</tr>
-				</table>
-				<script language=javascript type=text/javascript>
-					$('#courierTrackingId').focus();
+			<%--<s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction">--%>
+				<%--<s:hidden name="stockTransfer" value="${ica.stockTransfer.id}"/>--%>
+				<%--<table border="1">--%>
+					<%--<tr>--%>
+						<%--<td>UPC(Barcode) or VariantID:</td>--%>
+						<%--<td><s:text name="upc" class="variant"/></td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>Checkin Date:</td>--%>
+						<%--<td>--%>
+							<%--<s:text class="date_input" formatPattern="yyyy-MM-dd" name="stockTransfer.checkinDate"--%>
+							        <%--value="${ica.stockTransfer.checkinDate != null ? ica.stockTransfer.checkinDate : now}"/>--%>
+						<%--</td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>Checkin Qty:</td>--%>
+						<%--<td><s:text name="qty" class="qty" value="0"/></td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>Cost Price:</td>--%>
+						<%--<td><s:text name="costPrice" class="costPrice" value="0.0"/></td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>MRP:</td>--%>
+						<%--<td><s:text name="mrp" class="mrp" value="0.0"/></td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>Batch Number:</td>--%>
+						<%--<td><s:text name="batch" class="batchNumber"/></td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>Mfg. Date:</td>--%>
+						<%--<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="mfgDate"/></td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>Expiry Date:</td>--%>
+						<%--<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="expiryDate"/></td>--%>
+					<%--</tr>--%>
+				<%--</table>--%>
+				<%--<script language=javascript type=text/javascript>--%>
+					<%--$('#courierTrackingId').focus();--%>
 
-					function stopRKey(evt) {
-						var evt = (evt) ? evt : ((event) ? event : null);
-						var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-						if ((evt.keyCode == 13) && (node.type == "text")) {
-							return false;
-						}
-					}
-					document.onkeypress = stopRKey;
-					$(document).ready(function() {
-						$('.requiredFieldValidator').click(function() {
+					<%--function stopRKey(evt) {--%>
+						<%--var evt = (evt) ? evt : ((event) ? event : null);--%>
+						<%--var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);--%>
+						<%--if ((evt.keyCode == 13) && (node.type == "text")) {--%>
+							<%--return false;--%>
+						<%--}--%>
+					<%--}--%>
+					<%--document.onkeypress = stopRKey;--%>
+					<%--$(document).ready(function() {--%>
+						<%--$('.requiredFieldValidator').click(function() {--%>
 
-							var batchNumber = $('.batchNumber').val();
-							if (batchNumber == "") {
-								alert("Batch Number is must.");
-								return false;
-							}
-						});
+							<%--var batchNumber = $('.batchNumber').val();--%>
+							<%--if (batchNumber == "") {--%>
+								<%--alert("Batch Number is must.");--%>
+								<%--return false;--%>
+							<%--}--%>
+						<%--});--%>
 
-					 	$(".stPvId").click(function() {
-							$('.variant').val(this.innerHTML);
-							$(".batchNumber").val($(this).parent().siblings('.stBatchNum').html());
-							$('.qty').val($(this).parent().siblings('.stCheckOutQty').html());
-							$('.costPrice').val($(this).parent().siblings('.stCostPrice').html());
-							$('.mrp').val($(this).parent().siblings('.stMrp').html());
+					 	<%--$(".stPvId").click(function() {--%>
+							<%--$('.variant').val(this.innerHTML);--%>
+							<%--$(".batchNumber").val($(this).parent().siblings('.stBatchNum').html());--%>
+							<%--$('.qty').val($(this).parent().siblings('.stCheckOutQty').html());--%>
+							<%--$('.costPrice').val($(this).parent().siblings('.stCostPrice').html());--%>
+							<%--$('.mrp').val($(this).parent().siblings('.stMrp').html());--%>
 
-						});
-					});
+						<%--});--%>
+					<%--});--%>
 
-				</script>
-				<br/>
-				<s:submit name="saveInventoryAgainstStockTransfer" value="Save" class="requiredFieldValidator"/>
-			</s:form>
+				<%--</script>--%>
+				<%--<br/>--%>
+				<%--<s:submit name="saveInventoryAgainstStockTransfer" value="Save" class="requiredFieldValidator"/>--%>
+			<%--</s:form>--%>
+
+       <c:if test="${ica.stockTransfer.id != null}">
+		<s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="stForm2">
+		<fieldset class="right_label">
+			<legend>Scan Barcode:</legend>
+			<ul>
+				<li>
+					<s:label name="barcode">Product Variant Barcode</s:label>
+					<s:text name="productVariantBarcode" id="productVariantBarcode"/>
+				</li>
+				<li></li>
+			</ul>
+		</fieldset>
+		</s:form>
+
+		<table border="1">
+			<thead>
+			<tr>
+				<th>VariantID</th>
+				<th>Details</th>
+				<th>Checkedout Qty</th>
+                <th>CheckedIN Qty</th>
+				<th>Cost Price<br/>(Without TAX)</th>
+				<th>MRP</th>
+				<th>Batch Number</th>
+				<th>Mfg. Date<br/>(yyyy-MM-dd)</th>
+				<th>Exp. Date<br/>(yyyy-MM-dd)</th>
+			</tr>
+			</thead>
+			<tbody id="stTable">
+			<c:forEach var="stockTransferLineItem" items="${ica.stockTransfer.stockTransferLineItems}" varStatus="ctr">
+				<c:set var="productVariant" value="${stockTransferLineItem.sku.productVariant}"/>
+				<c:set var="checkedOutSkuGroup" value="${stockTransferLineItem.checkedOutSkuGroup}"/>
+				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+					<td>
+							${productVariant.id}
+					</td>
+					<td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
+					</td>
+					<td> ${stockTransferLineItem.checkedoutQty}
+					</td>
+                    <td> ${stockTransferLineItem.checkedinQty}
+                    </td>
+					<td>${checkedOutSkuGroup.costPrice}
+					</td>
+					<td> ${checkedOutSkuGroup.mrp}
+					</td>
+					<td>${checkedOutSkuGroup.batchNumber}</td>
+					<td>
+						<fmt:formatDate value="${checkedOutSkuGroup.mfgDate}" type="both"/></td>
+					<td>
+						<fmt:formatDate value="${checkedOutSkuGroup.expiryDate}" type="both"/></td>
+				</tr>
+
+			</c:forEach>
+			</tbody>
+		</table>
+	</c:if>
+
+
+
       <span style="display:inline;float:right;"><h2><s:link
 		      beanclass="com.hk.web.action.admin.inventory.StockTransferAction">&lang;&lang;&lang;
 	      Back to Stock Transfer List</s:link></h2></span>
 		</div>
-		<div style="display:inline;" align="center">
+		<%--<div style="display:inline;" align="center">--%>
 
-			<table style="font-size: .8em;">
-				<tr>
-					<th width="">S.No.</th>
-					<th width="">Item</th>
-					<th width="">VariantId</th>
-					<th width="">Batch</th>
-					<th width="">Checked-out Qty</th>
-					<th width="">Checked-in Qty</th>
-					<th width="">Cost Price</th>
-					<th width="">Mrp</th>
-				</tr>
-				<c:forEach items="${ica.stockTransfer.stockTransferLineItems}" var="stockTransferLineItem" varStatus="ctr">
-					<c:set value="${stockTransferLineItem.sku.productVariant}" var="productVariant"/>
-					<tr>
-						<td>${ctr.index+1}</td>
-						<td>
-								${productVariant.product.name}<br/>
-							<em><c:forEach items="${productVariant.productOptions}" var="productOption">
-								${productOption.name} ${productOption.value}
-							</c:forEach></em>
-						</td>
-						<td><a href="#" class="stPvId">${productVariant.id}</a></td>
+			<%--<table style="font-size: .8em;">--%>
+				<%--<tr>--%>
+					<%--<th width="">S.No.</th>--%>
+					<%--<th width="">Item</th>--%>
+					<%--<th width="">VariantId</th>--%>
+					<%--<th width="">Batch</th>--%>
+					<%--<th width="">Checked-out Qty</th>--%>
+					<%--<th width="">Checked-in Qty</th>--%>
+					<%--<th width="">Cost Price</th>--%>
+					<%--<th width="">Mrp</th>--%>
+				<%--</tr>--%>
+				<%--<c:forEach items="${ica.stockTransfer.stockTransferLineItems}" var="stockTransferLineItem" varStatus="ctr">--%>
+					<%--<c:set value="${stockTransferLineItem.sku.productVariant}" var="productVariant"/>--%>
+					<%--<tr>--%>
+						<%--<td>${ctr.index+1}</td>--%>
+						<%--<td>--%>
+								<%--${productVariant.product.name}<br/>--%>
+							<%--<em><c:forEach items="${productVariant.productOptions}" var="productOption">--%>
+								<%--${productOption.name} ${productOption.value}--%>
+							<%--</c:forEach></em>--%>
+						<%--</td>--%>
+						<%--<td><a href="#" class="stPvId">${productVariant.id}</a></td>--%>
 						<%--<td>${productVariant.upc}</td>--%>
-						<td class="stBatchNum">${stockTransferLineItem.batchNumber}</td>
+						<%--<td class="stBatchNum">${stockTransferLineItem.batchNumber}</td>--%>
 
-						<td class="stCheckOutQty">${stockTransferLineItem.checkedoutQty}</td>
+						<%--<td class="stCheckOutQty">${stockTransferLineItem.checkedoutQty}</td>--%>
 
-						<td style="color:green; font-weight:bold">${stockTransferLineItem.checkedinQty}</td>
-						<td class="stCostPrice">${stockTransferLineItem.costPrice}</td>
-						<td class="stMrp" >${stockTransferLineItem.mrp}</td>
-					</tr>
-				</c:forEach>
-			</table>
-		</div>
+						<%--<td style="color:green; font-weight:bold">${stockTransferLineItem.checkedinQty}</td>--%>
+						<%--<td class="stCostPrice">${stockTransferLineItem.costPrice}</td>--%>
+						<%--<td class="stMrp" >${stockTransferLineItem.mrp}</td>--%>
+					<%--</tr>--%>
+				<%--</c:forEach>--%>
+			<%--</table>--%>
+		<%--</div>--%>
 	</s:layout-component>
 </s:layout-render>
