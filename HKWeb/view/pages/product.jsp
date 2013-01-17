@@ -169,7 +169,7 @@
 	<%--</c:if>--%>
 
 		<shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
-			<s:layout-render name="/pages/modal/productLink.jsp" product="${product}"
+			<s:layout-render name="/pages/modal/productLink.jsp" product="${product}" combo="${pa.combo}"
 			                 affiliateId="${pa.affiliate.id}"/>
 
 			<s:layout-render name="/pages/modal/productBannerLink.jsp" product="${product}"
