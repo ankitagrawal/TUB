@@ -8,15 +8,11 @@ import com.hk.admin.util.helper.XslPincodeParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.core.PincodeService;
 import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +23,10 @@ import org.stripesstuff.plugin.security.Secure;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
 @Component
@@ -53,7 +52,6 @@ public class MasterPincodeAction extends BaseAction {
     private static Logger logger = LoggerFactory.getLogger(MasterPincodeAction.class);
     private String pincodeString;
     private Pincode pincode;
-    private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
     private PincodeRegionZone pincodeRegionZone;
     private List<PincodeRegionZone> pincodeRegionZoneList = null;
     private List<Pincode> pincodeList;
@@ -211,10 +209,6 @@ public class MasterPincodeAction extends BaseAction {
 
     public void setPincode(Pincode pincode) {
         this.pincode = pincode;
-    }
-
-    public List<CourierServiceInfo> getCourierServiceList() {
-        return courierServiceList;
     }
 
     public FileBean getFileBean() {

@@ -40,10 +40,6 @@ public class Courier implements java.io.Serializable  {
 	private Boolean  disabled;
 
 	@JsonSkip
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courier")
-	private Set<CourierServiceInfo> courierServiceInfos = new HashSet<CourierServiceInfo>(0);
-
-	@JsonSkip
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "couriers")
 	private List<CourierGroup> courierGroup = new ArrayList<CourierGroup>(0);
 
@@ -61,14 +57,6 @@ public class Courier implements java.io.Serializable  {
 
 	public void setName(String name) {
 		this.name = name; 
-	}
-
-	public Set<CourierServiceInfo> getCourierServiceInfos() {
-		return this.courierServiceInfos;
-	}
-
-	public void setCourierServiceInfos(Set<CourierServiceInfo> courierServiceInfos) {
-		this.courierServiceInfos = courierServiceInfos;
 	}
 
 	@Override

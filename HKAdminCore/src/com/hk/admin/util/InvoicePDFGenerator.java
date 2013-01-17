@@ -11,7 +11,6 @@ import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
-import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
