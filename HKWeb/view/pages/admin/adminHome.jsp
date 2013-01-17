@@ -153,7 +153,7 @@
 
 	<h3>
 		<s:link
-				beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">Search Shipping Order & Enter Courier</s:link></h3>
+				beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Create Update Shipment</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>

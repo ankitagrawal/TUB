@@ -5,16 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-<<<<<<< HEAD
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
-=======
 import net.sourceforge.stripes.action.*;
->>>>>>> 9873289bfc69c60b2a120fed5d27ea4fba22d5aa
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

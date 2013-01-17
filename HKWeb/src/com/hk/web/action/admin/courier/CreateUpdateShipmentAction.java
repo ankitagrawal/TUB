@@ -110,7 +110,6 @@ public class CreateUpdateShipmentAction extends BaseAction {
 					if(EnumReplacementOrderReason.getCourierRelatedReasonForRto().contains(replacementOrderReason.getId())){
 						if(selectedCourier != null && parentShippingOrder.getShipment().getAwb().getCourier().getId().equals(selectedCourier.getId())){
 							addRedirectAlertMessage(new SimpleMessage("Previous shipping order was returned due to the courier selected. Please select another courier or contact admin"));
-							return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class, "searchOrders").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
 						}
 					}
 				}

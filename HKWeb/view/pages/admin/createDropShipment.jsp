@@ -108,7 +108,6 @@
     <s:layout-component name="heading">Enter Tracking Details for Drop Shipped Orders</s:layout-component>
     <s:layout-component name="content">
         <div style="display:none">
-                <%--<s:link id="getcourier" beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction"  event="getCourierList"> </s:link> </div>--%>
                 <%--<input type="hidden" id="commentType" value="${shipmentQueueBean.shippingOrder.baseOrder.commentType}">--%>
                 <%--<input type="hidden" id="userComments" value="${shipmentQueueBean.shippingOrder.baseOrder.userComments}">--%>
                 <%--<div  class="error" style= "background-color:salmon; width:380px; display:none;">--%>
