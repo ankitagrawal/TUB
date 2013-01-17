@@ -446,12 +446,12 @@ public class DeliveryStatusUpdateManager {
 			ThirdPartyTrackDetails courierTrack = null;
 			String courierDeliveryStatus = null;
 			String deliveryDateString = null;
-			boolean statusUpdated;
+			boolean statusReceived;
 
 			if (shippingOrderList != null && shippingOrderList.size() > 0) {
 				for (ShippingOrder shippingOrderInList : shippingOrderList) {
 					trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
-					statusUpdated = false;
+					statusReceived = false;
 					try {
 						courierTrack = courierStatusUpdateHelper.updateDeliveryStatusIndiaOntime(trackingId);
 						if (courierTrack != null) {
@@ -465,18 +465,20 @@ public class DeliveryStatusUpdateManager {
 										try {
 											Date delivery_date = sdf_date.parse(deliveryDateString);
 											ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
-											statusUpdated = true;
+
 										} catch (ParseException pe) {
 											logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
+											unmodifiedTrackingIds.add(trackingId);
 										}
 									}
 								}
+								statusReceived = true;
 							}
 						}
 					} catch (Exception e) {
 						logger.debug(CourierConstants.EXCEPTION + trackingId);
 					}
-					if(!statusUpdated){
+					if(!statusReceived){
 						unmodifiedTrackingIds.add(trackingId);
 					}
 				}
