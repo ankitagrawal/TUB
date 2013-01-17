@@ -5,14 +5,13 @@
   Time: 4:23 PM
   To change this template use File | Settings | File Templates.
 --%>
+<?xml version="1.0" encoding="UTF-8"?>
 <% response.setContentType("text/xml"); %>
 <%@ page import="com.hk.util.HKImageUtils" %>
 <%@ page import="com.hk.util.ImageManager" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<rss version="2.0"
-     xmlns:g="http://base.google.com/ns/1.0">
-
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.GoogleCatalogAction" var="googleBean"/>
                 <channel>
                 <title>Healthkart Google Product Feed</title>
