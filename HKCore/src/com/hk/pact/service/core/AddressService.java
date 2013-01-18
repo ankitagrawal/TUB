@@ -5,6 +5,7 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.BillingAddress;
 import com.hk.domain.core.Country;
+import com.hk.domain.core.Pincode;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,6 +34,4 @@ public interface AddressService {
      public List<Country> getAllCountry();
 
      public Country getCountry(Long countryId);
-
-
 }

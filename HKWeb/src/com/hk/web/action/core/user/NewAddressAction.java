@@ -56,7 +56,6 @@ public class NewAddressAction extends BaseAction implements ValidationErrorHandl
             @Validate(field = "pincode", required = true, maxlength = 6),
             @Validate(field = "phone", required = true, maxlength = 25) })
     private Address             address;
-
     private User                user;
 
     public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
@@ -78,17 +77,21 @@ public class NewAddressAction extends BaseAction implements ValidationErrorHandl
      * HealthkartResponse(HealthkartResponse.STATUS_REDIRECT, "New address added!", data)); }
      */
     public Resolution create() {
+      if(address!=null){
+        if(address.getPincode()==null){
+          addRedirectAlertMessage(new SimpleMessage("We don't Service in this Pincode, please enter valid one or Call Customer Care"));
+          return new RedirectResolution(SelectAddressAction.class).addParameter("printAlert",true);
+        }
+      }
         user = getUserService().getUserById(getPrincipal().getId());
         address.setUser(user);
 
         boolean isDuplicateAddress = addressMatchScoreCalculator.isDuplicateAddress(address);
         if (!isDuplicateAddress) {
             address = addressDao.save(address);
-
             Order order = orderManager.getOrCreateOrder(user);
             order.setAddress(address);
             orderDao.save(order);
-
             return new RedirectResolution(OrderSummaryAction.class);
         } else {
             addRedirectAlertMessage(new SimpleMessage("Duplicate Address. It has been used in a different HK account."));

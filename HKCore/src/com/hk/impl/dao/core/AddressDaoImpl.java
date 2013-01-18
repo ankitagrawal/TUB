@@ -3,6 +3,8 @@ package com.hk.impl.dao.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.domain.core.City;
+import com.hk.domain.core.Pincode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -89,7 +91,7 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
 
     @SuppressWarnings("unchecked")
     public List<Address> getDuplicateAddresses(Address a) {
-        String hqlQuery = "select a from Address a " + "where a.pin=:pin and a.phone=:phone and a.user <> :user";
+        String hqlQuery = "select a from Address a " + "where a.pincode=:pin and a.phone=:phone and a.user <> :user";
         return getSession().createQuery(hqlQuery).setParameter("pin", a.getPincode()).setParameter("phone", a.getPhone()).setParameter("user", a.getUser()).list();
     }
 
@@ -132,5 +134,4 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     public Country getCountry(Long countryId) {
         return get(Country.class, countryId);
     }
-          
 }
