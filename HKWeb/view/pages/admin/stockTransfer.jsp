@@ -11,6 +11,8 @@
 	<%
 		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+		String messageColor = request.getParameter("messageColor");
+		pageContext.setAttribute("messageColor", messageColor);
 	%>
 
 
@@ -20,6 +22,19 @@
 	<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('.alert').hide();
+
+			$('#productVariantBarcode').focus();
+			$('#productVariantBarcode').keydown(function(){
+				$('.alertST').hide();
+			});
+
+			if($('#messageColorParam').val() == "green") {
+				$('.alertST').find('li').css('font-size', '30px').css('color', 'green');
+			} else {
+				$('.alertST').find('li').css('font-size', '30px').css('color', 'red');
+			}
+
 
             $("#createST").click(function() {
 	            if ($('.toWarehouse').val() == " ") {
@@ -45,7 +60,13 @@
 
 </s:layout-component>
 <s:layout-component name="content">
-	<h2>Create/Edit Stock Transfer</h2>
+	<input type="hidden" id="messageColorParam" value="${messageColor}">
+	<c:if test="${sta.stockTransfer.id != null}">
+		<h2>Edit Stock Transfer # ${sta.stockTransfer.id}</h2>
+	</c:if>
+	<c:if test="${sta.stockTransfer.id == null}">
+		<h2>Create New Stock Transfer</h2>
+	</c:if>
 	<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction" id="stForm">
 		<s:hidden name="stockTransfer" value="${sta.stockTransfer.id}"/>
 		<table>
@@ -94,6 +115,7 @@
 			</tr>
 		</table>
 	</s:form>
+	<div class="alertST messages"><s:messages key="generalMessages"/></div>
 
 	<c:if test="${sta.stockTransfer.id != null}">
 		<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction" id="stForm2">
@@ -108,10 +130,10 @@
 			</ul>
 		</fieldset>
 		</s:form>
-
 		<table border="1">
 			<thead>
 			<tr>
+				<th>Barcode</th>
 				<th>VariantID</th>
 				<th>Details</th>
 				<th>Checkedout Qty</th>
@@ -120,6 +142,7 @@
 				<th>Batch Number</th>
 				<th>Mfg. Date<br/>(yyyy-MM-dd)</th>
 				<th>Exp. Date<br/>(yyyy-MM-dd)</th>
+				<th>Reduce Qty By 1</th>
 			</tr>
 			</thead>
 			<tbody id="stTable">
@@ -127,6 +150,7 @@
 				<c:set var="productVariant" value="${stockTransferLineItem.sku.productVariant}"/>
 				<c:set var="checkedOutSkuGroup" value="${stockTransferLineItem.checkedOutSkuGroup}"/>
 				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+					<td>${stockTransferLineItem.checkedOutSkuGroup.barcode}</td>
 					<td>
 							${productVariant.id}
 					</td>
@@ -143,6 +167,12 @@
 						<fmt:formatDate value="${checkedOutSkuGroup.mfgDate}" type="both"/></td>
 					<td>
 						<fmt:formatDate value="${checkedOutSkuGroup.expiryDate}" type="both"/></td>
+					<c:if test="${stockTransferLineItem.checkedoutQty > 0}">
+					<td><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="revertStockTransferOut">
+						Reduce Qty By 1
+					<s:param name="stliToBeReduced" value="${stockTransferLineItem}"/>
+					<s:param name="stockTransfer" value="${sta.stockTransfer}" /></s:link> </td>
+					</c:if>
 				</tr>
 
 			</c:forEach>

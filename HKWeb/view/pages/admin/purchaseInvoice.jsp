@@ -232,6 +232,19 @@
 				alert("All fields are compulsory.");
 				return false;
 			}
+
+			var invoiceDateString = $('#invoice-date').val();
+			var dateValues = invoiceDateString.split("-");
+			var invoiceDate = new Date();
+			
+			invoiceDate.setYear(parseInt(dateValues[0]));
+			invoiceDate.setMonth(parseInt(dateValues[1])-1);
+			invoiceDate.setDate(parseInt(dateValues[2]));
+
+			if(invoiceDate > new Date()){
+				alert("Invoice date cannot be in future");
+				return false;
+			}
 		});
 
 		updateTotal('.receivedQuantity', '.totalQuantity', 1);
@@ -278,7 +291,7 @@
 	<tr>
 		<td>Invoice Date</td>
 		<td>
-			<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseInvoice.invoiceDate"/></td>
+			<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseInvoice.invoiceDate" id="invoice-date"/></td>
 		<td>Invoice Number</td>
 		<td><s:text name="purchaseInvoice.invoiceNumber"/></td>
 		<td>GRN Date</td>

@@ -167,5 +167,15 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 
 	}
 
+    public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId) {
+		List<SkuGroup> skuGroups = getSession().
+						createQuery("select distinct si.skuGroup from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId and si.skuItemStatus.id = "
+                + EnumSkuItemStatus.Stock_Transfer_Out.getId()).
+				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).list();
+		return skuGroups;
+    }
+
+
+
 
 }
