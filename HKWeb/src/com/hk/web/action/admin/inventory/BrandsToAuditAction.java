@@ -71,18 +71,23 @@ public class BrandsToAuditAction extends BasePaginatedAction {
 	public Resolution save() {
 		logger.debug("brand: " + brandsToAudit.getBrand());
 		try {
-			if (brandsToAudit != null && brandsToAudit.getAuditor() == null && getPrincipalUser() != null) {
-				User auditor = getPrincipalUser();
-				warehouse = auditor.getSelectedWarehouse();
-				brandsToAudit.setAuditor(auditor);
-				brandsToAudit.setWarehouse(warehouse);
+			boolean brandAuditInProgress = getBrandsToAuditDao().isBrandAuditInProgress(brandsToAudit.getBrand());
+			if (brandAuditInProgress) {
+			 addRedirectAlertMessage(new SimpleMessage("Brand Audit is already in progress"));
+			} else {
+				if (brandsToAudit != null && brandsToAudit.getAuditor() == null && getPrincipalUser() != null) {
+					User auditor = getPrincipalUser();
+					warehouse = auditor.getSelectedWarehouse();
+					brandsToAudit.setAuditor(auditor);
+					brandsToAudit.setWarehouse(warehouse);
+				}
+				getBrandsToAuditDao().save(brandsToAudit);
+				addRedirectAlertMessage(new SimpleMessage("Saved."));
 			}
-			getBrandsToAuditDao().save(brandsToAudit);
 
-			addRedirectAlertMessage(new SimpleMessage("Saved."));
 			return new RedirectResolution(BrandsToAuditAction.class);
 		} catch (Exception e) {
-			addRedirectAlertMessage(new SimpleMessage("Some Error."));
+			addRedirectAlertMessage(new SimpleMessage("Some Error." +e.getMessage()));
 			return new RedirectResolution(BrandsToAuditAction.class).addParameter("view").addParameter("brandsToAudit", brandsToAudit.getId());
 		}
 

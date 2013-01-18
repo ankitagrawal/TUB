@@ -10,9 +10,14 @@ import com.hk.pact.dao.BaseDao;
 
 public interface BrandsToAuditDao extends BaseDao {
 
-    public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
-    public List<String> brandsToBeAudited(Warehouse warehouse);
-    public boolean isBrandAudited(String brand, Warehouse warehouse);
-    public boolean isBrandAudited(String brand);
+	public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
+
+	public List<String> brandsToBeAudited(Warehouse warehouse);
+
+	public boolean isBrandAudited(String brand, Warehouse warehouse);
+
+	public boolean isBrandAudited(String brand);
+
+	public boolean isBrandAuditInProgress(String brand);
 
 }

@@ -4,6 +4,7 @@ package com.hk.web.action.admin.inventory;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 
 import com.akube.framework.dao.Page;
+import com.akube.framework.util.FormatUtils;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.warehouse.Warehouse;
@@ -19,6 +20,7 @@ import com.hk.pact.service.UserService;
 import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.inventory.EnumAuditStatus;
 import com.hk.constants.core.Keys;
+import com.hk.util.FtlUtils;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -87,14 +89,14 @@ public class CycleCountAction extends BasePaginatedAction {
 	FileBean fileBean;
 
 	public Resolution directToCycleCount() {
-		if (cycleCount != null && cycleCount.getId() != null) {
-			cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
-		} else {
+
+		if (cycleCount.getId() == null) {
 			cycleCount.setCreateDate(new Date());
-			cycleCount.setCycleStatus(EnumCycleCountStatus.Start.getId());
 			cycleCount.setUser(userService.getLoggedInUser());
+			cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
+			cycleCount = cycleCountService.save(cycleCount);
 		}
-		cycleCount = cycleCountService.save(cycleCount);
+
 		return view();
 
 	}
@@ -261,13 +263,13 @@ public class CycleCountAction extends BasePaginatedAction {
 			cycleCountService.save(cycleCountItem);
 		}
 		cycleCount.setCycleStatus(EnumCycleCountStatus.Approved.getId());
-		cycleCount.getBrandsToAudit().setAuditStatus(EnumAuditStatus.Done.getId());
 		cycleCount = cycleCountService.save(cycleCount);
 		return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
 	}
 
 	public Resolution closeCycleCount() {
 		cycleCount.setCycleStatus(EnumCycleCountStatus.Closed.getId());
+		cycleCount.getBrandsToAudit().setAuditStatus(EnumAuditStatus.Done.getId());
 		cycleCount = cycleCountService.save(cycleCount);
 		return new RedirectResolution(CycleCountAction.class, "pre");
 	}
@@ -321,7 +323,7 @@ public class CycleCountAction extends BasePaginatedAction {
 			excelFile.getParentFile().mkdirs();
 			fileBean.save(excelFile);
 			Map<String, Integer> hkBarcodeQtyMap = cycleCountHelper.readCycleCountNotepad(excelFile);
-			cycleCountPVImap = null;
+			cycleCountPVImap = new HashMap<Long,Integer>();
 			for (String hkbarcodeFromNotepad : hkBarcodeQtyMap.keySet()) {
 				List<SkuGroup> validSkuGroupList = findSkuGroup(brand, hkbarcodeFromNotepad);
 				if (validSkuGroupList != null && validSkuGroupList.size() > 0) {
@@ -354,7 +356,7 @@ public class CycleCountAction extends BasePaginatedAction {
 								}
 							}
 							cycleCountItemNew = cycleCountService.save(cycleCountItemNew);
-							cycleCountPVImap.put(cycleCountItemNew.getId(), new Integer(pviQty));
+							cycleCountPVImap.put(cycleCountItemNew.getId(), pviQty);
 						} else {
 							int alreadySavedScannedQty = cycleCountItemFromDb.getScannedQty();
 							int fillPviQty = pviQty - alreadySavedScannedQty;
@@ -382,22 +384,23 @@ public class CycleCountAction extends BasePaginatedAction {
 					}
 
 				} else {
-					hkBarcodeErrorsMap.put(hkBarcode, message);
+					hkBarcodeErrorsMap.put(hkbarcodeFromNotepad, message);
 				}
 
 			}
 			if (hkBarcodeErrorsMap.size() > 0) {
-				String docFilePath = adminDownloadsPath + "/cycleCountExcelFiles/" + cycleCount.getId() + "notepadError_For_Brand" + brand + ".txt";
+				message = "";
+				String newLine = FormatUtils.lineSeperator;
+				for (String hkBarcode : hkBarcodeErrorsMap.keySet()) {
 
-				File barcodeError = new File(docFilePath);
-				barcodeError.createNewFile();
-				cycleCountHelper.generateTextFile(barcodeError, hkBarcodeErrorsMap);
+					message = message + hkBarcode + " :: " + hkBarcodeErrorsMap.get(hkBarcode) + newLine;
+				}
 			}
 		} catch (IOException e) {
 			addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
 			return new ForwardResolution("/pages/admin/cycleCount.jsp");
 		}
-		return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId());
+		return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message);
 	}
 
 

@@ -37,7 +37,7 @@
 		</div>
 		<br/>
 
-		<div style="margin: 0px auto;text-align: center;">
+		<div>
 			<div>
 				<h5>CYCLE COUNT # ${cycle.cycleCount.id}</h5><br/>
 				<h5>BRAND : ${cycle.cycleCount.brandsToAudit.brand} </h5><br/><br/>
@@ -50,7 +50,7 @@
 					<th>Hk Barcode</th>
 					<th>Mrp</th>
 					<th>Mfg Date</th>
-					<th>Expiry Date/th>
+					<th>Expiry Date</th>
 					<th>Scanned Qty</th>
 					<th>Total Inventory</th>
 
@@ -61,7 +61,10 @@
 				<s:hidden name="message" value="${cycle.message}"/>
 				<s:hidden name="error" value="${cycle.error}"/>
 				<s:hidden name="cycleCountPVImapString" class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
+				<div>
 				Scan Here <s:text name="hkBarcode" class="scannedBarcode"/>
+				</div>
+				<div>
 				<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
 					<c:forEach items="${cycle.cycleCountItems}" var="cCItem" varStatus="ctr">
 						<s:hidden name="cycleCountItems[${ctr.index}]" value="${cCItem.id}"/>
@@ -95,8 +98,10 @@
 
 				</tr>
 			</table>
+		   </div>
 
-			<div>
+					
+			<div style="display: inline-block;">
 				<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
 					<s:submit name="save" value="Freeze"/>
 				</c:if>

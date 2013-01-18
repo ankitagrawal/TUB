@@ -5,7 +5,7 @@
 <%@ page import="com.hk.constants.inventory.EnumCycleCountStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Brand Audit List">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Cycle Count  List">
 	<s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cc"/>
 	<%
 		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
@@ -67,7 +67,7 @@
 
 						<c:set value="<%=EnumCycleCountStatus.InProgress.getId()%>" var="inProgress"/>
 						<c:choose>
-							<c:when test="${cycleCountV.cycleStatus <= inProgress}">
+							<c:when test="${cycleCountV.cycleStatus == inProgress}">
 								<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
 								        event="directToCycleCount">
 									<s:param name="cycleCount" value="${cycleCountV.id}"/>

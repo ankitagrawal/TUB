@@ -66,4 +66,19 @@ public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDa
 		return false;
 	}
 
+
+	public boolean isBrandAuditInProgress(String brand) {
+		String queryString = "from BrandsToAudit ba where ba.brand = :brand and ba.auditStatus = :auditStatus";
+		List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString,
+				new String[]{"brand", "auditStatus"},
+				new Object[]{brand, EnumAuditStatus.Pending.getId()});
+		if (!brandsToAuditList.isEmpty()) {
+			return true;
+		}
+		return false;
+
+
+	}
+
+
 }

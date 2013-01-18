@@ -12,9 +12,8 @@ import java.util.Arrays;
  */
 public enum EnumCycleCountStatus {
 
-	Start(10L, "Start"),
-	InProgress(20L, "InProgress"),
-	RequestForApproval(30L, "PendingForApproval"),
+	InProgress(10L, "InProgress"),
+	RequestForApproval(20L, "PendingForApproval"),
 	Approved(99L, "Approved"),
 	Closed(999L, "Closed");
 
@@ -35,8 +34,7 @@ public enum EnumCycleCountStatus {
 	}
 
 	public static List<EnumCycleCountStatus> getAllList() {
-		return Arrays.asList(
-				EnumCycleCountStatus.Start,
+		return Arrays.asList(			
 				EnumCycleCountStatus.InProgress,
 				EnumCycleCountStatus.RequestForApproval,
 				EnumCycleCountStatus.Approved,
