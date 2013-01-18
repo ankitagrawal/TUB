@@ -268,6 +268,7 @@ public class UserManager {
         String randomLogin = TokenUtils.generateGuestLogin();
         user.setLogin(randomLogin);
         user.setEmail(email);
+        user.setUnsubscribeToken(TokenUtils.getTokenToUnsubscribeWommEmail(email));
         user.setPasswordChecksum(BaseUtils.passwordEncrypt(randomLogin));
         user.getRoles().add(getRoleService().getRoleByName(RoleConstants.TEMP_USER));
         user = getUserService().save(user);
