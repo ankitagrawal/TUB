@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Marut
-  Date: 1/8/13
-  Time: 4:23 PM
-  To change this template use File | Settings | File Templates.
---%>
 <?xml version="1.0" encoding="UTF-8"?>
 <% response.setContentType("text/xml"); %>
 <%@ page import="com.hk.util.HKImageUtils" %>
