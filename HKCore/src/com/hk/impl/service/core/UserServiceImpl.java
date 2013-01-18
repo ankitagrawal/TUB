@@ -2,6 +2,7 @@ package com.hk.impl.service.core;
 
 import java.util.List;
 
+import com.hk.constants.user.EnumSubscriptions;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,17 @@ public class UserServiceImpl implements UserService {
 
     public User findByLogin(String email) {
         return getUserDao().findByLogin(email);
+    }
+
+
+    public boolean unsubscribeUser(String unsubscribeToken){
+        User user = getUserDao().findByUnsubscribeToken(unsubscribeToken);
+        if (user != null){
+            user.setSubscribedMask(EnumSubscriptions.UNSUBSCRIBED.getValue());
+            userDao.save(user);
+            return true;
+        }
+        return false;
     }
 
     public User getAdminUser() {
@@ -106,6 +118,7 @@ public class UserServiceImpl implements UserService {
                 user.setStore(getStoreService().getDefaultStore());
             }
         }
+        user.setSubscribedMask(30);//Subscribe for all
         return getUserDao().save(user);
     }
 
@@ -122,6 +135,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByLoginAndStoreId(String login, Long storeId) {
         return getUserDao().findByLoginAndStoreId(login, storeId);
+    }
+
+    public void subscribeUserForOffers(String login, boolean subscribe) {
+        int subscriptionMask = 0;
+        if (subscribe){
+            //if user has subscribed then all the type of emails will go to him
+            subscriptionMask = EnumSubscriptions.NOTIFY_ME.getValue()
+                    | EnumSubscriptions.PRODUCT_REPLENISHMENT.getValue() | EnumSubscriptions.PROMOTIONAL_OFFERS.getValue() | EnumSubscriptions.NEWSLETTERS.getValue();
+        }else{
+            //if user has not subscribed then only this type of email will go to him
+            subscriptionMask = EnumSubscriptions.NOTIFY_ME.getValue() | EnumSubscriptions.PRODUCT_REPLENISHMENT.getValue();
+        }
+        getUserDao().updateUserSubscription(login, subscriptionMask);
+    }
+
+    public void subscribeUserForOffers(User user, EnumSubscriptions enumSubscriptions) {
+        int subscriptionMask = user.getSubscribedMask() | enumSubscriptions.getValue();
+        getUserDao().updateUserSubscription(user.getLogin(), subscriptionMask);
     }
 
     // TODO: move such methods and methods getOrdersForUserSortedByDate to a user profile service

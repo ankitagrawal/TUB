@@ -64,6 +64,15 @@ public class User {
     @Column(name = "create_dt", nullable = false, length = 19)
     private Date                  createDate = new Date();
 
+
+    @Column(name = "subscribed_mask", nullable = false)
+    private int subscribedMask;
+
+
+    @Column(name = "unsubscribe_token", length = 512)
+    private String unsubscribeToken;
+
+
     /*
      * @JsonSkip @Temporal(TemporalType.TIMESTAMP) @Column(name = "update_date", nullable = false, length = 19) private
      * Date updateDate;
@@ -438,6 +447,23 @@ public class User {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public int getSubscribedMask() {
+        return subscribedMask;
+    }
+
+    public void setSubscribedMask(int subscribed) {
+        this.subscribedMask = subscribed;
+    }
+
+
+    public String getUnsubscribeToken() {
+        return unsubscribeToken;
+    }
+
+    public void setUnsubscribeToken(String unsubscribeToken) {
+        this.unsubscribeToken = unsubscribeToken;
     }
 
     /*

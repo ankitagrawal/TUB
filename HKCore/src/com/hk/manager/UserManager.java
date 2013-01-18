@@ -203,6 +203,7 @@ public class UserManager {
         user.setLogin(email);
         user.setEmail(email);
         user.setPasswordChecksum(BaseUtils.passwordEncrypt(password));
+        user.setUnsubscribeToken(TokenUtils.getTokenToUnsubscribeWommEmail(email));
 
         // to prevent overwriting referredBy we are checking for null
         // if this user is already referred by any other user then we will not override

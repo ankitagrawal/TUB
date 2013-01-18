@@ -10978,4 +10978,29 @@
 			update warehouse set warehouse_type_id = 10 where id = 301;
 		</sql>
 	</changeSet>
+    <changeSet author="Marut (generated)" id="1357977084301-2">
+        <addColumn tableName="user">
+            <column name="subscribed_mask" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1357977084301-3">
+        <sql>
+            update user u set subscribed_mask = 30;
+            update user u inner join email_recepient er on u.id = er.user_id set u.subscribed_mask = 1 where er.subscribed = 0;
+        </sql>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1357977084301-4">
+        <addColumn tableName="user">
+            <column name="unsubscribe_token" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1357977084301-5">
+        <sql>
+            update user u inner join email_recepient er on u.id = er.user_id set u.unsubscribe_token = er.unsubscribe_token;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
