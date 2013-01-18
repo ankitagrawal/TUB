@@ -295,7 +295,8 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.InTransit.getDispatchLotStatus());
 		dispatchLotService.save(dispatchLot);
-		return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+		addRedirectAlertMessage(new SimpleMessage("Dispatch Lot marked as Received"));
+		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
 	}
 
 	private class HTTPResponseResolution implements Resolution {
