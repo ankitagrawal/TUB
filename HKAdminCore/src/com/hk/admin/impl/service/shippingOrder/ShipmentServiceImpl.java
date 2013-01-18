@@ -106,6 +106,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 					shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(),
 							CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
 					adminEmailManager.sendNoShipmentEmail(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND, shippingOrder, shippingOrder.getBaseOrder());
+					return null;	
 				}
 			}
 
