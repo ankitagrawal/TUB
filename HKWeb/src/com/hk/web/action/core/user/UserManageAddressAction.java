@@ -38,7 +38,7 @@ public class UserManageAddressAction extends BaseAction {
       @Validate(field = "line1", required = true, on = "saveAddress"),
       @Validate(field = "city", required = true, on = "saveAddress"),
       @Validate(field = "state", required = true, on = "saveAddress"),
-      @Validate(field = "pin", required = true, on = "saveAddress"),
+      @Validate(field = "pincode", required = true, on = "saveAddress"),
       @Validate(field = "phone", required = true, on = "saveAddress")})
   @Autowired
   AffiliateDao affiliateDao;
@@ -76,6 +76,10 @@ public class UserManageAddressAction extends BaseAction {
   public Resolution saveAddress() {
     user = userService.getLoggedInUser();
     if (user != null) {
+      if(address.getPincode()==null){
+         addRedirectAlertMessage(new SimpleMessage("<style=\"color:red;font-size:14px; font-weight:bold;\"> We don't Service to this Pincode, please enter again or Contact to Customer Care!!!</style>"));
+         return new ForwardResolution("/pages/editUserAddresses.jsp").addParameter("address",address.getId());
+      }
       address.setUser(user);
       address = addressDao.save(address);
     }

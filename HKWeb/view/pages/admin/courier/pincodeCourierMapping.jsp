@@ -18,11 +18,6 @@
     <s:layout-component name="htmlHead">
         <script type="text/javascript">
             $(document).ready(function(){
-                var couriersName =  [];
-                <c:forEach items="${pcma.pincodeCourierMappings}" var="pCourierMap" varStatus="ctr">
-                couriersName[${ctr.index}] =  ${pCourierMap.courier.name};
-                </c:forEach>
-                alert(couriersName);
                 $('.check').click(function(){
                     var text = $('#pin').val();
                     if(text == "" || text == null){
@@ -78,8 +73,18 @@
                 $('#save').click(function(){
                     var bool = true;
                   $('.addCouriers').each(function(){
-                      
+                      var newCourier = $(this).val();
+                      $('.oldCouriers').each(function(){
+                         var oldCourier = $(this).val();
+                          if(newCourier == oldCourier){
+                              alert("Courier already added!!!");
+                              bool = false;
+                              return false;
+                          }
+                      });
+                      if(!bool)return false;
                   });
+                   if(!bool)return false;
                 });
             });
         </script>
@@ -140,7 +145,7 @@
                                 <s:hidden name="pincodeCourierMappings[${ctr.index}].id" value="${pCourierMap.id}"/>
                             </td>
                             <td>
-                                <s:hidden name="pincodeCourierMappings[${ctr.index}].courier" value="${pCourierMap.courier.id}"/>
+                                <s:hidden  class="oldCouriers" name="pincodeCourierMappings[${ctr.index}].courier" value="${pCourierMap.courier.id}"/>
                                     ${pCourierMap.courier.name}
                             </td>
                             <td>

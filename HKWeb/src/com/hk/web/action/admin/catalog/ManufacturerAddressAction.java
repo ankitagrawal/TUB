@@ -39,7 +39,6 @@ import com.hk.util.LatLongGenerator;
 @Component
 public class ManufacturerAddressAction extends BasePaginatedAction {
   private Manufacturer manufacturer;
-  private Address address;
   private List<Address> addresses = new ArrayList<Address>();
   String name;
   String mainAddressId;
@@ -55,9 +54,10 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
       @Validate(field = "line1", required = true, on = "addAddress"),
       @Validate(field = "city", required = true, on = "addAddress"),
       @Validate(field = "state", required = true, on = "addAddress"),
-      @Validate(field = "pin", required = true, on = "addAddress"),
+      @Validate(field = "pincode", required = true, on = "addAddress"),
       @Validate(field = "phone", required = true, on = "addAddress")
   })
+    private Address address;
 
   @Autowired
   ManufacturerDao manufacturerDao;
@@ -74,6 +74,10 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
   }
 
   public Resolution addAddress() {
+    if(address.getPincode()==null){
+    addRedirectAlertMessage(new SimpleMessage("We don't service to this Pincode!!"));
+    return new ForwardResolution("/pages/admin/addManufacturerAddresses.jsp");
+    }
     if (address.getId() == null) {
       address = addressDao.save(address);
       addresses = manufacturer.getAddresses();
@@ -88,7 +92,7 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
       latLongGenerator.createLocalityMap(address, manufacturer);
 
     addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-    return new RedirectResolution("/pages/admin/addManufacturerAddresses.jsp");
+    return new ForwardResolution("/pages/admin/addManufacturerAddresses.jsp");
   }
 
   public Resolution remove() {
