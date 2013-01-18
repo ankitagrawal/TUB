@@ -7,6 +7,7 @@ import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.inventory.EnumStockTransferStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.inventory.StockTransfer;
@@ -95,6 +96,7 @@ public class StockTransferAction extends BasePaginatedAction {
 
 		if (stockTransfer == null || stockTransfer.getId() == null) {
 			stockTransfer = new StockTransfer();
+			stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Generated.getStockTransferStatus());
 		}
 		stockTransfer.setCreateDate(createDate);
 		stockTransfer.setCheckoutDate(checkOutDate);
@@ -142,6 +144,11 @@ public class StockTransferAction extends BasePaginatedAction {
 				stockTransferLineItem.setCheckedoutQty(1L);
 			}
 			stockTransferLineItem = (StockTransferLineItem)baseDao.save(stockTransferLineItem);
+
+			if(stockTransfer.getStockTransferStatus().equals(EnumStockTransferStatus.Generated.getStockTransferStatus())) {
+				stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Stock_Transfer_Out_In_Process.getStockTransferStatus());
+				baseDao.save(stockTransfer);
+			}
 
      		adminInventoryService.inventoryCheckoutForStockTransfer(sku, skuItem, stockTransferLineItem, -1L, loggedOnUser);
 			getInventoryService().checkInventoryHealth(sku.getProductVariant());
@@ -209,6 +216,17 @@ public class StockTransferAction extends BasePaginatedAction {
 			return new RedirectResolution(StockTransferAction.class);
 		}
 		return new ForwardResolution("/pages/admin/inventoryCheckinAgainstStockTransfer.jsp");
+	}
+
+	public Resolution markAsStockTransferOutCompleted() {
+		if (stockTransfer == null) {
+			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
+			return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+		}
+		stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Stock_Transfer_Out_Completed.getStockTransferStatus());
+		baseDao.save(stockTransfer);
+		addRedirectAlertMessage(new SimpleMessage("Transfer Out Completed"));
+		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
 	}
 
 

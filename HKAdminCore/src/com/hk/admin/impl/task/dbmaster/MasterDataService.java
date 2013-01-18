@@ -1,6 +1,7 @@
 package com.hk.admin.impl.task.dbmaster;
 
 import com.hk.db.seed.courier.*;
+import com.hk.db.seed.inventory.*;
 import com.hk.db.seed.order.*;
 import com.hk.db.seed.sku.SkuItemStatusSeedData;
 import org.slf4j.Logger;
@@ -19,14 +20,6 @@ import com.hk.db.seed.core.StateSeedData;
 import com.hk.db.seed.core.SurchargeSeedData;
 import com.hk.db.seed.core.TaxSeedData;
 import com.hk.db.seed.email.EmailTypeSeedData;
-import com.hk.db.seed.inventory.DebitNoteStatusSeedData;
-import com.hk.db.seed.inventory.GrnStatusSeedData;
-import com.hk.db.seed.inventory.InvTxnTypeSeedData;
-import com.hk.db.seed.inventory.PurchaseFormTypeSeedData;
-import com.hk.db.seed.inventory.PurchaseInvoiceStatusSeedData;
-import com.hk.db.seed.inventory.PurchaseOrderStatusSeedData;
-import com.hk.db.seed.inventory.ReconciliationStatusSeedData;
-import com.hk.db.seed.inventory.ReconciliationTypeSeedData;
 import com.hk.db.seed.marketing.AdNetworksSeedData;
 import com.hk.db.seed.marketing.GoogleBannedWordSeedData;
 import com.hk.db.seed.marketing.ProductReferrerSeedData;
@@ -151,6 +144,8 @@ public class MasterDataService {
 	DispatchLotStatusSeedData dispatchLotStatusSeedData;
 	@Autowired
 	SkuItemStatusSeedData skuItemStatusSeedData;
+	@Autowired
+	StockTransferStatusSeed stockTransferStatusSeed;
 
 	public void insert() {
 
@@ -310,5 +305,8 @@ public class MasterDataService {
 
 		logger.debug("inserting Sku Item Status");
 		skuItemStatusSeedData.invokeInsert();
+
+		logger.debug("inserting Stock Transfer Status");
+		stockTransferStatusSeed.invokeInsert();
 	}
 }

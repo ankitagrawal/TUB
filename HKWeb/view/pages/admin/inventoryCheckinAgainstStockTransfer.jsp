@@ -52,6 +52,10 @@
         <div style="display:inline;float:left;">
             <h2>Item Checkin against Stock Transfer#${ica.stockTransfer.id}</h2>
 
+	        <div>
+		        <s:submit name="markAsStockTransferOutCompleted" value="Close Stock Transfer"
+		                  id="markAsStockTransferOutCompleted"/>
+	        </div>
             <input type="hidden" id="messageColorParam" value="${messageColor}">
 
             <div class="alertST messages"><s:messages key="generalMessages"/></div>

@@ -1,5 +1,6 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.inventory.EnumStockTransferStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="sta"/>
@@ -8,6 +9,8 @@
 <jsp:useBean id="now" class="java.util.Date" scope="request"/>
 <s:layout-component name="htmlHead">
  <c:set var="fromwarehouse" value="${whAction.setWarehouse}"/>
+	<c:set var="STOutInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_CheckIn_In_Process.getId()%>" />
+	<c:set var="STGenerated" value="<%=EnumStockTransferStatus.Generated.getId()%>" />
 	<%
 		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
@@ -53,6 +56,10 @@
 				var formURL = formName.attr('action');
 				formName.attr('action', formURL+"?stockTransfer=" + ${sta.stockTransfer.id} + "&save=");
 				formName.submit();
+			});
+
+			$('#markAsStockTransferOutCompleted').click(function() {
+				return confirm("Do You want to finish the Transfer Out Process?");
 			});
 
 		});
@@ -114,22 +121,27 @@
 				<td><s:submit name="createOrUpdateStockTransfer" value="Create/Update Stock Transfer" id="createST"/> </td>
 			</tr>
 		</table>
+		<div>
+			<s:submit name="markAsStockTransferOutCompleted" value="Mark As Stock Transfer Completed" id="markAsStockTransferOutCompleted"/>
+		</div>
 	</s:form>
 	<div class="alertST messages"><s:messages key="generalMessages"/></div>
 
 	<c:if test="${sta.stockTransfer.id != null}">
-		<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction" id="stForm2">
-		<fieldset class="right_label">
-			<legend>Scan Barcode:</legend>
-			<ul>
-				<li>
-					<s:label name="barcode">Product Variant Barcode</s:label>
-					<s:text name="productVariantBarcode" id="productVariantBarcode"/>
-				</li>
-				<li></li>
-			</ul>
-		</fieldset>
-		</s:form>
+		<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
+			<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction" id="stForm2">
+			<fieldset class="right_label">
+				<legend>Scan Barcode:</legend>
+				<ul>
+					<li>
+						<s:label name="barcode">Product Variant Barcode</s:label>
+						<s:text name="productVariantBarcode" id="productVariantBarcode"/>
+					</li>
+					<li></li>
+				</ul>
+			</fieldset>
+			</s:form>
+		</c:if>
 		<table border="1">
 			<thead>
 			<tr>

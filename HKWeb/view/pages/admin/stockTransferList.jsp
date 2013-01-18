@@ -56,6 +56,7 @@
 				<th>Received By</th>
 				<th>Checkout Date</th>
 				<th>Checkin Date</th>
+				<th>Status</th>
 				<th>Actions</th>
 			</tr>
 			</thead>
@@ -68,6 +69,7 @@
 							${stockTransfer.receivedBy.name} <br/>(${stockTransfer.receivedBy.login})</c:if></td>
 					<td><fmt:formatDate value="${stockTransfer.checkoutDate}" type="both" timeStyle="short"/></td>
 					<td><fmt:formatDate value="${stockTransfer.checkinDate}" type="both" timeStyle="short"/></td>
+					<td>${stockTransfer.stockTransferStatus.name}</td>
 					<td>
 						<c:if test="${stockTransfer.fromWarehouse.id == whAction.setWarehouse.id}">
 						<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="view">Edit
