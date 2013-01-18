@@ -36,7 +36,7 @@ public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements Shippi
 
     public List<ShippingOrderLifecycle> getShippingOrderLifecycleBySOAndActivities(Long shippingOrderId, List<Long> shippingOrderLifeCycleActivityIds) {
 		return findByNamedParams("select sl from ShippingOrderLifecycle sl where sl.shippingOrder.id = :shippingOrderId " +
-				" and sl.shippingOrderLifeCycleActivity.id in :(shippingOrderLifeCycleActivityIds) ", new String[]{"shippingOrderId", "shippingOrderLifeCycleActivityId"},
+				" and sl.shippingOrderLifeCycleActivity.id in :(shippingOrderLifeCycleActivityIds) ", new String[]{"shippingOrderId", "shippingOrderLifeCycleActivityIds"},
 				new Object[]{shippingOrderId, shippingOrderLifeCycleActivityIds});
 	}
 }
