@@ -295,7 +295,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.InTransit.getDispatchLotStatus());
 		dispatchLotService.save(dispatchLot);
-		addRedirectAlertMessage(new SimpleMessage("Dispatch Lot marked as Received"));
+		addRedirectAlertMessage(new SimpleMessage("Dispatch Lot marked as 'In Transit'"));
 		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList");
 	}
 

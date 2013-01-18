@@ -109,6 +109,10 @@
 						<s:textarea name="dispatchLot.remarks" class="text"/>
 
 					<div class="clear"></div>
+					<s:label name="noOfShipmentsSent" class="label">No. Of Shipments Sent</s:label>
+						<s:text name="dispatchLot.noOfShipmentsSent" style="width:200px" class="text" disabled="disabled"/>
+
+					<div class="clear"></div>
 						<s:param name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
 					<c:if test="${dispatch.dispatchLot.id == null || dispatch.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated}">
 						<s:submit name="save" value="Save"/>
@@ -149,10 +153,12 @@
 						</fieldset>
 					</div>
 					<div class="clear"></div>
+				<c:if test="${dispatch.dispatchLot.noOfShipmentsSent != null && dispatch.dispatchLot.noOfShipmentsSent > 0}">
 					<div>
 						<br><br>
 						<s:submit name="markLotAsInTransit" value="Mark Lot As 'In Transit'" />
 					</div>
+				</c:if>
 				</c:if>
 			</div>
 
