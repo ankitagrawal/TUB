@@ -18,6 +18,11 @@
     <s:layout-component name="htmlHead">
         <script type="text/javascript">
             $(document).ready(function(){
+                var couriersName =  [];
+                <c:forEach items="${pcma.pincodeCourierMappings}" var="pCourierMap" varStatus="ctr">
+                couriersName[${ctr.index}] =  ${pCourierMap.courier.name};
+                </c:forEach>
+                alert(couriersName);
                 $('.check').click(function(){
                     var text = $('#pin').val();
                     if(text == "" || text == null){
@@ -44,7 +49,7 @@
                             '<input type="hidden" value=' + pincode + ' name="pincodeCourierMappings[' + nextIndex + '].pincode">'+
                             '.</td>' +
                             '<td>' +
-                            '<select name="pincodeCourierMappings[' + nextIndex + '].courier">' +
+                            '<select class="addCouriers" name="pincodeCourierMappings[' + nextIndex + '].courier">' +
                             '<option value="">--Select--</option>' +
                                     <c:forEach items="${allCourier}" var="courier">
                             '<option value="' + ${courier.id} + '"> ' + "${courier.name}" + '</option>' +
@@ -68,8 +73,13 @@
                             '</tr>';
 
                     $('#courierTable').append(newRowHtml);
-
                     return false;
+                });
+                $('#save').click(function(){
+                    var bool = true;
+                  $('.addCouriers').each(function(){
+                      
+                  });
                 });
             });
         </script>
@@ -159,7 +169,7 @@
                      </table>
                     <a href="pincodeCourierMapping.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
                     <br/>
-                     <s:submit name="update" value="SAVE"/>
+                     <s:submit name="update" value="SAVE" id="save"/>
                     </fieldset>
                     </c:if>
                     </c:otherwise>
