@@ -62,6 +62,7 @@ public class UserEmailResource {
                     userDto.email = user.getEmail();
                     userDto.login = user.getLogin();
                     userDto.name = user.getName();
+                    userDto.unsubscribeToken = user.getUnsubscribeToken();
                     categoryUsers.add(userDto);
                 }
             }
@@ -124,5 +125,6 @@ public class UserEmailResource {
         public String email;
         public String name;
         public String login;
+        public String unsubscribeToken;
     }
 }
