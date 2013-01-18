@@ -18,6 +18,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 
 public interface AdminInventoryService {
 
@@ -60,14 +61,14 @@ public interface AdminInventoryService {
 
     public Long countOfCheckedInUnitsForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
 
-    public SkuGroup getSkuGroupByHkBarcode(String barcode);
-
     public List<VariantConfig> getAllVariantConfig();
 
 	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList);
 
 	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
-	
+	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse);
+
+	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy);
 
 }

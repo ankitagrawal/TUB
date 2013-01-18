@@ -513,18 +513,6 @@ public class GRNAction extends BasePaginatedAction {
 		this.grnStatus = grnStatus;
 	}
 
-	public Set<String> getParamSet() {
-		HashSet<String> params = new HashSet<String>();
-		params.add("productVariant");
-		params.add("invoiceNumber");
-		params.add("tinNumber");
-		params.add("supplierName");
-		params.add("grn");
-		params.add("grnStatus");
-		params.add("reconciled");
-		return params;
-	}
-
 	public Double getSurcharge() {
 		if (grn.getPurchaseOrder().getSupplier().getState().equals(StateList.HARYANA)) {
 			return 0.05;
@@ -667,5 +655,18 @@ public class GRNAction extends BasePaginatedAction {
 
 	public void setPurchaseOrderService(PurchaseOrderService purchaseOrderService) {
 		this.purchaseOrderService = purchaseOrderService;
+	}
+
+    public Set<String> getParamSet() {
+		HashSet<String> params = new HashSet<String>();
+		params.add("productVariant");
+		params.add("invoiceNumber");
+		params.add("tinNumber");
+		params.add("supplierName");
+		params.add("grn");
+		params.add("grnStatus");
+		params.add("reconciled");
+		params.add("warehouse");
+		return params;
 	}
 }

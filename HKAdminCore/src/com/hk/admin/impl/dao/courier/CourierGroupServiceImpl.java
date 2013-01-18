@@ -69,4 +69,8 @@ public class CourierGroupServiceImpl extends BaseDaoImpl implements CourierGroup
 	public void setBaseDao(BaseDao baseDao) {
 		this.baseDao = baseDao;
 	}
+
+	public void saveOrUpdate(CourierGroup courierGroup) {
+		getBaseDao().saveOrUpdate(courierGroup);
+	}
 }
