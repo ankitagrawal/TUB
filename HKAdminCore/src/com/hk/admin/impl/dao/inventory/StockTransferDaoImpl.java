@@ -60,4 +60,23 @@ public class StockTransferDaoImpl extends BaseDaoImpl implements StockTransferDa
 		return (StockTransferLineItem) findUniqueByNamedParams(query, new String[]{"stockTransfer", "sku", "skuGroup"}, new Object[]{stockTransfer, sku, checkedOutSkuGroup});
 	}
 
+
+
+     public StockTransferLineItem getStockTransferLineItemForCheckedOutSkuGrp(SkuGroup checkedOutSkuGroup, StockTransfer stockTransfer){
+         DetachedCriteria  stockTransferLineItemsCriteria =   DetachedCriteria.forClass(StockTransferLineItem.class);
+         stockTransferLineItemsCriteria.add(Restrictions.eq("checkedOutSkuGroup", checkedOutSkuGroup)) ;
+         stockTransferLineItemsCriteria.add(Restrictions.eq("stockTransfer",stockTransfer));
+         List <StockTransferLineItem> stockTransferLineItems =    (List<StockTransferLineItem>) findByCriteria(stockTransferLineItemsCriteria);
+          return stockTransferLineItems == null || stockTransferLineItems.isEmpty() ? null : stockTransferLineItems.get(0);
+     }
+
+
+    public StockTransferLineItem checkinSkuGroupExists(StockTransferLineItem stockTransferLineItem ){
+              DetachedCriteria  stockTransferLineItemsCriteria =   DetachedCriteria.forClass(StockTransferLineItem.class);
+              stockTransferLineItemsCriteria.add(Restrictions.eq("id",stockTransferLineItem.getId()));
+               stockTransferLineItemsCriteria.add(Restrictions.isNotNull("checkedInSkuGroup"));
+                List <StockTransferLineItem> stockTransferLineItems =    (List<StockTransferLineItem>) findByCriteria(stockTransferLineItemsCriteria);
+               return stockTransferLineItems == null || stockTransferLineItems.isEmpty() ? null : stockTransferLineItems.get(0);
+    }
+
 }

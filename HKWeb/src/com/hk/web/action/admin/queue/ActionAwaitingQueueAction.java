@@ -252,20 +252,12 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 if (isManualEscalable) {
                     trueMessage.append(shippingOrder.getId());
                     trueMessage.append(" ");
-                    if (shippingOrder.isDropShipping()) {
-                        shippingOrderService.escalateShippingOrderFromActionTODropQueue(shippingOrder, false);
-                    } else {
-                        shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
-                    }
+                    shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);                    
                 } else {
                     if (getPrincipalUser().getRoles().contains(EnumRole.GOD.toRole())) {
                         trueMessage.append(shippingOrder.getId());
                         trueMessage.append(" ");
-                        if (shippingOrder.isDropShipping()) {
-                            shippingOrderService.escalateShippingOrderFromActionTODropQueue(shippingOrder, false);
-                        } else {
-                            shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
-                        }
+                        shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
                     } else {
                         falseMessage.append(shippingOrder.getId());
                         falseMessage.append(" ");
@@ -273,7 +265,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 }
             }
             trueMessage.append("\n");
-            addRedirectAlertMessage(new SimpleMessage(trueMessage.toString() + " " + falseMessage.toString()));
+            addRedirectAlertMessage(new SimpleMessage(trueMessage.toString() + " / " + falseMessage.toString()));
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
         }

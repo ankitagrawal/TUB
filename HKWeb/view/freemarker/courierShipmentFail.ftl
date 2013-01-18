@@ -1,4 +1,4 @@
-Shipping Order -: ${shippingOrder.id?c} has been escalated to DropShip Queue
+Error creating shipment for order : ${orderId} 
 <html>
 <head>
   <title>Welcome to HealthKart.com</title>
@@ -9,8 +9,8 @@ Shipping Order -: ${shippingOrder.id?c} has been escalated to DropShip Queue
 <p style="margin-bottom:1.2em">Attention!!</p>
 
 <p style="margin-bottom:1em">
-    Please note that  Shipping Order : ${shippingOrder.id?c} has been escalated to DropShip Queue.
-
+  ${message}
+  Order Id = ${orderId} <br/>
 </p>
 
 
