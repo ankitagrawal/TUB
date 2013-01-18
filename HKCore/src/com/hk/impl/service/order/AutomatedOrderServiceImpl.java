@@ -1,6 +1,5 @@
 package com.hk.impl.service.order;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,19 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.cache.UserCache;
-import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
@@ -106,7 +101,7 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
 
 	    order=orderService.save(order);
-        orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 
        return  order;
     }

@@ -40,7 +40,11 @@ public interface AdminSkuItemDao extends BaseDao {
 
   public List<SkuGroup> getInStockSkuGroupsByCreateDate(Sku sku);
 
+  //This seems to be wrong hence deprecating it, please use it at your own risk
+  @Deprecated
   public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup);
+
+	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse);
 
 
 }

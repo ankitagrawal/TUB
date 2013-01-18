@@ -3,6 +3,8 @@ package com.hk.admin.impl.dao.inventory;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuGroup;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -52,5 +54,10 @@ public class StockTransferDaoImpl extends BaseDaoImpl implements StockTransferDa
 		        .setParameter("batchNumber", batchNumber).list();
         return stockTransferLineItems != null && !stockTransferLineItems.isEmpty() ? stockTransferLineItems.get(0) : null;
     }
+
+	public StockTransferLineItem getStockTransferLineItem(StockTransfer stockTransfer, Sku sku, SkuGroup checkedOutSkuGroup) {
+		String query = "select stli from StockTransferLineItem stli where stli.stockTransfer = :stockTransfer and stli.sku = :sku and stli.checkedOutSkuGroup = :skuGroup";
+		return (StockTransferLineItem) findUniqueByNamedParams(query, new String[]{"stockTransfer", "sku", "skuGroup"}, new Object[]{stockTransfer, sku, checkedOutSkuGroup});
+	}
 
 }

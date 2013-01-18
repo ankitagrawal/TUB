@@ -83,7 +83,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     CourierCostCalculator courierCostCalculator;
 
     @Autowired
-    ShipmentService shipmentService;
+	ShipmentService shipmentService;
 
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;

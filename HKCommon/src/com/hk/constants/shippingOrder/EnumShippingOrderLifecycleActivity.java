@@ -99,6 +99,9 @@ public enum EnumShippingOrderLifecycleActivity {
   }
 
   public static List<EnumShippingOrderLifecycleActivity> getActivitiesForActionQueue() {
-     return Arrays.asList(EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue,EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue,SO_CouldNotBeManuallyEscalatedToProcessingQueue);
+     return Arrays.asList(SO_EscalatedBackToActionQueue,
+			 SO_CouldNotBeAutoEscalatedToProcessingQueue,
+			 SO_CouldNotBeManuallyEscalatedToProcessingQueue,
+			 SO_ShipmentNotCreated);
   }
 }

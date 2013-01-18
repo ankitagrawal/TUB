@@ -30,9 +30,9 @@ import net.sourceforge.stripes.action.Resolution;
 @Component
 public class CycleCountHelper {
 	File xlsFile;
-   private static Logger logger = LoggerFactory.getLogger(CycleCountHelper.class);
+	private static Logger logger = LoggerFactory.getLogger(CycleCountHelper.class);
 
-	public File generateReconVoucherAddExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> scannedPviVariance) {
+	public File generateReconVoucherAddExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> cycleCountPVImap) {
 		this.xlsFile = xlsFile;
 		HkXlsWriter xlsWriter = new HkXlsWriter();
 		int xlsRow = 1;
@@ -48,8 +48,11 @@ public class CycleCountHelper {
 		for (CycleCountItem cycleCountItem : cycleCountItems) {
 			SkuGroup skuGroup = cycleCountItem.getSkuGroup();
 			xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
-			int qtyToadd = scannedPviVariance.get(cycleCountItem.getId());
-			xlsWriter.addCell(xlsRow, qtyToadd);
+
+			int pvi = cycleCountPVImap.get(cycleCountItem.getId());
+			int scannedQty = cycleCountItem.getScannedQty();
+			int qtyToAdd = Math.abs(pvi - scannedQty);
+			xlsWriter.addCell(xlsRow, qtyToAdd);
 			xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
 			String expiryDate = "";
 			if (skuGroup.getExpiryDate() != null) {
@@ -72,12 +75,12 @@ public class CycleCountHelper {
 	}
 
 
-	public File generateCompleteCycleCountExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> scannedPviVariance) {
+	public File generateCompleteCycleCountExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> cycleCountPVImap) {
 		this.xlsFile = xlsFile;
 		HkXlsWriter xlsWriter = new HkXlsWriter();
 		int xlsRow = 1;
 		xlsWriter.addHeader(XslConstants.VARIANT_ID, XslConstants.VARIANT_ID);
-		xlsWriter.addHeader(XslConstants.QTY, XslConstants.QTY);
+
 		xlsWriter.addHeader(XslConstants.BATCH_NUMBER, XslConstants.BATCH_NUMBER);
 		xlsWriter.addHeader(XslConstants.HK_BARCODE, XslConstants.HK_BARCODE);
 		xlsWriter.addHeader(XslConstants.SCANNED_QTY, XslConstants.SCANNED_QTY);
@@ -92,14 +95,13 @@ public class CycleCountHelper {
 		for (CycleCountItem cycleCountItem : cycleCountItems) {
 			SkuGroup skuGroup = cycleCountItem.getSkuGroup();
 			xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
-			int qtyToadd = scannedPviVariance.get(cycleCountItem.getId());
-			xlsWriter.addCell(xlsRow, qtyToadd);
 			xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
 			xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
-			xlsWriter.addCell(xlsRow, cycleCountItem.getScannedQty().intValue());
-			int diffQty = scannedPviVariance.get(cycleCountItem.getId()).intValue();
-			int sysQty = cycleCountItem.getScannedQty().intValue() + (diffQty);
+			int scannedQty = cycleCountItem.getScannedQty().intValue();
+			xlsWriter.addCell(xlsRow, scannedQty);
+			int sysQty = cycleCountPVImap.get(cycleCountItem.getId());
 			xlsWriter.addCell(xlsRow, sysQty);
+			int diffQty = sysQty - scannedQty;
 			xlsWriter.addCell(xlsRow, diffQty);
 			String expiryDate = "";
 			if (skuGroup.getExpiryDate() != null) {
@@ -122,29 +124,29 @@ public class CycleCountHelper {
 	}
 
 
-	public void generateDocFile(File  barcodeError, Map<String, String> hkBarcodeErrorsMap) throws IOException{
+	public void generateTextFile(File barcodeError, Map<String, String> hkBarcodeErrorsMap) throws IOException {
 		this.xlsFile = barcodeError;
-		if(hkBarcodeErrorsMap != null && hkBarcodeErrorsMap.size() > 0) {
-		for (String hkBarcode : hkBarcodeErrorsMap.keySet()) {
-			StringBuffer data = new StringBuffer();
-			data = data.append(hkBarcode).append("\t").append(hkBarcodeErrorsMap.get(hkBarcode).toString());
-			BufferedWriter bufferedWriter = null;
-			   FileWriter fileWriter ;
+		if (hkBarcodeErrorsMap != null && hkBarcodeErrorsMap.size() > 0) {
+			for (String hkBarcode : hkBarcodeErrorsMap.keySet()) {
+				StringBuffer data = new StringBuffer();
+				data = data.append(hkBarcode).append("\t").append(hkBarcodeErrorsMap.get(hkBarcode).toString());
+				BufferedWriter bufferedWriter = null;
+				FileWriter fileWriter;
 
-			   try {
-			     fileWriter = new FileWriter(barcodeError.getAbsolutePath(), false);
-			     bufferedWriter = new BufferedWriter(fileWriter);
-			     bufferedWriter.append(data);
-			   }
-			   finally {
-			     try {
-			       if (bufferedWriter != null)
-			         bufferedWriter.close();
-			     } catch (Exception ex) {
+				try {
+					fileWriter = new FileWriter(barcodeError.getAbsolutePath(), false);
+					bufferedWriter = new BufferedWriter(fileWriter);
+					bufferedWriter.append(data);
+				}
+				finally {
+					try {
+						if (bufferedWriter != null)
+							bufferedWriter.close();
+					} catch (Exception ex) {
 
-			     }
-			   }
-		}
+					}
+				}
+			}
 			download();
 		}
 
@@ -172,16 +174,13 @@ public class CycleCountHelper {
 	}
 
 
-
-
-
 	public Map<String, Integer> readCycleCountNotepad(File file) throws IOException {
 		logger.debug("parsing Cycle Count Notepad : " + file.getAbsolutePath());
 		Map<String, Integer> barcodeQty = new HashMap<String, Integer>();
 		try {
 			BufferedReader buffer = new BufferedReader(new FileReader(file));
-			String barcode = buffer.readLine();
-			while (barcode != null) {
+			String barcode = null;
+			while ((barcode = buffer.readLine()) != null) {
 				if (barcodeQty.containsKey(barcode)) {
 					int qty = barcodeQty.get(barcode);
 					barcodeQty.put(barcode, (qty + 1));
@@ -195,7 +194,6 @@ public class CycleCountHelper {
 		}
 		return barcodeQty;
 	}
-
 
 
 }

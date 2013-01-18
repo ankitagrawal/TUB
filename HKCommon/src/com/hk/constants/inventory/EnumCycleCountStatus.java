@@ -1,5 +1,8 @@
 package com.hk.constants.inventory;
 
+import java.util.List;
+import java.util.Arrays;
+
 /**
  * Created by IntelliJ IDEA.
  * User:Seema
@@ -11,7 +14,7 @@ public enum EnumCycleCountStatus {
 
 	Start(10L, "Start"),
 	InProgress(20L, "InProgress"),
-	PendingForApproval(30L, "PendingForApproval"),
+	RequestForApproval(30L, "PendingForApproval"),
 	Approved(99L, "Approved"),
 	Closed(999L, "Closed");
 
@@ -29,5 +32,15 @@ public enum EnumCycleCountStatus {
 
 	public Long getId() {
 		return id;
+	}
+
+	public static List<EnumCycleCountStatus> getAllList() {
+		return Arrays.asList(
+				EnumCycleCountStatus.Start,
+				EnumCycleCountStatus.InProgress,
+				EnumCycleCountStatus.RequestForApproval,
+				EnumCycleCountStatus.Approved,
+				EnumCycleCountStatus.Closed);
+
 	}
 }

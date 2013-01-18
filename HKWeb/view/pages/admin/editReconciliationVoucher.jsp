@@ -207,8 +207,9 @@
 
 						else{
 						$('#reconciliedqty').val('' + reconQty);
-
+						$('.singlesave').css("display", "block");
 						}
+
 						$('.error').empty();
 						$('.error').hide();
 					}

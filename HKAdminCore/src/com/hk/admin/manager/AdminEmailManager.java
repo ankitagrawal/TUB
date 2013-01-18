@@ -872,9 +872,22 @@ public class AdminEmailManager {
 			valuesMap.put("cod", "No");
 		}
 
-	Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.awbStatusEmail);
-	return emailService.sendHtmlEmail(freemarkerTemplate,valuesMap,logisticsAdminEmails,
-	EmailTemplateConstants.operationsTeam);
+		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.awbStatusEmail);
+		return emailService.sendHtmlEmail(freemarkerTemplate,valuesMap,logisticsAdminEmails,EmailTemplateConstants.operationsTeam);
+	}
+
+	public boolean sendNoShipmentEmail(String message, ShippingOrder shippingOrder, Order baseOrder){
+		HashMap valuesMap = new HashMap();
+		if(shippingOrder != null){
+			valuesMap.put("orderId", shippingOrder.getGatewayOrderId());
+		}
+		else{
+			valuesMap.put("orderId", baseOrder.getGatewayOrderId());
+		}
+		valuesMap.put("message", message);
+		
+		Template freemarTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.courierShipmentFail);
+		return emailService.sendHtmlEmail(freemarTemplate, valuesMap, logisticsAdminEmails, EmailTemplateConstants.operationsTeam);
 	}
 
     public boolean sendOrderDeliveredEmail(Order order) {
@@ -930,6 +943,8 @@ public class AdminEmailManager {
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedEmail);
 		return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
 	}
+
+
 
     static enum Product_Status{
 

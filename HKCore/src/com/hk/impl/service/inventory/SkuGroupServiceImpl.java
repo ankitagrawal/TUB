@@ -11,7 +11,6 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,8 +39,8 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return skuGroupDao.getAllCheckedInBatches(sku);
 	}
 
-	public SkuGroup getSkuGroup(String barcode) {
-		return skuGroupDao.getSkuGroup(barcode);
+	public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId) {
+		return skuGroupDao.getInStockSkuGroup(barcode, warehouseId);
 	}
 
 	public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku) {
@@ -60,11 +59,13 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return  skuGroupDao.getSkuGroupsByBatch(batch,sku);
 	}
 
-	public List<SkuGroup> getSkuGroup(String barcode, Warehouse warehouse){
-		return  skuGroupDao.getSkuGroup(barcode,warehouse);
+	public List<SkuGroup> getSkuGroupsByBarcode(String barcode, Long warehouseId){
+		return skuGroupDao.getSkuGroupsByBarcode(barcode, warehouseId);
 	}
 
-
+	public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId){
+		return  skuGroupDao.getSkuGroup(barcode,warehouseId);
+	}
 
 
 	//SkuItemDao Methods

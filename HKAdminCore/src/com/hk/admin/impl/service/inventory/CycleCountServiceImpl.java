@@ -5,11 +5,16 @@ import com.hk.admin.pact.dao.inventory.CycleCountDao;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
+import com.akube.framework.dao.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Date;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -50,5 +55,9 @@ public class CycleCountServiceImpl implements CycleCountService {
 
 	public List<CycleCountItem> getAllCycleCountItem(){
 		return getBaseDao().getAll(CycleCountItem.class);
+	}
+
+	public Page searchCycleList(String brand, Long warehouseId, User auditor, Date startDate, Date endDate, int pageNo, int perPage){
+		return cycleCountDao.searchCycleList(brand, warehouseId, auditor,startDate,endDate,pageNo, perPage);
 	}
 }

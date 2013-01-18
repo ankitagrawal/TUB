@@ -349,7 +349,7 @@ cooking fun for you. Get acquainted with unique ways to invite flavor combined w
   <tr>
         <td bgcolor="#363636" height="70" align="center" ><p><span style="font-size:12px; font-weight:bold; color:#999999; text-align:center; line-height:25px">FOR ANY QUERIES</span> <br />
 
-          <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>  |  Tel.: +91 124 4551666</span></p>          </td>
+          <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>  |  Tel.: +91 124 4502930</span></p>          </td>
       </tr>
 
 

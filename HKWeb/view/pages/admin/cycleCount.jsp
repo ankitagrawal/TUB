@@ -60,7 +60,7 @@
 				<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
 				<s:hidden name="message" value="${cycle.message}"/>
 				<s:hidden name="error" value="${cycle.error}"/>
-				<s:hidden name="cycleCountPVImapString"  class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
+				<s:hidden name="cycleCountPVImapString" class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
 				Scan Here <s:text name="hkBarcode" class="scannedBarcode"/>
 				<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
 					<c:forEach items="${cycle.cycleCountItems}" var="cCItem" varStatus="ctr">
@@ -73,8 +73,8 @@
 							<td> ${cCItem.skuGroup.sku.productVariant.product.name} </td>
 							<td> ${cCItem.skuGroup.barcode} </td>
 							<td> ${cCItem.skuGroup.mrp}</td>
-							<td>  <fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date" /></td>
-							<td> <fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
+							<td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
+							<td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
 							<td>${cCItem.scannedQty}</td>
 
 							<td>
@@ -95,7 +95,19 @@
 
 				</tr>
 			</table>
+
+			<div>
+				<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
+					<s:submit name="save" value="Freeze"/>
+				</c:if>
+				</s:form>
 			</div>
+		</div>
+
+
+
+
+
 
 
 
@@ -122,15 +134,7 @@
 				</fieldset>
 		</div>
 
-			<div>
-			<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
-				<c:set value = "<%=EnumCycleCountStatus.PendingForApproval.getId()%>" var="pendingForApproval"/>
-				<c:if test="${cycle.cycleCount.cycleStatus < pendingForApproval}}">
-					<s:submit name="save" value="done"/>
-				</c:if>
-			</c:if>
-			</s:form>
-		</div>
+
 	</s:layout-component>
 
 </s:layout-render>	

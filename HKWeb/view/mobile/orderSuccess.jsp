@@ -34,6 +34,20 @@
 			$.mobile.urlHistory.stack = [];
 		});
 	</script>
-	</div>
+    <%
+    if (AnalyticsConstants.analytics) {
+    %>
+    <div id="sdt-js"></div>
+    <script>
+        var _beaconping = _beaconping || [];
+        _beaconping.push({goalName:"Conversions", appId:"cb71699d-7566-45ad-9b77-a253b8fb25fb",event:"onloadbeacon"});
+        (function() {
+            var e = document.createElement('script');
+            e.src = 'http://sdtbeacon.appsdt.com/sdtbeacon.js';
+            e.async = true;
+            document.getElementById('sdt-js').appendChild(e);
+        }());
+    </script>
+    <%}%>
 </body>
 </html>

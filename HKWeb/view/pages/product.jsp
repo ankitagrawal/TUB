@@ -168,15 +168,13 @@
 	<%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" product="${product}"/>--%>
 	<%--</c:if>--%>
 
-	<c:if test="${pa.combo == null}">
 		<shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
 			<s:layout-render name="/pages/modal/productLink.jsp" product="${product}"
 			                 affiliateId="${pa.affiliate.id}"/>
 
-			<s:layout-render name="/pages/modal/productBannerLink.jsp" product="${product}"
+			<s:layout-render name="/pages/modal/productBannerLink.jsp" product="${product}" combo="${pa.combo}"
 			                 affiliateId="${pa.affiliate.id}"/>
 		</shiro:hasPermission>
-	</c:if>
 
 	<div class="jqmWindow" style="display:none;" id="notifyMeWindow"></div>
 
@@ -416,7 +414,7 @@
 			$(document).ready(function () {
 				$('#subscriptionWindow').jqm({trigger:'.addSubscriptionButton', ajax:'@href', ajaxText:'<br/><div style="text-align: center;">loading... please wait..</div> <br/>'});
 				$('.addSubscriptionButton').mouseover(function () {
-					var top = $(this).offset().top - $('#subscription-tooltip').outerHeight() - 55;
+					var top = $(this).offset().top - $('#subscription-tooltip').outerHeight() - 20;
 					var left = $(this).offset().left - $('#subscription-tooltip').outerWidth() / 2 + $(this).outerWidth() / 2;
 
 					$('#subscription-tooltip').css({
