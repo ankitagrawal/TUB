@@ -9,8 +9,6 @@ public interface ShipmentService {
 
     public Shipment createShipment(ShippingOrder shippingOrder);
 
-    public Shipment saveShipmentDate(Shipment shipment);
-
     public Shipment save(Shipment shipment);
 
     public Shipment findByAwb(Awb awb);

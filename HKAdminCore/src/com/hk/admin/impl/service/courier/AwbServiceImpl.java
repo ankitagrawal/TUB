@@ -75,7 +75,7 @@ public class AwbServiceImpl implements AwbService {
         }
     }
 
-    public Object save(Awb awb, Integer newStatus) {
+    public Awb save(Awb awb, Integer newStatus) {
 	return awbDao.save(awb,newStatus);
 	}
 

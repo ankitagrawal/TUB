@@ -47,7 +47,7 @@ public interface AwbService {
 
     public void delete(Awb awb);
 
-	public Object save(Awb awb, Integer newStatus);
+	public Awb save(Awb awb, Integer newStatus);
 
     public  Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
 

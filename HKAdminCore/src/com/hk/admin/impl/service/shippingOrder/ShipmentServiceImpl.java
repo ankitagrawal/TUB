@@ -148,13 +148,16 @@ public class ShipmentServiceImpl implements ShipmentService {
         return shippingOrder.getShipment();
     }
 
-    public Shipment saveShipmentDate(Shipment shipment) {
-        shipment.setShipDate(new Date());
-        return save(shipment);
-    }
-
     public Shipment save(Shipment shipment) {
         return (Shipment) shipmentDao.save(shipment);
+    }
+
+    public void delete(Shipment shipment) {
+        shipmentDao.delete(shipment);
+    }
+
+    public Shipment findByAwb(Awb awb) {
+        return shipmentDao.findByAwb(awb);
     }
 
     @Transactional
@@ -164,31 +167,13 @@ public class ShipmentServiceImpl implements ShipmentService {
         Awb suggestedAwb;
         if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId())) {
             suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
-            if (suggestedAwb != null) {
-                suggestedAwb = (Awb) awbService.save(suggestedAwb, null);
-                awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
-            }
         } else {
             suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), isCod, EnumAwbStatus.Unused.getAsAwbStatus());
         }
-        if (suggestedAwb == null) {
-            return null;
+        if (suggestedAwb != null) {
+            suggestedAwb = awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
         }
-        int rowsUpdate = (Integer) awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
-        awbService.refresh(suggestedAwb);
-        if (rowsUpdate == 1) {
-            return suggestedAwb;
-        } else {
-            return attachAwbToShipment(suggestedCourier, shippingOrder, weightInKg);
-        }
-    }
-
-    public Shipment findByAwb(Awb awb) {
-        return shipmentDao.findByAwb(awb);
-    }
-
-    public void delete(Shipment shipment) {
-        shipmentDao.delete(shipment);
+        return suggestedAwb;
     }
 
     @Override

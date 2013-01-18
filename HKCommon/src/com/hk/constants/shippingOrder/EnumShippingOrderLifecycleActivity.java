@@ -105,4 +105,9 @@ public enum EnumShippingOrderLifecycleActivity {
 			 SO_CouldNotBeManuallyEscalatedToProcessingQueue,
 			 SO_ShipmentNotCreated);
   }
+
+    public static List<Long> getActivitiesForShipmentResolutionQueue() {
+        return Arrays.asList(SO_ShipmentNotCreated.getId(), SO_Shipment_Auto_Created.getId(), SHIPMENT_RESOLUTION_ACTIVITY.getId());
+    }
+
 }

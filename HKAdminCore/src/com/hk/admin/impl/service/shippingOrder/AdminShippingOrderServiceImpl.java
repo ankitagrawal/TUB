@@ -256,7 +256,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
         if (shipment != null) {
             shipment.getAwb().setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
-            getShipmentService().saveShipmentDate(shipment);
+            shipment.setShipDate(new Date());
+            getShipmentService().save(shipment);
         }
 
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Shipped));

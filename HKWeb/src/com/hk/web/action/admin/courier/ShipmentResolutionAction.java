@@ -90,7 +90,7 @@ public class ShipmentResolutionAction extends BaseAction {
         shippingOrder = shippingOrderList.get(0);
         applicableCouriers = pincodeCourierService.getApplicableCouriers(shippingOrder);
         shipment = shippingOrder.getShipment();
-        shippingOrderLifeCycles = shippingOrderLifecycleService.getShippingOrderLifecycleBySOAndActivity(shippingOrder.getId(), EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.getId());
+        shippingOrderLifeCycles = shippingOrderLifecycleService.getShippingOrderLifecycleBySOAndActivities(shippingOrder.getId(), EnumShippingOrderLifecycleActivity.getActivitiesForShipmentResolutionQueue());
 
         return new ForwardResolution("/pages/admin/courier/shipmentResolution.jsp");
     }

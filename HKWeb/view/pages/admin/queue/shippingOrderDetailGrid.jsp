@@ -163,8 +163,8 @@
         </shiro:hasAnyRoles>
 
          <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
-           (<s:link beanclass="com.hk.web.action.admin.shipment.CreateDropShipmentAction" event="pre" target="_blank">
-            <s:param name="shippingOrder" value="${shippingOrder}"/>
+           (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="pre" target="_blank">
+            <s:param name="shippingOrderGatewayId" value="${shippingOrder.gatewayOrderId}"/>
             Create Shipment
         </s:link>)
         </c:if>
