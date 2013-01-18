@@ -75,7 +75,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     @Autowired
     private              AwbService                  awbService;
     @Autowired
-    private              ShipmentService             shipmentService;
+    private ShipmentService shipmentService;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")

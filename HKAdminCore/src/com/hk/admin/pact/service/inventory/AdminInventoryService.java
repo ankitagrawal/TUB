@@ -17,7 +17,9 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 
 public interface AdminInventoryService {
 
@@ -33,6 +35,8 @@ public interface AdminInventoryService {
      * SkuGroup/SkuItem/PVI Inventory Checkin / Checkout Functions
      */
     public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
+
+    public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) ;
 
     public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
             StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy);
@@ -60,14 +64,14 @@ public interface AdminInventoryService {
 
     public Long countOfCheckedInUnitsForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
 
-    public SkuGroup getSkuGroupByHkBarcode(String barcode);
-
     public List<VariantConfig> getAllVariantConfig();
 
 	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList);
 
 	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
-	
+	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse);
+
+	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy );
 
 }
