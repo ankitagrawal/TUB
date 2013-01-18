@@ -143,6 +143,7 @@
 				</s:select>
 				<s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}"/>
 				<s:submit name="viewLot" value="Filter" />
+				<s:submit name="downloadLotDetailsToExcel" value="Download To Excel" />
 			</s:form>
 		</fieldset>
 

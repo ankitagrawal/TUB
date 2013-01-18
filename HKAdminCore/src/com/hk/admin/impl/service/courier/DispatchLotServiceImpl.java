@@ -165,7 +165,7 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 			getBaseDao().saveOrUpdate(dispatchLotHasShipmentList);
 
 			//update dispatch Lot
-			dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.InTransit.getDispatchLotStatus());
+			//dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.InTransit.getDispatchLotStatus());
 			dispatchLot.setDispatchDate(new Date());
 			dispatchLot.setNoOfShipmentsSent((long)dispatchLotHasShipmentList.size());
 			getDispatchLotDao().save(dispatchLot);
@@ -202,10 +202,21 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 
 	public File generateDispatchLotExcel(File xlsFile, List<DispatchLotHasShipment> dispatchLotHasShipmentList) {
 		HkXlsWriter xlsWriter = new HkXlsWriter();
-				int xlsRow = 1;
-				xlsWriter.addHeader(XslConstants.SUPPLIER_NAME, XslConstants.SUPPLIER_NAME);
+		if(dispatchLotHasShipmentList != null) {
+			int xlsRow = 1;
+			xlsWriter.addHeader(XslConstants.GATEWAY_ORDER_ID, XslConstants.GATEWAY_ORDER_ID);
+			xlsWriter.addHeader(XslConstants.AWB_NUMBER, XslConstants.AWB_NUMBER);
+			xlsWriter.addHeader(XslConstants.SHIPMENT_STATUS, XslConstants.SHIPMENT_STATUS);
+			for (DispatchLotHasShipment dispatchLotHasShipment : dispatchLotHasShipmentList) {
+				xlsWriter.addCell(xlsRow, dispatchLotHasShipment.getShipment().getShippingOrder().getGatewayOrderId());
+				xlsWriter.addCell(xlsRow, dispatchLotHasShipment.getShipment().getAwb().getAwbNumber());
+				xlsWriter.addCell(xlsRow, dispatchLotHasShipment.getShipmentStatus());
+				xlsRow++;
+			}
+			xlsWriter.writeData(xlsFile, "Sheet1");
 
-
+		}
+		return xlsFile;
 	}
 
 	public List<Shipment> getShipmentsForDispatchLot(DispatchLot dispatchLot) {

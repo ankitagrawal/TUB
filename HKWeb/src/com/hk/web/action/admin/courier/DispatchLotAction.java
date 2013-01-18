@@ -199,10 +199,11 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 		dispatchLotShipments = getDispatchLotService().getDispatchLotHasShipmentListByDispatchLot(dispatchLot, shipmentStatusFilter);
 		if(dispatchLotShipments != null) {
-			xlsFile = new File(adminDownloads + "/reports/dispatchLot/DispatchLotShipment_" + dispatchLot.getId()+".xls");
-			dispatchLotService.generateDispatchLotExcel(xlsFile, dispatchLotShipments);
+			xlsFile = new File(adminDownloads + "/reports/DispatchLot.xls");
+			xlsFile = dispatchLotService.generateDispatchLotExcel(xlsFile, dispatchLotShipments);
+			return new HTTPResponseResolutionExcel();
 		}
-
+		addRedirectAlertMessage(new SimpleMessage("No Shipment found for the Dispatch Lot"));
 		return new ForwardResolution("/pages/admin/courier/viewDispatchLotWithShipments.jsp").addParameter("dispatchLot", dispatchLot.getId());
 	}
 
@@ -282,10 +283,19 @@ public class DispatchLotAction extends BasePaginatedAction {
 		if(dispatchLot != null) {
 			String documentFilePath = adminUploadsPath + "/dispatchLot/DispatchLot_" + dispatchLot.getId() + "_" + dispatchLot.getDocumentFileName();
 			documentFile = new File(documentFilePath);
-
 		}
 		return new HTTPResponseResolution();
+	}
 
+	public Resolution markLotAsInTransit() {
+		if (dispatchLot == null) {
+			addRedirectAlertMessage(new SimpleMessage("Invalid Dispatch Lot"));
+			return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
+		}
+
+		dispatchLot.setDispatchLotStatus(EnumDispatchLotStatus.InTransit.getDispatchLotStatus());
+		dispatchLotService.save(dispatchLot);
+		return new ForwardResolution("/pages/admin/courier/dispatchLot.jsp");
 	}
 
 	private class HTTPResponseResolution implements Resolution {
@@ -294,6 +304,23 @@ public class DispatchLotAction extends BasePaginatedAction {
 			InputStream in = new BufferedInputStream(new FileInputStream(documentFile));
 			res.setContentLength((int) documentFile.length());
 			res.setHeader("Content-Disposition", "attachment; filename=\"" + documentFile.getName() + "\";");
+			out = res.getOutputStream();
+
+			// Copy the contents of the file to the output stream
+			byte[] buf = new byte[4096];
+			int count = 0;
+			while ((count = in.read(buf)) >= 0) {
+				out.write(buf, 0, count);
+			}
+		}
+	}
+
+	private class HTTPResponseResolutionExcel implements Resolution {
+		public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+			OutputStream out = null;
+			InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
+			res.setContentLength((int) xlsFile.length());
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
 			out = res.getOutputStream();
 
 			// Copy the contents of the file to the output stream
