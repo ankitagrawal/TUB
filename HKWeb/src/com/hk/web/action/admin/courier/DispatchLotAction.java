@@ -163,7 +163,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 			logger.error("Exception while reading excel sheet.", e);
 			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
 		} catch (ExcelBlankFieldException e) {
-			logger.error("Exception while reading excel sheet.", e);
+			logger.error("Exception while reading excel sheet. : " + e.getMessage());
 			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
 		}
 		return new ForwardResolution(DispatchLotAction.class, "showDispatchLotList").addParameter("dispatchLot", dispatchLot.getId());
