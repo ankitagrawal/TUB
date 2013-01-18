@@ -294,93 +294,6 @@ public class InventoryCheckinAction extends BaseAction {
 		}
 	}
 
-//	@Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
-//	public Resolution saveInventoryAgainstStockTransfer() {
-//		User user = null;
-//		if (getPrincipal() != null) {
-//			user = getUserService().getUserById(getPrincipal().getId());
-//		}
-//
-//		stockTransfer.setReceivedBy(user);
-//		logger.debug("upc: " + upc);
-//		try {
-//			ProductVariant productVariant = getProductVariantService().findVariantFromUPC(upc);
-//			if (productVariant == null) {
-//				productVariant = getProductVariantService().getVariantById(upc);
-//			}
-//			if (productVariant != null) {
-//				Sku sku = skuService.findSKU(productVariant, stockTransfer.getToWarehouse());
-//				if (sku == null) {
-//					addRedirectAlertMessage(new SimpleMessage("Sku doesn't exist for product  - " + productVariant.getId() + "Plz contact category manager."));
-//					return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-//							"checkinInventoryAgainstStockTransfer", stockTransfer.getId());
-//				}
-//				Long askedQty = 0L;
-//				StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, productVariant, batch);
-//				if (stockTransferLineItem != null && sku != null) {
-//					askedQty = stockTransferLineItem.getCheckedoutQty();
-//					Long alreadyCheckedInQty = adminInventoryService.countOfCheckedInUnitsForStockTransferLineItem(stockTransferLineItem);
-//					// logger.info("Inventory Checkin ->
-//					// ProductVariant="+productVariant.getId()+";askedQty="+askedQty+";alreadyCheckedInQty="+alreadyCheckedInQty+";qty="+qty);
-//					if (qty > (askedQty - alreadyCheckedInQty)) {
-//						addRedirectAlertMessage(new SimpleMessage("Qty mentioned - " + qty + " is exceeding required checked in qty. Plz check."));
-//						return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-//								"checkinInventoryAgainstStockTransfer", stockTransfer.getId());
-//					}
-//
-//					SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, null, null, stockTransfer, sku);
-//					adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, qty, null, null, null, stockTransferLineItem,
-//							inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), user);
-//					inventoryService.checkInventoryHealth(productVariant);
-//					stockTransferLineItem.setCheckedinQty(alreadyCheckedInQty + qty);
-//					stockTransferLineItem.setBatchNumber(batch);
-//					stockTransferLineItem.setMfgDate(mfgDate);
-//					stockTransferLineItem.setExpiryDate(expiryDate);
-//					stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItem);
-//
-//					try {
-//						String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
-//						String barcodeFilePath = null;
-//						if (stockTransfer.getToWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)) {
-//							barcodeFilePath = barcodeGurgaon;
-//						} else {
-//							barcodeFilePath = barcodeMumbai;
-//						}
-//						barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + user.getId() + "_" + user.getName() + "_"
-//								+ StringUtils.substring(stockTransfer.getToWarehouse().getCity(), 0, 3) + ".txt";
-//						String date = "";
-//						if (expiryDate == null) {
-//							date = "NA";
-//						} else {
-//							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-//							date = sdf.format(expiryDate);
-//						}
-//						String data = skuGroup.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
-//								+ StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + qty + "\t" + skuGroup.getMrp();
-//
-//						BarcodeUtil.createBarcodeFile(barcodeFilePath, data);
-//
-//					} catch (IOException e) {
-//						logger.error("Exception while appending on barcode file", e);
-//						;
-//					}
-//				}
-//			} else {
-//				addRedirectAlertMessage(new SimpleMessage("No such UPC or Variant Id"));
-//				return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter("checkinInventoryAgainstStockTransfer",
-//						stockTransfer.getId());
-//			}
-//		} catch (Exception e) {
-//			logger.error("Error while stock transfer checkin : ", e);
-//			addRedirectAlertMessage(new SimpleMessage("Duplicate UPC or Variants in Stock Transfer - Please fix the same."));
-//			return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter("checkinInventoryAgainstStockTransfer",
-//					stockTransfer.getId());
-//		}
-//		addRedirectAlertMessage(new SimpleMessage("Inventory Checked in successfully. Qty = " + qty));
-//		return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter("checkinInventoryAgainstStockTransfer",
-//				stockTransfer.getId());
-//
-//	}
 
 
     public Resolution saveStockTransfer() {
@@ -457,7 +370,7 @@ public class InventoryCheckinAction extends BaseAction {
         }
 
         addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-        return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+        return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
     }
 
 
