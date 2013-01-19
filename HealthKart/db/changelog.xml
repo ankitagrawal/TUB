@@ -11011,13 +11011,7 @@
             </column>
             <column name="scanned_qty" type="INT"/>
         </createTable>
-    </changeSet>
-    <changeSet author="Seema (generated)" id="1358592197897-3">
-        <addForeignKeyConstraint baseColumnNames="default_courier_id" baseTableName="address"  constraintName="fk_address_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier"  referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Seema (generated)" id="1358592197897-4">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="address"  constraintName="fk_address_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
-    </changeSet>
+    </changeSet>     
     <changeSet author="Seema (generated)" id="1358592197897-5">
         <addForeignKeyConstraint baseColumnNames="brands_to_audit_id" baseTableName="cycle_count"  constraintName="fk_cycle_count_brands_to_audit1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="brands_to_audit"  referencesUniqueColumn="false"/>
     </changeSet>
@@ -11030,5 +11024,4 @@
     <changeSet author="Seema (generated)" id="1358592197897-8">
         <addForeignKeyConstraint baseColumnNames="sku_group_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_group"  referencesUniqueColumn="false"/>
     </changeSet>
-
 </databaseChangeLog>
