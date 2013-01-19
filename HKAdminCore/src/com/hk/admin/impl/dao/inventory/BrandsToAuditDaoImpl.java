@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
+import org.hibernate.Query;
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.constants.inventory.EnumAuditStatus;
@@ -16,13 +16,15 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 
+
+
 @SuppressWarnings ("unchecked")
 @Repository
 public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDao {
 
 	public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
 		DetachedCriteria auditCriteria = DetachedCriteria.forClass(BrandsToAudit.class);
-		if (StringUtils.isNotBlank(brand)) {
+		if (StringUtils.isNotBlank(brand) ) {
 			auditCriteria.add(Restrictions.eq("brand", brand));
 		}
 		if (warehouse != null) {
@@ -55,7 +57,7 @@ public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDa
 		return false;
 	}
 
-	public boolean isBrandAudited(String brand) {
+    	public boolean isBrandAudited(String brand) {
 		String queryString = "from BrandsToAudit ba where ba.brand = :brand and ba.auditStatus = :auditStatus";
 		List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString,
 				new String[]{"brand", "auditStatus"},
@@ -66,19 +68,12 @@ public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDa
 		return false;
 	}
 
-
-	public boolean isBrandAuditInProgress(String brand) {
-		String queryString = "from BrandsToAudit ba where ba.brand = :brand and ba.auditStatus = :auditStatus";
-		List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString,
-				new String[]{"brand", "auditStatus"},
-				new Object[]{brand, EnumAuditStatus.Pending.getId()});
-		if (!brandsToAuditList.isEmpty()) {
-			return true;
-		}
-		return false;
-
-
-	}
-
+    public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus){
+        String queryString = "from BrandsToAudit ba where ba.brand = :brand and ba.auditStatus = :auditStatus ";
+        Query q =  getSession().createQuery(queryString);
+        q.setParameter("auditStatus", auditStatus);
+        q.setParameter("brand",brand);
+        return q.list();
+    }
 
 }

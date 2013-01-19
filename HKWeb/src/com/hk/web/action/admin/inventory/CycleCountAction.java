@@ -216,11 +216,11 @@ public class CycleCountAction extends BasePaginatedAction {
 		List<SkuGroup> skuGroupListResult = new ArrayList<SkuGroup>();
 		if (skuGroupFromDb != null && skuGroupFromDb.size() > 0) {
 			for (SkuGroup skuGroupCheckBrand : skuGroupFromDb) {
-				if (skuGroupCheckBrand.getSku().getProductVariant().getProduct().getBrand().equals(brand)) {
+				if (skuGroupCheckBrand.getSku().getProductVariant().getProduct().getBrand().equalsIgnoreCase(brand)) {
 					skuGroupListResult.add(skuGroupCheckBrand);
 				} else {
 					error = true;
-					message =  hkBarcode + "  does not belong to brand ::" + brand;
+					message =  hkBarcode + " :: does not belong to brand";
 					return skuGroupListResult;
 				}
 

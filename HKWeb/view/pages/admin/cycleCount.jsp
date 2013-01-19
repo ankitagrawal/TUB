@@ -17,6 +17,15 @@
 				});
 
 
+				$('#uploadnotepad').live("click", function() {
+					var filebean = $('#filebean').val();
+					if (filebean == null || filebean == '') {
+						alert('choose file');
+						return false;
+					}
+				});
+
+
 				$('.scannedBarcode').live("change", function() {
 					var value = $(this).val();
 					if (value == null || value.trim() == '') {
@@ -32,14 +41,14 @@
 	</s:layout-component>
 	<s:layout-component name="content">
 
-		<div id="heading" style="margin-bottom: 17px;">
+		<div id="heading" style="margin-bottom: 17px;display: inline-block;">
 			<ul>
 				<li>CYCLE COUNT # ${cycle.cycleCount.id}</li>
 				<li>BRAND : ${cycle.cycleCount.brandsToAudit.brand} </li>
 			</ul>
 		</div>
 
-		<div  id="errordiv" style="font-weight: bold;font-size: 22px;margin-bottom: 66px;">
+		<div id="errordiv" style="font-weight: bold;font-size: 12px;margin-bottom: 38px;">
 			<c:choose>
 				<c:when test="${cycle.error}">
 					<span style="color:red;">${cycle.message}</span>
@@ -51,7 +60,7 @@
 		</div>
 
 		<div>
-			<table style="float: right;margin-top: -122px;">
+			<table style="float: right;margin-top: -205px;">
 				<thead>
 				<tr>
 					<th>VariantID</th>
@@ -70,32 +79,33 @@
 				<s:hidden name="message" value="${cycle.message}"/>
 				<s:hidden name="error" value="${cycle.error}"/>
 				<s:hidden name="cycleCountPVImapString" class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
-				<div style="display: inline-block; float:left;">
-				Scan Here <s:text name="hkBarcode" class="scannedBarcode"/>
+				<div style="display: inline-block;float: left;">
+					Scan Here <s:text name="hkBarcode" class="scannedBarcode"/>
 				</div>
 				<div style="display: inline-block;float:right;">
-				<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
-					<c:forEach items="${cycle.cycleCountItems}" var="cCItem" varStatus="ctr">
-						<s:hidden name="cycleCountItems[${ctr.index}]" value="${cCItem.id}"/>
-						<tr class="ccItemRow">
-							<td> ${cCItem.skuGroup.sku.productVariant.id}
-								<s:hidden name="cycleCountItems[${ctr.index}].skuGroup" value="${cCItem.skuGroup.id}"/>
-							</td>
+					<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
+						<c:forEach items="${cycle.cycleCountItems}" var="cCItem" varStatus="ctr">
+							<s:hidden name="cycleCountItems[${ctr.index}]" value="${cCItem.id}"/>
+							<tr class="ccItemRow">
+								<td> ${cCItem.skuGroup.sku.productVariant.id}
+									<s:hidden name="cycleCountItems[${ctr.index}].skuGroup"
+									          value="${cCItem.skuGroup.id}"/>
+								</td>
 
-							<td> ${cCItem.skuGroup.sku.productVariant.product.name} </td>
-							<td> ${cCItem.skuGroup.barcode} </td>
-							<td> ${cCItem.skuGroup.mrp}</td>
-							<td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
-							<td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
-							<td>${cCItem.scannedQty}</td>
-							<td>
-								<c:set value="${cycle.cycleCountPVImap}" var="item"/>
-									${item[cCItem.id]}
-							</td>
-						</tr>
-						<br/>
-					</c:forEach>
-				</c:if>
+								<td> ${cCItem.skuGroup.sku.productVariant.product.name} </td>
+								<td> ${cCItem.skuGroup.barcode} </td>
+								<td> ${cCItem.skuGroup.mrp}</td>
+								<td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
+								<td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
+								<td>${cCItem.scannedQty}</td>
+								<td>
+									<c:set value="${cycle.cycleCountPVImap}" var="item"/>
+										${item[cCItem.id]}
+								</td>
+							</tr>
+							<br/>
+						</c:forEach>
+					</c:if>
 				</div>
 				<tr>
 					<td>
@@ -106,33 +116,31 @@
 
 				</tr>
 			</table>
-					
+
 			<div style="margin-top: 188px;margin-bottom: 112px;">
 				<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
 					<s:submit name="save" value="Freeze"/>
 				</c:if>
 				</s:form>
 			</div>
-		   </div>
+		</div>
 
 
-
-
-		<div style="display: inline-block;margin-left: -31px;">
+		<div style="display: inline-block;margin-left: -31px;margin-bottom: -44px;margin-top: 42px;">
 			<fieldset class="right_label">
 				<legend>Upload Cycle Count Notepad</legend>
 				<ul>
 					<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
-					<s:hidden name="cycleCount"	value="${cycle.cycleCount.id}" />
+						<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
 						<li><label>File to Upload</label>
-							 <s:file name="fileBean" size="30"/>
+							<s:file id="filebean" name="fileBean" size="30"/>
 						</li>
 						<li>
-						<s:submit name="uploadCycleCountNotepad" value="Upload"/>
-						</li>						
+							<s:submit id="uploadnotepad" name="uploadCycleCountNotepad" value="Upload"/>
+						</li>
 					</s:form>
-			</ul>
-				</fieldset>
+				</ul>
+			</fieldset>
 		</div>
 
 
