@@ -18,7 +18,7 @@ import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
- * User:User
+ * User:Seema
  * Date: Jan 14, 2013
  * Time: 3:54:40 PM
  * To change this template use File | Settings | File Templates.
@@ -26,24 +26,24 @@ import java.util.Date;
 @Repository
 public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
 
-	public CycleCountItem getCycleCountItem(CycleCount cycleCount,SkuGroup skuGroup) {
-		DetachedCriteria cycleCountItemCriteria = getCycleCountItemCriteria(cycleCount ,skuGroup);
+	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup) {
+		DetachedCriteria cycleCountItemCriteria = getCycleCountItemCriteria(cycleCount, skuGroup);
 		List<CycleCountItem> cycleCountItems = findByCriteria(cycleCountItemCriteria);
 		return cycleCountItems != null && cycleCountItems.size() > 0 ? cycleCountItems.get(0) : null;
 
 	}
 
-	private DetachedCriteria getCycleCountItemCriteria(CycleCount cycleCount,SkuGroup skuGroup) {
+	private DetachedCriteria getCycleCountItemCriteria(CycleCount cycleCount, SkuGroup skuGroup) {
 		DetachedCriteria cycleCountItemCriteria = DetachedCriteria.forClass(CycleCountItem.class);
 
 		if (skuGroup != null) {
 			cycleCountItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
 		}
-		DetachedCriteria cycleCountDetachedCriteria = null ;
-		if(cycleCount != null){
-		cycleCountDetachedCriteria = cycleCountItemCriteria.add(Restrictions.eq("cycleCount", cycleCount));
+		DetachedCriteria cycleCountDetachedCriteria = null;
+		if (cycleCount != null) {
+			cycleCountDetachedCriteria = cycleCountItemCriteria.add(Restrictions.eq("cycleCount", cycleCount));
 		}
-		if(cycleCountDetachedCriteria != null){
+		if (cycleCountDetachedCriteria != null) {
 
 
 		}
@@ -75,13 +75,11 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
 	}
 
 
+	public Page searchCycleList(String brand, Long warehouseId, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
 
-	public Page searchCycleList(String brand, Long warehouseId, User auditor, Date startDate, Date endDate, int pageNo, int perPage){
-
-	   DetachedCriteria cyclecounDetachedCriteria =  getCycleCountCriteria(brand,warehouseId, auditor, startDate, endDate);
-	  cyclecounDetachedCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+		DetachedCriteria cyclecounDetachedCriteria = getCycleCountCriteria(brand, warehouseId, auditor, startDate, endDate);
+		cyclecounDetachedCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
 		return list(cyclecounDetachedCriteria, pageNo, perPage);
-
 
 
 	}

@@ -24,16 +24,13 @@ public interface CycleCountService {
 
 	public CycleCount save(CycleCount cycleCount);
 
-//CycleCountItem methods
+    //CycleCountItem methods
 
 	public CycleCountItem save(CycleCountItem cycleCountItem);
 
-	public CycleCountItem getCycleCountItem(CycleCount cycleCount ,SkuGroup skuGroup);
-
-	public List<CycleCountItem> getAllCycleCountItem();   
+	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup);
 
 	public Page searchCycleList(String brand, Long warehouseId, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
-
 
 
 }

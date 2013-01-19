@@ -53,10 +53,6 @@ public class CycleCountServiceImpl implements CycleCountService {
 	  return  cycleCountDao.getCycleCountItem(cycleCount ,skuGroup);
 	}
 
-	public List<CycleCountItem> getAllCycleCountItem(){
-		return getBaseDao().getAll(CycleCountItem.class);
-	}
-
 	public Page searchCycleList(String brand, Long warehouseId, User auditor, Date startDate, Date endDate, int pageNo, int perPage){
 		return cycleCountDao.searchCycleList(brand, warehouseId, auditor,startDate,endDate,pageNo, perPage);
 	}

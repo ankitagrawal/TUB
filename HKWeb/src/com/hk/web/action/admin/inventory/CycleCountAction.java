@@ -125,7 +125,7 @@ public class CycleCountAction extends BasePaginatedAction {
 			cycleCountPVImap = getMapFromJsonString(cycleCountPVImapString);
 		}
 		cycleCountItems = cycleCount.getCycleCountItems();
-		int newEntryInMap  = 0;
+		int newEntryInMap = 0;
 		for (CycleCountItem cycleCountItem : cycleCountItems) {
 			if (!(cycleCountPVImap.containsKey(cycleCountItem.getId()))) {
 				//new entry added by another auditor
@@ -220,14 +220,14 @@ public class CycleCountAction extends BasePaginatedAction {
 					skuGroupListResult.add(skuGroupCheckBrand);
 				} else {
 					error = true;
-					message =  hkBarcode + " :: does not belong to brand";
+					message = hkBarcode + " does not belong to brand";
 					return skuGroupListResult;
 				}
 
 			}
 		} else {
 			error = true;
-			message = "Invalid Hk Barcode ::" + hkBarcode;
+			message = "Invalid Hk Barcode  " + hkBarcode;
 		}
 		return skuGroupListResult;
 	}
@@ -245,7 +245,7 @@ public class CycleCountAction extends BasePaginatedAction {
 	}
 
 	private void populateScannedPviVarianceMap(List<CycleCountItem> cycleCountItems) {
-		cycleCountPVImap = new HashMap<Long,Integer>();
+		cycleCountPVImap = new HashMap<Long, Integer>();
 		for (CycleCountItem cycleCountItem : cycleCountItems) {
 			List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
 			int pvi = 0;
@@ -281,7 +281,7 @@ public class CycleCountAction extends BasePaginatedAction {
 		for (CycleCountItem cycleCountItem : cycleCountItems) {
 			int pvi = cycleCountPVImap.get(cycleCountItem.getId());
 			int scannedQty = cycleCountItem.getScannedQty();
-			if ((pvi-scannedQty) <  0) {
+			if ((pvi - scannedQty) < 0) {
 				cycleCountItemsForAddRecon.add(cycleCountItem);
 			}
 		}
@@ -307,7 +307,6 @@ public class CycleCountAction extends BasePaginatedAction {
 	}
 
 
-
 	//cycle count by uploading notepad.
 	public Resolution uploadCycleCountNotepad() {
 		if (fileBean == null) {
@@ -315,14 +314,14 @@ public class CycleCountAction extends BasePaginatedAction {
 			return new ForwardResolution("/pages/admin/cycleCount.jsp");
 		}
 		try {
-			hkBarcodeErrorsMap = new HashMap<String,String>();
+			hkBarcodeErrorsMap = new HashMap<String, String>();
 			String brand = cycleCount.getBrandsToAudit().getBrand();
 			String excelFilePath = adminDownloadsPath + "/cycleCountExcelFiles/" + System.currentTimeMillis() + ".txt";
 			File excelFile = new File(excelFilePath);
 			excelFile.getParentFile().mkdirs();
 			fileBean.save(excelFile);
 			Map<String, Integer> hkBarcodeQtyMap = cycleCountHelper.readCycleCountNotepad(excelFile);
-			cycleCountPVImap = new HashMap<Long,Integer>();
+			cycleCountPVImap = new HashMap<Long, Integer>();
 			for (String hkbarcodeFromNotepad : hkBarcodeQtyMap.keySet()) {
 				List<SkuGroup> validSkuGroupList = findSkuGroup(brand, hkbarcodeFromNotepad);
 				if (validSkuGroupList != null && validSkuGroupList.size() > 0) {
@@ -392,7 +391,6 @@ public class CycleCountAction extends BasePaginatedAction {
 				message = "";
 				String newLine = FormatUtils.lineSeperator;
 				for (String hkBarcode : hkBarcodeErrorsMap.keySet()) {
-
 					message = message + hkBarcodeErrorsMap.get(hkBarcode) + newLine;
 				}
 			}
@@ -400,9 +398,8 @@ public class CycleCountAction extends BasePaginatedAction {
 			addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
 			return new ForwardResolution("/pages/admin/cycleCount.jsp");
 		}
-		return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error",error);
+		return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", error);
 	}
-
 
 
 	private String getStringFromMap(Map<Long, Integer> cycleCountPVImap) {
@@ -483,7 +480,6 @@ public class CycleCountAction extends BasePaginatedAction {
 	public void setError(boolean error) {
 		this.error = error;
 	}
-
 
 
 	public void setFileBean(FileBean fileBean) {
