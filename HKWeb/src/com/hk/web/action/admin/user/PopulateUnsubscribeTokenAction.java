@@ -10,6 +10,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
  * Time: 9:29 AM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class PopulateUnsubscribeTokenAction extends BaseAction {
 
     private static Logger logger = LoggerFactory.getLogger(PopulateUserDetailAction.class);
