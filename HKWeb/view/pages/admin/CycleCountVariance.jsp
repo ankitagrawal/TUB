@@ -4,11 +4,16 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cycle"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Cycle Variance Report">
-
+	<s:layout-component name="heading">
+		<div style="text-align: center;">
+		CYCLE COUNT # ${cycle.cycleCount.id}
+		BRAND : ${cycle.cycleCount.brandsToAudit.brand}
+	   </div>
+	</s:layout-component>
 	<s:layout-component name="content">
 		<c:set value="<%= EnumCycleCountStatus.Closed.getId()%>" var="closed"/>
 		<c:if test="${cycle.cycleCount.cycleStatus < closed }">
-		<table style="margin: 80px auto 20px;">
+		<table style="margin: 80px auto 81px;">
 		<thead>
 		<tr>
 			<th>VariantID</th>
@@ -84,7 +89,7 @@
 				</ul>
 			</fieldset>
 
-			<fieldset class="right_label" style="display: inline-block;margin-left: 469px;">
+			<fieldset class="right_label" style="display: inline-block;margin-left: 469px;float: right;">
 				<legend>Download Complete Cycle Count Excel</legend>
 				<ul>
 					<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
@@ -96,7 +101,7 @@
 				</ul>
 			</fieldset>
 
-			<div style="text-align: center;">
+			<div style="text-align: center;margin-top: 70px;">
 				<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
 					<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
 					<s:submit name="closeCycleCount" value="Close"/>

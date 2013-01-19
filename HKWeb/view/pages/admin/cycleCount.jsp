@@ -10,14 +10,21 @@
 	<s:layout-component name="htmlHead">
 		<script type="text/javascript">
 			$(document).ready(function() {
+
+				$('.scannedBarcode').focus();
+				$('.scannedBarcode').keydown(function() {
+					$('#errordiv').hide();
+				});
+
+
 				$('.scannedBarcode').live("change", function() {
 					var value = $(this).val();
-					if( value == null || value.trim() == ''){
+					if (value == null || value.trim() == '') {
 						return false;
 					}
 					else {
-					$(this).attr("disable","disable");
-					return $('.saveform').click();
+						$(this).attr("disable", "disable");
+						return $('.saveform').click();
 					}
 				});
 			});
@@ -32,7 +39,7 @@
 			</ul>
 		</div>
 
-		<div style="font-weight: bold;font-size: 22px;margin-bottom: 66px;">
+		<div  id="errordiv" style="font-weight: bold;font-size: 22px;margin-bottom: 66px;">
 			<c:choose>
 				<c:when test="${cycle.error}">
 					<span style="color:red;">${cycle.message}</span>

@@ -30,6 +30,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.UserManager;
@@ -134,6 +135,30 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
     public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
+//        SkuGroup skuGroup = new SkuGroup();
+//        skuGroup.setBatchNumber(batch);
+//        skuGroup.setMfgDate(mfgDate);
+//        skuGroup.setExpiryDate(expiryDate);
+//        skuGroup.setCostPrice(costPrice);
+//        skuGroup.setMrp(mrp);
+//        skuGroup.setGoodsReceivedNote(goodsReceivedNote);
+//        skuGroup.setReconciliationVoucher(reconciliationVoucher);
+//        skuGroup.setStockTransfer(stockTransfer);
+//        skuGroup.setSku(sku);
+//        skuGroup.setCreateDate(new Date());
+//        skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
+         SkuGroup skuGroup = createSkuGroupWithoutBarcode(batch,mfgDate,expiryDate,costPrice,mrp,goodsReceivedNote,reconciliationVoucher,stockTransfer,sku );
+        if (skuGroup != null && skuGroup.getId() != null) {
+            String skuGroupBarCode = BarcodeUtil.generateBarCodeForSKuGroup(skuGroup.getId());
+            skuGroup.setBarcode(skuGroupBarCode);
+            skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
+        }
+
+        return skuGroup;
+    }
+
+
+     public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
         SkuGroup skuGroup = new SkuGroup();
         skuGroup.setBatchNumber(batch);
         skuGroup.setMfgDate(mfgDate);
@@ -146,14 +171,10 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         skuGroup.setSku(sku);
         skuGroup.setCreateDate(new Date());
         skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
-        if (skuGroup != null && skuGroup.getId() != null) {
-            String skuGroupBarCode = BarcodeUtil.generateBarCodeForSKuGroup(skuGroup.getId());
-            skuGroup.setBarcode(skuGroupBarCode);
-            skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
-        }
-
         return skuGroup;
     }
+
+
 
     public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
                                                   StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy) {
@@ -210,14 +231,14 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		pvi.setSku(sku);
 		pvi.setSkuItem(skuItem);
 		pvi.setStockTransferLineItem(stockTransferLineItem);
-		pvi.setInvTxnType(inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKOUT));
+        pvi.setInvTxnType(inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKOUT));
 		pvi.setQty(qty);
 		pvi.setTxnBy(txnBy);
 		pvi.setTxnDate(new Date());
 		getBaseDao().save(pvi);
 
-		if (skuItem != null && qty < 0) {
-			skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+		if (skuItem != null && qty < 0 ) {
+           skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
 			getBaseDao().save(skuItem);
 		}
 

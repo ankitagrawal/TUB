@@ -76,7 +76,6 @@ public class CycleCountAction extends BasePaginatedAction {
 	private String message;
 	private Map<String, String> hkBarcodeErrorsMap = new HashMap<String, String>();
 	private Map<Long, Integer> cycleCountPVImap = new HashMap<Long, Integer>();
-//	private Map<Long, Integer> scannedPviVariance = new HashMap<Long, Integer>();
 	private String cycleCountPVImapString;
 	private boolean error = false;
 	private Page cyceCountPage;

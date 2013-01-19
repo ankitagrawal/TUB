@@ -4,6 +4,7 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.sku.SkuItem;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -11,9 +12,9 @@ import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,22 +67,33 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		return minMRPUnbookedSkuGroup;
 	}
 
+
+
 	private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
-			DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
-			if (skuGroup != null) {
-				skuItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
-			}
-			if (skuItemStatus != null) {
-				skuItemCriteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
-			}
-			return skuItemCriteria;
+		DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
+		if (skuGroup != null) {
+			skuItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
 		}
+		if (skuItemStatus != null) {
+			skuItemCriteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
+		}
+		return skuItemCriteria;
+	}
 
 
-		public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
-			DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-			return findByCriteria(skuItemCriteria);
-		}
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+		DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		return findByCriteria(skuItemCriteria);
+	}
+
+	public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(SkuItem.class);
+		criteria.add(Restrictions.eq("skuGroup", skuGroup));
+		criteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
+		List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
+		return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
+	}
+
 
 }
 

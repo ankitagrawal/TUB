@@ -5,7 +5,6 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import org.hibernate.criterion.DetachedCriteria;
@@ -160,14 +159,6 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 		return findByCriteria(skuGroupCriteria);
 	}
 
-	//rohit
-	public List<SkuGroup> getSkuGroupsByBarcode(String barcode, Long warehouseId) {
-		List<SkuGroup> skuGroups = getSession().
-						createQuery("from SkuGroup sg where sg.barcode = :barcode and sg.sku.warehouse.id = :warehouseId").
-				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).list();
-		return skuGroups;
-
-	}
 
 	public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId) {
 		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, barcode, null, null);
@@ -176,6 +167,15 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 		List<SkuGroup> skuGroupList = findByCriteria(skuGroupCriteria);
 		return skuGroupList;
 	}
+
+    public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId) {
+		List<SkuGroup> skuGroups = getSession().
+						createQuery("select distinct si.skuGroup from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId and si.skuItemStatus.id = "
+                + EnumSkuItemStatus.Stock_Transfer_Out.getId()).
+				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).list();
+		return skuGroups;
+    }
+
 
 
 }
