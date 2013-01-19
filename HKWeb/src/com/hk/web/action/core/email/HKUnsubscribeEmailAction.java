@@ -31,8 +31,8 @@ public class HKUnsubscribeEmailAction extends BaseAction {
         if(!success) {
             addRedirectAlertMessage(new SimpleMessage("Invalid email."));
         }else{
-            addRedirectAlertMessage(new SimpleMessage("We have received for your request. " +
-                    "We will unsubscribe you from all future emails within next 30 mins. You can again subscribe by login to your account"));
+            addRedirectAlertMessage(new SimpleMessage("We have received your request. " +
+                    "We will unsubscribe you from all future emails within next 30 minutes."));
         }
         return new ForwardResolution("/pages/unsubscribeEmail.jsp");
     }
