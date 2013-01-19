@@ -44,7 +44,7 @@ class PopulateUnsubscribeToken {
         Long phone;
         int cnt = 0;
         sql.eachRow("""
-                    select * from user u join user_has_role ur on u.id = ur.user_id where ur.role_name='HK_USER';
+                    select * from user u join user_has_role ur on u.id = ur.user_id where ur.role_name IN('HK_USER','HKUNVERIFIED');
                       """){
             userRec ->
             String unsbuscribeToken = TokenUtils.getTokenToUnsubscribeWommEmail(userRec.login);
