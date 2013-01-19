@@ -33,6 +33,8 @@ public class LoyaltyProduct {
 		return "/loyaltypg/product/" + getId();
 	}
 	
+	private transient long qty;
+	
 	public Long getId() {
 		return id;
 	}
@@ -55,5 +57,13 @@ public class LoyaltyProduct {
 
 	public void setPoints(int points) {
 		this.points = points;
+	}
+	
+	public long getQty() {
+		return qty;
+	}
+	
+	public void setQty(long qty) {
+		this.qty = qty;
 	}
 }

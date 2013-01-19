@@ -10,28 +10,20 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.store.SearchCriteria;
-import com.hk.store.StoreProcessor;
 import com.hk.web.action.core.auth.LoginAction;
 
 @Component
 @UrlBinding("/loyaltypg")
-public class LoyaltyCatalogAction extends BasePaginatedAction {
+public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 	private int defaultPerPage = 24;
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
-
-	@Qualifier("loyaltyStoreProcessor")
-	@Autowired
-	StoreProcessor processor;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -41,7 +33,7 @@ public class LoyaltyCatalogAction extends BasePaginatedAction {
 		SearchCriteria criteria = new SearchCriteria();
 		criteria.setStartRow(0);
 		criteria.setMaxRows(0);
-		productList = processor.searchProducts(getPrincipal().getId(), criteria);
+		productList = getProcessor().searchProducts(getPrincipal().getId(), criteria);
 		productPage = new Page(productList, getPerPage(), getPageNo(), (int) productList.size());
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
 	}

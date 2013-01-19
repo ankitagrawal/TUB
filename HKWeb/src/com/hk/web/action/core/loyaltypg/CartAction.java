@@ -3,6 +3,7 @@ package com.hk.web.action.core.loyaltypg;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -11,40 +12,39 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.domain.loyaltypg.LoyaltyProduct;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.store.InvalidOrderException;
 import com.hk.store.ProductVariantInfo;
-import com.hk.store.StoreProcessor;
 import com.hk.web.HealthkartResponse;
 
-public class CartAction extends BaseAction {
+public class CartAction extends AbstractLoyaltyAction {
 
 	private String productVariantId;
 	private long qty;
 	
-	private Order order;
+	@Autowired LoyaltyProgramService loyaltyProgramService;
 	
-	@Qualifier("loyaltyStoreProcessor")
-	@Autowired
-	StoreProcessor processor;
-
+	private List<LoyaltyProduct> loyaltyProductList = new ArrayList<LoyaltyProduct>();
+	
 	@JsonHandler
 	public Resolution addToCart() {
 		
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", new HashMap<Object, Object>());
 		
-		Long orderId = processor.createOrder(getPrincipal().getId());
+		Long orderId = getProcessor().createOrder(getPrincipal().getId());
 		
 		ProductVariantInfo info = new ProductVariantInfo();
 		info.setProductVariantId(productVariantId);
 		info.setQuantity(qty);
 		List<ProductVariantInfo> infos = new ArrayList<ProductVariantInfo>();
+		infos.add(info);
 		try {
-			processor.addToCart(orderId, infos);
+			getProcessor().addToCart(orderId, infos);
 		} catch (InvalidOrderException e) {
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), new HashMap<Object, Object>());
 		}
@@ -54,11 +54,17 @@ public class CartAction extends BaseAction {
 	
 	@DefaultHandler
 	public Resolution viewKart() {
-		order = processor.getOrder(getPrincipal().getId());
-		return new ForwardResolution("/pages/loyaltypg/cart.jsp");
+		Order order = getProcessor().getOrder(getPrincipal().getId());
+		Set<CartLineItem> cartLineItems = order.getCartLineItems();
+		for (CartLineItem cartLineItem : cartLineItems) {
+			LoyaltyProduct loyaltyProduct  = loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
+			loyaltyProduct.setQty(cartLineItem.getQty());
+			loyaltyProductList.add(loyaltyProduct);
+		}
+		return new ForwardResolution("/pages/loyalty/cart.jsp");
 	}
 	
-    public Resolution placeOrder() {
+    public Resolution checkout() {
         return new RedirectResolution(AddressSelectionAction.class);
     }
 
@@ -70,19 +76,15 @@ public class CartAction extends BaseAction {
 		this.productVariantId = productVariantId;
 	}
 
+	public List<LoyaltyProduct> getLoyaltyProductList() {
+		return loyaltyProductList;
+	}
+	
 	public long getQty() {
 		return qty;
 	}
 
 	public void setQty(long qty) {
 		this.qty = qty;
-	}
-	
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
 	}
 }

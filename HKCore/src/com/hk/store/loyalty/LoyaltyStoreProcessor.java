@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
@@ -16,13 +18,12 @@ import com.hk.store.InvalidOrderException;
 import com.hk.store.ProductVariantInfo;
 import com.hk.store.SearchCriteria;
 
-@Component("loyaltyStoreProcessor")
+@Service("loyaltyStoreProcessor")
 public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 
 	private static final Long storeId = 2l;
 	
 	@Autowired LoyaltyProgramService loyaltyProgramService;
-	
 	
 	@Override
 	public List<LoyaltyProduct> searchProducts(Long userId, SearchCriteria criteria) {
@@ -35,6 +36,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	}
 
 	@Override
+	@Transactional
 	protected Payment doPayment(Long orderId, String remoteIp) {
 		Order order = orderService.find(orderId);
 		loyaltyProgramService.debitKarmaPoints(orderId);
@@ -49,5 +51,15 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 		 * and validate with user karma points. 
 		 * if order points are less then ok otherwise throw InvalidOrderException
 		 */
+	}
+
+	@Override
+	public Double calculateDebitAmount(Long orderId) {
+		return Double.valueOf(loyaltyProgramService.calculateDebitPoints(orderId));
+	}
+
+	@Override
+	protected void validatePayment(Long orderId) throws InvalidOrderException {
+		// TODO Check whether points are debited or not.
 	}
 }

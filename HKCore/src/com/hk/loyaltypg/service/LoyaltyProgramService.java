@@ -13,6 +13,8 @@ public interface LoyaltyProgramService {
 	void reconcileHistoryPurchase(Long userId);
 	
 	int calculateKarmaPoints(Long userId);
+	
+	int calculateDebitPoints(Long orderId);
 
 	void creditKarmaPoints(Long orderId);
 	

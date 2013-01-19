@@ -18,14 +18,16 @@ public interface StoreProcessor {
 	
 	Order getOrder(Long userId);
 	
+	Double calculateDebitAmount(Long orderId);
+	
 	List<Address> getUserAddresses(Long userId);
 	
 	Payment makePayment(Long orderId, String remoteId);
 	
-	void shipOrder(Long orderId);
+	void shipOrder(Long orderId) throws InvalidOrderException;
 	
 	OrderStatus getOrderStatus(Long orderId);
 	
-	void shipmentAddress(Long orderId, Address address);
+	void setShipmentAddress(Long orderId, Address address);
 
 }
