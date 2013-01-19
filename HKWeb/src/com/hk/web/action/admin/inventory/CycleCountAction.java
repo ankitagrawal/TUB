@@ -221,7 +221,7 @@ public class CycleCountAction extends BasePaginatedAction {
 					skuGroupListResult.add(skuGroupCheckBrand);
 				} else {
 					error = true;
-					message = "Scanned Product :" + hkBarcode + "  does not belong to brand ::" + brand;
+					message =  hkBarcode + "  does not belong to brand ::" + brand;
 					return skuGroupListResult;
 				}
 
@@ -389,18 +389,19 @@ public class CycleCountAction extends BasePaginatedAction {
 
 			}
 			if (hkBarcodeErrorsMap.size() > 0) {
+				error = true;
 				message = "";
 				String newLine = FormatUtils.lineSeperator;
 				for (String hkBarcode : hkBarcodeErrorsMap.keySet()) {
 
-					message = message + hkBarcode + " :: " + hkBarcodeErrorsMap.get(hkBarcode) + newLine;
+					message = message + hkBarcodeErrorsMap.get(hkBarcode) + newLine;
 				}
 			}
 		} catch (IOException e) {
 			addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
 			return new ForwardResolution("/pages/admin/cycleCount.jsp");
 		}
-		return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message);
+		return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error",error);
 	}
 
 
