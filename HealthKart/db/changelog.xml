@@ -10998,9 +10998,4 @@
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="Marut (generated)" id="1357977084301-5">
-        <sql>
-            update user u inner join email_recepient er on u.id = er.user_id set u.unsubscribe_token = er.unsubscribe_token;
-        </sql>
-    </changeSet>
 </databaseChangeLog>
