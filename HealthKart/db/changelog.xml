@@ -10998,8 +10998,9 @@
     </changeSet>
     <changeSet author="Marut (generated)" id="1357977084301-4">
         <addColumn tableName="user">
-        <column name="unsubscribe_token" type="VARCHAR(512)">
-            <constraints nullable="false"/>
-        </column>
+            <column name="unsubscribe_token" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
