@@ -407,6 +407,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("storeId");
         params.add("sortByPaymentDate");
         params.add("sortByScore");
+        params.add("dropShip");
 
         // params.add("orderLifecycleActivity");
         // params.add("shippingOrderStatus");
