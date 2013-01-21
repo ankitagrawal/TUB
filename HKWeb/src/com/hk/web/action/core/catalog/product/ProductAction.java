@@ -252,6 +252,11 @@ public class ProductAction extends BaseAction {
     }
 
     public Resolution productBanner() {
+        if (product != null) {
+            if (product instanceof Combo) {
+                combo = (Combo) product;
+            }
+        }
         affiliate = affiliateDao.getAffiliateByCode(affid);
         return new ForwardResolution("/pages/affiliate/productBanner.jsp");
     }

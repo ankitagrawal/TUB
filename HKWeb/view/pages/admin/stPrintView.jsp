@@ -91,6 +91,7 @@
 		</td>
 		<td><b>To Warehouse</b></td>
 		<td>
+			Bright Lifecare Pvt. Ltd.<br/>
 			${stockTransferBean.stockTransfer.toWarehouse.name} <br/>
 			${stockTransferBean.stockTransfer.toWarehouse.line1},
 			${stockTransferBean.stockTransfer.toWarehouse.line2}<br>
@@ -152,7 +153,7 @@
 			<td>${stockTransferLineItem.checkedOutSkuGroup.costPrice}
 			</td>
 			<td>${stockTransferLineItem.checkedOutSkuGroup.mrp}</td>
-			<td>${stockTransferLineItem.checkedOutSkuGroup.checkedoutQty}
+			<td>${stockTransferLineItem.checkedoutQty}
 			</td>
 			<td>${stockTransferLineItem.checkedoutQty * stockTransferLineItem.checkedOutSkuGroup.costPrice}
 				<c:set var="totalAmount" value="${totalAmount + (stockTransferLineItem.checkedoutQty * stockTransferLineItem.checkedOutSkuGroup.costPrice)}" />
