@@ -58,9 +58,10 @@ public interface PincodeCourierService {
 
     public PincodeCourierMapping savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping);
 
-
     public boolean isDefaultCourierApplicable(Pincode pincode, Courier courier, boolean isGround, boolean isCod);
 
     public Map<String,Boolean> generateDetailedAnalysis(List<PincodeCourierMapping> pincodeCourierMappings);
+
+    public void delete(PincodeCourierMapping pincodeCourierMapping);
 
 }

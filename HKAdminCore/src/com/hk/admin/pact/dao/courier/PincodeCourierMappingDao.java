@@ -37,4 +37,6 @@ public interface PincodeCourierMappingDao {
 
     public Courier searchDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
 
+    public void delete(PincodeCourierMapping pincodeCourierMapping);
+
 }

@@ -86,12 +86,12 @@ public class ChangeDefaultCourierAction extends BaseAction {
          boolean bool = false;
         for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
             if (!pincodeCourierService.isDefaultCourierApplicable(pincode, defaultCourier.getCourier(), defaultCourier.isGroundShipping(), defaultCourier.isCod())) {
-                   error += defaultCourier.getCourier().getName() + ",";
+                   error += "(Courier:" + defaultCourier.getCourier().getName() + ",COD:" + defaultCourier.isCod() + ",GroundShipping:" + defaultCourier.isGroundShipping()+ ")-";
                    bool = true;
             }
           else{
                getBaseDao().save(defaultCourier);
-               success += defaultCourier.getCourier().getName() + ",";
+               success += "(Courier:" + defaultCourier.getCourier().getName() + ",COD:" + defaultCourier.isCod() + ",GroundShipping:" + defaultCourier.isGroundShipping()+ ")-";
             }
         }
       if(bool){

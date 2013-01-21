@@ -83,8 +83,11 @@ public class PincodeCourierMappingAction extends BaseAction {
     public Resolution update() {
         for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappings) {
             boolean isValidMapping = pincodeCourierMapping.isPrepaidAir() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isCodAir() || pincodeCourierMapping.isCodGround();
-            if (isValidMapping) {
-                pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
+          if (pincodeCourierMapping.getId()!=null && !isValidMapping) {
+                pincodeCourierService.delete(pincodeCourierMapping);
+            }
+          else if(isValidMapping){
+              pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
             }
         }
         addRedirectAlertMessage(new SimpleMessage("changes saved in the system !!!!"));

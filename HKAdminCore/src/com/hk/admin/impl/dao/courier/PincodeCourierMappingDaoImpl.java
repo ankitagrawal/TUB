@@ -151,4 +151,8 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
         }
         return null;
     }
+
+  public void delete(PincodeCourierMapping pincodeCourierMapping){
+    delete(pincodeCourierMapping);
+  }
 }

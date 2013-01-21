@@ -140,9 +140,9 @@
             <label>Enter Pincode</label>
             <s:text name="pincodeString" id="pincode"/>
             <label>IsCod</label>
-            <s:checkbox name="isCod"/>
+            <s:checkbox name="cod"/>
             <label>IsGround</label>
-            <s:checkbox name="isGround"/>
+            <s:checkbox name="ground"/>
             <label>Select WareHouse</label>
             <s:select name="warehouse">
                 <option value="">--Select--</option>

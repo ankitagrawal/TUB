@@ -201,4 +201,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
     public List<PincodeCourierMapping> getApplicablePincodeCourierMappingList(Pincode pincode, boolean isCod, boolean isGround, Boolean activeCourier) {
         return pincodeCourierMappingDao.getApplicablePincodeCourierMapping(pincode,null,Arrays.asList(pincodeCourierMappingDao.getShipmentServiceType(isCod,isGround)),activeCourier);
     }
+  public void delete(PincodeCourierMapping pincodeCourierMapping){
+    pincodeCourierMappingDao.delete(pincodeCourierMapping);
+  }
 }
