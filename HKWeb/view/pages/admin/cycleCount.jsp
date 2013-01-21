@@ -5,6 +5,16 @@
 <%@ page import="com.hk.constants.inventory.EnumCycleCountStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
+<style>
+	.scannedBarcode{
+
+		width:125px
+	}
+	#heading li{
+		margin-left:0px
+	}
+	</style>
+</sttyle>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cycle"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Cycle Count">
 	<s:layout-component name="htmlHead">
@@ -41,14 +51,14 @@
 	</s:layout-component>
 	<s:layout-component name="content">
 
-		<div id="heading" style="margin-bottom: 17px;display: inline-block;">
-			<ul>
+		<div id="heading" style="margin:0px auto;width:1200px;margin-bottom: 30px;">
+			<ul style="padding-left:0px">
 				<li>CYCLE COUNT # ${cycle.cycleCount.id}</li>
 				<li>BRAND : ${cycle.cycleCount.brandsToAudit.brand} </li>
 			</ul>
 		</div>
 
-		<div id="errordiv" style="font-weight: bold;font-size: 12px;margin-bottom: 38px;">
+		<div id="errordiv" style="font-weight: bold;font-size: 12px;margin-bottom: 30px;">
 			<c:choose>
 				<c:when test="${cycle.error}">
 					<span style="color:red;">${cycle.message}</span>
@@ -59,8 +69,17 @@
 			</c:choose>
 		</div>
 
-		<div>
-			<table style="float: right;margin-top: -205px;">
+
+		<s:form id="ccform" beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
+				<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+				<s:hidden name="message" value="${cycle.message}"/>
+				<s:hidden name="error" value="${cycle.error}"/>
+				<s:hidden name="cycleCountPVImapString" class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
+		<div style="width:1200px;margin:0px auto">
+			<div style="display: inline-block;">
+					Scan Here <s:text name="hkBarcode" class="scannedBarcode"/>
+				</div>
+			<table style="float: right;margin-top:0px">
 				<thead>
 				<tr>
 					<th>VariantID</th>
@@ -74,15 +93,9 @@
 
 				</tr>
 				</thead>
-				<s:form id="ccform" beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
-				<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
-				<s:hidden name="message" value="${cycle.message}"/>
-				<s:hidden name="error" value="${cycle.error}"/>
-				<s:hidden name="cycleCountPVImapString" class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
-				<div style="display: inline-block;float: left;">
-					Scan Here <s:text name="hkBarcode" class="scannedBarcode"/>
-				</div>
-				<div style="display: inline-block;float:right;">
+
+
+
 					<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
 						<c:forEach items="${cycle.cycleCountItems}" var="cCItem" varStatus="ctr">
 							<s:hidden name="cycleCountItems[${ctr.index}]" value="${cCItem.id}"/>
@@ -103,10 +116,10 @@
 										${item[cCItem.id]}
 								</td>
 							</tr>
-							<br/>
+
 						</c:forEach>
 					</c:if>
-				</div>
+
 				<tr>
 					<td>
 						<div style="display:none;">
@@ -117,16 +130,17 @@
 				</tr>
 			</table>
 
-			<div style="margin-top: 188px;margin-bottom: 112px;">
+			<div style="margin-top: 60px;margin-bottom: 40px;">
 				<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
 					<s:submit name="save" value="Freeze"/>
 				</c:if>
-				</s:form>
+
 			</div>
 		</div>
+		</s:form>
 
-
-		<div style="display: inline-block;margin-left: -31px;margin-bottom: -44px;margin-top: 42px;">
+		  <br/><br/>
+		<div style="margin:0px auto;width:1200px;margin-top: 42px;">
 			<fieldset class="right_label">
 				<legend>Upload Cycle Count Notepad</legend>
 				<ul>

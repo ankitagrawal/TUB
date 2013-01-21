@@ -159,5 +159,5 @@ public class XslConstants {
 	public static final String SYSTEM_QTY = "SYSTEM QTY";
 	public static final String VARINACE_QTY = "VARINACE QTY";
 
-
+	public static final String SHIPMENT_STATUS = "SHIPMENT STATUS";
 }
