@@ -55,8 +55,22 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Override
 	public int calculateKarmaPoints(Long userId) {
+		Integer credits = calculatePoints(userId, TransactionType.CREDIT, karmaPointStatus.APPROVED);
+		Integer debits = calculatePoints(userId, TransactionType.DEBIT, karmaPointStatus.APPROVED);
+		if(credits == null) {
+			return 0;
+		} else if(debits == null) {
+			return credits;
+		} else {
+			return credits - debits;
+		}
+	}
+	
+	private Integer calculatePoints(Long userId, TransactionType transactionType, karmaPointStatus status) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
-		criteria.setProjection(Projections.sum("karmaPints")).add(Restrictions.eq("status", karmaPointStatus.APPROVED));
+		criteria.setProjection(Projections.sum("karmaPints"))
+		.add(Restrictions.eq("status", status))
+		.add(Restrictions.eq("transactionType", transactionType));
 		Integer karmaPoints = (Integer) orderDao.findByCriteria(criteria).iterator().next();
 		return karmaPoints;
 	}
